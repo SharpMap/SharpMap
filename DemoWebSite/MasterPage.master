@@ -1,0 +1,50 @@
+<%@ Master Language="C#" AutoEventWireup="true" CodeFile="MasterPage.master.cs" Inherits="MasterPage" %>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head runat="server">
+    <title>SharpMap Demo Website</title>
+    <link rel="stylesheet" type="text/css" href="~/styles.css" media="all" />
+</head>
+<body>
+    <form id="form1" runat="server">
+    <div>
+		<table style="width:100%;">
+		<tr>
+		<td colspan="2">
+		<h2><asp:Literal runat="server" id="litHeadline" /></h2>
+		</td>
+		</tr>
+			<tr>
+				<td style="width: 140px;" valign="top">
+				<div id="leftcont">
+					<div id="leftnav">
+						<h2>Examples</h2>
+						<a href="Simple.aspx">Simple</a>
+						<a href="Bins.aspx">Styling delegate</a>
+						<a href="Gradient.aspx">Gradient</a>
+						<a href="PieCharts.aspx">Pie Charts</a>
+						<a href="Ajax.aspx">AJAX</a>
+						<h2>WMS</h2>
+						<a href="wmsclient.aspx">WMS Client</a>
+						<a target="_blank" href="wms.ashx?SERVICE=WMS&REQUEST=GetCapabilities">WMS Server Capabilites</a>
+						<a target="_blank" href="wms.ashx?REQUEST=GetMap&Layers=Countries,Rivers,Country labels&STYLES=&CRS=EPSG:4326&BBOX=-180,-90,180,90&WIDTH=600&HEIGHT=300&FORMAT=image/png&VERSION=1.3.0">WMS Server Map</a>
+						<h2>Transformation</h2>
+						<a href="Transformation.aspx">On-the-fly transformation</a>
+						<a href="TransformTests.aspx">Transformation Test</a>
+						<h2>Utilities</h2>
+						<a href="Provider.aspx">List of available data providers</a>						
+						
+					</div></div>
+				</td>
+				<td>
+					<asp:contentplaceholder id="MainContent" runat="server">
+					</asp:contentplaceholder>
+				</td>
+			</tr>
+		</table>
+    </div>
+    </form>
+</body>
+</html>
