@@ -234,7 +234,7 @@ namespace SharpMap.Data.Providers
         private void CreateNewRow(SharpMap.Data.FeatureDataTable dataTable, GisSharpBlog.NetTopologySuite.Features.Feature feature)
         {
             SharpMap.Data.FeatureDataRow dataRow = dataTable.NewRow();
-            dataRow.Geometry = GeometryConverter.ToSharpMapGeometry(feature.Geometry);
+            dataRow.Geometry = GeometryConverter.ToSharpMapGeometry(feature.Geometry as GisSharpBlog.NetTopologySuite.Geometries.Geometry);
             foreach (string columnName in feature.Attributes.GetNames())
                 dataRow[columnName] = feature.Attributes[columnName];
 			dataTable.AddRow(dataRow);
@@ -300,7 +300,7 @@ namespace SharpMap.Data.Providers
                 dataTable.Columns.Add(new DataColumn(columnName, feature.Attributes.GetType(columnName)));            
             
             SharpMap.Data.FeatureDataRow dataRow = dataTable.NewRow();
-            dataRow.Geometry = GeometryConverter.ToSharpMapGeometry(feature.Geometry);
+            dataRow.Geometry = GeometryConverter.ToSharpMapGeometry(feature.Geometry as GisSharpBlog.NetTopologySuite.Geometries.Geometry);
             foreach (string columnName in feature.Attributes.GetNames())
                 dataRow[columnName] = feature.Attributes[columnName];
             return dataRow;
@@ -327,7 +327,7 @@ namespace SharpMap.Data.Providers
             Collection<SharpMap.Geometries.Geometry> geoms = new Collection<SharpMap.Geometries.Geometry>();
             foreach (GisSharpBlog.NetTopologySuite.Features.Feature feature in features)
                 if (envelope.Intersects(feature.Geometry.EnvelopeInternal))
-                    geoms.Add(GeometryConverter.ToSharpMapGeometry(feature.Geometry));  
+                    geoms.Add(GeometryConverter.ToSharpMapGeometry(feature.Geometry as GisSharpBlog.NetTopologySuite.Geometries.Geometry));  
             return geoms;        
         }
 
@@ -377,7 +377,7 @@ namespace SharpMap.Data.Providers
         public SharpMap.Geometries.Geometry GetGeometryByID(uint oid)
         {
             GisSharpBlog.NetTopologySuite.Features.Feature feature = features[Convert.ToInt32(oid)];
-            return GeometryConverter.ToSharpMapGeometry(feature.Geometry);
+            return GeometryConverter.ToSharpMapGeometry(feature.Geometry as GisSharpBlog.NetTopologySuite.Geometries.Geometry);
         }
 
         /// <summary>

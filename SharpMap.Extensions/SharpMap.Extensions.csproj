@@ -35,39 +35,43 @@
   <ItemGroup>
     <Reference Include="gdalconst_csharp, Version=0.0.0.0, Culture=neutral">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\Programme\FWTools1.2.0\csharp\gdalconst_csharp.dll</HintPath>
+      <HintPath>..\ExternalReferences\References4SharpMap.Extensions\gdalconst_csharp.dll</HintPath>
     </Reference>
     <Reference Include="gdal_csharp, Version=0.0.0.0, Culture=neutral">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\Programme\FWTools1.2.0\csharp\gdal_csharp.dll</HintPath>
+      <HintPath>..\ExternalReferences\References4SharpMap.Extensions\gdal_csharp.dll</HintPath>
+    </Reference>
+    <Reference Include="GeoAPI, Version=1.0.0.0, Culture=neutral, PublicKeyToken=a1a0da7def465678, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\ExternalReferences\References4SharpMap.Extensions\GeoAPI.dll</HintPath>
     </Reference>
     <Reference Include="Mono.Security, Version=2.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>bin\Debug\Mono.Security.dll</HintPath>
+      <HintPath>..\ExternalReferences\References4SharpMap.Extensions\Mono.Security.dll</HintPath>
     </Reference>
     <Reference Include="NetTopologySuite, Version=1.7.1.29911, Culture=neutral, PublicKeyToken=f580a05016ebada1, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>bin\Debug\NetTopologySuite.dll</HintPath>
+      <HintPath>..\ExternalReferences\NetTopologySuite.dll</HintPath>
     </Reference>
     <Reference Include="Npgsql, Version=0.99.3.0, Culture=neutral, PublicKeyToken=5d8b90d52f46fda7, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>bin\Debug\Npgsql.dll</HintPath>
+      <HintPath>..\ExternalReferences\References4SharpMap.Extensions\Npgsql.dll</HintPath>
     </Reference>
     <Reference Include="ogr_csharp, Version=0.0.0.0, Culture=neutral">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\Programme\FWTools1.2.0\csharp\ogr_csharp.dll</HintPath>
+      <HintPath>..\ExternalReferences\References4SharpMap.Extensions\ogr_csharp.dll</HintPath>
     </Reference>
     <Reference Include="Oracle.DataAccess, Version=2.102.2.10, Culture=neutral, PublicKeyToken=89b483f429c47342, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>bin\Debug\Oracle.DataAccess.dll</HintPath>
+      <HintPath>..\ExternalReferences\References4SharpMap.Extensions\Oracle.DataAccess.dll</HintPath>
     </Reference>
     <Reference Include="osr_csharp, Version=0.0.0.0, Culture=neutral">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\Programme\FWTools1.2.0\csharp\osr_csharp.dll</HintPath>
+      <HintPath>..\ExternalReferences\References4SharpMap.Extensions\osr_csharp.dll</HintPath>
     </Reference>
     <Reference Include="PostgreSql.Data.PostgreSqlClient, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>bin\Debug\PostgreSql.Data.PostgreSqlClient.dll</HintPath>
+      <HintPath>..\ExternalReferences\References4SharpMap.Extensions\PostgreSql.Data.PostgreSqlClient.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
