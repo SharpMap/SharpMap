@@ -34,9 +34,9 @@
     <DocumentationFile>bin\Release\SharpMap.XML</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="SharpMap.CoordinateSystems, Version=0.9.0.32201, Culture=neutral, PublicKeyToken=a1f5bdcd9c6f5740, processorArchitecture=MSIL">
+    <Reference Include="SharpMap.CoordinateSystems, Version=0.9.0.38130, Culture=neutral, PublicKeyToken=a1f5bdcd9c6f5740, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>G:\Entwicklung\SharpMapCS-3646\SharpMap.CoordinateSystems\bin\Debug\SharpMap.CoordinateSystems.dll</HintPath>
+      <HintPath>..\ExternalReferences\SharpMap.CoordinateSystems.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
