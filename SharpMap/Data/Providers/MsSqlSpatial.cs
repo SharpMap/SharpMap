@@ -44,16 +44,16 @@ namespace SharpMap.Data.Providers
 		/// <summary>
 		/// Initializes a new connection to MsSqlSpatial
 		/// </summary>
-		/// <param name="ConnectionStr">Connectionstring</param>
-		/// <param name="tablename">Name of data table</param>
+		/// <param name="connectionString">Connectionstring</param>
+		/// <param name="tableName">Name of data table</param>
 		/// <param name="geometryColumnName">Name of geometry column</param>
-		/// /// <param name="OID_ColumnName">Name of column with unique identifier</param>
-		public MsSqlSpatial(string ConnectionStr, string tablename, string geometryColumnName, string OID_ColumnName)
+		/// /// <param name="identifierColumnName">Name of column with unique identifier</param>
+		public MsSqlSpatial(string connectionString, string tableName, string geometryColumnName, string identifierColumnName)
 		{
-			this.ConnectionString = ConnectionStr;
-			this.Table = tablename;
+			this.ConnectionString = connectionString;
+			this.Table = tableName;
 			this.GeometryColumn = geometryColumnName;
-			this.ObjectIdColumn = OID_ColumnName;
+			this.ObjectIdColumn = identifierColumnName;
 		}
 
 		/// <summary>
@@ -62,7 +62,8 @@ namespace SharpMap.Data.Providers
 		/// <param name="ConnectionStr">Connectionstring</param>
 		/// <param name="tablename">Name of data table</param>
 		/// <param name="OID_ColumnName">Name of column with unique identifier</param>
-		public MsSqlSpatial(string ConnectionStr, string tablename, string OID_ColumnName) : this(ConnectionStr,tablename,"",OID_ColumnName)
+		public MsSqlSpatial(string connectionString, string tableName, string identifierColumnName)
+			: this(connectionString, tableName, "", identifierColumnName)
 		{
 			this.GeometryColumn = this.GetGeometryColumn();
 		}
@@ -183,8 +184,18 @@ namespace SharpMap.Data.Providers
 			set { _GeometryExpression = value; }
 		}
 
-		private string _ObjectIdColumn;
+		private string _FeatureColumns = "*";
+		/// <summary>
+		/// List of columns or T-SQL expressions separated by comma.
+		/// Using "*" (the value by default), all columns are selected.
+		/// </summary>
+		public string FeatureColumns
+		{
+			get { return _FeatureColumns; }
+			set { _FeatureColumns = value; }
+		}
 
+		private string _ObjectIdColumn;
 		/// <summary>
 		/// Name of column that contains the Object ID
 		/// </summary>
@@ -193,7 +204,49 @@ namespace SharpMap.Data.Providers
 			get { return _ObjectIdColumn; }
 			set { _ObjectIdColumn = value; }
 		}
-	
+
+		private string _DefinitionQuery = String.Empty;
+		/// <summary>
+		/// Definition query used for limiting dataset (WHERE clause)
+		/// </summary>
+		public string DefinitionQuery
+		{
+			get { return _DefinitionQuery; }
+			set { _DefinitionQuery = value; }
+		}
+
+		private string _OrderQuery = String.Empty;
+		/// <summary>
+		/// Columns or T-SQL expressions for sorting (ORDER BY clause)
+		/// </summary>
+		public string OrderQuery
+		{
+			get { return _OrderQuery; }
+			set { _OrderQuery = value; }
+		}
+
+
+		private int _TargetSRID = -1;
+		/// <summary>
+		/// The target spatial reference ID (SRID). 
+		/// It allows on-the-fly transformations in the server-side.
+		/// </summary>
+		public int TargetSRID
+		{
+			get { return _TargetSRID; }
+			set { _TargetSRID = value; }
+		}
+
+		private string TargetGeometryColumn
+		{
+			get
+			{
+				if (this.SRID > 0 && this.TargetSRID > 0 && this.SRID != this.TargetSRID)
+					return "ST.Transform(" + this.GeometryColumn + "," + this.TargetSRID + ")";
+				else
+					return this.GeometryColumn;
+			}
+		}
 
 		/// <summary>
 		/// Returns geometries within the specified bounding box
@@ -208,8 +261,11 @@ namespace SharpMap.Data.Providers
 				string strSQL = "SELECT ST.AsBinary(" + this.BuildGeometryExpression() + ") ";
 				strSQL += "FROM ST.FilterQuery" + this.BuildSpatialQuerySuffix() + "(" + this.BuildEnvelope(bbox) + ")";
 
-				if (!String.IsNullOrEmpty(_definitionQuery))
+				if (!String.IsNullOrEmpty(this.DefinitionQuery))
 					strSQL += " WHERE " + this.DefinitionQuery;
+
+				if (!String.IsNullOrEmpty(this.OrderQuery))
+					strSQL += " ORDER BY " + this.OrderQuery;
 
 				using (SqlCommand command = new SqlCommand(strSQL, conn))
 				{
@@ -240,7 +296,7 @@ namespace SharpMap.Data.Providers
 		public SharpMap.Geometries.Geometry GetGeometryByID(uint oid)
 		{
 			SharpMap.Geometries.Geometry geom = null;
-			using (SqlConnection conn = new SqlConnection(_ConnectionString))
+			using (SqlConnection conn = new SqlConnection(this.ConnectionString))
 			{
 				string strSQL = "SELECT ST.AsBinary(" + this.BuildGeometryExpression() + ") AS Geom FROM " + this.Table + " WHERE " + this.ObjectIdColumn + "='" + oid.ToString() + "'";
 				conn.Open();
@@ -267,12 +323,15 @@ namespace SharpMap.Data.Providers
 		public Collection<uint> GetObjectIDsInView(SharpMap.Geometries.BoundingBox bbox)
 		{
 			Collection<uint> objectlist = new Collection<uint>();
-			using (SqlConnection conn = new SqlConnection(_ConnectionString))
+			using (SqlConnection conn = new SqlConnection(this.ConnectionString))
 			{
 				string strSQL = "SELECT * FROM ST.FilterQuery('" + this.Table + "', '" + this.GeometryColumn + "', " + this.BuildEnvelope(bbox) + ")";
 
-				if (!String.IsNullOrEmpty(_definitionQuery))
+				if (!String.IsNullOrEmpty(this.DefinitionQuery))
 					strSQL += " WHERE " + this.DefinitionQuery;
+
+				if (!String.IsNullOrEmpty(this.OrderQuery))
+					strSQL += " ORDER BY " + this.OrderQuery;
 
 				using (SqlCommand command = new SqlCommand(strSQL, conn))
 				{
@@ -304,15 +363,22 @@ namespace SharpMap.Data.Providers
 		public SharpMap.Data.FeatureDataTable QueryFeatures(SharpMap.Geometries.Geometry geom, double distance)
 		{
 			//List<Geometries.Geometry> features = new List<SharpMap.Geometries.Geometry>();
-			using (SqlConnection conn = new SqlConnection(_ConnectionString))
+			using (SqlConnection conn = new SqlConnection(this.ConnectionString))
 			{
-				string strGeom = "ST.GeomFromText('" + geom.AsText() + "', " + this.SRID.ToString() + ")";
+				string strGeom;
+				if (this.TargetSRID > 0 && this.SRID > 0 && this.SRID != this.TargetSRID)
+					strGeom = "ST.Transform(ST.GeomFromText('" + geom.AsText() + "'," + this.TargetSRID.ToString() + ")," + this.SRID.ToString() + ")";
+				else
+					strGeom = "ST.GeomFromText('" + geom.AsText() + "', " + this.SRID.ToString() + ")";
 
-				string strSQL = "SELECT *, ST.AsBinary(" + this.BuildGeometryExpression() + ") As sharpmap_tempgeometry ";
+				string strSQL = "SELECT " + this.FeatureColumns + ", ST.AsBinary(" + this.BuildGeometryExpression() + ") As sharpmap_tempgeometry ";
 				strSQL += "FROM ST.IsWithinDistanceQuery" + this.BuildSpatialQuerySuffix() + "(" + strGeom + ", " + distance.ToString(Map.numberFormat_EnUS) + ")";
 
-				if (!String.IsNullOrEmpty(_definitionQuery))
+				if (!String.IsNullOrEmpty(this.DefinitionQuery))
 					strSQL += " WHERE " + this.DefinitionQuery;
+
+				if (!String.IsNullOrEmpty(this.OrderQuery))
+					strSQL += " ORDER BY " + this.OrderQuery;
 
 				using (SqlDataAdapter adapter = new SqlDataAdapter(strSQL, conn))
 				{
@@ -351,15 +417,22 @@ namespace SharpMap.Data.Providers
 		public void ExecuteIntersectionQuery(SharpMap.Geometries.Geometry geom, FeatureDataSet ds)
 		{
 			List<Geometries.Geometry> features = new List<SharpMap.Geometries.Geometry>();
-			using (SqlConnection conn = new SqlConnection(_ConnectionString))
+			using (SqlConnection conn = new SqlConnection(this.ConnectionString))
 			{
-				string strGeom = "ST.GeomFromText('" + geom.AsText() + "', " + this.SRID.ToString() + ")";
+				string strGeom;
+				if (this.TargetSRID > 0 && this.SRID > 0 && this.SRID != this.TargetSRID)
+					strGeom = "ST.Transform(ST.GeomFromText('" + geom.AsText() + "'," + this.TargetSRID.ToString() + ")," + this.SRID.ToString() + ")";
+				else
+					strGeom = "ST.GeomFromText('" + geom.AsText() + "', " + this.SRID.ToString() + ")";
 
-				string strSQL = "SELECT *, ST.AsBinary(" + this.BuildGeometryExpression() + ") As sharpmap_tempgeometry ";
+				string strSQL = "SELECT " + this.FeatureColumns + ", ST.AsBinary(" + this.BuildGeometryExpression() + ") As sharpmap_tempgeometry ";
 				strSQL += "FROM ST.RelateQuery" + this.BuildSpatialQuerySuffix() + "(" + strGeom + ", 'intersects')";
 
-				if (!String.IsNullOrEmpty(_definitionQuery))
+				if (!String.IsNullOrEmpty(this.DefinitionQuery))
 					strSQL += " WHERE " + this.DefinitionQuery;
+
+				if (!String.IsNullOrEmpty(this.OrderQuery))
+					strSQL += " ORDER BY " + this.OrderQuery;
 
 				using (SqlDataAdapter adapter = new SqlDataAdapter(strSQL, conn))
 				{
@@ -389,24 +462,6 @@ namespace SharpMap.Data.Providers
 		}
 
 		/// <summary>
-		/// Convert WellKnownText to linestrings
-		/// </summary>
-		/// <param name="WKT"></param>
-		/// <returns></returns>
-		private SharpMap.Geometries.LineString WktToLineString(string WKT)
-		{
-			SharpMap.Geometries.LineString line = new SharpMap.Geometries.LineString();
-			WKT = WKT.Substring(WKT.LastIndexOf('(') + 1).Split(')')[0];
-			string[] strPoints = WKT.Split(',');
-			foreach (string strPoint in strPoints)
-			{
-				string[] coord = strPoint.Split(' ');
-				line.Vertices.Add(new SharpMap.Geometries.Point(double.Parse(coord[0], SharpMap.Map.numberFormat_EnUS), double.Parse(coord[1], SharpMap.Map.numberFormat_EnUS)));
-			}
-			return line;
-		}
-
-		/// <summary>
 		/// Returns the number of features in the dataset
 		/// </summary>
 		/// <returns>number of features</returns>
@@ -416,7 +471,7 @@ namespace SharpMap.Data.Providers
 			using (SqlConnection conn = new SqlConnection(_ConnectionString))
 			{
 				string strSQL = "SELECT COUNT(*) FROM " + this.Table;
-				if (!String.IsNullOrEmpty(_definitionQuery))
+				if (!String.IsNullOrEmpty(this.DefinitionQuery))
 					strSQL += " WHERE " + this.DefinitionQuery;
 				using (SqlCommand command = new SqlCommand(strSQL, conn))
 				{
@@ -429,17 +484,6 @@ namespace SharpMap.Data.Providers
 		}
 
 		#region IProvider Members
-
-		private string _definitionQuery;
-
-		/// <summary>
-		/// Definition query used for limiting dataset
-		/// </summary>
-		public string DefinitionQuery
-		{
-			get { return _definitionQuery; }
-			set { _definitionQuery = value; }
-		}
 
 		/// <summary>
 		/// Gets a collection of columns in the dataset
@@ -570,7 +614,7 @@ namespace SharpMap.Data.Providers
 		{
 			using (SqlConnection conn = new SqlConnection(_ConnectionString))
 			{
-				string strSQL = "select * , ST.AsBinary(" + this.BuildGeometryExpression() + ") As sharpmap_tempgeometry from " + this.Table + " WHERE " + this.ObjectIdColumn + "='" + RowID.ToString() + "'";
+				string strSQL = "select " + this.FeatureColumns + ", ST.AsBinary(" + this.BuildGeometryExpression() + ") As sharpmap_tempgeometry from " + this.Table + " WHERE " + this.ObjectIdColumn + "='" + RowID.ToString() + "'";
 				using (SqlDataAdapter adapter = new SqlDataAdapter(strSQL, conn))
 				{
 					FeatureDataSet ds = new FeatureDataSet();
@@ -659,11 +703,14 @@ namespace SharpMap.Data.Providers
 			List<Geometries.Geometry> features = new List<SharpMap.Geometries.Geometry>();
 			using (SqlConnection conn = new SqlConnection(_ConnectionString))
 			{
-				string strSQL = "SELECT *, ST.AsBinary(" + this.BuildGeometryExpression() + ") AS sharpmap_tempgeometry ";
+				string strSQL = "SELECT " + this.FeatureColumns + ", ST.AsBinary(" + this.BuildGeometryExpression() + ") AS sharpmap_tempgeometry ";
 				strSQL += "FROM ST.FilterQuery" + this.BuildSpatialQuerySuffix() + "(" + this.BuildEnvelope(bbox) + ")";
 
-				if (!String.IsNullOrEmpty(_definitionQuery))
+				if (!String.IsNullOrEmpty(this.DefinitionQuery))
 					strSQL += " WHERE " + this.DefinitionQuery;
+
+				if (!String.IsNullOrEmpty(this.OrderQuery))
+					strSQL += " ORDER BY " + this.OrderQuery;
 
 				using (SqlDataAdapter adapter = new SqlDataAdapter(strSQL, conn))
 				{
@@ -713,13 +760,23 @@ namespace SharpMap.Data.Providers
 
 		private string BuildGeometryExpression()
 		{
-			return string.Format(this.GeometryExpression, this.GeometryColumn);
+			return string.Format(this.GeometryExpression, this.TargetGeometryColumn);
 		}
 
 		private string BuildEnvelope(SharpMap.Geometries.BoundingBox bbox)
 		{
-			return string.Format(SharpMap.Map.numberFormat_EnUS,
-				"ST.MakeEnvelope({0},{1},{2},{3},{4})",
+			if (this.TargetSRID > 0 && this.SRID > 0 && this.SRID != this.TargetSRID)
+				return string.Format(SharpMap.Map.numberFormat_EnUS,
+					"ST.Transform(ST.MakeEnvelope({0},{1},{2},{3},{4}),{5})",
+						bbox.Min.X,
+						bbox.Min.Y,
+						bbox.Max.X,
+						bbox.Max.Y,
+						this.TargetSRID,
+						this.SRID);
+			else
+				return string.Format(SharpMap.Map.numberFormat_EnUS, 
+					"ST.MakeEnvelope({0},{1},{2},{3},{4})",
 					bbox.Min.X,
 					bbox.Min.Y,
 					bbox.Max.X,
