@@ -204,21 +204,25 @@ namespace SharpMap.Data
 		public FeatureDataTable(DataTable table)
 			: base(table.TableName)
 		{
-			if ((table.CaseSensitive != table.DataSet.CaseSensitive))
-			{
-				this.CaseSensitive = table.CaseSensitive;
-			}
-			if ((table.Locale.ToString() != table.DataSet.Locale.ToString()))
-			{
-				this.Locale = table.Locale;
-			}
-			if ((table.Namespace != table.DataSet.Namespace))
-			{
-				this.Namespace = table.Namespace;
-			}
-			this.Prefix = table.Prefix;
-			this.MinimumCapacity = table.MinimumCapacity;
-			this.DisplayExpression = table.DisplayExpression;
+            if (table.DataSet != null)
+            {
+                if ((table.CaseSensitive != table.DataSet.CaseSensitive))
+                {
+                    CaseSensitive = table.CaseSensitive;
+                }
+                if ((table.Locale.ToString() != table.DataSet.Locale.ToString()))
+                {
+                    Locale = table.Locale;
+                }
+                if ((table.Namespace != table.DataSet.Namespace))
+                {
+                    Namespace = table.Namespace;
+                }
+            }
+
+			Prefix = table.Prefix;
+			MinimumCapacity = table.MinimumCapacity;
+			DisplayExpression = table.DisplayExpression;
 		}
 
 		/// <summary>
@@ -395,14 +399,14 @@ namespace SharpMap.Data
 			}
 		}
 
-		/// <summary>
-		/// Gets the collection of rows that belong to this table.
-		/// </summary>
-		public new DataRowCollection Rows
-		{
-			get { throw (new NotSupportedException()); }
-			set { throw (new NotSupportedException()); }
-		}
+        ///// <summary>
+        ///// Gets the collection of rows that belong to this table.
+        ///// </summary>
+        //public new DataRowCollection Rows
+        //{
+        //    get { throw (new NotSupportedException()); }
+        //    set { throw (new NotSupportedException()); }
+        //}
 
 		/// <summary>
 		/// Removes the row from the table

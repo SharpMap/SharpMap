@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>8.0.50727</ProductVersion>
+    <ProductVersion>9.0.20706</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{0C76DD99-AC5D-47C0-B76F-CE70092A9AC7}</ProjectGuid>
     <OutputType>Library</OutputType>
@@ -64,14 +64,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SharpMap\SharpMap.csproj">
-      <Project>{C9AFC8FB-F41C-4308-9C57-6EEFFDF005B3}</Project>
-      <Name>SharpMap</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="Converters\WKB\WKBTests.cs" />
     <Compile Include="Converters\WKT\WktGeometryTests.cs" />
+    <Compile Include="Data\Providers\DataTablePointTests.cs" />
     <Compile Include="Geometries\BoundingBoxTests.cs" />
     <Compile Include="Geometries\LinestringTests.cs" />
     <Compile Include="Geometries\MultiLinestringsTests.cs" />
@@ -79,5 +74,15 @@
     <Compile Include="Geometries\PolygonTests.cs" />
     <Compile Include="MapTest.cs" />
     <Compile Include="TestWmsCapabilityParser.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SharpMap.Extensions\SharpMap.Extensions.VS2008.csproj">
+      <Project>{A4140C12-53F5-438C-8D24-9E48C504FECF}</Project>
+      <Name>SharpMap.Extensions.VS2008</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SharpMap\SharpMap.VS2008.csproj">
+      <Project>{C83777FC-AABB-47D9-911F-D76255D4D541}</Project>
+      <Name>SharpMap.VS2008</Name>
+    </ProjectReference>
   </ItemGroup>
 </Project>

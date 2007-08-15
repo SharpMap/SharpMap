@@ -63,6 +63,7 @@
   <ItemGroup>
     <Compile Include="Converters\WKB\WKBTests.cs" />
     <Compile Include="Converters\WKT\WktGeometryTests.cs" />
+    <Compile Include="Data\Providers\DataTablePointTests.cs" />
     <Compile Include="Geometries\BoundingBoxTests.cs" />
     <Compile Include="Geometries\LinestringTests.cs" />
     <Compile Include="Geometries\MultiLinestringsTests.cs" />

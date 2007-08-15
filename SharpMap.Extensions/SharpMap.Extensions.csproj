@@ -79,6 +79,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Data\Providers\DataTablePoint.cs" />
     <Compile Include="Data\Providers\NtsGeometryConverter.cs" />
     <Compile Include="Data\Providers\NtsProvider.cs" />
     <Compile Include="Data\Providers\OgrProvider.cs" />
