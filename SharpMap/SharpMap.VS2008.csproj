@@ -2,7 +2,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>8.0.50727</ProductVersion>
+    <ProductVersion>9.0.20706</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{C83777FC-AABB-47D9-911F-D76255D4D541}</ProjectGuid>
     <OutputType>Library</OutputType>
@@ -97,6 +97,7 @@
     <Compile Include="Geometries\Polygon.cs" />
     <Compile Include="Geometries\SpatialRelations.cs" />
     <Compile Include="Geometries\Surface.cs" />
+    <Compile Include="Layers\DuplicateLayerException.cs" />
     <Compile Include="Layers\iLayer.cs" />
     <Compile Include="Layers\LabelLayer.cs" />
     <Compile Include="Layers\Layer.cs" />
