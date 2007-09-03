@@ -70,8 +70,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ExternalReferences", "Exter
 		ExternalReferences\NetTopologySuite.dll = ExternalReferences\NetTopologySuite.dll
 		ExternalReferences\nunit.framework.dll = ExternalReferences\nunit.framework.dll
 		ExternalReferences\nunit.framework.xml = ExternalReferences\nunit.framework.xml
-		ExternalReferences\SharpMap.CoordinateSystems.dll = ExternalReferences\SharpMap.CoordinateSystems.dll
-		ExternalReferences\SharpMap.CoordinateSystems.XML = ExternalReferences\SharpMap.CoordinateSystems.XML
+		ExternalReferences\ProjNET.dll = ExternalReferences\ProjNET.dll
+		ExternalReferences\ProjNET.XML = ExternalReferences\ProjNET.XML
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "References4SharpMap.Extensions", "References4SharpMap.Extensions", "{AFA0024B-50B7-4CA3-84DC-EC0CA7109492}"
@@ -111,14 +111,14 @@ Global
 		SccProjectUniqueName4 = DemoWinForm\\DemoWinForm.csproj
 		SccProjectName4 = DemoWinForm
 		SccLocalPath4 = DemoWinForm
-		SccWebProject5 = true
-		SccProjectUniqueName5 = DemoWebSite
-		SccProjectName5 = DemoWebSite
-		SccLocalPath5 = DemoWebSite
-		SccProjectEnlistmentChoice5 = 2
-		SccProjectUniqueName6 = SharpMap\\SharpMap.csproj
-		SccProjectName6 = SharpMap
-		SccLocalPath6 = SharpMap
+		SccProjectUniqueName5 = SharpMap\\SharpMap.csproj
+		SccProjectName5 = SharpMap
+		SccLocalPath5 = SharpMap
+		SccWebProject6 = true
+		SccProjectUniqueName6 = DemoWebSite
+		SccProjectName6 = DemoWebSite
+		SccLocalPath6 = DemoWebSite
+		SccProjectEnlistmentChoice6 = 2
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|.NET = Debug|.NET
