@@ -91,6 +91,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "References4SharpMap.Extensi
 		ExternalReferences\References4SharpMap.Extensions\OraOps10w.dll = ExternalReferences\References4SharpMap.Extensions\OraOps10w.dll
 		ExternalReferences\References4SharpMap.Extensions\osr_csharp.dll = ExternalReferences\References4SharpMap.Extensions\osr_csharp.dll
 		ExternalReferences\References4SharpMap.Extensions\PostgreSql.Data.PostgreSqlClient.dll = ExternalReferences\References4SharpMap.Extensions\PostgreSql.Data.PostgreSqlClient.dll
+		ExternalReferences\References4SharpMap.Extensions\System.Data.SQLite.DLL = ExternalReferences\References4SharpMap.Extensions\System.Data.SQLite.DLL
+		ExternalReferences\References4SharpMap.Extensions\System.Data.SQLite.XML = ExternalReferences\References4SharpMap.Extensions\System.Data.SQLite.XML
 	EndProjectSection
 EndProject
 Global
