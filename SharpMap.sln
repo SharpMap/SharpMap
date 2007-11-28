@@ -19,13 +19,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "UnitTests\Unit
 		Release.AspNetCompiler.Debug = "False"
 	EndProjectSection
 EndProject
-Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "E:\...\DemoWebSite\", "DemoWebSite", "{32ECD993-CB5A-4AD9-8C8F-45C73A088C13}"
+Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "G:\...\DemoWebSite\", "DemoWebSite", "{32ECD993-CB5A-4AD9-8C8F-45C73A088C13}"
 	ProjectSection(WebsiteProperties) = preProject
 		SccProjectName = "SAK"
 		SccAuxPath = "SAK"
 		SccLocalPath = "SAK"
 		SccProvider = "SAK"
-		ProjectReferences = "{C83777FC-AABB-47D9-911F-D76255D4D541}|SharpMap.dll;{DD1CC1DB-4BF9-4C88-A100-733D84795F3A}|SharpMap.UI.dll;"
+		ProjectReferences = "{C83777FC-AABB-47D9-911F-D76255D4D541}|SharpMap.dll;{DD1CC1DB-4BF9-4C88-A100-733D84795F3A}|SharpMap.UI.dll;{A4140C12-53F5-438C-8D24-9E48C504FECF}|SharpMap.Extensions.dll;"
 		Debug.AspNetCompiler.VirtualPath = "/DemoWebSite"
 		Debug.AspNetCompiler.PhysicalPath = "DemoWebSite\"
 		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\DemoWebSite\"
@@ -80,16 +80,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "References4SharpMap.Extensi
 		Release.AspNetCompiler.Debug = "False"
 	EndProjectSection
 	ProjectSection(SolutionItems) = preProject
-		ExternalReferences\References4SharpMap.Extensions\gdal_csharp.dll = ExternalReferences\References4SharpMap.Extensions\gdal_csharp.dll
-		ExternalReferences\References4SharpMap.Extensions\gdalconst_csharp.dll = ExternalReferences\References4SharpMap.Extensions\gdalconst_csharp.dll
+		..\..\GdalWrapper4SharpMap\gdal_managed.dll = ..\..\GdalWrapper4SharpMap\gdal_managed.dll
 		ExternalReferences\References4SharpMap.Extensions\GeoAPI.dll = ExternalReferences\References4SharpMap.Extensions\GeoAPI.dll
 		ExternalReferences\References4SharpMap.Extensions\Mono.Security.dll = ExternalReferences\References4SharpMap.Extensions\Mono.Security.dll
 		ExternalReferences\References4SharpMap.Extensions\Npgsql.dll = ExternalReferences\References4SharpMap.Extensions\Npgsql.dll
 		ExternalReferences\References4SharpMap.Extensions\Npgsql.xml = ExternalReferences\References4SharpMap.Extensions\Npgsql.xml
-		ExternalReferences\References4SharpMap.Extensions\ogr_csharp.dll = ExternalReferences\References4SharpMap.Extensions\ogr_csharp.dll
 		ExternalReferences\References4SharpMap.Extensions\Oracle.DataAccess.dll = ExternalReferences\References4SharpMap.Extensions\Oracle.DataAccess.dll
 		ExternalReferences\References4SharpMap.Extensions\OraOps10w.dll = ExternalReferences\References4SharpMap.Extensions\OraOps10w.dll
-		ExternalReferences\References4SharpMap.Extensions\osr_csharp.dll = ExternalReferences\References4SharpMap.Extensions\osr_csharp.dll
 		ExternalReferences\References4SharpMap.Extensions\PostgreSql.Data.PostgreSqlClient.dll = ExternalReferences\References4SharpMap.Extensions\PostgreSql.Data.PostgreSqlClient.dll
 		ExternalReferences\References4SharpMap.Extensions\System.Data.SQLite.DLL = ExternalReferences\References4SharpMap.Extensions\System.Data.SQLite.DLL
 		ExternalReferences\References4SharpMap.Extensions\System.Data.SQLite.XML = ExternalReferences\References4SharpMap.Extensions\System.Data.SQLite.XML

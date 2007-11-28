@@ -26,6 +26,8 @@
 						<a href="Gradient.aspx">Gradient</a>
 						<a href="PieCharts.aspx">Pie Charts</a>
 						<a href="Ajax.aspx">AJAX</a>
+						<h2>Extensions</h2>
+						<a href="MapInfo.aspx">MapInfo</a>
 						<h2>WMS</h2>
 						<a href="wmsclient.aspx">WMS Client</a>
 						<a target="_blank" href="wms.ashx?SERVICE=WMS&REQUEST=GetCapabilities">WMS Server Capabilites</a>
