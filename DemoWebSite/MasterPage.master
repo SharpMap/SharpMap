@@ -26,6 +26,7 @@
 						<a href="Gradient.aspx">Gradient</a>
 						<a href="PieCharts.aspx">Pie Charts</a>
 						<a href="Ajax.aspx">AJAX</a>
+						<a href="GeometryFeature.aspx">Geometry Feature Provider</a>
 						<h2>Extensions</h2>
 						<a href="MapInfo.aspx">MapInfo</a>
 						<h2>WMS</h2>

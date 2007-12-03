@@ -60,6 +60,7 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Data\Providers\DbaseReader.cs" />
+    <Compile Include="Data\Providers\GeometryFeatureProvider.cs" />
     <Compile Include="Data\Providers\GeometryProvider.cs" />
     <Compile Include="Data\Providers\iProvider.cs" />
     <Compile Include="Data\Providers\MsSql.cs" />

@@ -21,7 +21,7 @@
 
 
 <p>
-	<a href="bins.aspx">/bins.aspx</a><br/>
+	<a href="Bins.aspx">/Bins.aspx</a><br/>
 	Renders the colors based on a custom delegate
 </p>
 
@@ -31,8 +31,14 @@
 </p>
 
 <p>
-	<a href="ajax.aspx">/ajax.aspx</a><br/>
+	<a href="Ajax.aspx">/Ajax.aspx</a><br/>
 	AJAX style zooming and panning
+</p>
+
+<p>
+	<a href="GeometryFeature.aspx">/GeometryFeature.aspx</a><br/>
+	Shows how to add some custom geometries with features via the GeometryFeatureProvider class.<br />
+	This map is centered to Mayence/Germany, my home town since 4 years.
 </p>
 
 <p>
