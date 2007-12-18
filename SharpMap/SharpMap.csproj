@@ -95,6 +95,7 @@
     <Compile Include="Layers\Layer.cs" />
     <Compile Include="Layers\LayerCollection.cs" />
     <Compile Include="Layers\LayerGroup.cs" />
+    <Compile Include="Layers\TiledWmsLayer.cs" />
     <Compile Include="Layers\VectorLayer.cs" />
     <Compile Include="Layers\WmsLayer.cs" />
     <Compile Include="Map\Map.cs" />
@@ -123,6 +124,10 @@
     <Compile Include="Web\HttpHandler.cs" />
     <Compile Include="Web\Wms\Capabilities.cs" />
     <Compile Include="Web\Wms\Client.cs" />
+    <Compile Include="Web\Wms\Tiling\ITileCache.cs" />
+    <Compile Include="Web\Wms\Tiling\TileCacheFileStorage.cs" />
+    <Compile Include="Web\Wms\Tiling\TileExtents.cs" />
+    <Compile Include="Web\Wms\Tiling\TileSet.cs" />
     <Compile Include="Web\Wms\WmsException.cs" />
     <Compile Include="Web\Wms\WmsServer.cs" />
   </ItemGroup>

@@ -179,6 +179,18 @@ namespace SharpMap.Web.Wms
 		}
 		#endregion
 
+
+    private XmlNode _VendorSpecificCapabilities;
+
+    /// <summary>
+    /// Exposes the capabilitie's VendorSpecificCapabilities as XmlNode object. External modules 
+    /// could use this to parse the vendor specific capabilities for their specific purpose.
+    /// </summary>
+    public XmlNode VendorSpecificCapabilities
+    {
+      get { return _VendorSpecificCapabilities; }
+    }
+
 		/// <summary>
 		/// Initalizes WMS server and parses the Capabilities request
 		/// </summary>
@@ -218,20 +230,23 @@ namespace SharpMap.Web.Wms
 		{
 			try
 			{
-				System.Net.WebRequest myRequest = System.Net.WebRequest.Create(Url);
+				System.Net.WebRequest myRequest;
+        myRequest = System.Net.WebRequest.Create(Url);
 				if (proxy != null) myRequest.Proxy = proxy;
 				System.Net.WebResponse myResponse = myRequest.GetResponse();
 				System.IO.Stream stream = myResponse.GetResponseStream();
 				XmlTextReader r = new XmlTextReader(Url, stream);
+        r.XmlResolver = null;
 				XmlDocument doc = new XmlDocument();
-				doc.Load(r);
+        doc.XmlResolver = null;
+        doc.Load(r);
 				stream.Close();
 				nsmgr = new XmlNamespaceManager(doc.NameTable);
 				return doc;
 			}
 			catch (System.Exception ex)
 			{
-				throw new ApplicationException("Could now download capabilities", ex);
+				throw new ApplicationException("Could not download capabilities", ex);
 			}
 		}
 
@@ -344,6 +359,8 @@ namespace SharpMap.Web.Wms
 			XmlNode xnException = xnCapability.SelectSingleNode("sm:Exception", nsmgr);
 			if (xnException != null)
 				ParseExceptions(xnException);
+
+      _VendorSpecificCapabilities = xnCapability.SelectSingleNode("sm:VendorSpecificCapabilities", nsmgr);
 		}
 
 		/// <summary>
