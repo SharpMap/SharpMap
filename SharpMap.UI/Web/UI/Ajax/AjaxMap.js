@@ -228,23 +228,22 @@ function SharpMap_ResizeTimeout(event,obj)
 }
 
 /* Processes the response from the callback -
-   The function sets up an onload-event for when the image should start fading if dofade==1 */
-function SharpMap_GetCallbackResponse(url,obj,dofade)
-{
+   The function sets up an onload-even for when the image should start fading if dofade==1 */
+function SharpMap_GetCallbackResponse(url,obj,dofade){
 	if(url=='') return;
 	if(dofade==1)
 	{
 		var imgdnew = obj.HiddenMap();
-		imgdnew.src = url;
+		//set the onload function before setting the src
+		//Marc A. Tidd (Tidd Consulting) 01/16/2008
 		imgdnew.onload = function(){ obj.mapReady=1; imgdnew.onload=''; if(obj.zoomEnded==1) { SharpMap_BeginFade(obj); } }
-		//imgdnew.onerror = function(event) { alert('Could not load image'); imgdnew.onerror=''; }
+		imgdnew.src = url;
 	}
 	else
 	{
 		obj.VisibleMap().src = url;
 		obj.container.style.cursor = 'auto';
-		obj.VisibleMap().onload = function(){ obj.mapReady=1;  VisibleMap().onload='';}
-		//obj.VisibleMap().onerror = function(event) { alert('Could not load image: '); VisibleMap().onerror=''; }
+		obj.VisibleMap().onload = function(){ obj.mapReady=1; }
 	}
 }
 
