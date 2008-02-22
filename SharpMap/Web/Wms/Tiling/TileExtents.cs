@@ -36,22 +36,22 @@ namespace SharpMap.Web.Wms.Tiling
       tileSet.Resolutions.Sort();
 
       double tileResolution = GetTileResolution(tileSet.Resolutions, mapResolution);
-      
+
       List<BoundingBox> tileExtents = new List<BoundingBox>();
 
       double xOrigin = tileSet.BoundingBox.Left;
       double yOrigin = tileSet.BoundingBox.Bottom;
 
       double tileWorldUnits = tileResolution * tileSet.Width;
-      
+
       BoundingBox tileBbox = new BoundingBox(
-        Math.Floor  ((extent.Left   - xOrigin) / tileWorldUnits) * tileWorldUnits + xOrigin,
-        Math.Floor  ((extent.Bottom - yOrigin) / tileWorldUnits) * tileWorldUnits + yOrigin,
-        Math.Ceiling((extent.Right  - xOrigin) / tileWorldUnits) * tileWorldUnits + xOrigin,
-        Math.Ceiling((extent.Top    - yOrigin) / tileWorldUnits) * tileWorldUnits + yOrigin);
-      
-      double tileCountX = (tileBbox.Right - tileBbox.Left) / tileWorldUnits;
-      double tileCountY = (tileBbox.Top - tileBbox.Bottom) / tileWorldUnits;
+        Math.Floor((extent.Left - xOrigin) / tileWorldUnits) * tileWorldUnits + xOrigin,
+        Math.Floor((extent.Bottom - yOrigin) / tileWorldUnits) * tileWorldUnits + yOrigin,
+        Math.Ceiling((extent.Right - xOrigin) / tileWorldUnits) * tileWorldUnits + xOrigin,
+        Math.Ceiling((extent.Top - yOrigin) / tileWorldUnits) * tileWorldUnits + yOrigin);
+
+      int tileCountX = (int)Math.Round((tileBbox.Right - tileBbox.Left) / tileWorldUnits);
+      int tileCountY = (int)Math.Round((tileBbox.Top - tileBbox.Bottom) / tileWorldUnits);
 
       for (int x = 0; x < tileCountX; x++)
       {
@@ -82,10 +82,10 @@ namespace SharpMap.Web.Wms.Tiling
     /// <returns>Returns true if the tile with this extent is part of the tile collection on the server</returns>
     private static bool CheckForBounds(BoundingBox boundingBox, BoundingBox tileExtent)
     {
-      if (tileExtent.Left   < boundingBox.Left)   { return false; }
+      if (tileExtent.Left < boundingBox.Left) { return false; }
       if (tileExtent.Bottom < boundingBox.Bottom) { return false; }
-      if (tileExtent.Left   > boundingBox.Right)  { return false; }
-      if (tileExtent.Bottom > boundingBox.Top)    { return false; }
+      if (tileExtent.Left > boundingBox.Right) { return false; }
+      if (tileExtent.Bottom > boundingBox.Top) { return false; }
       return true;
     }
 

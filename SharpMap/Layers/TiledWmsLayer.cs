@@ -54,56 +54,56 @@ namespace SharpMap.Layers
     private int _TimeOut;
     private SortedList<string, TileSet> _TileSets = new SortedList<string, TileSet>();
     private Collection<string> _TileSetsActive = new Collection<string>();
-    
+
     #endregion
 
     #region Constructors
     /// <summary>
-		/// Initializes a new layer, and downloads and parses the service description
-		/// </summary>
-		/// <remarks>In and ASP.NET application the service description is automatically cached for 24 hours when not specified</remarks>
-		/// <param name="layername">Layername</param>
-		/// <param name="url">Url of WMS server's Capabilties</param>
+    /// Initializes a new layer, and downloads and parses the service description
+    /// </summary>
+    /// <remarks>In and ASP.NET application the service description is automatically cached for 24 hours when not specified</remarks>
+    /// <param name="layername">Layername</param>
+    /// <param name="url">Url of WMS server's Capabilties</param>
     public TiledWmsLayer(string layername, string url)
-			: this(layername, url, new TimeSpan(24, 0, 0))
-		{
-		}
-    
+      : this(layername, url, new TimeSpan(24, 0, 0))
+    {
+    }
+
     /// <summary>
-		/// Initializes a new layer, and downloads and parses the service description
-		/// </summary>
-		/// <param name="layername">Layername</param>
-		/// <param name="url">Url of WMS server's Capabilties</param>
-		/// <param name="cachetime">Time for caching Service Description (ASP.NET only)</param>
+    /// Initializes a new layer, and downloads and parses the service description
+    /// </summary>
+    /// <param name="layername">Layername</param>
+    /// <param name="url">Url of WMS server's Capabilties</param>
+    /// <param name="cachetime">Time for caching Service Description (ASP.NET only)</param>
     public TiledWmsLayer(string layername, string url, TimeSpan cachetime)
-			: this(layername, url, cachetime, null)
-		{
-		}
+      : this(layername, url, cachetime, null)
+    {
+    }
 
     /// <summary>
-		/// Initializes a new layer, and downloads and parses the service description
-		/// </summary>
-		/// <remarks>In and ASP.NET application the service description is automatically cached for 24 hours when not specified</remarks>
-		/// <param name="layername">Layername</param>
-		/// <param name="url">Url of WMS server's Capabilties</param>
-		/// <param name="proxy">Proxy</param>
-		public TiledWmsLayer(string layername, string url, System.Net.WebProxy proxy)
-			: this(layername, url, new TimeSpan(24,0,0), proxy)
-		{
-		}
+    /// Initializes a new layer, and downloads and parses the service description
+    /// </summary>
+    /// <remarks>In and ASP.NET application the service description is automatically cached for 24 hours when not specified</remarks>
+    /// <param name="layername">Layername</param>
+    /// <param name="url">Url of WMS server's Capabilties</param>
+    /// <param name="proxy">Proxy</param>
+    public TiledWmsLayer(string layername, string url, System.Net.WebProxy proxy)
+      : this(layername, url, new TimeSpan(24, 0, 0), proxy)
+    {
+    }
 
-		/// <summary>
-		/// Initializes a new layer, and downloads and parses the service description
-		/// </summary>
-		/// <param name="layername">Layername</param>
-		/// <param name="url">Url of WMS server's Capabilties</param>
-		/// <param name="cachetime">Time for caching Service Description (ASP.NET only)</param>
-		/// <param name="proxy">Proxy</param>
+    /// <summary>
+    /// Initializes a new layer, and downloads and parses the service description
+    /// </summary>
+    /// <param name="layername">Layername</param>
+    /// <param name="url">Url of WMS server's Capabilties</param>
+    /// <param name="cachetime">Time for caching Service Description (ASP.NET only)</param>
+    /// <param name="proxy">Proxy</param>
     public TiledWmsLayer(string layername, string url, TimeSpan cachetime, System.Net.WebProxy proxy)
-		{
-			_Proxy = proxy;
-			_TimeOut = 10000;
-			this.LayerName = layername;
+    {
+      _Proxy = proxy;
+      _TimeOut = 10000;
+      this.LayerName = layername;
       _ContinueOnError = true;
 
       if (System.Web.HttpContext.Current != null && System.Web.HttpContext.Current.Cache["SharpMap_WmsClient_" + url] != null)
@@ -122,9 +122,9 @@ namespace SharpMap.Layers
     }
 
     #endregion
-    
+
     #region Properties
-        
+
     /// <summary>
     /// Provides the base authentication interface for retrieving credentials for Web client authentication.
     /// </summary>
@@ -156,7 +156,7 @@ namespace SharpMap.Layers
     {
       get { return _TileSetsActive; }
     }
-        
+
     /// <summary>
     /// Gets the collection of TileSets that will be rendered
     /// </summary>
@@ -183,7 +183,7 @@ namespace SharpMap.Layers
     }
 
     #endregion
-    
+
     #region ILayer Members
 
     // <summary>
@@ -217,7 +217,7 @@ namespace SharpMap.Layers
             else
             {
               bitmap = WmsGetMap(tileExtent, tileSet);
-              if ((tileSet.TileCache != null) && (bitmap != null)) 
+              if ((tileSet.TileCache != null) && (bitmap != null))
               {
                 tileSet.TileCache.AddTile(tileExtent, bitmap);
               }
@@ -246,8 +246,12 @@ namespace SharpMap.Layers
 
               //TODO: Allow custom image attributes for each TileSet.
 
-              g.DrawImage(bitmap,
-                new Rectangle((int)Math.Round(destMin.X), (int)Math.Round(destMax.Y), (int)Math.Ceiling(destMax.X - destMin.X), (int)Math.Ceiling(destMin.Y - destMax.Y)),
+              int x = (int)Math.Round(destMin.X);
+              int y = (int)Math.Round(destMax.Y);
+              int width = (int)Math.Round(destMax.X - x);
+              int height = (int)Math.Round(destMin.Y - y);
+
+              g.DrawImage(bitmap, new Rectangle(x, y, width, height),
                 srcRect.Left, srcRect.Top, srcRect.Width, srcRect.Height,
                 GraphicsUnit.Pixel, _ImageAttributes);
 
@@ -264,18 +268,18 @@ namespace SharpMap.Layers
         }
       }
     }
-    
-		/// <summary>
-		/// Returns the extent of the layer
-		/// </summary>
-		/// <returns>Bounding box corresponding to the extent of the features in the layer</returns>
-		public override SharpMap.Geometries.BoundingBox Envelope
-		{
-			get
-			{
+
+    /// <summary>
+    /// Returns the extent of the layer
+    /// </summary>
+    /// <returns>Bounding box corresponding to the extent of the features in the layer</returns>
+    public override SharpMap.Geometries.BoundingBox Envelope
+    {
+      get
+      {
         return _WmsClient.Layer.LatLonBoundingBox; //TODO: no box is allowed in capabilities so check for it
-			}
-		}
+      }
+    }
 
     #endregion
 
@@ -314,7 +318,7 @@ namespace SharpMap.Layers
         strReq.Append("?");
       if (!strReq.ToString().EndsWith("&") && !strReq.ToString().EndsWith("?"))
         strReq.Append("&");
-           
+
       strReq.AppendFormat(SharpMap.Map.numberFormat_EnUS, "&REQUEST=GetMap&BBOX={0},{1},{2},{3}",
         box.Min.X, box.Min.Y, box.Max.X, box.Max.Y);
       strReq.AppendFormat("&WIDTH={0}&Height={1}", tileSet.Width, tileSet.Height);
@@ -326,13 +330,13 @@ namespace SharpMap.Layers
         strReq.Remove(strReq.Length - 1, 1);
       }
       strReq.AppendFormat("&FORMAT={0}", tileSet.Format);
-      
+
       if (_WmsClient.WmsVersion == "1.3.0")
         strReq.AppendFormat("&CRS={0}", tileSet.Srs);
       else
         strReq.AppendFormat("&SRS={0}", tileSet.Srs);
       strReq.AppendFormat("&VERSION={0}", _WmsClient.WmsVersion);
-      
+
       if (tileSet.Styles != null && tileSet.Styles.Count > 0)
       {
         strReq.Append("&STYLES=");
@@ -368,7 +372,7 @@ namespace SharpMap.Layers
       if (this.Credentials != null)
         webRequest.Credentials = this.Credentials;
       else
-      webRequest.Credentials = System.Net.CredentialCache.DefaultCredentials;
+        webRequest.Credentials = System.Net.CredentialCache.DefaultCredentials;
 
       if (this.Proxy != null)
         webRequest.Proxy = this.Proxy;
@@ -434,31 +438,31 @@ namespace SharpMap.Layers
       }
     }
 
-		private SharpMap.Web.Wms.Client.WmsOnlineResource GetPreferredMethod()
-		{
-			//We prefer posting. Seek for supported post method
-			for (int i = 0; i < _WmsClient.GetMapRequests.Length; i++)
-				if (_WmsClient.GetMapRequests[i].Type.ToLower() == "post")
-					return _WmsClient.GetMapRequests[i];
-			//Next we prefer the 'get' method
-			for (int i = 0; i < _WmsClient.GetMapRequests.Length; i++)
-				if (_WmsClient.GetMapRequests[i].Type.ToLower() == "get")
-					return _WmsClient.GetMapRequests[i];
-			return _WmsClient.GetMapRequests[0];
-		}
+    private SharpMap.Web.Wms.Client.WmsOnlineResource GetPreferredMethod()
+    {
+      //We prefer posting. Seek for supported post method
+      for (int i = 0; i < _WmsClient.GetMapRequests.Length; i++)
+        if (_WmsClient.GetMapRequests[i].Type.ToLower() == "post")
+          return _WmsClient.GetMapRequests[i];
+      //Next we prefer the 'get' method
+      for (int i = 0; i < _WmsClient.GetMapRequests.Length; i++)
+        if (_WmsClient.GetMapRequests[i].Type.ToLower() == "get")
+          return _WmsClient.GetMapRequests[i];
+      return _WmsClient.GetMapRequests[0];
+    }
 
-		#region ICloneable Members
+    #region ICloneable Members
 
-		/// <summary>
-		/// Clones the object
-		/// </summary>
-		/// <returns></returns>
-		public override object Clone()
-		{
-			throw new NotImplementedException();
-		}
+    /// <summary>
+    /// Clones the object
+    /// </summary>
+    /// <returns></returns>
+    public override object Clone()
+    {
+      throw new NotImplementedException();
+    }
 
-		#endregion
+    #endregion
 
 
   }
