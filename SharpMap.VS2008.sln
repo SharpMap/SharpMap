@@ -27,18 +27,18 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "References4SharpMap.Extensi
 		ExternalReferences\References4SharpMap.Extensions\PostgreSql.Data.PostgreSqlClient.dll = ExternalReferences\References4SharpMap.Extensions\PostgreSql.Data.PostgreSqlClient.dll
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpMap", "SharpMap\SharpMap.VS2008.csproj", "{C83777FC-AABB-47D9-911F-D76255D4D541}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpMap.VS2008", "SharpMap\SharpMap.VS2008.csproj", "{C83777FC-AABB-47D9-911F-D76255D4D541}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpMap.UI", "SharpMap.UI\SharpMap.UI.VS2008.csproj", "{DD1CC1DB-4BF9-4C88-A100-733D84795F3A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpMap.UI.VS2008", "SharpMap.UI\SharpMap.UI.VS2008.csproj", "{DD1CC1DB-4BF9-4C88-A100-733D84795F3A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "UnitTests\UnitTests.VS2008.csproj", "{0C76DD99-AC5D-47C0-B76F-CE70092A9AC7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests.VS2008", "UnitTests\UnitTests.VS2008.csproj", "{0C76DD99-AC5D-47C0-B76F-CE70092A9AC7}"
 EndProject
-Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "DemoWebSite", "DemoWebSite\", "{32ECD993-CB5A-4AD9-8C8F-45C73A088C13}"
+Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "DemoWebSite", "DemoWebSite", "{32ECD993-CB5A-4AD9-8C8F-45C73A088C13}"
 	ProjectSection(WebsiteProperties) = preProject
-		SccProjectName = ""
-		SccAuxPath = ""
-		SccLocalPath = ""
-		SccProvider = ""
+		SccProjectName = "SAK"
+		SccAuxPath = "SAK"
+		SccLocalPath = "SAK"
+		SccProvider = "SAK"
 		TargetFramework = "2.0"
 		ProjectReferences = "{C83777FC-AABB-47D9-911F-D76255D4D541}|SharpMap.dll;{DD1CC1DB-4BF9-4C88-A100-733D84795F3A}|SharpMap.UI.dll;"
 		Debug.AspNetCompiler.VirtualPath = "/DemoWebSite"
@@ -58,11 +58,22 @@ Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "DemoWebSite", "DemoWebSite\
 		VWDPort = "3046"
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpMap.Extensions", "SharpMap.Extensions\SharpMap.Extensions.VS2008.csproj", "{A4140C12-53F5-438C-8D24-9E48C504FECF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpMap.Extensions.VS2008", "SharpMap.Extensions\SharpMap.Extensions.VS2008.csproj", "{A4140C12-53F5-438C-8D24-9E48C504FECF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DemoWinForm", "DemoWinForm\DemoWinForm.VS2008.csproj", "{73A45373-6307-4D39-9FE9-E8803F95FAB6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DemoWinForm.VS2008", "DemoWinForm\DemoWinForm.VS2008.csproj", "{73A45373-6307-4D39-9FE9-E8803F95FAB6}"
 EndProject
 Global
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 2
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = https://tfs01.codeplex.com/
+		SccLocalPath0 = .
+		SccWebProject1 = true
+		SccProjectUniqueName1 = DemoWebSite
+		SccProjectName1 = DemoWebSite
+		SccLocalPath1 = DemoWebSite
+		SccProjectEnlistmentChoice1 = 2
+	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|.NET = Debug|.NET
 		Debug|Any CPU = Debug|Any CPU
@@ -139,31 +150,5 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{3BB63704-345C-400C-9146-0AD46859D76D} = {1EDFEF14-016A-4660-9C65-2F933B6D61F9}
 		{AFA0024B-50B7-4CA3-84DC-EC0CA7109492} = {3BB63704-345C-400C-9146-0AD46859D76D}
-	EndGlobalSection
-	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 7
-		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
-		SccTeamFoundationServer = https://tfs01.codeplex.com/
-		SccLocalPath0 = .
-		SccProjectUniqueName1 = SharpMap.UI\\SharpMap.UI.csproj
-		SccProjectName1 = SharpMap.UI
-		SccLocalPath1 = SharpMap.UI
-		SccProjectUniqueName2 = UnitTests\\UnitTests.csproj
-		SccProjectName2 = UnitTests
-		SccLocalPath2 = UnitTests
-		SccProjectUniqueName3 = SharpMap.Extensions\\SharpMap.Extensions.csproj
-		SccProjectName3 = SharpMap.Extensions
-		SccLocalPath3 = SharpMap.Extensions
-		SccProjectUniqueName4 = DemoWinForm\\DemoWinForm.csproj
-		SccProjectName4 = DemoWinForm
-		SccLocalPath4 = DemoWinForm
-		SccWebProject5 = true
-		SccProjectUniqueName5 = DemoWebSite
-		SccProjectName5 = DemoWebSite
-		SccLocalPath5 = DemoWebSite
-		SccProjectEnlistmentChoice5 = 2
-		SccProjectUniqueName6 = SharpMap\\SharpMap.csproj
-		SccProjectName6 = SharpMap
-		SccLocalPath6 = SharpMap
 	EndGlobalSection
 EndGlobal
