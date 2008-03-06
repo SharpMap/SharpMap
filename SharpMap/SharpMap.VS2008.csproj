@@ -32,6 +32,8 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <UseVSHostingProcess>true</UseVSHostingProcess>
+    <DocumentationFile>
+    </DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -104,6 +106,7 @@
     <Compile Include="Layers\Layer.cs" />
     <Compile Include="Layers\LayerCollection.cs" />
     <Compile Include="Layers\LayerGroup.cs" />
+    <Compile Include="Layers\TiledWmsLayer.cs" />
     <Compile Include="Layers\VectorLayer.cs" />
     <Compile Include="Layers\WmsLayer.cs" />
     <Compile Include="Map\Map.cs" />
@@ -132,6 +135,10 @@
     <Compile Include="Web\HttpHandler.cs" />
     <Compile Include="Web\Wms\Capabilities.cs" />
     <Compile Include="Web\Wms\Client.cs" />
+    <Compile Include="Web\Wms\Tiling\ITileCache.cs" />
+    <Compile Include="Web\Wms\Tiling\TileCacheFileStorage.cs" />
+    <Compile Include="Web\Wms\Tiling\TileExtents.cs" />
+    <Compile Include="Web\Wms\Tiling\TileSet.cs" />
     <Compile Include="Web\Wms\WmsException.cs" />
     <Compile Include="Web\Wms\WmsServer.cs" />
   </ItemGroup>
@@ -142,13 +149,15 @@
   <ItemGroup>
     <None Include="SRID.csv" />
     <EmbeddedResource Include="Web\Wms\Schemas\1.3.0\capabilities_1_3_0.xsd">
-      <SubType>Designer</SubType>
+      <SubType>
+      </SubType>
     </EmbeddedResource>
     <None Include="Web\Wms\Schemas\1.3.0\capabilities_1_3_0.xsx">
       <DependentUpon>capabilities_1_3_0.xsd</DependentUpon>
     </None>
     <EmbeddedResource Include="Web\Wms\Schemas\1.3.0\exceptions_1_3_0.xsd">
-      <SubType>Designer</SubType>
+      <SubType>
+      </SubType>
     </EmbeddedResource>
     <None Include="Web\Wms\Schemas\1.3.0\exceptions_1_3_0.xsx">
       <DependentUpon>exceptions_1_3_0.xsd</DependentUpon>
