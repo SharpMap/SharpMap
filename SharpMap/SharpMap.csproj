@@ -69,6 +69,7 @@
     <Compile Include="Data\Providers\Pooling\Connector.cs" />
     <Compile Include="Data\Providers\Pooling\ConnectorPool.cs" />
     <Compile Include="Data\Providers\ShapeFile.cs" />
+    <Compile Include="Data\Providers\WFSClient.cs" />
     <Compile Include="Geometries\BoundingBox.cs" />
     <Compile Include="Geometries\Curve.cs" />
     <Compile Include="Geometries\Geometry.cs" />
@@ -107,7 +108,8 @@
     <Compile Include="Rendering\Thematics\CustomTheme.cs" />
     <Compile Include="Rendering\Thematics\GradientTheme.cs" />
     <Compile Include="Rendering\Thematics\ITheme.cs" />
-    <Compile Include="Rendering\VectorRenderer.cs" />
+    <Compile Include="Rendering\VectorRenderer.cs">
+    </Compile>
     <Compile Include="Styles\IStyle.cs" />
     <Compile Include="Styles\LabelStyle.cs" />
     <Compile Include="Styles\Style.cs" />
@@ -120,6 +122,21 @@
     <Compile Include="Utilities\Surrogates.cs" />
     <Compile Include="Utilities\Transform.cs" />
     <Compile Include="Utilities\Version.cs" />
+    <Compile Include="Utilities\Wfs\FeatureTypeInfo.cs" />
+    <Compile Include="Utilities\Wfs\GeometryFactories.cs" />
+    <Compile Include="Utilities\Wfs\HttpClientUtil.cs" />
+    <Compile Include="Utilities\Wfs\IWFS_TextResources.cs" />
+    <Compile Include="Utilities\Wfs\IXPathQueryManager.cs" />
+    <Compile Include="Utilities\Wfs\OGCFilter_FE1_1_0.cs" />
+    <Compile Include="Utilities\Wfs\PathNode.cs" />
+    <Compile Include="Utilities\Wfs\WFS1_0_0_XPathTextResources.cs" />
+    <Compile Include="Utilities\Wfs\WFS1_1_0_XPathTextResources.cs" />
+    <Compile Include="Utilities\Wfs\WFS_1_0_0_TextResources.cs" />
+    <Compile Include="Utilities\Wfs\WFS_1_1_0_TextResources.cs" />
+    <Compile Include="Utilities\Wfs\WFS_XPathTextResourcesBase.cs" />
+    <Compile Include="Utilities\Wfs\XPathQueryManager.cs" />
+    <Compile Include="Utilities\Wfs\XPathQueryManager_CompiledExpressionsDecorator.cs" />
+    <Compile Include="Utilities\Wfs\XPathQueryManager_DecoratorBase.cs" />
     <Compile Include="Web\Cache.cs" />
     <Compile Include="Web\HttpHandler.cs" />
     <Compile Include="Web\Wms\Capabilities.cs" />
