@@ -113,10 +113,8 @@ namespace SharpMap.Utilities.Wfs
                     xWriter.WriteStartElement("GetFeature", NSWFS);
                     xWriter.WriteAttributeString("service", "WFS");
                     xWriter.WriteAttributeString("version", "1.1.0");
-                    if (!string.IsNullOrEmpty(featureTypeInfo.Prefix))
-                    {
-                      xWriter.WriteAttributeString("xmlns:" + featureTypeInfo.Prefix, featureTypeInfo.FeatureTypeNamespace); //added by PDD to get it to work for deegree default sample
-                    }
+                    if (!string.IsNullOrEmpty(featureTypeInfo.Prefix) && !string.IsNullOrEmpty(featureTypeInfo.FeatureTypeNamespace))
+                        xWriter.WriteAttributeString("xmlns:" + featureTypeInfo.Prefix, featureTypeInfo.FeatureTypeNamespace); //added by PDD to get it to work for deegree default sample
                     xWriter.WriteStartElement("Query", NSWFS);
                     xWriter.WriteAttributeString("typeName", qualification + featureTypeInfo.Name);
                     xWriter.WriteElementString("PropertyName", qualification + featureTypeInfo.Geometry._GeometryName); 
@@ -125,7 +123,10 @@ namespace SharpMap.Utilities.Wfs
                     xWriter.WriteStartElement("Filter", NSOGC);
                     if (filter != null) xWriter.WriteStartElement("And");
                     xWriter.WriteStartElement("BBOX");
-                    xWriter.WriteElementString("PropertyName", qualification + featureTypeInfo.Geometry._GeometryName); //added qualification to get it to work for deegree default sample
+                    if (!string.IsNullOrEmpty(featureTypeInfo.Prefix) && !string.IsNullOrEmpty(featureTypeInfo.FeatureTypeNamespace))
+                        xWriter.WriteElementString("PropertyName", qualification + featureTypeInfo.Geometry._GeometryName); //added qualification to get it to work for deegree default sample
+                    else
+                        xWriter.WriteElementString("PropertyName", featureTypeInfo.Geometry._GeometryName); 
                     xWriter.WriteStartElement("gml", "Envelope", NSGML);
                     xWriter.WriteAttributeString("srsName", "http://www.opengis.net/gml/srs/epsg.xml#" + featureTypeInfo.SRID);
                     xWriter.WriteElementString("lowerCorner", NSGML,
