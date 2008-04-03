@@ -1,0 +1,10 @@
+!table
+!version 300
+!charset Neutral
+
+Definition Table
+  Type NATIVE Charset "Neutral"
+  Fields 3
+    NAME Char (40) ;
+    POPULATION Float ;
+    CAPITAL Char (1) ;
