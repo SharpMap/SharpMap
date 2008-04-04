@@ -157,6 +157,26 @@ namespace SharpMap.Geometries
 			get { return _Min.Y; }
 		}
 
+    public SharpMap.Geometries.Point TopLeft
+    {
+      get { return new Point(Left, Top); }
+    }
+
+    public SharpMap.Geometries.Point TopRight
+    {
+      get { return new Point(Right, Top); }
+    }
+
+    public SharpMap.Geometries.Point BottomLeft
+    {
+      get { return new Point(Left, Bottom); }
+    }
+
+    public SharpMap.Geometries.Point BottomRight
+    {
+      get { return new Point(Right, Bottom); }
+    }
+
 		/// <summary>
 		/// Returns the width of the bounding box
 		/// </summary>

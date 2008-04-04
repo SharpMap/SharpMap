@@ -64,18 +64,18 @@ namespace SharpMap.Utilities.Wfs
             }
 
             StringBuilder filterBuilder = new StringBuilder();
-            filterBuilder.Append("&FILTER=%3CFilter%20xmlns=%22" + NSOGC + "%22%20xmlns:gml=%22" + NSGML + "%22%3E%3CAnd%3E%3CBBOX%3E%3CPropertyName%3E");
+            filterBuilder.Append("&filter=%3CFilter%20xmlns=%22" + NSOGC + "%22%20xmlns:gml=%22" + NSGML + "%22%3E%3CBBOX%3E%3CPropertyName%3E");
             filterBuilder.Append(qualification);
             filterBuilder.Append(featureTypeInfo.Geometry._GeometryName);
-            filterBuilder.Append("%3C/PropertyName%3E%3Cgml:Box%20srsName='EPSG:" + featureTypeInfo.SRID + "'%3E");
+            filterBuilder.Append("%3C/PropertyName%3E%3Cgml:Box%20srsName=%22EPSG:" + featureTypeInfo.SRID + "%22%3E");
             filterBuilder.Append("%3Cgml:coordinates%3E");
             filterBuilder.Append(System.Xml.XmlConvert.ToString(boundingBox.Left) + ",");
             filterBuilder.Append(System.Xml.XmlConvert.ToString(boundingBox.Bottom) + "%20");
             filterBuilder.Append(System.Xml.XmlConvert.ToString(boundingBox.Right) + ",");
             filterBuilder.Append(System.Xml.XmlConvert.ToString(boundingBox.Top));
-            filterBuilder.Append("%3C/gml:coordinates%3E%%3C/gml:Box%3E%%3C/BBOX%3E");
+            filterBuilder.Append("%3C/gml:coordinates%3E%3C/gml:Box%3E%3C/BBOX%3E");
             filterBuilder.Append(filterString);
-            filterBuilder.Append("%3C/And%3E%3C/Filter%3E");
+            filterBuilder.Append("%3C/Filter%3E");
 
             return "?SERVICE=WFS&Version=1.0.0&REQUEST=GetFeature&TYPENAME=" + qualification + featureTypeInfo.Name +
                    "&PROPERTYNAME=" + qualification + featureTypeInfo.Geometry._GeometryName +
@@ -107,7 +107,6 @@ namespace SharpMap.Utilities.Wfs
                     if(!string.IsNullOrEmpty(labelProperty))
                         xWriter.WriteElementString("PropertyName", qualification + labelProperty);
                     xWriter.WriteStartElement("Filter", NSOGC);
-                    if (filter != null) xWriter.WriteStartElement("And");
                     xWriter.WriteStartElement("BBOX");
                     xWriter.WriteElementString("PropertyName", featureTypeInfo.Geometry._GeometryName);
                     xWriter.WriteStartElement("gml", "Box", NSGML);

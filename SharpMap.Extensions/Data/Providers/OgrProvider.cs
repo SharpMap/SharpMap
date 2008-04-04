@@ -1,11 +1,19 @@
-/*
- * Created by SharpDevelop.
- * User: Christian
- * Date: 29.04.2006
- * Time: 10:06
- * 
- * To change this template use Tools | Options | Coding | Edit Standard Headers.
- */
+// Copyright 2007: Christian Graefe
+//
+// This file is part of SharpMap.
+// SharpMap is free software; you can redistribute it and/or modify
+// it under the terms of the GNU Lesser General Public License as published by
+// the Free Software Foundation; either version 2 of the License, or
+// (at your option) any later version.
+// 
+// SharpMap is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Lesser General Public License for more details.
+
+// You should have received a copy of the GNU Lesser General Public License
+// along with SharpMap; if not, write to the Free Software
+// Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
 
 using System;
 using System.Collections.ObjectModel;
@@ -15,7 +23,7 @@ namespace SharpMap.Data.Providers
 {
     /// <summary>
     /// Ogr provider for SharpMap
-    /// using the C# SWIG wrapper of GDAL/OGR
+    /// Using the csharp and native dlls provided with FwTools. See version FWToolsVersion property below.
     /// <code>
     /// SharpMap.Layers.VectorLayer vLayerOgr = new SharpMap.Layers.VectorLayer("MapInfoLayer");
     /// vLayerOgr.DataSource = new SharpMap.Data.Providers.Ogr(@"D:\GeoData\myWorld.tab");
@@ -23,12 +31,23 @@ namespace SharpMap.Data.Providers
     /// </summary>
     public class Ogr : SharpMap.Data.Providers.IProvider, IDisposable
     {
+        #region Fields
 
         private SharpMap.Geometries.BoundingBox _bbox;
         private String m_Filename;
-
         private OSGeo.OGR.DataSource _OgrDataSource;
         private OSGeo.OGR.Layer _OgrLayer;
+        
+        #endregion
+
+        #region Properties
+        /// <summary>
+        ///  Gets the version of fwTools that was used to compile and test this Ogr Provider
+        /// </summary>
+        public static string FWToolsVersion
+        {
+          get { return "2.2.0"; }
+        }
 
         /// <summary>
         /// return the file name of the datasource
@@ -38,8 +57,9 @@ namespace SharpMap.Data.Providers
             get { return m_Filename; }
             set { m_Filename = value; }
         }
+        #endregion
 
-        #region constructor
+        #region Constructors
 
         /// <summary>
         /// Loads a Ogr datasource with the specified layer
@@ -54,7 +74,6 @@ namespace SharpMap.Data.Providers
             _OgrDataSource = OSGeo.OGR.Ogr.Open(this.Filename, 1);
             _OgrLayer = _OgrDataSource.GetLayerByName(LayerName);
         }
-
 
         /// <summary>
         /// Loads a Ogr datasource with the specified layer
@@ -89,7 +108,6 @@ namespace SharpMap.Data.Providers
         public Ogr(string Filename)
             : this(Filename, 0)
         {
-
         }
 
         /// <summary>
@@ -100,12 +118,11 @@ namespace SharpMap.Data.Providers
         public Ogr(string Filename, out string name)
             : this(Filename, 0, out name)
         {
-
         }
+
         #endregion
 
         #region IProvider Members
-
 
         /// <summary>
         /// Boundingbox of the dataset
