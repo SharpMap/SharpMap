@@ -30,17 +30,27 @@ using SharpMap.Web.Wms;
 
 namespace SharpMap.Layers
 {
+  /// <summary>
+  /// Client layer for WMS-C service
+  /// </summary>
+  /// <remarks>
+  /// Initialize the TiledWmsLayer with the url to the capabilities documtent
+  /// and it will set the remaining BoundingBox property and proper requests that changes between the requests.
+  /// See the example below.
+  /// </remarks>
   /// <example>
-  /// The following example creates a map with a WMS layer the Demis WMS Server
+  /// The following example creates a map with a TiledWmsLayer the metacarta tile server
   /// <code lang="C#">
   /// map = new SharpMap.Map(mapImage1.Size);
-  /// string url = @"http://labs.metacarta.com/wms-c/tilecache.py?&version=1.1.1&request=GetCapabilities&service=wms-c";
+  /// string url = "http://labs.metacarta.com/wms-c/tilecache.py?version=1.1.1&amp;request=GetCapabilities&amp;service=wms-c";
   /// TiledWmsLayer tiledWmsLayer = new TiledWmsLayer("Metacarta", url);
   /// tiledWmsLayer.TileSetsActive.Add(tiledWmsLayer.TileSets["satellite"].Name);
   /// map.Layers.Add(tiledWmsLayer);
   /// map.ZoomToBox(new SharpMap.Geometries.BoundingBox(-180.0, -90.0, 180.0, 90.0));
   /// </code>
   /// </example>
+  
+  
   public class TiledWmsLayer : SharpMap.Layers.Layer, ILayer
   {
     #region Fields
@@ -283,6 +293,8 @@ namespace SharpMap.Layers
 
     #endregion
 
+    #region Methods
+
     /// <summary>
     /// Appends a custom parameter name-value pair to the WMS request
     /// </summary>
@@ -450,6 +462,8 @@ namespace SharpMap.Layers
           return _WmsClient.GetMapRequests[i];
       return _WmsClient.GetMapRequests[0];
     }
+    
+    #endregion
 
     #region ICloneable Members
 
