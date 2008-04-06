@@ -1,5 +1,7 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.IO;
 using SharpMap;
 using SharpMap.Rendering.Thematics;
 using SharpMap.Styles;
@@ -24,7 +26,7 @@ namespace WinFormSamples.Samples
       layCountries.Style.EnableOutline = true;
       layCountries.SRID = 4326;
       map.Layers.Add(layCountries);
-
+      
       //set up cities layer
       SharpMap.Layers.VectorLayer layCities = new SharpMap.Layers.VectorLayer("Cities");
       //Set the datasource to a shapefile in the App_data folder
@@ -101,9 +103,15 @@ namespace WinFormSamples.Samples
       //cities below 1.000.000 gets the smallest symbol, and cities with more than 5.000.000 the largest symbol
       VectorStyle citymin = new VectorStyle();
       VectorStyle citymax = new VectorStyle();
-      citymin.Symbol = new Bitmap("Images/icon.png");
+      string iconPath = "Images/icon.png"; 
+      if (!File.Exists(iconPath))
+      {
+        throw new Exception(String.Format("Error file '{0}' could not be found, make sure it is at the expected location", iconPath));
+      }
+
+      citymin.Symbol = new Bitmap(iconPath);
       citymin.SymbolScale = 0.5f;
-      citymax.Symbol = new Bitmap("Images/icon.png");
+      citymax.Symbol = new Bitmap(iconPath);
       citymax.SymbolScale = 1f;
       layCities.Theme = new GradientTheme("Population", 1000000, 5000000, citymin, citymax);
 
