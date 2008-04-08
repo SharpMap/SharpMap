@@ -415,7 +415,7 @@ namespace SharpMap.Data.Providers
                 using (PgCommand command = new PgCommand(strSQL, conn))
                 {
                     conn.Open();
-                    count = (int)command.ExecuteScalar();
+                    count = Convert.ToInt32(command.ExecuteScalar());
                     conn.Close();
                 }
             }

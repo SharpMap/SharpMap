@@ -423,7 +423,7 @@ namespace SharpMap.Data.Providers
 				using (Npgsql.NpgsqlCommand command = new Npgsql.NpgsqlCommand(strSQL, conn))
 				{
 					conn.Open();
-					count = (int)command.ExecuteScalar();
+					count = Convert.ToInt32(command.ExecuteScalar());
 					conn.Close();
 				}				
 			}
