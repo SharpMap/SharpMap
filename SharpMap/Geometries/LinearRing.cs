@@ -157,22 +157,21 @@ namespace SharpMap.Geometries
 			}
 		}
 		/// <summary>
-		/// Returns true of the Point 'p' is within the instance of this ring
-		/// </summary>
-		/// <param name="p"></param>
-		/// <returns></returns>
-		public bool IsPointWithin(Point p)
-		{
-			bool c = false;
-			for (int i = 0; i < this.Vertices.Count; i++)
-				for (int j = i + 1; j < this.Vertices.Count - 1; j++)
-				{
-					if ((((this.Vertices[i].Y <= p.Y) && (p.Y < this.Vertices[j].Y)) ||
-						 ((this.Vertices[j].Y <= p.Y) && (p.Y < this.Vertices[i].Y))) &&
-						(p.X < (this.Vertices[j].X - this.Vertices[i].X) * (p.Y - this.Vertices[i].Y) / (this.Vertices[j].Y - this.Vertices[i].Y) + this.Vertices[i].X))
-						c = !c;
-				}
-			return c;
-		}
+    /// Returns true of the Point 'p' is within the instance of this ring
+    /// </summary>
+    /// <param name="p"></param>
+    /// <returns></returns>
+    public bool IsPointWithin(Point p)
+    {
+      bool c = false;
+      for (int i = 0, j = this.Vertices.Count - 1; i < this.Vertices.Count; j = i++)
+      {
+        if ((((this.Vertices[i].Y <= p.Y) && (p.Y < this.Vertices[j].Y)) ||
+             ((this.Vertices[j].Y <= p.Y) && (p.Y < this.Vertices[i].Y))) &&
+            (p.X < (this.Vertices[j].X - this.Vertices[i].X) * (p.Y - this.Vertices[i].Y) / (this.Vertices[j].Y - this.Vertices[i].Y) + this.Vertices[i].X))
+          c = !c;
+      }
+      return c;
+    }
 	}
 }
