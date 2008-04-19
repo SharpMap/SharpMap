@@ -450,18 +450,18 @@ namespace SharpMap.Layers
       }
     }
 
-    private SharpMap.Web.Wms.Client.WmsOnlineResource GetPreferredMethod()
-    {
-      //We prefer posting. Seek for supported post method
-      for (int i = 0; i < _WmsClient.GetMapRequests.Length; i++)
-        if (_WmsClient.GetMapRequests[i].Type.ToLower() == "post")
-          return _WmsClient.GetMapRequests[i];
-      //Next we prefer the 'get' method
-      for (int i = 0; i < _WmsClient.GetMapRequests.Length; i++)
-        if (_WmsClient.GetMapRequests[i].Type.ToLower() == "get")
-          return _WmsClient.GetMapRequests[i];
-      return _WmsClient.GetMapRequests[0];
-    }
+		private SharpMap.Web.Wms.Client.WmsOnlineResource GetPreferredMethod()
+		{
+			//We prefer get. Seek for supported 'get' method
+			for (int i = 0; i < wmsClient.GetMapRequests.Length; i++)
+				if (wmsClient.GetMapRequests[i].Type.ToLower() == "get")
+					return wmsClient.GetMapRequests[i];
+			//Next we prefer the 'post' method
+			for (int i = 0; i < wmsClient.GetMapRequests.Length; i++)
+				if (wmsClient.GetMapRequests[i].Type.ToLower() == "post")
+					return wmsClient.GetMapRequests[i];
+			return wmsClient.GetMapRequests[0];
+		}
     
     #endregion
 
