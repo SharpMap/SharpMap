@@ -65,6 +65,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DemoWinForm.VS2008", "DemoW
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WinFormSamples", "WinFormSamples\WinFormSamples.csproj", "{F81C1843-3B2A-4D72-81AA-A658DB11FA85}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MsSqlSpatialDemoDb", "MsSqlSpatialDemoDb", "{3BDECA7F-3A75-41BF-9753-D4AAC02DFE36}"
+	ProjectSection(SolutionItems) = preProject
+		ReadMe.txt = ReadMe.txt
+		MsSqlSpatialDemoDb\SharpMapMsSqlSpatialDemoDb.bak = MsSqlSpatialDemoDb\SharpMapMsSqlSpatialDemoDb.bak
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
 		SccNumberOfProjects = 3
@@ -162,6 +168,7 @@ Global
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{3BB63704-345C-400C-9146-0AD46859D76D} = {1EDFEF14-016A-4660-9C65-2F933B6D61F9}
+		{3BDECA7F-3A75-41BF-9753-D4AAC02DFE36} = {1EDFEF14-016A-4660-9C65-2F933B6D61F9}
 		{AFA0024B-50B7-4CA3-84DC-EC0CA7109492} = {3BB63704-345C-400C-9146-0AD46859D76D}
 	EndGlobalSection
 EndGlobal

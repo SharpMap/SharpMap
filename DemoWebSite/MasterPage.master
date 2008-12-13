@@ -22,6 +22,7 @@
 					<div id="leftnav">
 						<h2>Examples</h2>
 						<a href="Simple.aspx">Simple</a>
+						<a href="SimpleMsSqlSpatial.aspx">Simple - MsSqlSpatial</a>
 						<a href="Bins.aspx">Styling delegate</a>
 						<a href="Gradient.aspx">Gradient</a>
 						<a href="PieCharts.aspx">Pie Charts</a>
