@@ -29,13 +29,13 @@ namespace SharpMap.Geometries
 	[Serializable]
 	public class LineString : Curve
 	{
-		private Collection<Point> _Vertices;
+		private IList<Point> _Vertices;
 
 		/// <summary>
 		/// Initializes an instance of a LineString from a set of vertices
 		/// </summary>
 		/// <param name="vertices"></param>
-		public LineString(Collection<Point> vertices)
+		public LineString(IList<Point> vertices)
 		{
 			_Vertices = vertices;
 		}
@@ -49,7 +49,7 @@ namespace SharpMap.Geometries
         /// Initializes an instance of a LineString
         /// </summary>
         /// <param name="points"></param>
-        public LineString(List<double[]> points)
+        public LineString(IEnumerable<double[]> points)
         {
             Collection<Point> vertices = new Collection<Point>();
 
@@ -62,7 +62,7 @@ namespace SharpMap.Geometries
 		/// <summary>
 		/// Gets or sets the collection of vertices in this Geometry
 		/// </summary>
-		public virtual Collection<Point> Vertices
+		public virtual IList<Point> Vertices
 		{
 			get { return _Vertices; }
 			set { _Vertices = value; }

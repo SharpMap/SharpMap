@@ -28,7 +28,7 @@ namespace SharpMap.Geometries
 	[Serializable]
 	public class MultiLineString : MultiCurve
 	{
-		private Collection<LineString> _LineStrings;
+		private IList<LineString> _LineStrings;
 		/// <summary>
 		/// Initializes an instance of a MultiLineString
 		/// </summary>
@@ -40,7 +40,7 @@ namespace SharpMap.Geometries
 		/// <summary>
 		/// Collection of <see cref="LineString">LineStrings</see> in the <see cref="MultiLineString"/>
 		/// </summary>
-		public Collection<LineString> LineStrings
+		public IList<LineString> LineStrings
 		{
 			get { return _LineStrings; }
 			set { _LineStrings = value; }

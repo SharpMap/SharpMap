@@ -33,14 +33,14 @@ namespace SharpMap.Geometries
 	public class Polygon : Surface
 	{
 		private LinearRing _ExteriorRing;
-		private Collection<LinearRing> _InteriorRings;
+		private IList<LinearRing> _InteriorRings;
 
 		/// <summary>
 		/// Instatiates a polygon based on one extorier ring and a collection of interior rings.
 		/// </summary>
 		/// <param name="exteriorRing">Exterior ring</param>
 		/// <param name="interiorRings">Interior rings</param>
-		public Polygon(LinearRing exteriorRing, Collection<LinearRing> interiorRings)
+		public Polygon(LinearRing exteriorRing, IList<LinearRing> interiorRings)
 		{
 			_ExteriorRing = exteriorRing;
 			_InteriorRings = interiorRings;
@@ -70,7 +70,7 @@ namespace SharpMap.Geometries
 		/// <summary>
 		/// Gets or sets the interior rings of this Polygon
 		/// </summary>
-		public Collection<LinearRing> InteriorRings
+		public IList<LinearRing> InteriorRings
 		{
 			get { return _InteriorRings; }
 			set { _InteriorRings = value; }

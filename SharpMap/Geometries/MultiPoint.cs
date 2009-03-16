@@ -28,7 +28,7 @@ namespace SharpMap.Geometries
 	/// </summary>
 	public class MultiPoint : GeometryCollection
 	{
-		private Collection<Point> _Points;
+		private IList<Point> _Points;
 
 		/// <summary>
 		/// Initializes a new MultiPoint collection
@@ -41,7 +41,7 @@ namespace SharpMap.Geometries
         /// <summary>
         /// Initializes a new MultiPoint collection
         /// </summary>		
-        public MultiPoint(List<double[]> points)
+        public MultiPoint(IEnumerable<double[]> points)
         {
             _Points = new Collection<Point>();
             foreach (double[] point in points)
@@ -61,7 +61,7 @@ namespace SharpMap.Geometries
 		/// <summary>
 		/// Gets or sets the MultiPoint collection
 		/// </summary>
-		public Collection<Point> Points
+		public IList<Point> Points
 		{
 			get { return _Points; }
 			set { _Points = value; }

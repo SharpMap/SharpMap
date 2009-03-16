@@ -28,7 +28,7 @@ namespace SharpMap.Geometries
 	[Serializable]
 	public class MultiPolygon : MultiSurface
 	{
-		private Collection<Polygon> _Polygons;
+		private IList<Polygon> _Polygons;
 
 		/// <summary>
 		/// Instantiates a MultiPolygon
@@ -41,7 +41,7 @@ namespace SharpMap.Geometries
 		/// <summary>
 		/// Collection of polygons in the multipolygon
 		/// </summary>
-		public Collection<Polygon> Polygons
+		public IList<Polygon> Polygons
 		{
 			get { return _Polygons; }
 			set { _Polygons = value; }

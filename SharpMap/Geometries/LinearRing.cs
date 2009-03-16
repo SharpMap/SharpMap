@@ -31,7 +31,7 @@ namespace SharpMap.Geometries
 		/// Initializes an instance of a LinearRing from a set of vertices
 		/// </summary>
 		/// <param name="vertices"></param>
-		public LinearRing(Collection<Point> vertices)
+		public LinearRing(IList<Point> vertices)
 			: base(vertices)
 		{
 		}
@@ -47,7 +47,7 @@ namespace SharpMap.Geometries
         /// Initializes an instance of a LinearRing
         /// </summary>
         /// <param name="points"></param>
-        public LinearRing(List<double[]> points)
+        public LinearRing(IEnumerable<double[]> points)
             : base(points)
         {
         }	
