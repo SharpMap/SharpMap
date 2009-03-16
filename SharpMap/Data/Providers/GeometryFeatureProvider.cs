@@ -60,7 +60,7 @@ namespace SharpMap.Data.Providers
     /// </remarks>
     public class GeometryFeatureProvider : SharpMap.Data.Providers.IProvider, IDisposable
     {
-        private FeatureDataTable _features;
+        private readonly FeatureDataTable _features;
 
         #region constructors
 
@@ -68,7 +68,7 @@ namespace SharpMap.Data.Providers
         /// Initializes a new instance of the <see cref="GeometryProvider"/>
         /// </summary>
         /// <param name="geometries">Set of geometries that this datasource should contain</param>
-        public GeometryFeatureProvider(Collection<Geometry> geometries)
+        public GeometryFeatureProvider(IEnumerable<Geometry> geometries)
         {
             _features = new FeatureDataTable();
             foreach (Geometry geom in geometries)

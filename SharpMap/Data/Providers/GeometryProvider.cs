@@ -58,12 +58,12 @@ namespace SharpMap.Data.Providers
 	/// </remarks>
 	public class GeometryProvider : SharpMap.Data.Providers.IProvider, IDisposable
 	{
-		private Collection<Geometry> _Geometries;
+        private IList<Geometry> _Geometries;
 
 		/// <summary>
 		/// Gets or sets the geometries this datasource contains
 		/// </summary>
-		public Collection<Geometry> Geometries
+		public IList<Geometry> Geometries
 		{
 			get { return _Geometries; }
 			set { _Geometries = value; }
@@ -75,7 +75,7 @@ namespace SharpMap.Data.Providers
 		/// Initializes a new instance of the <see cref="GeometryProvider"/>
 		/// </summary>
 		/// <param name="geometries">Set of geometries that this datasource should contain</param>
-		public GeometryProvider(Collection<Geometry> geometries)
+        public GeometryProvider(IList<Geometry> geometries)
 		{
 			_Geometries = geometries;
 		}
@@ -138,7 +138,7 @@ namespace SharpMap.Data.Providers
 		/// <returns></returns>
 		public Collection<Geometry> GetGeometriesInView(BoundingBox bbox)
 		{
-			Collection<Geometry> list = new Collection<Geometry>();
+            Collection<Geometry> list = new Collection<Geometry>();
 			for (int i = 0; i < _Geometries.Count; i++)
 				if(!_Geometries[i].IsEmpty())
 				if (_Geometries[i].GetBoundingBox().Intersects(bbox))
