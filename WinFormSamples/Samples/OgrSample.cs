@@ -20,10 +20,13 @@ namespace WinFormSamples.Samples
       {
         layCountries.DataSource = new SharpMap.Data.Providers.Ogr("GeoData/MapInfo/countriesMapInfo.tab");
       }
-      catch (Exception ex)
+      catch (TypeInitializationException ex)
       {
-        if (ex.GetType() == typeof(TypeInitializationException))
-          throw new Exception(String.Format("The application threw a PINVOKE exception. You probably need to copy the unmanaged dll's to your bin directory. They are a part of fwtools {0}. You can download it from: http://home.gdal.org/fwtools/", SharpMap.Data.Providers.Ogr.FWToolsVersion));
+        if (ex.Message == "The type initializer for 'OSGeo.OGR.Ogr' threw an exception.")
+        {
+          throw new Exception(String.Format("The application threw a PINVOKE exception. You probably need to copy the unmanaged dll's to your bin directory. They are a part of fwtools {0}. You can download it from: http://home.gdal.org/fwtools/", SharpMap.Layers.GdalRasterLayer.FWToolsVersion));
+        }
+        throw;
       }
 
       //Set fill-style to green

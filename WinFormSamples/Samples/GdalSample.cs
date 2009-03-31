@@ -53,7 +53,7 @@ namespace WinFormSamples.Samples
 
         return map;
       }
-      catch (Exception ex)
+      catch (TypeInitializationException ex)
       {
         if (ex.Message == "The type initializer for 'OSGeo.GDAL.GdalPINVOKE' threw an exception.")
         {

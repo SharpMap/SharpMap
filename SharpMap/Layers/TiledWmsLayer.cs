@@ -77,6 +77,7 @@ namespace SharpMap.Layers
     public TiledWmsLayer(string layername, string url)
       : this(layername, url, new TimeSpan(24, 0, 0))
     {
+      _ImageAttributes.SetWrapMode(System.Drawing.Drawing2D.WrapMode.TileFlipXY);
     }
 
     /// <summary>
@@ -238,34 +239,14 @@ namespace SharpMap.Layers
               PointF destMin = SharpMap.Utilities.Transform.WorldtoMap(tileExtent.Min, map);
               PointF destMax = SharpMap.Utilities.Transform.WorldtoMap(tileExtent.Max, map);
 
-              #region Comment on BorderBug correction
-              // Even when tiles border to one another without any space between them there are 
-              // seams visible between the tiles in the map image.
-              // This problem could be resolved with the solution suggested here:
-              // http://www.codeproject.com/csharp/BorderBug.asp
-              // The suggested correction value of 0.5f still results in seams in some cases, not so with 0.4999f.
-              // Also it was necessary to apply Math.Round and Math.Ceiling on the destination rectangle.
-              // PDD.
-              #endregion
-
-              float correction = 0.4999f;
-              RectangleF srcRect = new RectangleF(0 - correction, 0 - correction, tileSet.Width, tileSet.Height);
-
-              InterpolationMode tempInterpolationMode = g.InterpolationMode;
-              g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
-
-              //TODO: Allow custom image attributes for each TileSet.
-
-              int x = (int)Math.Round(destMin.X);
-              int y = (int)Math.Round(destMax.Y);
-              int width = (int)Math.Round(destMax.X - x);
-              int height = (int)Math.Round(destMin.Y - y);
-
-              g.DrawImage(bitmap, new Rectangle(x, y, width, height),
-                srcRect.Left, srcRect.Top, srcRect.Width, srcRect.Height,
+              double minX = (int)Math.Round(destMin.X);
+              double minY = (int)Math.Round(destMax.Y);
+              double maxX = (int)Math.Round(destMax.X);
+              double maxY = (int)Math.Round(destMin.Y);
+              
+              g.DrawImage(bitmap,  new Rectangle((int)minX, (int)minY, (int)(maxX - minX), (int)(maxY - minY)),
+                0, 0, tileSet.Width, tileSet.Height,
                 GraphicsUnit.Pixel, _ImageAttributes);
-
-              g.InterpolationMode = tempInterpolationMode; //Put InterpolationMode back so drawing of other layers is not affected.
             }
           }
         }
@@ -277,6 +258,15 @@ namespace SharpMap.Layers
           bitmap.Dispose();
         }
       }
+    }
+
+    private static Rectangle RoundRectangle(RectangleF dest)
+    {
+      double minX = Math.Round(dest.X);
+      double minY = Math.Round(dest.Y);
+      double maxX = Math.Round(dest.Right);
+      double maxY = Math.Round(dest.Bottom);
+      return new Rectangle((int)minX, (int)minY, (int)(maxX - minX), (int)(maxY - minY));
     }
 
     /// <summary>
@@ -477,7 +467,5 @@ namespace SharpMap.Layers
     }
 
     #endregion
-
-
   }
 }

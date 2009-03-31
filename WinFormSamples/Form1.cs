@@ -37,9 +37,13 @@ namespace WinFormSamples
           case "GDAL - GeoTiff":
             this.mapImage.Map = Samples.GdalSample.InitializeMap();
             break;
+          case "Tiled WMS":
+            this.mapImage.Map = Samples.TiledWmsSample.InitializeMap();
+            break;
 		      default:
             break;
 	      }
+        this.mapImage.Map.Size = this.Size;
         this.mapImage.Refresh();
       }
       catch (Exception ex)
