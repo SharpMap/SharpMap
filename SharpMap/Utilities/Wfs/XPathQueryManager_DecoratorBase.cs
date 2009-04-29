@@ -1,12 +1,10 @@
 // WFS provider by Peter Robineau (peter.robineau@gmx.at)
 // This file can be redistributed and/or modified under the terms of the GNU Lesser General Public License.
 
-using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Xml;
-using System.Xml.XPath;
 using System.IO;
+using System.Xml.XPath;
 
 namespace SharpMap.Utilities.Wfs
 {
@@ -108,7 +106,7 @@ namespace SharpMap.Utilities.Wfs
         {
             return _XPathQueryManager.GetValuesFromNodes(xPath);
         }
-        
+
         /// <summary>
         /// This method invokes the corresponding method of the inherent <see cref="IXPathQueryManager"/> instance.
         /// </summary>
@@ -130,7 +128,8 @@ namespace SharpMap.Utilities.Wfs
         /// </summary>
         /// <param name="xPath">A compiled XPath expression</param>
         /// <param name="queryParameters">Parameters for the compiled XPath expression</param>
-        public abstract IXPathQueryManager GetXPathQueryManagerInContext(XPathExpression xPath, DictionaryEntry[] queryParameters);
+        public abstract IXPathQueryManager GetXPathQueryManagerInContext(XPathExpression xPath,
+                                                                         DictionaryEntry[] queryParameters);
 
         /// <summary>
         /// This method must be implemented specifically in each decorator.

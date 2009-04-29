@@ -15,22 +15,21 @@
 // along with SharpMap; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
 
-using System;
-using System.Collections.Generic;
-using System.Text;
+using SharpMap.Data;
+using SharpMap.Styles;
 
 namespace SharpMap.Rendering.Thematics
 {
-	/// <summary>
-	/// Interface for rendering a thematic layer
-	/// </summary>
-	public interface ITheme
-	{
-		/// <summary>
-		/// Returns the style based on a feature
-		/// </summary>
-		/// <param name="attribute">Attribute to calculate color from</param>
-		/// <returns>Color</returns>
-		SharpMap.Styles.IStyle GetStyle(SharpMap.Data.FeatureDataRow attribute);
-	}
+    /// <summary>
+    /// Interface for rendering a thematic layer
+    /// </summary>
+    public interface ITheme
+    {
+        /// <summary>
+        /// Returns the style based on a feature
+        /// </summary>
+        /// <param name="attribute">Attribute to calculate color from</param>
+        /// <returns>Color</returns>
+        IStyle GetStyle(FeatureDataRow attribute);
+    }
 }

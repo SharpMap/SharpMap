@@ -1,19 +1,17 @@
 ﻿// WFS provider by Peter Robineau (peter.robineau@gmx.at)
 // This file can be redistributed and/or modified under the terms of the GNU Lesser General Public License.
 
-using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Xml;
-using System.Xml.XPath;
 using System.IO;
+using System.Xml.XPath;
 
 namespace SharpMap.Utilities.Wfs
 {
     /// <summary>
     /// XPathQueryManager interface
     /// </summary>
-    public interface IXPathQueryManager 
+    public interface IXPathQueryManager
     {
         void AddNamespace(string prefix, string ns);
         XPathExpression Compile(string xPath);

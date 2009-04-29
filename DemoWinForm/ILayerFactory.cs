@@ -15,16 +15,12 @@
 // along with SharpMap; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
 
-using System;
-using System.Collections.Generic;
-using System.Text;
-
 using SharpMap.Layers;
 
 namespace DemoWinForm
 {
-	public interface ILayerFactory
-	{
-		ILayer Create(string layerName, string connectionInfo);
-	}
+    public interface ILayerFactory
+    {
+        ILayer Create(string layerName, string connectionInfo);
+    }
 }

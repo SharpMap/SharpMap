@@ -6,9 +6,11 @@
 
 #region Using Statements
 
+using GisSharpBlog.NetTopologySuite.Geometries;
 using SharpMap.Converters.NTS;
 using SharpMap.Data;
 using SharpMap.Data.Providers;
+using Geometry=SharpMap.Geometries.Geometry;
 
 #endregion
 
@@ -27,13 +29,13 @@ namespace ExampleCodeSnippets
         /// <param name="pathToShapefile">The path to the shapefile</param>
         /// <param name="testGeometry">The geometry that we want to test against</param>
         /// <returns></returns>
-        public FeatureDataTable GetIntersectingFeaturesUsingFilterDelegate(string pathToShapefile, SharpMap.Geometries.Geometry testGeometry)
+        public FeatureDataTable GetIntersectingFeaturesUsingFilterDelegate(string pathToShapefile, Geometry testGeometry)
         {
             //create a new shapefile provider 
             using (ShapeFile shapefile = new ShapeFile(pathToShapefile))
             {
                 //create an nts GeometryFactory
-                GisSharpBlog.NetTopologySuite.Geometries.GeometryFactory geometryFactory = new GisSharpBlog.NetTopologySuite.Geometries.GeometryFactory();
+                GeometryFactory geometryFactory = new GeometryFactory();
 
                 //convert the testGeometry into the equivalent NTS geometry
                 GisSharpBlog.NetTopologySuite.Geometries.Geometry testGeometryAsNtsGeom =
@@ -44,7 +46,7 @@ namespace ExampleCodeSnippets
                 shapefile.FilterDelegate = delegate(FeatureDataRow featureDataRow)
                                                {
                                                    //get the geometry from the featureDataRow
-                                                   SharpMap.Geometries.Geometry rowGeometry = featureDataRow.Geometry;
+                                                   Geometry rowGeometry = featureDataRow.Geometry;
                                                    //convert it to the equivalent NTS geometry
                                                    GisSharpBlog.NetTopologySuite.Geometries.Geometry
                                                        compareGeometryAsNtsGeometry =
@@ -52,7 +54,8 @@ namespace ExampleCodeSnippets
                                                                                            geometryFactory);
                                                    //do the test. Note that the testGeometryAsNtsGeometry is available here because it is 
                                                    //declared in the same scope as the anonymous method.
-                                                   bool intersects = testGeometryAsNtsGeom.Intersects(compareGeometryAsNtsGeometry);
+                                                   bool intersects =
+                                                       testGeometryAsNtsGeom.Intersects(compareGeometryAsNtsGeometry);
                                                    //return the result
                                                    return intersects;
                                                };
@@ -76,10 +79,10 @@ namespace ExampleCodeSnippets
         /// </summary>
         /// <param name="featureDataTable">The FeatureDataTable instance to filter</param>
         /// <param name="testGeometry">the geometry to compare against</param>
-        public void PostFilterExistingFeatureDataTable(FeatureDataTable featureDataTable, SharpMap.Geometries.Geometry testGeometry)
+        public void PostFilterExistingFeatureDataTable(FeatureDataTable featureDataTable, Geometry testGeometry)
         {
             //first we create a new GeometryFactory.
-            GisSharpBlog.NetTopologySuite.Geometries.GeometryFactory geometryFactory = new GisSharpBlog.NetTopologySuite.Geometries.GeometryFactory();
+            GeometryFactory geometryFactory = new GeometryFactory();
 
 
             //then we convert the testGeometry into the equivalent NTS geometry
@@ -93,7 +96,7 @@ namespace ExampleCodeSnippets
                 //we get each row
                 FeatureDataRow featureDataRow = featureDataTable.Rows[i] as FeatureDataRow;
                 //and get the rows' geometry
-                SharpMap.Geometries.Geometry compareGeometry = featureDataRow.Geometry;
+                Geometry compareGeometry = featureDataRow.Geometry;
                 //convert the rows' geometry into the equivalent NTS geometry
                 GisSharpBlog.NetTopologySuite.Geometries.Geometry compareGeometryAsNts =
                     GeometryConverter.ToNTSGeometry(compareGeometry, geometryFactory);
@@ -104,7 +107,6 @@ namespace ExampleCodeSnippets
                 if (!intersects)
                     featureDataTable.Rows.RemoveAt(i);
             }
-
         }
     }
 }

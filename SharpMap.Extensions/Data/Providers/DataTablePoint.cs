@@ -16,10 +16,8 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
 
 using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Data;
 using System.Collections.ObjectModel;
+using System.Data;
 using SharpMap.Geometries;
 
 namespace SharpMap.Data.Providers
@@ -37,6 +35,15 @@ namespace SharpMap.Data.Providers
     /// </remarks>
     public class DataTablePoint : IProvider, IDisposable
     {
+        private string _ConnectionString;
+        private string _defintionQuery;
+        private bool _IsOpen;
+        private string _ObjectIdColumn;
+        private int _SRID = -1;
+        private DataTable _Table;
+        private string _XColumn;
+        private string _YColumn;
+
         /// <summary>
         /// Initializes a new instance of the DataTablePoint provider
         /// </summary>
@@ -52,16 +59,14 @@ namespace SharpMap.Data.Providers
         /// <param name="yColumn">
         /// Name of column where point's Y value is stored.
         /// </param>
-        public DataTablePoint(DataTable dataTable, string oidColumnName, 
-            string xColumn, string yColumn)
+        public DataTablePoint(DataTable dataTable, string oidColumnName,
+                              string xColumn, string yColumn)
         {
-            this.Table = dataTable;
-            this.XColumn = xColumn;
-            this.YColumn = yColumn;
-            this.ObjectIdColumn = oidColumnName;
+            Table = dataTable;
+            XColumn = xColumn;
+            YColumn = yColumn;
+            ObjectIdColumn = oidColumnName;
         }
-
-        private DataTable _Table;
 
         /// <summary>
         /// Data table used as the data source.
@@ -73,8 +78,6 @@ namespace SharpMap.Data.Providers
         }
 
 
-        private string _ObjectIdColumn;
-
         /// <summary>
         /// Name of column that contains the Object ID
         /// </summary>
@@ -83,8 +86,6 @@ namespace SharpMap.Data.Providers
             get { return _ObjectIdColumn; }
             set { _ObjectIdColumn = value; }
         }
-
-        private string _XColumn;
 
         /// <summary>
         /// Name of column that contains X coordinate
@@ -95,8 +96,6 @@ namespace SharpMap.Data.Providers
             set { _XColumn = value; }
         }
 
-        private string _YColumn;
-
         /// <summary>
         /// Name of column that contains Y coordinate
         /// </summary>
@@ -106,7 +105,6 @@ namespace SharpMap.Data.Providers
             set { _YColumn = value; }
         }
 
-        private string _ConnectionString;
         /// <summary>
         /// Connectionstring
         /// </summary>
@@ -114,6 +112,15 @@ namespace SharpMap.Data.Providers
         {
             get { return _ConnectionString; }
             set { _ConnectionString = value; }
+        }
+
+        /// <summary>
+        /// Definition query used for limiting dataset
+        /// </summary>
+        public string DefinitionQuery
+        {
+            get { return _defintionQuery; }
+            set { _defintionQuery = value; }
         }
 
         #region IProvider Members
@@ -133,16 +140,16 @@ namespace SharpMap.Data.Providers
                 return null;
             }
 
-            string strSQL = XColumn + " > " + bbox.Left.ToString(Map.numberFormat_EnUS) + " AND " +
-                XColumn + " < " + bbox.Right.ToString(Map.numberFormat_EnUS) + " AND " +
-                YColumn + " > " + bbox.Bottom.ToString(Map.numberFormat_EnUS) + " AND " +
-                YColumn + " < " + bbox.Top.ToString(Map.numberFormat_EnUS);
-            
+            string strSQL = XColumn + " > " + bbox.Left.ToString(Map.NumberFormatEnUs) + " AND " +
+                            XColumn + " < " + bbox.Right.ToString(Map.NumberFormatEnUs) + " AND " +
+                            YColumn + " > " + bbox.Bottom.ToString(Map.NumberFormatEnUs) + " AND " +
+                            YColumn + " < " + bbox.Top.ToString(Map.NumberFormatEnUs);
+
             drow = Table.Select(strSQL);
 
             foreach (DataRow dr in drow)
             {
-                features.Add(new Point((double)dr[2], (double)dr[1]));
+                features.Add(new Point((double) dr[2], (double) dr[1]));
             }
 
             return features;
@@ -163,16 +170,16 @@ namespace SharpMap.Data.Providers
                 return null;
             }
 
-            string strSQL = XColumn + " > " + bbox.Left.ToString(Map.numberFormat_EnUS) + " AND " +
-                XColumn + " < " + bbox.Right.ToString(Map.numberFormat_EnUS) + " AND " +
-                YColumn + " > " + bbox.Bottom.ToString(Map.numberFormat_EnUS) + " AND " +
-                YColumn + " < " + bbox.Top.ToString(Map.numberFormat_EnUS);
+            string strSQL = XColumn + " > " + bbox.Left.ToString(Map.NumberFormatEnUs) + " AND " +
+                            XColumn + " < " + bbox.Right.ToString(Map.NumberFormatEnUs) + " AND " +
+                            YColumn + " > " + bbox.Bottom.ToString(Map.NumberFormatEnUs) + " AND " +
+                            YColumn + " < " + bbox.Top.ToString(Map.NumberFormatEnUs);
 
             drow = Table.Select(strSQL);
 
             foreach (DataRow dr in drow)
             {
-                objectlist.Add((uint)(int)dr[0]);
+                objectlist.Add((uint) (int) dr[0]);
             }
 
             return objectlist;
@@ -199,7 +206,7 @@ namespace SharpMap.Data.Providers
 
             foreach (DataRow dr in rows)
             {
-                geom = new Point((double)dr[XColumn], (double)dr[YColumn]);
+                geom = new Point((double) dr[XColumn], (double) dr[YColumn]);
             }
 
             return geom;
@@ -241,10 +248,10 @@ namespace SharpMap.Data.Providers
                 return;
             }
 
-            string statement = XColumn + " > " + bbox.Left.ToString(Map.numberFormat_EnUS) + " AND " +
-                XColumn + " < " + bbox.Right.ToString(Map.numberFormat_EnUS) + " AND " +
-                YColumn + " > " + bbox.Bottom.ToString(Map.numberFormat_EnUS) + " AND " +
-                YColumn + " < " + bbox.Top.ToString(Map.numberFormat_EnUS);
+            string statement = XColumn + " > " + bbox.Left.ToString(Map.NumberFormatEnUs) + " AND " +
+                               XColumn + " < " + bbox.Right.ToString(Map.NumberFormatEnUs) + " AND " +
+                               YColumn + " > " + bbox.Bottom.ToString(Map.NumberFormatEnUs) + " AND " +
+                               YColumn + " < " + bbox.Top.ToString(Map.NumberFormatEnUs);
 
             rows = Table.Select(statement);
 
@@ -259,7 +266,7 @@ namespace SharpMap.Data.Providers
             {
                 fdt.ImportRow(dr);
                 FeatureDataRow fdr = fdt.Rows[fdt.Rows.Count - 1] as FeatureDataRow;
-                fdr.Geometry = new Point((double)dr[XColumn], (double)dr[YColumn]);
+                fdr.Geometry = new Point((double) dr[XColumn], (double) dr[YColumn]);
             }
 
             ds.Tables.Add(fdt);
@@ -272,17 +279,6 @@ namespace SharpMap.Data.Providers
         public int GetFeatureCount()
         {
             return Table.Rows.Count;
-        }
-
-        private string _defintionQuery;
-
-        /// <summary>
-        /// Definition query used for limiting dataset
-        /// </summary>
-        public string DefinitionQuery
-        {
-            get { return _defintionQuery; }
-            set { _defintionQuery = value; }
         }
 
         /// <summary>
@@ -312,19 +308,21 @@ namespace SharpMap.Data.Providers
 
             BoundingBox box;
 
-            double minX = Double.PositiveInfinity, minY = Double.PositiveInfinity,
-                maxX = Double.NegativeInfinity, maxY = Double.NegativeInfinity;
+            double minX = Double.PositiveInfinity,
+                   minY = Double.PositiveInfinity,
+                   maxX = Double.NegativeInfinity,
+                   maxY = Double.NegativeInfinity;
 
             foreach (DataRowView dr in Table.DefaultView)
             {
-                if (minX > (double)dr[XColumn]) minX = (double)dr[XColumn];
-                if (maxX < (double)dr[XColumn]) maxX = (double)dr[XColumn];
-                if (minY > (double)dr[YColumn]) minY = (double)dr[YColumn];
-                if (maxY < (double)dr[YColumn]) maxY = (double)dr[YColumn];
+                if (minX > (double) dr[XColumn]) minX = (double) dr[XColumn];
+                if (maxX < (double) dr[XColumn]) maxX = (double) dr[XColumn];
+                if (minY > (double) dr[YColumn]) minY = (double) dr[YColumn];
+                if (maxY < (double) dr[YColumn]) maxY = (double) dr[YColumn];
             }
 
             box = new BoundingBox(minX, minY, maxX, maxY);
-            
+
             return box;
         }
 
@@ -343,6 +341,7 @@ namespace SharpMap.Data.Providers
         {
             _IsOpen = true;
         }
+
         /// <summary>
         /// Closes the datasource.
         /// </summary>
@@ -350,8 +349,6 @@ namespace SharpMap.Data.Providers
         {
             _IsOpen = false;
         }
-
-        private bool _IsOpen;
 
         /// <summary>
         /// Gets true if the datasource is currently open.
@@ -361,7 +358,6 @@ namespace SharpMap.Data.Providers
             get { return _IsOpen; }
         }
 
-        private int _SRID = -1;
         /// <summary>
         /// The spatial reference ID (CRS)
         /// </summary>
@@ -374,6 +370,7 @@ namespace SharpMap.Data.Providers
         #endregion
 
         #region Disposers and finalizers
+
         private bool disposed = false;
 
         /// <summary>
@@ -403,6 +400,7 @@ namespace SharpMap.Data.Providers
         {
             Dispose();
         }
+
         #endregion
     }
 }

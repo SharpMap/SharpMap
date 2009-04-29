@@ -18,7 +18,6 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Text;
 using SharpMap.Geometries;
 
 namespace SharpMap.CoordinateSystems.Transformations
@@ -38,7 +37,7 @@ namespace SharpMap.CoordinateSystems.Transformations
         {
             if (box == null)
                 return null;
-            SharpMap.Geometries.Point[] corners = new Point[4];
+            Point[] corners = new Point[4];
             corners[0] = new Point(transform.Transform(box.Min.ToDoubleArray())); //LL
             corners[1] = new Point(transform.Transform(box.Max.ToDoubleArray())); //UR
             corners[2] = new Point(transform.Transform(new Point(box.Min.X, box.Max.Y).ToDoubleArray())); //UL
@@ -49,6 +48,7 @@ namespace SharpMap.CoordinateSystems.Transformations
                 result = result.Join(corners[i].GetBoundingBox());
             return result;
         }
+
         /// <summary>
         /// Transforms a <see cref="SharpMap.Geometries.Geometry"/>.
         /// </summary>
@@ -72,8 +72,9 @@ namespace SharpMap.CoordinateSystems.Transformations
             else if (g is MultiPolygon)
                 return TransformMultiPolygon(g as MultiPolygon, transform);
             else
-                throw new ArgumentException("Could not transform geometry type '" + g.GetType().ToString() + "'");
+                throw new ArgumentException("Could not transform geometry type '" + g.GetType() + "'");
         }
+
         /// <summary>
         /// Transforms a <see cref="SharpMap.Geometries.Point"/>.
         /// </summary>
@@ -82,9 +83,16 @@ namespace SharpMap.CoordinateSystems.Transformations
         /// <returns>Transformed Point</returns>
         public static Point TransformPoint(Point p, IMathTransform transform)
         {
-            try { return new Point(transform.Transform(p.ToDoubleArray())); }
-            catch { return null; }
+            try
+            {
+                return new Point(transform.Transform(p.ToDoubleArray()));
+            }
+            catch
+            {
+                return null;
+            }
         }
+
         /// <summary>
         /// Transforms a <see cref="SharpMap.Geometries.LineString"/>.
         /// </summary>
@@ -98,12 +106,16 @@ namespace SharpMap.CoordinateSystems.Transformations
                 List<double[]> points = new List<double[]>();
 
                 for (int i = 0; i < l.Vertices.Count; i++)
-                    points.Add(new double[2] { l.Vertices[i].X, l.Vertices[i].Y });
+                    points.Add(new double[2] {l.Vertices[i].X, l.Vertices[i].Y});
 
                 return new LineString(transform.TransformList(points));
             }
-            catch { return null; }
+            catch
+            {
+                return null;
+            }
         }
+
         /// <summary>
         /// Transforms a <see cref="SharpMap.Geometries.LinearRing"/>.
         /// </summary>
@@ -117,12 +129,16 @@ namespace SharpMap.CoordinateSystems.Transformations
                 List<double[]> points = new List<double[]>();
 
                 for (int i = 0; i < r.Vertices.Count; i++)
-                    points.Add(new double[2] { r.Vertices[i].X, r.Vertices[i].Y });
+                    points.Add(new double[2] {r.Vertices[i].X, r.Vertices[i].Y});
 
                 return new LinearRing(transform.TransformList(points));
             }
-            catch { return null; }
+            catch
+            {
+                return null;
+            }
         }
+
         /// <summary>
         /// Transforms a <see cref="SharpMap.Geometries.Polygon"/>.
         /// </summary>
@@ -138,6 +154,7 @@ namespace SharpMap.CoordinateSystems.Transformations
                 pOut.InteriorRings.Add(TransformLinearRing(p.InteriorRings[i], transform));
             return pOut;
         }
+
         /// <summary>
         /// Transforms a <see cref="SharpMap.Geometries.MultiPoint"/>.
         /// </summary>
@@ -148,10 +165,11 @@ namespace SharpMap.CoordinateSystems.Transformations
         {
             List<double[]> pts = new List<double[]>();
             for (int i = 0; i < points.NumGeometries; i++)
-                pts.Add(new double[2] { points[0].X, points[1].Y });
+                pts.Add(new double[2] {points[0].X, points[1].Y});
 
             return new MultiPoint(transform.TransformList(pts));
         }
+
         /// <summary>
         /// Transforms a <see cref="SharpMap.Geometries.MultiLineString"/>.
         /// </summary>
@@ -167,6 +185,7 @@ namespace SharpMap.CoordinateSystems.Transformations
                 lOut.LineStrings.Add(TransformLineString(lines[i], transform));
             return lOut;
         }
+
         /// <summary>
         /// Transforms a <see cref="SharpMap.Geometries.MultiPolygon"/>.
         /// </summary>
@@ -182,6 +201,7 @@ namespace SharpMap.CoordinateSystems.Transformations
                 pOut.Polygons.Add(TransformPolygon(polys[i], transform));
             return pOut;
         }
+
         /// <summary>
         /// Transforms a <see cref="SharpMap.Geometries.GeometryCollection"/>.
         /// </summary>
@@ -199,4 +219,3 @@ namespace SharpMap.CoordinateSystems.Transformations
         }
     }
 }
-

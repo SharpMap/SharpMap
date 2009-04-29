@@ -16,9 +16,7 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 using System;
-using System.Collections.ObjectModel;
 using System.Collections;
-using SharpMap.Layers;
 
 namespace SharpMap.Layers
 {
@@ -28,6 +26,48 @@ namespace SharpMap.Layers
     public class LayerCollection : CollectionBase
     {
         /// <summary>
+        /// Gets or sets the layer at the given <paramref name="index"/>.
+        /// </summary>
+        /// <param name="index">Index of the layer to get or set.</param>
+        /// <returns>The layer at the given <paramref name="index"/>.</returns>
+        /// <exception cref="ArgumentOutOfRangeException">
+        /// Thrown if <paramref name="index"/> is less than 0 or is 
+        /// greater or equal to <see cref="Count"/>.
+        /// </exception>
+        public virtual ILayer this[int index]
+        {
+            get { return (ILayer) List[index]; }
+            set { List[index] = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets the layer with the given <paramref name="layerName"/>.
+        /// </summary>
+        /// <param name="layerName">
+        /// Name of the layer to replace, if it exists.
+        /// </param>
+        public virtual ILayer this[string layerName]
+        {
+            get { return getLayerByName(layerName); }
+            set
+            {
+                for (int i = 0; i < Count; i++)
+                {
+                    int comparison = String.Compare((List[i] as ILayer).LayerName,
+                                                    layerName, StringComparison.CurrentCultureIgnoreCase);
+
+                    if (comparison == 0)
+                    {
+                        List[i] = value;
+                        return;
+                    }
+                }
+
+                Add(value);
+            }
+        }
+
+        /// <summary>
         /// Adds a layer to the collection.
         /// </summary>
         /// <param name="layer">The layer to add.</param>
@@ -35,7 +75,7 @@ namespace SharpMap.Layers
         {
             List.Add(layer);
         }
-        
+
         /// <summary>
         /// Removes the layer at the given index.
         /// </summary>
@@ -94,48 +134,6 @@ namespace SharpMap.Layers
             List.Insert(index, layer);
         }
 
-        /// <summary>
-        /// Gets or sets the layer at the given <paramref name="index"/>.
-        /// </summary>
-        /// <param name="index">Index of the layer to get or set.</param>
-        /// <returns>The layer at the given <paramref name="index"/>.</returns>
-        /// <exception cref="ArgumentOutOfRangeException">
-        /// Thrown if <paramref name="index"/> is less than 0 or is 
-        /// greater or equal to <see cref="Count"/>.
-        /// </exception>
-        public virtual ILayer this[int index]
-        {
-            get { return (ILayer)List[index]; }
-            set { List[index] = value; }
-        }
-
-        /// <summary>
-        /// Gets or sets the layer with the given <paramref name="layerName"/>.
-        /// </summary>
-        /// <param name="layerName">
-        /// Name of the layer to replace, if it exists.
-        /// </param>
-        public virtual ILayer this[string layerName]
-        {
-            get { return getLayerByName(layerName); }
-            set
-            {
-                for (int i = 0; i < Count; i++)
-                {
-                    int comparison = String.Compare((List[i] as ILayer).LayerName, 
-                        layerName, StringComparison.CurrentCultureIgnoreCase);
-
-                    if (comparison == 0)
-                    {
-                        List[i] = value;
-                        return;
-                    }
-                }
-
-                Add(value);
-            }
-        }
-
         protected override void OnInsert(int index, object value)
         {
             ILayer newLayer = (value as ILayer);
@@ -143,7 +141,7 @@ namespace SharpMap.Layers
             foreach (ILayer layer in List)
             {
                 int comparison = String.Compare(layer.LayerName,
-                    newLayer.LayerName, StringComparison.CurrentCultureIgnoreCase);
+                                                newLayer.LayerName, StringComparison.CurrentCultureIgnoreCase);
 
                 if (comparison == 0)
                 {
@@ -159,7 +157,7 @@ namespace SharpMap.Layers
             foreach (ILayer layer in List)
             {
                 int comparison = String.Compare(layer.LayerName,
-                    layerName, StringComparison.CurrentCultureIgnoreCase);
+                                                layerName, StringComparison.CurrentCultureIgnoreCase);
 
                 if (comparison == 0)
                 {

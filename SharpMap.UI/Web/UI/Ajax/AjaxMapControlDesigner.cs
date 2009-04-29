@@ -17,50 +17,46 @@
 
 using System;
 using System.ComponentModel;
-using System.ComponentModel.Design;
 using System.Drawing;
 using System.Web.UI;
 using System.Web.UI.Design;
-using System.Web.UI.Design.WebControls;
-using System.Web.UI.WebControls;
-
 
 namespace SharpMap.Web.UI.Ajax
 {
-	/// <summary>
-	/// Control used for the VS designer
-	/// </summary>
-	public class AjaxMapControlDesigner : System.Web.UI.Design.ContainerControlDesigner
-	{
-		/// <summary>
-		/// Allows the control to be resized
-		/// </summary>
-		public override bool AllowResize
-		{
-			get { return true; }
-		}
+    /// <summary>
+    /// Control used for the VS designer
+    /// </summary>
+    public class AjaxMapControlDesigner : ContainerControlDesigner
+    {
+        /// <summary>
+        /// Allows the control to be resized
+        /// </summary>
+        public override bool AllowResize
+        {
+            get { return true; }
+        }
 
-		/// <summary>
-		/// Returns the design-time HTML
-		/// </summary>
-		/// <returns></returns>
-		public override string GetDesignTimeHtml()
-		{
-			ControlCollection childControls = ((AjaxMapControl)Component).Controls;
-			return base.GetDesignTimeHtml();
-		}
-		/// <summary>
-		/// Initializes the designer control
-		/// </summary>
-		/// <param name="component"></param>
-		public override void Initialize(IComponent component)
-		{
-			if(!(component is AjaxMapControl))
-				throw(new ArgumentException("Component must be an AjaxMapControl","Component"));
-			AjaxMapControl mapControl = component as AjaxMapControl;
-			mapControl.Map = new Map(new Size((int)mapControl.Width.Value, (int)mapControl.Height.Value));
-			base.Initialize(component);
-		}
+        /// <summary>
+        /// Returns the design-time HTML
+        /// </summary>
+        /// <returns></returns>
+        public override string GetDesignTimeHtml()
+        {
+            ControlCollection childControls = ((AjaxMapControl) Component).Controls;
+            return base.GetDesignTimeHtml();
+        }
 
-	}
+        /// <summary>
+        /// Initializes the designer control
+        /// </summary>
+        /// <param name="component"></param>
+        public override void Initialize(IComponent component)
+        {
+            if (!(component is AjaxMapControl))
+                throw (new ArgumentException("Component must be an AjaxMapControl", "Component"));
+            AjaxMapControl mapControl = component as AjaxMapControl;
+            mapControl.Map = new Map(new Size((int) mapControl.Width.Value, (int) mapControl.Height.Value));
+            base.Initialize(component);
+        }
+    }
 }

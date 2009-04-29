@@ -1,24 +1,38 @@
 ﻿// WFS provider by Peter Robineau (peter.robineau@gmx.at)
 // This file can be redistributed and/or modified under the terms of the GNU Lesser General Public License.
 
-using System;
-using System.Collections.Generic;
-using System.Text;
-
 namespace SharpMap.Utilities.Wfs
 {
     public enum GeometryTypeEnum
     {
-        PointPropertyType, LineStringPropertyType, CurvePropertyType, PolygonPropertyType, SurfacePropertyType,
-        MultiPointPropertyType, MultiLineStringPropertyType, MultiCurvePropertyType, MultiPolygonPropertyType,
-        MultiSurfacePropertyType, Unknown
-    };
+        PointPropertyType,
+        LineStringPropertyType,
+        CurvePropertyType,
+        PolygonPropertyType,
+        SurfacePropertyType,
+        MultiPointPropertyType,
+        MultiLineStringPropertyType,
+        MultiCurvePropertyType,
+        MultiPolygonPropertyType,
+        MultiSurfacePropertyType,
+        Unknown
+    } ;
 
     public class WfsFeatureTypeInfo
     {
         #region Fields with Properties
 
+        private BoundingBox _BoundingBox = new BoundingBox();
+        private string _Cs = ",";
+        private string _DecimalDel = ".";
+        private string _FeatureTypeNamespace = string.Empty;
+        private GeometryInfo _Geometry = new GeometryInfo();
         private string _Name = string.Empty;
+
+        private string _Prefix = string.Empty;
+        private string _ServiceURI = string.Empty;
+        private string _SRID = "4326";
+        private string _Ts = " ";
 
         /// <summary>
         /// Gets or sets the name of the featuretype.
@@ -31,8 +45,6 @@ namespace SharpMap.Utilities.Wfs
             set { _Name = value; }
         }
 
-        private string _Prefix = string.Empty;
-
         /// <summary>
         /// Gets or sets the prefix of the featuretype and it's nested elements.
         /// This argument is obligatory for data retrieving, if the featuretype is declared with a 
@@ -44,8 +56,6 @@ namespace SharpMap.Utilities.Wfs
             get { return _Prefix; }
             set { _Prefix = value; }
         }
-
-        private string _FeatureTypeNamespace = string.Empty;
 
         /// <summary>
         /// Gets or sets the featuretype namespace.
@@ -65,8 +75,6 @@ namespace SharpMap.Utilities.Wfs
             get { return _FeatureTypeNamespace + _Name; }
         }
 
-        private string _ServiceURI = string.Empty;
-
         /// <summary>
         /// Gets or sets the service URI for WFS 'GetFeature' request.
         /// This argument is obligatory for data retrieving.
@@ -76,8 +84,6 @@ namespace SharpMap.Utilities.Wfs
             get { return _ServiceURI; }
             set { _ServiceURI = value; }
         }
-
-        private GeometryInfo _Geometry = new GeometryInfo();
 
         /// <summary>
         /// Gets or sets information about the geometry of the featuretype.
@@ -89,8 +95,6 @@ namespace SharpMap.Utilities.Wfs
             set { _Geometry = value; }
         }
 
-        private BoundingBox _BoundingBox = new BoundingBox();
-
         /// <summary>
         /// Gets or sets the spatial extent of the featuretype - defined as minimum bounding rectangle. 
         /// </summary>
@@ -99,8 +103,6 @@ namespace SharpMap.Utilities.Wfs
             get { return _BoundingBox; }
             set { _BoundingBox = value; }
         }
-
-        private string _SRID = "4326";
 
         /// <summary>
         /// Gets or sets the spatial reference ID
@@ -117,8 +119,6 @@ namespace SharpMap.Utilities.Wfs
         //attribute gives the tuple separator (a single space by default); the 
         //default values may be changed to reflect local usage.
 
-        private string _DecimalDel = ".";
-
         /// <summary>
         /// Decimal separator (for gml:coordinates)
         /// </summary>
@@ -128,8 +128,6 @@ namespace SharpMap.Utilities.Wfs
             set { _DecimalDel = value; }
         }
 
-        private string _Cs = ",";
-
         /// <summary>
         /// Separator for coordinate values (for gml:coordinates)
         /// </summary>
@@ -138,8 +136,6 @@ namespace SharpMap.Utilities.Wfs
             get { return _Cs; }
             set { _Cs = value; }
         }
-
-        private string _Ts = " ";
 
         /// <summary>
         /// Tuple separator (for gml:coordinates)
@@ -172,7 +168,7 @@ namespace SharpMap.Utilities.Wfs
         /// Specifying the geometry type helps to accelerate the rendering process.   
         /// </param>
         public WfsFeatureTypeInfo(string serviceURI, string nsPrefix, string featureTypeNamespace, string featureType,
-            string geometryName, GeometryTypeEnum geometryType)
+                                  string geometryName, GeometryTypeEnum geometryType)
         {
             _ServiceURI = serviceURI;
             _Prefix = nsPrefix;
@@ -196,15 +192,18 @@ namespace SharpMap.Utilities.Wfs
         /// The geometry name is the property of the featuretype from which geometry information can be obtained from.
         /// Usually this property is called something like 'Shape' or 'geom'. It is absolutely necessary to give this parameter. 
         /// </param>
-        public WfsFeatureTypeInfo(string serviceURI, string nsPrefix, string featureTypeNamespace, string featureType, string geometryName)
-            : this(serviceURI, nsPrefix, featureTypeNamespace,featureType, geometryName, GeometryTypeEnum.Unknown)
-        { }
+        public WfsFeatureTypeInfo(string serviceURI, string nsPrefix, string featureTypeNamespace, string featureType,
+                                  string geometryName)
+            : this(serviceURI, nsPrefix, featureTypeNamespace, featureType, geometryName, GeometryTypeEnum.Unknown)
+        {
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="WfsFeatureTypeInfo"/> class.
         /// </summary>
         public WfsFeatureTypeInfo()
-        { }
+        {
+        }
 
         #endregion
 
@@ -217,10 +216,10 @@ namespace SharpMap.Utilities.Wfs
         /// </summary>
         public class BoundingBox
         {
-            public double _MinLong;
-            public double _MinLat;
-            public double _MaxLong;
             public double _MaxLat;
+            public double _MaxLong;
+            public double _MinLat;
+            public double _MinLong;
         }
 
         #endregion
@@ -241,5 +240,4 @@ namespace SharpMap.Utilities.Wfs
 
         #endregion
     }
-
 }

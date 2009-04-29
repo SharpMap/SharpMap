@@ -3,8 +3,10 @@
 
 using System;
 using System.Collections.Specialized;
-using System.Net;
+using System.Diagnostics;
 using System.IO;
+using System.Net;
+using System.Security;
 
 namespace SharpMap.Utilities.Wfs
 {
@@ -15,11 +17,13 @@ namespace SharpMap.Utilities.Wfs
     {
         #region Fields and Properties
 
-        private HttpWebRequest _WebRequest;
-        private HttpWebResponse _WebResponse;
-        private NameValueCollection _RequestHeaders;
+        private readonly NameValueCollection _RequestHeaders;
+        private byte[] _PostData;
+        private string _ProxyUrl;
 
         private string _Url;
+        private HttpWebRequest _WebRequest;
+        private HttpWebResponse _WebResponse;
 
         /// <summary>
         /// Gets ans sets the Url of the request.
@@ -30,8 +34,6 @@ namespace SharpMap.Utilities.Wfs
             set { _Url = value; }
         }
 
-        private string _ProxyUrl;
-
         /// <summary>
         /// Gets and sets the proxy Url of the request. 
         /// </summary>
@@ -40,8 +42,6 @@ namespace SharpMap.Utilities.Wfs
             get { return _ProxyUrl; }
             set { _ProxyUrl = value; }
         }
-
-        private byte[] _PostData;
 
         /// <summary>
         /// Sets the data of a HTTP POST request as byte array.
@@ -82,7 +82,7 @@ namespace SharpMap.Utilities.Wfs
         /// </summary>
         public Stream GetDataStream()
         {
-            if(string.IsNullOrEmpty(_Url))
+            if (string.IsNullOrEmpty(_Url))
                 throw new ArgumentNullException("Request Url is not set!");
 
             // Free all resources of the previous request, if it hasn't been done yet...
@@ -90,19 +90,20 @@ namespace SharpMap.Utilities.Wfs
 
             try
             {
-                _WebRequest = (HttpWebRequest)WebRequest.Create(_Url);
+                _WebRequest = (HttpWebRequest) WebRequest.Create(_Url);
             }
-            catch (System.Security.SecurityException ex)
+            catch (SecurityException ex)
             {
-                System.Diagnostics.Trace.TraceError("An exception occured due to security reasons while initializing a request to " + _Url + ": " + ex.Message);
+                Trace.TraceError("An exception occured due to security reasons while initializing a request to " + _Url +
+                                 ": " + ex.Message);
                 throw ex;
             }
             catch (NotSupportedException ex)
             {
-                System.Diagnostics.Trace.TraceError("An exception occured while initializing a request to " + _Url + ": " + ex.Message);
+                Trace.TraceError("An exception occured while initializing a request to " + _Url + ": " + ex.Message);
                 throw ex;
             }
-           
+
             _WebRequest.Timeout = 90000;
 
             if (!string.IsNullOrEmpty(_ProxyUrl))
@@ -122,16 +123,16 @@ namespace SharpMap.Utilities.Wfs
                         requestStream.Write(_PostData, 0, _PostData.Length);
                     }
                 }
-                /* HTTP GET */
+                    /* HTTP GET */
                 else
                     _WebRequest.Method = WebRequestMethods.Http.Get;
 
-                _WebResponse = (HttpWebResponse)_WebRequest.GetResponse();
-                return _WebResponse.GetResponseStream();    
+                _WebResponse = (HttpWebResponse) _WebRequest.GetResponse();
+                return _WebResponse.GetResponseStream();
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Trace.TraceError("An exception occured during a HTTP request to " + _Url + ": " + ex.Message);
+                Trace.TraceError("An exception occured during a HTTP request to " + _Url + ": " + ex.Message);
                 throw ex;
             }
         }
@@ -160,6 +161,5 @@ namespace SharpMap.Utilities.Wfs
         }
 
         #endregion
-
     }
 }

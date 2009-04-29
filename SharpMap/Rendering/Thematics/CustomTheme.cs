@@ -15,126 +15,128 @@
 // along with SharpMap; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
 
-using System;
-using System.Collections.Generic;
-using System.Text;
+using SharpMap.Data;
+using SharpMap.Styles;
 
 namespace SharpMap.Rendering.Thematics
 {
-	/// <summary>
-	/// The CustomTheme class is used for defining your own thematic rendering by using a custom get-style-delegate.
-	/// </summary>
-	public class CustomTheme : ITheme
-	{
-		/// <summary>
-		/// Custom Style Delegate method
-		/// </summary>
-		/// <remarks>
-		/// The GetStyle delegate is used for determining the style of a feature using the <see cref="StyleDelegate"/> property.
-		/// The method must take a <see cref="SharpMap.Data.FeatureDataRow"/> and return an <see cref="SharpMap.Styles.IStyle"/>.
-		/// If the method returns null, the default style will be used for rendering.
-		/// <para>
-		/// <example>
-		/// The following example can used for highlighting all features where the attribute "NAME" starts with "S".
-		/// <code lang="C#">
-		/// SharpMap.Rendering.Thematics.CustomTheme iTheme = new SharpMap.Rendering.Thematics.CustomTheme(GetCustomStyle);
-		/// SharpMap.Styles.VectorStyle defaultstyle = new SharpMap.Styles.VectorStyle(); //Create default renderstyle
-		/// defaultstyle.Fill = Brushes.Gray;
-		/// iTheme.DefaultStyle = defaultstyle;
-		/// 
-		/// [...]
-		/// 
-		/// //Set up delegate for determining fill-color.
-		/// //Delegate will fill all objects with a yellow color where the attribute "NAME" starts with "S".
-		/// private static SharpMap.Styles.VectorStyle GetCustomStyle(SharpMap.Data.FeatureDataRow row)
-		/// {
-		/// 
-		/// 	if (row["NAME"].ToString().StartsWith("S"))
-		/// 	{
-		/// 		SharpMap.Styles.VectorStyle style = new SharpMap.Styles.VectorStyle();
-		/// 		style.Fill = Brushes.Yellow;
-		/// 		return style;
-		/// 	}
-		/// 	else
-		/// 		return null; //Return null which will render the default style
-		/// }
-		/// </code>
-		/// </example>
-		/// </para>
-		/// </remarks>
-		/// <param name="dr">Feature</param>
-		/// <returns>Style to be applied to feature</returns>
-		public delegate SharpMap.Styles.IStyle GetStyleMethod(SharpMap.Data.FeatureDataRow dr);
+    /// <summary>
+    /// The CustomTheme class is used for defining your own thematic rendering by using a custom get-style-delegate.
+    /// </summary>
+    public class CustomTheme : ITheme
+    {
+        #region Delegates
 
-		private SharpMap.Styles.IStyle _DefaultStyle;
+        /// <summary>
+        /// Custom Style Delegate method
+        /// </summary>
+        /// <remarks>
+        /// The GetStyle delegate is used for determining the style of a feature using the <see cref="StyleDelegate"/> property.
+        /// The method must take a <see cref="SharpMap.Data.FeatureDataRow"/> and return an <see cref="SharpMap.Styles.IStyle"/>.
+        /// If the method returns null, the default style will be used for rendering.
+        /// <para>
+        /// <example>
+        /// The following example can used for highlighting all features where the attribute "NAME" starts with "S".
+        /// <code lang="C#">
+        /// SharpMap.Rendering.Thematics.CustomTheme iTheme = new SharpMap.Rendering.Thematics.CustomTheme(GetCustomStyle);
+        /// SharpMap.Styles.VectorStyle defaultstyle = new SharpMap.Styles.VectorStyle(); //Create default renderstyle
+        /// defaultstyle.Fill = Brushes.Gray;
+        /// iTheme.DefaultStyle = defaultstyle;
+        /// 
+        /// [...]
+        /// 
+        /// //Set up delegate for determining fill-color.
+        /// //Delegate will fill all objects with a yellow color where the attribute "NAME" starts with "S".
+        /// private static SharpMap.Styles.VectorStyle GetCustomStyle(SharpMap.Data.FeatureDataRow row)
+        /// {
+        /// 
+        /// 	if (row["NAME"].ToString().StartsWith("S"))
+        /// 	{
+        /// 		SharpMap.Styles.VectorStyle style = new SharpMap.Styles.VectorStyle();
+        /// 		style.Fill = Brushes.Yellow;
+        /// 		return style;
+        /// 	}
+        /// 	else
+        /// 		return null; //Return null which will render the default style
+        /// }
+        /// </code>
+        /// </example>
+        /// </para>
+        /// </remarks>
+        /// <param name="dr">Feature</param>
+        /// <returns>Style to be applied to feature</returns>
+        public delegate IStyle GetStyleMethod(FeatureDataRow dr);
 
-		/// <summary>
-		/// Gets or sets the default style when an attribute isn't found in any bucket
-		/// </summary>
-		public SharpMap.Styles.IStyle DefaultStyle
-		{
-			get { return _DefaultStyle; }
-			set { _DefaultStyle = value; }
-		}
+        #endregion
 
-		private GetStyleMethod _getStyleDelegate;
+        private IStyle _DefaultStyle;
 
-		/// <summary>
-		/// Gets or sets the style delegate used for determining the style of a feature
-		/// </summary>
-		/// <remarks>
-		/// The delegate must take a <see cref="SharpMap.Data.FeatureDataRow"/> and return an <see cref="SharpMap.Styles.IStyle"/>.
-		/// If the method returns null, the default style will be used for rendering.
-		/// <example>
-		/// The example below creates a delegate that can be used for assigning the rendering of a road theme. If the road-class
-		/// is larger than '3', it will be rendered using a thick red line.
-		/// <code lang="C#">
-		/// private static SharpMap.Styles.VectorStyle GetRoadStyle(SharpMap.Data.FeatureDataRow row)
-		/// {
-		///		SharpMap.Styles.VectorStyle style = new SharpMap.Styles.VectorStyle();
-		///		if(((int)row["RoadClass"])>3)
-		///			style.Line = new Pen(Color.Red,5f);
-		///		else
-		///			style.Line = new Pen(Color.Black,1f);
-		///		return style;
-		/// }
-		/// </code>
-		/// </example>
-		/// </remarks>
-		/// <seealso cref="GetStyleMethod"/>
-		public GetStyleMethod StyleDelegate
-		{
-			get { return _getStyleDelegate; }
-			set { _getStyleDelegate = value; }
-		}
-	
-
-		/// <summary>
-		/// Initializes a new instance of the <see cref="CustomTheme"/> class
-		/// </summary>
-		/// <param name="getStyleMethod"></param>
-		public CustomTheme(GetStyleMethod getStyleMethod)
-		{
-			_getStyleDelegate = getStyleMethod;
-		}
+        private GetStyleMethod _getStyleDelegate;
 
 
-		#region ITheme Members
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CustomTheme"/> class
+        /// </summary>
+        /// <param name="getStyleMethod"></param>
+        public CustomTheme(GetStyleMethod getStyleMethod)
+        {
+            _getStyleDelegate = getStyleMethod;
+        }
 
-		/// <summary>
-		/// Returns the <see cref="System.Drawing.Color">color</see> based on an attribute value
-		/// </summary>
-		/// <param name="row">DataRow</param>
-		/// <returns>Style generated by GetStyle-Delegate</returns>
-		public SharpMap.Styles.IStyle GetStyle(SharpMap.Data.FeatureDataRow row)
-		{
-			SharpMap.Styles.IStyle style = _getStyleDelegate(row);
-			if (style != null)
-				return style;
-			else
-				return _DefaultStyle;
-		}
+        /// <summary>
+        /// Gets or sets the default style when an attribute isn't found in any bucket
+        /// </summary>
+        public IStyle DefaultStyle
+        {
+            get { return _DefaultStyle; }
+            set { _DefaultStyle = value; }
+        }
 
-		#endregion
-}
+        /// <summary>
+        /// Gets or sets the style delegate used for determining the style of a feature
+        /// </summary>
+        /// <remarks>
+        /// The delegate must take a <see cref="SharpMap.Data.FeatureDataRow"/> and return an <see cref="SharpMap.Styles.IStyle"/>.
+        /// If the method returns null, the default style will be used for rendering.
+        /// <example>
+        /// The example below creates a delegate that can be used for assigning the rendering of a road theme. If the road-class
+        /// is larger than '3', it will be rendered using a thick red line.
+        /// <code lang="C#">
+        /// private static SharpMap.Styles.VectorStyle GetRoadStyle(SharpMap.Data.FeatureDataRow row)
+        /// {
+        ///		SharpMap.Styles.VectorStyle style = new SharpMap.Styles.VectorStyle();
+        ///		if(((int)row["RoadClass"])>3)
+        ///			style.Line = new Pen(Color.Red,5f);
+        ///		else
+        ///			style.Line = new Pen(Color.Black,1f);
+        ///		return style;
+        /// }
+        /// </code>
+        /// </example>
+        /// </remarks>
+        /// <seealso cref="GetStyleMethod"/>
+        public GetStyleMethod StyleDelegate
+        {
+            get { return _getStyleDelegate; }
+            set { _getStyleDelegate = value; }
+        }
+
+        #region ITheme Members
+
+        /// <summary>
+        /// Returns the <see cref="System.Drawing.Color">color</see> based on an attribute value
+        /// </summary>
+        /// <param name="row">DataRow</param>
+        /// <returns>Style generated by GetStyle-Delegate</returns>
+        public IStyle GetStyle(FeatureDataRow row)
+        {
+            IStyle style = _getStyleDelegate(row);
+            if (style != null)
+                return style;
+            else
+                return _DefaultStyle;
+        }
+
+        #endregion
+    }
 }

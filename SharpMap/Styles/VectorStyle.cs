@@ -15,130 +15,128 @@
 // along with SharpMap; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
 
-using System;
-using System.Collections.Generic;
-using System.Text;
+using System.Drawing;
 
 namespace SharpMap.Styles
 {
-	/// <summary>
-	/// Defines a style used for rendering vector data
-	/// </summary>
-	public class VectorStyle : Style
-	{
-		#region Privates
-		private System.Drawing.Pen _LineStyle;
-		private System.Drawing.Pen _OutlineStyle;
-		private bool _Outline;
-		private System.Drawing.Brush _FillStyle;
-		private System.Drawing.Bitmap _Symbol;
-		#endregion
+    /// <summary>
+    /// Defines a style used for rendering vector data
+    /// </summary>
+    public class VectorStyle : Style
+    {
+        #region Privates
 
-		/// <summary>
-		/// Initializes a new VectorStyle and sets the default values
-		/// </summary>
-		/// <remarks>
-		/// Default style values when initialized:<br/>
-		/// *LineStyle: 1px solid black<br/>
-		/// *FillStyle: Solid black<br/>
-		/// *Outline: No Outline
-		/// *Symbol: null-reference
-		/// </remarks>
-		public VectorStyle()
-		{
-			this.Outline = new System.Drawing.Pen(System.Drawing.Color.Black, 1);
-			this.Line = new System.Drawing.Pen(System.Drawing.Color.Black, 1);
-			this.Fill = System.Drawing.Brushes.Black;
-			this.EnableOutline = false;
-			this.SymbolScale = 1f;
-		}
+        private Brush _FillStyle;
+        private Pen _LineStyle;
+        private bool _Outline;
+        private Pen _OutlineStyle;
+        private Bitmap _Symbol;
 
-		#region Properties
+        #endregion
 
-		/// <summary>
-		/// Linestyle for line geometries
-		/// </summary>
-		public System.Drawing.Pen Line
-		{
-			get { return _LineStyle; }
-			set { _LineStyle = value; }
-		}
+        /// <summary>
+        /// Initializes a new VectorStyle and sets the default values
+        /// </summary>
+        /// <remarks>
+        /// Default style values when initialized:<br/>
+        /// *LineStyle: 1px solid black<br/>
+        /// *FillStyle: Solid black<br/>
+        /// *Outline: No Outline
+        /// *Symbol: null-reference
+        /// </remarks>
+        public VectorStyle()
+        {
+            Outline = new Pen(Color.Black, 1);
+            Line = new Pen(Color.Black, 1);
+            Fill = Brushes.Black;
+            EnableOutline = false;
+            SymbolScale = 1f;
+        }
 
-		/// <summary>
-		/// Outline style for line and polygon geometries
-		/// </summary>
-		public System.Drawing.Pen Outline
-		{
-			get { return _OutlineStyle; }
-			set { _OutlineStyle = value; }
-		}
+        #region Properties
 
-		/// <summary>
-		/// Specified whether the objects are rendered with or without outlining
-		/// </summary>
-		public bool EnableOutline
-		{
-			get { return _Outline; }
-			set { _Outline = value; }
-		}
+        private PointF _SymbolOffset;
+        private float _SymbolRotation;
+        private float _SymbolScale;
 
-		/// <summary>
-		/// Fillstyle for Polygon geometries
-		/// </summary>
-		public System.Drawing.Brush Fill
-		{
-			get { return _FillStyle; }
-			set { _FillStyle = value; }
-		}
-		
-		/// <summary>
-		/// Symbol used for rendering points
-		/// </summary>
-		public System.Drawing.Bitmap Symbol
-		{
-			get { return _Symbol; }
-			set { _Symbol = value; }
-		}
-		private float _SymbolScale;
+        /// <summary>
+        /// Linestyle for line geometries
+        /// </summary>
+        public Pen Line
+        {
+            get { return _LineStyle; }
+            set { _LineStyle = value; }
+        }
 
-		/// <summary>
-		/// Scale of the symbol (defaults to 1)
-		/// </summary>
-		/// <remarks>
-		/// Setting the symbolscale to '2.0' doubles the size of the symbol, where a scale of 0.5 makes the scale half the size of the original image
-		/// </remarks>
-		public float SymbolScale
-		{
-			get { return _SymbolScale; }
-			set { _SymbolScale = value; }
-		}
+        /// <summary>
+        /// Outline style for line and polygon geometries
+        /// </summary>
+        public Pen Outline
+        {
+            get { return _OutlineStyle; }
+            set { _OutlineStyle = value; }
+        }
 
-		private System.Drawing.PointF _SymbolOffset;
+        /// <summary>
+        /// Specified whether the objects are rendered with or without outlining
+        /// </summary>
+        public bool EnableOutline
+        {
+            get { return _Outline; }
+            set { _Outline = value; }
+        }
 
-		/// <summary>
-		/// Gets or sets the offset in pixels of the symbol.
-		/// </summary>
-		/// <remarks>
-		/// The symbol offset is scaled with the <see cref="SymbolScale"/> property and refers to the offset af <see cref="SymbolScale"/>=1.0.
-		/// </remarks>
-		public System.Drawing.PointF SymbolOffset
-		{
-			get { return _SymbolOffset; }
-			set { _SymbolOffset = value; }
-		}
+        /// <summary>
+        /// Fillstyle for Polygon geometries
+        /// </summary>
+        public Brush Fill
+        {
+            get { return _FillStyle; }
+            set { _FillStyle = value; }
+        }
 
-		private float _SymbolRotation;
+        /// <summary>
+        /// Symbol used for rendering points
+        /// </summary>
+        public Bitmap Symbol
+        {
+            get { return _Symbol; }
+            set { _Symbol = value; }
+        }
 
-		/// <summary>
-		/// Gets or sets the rotation of the symbol in degrees (clockwise is positive)
-		/// </summary>
-		public float SymbolRotation
-		{
-			get { return _SymbolRotation; }
-			set { _SymbolRotation = value; }
-		}
-	
+        /// <summary>
+        /// Scale of the symbol (defaults to 1)
+        /// </summary>
+        /// <remarks>
+        /// Setting the symbolscale to '2.0' doubles the size of the symbol, where a scale of 0.5 makes the scale half the size of the original image
+        /// </remarks>
+        public float SymbolScale
+        {
+            get { return _SymbolScale; }
+            set { _SymbolScale = value; }
+        }
 
-		#endregion
-	}
+        /// <summary>
+        /// Gets or sets the offset in pixels of the symbol.
+        /// </summary>
+        /// <remarks>
+        /// The symbol offset is scaled with the <see cref="SymbolScale"/> property and refers to the offset af <see cref="SymbolScale"/>=1.0.
+        /// </remarks>
+        public PointF SymbolOffset
+        {
+            get { return _SymbolOffset; }
+            set { _SymbolOffset = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets the rotation of the symbol in degrees (clockwise is positive)
+        /// </summary>
+        public float SymbolRotation
+        {
+            get { return _SymbolRotation; }
+            set { _SymbolRotation = value; }
+        }
+
+        #endregion
+    }
 }

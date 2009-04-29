@@ -15,64 +15,64 @@
 // along with SharpMap; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
 
-using System;
-using System.Collections.Generic;
-using System.Text;
+using System.Drawing;
+using System.Drawing.Imaging;
+using System.IO;
+using System.Web;
 
 namespace SharpMap.Web
 {
-	/// <summary>
-	/// HttpHandler class for web applications
-	/// </summary>
-	public class HttpHandler : System.Web.IHttpHandler
-	{
-		#region IHttpHandler Members
+    /// <summary>
+    /// HttpHandler class for web applications
+    /// </summary>
+    public class HttpHandler : IHttpHandler
+    {
+        #region IHttpHandler Members
 
-		/// <summary>
-		/// Enable Http pooling
-		/// </summary>
-		public bool IsReusable
-		{
-			get { return true; }
-		}
+        /// <summary>
+        /// Enable Http pooling
+        /// </summary>
+        public bool IsReusable
+        {
+            get { return true; }
+        }
 
-		/// <summary>
-		/// Returns the requested image in an http imagestream
-		/// </summary>
-		/// <param name="context">HttpContext</param>
-		public void ProcessRequest(System.Web.HttpContext context)
-		{
-			string imgID = context.Request.QueryString["ID"];
-			if (context.Cache[imgID] == null)
-			{
-				context.Response.Clear();
-				context.Response.Write("Invalid Image requested");
-				return;
-			}
-			if (context.Cache[imgID].GetType() == typeof(System.Drawing.Bitmap))
-			{
-				context.Response.ContentType = "image/png";
-				System.Drawing.Bitmap b = (System.Drawing.Bitmap)context.Cache[imgID];
-				// send the image to the viewer
-				System.IO.MemoryStream MS = new System.IO.MemoryStream();
-				b.Save(MS, System.Drawing.Imaging.ImageFormat.Png);
-				// tidy up  
-				b.Dispose();
+        /// <summary>
+        /// Returns the requested image in an http imagestream
+        /// </summary>
+        /// <param name="context">HttpContext</param>
+        public void ProcessRequest(HttpContext context)
+        {
+            string imgID = context.Request.QueryString["ID"];
+            if (context.Cache[imgID] == null)
+            {
+                context.Response.Clear();
+                context.Response.Write("Invalid Image requested");
+                return;
+            }
+            if (context.Cache[imgID].GetType() == typeof (Bitmap))
+            {
+                context.Response.ContentType = "image/png";
+                Bitmap b = (Bitmap) context.Cache[imgID];
+                // send the image to the viewer
+                MemoryStream MS = new MemoryStream();
+                b.Save(MS, ImageFormat.Png);
+                // tidy up  
+                b.Dispose();
 
-				byte[] buffer = MS.ToArray();
-				context.Response.OutputStream.Write(buffer, 0, buffer.Length);
-			}
-			else if (context.Cache[imgID].GetType() == typeof(byte[]))
-			{
-				context.Response.ContentType = "image/png";
-				byte[] buffer = (byte[])context.Cache[imgID];
-				context.Response.OutputStream.Write(buffer, 0, buffer.Length);
-				return;
-			}
-			context.Response.End();
-		}		
-		
+                byte[] buffer = MS.ToArray();
+                context.Response.OutputStream.Write(buffer, 0, buffer.Length);
+            }
+            else if (context.Cache[imgID].GetType() == typeof (byte[]))
+            {
+                context.Response.ContentType = "image/png";
+                byte[] buffer = (byte[]) context.Cache[imgID];
+                context.Response.OutputStream.Write(buffer, 0, buffer.Length);
+                return;
+            }
+            context.Response.End();
+        }
 
-		#endregion
-	}
+        #endregion
+    }
 }

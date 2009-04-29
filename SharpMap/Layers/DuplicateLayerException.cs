@@ -20,7 +20,9 @@ namespace SharpMap.Layers
         /// The existing layer name which was duplicated.
         /// </param>
         public DuplicateLayerException(string duplicateLayerName)
-            : this(duplicateLayerName, null) { }
+            : this(duplicateLayerName, null)
+        {
+        }
 
         /// <summary>
         /// Creates a new instance of DuplicateLayerException, indicating
@@ -32,7 +34,9 @@ namespace SharpMap.Layers
         /// </param>
         /// <param name="message">Additional information about the exception.</param>
         public DuplicateLayerException(string duplicateLayerName, string message)
-            : this(duplicateLayerName, message, null) { }
+            : this(duplicateLayerName, message, null)
+        {
+        }
 
         /// <summary>
         /// Creates a new instance of DuplicateLayerException, indicating

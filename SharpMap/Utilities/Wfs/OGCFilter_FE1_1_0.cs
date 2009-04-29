@@ -1,10 +1,8 @@
 // WFS provider by Peter Robineau (peter.robineau@gmx.at)
 // This file can be redistributed and/or modified under the terms of the GNU Lesser General Public License.
 
-using System;
 using System.Collections.Generic;
 using System.Text;
-using System.Xml;
 
 namespace SharpMap.Utilities.Wfs
 {
@@ -15,24 +13,30 @@ namespace SharpMap.Utilities.Wfs
     {
         string Encode();
     }
-    
+
     /// <summary>
     /// This class hosts a collection of instances implementing <see cref="IFilter"/>.
     /// </summary>
-    public class OGCFilterCollection: IFilter
+    public class OGCFilterCollection : IFilter
     {
         #region Enumerations
 
         /// <summary>
         /// This enumeration consists of expressions denoting FE logical operators.
         /// </summary>
-        public enum JunctorEnum {And, Or};
+        public enum JunctorEnum
+        {
+            And,
+            Or
+        } ;
 
         #endregion
-        
+
         #region Fields and Properties
 
         private List<IFilter> _Filters;
+
+        private JunctorEnum _Junctor = JunctorEnum.And;
 
         /// <summary>
         /// Gets and sets a collection of instances implementing <see cref="IFilter"/>.
@@ -42,8 +46,6 @@ namespace SharpMap.Utilities.Wfs
             get { return _Filters; }
             set { _Filters = value; }
         }
-
-        private JunctorEnum _Junctor = JunctorEnum.And;
 
         /// <summary>
         /// Gets and sets the operator for combining the filters.
@@ -61,7 +63,10 @@ namespace SharpMap.Utilities.Wfs
         /// <summary>
         /// Initializes a new instance of the <see cref="OGCFilterCollection"/> class.
         /// </summary>
-        public OGCFilterCollection() { _Filters = new List<IFilter>(); }
+        public OGCFilterCollection()
+        {
+            _Filters = new List<IFilter>();
+        }
 
         #endregion
 
@@ -82,8 +87,8 @@ namespace SharpMap.Utilities.Wfs
         /// <param name="filterCollection"></param>
         public void AddFilterCollection(OGCFilterCollection filterCollection)
         {
-            if(!object.ReferenceEquals(filterCollection,this))
-            _Filters.Add(filterCollection);
+            if (!ReferenceEquals(filterCollection, this))
+                _Filters.Add(filterCollection);
         }
 
         #endregion
@@ -97,10 +102,10 @@ namespace SharpMap.Utilities.Wfs
         public string Encode()
         {
             StringBuilder filterBuilder = new StringBuilder();
-            filterBuilder.Append("<"+_Junctor.ToString()+">");
+            filterBuilder.Append("<" + _Junctor + ">");
             foreach (IFilter filter in Filters)
                 filterBuilder.Append(filter.Encode());
-            filterBuilder.Append("</" + _Junctor.ToString() + ">");
+            filterBuilder.Append("</" + _Junctor + ">");
             return filterBuilder.ToString();
         }
 
@@ -125,7 +130,7 @@ namespace SharpMap.Utilities.Wfs
         /// Protected constructor for the abstract class.
         /// </summary>
         /// <param name="args">An array of arguments for the filter</param>
-        protected OGCFilterBase (string[] args)
+        protected OGCFilterBase(string[] args)
         {
             _Args = args;
         }
@@ -143,9 +148,10 @@ namespace SharpMap.Utilities.Wfs
         /// <summary>
         /// Initializes a new instance of the <see cref="PropertyIsEqualToFilter_FE1_1_0"/> class.
         /// </summary>
-        public PropertyIsEqualToFilter_FE1_1_0 (string propertyName, string arg)
-            : base(new string[] { propertyName, arg })
-        { }
+        public PropertyIsEqualToFilter_FE1_1_0(string propertyName, string arg)
+            : base(new[] {propertyName, arg})
+        {
+        }
 
         #endregion
 
@@ -159,8 +165,10 @@ namespace SharpMap.Utilities.Wfs
         {
             return @"
             <PropertyIsEqualTo>
-                <PropertyName>"+_Args[0]+@"</PropertyName>
-                <Literal>" + _Args[1] + @"</Literal>
+                <PropertyName>" + _Args[0] +
+                   @"</PropertyName>
+                <Literal>" + _Args[1] +
+                   @"</Literal>
             </PropertyIsEqualTo>";
         }
 
@@ -177,9 +185,10 @@ namespace SharpMap.Utilities.Wfs
         /// <summary>
         /// Initializes a new instance of the <see cref="PropertyIsNotEqualToFilter_FE1_1_0"/> class.
         /// </summary>
-        public PropertyIsNotEqualToFilter_FE1_1_0 (string propertyName, string arg)
-            : base(new string[] { propertyName, arg })
-        { }
+        public PropertyIsNotEqualToFilter_FE1_1_0(string propertyName, string arg)
+            : base(new[] {propertyName, arg})
+        {
+        }
 
         #endregion
 
@@ -193,8 +202,10 @@ namespace SharpMap.Utilities.Wfs
         {
             return @"
             <PropertyIsNotEqualTo>
-                <PropertyName>" + _Args[0] + @"</PropertyName>
-                <Literal>" + _Args[1] + @"</Literal>
+                <PropertyName>" + _Args[0] +
+                   @"</PropertyName>
+                <Literal>" + _Args[1] +
+                   @"</Literal>
             </PropertyIsNotEqualTo>";
         }
 
@@ -211,9 +222,10 @@ namespace SharpMap.Utilities.Wfs
         /// <summary>
         /// Initializes a new instance of the <see cref="PropertyIsLessThanFilter_FE1_1_0"/> class.
         /// </summary>
-        public PropertyIsLessThanFilter_FE1_1_0 (string propertyName, string arg)
-            : base(new string[] { propertyName, arg })
-        { }
+        public PropertyIsLessThanFilter_FE1_1_0(string propertyName, string arg)
+            : base(new[] {propertyName, arg})
+        {
+        }
 
         #endregion
 
@@ -227,8 +239,10 @@ namespace SharpMap.Utilities.Wfs
         {
             return @"
             <PropertyIsLessThan>
-                <PropertyName>" + _Args[0] + @"</PropertyName>
-                <Literal>" + _Args[1] + @"</Literal>
+                <PropertyName>" + _Args[0] +
+                   @"</PropertyName>
+                <Literal>" + _Args[1] +
+                   @"</Literal>
             </PropertyIsLessThan>";
         }
 
@@ -245,9 +259,10 @@ namespace SharpMap.Utilities.Wfs
         /// <summary>
         /// Initializes a new instance of the <see cref="PropertyIsGreaterThanFilter_FE1_1_0"/> class.
         /// </summary>
-        public PropertyIsGreaterThanFilter_FE1_1_0 (string propertyName, string arg)
-            : base(new string[] { propertyName, arg })
-        { }
+        public PropertyIsGreaterThanFilter_FE1_1_0(string propertyName, string arg)
+            : base(new[] {propertyName, arg})
+        {
+        }
 
         #endregion
 
@@ -261,8 +276,10 @@ namespace SharpMap.Utilities.Wfs
         {
             return @"
             <PropertyIsGreaterThan>
-                <PropertyName>" + _Args[0] + @"</PropertyName>
-                <Literal>" + _Args[1] + @"</Literal>
+                <PropertyName>" + _Args[0] +
+                   @"</PropertyName>
+                <Literal>" + _Args[1] +
+                   @"</Literal>
             </PropertyIsGreaterThan>";
         }
 
@@ -279,9 +296,10 @@ namespace SharpMap.Utilities.Wfs
         /// <summary>
         /// Initializes a new instance of the <see cref="PropertyIsLessThanOrEqualToFilter_FE1_1_0"/> class.
         /// </summary>
-        public PropertyIsLessThanOrEqualToFilter_FE1_1_0 (string propertyName, string arg)
-            : base(new string[] { propertyName, arg })
-        { }
+        public PropertyIsLessThanOrEqualToFilter_FE1_1_0(string propertyName, string arg)
+            : base(new[] {propertyName, arg})
+        {
+        }
 
         #endregion
 
@@ -295,8 +313,10 @@ namespace SharpMap.Utilities.Wfs
         {
             return @"
             <PropertyIsLessThanOrEqualTo>
-                <PropertyName>" + _Args[0] + @"</PropertyName>
-                <Literal>" + _Args[1] + @"</Literal>
+                <PropertyName>" + _Args[0] +
+                   @"</PropertyName>
+                <Literal>" + _Args[1] +
+                   @"</Literal>
             </PropertyIsLessThanOrEqualTo>";
         }
 
@@ -313,9 +333,10 @@ namespace SharpMap.Utilities.Wfs
         /// <summary>
         /// Initializes a new instance of the <see cref="PropertyIsGreaterThanOrEqualToFilter_FE1_1_0"/> class.
         /// </summary>
-        public PropertyIsGreaterThanOrEqualToFilter_FE1_1_0 (string propertyName, string arg)
-            : base(new string[] { propertyName, arg })
-        { }
+        public PropertyIsGreaterThanOrEqualToFilter_FE1_1_0(string propertyName, string arg)
+            : base(new[] {propertyName, arg})
+        {
+        }
 
         #endregion
 
@@ -329,8 +350,10 @@ namespace SharpMap.Utilities.Wfs
         {
             return @"
             <PropertyIsGreaterThanOrEqualTo>
-                <PropertyName>" + _Args[0] + @"</PropertyName>
-                <Literal>" + _Args[1] + @"</Literal>
+                <PropertyName>" + _Args[0] +
+                   @"</PropertyName>
+                <Literal>" + _Args[1] +
+                   @"</Literal>
             </PropertyIsGreaterThanOrEqualTo>";
         }
 
@@ -348,8 +371,9 @@ namespace SharpMap.Utilities.Wfs
         /// Initializes a new instance of the <see cref="PropertyIsBetweenFilter_FE1_1_0"/> class.
         /// </summary>
         public PropertyIsBetweenFilter_FE1_1_0(string propertyName, string lowerBoundary, string upperBoundary)
-            : base(new string[] { propertyName, lowerBoundary, upperBoundary })
-        { }
+            : base(new[] {propertyName, lowerBoundary, upperBoundary})
+        {
+        }
 
         #endregion
 
@@ -363,9 +387,12 @@ namespace SharpMap.Utilities.Wfs
         {
             return @"
             <PropertyIsBetween>
-                <PropertyName>"+_Args[0]+@"</PropertyName>
-                    <LowerBoundary><Literal>" + _Args[1] + @"</Literal></LowerBoundary>
-                    <UpperBoundary><Literal>" + _Args[2] + @"</Literal></UpperBoundary>
+                <PropertyName>" + _Args[0] +
+                   @"</PropertyName>
+                    <LowerBoundary><Literal>" + _Args[1] +
+                   @"</Literal></LowerBoundary>
+                    <UpperBoundary><Literal>" + _Args[2] +
+                   @"</Literal></UpperBoundary>
             </PropertyIsBetween>";
         }
 
@@ -382,9 +409,10 @@ namespace SharpMap.Utilities.Wfs
         /// <summary>
         /// Initializes a new instance of the <see cref="PropertyIsLikeFilter_FE1_1_0"/> class.
         /// </summary>
-        public PropertyIsLikeFilter_FE1_1_0 (string propertyName, string arg)
-            : base(new string[] { propertyName, arg })
-        { }
+        public PropertyIsLikeFilter_FE1_1_0(string propertyName, string arg)
+            : base(new[] {propertyName, arg})
+        {
+        }
 
         #endregion
 
@@ -396,10 +424,13 @@ namespace SharpMap.Utilities.Wfs
         /// <returns>An XML string</returns>
         public string Encode()
         {
-            return @"
+            return
+                @"
             <PropertyIsLike wildCard='*' singleChar='#' escapeChar='!'>
-                <PropertyName>" + _Args[0] + @"</PropertyName>
-                <Literal>" + _Args[1] + @"</Literal>
+                <PropertyName>" +
+                _Args[0] + @"</PropertyName>
+                <Literal>" + _Args[1] +
+                @"</Literal>
             </PropertyIsLike>";
         }
 
@@ -416,16 +447,13 @@ namespace SharpMap.Utilities.Wfs
         /// <summary>
         /// Initializes a new instance of the <see cref="FeatureIdFilter_FE1_1_0 "/> class.
         /// </summary>
-        public FeatureIdFilter_FE1_1_0 (string id)
-            : base(new string[] { id })
-        { }
+        public FeatureIdFilter_FE1_1_0(string id)
+            : base(new[] {id})
+        {
+        }
 
         #endregion
 
-        /// <summary>
-        /// This method encodes the filter in XML.
-        /// </summary>
-        /// <returns>An XML string</returns>
         #region IFilter Member
 
         public string Encode()
@@ -434,5 +462,10 @@ namespace SharpMap.Utilities.Wfs
         }
 
         #endregion
+
+        /// <summary>
+        /// This method encodes the filter in XML.
+        /// </summary>
+        /// <returns>An XML string</returns>
     }
 }

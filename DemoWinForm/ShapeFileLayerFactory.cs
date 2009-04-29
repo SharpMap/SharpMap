@@ -15,26 +15,22 @@
 // along with SharpMap; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
 
-using System;
-using System.Collections.Generic;
-using System.Text;
-
-using SharpMap.Layers;
 using SharpMap.Data.Providers;
+using SharpMap.Layers;
 
 namespace DemoWinForm
 {
-	public class ShapeFileLayerFactory : ILayerFactory
-	{
-		#region ILayerFactory Members
+    public class ShapeFileLayerFactory : ILayerFactory
+    {
+        #region ILayerFactory Members
 
-		public ILayer Create(string layerName, string connectionInfo)
-		{
-			ShapeFile shapeFileData = new ShapeFile(connectionInfo);
-			VectorLayer shapeFileLayer = new VectorLayer(layerName, shapeFileData);
-			return shapeFileLayer;
-		}
+        public ILayer Create(string layerName, string connectionInfo)
+        {
+            ShapeFile shapeFileData = new ShapeFile(connectionInfo);
+            VectorLayer shapeFileLayer = new VectorLayer(layerName, shapeFileData);
+            return shapeFileLayer;
+        }
 
-		#endregion
-	}
+        #endregion
+    }
 }

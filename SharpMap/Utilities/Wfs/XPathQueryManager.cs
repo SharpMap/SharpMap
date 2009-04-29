@@ -4,10 +4,11 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
 using System.Xml;
 using System.Xml.XPath;
 using System.Xml.Xsl;
-using System.IO;
 
 namespace SharpMap.Utilities.Wfs
 {
@@ -18,12 +19,12 @@ namespace SharpMap.Utilities.Wfs
     {
         #region Fields
 
-        private CustomQueryContext _ParamContext;
-        private XPathNavigator _XNav;
-        private XPathNodeIterator _XIter;
-        private XPathDocument _XPathDoc;
         private int _NavDiff = -1;
-       
+        private CustomQueryContext _ParamContext;
+        private XPathNodeIterator _XIter;
+        private XPathNavigator _XNav;
+        private XPathDocument _XPathDoc;
+
         #endregion
 
         #region Constructors
@@ -31,7 +32,9 @@ namespace SharpMap.Utilities.Wfs
         /// <summary>
         /// Initializes a new instance of the <see cref="XPathQueryManager"/> class.
         /// </summary>
-        public XPathQueryManager() { }
+        public XPathQueryManager()
+        {
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="XPathQueryManager"/> class.
@@ -57,8 +60,8 @@ namespace SharpMap.Utilities.Wfs
         /// <param name="xPathDoc">An XmlDocument instance</param>
         public XPathQueryManager(XPathDocument xPathDoc)
         {
-           SetDocumentToParse(xPathDoc);
-           _ParamContext = new CustomQueryContext(new NameTable());
+            SetDocumentToParse(xPathDoc);
+            _ParamContext = new CustomQueryContext(new NameTable());
         }
 
         /// <summary>
@@ -243,7 +246,7 @@ namespace SharpMap.Utilities.Wfs
         /// </summary>
         public bool GetContextOfNextNode()
         {
-            return GetContextOfNode((uint)_NavDiff + 1);    
+            return GetContextOfNode((uint) _NavDiff + 1);
         }
 
         /// <summary>
@@ -336,7 +339,7 @@ namespace SharpMap.Utilities.Wfs
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Trace.TraceError("An exception occured while reading the xml file: " + fileName);
+                Trace.TraceError("An exception occured while reading the xml file: " + fileName);
                 throw ex;
             }
         }
@@ -368,17 +371,16 @@ namespace SharpMap.Utilities.Wfs
             }
             catch (XmlException ex)
             {
-                System.Diagnostics.Trace.TraceError("An XML specific exception occured " +
-                    "while initializing XPathDocument and XPathNavigator in XPathQueryManager: " +
-                    ex.Message);
+                Trace.TraceError("An XML specific exception occured " +
+                                 "while initializing XPathDocument and XPathNavigator in XPathQueryManager: " +
+                                 ex.Message);
                 throw ex;
-
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Trace.TraceError("An exception occured " +
-                   "while initializing XPathDocument and XPathNavigator in XPathQueryManager: " +
-                   ex.Message);
+                Trace.TraceError("An exception occured " +
+                                 "while initializing XPathDocument and XPathNavigator in XPathQueryManager: " +
+                                 ex.Message);
                 throw ex;
             }
             finally
@@ -429,7 +431,8 @@ namespace SharpMap.Utilities.Wfs
             /// Initializes a new instance of the <see cref="CustomQueryContext"/> class.
             /// </summary>
             public CustomQueryContext()
-            { }
+            {
+            }
 
             /// <summary>
             /// Initializes a new instance of the <see cref="CustomQueryContext"/> class.
@@ -437,11 +440,20 @@ namespace SharpMap.Utilities.Wfs
             /// <param name="table">A NameTable instance</param>
             public CustomQueryContext(NameTable table)
                 : base(table)
-            { }
+            {
+            }
 
             #endregion
 
             #region Public Member
+
+            /// <summary>
+            /// Method from XsltContext.
+            /// </summary>
+            public override bool Whitespace
+            {
+                get { return true; }
+            }
 
             /// <summary>
             /// This method adds a list of namespaces to use in the custom context.
@@ -477,8 +489,9 @@ namespace SharpMap.Utilities.Wfs
             /// <param name="ArgTypes">A list of argument types of the function</param>
             public override IXsltContextFunction ResolveFunction(string prefix, string name, XPathResultType[] ArgTypes)
             {
-                if (name.Equals(ParamCompare.FunctionName)) return new ParamCompare(ArgTypes,2, 2);
-                if (name.Equals(ParamCompareWithTargetNs.FunctionName)) return new ParamCompareWithTargetNs(ArgTypes, 3, 3);
+                if (name.Equals(ParamCompare.FunctionName)) return new ParamCompare(ArgTypes, 2, 2);
+                if (name.Equals(ParamCompareWithTargetNs.FunctionName))
+                    return new ParamCompareWithTargetNs(ArgTypes, 3, 3);
                 return null;
             }
 
@@ -489,18 +502,10 @@ namespace SharpMap.Utilities.Wfs
             /// <param name="name">The name of the variable</param>
             public override IXsltContextVariable ResolveVariable(string prefix, string name)
             {
-                object param = this.GetParam(name);
+                object param = GetParam(name);
                 if (param != null)
                     return new ParamFunctionVar(name, param);
                 return null;
-            }
-
-            /// <summary>
-            /// Method from XsltContext.
-            /// </summary>
-            public override bool Whitespace
-            {
-                get { return true; }
             }
 
             /// <summary>
@@ -522,7 +527,7 @@ namespace SharpMap.Utilities.Wfs
                 int length = parameters.Length;
                 for (int i = 0; i < length; i++)
                     _ArgumentList.AddParam(parameters[i].Key.ToString(),
-                        string.Empty, parameters[i].Value.ToString());
+                                           string.Empty, parameters[i].Value.ToString());
             }
 
             /// <summary>
@@ -566,9 +571,9 @@ namespace SharpMap.Utilities.Wfs
             #region Fields
 
             private XPathResultType[] _ArgTypes;
-            private XPathResultType _ReturnType;
-            private int _MinArgs;
             private int _MaxArgs;
+            private int _MinArgs;
+            private XPathResultType _ReturnType;
 
             #endregion
 
@@ -618,7 +623,7 @@ namespace SharpMap.Utilities.Wfs
             /// <param name="minArgs">The minimum number of arguments allowed</param>
             /// <param name="maxArgs">The maximum number of arguments allowed</param>
             protected ParamBase(XPathResultType[] argTypes, XPathResultType returnType,
-                int minArgs, int maxArgs)
+                                int minArgs, int maxArgs)
             {
                 _ArgTypes = argTypes;
                 _ReturnType = returnType;
@@ -657,7 +662,8 @@ namespace SharpMap.Utilities.Wfs
             /// <param name="maxArgs">The maximum number of arguments allowed</param>
             public ParamCompare(XPathResultType[] argTypes, int minArgs, int maxArgs)
                 : base(argTypes, XPathResultType.Boolean, minArgs, maxArgs)
-            { }
+            {
+            }
 
             #endregion
 
@@ -673,7 +679,7 @@ namespace SharpMap.Utilities.Wfs
             public virtual object Invoke(XsltContext xsltContext, object[] args, XPathNavigator docContext)
             {
                 return resolveNsPrefix(ResolveArgument(args[0]), xsltContext).Equals(
-                      resolveNsPrefix(ResolveArgument(args[1]), xsltContext), StringComparison.Ordinal);
+                    resolveNsPrefix(ResolveArgument(args[1]), xsltContext), StringComparison.Ordinal);
             }
 
             #endregion
@@ -690,8 +696,8 @@ namespace SharpMap.Utilities.Wfs
                 if (arg is string)
                     return arg.ToString();
                 else if (arg is XPathNodeIterator)
-                    if (((XPathNodeIterator)arg).MoveNext() == true)
-                        return ((XPathNodeIterator)arg).Current.Value;
+                    if (((XPathNodeIterator) arg).MoveNext() == true)
+                        return ((XPathNodeIterator) arg).Current.Value;
                 return string.Empty;
             }
 
@@ -718,7 +724,7 @@ namespace SharpMap.Utilities.Wfs
                 }
                 return args;
             }
-            
+
             #endregion
         }
 
@@ -751,7 +757,8 @@ namespace SharpMap.Utilities.Wfs
             /// <param name="maxArgs">The maximum number of arguments allowed</param>
             public ParamCompareWithTargetNs(XPathResultType[] argTypes, int minArgs, int maxArgs)
                 : base(argTypes, minArgs, maxArgs)
-            { }
+            {
+            }
 
             #endregion
 
@@ -766,8 +773,8 @@ namespace SharpMap.Utilities.Wfs
             /// <returns>A boolean value indicating whether the argument strings are identical</returns>
             public override object Invoke(XsltContext xsltContext, object[] args, XPathNavigator docContext)
             {
-                return ((string)((string)args[1] + ResolveArgument(args[2]))).Equals(
-                    resolveNsPrefix(ResolveArgument(args[0]), (string)args[1], docContext), StringComparison.Ordinal);
+                return ((string) ((string) args[1] + ResolveArgument(args[2]))).Equals(
+                    resolveNsPrefix(ResolveArgument(args[0]), (string) args[1], docContext), StringComparison.Ordinal);
             }
 
             #endregion
@@ -809,8 +816,8 @@ namespace SharpMap.Utilities.Wfs
         {
             #region Fields
 
-            string _Name;
-            object _Param;
+            private string _Name;
+            private object _Param;
 
             #endregion
 

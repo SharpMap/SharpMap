@@ -15,24 +15,22 @@
 // along with SharpMap; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
 
-using System;
-using System.Collections.Generic;
-using System.Text;
+using System.Reflection;
 
 namespace SharpMap.Utilities
 {
-	/// <summary>
-	/// Version information helper class
-	/// </summary>
-	public class Version
-	{
-		/// <summary>
-		/// Returns the current build version of SharpMap
-		/// </summary>
-		/// <returns></returns>
-		public static System.Version GetCurrentVersion()
-		{
-			return System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
-		}
-	}
+    /// <summary>
+    /// Version information helper class
+    /// </summary>
+    public class Version
+    {
+        /// <summary>
+        /// Returns the current build version of SharpMap
+        /// </summary>
+        /// <returns></returns>
+        public static System.Version GetCurrentVersion()
+        {
+            return Assembly.GetExecutingAssembly().GetName().Version;
+        }
+    }
 }

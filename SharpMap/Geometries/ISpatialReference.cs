@@ -15,18 +15,14 @@
 // along with SharpMap; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
 
-using System;
-using System.Collections.Generic;
-using System.Text;
-
 namespace SharpMap.Geometries
 {
-	/// <summary>
-	/// The ISpatialRelation interface defines a set of named spatial relationship operators for geometric shape
-	/// objects. The behavior of these operators is described in detail in the geometry object model sub-section of
-	/// the Architecture section of the OpenGIS Simple Features specification. [NOT IMPLEMENTED]
-	/// </summary>
-	public interface ISpatialReference
-	{
-	}
+    /// <summary>
+    /// The ISpatialRelation interface defines a set of named spatial relationship operators for geometric shape
+    /// objects. The behavior of these operators is described in detail in the geometry object model sub-section of
+    /// the Architecture section of the OpenGIS Simple Features specification. [NOT IMPLEMENTED]
+    /// </summary>
+    public interface ISpatialReference
+    {
+    }
 }

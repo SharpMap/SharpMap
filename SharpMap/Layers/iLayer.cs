@@ -15,55 +15,55 @@
 // along with SharpMap; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
 
-using System;
-using System.Collections.Generic;
-using System.Text;
+using System.Drawing;
+using SharpMap.Geometries;
 
 namespace SharpMap.Layers
 {
-	/// <summary>
-	/// Interface for map layers
-	/// </summary>
-	public interface ILayer
-	{
-		/// <summary>
-		/// Renders the layer
-		/// </summary>
-		/// <param name="g">Graphics object reference</param>
-		/// <param name="map">Map which is rendered</param>
-		void Render(System.Drawing.Graphics g, SharpMap.Map map);
+    /// <summary>
+    /// Interface for map layers
+    /// </summary>
+    public interface ILayer
+    {
+        /// <summary>
+        /// Minimum visible zoom level
+        /// </summary>
+        double MinVisible { get; set; }
 
-		/// <summary>
-		/// Minimum visible zoom level
-		/// </summary>
-		double MinVisible { get; set; }
+        /// <summary>
+        /// Minimum visible zoom level
+        /// </summary>
+        double MaxVisible { get; set; }
 
-		/// <summary>
-		/// Minimum visible zoom level
-		/// </summary>
-		double MaxVisible { get; set; }
+        /// <summary>
+        /// Specifies whether this layer should be rendered or not
+        /// </summary>
+        bool Enabled { get; set; }
 
-		/// <summary>
-		/// Specifies whether this layer should be rendered or not
-		/// </summary>
-		bool Enabled { get; set; }
+        /// <summary>
+        /// Name of layer
+        /// </summary>
+        string LayerName { get; set; }
 
-		/// <summary>
-		/// Name of layer
-		/// </summary>
-		string LayerName { get; set; }
+        /// <summary>
+        /// Gets the boundingbox of the entire layer
+        /// </summary>
+        BoundingBox Envelope { get; }
 
-		/// <summary>
-		/// Gets the boundingbox of the entire layer
-		/// </summary>
-		SharpMap.Geometries.BoundingBox Envelope { get; }
-		//System.Collections.Generic.List<T> Features { get; }
+        //System.Collections.Generic.List<T> Features { get; }
 
-		/// <summary>
-		/// The spatial reference ID (CRS)
-		/// </summary>
-		int SRID { get; set;}
+        /// <summary>
+        /// The spatial reference ID (CRS)
+        /// </summary>
+        int SRID { get; set; }
 
-		//SharpMap.CoordinateSystems.CoordinateSystem CoordinateSystem { get; set; }
-	}
+        /// <summary>
+        /// Renders the layer
+        /// </summary>
+        /// <param name="g">Graphics object reference</param>
+        /// <param name="map">Map which is rendered</param>
+        void Render(Graphics g, Map map);
+
+        //SharpMap.CoordinateSystems.CoordinateSystem CoordinateSystem { get; set; }
+    }
 }

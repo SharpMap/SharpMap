@@ -17,15 +17,13 @@
 
 
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Runtime;
-using System.Text;
-
-// more info at http://sf.net/projects/pgsqlclient
-using PostgreSql.Data.PostgreSqlClient;
+using System.Data;
 using PostgreSql.Data.PgTypes;
+using PostgreSql.Data.PostgreSqlClient;
+using SharpMap.Converters.WellKnownBinary;
+using SharpMap.Geometries;
+// more info at http://sf.net/projects/pgsqlclient
 
 namespace SharpMap.Data.Providers
 {
@@ -41,8 +39,16 @@ namespace SharpMap.Data.Providers
     /// </code>
     /// </example>
     [Serializable]
-    public class PostGIS2 : SharpMap.Data.Providers.IProvider, IDisposable
+    public class PostGIS2 : IProvider, IDisposable
     {
+        private string _ConnectionString;
+        private string _defintionQuery;
+        private string _GeometryColumn;
+        private bool _IsOpen;
+        private string _ObjectIdColumn;
+        private int _srid = -2;
+        private string _Table;
+
         /// <summary>
         /// Initializes a new connection to PostGIS
         /// </summary>
@@ -52,10 +58,10 @@ namespace SharpMap.Data.Providers
         /// <param name="OID_ColumnName">Name of column with unique identifier</param>
         public PostGIS2(string ConnectionStr, string tablename, string geometryColumnName, string OID_ColumnName)
         {
-            this.ConnectionString = ConnectionStr;
-            this.Table = tablename;
-            this.GeometryColumn = geometryColumnName;
-            this.ObjectIdColumn = OID_ColumnName;
+            ConnectionString = ConnectionStr;
+            Table = tablename;
+            GeometryColumn = geometryColumnName;
+            ObjectIdColumn = OID_ColumnName;
         }
 
         /// <summary>
@@ -67,10 +73,55 @@ namespace SharpMap.Data.Providers
         public PostGIS2(string ConnectionString, string TableName, string OIdColumnName)
             : this(ConnectionString, TableName, "", OIdColumnName)
         {
-            this.GeometryColumn = this.GetGeometryColumn();
+            GeometryColumn = GetGeometryColumn();
         }
 
-        private bool _IsOpen;
+        /// <summary>
+        /// Connectionstring
+        /// </summary>
+        public string ConnectionString
+        {
+            get { return _ConnectionString; }
+            set { _ConnectionString = value; }
+        }
+
+        /// <summary>
+        /// Data table name
+        /// </summary>
+        public string Table
+        {
+            get { return _Table; }
+            set { _Table = value; }
+        }
+
+        /// <summary>
+        /// Name of geometry column
+        /// </summary>
+        public string GeometryColumn
+        {
+            get { return _GeometryColumn; }
+            set { _GeometryColumn = value; }
+        }
+
+        /// <summary>
+        /// Name of column that contains the Object ID
+        /// </summary>
+        public string ObjectIdColumn
+        {
+            get { return _ObjectIdColumn; }
+            set { _ObjectIdColumn = value; }
+        }
+
+        /// <summary>
+        /// Definition query used for limiting dataset
+        /// </summary>
+        public string DefinitionQuery
+        {
+            get { return _defintionQuery; }
+            set { _defintionQuery = value; }
+        }
+
+        #region IProvider Members
 
         /// <summary>
         /// Returns true if the datasource is currently open
@@ -88,6 +139,7 @@ namespace SharpMap.Data.Providers
             //Don't really do anything. npgsql's ConnectionPooling takes over here
             _IsOpen = true;
         }
+
         /// <summary>
         /// Closes the datasource
         /// </summary>
@@ -98,7 +150,406 @@ namespace SharpMap.Data.Providers
         }
 
 
+        /// <summary>
+        /// Returns geometries within the specified bounding box
+        /// </summary>
+        /// <param name="bbox"></param>
+        /// <returns></returns>
+        public Collection<Geometry> GetGeometriesInView(BoundingBox bbox)
+        {
+            Collection<Geometry> features = new Collection<Geometry>();
+            using (PgConnection conn = new PgConnection(_ConnectionString))
+            {
+                string strBbox = GetBoundingBoxSql(bbox, SRID);
+
+                String strSql = String.Format("SELECT AsBinary({0}) as geom FROM {1} WHERE ",
+                                              GeometryColumn,
+                                              Table);
+
+                if (!String.IsNullOrEmpty(_defintionQuery))
+                    strSql += DefinitionQuery + " AND ";
+
+                strSql += String.Format("{0} && {1}", GeometryColumn, strBbox);
+
+                using (PgCommand command = new PgCommand(strSql, conn))
+                {
+                    conn.Open();
+                    using (PgDataReader dr = command.ExecuteReader())
+                    {
+                        while (dr.Read())
+                        {
+                            //object obj = dr[0];
+                            Geometry geom = null;
+
+                            //							if ( typeof(PgPoint) == obj.GetType() )
+                            //								geom = new SharpMap.Geometries.Point( ((PgPoint)obj).X, ((PgPoint)obj).Y );
+                            //							else 
+                            if (dr[0] != DBNull.Value)
+                                geom = GeometryFromWKB.Parse((byte[]) dr[0]);
+
+
+                            if (geom != null)
+                                features.Add(geom);
+                        }
+                    }
+                    conn.Close();
+                }
+            }
+            return features;
+        }
+
+        /// <summary>
+        /// Returns the geometry corresponding to the Object ID
+        /// </summary>
+        /// <param name="oid">Object ID</param>
+        /// <returns>geometry</returns>
+        public Geometry GetGeometryByID(uint oid)
+        {
+            Geometry geom = null;
+            using (PgConnection conn = new PgConnection(_ConnectionString))
+            {
+                String strSql = String.Format("SELECT AsBinary({0}) As Geom FROM {1} WHERE {2} = '{3}'",
+                                              GeometryColumn,
+                                              Table,
+                                              ObjectIdColumn,
+                                              oid);
+
+                conn.Open();
+                using (PgCommand command = new PgCommand(strSql, conn))
+                {
+                    using (PgDataReader dr = command.ExecuteReader())
+                    {
+                        while (dr.Read())
+                        {
+                            object obj = dr[0];
+                            if (typeof (PgPoint) == obj.GetType())
+                                geom = new Point(((PgPoint) obj).X, ((PgPoint) obj).Y);
+                            else if (obj != DBNull.Value)
+                                geom = GeometryFromWKB.Parse((byte[]) dr[0]);
+                        }
+                    }
+                }
+                conn.Close();
+            }
+            return geom;
+        }
+
+        /// <summary>
+        /// Returns geometry Object IDs whose bounding box intersects 'bbox'
+        /// </summary>
+        /// <param name="bbox"></param>
+        /// <returns></returns>
+        public Collection<uint> GetObjectIDsInView(BoundingBox bbox)
+        {
+            Collection<uint> objectlist = new Collection<uint>();
+            using (PgConnection conn = new PgConnection(_ConnectionString))
+            {
+                string strBbox = GetBoundingBoxSql(bbox, SRID);
+
+                String strSql = String.Format("SELECT {0} FROM {1} WHERE ", ObjectIdColumn, Table);
+
+                if (!String.IsNullOrEmpty(_defintionQuery))
+                    strSql += DefinitionQuery + " AND ";
+
+                strSql += GeometryColumn + " && " + strBbox;
+
+                using (PgCommand command = new PgCommand(strSql, conn))
+                {
+                    conn.Open();
+                    using (PgDataReader dr = command.ExecuteReader())
+                    {
+                        while (dr.Read())
+                        {
+                            if (dr[0] != DBNull.Value)
+                            {
+                                uint ID = (uint) (int) dr[0];
+                                objectlist.Add(ID);
+                            }
+                        }
+                    }
+                    conn.Close();
+                }
+            }
+            return objectlist;
+        }
+
+        /// <summary>
+        /// Returns the features that intersects with 'geom'
+        /// </summary>
+        /// <param name="geom"></param>
+        /// <param name="ds">FeatureDataSet to fill data into</param>
+        public void ExecuteIntersectionQuery(Geometry geom, FeatureDataSet ds)
+        {
+            //List<Geometries.Geometry> features = new List<SharpMap.Geometries.Geometry>();
+            using (PgConnection conn = new PgConnection(_ConnectionString))
+            {
+                string strGeom = "GeomFromText('" + geom.AsText() + "')";
+                if (SRID > 0)
+                    strGeom = "setSRID(" + strGeom + "," + SRID.ToString() + ")";
+
+                string strSQL = "SELECT * , AsBinary(" + GeometryColumn + ") As sharpmap_tempgeometry FROM " + Table +
+                                " WHERE ";
+
+                if (!String.IsNullOrEmpty(_defintionQuery))
+                    strSQL += DefinitionQuery + " AND ";
+
+                strSQL += GeometryColumn + " && " + strGeom + " AND distance(" + GeometryColumn + ", " + strGeom + ")<0";
+
+                using (PgDataAdapter adapter = new PgDataAdapter(strSQL, conn))
+                {
+                    conn.Open();
+                    adapter.Fill(ds);
+                    conn.Close();
+                    if (ds.Tables.Count > 0)
+                    {
+                        FeatureDataTable fdt = new FeatureDataTable(ds.Tables[0]);
+                        foreach (DataColumn col in ds.Tables[0].Columns)
+                            if (col.ColumnName != GeometryColumn && col.ColumnName != "sharpmap_tempgeometry")
+                                fdt.Columns.Add(col.ColumnName, col.DataType, col.Expression);
+                        foreach (DataRow dr in ds.Tables[0].Rows)
+                        {
+                            FeatureDataRow fdr = fdt.NewRow();
+                            foreach (DataColumn col in ds.Tables[0].Columns)
+                                if (col.ColumnName != GeometryColumn && col.ColumnName != "sharpmap_tempgeometry")
+                                    fdr[col.ColumnName] = dr[col];
+                            fdr.Geometry = GeometryFromWKB.Parse((byte[]) dr["sharpmap_tempgeometry"]);
+                            fdt.AddRow(fdr);
+                        }
+                        ds.Tables.Add(fdt);
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Returns the number of features in the dataset
+        /// </summary>
+        /// <returns>number of features</returns>
+        public int GetFeatureCount()
+        {
+            int count = 0;
+            using (PgConnection conn = new PgConnection(_ConnectionString))
+            {
+                string strSQL = "SELECT COUNT(*) FROM " + Table;
+
+                if (!String.IsNullOrEmpty(_defintionQuery))
+                    strSQL += " WHERE " + DefinitionQuery;
+
+                using (PgCommand command = new PgCommand(strSQL, conn))
+                {
+                    conn.Open();
+                    count = Convert.ToInt32(command.ExecuteScalar());
+                    conn.Close();
+                }
+            }
+            return count;
+        }
+
+        /// <summary>
+        /// Spacial Reference ID
+        /// </summary>
+        public int SRID
+        {
+            get
+            {
+                if (_srid == -2)
+                {
+                    string strSQL = "select srid from geometry_columns WHERE f_table_name = @Table";
+                    using (PgConnection conn = new PgConnection(_ConnectionString))
+                    using (PgCommand command = new PgCommand(strSQL, conn))
+                    {
+                        try
+                        {
+                            conn.Open();
+
+                            command.Parameters.Add(new PgParameter("@Table", PgDbType.VarChar));
+                            command.Parameters[0].Value = _Table;
+
+                            _srid = (int) command.ExecuteScalar();
+                            conn.Close();
+                        }
+                        catch
+                        {
+                            _srid = -1;
+                        }
+                    }
+                }
+                return _srid;
+            }
+            set { throw (new ApplicationException("Spatial Reference ID cannot by set on a PostGIS table")); }
+        }
+
+
+        /// <summary>
+        /// Returns a datarow based on a RowID
+        /// </summary>
+        /// <param name="RowID"></param>
+        /// <returns>datarow</returns>
+        public FeatureDataRow GetFeature(uint RowID)
+        {
+            using (PgConnection conn = new PgConnection(_ConnectionString))
+            {
+                string strSQL =
+                    String.Format("select * , AsBinary({0}) As sharpmap_tempgeometry from {1} WHERE {2} = '{3}'",
+                                  GeometryColumn, Table, ObjectIdColumn, RowID);
+
+                using (PgDataAdapter adapter = new PgDataAdapter(strSQL, conn))
+                {
+                    FeatureDataSet ds = new FeatureDataSet();
+                    conn.Open();
+                    adapter.Fill(ds);
+                    conn.Close();
+                    if (ds.Tables.Count > 0)
+                    {
+                        FeatureDataTable fdt = new FeatureDataTable(ds.Tables[0]);
+                        foreach (DataColumn col in ds.Tables[0].Columns)
+                            if (col.ColumnName != GeometryColumn && col.ColumnName != "sharpmap_tempgeometry")
+                                fdt.Columns.Add(col.ColumnName, col.DataType, col.Expression);
+                        if (ds.Tables[0].Rows.Count > 0)
+                        {
+                            DataRow dr = ds.Tables[0].Rows[0];
+                            FeatureDataRow fdr = fdt.NewRow();
+                            foreach (DataColumn col in ds.Tables[0].Columns)
+                                if (col.ColumnName != GeometryColumn && col.ColumnName != "sharpmap_tempgeometry")
+                                    fdr[col.ColumnName] = dr[col];
+                            fdr.Geometry = GeometryFromWKB.Parse((byte[]) dr["sharpmap_tempgeometry"]);
+                            return fdr;
+                        }
+                        else
+                            return null;
+                    }
+                    else
+                        return null;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Boundingbox of dataset
+        /// </summary>
+        /// <returns>boundingbox</returns>
+        public BoundingBox GetExtents()
+        {
+            using (PgConnection conn = new PgConnection(_ConnectionString))
+            {
+                string strSQL = String.Format("SELECT EXTENT({0}) FROM {1}",
+                                              GeometryColumn,
+                                              Table);
+
+                if (!String.IsNullOrEmpty(_defintionQuery))
+                    strSQL += " WHERE " + DefinitionQuery;
+
+
+                strSQL += ";";
+
+                using (PgCommand command = new PgCommand(strSQL, conn))
+                {
+                    conn.Open();
+
+                    BoundingBox bbox = null;
+                    try
+                    {
+                        PgBox2D result = (PgBox2D) command.ExecuteScalar();
+                        bbox = new BoundingBox(result.LowerLeft.X, result.LowerLeft.Y, result.UpperRight.X,
+                                               result.UpperRight.Y);
+                    }
+                    catch (Exception ex)
+                    {
+                        throw new Exception("Box2d couldn't fetched from table. " + ex.Message);
+                    }
+                    finally
+                    {
+                        conn.Close();
+                    }
+
+                    return bbox;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets the connection ID of the datasource
+        /// </summary>
+        public string ConnectionID
+        {
+            get { return _ConnectionString; }
+        }
+
+        /// <summary>
+        /// Returns all features with the view box
+        /// </summary>
+        /// <param name="bbox">view box</param>
+        /// <param name="ds">FeatureDataSet to fill data into</param>
+        public void ExecuteIntersectionQuery(BoundingBox bbox, FeatureDataSet ds)
+        {
+            using (PgConnection conn = new PgConnection(_ConnectionString))
+            {
+                string strBbox = GetBoundingBoxSql(bbox, SRID);
+
+                string strSQL = String.Format("SELECT *, AsBinary({0}) AS sharpmap_tempgeometry FROM {1} WHERE ",
+                                              GeometryColumn,
+                                              Table);
+
+                if (!String.IsNullOrEmpty(_defintionQuery))
+                    strSQL += DefinitionQuery + " AND ";
+
+                strSQL += GeometryColumn + " && " + strBbox;
+
+                using (PgDataAdapter adapter = new PgDataAdapter(strSQL, conn))
+                {
+                    conn.Open();
+                    DataSet ds2 = new DataSet();
+                    adapter.Fill(ds2);
+                    conn.Close();
+                    if (ds2.Tables.Count > 0)
+                    {
+                        FeatureDataTable fdt = new FeatureDataTable(ds2.Tables[0]);
+                        foreach (DataColumn col in ds2.Tables[0].Columns)
+                            if (col.ColumnName != GeometryColumn && col.ColumnName != "sharpmap_tempgeometry")
+                                fdt.Columns.Add(col.ColumnName, col.DataType, col.Expression);
+                        foreach (DataRow dr in ds2.Tables[0].Rows)
+                        {
+                            FeatureDataRow fdr = fdt.NewRow();
+                            foreach (DataColumn col in ds2.Tables[0].Columns)
+                                if (col.ColumnName != GeometryColumn && col.ColumnName != "sharpmap_tempgeometry")
+                                    fdr[col.ColumnName] = dr[col];
+                            fdr.Geometry = GeometryFromWKB.Parse((byte[]) dr["sharpmap_tempgeometry"]);
+                            fdt.AddRow(fdr);
+                        }
+                        ds.Tables.Add(fdt);
+                    }
+                }
+            }
+        }
+
+        #endregion
+
+        #region * Sql builder methods *
+
+        /// <summary>
+        /// returns the Bounding Box Sql part for PostGis Extension queries
+        /// </summary>
+        /// <param name="bbox">Bounding Box</param>
+        /// <param name="iSRID">Spatial Reference Id</param>
+        /// <returns>String</returns>
+        private static string GetBoundingBoxSql(BoundingBox bbox, int iSRID)
+        {
+            string strBbox = String.Format("box2d('BOX3D({0} {1},{2} {3})'::box3d)",
+                                           bbox.Min.X.ToString(Map.NumberFormatEnUs),
+                                           bbox.Min.Y.ToString(Map.NumberFormatEnUs),
+                                           bbox.Max.X.ToString(Map.NumberFormatEnUs),
+                                           bbox.Max.Y.ToString(Map.NumberFormatEnUs));
+
+            if (iSRID > 0)
+                strBbox = String.Format(Map.NumberFormatEnUs, "SetSRID({0},{1})", strBbox, iSRID);
+
+            return strBbox;
+        }
+
+        #endregion
+
         #region Disposers and finalizers
+
         private bool disposed = false;
 
         /// <summary>
@@ -129,175 +580,8 @@ namespace SharpMap.Data.Providers
         {
             Dispose();
         }
+
         #endregion
-
-        private string _ConnectionString;
-
-        /// <summary>
-        /// Connectionstring
-        /// </summary>
-        public string ConnectionString
-        {
-            get { return _ConnectionString; }
-            set { _ConnectionString = value; }
-        }
-
-        private string _Table;
-
-        /// <summary>
-        /// Data table name
-        /// </summary>
-        public string Table
-        {
-            get { return _Table; }
-            set { _Table = value; }
-        }
-
-        private string _GeometryColumn;
-
-        /// <summary>
-        /// Name of geometry column
-        /// </summary>
-        public string GeometryColumn
-        {
-            get { return _GeometryColumn; }
-            set { _GeometryColumn = value; }
-        }
-
-        private string _ObjectIdColumn;
-
-        /// <summary>
-        /// Name of column that contains the Object ID
-        /// </summary>
-        public string ObjectIdColumn
-        {
-            get { return _ObjectIdColumn; }
-            set { _ObjectIdColumn = value; }
-        }
-
-
-        /// <summary>
-        /// Returns geometries within the specified bounding box
-        /// </summary>
-        /// <param name="bbox"></param>
-        /// <returns></returns>
-        public Collection<Geometries.Geometry> GetGeometriesInView(SharpMap.Geometries.BoundingBox bbox)
-        {
-            Collection<Geometries.Geometry> features = new Collection<SharpMap.Geometries.Geometry>();
-            using (PgConnection conn = new PgConnection(_ConnectionString))
-            {
-                string strBbox = GetBoundingBoxSql(bbox, this.SRID);
-
-                String strSql = String.Format("SELECT AsBinary({0}) as geom FROM {1} WHERE ",
-                                              this.GeometryColumn,
-                                              this.Table);
-
-                if (!String.IsNullOrEmpty(_defintionQuery))
-                    strSql += this.DefinitionQuery + " AND ";
-
-                strSql += String.Format("{0} && {1}", this.GeometryColumn, strBbox);
-
-                using (PgCommand command = new PgCommand(strSql, conn))
-                {
-                    conn.Open();
-                    using (PgDataReader dr = command.ExecuteReader())
-                    {
-                        while (dr.Read())
-                        {
-                            //object obj = dr[0];
-                            SharpMap.Geometries.Geometry geom = null;
-
-                            //							if ( typeof(PgPoint) == obj.GetType() )
-                            //								geom = new SharpMap.Geometries.Point( ((PgPoint)obj).X, ((PgPoint)obj).Y );
-                            //							else 
-                            if (dr[0] != DBNull.Value)
-                                geom = SharpMap.Converters.WellKnownBinary.GeometryFromWKB.Parse((byte[])dr[0]);
-
-
-                            if (geom != null)
-                                features.Add(geom);
-
-                        }
-                    }
-                    conn.Close();
-                }
-            }
-            return features;
-        }
-
-        /// <summary>
-        /// Returns the geometry corresponding to the Object ID
-        /// </summary>
-        /// <param name="oid">Object ID</param>
-        /// <returns>geometry</returns>
-        public SharpMap.Geometries.Geometry GetGeometryByID(uint oid)
-        {
-            SharpMap.Geometries.Geometry geom = null;
-            using (PgConnection conn = new PgConnection(_ConnectionString))
-            {
-                String strSql = String.Format("SELECT AsBinary({0}) As Geom FROM {1} WHERE {2} = '{3}'",
-                                              this.GeometryColumn,
-                                              this.Table,
-                                              this.ObjectIdColumn,
-                                              oid);
-
-                conn.Open();
-                using (PgCommand command = new PgCommand(strSql, conn))
-                {
-                    using (PgDataReader dr = command.ExecuteReader())
-                    {
-                        while (dr.Read())
-                        {
-                            object obj = dr[0];
-                            if (typeof(PgPoint) == obj.GetType())
-                                geom = new SharpMap.Geometries.Point(((PgPoint)obj).X, ((PgPoint)obj).Y);
-                            else if (obj != DBNull.Value)
-                                geom = SharpMap.Converters.WellKnownBinary.GeometryFromWKB.Parse((byte[])dr[0]);
-                        }
-                    }
-                }
-                conn.Close();
-            }
-            return geom;
-        }
-        /// <summary>
-        /// Returns geometry Object IDs whose bounding box intersects 'bbox'
-        /// </summary>
-        /// <param name="bbox"></param>
-        /// <returns></returns>
-        public Collection<uint> GetObjectIDsInView(SharpMap.Geometries.BoundingBox bbox)
-        {
-            Collection<uint> objectlist = new Collection<uint>();
-            using (PgConnection conn = new PgConnection(_ConnectionString))
-            {
-                string strBbox = GetBoundingBoxSql(bbox, this.SRID);
-
-                String strSql = String.Format("SELECT {0} FROM {1} WHERE ", this.ObjectIdColumn, this.Table);
-
-                if (!String.IsNullOrEmpty(_defintionQuery))
-                    strSql += this.DefinitionQuery + " AND ";
-
-                strSql += this.GeometryColumn + " && " + strBbox;
-
-                using (PgCommand command = new PgCommand(strSql, conn))
-                {
-                    conn.Open();
-                    using (PgDataReader dr = command.ExecuteReader())
-                    {
-                        while (dr.Read())
-                        {
-                            if (dr[0] != DBNull.Value)
-                            {
-                                uint ID = (uint)(int)dr[0];
-                                objectlist.Add(ID);
-                            }
-                        }
-                    }
-                    conn.Close();
-                }
-            }
-            return objectlist;
-        }
 
         /// <summary>
         /// Returns all objects within a distance of a geometry
@@ -306,225 +590,51 @@ namespace SharpMap.Data.Providers
         /// <param name="distance"></param>
         /// <returns></returns>
         [Obsolete("Use ExecuteIntersectionQuery instead")]
-        public SharpMap.Data.FeatureDataTable QueryFeatures(SharpMap.Geometries.Geometry geom, double distance)
+        public FeatureDataTable QueryFeatures(Geometry geom, double distance)
         {
-            Collection<Geometries.Geometry> features = new Collection<SharpMap.Geometries.Geometry>();
+            Collection<Geometry> features = new Collection<Geometry>();
             using (PgConnection conn = new PgConnection(_ConnectionString))
             {
                 string strGeom = "GeomFromText('" + geom.AsText() + "')";
-                if (this.SRID > 0)
-                    strGeom = "setSRID(" + strGeom + "," + this.SRID.ToString() + ")";
+                if (SRID > 0)
+                    strGeom = "setSRID(" + strGeom + "," + SRID.ToString() + ")";
 
-                string strSQL = "SELECT * , AsBinary(" + this.GeometryColumn + ") As sharpmap_tempgeometry FROM " + this.Table + " WHERE ";
+                string strSQL = "SELECT * , AsBinary(" + GeometryColumn + ") As sharpmap_tempgeometry FROM " + Table +
+                                " WHERE ";
 
                 if (!String.IsNullOrEmpty(_defintionQuery))
-                    strSQL += this.DefinitionQuery + " AND ";
+                    strSQL += DefinitionQuery + " AND ";
 
-                strSQL += this.GeometryColumn + " && " + "buffer(" + strGeom + "," + distance.ToString(Map.numberFormat_EnUS) + ")";
-                strSQL += " AND distance(" + this.GeometryColumn + ", " + strGeom + ")<" + distance.ToString(Map.numberFormat_EnUS);
+                strSQL += GeometryColumn + " && " + "buffer(" + strGeom + "," + distance.ToString(Map.NumberFormatEnUs) +
+                          ")";
+                strSQL += " AND distance(" + GeometryColumn + ", " + strGeom + ")<" +
+                          distance.ToString(Map.NumberFormatEnUs);
 
                 using (PgDataAdapter adapter = new PgDataAdapter(strSQL, conn))
                 {
-                    System.Data.DataSet ds = new System.Data.DataSet();
+                    DataSet ds = new DataSet();
                     conn.Open();
                     adapter.Fill(ds);
                     conn.Close();
                     if (ds.Tables.Count > 0)
                     {
                         FeatureDataTable fdt = new FeatureDataTable(ds.Tables[0]);
-                        foreach (System.Data.DataColumn col in ds.Tables[0].Columns)
-                            if (col.ColumnName != this.GeometryColumn && col.ColumnName != "sharpmap_tempgeometry")
+                        foreach (DataColumn col in ds.Tables[0].Columns)
+                            if (col.ColumnName != GeometryColumn && col.ColumnName != "sharpmap_tempgeometry")
                                 fdt.Columns.Add(col.ColumnName, col.DataType, col.Expression);
-                        foreach (System.Data.DataRow dr in ds.Tables[0].Rows)
+                        foreach (DataRow dr in ds.Tables[0].Rows)
                         {
-                            SharpMap.Data.FeatureDataRow fdr = fdt.NewRow();
-                            foreach (System.Data.DataColumn col in ds.Tables[0].Columns)
-                                if (col.ColumnName != this.GeometryColumn && col.ColumnName != "sharpmap_tempgeometry")
+                            FeatureDataRow fdr = fdt.NewRow();
+                            foreach (DataColumn col in ds.Tables[0].Columns)
+                                if (col.ColumnName != GeometryColumn && col.ColumnName != "sharpmap_tempgeometry")
                                     fdr[col.ColumnName] = dr[col];
-                            fdr.Geometry = SharpMap.Converters.WellKnownBinary.GeometryFromWKB.Parse((byte[])dr["sharpmap_tempgeometry"]);
+                            fdr.Geometry = GeometryFromWKB.Parse((byte[]) dr["sharpmap_tempgeometry"]);
                             fdt.AddRow(fdr);
                         }
                         return fdt;
                     }
                     else return null;
                 }
-            }
-        }
-
-        /// <summary>
-        /// Returns the features that intersects with 'geom'
-        /// </summary>
-        /// <param name="geom"></param>
-        /// <param name="ds">FeatureDataSet to fill data into</param>
-        public void ExecuteIntersectionQuery(SharpMap.Geometries.Geometry geom, FeatureDataSet ds)
-        {
-            //List<Geometries.Geometry> features = new List<SharpMap.Geometries.Geometry>();
-            using (PgConnection conn = new PgConnection(_ConnectionString))
-            {
-                string strGeom = "GeomFromText('" + geom.AsText() + "')";
-                if (this.SRID > 0)
-                    strGeom = "setSRID(" + strGeom + "," + this.SRID.ToString() + ")";
-
-                string strSQL = "SELECT * , AsBinary(" + this.GeometryColumn + ") As sharpmap_tempgeometry FROM " + this.Table + " WHERE ";
-
-                if (!String.IsNullOrEmpty(_defintionQuery))
-                    strSQL += this.DefinitionQuery + " AND ";
-
-                strSQL += this.GeometryColumn + " && " + strGeom + " AND distance(" + this.GeometryColumn + ", " + strGeom + ")<0";
-
-                using (PgDataAdapter adapter = new PgDataAdapter(strSQL, conn))
-                {
-                    conn.Open();
-                    adapter.Fill(ds);
-                    conn.Close();
-                    if (ds.Tables.Count > 0)
-                    {
-                        FeatureDataTable fdt = new FeatureDataTable(ds.Tables[0]);
-                        foreach (System.Data.DataColumn col in ds.Tables[0].Columns)
-                            if (col.ColumnName != this.GeometryColumn && col.ColumnName != "sharpmap_tempgeometry")
-                                fdt.Columns.Add(col.ColumnName, col.DataType, col.Expression);
-                        foreach (System.Data.DataRow dr in ds.Tables[0].Rows)
-                        {
-                            SharpMap.Data.FeatureDataRow fdr = fdt.NewRow();
-                            foreach (System.Data.DataColumn col in ds.Tables[0].Columns)
-                                if (col.ColumnName != this.GeometryColumn && col.ColumnName != "sharpmap_tempgeometry")
-                                    fdr[col.ColumnName] = dr[col];
-                            fdr.Geometry = SharpMap.Converters.WellKnownBinary.GeometryFromWKB.Parse((byte[])dr["sharpmap_tempgeometry"]);
-                            fdt.AddRow(fdr);
-                        }
-                        ds.Tables.Add(fdt);
-                    }
-                }
-            }
-        }
-
-        /// <summary>
-        /// Returns the number of features in the dataset
-        /// </summary>
-        /// <returns>number of features</returns>
-        public int GetFeatureCount()
-        {
-            int count = 0;
-            using (PgConnection conn = new PgConnection(_ConnectionString))
-            {
-                string strSQL = "SELECT COUNT(*) FROM " + this.Table;
-
-                if (!String.IsNullOrEmpty(_defintionQuery))
-                    strSQL += " WHERE " + this.DefinitionQuery;
-
-                using (PgCommand command = new PgCommand(strSQL, conn))
-                {
-                    conn.Open();
-                    count = Convert.ToInt32(command.ExecuteScalar());
-                    conn.Close();
-                }
-            }
-            return count;
-        }
-
-        #region IProvider Members
-
-        private string _defintionQuery;
-
-        /// <summary>
-        /// Definition query used for limiting dataset
-        /// </summary>
-        public string DefinitionQuery
-        {
-            get { return _defintionQuery; }
-            set { _defintionQuery = value; }
-        }
-
-        /*
-		/// <summary>
-		/// Gets a collection of columns in the dataset
-		/// </summary>
-		public System.Data.DataColumnCollection Columns1
-		{
-			get {
-				throw new NotImplementedException();
-				//using (PgConnection conn = new PgConnection(this.ConnectionString))
-				//{
-				//    System.Data.DataColumnCollection columns = new System.Data.DataColumnCollection();
-				//    string strSQL = "SELECT column_name, udt_name FROM information_schema.columns WHERE table_name='" + this.Table + "' ORDER BY ordinal_position";
-				//    using (PgCommand command = new PgCommand(strSQL, conn))
-				//    {
-				//        conn.Open();
-				//        using (PgDataReader dr = command.ExecuteReader())
-				//        {
-				//            while (dr.Read())
-				//            {
-				//                System.Data.DataColumn col = new System.Data.DataColumn((string)dr["column_name"]);
-				//                switch((string)dr["udt_name"])
-				//                {
-				//                    case "int4":
-				//                        col.DataType = typeof(Int32);
-				//                        break;
-				//                    case "int8":
-				//                        col.DataType = typeof(Int64);
-				//                        break;
-				//                    case "varchar":
-				//                        col.DataType = typeof(string);
-				//                        break;
-				//                    case "text":
-				//                        col.DataType = typeof(string);
-				//                        break;
-				//                    case "bool":
-				//                        col.DataType = typeof(bool);
-				//                        break;
-				//                    case "geometry":
-				//                        col.DataType = typeof(SharpMap.Geometries.Geometry);
-				//                        break;
-				//                    default:
-				//                        col.DataType = typeof(object);
-				//                        break;
-				//                }
-				//                columns.Add(col);
-				//            }
-				//        }
-				//    }
-				//    return columns;
-				//}
-			}
-		}
-        */
-
-        private int _srid = -2;
-
-        /// <summary>
-        /// Spacial Reference ID
-        /// </summary>
-        public int SRID
-        {
-            get
-            {
-                if (_srid == -2)
-                {
-                    string strSQL = "select srid from geometry_columns WHERE f_table_name = @Table";
-                    using (PgConnection conn = new PgConnection(_ConnectionString))
-                    using (PgCommand command = new PgCommand(strSQL, conn))
-                    {
-                        try
-                        {
-                            conn.Open();
-
-                            command.Parameters.Add(new PgParameter("@Table", PgDbType.VarChar));
-                            command.Parameters[0].Value = this._Table;
-
-                            _srid = (int)command.ExecuteScalar();
-                            conn.Close();
-                        }
-                        catch
-                        {
-                            _srid = -1;
-                        }
-                    }
-                }
-                return _srid;
-            }
-            set
-            {
-                throw (new ApplicationException("Spatial Reference ID cannot by set on a PostGIS table"));
             }
         }
 
@@ -543,110 +653,15 @@ namespace SharpMap.Data.Providers
                 conn.Open();
 
                 command.Parameters.Add(new PgParameter("@Table", PgDbType.VarChar));
-                command.Parameters[0].Value = this._Table;
+                command.Parameters[0].Value = _Table;
 
                 object columnname = command.ExecuteScalar();
                 conn.Close();
 
-                if (columnname == System.DBNull.Value)
-                    throw new ApplicationException("Table '" + this.Table + "' does not contain a geometry column");
-                return (string)columnname;
+                if (columnname == DBNull.Value)
+                    throw new ApplicationException("Table '" + Table + "' does not contain a geometry column");
+                return (string) columnname;
             }
-        }
-
-
-        /// <summary>
-        /// Returns a datarow based on a RowID
-        /// </summary>
-        /// <param name="RowID"></param>
-        /// <returns>datarow</returns>
-        public SharpMap.Data.FeatureDataRow GetFeature(uint RowID)
-        {
-            using (PgConnection conn = new PgConnection(_ConnectionString))
-            {
-                string strSQL = String.Format("select * , AsBinary({0}) As sharpmap_tempgeometry from {1} WHERE {2} = '{3}'",
-                                              this.GeometryColumn, this.Table, this.ObjectIdColumn, RowID);
-
-                using (PgDataAdapter adapter = new PgDataAdapter(strSQL, conn))
-                {
-                    FeatureDataSet ds = new FeatureDataSet();
-                    conn.Open();
-                    adapter.Fill(ds);
-                    conn.Close();
-                    if (ds.Tables.Count > 0)
-                    {
-                        FeatureDataTable fdt = new FeatureDataTable(ds.Tables[0]);
-                        foreach (System.Data.DataColumn col in ds.Tables[0].Columns)
-                            if (col.ColumnName != this.GeometryColumn && col.ColumnName != "sharpmap_tempgeometry")
-                                fdt.Columns.Add(col.ColumnName, col.DataType, col.Expression);
-                        if (ds.Tables[0].Rows.Count > 0)
-                        {
-                            System.Data.DataRow dr = ds.Tables[0].Rows[0];
-                            SharpMap.Data.FeatureDataRow fdr = fdt.NewRow();
-                            foreach (System.Data.DataColumn col in ds.Tables[0].Columns)
-                                if (col.ColumnName != this.GeometryColumn && col.ColumnName != "sharpmap_tempgeometry")
-                                    fdr[col.ColumnName] = dr[col];
-                            fdr.Geometry = SharpMap.Converters.WellKnownBinary.GeometryFromWKB.Parse((byte[])dr["sharpmap_tempgeometry"]);
-                            return fdr;
-                        }
-                        else
-                            return null;
-
-                    }
-                    else
-                        return null;
-                }
-            }
-        }
-
-        /// <summary>
-        /// Boundingbox of dataset
-        /// </summary>
-        /// <returns>boundingbox</returns>
-        public SharpMap.Geometries.BoundingBox GetExtents()
-        {
-            using (PgConnection conn = new PgConnection(_ConnectionString))
-            {
-                string strSQL = String.Format("SELECT EXTENT({0}) FROM {1}",
-                                              this.GeometryColumn,
-                                              this.Table);
-
-                if (!String.IsNullOrEmpty(_defintionQuery))
-                    strSQL += " WHERE " + this.DefinitionQuery;
-
-
-                strSQL += ";";
-
-                using (PgCommand command = new PgCommand(strSQL, conn))
-                {
-                    conn.Open();
-
-                    SharpMap.Geometries.BoundingBox bbox = null;
-                    try
-                    {
-                        PostgreSql.Data.PgTypes.PgBox2D result = (PostgreSql.Data.PgTypes.PgBox2D)command.ExecuteScalar();
-                        bbox = new SharpMap.Geometries.BoundingBox(result.LowerLeft.X, result.LowerLeft.Y, result.UpperRight.X, result.UpperRight.Y);
-                    }
-                    catch (System.Exception ex)
-                    {
-                        throw new Exception("Box2d couldn't fetched from table. " + ex.Message);
-                    }
-                    finally
-                    {
-                        conn.Close();
-                    }
-
-                    return bbox;
-                }
-            }
-        }
-
-        /// <summary>
-        /// Gets the connection ID of the datasource
-        /// </summary>
-        public string ConnectionID
-        {
-            get { return _ConnectionString; }
         }
 
         /// <summary>
@@ -655,82 +670,9 @@ namespace SharpMap.Data.Providers
         /// <param name="bbox">view box</param>
         /// <param name="ds">FeatureDataSet to fill data into</param>
         [Obsolete("Use ExecuteIntersectionQuery")]
-        public void GetFeaturesInView(SharpMap.Geometries.BoundingBox bbox, SharpMap.Data.FeatureDataSet ds)
+        public void GetFeaturesInView(BoundingBox bbox, FeatureDataSet ds)
         {
             ExecuteIntersectionQuery(bbox, ds);
         }
-
-        /// <summary>
-        /// Returns all features with the view box
-        /// </summary>
-        /// <param name="bbox">view box</param>
-        /// <param name="ds">FeatureDataSet to fill data into</param>
-        public void ExecuteIntersectionQuery(SharpMap.Geometries.BoundingBox bbox, SharpMap.Data.FeatureDataSet ds)
-        {
-            using (PgConnection conn = new PgConnection(_ConnectionString))
-            {
-
-                string strBbox = GetBoundingBoxSql(bbox, this.SRID);
-
-                string strSQL = String.Format("SELECT *, AsBinary({0}) AS sharpmap_tempgeometry FROM {1} WHERE ",
-                                              this.GeometryColumn,
-                                              this.Table);
-
-                if (!String.IsNullOrEmpty(_defintionQuery))
-                    strSQL += this.DefinitionQuery + " AND ";
-
-                strSQL += this.GeometryColumn + " && " + strBbox;
-
-                using (PgDataAdapter adapter = new PgDataAdapter(strSQL, conn))
-                {
-                    conn.Open();
-                    System.Data.DataSet ds2 = new System.Data.DataSet();
-                    adapter.Fill(ds2);
-                    conn.Close();
-                    if (ds2.Tables.Count > 0)
-                    {
-                        FeatureDataTable fdt = new FeatureDataTable(ds2.Tables[0]);
-                        foreach (System.Data.DataColumn col in ds2.Tables[0].Columns)
-                            if (col.ColumnName != this.GeometryColumn && col.ColumnName != "sharpmap_tempgeometry")
-                                fdt.Columns.Add(col.ColumnName, col.DataType, col.Expression);
-                        foreach (System.Data.DataRow dr in ds2.Tables[0].Rows)
-                        {
-                            SharpMap.Data.FeatureDataRow fdr = fdt.NewRow();
-                            foreach (System.Data.DataColumn col in ds2.Tables[0].Columns)
-                                if (col.ColumnName != this.GeometryColumn && col.ColumnName != "sharpmap_tempgeometry")
-                                    fdr[col.ColumnName] = dr[col];
-                            fdr.Geometry = SharpMap.Converters.WellKnownBinary.GeometryFromWKB.Parse((byte[])dr["sharpmap_tempgeometry"]);
-                            fdt.AddRow(fdr);
-                        }
-                        ds.Tables.Add(fdt);
-                    }
-                }
-            }
-        }
-        #endregion
-
-        #region * Sql builder methods *
-
-        /// <summary>
-        /// returns the Bounding Box Sql part for PostGis Extension queries
-        /// </summary>
-        /// <param name="bbox">Bounding Box</param>
-        /// <param name="iSRID">Spatial Reference Id</param>
-        /// <returns>String</returns>
-        private static string GetBoundingBoxSql(SharpMap.Geometries.BoundingBox bbox, int iSRID)
-        {
-            string strBbox = String.Format("box2d('BOX3D({0} {1},{2} {3})'::box3d)",
-                                bbox.Min.X.ToString(SharpMap.Map.numberFormat_EnUS),
-                                bbox.Min.Y.ToString(SharpMap.Map.numberFormat_EnUS),
-                                bbox.Max.X.ToString(SharpMap.Map.numberFormat_EnUS),
-                                bbox.Max.Y.ToString(SharpMap.Map.numberFormat_EnUS));
-
-            if (iSRID > 0)
-                strBbox = String.Format(SharpMap.Map.numberFormat_EnUS, "SetSRID({0},{1})", strBbox, iSRID);
-
-            return strBbox;
-        }
-
-        #endregion
     }
 }

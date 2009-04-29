@@ -16,38 +16,36 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
 
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace SharpMap.Rendering.Exceptions
 {
-	/// <summary>
-	/// Exception thrown when a layer rendering fails
-	/// </summary>
-	public class RenderException : System.Exception
-	{
-		/// <summary>
-		/// Exception thrown when layer rendering has failed
-		/// </summary>
-		public RenderException()
-		{
-		}
+    /// <summary>
+    /// Exception thrown when a layer rendering fails
+    /// </summary>
+    public class RenderException : Exception
+    {
+        /// <summary>
+        /// Exception thrown when layer rendering has failed
+        /// </summary>
+        public RenderException()
+        {
+        }
 
-		/// <summary>
-		/// Exception thrown when layer rendering has failed
-		/// </summary>
-		/// <param name="message"></param>
-		public RenderException(string message) : base(message)
-		{
-		}
+        /// <summary>
+        /// Exception thrown when layer rendering has failed
+        /// </summary>
+        /// <param name="message"></param>
+        public RenderException(string message) : base(message)
+        {
+        }
 
-		/// <summary>
-		/// Exception thrown when layer rendering has failed
-		/// </summary>
-		/// <param name="message"></param>
-		/// <param name="inner"></param>
-		public RenderException(string message, System.Exception inner) : base(message,inner)
-		{
-		}
-	}
+        /// <summary>
+        /// Exception thrown when layer rendering has failed
+        /// </summary>
+        /// <param name="message"></param>
+        /// <param name="inner"></param>
+        public RenderException(string message, Exception inner) : base(message, inner)
+        {
+        }
+    }
 }

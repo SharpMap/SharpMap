@@ -1,7 +1,8 @@
 ﻿// WFS provider by Peter Robineau (peter.robineau@gmx.at)
 // This file can be redistributed and/or modified under the terms of the GNU Lesser General Public License.
 
-using System;
+using SharpMap.Geometries;
+
 namespace SharpMap.Utilities.Wfs
 {
     /// <summary>
@@ -9,10 +10,6 @@ namespace SharpMap.Utilities.Wfs
     /// </summary>
     public interface IWFS_TextResources
     {
-        string DescribeFeatureTypeRequest(string featureTypeName);
-        string GetCapabilitiesRequest();
-        string GetFeatureGETRequest(SharpMap.Utilities.Wfs.WfsFeatureTypeInfo featureTypeInfo, SharpMap.Geometries.BoundingBox boundingBox, IFilter filter);
-        byte[] GetFeaturePOSTRequest(SharpMap.Utilities.Wfs.WfsFeatureTypeInfo featureTypeInfo, string labelProperty, SharpMap.Geometries.BoundingBox boundingBox, IFilter filter);
         string NSFEATURETYPEPREFIX { get; }
         string NSGML { get; }
         string NSGMLPREFIX { get; }
@@ -42,5 +39,11 @@ namespace SharpMap.Utilities.Wfs
         string XPATH_SRS { get; }
         string XPATH_TARGETNS { get; }
         string XPATH_TYPEATTRIBUTEQUERY { get; }
+        string DescribeFeatureTypeRequest(string featureTypeName);
+        string GetCapabilitiesRequest();
+        string GetFeatureGETRequest(WfsFeatureTypeInfo featureTypeInfo, BoundingBox boundingBox, IFilter filter);
+
+        byte[] GetFeaturePOSTRequest(WfsFeatureTypeInfo featureTypeInfo, string labelProperty, BoundingBox boundingBox,
+                                     IFilter filter);
     }
 }

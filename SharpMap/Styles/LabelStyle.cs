@@ -15,163 +15,168 @@
 // along with SharpMap; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
 
-using System;
-using System.Collections.Generic;
-using System.Text;
+using System.Drawing;
 
 namespace SharpMap.Styles
 {
-	/// <summary>
-	/// Defines a style used for rendering labels
-	/// </summary>
-	public class LabelStyle : Style
-	{
-		/// <summary>
-		/// Initializes a new LabelStyle
-		/// </summary>
-		public LabelStyle()
-		{
-			_Font = new System.Drawing.Font("Times New Roman", 12f);
-			_Offset = new System.Drawing.PointF(0, 0);
-			_CollisionDetection = false;
-			_CollisionBuffer = new System.Drawing.Size(0, 0);
-			_ForeColor = System.Drawing.Color.Black;
-			_HorisontalAlignment = HorizontalAlignmentEnum.Center;
-			_VerticalAlignment = VerticalAlignmentEnum.Middle;
-		}
+    /// <summary>
+    /// Defines a style used for rendering labels
+    /// </summary>
+    public class LabelStyle : Style
+    {
+        #region HorizontalAlignmentEnum enum
 
-		private System.Drawing.Font _Font;
+        /// <summary>
+        /// Label text alignment
+        /// </summary>
+        public enum HorizontalAlignmentEnum : short
+        {
+            /// <summary>
+            /// Left oriented
+            /// </summary>
+            Left = 0,
+            /// <summary>
+            /// Right oriented
+            /// </summary>
+            Right = 2,
+            /// <summary>
+            /// Centered
+            /// </summary>
+            Center = 1
+        }
 
-		/// <summary>
-		/// Label Font
-		/// </summary>
-		public System.Drawing.Font Font
-		{
-			get { return _Font; }
-			set { _Font = value; }
-		}
+        #endregion
 
-		private System.Drawing.Color _ForeColor;
+        #region VerticalAlignmentEnum enum
 
-		/// <summary>
-		/// Font color
-		/// </summary>
-		public System.Drawing.Color ForeColor
-		{
-			get { return _ForeColor; }
-			set { _ForeColor = value; }
-		}
+        /// <summary>
+        /// Label text alignment
+        /// </summary>
+        public enum VerticalAlignmentEnum : short
+        {
+            /// <summary>
+            /// Left oriented
+            /// </summary>
+            Bottom = 0,
+            /// <summary>
+            /// Right oriented
+            /// </summary>
+            Top = 2,
+            /// <summary>
+            /// Centered
+            /// </summary>
+            Middle = 1
+        }
 
-		private System.Drawing.Brush _BackColor;
+        #endregion
 
-		/// <summary>
-		/// The background color of the label. Set to transparent brush or null if background isn't needed
-		/// </summary>
-		public System.Drawing.Brush BackColor
-		{
-			get { return _BackColor; }
-			set { _BackColor = value; }
-		}
+        private Brush _BackColor;
+        private SizeF _CollisionBuffer;
+        private bool _CollisionDetection;
 
-		private System.Drawing.Pen _Halo;
-		/// <summary>
-		/// Creates a halo around the text
-		/// </summary>
-		public System.Drawing.Pen Halo
-		{
-			get { return _Halo; }
-			set { _Halo = value; }
-		}
+        private Font _Font;
 
-	
-		private System.Drawing.PointF _Offset;
+        private Color _ForeColor;
+        private Pen _Halo;
+        private HorizontalAlignmentEnum _HorisontalAlignment;
+        private PointF _Offset;
+        private VerticalAlignmentEnum _VerticalAlignment;
 
-		/// <summary>
-		/// Specifies relative position of labels with respect to objects label point
-		/// </summary>
-		public System.Drawing.PointF Offset
-		{
-			get { return _Offset; }
-			set { _Offset = value; }
-		}
-		private bool _CollisionDetection;
+        /// <summary>
+        /// Initializes a new LabelStyle
+        /// </summary>
+        public LabelStyle()
+        {
+            _Font = new Font("Times New Roman", 12f);
+            _Offset = new PointF(0, 0);
+            _CollisionDetection = false;
+            _CollisionBuffer = new Size(0, 0);
+            _ForeColor = Color.Black;
+            _HorisontalAlignment = HorizontalAlignmentEnum.Center;
+            _VerticalAlignment = VerticalAlignmentEnum.Middle;
+        }
 
-		/// <summary>
-		/// Gets or sets whether Collision Detection is enabled for the labels.
-		/// If set to true, label collision will be tested.
-		/// </summary>
-		public bool CollisionDetection
-		{
-			get { return _CollisionDetection; }
-			set { _CollisionDetection = value; }
-		}
+        /// <summary>
+        /// Label Font
+        /// </summary>
+        public Font Font
+        {
+            get { return _Font; }
+            set { _Font = value; }
+        }
 
-		private System.Drawing.SizeF _CollisionBuffer;
+        /// <summary>
+        /// Font color
+        /// </summary>
+        public Color ForeColor
+        {
+            get { return _ForeColor; }
+            set { _ForeColor = value; }
+        }
 
-		/// <summary>
-		/// Distance around label where collision buffer is active
-		/// </summary>
-		public System.Drawing.SizeF CollisionBuffer
-		{
-			get { return _CollisionBuffer; }
-			set { _CollisionBuffer = value; }
-		}
+        /// <summary>
+        /// The background color of the label. Set to transparent brush or null if background isn't needed
+        /// </summary>
+        public Brush BackColor
+        {
+            get { return _BackColor; }
+            set { _BackColor = value; }
+        }
 
-		private HorizontalAlignmentEnum _HorisontalAlignment;
-		private VerticalAlignmentEnum _VerticalAlignment;
+        /// <summary>
+        /// Creates a halo around the text
+        /// </summary>
+        public Pen Halo
+        {
+            get { return _Halo; }
+            set { _Halo = value; }
+        }
 
-		/// <summary>
-		/// The horisontal alignment of the text in relation to the labelpoint
-		/// </summary>
-		public HorizontalAlignmentEnum HorizontalAlignment
-		{
-			get { return _HorisontalAlignment; }
-			set { _HorisontalAlignment = value; }
-		}
-		/// <summary>
-		/// The horisontal alignment of the text in relation to the labelpoint
-		/// </summary>
-		public VerticalAlignmentEnum VerticalAlignment
-		{
-			get { return _VerticalAlignment; }
-			set { _VerticalAlignment = value; }
-		}
-		/// <summary>
-		/// Label text alignment
-		/// </summary>
-		public enum HorizontalAlignmentEnum : short
-		{ 
-			/// <summary>
-			/// Left oriented
-			/// </summary>
-			Left = 0,
-			/// <summary>
-			/// Right oriented
-			/// </summary>
-			Right = 2,
-			/// <summary>
-			/// Centered
-			/// </summary>
-			Center = 1
-		}
 
-		/// <summary>
-		/// Label text alignment
-		/// </summary>
-		public enum VerticalAlignmentEnum : short
-		{
-			/// <summary>
-			/// Left oriented
-			/// </summary>
-			Bottom = 0,
-			/// <summary>
-			/// Right oriented
-			/// </summary>
-			Top = 2,
-			/// <summary>
-			/// Centered
-			/// </summary>
-			Middle = 1
-		}
-	}
+        /// <summary>
+        /// Specifies relative position of labels with respect to objects label point
+        /// </summary>
+        public PointF Offset
+        {
+            get { return _Offset; }
+            set { _Offset = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets whether Collision Detection is enabled for the labels.
+        /// If set to true, label collision will be tested.
+        /// </summary>
+        public bool CollisionDetection
+        {
+            get { return _CollisionDetection; }
+            set { _CollisionDetection = value; }
+        }
+
+        /// <summary>
+        /// Distance around label where collision buffer is active
+        /// </summary>
+        public SizeF CollisionBuffer
+        {
+            get { return _CollisionBuffer; }
+            set { _CollisionBuffer = value; }
+        }
+
+        /// <summary>
+        /// The horisontal alignment of the text in relation to the labelpoint
+        /// </summary>
+        public HorizontalAlignmentEnum HorizontalAlignment
+        {
+            get { return _HorisontalAlignment; }
+            set { _HorisontalAlignment = value; }
+        }
+
+        /// <summary>
+        /// The horisontal alignment of the text in relation to the labelpoint
+        /// </summary>
+        public VerticalAlignmentEnum VerticalAlignment
+        {
+            get { return _VerticalAlignment; }
+            set { _VerticalAlignment = value; }
+        }
+    }
 }

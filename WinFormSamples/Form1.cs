@@ -1,58 +1,56 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Windows.Forms;
+using SharpMap.Forms;
+using WinFormSamples.Samples;
 
 namespace WinFormSamples
 {
-  public partial class MainForm : Form
-  {
-    public MainForm()
+    public partial class MainForm : Form
     {
-      InitializeComponent();
-      this.mapImage.ActiveTool = SharpMap.Forms.MapImage.Tools.Pan;
+        public MainForm()
+        {
+            InitializeComponent();
+            mapImage.ActiveTool = MapImage.Tools.Pan;
+        }
+
+        private void radioButton_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                string text = ((RadioButton) sender).Text;
+                switch (text)
+                {
+                    case "Shapefile":
+                        mapImage.Map = ShapefileSample.InitializeMap();
+                        break;
+                    case "GradientTheme":
+                        mapImage.Map = GradiantThemeSample.InitializeMap();
+                        break;
+                    case "WFS Client":
+                        mapImage.Map = WfsSample.InitializeMap();
+                        break;
+                    case "WMS Client":
+                        mapImage.Map = WmsSample.InitializeMap();
+                        break;
+                    case "OGR - MapInfo":
+                        mapImage.Map = OgrSample.InitializeMap();
+                        break;
+                    case "GDAL - GeoTiff":
+                        mapImage.Map = GdalSample.InitializeMap();
+                        break;
+                    case "Tiled WMS":
+                        mapImage.Map = TiledWmsSample.InitializeMap();
+                        break;
+                    default:
+                        break;
+                }
+                mapImage.Map.Size = Size;
+                mapImage.Refresh();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(this, ex.Message, "Error");
+            }
+        }
     }
-
-    private void radioButton_Click(object sender, EventArgs e)
-    {
-      try
-      {
-        string text = ((RadioButton)sender).Text;
-        switch (text)
-	      {
-          case "Shapefile":
-            this.mapImage.Map = Samples.ShapefileSample.InitializeMap();
-            break;
-          case "GradientTheme":
-            this.mapImage.Map = Samples.GradiantThemeSample.InitializeMap();
-            break;
-          case "WFS Client":
-            this.mapImage.Map = Samples.WfsSample.InitializeMap();
-            break;
-          case "WMS Client":
-            this.mapImage.Map = Samples.WmsSample.InitializeMap();
-            break;
-          case "OGR - MapInfo":
-            this.mapImage.Map = Samples.OgrSample.InitializeMap();
-            break;
-          case "GDAL - GeoTiff":
-            this.mapImage.Map = Samples.GdalSample.InitializeMap();
-            break;
-          case "Tiled WMS":
-            this.mapImage.Map = Samples.TiledWmsSample.InitializeMap();
-            break;
-		      default:
-            break;
-	      }
-        this.mapImage.Map.Size = this.Size;
-        this.mapImage.Refresh();
-      }
-      catch (Exception ex)
-      {
-        MessageBox.Show(this, ex.Message, "Error");
-      }
-    }
-
-
-
-  }
 }

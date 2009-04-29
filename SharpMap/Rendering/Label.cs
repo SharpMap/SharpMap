@@ -17,161 +17,169 @@
 
 using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Drawing;
+using SharpMap.Styles;
 
 namespace SharpMap.Rendering
 {
+    /// <summary>
+    /// Defines an axis-aligned box around a label, used for collision detection
+    /// </summary>
+    public class LabelBox : IComparable<LabelBox>
+    {
+        private float _height;
+        private float _left;
+        private float _top;
+        private float _width;
 
-	/// <summary>
-	/// Defines an axis-aligned box around a label, used for collision detection
-	/// </summary>
-	public class LabelBox : IComparable<LabelBox>
-	{
-		/// <summary>
-		/// Initializes a new LabelBox instance
-		/// </summary>
-		/// <param name="left">Left side of box</param>
-		/// <param name="top">Top of box</param>
-		/// <param name="width">Width of the box</param>
-		/// <param name="height">Height of the box</param>
-		public LabelBox(float left, float top, float width, float height)
-		{
-			_left = left;
-			_top = top;
-			_width = width;
-			_height = height;
-		}
+        /// <summary>
+        /// Initializes a new LabelBox instance
+        /// </summary>
+        /// <param name="left">Left side of box</param>
+        /// <param name="top">Top of box</param>
+        /// <param name="width">Width of the box</param>
+        /// <param name="height">Height of the box</param>
+        public LabelBox(float left, float top, float width, float height)
+        {
+            _left = left;
+            _top = top;
+            _width = width;
+            _height = height;
+        }
 
-		/// <summary>
-		/// Initializes a new LabelBox instance based on a rectangle
-		/// </summary>
-		/// <param name="rectangle"></param>
-		public LabelBox(System.Drawing.RectangleF rectangle)
-		{
-			_left = rectangle.X;
-			_top = rectangle.Y;
-			_width = rectangle.Width;
-			_height = rectangle.Height;
-		}
+        /// <summary>
+        /// Initializes a new LabelBox instance based on a rectangle
+        /// </summary>
+        /// <param name="rectangle"></param>
+        public LabelBox(RectangleF rectangle)
+        {
+            _left = rectangle.X;
+            _top = rectangle.Y;
+            _width = rectangle.Width;
+            _height = rectangle.Height;
+        }
 
-		private float _left;
+        /// <summary>
+        /// The Left tie-point for the Label
+        /// </summary>
+        public float Left
+        {
+            get { return _left; }
+            set { _left = value; }
+        }
 
-		/// <summary>
-		/// The Left tie-point for the Label
-		/// </summary>
-		public float Left
-		{
-			get { return _left; }
-			set { _left = value; }
-		}
-		private float _top;
+        /// <summary>
+        /// The Top tie-point for the label
+        /// </summary>
+        public float Top
+        {
+            get { return _top; }
+            set { _top = value; }
+        }
 
-		/// <summary>
-		/// The Top tie-point for the label
-		/// </summary>
-		public float Top
-		{
-			get { return _top; }
-			set { _top = value; }
-		}
-		private float _width;
+        /// <summary>
+        /// Width of the box
+        /// </summary>
+        public float Width
+        {
+            get { return _width; }
+            set { _width = value; }
+        }
 
-		/// <summary>
-		/// Width of the box
-		/// </summary>
-		public float Width
-		{
-			get { return _width; }
-			set { _width = value; }
-		}
+        /// <summary>
+        /// Height of the box
+        /// </summary>
+        public float Height
+        {
+            get { return _height; }
+            set { _height = value; }
+        }
 
-		private float _height;
+        /// <summary>
+        /// Right side of the box
+        /// </summary>
+        public float Right
+        {
+            get { return _left + _width; }
+        }
 
-		/// <summary>
-		/// Height of the box
-		/// </summary>
-		public float Height
-		{
-			get { return _height; }
-			set { _height = value; }
-		}
+        /// <summary>
+        /// Bottom of th ebox
+        /// </summary>
+        public float Bottom
+        {
+            get { return _top - _height; }
+        }
 
-		/// <summary>
-		/// Right side of the box
-		/// </summary>
-		public float Right
-		{
-			get { return _left + _width; }
-		}
+        #region IComparable<LabelBox> Members
 
-		/// <summary>
-		/// Bottom of th ebox
-		/// </summary>
-		public float Bottom
-		{
-			get { return _top - _height; }
-		}
+        /// <summary>
+        /// Returns 0 if the boxes intersects each other
+        /// </summary>
+        /// <param name="other">labelbox to perform intersectiontest with</param>
+        /// <returns>0 if the intersect</returns>
+        public int CompareTo(LabelBox other)
+        {
+            if (Intersects(other))
+                return 0;
+            else if (other.Left > Right ||
+                     other.Bottom > Top)
+                return 1;
+            else
+                return -1;
+        }
 
-		/// <summary>
-		/// Determines whether the boundingbox intersects another boundingbox
-		/// </summary>
-		/// <param name="box"></param>
-		/// <returns></returns>
-		public bool Intersects(LabelBox box)
-		{
-			return !(box.Left > this.Right ||
-					 box.Right < this.Left ||
-					 box.Bottom > this.Top ||
-					 box.Top < this.Bottom);
-		}
+        #endregion
 
-		#region IComparable<LabelBox> Members
+        /// <summary>
+        /// Determines whether the boundingbox intersects another boundingbox
+        /// </summary>
+        /// <param name="box"></param>
+        /// <returns></returns>
+        public bool Intersects(LabelBox box)
+        {
+            return !(box.Left > Right ||
+                     box.Right < Left ||
+                     box.Bottom > Top ||
+                     box.Top < Bottom);
+        }
+    }
 
-		/// <summary>
-		/// Returns 0 if the boxes intersects each other
-		/// </summary>
-		/// <param name="other">labelbox to perform intersectiontest with</param>
-		/// <returns>0 if the intersect</returns>
-		public int CompareTo(LabelBox other)
-		{
-			if (this.Intersects(other))
-				return 0;
-			else if (other.Left > this.Right ||
-				other.Bottom > this.Top)
-				return 1;
-			else
-				return -1;
-		}
-
-		#endregion
-	}
-
-	/// <summary>
-	/// Class for storing a label instance
-	/// </summary>
-	public class Label : IComparable<Label>, IComparer<Label>
-	{
-		/// <summary>
-		/// Initializes a new Label instance
-		/// </summary>
-		/// <param name="text">Text to write</param>
-		/// <param name="labelpoint">Position of label</param>
-		/// <param name="rotation">Rotation</param>
-		/// <param name="priority">Label priority used for collision detection</param>
-		/// <param name="collisionbox">Box around label for collision detection</param>
-		/// <param name="style">The style of the label</param>
-		public Label(string text, System.Drawing.PointF labelpoint, float rotation, int priority, LabelBox collisionbox, SharpMap.Styles.LabelStyle style)
-		{
-			_Text = text;
-			_LabelPoint = labelpoint;
-			_Rotation = rotation;
-			_Priority = priority;
-			_box = collisionbox;
-			_Style = style;
-            _show = true;
-		}
-
+    /// <summary>
+    /// Class for storing a label instance
+    /// </summary>
+    public class Label : IComparable<Label>, IComparer<Label>
+    {
+        private LabelBox _box;
+        private Font _Font;
+        private PointF _LabelPoint;
+        private int _Priority;
+        private float _Rotation;
         private bool _show;
+        private LabelStyle _Style;
+
+        private string _Text;
+
+        /// <summary>
+        /// Initializes a new Label instance
+        /// </summary>
+        /// <param name="text">Text to write</param>
+        /// <param name="labelpoint">Position of label</param>
+        /// <param name="rotation">Rotation</param>
+        /// <param name="priority">Label priority used for collision detection</param>
+        /// <param name="collisionbox">Box around label for collision detection</param>
+        /// <param name="style">The style of the label</param>
+        public Label(string text, PointF labelpoint, float rotation, int priority, LabelBox collisionbox,
+                     LabelStyle style)
+        {
+            _Text = text;
+            _LabelPoint = labelpoint;
+            _Rotation = rotation;
+            _Priority = priority;
+            _box = collisionbox;
+            _Style = style;
+            _show = true;
+        }
 
         /// <summary>
         /// Show this label or don't
@@ -182,118 +190,103 @@ namespace SharpMap.Rendering
             set { _show = value; }
         }
 
-		private string _Text;
+        /// <summary>
+        /// The text of the label
+        /// </summary>
+        public string Text
+        {
+            get { return _Text; }
+            set { _Text = value; }
+        }
 
-		/// <summary>
-		/// The text of the label
-		/// </summary>
-		public string Text
-		{
-			get { return _Text; }
-			set { _Text = value; }
-		}
+        /// <summary>
+        /// Label position
+        /// </summary>
+        public PointF LabelPoint
+        {
+            get { return _LabelPoint; }
+            set { _LabelPoint = value; }
+        }
 
-		private System.Drawing.PointF _LabelPoint;
+        /// <summary>
+        /// Label font
+        /// </summary>
+        public Font Font
+        {
+            get { return _Font; }
+            set { _Font = value; }
+        }
 
-		/// <summary>
-		/// Label position
-		/// </summary>
-		public System.Drawing.PointF LabelPoint
-		{
-			get { return _LabelPoint; }
-			set { _LabelPoint = value; }
-		}
+        /// <summary>
+        /// Label rotation
+        /// </summary>
+        public float Rotation
+        {
+            get { return _Rotation; }
+            set { _Rotation = value; }
+        }
 
-		private System.Drawing.Font _Font;
+        /// <summary>
+        /// Value indicating rendering priority
+        /// </summary>
+        public int Priority
+        {
+            get { return _Priority; }
+            set { _Priority = value; }
+        }
 
-		/// <summary>
-		/// Label font
-		/// </summary>
-		public System.Drawing.Font Font
-		{
-			get { return _Font; }
-			set { _Font = value; }
-		}
+        /// <summary>
+        /// Label box
+        /// </summary>
+        public LabelBox Box
+        {
+            get { return _box; }
+            set { _box = value; }
+        }
 
-		private float _Rotation;
+        /// <summary>
+        /// Gets or sets the <see cref="SharpMap.Styles.LabelStyle"/> of this label
+        /// </summary>
+        public LabelStyle Style
+        {
+            get { return _Style; }
+            set { _Style = value; }
+        }
 
-		/// <summary>
-		/// Label rotation
-		/// </summary>
-		public float Rotation
-		{
-			get { return _Rotation; }
-			set { _Rotation = value; }
-		}
-		private int _Priority;
+        #region IComparable<Label> Members
 
-		/// <summary>
-		/// Value indicating rendering priority
-		/// </summary>
-		public int Priority
-		{
-			get { return _Priority; }
-			set { _Priority = value; }
-		}
+        /// <summary>
+        /// Tests if two label boxes intersects
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
+        public int CompareTo(Label other)
+        {
+            if (this == other)
+                return 0;
+            else if (_box == null)
+                return -1;
+            else if (other.Box == null)
+                return 1;
+            else
+                return _box.CompareTo(other.Box);
+        }
 
-		private LabelBox _box;
+        #endregion
 
-		/// <summary>
-		/// Label box
-		/// </summary>
-		public LabelBox Box
-		{
-			get { return _box; }
-			set { _box = value; }
-		}
+        #region IComparer<Label> Members
 
-		private SharpMap.Styles.LabelStyle _Style;
+        /// <summary>
+        /// Checks if two labels intersect
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <returns></returns>
+        public int Compare(Label x, Label y)
+        {
+            return x.CompareTo(y);
+        }
 
-		/// <summary>
-		/// Gets or sets the <see cref="SharpMap.Styles.LabelStyle"/> of this label
-		/// </summary>
-		public SharpMap.Styles.LabelStyle Style
-		{
-			get { return _Style; }
-			set { _Style = value; }
-		}
-	
-
-		#region IComparable<Label> Members
-
-		/// <summary>
-		/// Tests if two label boxes intersects
-		/// </summary>
-		/// <param name="other"></param>
-		/// <returns></returns>
-		public int CompareTo(Label other)
-		{
-			if (this == other)
-				return 0;
-			else if (_box == null)
-				return -1;
-			else if (other.Box == null)
-				return 1;
-			else
-				return _box.CompareTo(other.Box);
-		}
-
-		#endregion
-
-		
-		#region IComparer<Label> Members
-
-		/// <summary>
-		/// Checks if two labels intersect
-		/// </summary>
-		/// <param name="x"></param>
-		/// <param name="y"></param>
-		/// <returns></returns>
-		public int Compare(Label x, Label y)
-		{
-			return x.CompareTo(y);
-		}
-
-		#endregion
-	}
+        #endregion
+    }
 }

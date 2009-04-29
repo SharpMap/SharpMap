@@ -16,142 +16,147 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
 
 using System;
-using System.Collections.Generic;
-using System.Text;
+using System.Drawing;
+using SharpMap.CoordinateSystems.Transformations;
 using SharpMap.Geometries;
 
 namespace SharpMap.Layers
 {
-	/// <summary>
-	/// Abstract class for common layer properties
-	/// Implement this class instead of the ILayer interface to save a lot of common code.
-	/// </summary>
-	public abstract class Layer : ILayer, ICloneable
-	{
-		#region Events
-		/// <summary>
-		/// EventHandler for event fired when the layer has been rendered
-		/// </summary>
-		/// <param name="layer">Layer rendered</param>
-		/// <param name="g">Reference to graphics object used for rendering</param>
-		public delegate void LayerRenderedEventHandler(SharpMap.Layers.Layer layer, System.Drawing.Graphics g);
+    /// <summary>
+    /// Abstract class for common layer properties
+    /// Implement this class instead of the ILayer interface to save a lot of common code.
+    /// </summary>
+    public abstract class Layer : ILayer, ICloneable
+    {
+        #region Events
 
-		/// <summary>
-		/// Event fired when the layer has been rendered
-		/// </summary>
-		public event LayerRenderedEventHandler LayerRendered;
-		#endregion
+        #region Delegates
 
-		/// <summary>
-		/// Returns the name of the layer.
-		/// </summary>
-		/// <returns></returns>
-		public override string ToString()
-		{
-			return this.LayerName;
-		}
+        /// <summary>
+        /// EventHandler for event fired when the layer has been rendered
+        /// </summary>
+        /// <param name="layer">Layer rendered</param>
+        /// <param name="g">Reference to graphics object used for rendering</param>
+        public delegate void LayerRenderedEventHandler(Layer layer, Graphics g);
+
+        #endregion
+
+        /// <summary>
+        /// Event fired when the layer has been rendered
+        /// </summary>
+        public event LayerRenderedEventHandler LayerRendered;
+
+        #endregion
+
+        private ICoordinateTransformation _CoordinateTransform;
+
+        private string _LayerName;
+
+        private int _SRID = -1;
+
+        /// <summary>
+        /// Gets or sets the <see cref="SharpMap.CoordinateSystems.Transformations.ICoordinateTransformation"/> applied 
+        /// to this vectorlayer prior to rendering
+        /// </summary>
+        public virtual ICoordinateTransformation CoordinateTransformation
+        {
+            get { return _CoordinateTransform; }
+            set { _CoordinateTransform = value; }
+        }
+
+        #region ICloneable Members
+
+        /// <summary>
+        /// Clones the layer
+        /// </summary>
+        /// <returns>cloned object</returns>
+        public abstract object Clone();
+
+        #endregion
+
+        #region ILayer Members
+
+        /// <summary>
+        /// Gets or sets the name of the layer
+        /// </summary>
+        public string LayerName
+        {
+            get { return _LayerName; }
+            set { _LayerName = value; }
+        }
+
+        /// <summary>
+        /// The spatial reference ID (CRS)
+        /// </summary>
+        public virtual int SRID
+        {
+            get { return _SRID; }
+            set { _SRID = value; }
+        }
+
+        //public abstract SharpMap.CoordinateSystems.CoordinateSystem CoordinateSystem { get; set; }
 
 
-		private SharpMap.CoordinateSystems.Transformations.ICoordinateTransformation _CoordinateTransform;
+        /// <summary>
+        /// Renders the layer
+        /// </summary>
+        /// <param name="g">Graphics object reference</param>
+        /// <param name="map">Map which is rendered</param>
+        public virtual void Render(Graphics g, Map map)
+        {
+            if (LayerRendered != null) LayerRendered(this, g); //Fire event
+        }
 
-		/// <summary>
-		/// Gets or sets the <see cref="SharpMap.CoordinateSystems.Transformations.ICoordinateTransformation"/> applied 
-		/// to this vectorlayer prior to rendering
-		/// </summary>
-		public virtual SharpMap.CoordinateSystems.Transformations.ICoordinateTransformation CoordinateTransformation
-		{
-			get { return _CoordinateTransform; }
-			set { _CoordinateTransform = value; }
-		}
+        /// <summary>
+        /// Returns the extent of the layer
+        /// </summary>
+        /// <returns>Bounding box corresponding to the extent of the features in the layer</returns>
+        public abstract BoundingBox Envelope { get; }
 
-		#region ILayer Members
+        #endregion
 
-		private string _LayerName;
-		/// <summary>
-		/// Gets or sets the name of the layer
-		/// </summary>
-		public string LayerName
-		{
-			get { return _LayerName; }
-			set { _LayerName = value; }
-		}
-		
-		private int _SRID = -1;
-		/// <summary>
-		/// The spatial reference ID (CRS)
-		/// </summary>
-		public virtual int SRID
-		{
-			get { return _SRID; }
-			set { _SRID = value; }
-		}
+        #region Properties
 
-		//public abstract SharpMap.CoordinateSystems.CoordinateSystem CoordinateSystem { get; set; }
-	
+        private bool _Enabled = true;
+        private double _MaxVisible = double.MaxValue;
+        private double _MinVisible = 0;
 
-		/// <summary>
-		/// Renders the layer
-		/// </summary>
-		/// <param name="g">Graphics object reference</param>
-		/// <param name="map">Map which is rendered</param>
-		public virtual void Render(System.Drawing.Graphics g, Map map)
-		{
-			if(LayerRendered!=null) LayerRendered(this, g); //Fire event
-		}
+        /// <summary>
+        /// Minimum visibility zoom, including this value
+        /// </summary>
+        public double MinVisible
+        {
+            get { return _MinVisible; }
+            set { _MinVisible = value; }
+        }
 
-		/// <summary>
-		/// Returns the extent of the layer
-		/// </summary>
-		/// <returns>Bounding box corresponding to the extent of the features in the layer</returns>
-		public abstract SharpMap.Geometries.BoundingBox Envelope { get; }
+        /// <summary>
+        /// Maximum visibility zoom, excluding this value
+        /// </summary>
+        public double MaxVisible
+        {
+            get { return _MaxVisible; }
+            set { _MaxVisible = value; }
+        }
 
-		#region Properties
+        /// <summary>
+        /// Specified whether the layer is rendered or not
+        /// </summary>
+        public bool Enabled
+        {
+            get { return _Enabled; }
+            set { _Enabled = value; }
+        }
 
-		private double _MinVisible = 0;
-		/// <summary>
-		/// Minimum visibility zoom, including this value
-		/// </summary>
-		public double MinVisible
-		{
-			get { return _MinVisible; }
-			set { _MinVisible = value; }
-		}
+        #endregion
 
-		private double _MaxVisible = double.MaxValue;
-
-		/// <summary>
-		/// Maximum visibility zoom, excluding this value
-		/// </summary>
-		public double MaxVisible
-		{
-			get { return _MaxVisible; }
-			set { _MaxVisible = value; }
-		}
-
-		private bool _Enabled = true;
-
-		/// <summary>
-		/// Specified whether the layer is rendered or not
-		/// </summary>
-		public bool Enabled
-		{
-			get { return _Enabled; }
-			set { _Enabled = value; }
-		}
-
-		#endregion
-
-		#endregion
-
-		#region ICloneable Members
-
-		/// <summary>
-		/// Clones the layer
-		/// </summary>
-		/// <returns>cloned object</returns>
-		public abstract object Clone();
-
-		#endregion
-
-	}
+        /// <summary>
+        /// Returns the name of the layer.
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            return LayerName;
+        }
+    }
 }

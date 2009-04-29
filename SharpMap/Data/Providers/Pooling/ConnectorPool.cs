@@ -19,97 +19,100 @@
 // The following is only proof-of-concept. A final implementation should be based
 // on "src\Npgsql\NpgsqlConnectorPool.cs"
 
-using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace SharpMap.Data.Providers.Pooling
 {
-	/// <summary>
-	/// The ConnectorPool class implements the functionality for 
-	/// the administration of the connectors. Controls pooling and
-	/// sharing of connectors.
-	/// </summary>
-	internal class ConnectorPool
-	{
-		/// <summary>Unique static instance of the connector pool manager.</summary>
-		internal static ConnectorPool ConnectorPoolManager = new ConnectorPool();
-		/// <summary>List of unused, pooled connectors avaliable to the next RequestConnector() call.</summary>
-		internal List<Connector> PooledConnectors;
-		/// <summary>List of shared, in use connectors.</summary>
-		internal List<Connector> SharedConnectors;
-		/// <summary>
-		/// Default constructor, creates a new connector pool object.
-		/// Should only be used once in an application, since more 
-		/// than one connector pool does not make much sense..
-		/// </summary>
-		internal ConnectorPool()
-		{
-			this.PooledConnectors = new List<Connector>();
-			this.SharedConnectors = new List<Connector>();
-		}
+    /// <summary>
+    /// The ConnectorPool class implements the functionality for 
+    /// the administration of the connectors. Controls pooling and
+    /// sharing of connectors.
+    /// </summary>
+    internal class ConnectorPool
+    {
+        /// <summary>Unique static instance of the connector pool manager.</summary>
+        internal static ConnectorPool ConnectorPoolManager = new ConnectorPool();
 
-		/// <summary>
-		/// Searches the shared and pooled connector lists for a
-		/// matching connector object or creates a new one.
-		/// </summary>
-		/// <param name="provider">Provider requested to connect to the database server</param>
-		/// <param name="Shared">Allows multiple connections on a single connector. </param>
-		/// <returns>A pooled connector object.</returns>
-		internal Connector RequestConnector(SharpMap.Data.Providers.IProvider provider, bool Shared)
-		{
-			// if a shared connector is requested then the Shared
-			// Connector List is searched first:
-			if (Shared)
-			{
-				foreach (Connector Connector in this.SharedConnectors)
-				{
-					if (Connector.Provider.ConnectionID == provider.ConnectionID)
-					{	// Bingo!
-						// Return the shared connector to caller.
-						// The connector is already in use.
-						Connector._ShareCount++;
-						return Connector;
-					}
-				}
-			}
+        /// <summary>List of unused, pooled connectors avaliable to the next RequestConnector() call.</summary>
+        internal List<Connector> PooledConnectors;
 
-			// if a shared connector could not be found or a
-			// nonshared connector is requested, then the pooled
-			// (unused) connectors are beeing searched.
-			foreach (Connector Connector in this.PooledConnectors)
-			{
-				if (Connector.Provider.ConnectionID == provider.ConnectionID)
-				{	// Bingo!
-					// Remove the Connector from the pooled connectors list.
-					this.PooledConnectors.Remove(Connector);
-					// Make the connector shared if requested					
-					if (Connector.Shared = Shared)
-					{
-						this.SharedConnectors.Add(Connector);
-						Connector._ShareCount = 1;
-					}
-					// done...
-					Connector.InUse = true;
-					return Connector;
-				}
-			}
+        /// <summary>List of shared, in use connectors.</summary>
+        internal List<Connector> SharedConnectors;
 
-			// No suitable connector found, so create new one
-			Connector NewConnector = new Connector(provider, Shared);
+        /// <summary>
+        /// Default constructor, creates a new connector pool object.
+        /// Should only be used once in an application, since more 
+        /// than one connector pool does not make much sense..
+        /// </summary>
+        internal ConnectorPool()
+        {
+            PooledConnectors = new List<Connector>();
+            SharedConnectors = new List<Connector>();
+        }
 
-			// Shared connections must be added to the shared 
-			// connectors list
-			if (Shared)
-			{
-				this.SharedConnectors.Add(NewConnector);
-				NewConnector._ShareCount = 1;
-			}
+        /// <summary>
+        /// Searches the shared and pooled connector lists for a
+        /// matching connector object or creates a new one.
+        /// </summary>
+        /// <param name="provider">Provider requested to connect to the database server</param>
+        /// <param name="Shared">Allows multiple connections on a single connector. </param>
+        /// <returns>A pooled connector object.</returns>
+        internal Connector RequestConnector(IProvider provider, bool Shared)
+        {
+            // if a shared connector is requested then the Shared
+            // Connector List is searched first:
+            if (Shared)
+            {
+                foreach (Connector Connector in SharedConnectors)
+                {
+                    if (Connector.Provider.ConnectionID == provider.ConnectionID)
+                    {
+                        // Bingo!
+                        // Return the shared connector to caller.
+                        // The connector is already in use.
+                        Connector._ShareCount++;
+                        return Connector;
+                    }
+                }
+            }
 
-			// and then returned to the caller
-			NewConnector.InUse = true;
-			NewConnector.Open();
-			return NewConnector;
-		}
-	}
+            // if a shared connector could not be found or a
+            // nonshared connector is requested, then the pooled
+            // (unused) connectors are beeing searched.
+            foreach (Connector Connector in PooledConnectors)
+            {
+                if (Connector.Provider.ConnectionID == provider.ConnectionID)
+                {
+                    // Bingo!
+                    // Remove the Connector from the pooled connectors list.
+                    PooledConnectors.Remove(Connector);
+                    // Make the connector shared if requested					
+                    if (Connector.Shared = Shared)
+                    {
+                        SharedConnectors.Add(Connector);
+                        Connector._ShareCount = 1;
+                    }
+                    // done...
+                    Connector.InUse = true;
+                    return Connector;
+                }
+            }
+
+            // No suitable connector found, so create new one
+            Connector NewConnector = new Connector(provider, Shared);
+
+            // Shared connections must be added to the shared 
+            // connectors list
+            if (Shared)
+            {
+                SharedConnectors.Add(NewConnector);
+                NewConnector._ShareCount = 1;
+            }
+
+            // and then returned to the caller
+            NewConnector.InUse = true;
+            NewConnector.Open();
+            return NewConnector;
+        }
+    }
 }

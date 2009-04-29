@@ -1,11 +1,6 @@
 // WFS provider by Peter Robineau (peter.robineau@gmx.at)
 // This file can be redistributed and/or modified under the terms of the GNU Lesser General Public License.
 
-using System;
-using System.Collections.Generic;
-using System.Text;
-using SharpMap.Data.Providers;
-
 namespace SharpMap.Utilities.Wfs
 {
     public class WFS_XPathTextResourcesBase
@@ -17,7 +12,43 @@ namespace SharpMap.Utilities.Wfs
         // Prefixes                                                           //
         ////////////////////////////////////////////////////////////////////////
 
+        private static string _XPATH_GEOMETRY_ELEMREF_GEOMNAMEQUERY =
+            // _param1 = TargetNs 
+            // _param2 = Value of the type-attribute 
+            "//xs:element[_PARAMCOMPWITHTARGETNS_(@type, $_param1, $_param2)]/@name";
+
+        private static string _XPATH_GEOMETRY_ELEMREF_GEOMNAMEQUERY_ANONYMOUSTYPE =
+            "//xs:element[starts-with(@ref,'gml:')]/ancestor::xs:complexType[1]/ancestor::xs:element[1]/@name";
+
+        private static string _XPATH_GEOMETRY_ELEMREF_GMLELEMENTQUERY =
+            "descendant::xs:element[starts-with(@ref,'gml:')]/@ref";
+
+        private static string _XPATH_GEOMETRYELEMENT_BYTYPEATTRIBUTEQUERY =
+            "//xs:element[starts-with(@type,'gml:')]";
+
+        private static string _XPATH_GEOMETRYELEMENTCOMPLEXTYPE_BYELEMREFQUERY =
+            "//xs:element[starts-with(@ref,'gml:')]/ancestor::xs:complexType[1]";
+
+        private static string _XPATH_NAMEATTRIBUTEQUERY = "@name";
+
+        private static string _XPATH_TARGETNS =
+            "/xs:schema/@targetNamespace";
+
+        private static string _XPATH_TYPEATTRIBUTEQUERY = "@type";
+        private string _NSFEATURETYPEPREFIX = "feature";
+        private string _NSGML = "http://www.opengis.net/gml";
+        private string _NSGMLPREFIX = "gml";
+        private string _NSOGC = "http://www.opengis.net/ogc";
+
         private string _NSOGCPREFIX = "ogc";
+        private string _NSOWS = "http://www.opengis.net/ows";
+        private string _NSOWSPREFIX = "ows";
+        private string _NSSCHEMA = "http://www.w3.org/2001/XMLSchema";
+        private string _NSSCHEMAPREFIX = "xs";
+        private string _NSWFS = "http://www.opengis.net/wfs";
+        private string _NSWFSPREFIX = "wfs";
+        private string _NSXLINK = "http://www.w3.org/1999/xlink";
+        private string _NSXLINKPREFIX = "xlink";
 
         /// <summary>
         /// Prefix used for OGC namespace
@@ -27,8 +58,6 @@ namespace SharpMap.Utilities.Wfs
             get { return _NSOGCPREFIX; }
         }
 
-        private string _NSOGC = "http://www.opengis.net/ogc";
-
         /// <summary>
         /// OGC namespace URI 
         /// </summary>
@@ -36,8 +65,6 @@ namespace SharpMap.Utilities.Wfs
         {
             get { return _NSOGC; }
         }
-
-        private string _NSXLINKPREFIX = "xlink";
 
         /// <summary>
         /// Prefix used for XLink namespace
@@ -47,8 +74,6 @@ namespace SharpMap.Utilities.Wfs
             get { return _NSXLINKPREFIX; }
         }
 
-        private string _NSXLINK = "http://www.w3.org/1999/xlink";
-
         /// <summary>
         /// XLink namespace URI 
         /// </summary>
@@ -56,8 +81,6 @@ namespace SharpMap.Utilities.Wfs
         {
             get { return _NSXLINK; }
         }
-
-        private string _NSFEATURETYPEPREFIX = "feature";
 
         /// <summary>
         /// Prefix used for feature namespace
@@ -67,8 +90,6 @@ namespace SharpMap.Utilities.Wfs
             get { return _NSFEATURETYPEPREFIX; }
         }
 
-        private string _NSWFSPREFIX = "wfs";
-
         /// <summary>
         /// Prefix used for WFS namespace
         /// </summary>
@@ -76,8 +97,6 @@ namespace SharpMap.Utilities.Wfs
         {
             get { return _NSWFSPREFIX; }
         }
-
-        private string _NSWFS = "http://www.opengis.net/wfs";
 
         /// <summary>
         /// WFS namespace URI 
@@ -87,8 +106,6 @@ namespace SharpMap.Utilities.Wfs
             get { return _NSWFS; }
         }
 
-        private string _NSGMLPREFIX = "gml";
-
         /// <summary>
         /// Prefix used for GML namespace
         /// </summary>
@@ -96,8 +113,6 @@ namespace SharpMap.Utilities.Wfs
         {
             get { return _NSGMLPREFIX; }
         }
-
-        private string _NSGML = "http://www.opengis.net/gml";
 
         /// <summary>
         /// GML namespace URI 
@@ -107,8 +122,6 @@ namespace SharpMap.Utilities.Wfs
             get { return _NSGML; }
         }
 
-        private string _NSOWSPREFIX = "ows";
-
         /// <summary>
         /// Prefix used for OWS namespace
         /// </summary>
@@ -116,8 +129,6 @@ namespace SharpMap.Utilities.Wfs
         {
             get { return _NSOWSPREFIX; }
         }
-
-        private string _NSOWS = "http://www.opengis.net/ows";
 
         /// <summary>
         /// OWS namespace URI 
@@ -127,8 +138,6 @@ namespace SharpMap.Utilities.Wfs
             get { return _NSOWS; }
         }
 
-        private string _NSSCHEMAPREFIX = "xs";
-
         /// <summary>
         /// Prefix used for XML schema namespace
         /// </summary>
@@ -137,8 +146,6 @@ namespace SharpMap.Utilities.Wfs
             get { return _NSSCHEMAPREFIX; }
         }
 
-        private string _NSSCHEMA = "http://www.w3.org/2001/XMLSchema";
-
         /// <summary>
         /// XML schema namespace URI 
         /// </summary>
@@ -146,25 +153,19 @@ namespace SharpMap.Utilities.Wfs
         {
             get { return _NSSCHEMA; }
         }
-        
+
         ////////////////////////////////////////////////////////////////////////
         // XPath                                                              //                      
         // DescribeFeatureType WFS 1.0.0                                      //
         ////////////////////////////////////////////////////////////////////////
-        
-        private static string _XPATH_TARGETNS =
-            "/xs:schema/@targetNamespace";
 
         /// <summary>
         /// Gets an XPath string addressing the target namespace in 'DescribeFeatureType'.
         /// </summary>
         public string XPATH_TARGETNS
         {
-            get { return WFS_1_0_0_XPathTextResources._XPATH_TARGETNS; }
+            get { return _XPATH_TARGETNS; }
         }
-
-        private static string _XPATH_GEOMETRYELEMENT_BYTYPEATTRIBUTEQUERY =
-            "//xs:element[starts-with(@type,'gml:')]";
 
         /// <summary>
         /// Gets an XPath string addressing an element with a 'gml'-prefixed type-attribute in 'DescribeFeatureType'.
@@ -172,31 +173,24 @@ namespace SharpMap.Utilities.Wfs
         /// </summary>
         public string XPATH_GEOMETRYELEMENT_BYTYPEATTRIBUTEQUERY
         {
-            get { return WFS_1_0_0_XPathTextResources._XPATH_GEOMETRYELEMENT_BYTYPEATTRIBUTEQUERY; }
+            get { return _XPATH_GEOMETRYELEMENT_BYTYPEATTRIBUTEQUERY; }
         }
-
-        private static string _XPATH_NAMEATTRIBUTEQUERY = "@name";
 
         /// <summary>
         /// Gets an XPath string addressing a name-attribute.
         /// </summary>
         public string XPATH_NAMEATTRIBUTEQUERY
         {
-            get { return WFS_1_0_0_XPathTextResources._XPATH_NAMEATTRIBUTEQUERY; }
+            get { return _XPATH_NAMEATTRIBUTEQUERY; }
         }
-
-        private static string _XPATH_TYPEATTRIBUTEQUERY = "@type";
 
         /// <summary>
         ///  Gets an XPath string addressing a type-attribute.
         /// </summary>
         public string XPATH_TYPEATTRIBUTEQUERY
         {
-            get { return WFS_1_0_0_XPathTextResources._XPATH_TYPEATTRIBUTEQUERY; }
+            get { return _XPATH_TYPEATTRIBUTEQUERY; }
         }
-
-        private static string _XPATH_GEOMETRYELEMENTCOMPLEXTYPE_BYELEMREFQUERY =
-            "//xs:element[starts-with(@ref,'gml:')]/ancestor::xs:complexType[1]";
 
         /// <summary>
         /// Gets an XPath string addressing a complex type hosting an element with a 'gml'-prefixed ref-attribute in 'DescribeFeatureType'.
@@ -205,13 +199,8 @@ namespace SharpMap.Utilities.Wfs
         /// </summary>
         public string XPATH_GEOMETRYELEMENTCOMPLEXTYPE_BYELEMREFQUERY
         {
-            get { return WFS_1_0_0_XPathTextResources._XPATH_GEOMETRYELEMENTCOMPLEXTYPE_BYELEMREFQUERY; }
+            get { return _XPATH_GEOMETRYELEMENTCOMPLEXTYPE_BYELEMREFQUERY; }
         }
-
-        private static string _XPATH_GEOMETRY_ELEMREF_GEOMNAMEQUERY =
-            // _param1 = TargetNs 
-            // _param2 = Value of the type-attribute 
-            "//xs:element[_PARAMCOMPWITHTARGETNS_(@type, $_param1, $_param2)]/@name";
 
         /// <summary>
         /// Gets an XPath string addressing the name of an element having a type-attribute referencing 
@@ -220,11 +209,8 @@ namespace SharpMap.Utilities.Wfs
         /// </summary>
         public string XPATH_GEOMETRY_ELEMREF_GEOMNAMEQUERY
         {
-            get { return WFS_1_0_0_XPathTextResources._XPATH_GEOMETRY_ELEMREF_GEOMNAMEQUERY; }
+            get { return _XPATH_GEOMETRY_ELEMREF_GEOMNAMEQUERY; }
         }
-
-        private static string _XPATH_GEOMETRY_ELEMREF_GEOMNAMEQUERY_ANONYMOUSTYPE =
-            "//xs:element[starts-with(@ref,'gml:')]/ancestor::xs:complexType[1]/ancestor::xs:element[1]/@name";
 
         /// <summary>
         /// Gets an XPath string addressing the name of an element described by an anonymous complex type 
@@ -233,11 +219,8 @@ namespace SharpMap.Utilities.Wfs
         /// </summary>
         public string XPATH_GEOMETRY_ELEMREF_GEOMNAMEQUERY_ANONYMOUSTYPE
         {
-            get { return WFS_1_0_0_XPathTextResources._XPATH_GEOMETRY_ELEMREF_GEOMNAMEQUERY_ANONYMOUSTYPE; }
+            get { return _XPATH_GEOMETRY_ELEMREF_GEOMNAMEQUERY_ANONYMOUSTYPE; }
         }
-
-        private static string _XPATH_GEOMETRY_ELEMREF_GMLELEMENTQUERY =
-            "descendant::xs:element[starts-with(@ref,'gml:')]/@ref";
 
         /// <summary>
         /// Gets an XPath string addressing the 'gml'-prefixed  ref-attribute of an element.
@@ -245,7 +228,7 @@ namespace SharpMap.Utilities.Wfs
         /// </summary>
         public string XPATH_GEOMETRY_ELEMREF_GMLELEMENTQUERY
         {
-            get { return WFS_1_0_0_XPathTextResources._XPATH_GEOMETRY_ELEMREF_GMLELEMENTQUERY; }
+            get { return _XPATH_GEOMETRY_ELEMREF_GMLELEMENTQUERY; }
         }
 
         #endregion

@@ -7,10 +7,10 @@ using System.Xml;
 
 namespace SharpMap.Utilities.Wfs
 {
-    interface IPathNode
+    internal interface IPathNode
     {
+        bool IsActive { get; set; }
         bool Matches(XmlReader reader);
-        bool IsActive { get;set;}
     }
 
     /// <summary>
@@ -20,9 +20,9 @@ namespace SharpMap.Utilities.Wfs
     {
         #region Fields and Properties
 
+        private readonly string _XmlElementNodeName;
+        private readonly string _XmlElementNsUri;
         private bool _IsActive = true;
-        
-        private string _XmlElementNsUri;
 
         /// <summary>
         /// Gets the namespace URI of the element-node
@@ -31,8 +31,6 @@ namespace SharpMap.Utilities.Wfs
         {
             get { return _XmlElementNsUri; }
         }
-
-        private string _XmlElementNodeName;
 
         /// <summary>
         /// Gets the local name of the element-node
@@ -71,11 +69,11 @@ namespace SharpMap.Utilities.Wfs
         public bool Matches(XmlReader xmlReader)
         {
             if (!_IsActive) return true;
-            
+
             //Compare pointers instead of literal values
-            if ((object.ReferenceEquals(_XmlElementNsUri, xmlReader.NameTable.Get(xmlReader.NamespaceURI)))
-            &&
-            (object.ReferenceEquals(_XmlElementNodeName, xmlReader.NameTable.Get(xmlReader.LocalName))))
+            if ((ReferenceEquals(_XmlElementNsUri, xmlReader.NameTable.Get(xmlReader.NamespaceURI)))
+                &&
+                (ReferenceEquals(_XmlElementNodeName, xmlReader.NameTable.Get(xmlReader.LocalName))))
                 return true;
 
             return false;
@@ -87,14 +85,8 @@ namespace SharpMap.Utilities.Wfs
         /// </summary>
         public bool IsActive
         {
-            get
-            {
-                return _IsActive;
-            }
-            set
-            {
-                _IsActive = value;
-            }
+            get { return _IsActive; }
+            set { _IsActive = value; }
         }
 
         #endregion
@@ -107,7 +99,7 @@ namespace SharpMap.Utilities.Wfs
     {
         #region Fields
 
-        private List<IPathNode> _PathNodes = new List<IPathNode>();
+        private readonly List<IPathNode> _PathNodes = new List<IPathNode>();
 
         #endregion
 
@@ -144,10 +136,7 @@ namespace SharpMap.Utilities.Wfs
         /// </summary>
         public bool IsActive
         {
-            get
-            {
-                return _PathNodes[0].IsActive;
-            }
+            get { return _PathNodes[0].IsActive; }
             set
             {
                 foreach (IPathNode pathNode in _PathNodes)

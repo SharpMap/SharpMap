@@ -1,29 +1,25 @@
 using System;
-using System.Data;
 using System.Data.SqlClient;
 using System.Drawing;
-using System.Configuration;
-using System.Collections;
 using System.Web;
-using System.Web.Security;
 using System.Web.UI;
-using System.Web.UI.WebControls;
-using System.Web.UI.WebControls.WebParts;
-using System.Web.UI.HtmlControls;
+using SharpMap;
+using SharpMap.Web;
+using Point=SharpMap.Geometries.Point;
 
-public partial class SimpleMsSqlSpatial : System.Web.UI.Page
+public partial class SimpleMsSqlSpatial : Page
 {
-    private SharpMap.Map myMap;
+    private Map myMap;
 
     protected void Page_Load(object sender, EventArgs e)
     {
         //Set up the map. We use the method in the App_Code folder for initializing the map
-        myMap = MapHelper.InitializeMapMsSqlSpatial(new System.Drawing.Size((int)imgMap.Width.Value, (int)imgMap.Height.Value));
+        myMap = MapHelper.InitializeMapMsSqlSpatial(new Size((int) imgMap.Width.Value, (int) imgMap.Height.Value));
         if (Page.IsPostBack)
         {
             //Page is post back. Restore center and zoom-values from viewstate
-            myMap.Center = (SharpMap.Geometries.Point)ViewState["mapCenter"];
-            myMap.Zoom = (double)ViewState["mapZoom"];
+            myMap.Center = (Point) ViewState["mapCenter"];
+            myMap.Zoom = (double) ViewState["mapZoom"];
         }
         else
         {
@@ -43,9 +39,9 @@ public partial class SimpleMsSqlSpatial : System.Web.UI.Page
         myMap.Center = myMap.ImageToWorld(new System.Drawing.Point(e.X, e.Y));
         //Set zoom value if any of the zoom tools were selected
         if (rblMapTools.SelectedValue == "0") //Zoom in
-            myMap.Zoom = myMap.Zoom * 0.5;
+            myMap.Zoom = myMap.Zoom*0.5;
         else if (rblMapTools.SelectedValue == "1") //Zoom out
-            myMap.Zoom = myMap.Zoom * 2;
+            myMap.Zoom = myMap.Zoom*2;
         //Create the map
         GenerateMap();
     }
@@ -60,7 +56,7 @@ public partial class SimpleMsSqlSpatial : System.Web.UI.Page
         ViewState.Add("mapZoom", myMap.Zoom);
         //Render map
 
-        System.Drawing.Image img;
+        Image img;
         try
         {
             img = myMap.GetMap();
@@ -71,7 +67,7 @@ public partial class SimpleMsSqlSpatial : System.Web.UI.Page
                 "An error related to Sql occured. Ensure you have configured the database server correctly and updated the web.config file. See the readme in the MsSqlSpatialDemoDb folder.",
                 ex);
         }
-        string imgID = SharpMap.Web.Caching.InsertIntoCache(1, img);
+        string imgID = Caching.InsertIntoCache(1, img);
         imgMap.ImageUrl = "getmap.aspx?ID=" + HttpUtility.UrlEncode(imgID);
     }
 }

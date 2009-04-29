@@ -19,10 +19,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Data;
-using System.Text;
 using SharpMap.Geometries;
-using SharpMap.Data;
 
 namespace SharpMap.Data.Providers
 {
@@ -58,9 +55,10 @@ namespace SharpMap.Data.Providers
     /// </code>
     /// </example>
     /// </remarks>
-    public class GeometryFeatureProvider : SharpMap.Data.Providers.IProvider, IDisposable
+    public class GeometryFeatureProvider : IProvider, IDisposable
     {
         private readonly FeatureDataTable _features;
+        private int _SRID = -1;
 
         #region constructors
 
@@ -130,7 +128,7 @@ namespace SharpMap.Data.Providers
             Collection<uint> list = new Collection<uint>();
             for (int i = 0; i < _features.Rows.Count; i++)
                 if ((_features.Rows[i] as FeatureDataRow).Geometry.GetBoundingBox().Intersects(bbox))
-                    list.Add((uint)i);
+                    list.Add((uint) i);
             return list;
         }
 
@@ -141,7 +139,7 @@ namespace SharpMap.Data.Providers
         /// <returns>geometry</returns>
         public Geometry GetGeometryByID(uint oid)
         {
-            return (_features.Rows[(int)oid] as FeatureDataRow).Geometry;
+            return (_features.Rows[(int) oid] as FeatureDataRow).Geometry;
         }
 
         /// <summary>
@@ -163,12 +161,13 @@ namespace SharpMap.Data.Providers
 
             ds.Tables.Add(fdt);
         }
+
         /// <summary>
         /// Throws an NotSupportedException. Attribute data is not supported by this datasource
         /// </summary>
         /// <param name="box"></param>
         /// <param name="ds">FeatureDataSet to fill data into</param>
-        public void ExecuteIntersectionQuery(SharpMap.Geometries.BoundingBox box, FeatureDataSet ds)
+        public void ExecuteIntersectionQuery(BoundingBox box, FeatureDataSet ds)
         {
             FeatureDataTable fdt = new FeatureDataTable();
             fdt = _features.Clone();
@@ -199,7 +198,7 @@ namespace SharpMap.Data.Providers
         /// <returns></returns>
         public FeatureDataRow GetFeature(uint RowID)
         {
-            return _features[(int)RowID];
+            return _features[(int) RowID];
         }
 
         /// <summary>
@@ -254,9 +253,6 @@ namespace SharpMap.Data.Providers
             get { return true; }
         }
 
-        #endregion
-
-        private int _SRID = -1;
         /// <summary>
         /// The spatial reference ID (CRS)
         /// </summary>
@@ -265,8 +261,6 @@ namespace SharpMap.Data.Providers
             get { return _SRID; }
             set { _SRID = value; }
         }
-
-        #region IDisposable Members
 
         /// <summary>
         /// Disposes the object

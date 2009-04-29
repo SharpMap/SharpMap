@@ -16,55 +16,58 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
 
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace SharpMap.Styles
 {
-	/// <summary>
-	/// Defines a style used for for defining layer styles
-	/// </summary>
-	[Serializable]
-	public abstract class Style : IStyle
-	{
-		double _minVisible;
-		double _maxVisible;
-		private bool _Visible;
+    /// <summary>
+    /// Defines a style used for for defining layer styles
+    /// </summary>
+    [Serializable]
+    public abstract class Style : IStyle
+    {
+        private double _maxVisible;
+        private double _minVisible;
+        private bool _Visible;
 
-		/// <summary>
-		/// Initializes a style as sets Min=0, Max=double.MaxValue and Visible=true
-		/// </summary>
-		public Style()
-		{
-			_minVisible = 0;
-			_maxVisible = double.MaxValue;
-			_Visible = true;
-		}
+        /// <summary>
+        /// Initializes a style as sets Min=0, Max=double.MaxValue and Visible=true
+        /// </summary>
+        public Style()
+        {
+            _minVisible = 0;
+            _maxVisible = double.MaxValue;
+            _Visible = true;
+        }
 
-		/// <summary>
-		/// Gets or sets the minimum zoom value where the style is applied
-		/// </summary>
-		public double MinVisible
-		{
-			get { return _minVisible; }
-			set { _minVisible = value; }
-		}
-		/// <summary>
-		/// Gets or sets the maximum zoom value where the style is applied
-		/// </summary>
-		public double MaxVisible
-		{
-			get { return _maxVisible; }
-			set { _maxVisible = value; }
-		}
+        #region IStyle Members
 
-		/// <summary>
-		/// Specified whether style is rendered or not
-		/// </summary>
-		public bool Enabled
-		{
-			get { return _Visible; }
-			set { _Visible = value; }
-		}
-	}
+        /// <summary>
+        /// Gets or sets the minimum zoom value where the style is applied
+        /// </summary>
+        public double MinVisible
+        {
+            get { return _minVisible; }
+            set { _minVisible = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets the maximum zoom value where the style is applied
+        /// </summary>
+        public double MaxVisible
+        {
+            get { return _maxVisible; }
+            set { _maxVisible = value; }
+        }
+
+        /// <summary>
+        /// Specified whether style is rendered or not
+        /// </summary>
+        public bool Enabled
+        {
+            get { return _Visible; }
+            set { _Visible = value; }
+        }
+
+        #endregion
+    }
 }

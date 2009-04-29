@@ -1,7 +1,6 @@
 // WFS provider by Peter Robineau (peter.robineau@gmx.at)
 // This file can be redistributed and/or modified under the terms of the GNU Lesser General Public License.
 
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Xml;
@@ -18,8 +17,10 @@ namespace SharpMap.Utilities.Wfs
     {
         #region Fields
 
-        private static Dictionary<string, XPathExpression> _CompiledExpressions = new Dictionary<string,XPathExpression>();
-        private static NameTable _NameTable = new NameTable();
+        private static readonly Dictionary<string, XPathExpression> _CompiledExpressions =
+            new Dictionary<string, XPathExpression>();
+
+        private static readonly NameTable _NameTable = new NameTable();
 
         #endregion
 
@@ -31,7 +32,8 @@ namespace SharpMap.Utilities.Wfs
         /// <param name="xPathQueryManager">An instance implementing <see cref="IXPathQueryManager"/> to operate on</param>
         public XPathQueryManager_CompiledExpressionsDecorator(IXPathQueryManager xPathQueryManager)
             : base(xPathQueryManager)
-        {}
+        {
+        }
 
         #endregion
 
@@ -47,7 +49,7 @@ namespace SharpMap.Utilities.Wfs
         {
             XPathExpression expr;
             // Compare pointers instead of literal values
-            if (object.ReferenceEquals(xPath, _NameTable.Get(xPath)))
+            if (ReferenceEquals(xPath, _NameTable.Get(xPath)))
                 return _CompiledExpressions[xPath];
             else
             {
@@ -84,9 +86,11 @@ namespace SharpMap.Utilities.Wfs
         /// </summary>
         /// <param name="xPath">The compiled XPath expression</param>
         /// <param name="queryParameters">Parameters for the compiled XPath expression</param>
-        public override IXPathQueryManager GetXPathQueryManagerInContext(XPathExpression xPath, DictionaryEntry[] queryParameters)
+        public override IXPathQueryManager GetXPathQueryManagerInContext(XPathExpression xPath,
+                                                                         DictionaryEntry[] queryParameters)
         {
-            IXPathQueryManager xPathQueryManager = _XPathQueryManager.GetXPathQueryManagerInContext(xPath, queryParameters);
+            IXPathQueryManager xPathQueryManager = _XPathQueryManager.GetXPathQueryManagerInContext(xPath,
+                                                                                                    queryParameters);
             if (xPathQueryManager == null) return null;
             return new XPathQueryManager_CompiledExpressionsDecorator(xPathQueryManager);
         }
@@ -107,7 +111,7 @@ namespace SharpMap.Utilities.Wfs
         /// <param name="index">The index of the node to search</param>
         public override bool GetContextOfNode(uint index)
         {
-            return _XPathQueryManager.GetContextOfNode(index);  
+            return _XPathQueryManager.GetContextOfNode(index);
         }
 
         #endregion

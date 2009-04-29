@@ -1,13 +1,11 @@
 // WFS provider by Peter Robineau (peter.robineau@gmx.at)
 // This file can be redistributed and/or modified under the terms of the GNU Lesser General Public License.
 
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.IO;
+using System.Text;
 using System.Xml;
-using SharpMap.Geometries;
 using SharpMap.Data.Providers;
+using SharpMap.Geometries;
 
 namespace SharpMap.Utilities.Wfs
 {
@@ -49,7 +47,9 @@ namespace SharpMap.Utilities.Wfs
         /// <param name="filter">An instance implementing <see cref="IFilter"/></param>
         public string GetFeatureGETRequest(WfsFeatureTypeInfo featureTypeInfo, BoundingBox boundingBox, IFilter filter)
         {
-            string qualification = string.IsNullOrEmpty(featureTypeInfo.Prefix) ? string.Empty : featureTypeInfo.Prefix + ":";
+            string qualification = string.IsNullOrEmpty(featureTypeInfo.Prefix)
+                                       ? string.Empty
+                                       : featureTypeInfo.Prefix + ":";
             string filterString = string.Empty;
 
             if (filter != null)
@@ -64,22 +64,23 @@ namespace SharpMap.Utilities.Wfs
             }
 
             StringBuilder filterBuilder = new StringBuilder();
-            filterBuilder.Append("&filter=%3CFilter%20xmlns=%22" + NSOGC + "%22%20xmlns:gml=%22" + NSGML + "%22%3E%3CBBOX%3E%3CPropertyName%3E");
+            filterBuilder.Append("&filter=%3CFilter%20xmlns=%22" + NSOGC + "%22%20xmlns:gml=%22" + NSGML +
+                                 "%22%3E%3CBBOX%3E%3CPropertyName%3E");
             filterBuilder.Append(qualification);
             filterBuilder.Append(featureTypeInfo.Geometry._GeometryName);
             filterBuilder.Append("%3C/PropertyName%3E%3Cgml:Box%20srsName=%22EPSG:" + featureTypeInfo.SRID + "%22%3E");
             filterBuilder.Append("%3Cgml:coordinates%3E");
-            filterBuilder.Append(System.Xml.XmlConvert.ToString(boundingBox.Left) + ",");
-            filterBuilder.Append(System.Xml.XmlConvert.ToString(boundingBox.Bottom) + "%20");
-            filterBuilder.Append(System.Xml.XmlConvert.ToString(boundingBox.Right) + ",");
-            filterBuilder.Append(System.Xml.XmlConvert.ToString(boundingBox.Top));
+            filterBuilder.Append(XmlConvert.ToString(boundingBox.Left) + ",");
+            filterBuilder.Append(XmlConvert.ToString(boundingBox.Bottom) + "%20");
+            filterBuilder.Append(XmlConvert.ToString(boundingBox.Right) + ",");
+            filterBuilder.Append(XmlConvert.ToString(boundingBox.Top));
             filterBuilder.Append("%3C/gml:coordinates%3E%3C/gml:Box%3E%3C/BBOX%3E");
             filterBuilder.Append(filterString);
             filterBuilder.Append("%3C/Filter%3E");
 
             return "?SERVICE=WFS&Version=1.0.0&REQUEST=GetFeature&TYPENAME=" + qualification + featureTypeInfo.Name +
                    "&PROPERTYNAME=" + qualification + featureTypeInfo.Geometry._GeometryName +
-                   "&SRS =" + featureTypeInfo.SRID + filterBuilder.ToString();
+                   "&SRS =" + featureTypeInfo.SRID + filterBuilder;
         }
 
         /// <summary>
@@ -89,9 +90,12 @@ namespace SharpMap.Utilities.Wfs
         /// <param name="labelProperty">A property necessary for label rendering</param>
         /// <param name="boundingBox">The bounding box of the query</param>
         /// <param name="filter">An instance implementing <see cref="IFilter"/></param>
-        public byte[] GetFeaturePOSTRequest(WfsFeatureTypeInfo featureTypeInfo, string labelProperty, BoundingBox boundingBox, IFilter filter)
+        public byte[] GetFeaturePOSTRequest(WfsFeatureTypeInfo featureTypeInfo, string labelProperty,
+                                            BoundingBox boundingBox, IFilter filter)
         {
-            string qualification = string.IsNullOrEmpty(featureTypeInfo.Prefix) ? string.Empty : featureTypeInfo.Prefix + ":";
+            string qualification = string.IsNullOrEmpty(featureTypeInfo.Prefix)
+                                       ? string.Empty
+                                       : featureTypeInfo.Prefix + ":";
 
             using (StringWriter sWriter = new StringWriter())
             {
@@ -104,18 +108,19 @@ namespace SharpMap.Utilities.Wfs
                     xWriter.WriteStartElement("Query", NSWFS);
                     xWriter.WriteAttributeString("typeName", qualification + featureTypeInfo.Name);
                     xWriter.WriteElementString("PropertyName", qualification + featureTypeInfo.Geometry._GeometryName);
-                    if(!string.IsNullOrEmpty(labelProperty))
+                    if (!string.IsNullOrEmpty(labelProperty))
                         xWriter.WriteElementString("PropertyName", qualification + labelProperty);
                     xWriter.WriteStartElement("Filter", NSOGC);
                     xWriter.WriteStartElement("BBOX");
                     xWriter.WriteElementString("PropertyName", featureTypeInfo.Geometry._GeometryName);
                     xWriter.WriteStartElement("gml", "Box", NSGML);
-                    xWriter.WriteAttributeString("srsName", "http://www.opengis.net/gml/srs/epsg.xml#" + featureTypeInfo.SRID);
+                    xWriter.WriteAttributeString("srsName",
+                                                 "http://www.opengis.net/gml/srs/epsg.xml#" + featureTypeInfo.SRID);
                     xWriter.WriteElementString("coordinates", NSGML,
-                            System.Xml.XmlConvert.ToString(boundingBox.Left) + "," +
-                            System.Xml.XmlConvert.ToString(boundingBox.Bottom) + " " +
-                            System.Xml.XmlConvert.ToString(boundingBox.Right) + "," +
-                            System.Xml.XmlConvert.ToString(boundingBox.Top));
+                                               XmlConvert.ToString(boundingBox.Left) + "," +
+                                               XmlConvert.ToString(boundingBox.Bottom) + " " +
+                                               XmlConvert.ToString(boundingBox.Right) + "," +
+                                               XmlConvert.ToString(boundingBox.Top));
                     xWriter.WriteEndElement();
                     xWriter.WriteEndElement();
                     if (filter != null) xWriter.WriteRaw(filter.Encode());
@@ -124,7 +129,7 @@ namespace SharpMap.Utilities.Wfs
                     xWriter.WriteEndElement();
                     xWriter.WriteEndElement();
                     xWriter.Flush();
-                    return System.Text.Encoding.UTF8.GetBytes(sWriter.ToString());
+                    return Encoding.UTF8.GetBytes(sWriter.ToString());
                 }
             }
         }
