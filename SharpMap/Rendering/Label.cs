@@ -119,10 +119,10 @@ namespace SharpMap.Rendering
 		/// <returns></returns>
 		public bool Intersects(LabelBox box)
 		{
-			return !(box.Left > this.Left+this.Width ||
-					 box.Left+box.Width < this.Left ||
-					 box.Top-box.Height > this.Top ||
-					 box.Top < this.Top-this.Height);
+			return !(box.Left > this.Right ||
+					 box.Right < this.Left ||
+					 box.Bottom > this.Top ||
+					 box.Top < this.Bottom);
 		}
 
 		#region IComparable<LabelBox> Members
@@ -136,8 +136,8 @@ namespace SharpMap.Rendering
 		{
 			if (this.Intersects(other))
 				return 0;
-			else if (other.Left > this.Left+this.Width ||
-				other.Top - other.Height > this.Top)
+			else if (other.Left > this.Right ||
+				other.Bottom > this.Top)
 				return 1;
 			else
 				return -1;
@@ -168,7 +168,19 @@ namespace SharpMap.Rendering
 			_Priority = priority;
 			_box = collisionbox;
 			_Style = style;
+            _show = true;
 		}
+
+        private bool _show;
+
+        /// <summary>
+        /// Show this label or don't
+        /// </summary>
+        public bool Show
+        {
+            get { return _show; }
+            set { _show = value; }
+        }
 
 		private string _Text;
 
@@ -216,7 +228,7 @@ namespace SharpMap.Rendering
 		private int _Priority;
 
 		/// <summary>
-		/// Text rotation in radians
+		/// Value indicating rendering priority
 		/// </summary>
 		public int Priority
 		{

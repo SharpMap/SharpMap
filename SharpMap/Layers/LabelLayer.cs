@@ -21,7 +21,7 @@ using System.Text;
 
 namespace SharpMap.Layers
 {
-	/// <summary>
+    /// <summary>
 	/// Label layer class
 	/// </summary>
 	/// <example>
@@ -74,7 +74,13 @@ namespace SharpMap.Layers
 		/// </summary>
 		/// <param name="fdr"></param>
 		/// <returns></returns>
-		public delegate string GetLabelMethod(SharpMap.Data.FeatureDataRow fdr);
+        public delegate string GetLabelMethod(SharpMap.Data.FeatureDataRow fdr);
+        /// <summary>
+        /// Delegate method for calculating the priority of label rendering
+        /// </summary>
+        /// <param name="fdr"></param>
+        /// <returns></returns>
+        public delegate int GetPriorityMethod(SharpMap.Data.FeatureDataRow fdr);
 
 		/// <summary>
 		/// Creates a new instance of a LabelLayer
@@ -206,7 +212,33 @@ namespace SharpMap.Layers
 			get { return _getLabelMethod; }
 			set { _getLabelMethod = value; }
 		}
-	
+
+
+        private GetPriorityMethod _getPriorityMethod;
+
+        /// <summary>
+        /// Gets or sets the method for calculating the render priority of a label based on a feature.
+        /// </summary>
+        /// <remarks>
+        /// <para>If this method is not null, it will override the <see cref="PriorityColumn"/> value.</para>
+        /// <para>The label delegate must take a <see cref="SharpMap.Data.FeatureDataRow"/> and return an Int32.</para>
+        /// <example>
+        /// Creating a priority by combining attributes "capital" and "population" into one value, using
+        /// an anonymous delegate:
+        /// <code lang="C#">
+        /// myLabelLayer.PriorityDelegate = delegate(SharpMap.Data.FeatureDataRow fdr) 
+        ///     { 
+        ///         Int32 retVal = 100000000 * (Int32)( (String)fdr["capital"] == "Y" ? 1 : 0 );
+        ///         return  retVal + Convert.ToInt32(fdr["population"]);
+        ///     };
+        /// </code>
+        /// </example>
+        /// </remarks>
+        public GetPriorityMethod PriorityDelegate
+        {
+            get { return _getPriorityMethod; }
+            set { _getPriorityMethod = value; }
+        }
 		
 		private string _RotationColumn;
 
@@ -231,6 +263,15 @@ namespace SharpMap.Layers
 			get { return _Priority; }
 			set { _Priority = value; }
 		}
+        /// <summary>
+        /// A value indication the priority of the label in cases of label-collision detection
+        /// </summary>
+        string _PriorityColumn = "";
+        public string PriorityColumn
+        {
+            get { return _PriorityColumn; }
+            set { _PriorityColumn = value; }
+        }
 
 		/// <summary>
 		/// Renders the layer
@@ -282,7 +323,14 @@ namespace SharpMap.Layers
 					if (!String.IsNullOrEmpty(this.RotationColumn))
 						float.TryParse(feature[this.RotationColumn].ToString(), System.Globalization.NumberStyles.Any,SharpMap.Map.numberFormat_EnUS, out rotation);
 
-					string text;
+                    int priority = Priority;
+                    if (_getPriorityMethod != null)
+                        priority = _getPriorityMethod(feature);
+                    else
+                        if ( !String.IsNullOrEmpty(this.PriorityColumn ))
+                            int.TryParse(feature[this.PriorityColumn].ToString(), System.Globalization.NumberStyles.Any, SharpMap.Map.numberFormat_EnUS, out priority);
+
+                    string text;
 					if (_getLabelMethod != null)
 						text = _getLabelMethod(feature);
 					else
@@ -296,14 +344,14 @@ namespace SharpMap.Layers
 							{
 								foreach (SharpMap.Geometries.Geometry geom in (feature.Geometry as Geometries.GeometryCollection))
 								{
-									SharpMap.Rendering.Label lbl = CreateLabel(geom, text, rotation, style, map, g);
+									SharpMap.Rendering.Label lbl = CreateLabel(geom, text, rotation, priority, style, map, g);
 									if (lbl != null)
 										labels.Add(lbl);
 								}
 							}
 							else if (this.MultipartGeometryBehaviour == MultipartGeometryBehaviourEnum.CommonCenter)
 							{
-								SharpMap.Rendering.Label lbl = CreateLabel(feature.Geometry, text, rotation, style, map, g);
+                                SharpMap.Rendering.Label lbl = CreateLabel(feature.Geometry, text, rotation, priority, style, map, g);
 								if (lbl != null)
 									labels.Add(lbl);
 							}
@@ -348,7 +396,7 @@ namespace SharpMap.Layers
 										}
 									}
 
-									SharpMap.Rendering.Label lbl = CreateLabel(coll.Geometry(idxOfLargest), text, rotation, style, map, g);
+                                    SharpMap.Rendering.Label lbl = CreateLabel(coll.Geometry(idxOfLargest), text, rotation, priority, style, map, g);
 									if (lbl != null)
 										labels.Add(lbl);
 								}
@@ -356,7 +404,7 @@ namespace SharpMap.Layers
 						}
 						else
 						{
-							SharpMap.Rendering.Label lbl = CreateLabel(feature.Geometry, text, rotation, style, map, g);
+							SharpMap.Rendering.Label lbl = CreateLabel(feature.Geometry, text, rotation, priority, style, map, g);
 							if (lbl != null)
 								labels.Add(lbl);
 						}
@@ -367,14 +415,20 @@ namespace SharpMap.Layers
 					if (this.Style.CollisionDetection && this._LabelFilter!=null)
 						this._LabelFilter(labels);
 					for (int i = 0; i < labels.Count;i++ )
-						SharpMap.Rendering.VectorRenderer.DrawLabel(g, labels[i].LabelPoint, labels[i].Style.Offset, labels[i].Style.Font, labels[i].Style.ForeColor, labels[i].Style.BackColor, Style.Halo, labels[i].Rotation, labels[i].Text, map);
+                        if (labels[i].Show) 
+                            SharpMap.Rendering.VectorRenderer.DrawLabel(g, labels[i].LabelPoint, labels[i].Style.Offset, labels[i].Style.Font, labels[i].Style.ForeColor, labels[i].Style.BackColor, Style.Halo, labels[i].Rotation, labels[i].Text, map);
 				}
 				labels = null;
 			}
 			base.Render(g, map);
 		}
-		
-		private SharpMap.Rendering.Label CreateLabel(SharpMap.Geometries.Geometry feature,string text, float rotation, SharpMap.Styles.LabelStyle style, Map map, System.Drawing.Graphics g)
+
+        private SharpMap.Rendering.Label CreateLabel(SharpMap.Geometries.Geometry feature, string text, float rotation, SharpMap.Styles.LabelStyle style, Map map, System.Drawing.Graphics g)
+        { 
+            return CreateLabel( feature, text, rotation, this.Priority, style, map, g);;
+        }
+
+		private SharpMap.Rendering.Label CreateLabel(SharpMap.Geometries.Geometry feature,string text, float rotation, int priority, SharpMap.Styles.LabelStyle style, Map map, System.Drawing.Graphics g)
 		{
 			System.Drawing.SizeF size = g.MeasureString(text, style.Font);
 			
@@ -389,11 +443,11 @@ namespace SharpMap.Layers
 				SharpMap.Rendering.Label lbl;
 			
 				if (!style.CollisionDetection)
-					lbl = new SharpMap.Rendering.Label(text, position, rotation, this.Priority, null, style);
+                    lbl = new SharpMap.Rendering.Label(text, position, rotation, priority, null, style);
 				else
 				{
 					//Collision detection is enabled so we need to measure the size of the string
-					lbl = new SharpMap.Rendering.Label(text, position, rotation, this.Priority,
+					lbl = new SharpMap.Rendering.Label(text, position, rotation, priority,
 						new SharpMap.Rendering.LabelBox(position.X - size.Width * 0.5f - style.CollisionBuffer.Width, position.Y + size.Height * 0.5f + style.CollisionBuffer.Height,
 						size.Width + 2f * style.CollisionBuffer.Width, size.Height + style.CollisionBuffer.Height * 2f), style);
 				}

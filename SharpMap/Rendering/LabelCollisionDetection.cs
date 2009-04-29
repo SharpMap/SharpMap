@@ -45,7 +45,9 @@ namespace SharpMap.Rendering
 			for (int i = labels.Count - 1; i > 0; i--)
 				if (labels[i].CompareTo(labels[i - 1]) == 0)
 				{
-					if (labels[i].Priority > labels[i - 1].Priority)
+					if ( labels[i].Priority == labels[i - 1].Priority ) continue;
+
+                    if (labels[i].Priority > labels[i - 1].Priority)
 						labels.RemoveAt(i - 1);
 					else
 						labels.RemoveAt(i);
@@ -59,20 +61,28 @@ namespace SharpMap.Rendering
 		{
 			labels.Sort(); // sort labels by intersectiontests of labelbox
 			//remove labels that intersect other labels
-			for (int i = labels.Count - 1; i > 0; i--)
-				for (int j = i - 1; j > 0; j--)
-					if (labels[i].CompareTo(labels[j]) == 0)
-						if (labels[i].Priority >= labels[j].Priority)
-						{
-							labels.RemoveAt(j);
-							i--;
-						}
-						else
-						{
-							labels.RemoveAt(i);
-							i--;
-							break;
-						}
+            for (int i = labels.Count - 1; i > 0; i--)
+            {
+                if (!labels[i].Show) continue;
+                for (int j = i - 1; j >= 0; j--)
+                {
+                    if (!labels[j].Show) continue;
+                    if (labels[i].CompareTo(labels[j]) == 0)
+                        if (labels[i].Priority >= labels[j].Priority)
+                        {
+                            labels[j].Show = false;
+                            //labels.RemoveAt(j);
+                            //i--;
+                        }
+                        else
+                        {
+                            labels[i].Show = false;
+                            //labels.RemoveAt(i);
+                            //i--;
+                            break;
+                        }
+                }
+            }
 		}
 		#endregion
 	}
