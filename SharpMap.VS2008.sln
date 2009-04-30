@@ -34,14 +34,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpMap.UI.VS2008", "Sharp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests.VS2008", "UnitTests\UnitTests.VS2008.csproj", "{0C76DD99-AC5D-47C0-B76F-CE70092A9AC7}"
 EndProject
-Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "DemoWebSite", "DemoWebSite\", "{32ECD993-CB5A-4AD9-8C8F-45C73A088C13}"
+Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "DemoWebSite", "DemoWebSite", "{32ECD993-CB5A-4AD9-8C8F-45C73A088C13}"
 	ProjectSection(WebsiteProperties) = preProject
 		SccProjectName = ""
 		SccAuxPath = ""
 		SccLocalPath = ""
 		SccProvider = ""
 		TargetFramework = "2.0"
-		ProjectReferences = "{C83777FC-AABB-47D9-911F-D76255D4D541}|SharpMap.dll;{DD1CC1DB-4BF9-4C88-A100-733D84795F3A}|SharpMap.UI.dll;"
+		ProjectReferences = "{C83777FC-AABB-47D9-911F-D76255D4D541}|SharpMap.dll;{DD1CC1DB-4BF9-4C88-A100-733D84795F3A}|SharpMap.UI.dll;{A4140C12-53F5-438C-8D24-9E48C504FECF}|SharpMap.Extensions.dll;"
 		Debug.AspNetCompiler.VirtualPath = "/DemoWebSite"
 		Debug.AspNetCompiler.PhysicalPath = "DemoWebSite\"
 		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\DemoWebSite\"
@@ -73,7 +73,27 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MsSqlSpatialDemoDb", "MsSql
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExampleCodeSnippets", "ExampleCodeSnippets\ExampleCodeSnippets.csproj", "{A4184D38-C5A6-4E01-9D1C-8C63791AF825}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PostGisDb", "PostGisDb", "{826696BD-A157-45A5-A196-6652FE469D94}"
+	ProjectSection(SolutionItems) = preProject
+		PostgisDemoDb\postgisdemodb.backup = PostgisDemoDb\postgisdemodb.backup
+		PostgisDemoDb\ReadMe.txt = PostgisDemoDb\ReadMe.txt
+	EndProjectSection
+EndProject
 Global
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 3
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = https://tfs01.codeplex.com/
+		SccLocalPath0 = .
+		SccWebProject1 = true
+		SccProjectUniqueName1 = DemoWebSite
+		SccProjectName1 = DemoWebSite
+		SccLocalPath1 = DemoWebSite
+		SccProjectEnlistmentChoice1 = 2
+		SccProjectUniqueName2 = WinFormSamples\\WinFormSamples.csproj
+		SccProjectName2 = WinFormSamples
+		SccLocalPath2 = WinFormSamples
+	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|.NET = Debug|.NET
 		Debug|Any CPU = Debug|Any CPU
@@ -167,20 +187,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{3BB63704-345C-400C-9146-0AD46859D76D} = {1EDFEF14-016A-4660-9C65-2F933B6D61F9}
 		{3BDECA7F-3A75-41BF-9753-D4AAC02DFE36} = {1EDFEF14-016A-4660-9C65-2F933B6D61F9}
+		{826696BD-A157-45A5-A196-6652FE469D94} = {1EDFEF14-016A-4660-9C65-2F933B6D61F9}
 		{AFA0024B-50B7-4CA3-84DC-EC0CA7109492} = {3BB63704-345C-400C-9146-0AD46859D76D}
-	EndGlobalSection
-	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 3
-		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
-		SccTeamFoundationServer = https://tfs01.codeplex.com/
-		SccLocalPath0 = .
-		SccWebProject1 = true
-		SccProjectUniqueName1 = DemoWebSite
-		SccProjectName1 = DemoWebSite
-		SccLocalPath1 = DemoWebSite
-		SccProjectEnlistmentChoice1 = 2
-		SccProjectUniqueName2 = WinFormSamples\\WinFormSamples.csproj
-		SccProjectName2 = WinFormSamples
-		SccLocalPath2 = WinFormSamples
 	EndGlobalSection
 EndGlobal

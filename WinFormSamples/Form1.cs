@@ -5,52 +5,55 @@ using WinFormSamples.Samples;
 
 namespace WinFormSamples
 {
-    public partial class MainForm : Form
+  public partial class MainForm : Form
+  {
+    public MainForm()
     {
-        public MainForm()
-        {
-            InitializeComponent();
+      InitializeComponent();
             mapImage.ActiveTool = MapImage.Tools.Pan;
-        }
+    }
 
-        private void radioButton_Click(object sender, EventArgs e)
-        {
-            try
-            {
+    private void radioButton_Click(object sender, EventArgs e)
+    {
+      try
+      {
                 string text = ((RadioButton) sender).Text;
-                switch (text)
-                {
-                    case "Shapefile":
+        switch (text)
+	      {
+          case "Shapefile":
                         mapImage.Map = ShapefileSample.InitializeMap();
-                        break;
-                    case "GradientTheme":
+            break;
+          case "GradientTheme":
                         mapImage.Map = GradiantThemeSample.InitializeMap();
-                        break;
-                    case "WFS Client":
+            break;
+          case "WFS Client":
                         mapImage.Map = WfsSample.InitializeMap();
-                        break;
-                    case "WMS Client":
+            break;
+          case "WMS Client":
                         mapImage.Map = WmsSample.InitializeMap();
-                        break;
-                    case "OGR - MapInfo":
+            break;
+          case "OGR - MapInfo":
                         mapImage.Map = OgrSample.InitializeMap();
-                        break;
-                    case "GDAL - GeoTiff":
+            break;
+          case "GDAL - GeoTiff":
                         mapImage.Map = GdalSample.InitializeMap();
-                        break;
-                    case "Tiled WMS":
+            break;
+          case "Tiled WMS":
                         mapImage.Map = TiledWmsSample.InitializeMap();
-                        break;
+            break;
+          case "PostGis":
+            this.mapImage.Map = Samples.PostGisSample.InitializeMap();
+            break;
                     default:
-                        break;
-                }
+            break;
+	      }
                 mapImage.Map.Size = Size;
                 mapImage.Refresh();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(this, ex.Message, "Error");
-            }
-        }
+      }
+      catch (Exception ex)
+      {
+        MessageBox.Show(this, ex.Message, "Error");
+      }
     }
+  }
 }

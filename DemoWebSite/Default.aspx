@@ -9,11 +9,12 @@
 
 <h4>Demos:</h4>
 
-<p>
-	<a href="Simple.aspx">/Simple.aspx</a><br/>
-	Creates a simple map which can be zoomed and pan'ed
-</p>
-
+<p>Creation of a simple map which can be zoomed and pan'ed</p>
+<ul >
+    <li>using<b> Shapefile</b> provider: <a href="Simple.aspx">/Simple.aspx</a></li>
+    <li>using <b>MsSqlSpatial</b> provider: <a href="SimpleMsSqlSpatial.aspx">/SimpleMsSqlSpatial.aspx</a></li>
+    <li>using <b>Postgis</b> provider: <a href="SimplePostGis.aspx">/SimplePostGis.aspx</a></li>
+</ul>
 <p>
 	<a href="Gradient.aspx">/Gradient.aspx</a><br/>
 	Renders the colors, pens and symbols of each country based on the population density and city population

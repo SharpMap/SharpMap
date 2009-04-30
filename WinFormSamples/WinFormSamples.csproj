@@ -115,6 +115,7 @@
     <Content Include="GeoData\GeoTiff\outline.shx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <None Include="app.config" />
     <None Include="GeoData\World\cities.DBF">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -169,6 +170,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Compile Include="Samples\PostGisSample.cs" />
     <Compile Include="Samples\ShapefileSample.cs" />
     <Compile Include="Samples\TiledWmsSample.cs" />
     <Compile Include="Samples\WfsSample.cs" />
