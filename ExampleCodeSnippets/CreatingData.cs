@@ -31,7 +31,6 @@ namespace ExampleCodeSnippets
             else
             {
                 if (!(ycomponents.Length == xcomponents.Length))
-
                     throw new ApplicationException("Mismatched Array Lengths");
             }
 
@@ -45,8 +44,8 @@ namespace ExampleCodeSnippets
                                    ? new Point3D(xcomponents[i], ycomponents[i], zcomponents[i])
                                    : new Point(xcomponents[i], ycomponents[i]);
 
-                fdt.AddRow(fdr);
                 fdr["TimeStamp"] = DateTime.Now; //set the timestamp property
+                fdt.AddRow(fdr);
             }
 
             return fdt;
