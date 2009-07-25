@@ -20,8 +20,9 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using OSGeo.OGR;
 using SharpMap.Converters.WellKnownBinary;
+using SharpMap.Extensions.Data;
 using SharpMap.Geometries;
-using Geometry=OSGeo.OGR.Geometry;
+using Geometry = OSGeo.OGR.Geometry;
 
 namespace SharpMap.Data.Providers
 {
@@ -35,6 +36,11 @@ namespace SharpMap.Data.Providers
     /// </summary>
     public class Ogr : IProvider, IDisposable
     {
+        static Ogr()
+        {
+            FwToolsHelper.Configure();
+        }
+
         #region Fields
 
         private BoundingBox _bbox;
@@ -51,7 +57,7 @@ namespace SharpMap.Data.Providers
         /// </summary>
         public static string FWToolsVersion
         {
-            get { return "2.2.0"; }
+            get { return FwToolsHelper.FwToolsVersion; }
         }
 
         /// <summary>
@@ -219,7 +225,7 @@ namespace SharpMap.Data.Providers
 
             while ((_OgrFeature = _OgrLayer.GetNextFeature()) != null)
             {
-                _ObjectIDs.Add((uint) _OgrFeature.GetFID());
+                _ObjectIDs.Add((uint)_OgrFeature.GetFID());
                 _OgrFeature.Dispose();
             }
             return _ObjectIDs;
@@ -232,7 +238,7 @@ namespace SharpMap.Data.Providers
         /// <returns>geometry</returns>
         public Geometries.Geometry GetGeometryByID(uint oid)
         {
-            using (Feature _OgrFeature = _OgrLayer.GetFeature((int) oid))
+            using (Feature _OgrFeature = _OgrLayer.GetFeature((int)oid))
                 return ParseOgrGeometry(_OgrFeature.GetGeometryRef());
         }
 

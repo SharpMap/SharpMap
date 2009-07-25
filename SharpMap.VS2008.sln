@@ -13,20 +13,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ExternalReferences", "Exter
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "References4SharpMap.Extensions", "References4SharpMap.Extensions", "{AFA0024B-50B7-4CA3-84DC-EC0CA7109492}"
-	ProjectSection(SolutionItems) = preProject
-		ExternalReferences\References4SharpMap.Extensions\gdal_csharp.dll = ExternalReferences\References4SharpMap.Extensions\gdal_csharp.dll
-		ExternalReferences\References4SharpMap.Extensions\gdalconst_csharp.dll = ExternalReferences\References4SharpMap.Extensions\gdalconst_csharp.dll
-		ExternalReferences\References4SharpMap.Extensions\GeoAPI.dll = ExternalReferences\References4SharpMap.Extensions\GeoAPI.dll
-		ExternalReferences\References4SharpMap.Extensions\mapscript_csharp.dll = ExternalReferences\References4SharpMap.Extensions\mapscript_csharp.dll
-		ExternalReferences\References4SharpMap.Extensions\Mono.Security.dll = ExternalReferences\References4SharpMap.Extensions\Mono.Security.dll
-		ExternalReferences\References4SharpMap.Extensions\Npgsql.dll = ExternalReferences\References4SharpMap.Extensions\Npgsql.dll
-		ExternalReferences\References4SharpMap.Extensions\Npgsql.xml = ExternalReferences\References4SharpMap.Extensions\Npgsql.xml
-		ExternalReferences\References4SharpMap.Extensions\ogr_csharp.dll = ExternalReferences\References4SharpMap.Extensions\ogr_csharp.dll
-		ExternalReferences\References4SharpMap.Extensions\Oracle.DataAccess.dll = ExternalReferences\References4SharpMap.Extensions\Oracle.DataAccess.dll
-		ExternalReferences\References4SharpMap.Extensions\OraOps10w.dll = ExternalReferences\References4SharpMap.Extensions\OraOps10w.dll
-		ExternalReferences\References4SharpMap.Extensions\osr_csharp.dll = ExternalReferences\References4SharpMap.Extensions\osr_csharp.dll
-		ExternalReferences\References4SharpMap.Extensions\PostgreSql.Data.PostgreSqlClient.dll = ExternalReferences\References4SharpMap.Extensions\PostgreSql.Data.PostgreSqlClient.dll
-	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpMap.VS2008", "SharpMap\SharpMap.VS2008.csproj", "{C83777FC-AABB-47D9-911F-D76255D4D541}"
 EndProject
