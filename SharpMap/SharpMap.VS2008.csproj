@@ -82,6 +82,7 @@
     <Compile Include="Data\Providers\Pooling\Connector.cs" />
     <Compile Include="Data\Providers\Pooling\ConnectorPool.cs" />
     <Compile Include="Data\Providers\ShapeFile.cs" />
+    <Compile Include="Data\Providers\SqlServer2008.cs" />
     <Compile Include="Data\Providers\WFSClient.cs" />
     <Compile Include="Geometries\BoundingBox.cs" />
     <Compile Include="Geometries\Curve.cs" />
