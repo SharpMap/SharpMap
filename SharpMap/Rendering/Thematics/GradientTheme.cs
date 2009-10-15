@@ -23,80 +23,25 @@ using SharpMap.Styles;
 
 namespace SharpMap.Rendering.Thematics
 {
-    /// <summary>
-    /// The GradientTheme class defines a gradient color thematic rendering of features based by a numeric attribute.
-    /// </summary>
-    public class GradientTheme : ITheme
+    public abstract class GradientThemeBase : ITheme
     {
-        private string _ColumnName;
         private ColorBlend _FillColorBlend;
         private ColorBlend _LineColorBlend;
         private double _max;
         private IStyle _maxStyle;
-
         private double _min;
         private IStyle _minStyle;
         private ColorBlend _TextColorBlend;
 
-        /// <summary>
-        /// Initializes a new instance of the GradientTheme class
-        /// </summary>
-        /// <remarks>
-        /// <para>The gradient theme interpolates linearly between two styles based on a numerical attribute in the datasource.
-        /// This is useful for scaling symbols, line widths, line and fill colors from numerical attributes.</para>
-        /// <para>Colors are interpolated between two colors, but if you want to interpolate through more colors (fx. a rainbow),
-        /// set the <see cref="TextColorBlend"/>, <see cref="LineColorBlend"/> and <see cref="FillColorBlend"/> properties
-        /// to a custom <see cref="ColorBlend"/>.
-        /// </para>
-        /// <para>The following properties are scaled (properties not mentioned here are not interpolated):
-        /// <list type="table">
-        ///		<listheader><term>Property</term><description>Remarks</description></listheader>
-        ///		<item><term><see cref="System.Drawing.Color"/></term><description>Red, Green, Blue and Alpha values are linearly interpolated.</description></item>
-        ///		<item><term><see cref="System.Drawing.Pen"/></term><description>The color, width, color of pens are interpolated. MiterLimit,StartCap,EndCap,LineJoin,DashStyle,DashPattern,DashOffset,DashCap,CompoundArray, and Alignment are switched in the middle of the min/max values.</description></item>
-        ///		<item><term><see cref="System.Drawing.SolidBrush"/></term><description>SolidBrush color are interpolated. Other brushes are not supported.</description></item>
-        ///		<item><term><see cref="SharpMap.Styles.VectorStyle"/></term><description>MaxVisible, MinVisible, Line, Outline, Fill and SymbolScale are scaled linearly. Symbol, EnableOutline and Enabled switch in the middle of the min/max values.</description></item>
-        ///		<item><term><see cref="SharpMap.Styles.LabelStyle"/></term><description>FontSize, BackColor, ForeColor, MaxVisible, MinVisible, Offset are scaled linearly. All other properties use min-style.</description></item>
-        /// </list>
-        /// </para>
-        /// <example>
-        /// Creating a rainbow colorblend showing colors from red, through yellow, green and blue depicting 
-        /// the population density of a country.
-        /// <code lang="C#">
-        /// //Create two vector styles to interpolate between
-        /// SharpMap.Styles.VectorStyle min = new SharpMap.Styles.VectorStyle();
-        /// SharpMap.Styles.VectorStyle max = new SharpMap.Styles.VectorStyle();
-        /// min.Outline.Width = 1f; //Outline width of the minimum value
-        /// max.Outline.Width = 3f; //Outline width of the maximum value
-        /// //Create a theme interpolating population density between 0 and 400
-        /// SharpMap.Rendering.Thematics.GradientTheme popdens = new SharpMap.Rendering.Thematics.GradientTheme("PopDens", 0, 400, min, max);
-        /// //Set the fill-style colors to be a rainbow blend from red to blue.
-        /// popdens.FillColorBlend = SharpMap.Rendering.Thematics.ColorBlend.Rainbow5;
-        /// myVectorLayer.Theme = popdens;
-        /// </code>
-        /// </example>
-        /// </remarks>
-        /// <param name="columnName">Name of column to extract the attribute</param>
-        /// <param name="minValue">Minimum value</param>
-        /// <param name="maxValue">Maximum value</param>
-        /// <param name="minStyle">Color for minimum value</param>
-        /// <param name="maxStyle">Color for maximum value</param>
-        public GradientTheme(string columnName, double minValue, double maxValue, IStyle minStyle, IStyle maxStyle)
+        protected GradientThemeBase(double minValue, double maxValue, IStyle minStyle, IStyle maxStyle)
         {
-            _ColumnName = columnName;
             _min = minValue;
             _max = maxValue;
             _maxStyle = maxStyle;
             _minStyle = minStyle;
         }
 
-        /// <summary>
-        /// Gets or sets the column name from where to get the attribute value
-        /// </summary>
-        public string ColumnName
-        {
-            get { return _ColumnName; }
-            set { _ColumnName = value; }
-        }
+
 
         /// <summary>
         /// Gets or sets the minimum value of the gradient
@@ -161,43 +106,8 @@ namespace SharpMap.Rendering.Thematics
             set { _FillColorBlend = value; }
         }
 
-        #region ITheme Members
 
-        /// <summary>
-        /// Returns the style based on a numeric DataColumn, where style
-        /// properties are linearly interpolated between max and min values.
-        /// </summary>
-        /// <param name="row">Feature</param>
-        /// <returns><see cref="SharpMap.Styles.IStyle">Style</see> calculated by a linear interpolation between the min/max styles</returns>
-        public IStyle GetStyle(FeatureDataRow row)
-        {
-            double attr = 0;
-            try
-            {
-                attr = Convert.ToDouble(row[_ColumnName]);
-            }
-            catch
-            {
-                throw new ApplicationException(
-                    "Invalid Attribute type in Gradient Theme - Couldn't parse attribute (must be numerical)");
-            }
-            if (_minStyle.GetType() != _maxStyle.GetType())
-                throw new ArgumentException("MinStyle and MaxStyle must be of the same type");
-            switch (MinStyle.GetType().FullName)
-            {
-                case "SharpMap.Styles.VectorStyle":
-                    return CalculateVectorStyle(MinStyle as VectorStyle, MaxStyle as VectorStyle, attr);
-                case "SharpMap.Styles.LabelStyle":
-                    return CalculateLabelStyle(MinStyle as LabelStyle, MaxStyle as LabelStyle, attr);
-                default:
-                    throw new ArgumentException(
-                        "Only SharpMap.Styles.VectorStyle and SharpMap.Styles.LabelStyle are supported for the gradient theme");
-            }
-        }
-
-        #endregion
-
-        private VectorStyle CalculateVectorStyle(VectorStyle min, VectorStyle max, double value)
+        protected VectorStyle CalculateVectorStyle(VectorStyle min, VectorStyle max, double value)
         {
             VectorStyle style = new VectorStyle();
             double dFrac = Fraction(value);
@@ -220,12 +130,12 @@ namespace SharpMap.Rendering.Thematics
             style.MaxVisible = InterpolateDouble(min.MaxVisible, max.MaxVisible, value);
             style.Symbol = (dFrac > 0.5 ? min.Symbol : max.Symbol);
             style.SymbolOffset = (dFrac > 0.5 ? min.SymbolOffset : max.SymbolOffset);
-                //We don't interpolate the offset but let it follow the symbol instead
+            //We don't interpolate the offset but let it follow the symbol instead
             style.SymbolScale = InterpolateFloat(min.SymbolScale, max.SymbolScale, value);
             return style;
         }
 
-        private LabelStyle CalculateLabelStyle(LabelStyle min, LabelStyle max, double value)
+        protected LabelStyle CalculateLabelStyle(LabelStyle min, LabelStyle max, double value)
         {
             LabelStyle style = new LabelStyle();
             style.CollisionDetection = min.CollisionDetection;
@@ -249,38 +159,38 @@ namespace SharpMap.Rendering.Thematics
             return style;
         }
 
-        private double Fraction(double attr)
+        protected double Fraction(double attr)
         {
             if (attr < _min) return 0;
             if (attr > _max) return 1;
-            return (attr - _min)/(_max - _min);
+            return (attr - _min) / (_max - _min);
         }
 
-        private bool InterpolateBool(bool min, bool max, double attr)
+        protected bool InterpolateBool(bool min, bool max, double attr)
         {
             double frac = Fraction(attr);
             if (frac > 0.5) return max;
             else return min;
         }
 
-        private float InterpolateFloat(float min, float max, double attr)
+        protected float InterpolateFloat(float min, float max, double attr)
         {
-            return Convert.ToSingle((max - min)*Fraction(attr) + min);
+            return Convert.ToSingle((max - min) * Fraction(attr) + min);
         }
 
-        private double InterpolateDouble(double min, double max, double attr)
+        protected double InterpolateDouble(double min, double max, double attr)
         {
-            return (max - min)*Fraction(attr) + min;
+            return (max - min) * Fraction(attr) + min;
         }
 
-        private SolidBrush InterpolateBrush(Brush min, Brush max, double attr)
+        protected SolidBrush InterpolateBrush(Brush min, Brush max, double attr)
         {
-            if (min.GetType() != typeof (SolidBrush) || max.GetType() != typeof (SolidBrush))
+            if (min.GetType() != typeof(SolidBrush) || max.GetType() != typeof(SolidBrush))
                 throw (new ArgumentException("Only SolidBrush brushes are supported in GradientTheme"));
             return new SolidBrush(InterpolateColor((min as SolidBrush).Color, (max as SolidBrush).Color, attr));
         }
 
-        private Pen InterpolatePen(Pen min, Pen max, double attr)
+        protected Pen InterpolatePen(Pen min, Pen max, double attr)
         {
             if (min.PenType != PenType.SolidColor || max.PenType != PenType.SolidColor)
                 throw (new ArgumentException("Only SolidColor pens are supported in GradientTheme"));
@@ -303,7 +213,7 @@ namespace SharpMap.Rendering.Thematics
             return pen;
         }
 
-        private Color InterpolateColor(Color minCol, Color maxCol, double attr)
+        protected Color InterpolateColor(Color minCol, Color maxCol, double attr)
         {
             double frac = Fraction(attr);
             if (frac == 1)
@@ -312,16 +222,122 @@ namespace SharpMap.Rendering.Thematics
                 return minCol;
             else
             {
-                double r = (maxCol.R - minCol.R)*frac + minCol.R;
-                double g = (maxCol.G - minCol.G)*frac + minCol.G;
-                double b = (maxCol.B - minCol.B)*frac + minCol.B;
-                double a = (maxCol.A - minCol.A)*frac + minCol.A;
+                double r = (maxCol.R - minCol.R) * frac + minCol.R;
+                double g = (maxCol.G - minCol.G) * frac + minCol.G;
+                double b = (maxCol.B - minCol.B) * frac + minCol.B;
+                double a = (maxCol.A - minCol.A) * frac + minCol.A;
                 if (r > 255) r = 255;
                 if (g > 255) g = 255;
                 if (b > 255) b = 255;
                 if (a > 255) a = 255;
-                return Color.FromArgb((int) a, (int) r, (int) g, (int) b);
+                return Color.FromArgb((int)a, (int)r, (int)g, (int)b);
             }
+        }
+
+        /// <summary>
+        /// Returns the style based on a numeric DataColumn, where style
+        /// properties are linearly interpolated between max and min values.
+        /// </summary>
+        /// <param name="row">Feature</param>
+        /// <returns><see cref="SharpMap.Styles.IStyle">Style</see> calculated by a linear interpolation between the min/max styles</returns>
+        public virtual IStyle GetStyle(FeatureDataRow row)
+        {
+            double attr = 0;
+            try
+            {
+                attr = GetAttributeValue(row);
+            }
+            catch
+            {
+                throw new ApplicationException(
+                    "Invalid Attribute type in Gradient Theme - Couldn't parse attribute (must be numerical)");
+            }
+            if (_minStyle.GetType() != _maxStyle.GetType())
+                throw new ArgumentException("MinStyle and MaxStyle must be of the same type");
+            switch (MinStyle.GetType().FullName)
+            {
+                case "SharpMap.Styles.VectorStyle":
+                    return CalculateVectorStyle(MinStyle as VectorStyle, MaxStyle as VectorStyle, attr);
+                case "SharpMap.Styles.LabelStyle":
+                    return CalculateLabelStyle(MinStyle as LabelStyle, MaxStyle as LabelStyle, attr);
+                default:
+                    throw new ArgumentException(
+                        "Only SharpMap.Styles.VectorStyle and SharpMap.Styles.LabelStyle are supported for the gradient theme");
+            }
+        }
+
+        protected abstract double GetAttributeValue(FeatureDataRow row);
+    }
+
+    /// <summary>
+    /// The GradientTheme class defines a gradient color thematic rendering of features based by a numeric attribute.
+    /// </summary>
+    public class GradientTheme : GradientThemeBase
+    {
+        private string _ColumnName;
+
+
+        /// <summary>
+        /// Initializes a new instance of the GradientTheme class
+        /// </summary>
+        /// <remarks>
+        /// <para>The gradient theme interpolates linearly between two styles based on a numerical attribute in the datasource.
+        /// This is useful for scaling symbols, line widths, line and fill colors from numerical attributes.</para>
+        /// <para>Colors are interpolated between two colors, but if you want to interpolate through more colors (fx. a rainbow),
+        /// set the <see cref="TextColorBlend"/>, <see cref="LineColorBlend"/> and <see cref="FillColorBlend"/> properties
+        /// to a custom <see cref="ColorBlend"/>.
+        /// </para>
+        /// <para>The following properties are scaled (properties not mentioned here are not interpolated):
+        /// <list type="table">
+        ///		<listheader><term>Property</term><description>Remarks</description></listheader>
+        ///		<item><term><see cref="System.Drawing.Color"/></term><description>Red, Green, Blue and Alpha values are linearly interpolated.</description></item>
+        ///		<item><term><see cref="System.Drawing.Pen"/></term><description>The color, width, color of pens are interpolated. MiterLimit,StartCap,EndCap,LineJoin,DashStyle,DashPattern,DashOffset,DashCap,CompoundArray, and Alignment are switched in the middle of the min/max values.</description></item>
+        ///		<item><term><see cref="System.Drawing.SolidBrush"/></term><description>SolidBrush color are interpolated. Other brushes are not supported.</description></item>
+        ///		<item><term><see cref="SharpMap.Styles.VectorStyle"/></term><description>MaxVisible, MinVisible, Line, Outline, Fill and SymbolScale are scaled linearly. Symbol, EnableOutline and Enabled switch in the middle of the min/max values.</description></item>
+        ///		<item><term><see cref="SharpMap.Styles.LabelStyle"/></term><description>FontSize, BackColor, ForeColor, MaxVisible, MinVisible, Offset are scaled linearly. All other properties use min-style.</description></item>
+        /// </list>
+        /// </para>
+        /// <example>
+        /// Creating a rainbow colorblend showing colors from red, through yellow, green and blue depicting 
+        /// the population density of a country.
+        /// <code lang="C#">
+        /// //Create two vector styles to interpolate between
+        /// SharpMap.Styles.VectorStyle min = new SharpMap.Styles.VectorStyle();
+        /// SharpMap.Styles.VectorStyle max = new SharpMap.Styles.VectorStyle();
+        /// min.Outline.Width = 1f; //Outline width of the minimum value
+        /// max.Outline.Width = 3f; //Outline width of the maximum value
+        /// //Create a theme interpolating population density between 0 and 400
+        /// SharpMap.Rendering.Thematics.GradientTheme popdens = new SharpMap.Rendering.Thematics.GradientTheme("PopDens", 0, 400, min, max);
+        /// //Set the fill-style colors to be a rainbow blend from red to blue.
+        /// popdens.FillColorBlend = SharpMap.Rendering.Thematics.ColorBlend.Rainbow5;
+        /// myVectorLayer.Theme = popdens;
+        /// </code>
+        /// </example>
+        /// </remarks>
+        /// <param name="columnName">Name of column to extract the attribute</param>
+        /// <param name="minValue">Minimum value</param>
+        /// <param name="maxValue">Maximum value</param>
+        /// <param name="minStyle">Color for minimum value</param>
+        /// <param name="maxStyle">Color for maximum value</param>
+        public GradientTheme(string columnName, double minValue, double maxValue, IStyle minStyle, IStyle maxStyle)
+            : base(minValue, maxValue, minStyle, maxStyle)
+        {
+            _ColumnName = columnName;
+
+        }
+
+        /// <summary>
+        /// Gets or sets the column name from where to get the attribute value
+        /// </summary>
+        public string ColumnName
+        {
+            get { return _ColumnName; }
+            set { _ColumnName = value; }
+        }
+
+        protected override double GetAttributeValue(FeatureDataRow row)
+        {
+            return Convert.ToDouble(row[_ColumnName]);
         }
     }
 }
