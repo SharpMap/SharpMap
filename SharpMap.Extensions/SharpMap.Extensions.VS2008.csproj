@@ -101,6 +101,7 @@
     <Compile Include="Layers\GdalRasterLayer.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Layers\GdalRasterLayerCachingProxy.cs" />
     <Compile Include="Layers\GeoTransform.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
