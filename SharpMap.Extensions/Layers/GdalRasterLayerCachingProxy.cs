@@ -22,10 +22,9 @@ using System.Collections.Generic;
 using System.Drawing;
 using SharpMap.CoordinateSystems.Transformations;
 using SharpMap.Geometries;
-using SharpMap.Layers;
 using Point = System.Drawing.Point;
- 
-namespace SharpMap.Extensions.Layers
+
+namespace SharpMap.Layers
 {
     public class GdalRasterLayerCachingProxy : Layer
     {
@@ -454,12 +453,7 @@ namespace SharpMap.Extensions.Layers
                 Bitmap bmp = new Bitmap(LastRenderedSize.Value.Width, LastRenderedSize.Value.Height);
                 using (Graphics g2 = Graphics.FromImage(bmp))
                 {
-                    g2.Clear(Color.Yellow);
                     _innerLayer.Render(g2, map);
-                    bmp.MakeTransparent(Color.Yellow);
-                    if (TransparentColor != Color.Transparent)
-                        bmp.MakeTransparent(TransparentColor);
-
                     CachedBitmap = bmp;
                 }
             }
