@@ -542,7 +542,7 @@ namespace SharpMap.Data.Providers
                //Get bounding box string   
                string strBbox = GetBoxFilterStr(bbox);   
  
-               string strSQL = "SELECT g.*, g." + this.GeometryColumn + ".Get_WKB() AS sharpmap_tempgeometry ";   
+               string strSQL = "SELECT g.*, g." + this.GeometryColumn + ".STAsBinary() AS sharpmap_tempgeometry ";   
                strSQL += "FROM " + this.Table + " g WHERE ";   
  
                if (!String.IsNullOrEmpty(_defintionQuery))   
