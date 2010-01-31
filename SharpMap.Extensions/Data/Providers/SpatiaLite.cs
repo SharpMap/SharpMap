@@ -426,16 +426,34 @@ namespace SharpMap.Data.Providers
             get { return _ObjectIdColumn; }
             set { _ObjectIdColumn = value; }
         }
+        private string _SpatialIndex;
+
+        /// <summary>
+        /// Name of the spatial index table
+        /// </summary>
+        public string SpatialIndex
+        {
+            get { return _SpatialIndex; }
+            set { _SpatialIndex = value; }
+        }
 
         private string GetBoxClause(SharpMap.Geometries.BoundingBox bbox)
         {
-            //TODO:: make a diagonal line from bbox and convert to WKT. MBR of line will be identical to bbox.
+            if (!string.IsNullOrEmpty(SpatialIndex))
+            {
+                StringBuilder sql = new StringBuilder("ROWID IN ( ");
+                sql.Append("SELECT pkid FROM ");
+                sql.Append(SpatialIndex);
+                sql.Append(" WHERE ");
+                sql.AppendFormat(SharpMap.Map.numberFormat_EnUS,
+                "xmin < {0} AND xmax > {1} AND ymin < {2} AND ymax > {3} )",
+                 bbox.Max.X, bbox.Min.X, bbox.Max.Y, bbox.Min.Y);
+
+                return sql.ToString();
+            }
+
             string wkt = SharpMap.Converters.WellKnownText.GeometryToWKT.Write(LineFromBbox(bbox));
-            string retval = "MBRIntersects(GeomFromText('" + wkt + "')," + _GeometryColumn + ")=1";
-            return retval;
-            //return String.Format(SharpMap.Map.numberFormat_EnUS,
-            //    "(minx < {0} AND maxx > {1} AND miny < {2} AND maxy > {3})",
-            //    bbox.Max.X, bbox.Min.X, bbox.Max.Y, bbox.Min.Y);
+            return "MBRIntersects(GeomFromText('" + wkt + "')," + _GeometryColumn + ")=1";
         }
 
         private SharpMap.Geometries.IGeometry LineFromBbox(SharpMap.Geometries.BoundingBox bbox)
