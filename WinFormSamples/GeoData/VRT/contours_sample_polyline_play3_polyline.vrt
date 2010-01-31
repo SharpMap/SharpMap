@@ -1,0 +1,40 @@
+<VRTDataset rasterXSize="251" rasterYSize="207">
+<SRS>PROJCS[&quot;UTM Zone 37, Northern Hemisphere&quot;,GEOGCS[&quot;WGS 84&quot;,DATUM[&quot;WGS_1984&quot;,SPHEROID[&quot;WGS 84&quot;,6378137,298.257223563,AUTHORITY[&quot;EPSG&quot;,&quot;7030&quot;]],TOWGS84[0,0,0,0,0,0,0],AUTHORITY[&quot;EPSG&quot;,&quot;6326&quot;]],PRIMEM[&quot;Greenwich&quot;,0,AUTHORITY[&quot;EPSG&quot;,&quot;8901&quot;]],UNIT[&quot;degree&quot;,0.0174532925199433,AUTHORITY[&quot;EPSG&quot;,&quot;9108&quot;]],AUTHORITY[&quot;EPSG&quot;,&quot;4326&quot;]],PROJECTION[&quot;Transverse_Mercator&quot;],PARAMETER[&quot;latitude_of_origin&quot;,0],PARAMETER[&quot;central_meridian&quot;,39],PARAMETER[&quot;scale_factor&quot;,0.9996],PARAMETER[&quot;false_easting&quot;,500000],PARAMETER[&quot;false_northing&quot;,0],UNIT[&quot;Meter&quot;,1]]</SRS>
+<GeoTransform>5.2377000000000000e+005, 2.5500000000000000e+002, 0.0000000000000000e+000, 4.2054600000000000e+006, 0.0000000000000000e+000,-2.5500000000000000e+002</GeoTransform>
+<Metadata>
+	<MDI key="AREA_OR_POINT">Area</MDI>
+</Metadata>
+<VRTRasterBand DataType="Byte" band="1">
+	<NoDataValue>0</NoDataValue>
+	<ColorInterp>Red</ColorInterp>
+	<ComplexSource>
+		<SourceFilename relativeToVRT="1">contours_sample_polyline_play_polyline.asc</SourceFilename>
+		<SourceProperties RasterXSize="251" RasterYSize="207" DataType="Byte" BlockXSize="251" BlockYSize="1"/>
+		<SrcRect xOff="0" yOff="0" xSize="251" ySize="207"/>
+		<DstRect xOff="0" yOff="0" xSize="251" ySize="207"/>
+		<LUT>0:0,100:0,200:0,300:0,400:0,500:0,600:0,700:0,800:0,900:0</LUT>
+	</ComplexSource>
+</VRTRasterBand>
+<VRTRasterBand DataType="Byte" band="2">
+<NoDataValue>0</NoDataValue>
+<ColorInterp>Green</ColorInterp>
+		<ComplexSource>
+			<SourceFilename relativeToVRT="1">contours_sample_polyline_play_polyline.asc</SourceFilename>
+			<SourceProperties RasterXSize="251" RasterYSize="207" DataType="Byte" BlockXSize="251" BlockYSize="1"/>
+			<SrcRect xOff="0" yOff="0" xSize="251" ySize="207"/>
+			<DstRect xOff="0" yOff="0" xSize="251" ySize="207"/>
+			<LUT>0:0,100:13,200:25,300:38,400:52,500:65,600:76,700:90,800:103,900:115</LUT>
+		</ComplexSource>
+</VRTRasterBand>
+<VRTRasterBand DataType="Byte" band="3">
+	<NoDataValue>0</NoDataValue>
+	<ColorInterp>Blue</ColorInterp>
+		<ComplexSource>
+			<SourceFilename relativeToVRT="1">contours_sample_polyline_play_polyline.asc</SourceFilename>
+			<SourceProperties RasterXSize="251" RasterYSize="207" DataType="Byte" BlockXSize="251" BlockYSize="1"/>
+			<SrcRect xOff="0" yOff="0" xSize="251" ySize="207"/>
+			<DstRect xOff="0" yOff="0" xSize="251" ySize="207"/>
+			<LUT>0:0,100:228,200:205,300:179,400:152,500:126,600:103,700:76,800:50,900:27</LUT>
+		</ComplexSource>
+	</VRTRasterBand>
+</VRTDataset>

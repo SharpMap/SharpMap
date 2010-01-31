@@ -28,7 +28,6 @@
     /// </summary>
     private void InitializeComponent()
     {
-        this.mapImage = new SharpMap.Forms.MapImage();
         this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
         this.radioButton2 = new System.Windows.Forms.RadioButton();
         this.radioButton3 = new System.Windows.Forms.RadioButton();
@@ -38,24 +37,16 @@
         this.radioButton6 = new System.Windows.Forms.RadioButton();
         this.radioButton7 = new System.Windows.Forms.RadioButton();
         this.radioButton8 = new System.Windows.Forms.RadioButton();
-        ((System.ComponentModel.ISupportInitialize)(this.mapImage)).BeginInit();
+        this.radioButton9 = new System.Windows.Forms.RadioButton();
+        this.radioButton10 = new System.Windows.Forms.RadioButton();
+        this.radioButton11 = new System.Windows.Forms.RadioButton();
+        this.button1 = new System.Windows.Forms.Button();
+        this.dataGridView1 = new System.Windows.Forms.DataGridView();
+        this.mapImage = new SharpMap.Forms.MapImage();
         this.flowLayoutPanel1.SuspendLayout();
+        ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
+        ((System.ComponentModel.ISupportInitialize)(this.mapImage)).BeginInit();
         this.SuspendLayout();
-        // 
-        // mapImage
-        // 
-        this.mapImage.ActiveTool = SharpMap.Forms.MapImage.Tools.None;
-        this.mapImage.BackColor = System.Drawing.Color.White;
-        this.mapImage.Cursor = System.Windows.Forms.Cursors.Cross;
-        this.mapImage.Dock = System.Windows.Forms.DockStyle.Fill;
-        this.mapImage.FineZoomFactor = 10;
-        this.mapImage.Location = new System.Drawing.Point(219, 0);
-        this.mapImage.Name = "mapImage";
-        this.mapImage.QueryLayerIndex = 0;
-        this.mapImage.Size = new System.Drawing.Size(470, 446);
-        this.mapImage.TabIndex = 0;
-        this.mapImage.TabStop = false;
-        this.mapImage.WheelZoomMagnitude = 2;
         // 
         // flowLayoutPanel1
         // 
@@ -67,13 +58,17 @@
         this.flowLayoutPanel1.Controls.Add(this.radioButton6);
         this.flowLayoutPanel1.Controls.Add(this.radioButton7);
         this.flowLayoutPanel1.Controls.Add(this.radioButton8);
+        this.flowLayoutPanel1.Controls.Add(this.radioButton9);
+        this.flowLayoutPanel1.Controls.Add(this.radioButton10);
+        this.flowLayoutPanel1.Controls.Add(this.radioButton11);
+        this.flowLayoutPanel1.Controls.Add(this.button1);
         this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Left;
         this.flowLayoutPanel1.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
         this.flowLayoutPanel1.Location = new System.Drawing.Point(0, 0);
         this.flowLayoutPanel1.Margin = new System.Windows.Forms.Padding(0);
         this.flowLayoutPanel1.Name = "flowLayoutPanel1";
         this.flowLayoutPanel1.Padding = new System.Windows.Forms.Padding(10, 4, 4, 4);
-        this.flowLayoutPanel1.Size = new System.Drawing.Size(219, 446);
+        this.flowLayoutPanel1.Size = new System.Drawing.Size(166, 446);
         this.flowLayoutPanel1.TabIndex = 2;
         // 
         // radioButton2
@@ -172,18 +167,93 @@
         this.radioButton8.UseVisualStyleBackColor = true;
         this.radioButton8.Click += new System.EventHandler(this.radioButton_Click);
         // 
+        // radioButton9
+        // 
+        this.radioButton9.AutoSize = true;
+        this.radioButton9.Location = new System.Drawing.Point(13, 191);
+        this.radioButton9.Name = "radioButton9";
+        this.radioButton9.Size = new System.Drawing.Size(72, 17);
+        this.radioButton9.TabIndex = 7;
+        this.radioButton9.TabStop = true;
+        this.radioButton9.Text = "SpatiaLite";
+        this.radioButton9.UseVisualStyleBackColor = true;
+        this.radioButton9.Click += new System.EventHandler(this.radioButton_Click);
+        // 
+        // radioButton10
+        // 
+        this.radioButton10.AutoSize = true;
+        this.radioButton10.Location = new System.Drawing.Point(13, 214);
+        this.radioButton10.Name = "radioButton10";
+        this.radioButton10.Size = new System.Drawing.Size(56, 17);
+        this.radioButton10.TabIndex = 8;
+        this.radioButton10.TabStop = true;
+        this.radioButton10.Text = "Oracle";
+        this.radioButton10.UseVisualStyleBackColor = true;
+        this.radioButton10.Click += new System.EventHandler(this.radioButton_Click);
+        // 
+        // radioButton11
+        // 
+        this.radioButton11.AutoSize = true;
+        this.radioButton11.Location = new System.Drawing.Point(13, 237);
+        this.radioButton11.Name = "radioButton11";
+        this.radioButton11.Size = new System.Drawing.Size(85, 17);
+        this.radioButton11.TabIndex = 9;
+        this.radioButton11.TabStop = true;
+        this.radioButton11.Text = "GDAL - VRT";
+        this.radioButton11.UseVisualStyleBackColor = true;
+        this.radioButton11.Click += new System.EventHandler(this.radioButton_Click);
+        // 
+        // button1
+        // 
+        this.button1.Location = new System.Drawing.Point(13, 260);
+        this.button1.Name = "button1";
+        this.button1.Size = new System.Drawing.Size(75, 23);
+        this.button1.TabIndex = 10;
+        this.button1.Text = "button1";
+        this.button1.UseVisualStyleBackColor = true;
+        this.button1.Click += new System.EventHandler(this.button1_Click);
+        // 
+        // dataGridView1
+        // 
+        this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+        this.dataGridView1.Dock = System.Windows.Forms.DockStyle.Bottom;
+        this.dataGridView1.Location = new System.Drawing.Point(166, 360);
+        this.dataGridView1.Name = "dataGridView1";
+        this.dataGridView1.Size = new System.Drawing.Size(523, 86);
+        this.dataGridView1.TabIndex = 3;
+        // 
+        // mapImage
+        // 
+        this.mapImage.ActiveTool = SharpMap.Forms.MapImage.Tools.None;
+        this.mapImage.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                    | System.Windows.Forms.AnchorStyles.Left)
+                    | System.Windows.Forms.AnchorStyles.Right)));
+        this.mapImage.BackColor = System.Drawing.Color.White;
+        this.mapImage.Cursor = System.Windows.Forms.Cursors.Cross;
+        this.mapImage.FineZoomFactor = 10;
+        this.mapImage.Location = new System.Drawing.Point(166, 0);
+        this.mapImage.Name = "mapImage";
+        this.mapImage.QueryLayerIndex = 0;
+        this.mapImage.Size = new System.Drawing.Size(523, 362);
+        this.mapImage.TabIndex = 0;
+        this.mapImage.TabStop = false;
+        this.mapImage.WheelZoomMagnitude = 2;
+        this.mapImage.MapQueried += new SharpMap.Forms.MapImage.MapQueryHandler(this.mapImage_MapQueried);
+        // 
         // MainForm
         // 
         this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
         this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
         this.ClientSize = new System.Drawing.Size(689, 446);
+        this.Controls.Add(this.dataGridView1);
         this.Controls.Add(this.mapImage);
         this.Controls.Add(this.flowLayoutPanel1);
         this.Name = "MainForm";
         this.Text = "SharpMap Samples";
-        ((System.ComponentModel.ISupportInitialize)(this.mapImage)).EndInit();
         this.flowLayoutPanel1.ResumeLayout(false);
         this.flowLayoutPanel1.PerformLayout();
+        ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
+        ((System.ComponentModel.ISupportInitialize)(this.mapImage)).EndInit();
         this.ResumeLayout(false);
 
     }
@@ -192,14 +262,19 @@
 
     private SharpMap.Forms.MapImage mapImage;
     private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
-    private System.Windows.Forms.RadioButton radioButton1;
     private System.Windows.Forms.RadioButton radioButton2;
     private System.Windows.Forms.RadioButton radioButton3;
     private System.Windows.Forms.RadioButton radioButton4;
+    private System.Windows.Forms.RadioButton radioButton1;
     private System.Windows.Forms.RadioButton radioButton5;
     private System.Windows.Forms.RadioButton radioButton6;
     private System.Windows.Forms.RadioButton radioButton7;
     private System.Windows.Forms.RadioButton radioButton8;
+    private System.Windows.Forms.RadioButton radioButton9;
+    private System.Windows.Forms.RadioButton radioButton10;
+    private System.Windows.Forms.RadioButton radioButton11;
+    private System.Windows.Forms.Button button1;
+    private System.Windows.Forms.DataGridView dataGridView1;
   }
 }
 

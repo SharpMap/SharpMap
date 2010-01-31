@@ -361,16 +361,30 @@ namespace SharpMap.Forms
                     {
                         if (_Map.Layers.Count > _queryLayerIndex && _queryLayerIndex > -1)
                         {
-                            if (_Map.Layers[_queryLayerIndex].GetType() == typeof (VectorLayer))
+                            /*
+                            if (_Map.Layers[_queryLayerIndex].GetType() == typeof(VectorLayer))
                             {
                                 VectorLayer layer = _Map.Layers[_queryLayerIndex] as VectorLayer;
                                 BoundingBox bbox =
                                     _Map.ImageToWorld(new System.Drawing.Point(e.X, e.Y)).GetBoundingBox().Grow(
-                                        _Map.PixelSize*5);
+                                        _Map.PixelSize * 5);
                                 FeatureDataSet ds = new FeatureDataSet();
                                 layer.DataSource.Open();
                                 layer.DataSource.ExecuteIntersectionQuery(bbox, ds);
                                 layer.DataSource.Close();
+                                if (ds.Tables.Count > 0)
+                                    if (MapQueried != null) MapQueried(ds.Tables[0]);
+                                    else if (MapQueried != null) MapQueried(new FeatureDataTable());
+                            }
+                            */
+                            if (_Map.Layers[_queryLayerIndex] is ICanQueryLayer)
+                            {
+                                ICanQueryLayer layer = _Map.Layers[_queryLayerIndex] as ICanQueryLayer;
+                                BoundingBox bbox =
+                                    _Map.ImageToWorld(new System.Drawing.Point(e.X, e.Y)).GetBoundingBox().Grow(
+                                        _Map.PixelSize*5);
+                                FeatureDataSet ds = new FeatureDataSet();
+                                layer.ExecuteIntersectionQuery(bbox, ds);
                                 if (ds.Tables.Count > 0)
                                     if (MapQueried != null) MapQueried(ds.Tables[0]);
                                     else if (MapQueried != null) MapQueried(new FeatureDataTable());

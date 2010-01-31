@@ -33,5 +33,15 @@ namespace WinFormSamples.Properties {
                 return ((string)(this["PostGisConnectionString"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
+        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=C:\\VENUS\\CodePlex\\sharpMap\\SharpMap\\TestData\\vrs2386_v11.sqlite;")]
+        public string SpatiaLiteConnectionString {
+            get {
+                return ((string)(this["SpatiaLiteConnectionString"]));
+            }
+        }
     }
 }

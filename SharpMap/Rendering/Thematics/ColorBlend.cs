@@ -30,6 +30,8 @@ namespace SharpMap.Rendering.Thematics
         private Color[] _Colors;
 
         private float[] _Positions;
+        private float _maximum = float.NaN;
+        private float _minimum = float.NaN;
 
         internal ColorBlend()
         {
@@ -43,7 +45,7 @@ namespace SharpMap.Rendering.Thematics
         public ColorBlend(Color[] colors, float[] positions)
         {
             _Colors = colors;
-            _Positions = positions;
+            Positions = positions;
         }
 
         /// <summary>
@@ -75,7 +77,17 @@ namespace SharpMap.Rendering.Thematics
         public float[] Positions
         {
             get { return _Positions; }
-            set { _Positions = value; }
+            set 
+            { 
+                _Positions = value;
+                if ( value == null )
+                    _minimum = _maximum = float.NaN;
+                else
+                {
+                    _minimum = value[0];
+                    _maximum = value[value.GetUpperBound(0)];
+                }
+            }
         }
 
         /// <summary>
@@ -87,15 +99,19 @@ namespace SharpMap.Rendering.Thematics
         /// <returns>Color on scale</returns>
         public Color GetColor(float pos)
         {
+            if (float.IsNaN(_minimum))
+                throw (new ArgumentException("Positions not set"));
             if (_Colors.Length != _Positions.Length)
                 throw (new ArgumentException("Colors and Positions arrays must be of equal length"));
             if (_Colors.Length < 2)
                 throw (new ArgumentException("At least two colors must be defined in the ColorBlend"));
+            /*
             if (_Positions[0] != 0f)
                 throw (new ArgumentException("First position value must be 0.0f"));
             if (_Positions[_Positions.Length - 1] != 1f)
                 throw (new ArgumentException("Last position value must be 1.0f"));
             if (pos > 1 || pos < 0) pos -= (float) Math.Floor(pos);
+             */
             int i = 1;
             while (i < _Positions.Length && _Positions[i] < pos)
                 i++;

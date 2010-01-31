@@ -66,4 +66,54 @@ namespace WinFormSamples.Samples
             }
         }
     }
+    public static class GdalSample2
+    {
+        private static readonly string[] Vrts = new string[] { @"..\DEM\Golden_CO.dem", "contours_sample_polyline_play_polyline.asc", "contours_sample_polyline_play1_polyline.vrt", "contours_sample_polyline_play2_polyline.vrt", "contours_sample_polyline_play3_polyline.vrt", "contours_sample_polyline_play3_polyline.vrt" };
+        private static int _index = 1;
+        private const string RelativePath = "GeoData/VRT/";
+
+        public static Map InitializeMap()
+        {
+            try
+            {
+                _index = -1;
+                //Sample provided by Dan Brecht and Joel Wilson
+                Map map = new Map();
+                map.BackColor = Color.White;
+
+                Next(map);
+                map.ZoomToExtents();
+
+                return map;
+            }
+            catch (TypeInitializationException ex)
+            {
+                if (ex.Message == "The type initializer for 'OSGeo.GDAL.GdalPINVOKE' threw an exception.")
+                {
+                    throw new Exception(
+                        String.Format(
+                            "The application threw a PINVOKE exception. You probably need to copy the unmanaged dll's to your bin directory. They are a part of fwtools {0}. You can download it from: http://home.gdal.org/fwtools/",
+                            GdalRasterLayer.FWToolsVersion));
+                }
+                throw;
+            }
+        }
+
+        public static void Next(Map map)
+        {
+            _index++;
+            if (_index >= Vrts.Length) _index = 0;
+
+            if (!File.Exists(RelativePath + Vrts[_index]))
+            {
+                throw new Exception("Make sure the data is in the relative directory: " + RelativePath);
+            }
+
+            GdalRasterLayer layer = new GdalRasterLayer("VirtualRasterTable", RelativePath + Vrts[_index]);
+            map.Layers.Add(layer);
+
+            map.ZoomToExtents();
+
+        }
+    }
 }

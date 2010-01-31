@@ -52,7 +52,7 @@ namespace SharpMap.Layers
     /// System.Drawing.Image mapImage = myMap.GetMap();
     /// </code>
     /// </example>
-    public class VectorLayer : Layer, IDisposable
+    public class VectorLayer : Layer, ICanQueryLayer, IDisposable
     {
         private bool _ClippingEnabled = false;
         private IProvider _DataSource;
@@ -351,5 +351,21 @@ namespace SharpMap.Layers
         {
             throw new NotImplementedException();
         }
+
+        #region Implementation of ICanQueryLayer
+
+        /// <summary>
+        /// Returns the data associated with all the geometries that are intersected by 'geom'
+        /// </summary>
+        /// <param name="box">Geometry to intersect with</param>
+        /// <param name="ds">FeatureDataSet to fill data into</param>
+        public void ExecuteIntersectionQuery(BoundingBox box, FeatureDataSet ds)
+        {
+            _DataSource.Open();
+            _DataSource.ExecuteIntersectionQuery(box, ds);
+            _DataSource.Close();
+        }
+
+        #endregion
     }
 }

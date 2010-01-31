@@ -18,6 +18,7 @@
 using System;
 using System.Collections.ObjectModel;
 using System.Drawing;
+using SharpMap.Data;
 using SharpMap.Geometries;
 
 namespace SharpMap.Layers
@@ -29,7 +30,7 @@ namespace SharpMap.Layers
     /// The Group layer is useful for grouping a set of layers,
     /// for instance a set of image tiles, and expose them as a single layer
     /// </remarks>
-    public class LayerGroup : Layer, IDisposable
+    public class LayerGroup : Layer, ICanQueryLayer, IDisposable
     {
         private Collection<Layer> _Layers;
 
@@ -120,5 +121,27 @@ namespace SharpMap.Layers
         {
             throw new NotImplementedException();
         }
+
+        #region Implementation of ICanQueryLayer
+
+        /// <summary>
+        /// Returns the data associated with all the geometries that are intersected by 'geom'
+        /// </summary>
+        /// <param name="box">Geometry to intersect with</param>
+        /// <param name="ds">FeatureDataSet to fill data into</param>
+        public void ExecuteIntersectionQuery(BoundingBox box, FeatureDataSet ds)
+        {
+            foreach (Layer layer in Layers)
+            {
+                if (layer is ICanQueryLayer)
+                {
+                    FeatureDataSet dsTmp = new FeatureDataSet();
+                    ((ICanQueryLayer)layer).ExecuteIntersectionQuery(box, dsTmp);
+                    ds.Tables.AddRange(dsTmp.Tables);
+                }
+            }
+        }
+
+        #endregion
     }
 }

@@ -1,0 +1,39 @@
+<VRTDataset rasterXSize="251" rasterYSize="207">
+  <SRS>PROJCS[&quot;WGS 84 / UTM zone 37N&quot;,GEOGCS[&quot;WGS 84&quot;,DATUM[&quot;WGS_1984&quot;,SPHEROID[&quot;WGS 84&quot;,6378137,298.257223563,AUTHORITY[&quot;EPSG&quot;,&quot;7030&quot;]],AUTHORITY[&quot;EPSG&quot;,&quot;6326&quot;]],PRIMEM[&quot;Greenwich&quot;,0],UNIT[&quot;degree&quot;,0.0174532925199433],AUTHORITY[&quot;EPSG&quot;,&quot;4326&quot;]],PROJECTION[&quot;Transverse_Mercator&quot;],PARAMETER[&quot;latitude_of_origin&quot;,0],PARAMETER[&quot;central_meridian&quot;,39],PARAMETER[&quot;scale_factor&quot;,0.9996],PARAMETER[&quot;false_easting&quot;,500000],PARAMETER[&quot;false_northing&quot;,0],UNIT[&quot;metre&quot;,1,AUTHORITY[&quot;EPSG&quot;,&quot;9001&quot;]],AUTHORITY[&quot;EPSG&quot;,&quot;32637&quot;]]</SRS>
+  <GeoTransform> 5.2377000000000000e+005, 2.5500000000000000e+002, 0.0000000000000000e+000, 4.2054600000000000e+006, 0.0000000000000000e+000,-2.5500000000000000e+002</GeoTransform>
+  <Metadata>
+    <MDI key="AREA_OR_POINT">Area</MDI>
+  </Metadata>
+  <VRTRasterBand dataType="Int32" band="1">
+    <Metadata>
+      <MDI key="STATISTICS_MINIMUM">1</MDI>
+      <MDI key="STATISTICS_MAXIMUM">5</MDI>
+      <MDI key="STATISTICS_MEAN">1.0783514492754</MDI>
+      <MDI key="STATISTICS_STDDEV">0.43559117712008</MDI>
+    </Metadata>
+    <NoDataValue>0.00000000000000E+000</NoDataValue>
+    <ColorInterp>Palette</ColorInterp>
+    <ColorTable>
+      <Entry c1="0" c2="0" c3="255" c4="255"/>
+      <Entry c1="128" c2="225" c3="133" c4="255"/>
+      <Entry c1="0" c2="189" c3="163" c4="255"/>
+      <Entry c1="128" c2="42" c3="24" c4="255"/>
+      <Entry c1="0" c2="226" c3="80" c4="255"/>
+      <Entry c1="128" c2="187" c3="228" c4="255"/>
+      <Entry c1="128" c2="187" c3="100" c4="255"/>
+      <Entry c1="128" c2="187" c3="50" c4="255"/>
+      <Entry c1="128" c2="187" c3="10" c4="255"/>
+      <Entry c1="128" c2="100" c3="228" c4="255"/>
+    </ColorTable>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="1">contours_sample_polyline_play_polyline.asc</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="251" RasterYSize="207" DataType="Int32" BlockXSize="251" BlockYSize="8"/>
+      <SrcRect xOff="0" yOff="0" xSize="251" ySize="207"/>
+      <DstRect xOff="0" yOff="0" xSize="251" ySize="207"/>
+      <ScaleOffset>0</ScaleOffset>
+      <ScaleRatio>1</ScaleRatio>
+      <LUT>0:0,200:2,1000:10</LUT>
+    </ComplexSource>
+  </VRTRasterBand>
+</VRTDataset>

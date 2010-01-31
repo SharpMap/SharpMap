@@ -64,9 +64,9 @@
     <EmbeddedResource Include="Web\UI\Ajax\AjaxMap.js" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SharpMap\SharpMap.csproj">
+    <ProjectReference Include="..\SharpMap\SharpMap.VS2008.csproj">
       <Project>{C83777FC-AABB-47D9-911F-D76255D4D541}</Project>
-      <Name>SharpMap</Name>
+      <Name>SharpMap.VS2008</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

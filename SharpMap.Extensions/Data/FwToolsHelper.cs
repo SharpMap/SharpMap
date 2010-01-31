@@ -46,7 +46,8 @@ namespace SharpMap.Extensions.Data
                 }
             }
             if (!pathFound)
-                Environment.SetEnvironmentVariable("PATH", path + (!path.EndsWith(";") ? ";" : "") + fwtoolsPath);
+                //Environment.SetEnvironmentVariable("PATH", path + (!path.EndsWith(";") ? ";" : "") + fwtoolsPath);
+                Environment.SetEnvironmentVariable("PATH", fwtoolsPath + ";" + path);
         }
 
         public static string FwToolsVersion

@@ -106,6 +106,7 @@
     <Compile Include="Geometries\Surface.cs" />
     <Compile Include="Layers\DuplicateLayerException.cs" />
     <Compile Include="Layers\iLayer.cs" />
+    <Compile Include="Layers\ICanQueryLayer.cs" />
     <Compile Include="Layers\LabelLayer.cs" />
     <Compile Include="Layers\Layer.cs" />
     <Compile Include="Layers\LayerCollection.cs" />
