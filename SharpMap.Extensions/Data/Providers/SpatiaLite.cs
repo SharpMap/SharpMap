@@ -445,7 +445,7 @@ namespace SharpMap.Data.Providers
                 sql.Append("SELECT pkid FROM ");
                 sql.Append(SpatialIndex);
                 sql.Append(" WHERE ");
-                sql.AppendFormat(SharpMap.Map.numberFormat_EnUS,
+                sql.AppendFormat(SharpMap.Map.NumberFormatEnUs,
                 "xmin < {0} AND xmax > {1} AND ymin < {2} AND ymax > {3} )",
                  bbox.Max.X, bbox.Min.X, bbox.Max.Y, bbox.Min.Y);
 
