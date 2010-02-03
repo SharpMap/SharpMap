@@ -224,11 +224,23 @@ namespace SharpMap.Converters.WellKnownText.IO
                 }
 
                 // handle negative numbers
-                if (currentCharacter == '-' && nextTokenType == TokenType.Number && isNumber == false)
+                if (currentCharacter == '-' && nextTokenType == TokenType.Number) // && isNumber == false)
                 {
                     _currentTokenType = TokenType.Number;
                     nextTokenType = TokenType.Number;
                     //isNumber = true;
+                }
+
+                // this handles numbers with exponential values
+                if (isNumber && (nextCharacter.Equals('E') || nextCharacter.Equals('e')))
+                {
+                    nextTokenType = TokenType.Number;
+                }
+
+                if (isNumber && (currentCharacter.Equals('E') || currentCharacter.Equals('e')) && (nextTokenType == TokenType.Number || nextTokenType == TokenType.Symbol))
+                {
+                    _currentTokenType = TokenType.Number;
+                    nextTokenType = TokenType.Number;
                 }
 
 
