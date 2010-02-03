@@ -38,8 +38,13 @@ namespace UnitTests.Converters.WKT
             Assert.AreEqual(40, geom.Length);
             Assert.IsFalse(geom.IsRing);
             Assert.AreEqual(linestring, geom.AsText());
+
             Assert.IsTrue((Geometry.GeomFromText("LINESTRING EMPTY") as LineString).IsEmpty());
             Assert.AreEqual("LINESTRING EMPTY", new LineString().AsText());
+
+            linestring = "LINESTRING (-3.32348670085011 56.3658879665301, 5.72037855874896E-05 53.5353372259589)";
+            geom = Geometry.GeomFromText(linestring) as LineString;
+            Assert.IsNotNull(geom);
         }
 
         [Test]
