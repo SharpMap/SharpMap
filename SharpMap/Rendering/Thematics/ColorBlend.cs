@@ -116,6 +116,8 @@ namespace SharpMap.Rendering.Thematics
             while (i < _Positions.Length && _Positions[i] < pos)
                 i++;
             float frac = (pos - _Positions[i - 1])/(_Positions[i] - _Positions[i - 1]);
+            frac = Math.Max(frac, 0.0f);
+            frac = Math.Min(frac, 1.0f);
             int R = (int) Math.Round((_Colors[i - 1].R*(1 - frac) + _Colors[i].R*frac));
             int G = (int) Math.Round((_Colors[i - 1].G*(1 - frac) + _Colors[i].G*frac));
             int B = (int) Math.Round((_Colors[i - 1].B*(1 - frac) + _Colors[i].B*frac));
@@ -134,7 +136,12 @@ namespace SharpMap.Rendering.Thematics
             LinearGradientBrush br = new LinearGradientBrush(rectangle, Color.Black, Color.Black, angle, true);
             System.Drawing.Drawing2D.ColorBlend cb = new System.Drawing.Drawing2D.ColorBlend();
             cb.Colors = _Colors;
-            cb.Positions = _Positions;
+            //scale and translate positions to range[0.0, 1.0]
+            float[] positions = new float[_Positions.Length];
+            float range = _maximum - _minimum;
+            for (int i = 0; i < _Positions.Length; i++)
+                positions[i] = (_Positions[i] - _minimum) / range;
+            cb.Positions = positions;
             br.InterpolationColors = cb;
             return br;
         }
