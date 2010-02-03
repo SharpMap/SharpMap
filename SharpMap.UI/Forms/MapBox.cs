@@ -1,9 +1,27 @@
+/*
+ * Note:
+ * 
+ * If you want to use MapBox control along with MapImage controls
+ * you have to define the compile time constant 'UseMapBox' in the
+ * properties dialog of this project. As a result you will have the
+ * MapImage control and the MapBox control included in your SharpMap.UI
+ * assembly.
+ * 
+ * If you want to use MapBox control as a replacement of MapImage 
+ * control you have to define the compile time constant 'UseMapBoxAsMapImage'.
+ * in the  * properties dialog of this project. As a result you will have a
+ * MapImage control in your SharpMap.UI assembly which is actually this
+ * MapBox control.
+ * 
+ * If you don't define any of the two compile time constants this control
+ * is omitted.
+ * 
+ * FObermaier
+ */
+#if UseMapBox || UseMapBoxAsMapImage
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
-using System.Data;
-using System.Text;
 using System.Windows.Forms;
 
 namespace SharpMap.Forms
@@ -15,9 +33,13 @@ namespace SharpMap.Forms
     /// The ExtendedMapImage control adds more than basic functionality to a Windows Form, such as dynamic pan, widow zoom and data query.
     /// </remarks>
     [DesignTimeVisible(true)]
-    public class MapBox : System.Windows.Forms.Control
+#if UseMapBoxAsMapImage
+    public class MapImage : Control
+#else
+    public class MapBox : Control
+#endif
     {
-        #region PreviewModes enumerator
+#region PreviewModes enumerator
         public enum PreviewModes
         { 
             Best,
@@ -25,7 +47,7 @@ namespace SharpMap.Forms
         }
         #endregion
 
-        #region Position enumerators
+#region Position enumerators
         private enum XPosition
         {
             Center = 0,
@@ -41,7 +63,7 @@ namespace SharpMap.Forms
         }
         #endregion
 
-        #region Tools enumerator
+#region Tools enumerator
         /// <summary>
         /// Map tools enumeration
         /// </summary>
@@ -74,13 +96,13 @@ namespace SharpMap.Forms
         }
         #endregion
 
-        #region Events
+#region Events
         /// <summary>
         /// MouseEventtype fired from the MapImage control
         /// </summary>
-        /// <param name="WorldPos"></param>
-        /// <param name="ImagePos"></param>
-        public delegate void MouseEventHandler(SharpMap.Geometries.Point WorldPos, System.Windows.Forms.MouseEventArgs ImagePos);
+        /// <param name="worldPos"></param>
+        /// <param name="imagePos"></param>
+        public delegate void MouseEventHandler(Geometries.Point worldPos, MouseEventArgs imagePos);
         /// <summary>
         /// Fires when mouse moves over the map
         /// </summary>
@@ -101,7 +123,7 @@ namespace SharpMap.Forms
         /// <summary>
         /// Fired when the map has been refreshed
         /// </summary>
-        public event System.EventHandler MapRefreshed;
+        public event EventHandler MapRefreshed;
 
         /// <summary>
         /// Eventtype fired when the zoom was or are being changed
@@ -121,7 +143,7 @@ namespace SharpMap.Forms
         /// Eventtype fired when the map is queried
         /// </summary>
         /// <param name="data"></param>
-        public delegate void MapQueryHandler(SharpMap.Data.FeatureDataTable data);
+        public delegate void MapQueryHandler(Data.FeatureDataTable data);
         /// <summary>
         /// Fired when the map is queried
         /// </summary>
@@ -132,7 +154,7 @@ namespace SharpMap.Forms
         /// Eventtype fired when the center has changed
         /// </summary>
         /// <param name="center"></param>
-        public delegate void MapCenterChangedHandler(SharpMap.Geometries.Point center);
+        public delegate void MapCenterChangedHandler(Geometries.Point center);
         /// <summary>
         /// Fired when the center of the map has changed
         /// </summary>
@@ -149,7 +171,7 @@ namespace SharpMap.Forms
         public event ActiveToolChangedHandler ActiveToolChanged;
         #endregion
 
-        private static int m_DefaultColorIndex = 0;
+        private static int m_DefaultColorIndex;
         private static Color[] m_DefaultColors = new Color[] { Color.DarkRed, Color.DarkGreen, Color.DarkBlue, Color.Orange, Color.Cyan, Color.Black, Color.Purple, Color.Yellow, Color.LightBlue, Color.Fuchsia };
         private const float MIN_DRAG_SCALING_BEFORE_REGEN = 0.3333f;
         private const float MAX_DRAG_SCALING_BEFORE_REGEN = 3f;
@@ -162,7 +184,7 @@ namespace SharpMap.Forms
             m_DefaultColorIndex++;
         }
 
-        private bool m_IsCtrlPressed = false;
+        private bool m_IsCtrlPressed;
         private double m_WheelZoomMagnitude = 2;
         private Tools m_ActiveTool;
         private double m_FineZoomFactor = 10;
@@ -220,7 +242,7 @@ namespace SharpMap.Forms
         }
 
         [Description("Mode used to create preview image while panning or zooming.")]
-        [DefaultValue(MapBox.PreviewModes.Best)]
+        [DefaultValue(PreviewModes.Best)]
 
         [Category("Behavior")]
         public PreviewModes PreviewMode
@@ -248,7 +270,7 @@ namespace SharpMap.Forms
         /// Map reference
         /// </summary>
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public SharpMap.Map Map
+        public Map Map
         {
             get { return m_Map; }
             set
@@ -290,11 +312,15 @@ namespace SharpMap.Forms
         /// <summary>
         /// Initializes a new map
         /// </summary>
+#if UseMapBoxAsMapImage
+        public MapImage()
+#else
         public MapBox()
+#endif
         {
             SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.ResizeRedraw | ControlStyles.UserPaint, true);
             DoubleBuffered = true;
-            m_Map = new SharpMap.Map(ClientSize);
+            m_Map = new Map(ClientSize);
             m_ActiveTool = Tools.None;
             LostFocus += new EventHandler(MapBox_LostFocus);
         }
@@ -378,8 +404,8 @@ namespace SharpMap.Forms
 
             if (m_Map != null)
             {
-                double scale = ((double)e.Delta / 120.0);
-                double scaleBase = 1 + (m_WheelZoomMagnitude / (10 * ((double)(m_IsCtrlPressed ? m_FineZoomFactor : 1))));
+                double scale = (e.Delta / 120.0);
+                double scaleBase = 1 + (m_WheelZoomMagnitude / (10 * (m_IsCtrlPressed ? m_FineZoomFactor : 1)));
 
                 m_Map.Zoom *= Math.Pow(scaleBase, scale);
 
@@ -403,7 +429,7 @@ namespace SharpMap.Forms
                 }
                 
                 if (MouseDown != null)
-                    MouseDown(m_Map.ImageToWorld(new System.Drawing.Point(e.X, e.Y)), e);
+                    MouseDown(m_Map.ImageToWorld(new Point(e.X, e.Y)), e);
             }
         }
 
@@ -413,7 +439,7 @@ namespace SharpMap.Forms
 
             if (m_Map != null)
             {
-                SharpMap.Geometries.Point p = m_Map.ImageToWorld(new System.Drawing.Point(e.X, e.Y));
+                Geometries.Point p = m_Map.ImageToWorld(new Point(e.X, e.Y));
 
                 if (MouseMove != null)
                     MouseMove(p, e);
@@ -458,7 +484,6 @@ namespace SharpMap.Forms
                     else if (m_ActiveTool == Tools.ZoomWindow || m_ActiveTool == Tools.Query)
                     {
                         m_DragEndPoint = ClipPoint(e.Location);
-                        Rectangle oldRectangle = m_Rectangle;
                         m_Rectangle = GenerateRectangle(m_DragStartPoint, m_DragEndPoint);
                         Invalidate(new Region(ClientRectangle));
                     }
@@ -485,14 +510,13 @@ namespace SharpMap.Forms
                 Cursor c = Cursor;
                 Cursor = Cursors.WaitCursor;
 
-                SharpMap.Geometries.Point realCenter = m_Map.Center;
+                Geometries.Point realCenter = m_Map.Center;
                 Bitmap bmp = new Bitmap(m_Map.Size.Width * 3, m_Map.Size.Height * 3);
                 Graphics g = Graphics.FromImage(bmp);
 
-                int i, j;
-                for (i = -1; i <= 1; i++)
+                for (int i = -1; i <= 1; i++)
                 {
-                    for (j = -1; j <= 1; j++)
+                    for (int j = -1; j <= 1; j++)
                     {
                         if (i == 0 && j == 0)
                             g.DrawImageUnscaled(m_Image.Clone() as Image, m_Map.Size.Width, m_Map.Size.Height);
@@ -507,11 +531,10 @@ namespace SharpMap.Forms
 
                 return bmp;
             }
-            else
-                return m_Image.Clone() as Bitmap;
+            return m_Image.Clone() as Bitmap;
         }
 
-        private Bitmap GeneratePartialBitmap(SharpMap.Geometries.Point center, XPosition xPos, YPosition yPos)
+        private Bitmap GeneratePartialBitmap(Geometries.Point center, XPosition xPos, YPosition yPos)
         {
             double x = center.X, y = center.Y;
 
@@ -535,7 +558,7 @@ namespace SharpMap.Forms
                     break;
             }
 
-            m_Map.Center = new SharpMap.Geometries.Point(x, y);
+            m_Map.Center = new Geometries.Point(x, y);
             return m_Map.GetMap() as Bitmap;
         }
 
@@ -546,7 +569,7 @@ namespace SharpMap.Forms
             return new Point(x, y);
         }
 
-        private Rectangle GenerateRectangle(Point p1, Point p2)
+        private static Rectangle GenerateRectangle(Point p1, Point p2)
         {
             int x = Math.Min(p1.X, p2.X);
             int y = Math.Min(p1.Y, p2.Y);
@@ -576,7 +599,7 @@ namespace SharpMap.Forms
                     }
                     return;
                 }
-                else if (m_ActiveTool == Tools.Pan)
+                if (m_ActiveTool == Tools.Pan)
                 {
                     if (m_PreviewMode == PreviewModes.Best)
                         pe.Graphics.DrawImageUnscaled(m_DragImage, new Point(-m_Map.Size.Width + m_DragEndPoint.X - m_DragStartPoint.X, -m_Map.Size.Height + m_DragEndPoint.Y - m_DragStartPoint.Y));
@@ -584,7 +607,7 @@ namespace SharpMap.Forms
                         pe.Graphics.DrawImageUnscaled(m_DragImage, new Point(m_DragEndPoint.X - m_DragStartPoint.X, m_DragEndPoint.Y - m_DragStartPoint.Y));
                     return;
                 }
-                else if (m_ActiveTool == Tools.ZoomIn || m_ActiveTool == Tools.ZoomOut)
+                if (m_ActiveTool == Tools.ZoomIn || m_ActiveTool == Tools.ZoomOut)
                 {
                     RectangleF rect = new RectangleF(0, 0, m_Map.Size.Width, m_Map.Size.Height);
 
@@ -599,7 +622,7 @@ namespace SharpMap.Forms
                     rect.Width *= m_Scaling;
                     rect.Height *= m_Scaling;
 
-                    rect.Offset(m_Map.Size.Width / 2 - rect.Width / 2, m_Map.Size.Height / 2 - rect.Height / 2);
+                    rect.Offset(m_Map.Size.Width / 2f - rect.Width / 2, m_Map.Size.Height / 2f - rect.Height / 2);
 
                     pe.Graphics.DrawImage(m_DragImage, rect);
                     return;
@@ -634,7 +657,7 @@ namespace SharpMap.Forms
                         }
                         else
                         {
-                            m_Map.Center = m_Map.ImageToWorld(new System.Drawing.Point(e.X, e.Y));
+                            m_Map.Center = m_Map.ImageToWorld(new Point(e.X, e.Y));
                             
                             if (MapCenterChanged != null)
                                 MapCenterChanged(m_Map.Center);
@@ -657,7 +680,7 @@ namespace SharpMap.Forms
                         }
                         else
                         {
-                            m_Map.Center = m_Map.ImageToWorld(new System.Drawing.Point(e.X, e.Y));
+                            m_Map.Center = m_Map.ImageToWorld(new Point(e.X, e.Y));
                             
                             if (MapCenterChanged != null)
                                 MapCenterChanged(m_Map.Center);
@@ -672,7 +695,7 @@ namespace SharpMap.Forms
                     {
                         if (m_Dragging)
                         {
-                            System.Drawing.Point point = new System.Drawing.Point(ClientSize.Width / 2 + (m_DragStartPoint.X - e.Location.X), ClientSize.Height / 2 + (m_DragStartPoint.Y - e.Location.Y));
+                            Point point = new Point(ClientSize.Width / 2 + (m_DragStartPoint.X - e.Location.X), ClientSize.Height / 2 + (m_DragStartPoint.Y - e.Location.Y));
                             m_Map.Center = m_Map.ImageToWorld(point);
                             
                             if (MapCenterChanged != null)
@@ -680,7 +703,7 @@ namespace SharpMap.Forms
                         }
                         else
                         {
-                            m_Map.Center = m_Map.ImageToWorld(new System.Drawing.Point(e.X, e.Y));
+                            m_Map.Center = m_Map.ImageToWorld(new Point(e.X, e.Y));
                             
                             if (MapCenterChanged != null)
                                 MapCenterChanged(m_Map.Center);
@@ -690,31 +713,56 @@ namespace SharpMap.Forms
                     {
                         if (m_Map.Layers.Count > m_QueryLayerIndex && m_QueryLayerIndex > -1)
                         {
-                            if (m_Map.Layers[m_QueryLayerIndex].GetType() == typeof(SharpMap.Layers.VectorLayer))
+                            /*
+                            if (m_Map.Layers[m_QueryLayerIndex].GetType() == typeof(Layers.VectorLayer))
                             {
                                 
-                                SharpMap.Layers.VectorLayer layer = m_Map.Layers[m_QueryLayerIndex] as SharpMap.Layers.VectorLayer;
-                                SharpMap.Geometries.BoundingBox bounding;
+                                Layers.VectorLayer layer = m_Map.Layers[m_QueryLayerIndex] as Layers.VectorLayer;
+                                Geometries.BoundingBox bounding;
                                 
                                 if (m_Dragging)
                                 {
-                                    SharpMap.Geometries.Point lowerLeft;
-                                    SharpMap.Geometries.Point upperRight;
+                                    Geometries.Point lowerLeft;
+                                    Geometries.Point upperRight;
                                     GetBounds(m_Map.ImageToWorld(m_DragStartPoint), m_Map.ImageToWorld(m_DragEndPoint), out lowerLeft, out upperRight);
 
-                                    bounding = new SharpMap.Geometries.BoundingBox(lowerLeft, upperRight);
+                                    bounding = new Geometries.BoundingBox(lowerLeft, upperRight);
                                 }
                                 else
-                                    bounding = m_Map.ImageToWorld(new System.Drawing.Point(e.X, e.Y)).GetBoundingBox().Grow(m_Map.PixelSize * 5);
+                                    bounding = m_Map.ImageToWorld(new Point(e.X, e.Y)).GetBoundingBox().Grow(m_Map.PixelSize * 5);
                                 
-                                SharpMap.Data.FeatureDataSet ds = new SharpMap.Data.FeatureDataSet();
+                                Data.FeatureDataSet ds = new Data.FeatureDataSet();
                                 layer.DataSource.Open();
                                 layer.DataSource.ExecuteIntersectionQuery(bounding, ds);
                                 layer.DataSource.Close();
 
                                 if (MapQueried != null)
-                                    MapQueried((ds.Tables.Count > 0 ? ds.Tables[0] : new SharpMap.Data.FeatureDataTable()));
+                                    MapQueried((ds.Tables.Count > 0 ? ds.Tables[0] : new Data.FeatureDataTable()));
                             }
+                             */
+                            if (m_Map.Layers[m_QueryLayerIndex] is Layers.ICanQueryLayer)
+                            {
+                                Layers.ICanQueryLayer layer = m_Map.Layers[m_QueryLayerIndex] as Layers.ICanQueryLayer;
+                                Geometries.BoundingBox bounding;
+
+                                if (m_Dragging)
+                                {
+                                    Geometries.Point lowerLeft;
+                                    Geometries.Point upperRight;
+                                    GetBounds(m_Map.ImageToWorld(m_DragStartPoint), m_Map.ImageToWorld(m_DragEndPoint), out lowerLeft, out upperRight);
+
+                                    bounding = new Geometries.BoundingBox(lowerLeft, upperRight);
+                                }
+                                else
+                                    bounding = m_Map.ImageToWorld(new Point(e.X, e.Y)).GetBoundingBox().Grow(m_Map.PixelSize * 5);
+
+                                Data.FeatureDataSet ds = new Data.FeatureDataSet();
+                                layer.ExecuteIntersectionQuery(bounding, ds);
+                                if (ds.Tables.Count > 0)
+                                    if (MapQueried != null) MapQueried(ds.Tables[0]);
+                                    else if (MapQueried != null) MapQueried(new Data.FeatureDataTable());
+                            }
+
                         }
                         else
                             MessageBox.Show("No active layer to query");
@@ -723,11 +771,11 @@ namespace SharpMap.Forms
                     {
                         if (m_Rectangle.Width > 0 && m_Rectangle.Height > 0)
                         {
-                            SharpMap.Geometries.Point lowerLeft;
-                            SharpMap.Geometries.Point upperRight;
+                            Geometries.Point lowerLeft;
+                            Geometries.Point upperRight;
                             GetBounds(m_Map.ImageToWorld(m_DragStartPoint), m_Map.ImageToWorld(m_DragEndPoint), out lowerLeft, out upperRight);
 
-                            m_Map.ZoomToBox(new SharpMap.Geometries.BoundingBox(lowerLeft, upperRight));
+                            m_Map.ZoomToBox(new Geometries.BoundingBox(lowerLeft, upperRight));
                         }
                     }
                 }
@@ -755,10 +803,11 @@ namespace SharpMap.Forms
             }
         }
 
-        private void GetBounds(SharpMap.Geometries.Point p1, SharpMap.Geometries.Point p2, out SharpMap.Geometries.Point lowerLeft, out SharpMap.Geometries.Point upperRight)
+        private void GetBounds(Geometries.Point p1, Geometries.Point p2, 
+            out Geometries.Point lowerLeft, out Geometries.Point upperRight)
         {
-            lowerLeft = new SharpMap.Geometries.Point(Math.Min(p1.X, p2.X), Math.Min(p1.Y, p2.Y));
-            upperRight = new SharpMap.Geometries.Point(Math.Max(p1.X, p2.X), Math.Max(p1.Y, p2.Y));
+            lowerLeft = new Geometries.Point(Math.Min(p1.X, p2.X), Math.Min(p1.Y, p2.Y));
+            upperRight = new Geometries.Point(Math.Max(p1.X, p2.X), Math.Max(p1.Y, p2.Y));
 
             System.Diagnostics.Debug.WriteLine("p1: " + p1);
             System.Diagnostics.Debug.WriteLine("p2: " + p2);
@@ -767,3 +816,4 @@ namespace SharpMap.Forms
         }
     }
 }
+#endif

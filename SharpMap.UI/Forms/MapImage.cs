@@ -1,3 +1,4 @@
+#if !UseMapBoxAsMapImage
 // Copyright 2005, 2006 - Morten Nielsen (www.iter.dk)
 //
 // This file is part of SharpMap.
@@ -494,3 +495,4 @@ namespace SharpMap.Forms
         #endregion
     }
 }
+#endif
