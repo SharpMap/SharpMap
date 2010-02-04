@@ -527,15 +527,14 @@ namespace SharpMap.Data.Providers
 
             for (int j = 0; j < objectlist.Count; j++)
             {
-                for (uint i = (uint) dt.Rows.Count - 1; i >= 0; i--)
-                {
-                    FeatureDataRow fdr = GetFeature(objectlist[j], dt);
-                    if (fdr.Geometry != null)
-                        if (fdr.Geometry.GetBoundingBox().Intersects(bbox))
-                            //replace above line with this:  if(fdr.Geometry.Intersects(bbox))  when relation model is complete
-                            if (FilterDelegate == null || FilterDelegate(fdr))
-                                dt.AddRow(fdr);
-                }
+                FeatureDataRow fdr = GetFeature(objectlist[j], dt);
+                //if (fdr == null) continue;
+
+                if (fdr.Geometry != null)
+                    if (fdr.Geometry.GetBoundingBox().Intersects(bbox))
+                        //replace above line with this:  if(fdr.Geometry.Intersects(bbox))  when relation model is complete
+                        if (FilterDelegate == null || FilterDelegate(fdr))
+                            dt.AddRow(fdr);
             }
             ds.Tables.Add(dt);
         }
@@ -982,11 +981,14 @@ namespace SharpMap.Data.Providers
             if (dbaseFile != null)
             {
                 FeatureDataRow dr = (FeatureDataRow) dbaseFile.GetFeature(RowID, (dt == null) ? dbaseFile.NewTable : dt);
+                return dr;
+                /*
                 dr.Geometry = ReadGeometry(RowID);
                 if (FilterDelegate == null || FilterDelegate(dr))
                     return dr;
                 else
                     return null;
+                 */
             }
             else
                 throw (new ApplicationException(
