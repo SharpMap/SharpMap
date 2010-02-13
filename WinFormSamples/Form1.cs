@@ -42,8 +42,8 @@ namespace WinFormSamples
             mapImage.Map = GdalSample.InitializeMap();
             mapImage.ActiveTool = MapImage.Tools.Pan;
             break;
-          case "Tiled WMS":
-                        mapImage.Map = TiledWmsSample.InitializeMap();
+          case "TileLayer OpenStreetMap":
+            mapImage.Map = TileLayerSample.InitializeMap();
             break;
           case "PostGis":
             mapImage.Map = PostGisSample.InitializeMap();

@@ -56,6 +56,10 @@
     <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="BruTile, Version=0.3.3696.21192, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\ExternalReferences\BruTile.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Data" />
@@ -210,6 +214,7 @@
     <Compile Include="Samples\TiledWmsSample.cs" />
     <Compile Include="Samples\WfsSample.cs" />
     <Compile Include="Samples\WmsSample.cs" />
+    <Compile Include="Samples\TileLayerSample.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="GeoData\GeoTiff\format01-image_a.tif">

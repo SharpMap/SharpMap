@@ -148,10 +148,10 @@
         this.radioButton7.AutoSize = true;
         this.radioButton7.Location = new System.Drawing.Point(13, 145);
         this.radioButton7.Name = "radioButton7";
-        this.radioButton7.Size = new System.Drawing.Size(78, 17);
+        this.radioButton7.Size = new System.Drawing.Size(146, 17);
         this.radioButton7.TabIndex = 5;
         this.radioButton7.TabStop = true;
-        this.radioButton7.Text = "Tiled WMS";
+        this.radioButton7.Text = "TileLayer OpenStreetMap";
         this.radioButton7.UseVisualStyleBackColor = true;
         this.radioButton7.Click += new System.EventHandler(this.radioButton_Click);
         // 
