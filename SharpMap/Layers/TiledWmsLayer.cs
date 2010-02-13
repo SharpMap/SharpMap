@@ -55,6 +55,7 @@ namespace SharpMap.Layers
     /// map.ZoomToBox(new SharpMap.Geometries.BoundingBox(-180.0, -90.0, 180.0, 90.0));
     /// </code>
     /// </example>
+    [Obsolete("use TileLayer instead") ]
     public class TiledWmsLayer : Layer, ILayer
     {
         #region Fields
@@ -220,6 +221,8 @@ namespace SharpMap.Layers
                     tileSet.Verify();
 
                     List<BoundingBox> tileExtents = TileExtents.GetTileExtents(tileSet, map.Envelope, map.PixelSize);
+
+                    Console.WriteLine("TileCount: " + tileExtents.Count);
 
                     //TODO: Retrieve several tiles at the same time asynchronously to improve performance. PDD.
                     foreach (BoundingBox tileExtent in tileExtents)
