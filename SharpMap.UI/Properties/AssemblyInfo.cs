@@ -54,4 +54,4 @@ using System.Web.UI;
 
 [assembly: AssemblyVersion("0.9.*")]
 [assembly: AssemblyFileVersion("0.9.0.0")]
-[assembly: WebResource("SharpMap.UI.Web.UI.Ajax.AjaxMap.js", "text/javascript")]
+[assembly: WebResource("SharpMap.Web.UI.Ajax.AjaxMap.js", "text/javascript")]

@@ -355,8 +355,8 @@ namespace SharpMap.Web.UI.Ajax
         {
             string newline = Environment.NewLine;
             //Include scriptresource
-            string scriptLocation = Page.ClientScript.GetWebResourceUrl(GetType(), "SharpMap.UI.Web.UI.Ajax.AjaxMap.js");
-            Page.ClientScript.RegisterClientScriptInclude("SharpMap.UI.AjaxMap.js", scriptLocation);
+            string scriptLocation = Page.ClientScript.GetWebResourceUrl(GetType(), "SharpMap.Web.UI.Ajax.AjaxMap.js");
+            Page.ClientScript.RegisterClientScriptInclude("SharpMap.Web.UI.AjaxMap.js", scriptLocation);
             string obj = ClientID + "Obj";
             string setvarsScript = "SetVars_" + ClientID + "();" + newline +
                                    "function SetVars_" + ClientID + "() {" + newline +
