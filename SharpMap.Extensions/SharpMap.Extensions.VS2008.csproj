@@ -7,7 +7,7 @@
     <ProjectGuid>{A4140C12-53F5-438C-8D24-9E48C504FECF}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>SharpMap.Extensions</RootNamespace>
+    <RootNamespace>SharpMap</RootNamespace>
     <AssemblyName>SharpMap.Extensions</AssemblyName>
     <SccProjectName>
     </SccProjectName>

@@ -1242,7 +1242,7 @@ namespace SharpMap.Layers
                             else if (band[i].GetRasterColorInterpretation() == ColorInterp.GCI_RedBand) ch[i] = 2;
                             else if (band[i].GetRasterColorInterpretation() == ColorInterp.GCI_Undefined)
                                 ch[i] = 3; // infrared
-                            else if (band[i].GetRasterColorInterpretation() == ColorInterp.GCI_GrayIndex) ch[i] = 4;
+                            else if (band[i].GetRasterColorInterpretation() == ColorInterp.GCI_GrayIndex) ch[i] = 0;
                             else ch[i] = -1;
                         }
 

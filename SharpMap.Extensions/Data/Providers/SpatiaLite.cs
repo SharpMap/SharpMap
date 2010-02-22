@@ -15,59 +15,218 @@
 // along with SharpMap; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-using SharpMap;
-using System.Data.SQLite;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Text;
+using System.Configuration;
 using System.Data;
-using SharpMap.Data;
-using SharpMap.Data.Providers;
+using System.Data.SQLite;
+using System.Text;
 using SharpMap.Converters.WellKnownBinary;
+using SharpMap.Converters.WellKnownText;
+using SharpMap.Geometries;
 
 namespace SharpMap.Data.Providers
 {
-    public class SpatiaLite : IProvider, IDisposable
+    /// <summary>
+    /// SpatiaLite Provider for SharpMap
+    /// <para>
+    /// Spatialite is a spatial extension for the popular SQLite database engine.
+    /// </para>
+    /// <para>
+    /// In order to use this provider with SharpMap, you need to 
+    /// <list type="bullet">
+    /// <item>get your copy of the native spatialite binaries from http://www.gaia-gis.it/spatialite/,</item>
+    /// <item>copy them all in <strong>one</strong> directory,</item>
+    /// <item>add a (or modify your) app.config- or web.config-file with key/value pairs SpatiaLitePath and SpatiaLiteNativeDll</item>
+    /// </list>
+    /// </para>
+    /// </summary>
+    public class SpatiaLite : IProvider
     {
-        //string conStr = "Data Source=C:\\Workspace\\test.sqlite;Version=3;";
-        public SpatiaLite(string ConnectionStr, string tablename, string geometryColumnName, string OID_ColumnName)
+        private string _connectionString;
+        private string _defintionQuery;
+        private string _geometryColumn;
+        private bool _isOpen;
+        private string _objectIdColumn;
+        private string _spatialIndex;
+        private readonly int _srid = -2;
+        private string _table;
+
+        private static readonly string SpatiaLitePath;
+        private static readonly string SpatiaLiteNativeDll = "libspatialite-2.dll";
+
+        /// <summary>
+        /// Initializes Provider with information about where to find native spatialite library and how
+        /// it is named.
+        /// </summary>
+        static SpatiaLite()
         {
-            //Object retVal = new SQLiteCommand("SELECT load_extension('libspatialite-2.dll');", new SQLiteConnection(ConnectionStr)).ExecuteScalar();
-            this.ConnectionString = ConnectionStr;
-            this.Table = tablename;
-            this.GeometryColumn = geometryColumnName; //Name of column to store geometry
-            this.ObjectIdColumn = OID_ColumnName; //Name of object ID column
+            AppSettingsReader asr = new AppSettingsReader();
+            try
+            {
+                String slBin = (String)asr.GetValue("SpatiaLiteNativeDll", typeof(String));
+                if (!String.IsNullOrEmpty(slBin))
+                    SpatiaLiteNativeDll = slBin;
+            }
+            catch
+            {
+                System.Diagnostics.Trace.WriteLine("Path to native SpatiaLite binaries not configured, assuming they are in applications directory");
+            }
+
+            try
+            {
+                String slPath = (String)asr.GetValue("SpatiaLitePath", typeof (String));
+                SpatiaLitePath = slPath;
+                String path = Environment.GetEnvironmentVariable("path");
+                if (path == null) path = "";
+                if (!path.ToLowerInvariant().Contains(slPath.ToLowerInvariant()))
+                    Environment.SetEnvironmentVariable("path", slPath + ";" + path);
+            }
+            catch
+            {
+                SpatiaLitePath = "";
+            }
+
+            if (!System.IO.File.Exists(System.IO.Path.Combine(SpatiaLitePath, SpatiaLiteNativeDll)))
+                throw new System.IO.FileNotFoundException("SpatiaLite binaries not found under given path and filename");
+        }
+
+        /// <summary>
+        /// Function to provide an SqLiteConnection with SpatiaLite extension loaded.
+        /// </summary>
+        /// <param name="connectionString">Connection string to connect to SQLite database file.</param>
+        /// <returns>Opened <see cref="SQLiteConnection"/></returns>
+        private static SQLiteConnection SpatiaLiteConnection(String connectionString)
+        {
+            try
+            {
+                SQLiteConnection cn = new SQLiteConnection(connectionString);
+                cn.Open();
+                SQLiteCommand cm = new SQLiteCommand(String.Format("SELECT load_extension('{0}');", SpatiaLiteNativeDll), cn);
+                cm.ExecuteNonQuery();
+                //if ((Int32)cm.ExecuteScalar() != 0)
+                //    throw new Exception();
+                return cn;
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+
+        }
+
+        /// <summary>
+        /// Creates an instance of SpatiaLite provider
+        /// </summary>
+        /// <param name="connectionStr">Connection String to SQLite database file 
+        /// ("http://www.connectionstrings.com/sqlite")</param>
+        /// <param name="tablename">Name of the table with geometry information</param>
+        /// <param name="geometryColumnName">Name of the desired geometry column</param>
+        /// <param name="oidColumnName">Name of the object Id column</param>
+        public SpatiaLite(string connectionStr, string tablename, string geometryColumnName, string oidColumnName)
+        {
+            ConnectionString = connectionStr;
+            Table = tablename;
+            GeometryColumn = geometryColumnName; //Name of column to store geometry
+            ObjectIdColumn = oidColumnName; //Name of object ID column
+
+            try
+            {
+
+                using (SQLiteConnection cn = new SQLiteConnection(connectionStr))
+                {
+                    cn.Open();
+                    SQLiteCommand cm = new SQLiteCommand(
+                        String.Format(
+                            "SELECT srid FROM geometry_columns WHERE(f_table_name='{0}' AND f_geometry_column='{1}');",
+                            tablename, geometryColumnName), cn);
+                    _srid = Convert.ToInt32(cm.ExecuteScalar());
+                }
+            }
+            catch (Exception)
+            {
+                _srid = -1;
+            }
+        }
+
+        /// <summary>
+        /// Connectionstring
+        /// </summary>
+        public string ConnectionString
+        {
+            get { return _connectionString; }
+            set { _connectionString = value; }
+        }
+
+        /// <summary>
+        /// Data table name
+        /// </summary>
+        public string Table
+        {
+            get { return _table; }
+            set { _table = value; }
+        }
+
+        /// <summary>
+        /// Name of geometry column
+        /// </summary>
+        public string GeometryColumn
+        {
+            get { return _geometryColumn; }
+            set { _geometryColumn = value; }
+        }
+
+        /// <summary>
+        /// Name of column that contains the Object ID
+        /// </summary>
+        public string ObjectIdColumn
+        {
+            get { return _objectIdColumn; }
+            set { _objectIdColumn = value; }
+        }
+
+        /// <summary>
+        /// Name of the spatial index table
+        /// </summary>
+        public string SpatialIndex
+        {
+            get { return _spatialIndex; }
+            set { _spatialIndex = value; }
+        }
+
+        /// <summary>
+        /// Definition query used for limiting dataset
+        /// </summary>
+        public string DefinitionQuery
+        {
+            get { return _defintionQuery; }
+            set { _defintionQuery = value; }
         }
 
         #region IProvider Members
 
-        public System.Collections.ObjectModel.Collection<SharpMap.Geometries.Geometry> GetGeometriesInView(SharpMap.Geometries.BoundingBox bbox)
+        public Collection<Geometry> GetGeometriesInView(BoundingBox bbox)
         {
-            Collection<Geometries.Geometry> features = new Collection<SharpMap.Geometries.Geometry>();
-            using (SQLiteConnection conn = new SQLiteConnection(_ConnectionString))
+            Collection<Geometry> features = new Collection<Geometry>();
+            using (SQLiteConnection conn = SpatiaLiteConnection(_connectionString))
             {
-                //conn.Open();
-                //Object retVal = new SQLiteCommand("SELECT load_extension('libspatialite-2.dll');", conn).ExecuteScalar();
-                string BoxIntersect = GetBoxClause(bbox);
+                string boxIntersect = GetBoxClause(bbox);
 
-                string strSQL = "SELECT AsBinary(" + this.GeometryColumn + ") AS Geom ";
-                strSQL += "FROM " + this.Table + " WHERE ";
-                strSQL += BoxIntersect;
+                string strSQL = "SELECT AsBinary(" + GeometryColumn + ") AS Geom ";
+                strSQL += "FROM " + Table + " WHERE ";
+                strSQL += boxIntersect;
                 if (!String.IsNullOrEmpty(_defintionQuery))
-                    strSQL += " AND " + this.DefinitionQuery;
+                    strSQL += " AND " + DefinitionQuery;
 
                 using (SQLiteCommand command = new SQLiteCommand(strSQL, conn))
                 {
-                    conn.Open();
-                    Object retVal = new SQLiteCommand("SELECT load_extension('libspatialite-2.dll');", conn).ExecuteScalar();
                     using (SQLiteDataReader dr = command.ExecuteReader())
                     {
                         while (dr.Read())
                         {
                             if (dr[0] != DBNull.Value)
                             {
-                                SharpMap.Geometries.Geometry geom = SharpMap.Converters.WellKnownBinary.GeometryFromWKB.Parse((byte[])dr[0]);
+                                Geometry geom = GeometryFromWKB.Parse((byte[]) dr[0]);
                                 if (geom != null)
                                     features.Add(geom);
                             }
@@ -79,31 +238,29 @@ namespace SharpMap.Data.Providers
             return features;
         }
 
-        public System.Collections.ObjectModel.Collection<uint> GetObjectIDsInView(SharpMap.Geometries.BoundingBox bbox)
+        public Collection<uint> GetObjectIDsInView(BoundingBox bbox)
         {
             Collection<uint> objectlist = new Collection<uint>();
-            using (SQLiteConnection conn = new SQLiteConnection(_ConnectionString))
+            using (SQLiteConnection conn = SpatiaLiteConnection(_connectionString))
             {
-                string strSQL = "SELECT " + this.ObjectIdColumn + " ";
-                strSQL += "FROM " + this.Table + " WHERE ";
+                string strSQL = "SELECT " + ObjectIdColumn + " ";
+                strSQL += "FROM " + Table + " WHERE ";
 
                 strSQL += GetBoxClause(bbox);
 
                 if (!String.IsNullOrEmpty(_defintionQuery))
-                    strSQL += " AND " + this.DefinitionQuery + " AND ";
+                    strSQL += " AND " + DefinitionQuery + " AND ";
 
                 using (SQLiteCommand command = new SQLiteCommand(strSQL, conn))
                 {
-                    conn.Open();
-                    Object retVal = new SQLiteCommand("SELECT load_extension('libspatialite-2.dll');", conn).ExecuteScalar();
                     using (SQLiteDataReader dr = command.ExecuteReader())
                     {
                         while (dr.Read())
                         {
                             if (dr[0] != DBNull.Value)
                             {
-                                uint ID = Convert.ToUInt32(dr[0]);
-                                objectlist.Add(ID);
+                                uint id = Convert.ToUInt32(dr[0]);
+                                objectlist.Add(id);
                             }
                         }
                     }
@@ -113,15 +270,13 @@ namespace SharpMap.Data.Providers
             return objectlist;
         }
 
-        public SharpMap.Geometries.Geometry GetGeometryByID(uint oid)
+        public Geometry GetGeometryByID(uint oid)
         {
-            SharpMap.Geometries.Geometry geom = null;
-            using (SQLiteConnection conn = new SQLiteConnection(_ConnectionString))
+            Geometry geom = null;
+            using (SQLiteConnection conn = SpatiaLiteConnection(_connectionString))
             {
-
-                string strSQL = "SELECT AsBinary(" + this.GeometryColumn + ") AS Geom FROM " + this.Table + " WHERE " + this.ObjectIdColumn + "='" + oid.ToString() + "'";
-                conn.Open();
-                Object retVal = new SQLiteCommand("SELECT load_extension('libspatialite-2.dll');", conn).ExecuteScalar();
+                string strSQL = "SELECT AsBinary(" + GeometryColumn + ") AS Geom FROM " + Table + " WHERE " +
+                                ObjectIdColumn + "='" + oid + "'";
                 using (SQLiteCommand command = new SQLiteCommand(strSQL, conn))
                 {
                     using (SQLiteDataReader dr = command.ExecuteReader())
@@ -130,8 +285,7 @@ namespace SharpMap.Data.Providers
                         {
                             if (dr[0] != DBNull.Value)
                             {
-                                //byte[] b = dr[0] as byte[];
-                                geom = SharpMap.Converters.WellKnownBinary.GeometryFromWKB.Parse((byte[])dr[0]);
+                                geom = GeometryFromWKB.Parse((byte[]) dr[0]);
                             }
                         }
                     }
@@ -141,39 +295,38 @@ namespace SharpMap.Data.Providers
             return geom;
         }
 
-        public void ExecuteIntersectionQuery(SharpMap.Geometries.Geometry geom, FeatureDataSet ds)
+        public void ExecuteIntersectionQuery(Geometry geom, FeatureDataSet ds)
         {
-            using (SQLiteConnection conn = new SQLiteConnection(_ConnectionString))
+            using (SQLiteConnection conn = SpatiaLiteConnection(_connectionString))
             {
-
-                string strSQL = "SELECT *, AsBinary(" + this.GeometryColumn + ") AS sharpmap_tempgeometry ";
-                strSQL += "FROM " + this.Table + " WHERE ";
+                string strSQL = "SELECT *, AsBinary(" + GeometryColumn + ") AS sharpmap_tempgeometry ";
+                strSQL += "FROM " + Table + " WHERE ";
                 strSQL += GetOverlapsClause(geom);
 
                 if (!String.IsNullOrEmpty(_defintionQuery))
-                    strSQL += " AND " + this.DefinitionQuery;
+                    strSQL += " AND " + DefinitionQuery;
 
                 using (SQLiteDataAdapter adapter = new SQLiteDataAdapter(strSQL, conn))
                 {
-                    conn.Open();
-                    Object retVal = new SQLiteCommand("SELECT load_extension('libspatialite-2.dll');", conn).ExecuteScalar();
-                    System.Data.DataSet ds2 = new System.Data.DataSet();
+                    DataSet ds2 = new DataSet();
                     adapter.Fill(ds2);
                     conn.Close();
                     if (ds2.Tables.Count > 0)
                     {
                         FeatureDataTable fdt = new FeatureDataTable(ds2.Tables[0]);
-                        foreach (System.Data.DataColumn col in ds2.Tables[0].Columns)
-                            if (col.ColumnName != this.GeometryColumn && col.ColumnName != "sharpmap_tempgeometry" && !col.ColumnName.StartsWith("Envelope_"))
+                        foreach (DataColumn col in ds2.Tables[0].Columns)
+                            if (col.ColumnName != GeometryColumn && col.ColumnName != "sharpmap_tempgeometry" &&
+                                !col.ColumnName.StartsWith("Envelope_"))
                                 fdt.Columns.Add(col.ColumnName, col.DataType, col.Expression);
-                        foreach (System.Data.DataRow dr in ds2.Tables[0].Rows)
+                        foreach (DataRow dr in ds2.Tables[0].Rows)
                         {
-                            SharpMap.Data.FeatureDataRow fdr = fdt.NewRow();
-                            foreach (System.Data.DataColumn col in ds2.Tables[0].Columns)
-                                if (col.ColumnName != this.GeometryColumn && col.ColumnName != "sharpmap_tempgeometry" && !col.ColumnName.StartsWith("Envelope_"))
+                            FeatureDataRow fdr = fdt.NewRow();
+                            foreach (DataColumn col in ds2.Tables[0].Columns)
+                                if (col.ColumnName != GeometryColumn && col.ColumnName != "sharpmap_tempgeometry" &&
+                                    !col.ColumnName.StartsWith("Envelope_"))
                                     fdr[col.ColumnName] = dr[col];
                             if (dr["sharpmap_tempgeometry"] != DBNull.Value)
-                                fdr.Geometry = SharpMap.Converters.WellKnownBinary.GeometryFromWKB.Parse((byte[])dr["sharpmap_tempgeometry"]);
+                                fdr.Geometry = GeometryFromWKB.Parse((byte[]) dr["sharpmap_tempgeometry"]);
                             fdt.AddRow(fdr);
                         }
                         ds.Tables.Add(fdt);
@@ -181,39 +334,39 @@ namespace SharpMap.Data.Providers
                 }
             }
         }
-        public void ExecuteIntersectionQuery(SharpMap.Geometries.BoundingBox box, FeatureDataSet ds)
-        {
-            using (SQLiteConnection conn = new SQLiteConnection(_ConnectionString))
-            {
 
-                string strSQL = "SELECT *, AsBinary(" + this.GeometryColumn + ") AS sharpmap_tempgeometry ";
-                strSQL += "FROM " + this.Table + " WHERE ";
+        public void ExecuteIntersectionQuery(BoundingBox box, FeatureDataSet ds)
+        {
+            using (SQLiteConnection conn = SpatiaLiteConnection(_connectionString))
+            {
+                string strSQL = "SELECT *, AsBinary(" + GeometryColumn + ") AS sharpmap_tempgeometry ";
+                strSQL += "FROM " + Table + " WHERE ";
                 strSQL += GetBoxClause(box);
 
                 if (!String.IsNullOrEmpty(_defintionQuery))
-                    strSQL += " AND " + this.DefinitionQuery;
+                    strSQL += " AND " + DefinitionQuery;
 
                 using (SQLiteDataAdapter adapter = new SQLiteDataAdapter(strSQL, conn))
                 {
-                    conn.Open();
-                    Object retVal = new SQLiteCommand("SELECT load_extension('libspatialite-2.dll');", conn).ExecuteScalar();
-                    System.Data.DataSet ds2 = new System.Data.DataSet();
+                    DataSet ds2 = new DataSet();
                     adapter.Fill(ds2);
                     conn.Close();
                     if (ds2.Tables.Count > 0)
                     {
                         FeatureDataTable fdt = new FeatureDataTable(ds2.Tables[0]);
-                        foreach (System.Data.DataColumn col in ds2.Tables[0].Columns)
-                            if (col.ColumnName != this.GeometryColumn && col.ColumnName != "sharpmap_tempgeometry" && !col.ColumnName.StartsWith("Envelope_"))
+                        foreach (DataColumn col in ds2.Tables[0].Columns)
+                            if (col.ColumnName != GeometryColumn && col.ColumnName != "sharpmap_tempgeometry" &&
+                                !col.ColumnName.StartsWith("Envelope_"))
                                 fdt.Columns.Add(col.ColumnName, col.DataType, col.Expression);
-                        foreach (System.Data.DataRow dr in ds2.Tables[0].Rows)
+                        foreach (DataRow dr in ds2.Tables[0].Rows)
                         {
-                            SharpMap.Data.FeatureDataRow fdr = fdt.NewRow();
-                            foreach (System.Data.DataColumn col in ds2.Tables[0].Columns)
-                                if (col.ColumnName != this.GeometryColumn && col.ColumnName != "sharpmap_tempgeometry" && !col.ColumnName.StartsWith("Envelope_"))
+                            FeatureDataRow fdr = fdt.NewRow();
+                            foreach (DataColumn col in ds2.Tables[0].Columns)
+                                if (col.ColumnName != GeometryColumn && col.ColumnName != "sharpmap_tempgeometry" &&
+                                    !col.ColumnName.StartsWith("Envelope_"))
                                     fdr[col.ColumnName] = dr[col];
                             if (dr["sharpmap_tempgeometry"] != DBNull.Value)
-                                fdr.Geometry = SharpMap.Converters.WellKnownBinary.GeometryFromWKB.Parse((byte[])dr["sharpmap_tempgeometry"]);
+                                fdr.Geometry = GeometryFromWKB.Parse((byte[]) dr["sharpmap_tempgeometry"]);
                             fdt.AddRow(fdr);
                         }
                         ds.Tables.Add(fdt);
@@ -224,13 +377,12 @@ namespace SharpMap.Data.Providers
 
         public int GetFeatureCount()
         {
-            int count = 0;
-            using (SQLiteConnection conn = new SQLiteConnection(_ConnectionString))
+            int count;
+            using (SQLiteConnection conn = new SQLiteConnection(_connectionString))
             {
-
-                string strSQL = "SELECT COUNT(*) as numrecs FROM " + this.Table;
+                string strSQL = "SELECT COUNT(*) as numrecs FROM " + Table;
                 if (!String.IsNullOrEmpty(_defintionQuery))
-                    strSQL += " WHERE " + this.DefinitionQuery;
+                    strSQL += " WHERE " + DefinitionQuery;
                 using (SQLiteCommand command = new SQLiteCommand(strSQL, conn))
                 {
                     conn.Open();
@@ -249,65 +401,62 @@ namespace SharpMap.Data.Providers
             return count;
         }
 
-        public FeatureDataRow GetFeature(uint RowID)
+        public FeatureDataRow GetFeature(uint rowId)
         {
-            using (SQLiteConnection conn = new SQLiteConnection(_ConnectionString))
+            using (SQLiteConnection conn = SpatiaLiteConnection(_connectionString))
             {
-
-                string strSQL = "SELECT *, AsBinary(" + this.GeometryColumn + ") AS sharpmap_tempgeometry FROM " + this.Table + " WHERE " + this.ObjectIdColumn + "='" + RowID.ToString() + "'";
+                string strSQL = "SELECT *, AsBinary(" + GeometryColumn + ") AS sharpmap_tempgeometry FROM " + Table +
+                                " WHERE " + ObjectIdColumn + "='" + rowId + "'";
                 using (SQLiteDataAdapter adapter = new SQLiteDataAdapter(strSQL, conn))
                 {
                     DataSet ds = new DataSet();
-                    conn.Open();
-                    Object retVal = new SQLiteCommand("SELECT load_extension('libspatialite-2.dll');", conn).ExecuteScalar();
                     adapter.Fill(ds);
                     conn.Close();
                     if (ds.Tables.Count > 0)
                     {
                         FeatureDataTable fdt = new FeatureDataTable(ds.Tables[0]);
-                        foreach (System.Data.DataColumn col in ds.Tables[0].Columns)
-                            if (col.ColumnName != this.GeometryColumn && col.ColumnName != "sharpmap_tempgeometry" && !col.ColumnName.StartsWith("Envelope_"))
+                        foreach (DataColumn col in ds.Tables[0].Columns)
+                            if (col.ColumnName != GeometryColumn && col.ColumnName != "sharpmap_tempgeometry" &&
+                                !col.ColumnName.StartsWith("Envelope_"))
                                 fdt.Columns.Add(col.ColumnName, col.DataType, col.Expression);
                         if (ds.Tables[0].Rows.Count > 0)
                         {
-                            System.Data.DataRow dr = ds.Tables[0].Rows[0];
-                            SharpMap.Data.FeatureDataRow fdr = fdt.NewRow();
-                            foreach (System.Data.DataColumn col in ds.Tables[0].Columns)
-                                if (col.ColumnName != this.GeometryColumn && col.ColumnName != "sharpmap_tempgeometry" && !col.ColumnName.StartsWith("Envelope_"))
+                            DataRow dr = ds.Tables[0].Rows[0];
+                            FeatureDataRow fdr = fdt.NewRow();
+                            foreach (DataColumn col in ds.Tables[0].Columns)
+                                if (col.ColumnName != GeometryColumn && col.ColumnName != "sharpmap_tempgeometry" &&
+                                    !col.ColumnName.StartsWith("Envelope_"))
                                     fdr[col.ColumnName] = dr[col];
                             if (dr["sharpmap_tempgeometry"] != DBNull.Value)
-                                fdr.Geometry = SharpMap.Converters.WellKnownBinary.GeometryFromWKB.Parse((byte[])dr["sharpmap_tempgeometry"]);
+                                fdr.Geometry = GeometryFromWKB.Parse((byte[]) dr["sharpmap_tempgeometry"]);
                             return fdr;
                         }
-                        else
-                            return null;
-
-                    }
-                    else
                         return null;
+                    }
+                    return null;
                 }
             }
         }
 
-        public SharpMap.Geometries.BoundingBox GetExtents()
+        public BoundingBox GetExtents()
         {
-            //TODO: Update GetExtents
-            SharpMap.Geometries.BoundingBox box = null;
-            using (SQLiteConnection conn = new SQLiteConnection(_ConnectionString))
+            BoundingBox box = null;
+            using (SQLiteConnection conn = SpatiaLiteConnection(_connectionString))
             {
-
                 //string strSQL = "SELECT Min(minx) AS MinX, Min(miny) AS MinY, Max(maxx) AS MaxX, Max(maxy) AS MaxY FROM " + this.Table;
-                string strSQL = string.Format("SELECT max(MbrMaxY({0})) as maxy, max(MbrMaxX({0})) as maxx, min(MbrMinY({0})) as miny, min(MbrMinX({0})) as minx from {1};", _GeometryColumn, _Table);
+                string strSQL =
+                    string.Format(
+                        "SELECT max(MbrMaxY({0})) as maxy, max(MbrMaxX({0})) as maxx, min(MbrMinY({0})) as miny, min(MbrMinX({0})) as minx from {1};",
+                        _geometryColumn, _table);
                 if (!String.IsNullOrEmpty(_defintionQuery))
-                    strSQL += " WHERE " + this.DefinitionQuery;
+                    strSQL += " WHERE " + DefinitionQuery;
                 using (SQLiteCommand command = new SQLiteCommand(strSQL, conn))
                 {
-                    conn.Open();
-                    Object retVal = new SQLiteCommand("SELECT load_extension('libspatialite-2.dll');", conn).ExecuteScalar();
                     using (SQLiteDataReader dr = command.ExecuteReader())
                         if (dr.Read())
                         {
-                            box = new SharpMap.Geometries.BoundingBox((double)dr["minx"], (double)dr["miny"], (double)dr["maxx"], (double)dr["maxy"]);
+                            box = new BoundingBox((double) dr["minx"], (double) dr["miny"], (double) dr["maxx"],
+                                                  (double) dr["maxy"]);
                         }
                     conn.Close();
                 }
@@ -317,17 +466,15 @@ namespace SharpMap.Data.Providers
 
         public string ConnectionID
         {
-            get { return _ConnectionString; }
+            get { return _connectionString; }
         }
-
-        private bool _IsOpen;
 
         /// <summary>
         /// Returns true if the datasource is currently open
         /// </summary>
         public bool IsOpen
         {
-            get { return _IsOpen; }
+            get { return _isOpen; }
         }
 
         /// <summary>
@@ -336,18 +483,17 @@ namespace SharpMap.Data.Providers
         public void Open()
         {
             //Don't really do anything. mssql's ConnectionPooling takes over here
-            _IsOpen = true;
+            _isOpen = true;
         }
+
         /// <summary>
         /// Closes the datasource
         /// </summary>
         public void Close()
         {
             //Don't really do anything. mssql's ConnectionPooling takes over here
-            _IsOpen = false;
+            _isOpen = false;
         }
-
-        private int _srid = -2;
 
         /// <summary>
         /// Spatial Reference ID
@@ -355,18 +501,18 @@ namespace SharpMap.Data.Providers
         public int SRID
         {
             get { return _srid; }
-            set { _srid = value; }
+            set
+            {
+                System.Diagnostics.Debug.WriteLine("SRID property is read from geometry_columns");
+            }
         }
-
-        #endregion
-
-        #region IDisposable Members
 
         public void Dispose()
         {
-            this.Dispose();
             GC.SuppressFinalize(this);
         }
+
+        #endregion
 
         //internal void Dispose(bool disposing)
         //{
@@ -379,65 +525,8 @@ namespace SharpMap.Data.Providers
         //        disposed = true;
         //    }
         //}
-        #endregion
 
-        #region Native Members
-
-        private string _ConnectionString;
-
-        /// <summary>
-        /// Connectionstring
-        /// </summary>
-        public string ConnectionString
-        {
-            get { return _ConnectionString; }
-            set { _ConnectionString = value; }
-        }
-
-        private string _Table;
-
-        /// <summary>
-        /// Data table name
-        /// </summary>
-        public string Table
-        {
-            get { return _Table; }
-            set { _Table = value; }
-        }
-
-        private string _GeometryColumn;
-
-        /// <summary>
-        /// Name of geometry column
-        /// </summary>
-        public string GeometryColumn
-        {
-            get { return _GeometryColumn; }
-            set { _GeometryColumn = value; }
-        }
-
-        private string _ObjectIdColumn;
-
-        /// <summary>
-        /// Name of column that contains the Object ID
-        /// </summary>
-        public string ObjectIdColumn
-        {
-            get { return _ObjectIdColumn; }
-            set { _ObjectIdColumn = value; }
-        }
-        private string _SpatialIndex;
-
-        /// <summary>
-        /// Name of the spatial index table
-        /// </summary>
-        public string SpatialIndex
-        {
-            get { return _SpatialIndex; }
-            set { _SpatialIndex = value; }
-        }
-
-        private string GetBoxClause(SharpMap.Geometries.BoundingBox bbox)
+        private string GetBoxClause(BoundingBox bbox)
         {
             if (!string.IsNullOrEmpty(SpatialIndex))
             {
@@ -445,48 +534,28 @@ namespace SharpMap.Data.Providers
                 sql.Append("SELECT pkid FROM ");
                 sql.Append(SpatialIndex);
                 sql.Append(" WHERE ");
-                sql.AppendFormat(SharpMap.Map.NumberFormatEnUs,
-                "xmin < {0} AND xmax > {1} AND ymin < {2} AND ymax > {3} )",
-                 bbox.Max.X, bbox.Min.X, bbox.Max.Y, bbox.Min.Y);
+                sql.AppendFormat(Map.NumberFormatEnUs,
+                                 "xmin < {0} AND xmax > {1} AND ymin < {2} AND ymax > {3} )",
+                                 bbox.Max.X, bbox.Min.X, bbox.Max.Y, bbox.Min.Y);
 
                 return sql.ToString();
             }
 
-            string wkt = SharpMap.Converters.WellKnownText.GeometryToWKT.Write(LineFromBbox(bbox));
-            return "MBRIntersects(GeomFromText('" + wkt + "')," + _GeometryColumn + ")=1";
+            string wkt = GeometryToWKT.Write(LineFromBbox(bbox));
+            return "MBRIntersects(GeomFromText('" + wkt + "')," + _geometryColumn + ")=1";
         }
 
-        private SharpMap.Geometries.IGeometry LineFromBbox(SharpMap.Geometries.BoundingBox bbox)
+        private static IGeometry LineFromBbox(BoundingBox bbox)
         {
-            Collection<SharpMap.Geometries.Point> PointColl = new Collection<SharpMap.Geometries.Point>();
-            PointColl.Add(bbox.Min);
-            PointColl.Add(bbox.Max);
-
-            return (SharpMap.Geometries.IGeometry)new SharpMap.Geometries.LineString(PointColl);
+            Collection<Point> pointColl = new Collection<Point> {bbox.Min, bbox.Max};
+            return new LineString(pointColl);
         }
 
-        public string GetOverlapsClause(SharpMap.Geometries.Geometry geom)
+        public string GetOverlapsClause(Geometry geom)
         {
-            string wkt = SharpMap.Converters.WellKnownText.GeometryToWKT.Write((SharpMap.Geometries.IGeometry)geom);
-            string retval = "Intersects(GeomFromText('" + wkt + "')," + _GeometryColumn + ")=1";
+            string wkt = GeometryToWKT.Write(geom);
+            string retval = "Intersects(GeomFromText('" + wkt + "')," + _geometryColumn + ")=1";
             return retval;
-            //return String.Format(SharpMap.Map.numberFormat_EnUS,
-            //    "(minx < {0} AND maxx > {1} AND miny < {2} AND maxy > {3})",
-            //    bbox.Max.X, bbox.Min.X, bbox.Max.Y, bbox.Min.Y);
         }
-
-        private string _defintionQuery;
-
-        /// <summary>
-        /// Definition query used for limiting dataset
-        /// </summary>
-        public string DefinitionQuery
-        {
-            get { return _defintionQuery; }
-            set { _defintionQuery = value; }
-        }
-
-        #endregion
-
     }
 }

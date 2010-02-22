@@ -80,6 +80,9 @@
     <Compile Include="Samples\GdalSample.cs" />
     <Compile Include="Samples\GradiantThemeSample.cs" />
     <Compile Include="Samples\OracleSample.cs" />
+    <None Include="GeoData\SpatiaLite\sample.sqlite">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <Compile Include="Samples\SpatiaLiteSample.cs" />
     <Compile Include="Samples\OgrSample.cs" />
     <Compile Include="Program.cs" />
