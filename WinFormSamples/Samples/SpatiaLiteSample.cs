@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace WinFormSamples.Samples
 {
@@ -35,15 +33,22 @@ namespace WinFormSamples.Samples
             //Set the datasource to a shapefile in the App_data folder
             layRivers.DataSource = new SharpMap.Data.Providers.SpatiaLite(
                 DataSource, "rivers", "geom", "PK_UID");
-            //Define a blue 1px wide pen
-            layRivers.Style.Line = new System.Drawing.Pen(System.Drawing.Color.Blue, 2);
-            layRivers.Style.Line.CompoundArray = new float[] {0.0f, 0.2f,0.8f,1.0f};
+            //Define a blue 3px wide pen
+            layRivers.Style.Line = new System.Drawing.Pen(System.Drawing.Color.DarkBlue, 3);
+
+            SharpMap.Layers.VectorLayer layRivers2 = new SharpMap.Layers.VectorLayer("Rivers2");
+            //Set the datasource to a shapefile in the App_data folder
+            layRivers2.DataSource = new SharpMap.Data.Providers.SpatiaLite(
+                DataSource, "rivers", "geom", "PK_UID");
+            //Define a blue 2px wide pen
+            layRivers2.Style.Line = new System.Drawing.Pen(System.Drawing.Color.LightBlue, 2);
+            layRivers2.Style.Line.CompoundArray = new float[] {0.2f, 0.8f};
 
             //Set up a cities layer
             SharpMap.Layers.VectorLayer layCities = new SharpMap.Layers.VectorLayer("Cities");
             //Set the datasource to a shapefile in the App_data folder
             layCities.DataSource = new SharpMap.Data.Providers.SpatiaLite(
-                DataSource, "cities", "geom","PK_UID");
+                DataSource, "cities", "geom", "PK_UID");
             layCities.Style.SymbolScale = 0.8f;
             layCities.MaxVisible = 40;
 
@@ -100,6 +105,7 @@ namespace WinFormSamples.Samples
             //The order we add them in are the order they are drawn, so we add the rivers last to put them on top
             map.Layers.Add(layCountries);
             map.Layers.Add(layRivers);
+            map.Layers.Add(layRivers2);
             map.Layers.Add(layCities);
             map.Layers.Add(layLabel);
             map.Layers.Add(layCityLabel);
