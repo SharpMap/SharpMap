@@ -28,6 +28,25 @@ using SharpMap.Geometries;
 namespace SharpMap.Data.Providers
 {
     /// <summary>
+    /// Defines possible spatial indices
+    /// </summary>
+    public enum SpatiaLiteIndex
+    {
+        /// <summary>
+        /// No spatial index defined
+        /// </summary>
+        None = 0,
+        /// <summary>
+        /// RTree
+        /// </summary>
+        RTree = 1,
+        /// <summary>
+        /// Cache of minimum bounding rectangles (MBR)
+        /// </summary>
+        MbrCache = 2
+    }
+
+    /// <summary>
     /// SpatiaLite Provider for SharpMap
     /// <para>
     /// Spatialite is a spatial extension for the popular SQLite database engine.
@@ -48,9 +67,13 @@ namespace SharpMap.Data.Providers
         private string _geometryColumn;
         private bool _isOpen;
         private string _objectIdColumn;
-        private string _spatialIndex;
+        //private string _spatialIndex;
+        private readonly string _spatiaLiteIndexClause;
+        private readonly SpatiaLiteIndex _spatiaLiteIndex;
         private readonly int _srid = -2;
         private string _table;
+
+        private Boolean _useSpatialIndex = false;
 
         private static readonly string SpatiaLitePath;
         private static readonly string SpatiaLiteNativeDll = "libspatialite-2.dll";
@@ -138,14 +161,40 @@ namespace SharpMap.Data.Providers
                     cn.Open();
                     SQLiteCommand cm = new SQLiteCommand(
                         String.Format(
-                            "SELECT srid FROM geometry_columns WHERE(f_table_name='{0}' AND f_geometry_column='{1}');",
+                            "SELECT srid, spatial_index_enabled FROM geometry_columns WHERE(f_table_name='{0}' AND f_geometry_column='{1}');",
                             tablename, geometryColumnName), cn);
-                    _srid = Convert.ToInt32(cm.ExecuteScalar());
+                    SQLiteDataReader dr = cm.ExecuteReader();
+                    if (dr.HasRows)
+                    {
+                        dr.Read();
+                        _srid = dr.GetInt32(0);
+
+                        switch (dr.GetInt32(1))
+                        {
+                            case 1: //RTree
+                                String indexName = string.Format(@"idx_{0}_{1}", tablename, geometryColumnName);
+                                String whereClause = @"xmin < {0} AND xmax > {1} AND ymin < {2} AND ymax > {3}";
+                                _spatiaLiteIndexClause = string.Format(@"ROWID IN (SELECT pkid FROM {0} WHERE {1})", indexName, whereClause);
+                                _spatiaLiteIndex = SpatiaLiteIndex.RTree;
+                                _useSpatialIndex = true;
+                                break;
+                            case 2: //MBRCache
+                                indexName = string.Format(@"cache_{0}_{1}", tablename, geometryColumnName);
+                                whereClause = "mbr=FilterMbrIntersects({1}, {3}, {0}, {2})";
+                                _spatiaLiteIndexClause = string.Format(@"ROWID IN (SELECT ROWID FROM {0} WHERE {1})", indexName, whereClause);
+                                _spatiaLiteIndex = SpatiaLiteIndex.MbrCache;
+                                _useSpatialIndex = true;
+                                break;
+                        }
+                    }
+                    dr.Close();
                 }
             }
             catch (Exception)
             {
                 _srid = -1;
+                _spatiaLiteIndex = SpatiaLiteIndex.None;
+                _useSpatialIndex = false;
             }
         }
 
@@ -185,13 +234,30 @@ namespace SharpMap.Data.Providers
             set { _objectIdColumn = value; }
         }
 
+        public bool UseSpatiaLiteIndex
+        {
+            get { return _useSpatialIndex && _spatiaLiteIndex != SpatiaLiteIndex.None; }
+            set 
+            {
+                if (_spatiaLiteIndex != SpatiaLiteIndex.None)
+                    _useSpatialIndex = value;
+            }
+        }
+
         /// <summary>
-        /// Name of the spatial index table
+        /// Name of the spatial index
         /// </summary>
         public string SpatialIndex
         {
-            get { return _spatialIndex; }
-            set { _spatialIndex = value; }
+            get
+            {
+                return _spatiaLiteIndex.ToString();
+            }
+            set 
+            { 
+                System.Diagnostics.Debug.WriteLine("SpatialIndex is obsolete, use UseSpatiaLiteIndex property");
+                //_spatialIndex = value;
+            }
         }
 
         /// <summary>
@@ -528,8 +594,10 @@ namespace SharpMap.Data.Providers
 
         private string GetBoxClause(BoundingBox bbox)
         {
-            if (!string.IsNullOrEmpty(SpatialIndex))
+            if (UseSpatiaLiteIndex)
             {
+                return string.Format(Map.NumberFormatEnUs, _spatiaLiteIndexClause, bbox.Max.X, bbox.Min.X, bbox.Max.Y, bbox.Min.Y);
+                /*
                 StringBuilder sql = new StringBuilder("ROWID IN ( ");
                 sql.Append("SELECT pkid FROM ");
                 sql.Append(SpatialIndex);
@@ -539,6 +607,7 @@ namespace SharpMap.Data.Providers
                                  bbox.Max.X, bbox.Min.X, bbox.Max.Y, bbox.Min.Y);
 
                 return sql.ToString();
+                */
             }
 
             string wkt = GeometryToWKT.Write(LineFromBbox(bbox));
