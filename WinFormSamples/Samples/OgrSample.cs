@@ -13,7 +13,73 @@ namespace WinFormSamples.Samples
 {
     public static class OgrSample
     {
+        private static int _num = 0;
+        private static String _ogrSampleDataset;
+        public static String OgrSampleDataSet
+        {
+            get { return _ogrSampleDataset; }
+        }
+
         public static Map InitializeMap()
+        {
+            switch (_num++ % 2)
+            {
+                case 0:
+                    return InitializeMapinfo();
+                case 1:
+                    return InitializeS57();
+            }
+            return InitializeMapinfo();
+        }
+
+        private static Map InitializeS57()
+        {
+            //Initialize a new map of size 'imagesize'
+            Map map = new Map();
+
+            //Set the datasource to a shapefile in the App_data folder
+            Ogr provider;
+            try
+            {
+                provider = new Ogr("GeoData/S57/US5TX51M.000");
+            }
+            catch (TypeInitializationException ex)
+            {
+                if (ex.Message == "The type initializer for 'OSGeo.OGR.Ogr' threw an exception.")
+                {
+                    throw new Exception(
+                        String.Format(
+                            "The application threw a PINVOKE exception. You probably need to copy the unmanaged dll's to your bin directory. They are a part of fwtools {0}. You can download it from: http://home.gdal.org/fwtools/",
+                            GdalRasterLayer.FWToolsVersion));
+                }
+                throw;
+            }
+
+            VectorLayer lay;
+            Random rnd = new Random(9);
+            for(Int32 i = provider.NumberOfLayers - 1; i >=0 ; i--)
+            {
+                String name;
+                Ogr prov = new Ogr("GeoData/S57/US5TX51M.000", i, out name);
+                if (!prov.IsFeatureDataLayer) continue;
+                System.Diagnostics.Debug.WriteLine(string.Format("Layer {0}: {1}", i, name));
+                //if (provider.GeometryType )
+                lay = new VectorLayer(string.Format("Layer_{0}",name), prov);
+                if (prov.OgrGeometryTypeString.IndexOf("Polygon") > 0)
+                {
+                    lay.Style.Fill = new SolidBrush(Color.FromArgb(150, Convert.ToInt32(rnd.NextDouble() * 255), Convert.ToInt32(rnd.NextDouble() * 255), Convert.ToInt32(rnd.NextDouble() * 255)));
+                    lay.Style.Outline = new Pen(Color.FromArgb(150, Convert.ToInt32(rnd.NextDouble() * 255), Convert.ToInt32(rnd.NextDouble() * 255), Convert.ToInt32(rnd.NextDouble() * 255)), Convert.ToInt32(rnd.NextDouble()*3));
+                    lay.Style.EnableOutline = true;
+                }
+                lay.Style.Line = new Pen(Color.FromArgb(150, Convert.ToInt32(rnd.NextDouble() * 255), Convert.ToInt32(rnd.NextDouble() * 255), Convert.ToInt32(rnd.NextDouble() * 255)), Convert.ToInt32(rnd.NextDouble() * 3));
+                map.Layers.Add(lay);
+            }
+            _ogrSampleDataset = "S-57";
+            map.ZoomToExtents();
+            return map;
+        }
+
+        private static Map InitializeMapinfo()
         {
             //Initialize a new map of size 'imagesize'
             Map map = new Map();
@@ -108,6 +174,8 @@ namespace WinFormSamples.Samples
 
             map.ZoomToExtents(); // = 360;
             map.Center = new Point(0, 0);
+
+            _ogrSampleDataset = "MapInfo";
 
             return map;
         }

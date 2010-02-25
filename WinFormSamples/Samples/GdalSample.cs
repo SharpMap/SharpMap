@@ -9,7 +9,26 @@ namespace WinFormSamples.Samples
 {
     public static class GdalSample
     {
+        private static int _num = 0;
+        private static String _gdalSampleDataset;
+        public static String GdalSampleDataSet
+        {
+            get { return _gdalSampleDataset; }
+        }
+
         public static Map InitializeMap()
+        {
+            switch (_num++ % 5)
+            {
+                case 0:
+                    return InitializeGeoTiff();
+                default:
+                    return InitializeVRT(ref _num);
+            }
+            return InitializeGeoTiff();
+        }
+
+        private static Map InitializeGeoTiff()
         {
             try
             {
@@ -50,7 +69,8 @@ namespace WinFormSamples.Samples
                 map.Layers.Add(shapeLayer);
 
                 map.ZoomToExtents();
-
+                if (_num > 1) _num = 1;
+                _gdalSampleDataset = "GeoTiff";
                 return map;
             }
             catch (TypeInitializationException ex)
@@ -64,56 +84,30 @@ namespace WinFormSamples.Samples
                 }
                 throw;
             }
+
         }
-    }
-    public static class GdalSample2
-    {
+
         private static readonly string[] Vrts = new string[] { @"..\DEM\Golden_CO.dem", "contours_sample_polyline_play_polyline.asc", "contours_sample_polyline_play1_polyline.vrt", "contours_sample_polyline_play2_polyline.vrt", "contours_sample_polyline_play3_polyline.vrt", "contours_sample_polyline_play3_polyline.vrt" };
-        private static int _index = 1;
         private const string RelativePath = "GeoData/VRT/";
-
-        public static Map InitializeMap()
+        private static Map InitializeVRT(ref Int32 index)
         {
-            try
-            {
-                _index = -1;
-                //Sample provided by Dan Brecht and Joel Wilson
-                Map map = new Map();
-                map.BackColor = Color.White;
+            Map map = new Map();
+            Int32 ind = index - 2;
+            if (ind >= Vrts.Length) ind = 0;
 
-                Next(map);
-                map.ZoomToExtents();
-
-                return map;
-            }
-            catch (TypeInitializationException ex)
-            {
-                if (ex.Message == "The type initializer for 'OSGeo.GDAL.GdalPINVOKE' threw an exception.")
-                {
-                    throw new Exception(
-                        String.Format(
-                            "The application threw a PINVOKE exception. You probably need to copy the unmanaged dll's to your bin directory. They are a part of fwtools {0}. You can download it from: http://home.gdal.org/fwtools/",
-                            GdalRasterLayer.FWToolsVersion));
-                }
-                throw;
-            }
-        }
-
-        public static void Next(Map map)
-        {
-            _index++;
-            if (_index >= Vrts.Length) _index = 0;
-
-            if (!File.Exists(RelativePath + Vrts[_index]))
+            if (!File.Exists(RelativePath + Vrts[ind]))
             {
                 throw new Exception("Make sure the data is in the relative directory: " + RelativePath);
             }
 
-            GdalRasterLayer layer = new GdalRasterLayer("VirtualRasterTable", RelativePath + Vrts[_index]);
+            GdalRasterLayer layer = new GdalRasterLayer("VirtualRasterTable", RelativePath + Vrts[ind]);
             map.Layers.Add(layer);
-
+            _gdalSampleDataset = string.Format("'{0}'", Path.GetExtension(layer.Filename).ToUpper());
             map.ZoomToExtents();
-
+            //index++;
+            return map;
         }
+
     }
+
 }

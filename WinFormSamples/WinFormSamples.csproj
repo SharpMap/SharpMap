@@ -158,6 +158,9 @@
     <Content Include="GeoData\DEM\Golden_CO.dem">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <None Include="GeoData\S57\US5TX51M.000">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="GeoData\World\cities.DBF">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

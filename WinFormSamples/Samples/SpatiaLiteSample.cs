@@ -34,19 +34,14 @@ namespace WinFormSamples.Samples
             layRivers.DataSource = new SharpMap.Data.Providers.SpatiaLite(
                 DataSource, "rivers", "geom", "PK_UID");
             //Define a blue 3px wide pen
-            layRivers.Style.Line = new System.Drawing.Pen(System.Drawing.Color.DarkBlue, 3);
-
-            SharpMap.Layers.VectorLayer layRivers2 = new SharpMap.Layers.VectorLayer("Rivers2");
-            //Set the datasource to a shapefile in the App_data folder
-            layRivers2.DataSource = new SharpMap.Data.Providers.SpatiaLite(
-                DataSource, "rivers", "geom", "PK_UID");
-            //Define a blue 2px wide pen
-            layRivers2.Style.Line = new System.Drawing.Pen(System.Drawing.Color.LightBlue, 2);
-            layRivers2.Style.Line.CompoundArray = new float[] {0.2f, 0.8f};
+            layRivers.Style.Line = new System.Drawing.Pen(System.Drawing.Color.LightBlue, 2);
+            layRivers.Style.Line.CompoundArray = new float[] { 0.2f, 0.8f };
+            layRivers.Style.Outline = new System.Drawing.Pen(System.Drawing.Color.DarkBlue, 3);
+            layRivers.Style.EnableOutline = true;
 
             //Set up a cities layer
             SharpMap.Layers.VectorLayer layCities = new SharpMap.Layers.VectorLayer("Cities");
-            //Set the datasource to a shapefile in the App_data folder
+            //Set the datasource to the spatialite table
             layCities.DataSource = new SharpMap.Data.Providers.SpatiaLite(
                 DataSource, "cities", "geom", "PK_UID");
             layCities.Style.SymbolScale = 0.8f;
@@ -63,7 +58,7 @@ namespace WinFormSamples.Samples
                 MultipartGeometryBehaviour = SharpMap.Layers.LabelLayer.MultipartGeometryBehaviourEnum.Largest,
                 LabelFilter = SharpMap.Rendering.LabelCollisionDetection.ThoroughCollisionDetection,
                 PriorityColumn = "POPDENS",
-                Style = new SharpMap.Styles.LabelStyle()
+                Style = new SharpMap.Styles.LabelStyle
                 {
                     ForeColor = System.Drawing.Color.White,
                     Font = new System.Drawing.Font(System.Drawing.FontFamily.GenericSerif, 12),
@@ -82,13 +77,13 @@ namespace WinFormSamples.Samples
                 PriorityColumn = "population",
                 PriorityDelegate = delegate(SharpMap.Data.FeatureDataRow fdr) 
                 { 
-                    Int32 retVal = 10000000 * (Int32)( (String)fdr["capital"] == "Y" ? 1 : 0 );
+                    Int32 retVal = 10000000 * ( (String)fdr["capital"] == "Y" ? 1 : 0 );
                     return  retVal + Convert.ToInt32(fdr["population"]);
                 },
                 TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAlias,
                 SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias,
                 LabelFilter = SharpMap.Rendering.LabelCollisionDetection.ThoroughCollisionDetection,
-                Style = new SharpMap.Styles.LabelStyle()
+                Style = new SharpMap.Styles.LabelStyle
                 {
                     ForeColor = System.Drawing.Color.Black,
                     Font = new System.Drawing.Font(System.Drawing.FontFamily.GenericSerif, 11),
@@ -105,7 +100,6 @@ namespace WinFormSamples.Samples
             //The order we add them in are the order they are drawn, so we add the rivers last to put them on top
             map.Layers.Add(layCountries);
             map.Layers.Add(layRivers);
-            map.Layers.Add(layRivers2);
             map.Layers.Add(layCities);
             map.Layers.Add(layLabel);
             map.Layers.Add(layCityLabel);
