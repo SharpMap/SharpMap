@@ -48,6 +48,23 @@ namespace SharpMap.Extensions.Data
             if (!pathFound)
                 //Environment.SetEnvironmentVariable("PATH", path + (!path.EndsWith(";") ? ";" : "") + fwtoolsPath);
                 Environment.SetEnvironmentVariable("PATH", fwtoolsPath + ";" + path);
+
+            SetFWToolsEnvironmentVariable("FWToolsProjLib", "PROJ_LIB");
+            SetFWToolsEnvironmentVariable("FWToolsGeoTiffCsv", "GEOTIFF_CSV");
+            SetFWToolsEnvironmentVariable("FWToolsGdalData", "GDAL_DATA");
+            SetFWToolsEnvironmentVariable("FWToolsGdalDriver", "GDAL_DRIVER");
+
+        }
+
+        private static void SetFWToolsEnvironmentVariable(String setting, String envVariable)
+        {
+            string set = ConfigurationManager.AppSettings[setting];
+            if (String.IsNullOrEmpty(set))
+                System.Diagnostics.Debug.WriteLine(string.Format(
+                                                       "\nValue for environment variable '{0}' not set!\nPlease add\n\t<add key=\"{1}\" value=\"...\"/>\n to your app.config file",
+                                                       envVariable, setting));
+
+            Environment.SetEnvironmentVariable(envVariable, set);
         }
 
         public static string FwToolsVersion

@@ -18,11 +18,22 @@
 using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
-using OSGeo.OGR;
+//using OSGeo.OGR;
 using SharpMap.Converters.WellKnownBinary;
 using SharpMap.Extensions.Data;
 using SharpMap.Geometries;
-using Geometry = OSGeo.OGR.Geometry;
+using Geometry=SharpMap.Geometries.Geometry;
+using OgrOgr = OSGeo.OGR.Ogr;
+using OgrDataSource = OSGeo.OGR.DataSource;
+using OgrLayer = OSGeo.OGR.Layer;
+using OgrGeometry = OSGeo.OGR.Geometry;
+using OgrEnvelope = OSGeo.OGR.Envelope;
+using OgrFeature = OSGeo.OGR.Feature;
+using OgrFeatureDefn = OSGeo.OGR.FeatureDefn;
+using OgrFieldDefn = OSGeo.OGR.FieldDefn;
+using OgrFieldType = OSGeo.OGR.FieldType;
+using OsrSpatialReference = OSGeo.OSR.SpatialReference;
+using OgrGeometryType = OSGeo.OGR.wkbGeometryType;
 
 namespace SharpMap.Data.Providers
 {
@@ -34,19 +45,21 @@ namespace SharpMap.Data.Providers
     /// vLayerOgr.DataSource = new SharpMap.Data.Providers.Ogr(@"D:\GeoData\myWorld.tab");
     /// </code>
     /// </summary>
-    public class Ogr : IProvider, IDisposable
+    public class Ogr : IProvider
     {
         static Ogr()
         {
             FwToolsHelper.Configure();
+            OgrOgr.RegisterAll();
         }
 
         #region Fields
 
         private BoundingBox _bbox;
-        private DataSource _OgrDataSource;
-        private Layer _OgrLayer;
-        private String m_Filename;
+        private readonly OgrDataSource _ogrDataSource;
+        private readonly OgrLayer _ogrLayer;
+        private String _filename;
+        private String _definitionQuery = "";
 
         #endregion
 
@@ -65,10 +78,55 @@ namespace SharpMap.Data.Providers
         /// </summary>
         public string Filename
         {
-            get { return m_Filename; }
-            set { m_Filename = value; }
+            get { return _filename; }
+            set { _filename = value; }
         }
 
+        public String DefinitionQuery
+        {
+            get { return _definitionQuery; }
+            set { _definitionQuery = value; }
+        }
+
+        public Int32 NumberOfLayers
+        {
+            get
+            {
+                Int32 numberOfLayers = 0;
+                numberOfLayers = _ogrDataSource.GetLayerCount();
+                return numberOfLayers;
+            }
+        }
+
+        public Boolean IsFeatureDataLayer
+        {
+            get
+            {
+                _ogrLayer.ResetReading();
+                Int32 numFeatures = _ogrLayer.GetFeatureCount(1);
+                if (numFeatures <= 0) return false;
+                OgrFeature feature = _ogrLayer.GetNextFeature();
+                if (feature == null) return false;
+                OgrGeometry geom = feature.GetGeometryRef();
+                if (geom == null) return false;
+                return geom.GetGeometryType() != OgrGeometryType.wkbNone;
+            }
+        }
+
+        public String OgrGeometryTypeString
+        {
+            get
+            {
+                _ogrLayer.ResetReading();
+                Int32 numFeatures = _ogrLayer.GetFeatureCount(1);
+                if (numFeatures <= 0) return string.Format("{0}", OgrGeometryType.wkbNone);
+                OgrFeature feature = _ogrLayer.GetNextFeature();
+                if (feature == null) return string.Format("{0}", OgrGeometryType.wkbNone);
+                OgrGeometry geom = feature.GetGeometryRef();
+                if (geom==null) return string.Format("{0}", OgrGeometryType.wkbNone);
+                return string.Format("{0}", geom.GetGeometryType());
+            }
+        }
         #endregion
 
         #region Constructors
@@ -76,66 +134,66 @@ namespace SharpMap.Data.Providers
         /// <summary>
         /// Loads a Ogr datasource with the specified layer
         /// </summary>
-        /// <param name="Filename">datasource</param>
-        /// <param name="LayerName">name of layer</param>
-        public Ogr(string Filename, string LayerName)
+        /// <param name="filename">datasource</param>
+        /// <param name="layerName">name of layer</param>
+        public Ogr(string filename, string layerName)
         {
-            this.Filename = Filename;
+            Filename = filename;
 
-            OSGeo.OGR.Ogr.RegisterAll();
-            _OgrDataSource = OSGeo.OGR.Ogr.Open(this.Filename, 1);
-            _OgrLayer = _OgrDataSource.GetLayerByName(LayerName);
+            _ogrDataSource = OgrOgr.Open(filename, 1);
+            _ogrLayer = _ogrDataSource.GetLayerByName(layerName);
         }
 
         /// <summary>
         /// Loads a Ogr datasource with the specified layer
         /// </summary>
-        /// <param name="Filename">datasource</param>
-        /// <param name="LayerNum">number of layer</param>
-        public Ogr(string Filename, int LayerNum)
+        /// <param name="filename">datasource</param>
+        /// <param name="layerNum">number of layer</param>
+        public Ogr(string filename, int layerNum)
         {
-            this.Filename = Filename;
-            OSGeo.OGR.Ogr.RegisterAll();
+            Filename = filename;
 
-            _OgrDataSource = OSGeo.OGR.Ogr.Open(this.Filename, 0);
-            _OgrLayer = _OgrDataSource.GetLayerByIndex(LayerNum);
+            _ogrDataSource = OSGeo.OGR.Ogr.Open(filename, 0);
+            _ogrLayer = _ogrDataSource.GetLayerByIndex(layerNum);
+            OsrSpatialReference spatialReference = _ogrLayer.GetSpatialRef();
+            _srid = spatialReference.AutoIdentifyEPSG();
         }
 
         /// <summary>
         /// Loads a Ogr datasource with the specified layer
         /// </summary>
-        /// <param name="Filename">datasource</param>
-        /// <param name="LayerNum">number of layer</param>
+        /// <param name="filename">datasource</param>
+        /// <param name="layerNum">number of layer</param>
         /// <param name="name">Returns the name of the loaded layer</param>
-        public Ogr(string Filename, int LayerNum, out string name)
-            : this(Filename, LayerNum)
+        public Ogr(string filename, int layerNum, out string name)
+            : this(filename, layerNum)
         {
-            name = _OgrLayer.GetName();
+            name = _ogrLayer.GetName();
         }
 
         /// <summary>
         /// Loads a Ogr datasource with the first layer
         /// </summary>
-        /// <param name="Filename">datasource</param>
-        public Ogr(string Filename)
-            : this(Filename, 0)
+        /// <param name="filename">datasource</param>
+        public Ogr(string filename)
+            : this(filename, 0)
         {
         }
 
         /// <summary>
         /// Loads a Ogr datasource with the first layer
         /// </summary>
-        /// <param name="Filename">datasource</param>
+        /// <param name="filename">datasource</param>
         /// <param name="name">Returns the name of the loaded layer</param>
-        public Ogr(string Filename, out string name)
-            : this(Filename, 0, out name)
+        public Ogr(string filename, out string name)
+            : this(filename, 0, out name)
         {
         }
 
         #endregion
 
-        private bool _IsOpen;
-        private int _SRID = -1;
+        private bool _isOpen;
+        private int _srid = -1;
 
         #region IProvider Members
 
@@ -147,13 +205,13 @@ namespace SharpMap.Data.Providers
         {
             if (_bbox == null)
             {
-                Envelope _OgrEnvelope = new Envelope();
-                int i = _OgrLayer.GetExtent(_OgrEnvelope, 1);
+                OgrEnvelope ogrEnvelope = new OgrEnvelope();
+                if (_ogrLayer != null) _ogrLayer.GetExtent(ogrEnvelope, 1);
 
-                _bbox = new BoundingBox(_OgrEnvelope.MinX,
-                                        _OgrEnvelope.MinY,
-                                        _OgrEnvelope.MaxX,
-                                        _OgrEnvelope.MaxY);
+                _bbox = new BoundingBox(ogrEnvelope.MinX,
+                                        ogrEnvelope.MinY,
+                                        ogrEnvelope.MaxX,
+                                        ogrEnvelope.MaxY);
             }
 
             return _bbox;
@@ -165,17 +223,21 @@ namespace SharpMap.Data.Providers
         /// <returns>number of features</returns>
         public int GetFeatureCount()
         {
-            return _OgrLayer.GetFeatureCount(1);
+            return _ogrLayer.GetFeatureCount(1);
         }
 
         /// <summary>
         /// Returns a FeatureDataRow based on a RowID
         /// </summary>
-        /// <param name="RowID"></param>
+        /// <param name="rowId"></param>
         /// <returns>FeatureDataRow</returns>
-        public FeatureDataRow GetFeature(uint RowID)
+        public FeatureDataRow GetFeature(uint rowId)
         {
-            throw new NotImplementedException();
+            FeatureDataTable fdt = new FeatureDataTable();
+            _ogrLayer.ResetReading();
+            ReadColumnDefinition(fdt, _ogrLayer);
+            OgrFeature feature = _ogrLayer.GetFeature((int) rowId);
+            return OgrFeatureToFeatureDataRow(fdt, feature);
         }
 
         /// <summary>
@@ -183,7 +245,10 @@ namespace SharpMap.Data.Providers
         /// </summary>
         public string ConnectionID
         {
-            get { throw new NotImplementedException(); }
+            get
+            {
+                return string.Format("Data Source={0};Layer{1}", _ogrDataSource.name, _ogrLayer.GetName());
+            }
         }
 
         /// <summary>
@@ -191,7 +256,7 @@ namespace SharpMap.Data.Providers
         /// </summary>
         public void Open()
         {
-            _IsOpen = true;
+            _isOpen = true;
         }
 
         /// <summary>
@@ -199,7 +264,7 @@ namespace SharpMap.Data.Providers
         /// </summary>
         public void Close()
         {
-            _IsOpen = false;
+            _isOpen = false;
         }
 
         /// <summary>
@@ -207,7 +272,7 @@ namespace SharpMap.Data.Providers
         /// </summary>
         public bool IsOpen
         {
-            get { return _IsOpen; }
+            get { return _isOpen; }
         }
 
         /// <summary>
@@ -217,18 +282,17 @@ namespace SharpMap.Data.Providers
         /// <returns></returns>
         public Collection<uint> GetObjectIDsInView(BoundingBox bbox)
         {
-            _OgrLayer.SetSpatialFilterRect(bbox.Min.X, bbox.Min.Y, bbox.Max.X, bbox.Max.Y);
-            Feature _OgrFeature = null;
-            _OgrLayer.ResetReading();
+            _ogrLayer.SetSpatialFilterRect(bbox.Min.X, bbox.Min.Y, bbox.Max.X, bbox.Max.Y);
+            _ogrLayer.ResetReading();
 
-            Collection<uint> _ObjectIDs = new Collection<uint>();
-
-            while ((_OgrFeature = _OgrLayer.GetNextFeature()) != null)
+            Collection<uint> objectIDs = new Collection<uint>();
+            OgrFeature ogrFeature = null;
+            while ((ogrFeature = _ogrLayer.GetNextFeature()) != null)
             {
-                _ObjectIDs.Add((uint)_OgrFeature.GetFID());
-                _OgrFeature.Dispose();
+                objectIDs.Add((uint)ogrFeature.GetFID());
+                ogrFeature.Dispose();
             }
-            return _ObjectIDs;
+            return objectIDs;
         }
 
         /// <summary>
@@ -236,10 +300,10 @@ namespace SharpMap.Data.Providers
         /// </summary>
         /// <param name="oid">Object ID</param>
         /// <returns>geometry</returns>
-        public Geometries.Geometry GetGeometryByID(uint oid)
+        public Geometry GetGeometryByID(uint oid)
         {
-            using (Feature _OgrFeature = _OgrLayer.GetFeature((int)oid))
-                return ParseOgrGeometry(_OgrFeature.GetGeometryRef());
+            using (OgrFeature ogrFeature = _ogrLayer.GetFeature((int)oid))
+                return ParseOgrGeometry(ogrFeature.GetGeometryRef());
         }
 
         /// <summary>
@@ -247,18 +311,26 @@ namespace SharpMap.Data.Providers
         /// </summary>
         /// <param name="bbox"></param>
         /// <returns></returns>
-        public Collection<Geometries.Geometry> GetGeometriesInView(BoundingBox bbox)
+        public Collection<Geometry> GetGeometriesInView(BoundingBox bbox)
         {
-            Collection<Geometries.Geometry> geoms = new Collection<Geometries.Geometry>();
+            Collection<Geometry> geoms = new Collection<Geometry>();
 
-            _OgrLayer.SetSpatialFilterRect(bbox.Left, bbox.Bottom, bbox.Right, bbox.Top);
-            Feature _OgrFeature = null;
+            _ogrLayer.SetSpatialFilterRect(bbox.Left, bbox.Bottom, bbox.Right, bbox.Top);
+            _ogrLayer.ResetReading();
 
-            _OgrLayer.ResetReading();
-            while ((_OgrFeature = _OgrLayer.GetNextFeature()) != null)
+            OgrFeature ogrFeature = null;
+            try
             {
-                geoms.Add(ParseOgrGeometry(_OgrFeature.GetGeometryRef()));
-                _OgrFeature.Dispose();
+                while ((ogrFeature = _ogrLayer.GetNextFeature()) != null)
+                {
+                    Geometry geom = ParseOgrGeometry(ogrFeature.GetGeometryRef());
+                    if (geom != null) geoms.Add(geom);
+                    ogrFeature.Dispose();
+                }
+            }
+            catch(Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
             }
 
             return geoms;
@@ -269,8 +341,8 @@ namespace SharpMap.Data.Providers
         /// </summary>
         public int SRID
         {
-            get { return _SRID; }
-            set { _SRID = value; }
+            get { return _srid; }
+            set { _srid = value; }
         }
 
         /// <summary>
@@ -280,34 +352,8 @@ namespace SharpMap.Data.Providers
         /// <param name="ds">FeatureDataSet to fill data into</param>
         public void ExecuteIntersectionQuery(BoundingBox bbox, FeatureDataSet ds)
         {
-            FeatureDataTable myDt = new FeatureDataTable();
-
-            _OgrLayer.SetSpatialFilterRect(bbox.Left, bbox.Bottom, bbox.Right, bbox.Top);
-
-            //reads the column definition of the layer/feature
-            ReadColumnDefinition(myDt, _OgrLayer);
-
-            Feature _OgrFeature;
-            _OgrLayer.ResetReading();
-            while ((_OgrFeature = _OgrLayer.GetNextFeature()) != null)
-            {
-                FeatureDataRow _dr = myDt.NewRow();
-                for (int iField = 0; iField < _OgrFeature.GetFieldCount(); iField++)
-                {
-                    if (myDt.Columns[iField].DataType == Type.GetType("System.String"))
-                        _dr[iField] = _OgrFeature.GetFieldAsString(iField);
-                    else if (myDt.Columns[iField].GetType() == Type.GetType("System.Int32"))
-                        _dr[iField] = _OgrFeature.GetFieldAsInteger(iField);
-                    else if (myDt.Columns[iField].GetType() == Type.GetType("System.Double"))
-                        _dr[iField] = _OgrFeature.GetFieldAsDouble(iField);
-                    else
-                        _dr[iField] = _OgrFeature.GetFieldAsString(iField);
-                }
-
-                _dr.Geometry = ParseOgrGeometry(_OgrFeature.GetGeometryRef());
-                myDt.AddRow(_dr);
-            }
-            ds.Tables.Add(myDt);
+            _ogrLayer.SetSpatialFilterRect(bbox.Left, bbox.Bottom, bbox.Right, bbox.Top);
+            ExecuteIntersectionQuery(ds);
         }
 
         /// <summary>
@@ -315,16 +361,42 @@ namespace SharpMap.Data.Providers
         /// </summary>
         /// <param name="geom">Geometry to intersect with</param>
         /// <param name="ds">FeatureDataSet to fill data into</param>
-        public void ExecuteIntersectionQuery(Geometries.Geometry geom, FeatureDataSet ds)
+        public void ExecuteIntersectionQuery(Geometry geom, FeatureDataSet ds)
         {
-            throw new NotImplementedException();
+            OgrGeometry ogrGeometry = OgrGeometry.CreateFromWkb(GeometryToWKB.Write(geom));
+            _ogrLayer.SetSpatialFilter(ogrGeometry);
+            ExecuteIntersectionQuery(ds);
+
+        }
+
+        private void ExecuteIntersectionQuery(FeatureDataSet ds)
+        {
+            if (!String.IsNullOrEmpty(_definitionQuery))
+                _ogrLayer.SetAttributeFilter(_definitionQuery);
+            else
+                _ogrLayer.SetAttributeFilter("");
+
+            _ogrLayer.ResetReading();
+
+            //reads the column definition of the layer/feature
+            FeatureDataTable myDt = new FeatureDataTable();
+            ReadColumnDefinition(myDt, _ogrLayer);
+
+            OgrFeature ogrFeature;
+            while ((ogrFeature = _ogrLayer.GetNextFeature()) != null)
+            {
+                FeatureDataRow fdr = OgrFeatureToFeatureDataRow(myDt, ogrFeature);
+                myDt.AddRow(fdr);
+            }
+            ds.Tables.Add(myDt);
+
         }
 
         #endregion
 
         #region Disposers and finalizers
 
-        private bool disposed = false;
+        private bool _disposed;
 
         /// <summary>
         /// Disposes the object
@@ -337,13 +409,13 @@ namespace SharpMap.Data.Providers
 
         internal void Dispose(bool disposing)
         {
-            if (!disposed)
+            if (!_disposed)
             {
-                if (disposing && _OgrDataSource != null)
+                if (disposing && _ogrDataSource != null)
                 {
-                    _OgrDataSource.Dispose();
+                    _ogrDataSource.Dispose();
                 }
-                disposed = true;
+                _disposed = true;
             }
         }
 
@@ -365,35 +437,40 @@ namespace SharpMap.Data.Providers
         /// </summary>
         /// <param name="fdt">FeatureDatatTable</param>
         /// <param name="oLayer">OgrLayer</param>
-        private void ReadColumnDefinition(FeatureDataTable fdt, Layer oLayer)
+        private static void ReadColumnDefinition(FeatureDataTable fdt, OgrLayer oLayer)
         {
-            using (FeatureDefn _OgrFeatureDefn = oLayer.GetLayerDefn())
+            using (OgrFeatureDefn ogrFeatureDefn = oLayer.GetLayerDefn())
             {
                 int iField;
 
-                for (iField = 0; iField < _OgrFeatureDefn.GetFieldCount(); iField++)
+                for (iField = 0; iField < ogrFeatureDefn.GetFieldCount(); iField++)
                 {
-                    using (FieldDefn _OgrFldDef = _OgrFeatureDefn.GetFieldDefn(iField))
+                    using (OgrFieldDefn ogrFldDef = ogrFeatureDefn.GetFieldDefn(iField))
                     {
-                        FieldType type;
-                        switch ((type = _OgrFldDef.GetFieldType()))
+                        OgrFieldType type= ogrFldDef.GetFieldType();
+                        switch (type)
                         {
-                            case FieldType.OFTInteger:
-                                fdt.Columns.Add(_OgrFldDef.GetName(), Type.GetType("System.Int32"));
+                            case OgrFieldType.OFTInteger:
+                                fdt.Columns.Add(ogrFldDef.GetName(), Type.GetType("System.Int32"));
                                 break;
-                            case FieldType.OFTReal:
-                                fdt.Columns.Add(_OgrFldDef.GetName(), Type.GetType("System.Double"));
+                            case OgrFieldType.OFTReal:
+                                fdt.Columns.Add(ogrFldDef.GetName(), Type.GetType("System.Double"));
                                 break;
-                            case FieldType.OFTString:
-                                fdt.Columns.Add(_OgrFldDef.GetName(), Type.GetType("System.String"));
+                            case OgrFieldType.OFTString:
+                                fdt.Columns.Add(ogrFldDef.GetName(), Type.GetType("System.String"));
                                 break;
-                            case FieldType.OFTWideString:
-                                fdt.Columns.Add(_OgrFldDef.GetName(), Type.GetType("System.String"));
+                            case OgrFieldType.OFTWideString:
+                                fdt.Columns.Add(ogrFldDef.GetName(), Type.GetType("System.String"));
+                                break;
+                            case OgrFieldType.OFTDate:
+                            case OgrFieldType.OFTTime:
+                            case OgrFieldType.OFTDateTime:
+                                fdt.Columns.Add(ogrFldDef.GetName(), typeof(DateTime));
                                 break;
                             default:
                                 {
                                     //fdt.Columns.Add(_OgrFldDef.GetName(), System.Type.GetType("System.String"));
-                                    Debug.WriteLine("Not supported type: " + type + " [" + _OgrFldDef.GetName() + "]");
+                                    Debug.WriteLine("Not supported type: " + type + " [" + ogrFldDef.GetName() + "]");
                                     break;
                                 }
                         }
@@ -402,11 +479,62 @@ namespace SharpMap.Data.Providers
             }
         }
 
-        private Geometries.Geometry ParseOgrGeometry(Geometry OgrGeometry)
+        private static Geometry ParseOgrGeometry(OgrGeometry ogrGeometry)
         {
-            byte[] wkbBuffer = new byte[OgrGeometry.WkbSize()];
-            int i = OgrGeometry.ExportToWkb(wkbBuffer);
-            return GeometryFromWKB.Parse(wkbBuffer);
+            if (ogrGeometry != null)
+            {
+                //Just in case it isn't 2D
+                ogrGeometry.FlattenTo2D();
+                byte[] wkbBuffer = new byte[ogrGeometry.WkbSize()];
+                ogrGeometry.ExportToWkb(wkbBuffer);
+                Geometry geom = GeometryFromWKB.Parse(wkbBuffer);
+                if (geom == null)
+                    Debug.WriteLine(string.Format("Failed to parse '{0}'", ogrGeometry.GetGeometryType()));
+                return geom;
+            }
+            return null;
+        }
+
+        private static FeatureDataRow OgrFeatureToFeatureDataRow(FeatureDataTable table, OSGeo.OGR.Feature ogrFeature)
+        {
+            FeatureDataRow fdr = table.NewRow();
+            Int32 fdrIndex = 0;
+            for (int iField = 0; iField < ogrFeature.GetFieldCount(); iField++)
+            {
+                switch (ogrFeature.GetFieldType(iField))
+                {
+                    case OgrFieldType.OFTString:
+                    case OgrFieldType.OFTWideString:
+                        fdr[fdrIndex++] = ogrFeature.GetFieldAsString(iField);
+                        break;
+                    case OgrFieldType.OFTStringList:
+                    case OgrFieldType.OFTWideStringList:
+                        break;
+                    case OgrFieldType.OFTInteger:
+                        fdr[fdrIndex++] = ogrFeature.GetFieldAsInteger(iField);
+                        break;
+                    case OgrFieldType.OFTIntegerList:
+                        break;
+                    case OgrFieldType.OFTReal:
+                        fdr[fdrIndex++] = ogrFeature.GetFieldAsDouble(iField);
+                        break;
+                    case OgrFieldType.OFTRealList:
+                        break;
+                    case OgrFieldType.OFTDate:
+                    case OgrFieldType.OFTDateTime:
+                    case OgrFieldType.OFTTime:
+                        Int32 y, m, d, h, mi, s, tz;
+                        ogrFeature.GetFieldAsDateTime(iField, out y, out m, out d, out h, out mi, out s, out tz);
+                        fdr[fdrIndex++] = new DateTime(y, m, d, h, mi, s);
+                        break;
+                    default:
+                        Debug.WriteLine(string.Format("Cannot handle Ogr DataType '{0}'", ogrFeature.GetFieldType(iField)));
+                        break;
+                }
+            }
+
+            fdr.Geometry = ParseOgrGeometry(ogrFeature.GetGeometryRef());
+            return fdr;
         }
 
         #endregion
@@ -416,40 +544,44 @@ namespace SharpMap.Data.Providers
             return ExecuteQuery(query, null);
         }
 
-        public FeatureDataSet ExecuteQuery(string query, Geometry filter)
+        public FeatureDataSet ExecuteQuery(string query, OgrGeometry filter)
         {
             try
             {
                 FeatureDataSet ds = new FeatureDataSet();
                 FeatureDataTable myDt = new FeatureDataTable();
 
-                Layer results = _OgrDataSource.ExecuteSQL(query, filter, "");
+                OgrLayer results = _ogrDataSource.ExecuteSQL(query, filter, "");
 
                 //reads the column definition of the layer/feature
                 ReadColumnDefinition(myDt, results);
 
-                Feature _OgrFeature;
+                OgrFeature ogrFeature;
                 results.ResetReading();
-                while ((_OgrFeature = results.GetNextFeature()) != null)
+                while ((ogrFeature = results.GetNextFeature()) != null)
                 {
-                    FeatureDataRow _dr = myDt.NewRow();
-                    for (int iField = 0; iField < _OgrFeature.GetFieldCount(); iField++)
+                    FeatureDataRow dr = OgrFeatureToFeatureDataRow(myDt, ogrFeature);
+                    myDt.AddRow(dr);
+                    /*
+                    myDt.NewRow();
+                    for (int iField = 0; iField < ogrFeature.GetFieldCount(); iField++)
                     {
                         if (myDt.Columns[iField].DataType == Type.GetType("System.String"))
-                            _dr[iField] = _OgrFeature.GetFieldAsString(iField);
+                            dr[iField] = ogrFeature.GetFieldAsString(iField);
                         else if (myDt.Columns[iField].GetType() == Type.GetType("System.Int32"))
-                            _dr[iField] = _OgrFeature.GetFieldAsInteger(iField);
+                            dr[iField] = ogrFeature.GetFieldAsInteger(iField);
                         else if (myDt.Columns[iField].GetType() == Type.GetType("System.Double"))
-                            _dr[iField] = _OgrFeature.GetFieldAsDouble(iField);
+                            dr[iField] = ogrFeature.GetFieldAsDouble(iField);
                         else
-                            _dr[iField] = _OgrFeature.GetFieldAsString(iField);
+                            dr[iField] = ogrFeature.GetFieldAsString(iField);
                     }
 
-                    _dr.Geometry = ParseOgrGeometry(_OgrFeature.GetGeometryRef());
-                    myDt.AddRow(_dr);
+                    dr.Geometry = ParseOgrGeometry(ogrFeature.GetGeometryRef());
+                    myDt.AddRow(dr);
+                     */
                 }
                 ds.Tables.Add(myDt);
-                _OgrDataSource.ReleaseResultSet(results);
+                _ogrDataSource.ReleaseResultSet(results);
 
                 return ds;
             }
@@ -467,9 +599,9 @@ namespace SharpMap.Data.Providers
         /// <param name="distance"></param>
         /// <returns></returns>
         [Obsolete("Use ExecuteIntersectionQuery instead")]
-        public FeatureDataTable QueryFeatures(Geometries.Geometry geom, double distance)
+        public FeatureDataTable QueryFeatures(Geometry geom, double distance)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
         /// <summary>
@@ -477,7 +609,7 @@ namespace SharpMap.Data.Providers
         /// </summary>
         /// <param name="geom">Geometry</param>
         /// <returns>FeatureDataTable</returns>
-        public FeatureDataTable ExecuteIntersectionQuery(Geometries.Geometry geom)
+        public FeatureDataTable ExecuteIntersectionQuery(Geometry geom)
         {
             FeatureDataSet fds = new FeatureDataSet();
             ExecuteIntersectionQuery(geom, fds);
