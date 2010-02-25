@@ -36,9 +36,13 @@ namespace WinFormSamples
                         mapImage.Map = WmsSample.InitializeMap();
             break;
           case "OGR - MapInfo":
+            case "OGR - S-57":
                         mapImage.Map = OgrSample.InitializeMap();
             break;
           case "GDAL - GeoTiff":
+            case "GDAL - '.DEM'":
+            case "GDAL - '.ASC'":
+            case "GDAL - '.VRT'":
             mapImage.Map = GdalSample.InitializeMap();
             mapImage.ActiveTool = MapImage.Tools.Pan;
             break;
@@ -54,11 +58,6 @@ namespace WinFormSamples
           case "Oracle":
             mapImage.Map = OracleSample.InitializeMap();
             break;
-          case "GDAL - VRT":
-            mapImage.Map = GdalSample2.InitializeMap();
-            mapImage.ActiveTool = MapImage.Tools.Query;
-            button1.Enabled = true;
-            break;
           default:
             break;
         }
@@ -73,14 +72,6 @@ namespace WinFormSamples
 
     private void button1_Click(object sender, EventArgs e)
     {
-        mapImage.Map.Layers.Remove(mapImage.Map.Layers[0]);
-        mapImage.Refresh();
-        GdalSample2.Next(mapImage.Map);
-        mapImage.Refresh();
-        var g = mapImage.CreateGraphics();
-        var l = (GdalRasterLayer)mapImage.Map.Layers[0];
-
-        g.DrawString(l.Filename, System.Drawing.SystemFonts.DefaultFont, System.Drawing.SystemBrushes.WindowText, 0, 0);
 
     }
 
