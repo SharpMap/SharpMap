@@ -1001,7 +1001,6 @@ namespace SharpMap.Data.Providers
             {
                 //FeatureDataRow dr = (FeatureDataRow)dbaseFile.GetFeature(RowID, (dt == null) ? dbaseFile.NewTable : dt);
                 FeatureDataRow dr = dbaseFile.GetFeature(RowID, dt);
-                return dr;
                 dr.Geometry = ReadGeometry(RowID);
                 if (FilterDelegate == null || FilterDelegate(dr))
                     return dr;

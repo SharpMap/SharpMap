@@ -303,16 +303,22 @@ namespace SharpMap.Layers
 
         private void RenderGeometry(Graphics g, Map map, Geometry feature, VectorStyle style)
         {
-            switch (feature.GetType().FullName)
+            //ToDo: Add Property 'public GeometryType2 GeometryType { get; }' to remove this
+            GeometryType2 geometryType = (GeometryType2)Enum.Parse(typeof(GeometryType2), feature.GetType().Name);
+            
+            switch (geometryType)
+            //switch (feature.GetType().FullName)
             {
-                case "SharpMap.Geometries.Polygon":
+                case GeometryType2.Polygon:
+                //case "SharpMap.Geometries.Polygon":
                     if (style.EnableOutline)
                         VectorRenderer.DrawPolygon(g, (Polygon) feature, style.Fill, style.Outline, _ClippingEnabled,
                                                    map);
                     else
                         VectorRenderer.DrawPolygon(g, (Polygon) feature, style.Fill, null, _ClippingEnabled, map);
                     break;
-                case "SharpMap.Geometries.MultiPolygon":
+                case GeometryType2.MultiPolygon:
+                //case "SharpMap.Geometries.MultiPolygon":
                     if (style.EnableOutline)
                         VectorRenderer.DrawMultiPolygon(g, (MultiPolygon) feature, style.Fill, style.Outline,
                                                         _ClippingEnabled, map);
@@ -320,21 +326,26 @@ namespace SharpMap.Layers
                         VectorRenderer.DrawMultiPolygon(g, (MultiPolygon) feature, style.Fill, null, _ClippingEnabled,
                                                         map);
                     break;
-                case "SharpMap.Geometries.LineString":
+                case GeometryType2.LineString:
+                //case "SharpMap.Geometries.LineString":
                     VectorRenderer.DrawLineString(g, (LineString) feature, style.Line, map);
                     break;
-                case "SharpMap.Geometries.MultiLineString":
+                case GeometryType2.MultiLineString:
+                //case "SharpMap.Geometries.MultiLineString":
                     VectorRenderer.DrawMultiLineString(g, (MultiLineString) feature, style.Line, map);
                     break;
-                case "SharpMap.Geometries.Point":
+                case GeometryType2.Point:
+                //case "SharpMap.Geometries.Point":
                     VectorRenderer.DrawPoint(g, (Point) feature, style.Symbol, style.SymbolScale, style.SymbolOffset,
                                              style.SymbolRotation, map);
                     break;
-                case "SharpMap.Geometries.MultiPoint":
+                case GeometryType2.MultiPoint:
+                //case "SharpMap.Geometries.MultiPoint":
                     VectorRenderer.DrawMultiPoint(g, (MultiPoint) feature, style.Symbol, style.SymbolScale,
                                                   style.SymbolOffset, style.SymbolRotation, map);
                     break;
-                case "SharpMap.Geometries.GeometryCollection":
+                case GeometryType2.GeometryCollection:
+                //case "SharpMap.Geometries.GeometryCollection":
                     foreach (Geometry geom in (GeometryCollection) feature)
                         RenderGeometry(g, map, geom, style);
                     break;
