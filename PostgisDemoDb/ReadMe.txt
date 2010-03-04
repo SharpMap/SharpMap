@@ -5,6 +5,6 @@ The backup was made with the following versions:
 
 Steps to restore this database you need to run the following commands from console:
 	psql -U postgres -c "CREATE DATABASE postgis_sample OWNER postgres TEMPLATE template_postgis ENCODING 'UTF8';"
-	psql -d postgis_sample -U postgres < postgisdemodb.backup
+	psql -d postgis_sample -U postgres -f <path to postgisdemodb.backup>
 
 It contains the data from the Countries/Rivers/Cities shapefiles
