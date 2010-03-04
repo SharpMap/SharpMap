@@ -356,8 +356,18 @@ namespace SharpMap.Utilities.SpatialIndexing
         {
             if (node.IsLeaf) //Leaf has been reached
             {
+                foreach (BoxObjects boxObject in node._objList)
+                {
+                    if(box.Intersects(boxObject.box))
+                        list.Add(boxObject.ID);
+
+                }
+                /*
                 for (int i = 0; i < node._objList.Count; i++)
+                {
                     list.Add(node._objList[i].ID);
+                }
+                */
             }
             else
             {

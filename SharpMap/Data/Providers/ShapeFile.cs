@@ -209,10 +209,11 @@ namespace SharpMap.Data.Providers
         public ShapeFile(string filename, bool fileBasedIndex)
         {
             _Filename = filename;
-            _FileBasedIndex = fileBasedIndex;
+            _FileBasedIndex = (fileBasedIndex) && File.Exists(Path.ChangeExtension(filename, ".shx"));
 
             //Initialize DBF
-            string dbffile = _Filename.Substring(0, _Filename.LastIndexOf(".")) + ".dbf";
+            //string dbffile = _Filename.Substring(0, _Filename.LastIndexOf(".")) + ".dbf";
+            string dbffile = Path.ChangeExtension(filename, ".dbf");
             if (File.Exists(dbffile))
                 dbaseFile = new DbaseReader(dbffile);
             //Parse shape header
@@ -466,12 +467,20 @@ namespace SharpMap.Data.Providers
 
             for (int i = 0; i < objectlist.Count; i++)
             {
+                FeatureDataRow fdr = GetFeature(objectlist[i], dt);
+                if ( fdr != null ) dt.AddRow(fdr);
+
+                /*
+                //This is triple effort since 
+                //- Bounding Boxes are checked by GetObjectIdsInView,
+                //- FilterDelegate is evaluated in GetFeature
                 FeatureDataRow fdr = dbaseFile.GetFeature(objectlist[i], dt);
                 fdr.Geometry = ReadGeometry(objectlist[i]);
                 if (fdr.Geometry != null)
                     if (fdr.Geometry.GetBoundingBox().Intersects(bbox))
                         if (FilterDelegate == null || FilterDelegate(fdr))
                             dt.AddRow(fdr);
+                 */
             }
             ds.Tables.Add(dt);
         }
@@ -501,10 +510,9 @@ namespace SharpMap.Data.Providers
                 FeatureDataRow fdr = GetFeature(oid);
                 if (fdr != null)
                     return fdr.Geometry;
-                else
-                    return null;
+                return null;
             }
-            else return ReadGeometry(oid);
+            return ReadGeometry(oid);
         }
 
         /// <summary>
@@ -517,8 +525,13 @@ namespace SharpMap.Data.Providers
         /// <param name="ds">FeatureDataSet to fill data into</param>
         public void ExecuteIntersectionQuery(Geometry geom, FeatureDataSet ds)
         {
-            FeatureDataTable dt = (FeatureDataTable) dbaseFile.NewTable;
+            FeatureDataTable dt = dbaseFile.NewTable;
             BoundingBox bbox = geom.GetBoundingBox();
+
+            //currently we are only checking against the bounding box,
+            //so we can safely call ExecuteIntersectionQuery(BoundingBox, FeatureDataSet)
+            ExecuteIntersectionQuery(bbox, ds);
+            /*
             //Get candidates by intersecting the spatial index tree
             Collection<uint> objectlist = tree.Search(bbox);
 
@@ -537,6 +550,7 @@ namespace SharpMap.Data.Providers
                             dt.AddRow(fdr);
             }
             ds.Tables.Add(dt);
+             */
         }
 
 
@@ -556,7 +570,8 @@ namespace SharpMap.Data.Providers
         /// <returns></returns>
         public FeatureDataRow GetFeature(uint RowID)
         {
-            return GetFeature(RowID, null);
+            //return GetFeature(RowID, null);
+            return GetFeature(RowID, dbaseFile.NewTable);
         }
 
         /// <summary>
@@ -593,14 +608,14 @@ namespace SharpMap.Data.Providers
 
         #endregion
 
-        private void InitializeShape(string filename, bool FileBasedIndex)
+        private void InitializeShape(string filename, bool fileBasedIndex)
         {
             if (!File.Exists(filename))
                 throw new FileNotFoundException(String.Format("Could not find file \"{0}\"", filename));
             if (!filename.ToLower().EndsWith(".shp"))
                 throw (new Exception("Invalid shapefile filename: " + filename));
 
-            LoadSpatialIndex(FileBasedIndex); //Load spatial index			
+            LoadSpatialIndex(fileBasedIndex); //Load spatial index			
         }
 
         /// <summary>
@@ -608,7 +623,7 @@ namespace SharpMap.Data.Providers
         /// </summary>
         private void ParseHeader()
         {
-            fsShapeIndex = new FileStream(_Filename.Remove(_Filename.Length - 4, 4) + ".shx", FileMode.Open,
+            fsShapeIndex = new FileStream(Path.ChangeExtension(_Filename, ".shx"), FileMode.Open,
                                           FileAccess.Read);
             brShapeIndex = new BinaryReader(fsShapeIndex, Encoding.Unicode);
 
@@ -824,11 +839,11 @@ namespace SharpMap.Data.Providers
         /// Reads all boundingboxes of features in the shapefile. This is used for spatial indexing.
         /// </summary>
         /// <returns></returns>
-        private List<BoundingBox> GetAllFeatureBoundingBoxes()
+        private IEnumerable<BoundingBox> GetAllFeatureBoundingBoxes()
         {
             int[] offsetOfRecord = ReadIndex(); //Read the whole .idx file
 
-            List<BoundingBox> boxes = new List<BoundingBox>();
+            //List<BoundingBox> boxes = new List<BoundingBox>();
 
             if (_ShapeType == ShapeType.Point)
             {
@@ -839,7 +854,8 @@ namespace SharpMap.Data.Providers
                     {
                         double x = brShapeFile.ReadDouble();
                         double y = brShapeFile.ReadDouble();
-                        boxes.Add(new BoundingBox(x, y, x, y));
+                        //boxes.Add(new BoundingBox(x, y, x, y));
+                        yield return new BoundingBox(x, y, x, y);
                     }
                 }
             }
@@ -848,12 +864,14 @@ namespace SharpMap.Data.Providers
                 for (int a = 0; a < _FeatureCount; ++a)
                 {
                     fsShapeFile.Seek(offsetOfRecord[a] + 8, 0); //skip record number and content length
-                    if ((ShapeType) brShapeFile.ReadInt32() != ShapeType.Null)
-                        boxes.Add(new BoundingBox(brShapeFile.ReadDouble(), brShapeFile.ReadDouble(),
-                                                  brShapeFile.ReadDouble(), brShapeFile.ReadDouble()));
+                    if ((ShapeType)brShapeFile.ReadInt32() != ShapeType.Null)
+                        yield return new BoundingBox(brShapeFile.ReadDouble(), brShapeFile.ReadDouble(),
+                                                     brShapeFile.ReadDouble(), brShapeFile.ReadDouble());
+                        //boxes.Add(new BoundingBox(brShapeFile.ReadDouble(), brShapeFile.ReadDouble(),
+                        //                          brShapeFile.ReadDouble(), brShapeFile.ReadDouble()));
                 }
             }
-            return boxes;
+            //return boxes;
         }
 
         /// <summary>
@@ -978,17 +996,17 @@ namespace SharpMap.Data.Providers
         /// <returns></returns>
         public FeatureDataRow GetFeature(uint RowID, FeatureDataTable dt)
         {
+            Debug.Assert(dt != null);
             if (dbaseFile != null)
             {
-                FeatureDataRow dr = (FeatureDataRow) dbaseFile.GetFeature(RowID, (dt == null) ? dbaseFile.NewTable : dt);
+                //FeatureDataRow dr = (FeatureDataRow)dbaseFile.GetFeature(RowID, (dt == null) ? dbaseFile.NewTable : dt);
+                FeatureDataRow dr = dbaseFile.GetFeature(RowID, dt);
                 return dr;
-                /*
                 dr.Geometry = ReadGeometry(RowID);
                 if (FilterDelegate == null || FilterDelegate(dr))
                     return dr;
                 else
                     return null;
-                 */
             }
             else
                 throw (new ApplicationException(
