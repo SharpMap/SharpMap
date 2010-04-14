@@ -32,7 +32,7 @@ namespace SharpMap.Layers
     /// </remarks>
     public class LayerGroup : Layer, ICanQueryLayer, IDisposable
     {
-        private Collection<Layer> _Layers;
+        private Collection<ILayer> _Layers;
 
         /// <summary>
         /// Initializes a new group layer
@@ -41,13 +41,13 @@ namespace SharpMap.Layers
         public LayerGroup(string layername)
         {
             LayerName = layername;
-            _Layers = new Collection<Layer>();
+            _Layers = new Collection<ILayer>();
         }
 
         /// <summary>
         /// Sublayers in the group
         /// </summary>
-        public Collection<Layer> Layers
+        public Collection<ILayer> Layers
         {
             get { return _Layers; }
             set { _Layers = value; }
@@ -90,7 +90,7 @@ namespace SharpMap.Layers
         /// </summary>
         /// <param name="name">Name of layer</param>
         /// <returns>Layer</returns>
-        public Layer GetLayerByName(string name)
+        public ILayer GetLayerByName(string name)
         {
             //return _Layers.Find( delegate(SharpMap.Layers.Layer layer) { return layer.LayerName.Equals(name); });
 
