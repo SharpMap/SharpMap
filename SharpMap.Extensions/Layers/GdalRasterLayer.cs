@@ -29,7 +29,7 @@ using SharpMap.Data;
 using SharpMap.Extensions.Data;
 using SharpMap.Geometries;
 using SharpMap.Rendering.Thematics;
-using Point=System.Drawing.Point;
+using Point = System.Drawing.Point;
 
 namespace SharpMap.Layers
 {
@@ -58,7 +58,7 @@ namespace SharpMap.Layers
         private bool _displayCIR;
         private bool _displayIR;
         protected BoundingBox _envelope;
-        private double[] _gain = {1, 1, 1, 1};
+        private double[] _gain = { 1, 1, 1, 1 };
         private double _gamma = 1;
         protected Dataset _gdalDataset;
         internal GeoTransform _geoTransform;
@@ -75,7 +75,7 @@ namespace SharpMap.Layers
         internal int _lbands;
 
         private List<int[]> _nonSpotCurveLut;
-        private double[] _nonSpotGain = {1, 1, 1, 1};
+        private double[] _nonSpotGain = { 1, 1, 1, 1 };
         private double _nonSpotGamma = 1;
 
         private double _outerSpotRadius;
@@ -85,7 +85,7 @@ namespace SharpMap.Layers
 
         private PointF _spot = new PointF(0, 0);
         private List<int[]> _spotCurveLut;
-        private double[] _spotGain = {1, 1, 1, 1};
+        private double[] _spotGain = { 1, 1, 1, 1 };
 
         private double _spotGamma = 1;
         private Point _stretchPoint;
@@ -409,8 +409,8 @@ namespace SharpMap.Layers
 
                 _imagesize = new Size(_gdalDataset.RasterXSize, _gdalDataset.RasterYSize);
                 _envelope = GetExtent();
-                _histoBounds = new Rectangle((int) _envelope.Left, (int) _envelope.Bottom, (int) _envelope.Width,
-                                             (int) _envelope.Height);
+                _histoBounds = new Rectangle((int)_envelope.Left, (int)_envelope.Bottom, (int)_envelope.Width,
+                                             (int)_envelope.Height);
                 _lbands = _gdalDataset.RasterCount;
             }
             catch (Exception ex)
@@ -486,16 +486,16 @@ namespace SharpMap.Layers
             dblWindowGndH = bbox.Top - bbox.Bottom;
 
             // height and width of transformed image in pixel space
-            dblImginMapW = size.Width*(dblImgEnvW/dblWindowGndW);
-            dblImginMapH = size.Height*(dblImgEnvH/dblWindowGndH);
+            dblImginMapW = size.Width * (dblImgEnvW / dblWindowGndW);
+            dblImginMapH = size.Height * (dblImgEnvH / dblWindowGndH);
 
             // image was not turned on its side
             if ((dblImginMapW > dblImginMapH && DsWidth > DsHeight) ||
                 (dblImginMapW < dblImginMapH && DsWidth < DsHeight))
-                return map.Zoom*(dblImginMapW/DsWidth);
-                // image was turned on its side
+                return map.Zoom * (dblImginMapW / DsWidth);
+            // image was turned on its side
             else
-                return map.Zoom*(dblImginMapH/DsWidth);
+                return map.Zoom * (dblImginMapH / DsWidth);
         }
 
         // zooms to nearest tiff internal resolution set
@@ -525,8 +525,8 @@ namespace SharpMap.Layers
             dblWindowGndH = bbox.Top - bbox.Bottom;
 
             // height and width of transformed image in pixel space
-            dblImginMapW = size.Width*(dblImgEnvW/dblWindowGndW);
-            dblImginMapH = size.Height*(dblImgEnvH/dblWindowGndH);
+            dblImginMapW = size.Width * (dblImgEnvW / dblWindowGndW);
+            dblImginMapH = size.Height * (dblImgEnvH / dblWindowGndH);
 
             // image was not turned on its side
             if ((dblImginMapW > dblImginMapH && DsWidth > DsHeight) ||
@@ -536,16 +536,16 @@ namespace SharpMap.Layers
                 dblTempWidth = dblImginMapH;
 
             // zoom level is within the r sets
-            if (DsWidth > dblTempWidth && (DsWidth/Math.Pow(2, 8)) < dblTempWidth)
+            if (DsWidth > dblTempWidth && (DsWidth / Math.Pow(2, 8)) < dblTempWidth)
             {
                 if (bZoomIn)
                 {
                     for (int i = 0; i <= 8; i++)
                     {
-                        if (DsWidth/Math.Pow(2, i) > dblTempWidth)
+                        if (DsWidth / Math.Pow(2, i) > dblTempWidth)
                         {
-                            if (DsWidth/Math.Pow(2, i + 1) < dblTempWidth)
-                                return map.Zoom*(dblTempWidth/(DsWidth/Math.Pow(2, i)));
+                            if (DsWidth / Math.Pow(2, i + 1) < dblTempWidth)
+                                return map.Zoom * (dblTempWidth / (DsWidth / Math.Pow(2, i)));
                         }
                     }
                 }
@@ -553,10 +553,10 @@ namespace SharpMap.Layers
                 {
                     for (int i = 8; i >= 0; i--)
                     {
-                        if (DsWidth/Math.Pow(2, i) < dblTempWidth)
+                        if (DsWidth / Math.Pow(2, i) < dblTempWidth)
                         {
-                            if (DsWidth/Math.Pow(2, i - 1) > dblTempWidth)
-                                return map.Zoom*(dblTempWidth/(DsWidth/Math.Pow(2, i)));
+                            if (DsWidth / Math.Pow(2, i - 1) > dblTempWidth)
+                                return map.Zoom * (dblTempWidth / (DsWidth / Math.Pow(2, i)));
                         }
                     }
                 }
@@ -577,8 +577,8 @@ namespace SharpMap.Layers
 
         public void ResetHistoRectangle()
         {
-            _histoBounds = new Rectangle((int) _envelope.Left, (int) _envelope.Bottom, (int) _envelope.Width,
-                                         (int) _envelope.Height);
+            _histoBounds = new Rectangle((int)_envelope.Left, (int)_envelope.Bottom, (int)_envelope.Width,
+                                         (int)_envelope.Height);
         }
 
         // gets transform between raster's native projection and the map projection
@@ -622,7 +622,7 @@ namespace SharpMap.Layers
 
                 // no rotation...use default transform
                 if (!_useRotation && !_haveSpot || (geoTrans[0] == 0 && geoTrans[3] == 0))
-                    geoTrans = new[] {999.5, 1, 0, 1000.5, 0, -1};
+                    geoTrans = new[] { 999.5, 1, 0, 1000.5, 0, -1 };
 
                 _geoTransform = new GeoTransform(geoTrans);
 
@@ -654,23 +654,23 @@ namespace SharpMap.Layers
 
                 // no rotation...use default transform
                 if (!_useRotation && !_haveSpot || (geoTrans[0] == 0 && geoTrans[3] == 0))
-                    geoTrans = new[] {999.5, 1, 0, 1000.5, 0, -1};
+                    geoTrans = new[] { 999.5, 1, 0, 1000.5, 0, -1 };
 
                 points.Add(new Geometries.Point(geoTrans[0], geoTrans[3]));
-                points.Add(new Geometries.Point(geoTrans[0] + (geoTrans[1]*_imagesize.Width),
-                                                geoTrans[3] + (geoTrans[4]*_imagesize.Width)));
+                points.Add(new Geometries.Point(geoTrans[0] + (geoTrans[1] * _imagesize.Width),
+                                                geoTrans[3] + (geoTrans[4] * _imagesize.Width)));
                 points.Add(
-                    new Geometries.Point(geoTrans[0] + (geoTrans[1]*_imagesize.Width) + (geoTrans[2]*_imagesize.Height),
-                                         geoTrans[3] + (geoTrans[4]*_imagesize.Width) + (geoTrans[5]*_imagesize.Height)));
-                points.Add(new Geometries.Point(geoTrans[0] + (geoTrans[2]*_imagesize.Height),
-                                                geoTrans[3] + (geoTrans[5]*_imagesize.Height)));
+                    new Geometries.Point(geoTrans[0] + (geoTrans[1] * _imagesize.Width) + (geoTrans[2] * _imagesize.Height),
+                                         geoTrans[3] + (geoTrans[4] * _imagesize.Width) + (geoTrans[5] * _imagesize.Height)));
+                points.Add(new Geometries.Point(geoTrans[0] + (geoTrans[2] * _imagesize.Height),
+                                                geoTrans[3] + (geoTrans[5] * _imagesize.Height)));
 
                 // transform to map's projection
                 if (_transform != null)
                 {
                     for (int i = 0; i < 4; i++)
                     {
-                        dblPoint = _transform.MathTransform.Transform(new[] {points[i].X, points[i].Y});
+                        dblPoint = _transform.MathTransform.Transform(new[] { points[i].X, points[i].Y });
                         points[i] = new Geometries.Point(dblPoint[0], dblPoint[1]);
                     }
                 }
@@ -700,10 +700,10 @@ namespace SharpMap.Layers
             _envelope = GeometryTransform.TransformBox(_envelope, _transform.MathTransform);
 
             // do same to histo rectangle
-            leftBottom = new double[] {_histoBounds.Left, _histoBounds.Bottom};
-            leftTop = new double[] {_histoBounds.Left, _histoBounds.Top};
-            rightBottom = new double[] {_histoBounds.Right, _histoBounds.Bottom};
-            rightTop = new double[] {_histoBounds.Right, _histoBounds.Top};
+            leftBottom = new double[] { _histoBounds.Left, _histoBounds.Bottom };
+            leftTop = new double[] { _histoBounds.Left, _histoBounds.Top };
+            rightBottom = new double[] { _histoBounds.Right, _histoBounds.Bottom };
+            rightTop = new double[] { _histoBounds.Right, _histoBounds.Top };
 
             // transform corners into new projection
             leftBottom = _transform.MathTransform.Transform(leftBottom);
@@ -718,7 +718,7 @@ namespace SharpMap.Layers
             top = Math.Max(leftBottom[1], Math.Max(leftTop[1], Math.Max(rightBottom[1], rightTop[1])));
 
             // set histo rectangle
-            _histoBounds = new Rectangle((int) left, (int) bottom, (int) right, (int) top);
+            _histoBounds = new Rectangle((int)left, (int)bottom, (int)right, (int)top);
         }
 
         // public method to set envelope and transform to new projection
@@ -743,9 +743,9 @@ namespace SharpMap.Layers
                 GetNonRotatedPreview(dataset, size, g, displayBbox, mapProjection);
                 return;
             }
-                // not rotated, but has spot...need default rotation
+            // not rotated, but has spot...need default rotation
             else if ((geoTrans[0] == 0 && geoTrans[3] == 0) && _haveSpot)
-                geoTrans = new[] {999.5, 1, 0, 1000.5, 0, -1};
+                geoTrans = new[] { 999.5, 1, 0, 1000.5, 0, -1 };
 
             _geoTransform = new GeoTransform(geoTrans);
             double DsWidth = _imagesize.Width;
@@ -826,18 +826,18 @@ namespace SharpMap.Layers
                 if (imageTL.X < 0)
                     imageTL.X = 0;
 
-                displayImageLength = (int) (imageBR.X - imageTL.X);
-                displayImageHeight = (int) (imageBR.Y - imageTL.Y);
+                displayImageLength = (int)(imageBR.X - imageTL.X);
+                displayImageHeight = (int)(imageBR.Y - imageTL.Y);
 
                 // find ground coordinates of image pixels
                 Geometries.Point groundBR = _geoTransform.ImageToGround(imageBR);
                 Geometries.Point groundTL = _geoTransform.ImageToGround(imageTL);
 
                 // convert ground coordinates to map coordinates to figure out where to place the bitmap
-                bitmapBR = new Point((int) map.WorldToImage(trueImageBbox.BottomRight).X + 1,
-                                     (int) map.WorldToImage(trueImageBbox.BottomRight).Y + 1);
-                bitmapTL = new Point((int) map.WorldToImage(trueImageBbox.TopLeft).X,
-                                     (int) map.WorldToImage(trueImageBbox.TopLeft).Y);
+                bitmapBR = new Point((int)map.WorldToImage(trueImageBbox.BottomRight).X + 1,
+                                     (int)map.WorldToImage(trueImageBbox.BottomRight).Y + 1);
+                bitmapTL = new Point((int)map.WorldToImage(trueImageBbox.TopLeft).X,
+                                     (int)map.WorldToImage(trueImageBbox.TopLeft).Y);
 
                 bitmapLength = bitmapBR.X - bitmapTL.X;
                 bitmapHeight = bitmapBR.Y - bitmapTL.Y;
@@ -882,10 +882,10 @@ namespace SharpMap.Layers
 
                         for (int y = 0; y < bitmapHeight; y++)
                         {
-                            byte* brow = (byte*) bitmapData.Scan0 + (y*bitmapData.Stride);
+                            byte* brow = (byte*)bitmapData.Scan0 + (y * bitmapData.Stride);
                             for (int x = 0; x < bitmapLength; x++)
                             {
-                                Int32 offsetX = x*3;
+                                Int32 offsetX = x * 3;
                                 brow[offsetX++] = cb;
                                 brow[offsetX++] = cg;
                                 brow[offsetX] = cr;
@@ -914,7 +914,7 @@ namespace SharpMap.Layers
                         // get data from image
                         for (int i = 0; i < Bands; i++)
                         {
-                            tempBuffer[i] = new double[displayImageLength*displayImageHeight];
+                            tempBuffer[i] = new double[displayImageLength * displayImageHeight];
                             band[i] = dataset.GetRasterBand(i + 1);
 
                             //get nodata value if present
@@ -925,10 +925,10 @@ namespace SharpMap.Layers
                             if (hasVal == 0) scales[i] = 1.0;
 
                             band[i].ReadRaster(
-                                (int) imageTL.X,
-                                (int) imageTL.Y,
-                                (int) (imageBR.X - imageTL.X),
-                                (int) (imageBR.Y - imageTL.Y),
+                                (int)imageTL.X,
+                                (int)imageTL.Y,
+                                (int)(imageBR.X - imageTL.X),
+                                (int)(imageBR.Y - imageTL.Y),
                                 tempBuffer[i], displayImageLength, displayImageHeight, 0, 0);
 
                             // parse temp buffer into the image x y value buffer
@@ -1000,8 +1000,8 @@ namespace SharpMap.Layers
                         geoXRot = _geoTransform.Inverse[2];
                         geoYRot = _geoTransform.Inverse[4];
 
-                        double dblXScale = (imageBR.X - imageTL.X)/(displayImageLength - 1);
-                        double dblYScale = (imageBR.Y - imageTL.Y)/(displayImageHeight - 1);
+                        double dblXScale = (imageBR.X - imageTL.X) / (displayImageLength - 1);
+                        double dblYScale = (imageBR.Y - imageTL.Y) / (displayImageHeight - 1);
                         double[] dblPoint;
 
                         // get inverse transform  
@@ -1013,25 +1013,25 @@ namespace SharpMap.Layers
 
                         for (PixY = 0; PixY < bitmapBR.Y - bitmapTL.Y; PixY++)
                         {
-                            byte* row = (byte*) bitmapData.Scan0 + ((int) Math.Round(PixY)*bitmapData.Stride);
+                            byte* row = (byte*)bitmapData.Scan0 + ((int)Math.Round(PixY) * bitmapData.Stride);
 
                             for (PixX = 0; PixX < bitmapBR.X - bitmapTL.X; PixX++)
                             {
                                 // same as Map.ImageToGround(), but much faster using stored values...rather than called each time
-                                GndX = dblMapMinX + (PixX + bitmapTLX)*dblMapPixelWidth;
-                                GndY = dblMapMaxY - (PixY + bitmapTLY)*dblMapPixelHeight;
+                                GndX = dblMapMinX + (PixX + bitmapTLX) * dblMapPixelWidth;
+                                GndY = dblMapMaxY - (PixY + bitmapTLY) * dblMapPixelHeight;
 
                                 // transform ground point if needed
                                 if (_transform != null)
                                 {
-                                    dblPoint = inverseTransform.Transform(new[] {GndX, GndY});
+                                    dblPoint = inverseTransform.Transform(new[] { GndX, GndY });
                                     GndX = dblPoint[0];
                                     GndY = dblPoint[1];
                                 }
 
                                 // same as GeoTransform.GroundToImage(), but much faster using stored values...
-                                ImgX = (geoLeft + geoHorzPixRes*GndX + geoXRot*GndY);
-                                ImgY = (geoTop + geoYRot*GndX + geoVertPixRes*GndY);
+                                ImgX = (geoLeft + geoHorzPixRes * GndX + geoXRot * GndY);
+                                ImgY = (geoTop + geoYRot * GndX + geoVertPixRes * GndY);
 
                                 if (ImgX < imageTL.X || ImgX > imageBR.X || ImgY < imageTL.Y || ImgY > imageBR.Y)
                                     continue;
@@ -1040,8 +1040,8 @@ namespace SharpMap.Layers
                                 for (int i = 0; i < Bands; i++)
                                 {
                                     intVal[i] =
-                                        buffer[i][(int) ((ImgX - imageLeft)/dblXScale)][
-                                            (int) ((ImgY - imageTop)/dblYScale)];
+                                        buffer[i][(int)((ImgX - imageLeft) / dblXScale)][
+                                            (int)((ImgY - imageTop) / dblYScale)];
 
                                     imageVal = SpotVal = intVal[i] = intVal[i] / bitScalar;
                                     if (ch[i] == 4)
@@ -1088,11 +1088,11 @@ namespace SharpMap.Layers
                                             intVal[i] = ApplyColorCorrection(imageVal, SpotVal, ch[i], GndX, GndY);
 
                                             // if pixel is within ground boundary, add its value to the histogram
-                                            if (ch[i] != -1 && intVal[i] > 0 && (_histoBounds.Bottom >= (int) GndY) &&
-                                                _histoBounds.Top <= (int) GndY &&
-                                                _histoBounds.Left <= (int) GndX && _histoBounds.Right >= (int) GndX)
+                                            if (ch[i] != -1 && intVal[i] > 0 && (_histoBounds.Bottom >= (int)GndY) &&
+                                                _histoBounds.Top <= (int)GndY &&
+                                                _histoBounds.Left <= (int)GndX && _histoBounds.Right >= (int)GndX)
                                             {
-                                                _histogram[ch[i]][(int) intVal[i]]++;
+                                                _histogram[ch[i]][(int)intVal[i]]++;
                                             }
                                         }
 
@@ -1103,7 +1103,7 @@ namespace SharpMap.Layers
 
                                 // luminosity
                                 if (_lbands >= 3)
-                                    _histogram[_lbands][(int) (intVal[2]*0.2126 + intVal[1]*0.7152 + intVal[0]*0.0722)]
+                                    _histogram[_lbands][(int)(intVal[2] * 0.2126 + intVal[1] * 0.7152 + intVal[0] * 0.0722)]
                                         ++;
 
                                 WritePixel(PixX, intVal, iPixelSize, ch, row);
@@ -1132,7 +1132,7 @@ namespace SharpMap.Layers
 
             // default transform
             if (!_useRotation && !_haveSpot || (geoTrans[0] == 0 && geoTrans[3] == 0))
-                geoTrans = new[] {999.5, 1, 0, 1000.5, 0, -1};
+                geoTrans = new[] { 999.5, 1, 0, 1000.5, 0, -1 };
             Bitmap bitmap = null;
             _geoTransform = new GeoTransform(geoTrans);
             int DsWidth = 0;
@@ -1172,33 +1172,33 @@ namespace SharpMap.Layers
 
                 //get screen pixels image should fill 
                 double dblBBoxW = bbox.Right - bbox.Left;
-                double dblBBoxtoImgPixX = imgPixWidth/dblBBoxW;
-                dblImginMapW = size.Width*dblBBoxtoImgPixX*_geoTransform.HorizontalPixelResolution;
+                double dblBBoxtoImgPixX = imgPixWidth / dblBBoxW;
+                dblImginMapW = size.Width * dblBBoxtoImgPixX * _geoTransform.HorizontalPixelResolution;
 
 
                 double dblBBoxH = bbox.Top - bbox.Bottom;
-                double dblBBoxtoImgPixY = imgPixHeight/dblBBoxH;
-                dblImginMapH = size.Height*dblBBoxtoImgPixY*-_geoTransform.VerticalPixelResolution;
+                double dblBBoxtoImgPixY = imgPixHeight / dblBBoxH;
+                dblImginMapH = size.Height * dblBBoxtoImgPixY * -_geoTransform.VerticalPixelResolution;
 
                 if ((dblImginMapH == 0) || (dblImginMapW == 0))
                     return;
 
                 // ratios of bounding box to image ground space
-                double dblBBoxtoImgX = size.Width/dblBBoxW;
-                double dblBBoxtoImgY = size.Height/dblBBoxH;
+                double dblBBoxtoImgX = size.Width / dblBBoxW;
+                double dblBBoxtoImgY = size.Height / dblBBoxH;
 
                 // set where to display bitmap in Map
                 if (bbox.Left != left)
                 {
                     if (bbox.Right != right)
-                        dblLocX = (_envelope.Left - bbox.Left)*dblBBoxtoImgX;
+                        dblLocX = (_envelope.Left - bbox.Left) * dblBBoxtoImgX;
                     else
                         dblLocX = size.Width - dblImginMapW;
                 }
                 if (bbox.Top != top)
                 {
                     if (bbox.Bottom != bottom)
-                        dblLocY = (bbox.Top - _envelope.Top)*dblBBoxtoImgY;
+                        dblLocY = (bbox.Top - _envelope.Top) * dblBBoxtoImgY;
                     else
                         dblLocY = size.Height - dblImginMapH;
                 }
@@ -1213,11 +1213,11 @@ namespace SharpMap.Layers
 
                 try
                 {
-                    bitmap = new Bitmap((int) Math.Round(dblImginMapW), (int) Math.Round(dblImginMapH),
+                    bitmap = new Bitmap((int)Math.Round(dblImginMapW), (int)Math.Round(dblImginMapH),
                                         PixelFormat.Format24bppRgb);
                     bitmapData =
                         bitmap.LockBits(
-                            new Rectangle(0, 0, (int) Math.Round(dblImginMapW), (int) Math.Round(dblImginMapH)),
+                            new Rectangle(0, 0, (int)Math.Round(dblImginMapW), (int)Math.Round(dblImginMapH)),
                             ImageLockMode.ReadWrite, bitmap.PixelFormat);
 
                     unsafe
@@ -1229,12 +1229,12 @@ namespace SharpMap.Layers
                         // get data from image
                         for (int i = 0; i < Bands; i++)
                         {
-                            buffer[i] = new double[(int) Math.Round(dblImginMapW)*(int) Math.Round(dblImginMapH)];
+                            buffer[i] = new double[(int)Math.Round(dblImginMapW) * (int)Math.Round(dblImginMapH)];
                             band[i] = dataset.GetRasterBand(i + 1);
 
-                            band[i].ReadRaster((int) Math.Round(x1), (int) Math.Round(y1), (int) Math.Round(imgPixWidth),
-                                               (int) Math.Round(imgPixHeight),
-                                               buffer[i], (int) Math.Round(dblImginMapW), (int) Math.Round(dblImginMapH),
+                            band[i].ReadRaster((int)Math.Round(x1), (int)Math.Round(y1), (int)Math.Round(imgPixWidth),
+                                               (int)Math.Round(imgPixHeight),
+                                               buffer[i], (int)Math.Round(dblImginMapW), (int)Math.Round(dblImginMapH),
                                                0, 0);
 
                             if (band[i].GetRasterColorInterpretation() == ColorInterp.GCI_BlueBand) ch[i] = 0;
@@ -1247,17 +1247,17 @@ namespace SharpMap.Layers
                         }
 
                         if (_bitDepth == 32)
-                            ch = new[] {0, 1, 2};
+                            ch = new[] { 0, 1, 2 };
 
                         p_indx = 0;
                         for (int y = 0; y < Math.Round(dblImginMapH); y++)
                         {
-                            byte* row = (byte*) bitmapData.Scan0 + (y*bitmapData.Stride);
+                            byte* row = (byte*)bitmapData.Scan0 + (y * bitmapData.Stride);
                             for (int x = 0; x < Math.Round(dblImginMapW); x++, p_indx++)
                             {
                                 for (int i = 0; i < Bands; i++)
                                 {
-                                    intVal[i] = buffer[i][p_indx]/bitScalar;
+                                    intVal[i] = buffer[i][p_indx] / bitScalar;
 
                                     if (_colorCorrect)
                                     {
@@ -1265,7 +1265,7 @@ namespace SharpMap.Layers
 
                                         if (_lbands >= 3)
                                             _histogram[_lbands][
-                                                (int) (intVal[2]*0.2126 + intVal[1]*0.7152 + intVal[0]*0.0722)]++;
+                                                (int)(intVal[2] * 0.2126 + intVal[1] * 0.7152 + intVal[0] * 0.0722)]++;
                                     }
 
                                     if (intVal[i] > 255)
@@ -1289,14 +1289,14 @@ namespace SharpMap.Layers
             }
             if (_transparentColor != Color.Empty)
                 bitmap.MakeTransparent(_transparentColor);
-            g.DrawImage(bitmap, new Point((int) Math.Round(dblLocX), (int) Math.Round(dblLocY)));
+            g.DrawImage(bitmap, new Point((int)Math.Round(dblLocX), (int)Math.Round(dblLocY)));
         }
 
         protected unsafe void WritePixel(double x, double[] intVal, int iPixelSize, int[] ch, byte* row)
         {
             // write out pixels
             // black and white
-            Int32 offsetX = (int) Math.Round(x)*iPixelSize;
+            Int32 offsetX = (int)Math.Round(x) * iPixelSize;
             if (Bands == 1 && _bitDepth != 32)
             {
                 if (ch[0] < 4)
@@ -1336,7 +1336,7 @@ namespace SharpMap.Layers
                     row[offsetX] = (byte)intVal[2];
                 }
             }
-                // IR grayscale
+            // IR grayscale
             else if (DisplayIR && Bands == 4)
             {
                 for (int i = 0; i < Bands; i++)
@@ -1347,35 +1347,35 @@ namespace SharpMap.Layers
                         {
                             if (intVal[3] == 0)
                             {
-                                row[(int) Math.Round(x)*iPixelSize] = 255;
-                                row[(int) Math.Round(x)*iPixelSize + 1] = 0;
-                                row[(int) Math.Round(x)*iPixelSize + 2] = 0;
+                                row[(int)Math.Round(x) * iPixelSize] = 255;
+                                row[(int)Math.Round(x) * iPixelSize + 1] = 0;
+                                row[(int)Math.Round(x) * iPixelSize + 2] = 0;
                             }
                             else if (intVal[3] == 255)
                             {
-                                row[(int) Math.Round(x)*iPixelSize] = 0;
-                                row[(int) Math.Round(x)*iPixelSize + 1] = 0;
-                                row[(int) Math.Round(x)*iPixelSize + 2] = 255;
+                                row[(int)Math.Round(x) * iPixelSize] = 0;
+                                row[(int)Math.Round(x) * iPixelSize + 1] = 0;
+                                row[(int)Math.Round(x) * iPixelSize + 2] = 255;
                             }
                             else
                             {
-                                row[(int) Math.Round(x)*iPixelSize] = (byte) intVal[i];
-                                row[(int) Math.Round(x)*iPixelSize + 1] = (byte) intVal[i];
-                                row[(int) Math.Round(x)*iPixelSize + 2] = (byte) intVal[i];
+                                row[(int)Math.Round(x) * iPixelSize] = (byte)intVal[i];
+                                row[(int)Math.Round(x) * iPixelSize + 1] = (byte)intVal[i];
+                                row[(int)Math.Round(x) * iPixelSize + 2] = (byte)intVal[i];
                             }
                         }
                         else
                         {
-                            row[(int) Math.Round(x)*iPixelSize] = (byte) intVal[i];
-                            row[(int) Math.Round(x)*iPixelSize + 1] = (byte) intVal[i];
-                            row[(int) Math.Round(x)*iPixelSize + 2] = (byte) intVal[i];
+                            row[(int)Math.Round(x) * iPixelSize] = (byte)intVal[i];
+                            row[(int)Math.Round(x) * iPixelSize + 1] = (byte)intVal[i];
+                            row[(int)Math.Round(x) * iPixelSize + 2] = (byte)intVal[i];
                         }
                     }
                     else
                         continue;
                 }
             }
-                // CIR
+            // CIR
             else if (DisplayCIR && Bands == 4)
             {
                 if (_showClip)
@@ -1392,10 +1392,10 @@ namespace SharpMap.Layers
                 for (int i = 0; i < Bands; i++)
                 {
                     if (ch[i] != 0 && ch[i] != -1)
-                        row[(int) Math.Round(x)*iPixelSize + ch[i] - 1] = (byte) intVal[i];
+                        row[(int)Math.Round(x) * iPixelSize + ch[i] - 1] = (byte)intVal[i];
                 }
             }
-                // RGB
+            // RGB
             else
             {
                 if (_showClip)
@@ -1412,7 +1412,7 @@ namespace SharpMap.Layers
                 for (int i = 0; i < 3; i++)
                 {
                     if (ch[i] != 3 && ch[i] != -1)
-                        row[(int) Math.Round(x)*iPixelSize + ch[i]] = (byte) intVal[i];
+                        row[(int)Math.Round(x) * iPixelSize + ch[i]] = (byte)intVal[i];
                 }
             }
         }
@@ -1430,17 +1430,17 @@ namespace SharpMap.Layers
             {
                 // gamma
                 if (_nonSpotGamma != 1)
-                    imageVal = 256*Math.Pow((imageVal/256), _nonSpotGamma);
+                    imageVal = 256 * Math.Pow((imageVal / 256), _nonSpotGamma);
 
                 // gain
                 if (channel == 2)
-                    imageVal = imageVal*_nonSpotGain[0];
+                    imageVal = imageVal * _nonSpotGain[0];
                 else if (channel == 1)
-                    imageVal = imageVal*_nonSpotGain[1];
+                    imageVal = imageVal * _nonSpotGain[1];
                 else if (channel == 0)
-                    imageVal = imageVal*_nonSpotGain[2];
+                    imageVal = imageVal * _nonSpotGain[2];
                 else if (channel == 3)
-                    imageVal = imageVal*_nonSpotGain[3];
+                    imageVal = imageVal * _nonSpotGain[3];
 
                 if (imageVal > 255)
                     imageVal = 255;
@@ -1450,13 +1450,13 @@ namespace SharpMap.Layers
                     if (_nonSpotCurveLut.Count != 0)
                     {
                         if (channel == 2 || channel == 4)
-                            imageVal = _nonSpotCurveLut[0][(int) imageVal];
+                            imageVal = _nonSpotCurveLut[0][(int)imageVal];
                         else if (channel == 1)
-                            imageVal = _nonSpotCurveLut[1][(int) imageVal];
+                            imageVal = _nonSpotCurveLut[1][(int)imageVal];
                         else if (channel == 0)
-                            imageVal = _nonSpotCurveLut[2][(int) imageVal];
+                            imageVal = _nonSpotCurveLut[2][(int)imageVal];
                         else if (channel == 3)
-                            imageVal = _nonSpotCurveLut[3][(int) imageVal];
+                            imageVal = _nonSpotCurveLut[3][(int)imageVal];
                     }
 
                 finalVal = imageVal;
@@ -1467,17 +1467,17 @@ namespace SharpMap.Layers
                 {
                     // gamma
                     if (_spotGamma != 1)
-                        spotVal = 256*Math.Pow((spotVal/256), _spotGamma);
+                        spotVal = 256 * Math.Pow((spotVal / 256), _spotGamma);
 
                     // gain
                     if (channel == 2)
-                        spotVal = spotVal*_spotGain[0];
+                        spotVal = spotVal * _spotGain[0];
                     else if (channel == 1)
-                        spotVal = spotVal*_spotGain[1];
+                        spotVal = spotVal * _spotGain[1];
                     else if (channel == 0)
-                        spotVal = spotVal*_spotGain[2];
+                        spotVal = spotVal * _spotGain[2];
                     else if (channel == 3)
-                        spotVal = spotVal*_spotGain[3];
+                        spotVal = spotVal * _spotGain[3];
 
                     if (spotVal > 255)
                         spotVal = 255;
@@ -1487,45 +1487,45 @@ namespace SharpMap.Layers
                         if (_spotCurveLut.Count != 0)
                         {
                             if (channel == 2 || channel == 4)
-                                spotVal = _spotCurveLut[0][(int) spotVal];
+                                spotVal = _spotCurveLut[0][(int)spotVal];
                             else if (channel == 1)
-                                spotVal = _spotCurveLut[1][(int) spotVal];
+                                spotVal = _spotCurveLut[1][(int)spotVal];
                             else if (channel == 0)
-                                spotVal = _spotCurveLut[2][(int) spotVal];
+                                spotVal = _spotCurveLut[2][(int)spotVal];
                             else if (channel == 3)
-                                spotVal = _spotCurveLut[3][(int) spotVal];
+                                spotVal = _spotCurveLut[3][(int)spotVal];
                         }
 
                     if (distance < _innerSpotRadius)
                         finalVal = spotVal;
                     else
                     {
-                        imagePct = (distance - _innerSpotRadius)/_outerSpotRadius;
+                        imagePct = (distance - _innerSpotRadius) / _outerSpotRadius;
                         spotPct = 1 - imagePct;
 
-                        finalVal = (Math.Round((spotVal*spotPct) + (imageVal*imagePct)));
+                        finalVal = (Math.Round((spotVal * spotPct) + (imageVal * imagePct)));
                     }
                 }
             }
 
             // gamma
             if (_gamma != 1)
-                finalVal = (256*Math.Pow((finalVal/256), _gamma));
+                finalVal = (256 * Math.Pow((finalVal / 256), _gamma));
 
 
             switch (channel)
             {
                 case 2:
-                    finalVal = finalVal*_gain[0];
+                    finalVal = finalVal * _gain[0];
                     break;
                 case 1:
-                    finalVal = finalVal*_gain[1];
+                    finalVal = finalVal * _gain[1];
                     break;
                 case 0:
-                    finalVal = finalVal*_gain[2];
+                    finalVal = finalVal * _gain[2];
                     break;
                 case 3:
-                    finalVal = finalVal*_gain[3];
+                    finalVal = finalVal * _gain[3];
                     break;
             }
 
@@ -1537,13 +1537,13 @@ namespace SharpMap.Layers
                 if (_curveLut.Count != 0)
                 {
                     if (channel == 2 || channel == 4)
-                        finalVal = _curveLut[0][(int) finalVal];
+                        finalVal = _curveLut[0][(int)finalVal];
                     else if (channel == 1)
-                        finalVal = _curveLut[1][(int) finalVal];
+                        finalVal = _curveLut[1][(int)finalVal];
                     else if (channel == 0)
-                        finalVal = _curveLut[2][(int) finalVal];
+                        finalVal = _curveLut[2][(int)finalVal];
                     else if (channel == 3)
-                        finalVal = _curveLut[3][(int) finalVal];
+                        finalVal = _curveLut[3][(int)finalVal];
                 }
 
             return finalVal;
@@ -1674,10 +1674,10 @@ namespace SharpMap.Layers
             else
             {
                 height = 4000;
-                width = (int) (4000*(_gdalDataset.RasterXSize/(double) _gdalDataset.RasterYSize));
+                width = (int)(4000 * (_gdalDataset.RasterXSize / (double)_gdalDataset.RasterYSize));
             }
 
-            double[] buffer = new double[width*height];
+            double[] buffer = new double[width * height];
 
             for (int band = 1; band <= _lbands; band++)
             {
@@ -1707,7 +1707,7 @@ namespace SharpMap.Layers
             if (max > 255)
                 max = 255;
 
-            _stretchPoint = new Point((int) min, (int) max);
+            _stretchPoint = new Point((int)min, (int)max);
         }
 
         #region Disposers and finalizers
@@ -1763,8 +1763,8 @@ namespace SharpMap.Layers
         public void ExecuteIntersectionQuery(BoundingBox box, FeatureDataSet ds)
         {
             Geometries.Point pt = new Geometries.Point(
-                box.Left + 0.5*box.Width,
-                box.Top - 0.5*box.Height);
+                box.Left + 0.5 * box.Width,
+                box.Top - 0.5 * box.Height);
             ExecuteIntersectionQuery(pt, ds);
         }
 
@@ -1774,13 +1774,13 @@ namespace SharpMap.Layers
             FeatureDataTable dt = new FeatureDataTable();
             dt.Columns.Add("Ordinate X", typeof(Double));
             dt.Columns.Add("Ordinate Y", typeof(Double));
-            for ( int i = 1; i <= Bands; i++)
-                dt.Columns.Add(string.Format("Value Band {0}", i), typeof (Double));
+            for (int i = 1; i <= Bands; i++)
+                dt.Columns.Add(string.Format("Value Band {0}", i), typeof(Double));
 
             //Get location on raster
             Double[] buffer = new double[1];
             Int32[] bandMap = new int[Bands];
-            for(int i = 1; i <= Bands; i++) bandMap[i-1] = i;
+            for (int i = 1; i <= Bands; i++) bandMap[i - 1] = i;
             Geometries.Point imgPt = _geoTransform.GroundToImage(pt);
             Int32 x = Convert.ToInt32(imgPt.X);
             Int32 y = Convert.ToInt32(imgPt.Y);
@@ -1799,7 +1799,7 @@ namespace SharpMap.Layers
             //Add data from raster
             for (int i = 1; i <= Bands; i++)
             {
-                Band band= _gdalDataset.GetRasterBand(i);
+                Band band = _gdalDataset.GetRasterBand(i);
                 //DataType dtype = band.DataType;
                 CPLErr res = band.ReadRaster(x, y, 1, 1, buffer, 1, 1, 0, 0);
                 if (res == CPLErr.CE_None)
