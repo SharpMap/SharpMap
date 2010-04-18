@@ -1786,8 +1786,9 @@ namespace SharpMap.Layers
             Int32 y = Convert.ToInt32(imgPt.Y);
 
             //Test if raster ordinates are within bounds
-            if (x < 0 || y < 0) return;
-            if (y >= _imagesize.Width) return;
+            if (x < 0) return;
+            if (y < 0) return;
+            if (x >= _imagesize.Width) return;
             if (y >= _imagesize.Height) return;
 
             //Create new row, add ordinates and location geometry
