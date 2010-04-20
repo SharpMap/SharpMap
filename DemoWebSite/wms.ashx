@@ -13,8 +13,7 @@ public class wms : IHttpHandler
     {
         //Get the path of this page
         string url = (context.Request.Url.Query.Length > 0
-                          ?
-                              context.Request.Url.AbsoluteUri.Replace(context.Request.Url.Query, "")
+                          ? context.Request.Url.AbsoluteUri.Replace(context.Request.Url.Query, "")
                           : context.Request.Url.AbsoluteUri);
         Capabilities.WmsServiceDescription description =
             new Capabilities.WmsServiceDescription("Acme Corp. Map Server", url);

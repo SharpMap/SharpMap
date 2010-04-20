@@ -30,7 +30,7 @@ namespace SharpMap.Web.Wms
     /// <summary>
     /// This is a helper class designed to make it easy to create a WMS Service
     /// </summary>
-    public class WmsServer
+    public static class WmsServer
     {
         /// <summary>
         /// Generates a WMS 1.3.0 compliant response based on a <see cref="SharpMap.Map"/> and the current HttpRequest.
@@ -116,7 +116,7 @@ namespace SharpMap.Web.Wms
                 }
             }
             else
-                //Version is mandatory if REQUEST!=GetCapabilities. Check if this is a capabilities request, since VERSION is null
+            //Version is mandatory if REQUEST!=GetCapabilities. Check if this is a capabilities request, since VERSION is null
             {
                 if (String.Compare(context.Request.Params["REQUEST"], "GetCapabilities", ignorecase) != 0)
                 {
@@ -145,6 +145,217 @@ namespace SharpMap.Web.Wms
                 XmlWriter writer = XmlWriter.Create(context.Response.OutputStream);
                 capabilities.WriteTo(writer);
                 writer.Close();
+                context.Response.End();
+            }
+            else if (String.Compare(context.Request.Params["REQUEST"], "GetFeatureInfo", ignorecase) == 0) //FeatureInfo Requested
+            {
+                if (context.Request.Params["LAYERS"] == null)
+                {
+                    WmsException.ThrowWmsException("Required parameter LAYERS not specified");
+                    return;
+                }
+                if (context.Request.Params["STYLES"] == null)
+                {
+                    WmsException.ThrowWmsException("Required parameter STYLES not specified");
+                    return;
+                }
+                if (context.Request.Params["CRS"] == null)
+                {
+                    WmsException.ThrowWmsException("Required parameter CRS not specified");
+                    return;
+                }
+                else if (context.Request.Params["CRS"] != "EPSG:" + map.Layers[0].SRID)
+                {
+                    WmsException.ThrowWmsException(WmsException.WmsExceptionCode.InvalidCRS, "CRS not supported");
+                    return;
+                }
+                if (context.Request.Params["BBOX"] == null)
+                {
+                    WmsException.ThrowWmsException(WmsException.WmsExceptionCode.InvalidDimensionValue,
+                                                   "Required parameter BBOX not specified");
+                    return;
+                }
+                if (context.Request.Params["WIDTH"] == null)
+                {
+                    WmsException.ThrowWmsException(WmsException.WmsExceptionCode.InvalidDimensionValue,
+                                                   "Required parameter WIDTH not specified");
+                    return;
+                }
+                if (context.Request.Params["HEIGHT"] == null)
+                {
+                    WmsException.ThrowWmsException(WmsException.WmsExceptionCode.InvalidDimensionValue,
+                                                   "Required parameter HEIGHT not specified");
+                    return;
+                }
+                if (context.Request.Params["FORMAT"] == null)
+                {
+                    WmsException.ThrowWmsException("Required parameter FORMAT not specified");
+                    return;
+                }
+                if (context.Request.Params["QUERY_LAYERS"] == null)
+                {
+                    WmsException.ThrowWmsException("Required parameter QUERY_LAYERS not specified");
+                    return;
+                }
+                if (context.Request.Params["INFO_FORMAT"] == null)
+                {
+                    WmsException.ThrowWmsException("Required parameter INFO_FORMAT not specified");
+                    return;
+                }
+                //parameters X&Y are not part of the 1.3.0 specification, but are included for backwards compatability with 1.1.1 (OpenLayers likes it when used together with wms1.1.1 services)
+                if (context.Request.Params["X"] == null && context.Request.Params["I"] == null)
+                {
+                    WmsException.ThrowWmsException("Required parameter I not specified");
+                    return;
+                }
+                if (context.Request.Params["Y"] == null && context.Request.Params["J"] == null)
+                {
+                    WmsException.ThrowWmsException("Required parameter J not specified");
+                    return;
+                }
+                //sets the map size to the size of the client in order to calculate the coordinates of the projection of the client
+                try
+                {
+                    map.Size = new System.Drawing.Size(System.Convert.ToInt16(context.Request.Params["WIDTH"]), System.Convert.ToInt16(context.Request.Params["HEIGHT"]));
+                }
+                catch
+                {
+                    WmsException.ThrowWmsException("Invalid parameters for HEIGHT or WITDH");
+                    return;
+                }
+                //sets the boundingbox to the boundingbox of the client in order to calculate the coordinates of the projection of the client
+                BoundingBox bbox = ParseBBOX(context.Request.Params["bbox"]);
+                if (bbox == null)
+                {
+                    WmsException.ThrowWmsException("Invalid parameter BBOX");
+                    return;
+                }
+                map.ZoomToBox(bbox);
+                //sets the point clicked by the client
+                SharpMap.Geometries.Point p = new SharpMap.Geometries.Point();
+                Single x = 0;
+                Single y = 0;
+                //tries to set the x to the Param I, if the client send an X, it will try the X, if both fail, exception is thrown
+                if (context.Request.Params["X"] != null)
+                    try
+                    {
+                        x = System.Convert.ToSingle(context.Request.Params["X"]);
+                    }
+                    catch
+                    {
+                        WmsException.ThrowWmsException("Invalid parameters for I");
+                    }
+                if (context.Request.Params["I"] != null)
+                    try
+                    {
+                        x = System.Convert.ToSingle(context.Request.Params["I"]);
+                    }
+                    catch
+                    {
+                        WmsException.ThrowWmsException("Invalid parameters for I");
+                    }
+                //same procedure for J (Y)
+                if (context.Request.Params["Y"] != null)
+                    try
+                    {
+                        y = System.Convert.ToSingle(context.Request.Params["Y"]);
+                    }
+                    catch
+                    {
+                        WmsException.ThrowWmsException("Invalid parameters for I");
+                    }
+                if (context.Request.Params["J"] != null)
+                    try
+                    {
+                        y = System.Convert.ToSingle(context.Request.Params["J"]);
+                    }
+                    catch
+                    {
+                        WmsException.ThrowWmsException("Invalid parameters for I");
+                    }
+                p = map.ImageToWorld(new System.Drawing.PointF(x, y));
+                int fc;
+                try
+                {
+                    fc = System.Convert.ToInt16(context.Request.Params["FEATURE_COUNT"]);
+                    if (fc < 1)
+                        fc = 1;
+                }
+                catch
+                {
+                    fc = 1;
+                }
+                String vstr = "GetFeatureInfo results: \n";
+                string[] requestLayers = context.Request.Params["QUERY_LAYERS"].Split(new[] { ',' });
+                foreach (string requestLayer in requestLayers)
+                {
+                    bool found = false;
+                    foreach (ILayer mapLayer in map.Layers)
+                    {
+                        if (String.Equals(mapLayer.LayerName, requestLayer,
+                                          StringComparison.InvariantCultureIgnoreCase))
+                        {
+                            found = true;
+                            if (!(mapLayer is ICanQueryLayer)) continue;
+
+                            ICanQueryLayer queryLayer = mapLayer as ICanQueryLayer;
+                            if (queryLayer.IsQueryEnabled)
+                            {
+                                SharpMap.Data.FeatureDataSet fds = new SharpMap.Data.FeatureDataSet();
+                                queryLayer.ExecuteIntersectionQuery(p.GetBoundingBox(), fds);
+                                if (fds.Tables.Count == 0)
+                                {
+                                    vstr = vstr + "\nSearch returned no results on layer: " + requestLayer;
+                                }
+                                else
+                                {
+                                    if (fds.Tables[0].Rows.Count == 0)
+                                    {
+                                        vstr = vstr + "\nSearch returned no results on layer: " + requestLayer + " ";
+                                    }
+                                    else
+                                    {
+                                        //if featurecount < fds...count, select smallest bbox, because most likely to be clicked
+                                        vstr = vstr + "\n Layer: '" + requestLayer + "'\n Featureinfo:\n";
+                                        int[] keys = new int[fds.Tables[0].Rows.Count];
+                                        double[] area = new double[fds.Tables[0].Rows.Count];
+                                        for (int l = 0; l < fds.Tables[0].Rows.Count; l++)
+                                        {
+                                            SharpMap.Data.FeatureDataRow fdr = fds.Tables[0].Rows[l] as SharpMap.Data.FeatureDataRow;
+                                            area[l] = fdr.Geometry.GetBoundingBox().GetArea();
+                                            keys[l] = l;
+                                        }
+                                        Array.Sort(area, keys);
+                                        if (fds.Tables[0].Rows.Count < fc)
+                                        {
+                                            fc = fds.Tables[0].Rows.Count;
+                                        }
+                                        for (int k = 0; k < fc; k++)
+                                        {
+                                            for (int j = 0; j < fds.Tables[0].Rows[keys[k]].ItemArray.Length; j++)
+                                            {
+                                                vstr = vstr + " '" + fds.Tables[0].Rows[keys[k]].ItemArray[j].ToString() + "'";
+                                            }
+                                            if ((k + 1) < fc)
+                                                vstr = vstr + ",\n";
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (found == false)
+                    {
+                        WmsException.ThrowWmsException(WmsException.WmsExceptionCode.LayerNotDefined,
+                                                       "Unknown layer '" + requestLayer + "'");
+                        return;
+                    }
+                }
+                context.Response.Clear();
+                context.Response.ContentType = "text/plain";
+                context.Response.Charset = "windows-1252";
+                context.Response.Write(vstr);
+                context.Response.Flush();
                 context.Response.End();
             }
             else if (String.Compare(context.Request.Params["REQUEST"], "GetMap", ignorecase) == 0) //Map requested
@@ -256,15 +467,15 @@ namespace SharpMap.Web.Wms
                     WmsException.ThrowWmsException("Invalid parameter BBOX");
                     return;
                 }
-                map.PixelAspectRatio = (width/(double) height)/(bbox.Width/bbox.Height);
+                map.PixelAspectRatio = (width / (double)height) / (bbox.Width / bbox.Height);
                 map.Center = bbox.GetCentroid();
                 map.Zoom = bbox.Width;
 
                 //Set layers on/off
                 if (!String.IsNullOrEmpty(context.Request.Params["LAYERS"]))
-                    //If LAYERS is empty, use default layer on/off settings
+                //If LAYERS is empty, use default layer on/off settings
                 {
-                    string[] layers = context.Request.Params["LAYERS"].Split(new[] {','});
+                    string[] layers = context.Request.Params["LAYERS"].Split(new[] { ',' });
                     if (description.LayerLimit > 0)
                     {
                         if (layers.Length == 0 && map.Layers.Count > description.LayerLimit ||
@@ -332,7 +543,7 @@ namespace SharpMap.Web.Wms
         /// <returns>Boundingbox or null if invalid parameter</returns>
         private static BoundingBox ParseBBOX(string strBBOX)
         {
-            string[] strVals = strBBOX.Split(new[] {','});
+            string[] strVals = strBBOX.Split(new[] { ',' });
             if (strVals.Length != 4)
                 return null;
             double minx = 0;

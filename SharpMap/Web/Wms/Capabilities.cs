@@ -150,7 +150,10 @@ namespace SharpMap.Web.Wms
             GetCapabilitiesNode.AppendChild(CreateElement("Format", "text/xml", capabilities, false, wmsNamespaceURI));
             GetCapabilitiesNode.AppendChild(GenerateDCPTypeNode(capabilities, OnlineResource));
             RequestNode.AppendChild(GetCapabilitiesNode);
-
+            XmlNode GetFeatureInfoNode = capabilities.CreateNode(XmlNodeType.Element, "GetFeatureInfo", wmsNamespaceURI);
+            GetFeatureInfoNode.AppendChild(CreateElement("Format", "text/plain", capabilities, false, wmsNamespaceURI));
+            GetFeatureInfoNode.AppendChild(GenerateDCPTypeNode(capabilities, OnlineResource));
+            RequestNode.AppendChild(GetFeatureInfoNode);
             XmlNode GetMapNode = capabilities.CreateNode(XmlNodeType.Element, "GetMap", wmsNamespaceURI);
             //Add supported fileformats. Return the ones that GDI+ supports
             foreach (ImageCodecInfo encoder in ImageCodecInfo.GetImageEncoders())
@@ -278,10 +281,20 @@ namespace SharpMap.Web.Wms
             if (layer.GetType() == typeof (LayerGroup))
                 foreach (Layer childlayer in ((LayerGroup) layer).Layers)
                     LayerNode.AppendChild(GetWmsLayerNode(childlayer, doc));
+            
+            LayerNode.Attributes.Append(CreateAttribute("queryable", GetQueriable(layer), doc));
 
             LayerNode.AppendChild(GenerateBoundingBoxElement(layer.Envelope, layer.SRID, doc));
-
             return LayerNode;
+        }
+
+        private static string GetQueriable(ILayer layer)
+        {
+            if (layer is ICanQueryLayer)
+            {
+                if ((layer as ICanQueryLayer).IsQueryEnabled) return "1";
+            }
+            return "0";
         }
 
         private static XmlElement GenerateBoundingBoxElement(BoundingBox bbox, int SRID, XmlDocument doc)

@@ -1834,5 +1834,11 @@ namespace SharpMap.Layers
             set { _colorBlend = value; }
         }
 
+        private bool _isQueryEnabled = true;
+        public bool IsQueryEnabled
+        {
+            get { return _isQueryEnabled; }
+            set { _isQueryEnabled = value; }
+        }
     }
 }

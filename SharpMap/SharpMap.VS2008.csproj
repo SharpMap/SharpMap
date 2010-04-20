@@ -82,8 +82,6 @@
     <Compile Include="Data\Providers\MsSql.cs" />
     <Compile Include="Data\Providers\MsSqlSpatial.cs" />
     <Compile Include="Data\Providers\OleDbPoint.cs" />
-    <Compile Include="Data\Providers\Pooling\Connector.cs" />
-    <Compile Include="Data\Providers\Pooling\ConnectorPool.cs" />
     <Compile Include="Data\Providers\ShapeFile.cs" />
     <Compile Include="Data\Providers\SqlServer2008.cs" />
     <Compile Include="Data\Providers\WFSClient.cs" />

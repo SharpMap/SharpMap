@@ -32,8 +32,8 @@ namespace SharpMap.Layers
     /// </remarks>
     public class LayerGroup : Layer, ICanQueryLayer, IDisposable
     {
-        private Collection<ILayer> _Layers;
-
+        private Collection<Layer> _Layers;
+        private bool _isQueryEnabled = true;
         /// <summary>
         /// Initializes a new group layer
         /// </summary>
@@ -41,13 +41,20 @@ namespace SharpMap.Layers
         public LayerGroup(string layername)
         {
             LayerName = layername;
-            _Layers = new Collection<ILayer>();
+            _Layers = new Collection<Layer>();
         }
-
+        /// <summary>
+        /// Whether the layer is queryable when used in a SharpMap.Web.Wms.WmsServer, ExecuteIntersectionQuery() will be possible in all other situations when set to FALSE
+        /// </summary>
+        public bool IsQueryEnabled
+        {
+            get { return _isQueryEnabled; }
+            set { _isQueryEnabled = value; }
+        }
         /// <summary>
         /// Sublayers in the group
         /// </summary>
-        public Collection<ILayer> Layers
+        public Collection<Layer> Layers
         {
             get { return _Layers; }
             set { _Layers = value; }
@@ -90,7 +97,7 @@ namespace SharpMap.Layers
         /// </summary>
         /// <param name="name">Name of layer</param>
         /// <returns>Layer</returns>
-        public ILayer GetLayerByName(string name)
+        public Layer GetLayerByName(string name)
         {
             //return _Layers.Find( delegate(SharpMap.Layers.Layer layer) { return layer.LayerName.Equals(name); });
 

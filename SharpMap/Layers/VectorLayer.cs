@@ -55,6 +55,7 @@ namespace SharpMap.Layers
     public class VectorLayer : Layer, ICanQueryLayer, IDisposable
     {
         private bool _ClippingEnabled = false;
+        private bool _isQueryEnabled = true;
         private IProvider _DataSource;
         private SmoothingMode _SmoothingMode;
         private VectorStyle _Style;
@@ -106,6 +107,14 @@ namespace SharpMap.Layers
             set { _ClippingEnabled = value; }
         }
 
+        /// <summary>
+        /// Whether the layer is queryable when used in a SharpMap.Web.Wms.WmsServer, ExecuteIntersectionQuery() will be possible in all other situations when set to FALSE
+        /// </summary>
+        public bool IsQueryEnabled 
+        {
+            get { return _isQueryEnabled; }
+            set {_isQueryEnabled = value; } 
+        }
 
         /// <summary>
         /// Render whether smoothing (antialiasing) is applied to lines and curves and the edges of filled areas
