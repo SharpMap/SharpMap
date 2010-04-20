@@ -439,11 +439,6 @@ namespace SharpMap.Layers
                 RequiresRedraw = true;
         }
 
-        public override object Clone()
-        {
-            throw new NotImplementedException();
-        }
-
         public override void Render(Graphics g, Map map)
         {
             LastRenderedSize = map.Size;

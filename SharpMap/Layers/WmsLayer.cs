@@ -543,14 +543,5 @@ namespace SharpMap.Layers
                     return wmsClient.GetMapRequests[i];
             return wmsClient.GetMapRequests[0];
         }
-
-        /// <summary>
-        /// Clones the object
-        /// </summary>
-        /// <returns></returns>
-        public override object Clone()
-        {
-            throw new NotImplementedException();
-        }
     }
 }

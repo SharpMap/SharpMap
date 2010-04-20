@@ -26,7 +26,7 @@ namespace SharpMap.Layers
     /// Abstract class for common layer properties
     /// Implement this class instead of the ILayer interface to save a lot of common code.
     /// </summary>
-    public abstract class Layer : ILayer, ICloneable
+    public abstract class Layer : ILayer
     {
         #region Events
 
@@ -63,16 +63,6 @@ namespace SharpMap.Layers
             get { return _CoordinateTransform; }
             set { _CoordinateTransform = value; }
         }
-
-        #region ICloneable Members
-
-        /// <summary>
-        /// Clones the layer
-        /// </summary>
-        /// <returns>cloned object</returns>
-        public abstract object Clone();
-
-        #endregion
 
         #region ILayer Members
 

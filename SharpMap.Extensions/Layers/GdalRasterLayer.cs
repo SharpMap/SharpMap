@@ -566,14 +566,6 @@ namespace SharpMap.Layers
             return map.Zoom;
         }
 
-        /// <summary>
-        /// Clones the object
-        /// </summary>
-        /// <returns></returns>
-        public override object Clone()
-        {
-            throw new NotImplementedException();
-        }
 
         public void ResetHistoRectangle()
         {

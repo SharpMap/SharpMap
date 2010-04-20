@@ -571,14 +571,5 @@ namespace SharpMap.Layers
             tmpy = line.Vertices[midPoint].Y + (dy*0.5);
             label.LabelPoint = map.WorldToImage(new Point(tmpx, tmpy));
         }
-
-        /// <summary>
-        /// Clones the object
-        /// </summary>
-        /// <returns></returns>
-        public override object Clone()
-        {
-            throw new NotImplementedException();
-        }
     }
 }

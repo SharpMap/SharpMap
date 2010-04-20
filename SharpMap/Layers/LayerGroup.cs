@@ -120,16 +120,7 @@ namespace SharpMap.Layers
                     _Layers[i].Render(g, map);
         }
 
-        /// <summary>
-        /// Clones the layer
-        /// </summary>
-        /// <returns>cloned object</returns>
-        public override object Clone()
-        {
-            throw new NotImplementedException();
-        }
-
-        #region Implementation of ICanQueryLayer
+         #region Implementation of ICanQueryLayer
 
         /// <summary>
         /// Returns the data associated with all the geometries that are intersected by 'geom'

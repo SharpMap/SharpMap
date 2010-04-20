@@ -363,15 +363,6 @@ namespace SharpMap.Layers
             }
         }
 
-        /// <summary>
-        /// Clones the layer
-        /// </summary>
-        /// <returns>cloned object</returns>
-        public override object Clone()
-        {
-            throw new NotImplementedException();
-        }
-
         #region Implementation of ICanQueryLayer
 
         /// <summary>

@@ -469,14 +469,5 @@ namespace SharpMap.Layers
             double maxY = Math.Round(dest.Bottom);
             return new Rectangle((int) minX, (int) minY, (int) (maxX - minX), (int) (maxY - minY));
         }
-
-        /// <summary>
-        /// Clones the object
-        /// </summary>
-        /// <returns></returns>
-        public override object Clone()
-        {
-            throw new NotImplementedException();
-        }
     }
 }
