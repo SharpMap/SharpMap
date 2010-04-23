@@ -108,7 +108,7 @@ namespace SharpMap.Layers
 
             foreach (TileInfo info in tiles)
             {
-                if (bitmaps.Find(info.Key) != null) continue;
+                if (bitmaps.Find(info.Index) != null) continue;
                 AutoResetEvent waitHandle = new AutoResetEvent(false);
                 waitHandles.Add(waitHandle);
                 ThreadPool.QueueUserWorkItem(GetTileOnThread, new object[] { source.Provider, info, bitmaps, waitHandle });
@@ -119,7 +119,7 @@ namespace SharpMap.Layers
 
             foreach (TileInfo info in tiles)
             {
-                Bitmap bitmap = bitmaps.Find(info.Key);
+                Bitmap bitmap = bitmaps.Find(info.Index);
                 if (bitmap == null) continue;
 
                 PointF min = map.WorldToImage(new SharpMap.Geometries.Point(info.Extent.MinX, info.Extent.MinY));
