@@ -14,7 +14,8 @@ namespace WinFormSamples.Samples
         public static Map InitializeMap()
         {
             Map map = new Map();
-            TileLayer tileLayer = new TileLayer(new TileSourceOsm(), "OSM");
+            
+            TileLayer tileLayer = new TileLayer(new OsmTileSource(), "OSM");
             map.Layers.Add(tileLayer);
             map.ZoomToBox(tileLayer.Envelope);
             return map;
