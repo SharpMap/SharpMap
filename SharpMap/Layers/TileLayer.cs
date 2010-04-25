@@ -154,7 +154,7 @@ namespace SharpMap.Layers
             {
                 bytes = tileProvider.GetTile(tileInfo);
                 Bitmap bitmap = new Bitmap(new MemoryStream(bytes));
-                bitmaps.Add(tileInfo.Key, bitmap);
+                bitmaps.Add(tileInfo.Index, bitmap);
             }
             catch (WebException ex)
             {
@@ -166,7 +166,7 @@ namespace SharpMap.Layers
                     Graphics graphics = Graphics.FromImage(bitmap);
                     graphics.DrawString(ex.Message, new Font(FontFamily.GenericSansSerif, 12), new SolidBrush(Color.Black),
                         new RectangleF(0, 0, this.source.Schema.Width, this.source.Schema.Height));
-                    bitmaps.Add(tileInfo.Key, bitmap);
+                    bitmaps.Add(tileInfo.Index, bitmap);
                 }
             }
             catch (Exception ex)
