@@ -68,7 +68,7 @@ namespace SharpMap.Layers
         #region Public methods
 
 
-        public void Render(Graphics graphics, Map map)
+        public override void Render(Graphics graphics, Map map)
         {
             Extent extent = new Extent(map.Envelope.Min.X, map.Envelope.Min.Y, map.Envelope.Max.X, map.Envelope.Max.Y);
             int level = BruTile.Utilities.GetNearestLevel(source.Schema.Resolutions, map.PixelSize);
