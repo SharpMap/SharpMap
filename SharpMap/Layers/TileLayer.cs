@@ -12,7 +12,7 @@ using SharpMap.Geometries;
 
 namespace SharpMap.Layers
 {
-    public class TileLayer : ILayer
+    public class TileLayer : Layer
     {
         #region Fields
         
@@ -30,31 +30,10 @@ namespace SharpMap.Layers
 
         #region Properties
 
-        public double MinVisible
-        {
-            get { return minVisible; }
-            set { minVisible = value; }
-        }
-
-        public double MaxVisible
-        {
-            get { return maxVisible; }
-            set { maxVisible = value; }
-        }
-
-        public bool Enabled
-        {
-            get { return enabled; }
-            set { enabled = value; }
-        }
-
-        public string LayerName
-        {
-            get { return layerName; }
-            set { layerName = value; }
-        }
-
-        public BoundingBox Envelope
+        /// <summary>
+        /// Gets the boundingbox of the entire layer
+        /// </summary>
+        public override BoundingBox Envelope
         {
             get 
             {
@@ -136,7 +115,12 @@ namespace SharpMap.Layers
             }
         }
 
-#endregion
+        //public BoundingBox Envelope 
+        //{
+        //    get { return source.Schema.Extent; }  
+        //}
+
+        #endregion
 
         #region Private methods
 
