@@ -16,11 +16,7 @@ namespace SharpMap.Layers
     {
         #region Fields
         
-        double minVisible = Double.MinValue;
-        double maxVisible = Double.MaxValue;
-        bool enabled = true;
         string layerName;
-        int srid;
         ImageAttributes imageAttributes = new ImageAttributes();
         ITileSource source;
         MemoryCache<Bitmap> bitmaps = new MemoryCache<Bitmap>(100, 200);
@@ -43,12 +39,6 @@ namespace SharpMap.Layers
                     source.Schema.Extent.MaxX, 
                     source.Schema.Extent.MaxY);
             }
-        }
-
-        public int SRID
-        {
-            get { return srid; }
-            set { srid = value; }
         }
 
         #endregion
@@ -76,6 +66,7 @@ namespace SharpMap.Layers
         #endregion
 
         #region Public methods
+
 
         public void Render(Graphics graphics, Map map)
         {
@@ -114,11 +105,6 @@ namespace SharpMap.Layers
                     imageAttributes);
             }
         }
-
-        //public BoundingBox Envelope 
-        //{
-        //    get { return source.Schema.Extent; }  
-        //}
 
         #endregion
 
