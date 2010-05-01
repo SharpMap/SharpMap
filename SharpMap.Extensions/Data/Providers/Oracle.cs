@@ -149,14 +149,6 @@ namespace SharpMap.Data.Providers
             set { _defintionQuery = value; }
         }
 
-        /// <summary>
-        /// Gets a collection of columns in the dataset
-        /// </summary>
-        public DataColumnCollection Columns
-        {
-            get { throw new NotImplementedException(); }
-        }
-
         #region IProvider Members
 
         /// <summary>

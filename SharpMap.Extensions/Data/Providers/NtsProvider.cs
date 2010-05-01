@@ -403,18 +403,6 @@ namespace SharpMap.Data.Providers
         #endregion
 
         /// <summary>
-        /// Returns the data associated with all the geometries that is within 'distance' of 'geom'
-        /// </summary>
-        /// <param name="geom"></param>
-        /// <param name="distance"></param>
-        /// <returns></returns>
-        [Obsolete("Use ExecuteIntersectionQuery instead")]
-        public FeatureDataTable QueryFeatures(Geometry geom, double distance)
-        {
-            throw new NotImplementedException("QueryFeatures is obsolete. Use ExecuteIntersectionQuery.");
-        }
-
-        /// <summary>
         /// Creates a new row in the given <see cref="SharpMap.Data.FeatureDataTable"/> <paramref name="dataTable"/>
         /// using data in <see cref="GisSharpBlog.NetTopologySuite.Features.Feature"/> <paramref name="feature"/>.
         /// </summary>

@@ -24,7 +24,7 @@ using System.Windows.Forms;
 using SharpMap.Data;
 using SharpMap.Geometries;
 using SharpMap.Layers;
-using Point=SharpMap.Geometries.Point;
+using Point = SharpMap.Geometries.Point;
 
 namespace SharpMap.Forms
 {
@@ -208,8 +208,8 @@ namespace SharpMap.Forms
         {
             if (_Map != null)
             {
-                double scale = ((double) e.Delta/120.0);
-                double scaleBase = 1 + (_wheelZoomMagnitude/(10*((double) (_isCtrlPressed ? _fineZoomFactor : 1))));
+                double scale = ((double)e.Delta / 120.0);
+                double scaleBase = 1 + (_wheelZoomMagnitude / (10 * ((double)(_isCtrlPressed ? _fineZoomFactor : 1))));
 
                 _Map.Zoom *= Math.Pow(scaleBase, scale);
 
@@ -270,15 +270,15 @@ namespace SharpMap.Forms
                         g.Clear(Color.Transparent);
                         float scale = 0;
                         if (e.Y - mousedrag.Y < 0) //Zoom out
-                            scale = (float) Math.Pow(1/(float) (mousedrag.Y - e.Y), 0.5);
+                            scale = (float)Math.Pow(1 / (float)(mousedrag.Y - e.Y), 0.5);
                         else //Zoom in
-                            scale = 1 + (e.Y - mousedrag.Y)*0.1f;
+                            scale = 1 + (e.Y - mousedrag.Y) * 0.1f;
                         RectangleF rect = new RectangleF(0, 0, Width, Height);
-                        if (_Map.Zoom/scale < _Map.MinimumZoom)
-                            scale = (float) Math.Round(_Map.Zoom/_Map.MinimumZoom, 4);
+                        if (_Map.Zoom / scale < _Map.MinimumZoom)
+                            scale = (float)Math.Round(_Map.Zoom / _Map.MinimumZoom, 4);
                         rect.Width *= scale;
                         rect.Height *= scale;
-                        rect.Offset(Width/2 - rect.Width/2, Height/2 - rect.Height/2);
+                        rect.Offset(Width / 2 - rect.Width / 2, Height / 2 - rect.Height / 2);
                         g.DrawImage(mousedragImg, rect);
                         g.Dispose();
                         Image = img;
@@ -310,11 +310,11 @@ namespace SharpMap.Forms
                         else
                         {
                             if (e.Y - mousedrag.Y < 0) //Zoom out
-                                scale = (float) Math.Pow(1/(float) (mousedrag.Y - e.Y), 0.5);
+                                scale = (float)Math.Pow(1 / (float)(mousedrag.Y - e.Y), 0.5);
                             else //Zoom in
-                                scale = 1 + (e.Y - mousedrag.Y)*0.1;
+                                scale = 1 + (e.Y - mousedrag.Y) * 0.1;
                         }
-                        _Map.Zoom *= 1/scale;
+                        _Map.Zoom *= 1 / scale;
                         if (MapZoomChanged != null)
                             MapZoomChanged(_Map.Zoom);
                         Refresh();
@@ -331,11 +331,11 @@ namespace SharpMap.Forms
                         else
                         {
                             if (e.Y - mousedrag.Y < 0) //Zoom out
-                                scale = (float) Math.Pow(1/(float) (mousedrag.Y - e.Y), 0.5);
+                                scale = (float)Math.Pow(1 / (float)(mousedrag.Y - e.Y), 0.5);
                             else //Zoom in
-                                scale = 1 + (e.Y - mousedrag.Y)*0.1;
+                                scale = 1 + (e.Y - mousedrag.Y) * 0.1;
                         }
-                        _Map.Zoom *= 1/scale;
+                        _Map.Zoom *= 1 / scale;
                         if (MapZoomChanged != null)
                             MapZoomChanged(_Map.Zoom);
                         Refresh();
@@ -344,8 +344,8 @@ namespace SharpMap.Forms
                     {
                         if (mousedragging)
                         {
-                            System.Drawing.Point pnt = new System.Drawing.Point(Width/2 + (mousedrag.X - e.Location.X),
-                                                                                Height/2 + (mousedrag.Y - e.Location.Y));
+                            System.Drawing.Point pnt = new System.Drawing.Point(Width / 2 + (mousedrag.X - e.Location.X),
+                                                                                Height / 2 + (mousedrag.Y - e.Location.Y));
                             _Map.Center = _Map.ImageToWorld(pnt);
                             if (MapCenterChanged != null)
                                 MapCenterChanged(_Map.Center);
@@ -370,9 +370,13 @@ namespace SharpMap.Forms
                                         _Map.PixelSize * 5);
                                 FeatureDataSet ds = new FeatureDataSet();
                                 layer.ExecuteIntersectionQuery(bbox, ds);
-                                if (ds.Tables.Count > 0)
-                                    if (MapQueried != null) MapQueried(ds.Tables[0]);
-                                    else if (MapQueried != null) MapQueried(new FeatureDataTable());
+                                if (MapQueried != null)
+                                {
+                                    if (ds.Tables.Count > 0)
+                                        MapQueried(ds.Tables[0]);
+                                    else
+                                        MapQueried(new FeatureDataTable());
+                                }
                             }
                         }
                         else

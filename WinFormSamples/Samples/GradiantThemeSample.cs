@@ -78,7 +78,6 @@ namespace WinFormSamples.Samples
             layCityLabel.Style.CollisionDetection = true;
             map.Layers.Add(layCityLabel);
 
-
             //Set a gradient theme on the countries layer, based on Population density
             //First create two styles that specify min and max styles
             //In this case we will just use the default values and override the fill-colors

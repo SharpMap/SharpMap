@@ -149,59 +149,6 @@ namespace SharpMap.Data.Providers
             set { _defintionQuery = value; }
         }
 
-        /// <summary>
-        /// Gets a collection of columns in the dataset
-        /// </summary>
-        public DataColumnCollection Columns
-        {
-            get
-            {
-                throw new NotImplementedException();
-                //using (Npgsql.NpgsqlConnection conn = new Npgsql.NpgsqlConnection(this.ConnectionString))
-                //{
-                //    System.Data.DataColumnCollection columns = new System.Data.DataColumnCollection();
-                //    string strSQL = "SELECT column_name, udt_name FROM information_schema.columns WHERE table_name='" + this.Table + "' ORDER BY ordinal_position";
-                //    using (Npgsql.NpgsqlCommand command = new Npgsql.NpgsqlCommand(strSQL, conn))
-                //    {
-                //        conn.Open();
-                //        using (Npgsql.NpgsqlDataReader dr = command.ExecuteReader())
-                //        {
-                //            while (dr.Read())
-                //            {
-                //                System.Data.DataColumn col = new System.Data.DataColumn((string)dr["column_name"]);
-                //                switch((string)dr["udt_name"])
-                //                {
-                //                    case "int4":
-                //                        col.DataType = typeof(Int32);
-                //                        break;
-                //                    case "int8":
-                //                        col.DataType = typeof(Int64);
-                //                        break;
-                //                    case "varchar":
-                //                        col.DataType = typeof(string);
-                //                        break;
-                //                    case "text":
-                //                        col.DataType = typeof(string);
-                //                        break;
-                //                    case "bool":
-                //                        col.DataType = typeof(bool);
-                //                        break;
-                //                    case "geometry":
-                //                        col.DataType = typeof(SharpMap.Geometries.Geometry);
-                //                        break;
-                //                    default:
-                //                        col.DataType = typeof(object);
-                //                        break;
-                //                }
-                //                columns.Add(col);
-                //            }
-                //        }
-                //    }
-                //    return columns;
-                //}
-            }
-        }
-
         #region IProvider Members
 
         /// <summary>
