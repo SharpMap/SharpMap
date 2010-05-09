@@ -33,7 +33,7 @@
     <WarningLevel>4</WarningLevel>
     <UseVSHostingProcess>true</UseVSHostingProcess>
     <DocumentationFile>bin\Debug\SharpMap.XML</DocumentationFile>
-    <PlatformTarget>AnyCPU</PlatformTarget>
+    <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -82,6 +82,8 @@
     <Compile Include="Data\Providers\MsSql.cs" />
     <Compile Include="Data\Providers\MsSqlSpatial.cs" />
     <Compile Include="Data\Providers\OleDbPoint.cs" />
+    <Compile Include="Data\Providers\Pooling\Connector.cs" />
+    <Compile Include="Data\Providers\Pooling\ConnectorPool.cs" />
     <Compile Include="Data\Providers\ShapeFile.cs" />
     <Compile Include="Data\Providers\SqlServer2008.cs" />
     <Compile Include="Data\Providers\WFSClient.cs" />
@@ -106,8 +108,8 @@
     <Compile Include="Geometries\SpatialRelations.cs" />
     <Compile Include="Geometries\Surface.cs" />
     <Compile Include="Layers\DuplicateLayerException.cs" />
+    <Compile Include="Layers\iLayer.cs" />
     <Compile Include="Layers\ICanQueryLayer.cs" />
-    <Compile Include="Layers\ILayer.cs" />
     <Compile Include="Layers\LabelLayer.cs" />
     <Compile Include="Layers\Layer.cs" />
     <Compile Include="Layers\LayerCollection.cs" />
@@ -157,6 +159,7 @@
     <Compile Include="Web\HttpHandler.cs" />
     <Compile Include="Web\Wms\Capabilities.cs" />
     <Compile Include="Web\Wms\Client.cs" />
+    <Compile Include="Web\Wms\SpatialReferencedBoundingBox.cs" />
     <Compile Include="Web\Wms\Tiling\ITileCache.cs" />
     <Compile Include="Web\Wms\Tiling\TileCacheFileStorage.cs" />
     <Compile Include="Web\Wms\Tiling\TileExtents.cs" />

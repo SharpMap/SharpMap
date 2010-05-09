@@ -158,8 +158,7 @@ public class MapHelper
 	{
 		string wmsUrl = "http://www2.demis.nl/mapserver/request.asp";
         WmsLayer layWms = new WmsLayer("Demis Map", wmsUrl);
-        layWms.SpatialReferenceSystem = "EPSG:4326";
-		layWms.AddLayer("Bathymetry");
+        layWms.AddLayer("Bathymetry");
 		layWms.AddLayer("Ocean features");
 		layWms.SetImageFormat(layWms.OutputFormats[0]);
         layWms.ContinueOnError = true;

@@ -17,6 +17,7 @@
 
 using System;
 using System.Collections.ObjectModel;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
@@ -67,10 +68,11 @@ namespace SharpMap.Layers
         private Collection<string> _LayerList;
         private string _MimeType = "";
         private WebProxy _Proxy;
-        private string _SpatialReferenceSystem;
         private Collection<string> _StylesList;
         private int _TimeOut;
         private Client wmsClient;
+        private bool _Transparancy = true;
+        private Color _BgColor = Color.White;
 
         /// <summary>
         /// Initializes a new layer, and downloads and parses the service description
@@ -121,7 +123,7 @@ namespace SharpMap.Layers
             _ContinueOnError = true;
             if (HttpContext.Current != null && HttpContext.Current.Cache["SharpMap_WmsClient_" + url] != null)
             {
-                wmsClient = (Client) HttpContext.Current.Cache["SharpMap_WmsClient_" + url];
+                wmsClient = (Client)HttpContext.Current.Cache["SharpMap_WmsClient_" + url];
             }
             else
             {
@@ -186,12 +188,22 @@ namespace SharpMap.Layers
         }
 
         /// <summary>
-        /// Gets or sets the spatial reference used for the WMS server request
+        /// Sets the optional transparancy. The WMS server might ignore this when not implemented and will ignore if the imageformat is jpg
         /// </summary>
-        public string SpatialReferenceSystem
+        public bool Transparancy
         {
-            get { return _SpatialReferenceSystem; }
-            set { _SpatialReferenceSystem = value; }
+            get { return _Transparancy; }
+            set { _Transparancy = value; }
+        }
+
+        /// <summary>
+        /// Sets the optional backgroundcolor. 
+        /// </summary>
+        public Color BgColor
+        {
+            get { return _BgColor; }
+            set { _BgColor = value; }
+
         }
 
 
@@ -248,7 +260,28 @@ namespace SharpMap.Layers
         /// <returns>Bounding box corresponding to the extent of the features in the layer</returns>
         public override BoundingBox Envelope
         {
-            get { return RootLayer.LatLonBoundingBox; }
+            //There are two boundingboxes available: 1 as EPSG:4326 with LatLonCoordinates and or one with the coordinates of the FIRST BoundingBox with SRID of the layer
+            //If the request is using EPSG:4326, it should use the boundingbox with LatLon coordinates, else, it should use the boundingbox with the coordinates in the SRID
+            get
+            {
+                Collection<BoundingBox> boxes = new Collection<BoundingBox>();
+                List<SpatialReferencedBoundingBox> SRIDBoxes = getBoundingBoxes(RootLayer);
+                foreach (SpatialReferencedBoundingBox SRIDbox in SRIDBoxes)
+                {
+                    if (this.SRID == SRIDbox.SRID)
+                        boxes.Add(SRIDbox);
+                }
+                if (boxes.Count > 0)
+                    return new BoundingBox(boxes);
+                else if (this.SRID == 4326)
+                    return RootLayer.LatLonBoundingBox;
+                else
+                {
+                    //There is no boundingbox defined. Maybe we should throw a NotImplementedException
+                    //TODO: project one of the available bboxes to layers projection
+                    return null;
+                }
+            }
         }
 
         /// <summary>
@@ -442,7 +475,7 @@ namespace SharpMap.Layers
 
             try
             {
-                HttpWebResponse myWebResponse = (HttpWebResponse) myWebRequest.GetResponse();
+                HttpWebResponse myWebResponse = (HttpWebResponse)myWebRequest.GetResponse();
                 Stream dataStream = myWebResponse.GetResponseStream();
 
                 if (myWebResponse.ContentType.StartsWith("image"))
@@ -506,12 +539,12 @@ namespace SharpMap.Layers
                 strReq.Remove(strReq.Length - 1, 1);
             }
             strReq.AppendFormat("&FORMAT={0}", _MimeType);
-            if (_SpatialReferenceSystem == string.Empty)
+            if (SRID < 0)
                 throw new ApplicationException("Spatial reference system not set");
             if (wmsClient.WmsVersion == "1.3.0")
-                strReq.AppendFormat("&CRS={0}", _SpatialReferenceSystem);
+                strReq.AppendFormat("&CRS=EPSG:{0}", SRID);
             else
-                strReq.AppendFormat("&SRS={0}", _SpatialReferenceSystem);
+                strReq.AppendFormat("&SRS=EPSG:{0}", SRID);
             strReq.AppendFormat("&VERSION={0}", wmsClient.WmsVersion);
             strReq.Append("&Styles=");
             if (_StylesList != null && _StylesList.Count > 0)
@@ -520,16 +553,11 @@ namespace SharpMap.Layers
                     strReq.AppendFormat("{0},", style);
                 strReq.Remove(strReq.Length - 1, 1);
             }
+            strReq.AppendFormat("&TRANSPARENT={0}", _Transparancy);
+            if (!_Transparancy)
+                strReq.AppendFormat("&BGCOLOR={0}", ColorTranslator.ToHtml(_BgColor));
             return strReq.ToString();
         }
-
-        /// <summary>
-        /// Returns the type of the layer
-        /// </summary>
-        //public override SharpMap.Layers.Layertype LayerType
-        //{
-        //    get { return SharpMap.Layers.Layertype.Wms; }
-        //}
 
         private Client.WmsOnlineResource GetPreferredMethod()
         {
@@ -542,6 +570,24 @@ namespace SharpMap.Layers
                 if (wmsClient.GetMapRequests[i].Type.ToLower() == "post")
                     return wmsClient.GetMapRequests[i];
             return wmsClient.GetMapRequests[0];
+        }
+
+        /// <summary>
+        /// Gets all the boundingboxes from the Client.WmsServerLayer
+        /// </summary>
+        /// <returns>List of all spatial referenced boundingboxes</returns>
+        private List<SpatialReferencedBoundingBox> getBoundingBoxes(Client.WmsServerLayer layer)
+        {
+            List<SpatialReferencedBoundingBox> box = new List<SpatialReferencedBoundingBox>();
+            box.AddRange(layer.SRIDBoundingBoxes);
+            if (layer.ChildLayers.Length > 0)
+            {
+                for (int i = 0; i < layer.ChildLayers.Length; i++)
+                {
+                    box.AddRange(getBoundingBoxes(layer.ChildLayers[i]));
+                }
+            }
+            return box;
         }
     }
 }

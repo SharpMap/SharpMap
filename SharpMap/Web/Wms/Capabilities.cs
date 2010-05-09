@@ -174,12 +174,26 @@ namespace SharpMap.Web.Wms
             LayerRootNode.AppendChild(CreateElement("CRS", "EPSG:" + map.Layers[0].SRID, capabilities, false,
                                                     wmsNamespaceURI)); //TODO
             LayerRootNode.AppendChild(GenerateBoundingBoxElement(map.GetExtents(), map.Layers[0].SRID, capabilities));
-            //This should be changed when Transformation library is complete
+                        
             XmlElement geoBox = capabilities.CreateElement("EX_GeographicBoundingBox", wmsNamespaceURI);
-            geoBox.Attributes.Append(CreateAttribute("minx", "-180", capabilities));
-            geoBox.Attributes.Append(CreateAttribute("miny", "-90", capabilities));
-            geoBox.Attributes.Append(CreateAttribute("maxx", "180", capabilities));
-            geoBox.Attributes.Append(CreateAttribute("maxy", "90", capabilities));
+
+            //Using default values here. This should be changed when projection library is complete
+            string minX = "-180";
+            string minY = "-90";
+            string maxX = "180";
+            string maxY = "90";
+
+            geoBox.AppendChild(CreateElement("westBoundLongitude", minX, capabilities, false, wmsNamespaceURI));
+            geoBox.AppendChild(CreateElement("southBoundLatitude", minY, capabilities, false, wmsNamespaceURI));
+            geoBox.AppendChild(CreateElement("eastBoundLongitude", maxX, capabilities, false, wmsNamespaceURI));
+            geoBox.AppendChild(CreateElement("northBoundLatitude", maxY, capabilities, false, wmsNamespaceURI));
+
+            //The above way to respresent the boundingbox is correct and replace the incorrect way below. 
+            //For downward compatibility I will keep the old code.
+            geoBox.Attributes.Append(CreateAttribute("minx", minX, capabilities));
+            geoBox.Attributes.Append(CreateAttribute("miny", minY, capabilities));
+            geoBox.Attributes.Append(CreateAttribute("maxx", maxX, capabilities));
+            geoBox.Attributes.Append(CreateAttribute("maxy", maxY, capabilities));
             LayerRootNode.AppendChild(geoBox);
 
             foreach (ILayer layer in map.Layers)

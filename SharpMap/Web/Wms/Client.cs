@@ -1,5 +1,6 @@
 using System;
 using System.Collections.ObjectModel;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
@@ -107,6 +108,11 @@ namespace SharpMap.Web.Wms
             /// Latitudal/longitudal extent of this layer
             /// </summary>
             public BoundingBox LatLonBoundingBox;
+
+            /// <summary>
+            /// Extent of this layer in spatial reference system
+            /// </summary>
+            public List<SpatialReferencedBoundingBox> SRIDBoundingBoxes;
 
             /// <summary>
             /// Unique name of this layer used for requesting layer
@@ -254,7 +260,7 @@ namespace SharpMap.Web.Wms
 
 
         /// <summary>
-        /// Downloads servicedescription from WMS service
+        /// Downloads servicedescription from WMS service  
         /// </summary>
         /// <returns>XmlDocument from Url. Null if Url is empty or inproper XmlDocument</returns>
         private XmlDocument GetRemoteXml(string Url, WebProxy proxy)
@@ -471,6 +477,7 @@ namespace SharpMap.Web.Wms
             layer.Abstract = (node != null ? node.InnerText : null);
             XmlAttribute attr = xmlLayer.Attributes["queryable"];
             layer.Queryable = (attr != null && attr.InnerText == "1");
+            layer.SRIDBoundingBoxes = new List<SpatialReferencedBoundingBox>();
 
 
             XmlNodeList xnlKeywords = xmlLayer.SelectNodes("sm:KeywordList/sm:Keyword", nsmgr);
@@ -528,21 +535,98 @@ namespace SharpMap.Web.Wms
                 for (int i = 0; i < xnlLayers.Count; i++)
                     layer.ChildLayers[i] = ParseLayer(xnlLayers[i]);
             }
+
+            //LatLonBoundingBox is specific for WMS 1.1.1 servers    
             node = xmlLayer.SelectSingleNode("sm:LatLonBoundingBox", nsmgr);
             if (node != null)
             {
-                double minx = 0;
-                double miny = 0;
-                double maxx = 0;
-                double maxy = 0;
-                if (!double.TryParse(node.Attributes["minx"].Value, NumberStyles.Any, Map.NumberFormatEnUs, out minx) &
-                    !double.TryParse(node.Attributes["miny"].Value, NumberStyles.Any, Map.NumberFormatEnUs, out miny) &
-                    !double.TryParse(node.Attributes["maxx"].Value, NumberStyles.Any, Map.NumberFormatEnUs, out maxx) &
-                    !double.TryParse(node.Attributes["maxy"].Value, NumberStyles.Any, Map.NumberFormatEnUs, out maxy))
-                    throw new ArgumentException("Invalid LatLonBoundingBox on layer '" + layer.Name + "'");
+                double minx = ParseNodeAsDouble(node.Attributes["minx"], -180.0);
+                double miny = ParseNodeAsDouble(node.Attributes["miny"], -90.0);
+                double maxx = ParseNodeAsDouble(node.Attributes["maxx"], 180.0);
+                double maxy = ParseNodeAsDouble(node.Attributes["miny"], 90.0);
                 layer.LatLonBoundingBox = new BoundingBox(minx, miny, maxx, maxy);
             }
+            else
+            {
+                //EX_GeographicBoundingBox is specific for WMS 1.3.0 servers   
+                node = xmlLayer.ParentNode.SelectSingleNode("sm:EX_GeographicBoundingBox", nsmgr);
+                if (node != null)
+                {
+                    //EX_GeographicBoundingBox is specific for WMS1.3.0 servers so this will be parsed if LatLonBoundingBox is null
+                    double minx = ParseNodeAsDouble(node.SelectSingleNode("sm:westBoundLongitude", nsmgr), -180.0);
+                    double miny = ParseNodeAsDouble(node.SelectSingleNode("sm:southBoundLatitude", nsmgr), -90.0);
+                    double maxx = ParseNodeAsDouble(node.SelectSingleNode("sm:eastBoundLongitude", nsmgr), 180.0);
+                    double maxy = ParseNodeAsDouble(node.SelectSingleNode("sm:northBoundLatitude", nsmgr), 90.0);
+                    layer.LatLonBoundingBox = new BoundingBox(minx, miny, maxx, maxy);
+                }
+                else
+                {
+                    //Not sure what to do in this case. PDD.
+                    layer.LatLonBoundingBox = null;
+                }
+            }
+
+            //if the layer has a specific spatial reference system, the boundingbox in this reference system should be parsed and placed in 
+            //the SRIDboundingbox
+            XmlNodeList bboxes = xmlLayer.SelectNodes("sm:BoundingBox", nsmgr);
+            foreach (XmlNode bbox in bboxes)
+            {
+                double minx;
+                double miny;
+                double maxx;
+                double maxy;
+                int epsg;
+
+                if (!TryParseNodeAsDouble(bbox.Attributes["minx"], out minx)) continue;
+                if (!TryParseNodeAsDouble(bbox.Attributes["miny"], out miny)) continue;
+                if (!TryParseNodeAsDouble(bbox.Attributes["maxx"], out maxx)) continue;
+                if (!TryParseNodeAsDouble(bbox.Attributes["maxy"], out maxy)) continue;
+                if (!TryParseNodeAsEpsg(FindEpsgNode(bbox), out epsg)) continue; 
+           
+                layer.SRIDBoundingBoxes.Add(new SpatialReferencedBoundingBox(minx, miny, maxx, maxy, epsg));
+            }
             return layer;
+        }
+
+        private static XmlNode FindEpsgNode(XmlNode bbox)
+        {
+            XmlNode epsgNode;
+            epsgNode = bbox.Attributes["srs"];
+            if (epsgNode == null) epsgNode = bbox.Attributes["crs"];
+            if (epsgNode == null) epsgNode = bbox.Attributes["SRS"];
+            if (epsgNode == null) epsgNode = bbox.Attributes["CRS"];
+            return epsgNode;
+        }
+
+        private bool TryParseNodeAsEpsg(XmlNode node, out int epsg)
+        {
+            epsg = default(int);
+            if (node == null) return false;
+            string epsgString = node.Value;
+            if (String.IsNullOrEmpty(epsgString)) return false;
+            string prefix = "EPSG:";
+            int index = epsgString.IndexOf(prefix);
+            if (index < 0) return false;
+            return (int.TryParse(epsgString.Substring(index + prefix.Length), NumberStyles.Any, Map.NumberFormatEnUs, out epsg));
+        }
+
+        private double ParseNodeAsDouble(XmlNode node, double defaultValue)
+        {
+            if (node == null) return defaultValue;
+            if (String.IsNullOrEmpty(node.InnerText)) return defaultValue;
+            double value;
+            if (Double.TryParse(node.InnerText, NumberStyles.Any, Map.NumberFormatEnUs, out value))
+                return value;
+            else
+                return defaultValue;
+        }
+
+        private bool TryParseNodeAsDouble(XmlNode node, out double value)
+        {
+            value = default(double);
+            if (node == null) return false;
+            if (String.IsNullOrEmpty(node.InnerText)) return false;
+            return Double.TryParse(node.InnerText, NumberStyles.Any, Map.NumberFormatEnUs, out value);
         }
     }
 }

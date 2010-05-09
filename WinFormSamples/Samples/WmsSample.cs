@@ -14,8 +14,7 @@ namespace WinFormSamples.Samples
             Map map = new Map();
 
             WmsLayer layWms = new WmsLayer("Demis Map", wmsUrl);
-            layWms.SpatialReferenceSystem = "EPSG:4326";
-
+            
             layWms.AddLayer("Bathymetry");
             layWms.AddLayer("Topography");
             layWms.AddLayer("Hillshading");
