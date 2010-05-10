@@ -372,6 +372,9 @@ namespace SharpMap.Layers
         /// <param name="ds">FeatureDataSet to fill data into</param>
         public void ExecuteIntersectionQuery(BoundingBox box, FeatureDataSet ds)
         {
+            if (CoordinateTransformation != null)
+                box = GeometryTransform.TransformBox(box, CoordinateTransformation.MathTransform.Inverse());
+
             _DataSource.Open();
             _DataSource.ExecuteIntersectionQuery(box, ds);
             _DataSource.Close();
