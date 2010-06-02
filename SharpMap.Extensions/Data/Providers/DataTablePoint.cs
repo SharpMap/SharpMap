@@ -149,7 +149,7 @@ namespace SharpMap.Data.Providers
 
             foreach (DataRow dr in drow)
             {
-                features.Add(new Point((double) dr[2], (double) dr[1]));
+                features.Add(new Point((double) dr[XColumn], (double) dr[YColumn]));
             }
 
             return features;
