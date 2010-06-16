@@ -566,7 +566,6 @@ namespace SharpMap.Layers
             return map.Zoom;
         }
 
-
         public void ResetHistoRectangle()
         {
             _histoBounds = new Rectangle((int)_envelope.Left, (int)_envelope.Bottom, (int)_envelope.Width,
@@ -778,7 +777,11 @@ namespace SharpMap.Layers
 
                 // put display bounds into current projection
                 if (_transform != null)
-                    shownImageBbox = GeometryTransform.TransformBox(trueImageBbox, _transform.MathTransform.Inverse());
+                {
+                    _transform.MathTransform.Invert();
+                    shownImageBbox = GeometryTransform.TransformBox(trueImageBbox, _transform.MathTransform);
+                    _transform.MathTransform.Invert();
+                }
                 else
                     shownImageBbox = trueImageBbox;
 
@@ -1810,6 +1813,20 @@ namespace SharpMap.Layers
             //Add table to dataset
             ds.Tables.Add(dt);
         }
+
+        private bool _isQueryEnabled = true;
+        public bool IsQueryEnabled
+        {
+            get
+            {
+                return _isQueryEnabled;
+            }
+            set
+            {
+                _isQueryEnabled = value;
+            }
+        }
+
         #endregion
 
         private Color _noDataInitColor = Color.Yellow;
@@ -1826,11 +1843,5 @@ namespace SharpMap.Layers
             set { _colorBlend = value; }
         }
 
-        private bool _isQueryEnabled = true;
-        public bool IsQueryEnabled
-        {
-            get { return _isQueryEnabled; }
-            set { _isQueryEnabled = value; }
-        }
     }
 }

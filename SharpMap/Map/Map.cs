@@ -153,9 +153,15 @@ namespace SharpMap
         /// <summary>
         /// Renders the map to an image
         /// </summary>
-        /// <returns></returns>
+        /// <returns>the map image</returns>
         public Image GetMap()
         {
+            Image img = new Bitmap(Size.Width, Size.Height);
+            Graphics g = Graphics.FromImage(img);
+            RenderMap(g);
+            g.Dispose();
+            return img;
+            /*
             if (Layers == null || Layers.Count == 0)
                 throw new InvalidOperationException("No layers to render");
 
@@ -173,6 +179,73 @@ namespace SharpMap
             if (MapRendered != null) MapRendered(g); //Fire render event
             g.Dispose();
             return img;
+             */
+        }
+        /// <summary>
+        /// Renders the map using the provided <see cref="Graphics"/> object.
+        /// </summary>
+        /// <param name="g">the <see cref="Graphics"/> object to use</param>
+        /// <exception cref="ArgumentNullException">if <see cref="Graphics"/> object is null.</exception>
+        /// <exception cref="InvalidOperationException">if there are no layers to render.</exception>
+        public void RenderMap(Graphics g)
+        {
+            if (g == null)
+                throw new ArgumentNullException("g", "Cannot render map with null graphics object!");
+
+            if (Layers == null || Layers.Count == 0)
+                throw new InvalidOperationException("No layers to render");
+
+            g.Transform = MapTransform;
+            g.Clear(BackColor);
+            g.PageUnit = GraphicsUnit.Pixel;
+
+            //int srid = (Layers.Count > 0 ? Layers[0].SRID : -1); //Get the SRID of the first layer
+            for (int i = 0; i < _Layers.Count; i++)
+            {
+                if (_Layers[i].Enabled && _Layers[i].MaxVisible >= Zoom && _Layers[i].MinVisible < Zoom)
+                    _Layers[i].Render(g, this);
+            }
+
+            RenderDisclaimer(g);
+
+            if (MapRendered != null) MapRendered(g); //Fire render event
+
+        }
+
+        private void RenderDisclaimer(Graphics g)
+        {
+
+            StringFormat sf;
+            //Disclaimer
+            if (!String.IsNullOrEmpty(_disclaimer))
+            {
+                SizeF size = g.MeasureString(_disclaimer, _disclaimerFont);
+                size.Width = (Single)Math.Ceiling(size.Width);
+                size.Height = (Single)Math.Ceiling(size.Height);
+                switch (DisclaimerLocation)
+                {
+                    case 0: //Right-Bottom
+                        sf = new StringFormat();
+                        sf.Alignment = StringAlignment.Far;
+                        g.DrawString(Disclaimer, DisclaimerFont, Brushes.Black,
+                            g.VisibleClipBounds.Width,
+                            g.VisibleClipBounds.Height - size.Height - 2, sf);
+                        break;
+                    case 1: //Right-Top
+                        sf = new StringFormat();
+                        sf.Alignment = StringAlignment.Far;
+                        g.DrawString(Disclaimer, DisclaimerFont, Brushes.Black,
+                            g.VisibleClipBounds.Width, 0f, sf);
+                        break;
+                    case 2: //Left-Top
+                        g.DrawString(Disclaimer, DisclaimerFont, Brushes.Black, 0f, 0f);
+                        break;
+                    case 3://Left-Bottom
+                        g.DrawString(Disclaimer, DisclaimerFont, Brushes.Black, 0f,
+                            g.VisibleClipBounds.Height - size.Height - 2);
+                        break;
+                }
+            }
         }
 
         /// <summary>
@@ -483,6 +556,56 @@ namespace SharpMap
                     bbox = bbox.Join(Layers[i].Envelope);
             }
             return bbox;
+        }
+
+        #endregion
+
+        #region Disclaimer
+
+        private String _disclaimer;
+        /// <summary>
+        /// Copyright notice to be placed on the map
+        /// </summary>
+        public String Disclaimer
+        {
+            get { return _disclaimer; }
+            set {
+                //only set disclaimer if not already done
+                if (String.IsNullOrEmpty(_disclaimer))
+                {
+                    _disclaimer = value;
+                    //Ensure that Font for disclaimer is set
+                    if (_disclaimerFont == null)
+                        _disclaimerFont = new Font(FontFamily.GenericSansSerif, 8f);
+                }
+            }
+        }
+
+        private Font _disclaimerFont;
+        /// <summary>
+        /// Font to use for the Disclaimer
+        /// </summary>
+        public Font DisclaimerFont
+        {
+            get { return _disclaimerFont; }
+            set
+            {
+                if (value == null) return;
+                _disclaimerFont = value;
+            }
+        }
+
+        private Int32 _disclaimerLocation;
+        /// <summary>
+        /// Location for the disclaimer
+        /// 2|1
+        /// -+-
+        /// 3|0
+        /// </summary>
+        public Int32 DisclaimerLocation
+        {
+            get { return _disclaimerLocation; }
+            set { _disclaimerLocation = value%4; }
         }
 
         #endregion

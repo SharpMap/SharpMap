@@ -350,8 +350,11 @@ namespace SharpMap.Layers
 
                 BoundingBox envelope = map.Envelope; //View to render
                 if (CoordinateTransformation != null)
-                    envelope = GeometryTransform.TransformBox(envelope, CoordinateTransformation.MathTransform.Inverse());
-
+                {
+                    CoordinateTransformation.MathTransform.Invert();
+                    envelope = GeometryTransform.TransformBox(envelope, CoordinateTransformation.MathTransform);
+                    CoordinateTransformation.MathTransform.Invert();
+                }
                 FeatureDataSet ds = new FeatureDataSet();
                 DataSource.Open();
                 DataSource.ExecuteIntersectionQuery(envelope, ds);

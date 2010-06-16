@@ -10,9 +10,26 @@ using Point=SharpMap.Geometries.Point;
 
 namespace WinFormSamples.Samples
 {
-    public static class ShapefileSample
+    public static partial class ShapefileSample
     {
+        private static int _mapId = 0;
         public static Map InitializeMap()
+        {
+            switch (_mapId)
+            {
+                case 0:
+                    _mapId++;
+                    return InitializeMapOrig();
+                case 1:
+                    _mapId--;
+                    return InitializeMapOsm();
+                default:
+                    _mapId = 0;
+                    return InitializeMapOrig();
+            }
+        }
+        
+        private static Map InitializeMapOrig()
         {
             //Initialize a new map of size 'imagesize'
             Map map = new Map();

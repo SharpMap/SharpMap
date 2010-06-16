@@ -208,7 +208,11 @@ namespace SharpMap.Layers
             g.SmoothingMode = SmoothingMode;
             BoundingBox envelope = map.Envelope; //View to render
             if (CoordinateTransformation != null)
-                envelope = GeometryTransform.TransformBox(envelope, CoordinateTransformation.MathTransform.Inverse());
+            {
+                CoordinateTransformation.MathTransform.Invert();
+                envelope = GeometryTransform.TransformBox(envelope, CoordinateTransformation.MathTransform);
+                CoordinateTransformation.MathTransform.Invert();
+            }
 
             //List<SharpMap.Geometries.Geometry> features = this.DataSource.GetGeometriesInView(map.Envelope);
 
@@ -261,6 +265,9 @@ namespace SharpMap.Layers
                 {
                     FeatureDataRow feature = features[i];
                     VectorStyle style = Theme.GetStyle(feature) as VectorStyle;
+                    if (style == null) continue;
+                    if (!style.Enabled) continue;
+                    if (!(style.MinVisible <= map.Zoom && map.Zoom <= style.MaxVisible)) continue;
                     RenderGeometry(g, map, feature.Geometry, style);
                 }
             }
@@ -372,9 +379,6 @@ namespace SharpMap.Layers
         /// <param name="ds">FeatureDataSet to fill data into</param>
         public void ExecuteIntersectionQuery(BoundingBox box, FeatureDataSet ds)
         {
-            if (CoordinateTransformation != null)
-                box = GeometryTransform.TransformBox(box, CoordinateTransformation.MathTransform.Inverse());
-
             _DataSource.Open();
             _DataSource.ExecuteIntersectionQuery(box, ds);
             _DataSource.Close();
