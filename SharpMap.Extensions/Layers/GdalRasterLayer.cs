@@ -1215,17 +1215,32 @@ namespace SharpMap.Layers
                             new Rectangle(0, 0, (int)Math.Round(dblImginMapW), (int)Math.Round(dblImginMapH)),
                             ImageLockMode.ReadWrite, bitmap.PixelFormat);
 
+                    byte cr = _noDataInitColor.R;
+                    byte cg = _noDataInitColor.G;
+                    byte cb = _noDataInitColor.B;
+
+                    //
+                    Double[] noDataValues = new Double[Bands];
+                    Double[] scales = new Double[Bands];
+
+                    ColorTable colorTable = null;
                     unsafe
                     {
                         double[][] buffer = new double[Bands][];
                         Band[] band = new Band[Bands];
                         int[] ch = new int[Bands];
-
                         // get data from image
                         for (int i = 0; i < Bands; i++)
                         {
                             buffer[i] = new double[(int)Math.Round(dblImginMapW) * (int)Math.Round(dblImginMapH)];
                             band[i] = dataset.GetRasterBand(i + 1);
+
+                            //get nodata value if present
+                            Int32 hasVal = 0;
+                            band[i].GetNoDataValue(out noDataValues[i], out hasVal);
+                            if (hasVal == 0) noDataValues[i] = Double.NaN;
+                            band[i].GetScale(out scales[i], out hasVal);
+                            if (hasVal == 0) scales[i] = 1.0;
 
                             band[i].ReadRaster((int)Math.Round(x1), (int)Math.Round(y1), (int)Math.Round(imgPixWidth),
                                                (int)Math.Round(imgPixHeight),
@@ -1236,8 +1251,41 @@ namespace SharpMap.Layers
                             else if (band[i].GetRasterColorInterpretation() == ColorInterp.GCI_GreenBand) ch[i] = 1;
                             else if (band[i].GetRasterColorInterpretation() == ColorInterp.GCI_RedBand) ch[i] = 2;
                             else if (band[i].GetRasterColorInterpretation() == ColorInterp.GCI_Undefined)
-                                ch[i] = 3; // infrared
+                            {
+                                if (Bands > 1)
+                                    ch[i] = 3; // infrared
+                                else
+                                {
+                                    ch[i] = 4;
+                                    if (_colorBlend == null)
+                                    {
+                                        Double dblMin, dblMax;
+                                        band[i].GetMinimum(out dblMin, out hasVal);
+                                        if (hasVal == 0) dblMin = Double.NaN;
+                                        band[i].GetMaximum(out dblMax, out hasVal);
+                                        if (hasVal == 0) dblMax = double.NaN;
+                                        if (Double.IsNaN(dblMin) || Double.IsNaN(dblMax))
+                                        {
+                                            double dblMean, dblStdDev;
+                                            band[i].GetStatistics(0, 1, out dblMin, out dblMax, out dblMean, out dblStdDev);
+                                            //double dblRange = dblMax - dblMin;
+                                            //dblMin -= 0.1*dblRange;
+                                            //dblMax += 0.1*dblRange;
+                                        }
+                                        Single[] minmax = new float[] { Convert.ToSingle(dblMin), 0.5f * Convert.ToSingle(dblMin + dblMax), Convert.ToSingle(dblMax) };
+                                        Color[] colors = new Color[] { Color.Blue, Color.Yellow, Color.Red };
+                                        _colorBlend = new ColorBlend(colors, minmax);
+                                    }
+                                    intVal = new Double[3];
+                                }
+                            }
                             else if (band[i].GetRasterColorInterpretation() == ColorInterp.GCI_GrayIndex) ch[i] = 0;
+                            else if (band[i].GetRasterColorInterpretation() == ColorInterp.GCI_PaletteIndex)
+                            {
+                                colorTable = band[i].GetRasterColorTable();
+                                ch[i] = 5;
+                                intVal = new Double[3];
+                            }
                             else ch[i] = -1;
                         }
 
@@ -1252,15 +1300,53 @@ namespace SharpMap.Layers
                             {
                                 for (int i = 0; i < Bands; i++)
                                 {
-                                    intVal[i] = buffer[i][p_indx] / bitScalar;
-
-                                    if (_colorCorrect)
+                                    intVal[i] = buffer[i][p_indx]/bitScalar;
+                                    Double imageVal = intVal[i] = intVal[i]/bitScalar;
+                                    if (ch[i] == 4)
                                     {
-                                        intVal[i] = ApplyColorCorrection(intVal[i], 0, ch[i], 0, 0);
+                                        if (imageVal != noDataValues[i])
+                                        {
+                                            Color color = _colorBlend.GetColor(Convert.ToSingle(imageVal));
+                                            intVal[0] = color.B;
+                                            intVal[1] = color.G;
+                                            intVal[2] = color.R;
+                                            //intVal[3] = ce.c4;
+                                        }
+                                        else
+                                        {
+                                            intVal[0] = cb;
+                                            intVal[1] = cg;
+                                            intVal[2] = cr;
+                                        }
+                                    }
 
-                                        if (_lbands >= 3)
-                                            _histogram[_lbands][
-                                                (int)(intVal[2] * 0.2126 + intVal[1] * 0.7152 + intVal[0] * 0.0722)]++;
+                                    else if (ch[i] == 5 && colorTable != null)
+                                    {
+                                        if (imageVal != noDataValues[i])
+                                        {
+                                            ColorEntry ce = colorTable.GetColorEntry(Convert.ToInt32(imageVal));
+                                            intVal[0] = ce.c3;
+                                            intVal[1] = ce.c2;
+                                            intVal[2] = ce.c1;
+                                            //intVal[3] = ce.c4;
+                                        }
+                                        else
+                                        {
+                                            intVal[0] = cb;
+                                            intVal[1] = cg;
+                                            intVal[2] = cr;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        if (_colorCorrect)
+                                        {
+                                            intVal[i] = ApplyColorCorrection(intVal[i], 0, ch[i], 0, 0);
+
+                                            if (_lbands >= 3)
+                                                _histogram[_lbands][
+                                                    (int) (intVal[2]*0.2126 + intVal[1]*0.7152 + intVal[0]*0.0722)]++;
+                                        }
                                     }
 
                                     if (intVal[i] > 255)
