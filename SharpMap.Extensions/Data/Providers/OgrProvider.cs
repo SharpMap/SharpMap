@@ -156,7 +156,8 @@ namespace SharpMap.Data.Providers
             _ogrDataSource = OSGeo.OGR.Ogr.Open(filename, 0);
             _ogrLayer = _ogrDataSource.GetLayerByIndex(layerNum);
             OsrSpatialReference spatialReference = _ogrLayer.GetSpatialRef();
-            _srid = spatialReference.AutoIdentifyEPSG();
+            if (spatialReference != null)
+                _srid = spatialReference.AutoIdentifyEPSG();
         }
 
         /// <summary>

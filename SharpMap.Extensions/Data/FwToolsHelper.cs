@@ -69,7 +69,7 @@ namespace SharpMap.Extensions.Data
 
         public static string FwToolsVersion
         {
-            get { return "2.4.2"; }
+            get { return "2.4.7"; }
         }
 
         public static void Configure()
@@ -83,8 +83,8 @@ namespace SharpMap.Extensions.Data
         {
             public FwToolsPathException(string path)
                 : base(
-                    string.Format("'{0}' is an Invalid Path to FWTools2.4.2. Create an application setting in [app|web].config key='FWToolsBinPath' pointing to the bin directory of FWTools2.4.2 (absolute file path) . FWTools is downloaded from http://home.gdal.org/fwtools/",
-                                  path))
+                    string.Format("'{0}' is an Invalid Path to FWTools{1}. Create an application setting in [app|web].config key='FWToolsBinPath' pointing to the bin directory of FWTools{1} (absolute file path) . FWTools is downloaded from http://home.gdal.org/fwtools/",
+                                  path, FwToolsVersion))
             {
             }
         }

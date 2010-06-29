@@ -22,14 +22,44 @@ namespace WinFormSamples.Samples
 
         public static Map InitializeMap()
         {
-            switch (_num++ % 2)
+            switch (_num++ % 3)
             {
                 case 0:
                     return InitializeMapinfo();
                 case 1:
                     return InitializeS57();
+                case 2:
+                    return InitializeDXF();
             }
             return InitializeMapinfo();
+        }
+
+        private static Map InitializeDXF()
+        {
+            Map map = new Map();
+            //Set the datasource to a shapefile in the App_data folder
+            Ogr provider;
+            try
+            {
+                provider = new Ogr("GeoData/SampleDXF.dxf",0);
+            }
+            catch (TypeInitializationException ex)
+            {
+                if (ex.Message == "The type initializer for 'OSGeo.OGR.Ogr' threw an exception.")
+                {
+                    throw new Exception(
+                        String.Format(
+                            "The application threw a PINVOKE exception. You probably need to copy the unmanaged dll's to your bin directory. They are a part of fwtools {0}. You can download it from: http://home.gdal.org/fwtools/",
+                            GdalRasterLayer.FWToolsVersion));
+                }
+                throw;
+            }
+            VectorLayer lay = new VectorLayer("SampleDXF", provider);
+            map.Layers.Add(lay);
+            map.ZoomToExtents();
+            _ogrSampleDataset = "SampleDXF";
+            return map;
+
         }
 
         private static Map InitializeS57()
