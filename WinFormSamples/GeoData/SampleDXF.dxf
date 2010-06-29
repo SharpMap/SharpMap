@@ -1,0 +1,252 @@
+  0
+SECTION
+  2
+HEADER
+  9
+$ACADVER
+  1
+AC1009
+  9
+$LUNITS
+  70
+2
+  9
+$LIMMIN
+  10
+686349.853
+  20
+5494287.641
+  9
+$LIMMAX
+  10
+690083.673
+  20
+5498734.453
+  9
+$EXTMIN
+  10
+686349.853
+  20
+5494287.641
+  9
+$EXTMAX
+  10
+690083.673
+  20
+5498734.453
+  999
+Created by Global Mapper
+  999
+Projection: UTM
+  999
+Datum: NAD83
+  999
+Ground Units: meters
+  999
+ZONE: 11
+  0
+ENDSEC
+  0
+SECTION
+  2
+BLOCKS
+  0
+BLOCK
+  8
+FeatureAttribs
+  70
+0
+  2
+FEATURE
+  3
+FEATURE
+  10
+0.00000000
+  20
+0.00000000
+  0
+ATTDEF
+  8
+FeatureAttribs
+  70
+0
+  1
+ 
+  2
+NAME
+  3
+NAME
+  10
+0.00000000
+  20
+0.00000000
+  40
+1.00000000
+  0
+ENDBLK
+  0
+ENDSEC
+  0
+SECTION
+  2
+ENTITIES
+  0
+POLYLINE
+  8
+Unclassified_Line_Feature
+  66
+1
+ 62
+9
+ 39
+1
+  0
+VERTEX
+  8
+Unclassified_Line_Feature
+  10
+688742.125
+  20
+5498134.039
+  0
+VERTEX
+  8
+Unclassified_Line_Feature
+  10
+690083.673
+  20
+5497749.400
+  0
+VERTEX
+  8
+Unclassified_Line_Feature
+  10
+688854.702
+  20
+5496285.892
+  0
+VERTEX
+  8
+Unclassified_Line_Feature
+  10
+688873.465
+  20
+5494418.982
+  0
+VERTEX
+  8
+Unclassified_Line_Feature
+  10
+687137.895
+  20
+5494287.641
+  0
+VERTEX
+  8
+Unclassified_Line_Feature
+  10
+686809.544
+  20
+5495854.345
+  0
+VERTEX
+  8
+Unclassified_Line_Feature
+  10
+686349.853
+  20
+5497299.090
+  0
+VERTEX
+  8
+Unclassified_Line_Feature
+  10
+687569.442
+  20
+5497186.512
+  0
+VERTEX
+  8
+Unclassified_Line_Feature
+  10
+687344.287
+  20
+5498734.453
+  0
+VERTEX
+  8
+Unclassified_Line_Feature
+  10
+688244.907
+  20
+5498077.751
+  0
+VERTEX
+  8
+Unclassified_Line_Feature
+  10
+689126.764
+  20
+5498678.164
+  0
+SEQEND
+  8
+Unclassified_Line_Feature
+  0
+POLYLINE
+  8
+Unclassified_Line_Feature
+  66
+1
+ 62
+9
+ 39
+1
+  0
+VERTEX
+  8
+Unclassified_Line_Feature
+  10
+686800.163
+  20
+5497017.646
+  0
+VERTEX
+  8
+Unclassified_Line_Feature
+  10
+687531.916
+  20
+5497017.646
+  0
+VERTEX
+  8
+Unclassified_Line_Feature
+  10
+687531.916
+  20
+5496604.862
+  0
+VERTEX
+  8
+Unclassified_Line_Feature
+  10
+686800.163
+  20
+5496604.862
+  0
+VERTEX
+  8
+Unclassified_Line_Feature
+  10
+686800.163
+  20
+5497017.646
+  0
+SEQEND
+  8
+Unclassified_Line_Feature
+  0
+ENDSEC
+  0
+EOF
