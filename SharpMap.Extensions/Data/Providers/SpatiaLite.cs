@@ -266,7 +266,14 @@ namespace SharpMap.Data.Providers
         public string DefinitionQuery
         {
             get { return _defintionQuery; }
-            set { _defintionQuery = value; }
+            set
+            {
+                if (value != _defintionQuery)
+                {
+                    _cachedExtents = null;
+                    _defintionQuery = value;
+                }
+            }
         }
 
         #region IProvider Members
@@ -504,31 +511,55 @@ namespace SharpMap.Data.Providers
             }
         }
 
+        private BoundingBox _cachedExtents = null;
+
         public BoundingBox GetExtents()
         {
+            if (_cachedExtents != null)
+                return _cachedExtents;
+
             BoundingBox box = null;
             using (SQLiteConnection conn = SpatiaLiteConnection(_connectionString))
             {
                 //string strSQL = "SELECT Min(minx) AS MinX, Min(miny) AS MinY, Max(maxx) AS MaxX, Max(maxy) AS MaxY FROM " + this.Table;
-                string strSQL =
-                    string.Format(
-                        "SELECT max(MbrMaxY({0})) as maxy, max(MbrMaxX({0})) as maxx, min(MbrMinY({0})) as miny, min(MbrMinX({0})) as minx from {1};",
-                        _geometryColumn, _table);
-                if (!String.IsNullOrEmpty(_defintionQuery))
-                    strSQL += " WHERE " + DefinitionQuery;
+                string strSQL;
+                if (_spatiaLiteIndex == SpatiaLiteIndex.RTree && String.IsNullOrEmpty(_defintionQuery))
+                {
+                    strSQL = string.Format(
+                        "SELECT MIN(xmin) AS minx, MAX(xmax) AS maxx, MIN(ymin) AS miny, MAX(ymax) AS maxy from {0};",
+                        string.Format("idx_{0}_{1}", _table, _geometryColumn));
+                }
+                else
+                {
+                    strSQL = string.Format(
+                        "SELECT MIN(MbrMinX({0})) AS minx, MIN(MbrMinY({0})) AS miny, MAX(MbrMaxX({0})) AS maxx, MAX(MbrMaxY({0})) AS maxy FROM {1};",
+                        _geometryColumn, FromClause(_table));
+                }
+
                 using (SQLiteCommand command = new SQLiteCommand(strSQL, conn))
                 {
                     using (SQLiteDataReader dr = command.ExecuteReader())
                         if (dr.Read())
                         {
-                            box = new BoundingBox((double) dr["minx"], (double) dr["miny"], (double) dr["maxx"],
-                                                  (double) dr["maxy"]);
+                            box = new BoundingBox(
+                                (double) dr["minx"], (double) dr["miny"], 
+                                (double) dr["maxx"], (double) dr["maxy"]);
                         }
                     conn.Close();
                 }
+                _cachedExtents = box;
                 return box;
             }
         }
+
+        private string FromClause(String table)
+        {
+            if (String.IsNullOrEmpty(DefinitionQuery))
+                return table;
+
+            return string.Format("{0} WHERE ({1})", table, _defintionQuery);
+        }
+
 
         public string ConnectionID
         {

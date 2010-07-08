@@ -16,7 +16,7 @@ namespace SharpMap.Layers
     {
         #region Fields
         
-        string layerName;
+        //string layerName;
         ImageAttributes imageAttributes = new ImageAttributes();
         ITileSource source;
         MemoryCache<Bitmap> bitmaps = new MemoryCache<Bitmap>(100, 200);
@@ -53,7 +53,8 @@ namespace SharpMap.Layers
         public TileLayer(ITileSource tileSource, string layerName, Color transparentColor, bool showErrorInTile)
         {
             this.source = tileSource;
-            this.layerName = layerName;
+            base.LayerName = layerName;
+            //this.layerName = layerName;
             if (!transparentColor.IsEmpty)
                 imageAttributes.SetColorKey(transparentColor, transparentColor);
             this.showErrorInTile = showErrorInTile;
