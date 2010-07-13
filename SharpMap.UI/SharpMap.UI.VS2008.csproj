@@ -53,16 +53,44 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Forms\EditLabelStyle.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\EditLabelStyle.Designer.cs">
+      <DependentUpon>EditLabelStyle.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Provider\DataSource.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Provider\DataSource.Designer.cs">
+      <DependentUpon>DataSource.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\MapBox.cs">
     </Compile>
     <Compile Include="Forms\MapImage.cs">
       <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Forms\Provider\ICreate.cs" />
+    <Compile Include="Forms\Provider\StyleEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Provider\StyleEditor.Designer.cs">
+      <DependentUpon>StyleEditor.cs</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Web\UI\Ajax\AjaxMapControl.cs" />
     <Compile Include="Web\UI\Ajax\AjaxMapControlDesigner.cs" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Forms\EditLabelStyle.resx">
+      <DependentUpon>EditLabelStyle.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Provider\DataSource.resx">
+      <DependentUpon>DataSource.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Provider\StyleEditor.resx">
+      <DependentUpon>StyleEditor.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Web\UI\Ajax\AjaxMap.js" />
   </ItemGroup>
   <ItemGroup>

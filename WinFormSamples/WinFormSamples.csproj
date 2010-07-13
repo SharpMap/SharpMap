@@ -56,6 +56,10 @@
     <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="BruTile, Version=0.4.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\ExternalReferences\BruTile.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Data" />
@@ -351,10 +355,6 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\brutile\trunk\BruTile\BruTile.csproj">
-      <Project>{70315167-2BF1-4C7B-9184-728CAABF30D7}</Project>
-      <Name>BruTile</Name>
-    </ProjectReference>
     <ProjectReference Include="..\SharpMap.Extensions\SharpMap.Extensions.VS2008.csproj">
       <Project>{A4140C12-53F5-438C-8D24-9E48C504FECF}</Project>
       <Name>SharpMap.Extensions.VS2008</Name>

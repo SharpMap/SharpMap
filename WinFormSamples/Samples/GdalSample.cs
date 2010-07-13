@@ -43,11 +43,6 @@ namespace WinFormSamples.Samples
 
                 switch (index)
                 {
-                    case 1:
-                        layer = new GdalRasterLayer("GeoTiff", relativePath + "SU83NE.TIF");
-                        layer.UseRotation = true;
-                        map.Layers.Add(layer);
-                        break;
                     case 2:
                         layer = new GdalRasterLayer("GeoTiff", relativePath + "utm.tif");
                         layer.UseRotation = true;
