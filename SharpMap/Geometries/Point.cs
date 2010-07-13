@@ -57,7 +57,7 @@ namespace SharpMap.Geometries
         /// <param name="point"></param>
         public Point(double[] point)
         {
-            if (point.Length != 2)
+            if (point.Length < 2)
                 throw new Exception("Only 2 dimensions are supported for points");
 
             _X = point[0];
@@ -260,6 +260,14 @@ namespace SharpMap.Geometries
         #endregion
 
         #region "Inherited methods from abstract class Geometry"
+
+        public override GeometryType2 GeometryType
+        {
+            get
+            {
+                return GeometryType2.Point;
+            }
+        }
 
         /// <summary>
         ///  The inherent dimension of this Geometry object, which must be less than or equal to the coordinate dimension.

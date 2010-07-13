@@ -45,6 +45,7 @@ namespace SharpMap.Data.Providers
     /// vLayerOgr.DataSource = new SharpMap.Data.Providers.Ogr(@"D:\GeoData\myWorld.tab");
     /// </code>
     /// </summary>
+    [Serializable]
     public class Ogr : IProvider
     {
         static Ogr()
@@ -55,9 +56,12 @@ namespace SharpMap.Data.Providers
 
         #region Fields
 
+        [NonSerialized]
         private BoundingBox _bbox;
+        [NonSerialized]
         private readonly OgrDataSource _ogrDataSource;
-        private readonly OgrLayer _ogrLayer;
+        [NonSerialized]
+        private OgrLayer _ogrLayer;
         private String _filename;
         private String _definitionQuery = "";
 
@@ -127,6 +131,51 @@ namespace SharpMap.Data.Providers
                 return string.Format("{0}", geom.GetGeometryType());
             }
         }
+
+        /// <summary>
+        /// Get the name of the layer set or set the layer by its name
+        /// </summary>
+        ///<remarks>
+        /// If the name set is not within the layer collection of the
+        /// datasource the old layer is kept.
+        ///</remarks>
+        public string LayerName
+        {
+            get { return _ogrLayer.GetLayerDefn().GetName(); }
+            set
+            {
+                try
+                {
+                    OgrLayer layer = _ogrDataSource.GetLayerByName(value);
+                    _ogrLayer = layer;
+                }
+                catch { }
+            }
+        }
+
+        /// <summary>
+        /// Get the index of the layer set or set the layer by its index
+        /// </summary>
+        public Int32 LayerIndex
+        {
+            get
+            {
+                string layerName = LayerName;
+                for (int i = 0; i < _ogrDataSource.GetLayerCount(); i++)
+                {
+                    if (_ogrDataSource.GetLayerByIndex(i).GetName() == layerName)
+                        return i;
+                }
+                throw new Exception("Somehow the layer set cannot be found in datasource");
+            }
+            set
+            {
+                if (value < 0 || _ogrDataSource.GetLayerCount() - 1 < value)
+                    throw new ArgumentOutOfRangeException("value");
+                _ogrLayer = _ogrDataSource.GetLayerByIndex(value);
+            }
+        }
+
         #endregion
 
         #region Constructors
@@ -136,12 +185,22 @@ namespace SharpMap.Data.Providers
         /// </summary>
         /// <param name="filename">datasource</param>
         /// <param name="layerName">name of layer</param>
+        ///If you want this functionality use
+        ///<example>
+        ///SharpMap.Data.Providers.Ogr prov = new SharpMap.Data.Providers.Ogr(datasource);
+        ///prov.LayerName = layerName;
+        ///</example>
+        ///</remarks>
+        [Obsolete("This constructor does not work well with VB.NET. Use LayerName property instead")]
         public Ogr(string filename, string layerName)
         {
             Filename = filename;
 
             _ogrDataSource = OgrOgr.Open(filename, 1);
             _ogrLayer = _ogrDataSource.GetLayerByName(layerName);
+            OsrSpatialReference spatialReference = _ogrLayer.GetSpatialRef();
+            if (spatialReference != null)
+                _srid = spatialReference.AutoIdentifyEPSG();
         }
 
         /// <summary>
@@ -153,7 +212,7 @@ namespace SharpMap.Data.Providers
         {
             Filename = filename;
 
-            _ogrDataSource = OSGeo.OGR.Ogr.Open(filename, 0);
+            _ogrDataSource = OgrOgr.Open(filename, 0);
             _ogrLayer = _ogrDataSource.GetLayerByIndex(layerNum);
             OsrSpatialReference spatialReference = _ogrLayer.GetSpatialRef();
             if (spatialReference != null)
@@ -163,11 +222,18 @@ namespace SharpMap.Data.Providers
         /// <summary>
         /// Loads a Ogr datasource with the specified layer
         /// </summary>
-        /// <param name="filename">datasource</param>
+        /// <param name="datasource">datasource</param>
         /// <param name="layerNum">number of layer</param>
         /// <param name="name">Returns the name of the loaded layer</param>
-        public Ogr(string filename, int layerNum, out string name)
-            : this(filename, layerNum)
+        ///If you want this functionality use
+        ///<example>
+        ///SharpMap.Data.Providers.Ogr prov = new SharpMap.Data.Providers.Ogr(datasource, layerNum);
+        ///string layerName = prov.Layername;
+        ///</example>
+        ///</remarks>
+        [Obsolete("This constructor does not work well with VB.NET. Use LayerName property instead")]
+        public Ogr(string datasource, int layerNum, out string name)
+            : this(datasource, layerNum)
         {
             name = _ogrLayer.GetName();
         }
@@ -175,19 +241,28 @@ namespace SharpMap.Data.Providers
         /// <summary>
         /// Loads a Ogr datasource with the first layer
         /// </summary>
-        /// <param name="filename">datasource</param>
-        public Ogr(string filename)
-            : this(filename, 0)
+        /// <param name="datasource">datasource</param>
+        public Ogr(string datasource)
+            : this(datasource, 0)
         {
         }
 
         /// <summary>
         /// Loads a Ogr datasource with the first layer
         /// </summary>
-        /// <param name="filename">datasource</param>
+        /// <param name="datasource">datasource</param>
         /// <param name="name">Returns the name of the loaded layer</param>
-        public Ogr(string filename, out string name)
-            : this(filename, 0, out name)
+        ///<remarks>
+        ///This constructor is obsolete!
+        ///If you want this functionality use
+        ///<example>
+        ///SharpMap.Data.Providers.Ogr prov = new SharpMap.Data.Providers.Ogr(datasource);
+        ///string layerName = prov.Layername;
+        ///</example>
+        ///</remarks>
+        [Obsolete("This constructor does not work well with VB.NET. Use LayerName property instead")]
+        public Ogr(string datasource, out string name)
+            : this(datasource, 0, out name)
         {
         }
 

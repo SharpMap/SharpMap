@@ -289,5 +289,13 @@ namespace SharpMap.Geometries
                 geoms.Collection.Add((Geometry) _Geometries[i].Clone());
             return geoms;
         }
+
+        public override GeometryType2 GeometryType
+        {
+            get
+            {
+                return GeometryType2.GeometryCollection;
+            }
+        }
     }
 }

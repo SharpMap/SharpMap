@@ -87,21 +87,36 @@ namespace WinFormSamples.Samples
 
             VectorLayer lay;
             Random rnd = new Random(9);
-            for(Int32 i = provider.NumberOfLayers - 1; i >=0 ; i--)
+            for (Int32 i = provider.NumberOfLayers - 1; i >= 0; i--)
             {
-                String name;
-                Ogr prov = new Ogr("GeoData/S57/US5TX51M.000", i, out name);
+                Ogr prov = new Ogr("GeoData/S57/US5TX51M.000", i);
                 if (!prov.IsFeatureDataLayer) continue;
+                string name = prov.LayerName;
                 System.Diagnostics.Debug.WriteLine(string.Format("Layer {0}: {1}", i, name));
                 //if (provider.GeometryType )
-                lay = new VectorLayer(string.Format("Layer_{0}",name), prov);
+                lay = new VectorLayer(string.Format("Layer_{0}", name), prov);
                 if (prov.OgrGeometryTypeString.IndexOf("Polygon") > 0)
                 {
-                    lay.Style.Fill = new SolidBrush(Color.FromArgb(150, Convert.ToInt32(rnd.NextDouble() * 255), Convert.ToInt32(rnd.NextDouble() * 255), Convert.ToInt32(rnd.NextDouble() * 255)));
-                    lay.Style.Outline = new Pen(Color.FromArgb(150, Convert.ToInt32(rnd.NextDouble() * 255), Convert.ToInt32(rnd.NextDouble() * 255), Convert.ToInt32(rnd.NextDouble() * 255)), Convert.ToInt32(rnd.NextDouble()*3));
+                    lay.Style.Fill =
+                        new SolidBrush(Color.FromArgb(150, Convert.ToInt32(rnd.NextDouble() * 255),
+                                                      Convert.ToInt32(rnd.NextDouble() * 255),
+                                                      Convert.ToInt32(rnd.NextDouble() * 255)));
+                    lay.Style.Outline =
+                        new Pen(
+                            Color.FromArgb(150, Convert.ToInt32(rnd.NextDouble() * 255),
+                                           Convert.ToInt32(rnd.NextDouble() * 255),
+                                           Convert.ToInt32(rnd.NextDouble() * 255)),
+                            Convert.ToInt32(rnd.NextDouble() * 3));
                     lay.Style.EnableOutline = true;
                 }
-                lay.Style.Line = new Pen(Color.FromArgb(150, Convert.ToInt32(rnd.NextDouble() * 255), Convert.ToInt32(rnd.NextDouble() * 255), Convert.ToInt32(rnd.NextDouble() * 255)), Convert.ToInt32(rnd.NextDouble() * 3));
+                else
+                {
+                    lay.Style.Line =
+                        new Pen(
+                            Color.FromArgb(150, Convert.ToInt32(rnd.NextDouble()*255),
+                                           Convert.ToInt32(rnd.NextDouble()*255), Convert.ToInt32(rnd.NextDouble()*255)),
+                            Convert.ToInt32(rnd.NextDouble()*3));
+                }
                 map.Layers.Add(lay);
             }
             _ogrSampleDataset = "S-57";

@@ -249,5 +249,14 @@ namespace SharpMap.Geometries
             foreach (LineString l in _LineStrings)
                 yield return l;
         }
+
+        public override GeometryType2 GeometryType
+        {
+            get
+            {
+                return GeometryType2.MultiLineString;
+            }
+        }
+
     }
 }

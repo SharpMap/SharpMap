@@ -320,7 +320,8 @@ namespace SharpMap.Layers
         private void RenderGeometry(Graphics g, Map map, Geometry feature, VectorStyle style)
         {
             //ToDo: Add Property 'public GeometryType2 GeometryType { get; }' to remove this
-            GeometryType2 geometryType = (GeometryType2)Enum.Parse(typeof(GeometryType2), feature.GetType().Name);
+            GeometryType2 geometryType = feature.GeometryType;
+            //(GeometryType2)Enum.Parse(typeof(GeometryType2), feature.GetType().Name);
             
             switch (geometryType)
             //switch (feature.GetType().FullName)

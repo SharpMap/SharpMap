@@ -126,6 +126,8 @@ namespace SharpMap.Styles
         /// <summary>
         /// Creates a halo around the text
         /// </summary>
+        [System.ComponentModel.Category("Uneditable")]
+        [System.ComponentModel.Editor()]
         public Pen Halo
         {
             get { return _Halo; }
@@ -136,6 +138,7 @@ namespace SharpMap.Styles
         /// <summary>
         /// Specifies relative position of labels with respect to objects label point
         /// </summary>
+        [System.ComponentModel.Category("Uneditable")]
         public PointF Offset
         {
             get { return _Offset; }
@@ -146,6 +149,7 @@ namespace SharpMap.Styles
         /// Gets or sets whether Collision Detection is enabled for the labels.
         /// If set to true, label collision will be tested.
         /// </summary>
+        [System.ComponentModel.Category("Collision Detection")]
         public bool CollisionDetection
         {
             get { return _CollisionDetection; }
@@ -155,6 +159,7 @@ namespace SharpMap.Styles
         /// <summary>
         /// Distance around label where collision buffer is active
         /// </summary>
+        [System.ComponentModel.Category("Collision Detection")]
         public SizeF CollisionBuffer
         {
             get { return _CollisionBuffer; }
@@ -164,6 +169,7 @@ namespace SharpMap.Styles
         /// <summary>
         /// The horisontal alignment of the text in relation to the labelpoint
         /// </summary>
+        [System.ComponentModel.Category("Alignment")]
         public HorizontalAlignmentEnum HorizontalAlignment
         {
             get { return _HorisontalAlignment; }
@@ -173,6 +179,7 @@ namespace SharpMap.Styles
         /// <summary>
         /// The horisontal alignment of the text in relation to the labelpoint
         /// </summary>
+        [System.ComponentModel.Category("Alignment")]
         public VerticalAlignmentEnum VerticalAlignment
         {
             get { return _VerticalAlignment; }

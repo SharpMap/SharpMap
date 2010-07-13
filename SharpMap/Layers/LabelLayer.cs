@@ -508,7 +508,7 @@ namespace SharpMap.Layers
 
             PointF position = map.WorldToImage(feature.GetBoundingBox().GetCentroid());
             position.X = position.X - size.Width*(short) style.HorizontalAlignment*0.5f;
-            position.Y = position.Y - size.Height*(short) style.VerticalAlignment*0.5f;
+            position.Y = position.Y - size.Height*(short) (2-(int)style.VerticalAlignment)*0.5f;
             if (position.X - size.Width > map.Size.Width || position.X + size.Width < 0 ||
                 position.Y - size.Height > map.Size.Height || position.Y + size.Height < 0)
                 return null;

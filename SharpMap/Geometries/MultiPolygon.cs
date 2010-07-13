@@ -250,5 +250,14 @@ namespace SharpMap.Geometries
             foreach (Polygon p in _Polygons)
                 yield return p;
         }
+
+        public override GeometryType2 GeometryType
+        {
+            get
+            {
+                return GeometryType2.MultiPolygon;
+            }
+        }
+
     }
 }

@@ -234,5 +234,14 @@ namespace SharpMap.Geometries
             foreach (Point p in _Points)
                 yield return p;
         }
+
+        public override GeometryType2 GeometryType
+        {
+            get
+            {
+                return GeometryType2.MultiPoint;
+            }
+        }
+
     }
 }

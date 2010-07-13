@@ -203,6 +203,14 @@ namespace SharpMap.Geometries
 
         #region "Inherited methods from abstract class Geometry"
 
+        public override GeometryType2 GeometryType
+        {
+            get
+            {
+                return GeometryType2.LineString;
+            }
+        }
+
         /// <summary>
         /// Checks whether this instance is spatially equal to the LineString 'l'
         /// </summary>

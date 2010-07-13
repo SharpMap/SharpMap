@@ -164,6 +164,14 @@ namespace SharpMap.Geometries
             return GeometryFromWKB.Parse(WKB);
         }
 
+        /// <summary>
+        /// Gets the geometry type of this class
+        /// </summary>
+        public virtual GeometryType2 GeometryType
+        {
+            get { return GeometryType2.Geometry; }
+        }
+
         #endregion
 
         #region "Methods for testing Spatial Relations between geometric objects"

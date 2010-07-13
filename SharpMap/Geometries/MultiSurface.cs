@@ -52,5 +52,14 @@ namespace SharpMap.Geometries
         {
             get { return 2; }
         }
+
+        public override GeometryType2 GeometryType
+        {
+            get
+            {
+                return GeometryType2.MultiSurface;
+            }
+        }
+
     }
 }

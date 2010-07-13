@@ -18,59 +18,81 @@ namespace WinFormSamples.Samples
 
         public static Map InitializeMap()
         {
-            switch (_num++ % 5)
+            switch (_num++ % 8)
             {
                 case 0:
-                    return InitializeGeoTiff();
+                case 1:
+                case 2:
+                case 3:
+                    return InitializeGeoTiff(_num);
                 default:
                     return InitializeVRT(ref _num);
             }
-            return InitializeGeoTiff();
         }
 
-        private static Map InitializeGeoTiff()
+        private static Map InitializeGeoTiff(Int32 index)
         {
             try
             {
                 //Sample provided by Dan Brecht and Joel Wilson
                 Map map = new Map();
                 map.BackColor = Color.White;
-
-                string relativePath = "GeoData/GeoTiff/";
+                const string relativePath = "GeoData/GeoTiff/";
 
                 GdalRasterLayer layer;
 
-                if (!File.Exists(relativePath + "format01-image_a.tif"))
+                switch (index)
                 {
-                    throw new Exception("Make sure the data is in the relative directory: " + relativePath);
+                    case 1:
+                        layer = new GdalRasterLayer("GeoTiff", relativePath + "SU83NE.TIF");
+                        layer.UseRotation = true;
+                        map.Layers.Add(layer);
+                        break;
+                    case 2:
+                        layer = new GdalRasterLayer("GeoTiff", relativePath + "utm.tif");
+                        layer.UseRotation = true;
+                        map.Layers.Add(layer);
+                        break;
+                    case 3:
+                        layer = new GdalRasterLayer("GeoTiff", relativePath + "utm.jp2");
+                        layer.UseRotation = true;
+                        map.Layers.Add(layer);
+                        break;
+
+                    default:
+                        if (!File.Exists(relativePath + "format01-image_a.tif"))
+                        {
+                            throw new Exception("Make sure the data is in the relative directory: " + relativePath);
+                        }
+
+                        layer = new GdalRasterLayer("GeoTiffA", relativePath + "format01-image_a.tif");
+                        map.Layers.Add(layer);
+                        layer = new GdalRasterLayer("GeoTiffB", relativePath + "format01-image_b.tif");
+                        map.Layers.Add(layer);
+                        layer = new GdalRasterLayer("GeoTiffC", relativePath + "format01-image_c.tif");
+                        map.Layers.Add(layer);
+                        layer = new GdalRasterLayer("GeoTiffD", relativePath + "format01-image_d.tif");
+                        map.Layers.Add(layer);
+
+                        VectorLayer shapeLayer;
+
+                        if (!File.Exists(relativePath + "outline.shp"))
+                        {
+                            throw new Exception("Make sure the data is in the relative directory: " + relativePath);
+                        }
+
+                        shapeLayer = new VectorLayer("outline", new ShapeFile(relativePath + "outline.shp"));
+                        shapeLayer.Style.Fill = Brushes.Transparent;
+                        shapeLayer.Style.Outline = Pens.Black;
+                        shapeLayer.Style.EnableOutline = true;
+                        shapeLayer.Style.Enabled = true;
+                        map.Layers.Add(shapeLayer);
+                        break;
                 }
-
-                layer = new GdalRasterLayer("GeoTiffA", relativePath + "format01-image_a.tif");
-                map.Layers.Add(layer);
-                layer = new GdalRasterLayer("GeoTiffB", relativePath + "format01-image_b.tif");
-                map.Layers.Add(layer);
-                layer = new GdalRasterLayer("GeoTiffC", relativePath + "format01-image_c.tif");
-                map.Layers.Add(layer);
-                layer = new GdalRasterLayer("GeoTiffD", relativePath + "format01-image_d.tif");
-                map.Layers.Add(layer);
-
-                VectorLayer shapeLayer;
-
-                if (!File.Exists(relativePath + "outline.shp"))
-                {
-                    throw new Exception("Make sure the data is in the relative directory: " + relativePath);
-                }
-
-                shapeLayer = new VectorLayer("outline", new ShapeFile(relativePath + "outline.shp"));
-                shapeLayer.Style.Fill = Brushes.Transparent;
-                shapeLayer.Style.Outline = Pens.Black;
-                shapeLayer.Style.EnableOutline = true;
-                shapeLayer.Style.Enabled = true;
-                map.Layers.Add(shapeLayer);
 
                 map.ZoomToExtents();
-                if (_num > 1) _num = 1;
-                _gdalSampleDataset = "GeoTiff";
+                if (_num > 4) _num = 1;
+                _gdalSampleDataset = "GeoTiff" + _num;
                 return map;
             }
             catch (TypeInitializationException ex)
@@ -92,7 +114,7 @@ namespace WinFormSamples.Samples
         private static Map InitializeVRT(ref Int32 index)
         {
             Map map = new Map();
-            Int32 ind = index - 2;
+            Int32 ind = index - 5;
             if (ind >= Vrts.Length) ind = 0;
 
             if (!File.Exists(RelativePath + Vrts[ind]))

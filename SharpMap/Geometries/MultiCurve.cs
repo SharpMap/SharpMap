@@ -51,5 +51,14 @@ namespace SharpMap.Geometries
         /// <param name="N">Geometry index</param>
         /// <returns>Geometry at index N</returns>
         public new abstract Geometry Geometry(int N);
+
+        public override GeometryType2 GeometryType
+        {
+            get
+            {
+                return GeometryType2.MultiCurve;
+            }
+        }
+
     }
 }

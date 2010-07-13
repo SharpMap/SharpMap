@@ -66,5 +66,13 @@ namespace SharpMap.Geometries
         /// <param name="t"></param>
         /// <returns></returns>
         public abstract Point Value(double t);
+
+        public override GeometryType2 GeometryType
+        {
+            get
+            {
+                return GeometryType2.Curve;
+            }
+        }
     }
 }

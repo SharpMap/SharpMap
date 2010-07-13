@@ -195,6 +195,13 @@ namespace SharpMap.Geometries
         }
 
         #region "Inherited methods from abstract class Geometry"
+        public override GeometryType2 GeometryType
+        {
+            get
+            {
+                return GeometryType2.Polygon;
+            }
+        }
 
         /// <summary>
         /// Determines if this Polygon and the specified Polygon object has the same values
