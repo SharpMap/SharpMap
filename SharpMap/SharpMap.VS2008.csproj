@@ -122,7 +122,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Rendering\Label.cs" />
     <Compile Include="Rendering\LabelCollisionDetection.cs" />
-    <Compile Include="Rendering\LineLabelBox.cs" />
     <Compile Include="Rendering\RenderExceptions.cs" />
     <Compile Include="Rendering\Thematics\ColorBlend.cs" />
     <Compile Include="Rendering\Thematics\CustomTheme.cs" />
