@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Web.UI;
-using SharpMap.CoordinateSystems;
-using SharpMap.CoordinateSystems.Transformations;
+using ProjNet.CoordinateSystems;
+using ProjNet.CoordinateSystems.Transformations;
 using SharpMap.Geometries;
 
 public partial class TransformTests : Page

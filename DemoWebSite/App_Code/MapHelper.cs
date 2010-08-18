@@ -322,7 +322,6 @@ public class MapHelper
         return map;
     }
 
-
     public static Map InitializeMapMsSqlSpatial(Size size)
     {
         HttpContext.Current.Trace.Write("Initializing map...");
@@ -419,7 +418,7 @@ public class MapHelper
         return map;
     }
 
-    public static SharpMap.Map InitializeMapPostGis(System.Drawing.Size size)
+    public static Map InitializeMapPostGis(Size size)
     {
 
         HttpContext.Current.Trace.Write("Initializing map...");
@@ -518,4 +517,39 @@ public class MapHelper
         return map;
     }
 
+    public static Map InitializeMapGdal(Size size)
+    {
+        HttpContext.Current.Trace.Write("Initializing map...");
+
+        //Initialize a new map of size 'imagesize'
+        Map map = new Map(size);
+
+        //Set up the gdal layer
+        LayerGroup g = new LayerGroup("OS");
+        g.SRID = 27700;
+        //D:\Raster\Ordnance Survey\OS Street View SM\data\sm
+        System.IO.DirectoryInfo di = new System.IO.DirectoryInfo(HttpContext.Current.Server.MapPath(@"~\App_Data\Gdal"));
+        foreach (System.IO.FileInfo fi in di.GetFiles("*.tif"))
+        {
+            try
+            {
+                SharpMap.Layers.GdalRasterLayer layer = 
+                    new SharpMap.Layers.GdalRasterLayer(
+                        fi.Name, HttpContext.Current.Server.MapPath(@"~\App_Data\Gdal\" + fi.Name));
+                //layer.SRID = 27700;
+                g.Layers.Add(layer);
+            }
+            catch (TypeInitializationException ex)
+            {
+                if (ex.GetType() == typeof(TypeInitializationException))
+                    throw new Exception(
+                        "Please copy the umanaged dll's into your bin folder from javascript:window.location.href='http://www.codeplex.com/SharpMap/Wiki/View.aspx?title=Extensions';.");
+            }
+        }
+        map.Layers.Add(g);
+        map.ZoomToExtents();
+
+        HttpContext.Current.Trace.Write("Map initialized");
+        return map;
+    }
 }

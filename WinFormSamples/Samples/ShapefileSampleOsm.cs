@@ -18,6 +18,9 @@ namespace WinFormSamples.Samples
         //Transformed to shapefile by Geofabrik (http://www.geofabrik.de)
         private const string PathOsm = "GeoData/OSM";
 
+
+        private static SharpMap.Geometries.BoundingBox _roadsExtents;
+
         //Could have used SharpMap.Rendering.Thematics.CustomTheme,
         //but that one does not perserve styles for fast retrieval.
         //Maybe a category theme would be a good idea...
@@ -54,8 +57,8 @@ namespace WinFormSamples.Samples
                     else
                         returnStyle = _default;
                 }
-                returnStyle.MinVisible = _default.MinVisible;
-                returnStyle.MaxVisible = _default.MaxVisible;
+                //returnStyle.MinVisible = _default.MinVisible;
+                //returnStyle.MaxVisible = _default.MaxVisible;
                 return returnStyle;
             }
 
@@ -94,8 +97,11 @@ namespace WinFormSamples.Samples
             ThemeViaDelegate theme = new ThemeViaDelegate(layNatural.Style, "type");
             theme.GetStyleFunction = delegate(FeatureDataRow row)
                                          {
+                                             string caseVal = (String) row["type"];
+                                             caseVal = caseVal.ToLowerInvariant();
                                              VectorStyle returnStyle = new VectorStyle();
-                                             switch ((String) row["type"])
+                                             
+                                             switch (caseVal)
                                              {
                                                  case "forest":
                                                      returnStyle.Fill = Brushes.ForestGreen;
@@ -128,6 +134,9 @@ namespace WinFormSamples.Samples
 
             VectorLayer layRoads = new VectorLayer("Roads");
             layRoads.DataSource = new ShapeFile(string.Format("{0}/roads.shp", PathOsm));
+            layRoads.DataSource.Open();
+            _roadsExtents = layRoads.DataSource.GetExtents();
+            //layRoads.DataSource.Close();
             layRoads.Style = transparentStyle;
             ThemeViaDelegate themeRoads = new ThemeViaDelegate(transparentStyle, "type");
             themeRoads.GetStyleFunction = delegate(FeatureDataRow row)
@@ -156,6 +165,7 @@ namespace WinFormSamples.Samples
                                                           returnStyle.Line.DashStyle =
                                                               DashStyle.Dot;
                                                           returnStyle.Line.Width = 1;
+                                                          returnStyle.MaxVisible = _roadsExtents.Width * 0.05d;
                                                           break;
                                                       case "living_street":
                                                       case "residential":
@@ -164,6 +174,7 @@ namespace WinFormSamples.Samples
                                                           returnStyle.EnableOutline = true;
                                                           returnStyle.Outline.Brush = Brushes.DarkGray;
                                                           returnStyle.Outline.Width = 4;
+                                                          returnStyle.MaxVisible = _roadsExtents.Width * 0.15d;
                                                           break;
                                                       case "primary":
                                                           returnStyle.Line.Brush = Brushes.LightGoldenrodYellow;
@@ -177,6 +188,7 @@ namespace WinFormSamples.Samples
                                                           returnStyle.Line.Width = 6;
                                                           returnStyle.EnableOutline = true;
                                                           returnStyle.Outline.Brush = Brushes.Black;
+                                                          returnStyle.MaxVisible = _roadsExtents.Width * 0.3d;
                                                           returnStyle.Outline.Width = 10;
                                                           break;
                                                       case "tertiary":
@@ -184,6 +196,7 @@ namespace WinFormSamples.Samples
                                                           returnStyle.Line.Width = 5;
                                                           returnStyle.EnableOutline = true;
                                                           returnStyle.Outline.Brush = Brushes.Black;
+                                                          returnStyle.MaxVisible = _roadsExtents.Width * 0.6d;
                                                           returnStyle.Outline.Width = 9;
                                                           break;
                                                       case "path":
@@ -193,6 +206,7 @@ namespace WinFormSamples.Samples
                                                           returnStyle.Line.DashStyle =
                                                               DashStyle.DashDotDot;
                                                           returnStyle.Line.Width = 1;
+                                                          returnStyle.MaxVisible = _roadsExtents.Width * 0.025d;
                                                           break;
                                                       default:
                                                           returnStyle = null;

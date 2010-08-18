@@ -54,11 +54,11 @@ namespace SharpMap.Layers
     /// </example>
     public class VectorLayer : Layer, ICanQueryLayer, IDisposable
     {
-        private bool _ClippingEnabled = false;
+        private bool _clippingEnabled;
         private bool _isQueryEnabled = true;
-        private IProvider _DataSource;
-        private SmoothingMode _SmoothingMode;
-        private VectorStyle _Style;
+        private IProvider _dataSource;
+        private SmoothingMode _smoothingMode;
+        //private VectorStyle _Style;
         private ITheme _theme;
 
         /// <summary>
@@ -66,8 +66,9 @@ namespace SharpMap.Layers
         /// </summary>
         /// <param name="layername">Name of layer</param>
         public VectorLayer(string layername)
+            :base(new VectorStyle())
         {
-            Style = new VectorStyle();
+            //Style = new VectorStyle();
             LayerName = layername;
             SmoothingMode = SmoothingMode.AntiAlias;
         }
@@ -79,7 +80,7 @@ namespace SharpMap.Layers
         /// <param name="dataSource">Data source</param>
         public VectorLayer(string layername, IProvider dataSource) : this(layername)
         {
-            _DataSource = dataSource;
+            _dataSource = dataSource;
         }
 
         /// <summary>
@@ -103,8 +104,8 @@ namespace SharpMap.Layers
         /// </remarks>
         public bool ClippingEnabled
         {
-            get { return _ClippingEnabled; }
-            set { _ClippingEnabled = value; }
+            get { return _clippingEnabled; }
+            set { _clippingEnabled = value; }
         }
 
         /// <summary>
@@ -121,8 +122,8 @@ namespace SharpMap.Layers
         /// </summary>
         public SmoothingMode SmoothingMode
         {
-            get { return _SmoothingMode; }
-            set { _SmoothingMode = value; }
+            get { return _smoothingMode; }
+            set { _smoothingMode = value; }
         }
 
         /// <summary>
@@ -130,19 +131,18 @@ namespace SharpMap.Layers
         /// </summary>
         public IProvider DataSource
         {
-            get { return _DataSource; }
-            set { _DataSource = value; }
+            get { return _dataSource; }
+            set { _dataSource = value; }
         }
 
         /// <summary>
         /// Gets or sets the rendering style of the vector layer.
         /// </summary>
-        public VectorStyle Style
+        public new VectorStyle Style
         {
-            get { return _Style; }
-            set { _Style = value; }
+            get { return base.Style as VectorStyle; }
+            set { base.Style = value; }
         }
-
 
         /// <summary>
         /// Returns the extent of the layer
@@ -189,8 +189,8 @@ namespace SharpMap.Layers
         /// </summary>
         public void Dispose()
         {
-            if (DataSource is IDisposable)
-                ((IDisposable) DataSource).Dispose();
+            if (DataSource != null)
+                DataSource.Dispose();
         }
 
         #endregion
@@ -227,7 +227,7 @@ namespace SharpMap.Layers
                 DataSource.ExecuteIntersectionQuery(envelope, ds);
                 DataSource.Close();
 
-                FeatureDataTable features = (FeatureDataTable) ds.Tables[0];
+                FeatureDataTable features = ds.Tables[0];
 
                 if (CoordinateTransformation != null)
                     for (int i = 0; i < features.Count; i++)
@@ -243,20 +243,21 @@ namespace SharpMap.Layers
                     for (int i = 0; i < features.Count; i++)
                     {
                         FeatureDataRow feature = features[i];
+                        VectorStyle outlineStyle = Theme.GetStyle(feature) as VectorStyle;
+                        if (outlineStyle == null) continue;
+                        if (!(outlineStyle.Enabled && outlineStyle.EnableOutline)) continue;
+                        if (!(outlineStyle.MinVisible <= map.Zoom && map.Zoom <= outlineStyle.MaxVisible)) continue;
+
                         //Draw background of all line-outlines first
                         if (feature.Geometry is LineString)
                         {
-                            VectorStyle outlinestyle1 = Theme.GetStyle(feature) as VectorStyle;
-                            if (outlinestyle1.Enabled && outlinestyle1.EnableOutline)
-                                VectorRenderer.DrawLineString(g, feature.Geometry as LineString, outlinestyle1.Outline,
+                            VectorRenderer.DrawLineString(g, feature.Geometry as LineString, outlineStyle.Outline,
                                                               map);
                         }
                         else if (feature.Geometry is MultiLineString)
                         {
-                            VectorStyle outlinestyle2 = Theme.GetStyle(feature) as VectorStyle;
-                            if (outlinestyle2.Enabled && outlinestyle2.EnableOutline)
                                 VectorRenderer.DrawMultiLineString(g, feature.Geometry as MultiLineString,
-                                                                   outlinestyle2.Outline, map);
+                                                                   outlineStyle.Outline, map);
                         }
                     }
                 }
@@ -273,6 +274,9 @@ namespace SharpMap.Layers
             }
             else
             {
+                //if style is not enabled, we don't need to render anything
+                if (!Style.Enabled) return;
+
                 DataSource.Open();
 
                 Collection<Geometry> geoms = DataSource.GetGeometriesInView(envelope);
@@ -291,17 +295,10 @@ namespace SharpMap.Layers
                         if (geom != null)
                         {
                             //Draw background of all line-outlines first
-                            switch (geom.GetType().FullName)
-                            {
-                                case "SharpMap.Geometries.LineString":
-                                    VectorRenderer.DrawLineString(g, geom as LineString, Style.Outline, map);
-                                    break;
-                                case "SharpMap.Geometries.MultiLineString":
-                                    VectorRenderer.DrawMultiLineString(g, geom as MultiLineString, Style.Outline, map);
-                                    break;
-                                default:
-                                    break;
-                            }
+                            if (geom  is LineString)
+                                VectorRenderer.DrawLineString(g, geom as LineString, Style.Outline, map);
+                            else if (geom is MultiLineString)
+                                VectorRenderer.DrawMultiLineString(g, geom as MultiLineString, Style.Outline, map);
                         }
                     }
                 }
@@ -329,18 +326,18 @@ namespace SharpMap.Layers
                 case GeometryType2.Polygon:
                 //case "SharpMap.Geometries.Polygon":
                     if (style.EnableOutline)
-                        VectorRenderer.DrawPolygon(g, (Polygon) feature, style.Fill, style.Outline, _ClippingEnabled,
+                        VectorRenderer.DrawPolygon(g, (Polygon) feature, style.Fill, style.Outline, _clippingEnabled,
                                                    map);
                     else
-                        VectorRenderer.DrawPolygon(g, (Polygon) feature, style.Fill, null, _ClippingEnabled, map);
+                        VectorRenderer.DrawPolygon(g, (Polygon) feature, style.Fill, null, _clippingEnabled, map);
                     break;
                 case GeometryType2.MultiPolygon:
                 //case "SharpMap.Geometries.MultiPolygon":
                     if (style.EnableOutline)
                         VectorRenderer.DrawMultiPolygon(g, (MultiPolygon) feature, style.Fill, style.Outline,
-                                                        _ClippingEnabled, map);
+                                                        _clippingEnabled, map);
                     else
-                        VectorRenderer.DrawMultiPolygon(g, (MultiPolygon) feature, style.Fill, null, _ClippingEnabled,
+                        VectorRenderer.DrawMultiPolygon(g, (MultiPolygon) feature, style.Fill, null, _clippingEnabled,
                                                         map);
                     break;
                 case GeometryType2.LineString:
@@ -380,9 +377,9 @@ namespace SharpMap.Layers
         /// <param name="ds">FeatureDataSet to fill data into</param>
         public void ExecuteIntersectionQuery(BoundingBox box, FeatureDataSet ds)
         {
-            _DataSource.Open();
-            _DataSource.ExecuteIntersectionQuery(box, ds);
-            _DataSource.Close();
+            _dataSource.Open();
+            _dataSource.ExecuteIntersectionQuery(box, ds);
+            _dataSource.Close();
         }
 
         #endregion

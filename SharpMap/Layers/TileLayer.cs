@@ -12,15 +12,17 @@ using SharpMap.Geometries;
 
 namespace SharpMap.Layers
 {
+    ///<summary>
+    ///</summary>
     public class TileLayer : Layer
     {
         #region Fields
         
         //string layerName;
-        ImageAttributes imageAttributes = new ImageAttributes();
-        ITileSource source;
-        MemoryCache<Bitmap> bitmaps = new MemoryCache<Bitmap>(100, 200);
-        bool showErrorInTile = true;
+        readonly ImageAttributes _imageAttributes = new ImageAttributes();
+        readonly ITileSource _source;
+        readonly MemoryCache<Bitmap> _bitmaps = new MemoryCache<Bitmap>(100, 200);
+        readonly bool _showErrorInTile = true;
 
         #endregion
 
@@ -34,10 +36,10 @@ namespace SharpMap.Layers
             get 
             {
                 return new BoundingBox(
-                    source.Schema.Extent.MinX, 
-                    source.Schema.Extent.MinY, 
-                    source.Schema.Extent.MaxX, 
-                    source.Schema.Extent.MaxY);
+                    _source.Schema.Extent.MinX, 
+                    _source.Schema.Extent.MinY, 
+                    _source.Schema.Extent.MaxX, 
+                    _source.Schema.Extent.MaxY);
             }
         }
 
@@ -45,22 +47,34 @@ namespace SharpMap.Layers
 
         #region Constructors 
 
+        /// <summary>
+        /// Creates an instance of this class
+        /// </summary>
+        /// <param name="tileSource">the source to get the tiles from</param>
+        /// <param name="layerName">name of the layer</param>
         public TileLayer(ITileSource tileSource, string layerName)
             : this(tileSource, layerName, new Color(), true)
         {
         }
 
+        /// <summary>
+        /// Creates an instance of this class
+        /// </summary>
+        /// <param name="tileSource">the source to get the tiles from</param>
+        /// <param name="layerName">name of the layer</param>
+        /// <param name="transparentColor">transparent color off</param>
+        /// <param name="showErrorInTile">generate an error tile if it could not be retrieved from source</param>
+        /// <remarks>If <see cref="showErrorInTile"/> is set to false, tile source keeps trying to get the tile in every request</remarks>
         public TileLayer(ITileSource tileSource, string layerName, Color transparentColor, bool showErrorInTile)
         {
-            this.source = tileSource;
-            base.LayerName = layerName;
-            //this.layerName = layerName;
+            _source = tileSource;
+            LayerName = layerName;
             if (!transparentColor.IsEmpty)
-                imageAttributes.SetColorKey(transparentColor, transparentColor);
-            this.showErrorInTile = showErrorInTile;
+                _imageAttributes.SetColorKey(transparentColor, transparentColor);
+            _showErrorInTile = showErrorInTile;
 
 #if !PocketPC
-            imageAttributes.SetWrapMode(WrapMode.TileFlipXY);
+            _imageAttributes.SetWrapMode(WrapMode.TileFlipXY);
 #endif
         }
 
@@ -68,21 +82,20 @@ namespace SharpMap.Layers
 
         #region Public methods
 
-
         public override void Render(Graphics graphics, Map map)
         {
             Extent extent = new Extent(map.Envelope.Min.X, map.Envelope.Min.Y, map.Envelope.Max.X, map.Envelope.Max.Y);
-            int level = BruTile.Utilities.GetNearestLevel(source.Schema.Resolutions, map.PixelSize);
-            IList<TileInfo> tiles = source.Schema.GetTilesInView(extent, level);
+            int level = BruTile.Utilities.GetNearestLevel(_source.Schema.Resolutions, map.PixelSize);
+            IList<TileInfo> tiles = _source.Schema.GetTilesInView(extent, level);
             
             IList<WaitHandle> waitHandles = new List<WaitHandle>();
 
             foreach (TileInfo info in tiles)
             {
-                if (bitmaps.Find(info.Index) != null) continue;
+                if (_bitmaps.Find(info.Index) != null) continue;
                 AutoResetEvent waitHandle = new AutoResetEvent(false);
                 waitHandles.Add(waitHandle);
-                ThreadPool.QueueUserWorkItem(GetTileOnThread, new object[] { source.Provider, info, bitmaps, waitHandle });
+                ThreadPool.QueueUserWorkItem(GetTileOnThread, new object[] { _source.Provider, info, _bitmaps, waitHandle });
             }
 
             foreach (WaitHandle handle in waitHandles)
@@ -90,20 +103,20 @@ namespace SharpMap.Layers
 
             foreach (TileInfo info in tiles)
             {
-                Bitmap bitmap = bitmaps.Find(info.Index);
+                Bitmap bitmap = _bitmaps.Find(info.Index);
                 if (bitmap == null) continue;
 
-                PointF min = map.WorldToImage(new SharpMap.Geometries.Point(info.Extent.MinX, info.Extent.MinY));
-                PointF max = map.WorldToImage(new SharpMap.Geometries.Point(info.Extent.MaxX, info.Extent.MaxY));
+                PointF min = map.WorldToImage(new Geometries.Point(info.Extent.MinX, info.Extent.MinY));
+                PointF max = map.WorldToImage(new Geometries.Point(info.Extent.MaxX, info.Extent.MaxY));
 
                 min = new PointF((float)Math.Round(min.X), (float)Math.Round(min.Y));
                 max = new PointF((float)Math.Round(max.X), (float)Math.Round(max.Y));
 
                 graphics.DrawImage(bitmap,
                     new Rectangle((int)min.X, (int)max.Y, (int)(max.X - min.X), (int)(min.Y - max.Y)),
-                    0, 0, source.Schema.Width, source.Schema.Height,
+                    0, 0, _source.Schema.Width, _source.Schema.Height,
                     GraphicsUnit.Pixel,
-                    imageAttributes);
+                    _imageAttributes);
             }
         }
 
@@ -129,18 +142,18 @@ namespace SharpMap.Layers
             }
             catch (WebException ex)
             {
-                if (showErrorInTile)
+                if (_showErrorInTile)
                 {
                     //an issue with this method is that one an error tile is in the memory cache it will stay even
                     //if the error is resolved. PDD.
-                    Bitmap bitmap = new Bitmap(this.source.Schema.Width, this.source.Schema.Height);
+                    Bitmap bitmap = new Bitmap(_source.Schema.Width, _source.Schema.Height);
                     Graphics graphics = Graphics.FromImage(bitmap);
                     graphics.DrawString(ex.Message, new Font(FontFamily.GenericSansSerif, 12), new SolidBrush(Color.Black),
-                        new RectangleF(0, 0, this.source.Schema.Width, this.source.Schema.Height));
+                        new RectangleF(0, 0, _source.Schema.Width, _source.Schema.Height));
                     bitmaps.Add(tileInfo.Index, bitmap);
                 }
             }
-            catch (Exception ex)
+            catch(Exception ex)
             {
                 //todo: log and use other ways to report to user.
             }

@@ -15,10 +15,10 @@
 // along with SharpMap; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
 
-using System;
 using System.Drawing;
 using ProjNet.CoordinateSystems.Transformations;
 using SharpMap.Geometries;
+using SharpMap.Styles;
 
 namespace SharpMap.Layers
 {
@@ -48,11 +48,27 @@ namespace SharpMap.Layers
 
         #endregion
 
-        private ICoordinateTransformation _CoordinateTransform;
+        private ICoordinateTransformation _coordinateTransform;
 
-        private string _LayerName;
+        private string _layerName;
+        private Style _style;
+        private int _srid = -1;
 
-        private int _SRID = -1;
+// ReSharper disable PublicConstructorInAbstractClass
+        ///<summary>
+        /// Creates an instance of this class using the given Style
+        ///</summary>
+        ///<param name="style"></param>
+        public Layer(Style style)
+// ReSharper restore PublicConstructorInAbstractClass
+        {
+            _style = style;
+        }
+
+        protected Layer() //Style style)
+        {
+            _style = new Style();
+        }
 
         /// <summary>
         /// Gets or sets the <see cref="SharpMap.CoordinateSystems.Transformations.ICoordinateTransformation"/> applied 
@@ -60,8 +76,8 @@ namespace SharpMap.Layers
         /// </summary>
         public virtual ICoordinateTransformation CoordinateTransformation
         {
-            get { return _CoordinateTransform; }
-            set { _CoordinateTransform = value; }
+            get { return _coordinateTransform; }
+            set { _coordinateTransform = value; }
         }
 
         #region ILayer Members
@@ -71,8 +87,8 @@ namespace SharpMap.Layers
         /// </summary>
         public string LayerName
         {
-            get { return _LayerName; }
-            set { _LayerName = value; }
+            get { return _layerName; }
+            set { _layerName = value; }
         }
 
         /// <summary>
@@ -80,8 +96,8 @@ namespace SharpMap.Layers
         /// </summary>
         public virtual int SRID
         {
-            get { return _SRID; }
-            set { _SRID = value; }
+            get { return _srid; }
+            set { _srid = value; }
         }
 
         //public abstract SharpMap.CoordinateSystems.CoordinateSystem CoordinateSystem { get; set; }
@@ -107,17 +123,24 @@ namespace SharpMap.Layers
 
         #region Properties
 
+        /*
         private bool _Enabled = true;
         private double _MaxVisible = double.MaxValue;
         private double _MinVisible = 0;
-
+        */
         /// <summary>
         /// Minimum visibility zoom, including this value
         /// </summary>
         public double MinVisible
         {
-            get { return _MinVisible; }
-            set { _MinVisible = value; }
+            get
+            {
+                return _style.MinVisible; // return _MinVisible;
+            }
+            set
+            {
+                _style.MinVisible = value; // _MinVisible = value; 
+            }
         }
 
         /// <summary>
@@ -125,8 +148,16 @@ namespace SharpMap.Layers
         /// </summary>
         public double MaxVisible
         {
-            get { return _MaxVisible; }
-            set { _MaxVisible = value; }
+            get
+            {
+                //return _MaxVisible; 
+                return _style.MaxVisible;
+            }
+            set
+            {
+                //_MaxVisible = value;
+                _style.MaxVisible = value;
+            }
         }
 
         /// <summary>
@@ -134,8 +165,25 @@ namespace SharpMap.Layers
         /// </summary>
         public bool Enabled
         {
-            get { return _Enabled; }
-            set { _Enabled = value; }
+            get
+            {
+                //return _Enabled;
+                return _style.Enabled;
+            }
+            set
+            {
+                //_Enabled = value;
+                _style.Enabled = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets/sets the Style for this Layer
+        /// </summary>
+        public virtual Style Style
+        {
+            get { return _style; }
+            set { _style = value; }
         }
 
         #endregion

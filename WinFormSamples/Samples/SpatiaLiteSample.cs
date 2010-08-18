@@ -51,10 +51,7 @@ namespace WinFormSamples.Samples
             SharpMap.Layers.LabelLayer layLabel = new SharpMap.Layers.LabelLayer("Country labels") 
             {
                 DataSource = layCountries.DataSource,
-                Enabled = true,
                 LabelColumn = "NAME",
-                MaxVisible = 90,
-                MinVisible = 30,
                 MultipartGeometryBehaviour = SharpMap.Layers.LabelLayer.MultipartGeometryBehaviourEnum.Largest,
                 LabelFilter = SharpMap.Rendering.LabelCollisionDetection.ThoroughCollisionDetection,
                 PriorityColumn = "POPDENS",
@@ -64,6 +61,8 @@ namespace WinFormSamples.Samples
                     Font = new System.Drawing.Font(System.Drawing.FontFamily.GenericSerif, 12),
                     BackColor = new System.Drawing.SolidBrush(System.Drawing.Color.FromArgb(128, 255, 0, 0)),
                     HorizontalAlignment = SharpMap.Styles.LabelStyle.HorizontalAlignmentEnum.Center,
+                    MaxVisible = 90,
+                    MinVisible = 30,
                     CollisionDetection = true
                 }
             };
@@ -72,7 +71,6 @@ namespace WinFormSamples.Samples
             SharpMap.Layers.LabelLayer layCityLabel = new SharpMap.Layers.LabelLayer("City labels")
             {
                 DataSource = layCities.DataSource,
-                Enabled = true,
                 LabelColumn = "name",
                 PriorityColumn = "population",
                 PriorityDelegate = delegate(SharpMap.Data.FeatureDataRow fdr) 

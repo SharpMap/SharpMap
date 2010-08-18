@@ -30,6 +30,7 @@
 						<a href="GeometryFeature.aspx">Geometry Feature Provider</a>
 						<h2>Extensions</h2>
 						<a href="MapInfo.aspx">MapInfo</a>
+						<a href="Gdal.aspx">Gdal</a>
 						<a href="SimplePostGis.aspx">Simple - PostGis</a>
 						<h2>WMS</h2>
 						<a href="wmsclient.aspx">WMS Client</a>

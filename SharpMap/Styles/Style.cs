@@ -23,11 +23,11 @@ namespace SharpMap.Styles
     /// Defines a style used for for defining layer styles
     /// </summary>
     [Serializable]
-    public abstract class Style : IStyle
+    public class Style : IStyle
     {
         private double _maxVisible;
         private double _minVisible;
-        private bool _Visible;
+        private bool _visible;
 
         /// <summary>
         /// Initializes a style as sets Min=0, Max=double.MaxValue and Visible=true
@@ -36,7 +36,7 @@ namespace SharpMap.Styles
         {
             _minVisible = 0;
             _maxVisible = double.MaxValue;
-            _Visible = true;
+            _visible = true;
         }
 
         #region IStyle Members
@@ -64,8 +64,8 @@ namespace SharpMap.Styles
         /// </summary>
         public bool Enabled
         {
-            get { return _Visible; }
-            set { _Visible = value; }
+            get { return _visible; }
+            set { _visible = value; }
         }
 
         #endregion

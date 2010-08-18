@@ -32,7 +32,7 @@ namespace SharpMap.Layers
         /// <returns>The layer at the given <paramref name="index"/>.</returns>
         /// <exception cref="ArgumentOutOfRangeException">
         /// Thrown if <paramref name="index"/> is less than 0 or is 
-        /// greater or equal to <see cref="Count"/>.
+        /// greater or equal to <see cref="CollectionBase.Count"/>.
         /// </exception>
         public virtual ILayer this[int index]
         {
@@ -48,17 +48,17 @@ namespace SharpMap.Layers
         /// </param>
         public virtual ILayer this[string layerName]
         {
-            get { return getLayerByName(layerName); }
+            get { return GetLayerByName(layerName); }
             set
             {
                 for (int i = 0; i < Count; i++)
                 {
-                    int comparison = String.Compare((List[i] as ILayer).LayerName,
+                    int comparison = String.Compare(this[i].LayerName,
                                                     layerName, StringComparison.CurrentCultureIgnoreCase);
 
                     if (comparison == 0)
                     {
-                        List[i] = value;
+                        this[i] = value;
                         return;
                     }
                 }
@@ -84,7 +84,7 @@ namespace SharpMap.Layers
         /// </param>
         /// <exception cref="ArgumentOutOfRangeException">
         /// <paramref name="index"/> is less than 0. 
-        /// or is equal to or greater than <see cref="Count"/>.
+        /// or is equal to or greater than <see cref="CollectionBase.Count"/>.
         /// </exception>
         public new void RemoveAt(int index)
         {
@@ -122,7 +122,7 @@ namespace SharpMap.Layers
         /// <param name="layer">The layer to insert.</param>
         /// <exception cref="ArgumentOutOfRangeException">
         /// Thrown if <paramref name="index"/> is less than 0 or is 
-        /// greater or equal to <see cref="Count"/>.
+        /// greater or equal to <see cref="CollectionBase.Count"/>.
         /// </exception>
         public void Insert(int index, ILayer layer)
         {
@@ -137,35 +137,31 @@ namespace SharpMap.Layers
         protected override void OnInsert(int index, object value)
         {
             ILayer newLayer = (value as ILayer);
+            if (newLayer == null) throw new ArgumentNullException("value","The passed argument is null or not an ILayer");
 
-            foreach (ILayer layer in List)
+            foreach (ILayer layer in this)
             {
                 int comparison = String.Compare(layer.LayerName,
                                                 newLayer.LayerName, StringComparison.CurrentCultureIgnoreCase);
 
-                if (comparison == 0)
-                {
-                    throw new DuplicateLayerException(newLayer.LayerName);
-                }
+                if (comparison == 0) throw new DuplicateLayerException(newLayer.LayerName);
             }
 
             base.OnInsert(index, value);
         }
 
-        private ILayer getLayerByName(string layerName)
+        private ILayer GetLayerByName(string layerName)
         {
-            foreach (ILayer layer in List)
+            foreach (ILayer layer in this)
             {
                 int comparison = String.Compare(layer.LayerName,
                                                 layerName, StringComparison.CurrentCultureIgnoreCase);
 
-                if (comparison == 0)
-                {
-                    return layer;
-                }
+                if (comparison == 0) return layer;
             }
 
             return null;
         }
+
     }
 }

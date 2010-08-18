@@ -59,15 +59,15 @@ namespace SharpMap.Layers
         /// <summary>
         /// Delegate method for creating advanced label texts
         /// </summary>
-        /// <param name="fdr"></param>
-        /// <returns></returns>
+        /// <param name="fdr">the <see cref="FeatureDataRow"/> to build the label for</param>
+        /// <returns>the label</returns>
         public delegate string GetLabelMethod(FeatureDataRow fdr);
 
         /// <summary>
         /// Delegate method for calculating the priority of label rendering
         /// </summary>
-        /// <param name="fdr"></param>
-        /// <returns></returns>
+        /// <param name="fdr">the <see cref="FeatureDataRow"/> to compute the priority value from</param>
+        /// <returns>the priority value</returns>
         public delegate int GetPriorityMethod(FeatureDataRow fdr);
 
         #endregion
@@ -102,37 +102,53 @@ namespace SharpMap.Layers
 
         #endregion
 
-        private IProvider _DataSource;
+        private IProvider _dataSource;
         private GetLabelMethod _getLabelMethod;
         private GetPriorityMethod _getPriorityMethod;
-        private string _LabelColumn;
-        private LabelCollisionDetection.LabelFilterMethod _LabelFilter;
 
-        private MultipartGeometryBehaviourEnum _MultipartGeometryBehaviour;
-        private int _Priority;
+        /// <summary>
+        /// Name of the column that holds the value for the label.
+        /// </summary>
+        private string _labelColumn;
+
+        /// <summary>
+        /// Delegate for custom Label Collision Detection
+        /// </summary>
+        private LabelCollisionDetection.LabelFilterMethod _labelFilter;
+
+        /// <summary>
+        /// A value indicating the labeling technique use in case of MultiPart geometries
+        /// </summary>
+        private MultipartGeometryBehaviourEnum _multipartGeometryBehaviour;
 
         /// <summary>
         /// A value indication the priority of the label in cases of label-collision detection
         /// </summary>
-        private string _PriorityColumn = "";
+        private int _priority;
+        /// <summary>
+        /// Name of the column that contains the value indicating the priority of the label in case of label-collision detection
+        /// </summary>
+        private string _priorityColumn = "";
 
-        private string _RotationColumn;
-        private SmoothingMode _SmoothingMode;
-        private LabelStyle _Style;
-        private TextRenderingHint _TextRenderingHint;
+        private string _rotationColumn;
+        private SmoothingMode _smoothingMode;
+        //private LabelStyle _Style;
+        private TextRenderingHint _textRenderingHint;
+
         private ITheme _theme;
 
         /// <summary>
         /// Creates a new instance of a LabelLayer
         /// </summary>
         public LabelLayer(string layername)
+            :base(new LabelStyle())
         {
-            _Style = new LabelStyle();
+            //_Style = new LabelStyle();
             LayerName = layername;
             SmoothingMode = SmoothingMode.AntiAlias;
             TextRenderingHint = TextRenderingHint.AntiAlias;
-            _MultipartGeometryBehaviour = MultipartGeometryBehaviourEnum.All;
-            _LabelFilter = LabelCollisionDetection.SimpleCollisionDetection;
+            _multipartGeometryBehaviour = MultipartGeometryBehaviourEnum.All;
+            _labelFilter = LabelCollisionDetection.SimpleCollisionDetection;
         }
 
         /// <summary>
@@ -141,8 +157,8 @@ namespace SharpMap.Layers
         /// <remarks>Default value is <see cref="MultipartGeometryBehaviourEnum.All"/></remarks>
         public MultipartGeometryBehaviourEnum MultipartGeometryBehaviour
         {
-            get { return _MultipartGeometryBehaviour; }
-            set { _MultipartGeometryBehaviour = value; }
+            get { return _multipartGeometryBehaviour; }
+            set { _multipartGeometryBehaviour = value; }
         }
 
         /// <summary>
@@ -153,8 +169,8 @@ namespace SharpMap.Layers
         /// </remarks>
         public LabelCollisionDetection.LabelFilterMethod LabelFilter
         {
-            get { return _LabelFilter; }
-            set { _LabelFilter = value; }
+            get { return _labelFilter; }
+            set { _labelFilter = value; }
         }
 
 
@@ -163,8 +179,8 @@ namespace SharpMap.Layers
         /// </summary>
         public SmoothingMode SmoothingMode
         {
-            get { return _SmoothingMode; }
-            set { _SmoothingMode = value; }
+            get { return _smoothingMode; }
+            set { _smoothingMode = value; }
         }
 
         /// <summary>
@@ -172,8 +188,8 @@ namespace SharpMap.Layers
         /// </summary>
         public TextRenderingHint TextRenderingHint
         {
-            get { return _TextRenderingHint; }
-            set { _TextRenderingHint = value; }
+            get { return _textRenderingHint; }
+            set { _textRenderingHint = value; }
         }
 
         /// <summary>
@@ -181,17 +197,17 @@ namespace SharpMap.Layers
         /// </summary>
         public IProvider DataSource
         {
-            get { return _DataSource; }
-            set { _DataSource = value; }
+            get { return _dataSource; }
+            set { _dataSource = value; }
         }
 
         /// <summary>
         /// Gets or sets the rendering style of the label layer.
         /// </summary>
-        public LabelStyle Style
+        public new LabelStyle Style
         {
-            get { return _Style; }
-            set { _Style = value; }
+            get { return base.Style as LabelStyle; }
+            set { base.Style = value; }
         }
 
         /// <summary>
@@ -211,8 +227,8 @@ namespace SharpMap.Layers
         /// </remarks>
         public string LabelColumn
         {
-            get { return _LabelColumn; }
-            set { _LabelColumn = value; }
+            get { return _labelColumn; }
+            set { _labelColumn = value; }
         }
 
         /// <summary>
@@ -268,8 +284,8 @@ namespace SharpMap.Layers
         /// </summary>
         public string RotationColumn
         {
-            get { return _RotationColumn; }
-            set { _RotationColumn = value; }
+            get { return _rotationColumn; }
+            set { _rotationColumn = value; }
         }
 
         /// <summary>
@@ -277,14 +293,17 @@ namespace SharpMap.Layers
         /// </summary>
         public int Priority
         {
-            get { return _Priority; }
-            set { _Priority = value; }
+            get { return _priority; }
+            set { _priority = value; }
         }
 
+        /// <summary>
+        /// Name of the column that holds the value indicating the priority of the label in cases of label-collision detection
+        /// </summary>
         public string PriorityColumn
         {
-            get { return _PriorityColumn; }
-            set { _PriorityColumn = value; }
+            get { return _priorityColumn; }
+            set { _priorityColumn = value; }
         }
 
         /// <summary>
@@ -328,8 +347,7 @@ namespace SharpMap.Layers
         /// </summary>
         public void Dispose()
         {
-            if (DataSource is IDisposable)
-                ((IDisposable) DataSource).Dispose();
+            if (DataSource != null) DataSource.Dispose();
         }
 
         #endregion
@@ -364,7 +382,7 @@ namespace SharpMap.Layers
                     base.Render(g, map);
                     return;
                 }
-                FeatureDataTable features = (FeatureDataTable) ds.Tables[0];
+                FeatureDataTable features = ds.Tables[0];
 
                 //Initialize label collection
                 List<Label> labels = new List<Label>();
@@ -379,7 +397,7 @@ namespace SharpMap.Layers
                                                                                    CoordinateTransformation.
                                                                                        MathTransform);
 
-                    LabelStyle style = null;
+                    LabelStyle style;
                     if (Theme != null) //If thematics is enabled, lets override the style
                         style = Theme.GetStyle(feature) as LabelStyle;
                     else
@@ -449,7 +467,7 @@ namespace SharpMap.Layers
                                         }
                                         if (geom is MultiLineString && ((MultiLineString) geom).Length > largestVal)
                                         {
-                                            largestVal = ((LineString) geom).Length;
+                                            largestVal = ((MultiLineString)geom).Length;
                                             idxOfLargest = j;
                                         }
                                         if (geom is Polygon && ((Polygon) geom).Area > largestVal)
@@ -481,8 +499,8 @@ namespace SharpMap.Layers
                 }
                 if (labels.Count > 0) //We have labels to render...
                 {
-                    if (Style.CollisionDetection && _LabelFilter != null)
-                        _LabelFilter(labels);
+                    if (Style.CollisionDetection && _labelFilter != null)
+                        _labelFilter(labels);
                     for (int i = 0; i < labels.Count; i++)
                         if (labels[i].Show)
                             VectorRenderer.DrawLabel(g, labels[i].LabelPoint, labels[i].Style.Offset,
@@ -490,7 +508,6 @@ namespace SharpMap.Layers
                                                      labels[i].Style.BackColor, Style.Halo, labels[i].Rotation,
                                                      labels[i].Text, map);
                 }
-                labels = null;
             }
             base.Render(g, map);
         }
@@ -498,10 +515,9 @@ namespace SharpMap.Layers
         private Label CreateLabel(Geometry feature, string text, float rotation, LabelStyle style, Map map, Graphics g)
         {
             return CreateLabel(feature, text, rotation, Priority, style, map, g);
-            ;
         }
 
-        private Label CreateLabel(Geometry feature, string text, float rotation, int priority, LabelStyle style, Map map,
+        private static Label CreateLabel(Geometry feature, string text, float rotation, int priority, LabelStyle style, Map map,
                                   Graphics g)
         {
             SizeF size = g.MeasureString(text, style.Font);
@@ -512,39 +528,34 @@ namespace SharpMap.Layers
             if (position.X - size.Width > map.Size.Width || position.X + size.Width < 0 ||
                 position.Y - size.Height > map.Size.Height || position.Y + size.Height < 0)
                 return null;
+
+            Label lbl;
+            if (!style.CollisionDetection)
+                lbl = new Label(text, position, rotation, priority, null, style);
             else
             {
-                Label lbl;
-
-                if (!style.CollisionDetection)
-                    lbl = new Label(text, position, rotation, priority, null, style);
-                else
-                {
-                    //Collision detection is enabled so we need to measure the size of the string
-                    lbl = new Label(text, position, rotation, priority,
-                                    new LabelBox(position.X - size.Width*0.5f - style.CollisionBuffer.Width,
-                                                 position.Y + size.Height*0.5f + style.CollisionBuffer.Height,
-                                                 size.Width + 2f*style.CollisionBuffer.Width,
-                                                 size.Height + style.CollisionBuffer.Height*2f), style);
-                }
-                if (feature.GetType() == typeof (LineString))
-                {
-                    LineString line = feature as LineString;
-                    if (line.Length/map.PixelSize > size.Width) //Only label feature if it is long enough
-                        CalculateLabelOnLinestring(line, ref lbl, map);
-                    else
-                        return null;
-                }
-
-                return lbl;
+                //Collision detection is enabled so we need to measure the size of the string
+                lbl = new Label(text, position, rotation, priority,
+                                new LabelBox(position.X - size.Width*0.5f - style.CollisionBuffer.Width,
+                                             position.Y + size.Height*0.5f + style.CollisionBuffer.Height,
+                                             size.Width + 2f*style.CollisionBuffer.Width,
+                                             size.Height + style.CollisionBuffer.Height*2f), style);
             }
+            if (feature is LineString)
+            {
+                LineString line = feature as LineString;
+                if (line.Length/map.PixelSize > size.Width) //Only label feature if it is long enough
+                    CalculateLabelOnLinestring(line, ref lbl, map);
+                else
+                    return null;
+            }
+
+            return lbl;
         }
 
-        private void CalculateLabelOnLinestring(LineString line, ref Label label, Map map)
+        private static void CalculateLabelOnLinestring(LineString line, ref Label label, Map map)
         {
             double dx, dy;
-            double tmpx, tmpy;
-            double angle = 0.0;
 
             // first find the middle segment of the line
             int midPoint = (line.Vertices.Count - 1)/2;
@@ -566,12 +577,12 @@ namespace SharpMap.Layers
             else
             {
                 // calculate angle of line					
-                angle = -Math.Atan(dy/dx) + Math.PI*0.5;
+                double angle = -Math.Atan(dy/dx) + Math.PI*0.5;
                 angle *= (180d/Math.PI); // convert radians to degrees
                 label.Rotation = (float) angle - 90; // -90 text orientation
             }
-            tmpx = line.Vertices[midPoint].X + (dx*0.5);
-            tmpy = line.Vertices[midPoint].Y + (dy*0.5);
+            double tmpx = line.Vertices[midPoint].X + (dx*0.5);
+            double tmpy = line.Vertices[midPoint].Y + (dy*0.5);
             label.LabelPoint = map.WorldToImage(new Point(tmpx, tmpy));
         }
     }

@@ -268,19 +268,18 @@ namespace SharpMap.Layers
                 List<SpatialReferencedBoundingBox> SRIDBoxes = getBoundingBoxes(RootLayer);
                 foreach (SpatialReferencedBoundingBox SRIDbox in SRIDBoxes)
                 {
-                    if (this.SRID == SRIDbox.SRID)
+                    if (SRID == SRIDbox.SRID)
                         boxes.Add(SRIDbox);
                 }
                 if (boxes.Count > 0)
                     return new BoundingBox(boxes);
-                else if (this.SRID == 4326)
+
+                if (SRID == 4326)
                     return RootLayer.LatLonBoundingBox;
-                else
-                {
-                    //There is no boundingbox defined. Maybe we should throw a NotImplementedException
-                    //TODO: project one of the available bboxes to layers projection
-                    return null;
-                }
+
+                //There is no boundingbox defined. Maybe we should throw a NotImplementedException
+                //TODO: project one of the available bboxes to layers projection
+                return null;
             }
         }
 
@@ -476,19 +475,23 @@ namespace SharpMap.Layers
             try
             {
                 HttpWebResponse myWebResponse = (HttpWebResponse)myWebRequest.GetResponse();
-                Stream dataStream = myWebResponse.GetResponseStream();
-
-                if (myWebResponse.ContentType.StartsWith("image"))
+                if (myWebResponse != null)
                 {
-                    Image img = Image.FromStream(myWebResponse.GetResponseStream());
-                    if (_ImageAttributes != null)
-                        g.DrawImage(img, new Rectangle(0, 0, img.Width, img.Height), 0, 0,
-                                    img.Width, img.Height, GraphicsUnit.Pixel, ImageAttributes);
-                    else
-                        g.DrawImageUnscaled(img, 0, 0, map.Size.Width, map.Size.Height);
+                    Stream dataStream = myWebResponse.GetResponseStream();
+
+                    if (dataStream != null && myWebResponse.ContentType.StartsWith("image"))
+                    {
+                        Image img = Image.FromStream(dataStream);
+                        if (_ImageAttributes != null)
+                            g.DrawImage(img, new Rectangle(0, 0, img.Width, img.Height), 0, 0,
+                                        img.Width, img.Height, GraphicsUnit.Pixel, ImageAttributes);
+                        else
+                            g.DrawImageUnscaled(img, 0, 0, map.Size.Width, map.Size.Height);
+
+                        dataStream.Close();
+                    }
+                    myWebResponse.Close();
                 }
-                dataStream.Close();
-                myWebResponse.Close();
             }
             catch (WebException webEx)
             {
@@ -496,19 +499,15 @@ namespace SharpMap.Layers
                     throw (new RenderException(
                         "There was a problem connecting to the WMS server when rendering layer '" + LayerName + "'",
                         webEx));
-                else
-                    //Write out a trace warning instead of throwing an error to help debugging WMS problems
-                    Trace.Write("There was a problem connecting to the WMS server when rendering layer '" + LayerName +
-                                "': " + webEx.Message);
+                Trace.Write("There was a problem connecting to the WMS server when rendering layer '" + LayerName +
+                            "': " + webEx.Message);
             }
             catch (Exception ex)
             {
                 if (!_ContinueOnError)
                     throw (new RenderException("There was a problem rendering layer '" + LayerName + "'", ex));
-                else
-                    //Write out a trace warning instead of throwing an error to help debugging WMS problems
-                    Trace.Write("There was a problem connecting to the WMS server when rendering layer '" + LayerName +
-                                "': " + ex.Message);
+                Trace.Write("There was a problem connecting to the WMS server when rendering layer '" + LayerName +
+                            "': " + ex.Message);
             }
             base.Render(g, map);
         }

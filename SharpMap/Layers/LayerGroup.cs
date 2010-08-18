@@ -20,6 +20,7 @@ using System.Collections.ObjectModel;
 using System.Drawing;
 using SharpMap.Data;
 using SharpMap.Geometries;
+using SharpMap.Styles;
 
 namespace SharpMap.Layers
 {
