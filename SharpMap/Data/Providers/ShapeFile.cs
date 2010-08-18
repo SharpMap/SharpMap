@@ -23,8 +23,8 @@ using System.IO;
 using System.Text;
 using System.Web;
 using System.Web.Caching;
-using SharpMap.Converters.WellKnownText;
-using SharpMap.CoordinateSystems;
+using ProjNet.Converters.WellKnownText;
+using ProjNet.CoordinateSystems;
 using SharpMap.Geometries;
 using SharpMap.Utilities.SpatialIndexing;
 

@@ -21,7 +21,7 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Text;
 using System.Globalization;
-using SharpMap.CoordinateSystems.Transformations;
+using ProjNet.CoordinateSystems.Transformations;
 using SharpMap.Data;
 using SharpMap.Data.Providers;
 using SharpMap.Geometries;

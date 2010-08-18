@@ -18,7 +18,7 @@
 using System;
 using SharpMap.Converters.WellKnownBinary;
 using SharpMap.Converters.WellKnownText;
-using SharpMap.CoordinateSystems;
+using ProjNet.CoordinateSystems;
 
 namespace SharpMap.Geometries
 {

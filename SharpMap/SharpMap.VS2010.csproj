@@ -1,0 +1,204 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{C83777FC-AABB-47D9-911F-D76255D4D541}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>SharpMap</RootNamespace>
+    <AssemblyName>SharpMap</AssemblyName>
+    <SccProjectName>
+    </SccProjectName>
+    <SccLocalPath>
+    </SccLocalPath>
+    <SccAuxPath>
+    </SccAuxPath>
+    <SccProvider>
+    </SccProvider>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <UseVSHostingProcess>true</UseVSHostingProcess>
+    <DocumentationFile>bin\Debug\SharpMap.XML</DocumentationFile>
+    <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Release\SharpMap.XML</DocumentationFile>
+    <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="BruTile, Version=0.4.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\ExternalReferences\BruTile.dll</HintPath>
+    </Reference>
+    <Reference Include="ProjNET, Version=1.0.2794.16965, Culture=neutral, PublicKeyToken=a1f5bdcd9c6f5740, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\ExternalReferences\ProjNET.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Converters\WellKnownBinary\GeometryFromWKB.cs" />
+    <Compile Include="Converters\WellKnownBinary\GeometryToWKB.cs" />
+    <Compile Include="Converters\WellKnownBinary\WKBByteOrder.cs" />
+    <Compile Include="Converters\WellKnownBinary\WKBGeometryType.cs" />
+    <Compile Include="Converters\WellKnownText\GeometryFromWKT.cs" />
+    <Compile Include="Converters\WellKnownText\GeometryToWKT.cs" />
+    <Compile Include="Converters\WellKnownText\SpatialReference.cs" />
+    <Compile Include="Converters\WellKnownText\StreamTokenizer.cs" />
+    <Compile Include="Converters\WellKnownText\TokenType.cs" />
+    <Compile Include="Converters\WellKnownText\WKTStreamTokenizer.cs" />
+    <Compile Include="CoordinateSystems\Transformations\GeometryTransform.cs" />
+    <Compile Include="Data\FeatureDataSet.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Data\Providers\DbaseReader.cs" />
+    <Compile Include="Data\Providers\GeometryFeatureProvider.cs" />
+    <Compile Include="Data\Providers\GeometryProvider.cs" />
+    <Compile Include="Data\Providers\iProvider.cs" />
+    <Compile Include="Data\Providers\MsSql.cs" />
+    <Compile Include="Data\Providers\MsSqlSpatial.cs" />
+    <Compile Include="Data\Providers\OleDbPoint.cs" />
+    <Compile Include="Data\Providers\Pooling\Connector.cs" />
+    <Compile Include="Data\Providers\Pooling\ConnectorPool.cs" />
+    <Compile Include="Data\Providers\ShapeFile.cs" />
+    <Compile Include="Data\Providers\SqlServer2008.cs" />
+    <Compile Include="Data\Providers\WFSClient.cs" />
+    <Compile Include="Geometries\BoundingBox.cs" />
+    <Compile Include="Geometries\Curve.cs" />
+    <Compile Include="Geometries\Geometry.cs" />
+    <Compile Include="Geometries\GeometryCollection.cs" />
+    <Compile Include="Geometries\GeometryType.cs" />
+    <Compile Include="Geometries\IGeometry.cs" />
+    <Compile Include="Geometries\IGeometryCollection.cs" />
+    <Compile Include="Geometries\ISpatialReference.cs" />
+    <Compile Include="Geometries\LinearRing.cs" />
+    <Compile Include="Geometries\LineString.cs" />
+    <Compile Include="Geometries\MultiCurve.cs" />
+    <Compile Include="Geometries\MultiLineString.cs" />
+    <Compile Include="Geometries\MultiPoint.cs" />
+    <Compile Include="Geometries\MultiPolygon.cs" />
+    <Compile Include="Geometries\MultiSurface.cs" />
+    <Compile Include="Geometries\Point.cs" />
+    <Compile Include="Geometries\Point3D.cs" />
+    <Compile Include="Geometries\Polygon.cs" />
+    <Compile Include="Geometries\SpatialRelations.cs" />
+    <Compile Include="Geometries\Surface.cs" />
+    <Compile Include="Layers\DuplicateLayerException.cs" />
+    <Compile Include="Layers\iLayer.cs" />
+    <Compile Include="Layers\ICanQueryLayer.cs" />
+    <Compile Include="Layers\LabelLayer.cs" />
+    <Compile Include="Layers\Layer.cs" />
+    <Compile Include="Layers\LayerCollection.cs" />
+    <Compile Include="Layers\LayerGroup.cs" />
+    <Compile Include="Layers\TiledWmsLayer.cs" />
+    <Compile Include="Layers\TileLayer.cs" />
+    <Compile Include="Layers\VectorLayer.cs" />
+    <Compile Include="Layers\WmsLayer.cs" />
+    <Compile Include="Map\Map.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Rendering\Label.cs" />
+    <Compile Include="Rendering\LabelCollisionDetection.cs" />
+    <Compile Include="Rendering\RenderExceptions.cs" />
+    <Compile Include="Rendering\Thematics\ColorBlend.cs" />
+    <Compile Include="Rendering\Thematics\CustomTheme.cs" />
+    <Compile Include="Rendering\Thematics\GradientTheme.cs" />
+    <Compile Include="Rendering\Thematics\ITheme.cs" />
+    <Compile Include="Rendering\VectorRenderer.cs" />
+    <Compile Include="Styles\IStyle.cs" />
+    <Compile Include="Styles\LabelStyle.cs" />
+    <Compile Include="Styles\Style.cs" />
+    <Compile Include="Styles\VectorStyle.cs" />
+    <Compile Include="Utilities\Algorithms.cs" />
+    <Compile Include="Utilities\Indexing\BinaryTree.cs" />
+    <Compile Include="Utilities\Indexing\SpatialIndexing.cs" />
+    <Compile Include="Utilities\LeastSquaresTransform.cs" />
+    <Compile Include="Utilities\Providers.cs" />
+    <Compile Include="Utilities\Surrogates.cs" />
+    <Compile Include="Utilities\Transform.cs" />
+    <Compile Include="Utilities\Version.cs" />
+    <Compile Include="Utilities\Wfs\FeatureTypeInfo.cs" />
+    <Compile Include="Utilities\Wfs\GeometryFactories.cs" />
+    <Compile Include="Utilities\Wfs\HttpClientUtil.cs" />
+    <Compile Include="Utilities\Wfs\IWFS_TextResources.cs" />
+    <Compile Include="Utilities\Wfs\IXPathQueryManager.cs" />
+    <Compile Include="Utilities\Wfs\OGCFilter_FE1_1_0.cs" />
+    <Compile Include="Utilities\Wfs\PathNode.cs" />
+    <Compile Include="Utilities\Wfs\WFS1_0_0_XPathTextResources.cs" />
+    <Compile Include="Utilities\Wfs\WFS1_1_0_XPathTextResources.cs" />
+    <Compile Include="Utilities\Wfs\WFS_1_0_0_TextResources.cs" />
+    <Compile Include="Utilities\Wfs\WFS_1_1_0_TextResources.cs" />
+    <Compile Include="Utilities\Wfs\WFS_XPathTextResourcesBase.cs" />
+    <Compile Include="Utilities\Wfs\XPathQueryManager.cs" />
+    <Compile Include="Utilities\Wfs\XPathQueryManager_CompiledExpressionsDecorator.cs" />
+    <Compile Include="Utilities\Wfs\XPathQueryManager_DecoratorBase.cs" />
+    <Compile Include="Web\Cache.cs" />
+    <Compile Include="Web\HttpHandler.cs" />
+    <Compile Include="Web\Wms\Capabilities.cs" />
+    <Compile Include="Web\Wms\Client.cs" />
+    <Compile Include="Web\Wms\SpatialReferencedBoundingBox.cs" />
+    <Compile Include="Web\Wms\Tiling\ITileCache.cs" />
+    <Compile Include="Web\Wms\Tiling\TileCacheFileStorage.cs" />
+    <Compile Include="Web\Wms\Tiling\TileExtents.cs" />
+    <Compile Include="Web\Wms\Tiling\TileSet.cs" />
+    <Compile Include="Web\Wms\WmsException.cs" />
+    <Compile Include="Web\Wms\WmsServer.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="COPYING.txt" />
+    <EmbeddedResource Include="Styles\DefaultSymbol.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="SRID.csv" />
+    <EmbeddedResource Include="Web\Wms\Schemas\1.3.0\capabilities_1_3_0.xsd">
+      <SubType>
+      </SubType>
+    </EmbeddedResource>
+    <None Include="Web\Wms\Schemas\1.3.0\capabilities_1_3_0.xsx">
+      <DependentUpon>capabilities_1_3_0.xsd</DependentUpon>
+    </None>
+    <EmbeddedResource Include="Web\Wms\Schemas\1.3.0\exceptions_1_3_0.xsd">
+      <SubType>
+      </SubType>
+    </EmbeddedResource>
+    <None Include="Web\Wms\Schemas\1.3.0\exceptions_1_3_0.xsx">
+      <DependentUpon>exceptions_1_3_0.xsd</DependentUpon>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Web\Wfs\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

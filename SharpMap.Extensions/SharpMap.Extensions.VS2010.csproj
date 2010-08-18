@@ -1,0 +1,129 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{A4140C12-53F5-438C-8D24-9E48C504FECF}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>SharpMap</RootNamespace>
+    <AssemblyName>SharpMap.Extensions</AssemblyName>
+    <SccProjectName>
+    </SccProjectName>
+    <SccLocalPath>
+    </SccLocalPath>
+    <SccAuxPath>
+    </SccAuxPath>
+    <SccProvider>
+    </SccProvider>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <DocumentationFile>bin\Release\SharpMap.Extensions.XML</DocumentationFile>
+    <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="gdal_csharp, Version=1.0.3462.17845, Culture=neutral, PublicKeyToken=db5a52b08dc5b321">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\ExternalReferences\References4SharpMap.Extensions\gdal_csharp.dll</HintPath>
+    </Reference>
+    <Reference Include="GeoAPI, Version=1.0.0.0, Culture=neutral, PublicKeyToken=a1a0da7def465678, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\ExternalReferences\References4SharpMap.Extensions\GeoAPI.dll</HintPath>
+    </Reference>
+    <Reference Include="NetTopologySuite, Version=1.7.1.29911, Culture=neutral, PublicKeyToken=f580a05016ebada1, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\ExternalReferences\NetTopologySuite.dll</HintPath>
+    </Reference>
+    <Reference Include="Npgsql, Version=0.99.3.0, Culture=neutral, PublicKeyToken=5d8b90d52f46fda7, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\ExternalReferences\References4SharpMap.Extensions\Npgsql.dll</HintPath>
+    </Reference>
+    <Reference Include="ogr_csharp, Version=1.0.3462.17845, Culture=neutral, PublicKeyToken=db5a52b08dc5b321">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\ExternalReferences\References4SharpMap.Extensions\ogr_csharp.dll</HintPath>
+    </Reference>
+    <Reference Include="Oracle.DataAccess, Version=2.102.2.10, Culture=neutral, PublicKeyToken=89b483f429c47342, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\ExternalReferences\References4SharpMap.Extensions\Oracle.DataAccess.dll</HintPath>
+    </Reference>
+    <Reference Include="osr_csharp, Version=1.0.3462.17844, Culture=neutral, PublicKeyToken=db5a52b08dc5b321">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\ExternalReferences\References4SharpMap.Extensions\osr_csharp.dll</HintPath>
+    </Reference>
+    <Reference Include="PostgreSql.Data.PostgreSqlClient, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\ExternalReferences\References4SharpMap.Extensions\PostgreSql.Data.PostgreSqlClient.dll</HintPath>
+    </Reference>
+    <Reference Include="ProjNET, Version=1.0.2794.16965, Culture=neutral, PublicKeyToken=a1f5bdcd9c6f5740, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\ExternalReferences\ProjNET.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.SQLite, Version=1.0.60.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\ExternalReferences\References4SharpMap.Extensions\System.Data.SQLite.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Data\Providers\DataTablePoint.cs" />
+    <Compile Include="Data\FwToolsHelper.cs" />
+    <Compile Include="Data\Providers\NtsGeometryConverter.cs" />
+    <Compile Include="Data\Providers\NtsProvider.cs" />
+    <Compile Include="Data\Providers\OgrProvider.cs" />
+    <Compile Include="Data\Providers\Oracle.cs" />
+    <Compile Include="Data\Providers\PostGIS.cs" />
+    <Compile Include="Data\Providers\PostGIS2.cs" />
+    <Compile Include="Data\Providers\SqlLite.cs" />
+    <Compile Include="Data\Providers\SpatiaLite.cs" />
+    <Compile Include="Layers\GdalRasterLayer.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Layers\GdalRasterLayerCachingProxy.cs" />
+    <Compile Include="Layers\GeoTransform.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SharpMap\SharpMap.VS2008.csproj">
+      <Project>{C83777FC-AABB-47D9-911F-D76255D4D541}</Project>
+      <Name>SharpMap.VS2008</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>  -->
+  <!--<PropertyGroup>
+    <PostBuildEvent>xcopy /Y "$(ProjectDir)..\ExternalReferences\References4SharpMap.Extensions\FWToolsUnmanaged2.4.2\*.dll" $(TargetDir)</PostBuildEvent>
+  </PropertyGroup>-->
+</Project>

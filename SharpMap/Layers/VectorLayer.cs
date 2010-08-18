@@ -19,7 +19,7 @@ using System;
 using System.Collections.ObjectModel;
 using System.Drawing;
 using System.Drawing.Drawing2D;
-using SharpMap.CoordinateSystems.Transformations;
+using ProjNet.CoordinateSystems.Transformations;
 using SharpMap.Data;
 using SharpMap.Data.Providers;
 using SharpMap.Geometries;

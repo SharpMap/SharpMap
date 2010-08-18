@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using SharpMap.Geometries;
 
-namespace SharpMap.CoordinateSystems.Transformations
+namespace ProjNet.CoordinateSystems.Transformations
 {
     /// <summary>
     /// Helper class for transforming <see cref="SharpMap.Geometries.Geometry"/>

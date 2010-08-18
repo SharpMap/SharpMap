@@ -17,7 +17,7 @@
 
 using System;
 using System.Drawing;
-using SharpMap.CoordinateSystems.Transformations;
+using ProjNet.CoordinateSystems.Transformations;
 using SharpMap.Geometries;
 
 namespace SharpMap.Layers
