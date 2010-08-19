@@ -9,7 +9,7 @@ namespace WinFormSamples.Samples
     {
         public static Map InitializeMap()
         {
-            string wmsUrl = "http://www2.demis.nl/mapserver/request.asp";
+            string wmsUrl = "http://www2.demis.nl/worldmap/wms.asp";
 
             Map map = new Map();
 

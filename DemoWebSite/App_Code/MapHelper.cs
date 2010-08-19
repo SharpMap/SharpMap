@@ -156,10 +156,14 @@ public class MapHelper
 
     public static WmsLayer GetWmsLayer()
 	{
-		string wmsUrl = "http://www2.demis.nl/mapserver/request.asp";
+		string wmsUrl = "http://www2.demis.nl/worldmap/wms.asp";
         WmsLayer layWms = new WmsLayer("Demis Map", wmsUrl);
         layWms.AddLayer("Bathymetry");
-		layWms.AddLayer("Ocean features");
+        //layWms.AddLayer("Coastlines");
+        //layWms.AddLayer("Countries");
+        //layWms.AddLayer("Rivers");
+        //layWms.AddLayer("Streams");
+        layWms.AddLayer("Ocean features");
 		layWms.SetImageFormat(layWms.OutputFormats[0]);
         layWms.ContinueOnError = true;
             //Skip rendering the WMS Map if the server couldn't be requested (if set to false such an event would crash the app)
@@ -175,7 +179,8 @@ public class MapHelper
 			//Initialize a new map of size 'imagesize'
         Map map = new Map(size);
         WmsLayer layWms = GetWmsLayer();
-			//Set up the countries layer
+		
+        //Set up the countries layer
         VectorLayer layCountries = new VectorLayer("Countries");
 			//Set the datasource to a shapefile in the App_data folder
         layCountries.DataSource = new ShapeFile(HttpContext.Current.Server.MapPath(@"~\App_data\countries.shp"), true);
@@ -199,7 +204,7 @@ public class MapHelper
 			layLabel.MinVisible = 30;
         layLabel.Style.HorizontalAlignment = LabelStyle.HorizontalAlignmentEnum.Center;
 			layLabel.SRID = 4326;
-
+        
 			//Add the layers to the map object.
 			//The order we add them in are the order they are drawn, so we add the rivers last to put them on top
 			map.Layers.Add(layWms);

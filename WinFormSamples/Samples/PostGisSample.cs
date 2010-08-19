@@ -1,11 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Drawing;
-using SharpMap;
-using SharpMap.Data.Providers;
-using SharpMap.Rendering;
-using SharpMap.Styles;
 
 namespace WinFormSamples.Samples
 {
@@ -14,7 +7,7 @@ namespace WinFormSamples.Samples
         public static SharpMap.Map InitializeMap()
         {
             //Initialize a new map of size 'imagesize'
-            SharpMap.Map map = new Map();
+            SharpMap.Map map = new SharpMap.Map();
 
             //Set up the countries layer
             SharpMap.Layers.VectorLayer layCountries = new SharpMap.Layers.VectorLayer("Countries");
@@ -23,7 +16,7 @@ namespace WinFormSamples.Samples
             layCountries.DataSource = new SharpMap.Data.Providers.PostGIS(Properties.Settings.Default.PostGisConnectionString, "countries", "ogc_fid");
 
             //Set fill-style to green
-            layCountries.Style.Fill = new SolidBrush(Color.Green);
+            layCountries.Style.Fill = new System.Drawing.SolidBrush(System.Drawing.Color.Green);
             //Set the polygons to have a black outline
             layCountries.Style.Outline = System.Drawing.Pens.Black;
             layCountries.Style.EnableOutline = true;
@@ -33,7 +26,7 @@ namespace WinFormSamples.Samples
             //Set the datasource to a shapefile in the App_data folder
             layRivers.DataSource = new SharpMap.Data.Providers.PostGIS(Properties.Settings.Default.PostGisConnectionString, "rivers", "ogc_fid");
             //Define a blue 1px wide pen
-            layRivers.Style.Line = new Pen(Color.Blue, 1);
+            layRivers.Style.Line = new System.Drawing.Pen(System.Drawing.Color.Blue, 1);
 
             //Set up a river layer
             SharpMap.Layers.VectorLayer layCities = new SharpMap.Layers.VectorLayer("Cities");
@@ -48,18 +41,18 @@ namespace WinFormSamples.Samples
                 DataSource = layCountries.DataSource,
                 Enabled = true,
                 LabelColumn = "Name",
-                MaxVisible = 90,
-                MinVisible = 30,
                 MultipartGeometryBehaviour = SharpMap.Layers.LabelLayer.MultipartGeometryBehaviourEnum.Largest,
                 LabelFilter = SharpMap.Rendering.LabelCollisionDetection.ThoroughCollisionDetection,
                 PriorityColumn = "popdens",
                 Style = new SharpMap.Styles.LabelStyle()
                 {
-                    ForeColor = Color.White,
-                    Font = new Font(FontFamily.GenericSerif, 12),
-                    BackColor = new System.Drawing.SolidBrush(Color.FromArgb(128, 255, 0, 0)),
+                    ForeColor = System.Drawing.Color.White,
+                    Font = new System.Drawing.Font(System.Drawing.FontFamily.GenericSerif, 12),
+                    BackColor = new System.Drawing.SolidBrush(System.Drawing.Color.FromArgb(128, 255, 0, 0)),
                     HorizontalAlignment = SharpMap.Styles.LabelStyle.HorizontalAlignmentEnum.Center,
-                    CollisionDetection = true
+                    CollisionDetection = true,
+                    MaxVisible = 90,
+                    MinVisible = 30
                 }
             };
 
@@ -78,15 +71,15 @@ namespace WinFormSamples.Samples
                 TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAlias,
                 SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias,
                 LabelFilter = SharpMap.Rendering.LabelCollisionDetection.ThoroughCollisionDetection,
-                Style = new LabelStyle()
+                Style = new SharpMap.Styles.LabelStyle()
                 {
-                    ForeColor = Color.Black,
-                    Font = new Font(FontFamily.GenericSerif, 11),
+                    ForeColor = System.Drawing.Color.White,
+                    Font = new System.Drawing.Font(System.Drawing.FontFamily.GenericSerif, 11),
                     MaxVisible = layLabel.MinVisible,
-                    HorizontalAlignment = LabelStyle.HorizontalAlignmentEnum.Left,
-                    VerticalAlignment = LabelStyle.VerticalAlignmentEnum.Bottom,
-                    Offset = new PointF(3, 3),
-                    Halo = new Pen(Color.Yellow, 2),
+                    HorizontalAlignment = SharpMap.Styles.LabelStyle.HorizontalAlignmentEnum.Left,
+                    VerticalAlignment = SharpMap.Styles.LabelStyle.VerticalAlignmentEnum.Bottom,
+                    Offset = new System.Drawing.PointF(3, 3),
+                    Halo = new System.Drawing.Pen(System.Drawing.Color.Black, 2),
                     CollisionDetection = true
                 }
             };
@@ -101,7 +94,7 @@ namespace WinFormSamples.Samples
 
             //limit the zoom to 360 degrees width
             map.MaximumZoom = 360;
-            map.BackColor = Color.LightBlue;
+            map.BackColor = System.Drawing.Color.LightBlue;
 
             map.ZoomToExtents(); // = 360;
             map.Center = new SharpMap.Geometries.Point(0, 0);
