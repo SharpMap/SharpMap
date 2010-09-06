@@ -1062,9 +1062,9 @@ namespace SharpMap.Layers
                                         if (imageVal != noDataValues[i])
                                         {
                                             ColorEntry ce = colorTable.GetColorEntry(Convert.ToInt32(imageVal));
-                                            intVal[0] = ce.c1;
+                                            intVal[0] = ce.c3;
                                             intVal[1] = ce.c2;
-                                            intVal[2] = ce.c3;
+                                            intVal[2] = ce.c1;
                                             //intVal[3] = ce.c4;
                                         }
                                         else

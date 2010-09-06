@@ -18,12 +18,13 @@ namespace WinFormSamples.Samples
 
         public static Map InitializeMap()
         {
-            switch (_num++ % 8)
+            switch (_num++ % 9)
             {
                 case 0:
                 case 1:
                 case 2:
                 case 3:
+                case 4:
                     return InitializeGeoTiff(_num);
                 default:
                     return InitializeVRT(ref _num);
@@ -50,6 +51,12 @@ namespace WinFormSamples.Samples
                         break;
                     case 3:
                         layer = new GdalRasterLayer("GeoTiff", relativePath + "utm.jp2");
+                        layer.UseRotation = true;
+                        map.Layers.Add(layer);
+                        break;
+
+                    case 4:
+                        layer = new GdalRasterLayer("GeoTiff", relativePath + "world_raster_mod.tif");
                         layer.UseRotation = true;
                         map.Layers.Add(layer);
                         break;
@@ -86,7 +93,7 @@ namespace WinFormSamples.Samples
                 }
 
                 map.ZoomToExtents();
-                if (_num > 4) _num = 1;
+                if (_num > 5) _num = 1;
                 _gdalSampleDataset = "GeoTiff" + _num;
                 return map;
             }
@@ -109,7 +116,7 @@ namespace WinFormSamples.Samples
         private static Map InitializeVRT(ref Int32 index)
         {
             Map map = new Map();
-            Int32 ind = index - 5;
+            Int32 ind = index - 6;
             if (ind >= Vrts.Length) ind = 0;
 
             if (!File.Exists(RelativePath + Vrts[ind]))
