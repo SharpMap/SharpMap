@@ -549,7 +549,7 @@ namespace SharpMap.Web.Wms
             else
             {
                 //EX_GeographicBoundingBox is specific for WMS 1.3.0 servers   
-                node = xmlLayer.ParentNode.SelectSingleNode("sm:EX_GeographicBoundingBox", nsmgr);
+                node = xmlLayer.SelectSingleNode("sm:EX_GeographicBoundingBox", nsmgr);
                 if (node != null)
                 {
                     //EX_GeographicBoundingBox is specific for WMS1.3.0 servers so this will be parsed if LatLonBoundingBox is null
