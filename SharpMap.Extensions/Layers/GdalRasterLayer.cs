@@ -1851,6 +1851,14 @@ namespace SharpMap.Layers
 
         private void ExecuteIntersectionQuery(Geometries.Point pt, FeatureDataSet ds)
         {
+
+            if (CoordinateTransformation != null)
+            {
+                CoordinateTransformation.MathTransform.Invert();
+                pt = GeometryTransform.TransformPoint(pt, CoordinateTransformation.MathTransform);
+                CoordinateTransformation.MathTransform.Invert();
+            }
+            
             //Setup resulting Table
             FeatureDataTable dt = new FeatureDataTable();
             dt.Columns.Add("Ordinate X", typeof(Double));
