@@ -29,12 +29,16 @@ namespace SharpMap.Rendering
     /// <summary>
     /// This class renders individual geometry features to a graphics object using the settings of a map object.
     /// </summary>
-    public class VectorRenderer
+    public static class VectorRenderer
     {
-        private const float extremeValueLimit = 1E+8f;
-        private const float nearZero = 1E-30f; // 1/Infinity
+        private const float ExtremeValueLimit = 1E+8f;
+        private const float NearZero = 1E-30f; // 1/Infinity
 
-        private static readonly Bitmap defaultsymbol =
+        static VectorRenderer()
+        {
+            SizeOfString = SizeOfStringCeiling;
+        }
+        private static readonly Bitmap Defaultsymbol =
             (Bitmap)
             Image.FromStream(
                 Assembly.GetExecutingAssembly().GetManifestResourceStream("SharpMap.Styles.DefaultSymbol.png"));
@@ -64,7 +68,7 @@ namespace SharpMap.Rendering
             if (line.Vertices.Count > 1)
             {
                 GraphicsPath gp = new GraphicsPath();
-                gp.AddLines(LimitValues(line.TransformToImage(map), extremeValueLimit));
+                gp.AddLines(LimitValues(line.TransformToImage(map), ExtremeValueLimit));
                 g.DrawPath(pen, gp);
             }
         }
@@ -104,14 +108,14 @@ namespace SharpMap.Rendering
 
                 //Add the exterior polygon
                 if (!clip)
-                    gp.AddPolygon(LimitValues(pol.ExteriorRing.TransformToImage(map), extremeValueLimit));
+                    gp.AddPolygon(LimitValues(pol.ExteriorRing.TransformToImage(map), ExtremeValueLimit));
                 else
                     DrawPolygonClipped(gp, pol.ExteriorRing.TransformToImage(map), map.Size.Width, map.Size.Height);
 
                 //Add the interior polygons (holes)
                 for (int i = 0; i < pol.InteriorRings.Count; i++)
                     if (!clip)
-                        gp.AddPolygon(LimitValues(pol.InteriorRings[i].TransformToImage(map), extremeValueLimit));
+                        gp.AddPolygon(LimitValues(pol.InteriorRings[i].TransformToImage(map), ExtremeValueLimit));
                     else
                         DrawPolygonClipped(gp, pol.InteriorRings[i].TransformToImage(map), map.Size.Width,
                                            map.Size.Height);
@@ -161,11 +165,62 @@ namespace SharpMap.Rendering
         }
 
         /// <summary>
+        /// Signature for a function that evaluates the length of a string when rendered on a Graphics object with a given font
+        /// </summary>
+        /// <param name="g"><see cref="Graphics"/> object</param>
+        /// <param name="text">the text to render</param>
+        /// <param name="font">the font to use</param>
+        /// <returns>the size</returns>
+        public delegate SizeF SizeOfStringDelegate(Graphics g, string text, Font font);
+
+        private static SizeOfStringDelegate _sizeOfString;
+
+        /// <summary>
+        /// Delegate used to determine the <see cref="SizeF"/> of a given string.
+        /// </summary>
+        public static SizeOfStringDelegate SizeOfString
+        {
+            get { return _sizeOfString; }
+            set 
+            { 
+                if (value != null )
+                    _sizeOfString = value;
+            }
+        }
+
+        /// <summary>
+        /// Function to get the <see cref="SizeF"/> of a string when rendered with the given font.
+        /// </summary>
+        /// <param name="g"><see cref="Graphics"/> object</param>
+        /// <param name="text">the text to render</param>
+        /// <param name="font">the font to use</param>
+        /// <returns>the size</returns>
+        public static SizeF SizeOfStringBase(Graphics g, string text, Font font)
+        {
+            return g.MeasureString(text, font);
+        }
+
+        /// <summary>
+        /// Function to get the <see cref="SizeF"/> of a string when rendered with the given font.
+        /// </summary>
+        /// <param name="g"><see cref="Graphics"/> object</param>
+        /// <param name="text">the text to render</param>
+        /// <param name="font">the font to use</param>
+        /// <returns>the size</returns>
+        public static SizeF SizeOfStringCeiling(Graphics g, string text, Font font)
+        {
+            SizeF f = g.MeasureString(text, font);
+            return new SizeF((float)Math.Ceiling(f.Width), (float)Math.Ceiling(f.Height));
+        }
+
+
+
+        /// <summary>
         /// Renders a label to the map.
         /// </summary>
         /// <param name="g">Graphics reference</param>
-        /// <param name="LabelPoint">Label placement</param>
-        /// <param name="Offset">Offset of label in screen coordinates</param>
+        /// <param name="labelPoint">Label placement</param>
+        /// <param name="offset">Offset of label in screen coordinates</param>
         /// <param name="font">Font used for rendering</param>
         /// <param name="forecolor">Font forecolor</param>
         /// <param name="backcolor">Background color</param>
@@ -173,15 +228,15 @@ namespace SharpMap.Rendering
         /// <param name="rotation">Text rotation in degrees</param>
         /// <param name="text">Text to render</param>
         /// <param name="map">Map reference</param>
-        public static void DrawLabel(Graphics g, PointF LabelPoint, PointF Offset, Font font, Color forecolor,
+        public static void DrawLabel(Graphics g, PointF labelPoint, PointF offset, Font font, Color forecolor,
                                      Brush backcolor, Pen halo, float rotation, string text, Map map)
         {
-            SizeF fontSize = g.MeasureString(text, font); //Calculate the size of the text
-            LabelPoint.X += Offset.X;
-            LabelPoint.Y += Offset.Y; //add label offset
-            if (rotation != 0 && rotation != float.NaN)
+            SizeF fontSize = _sizeOfString(g, text, font); //Calculate the size of the text
+            labelPoint.X += offset.X;
+            labelPoint.Y += offset.Y; //add label offset
+            if (rotation != 0 && !float.IsNaN(rotation))
             {
-                g.TranslateTransform(LabelPoint.X, LabelPoint.Y);
+                g.TranslateTransform(labelPoint.X, labelPoint.Y);
                 g.RotateTransform(rotation);
                 g.TranslateTransform(-fontSize.Width/2, -fontSize.Height/2);
                 if (backcolor != null && backcolor != Brushes.Transparent)
@@ -197,12 +252,12 @@ namespace SharpMap.Rendering
             else
             {
                 if (backcolor != null && backcolor != Brushes.Transparent)
-                    g.FillRectangle(backcolor, LabelPoint.X, LabelPoint.Y, fontSize.Width*0.74f + 1,
+                    g.FillRectangle(backcolor, labelPoint.X, labelPoint.Y, fontSize.Width*0.74f + 1,
                                     fontSize.Height*0.74f);
 
                 GraphicsPath path = new GraphicsPath();
 
-                path.AddString(text, font.FontFamily, (int) font.Style, font.Size, LabelPoint, null);
+                path.AddString(text, font.FontFamily, (int) font.Style, font.Size, labelPoint, null);
                 if (halo != null)
                     g.DrawPath(halo, path);
                 g.FillPath(new SolidBrush(forecolor), path);
@@ -262,13 +317,13 @@ namespace SharpMap.Rendering
                 if (deltax == 0)
                 {
                     // bump off of the vertical
-                    deltax = (x1 > 0) ? -nearZero : nearZero;
+                    deltax = (x1 > 0) ? -NearZero : NearZero;
                 }
                 deltay = y2 - y1;
                 if (deltay == 0)
                 {
                     // bump off of the horizontal
-                    deltay = (y1 > 0) ? -nearZero : nearZero;
+                    deltay = (y1 > 0) ? -NearZero : NearZero;
                 }
 
                 if (deltax > 0)
@@ -378,7 +433,7 @@ namespace SharpMap.Rendering
             if (point == null)
                 return;
             if (symbol == null) //We have no point style - Use a default symbol
-                symbol = defaultsymbol;
+                symbol = Defaultsymbol;
 
             PointF pp = Transform.WorldtoMap(point, map);
 

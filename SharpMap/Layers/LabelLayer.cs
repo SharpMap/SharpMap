@@ -520,7 +520,9 @@ namespace SharpMap.Layers
         private static Label CreateLabel(Geometry feature, string text, float rotation, int priority, LabelStyle style, Map map,
                                   Graphics g)
         {
-            SizeF size = g.MeasureString(text, style.Font);
+            //SizeF size = g.MeasureString(text, style.Font);
+
+            SizeF size = VectorRenderer.SizeOfString(g, text, style.Font);
 
             PointF position = map.WorldToImage(feature.GetBoundingBox().GetCentroid());
             position.X = position.X - size.Width*(short) style.HorizontalAlignment*0.5f;

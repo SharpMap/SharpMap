@@ -22,6 +22,7 @@ using System.Drawing.Drawing2D;
 using System.Globalization;
 using SharpMap.Geometries;
 using SharpMap.Layers;
+using SharpMap.Rendering;
 using SharpMap.Utilities;
 using Point=SharpMap.Geometries.Point;
 
@@ -219,7 +220,7 @@ namespace SharpMap
             //Disclaimer
             if (!String.IsNullOrEmpty(_disclaimer))
             {
-                SizeF size = g.MeasureString(_disclaimer, _disclaimerFont);
+                SizeF size = VectorRenderer.SizeOfString(g, _disclaimer, _disclaimerFont);
                 size.Width = (Single)Math.Ceiling(size.Width);
                 size.Height = (Single)Math.Ceiling(size.Height);
                 switch (DisclaimerLocation)
