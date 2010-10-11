@@ -16,6 +16,7 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
 
 using System.Drawing;
+using System.Reflection;
 
 namespace SharpMap.Styles
 {
@@ -24,13 +25,28 @@ namespace SharpMap.Styles
     /// </summary>
     public class VectorStyle : Style
     {
+        /// <summary>
+        /// Default Symbol
+        /// </summary>
+        public static readonly Image DefaultSymbol;
+
+        /// <summary>
+        /// Static constructor
+        /// </summary>
+        static VectorStyle()
+        {
+            System.IO.Stream rs = Assembly.GetExecutingAssembly().GetManifestResourceStream("SharpMap.Styles.DefaultSymbol.png");
+            if (rs != null)
+                DefaultSymbol = Image.FromStream(rs);
+        }
+        
         #region Privates
 
-        private Brush _FillStyle;
-        private Pen _LineStyle;
-        private bool _Outline;
-        private Pen _OutlineStyle;
-        private Bitmap _Symbol;
+        private Brush _fillStyle;
+        private Pen _lineStyle;
+        private bool _outline;
+        private Pen _outlineStyle;
+        private Image _symbol;
 
         #endregion
 
@@ -55,17 +71,17 @@ namespace SharpMap.Styles
 
         #region Properties
 
-        private PointF _SymbolOffset;
-        private float _SymbolRotation;
-        private float _SymbolScale;
+        private PointF _symbolOffset;
+        private float _symbolRotation;
+        private float _symbolScale;
 
         /// <summary>
         /// Linestyle for line geometries
         /// </summary>
         public Pen Line
         {
-            get { return _LineStyle; }
-            set { _LineStyle = value; }
+            get { return _lineStyle; }
+            set { _lineStyle = value; }
         }
 
         /// <summary>
@@ -73,8 +89,8 @@ namespace SharpMap.Styles
         /// </summary>
         public Pen Outline
         {
-            get { return _OutlineStyle; }
-            set { _OutlineStyle = value; }
+            get { return _outlineStyle; }
+            set { _outlineStyle = value; }
         }
 
         /// <summary>
@@ -82,8 +98,8 @@ namespace SharpMap.Styles
         /// </summary>
         public bool EnableOutline
         {
-            get { return _Outline; }
-            set { _Outline = value; }
+            get { return _outline; }
+            set { _outline = value; }
         }
 
         /// <summary>
@@ -91,17 +107,17 @@ namespace SharpMap.Styles
         /// </summary>
         public Brush Fill
         {
-            get { return _FillStyle; }
-            set { _FillStyle = value; }
+            get { return _fillStyle; }
+            set { _fillStyle = value; }
         }
 
         /// <summary>
         /// Symbol used for rendering points
         /// </summary>
-        public Bitmap Symbol
+        public Image Symbol
         {
-            get { return _Symbol; }
-            set { _Symbol = value; }
+            get { return _symbol; }
+            set { _symbol = value; }
         }
 
         /// <summary>
@@ -112,8 +128,8 @@ namespace SharpMap.Styles
         /// </remarks>
         public float SymbolScale
         {
-            get { return _SymbolScale; }
-            set { _SymbolScale = value; }
+            get { return _symbolScale; }
+            set { _symbolScale = value; }
         }
 
         /// <summary>
@@ -124,8 +140,8 @@ namespace SharpMap.Styles
         /// </remarks>
         public PointF SymbolOffset
         {
-            get { return _SymbolOffset; }
-            set { _SymbolOffset = value; }
+            get { return _symbolOffset; }
+            set { _symbolOffset = value; }
         }
 
         /// <summary>
@@ -133,8 +149,8 @@ namespace SharpMap.Styles
         /// </summary>
         public float SymbolRotation
         {
-            get { return _SymbolRotation; }
-            set { _SymbolRotation = value; }
+            get { return _symbolRotation; }
+            set { _symbolRotation = value; }
         }
 
         #endregion

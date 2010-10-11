@@ -64,6 +64,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\ExternalReferences\BruTile.dll</HintPath>
     </Reference>
+    <Reference Include="ProjNET">
+      <HintPath>..\..\sharpmap_svn4\ExternalReferences\ProjNET.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Data" />
@@ -81,6 +84,9 @@
     <Compile Include="Samples\GdalSample.cs" />
     <Compile Include="Samples\GradiantThemeSample.cs" />
     <Compile Include="Samples\OracleSample.cs" />
+    <None Include="GeoData\Cities.xls">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="GeoData\GeoTiff\utm.jp2">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

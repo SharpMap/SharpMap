@@ -427,7 +427,7 @@ namespace SharpMap.Rendering
         /// <param name="offset">Symbol offset af scale=1</param>
         /// <param name="rotation">Symbol rotation in degrees</param>
         /// <param name="map">Map reference</param>
-        public static void DrawPoint(Graphics g, Point point, Bitmap symbol, float symbolscale, PointF offset,
+        public static void DrawPoint(Graphics g, Point point, Image symbol, float symbolscale, PointF offset,
                                      float rotation, Map map)
         {
             if (point == null)
@@ -485,7 +485,7 @@ namespace SharpMap.Rendering
         /// <param name="offset">Symbol offset af scale=1</param>
         /// <param name="rotation">Symbol rotation in degrees</param>
         /// <param name="map">Map reference</param>
-        public static void DrawMultiPoint(Graphics g, MultiPoint points, Bitmap symbol, float symbolscale, PointF offset,
+        public static void DrawMultiPoint(Graphics g, MultiPoint points, Image symbol, float symbolscale, PointF offset,
                                           float rotation, Map map)
         {
             for (int i = 0; i < points.Points.Count; i++)
