@@ -366,17 +366,17 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SharpMap.Extensions\SharpMap.Extensions.VS2008.csproj">
+    <ProjectReference Include="..\SharpMap.Extensions\SharpMap.Extensions.VS2010.csproj">
       <Project>{A4140C12-53F5-438C-8D24-9E48C504FECF}</Project>
-      <Name>SharpMap.Extensions.VS2008</Name>
+      <Name>SharpMap.Extensions.VS2010</Name>
     </ProjectReference>
-    <ProjectReference Include="..\SharpMap.UI\SharpMap.UI.VS2008.csproj">
+    <ProjectReference Include="..\SharpMap.UI\SharpMap.UI.VS2010.csproj">
       <Project>{DD1CC1DB-4BF9-4C88-A100-733D84795F3A}</Project>
-      <Name>SharpMap.UI.VS2008</Name>
+      <Name>SharpMap.UI.VS2010</Name>
     </ProjectReference>
-    <ProjectReference Include="..\SharpMap\SharpMap.VS2008.csproj">
+    <ProjectReference Include="..\SharpMap\SharpMap.VS2010.csproj">
       <Project>{C83777FC-AABB-47D9-911F-D76255D4D541}</Project>
-      <Name>SharpMap.VS2008</Name>
+      <Name>SharpMap.VS2010</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

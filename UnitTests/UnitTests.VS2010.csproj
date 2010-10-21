@@ -57,6 +57,10 @@
   </Target>
   -->
   <ItemGroup>
+    <Reference Include="Microsoft.SqlServer.Types, Version=10.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Programme\Microsoft SQL Server\100\SDK\Assemblies\Microsoft.SqlServer.Types.dll</HintPath>
+    </Reference>
     <Reference Include="nunit.framework, Version=2.4.1.0, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\ExternalReferences\nunit.framework.dll</HintPath>
@@ -67,6 +71,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Converters\SqlServer2008.cs" />
     <Compile Include="Converters\WKB\WKBTests.cs" />
     <Compile Include="Converters\WKT\WktGeometryTests.cs" />
     <Compile Include="Data\Providers\DataTablePointTests.cs" />
@@ -80,13 +85,17 @@
     <Compile Include="TestWmsCapabilityParser.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SharpMap.Extensions\SharpMap.Extensions.VS2008.csproj">
+    <ProjectReference Include="..\SharpMap.Extensions\SharpMap.Extensions.VS2010.csproj">
       <Project>{A4140C12-53F5-438C-8D24-9E48C504FECF}</Project>
-      <Name>SharpMap.Extensions.VS2008</Name>
+      <Name>SharpMap.Extensions.VS2010</Name>
     </ProjectReference>
-    <ProjectReference Include="..\SharpMap\SharpMap.VS2008.csproj">
+    <ProjectReference Include="..\SharpMap.SqlServerSpatialObjects\SharpMap.SqlServerSpatialObjects.VS2010.csproj">
+      <Project>{6D681045-8EF1-44EA-A19D-C7A63A6D0F76}</Project>
+      <Name>SharpMap.SqlServerSpatialObjects.VS2010</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SharpMap\SharpMap.VS2010.csproj">
       <Project>{C83777FC-AABB-47D9-911F-D76255D4D541}</Project>
-      <Name>SharpMap.VS2008</Name>
+      <Name>SharpMap.VS2010</Name>
     </ProjectReference>
   </ItemGroup>
 </Project>

@@ -358,16 +358,29 @@ namespace SharpMap.Forms
                         }
                         Refresh();
                     }
-                    else if (ActiveTool == Tools.Query)
-                    {
+                        else if (ActiveTool == Tools.Query)
+                        {
                         if (_Map.Layers.Count > _queryLayerIndex && _queryLayerIndex > -1)
                         {
                             if (_Map.Layers[_queryLayerIndex] is ICanQueryLayer)
                             {
                                 ICanQueryLayer layer = _Map.Layers[_queryLayerIndex] as ICanQueryLayer;
+                                System.Drawing.Point pt;
+                                if (!Map.MapTransform.IsIdentity)
+                                {
+                                    System.Drawing.Drawing2D.Matrix mat = Map.MapTransform;
+                                    mat.Invert();
+                                    System.Drawing.Point[] pts = new System.Drawing.Point[1];
+                                    pts[0] = new System.Drawing.Point(e.X, e.Y);
+                                    mat.TransformPoints(pts);
+                                    pt = pts[0];
+                                }
+                                else
+                                {
+                                    pt = new System.Drawing.Point(e.X, e.Y);
+                                }
                                 BoundingBox bbox =
-                                    _Map.ImageToWorld(new System.Drawing.Point(e.X, e.Y)).GetBoundingBox().Grow(
-                                        _Map.PixelSize * 5);
+                                    _Map.ImageToWorld(pt).GetBoundingBox().Grow(_Map.PixelSize * 5);
                                 FeatureDataSet ds = new FeatureDataSet();
                                 layer.ExecuteIntersectionQuery(bbox, ds);
                                 if (MapQueried != null)

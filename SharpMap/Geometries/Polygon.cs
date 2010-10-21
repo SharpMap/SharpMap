@@ -44,7 +44,7 @@ namespace SharpMap.Geometries
         public Polygon(LinearRing exteriorRing, IList<LinearRing> interiorRings)
         {
             _ExteriorRing = exteriorRing;
-            _InteriorRings = interiorRings;
+            _InteriorRings = interiorRings ?? new Collection<LinearRing>();
         }
 
         /// <summary>

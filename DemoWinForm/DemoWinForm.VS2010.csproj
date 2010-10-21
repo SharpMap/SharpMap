@@ -88,13 +88,13 @@
     <Compile Include="ShapeFileLayerFactory.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SharpMap.UI\SharpMap.UI.VS2008.csproj">
+    <ProjectReference Include="..\SharpMap.UI\SharpMap.UI.VS2010.csproj">
       <Project>{DD1CC1DB-4BF9-4C88-A100-733D84795F3A}</Project>
-      <Name>SharpMap.UI.VS2008</Name>
+      <Name>SharpMap.UI.VS2010</Name>
     </ProjectReference>
-    <ProjectReference Include="..\SharpMap\SharpMap.VS2008.csproj">
+    <ProjectReference Include="..\SharpMap\SharpMap.VS2010.csproj">
       <Project>{C83777FC-AABB-47D9-911F-D76255D4D541}</Project>
-      <Name>SharpMap.VS2008</Name>
+      <Name>SharpMap.VS2010</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
