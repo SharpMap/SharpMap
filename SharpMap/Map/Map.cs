@@ -309,7 +309,14 @@ namespace SharpMap
         /// <returns>Point in image coordinates</returns>
         public PointF WorldToImage(Point p)
         {
-            return Transform.WorldtoMap(p, this);
+            PointF pTmp=  Transform.WorldtoMap(p, this);
+            if (!MapTransform.IsIdentity)
+            {
+                PointF[] pts = new PointF[] { pTmp };
+                MapTransform.TransformPoints(pts);
+                pTmp = pts[0];
+            }
+            return pTmp;
         }
 
         /// <summary>
@@ -320,6 +327,12 @@ namespace SharpMap
         /// <returns>Point in world coordinates</returns>
         public Point ImageToWorld(PointF p)
         {
+            if (!MapTransform.IsIdentity)
+            {
+                PointF[] pts = new PointF[] { p };
+                MapTransformInverted.TransformPoints(pts);
+                p = pts[0];
+            }            
             return Transform.MapToWorld(p, this);
         }
 
@@ -371,7 +384,7 @@ namespace SharpMap
                 _MapTransform = value;
                 if (_MapTransform.IsInvertible)
                 {
-                    MapTransformInverted = _MapTransform.Clone();
+                    MapTransformInverted = value.Clone();
                     MapTransformInverted.Invert();
                 }
                 else

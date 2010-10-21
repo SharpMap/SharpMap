@@ -81,6 +81,7 @@ namespace SharpMap.Styles
         private HorizontalAlignmentEnum _HorisontalAlignment;
         private PointF _Offset;
         private VerticalAlignmentEnum _VerticalAlignment;
+        private float _rotation;
 
         /// <summary>
         /// Initializes a new LabelStyle
@@ -177,7 +178,7 @@ namespace SharpMap.Styles
         }
 
         /// <summary>
-        /// The horisontal alignment of the text in relation to the labelpoint
+        /// The horizontal alignment of the text in relation to the labelpoint
         /// </summary>
         [System.ComponentModel.Category("Alignment")]
         public VerticalAlignmentEnum VerticalAlignment
@@ -185,5 +186,16 @@ namespace SharpMap.Styles
             get { return _VerticalAlignment; }
             set { _VerticalAlignment = value; }
         }
+
+        /// <summary>
+        /// The Rotation of the text
+        /// </summary>
+        [System.ComponentModel.Category("Alignment")]
+        public float Rotation
+        {
+            get { return _rotation; }
+            set { _rotation = value % 360f; }
+        }
+
     }
 }

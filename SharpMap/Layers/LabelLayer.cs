@@ -28,6 +28,7 @@ using SharpMap.Geometries;
 using SharpMap.Rendering;
 using SharpMap.Rendering.Thematics;
 using SharpMap.Styles;
+using SharpMap.Utilities;
 using Point=SharpMap.Geometries.Point;
 
 namespace SharpMap.Layers
@@ -403,7 +404,7 @@ namespace SharpMap.Layers
                     else
                         style = Style;
 
-                    float rotation = 0;
+                    float rotation = style != null ? style.Rotation : 0f;
                     if (!String.IsNullOrEmpty(RotationColumn))
                         float.TryParse(feature[RotationColumn].ToString(), NumberStyles.Any, Map.NumberFormatEnUs,
                                        out rotation);
@@ -523,8 +524,9 @@ namespace SharpMap.Layers
             //SizeF size = g.MeasureString(text, style.Font);
 
             SizeF size = VectorRenderer.SizeOfString(g, text, style.Font);
+            //PointF position = map.WorldToImage(feature.GetBoundingBox().GetCentroid());
+            PointF position = Transform.WorldtoMap(feature.GetBoundingBox().GetCentroid(), map);
 
-            PointF position = map.WorldToImage(feature.GetBoundingBox().GetCentroid());
             position.X = position.X - size.Width*(short) style.HorizontalAlignment*0.5f;
             position.Y = position.Y - size.Height*(short) (2-(int)style.VerticalAlignment)*0.5f;
             if (position.X - size.Width > map.Size.Width || position.X + size.Width < 0 ||

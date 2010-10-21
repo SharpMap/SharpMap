@@ -101,6 +101,9 @@ namespace SharpMap.Layers
             foreach (WaitHandle handle in waitHandles)
                 handle.WaitOne();
 
+            Matrix mapTransform = map.MapTransform;
+            map.MapTransform = new Matrix();
+
             foreach (TileInfo info in tiles)
             {
                 Bitmap bitmap = _bitmaps.Find(info.Index);
@@ -117,7 +120,11 @@ namespace SharpMap.Layers
                     0, 0, _source.Schema.Width, _source.Schema.Height,
                     GraphicsUnit.Pixel,
                     _imageAttributes);
+
+                //graphics.DrawRectangle(Pens.Black, (int)min.X, (int)max.Y, (int)(max.X - min.X), (int)(min.Y - max.Y));
             }
+
+            map.MapTransform = mapTransform;
         }
 
         #endregion

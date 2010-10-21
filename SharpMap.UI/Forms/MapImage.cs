@@ -365,7 +365,8 @@ namespace SharpMap.Forms
                             if (_Map.Layers[_queryLayerIndex] is ICanQueryLayer)
                             {
                                 ICanQueryLayer layer = _Map.Layers[_queryLayerIndex] as ICanQueryLayer;
-                                System.Drawing.Point pt;
+                                PointF pt;
+                                /*
                                 if (!Map.MapTransform.IsIdentity)
                                 {
                                     System.Drawing.Drawing2D.Matrix mat = Map.MapTransform;
@@ -379,6 +380,8 @@ namespace SharpMap.Forms
                                 {
                                     pt = new System.Drawing.Point(e.X, e.Y);
                                 }
+                                 */
+                                pt =  new PointF(e.X, e.Y);
                                 BoundingBox bbox =
                                     _Map.ImageToWorld(pt).GetBoundingBox().Grow(_Map.PixelSize * 5);
                                 FeatureDataSet ds = new FeatureDataSet();
