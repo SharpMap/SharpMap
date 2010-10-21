@@ -14,7 +14,7 @@ namespace WinFormSamples.Samples
     {
         private static Int32 _num = 0;
         
-        public static Map InitializeMap()
+        public static Map InitializeMap(float angle)
         {
             switch (_num++ % 10)
             {
@@ -38,7 +38,7 @@ namespace WinFormSamples.Samples
                     return InitializeMapGoogle(GoogleMapType.GoogleLabels);
                 case 9:
                     _num = 0;
-                    return InitializeMapOsmWithXls();
+                    return InitializeMapOsmWithXls(angle);
 
             }
             return InitializeMapOsm();
@@ -55,11 +55,11 @@ namespace WinFormSamples.Samples
         }
 
         private const string XlsConnectionString = @"Provider=Microsoft.Jet.OLEDB.4.0;Data Source={0}\{1};Extended Properties=""Excel 8.0;HDR=Yes;IMEX=1""";
-        private static Map InitializeMapOsmWithXls()
+        private static Map InitializeMapOsmWithXls(float angle)
         {
             Map map = new Map();
 
-            TileLayer tileLayer = new TileLayer(new OsmTileSource(), "TileLayer - OSM");
+            TileLayer tileLayer = new TileLayer(new OsmTileSource(), "TileLayer - OSM with XLS");
             map.Layers.Add(tileLayer);
 
             //Get data from excel
@@ -71,6 +71,11 @@ namespace WinFormSamples.Samples
                 using (var da = new System.Data.OleDb.OleDbDataAdapter(new System.Data.OleDb.OleDbCommand("SELECT * FROM [Cities$]", cn)))
                     da.Fill(ds);
             }
+
+            //Add Rotation Column
+            ds.Tables[0].Columns.Add("Rotation", typeof (float));
+            foreach (System.Data.DataRow row in ds.Tables[0].Rows)
+                row["Rotation"] = -angle;
 
             //Set up provider
             var xlsProvider = new SharpMap.Data.Providers.DataTablePoint(ds.Tables[0], "OID", "X", "Y");

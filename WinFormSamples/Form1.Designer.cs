@@ -41,6 +41,7 @@
         this.radioButton10 = new System.Windows.Forms.RadioButton();
         this.scMain = new System.Windows.Forms.SplitContainer();
         this.scMapProp = new System.Windows.Forms.SplitContainer();
+        this.tbAngle = new System.Windows.Forms.TrackBar();
         this.mapImage = new SharpMap.Forms.MapImage();
         this.pgMap = new System.Windows.Forms.PropertyGrid();
         this.dataGridView1 = new System.Windows.Forms.DataGridView();
@@ -51,6 +52,7 @@
         this.scMapProp.Panel1.SuspendLayout();
         this.scMapProp.Panel2.SuspendLayout();
         this.scMapProp.SuspendLayout();
+        ((System.ComponentModel.ISupportInitialize)(this.tbAngle)).BeginInit();
         ((System.ComponentModel.ISupportInitialize)(this.mapImage)).BeginInit();
         ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
         this.SuspendLayout();
@@ -222,6 +224,7 @@
         // 
         // scMapProp.Panel1
         // 
+        this.scMapProp.Panel1.Controls.Add(this.tbAngle);
         this.scMapProp.Panel1.Controls.Add(this.mapImage);
         // 
         // scMapProp.Panel2
@@ -230,6 +233,18 @@
         this.scMapProp.Size = new System.Drawing.Size(523, 316);
         this.scMapProp.SplitterDistance = 383;
         this.scMapProp.TabIndex = 2;
+        // 
+        // tbAngle
+        // 
+        this.tbAngle.Dock = System.Windows.Forms.DockStyle.Bottom;
+        this.tbAngle.Location = new System.Drawing.Point(0, 271);
+        this.tbAngle.Maximum = 360;
+        this.tbAngle.Name = "tbAngle";
+        this.tbAngle.Size = new System.Drawing.Size(383, 45);
+        this.tbAngle.TabIndex = 5;
+        this.tbAngle.TickFrequency = 15;
+        this.tbAngle.Visible = false;
+        this.tbAngle.Scroll += new System.EventHandler(this.tbAngle_Scroll);
         // 
         // mapImage
         // 
@@ -286,8 +301,10 @@
         this.scMain.Panel2.ResumeLayout(false);
         this.scMain.ResumeLayout(false);
         this.scMapProp.Panel1.ResumeLayout(false);
+        this.scMapProp.Panel1.PerformLayout();
         this.scMapProp.Panel2.ResumeLayout(false);
         this.scMapProp.ResumeLayout(false);
+        ((System.ComponentModel.ISupportInitialize)(this.tbAngle)).EndInit();
         ((System.ComponentModel.ISupportInitialize)(this.mapImage)).EndInit();
         ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
         this.ResumeLayout(false);
@@ -312,6 +329,7 @@
     private SharpMap.Forms.MapImage mapImage;
     private System.Windows.Forms.PropertyGrid pgMap;
     private System.Windows.Forms.DataGridView dataGridView1;
+    private System.Windows.Forms.TrackBar tbAngle;
   }
 }
 

@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Windows.Forms;
 using SharpMap.Forms;
 using SharpMap.Layers;
@@ -56,7 +58,9 @@ namespace WinFormSamples
                     case "TileLayer - GoogleSatellite":
                     case "TileLayer - GoogleTerrain":
                     case "TileLayer - GoogleLabels":
-                        mapImage.Map = TileLayerSample.InitializeMap();
+                        tbAngle.Visible = text.Equals("TileLayer - GoogleLabels");
+                        if (!tbAngle.Visible) tbAngle.Value = 0;
+                        mapImage.Map = TileLayerSample.InitializeMap(tbAngle.Value);
                         ((RadioButton) sender).Text = mapImage.Map.Layers[0].LayerName;
                         break;
                     case "PostGis":
@@ -118,6 +122,14 @@ namespace WinFormSamples
 
         private void mapImage_SizeChanged(object sender, EventArgs e)
         {
+            mapImage.Refresh();
+        }
+
+        private void tbAngle_Scroll(object sender, EventArgs e)
+        {
+            System.Drawing.Drawing2D.Matrix matrix = new Matrix(); 
+            matrix.RotateAt(tbAngle.Value, new PointF(mapImage.Width * 0.5f, mapImage.Height*0.5f));
+            mapImage.Map.MapTransform = matrix;
             mapImage.Refresh();
         }
 
