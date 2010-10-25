@@ -42,9 +42,9 @@
         this.scMain = new System.Windows.Forms.SplitContainer();
         this.scMapProp = new System.Windows.Forms.SplitContainer();
         this.tbAngle = new System.Windows.Forms.TrackBar();
+        this.dataGridView1 = new System.Windows.Forms.DataGridView();
         this.mapImage = new SharpMap.Forms.MapImage();
         this.pgMap = new System.Windows.Forms.PropertyGrid();
-        this.dataGridView1 = new System.Windows.Forms.DataGridView();
         this.flowLayoutPanel1.SuspendLayout();
         this.scMain.Panel1.SuspendLayout();
         this.scMain.Panel2.SuspendLayout();
@@ -53,8 +53,8 @@
         this.scMapProp.Panel2.SuspendLayout();
         this.scMapProp.SuspendLayout();
         ((System.ComponentModel.ISupportInitialize)(this.tbAngle)).BeginInit();
-        ((System.ComponentModel.ISupportInitialize)(this.mapImage)).BeginInit();
         ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
+        ((System.ComponentModel.ISupportInitialize)(this.mapImage)).BeginInit();
         this.SuspendLayout();
         // 
         // flowLayoutPanel1
@@ -238,44 +238,13 @@
         // 
         this.tbAngle.Dock = System.Windows.Forms.DockStyle.Bottom;
         this.tbAngle.Location = new System.Drawing.Point(0, 271);
-        this.tbAngle.Maximum = 360;
+        this.tbAngle.Maximum = 180;
+        this.tbAngle.Minimum = -180;
         this.tbAngle.Name = "tbAngle";
         this.tbAngle.Size = new System.Drawing.Size(383, 45);
         this.tbAngle.TabIndex = 5;
         this.tbAngle.TickFrequency = 15;
-        this.tbAngle.Visible = false;
         this.tbAngle.Scroll += new System.EventHandler(this.tbAngle_Scroll);
-        // 
-        // mapImage
-        // 
-        this.mapImage.ActiveTool = SharpMap.Forms.MapImage.Tools.None;
-        this.mapImage.BackColor = System.Drawing.Color.White;
-        this.mapImage.Cursor = System.Windows.Forms.Cursors.Cross;
-        this.mapImage.Dock = System.Windows.Forms.DockStyle.Fill;
-        this.mapImage.FineZoomFactor = 10;
-        this.mapImage.Location = new System.Drawing.Point(0, 0);
-        this.mapImage.Name = "mapImage";
-        this.mapImage.QueryLayerIndex = 0;
-        this.mapImage.Size = new System.Drawing.Size(383, 316);
-        this.mapImage.TabIndex = 1;
-        this.mapImage.TabStop = false;
-        this.mapImage.WheelZoomMagnitude = 2;
-        this.mapImage.MapZooming += new SharpMap.Forms.MapImage.MapZoomHandler(this.mapImage_MapZooming);
-        this.mapImage.MapRefreshed += new System.EventHandler(this.mapImage_MapRefreshed);
-        this.mapImage.MapZoomChanged += new SharpMap.Forms.MapImage.MapZoomHandler(this.mapImage_MapZoomChanged);
-        this.mapImage.ActiveToolChanged += new SharpMap.Forms.MapImage.ActiveToolChangedHandler(this.mapImage_ActiveToolChanged);
-        this.mapImage.SizeChanged += new System.EventHandler(this.mapImage_SizeChanged);
-        this.mapImage.MapQueried += new SharpMap.Forms.MapImage.MapQueryHandler(this.mapImage_MapQueried);
-        this.mapImage.MapCenterChanged += new SharpMap.Forms.MapImage.MapCenterChangedHandler(this.mapImage_MapCenterChanged);
-        // 
-        // pgMap
-        // 
-        this.pgMap.Dock = System.Windows.Forms.DockStyle.Fill;
-        this.pgMap.Location = new System.Drawing.Point(0, 0);
-        this.pgMap.Name = "pgMap";
-        this.pgMap.SelectedObject = this.mapImage;
-        this.pgMap.Size = new System.Drawing.Size(136, 316);
-        this.pgMap.TabIndex = 3;
         // 
         // dataGridView1
         // 
@@ -285,6 +254,37 @@
         this.dataGridView1.Name = "dataGridView1";
         this.dataGridView1.Size = new System.Drawing.Size(523, 126);
         this.dataGridView1.TabIndex = 4;
+        // 
+        // mapImage
+        // 
+        this.mapImage.ActiveTool = SharpMap.Forms.MapImage.Tools.None;
+        this.mapImage.BackColor = System.Drawing.Color.White;
+        this.mapImage.Cursor = System.Windows.Forms.Cursors.Cross;
+        this.mapImage.Dock = System.Windows.Forms.DockStyle.Fill;
+        this.mapImage.FineZoomFactor = 10D;
+        this.mapImage.Location = new System.Drawing.Point(0, 0);
+        this.mapImage.Name = "mapImage";
+        this.mapImage.QueryLayerIndex = 0;
+        this.mapImage.Size = new System.Drawing.Size(383, 316);
+        this.mapImage.TabIndex = 1;
+        this.mapImage.TabStop = false;
+        this.mapImage.WheelZoomMagnitude = 2D;
+        this.mapImage.MapRefreshed += new System.EventHandler(this.mapImage_MapRefreshed);
+        this.mapImage.MapZoomChanged += new SharpMap.Forms.MapImage.MapZoomHandler(this.mapImage_MapZoomChanged);
+        this.mapImage.MapZooming += new SharpMap.Forms.MapImage.MapZoomHandler(this.mapImage_MapZooming);
+        this.mapImage.MapQueried += new SharpMap.Forms.MapImage.MapQueryHandler(this.mapImage_MapQueried);
+        this.mapImage.MapCenterChanged += new SharpMap.Forms.MapImage.MapCenterChangedHandler(this.mapImage_MapCenterChanged);
+        this.mapImage.ActiveToolChanged += new SharpMap.Forms.MapImage.ActiveToolChangedHandler(this.mapImage_ActiveToolChanged);
+        this.mapImage.SizeChanged += new System.EventHandler(this.mapImage_SizeChanged);
+        // 
+        // pgMap
+        // 
+        this.pgMap.Dock = System.Windows.Forms.DockStyle.Fill;
+        this.pgMap.Location = new System.Drawing.Point(0, 0);
+        this.pgMap.Name = "pgMap";
+        this.pgMap.SelectedObject = this.mapImage;
+        this.pgMap.Size = new System.Drawing.Size(136, 316);
+        this.pgMap.TabIndex = 3;
         // 
         // MainForm
         // 
@@ -305,8 +305,8 @@
         this.scMapProp.Panel2.ResumeLayout(false);
         this.scMapProp.ResumeLayout(false);
         ((System.ComponentModel.ISupportInitialize)(this.tbAngle)).EndInit();
-        ((System.ComponentModel.ISupportInitialize)(this.mapImage)).EndInit();
         ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
+        ((System.ComponentModel.ISupportInitialize)(this.mapImage)).EndInit();
         this.ResumeLayout(false);
 
     }

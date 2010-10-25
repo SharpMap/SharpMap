@@ -16,7 +16,7 @@ namespace WinFormSamples.Samples
 {
     public class GradiantThemeSample
     {
-        public static Map InitializeMap()
+        public static Map InitializeMap(float angle)
         {
             //Initialize a new map based on the simple map
             Map map = new Map();
@@ -128,6 +128,10 @@ namespace WinFormSamples.Samples
 
             map.Zoom = 30;
             map.Center = new Point(0, 0);
+
+            Matrix mat = new Matrix();
+            mat.RotateAt(angle, map.WorldToImage(map.Center));
+            map.MapTransform = mat;
 
             return map;
         }

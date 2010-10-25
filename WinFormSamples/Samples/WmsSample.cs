@@ -1,4 +1,5 @@
 ﻿using System.Drawing;
+using System.Drawing.Drawing2D;
 using SharpMap;
 using SharpMap.Layers;
 using Point=SharpMap.Geometries.Point;
@@ -7,7 +8,7 @@ namespace WinFormSamples.Samples
 {
     public static class WmsSample
     {
-        public static Map InitializeMap()
+        public static Map InitializeMap(float angle)
         {
             string wmsUrl = "http://www2.demis.nl/worldmap/wms.asp";
 
@@ -32,6 +33,10 @@ namespace WinFormSamples.Samples
 
             map.Zoom = 360;
             map.Center = new Point(0, 0);
+
+            Matrix mat = new Matrix();
+            mat.RotateAt(angle, map.WorldToImage(map.Center));
+            map.MapTransform = mat;
 
             return map;
         }

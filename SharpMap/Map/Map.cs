@@ -306,17 +306,29 @@ namespace SharpMap
         /// zoom, center and mapsize.
         /// </summary>
         /// <param name="p">Point in world coordinates</param>
+        /// <param name="careAboutMapTransform">Indicates whether MapTransform should be taken into account</param>
         /// <returns>Point in image coordinates</returns>
-        public PointF WorldToImage(Point p)
+        public PointF WorldToImage(Point p, bool careAboutMapTransform)
         {
-            PointF pTmp=  Transform.WorldtoMap(p, this);
-            if (!MapTransform.IsIdentity)
+            PointF pTmp = Transform.WorldtoMap(p, this);
+            if (careAboutMapTransform && !MapTransform.IsIdentity)
             {
                 PointF[] pts = new PointF[] { pTmp };
                 MapTransform.TransformPoints(pts);
                 pTmp = pts[0];
             }
             return pTmp;
+        }
+
+        /// <summary>
+        /// Converts a point from world coordinates to image coordinates based on the current
+        /// zoom, center and mapsize.
+        /// </summary>
+        /// <param name="p">Point in world coordinates</param>
+        /// <returns>Point in image coordinates</returns>
+        public PointF WorldToImage(Point p)
+        {
+            return WorldToImage(p, false);
         }
 
         /// <summary>
@@ -327,7 +339,19 @@ namespace SharpMap
         /// <returns>Point in world coordinates</returns>
         public Point ImageToWorld(PointF p)
         {
-            if (!MapTransform.IsIdentity)
+            return ImageToWorld(p, false);
+        }
+        /// <summary>
+        /// Converts a point from image coordinates to world coordinates based on the current
+        /// zoom, center and mapsize.
+        /// </summary>
+        /// <param name="p">Point in image coordinates</param>
+        /// <param name="careAboutMapTransform">Indicates whether MapTransform should be taken into account</param>
+        /// <returns>Point in world coordinates</returns>
+        public Point ImageToWorld(PointF p, bool careAboutMapTransform)
+        {
+
+            if (careAboutMapTransform && !MapTransform.IsIdentity)
             {
                 PointF[] pts = new PointF[] { p };
                 MapTransformInverted.TransformPoints(pts);
@@ -358,9 +382,23 @@ namespace SharpMap
         {
             get
             {
-                return new BoundingBox(
-                    new Point(Center.X - Zoom*.5, Center.Y - MapHeight*.5),
-                    new Point(Center.X + Zoom*.5, Center.Y + MapHeight*.5));
+
+                Point ll = new Point(Center.X - Zoom * .5, Center.Y - MapHeight * .5);
+                Point ur = new Point(Center.X + Zoom * .5, Center.Y + MapHeight * .5);
+                PointF ptfll = WorldToImage(ll, true);
+                ptfll = new PointF(Math.Abs(ptfll.X), Math.Abs(Size.Height - ptfll.Y));
+                if (!ptfll.IsEmpty)
+                {
+                    ll.X = ll.X - ptfll.X * PixelWidth;
+                    ll.Y = ll.Y - ptfll.Y * PixelHeight;
+                    ur.X = ur.X + ptfll.X * PixelWidth;
+                    ur.Y = ur.Y + ptfll.Y * PixelHeight;
+                }
+                return new BoundingBox(ll, ur);
+                
+                //Point lb = new Point(Center.X - Zoom*.5, Center.Y - MapHeight*.5);
+                //Point rt = new Point(Center.X + Zoom*.5, Center.Y + MapHeight*.5);
+                //return new BoundingBox(lb, rt);
             }
         }
 

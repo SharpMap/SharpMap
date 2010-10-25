@@ -1,5 +1,6 @@
 using System;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using SharpMap;
 using SharpMap.Layers;
 using SharpMap.Data.Providers;
@@ -9,7 +10,7 @@ namespace WinFormSamples.Samples
 {
     public class OracleSample
     {
-        public static Map InitializeMap()
+        public static Map InitializeMap(float angle)
         {
             //Initialize a new map of size 'imagesize'
             Map map = new Map();
@@ -104,6 +105,10 @@ namespace WinFormSamples.Samples
             map.BackColor = Color.LightBlue;
 
             map.ZoomToExtents(); // = 360;
+
+            Matrix mat = new Matrix();
+            mat.RotateAt(angle, map.WorldToImage(map.Center));
+            map.MapTransform = mat;
             //map.Center = new SharpMap.Geometries.Point(0, 0);
 
             return map;

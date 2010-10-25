@@ -63,39 +63,49 @@ namespace SharpMap.Forms
             /// <summary>
             /// No active tool
             /// </summary>
+            PanOrQuery,
+            /// <summary>
+            /// Pan on drag, Query on click
+            /// </summary>
             None
         }
 
         #endregion
 
-        private Tools _Activetool;
+        private Tools _activetool;
         private double _fineZoomFactor = 10;
-        private bool _isCtrlPressed = false;
-        private Map _Map;
+        private bool _isCtrlPressed;
+        private Map _map;
         private int _queryLayerIndex;
 
         private double _wheelZoomMagnitude = 2;
-        private System.Drawing.Point mousedrag;
-        private bool mousedragging = false;
-        private Image mousedragImg;
+        private System.Drawing.Point _mousedrag;
+        private bool _mousedragging;
+        private Image _mousedragImg;
+        private bool _panOnClick;
+        private bool _zoomOnDblClick;
+        private Image _dragImg1, _dragImg2, _dragImgSupp;
+
+        private bool _panOrQueryIsPan;
 
         /// <summary>
         /// Initializes a new map
         /// </summary>
         public MapImage()
         {
-            _Map = new Map(base.Size);
-            _Activetool = Tools.None;
+            _map = new Map(Size);
+            _activetool = Tools.None;
             base.MouseMove += new System.Windows.Forms.MouseEventHandler(MapImage_MouseMove);
             base.MouseUp += new System.Windows.Forms.MouseEventHandler(MapImage_MouseUp);
             base.MouseDown += new System.Windows.Forms.MouseEventHandler(MapImage_MouseDown);
             base.MouseWheel += new System.Windows.Forms.MouseEventHandler(MapImage_Wheel);
+            base.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(MapImage_DblClick);
             Cursor = Cursors.Cross;
             DoubleBuffered = true;
         }
 
         [Description("The amount which a single movement of the mouse wheel zooms by.")]
-        [DefaultValue(2)]
+        [DefaultValue(-2)]
         [Category("Behavior")]
         public double WheelZoomMagnitude
         {
@@ -120,11 +130,11 @@ namespace SharpMap.Forms
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public Map Map
         {
-            get { return _Map; }
+            get { return _map; }
             set
             {
-                _Map = value;
-                if (_Map != null)
+                _map = value;
+                if (_map != null)
                     Refresh();
             }
         }
@@ -144,11 +154,11 @@ namespace SharpMap.Forms
         /// </summary>
         public Tools ActiveTool
         {
-            get { return _Activetool; }
+            get { return _activetool; }
             set
             {
-                bool fireevent = (value != _Activetool);
-                _Activetool = value;
+                bool fireevent = (value != _activetool);
+                _activetool = value;
                 if (value == Tools.Pan)
                     Cursor = Cursors.Hand;
                 else
@@ -156,6 +166,54 @@ namespace SharpMap.Forms
                 if (fireevent)
                     if (ActiveToolChanged != null)
                         ActiveToolChanged(value);
+
+                // Check if settings collide
+                if (value != Tools.None && ZoomOnDblClick)
+                    ZoomOnDblClick = false;
+                if (value != Tools.Pan && PanOnClick)
+                    PanOnClick = false;
+            }
+        }
+
+        ///// <summary>
+        ///// Sets the direction of wheel for zoom-in operation
+        ///// </summary>
+        //public bool WheelZoomForward
+        //{
+        //    get { return _wheelZoomDirection==-1; }
+        //    set { _wheelZoomDirection = (value == true) ? -1 : 1; }
+        //}
+
+        /// <summary>
+        /// Sets whether the "go-to-cursor-on-click" feature is enabled or not (even if enabled it works only if the active tool is Pan)
+        /// </summary>
+        [Description("Sets whether the \"go-to-cursor-on-click\" feature is enabled or not (even if enabled it works only if the active tool is Pan)")]
+        [DefaultValue(true)]
+        [Category("Behavior")]
+        public bool PanOnClick
+        {
+            get { return _panOnClick; }
+            set
+            {
+                ActiveTool = Tools.Pan;
+                _panOnClick = value;
+
+            }
+        }
+
+        /// <summary>
+        /// Sets whether the "go-to-cursor-and-zoom-in-on-double-click" feature is enable or not
+        /// </summary>
+        [Description("Sets whether the \"go-to-cursor-and-zoom-in-on-double-click\" feature is enable or not. This only works if no tool is currently active.")]
+        [DefaultValue(true)]
+        [Category("Behavior")]
+        public bool ZoomOnDblClick
+        {
+            get { return _zoomOnDblClick; }
+            set { 
+                if (value)
+                    ActiveTool = Tools.None;
+                _zoomOnDblClick = value;
             }
         }
 
@@ -164,13 +222,13 @@ namespace SharpMap.Forms
         /// </summary>
         public override void Refresh()
         {
-            if (_Map != null)
+            if (_map != null)
             {
-                _Map.Size = Size;
-                if (_Map.Layers == null || _Map.Layers.Count == 0)
+                _map.Size = Size;
+                if (_map.Layers == null || _map.Layers.Count == 0)
                     Image = null;
                 else
-                    Image = _Map.GetMap();
+                    Image = _map.GetMap();
                 base.Refresh();
                 if (MapRefreshed != null)
                     MapRefreshed(this, null);
@@ -206,15 +264,15 @@ namespace SharpMap.Forms
 
         private void MapImage_Wheel(object sender, MouseEventArgs e)
         {
-            if (_Map != null)
+            if (_map != null)
             {
-                double scale = ((double)e.Delta / 120.0);
-                double scaleBase = 1 + (_wheelZoomMagnitude / (10 * ((double)(_isCtrlPressed ? _fineZoomFactor : 1))));
+                double scale = (e.Delta / 120.0);
+                double scaleBase = 1 + (_wheelZoomMagnitude / (10 * (_isCtrlPressed ? _fineZoomFactor : 1)));
 
-                _Map.Zoom *= Math.Pow(scaleBase, scale);
+                _map.Zoom *= Math.Pow(scaleBase, scale);
 
                 if (MapZoomChanged != null)
-                    MapZoomChanged(_Map.Zoom);
+                    MapZoomChanged(_map.Zoom);
 
                 Refresh();
             }
@@ -222,64 +280,93 @@ namespace SharpMap.Forms
 
         private void MapImage_MouseDown(object sender, MouseEventArgs e)
         {
-            if (_Map != null)
+            _panOrQueryIsPan = false;
+            if (_map != null)
             {
                 if (e.Button == MouseButtons.Left) //dragging
-                    mousedrag = e.Location;
+                    _mousedrag = e.Location;
                 if (MouseDown != null)
-                    MouseDown(_Map.ImageToWorld(new System.Drawing.Point(e.X, e.Y)), e);
+                    MouseDown(_map.ImageToWorld(new System.Drawing.Point(e.X, e.Y), true), e);
             }
         }
 
+        private void MapImage_DblClick(object sender, MouseEventArgs e)
+        {
+            if (_map != null && ActiveTool == Tools.None)
+            {
+                double scaleBase = 1d + (Math.Abs(_wheelZoomMagnitude) / 10d);
+                if (_zoomOnDblClick && e.Button == MouseButtons.Left)
+                {
+                    _map.Center = _map.ImageToWorld(new System.Drawing.Point(e.X, e.Y), true);
+                    if (MapCenterChanged != null) { MapCenterChanged(_map.Center); }
+                    _map.Zoom /= scaleBase;
+                    if (MapZoomChanged != null) { MapZoomChanged(_map.Zoom); }
+                    Refresh();
+                }
+                else if (_zoomOnDblClick && e.Button == MouseButtons.Right)
+                {
+                    _map.Zoom *= scaleBase;
+                    if (MapZoomChanged != null) { MapZoomChanged(_map.Zoom); }
+                    Refresh();
+                }
+            }
+        }
 
         private void MapImage_MouseMove(object sender, MouseEventArgs e)
         {
-            if (_Map != null)
+            if (_map != null)
             {
-                Point p = _Map.ImageToWorld(new System.Drawing.Point(e.X, e.Y));
+                Point p = _map.ImageToWorld(new System.Drawing.Point(e.X, e.Y), true);
 
                 if (MouseMove != null)
                     MouseMove(p, e);
 
-                if (Image != null && e.Location != mousedrag && !mousedragging && e.Button == MouseButtons.Left)
+                if (Image != null && e.Location != _mousedrag && !_mousedragging && e.Button == MouseButtons.Left)
                 {
-                    mousedragImg = Image.Clone() as Image;
-                    mousedragging = true;
+                    _mousedragImg = Image.Clone() as Image;
+                    _mousedragging = true;
+                    _dragImg1 = new Bitmap(Size.Width, Size.Height);
+                    _dragImg2 = new Bitmap(Size.Width, Size.Height);
                 }
 
-                if (mousedragging)
+                if (_mousedragging)
                 {
                     if (MouseDrag != null)
                         MouseDrag(p, e);
 
-                    if (ActiveTool == Tools.Pan)
+                    if (ActiveTool == Tools.Pan || ActiveTool == Tools.PanOrQuery)
                     {
-                        Image img = new Bitmap(Size.Width, Size.Height);
-                        Graphics g = Graphics.FromImage(img);
+                        Graphics g = Graphics.FromImage(_dragImg1);
                         g.Clear(Color.Transparent);
-                        g.DrawImageUnscaled(mousedragImg,
-                                            new System.Drawing.Point(e.Location.X - mousedrag.X,
-                                                                     e.Location.Y - mousedrag.Y));
+                        g.DrawImageUnscaled(_mousedragImg,
+                                            new System.Drawing.Point(e.Location.X - _mousedrag.X,
+                                                                     e.Location.Y - _mousedrag.Y));
                         g.Dispose();
-                        Image = img;
+                        _dragImgSupp = _dragImg2;
+                        _dragImg2 = _dragImg1;
+                        _dragImg1 = _dragImgSupp;
+                        Image = _dragImg2;
+                        _panOrQueryIsPan = true;
+                        base.Refresh();
+
                     }
                     else if (ActiveTool == Tools.ZoomIn || ActiveTool == Tools.ZoomOut)
                     {
                         Image img = new Bitmap(Size.Width, Size.Height);
                         Graphics g = Graphics.FromImage(img);
                         g.Clear(Color.Transparent);
-                        float scale = 0;
-                        if (e.Y - mousedrag.Y < 0) //Zoom out
-                            scale = (float)Math.Pow(1 / (float)(mousedrag.Y - e.Y), 0.5);
+                        float scale;
+                        if (e.Y - _mousedrag.Y < 0) //Zoom out
+                            scale = (float)Math.Pow(1 / (float)(_mousedrag.Y - e.Y), 0.5);
                         else //Zoom in
-                            scale = 1 + (e.Y - mousedrag.Y) * 0.1f;
+                            scale = 1 + (e.Y - _mousedrag.Y) * 0.1f;
                         RectangleF rect = new RectangleF(0, 0, Width, Height);
-                        if (_Map.Zoom / scale < _Map.MinimumZoom)
-                            scale = (float)Math.Round(_Map.Zoom / _Map.MinimumZoom, 4);
+                        if (_map.Zoom / scale < _map.MinimumZoom)
+                            scale = (float)Math.Round(_map.Zoom / _map.MinimumZoom, 4);
                         rect.Width *= scale;
                         rect.Height *= scale;
-                        rect.Offset(Width / 2 - rect.Width / 2, Height / 2 - rect.Height / 2);
-                        g.DrawImage(mousedragImg, rect);
+                        rect.Offset(Width / 2f - rect.Width / 2f, Height / 2f - rect.Height / 2);
+                        g.DrawImage(_mousedragImg, rect);
                         g.Dispose();
                         Image = img;
                         if (MapZooming != null)
@@ -291,107 +378,94 @@ namespace SharpMap.Forms
 
         private void MapImage_MouseUp(object sender, MouseEventArgs e)
         {
-            if (_Map != null)
+            if (_map != null)
             {
                 if (MouseUp != null)
-                    MouseUp(_Map.ImageToWorld(new System.Drawing.Point(e.X, e.Y)), e);
+                    MouseUp(_map.ImageToWorld(new System.Drawing.Point(e.X, e.Y), true), e);
 
                 if (e.Button == MouseButtons.Left)
                 {
                     if (ActiveTool == Tools.ZoomOut)
                     {
                         double scale = 0.5;
-                        if (!mousedragging)
+                        if (!_mousedragging)
                         {
-                            _Map.Center = _Map.ImageToWorld(new System.Drawing.Point(e.X, e.Y));
+                            _map.Center = _map.ImageToWorld(new System.Drawing.Point(e.X, e.Y), true);
                             if (MapCenterChanged != null)
-                                MapCenterChanged(_Map.Center);
+                                MapCenterChanged(_map.Center);
                         }
                         else
                         {
-                            if (e.Y - mousedrag.Y < 0) //Zoom out
-                                scale = (float)Math.Pow(1 / (float)(mousedrag.Y - e.Y), 0.5);
+                            if (e.Y - _mousedrag.Y < 0) //Zoom out
+                                scale = (float)Math.Pow(1 / (float)(_mousedrag.Y - e.Y), 0.5);
                             else //Zoom in
-                                scale = 1 + (e.Y - mousedrag.Y) * 0.1;
+                                scale = 1 + (e.Y - _mousedrag.Y) * 0.1;
                         }
-                        _Map.Zoom *= 1 / scale;
+                        _map.Zoom *= 1 / scale;
                         if (MapZoomChanged != null)
-                            MapZoomChanged(_Map.Zoom);
+                            MapZoomChanged(_map.Zoom);
                         Refresh();
                     }
                     else if (ActiveTool == Tools.ZoomIn)
                     {
                         double scale = 2;
-                        if (!mousedragging)
+                        if (!_mousedragging)
                         {
-                            _Map.Center = _Map.ImageToWorld(new System.Drawing.Point(e.X, e.Y));
+                            _map.Center = _map.ImageToWorld(new System.Drawing.Point(e.X, e.Y), true);
                             if (MapCenterChanged != null)
-                                MapCenterChanged(_Map.Center);
+                                MapCenterChanged(_map.Center);
                         }
                         else
                         {
-                            if (e.Y - mousedrag.Y < 0) //Zoom out
-                                scale = (float)Math.Pow(1 / (float)(mousedrag.Y - e.Y), 0.5);
+                            if (e.Y - _mousedrag.Y < 0) //Zoom out
+                                scale = (float)Math.Pow(1 / (float)(_mousedrag.Y - e.Y), 0.5);
                             else //Zoom in
-                                scale = 1 + (e.Y - mousedrag.Y) * 0.1;
+                                scale = 1 + (e.Y - _mousedrag.Y) * 0.1;
                         }
-                        _Map.Zoom *= 1 / scale;
+                        _map.Zoom *= 1 / scale;
                         if (MapZoomChanged != null)
-                            MapZoomChanged(_Map.Zoom);
+                            MapZoomChanged(_map.Zoom);
                         Refresh();
                     }
-                    else if (ActiveTool == Tools.Pan)
+                    else if (ActiveTool == Tools.Pan || (ActiveTool == Tools.PanOrQuery && _panOrQueryIsPan))
                     {
-                        if (mousedragging)
+                        if (_mousedragging)
                         {
-                            System.Drawing.Point pnt = new System.Drawing.Point(Width / 2 + (mousedrag.X - e.Location.X),
-                                                                                Height / 2 + (mousedrag.Y - e.Location.Y));
-                            _Map.Center = _Map.ImageToWorld(pnt);
+                            System.Drawing.Point pnt = new System.Drawing.Point(Width / 2 + (_mousedrag.X - e.Location.X),
+                                                                                Height / 2 + (_mousedrag.Y - e.Location.Y));
+                            _map.Center = _map.ImageToWorld(pnt, true);
                             if (MapCenterChanged != null)
-                                MapCenterChanged(_Map.Center);
+                                MapCenterChanged(_map.Center);
                         }
-                        else
+                        else if(_panOnClick && !_zoomOnDblClick)
                         {
-                            _Map.Center = _Map.ImageToWorld(new System.Drawing.Point(e.X, e.Y));
+                            _map.Center = _map.ImageToWorld(new System.Drawing.Point(e.X, e.Y), true);
                             if (MapCenterChanged != null)
-                                MapCenterChanged(_Map.Center);
+                                MapCenterChanged(_map.Center);
                         }
                         Refresh();
                     }
-                        else if (ActiveTool == Tools.Query)
+                    else if (ActiveTool == Tools.Query || (ActiveTool == Tools.PanOrQuery && !_panOrQueryIsPan))
+                    {
+                        if (_map.Layers.Count > _queryLayerIndex && _queryLayerIndex > -1)
                         {
-                        if (_Map.Layers.Count > _queryLayerIndex && _queryLayerIndex > -1)
-                        {
-                            if (_Map.Layers[_queryLayerIndex] is ICanQueryLayer)
+                            if (_map.Layers[_queryLayerIndex] is ICanQueryLayer)
                             {
-                                ICanQueryLayer layer = _Map.Layers[_queryLayerIndex] as ICanQueryLayer;
-                                PointF pt;
-                                /*
-                                if (!Map.MapTransform.IsIdentity)
+                                ICanQueryLayer layer = _map.Layers[_queryLayerIndex] as ICanQueryLayer;
+                                if (layer != null)
                                 {
-                                    System.Drawing.Drawing2D.Matrix mat = Map.MapTransform;
-                                    mat.Invert();
-                                    System.Drawing.Point[] pts = new System.Drawing.Point[1];
-                                    pts[0] = new System.Drawing.Point(e.X, e.Y);
-                                    mat.TransformPoints(pts);
-                                    pt = pts[0];
-                                }
-                                else
-                                {
-                                    pt = new System.Drawing.Point(e.X, e.Y);
-                                }
-                                 */
-                                pt =  new PointF(e.X, e.Y);
-                                BoundingBox bbox =
-                                    _Map.ImageToWorld(pt).GetBoundingBox().Grow(_Map.PixelSize * 5);
-                                FeatureDataSet ds = new FeatureDataSet();
-                                layer.ExecuteIntersectionQuery(bbox, ds);
-                                if (MapQueried != null)
-                                {
-                                    if (ds.Tables.Count > 0)
-                                        MapQueried(ds.Tables[0]);
-                                    else
-                                        MapQueried(new FeatureDataTable());
+                                    PointF pt = new PointF(e.X, e.Y);
+                                    BoundingBox bbox =
+                                        _map.ImageToWorld(pt, true).GetBoundingBox().Grow(_map.PixelSize*5);
+                                    FeatureDataSet ds = new FeatureDataSet();
+                                    layer.ExecuteIntersectionQuery(bbox, ds);
+                                    if (MapQueried != null)
+                                    {
+                                        if (ds.Tables.Count > 0)
+                                            MapQueried(ds.Tables[0]);
+                                        else
+                                            MapQueried(new FeatureDataTable());
+                                    }
                                 }
                             }
                         }
@@ -399,12 +473,12 @@ namespace SharpMap.Forms
                             MessageBox.Show("No active layer to query");
                     }
                 }
-                if (mousedragImg != null)
+                if (_mousedragImg != null)
                 {
-                    mousedragImg.Dispose();
-                    mousedragImg = null;
+                    _mousedragImg.Dispose();
+                    _mousedragImg = null;
                 }
-                mousedragging = false;
+                _mousedragging = false;
             }
         }
 

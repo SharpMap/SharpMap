@@ -25,29 +25,30 @@ namespace WinFormSamples
                 Cursor = Cursors.WaitCursor;
                 //mapImage.ActiveTool = MapImage.Tools.None;
                 string text = ((RadioButton)sender).Text;
+
                 switch (text)
                 {
                     case "Shapefile":
-                        mapImage.Map = ShapefileSample.InitializeMap();
+                        mapImage.Map = ShapefileSample.InitializeMap(tbAngle.Value);
                         break;
                     case "GradientTheme":
-                        mapImage.Map = GradiantThemeSample.InitializeMap();
+                        mapImage.Map = GradiantThemeSample.InitializeMap(tbAngle.Value);
                         break;
                     case "WFS Client":
-                        mapImage.Map = WfsSample.InitializeMap();
+                        mapImage.Map = WfsSample.InitializeMap(tbAngle.Value);
                         break;
                     case "WMS Client":
-                        mapImage.Map = WmsSample.InitializeMap();
+                        mapImage.Map = WmsSample.InitializeMap(tbAngle.Value);
                         break;
                     case "OGR - MapInfo":
                     case "OGR - S-57":
-                        mapImage.Map = OgrSample.InitializeMap();
+                        mapImage.Map = OgrSample.InitializeMap(tbAngle.Value);
                         break;
                     case "GDAL - GeoTiff":
                     case "GDAL - '.DEM'":
                     case "GDAL - '.ASC'":
                     case "GDAL - '.VRT'":
-                        mapImage.Map = GdalSample.InitializeMap();
+                        mapImage.Map = GdalSample.InitializeMap(tbAngle.Value);
                         mapImage.ActiveTool = MapImage.Tools.Pan;
                         break;
                     case "TileLayer - OSM":
@@ -58,19 +59,21 @@ namespace WinFormSamples
                     case "TileLayer - GoogleSatellite":
                     case "TileLayer - GoogleTerrain":
                     case "TileLayer - GoogleLabels":
+                        /*
                         tbAngle.Visible = text.Equals("TileLayer - GoogleLabels");
                         if (!tbAngle.Visible) tbAngle.Value = 0;
+                         */
                         mapImage.Map = TileLayerSample.InitializeMap(tbAngle.Value);
                         ((RadioButton) sender).Text = mapImage.Map.Layers[0].LayerName;
                         break;
                     case "PostGis":
-                        mapImage.Map = PostGisSample.InitializeMap();
+                        mapImage.Map = PostGisSample.InitializeMap(tbAngle.Value);
                         break;
                     case "SpatiaLite":
-                        mapImage.Map = SpatiaLiteSample.InitializeMap();
+                        mapImage.Map = SpatiaLiteSample.InitializeMap(tbAngle.Value);
                         break;
                     case "Oracle":
-                        mapImage.Map = OracleSample.InitializeMap();
+                        mapImage.Map = OracleSample.InitializeMap(tbAngle.Value);
                         break;
                     default:
                         break;

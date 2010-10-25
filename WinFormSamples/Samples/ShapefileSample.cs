@@ -13,23 +13,23 @@ namespace WinFormSamples.Samples
     public static partial class ShapefileSample
     {
         private static int _mapId = 0;
-        public static Map InitializeMap()
+        public static Map InitializeMap(float angle)
         {
             switch (_mapId)
             {
                 case 0:
                     _mapId++;
-                    return InitializeMapOrig();
+                    return InitializeMapOrig(angle);
                 case 1:
                     _mapId--;
-                    return InitializeMapOsm();
+                    return InitializeMapOsm(angle);
                 default:
                     _mapId = 0;
-                    return InitializeMapOrig();
+                    return InitializeMapOrig(angle);
             }
         }
         
-        private static Map InitializeMapOrig()
+        private static Map InitializeMapOrig(float angle)
         {
             //Initialize a new map of size 'imagesize'
             Map map = new Map();
@@ -110,6 +110,10 @@ namespace WinFormSamples.Samples
 
             map.Zoom = 360;
             map.Center = new Point(0, 0);
+
+            Matrix mat = new Matrix();
+            mat.RotateAt(angle, map.WorldToImage(map.Center));
+            map.MapTransform = mat;
 
             return map;
         }

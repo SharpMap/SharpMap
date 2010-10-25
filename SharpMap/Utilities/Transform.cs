@@ -63,9 +63,12 @@ namespace SharpMap.Utilities
             //    return Utilities.Transform.MapToWorld(p2[0], this);
             //}
             //else 
-            BoundingBox env = map.Envelope;
-            return new Point(env.Min.X + p.X*map.PixelWidth,
-                             env.Max.Y - p.Y*map.PixelHeight);
+            Point ul = new Point(map.Center.X - map.Zoom * .5, map.Center.Y + map.MapHeight * .5);
+            return new Point(ul.X + p.X * map.PixelWidth,
+                             ul.Y - p.Y * map.PixelHeight);
+            //BoundingBox env = map.Envelope;
+            //return new Point(env.Min.X + p.X*map.PixelWidth,
+            //                 env.Max.Y - p.Y*map.PixelHeight);
         }
     }
 }

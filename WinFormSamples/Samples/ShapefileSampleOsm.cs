@@ -66,7 +66,7 @@ namespace WinFormSamples.Samples
         }
 
 
-        private static Map InitializeMapOsm()
+        private static Map InitializeMapOsm(float angle)
         {
             //Transparent style
             VectorStyle transparentStyle = new VectorStyle();
@@ -313,6 +313,11 @@ namespace WinFormSamples.Samples
             map.DisclaimerFont = new Font("Arial", 7f, FontStyle.Italic);
             map.DisclaimerLocation = 1;
             transparentStyle2.MaxVisible = map.MaximumZoom*0.3;
+
+            Matrix mat = new Matrix();
+            mat.RotateAt(angle, map.WorldToImage(map.Center));
+            map.MapTransform = mat;
+
             return map;
         }
     }

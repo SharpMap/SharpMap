@@ -1,10 +1,11 @@
 using System;
+using System.Drawing.Drawing2D;
 
 namespace WinFormSamples.Samples
 {
     public static class PostGisSample
     {
-        public static SharpMap.Map InitializeMap()
+        public static SharpMap.Map InitializeMap(float angle)
         {
             //Initialize a new map of size 'imagesize'
             SharpMap.Map map = new SharpMap.Map();
@@ -98,6 +99,10 @@ namespace WinFormSamples.Samples
 
             map.ZoomToExtents(); // = 360;
             map.Center = new SharpMap.Geometries.Point(0, 0);
+
+            Matrix mat = new Matrix();
+            mat.RotateAt(angle, map.WorldToImage(map.Center));
+            map.MapTransform = mat;
 
             return map;
 

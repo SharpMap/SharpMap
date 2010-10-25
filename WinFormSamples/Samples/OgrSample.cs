@@ -20,21 +20,21 @@ namespace WinFormSamples.Samples
             get { return _ogrSampleDataset; }
         }
 
-        public static Map InitializeMap()
+        public static Map InitializeMap(float angle)
         {
             switch (_num++ % 3)
             {
                 case 0:
-                    return InitializeMapinfo();
+                    return InitializeMapinfo(angle);
                 case 1:
-                    return InitializeS57();
+                    return InitializeS57(angle);
                 case 2:
-                    return InitializeDXF();
+                    return InitializeDXF(angle);
             }
-            return InitializeMapinfo();
+            return InitializeMapinfo(angle);
         }
 
-        private static Map InitializeDXF()
+        private static Map InitializeDXF(float angle)
         {
             Map map = new Map();
             //Set the datasource to a shapefile in the App_data folder
@@ -57,12 +57,16 @@ namespace WinFormSamples.Samples
             VectorLayer lay = new VectorLayer("SampleDXF", provider);
             map.Layers.Add(lay);
             map.ZoomToExtents();
+            Matrix mat = new Matrix();
+            mat.RotateAt(angle, map.WorldToImage(map.Center));
+            map.MapTransform = mat;
+
             _ogrSampleDataset = "SampleDXF";
             return map;
 
         }
 
-        private static Map InitializeS57()
+        private static Map InitializeS57(float angle)
         {
             //Initialize a new map of size 'imagesize'
             Map map = new Map();
@@ -121,10 +125,15 @@ namespace WinFormSamples.Samples
             }
             _ogrSampleDataset = "S-57";
             map.ZoomToExtents();
+
+            Matrix mat = new Matrix();
+            mat.RotateAt(angle, map.WorldToImage(map.Center));
+            map.MapTransform = mat;
+
             return map;
         }
 
-        private static Map InitializeMapinfo()
+        private static Map InitializeMapinfo(float angle)
         {
             //Initialize a new map of size 'imagesize'
             Map map = new Map();
@@ -221,6 +230,10 @@ namespace WinFormSamples.Samples
             map.Center = new Point(0, 0);
 
             _ogrSampleDataset = "MapInfo";
+
+            Matrix mat = new Matrix();
+            mat.RotateAt(angle, map.WorldToImage(map.Center));
+            map.MapTransform = mat;
 
             return map;
         }

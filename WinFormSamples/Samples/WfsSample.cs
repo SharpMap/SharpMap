@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Net;
 using SharpMap;
 using SharpMap.Data.Providers;
@@ -12,7 +13,7 @@ namespace WinFormSamples.Samples
 {
     public static class WfsSample
     {
-        public static Map InitializeMap()
+        public static Map InitializeMap(float angle)
         {
             try
             {
@@ -140,6 +141,10 @@ namespace WinFormSamples.Samples
                 map.Zoom = 10;
                 // Alternatively zoom closer
                 // demoMap.Zoom = 0.2;
+
+                Matrix mat = new Matrix();
+                mat.RotateAt(angle, map.WorldToImage(map.Center));
+                map.MapTransform = mat;
 
                 return map;
             }

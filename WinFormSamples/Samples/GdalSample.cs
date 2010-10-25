@@ -1,5 +1,6 @@
 using System;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.IO;
 using SharpMap;
 using SharpMap.Data.Providers;
@@ -16,7 +17,7 @@ namespace WinFormSamples.Samples
             get { return _gdalSampleDataset; }
         }
 
-        public static Map InitializeMap()
+        public static Map InitializeMap(float angle)
         {
             switch (_num++ % 9)
             {
@@ -25,13 +26,13 @@ namespace WinFormSamples.Samples
                 case 2:
                 case 3:
                 case 4:
-                    return InitializeGeoTiff(_num);
+                    return InitializeGeoTiff(_num, angle);
                 default:
-                    return InitializeVRT(ref _num);
+                    return InitializeVRT(ref _num, angle);
             }
         }
 
-        private static Map InitializeGeoTiff(Int32 index)
+        private static Map InitializeGeoTiff(Int32 index, float angle)
         {
             try
             {
@@ -93,6 +94,11 @@ namespace WinFormSamples.Samples
                 }
 
                 map.ZoomToExtents();
+
+                Matrix mat = new Matrix();
+                mat.RotateAt(angle, map.WorldToImage(map.Center));
+                map.MapTransform = mat;
+
                 if (_num > 5) _num = 1;
                 _gdalSampleDataset = "GeoTiff" + _num;
                 return map;
@@ -113,7 +119,7 @@ namespace WinFormSamples.Samples
 
         private static readonly string[] Vrts = new string[] { @"..\DEM\Golden_CO.dem", "contours_sample_polyline_play_polyline.asc", "contours_sample_polyline_play1_polyline.vrt", "contours_sample_polyline_play2_polyline.vrt", "contours_sample_polyline_play3_polyline.vrt", "contours_sample_polyline_play3_polyline.vrt" };
         private const string RelativePath = "GeoData/VRT/";
-        private static Map InitializeVRT(ref Int32 index)
+        private static Map InitializeVRT(ref Int32 index, float angle)
         {
             Map map = new Map();
             Int32 ind = index - 6;
@@ -128,6 +134,10 @@ namespace WinFormSamples.Samples
             map.Layers.Add(layer);
             _gdalSampleDataset = string.Format("'{0}'", Path.GetExtension(layer.Filename).ToUpper());
             map.ZoomToExtents();
+
+            Matrix mat = new Matrix();
+            mat.RotateAt(angle, map.WorldToImage(map.Center));
+            map.MapTransform = mat;
             //index++;
             return map;
         }
