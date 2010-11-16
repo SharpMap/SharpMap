@@ -23,8 +23,12 @@ using System.IO;
 using System.Text;
 using System.Web;
 using System.Web.Caching;
+#if !DotSpatialProjections
 using ProjNet.Converters.WellKnownText;
 using ProjNet.CoordinateSystems;
+#else
+using DotSpatial.Projections;
+#endif
 using SharpMap.Geometries;
 using SharpMap.Utilities.SpatialIndexing;
 
@@ -164,7 +168,11 @@ namespace SharpMap.Data.Providers
 
         #endregion
 
+#if !DotSpatialProjections
         private ICoordinateSystem _CoordinateSystem;
+#else
+        private ProjectionInfo _CoordinateSystem;
+#endif
         private bool _CoordsysReadFromFile = false;
 
         private BoundingBox _Envelope;
@@ -229,7 +237,11 @@ namespace SharpMap.Data.Providers
         /// If this is not the case, the coordinate system will default to null.
         /// </summary>
         /// <exception cref="ApplicationException">An exception is thrown if the coordinate system is read from file.</exception>
+#if !DotSpatialProjections
         public ICoordinateSystem CoordinateSystem
+#else
+        public ProjectionInfo CoordinateSystem
+#endif
         {
             get { return _CoordinateSystem; }
             set
@@ -663,7 +675,12 @@ namespace SharpMap.Data.Providers
                 try
                 {
                     string wkt = File.ReadAllText(projfile);
+#if !DotSpatialProjections
                     _CoordinateSystem = (ICoordinateSystem) CoordinateSystemWktReader.Parse(wkt);
+#else
+                    _CoordinateSystem = new ProjectionInfo();
+                    _CoordinateSystem.ReadEsriString(wkt);
+#endif
                     _CoordsysReadFromFile = true;
                 }
                 catch (Exception ex)

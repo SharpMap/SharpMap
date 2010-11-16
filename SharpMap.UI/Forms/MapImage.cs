@@ -86,6 +86,9 @@ namespace SharpMap.Forms
         private bool _zoomOnDblClick;
         private Image _dragImg1, _dragImg2, _dragImgSupp;
 
+        private Bitmap _staticMap;
+        private Bitmap _variableMap;
+
         private bool _panOrQueryIsPan;
 
         /// <summary>
@@ -135,8 +138,26 @@ namespace SharpMap.Forms
             {
                 _map = value;
                 if (_map != null)
+                {
+                    _map.VariableLayers.VariableLayerCollectionRequery += new VariableLayerCollectionRequeryHandler(VariableLayersRequery);
                     Refresh();
+                }
             }
+        }
+
+        /// <summary>
+        /// Handles need to requery of variable layers
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void VariableLayersRequery(object sender, EventArgs e)
+        {
+            lock (_map)
+            {
+                if (_mousedragging) return;
+                _variableMap = GetMap(_map.VariableLayers, LayerCollectionType.Variable);
+            }
+            UpdateImage();
         }
 
         /// <summary>
@@ -225,13 +246,46 @@ namespace SharpMap.Forms
             if (_map != null)
             {
                 _map.Size = Size;
-                if (_map.Layers == null || _map.Layers.Count == 0)
-                    Image = null;
-                else
-                    Image = _map.GetMap();
+                _staticMap = GetMap(_map.Layers, LayerCollectionType.Static);
+                _variableMap = GetMap(_map.VariableLayers, LayerCollectionType.Variable);
+
+                UpdateImage();
                 base.Refresh();
                 if (MapRefreshed != null)
                     MapRefreshed(this, null);
+            }
+        }
+
+        private Bitmap GetMap(LayerCollection layers, LayerCollectionType layerCollectionType)
+        {
+            if ((layers == null || layers.Count == 0))
+                return null;
+
+            Bitmap retval = new Bitmap(Width, Height);
+            Graphics g = Graphics.FromImage(retval);
+            _map.RenderMap(g, layerCollectionType);
+            g.Dispose();
+
+            if (layerCollectionType == LayerCollectionType.Variable)
+                retval.MakeTransparent(_map.BackColor);
+
+            return retval;
+
+        }
+
+        private void UpdateImage()
+        {
+            if (!(_staticMap == null && _variableMap == null))
+            {
+                Bitmap bmp = new Bitmap(Width, Height);
+                Graphics g = Graphics.FromImage(bmp);
+                if (_staticMap != null)
+                    g.DrawImageUnscaled(_staticMap, 0, 0);
+                if (_variableMap != null)
+                    g.DrawImageUnscaled(_variableMap, 0, 0);
+                g.Dispose();
+
+                Image = bmp;
             }
         }
 
@@ -447,28 +501,12 @@ namespace SharpMap.Forms
                     }
                     else if (ActiveTool == Tools.Query || (ActiveTool == Tools.PanOrQuery && !_panOrQueryIsPan))
                     {
-                        if (_map.Layers.Count > _queryLayerIndex && _queryLayerIndex > -1)
-                        {
-                            if (_map.Layers[_queryLayerIndex] is ICanQueryLayer)
-                            {
-                                ICanQueryLayer layer = _map.Layers[_queryLayerIndex] as ICanQueryLayer;
-                                if (layer != null)
-                                {
-                                    PointF pt = new PointF(e.X, e.Y);
-                                    BoundingBox bbox =
-                                        _map.ImageToWorld(pt, true).GetBoundingBox().Grow(_map.PixelSize*5);
-                                    FeatureDataSet ds = new FeatureDataSet();
-                                    layer.ExecuteIntersectionQuery(bbox, ds);
-                                    if (MapQueried != null)
-                                    {
-                                        if (ds.Tables.Count > 0)
-                                            MapQueried(ds.Tables[0]);
-                                        else
-                                            MapQueried(new FeatureDataTable());
-                                    }
-                                }
-                            }
-                        }
+                        if (_queryLayerIndex < 0)
+                            MessageBox.Show("No active layer to query");
+                        else if (_queryLayerIndex < _map.Layers.Count)
+                            QueryLayer(_map.Layers[_queryLayerIndex], new PointF(e.X, e.Y));
+                        else if(_queryLayerIndex - Map.Layers.Count < _map.VariableLayers.Count)
+                            QueryLayer(_map.VariableLayers[_queryLayerIndex - Map.Layers.Count], new PointF(e.X, e.Y));
                         else
                             MessageBox.Show("No active layer to query");
                     }
@@ -479,6 +517,33 @@ namespace SharpMap.Forms
                     _mousedragImg = null;
                 }
                 _mousedragging = false;
+            }
+        }
+
+        /// <summary>
+        /// Performs query on layer if it is of <see cref="ICanQueryLayer"/>
+        /// </summary>
+        /// <param name="layer">The layer to query</param>
+        /// <param name="pt">The point to perform the query on</param>
+        private void QueryLayer(ILayer layer, PointF pt)
+        {
+            if (layer is ICanQueryLayer)
+            {
+                ICanQueryLayer queryLayer = layer as ICanQueryLayer;
+
+                BoundingBox bbox =
+                        _map.ImageToWorld(pt, true).GetBoundingBox().Grow(_map.PixelSize*5);
+                FeatureDataSet ds = new FeatureDataSet();
+                queryLayer.ExecuteIntersectionQuery(bbox, ds);
+                if (MapQueried != null)
+                {
+                    if (ds.Tables.Count > 0)
+                        MapQueried(ds.Tables[0]);
+                    else
+                        MapQueried(new FeatureDataTable());
+                }
+                if (MapQueriedDataSet != null)
+                    MapQueriedDataSet(ds);
             }
         }
 
@@ -502,7 +567,14 @@ namespace SharpMap.Forms
         /// Eventtype fired when the map is queried
         /// </summary>
         /// <param name="data"></param>
+        [Obsolete]
         public delegate void MapQueryHandler(FeatureDataTable data);
+
+        /// <summary>
+        /// Eventtype fired when the map is queried
+        /// </summary>
+        /// <param name="data"></param>
+        public delegate void MapQueryDataSetHandler(FeatureDataSet data);
 
         /// <summary>
         /// Eventtype fired when the zoom was or are being changed
@@ -559,6 +631,7 @@ namespace SharpMap.Forms
         /// </summary>
         public event MapQueryHandler MapQueried;
 
+        public event MapQueryDataSetHandler MapQueriedDataSet;
 
         /// <summary>
         /// Fired when the center of the map has changed

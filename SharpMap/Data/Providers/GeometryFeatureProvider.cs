@@ -19,6 +19,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Data;
 using SharpMap.Geometries;
 
 namespace SharpMap.Data.Providers
@@ -75,6 +76,7 @@ namespace SharpMap.Data.Providers
                 fdr.Geometry = geom;
                 _features.AddRow(fdr);
             }
+            _features.TableCleared += HandleFeaturesCleared;
         }
 
         /// <summary>
@@ -84,6 +86,7 @@ namespace SharpMap.Data.Providers
         public GeometryFeatureProvider(FeatureDataTable features)
         {
             _features = features;
+            _features.TableCleared += HandleFeaturesCleared;
         }
 
         /// <summary>
@@ -96,9 +99,24 @@ namespace SharpMap.Data.Providers
             FeatureDataRow fdr = _features.NewRow();
             fdr.Geometry = geometry;
             _features.AddRow(fdr);
+            _features.TableCleared += HandleFeaturesCleared;
         }
 
         #endregion
+
+        private void HandleFeaturesCleared(object sender, DataTableClearEventArgs e)
+        {
+            //maybe clear extents
+            //ok, maybe not
+        }
+
+        /// <summary>
+        /// Access to underlying <see cref="FeatureDataTable"/>
+        /// </summary>
+        public FeatureDataTable Features
+        {
+            get { return _features; }
+        }
 
         #region IProvider Members
 
@@ -211,7 +229,7 @@ namespace SharpMap.Data.Providers
                 return null;
             BoundingBox box = null;
             foreach (FeatureDataRow fdr in _features.Rows)
-                if (!fdr.Geometry.IsEmpty())
+                if (fdr.Geometry != null && !fdr.Geometry.IsEmpty())
                     box = box == null ? fdr.Geometry.GetBoundingBox() : box.Join(fdr.Geometry.GetBoundingBox());
 
             return box;

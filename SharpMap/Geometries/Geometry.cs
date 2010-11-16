@@ -18,8 +18,11 @@
 using System;
 using SharpMap.Converters.WellKnownBinary;
 using SharpMap.Converters.WellKnownText;
+#if !DotSpatialProjections
 using ProjNet.CoordinateSystems;
-
+#else
+using DotSpatial.Projections;
+#endif
 namespace SharpMap.Geometries
 {
     /// <summary>
@@ -35,8 +38,11 @@ namespace SharpMap.Geometries
     [Serializable]
     public abstract class Geometry : IGeometry, IEquatable<Geometry>
     {
+#if !DotSpatialProjections
         private ICoordinateSystem _SpatialReference;
-
+#else
+        private ProjectionInfo _SpatialReference;
+#endif
         #region IGeometry Members
 
         /// <summary>
@@ -44,7 +50,11 @@ namespace SharpMap.Geometries
         /// A <see cref="Geometry"/> may not have had a spatial reference system defined for
         /// it, in which case *spatialRef will be NULL.
         /// </summary>
+#if !DotSpatialProjections
         public ICoordinateSystem SpatialReference
+#else
+        public ProjectionInfo SpatialReference
+#endif
         {
             get { return _SpatialReference; }
             set { _SpatialReference = value; }

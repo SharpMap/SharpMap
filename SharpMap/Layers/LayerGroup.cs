@@ -136,11 +136,29 @@ namespace SharpMap.Layers
                 {
                     FeatureDataSet dsTmp = new FeatureDataSet();
                     ((ICanQueryLayer)layer).ExecuteIntersectionQuery(box, dsTmp);
-                    ds.Tables.AddRange(dsTmp.Tables);
+                    ds.Tables.AddRange(dsTmp.Tables.ToArray());
                 }
             }
         }
 
-        #endregion
+        /// <summary>
+        /// Returns the data associated with all the geometries that are intersected by 'geom'
+        /// </summary>
+        /// <param name="geometry">Geometry to intersect with</param>
+        /// <param name="ds">FeatureDataSet to fill data into</param>
+        public void ExecuteIntersectionQuery(Geometry geometry, FeatureDataSet ds)
+        {
+            foreach (Layer layer in Layers)
+            {
+                if (layer is ICanQueryLayer)
+                {
+                    FeatureDataSet dsTmp = new FeatureDataSet();
+                    ((ICanQueryLayer)layer).ExecuteIntersectionQuery(geometry, dsTmp);
+                    ds.Tables.AddRange(dsTmp.Tables.ToArray());
+                }
+            }
+        }
+
+         #endregion
     }
 }

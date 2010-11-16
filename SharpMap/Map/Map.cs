@@ -85,6 +85,7 @@ namespace SharpMap
         {
             Size = size;
             Layers = new LayerCollection();
+            _variableLayers = new VariableLayerCollection(_Layers);
             BackColor = Color.Transparent;
             _MaximumZoom = double.MaxValue;
             _MinimumZoom = 0;
@@ -182,6 +183,7 @@ namespace SharpMap
             return img;
              */
         }
+
         /// <summary>
         /// Renders the map using the provided <see cref="Graphics"/> object.
         /// </summary>
@@ -192,6 +194,8 @@ namespace SharpMap
         {
             if (g == null)
                 throw new ArgumentNullException("g", "Cannot render map with null graphics object!");
+
+            VariableLayers.Pause = true;
 
             if (Layers == null || Layers.Count == 0)
                 throw new InvalidOperationException("No layers to render");
@@ -207,9 +211,65 @@ namespace SharpMap
                     _Layers[i].Render(g, this);
             }
 
+            for (int i = 0; i < _variableLayers.Count; i++)
+            {
+                if (_variableLayers[i].Enabled && _variableLayers[i].MaxVisible >= Zoom && _variableLayers[i].MinVisible < Zoom)
+                    _variableLayers[i].Render(g, this);
+            }
+
+            VariableLayers.Pause = false;
+
             RenderDisclaimer(g);
 
             if (MapRendered != null) MapRendered(g); //Fire render event
+
+        }
+
+        /// <summary>
+        /// Renders the map using the provided <see cref="Graphics"/> object.
+        /// </summary>
+        /// <param name="g">the <see cref="Graphics"/> object to use</param>
+        /// <param name="layerCollectionType">the <see cref="LayerCollectionType"/> to use</param>
+        /// <exception cref="ArgumentNullException">if <see cref="Graphics"/> object is null.</exception>
+        /// <exception cref="InvalidOperationException">if there are no layers to render.</exception>
+        public void RenderMap(Graphics g, LayerCollectionType layerCollectionType)
+        {
+            if (g == null)
+                throw new ArgumentNullException("g", "Cannot render map with null graphics object!");
+
+            VariableLayers.Pause = true;
+
+            LayerCollection lc = null;
+            switch (layerCollectionType)
+            {
+                case LayerCollectionType.Static:
+                    lc = Layers;
+                    break;
+                case LayerCollectionType.Variable:
+                    lc = VariableLayers;
+                    break;
+            }
+
+            if (lc== null || lc.Count == 0)
+                throw new InvalidOperationException("No layers to render");
+
+            Matrix transform = g.Transform;
+            g.Transform = MapTransform;
+            g.Clear(BackColor);
+            g.PageUnit = GraphicsUnit.Pixel;
+
+            //int srid = (Layers.Count > 0 ? Layers[0].SRID : -1); //Get the SRID of the first layer
+            foreach (ILayer layer in lc)
+            {
+                if (layer.Enabled && layer.MaxVisible >= Zoom && layer.MinVisible < Zoom)
+                    layer.Render(g, this);
+            }
+
+            g.Transform = transform;
+            if (layerCollectionType == LayerCollectionType.Static)
+                RenderDisclaimer(g);
+
+            VariableLayers.Pause = false;
 
         }
 
@@ -367,6 +427,7 @@ namespace SharpMap
         private Color _BackgroundColor;
         private Point _Center;
         private LayerCollection _Layers;
+        private VariableLayerCollection _variableLayers;
         private Matrix _MapTransform;
         private double _MaximumZoom;
         private double _MinimumZoom;
@@ -450,6 +511,14 @@ namespace SharpMap
                         MapViewOnChange();
                 }
             }
+        }
+
+        /// <summary>
+        /// A collection of layers. The first layer in the list is drawn first, the last one on top.
+        /// </summary>
+        public VariableLayerCollection VariableLayers
+        {
+            get { return _variableLayers; }
         }
 
         /// <summary>

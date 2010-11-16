@@ -16,7 +16,11 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
 
 using System.Drawing;
+#if !DotSpatialProjections
 using ProjNet.CoordinateSystems.Transformations;
+#else
+using DotSpatial.Projections;
+#endif
 using SharpMap.Geometries;
 using SharpMap.Styles;
 
@@ -70,10 +74,17 @@ namespace SharpMap.Layers
             _style = new Style();
         }
 
+#if !DotSpatialProjections
         /// <summary>
-        /// Gets or sets the <see cref="SharpMap.CoordinateSystems.Transformations.ICoordinateTransformation"/> applied 
+        /// Gets or sets the <see cref="ProjNet.CoordinateSystems.Transformations.ICoordinateTransformation"/> applied 
         /// to this vectorlayer prior to rendering
         /// </summary>
+#else
+        /// <summary>
+        /// Gets or sets the <see cref="DotSpatial.Projections.ICoordinateTransformation"/> applied 
+        /// to this vectorlayer prior to rendering
+        /// </summary>
+#endif
         public virtual ICoordinateTransformation CoordinateTransformation
         {
             get { return _coordinateTransform; }

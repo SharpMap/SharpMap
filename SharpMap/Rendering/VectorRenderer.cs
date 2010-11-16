@@ -437,19 +437,19 @@ namespace SharpMap.Rendering
 
             PointF pp = Transform.WorldtoMap(point, map);
 
-            Matrix startingTransform = g.Transform;
-
             if (rotation != 0 && !Single.IsNaN(rotation))
             {
-                PointF rotationCenter = PointF.Add(pp, new SizeF(symbol.Width/2, symbol.Height/2));
-                Matrix transform = new Matrix();
+                Matrix startingTransform = g.Transform.Clone();
+                Matrix transform = g.Transform;
+                PointF rotationCenter = PointF.Add(pp, new SizeF(symbol.Width/2f, symbol.Height/2f));
+                //Matrix transform = new Matrix();
                 transform.RotateAt(rotation, rotationCenter);
 
                 g.Transform = transform;
 
                 if (symbolscale == 1f)
-                    g.DrawImageUnscaled(symbol, (int) (pp.X - symbol.Width/2 + offset.X),
-                                        (int) (pp.Y - symbol.Height/2 + offset.Y));
+                    g.DrawImageUnscaled(symbol, (int) (pp.X - symbol.Width/2f + offset.X),
+                                        (int) (pp.Y - symbol.Height/2f + offset.Y));
                 else
                 {
                     float width = symbol.Width*symbolscale;
@@ -463,8 +463,8 @@ namespace SharpMap.Rendering
             else
             {
                 if (symbolscale == 1f)
-                    g.DrawImageUnscaled(symbol, (int) (pp.X - symbol.Width/2 + offset.X),
-                                        (int) (pp.Y - symbol.Height/2 + offset.Y));
+                    g.DrawImageUnscaled(symbol, (int) (pp.X - symbol.Width/2f + offset.X),
+                                        (int) (pp.Y - symbol.Height/2f + offset.Y));
                 else
                 {
                     float width = symbol.Width*symbolscale;

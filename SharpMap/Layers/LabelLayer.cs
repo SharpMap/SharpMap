@@ -21,15 +21,19 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Text;
 using System.Globalization;
+#if !DotSpatialProjections
 using ProjNet.CoordinateSystems.Transformations;
+#else
+using DotSpatial.Projections;
+#endif
 using SharpMap.Data;
 using SharpMap.Data.Providers;
 using SharpMap.Geometries;
 using SharpMap.Rendering;
 using SharpMap.Rendering.Thematics;
 using SharpMap.Styles;
-using SharpMap.Utilities;
 using Point=SharpMap.Geometries.Point;
+using Transform = SharpMap.Utilities.Transform;
 
 namespace SharpMap.Layers
 {
@@ -370,9 +374,13 @@ namespace SharpMap.Layers
                 BoundingBox envelope = map.Envelope; //View to render
                 if (CoordinateTransformation != null)
                 {
+#if !DotSpatialProjections
                     CoordinateTransformation.MathTransform.Invert();
                     envelope = GeometryTransform.TransformBox(envelope, CoordinateTransformation.MathTransform);
                     CoordinateTransformation.MathTransform.Invert();
+#else
+                    envelope = GeometryTransform.TransformBox(envelope, CoordinateTransformation.Target, CoordinateTransformation.Source);
+#endif
                 }
                 FeatureDataSet ds = new FeatureDataSet();
                 DataSource.Open();
@@ -394,20 +402,27 @@ namespace SharpMap.Layers
                 {
                     FeatureDataRow feature = features[i];
                     if (CoordinateTransformation != null)
+#if !DotSpatialProjections
                         features[i].Geometry = GeometryTransform.TransformGeometry(features[i].Geometry,
                                                                                    CoordinateTransformation.
                                                                                        MathTransform);
-
+#else
+                        features[i].Geometry = GeometryTransform.TransformGeometry(features[i].Geometry,
+                                                                               CoordinateTransformation.Source,
+                                                                               CoordinateTransformation.Target);
+#endif
                     LabelStyle style;
                     if (Theme != null) //If thematics is enabled, lets override the style
                         style = Theme.GetStyle(feature) as LabelStyle;
                     else
                         style = Style;
 
-                    float rotation = style != null ? style.Rotation : 0f;
+                    float rotationStyle = style != null ? style.Rotation : 0f;
+                    float rotationColumn = 0f;
                     if (!String.IsNullOrEmpty(RotationColumn))
                         float.TryParse(feature[RotationColumn].ToString(), NumberStyles.Any, Map.NumberFormatEnUs,
-                                       out rotation);
+                                       out rotationColumn);
+                    float rotation = rotationStyle + rotationColumn;
 
                     int priority = Priority;
                     if (_getPriorityMethod != null)
@@ -422,7 +437,7 @@ namespace SharpMap.Layers
                     else
                         text = feature[LabelColumn].ToString();
 
-                    if (text != null && text != String.Empty)
+                    if (!String.IsNullOrEmpty(text))
                     {
                         if (feature.Geometry is GeometryCollection)
                         {

@@ -15,7 +15,11 @@
 // along with SharpMap; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
 
+#if !DotSpatialProjections
 using ProjNet.CoordinateSystems;
+#else
+using DotSpatial.Projections;
+#endif
 
 namespace SharpMap.Geometries
 {
@@ -31,8 +35,11 @@ namespace SharpMap.Geometries
         /// A <see cref="Geometry"/> may not have had a spatial reference system defined for
         /// it, in which case *spatialRef will be NULL.
         /// </summary>
+#if !DotSpatialProjections
         ICoordinateSystem SpatialReference { get; set; }
-
+#else
+        ProjectionInfo SpatialReference { get; set; }
+#endif
         /// <summary>
         ///  The inherent dimension of this <see cref="Geometry"/> object, which must be less than or equal to the coordinate dimension.
         /// </summary>

@@ -23,6 +23,7 @@ namespace SharpMap.Layers
         readonly ITileSource _source;
         readonly MemoryCache<Bitmap> _bitmaps = new MemoryCache<Bitmap>(100, 200);
         readonly bool _showErrorInTile = true;
+        InterpolationMode _interpolationMode = InterpolationMode.HighQualityBicubic;
 
         #endregion
 
@@ -41,6 +42,15 @@ namespace SharpMap.Layers
                     _source.Schema.Extent.MaxX, 
                     _source.Schema.Extent.MaxY);
             }
+        }
+
+        /// <summary>
+        /// The algorithm used when images are scaled or rotated 
+        /// </summary>
+        public InterpolationMode InterpolationMode
+        {
+            get { return _interpolationMode; }
+            set { _interpolationMode = value; }
         }
 
         #endregion
@@ -84,6 +94,12 @@ namespace SharpMap.Layers
 
         public override void Render(Graphics graphics, Map map)
         {
+            Bitmap bmp = new Bitmap(map.Size.Width, map.Size.Height, PixelFormat.Format32bppArgb);
+            Graphics g = Graphics.FromImage(bmp);
+
+            g.InterpolationMode = InterpolationMode;
+            g.Transform = graphics.Transform.Clone();
+
             Extent extent = new Extent(map.Envelope.Min.X, map.Envelope.Min.Y, map.Envelope.Max.X, map.Envelope.Max.Y);
             int level = BruTile.Utilities.GetNearestLevel(_source.Schema.Resolutions, map.PixelSize);
             IList<TileInfo> tiles = _source.Schema.GetTilesInView(extent, level);
@@ -101,9 +117,6 @@ namespace SharpMap.Layers
             foreach (WaitHandle handle in waitHandles)
                 handle.WaitOne();
 
-            //Matrix mapTransform = map.MapTransform;
-            //map.MapTransform = new Matrix();
-
             foreach (TileInfo info in tiles)
             {
                 Bitmap bitmap = _bitmaps.Find(info.Index);
@@ -115,16 +128,19 @@ namespace SharpMap.Layers
                 min = new PointF((float)Math.Round(min.X), (float)Math.Round(min.Y));
                 max = new PointF((float)Math.Round(max.X), (float)Math.Round(max.Y));
 
-                graphics.DrawImage(bitmap,
+                g.DrawImage(bitmap,
                     new Rectangle((int)min.X, (int)max.Y, (int)(max.X - min.X), (int)(min.Y - max.Y)),
                     0, 0, _source.Schema.Width, _source.Schema.Height,
                     GraphicsUnit.Pixel,
                     _imageAttributes);
 
-                //graphics.DrawRectangle(Pens.Black, (int)min.X, (int)max.Y, (int)(max.X - min.X), (int)(min.Y - max.Y));
             }
 
-            //map.MapTransform = mapTransform;
+            graphics.Transform = new Matrix();
+            graphics.DrawImageUnscaled(bmp, 0, 0);
+            graphics.Transform = g.Transform;
+
+            g.Dispose();
         }
 
         #endregion

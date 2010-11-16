@@ -19,7 +19,11 @@ using System;
 using System.Collections.ObjectModel;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+#if !DotSpatialProjections
 using ProjNet.CoordinateSystems.Transformations;
+#else
+using DotSpatial.Projections;
+#endif
 using SharpMap.Data;
 using SharpMap.Data.Providers;
 using SharpMap.Geometries;
@@ -109,15 +113,6 @@ namespace SharpMap.Layers
         }
 
         /// <summary>
-        /// Whether the layer is queryable when used in a SharpMap.Web.Wms.WmsServer, ExecuteIntersectionQuery() will be possible in all other situations when set to FALSE
-        /// </summary>
-        public bool IsQueryEnabled 
-        {
-            get { return _isQueryEnabled; }
-            set {_isQueryEnabled = value; } 
-        }
-
-        /// <summary>
         /// Render whether smoothing (antialiasing) is applied to lines and curves and the edges of filled areas
         /// </summary>
         public SmoothingMode SmoothingMode
@@ -162,7 +157,11 @@ namespace SharpMap.Layers
                 if (!wasOpen) //Restore state
                     DataSource.Close();
                 if (CoordinateTransformation != null)
+#if !DotSpatialProjections
                     return GeometryTransform.TransformBox(box, CoordinateTransformation.MathTransform);
+#else
+                    return GeometryTransform.TransformBox(box, CoordinateTransformation.Source, CoordinateTransformation.Target);
+#endif
                 return box;
             }
         }
@@ -209,9 +208,13 @@ namespace SharpMap.Layers
             BoundingBox envelope = map.Envelope; //View to render
             if (CoordinateTransformation != null)
             {
+#if !DotSpatialProjections
                 CoordinateTransformation.MathTransform.Invert();
                 envelope = GeometryTransform.TransformBox(envelope, CoordinateTransformation.MathTransform);
                 CoordinateTransformation.MathTransform.Invert();
+#else
+                envelope = GeometryTransform.TransformBox(envelope, CoordinateTransformation.Target, CoordinateTransformation.Source);
+#endif
             }
 
             //List<SharpMap.Geometries.Geometry> features = this.DataSource.GetGeometriesInView(map.Envelope);
@@ -231,9 +234,16 @@ namespace SharpMap.Layers
 
                 if (CoordinateTransformation != null)
                     for (int i = 0; i < features.Count; i++)
+#if !DotSpatialProjections
                         features[i].Geometry = GeometryTransform.TransformGeometry(features[i].Geometry,
                                                                                    CoordinateTransformation.
                                                                                        MathTransform);
+#else
+                        features[i].Geometry = GeometryTransform.TransformGeometry(features[i].Geometry,
+                                                                                   CoordinateTransformation.Source,
+                                                                                   CoordinateTransformation.Target);
+
+#endif
 
                 //Linestring outlines is drawn by drawing the layer once with a thicker line
                 //before drawing the "inline" on top.
@@ -284,7 +294,11 @@ namespace SharpMap.Layers
 
                 if (CoordinateTransformation != null)
                     for (int i = 0; i < geoms.Count; i++)
+#if !DotSpatialProjections
                         geoms[i] = GeometryTransform.TransformGeometry(geoms[i], CoordinateTransformation.MathTransform);
+#else
+                        geoms[i] = GeometryTransform.TransformGeometry(geoms[i], CoordinateTransformation.Source, CoordinateTransformation.Target);
+#endif
 
                 //Linestring outlines is drawn by drawing the layer once with a thicker line
                 //before drawing the "inline" on top.
@@ -379,15 +393,52 @@ namespace SharpMap.Layers
         {
             if (CoordinateTransformation != null)
             {
+#if !DotSpatialProjections
                 CoordinateTransformation.MathTransform.Invert();
                 box = GeometryTransform.TransformBox(box, CoordinateTransformation.MathTransform);
                 CoordinateTransformation.MathTransform.Invert();
+#else
+                box = GeometryTransform.TransformBox(box, CoordinateTransformation.Target, CoordinateTransformation.Source);
+#endif
             }
             
             
             _dataSource.Open();
             _dataSource.ExecuteIntersectionQuery(box, ds);
             _dataSource.Close();
+        }
+
+        /// <summary>
+        /// Returns the data associated with all the geometries that are intersected by 'geom'
+        /// </summary>
+        /// <param name="geometry">Geometry to intersect with</param>
+        /// <param name="ds">FeatureDataSet to fill data into</param>
+        public void ExecuteIntersectionQuery(Geometry geometry, FeatureDataSet ds)
+        {
+            if (CoordinateTransformation != null)
+            {
+#if !DotSpatialProjections
+                CoordinateTransformation.MathTransform.Invert();
+                geometry = GeometryTransform.TransformGeometry(geometry, CoordinateTransformation.MathTransform);
+                CoordinateTransformation.MathTransform.Invert();
+#else
+                geometry = GeometryTransform.TransformGeometry(geometry, CoordinateTransformation.Target, CoordinateTransformation.Source);
+#endif
+            }
+
+
+            _dataSource.Open();
+            _dataSource.ExecuteIntersectionQuery(geometry, ds);
+            _dataSource.Close();
+        }
+
+        /// <summary>
+        /// Whether the layer is queryable when used in a SharpMap.Web.Wms.WmsServer, ExecuteIntersectionQuery() will be possible in all other situations when set to FALSE
+        /// </summary>
+        public bool IsQueryEnabled
+        {
+            get { return _isQueryEnabled; }
+            set { _isQueryEnabled = value; }
         }
 
         #endregion

@@ -17,10 +17,13 @@
  * 
  */
 
-using System;
 using System.Collections.Generic;
 using System.Drawing;
+#if !DotSpatialProjections
 using ProjNet.CoordinateSystems.Transformations;
+#else
+using DotSpatial.Projections;
+#endif
 using SharpMap.Geometries;
 using Point = System.Drawing.Point;
 

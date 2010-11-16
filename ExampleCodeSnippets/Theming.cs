@@ -1,3 +1,6 @@
+using System.Data;
+using SharpMap.Data.Providers;
+
 namespace ExampleCodeSnippets
 {
     public class SymbolRotationTheming
@@ -285,4 +288,22 @@ namespace ExampleCodeSnippets
         }
     }
 
+    public class TestExternalData
+    {
+        public void DoTest()
+        {
+            SharpMap.Data.Providers.ShapeFile sf = new SharpMap.Data.Providers.ShapeFile("cities.shp");
+            SharpMap.Data.FeatureDataSet fds = new SharpMap.Data.FeatureDataSet();
+            sf.ExecuteIntersectionQuery(sf.GetExtents(), fds);
+            SharpMap.Data.Providers.GeometryFeatureProvider gfp =
+                new SharpMap.Data.Providers.GeometryFeatureProvider(fds.Tables[0]);
+
+            System.Data.DataTable dt = new System.Data.DataTable("external");
+            dt.Columns.Add("city", typeof (string));
+            dt.Columns.Add("males", typeof (int));
+            dt.Columns.Add("females", typeof (int));
+
+
+        }
+    }
 }

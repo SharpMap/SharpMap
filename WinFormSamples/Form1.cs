@@ -94,6 +94,11 @@ namespace WinFormSamples
             dataGridView1.DataSource = data as System.Data.DataTable;
         }
 
+        private void mapImage_MapQueriedDataSet(SharpMap.Data.FeatureDataSet data)
+        {
+            dataGridView1.DataSource = data as System.Data.DataSet;
+        }
+
         private void UpdatePropertyGrid()
         {
             pgMap.Update();
@@ -131,9 +136,25 @@ namespace WinFormSamples
         private void tbAngle_Scroll(object sender, EventArgs e)
         {
             System.Drawing.Drawing2D.Matrix matrix = new Matrix(); 
-            matrix.RotateAt(tbAngle.Value, new PointF(mapImage.Width * 0.5f, mapImage.Height*0.5f));
+            if (tbAngle.Value != 0f)
+                matrix.RotateAt(tbAngle.Value, new PointF(mapImage.Width * 0.5f, mapImage.Height*0.5f));
+
             mapImage.Map.MapTransform = matrix;
+            AdjustRotation(mapImage.Map.Layers, tbAngle.Value);
+            AdjustRotation(mapImage.Map.VariableLayers, tbAngle.Value);
+
             mapImage.Refresh();
+        }
+
+        private void AdjustRotation(LayerCollection lc, float angle)
+        {
+            foreach (ILayer layer in lc)
+            {
+                if (layer is VectorLayer)
+                    ((VectorLayer) layer).Style.SymbolRotation = -angle;
+                else if (layer is LabelLayer)
+                    ((LabelLayer)layer).Style.Rotation = -angle;
+            }
         }
 
     }

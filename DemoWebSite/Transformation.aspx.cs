@@ -6,12 +6,14 @@ using System.Web.UI;
 using SharpMap;
 using ProjNet.CoordinateSystems;
 using ProjNet.CoordinateSystems.Transformations;
+using DotSpatial.Projections;
 using SharpMap.Data.Providers;
 using SharpMap.Geometries;
 using SharpMap.Layers;
 using SharpMap.Web;
 using Point=SharpMap.Geometries.Point;
 
+#if !DotSpatialProjections
 public partial class Transformation : Page
 {
     private ICoordinateSystem datacoordsys;
@@ -82,7 +84,7 @@ public partial class Transformation : Page
         if (PreviousProj != "Pseudo")
         {
             //Transform current view back to geographic coordinates
-            ICoordinateTransformation trans = GetTransform(PreviousProj);
+            ProjNet.CoordinateSystems.Transformations.ICoordinateTransformation trans = GetTransform(PreviousProj);
             left = GeometryTransform.TransformPoint(new Point(myMap.Envelope.Left, myMap.Center.Y),
                                                     trans.MathTransform.Inverse());
             right = GeometryTransform.TransformPoint(new Point(myMap.Envelope.Right, myMap.Center.Y),
@@ -99,7 +101,7 @@ public partial class Transformation : Page
         else //Project coordinates to new projection
         {
             //Transform back to geographic and over to new projection
-            ICoordinateTransformation trans = GetTransform(SelectedProj);
+            ProjNet.CoordinateSystems.Transformations.ICoordinateTransformation trans = GetTransform(SelectedProj);
             left = GeometryTransform.TransformPoint(left, trans.MathTransform);
             right = GeometryTransform.TransformPoint(right, trans.MathTransform);
             center = GeometryTransform.TransformPoint(center, trans.MathTransform);
@@ -139,6 +141,7 @@ public partial class Transformation : Page
         }
         else
         {
+            
             litInputCoordsys.Text = datasource.CoordinateSystem.WKT;
             litCoordsys.Text = "None";
             litTransform.Text = "None";
@@ -159,7 +162,7 @@ public partial class Transformation : Page
         return map;
     }
 
-    public ICoordinateTransformation GetTransform(string name)
+    public ProjNet.CoordinateSystems.Transformations.ICoordinateTransformation GetTransform(string name)
     {
         switch (name)
         {
@@ -174,7 +177,7 @@ public partial class Transformation : Page
         }
     }
 
-    public static ICoordinateTransformation Transform2Albers(ICoordinateSystem source)
+    public static ProjNet.CoordinateSystems.Transformations.ICoordinateTransformation Transform2Albers(ProjNet.CoordinateSystems.ICoordinateSystem source)
     {
         if (source == null)
             throw new ArgumentException("Source coordinate system is null");
@@ -194,7 +197,7 @@ public partial class Transformation : Page
 
         IProjectedCoordinateSystem coordsys = cFac.CreateProjectedCoordinateSystem("Albers_Conic_Equal_Area",
                                                                                    source as IGeographicCoordinateSystem,
-                                                                                   projection, LinearUnit.Metre,
+                                                                                   projection, ProjNet.CoordinateSystems.LinearUnit.Metre,
                                                                                    new AxisInfo("East",
                                                                                                 AxisOrientationEnum.East),
                                                                                    new AxisInfo("North",
@@ -204,7 +207,7 @@ public partial class Transformation : Page
         return new CoordinateTransformationFactory().CreateFromCoordinateSystems(source, coordsys);
     }
 
-    public static ICoordinateTransformation Transform2Mercator(ICoordinateSystem source)
+    public static ProjNet.CoordinateSystems.Transformations.ICoordinateTransformation Transform2Mercator(ICoordinateSystem source)
     {
         CoordinateSystemFactory cFac = new CoordinateSystemFactory();
 
@@ -217,7 +220,7 @@ public partial class Transformation : Page
 
         IProjectedCoordinateSystem coordsys = cFac.CreateProjectedCoordinateSystem("Mercator",
                                                                                    source as IGeographicCoordinateSystem,
-                                                                                   projection, LinearUnit.Metre,
+                                                                                   projection, ProjNet.CoordinateSystems.LinearUnit.Metre,
                                                                                    new AxisInfo("East",
                                                                                                 AxisOrientationEnum.East),
                                                                                    new AxisInfo("North",
@@ -228,7 +231,7 @@ public partial class Transformation : Page
     }
 
 
-    public static ICoordinateTransformation Transform2Lambert(ICoordinateSystem source)
+    public static ProjNet.CoordinateSystems.Transformations.ICoordinateTransformation Transform2Lambert(ICoordinateSystem source)
     {
         if (source == null)
             throw new ArgumentException("Source coordinate system is null");
@@ -249,7 +252,7 @@ public partial class Transformation : Page
 
         IProjectedCoordinateSystem coordsys = cFac.CreateProjectedCoordinateSystem("Lambert Conformal Conic 2SP",
                                                                                    source as IGeographicCoordinateSystem,
-                                                                                   projection, LinearUnit.Metre,
+                                                                                   projection, ProjNet.CoordinateSystems.LinearUnit.Metre,
                                                                                    new AxisInfo("East",
                                                                                                 AxisOrientationEnum.East),
                                                                                    new AxisInfo("North",
@@ -259,3 +262,4 @@ public partial class Transformation : Page
         return new CoordinateTransformationFactory().CreateFromCoordinateSystems(source, coordsys);
     }
 }
+#endif

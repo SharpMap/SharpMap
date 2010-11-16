@@ -272,7 +272,8 @@
         this.mapImage.MapRefreshed += new System.EventHandler(this.mapImage_MapRefreshed);
         this.mapImage.MapZoomChanged += new SharpMap.Forms.MapImage.MapZoomHandler(this.mapImage_MapZoomChanged);
         this.mapImage.MapZooming += new SharpMap.Forms.MapImage.MapZoomHandler(this.mapImage_MapZooming);
-        this.mapImage.MapQueried += new SharpMap.Forms.MapImage.MapQueryHandler(this.mapImage_MapQueried);
+        //this.mapImage.MapQueried += new SharpMap.Forms.MapImage.MapQueryHandler(this.mapImage_MapQueried);
+        this.mapImage.MapQueriedDataSet += new SharpMap.Forms.MapImage.MapQueryDataSetHandler(this.mapImage_MapQueriedDataSet);
         this.mapImage.MapCenterChanged += new SharpMap.Forms.MapImage.MapCenterChangedHandler(this.mapImage_MapCenterChanged);
         this.mapImage.ActiveToolChanged += new SharpMap.Forms.MapImage.ActiveToolChangedHandler(this.mapImage_ActiveToolChanged);
         this.mapImage.SizeChanged += new System.EventHandler(this.mapImage_SizeChanged);

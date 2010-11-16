@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.Timers;
 using SharpMap;
 using SharpMap.Data;
 using SharpMap.Data.Providers;
@@ -304,6 +305,14 @@ namespace WinFormSamples.Samples
             map.Layers.Add(layRoads);
             map.Layers.Add(layPoints);
 
+            ShapeProvider sp = new ShapeProvider(string.Format("{0}/obepath.shp", PathOsm));
+            VectorLayer vl = new VectorLayer("obepath", sp);
+            vl.SRID = 31466;
+            vl.Style.Symbol = new Bitmap("Images/car.gif");
+
+            map.VariableLayers.Interval = 500;
+            map.VariableLayers.Add(vl);
+
             //Restrict zoom
             map.MaximumZoom = layRoads.Envelope.Width * 0.75d;
             map.Zoom = layRoads.Envelope.Width * 0.2d; ;
@@ -320,5 +329,41 @@ namespace WinFormSamples.Samples
 
             return map;
         }
+
+        private class ShapeProvider : SharpMap.Data.Providers.ShapeFile
+        {
+            private System.Timers.Timer _timer = new Timer(500);
+            private int _id;
+            private int _modValue;
+            public ShapeProvider(string file)
+                :this(file, true)
+            {
+            }
+
+            public ShapeProvider(string file, bool fbi)
+                :base(file, fbi)
+            {
+                FilterDelegate = Filter;
+                Open();
+                _modValue = GetFeatureCount();
+                _timer.Elapsed += new ElapsedEventHandler(TimerElapsed);
+                _timer.Start();
+
+            }
+
+            void TimerElapsed(object sender, ElapsedEventArgs e)
+            {
+                _id++;
+                if (_id == _modValue) _id = 0;
+            }
+
+            bool Filter(FeatureDataRow fdr)
+            {
+                return Convert.ToInt32(fdr[0]) == _id;
+            }
+
+        }
     }
+
+
 }

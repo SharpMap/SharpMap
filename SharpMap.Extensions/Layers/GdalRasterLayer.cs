@@ -23,8 +23,12 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using OSGeo.GDAL;
+#if !DotSpatialProjections
 using ProjNet.CoordinateSystems;
 using ProjNet.CoordinateSystems.Transformations;
+#else
+using DotSpatial.Projections;
+#endif
 using SharpMap.Data;
 using SharpMap.Extensions.Data;
 using SharpMap.Geometries;
@@ -443,6 +447,7 @@ namespace SharpMap.Layers
             base.Render(g, map);
         }
 
+#if !DotSpatialProjections
         // get raster projection
         public ICoordinateSystem GetProjection()
         {
@@ -459,6 +464,20 @@ namespace SharpMap.Layers
 
             return null;
         }
+#else
+        // get raster projection
+        public ProjectionInfo GetProjection()
+        {
+            if (!String.IsNullOrEmpty(_projectionWkt))
+            {
+                ProjectionInfo p = new ProjectionInfo();
+                p.ReadEsriString(_projectionWkt);
+                return p;
+            }
+            return null;
+        }
+
+#endif
 
         // zoom to native resolution
         public double GetOneToOne(Map map)
@@ -572,6 +591,7 @@ namespace SharpMap.Layers
                                          (int)_envelope.Height);
         }
 
+#if !DotSpatialProjections
         // gets transform between raster's native projection and the map projection
         private void GetTransform(ICoordinateSystem mapProjection)
         {
@@ -597,7 +617,33 @@ namespace SharpMap.Layers
             // create transform
             _transform = new CoordinateTransformationFactory().CreateFromCoordinateSystems(srcCoord, tgtCoord);
         }
+#else
+        // gets transform between raster's native projection and the map projection
+        private void GetTransform(ProjectionInfo mapProjection)
+        {
+            if (mapProjection == null || _projectionWkt == "")
+            {
+                _transform = null;
+                return;
+            }
 
+            // get our two projections
+            ProjectionInfo srcCoord = new ProjectionInfo();
+            srcCoord.ReadEsriString(_projectionWkt);
+            ProjectionInfo tgtCoord = mapProjection;
+
+            // raster and map are in same projection, no need to transform
+            if (srcCoord.Matches(tgtCoord))
+            {
+                _transform = null;
+                return;
+            }
+
+            // create transform
+            _transform = new CoordinateTransformation {Source = srcCoord, Target = tgtCoord};
+        }
+            
+#endif
         // get boundary of raster
         private BoundingBox GetExtent()
         {
@@ -661,7 +707,12 @@ namespace SharpMap.Layers
                 {
                     for (int i = 0; i < 4; i++)
                     {
+#if !DotSpatialProjections
                         dblPoint = _transform.MathTransform.Transform(new[] { points[i].X, points[i].Y });
+#else
+                        dblPoint = points[i].ToDoubleArray();
+                        Reproject.ReprojectPoints(dblPoint, null, _transform.Source, _transform.Target, 0, 1);
+#endif
                         points[i] = new Geometries.Point(dblPoint[0], dblPoint[1]);
                     }
                 }
@@ -688,8 +739,11 @@ namespace SharpMap.Layers
                 return;
 
             // set envelope
+#if !DotSpatialProjections
             _envelope = GeometryTransform.TransformBox(_envelope, _transform.MathTransform);
-
+#else
+            _envelope = GeometryTransform.TransformBox(_envelope, _transform.Source, _transform.Target);
+#endif
             // do same to histo rectangle
             leftBottom = new double[] { _histoBounds.Left, _histoBounds.Bottom };
             leftTop = new double[] { _histoBounds.Left, _histoBounds.Top };
@@ -697,11 +751,17 @@ namespace SharpMap.Layers
             rightTop = new double[] { _histoBounds.Right, _histoBounds.Top };
 
             // transform corners into new projection
+#if !DotSpatialProjections
             leftBottom = _transform.MathTransform.Transform(leftBottom);
             leftTop = _transform.MathTransform.Transform(leftTop);
             rightBottom = _transform.MathTransform.Transform(rightBottom);
             rightTop = _transform.MathTransform.Transform(rightTop);
-
+#else
+            Reproject.ReprojectPoints(leftBottom, null, _transform.Source, _transform.Target, 0, 1);
+            Reproject.ReprojectPoints(leftTop, null, _transform.Source, _transform.Target, 0, 1);
+            Reproject.ReprojectPoints(rightBottom, null, _transform.Source, _transform.Target, 0, 1);
+            Reproject.ReprojectPoints(rightTop, null, _transform.Source, _transform.Target, 0, 1);
+#endif
             // find extents
             left = Math.Min(leftBottom[0], Math.Min(leftTop[0], Math.Min(rightBottom[0], rightTop[0])));
             right = Math.Max(leftBottom[0], Math.Max(leftTop[0], Math.Max(rightBottom[0], rightTop[0])));
@@ -720,8 +780,14 @@ namespace SharpMap.Layers
         }
 
         // add image pixels to the map
+        
+#if !DotSpatialProjections
         protected virtual void GetPreview(Dataset dataset, Size size, Graphics g,
                                           BoundingBox displayBbox, ICoordinateSystem mapProjection, Map map)
+#else
+        protected virtual void GetPreview(Dataset dataset, Size size, Graphics g,
+                                          BoundingBox displayBbox, ProjectionInfo mapProjection, Map map)
+#endif
         {
             double[] geoTrans = new double[6];
             _gdalDataset.GetGeoTransform(geoTrans);
@@ -778,9 +844,13 @@ namespace SharpMap.Layers
                 // put display bounds into current projection
                 if (_transform != null)
                 {
+#if !DotSpatialProjections
                     _transform.MathTransform.Invert();
                     shownImageBbox = GeometryTransform.TransformBox(trueImageBbox, _transform.MathTransform);
                     _transform.MathTransform.Invert();
+#else
+                    shownImageBbox = GeometryTransform.TransformBox(trueImageBbox, _transform.Source, _transform.Target);
+#endif
                 }
                 else
                     shownImageBbox = trueImageBbox;
@@ -1002,9 +1072,11 @@ namespace SharpMap.Layers
                         // get inverse transform  
                         // NOTE: calling transform.MathTransform.Inverse() once and storing it
                         // is much faster than having to call every time it is needed
+#if !DotSpatialProjections
                         IMathTransform inverseTransform = null;
                         if (_transform != null)
                             inverseTransform = _transform.MathTransform.Inverse();
+#endif
 
                         for (PixY = 0; PixY < bitmapBR.Y - bitmapTL.Y; PixY++)
                         {
@@ -1019,7 +1091,12 @@ namespace SharpMap.Layers
                                 // transform ground point if needed
                                 if (_transform != null)
                                 {
+#if !DotSpatialProjections
                                     dblPoint = inverseTransform.Transform(new[] { GndX, GndY });
+#else
+                                    dblPoint = new double[] { GndX, GndY };
+                                    Reproject.ReprojectPoints(dblPoint, null, _transform.Source, _transform.Target, 0, 1);
+#endif
                                     GndX = dblPoint[0];
                                     GndY = dblPoint[1];
                                 }
@@ -1119,8 +1196,13 @@ namespace SharpMap.Layers
         }
 
         // faster than rotated display
+#if !DotSpatialProjections
         private void GetNonRotatedPreview(Dataset dataset, Size size, Graphics g,
                                           BoundingBox bbox, ICoordinateSystem mapProjection)
+#else
+        private void GetNonRotatedPreview(Dataset dataset, Size size, Graphics g,
+                                          BoundingBox bbox, ProjectionInfo mapProjection)
+#endif
         {
             double[] geoTrans = new double[6];
             dataset.GetGeoTransform(geoTrans);
@@ -1837,9 +1919,9 @@ namespace SharpMap.Layers
         #region Implementation of ICanQueryLayer
 
         /// <summary>
-        /// Returns the data associated with all the geometries that are intersected by 'geom'
+        /// Returns the data associated with the centroid of the bounding box.
         /// </summary>
-        /// <param name="box">Geometry to intersect with</param>
+        /// <param name="box">BoundingBox to intersect with</param>
         /// <param name="ds">FeatureDataSet to fill data into</param>
         public void ExecuteIntersectionQuery(BoundingBox box, FeatureDataSet ds)
         {
@@ -1854,9 +1936,13 @@ namespace SharpMap.Layers
 
             if (CoordinateTransformation != null)
             {
+#if !DotSpatialProjections
                 CoordinateTransformation.MathTransform.Invert();
                 pt = GeometryTransform.TransformPoint(pt, CoordinateTransformation.MathTransform);
                 CoordinateTransformation.MathTransform.Invert();
+#else
+                pt = GeometryTransform.TransformPoint(pt, CoordinateTransformation.Target, CoordinateTransformation.Source);
+#endif
             }
             
             //Setup resulting Table
@@ -1906,6 +1992,16 @@ namespace SharpMap.Layers
 
             //Add table to dataset
             ds.Tables.Add(dt);
+        }
+
+        /// <summary>
+        /// Returns the data associated with all the geometries that are intersected by 'geom'
+        /// </summary>
+        /// <param name="geometry">Geometry to intersect with</param>
+        /// <param name="ds">FeatureDataSet to fill data into</param>
+        public void ExecuteIntersectionQuery(Geometry geometry, FeatureDataSet ds)
+        {
+            ExecuteIntersectionQuery(geometry.GetBoundingBox(), ds);
         }
 
         private bool _isQueryEnabled = true;

@@ -48,6 +48,7 @@ namespace SharpMap.Data.Providers
         private BinaryReader br;
         private bool HeaderIsParsed;
 
+
         public DbaseReader(string filename)
         {
             if (!File.Exists(filename))
@@ -460,15 +461,15 @@ namespace SharpMap.Data.Providers
         /// <summary>
         /// Gets the feature at the specified Object ID
         /// </summary>
-        /// <param name="oid"></param>
-        /// <param name="table"></param>
+        /// <param name="oid">the object Id</param>
+        /// <param name="table">the table to add the feature to</param>
         /// <returns></returns>
         internal FeatureDataRow GetFeature(uint oid, FeatureDataTable table)
         {
             if (!_isOpen)
                 throw (new ApplicationException("An attempt was made to read from a closed DBF file"));
             if (oid >= _NumberOfRecords)
-                throw (new ArgumentException("Invalid DataRow requested at index " + oid.ToString()));
+                throw (new ArgumentException("Invalid DataRow requested at index " + oid));
             fs.Seek(_HeaderLength + oid*_RecordLength, 0);
 
             FeatureDataRow dr = table.NewRow();
@@ -482,6 +483,7 @@ namespace SharpMap.Data.Providers
                 dr[dbf.ColumnName] = ReadDbfValue(dbf);
             }
             return dr;
+
         }
 
         private object ReadDbfValue(DbaseField dbf)
@@ -491,43 +493,37 @@ namespace SharpMap.Data.Providers
                 case "System.String":
                     if (_Encoding == null)
                         return _FileEncoding.GetString(br.ReadBytes(dbf.Length)).Replace("\0", "").Trim();
-                    else
-                        return _Encoding.GetString(br.ReadBytes(dbf.Length)).Replace("\0", "").Trim();
+                    return _Encoding.GetString(br.ReadBytes(dbf.Length)).Replace("\0", "").Trim();
                 case "System.Double":
                     string temp = Encoding.UTF7.GetString(br.ReadBytes(dbf.Length)).Replace("\0", "").Trim();
                     double dbl = 0;
                     if (double.TryParse(temp, NumberStyles.Float, Map.NumberFormatEnUs, out dbl))
                         return dbl;
-                    else
-                        return DBNull.Value;
+                    return DBNull.Value;
                 case "System.Int16":
                     string temp16 = Encoding.UTF7.GetString((br.ReadBytes(dbf.Length))).Replace("\0", "").Trim();
                     Int16 i16 = 0;
                     if (Int16.TryParse(temp16, NumberStyles.Float, Map.NumberFormatEnUs, out i16))
                         return i16;
-                    else
-                        return DBNull.Value;
+                    return DBNull.Value;
                 case "System.Int32":
                     string temp32 = Encoding.UTF7.GetString((br.ReadBytes(dbf.Length))).Replace("\0", "").Trim();
                     Int32 i32 = 0;
                     if (Int32.TryParse(temp32, NumberStyles.Float, Map.NumberFormatEnUs, out i32))
                         return i32;
-                    else
-                        return DBNull.Value;
+                    return DBNull.Value;
                 case "System.Int64":
                     string temp64 = Encoding.UTF7.GetString((br.ReadBytes(dbf.Length))).Replace("\0", "").Trim();
                     Int64 i64 = 0;
                     if (Int64.TryParse(temp64, NumberStyles.Float, Map.NumberFormatEnUs, out i64))
                         return i64;
-                    else
-                        return DBNull.Value;
+                    return DBNull.Value;
                 case "System.Single":
                     string temp4 = Encoding.UTF8.GetString((br.ReadBytes(dbf.Length)));
                     float f = 0;
                     if (float.TryParse(temp4, NumberStyles.Float, Map.NumberFormatEnUs, out f))
                         return f;
-                    else
-                        return DBNull.Value;
+                    return DBNull.Value;
                 case "System.Boolean":
                     char tempChar = br.ReadChar();
                     return ((tempChar == 'T') || (tempChar == 't') || (tempChar == 'Y') || (tempChar == 'y'));
@@ -538,8 +534,7 @@ namespace SharpMap.Data.Providers
                     if (DateTime.TryParseExact(Encoding.UTF7.GetString((br.ReadBytes(8))),
                                                "yyyyMMdd", Map.NumberFormatEnUs, DateTimeStyles.None, out date))
                         return date;
-                    else
-                        return DBNull.Value;
+                    return DBNull.Value;
 #else
 					try 
 					{

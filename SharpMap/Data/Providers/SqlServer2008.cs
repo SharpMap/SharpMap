@@ -4,26 +4,28 @@
 //   
 // Date 2007-11-28   
 //   
-// This file is part of SharpMap.   
-// SharpMap is free software; you can redistribute it and/or modify   
+// This file is part of    
+// is free software; you can redistribute it and/or modify   
 // it under the terms of the GNU Lesser General Public License as published by   
 // the Free Software Foundation; either version 2 of the License, or   
 // (at your option) any later version.   
 //   
-// SharpMap is distributed in the hope that it will be useful,   
+// is distributed in the hope that it will be useful,   
 // but WITHOUT ANY WARRANTY; without even the implied warranty of   
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the   
 // GNU Lesser General Public License for more details.   
   
 // You should have received a copy of the GNU Lesser General Public License   
-// along with SharpMap; if not, write to the Free Software   
+// along with  if not, write to the Free Software   
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA    
   
 using System;   
 using System.Collections.Generic;   
 using System.Collections.ObjectModel;   
 using System.Text;   
-using System.Data.SqlClient;   
+using System.Data.SqlClient;
+using SharpMap.Geometries;
+
   
 namespace SharpMap.Data.Providers   
 {   
@@ -35,51 +37,51 @@ namespace SharpMap.Data.Providers
     /// <example>   
     /// Adding a datasource to a layer:   
     /// <code lang="C#">   
-    /// SharpMap.Layers.VectorLayer myLayer = new SharpMap.Layers.VectorLayer("My layer");   
+    /// Layers.VectorLayer myLayer = new Layers.VectorLayer("My layer");   
     /// string ConnStr = "Provider=SQLOLEDB.1;Integrated Security=SSPI;Persist Security Info=False;Initial Catalog=myDB;Data Source=myServer\myInstance";   
-    /// myLayer.DataSource = new SharpMap.Data.Providers.Katmai(ConnStr, "myTable", "GeomColumn", "OidColumn");   
+    /// myLayer.DataSource = new Data.Providers.Katmai(ConnStr, "myTable", "GeomColumn", "OidColumn");   
     /// </code>   
     /// </example>   
-    /// <para>SharpMap SQL Server 2008 provider by Bill Dollins (dollins.bill@gmail.com). Based on the Oracle provider written by Humberto Ferreira.</para>   
+    /// <para>SQL Server 2008 provider by Bill Dollins (dollins.bill@gmail.com). Based on the Oracle provider written by Humberto Ferreira.</para>   
     /// </remarks>   
     [Serializable]   
-    public class SqlServer2008 : SharpMap.Data.Providers.IProvider, IDisposable   
+    public class SqlServer2008 : IProvider   
     {   
         /// <summary>   
         /// Initializes a new connection to SQL Server   
         /// </summary>   
-        /// <param name="ConnectionStr">Connectionstring</param>   
+        /// <param name="connectionStr">Connectionstring</param>   
         /// <param name="tablename">Name of data table</param>   
         /// <param name="geometryColumnName">Name of geometry column</param>   
-        /// /// <param name="OID_ColumnName">Name of column with unique identifier</param>   
-        public SqlServer2008(string ConnectionStr, string tablename, string geometryColumnName, string OID_ColumnName)   
+        /// /// <param name="oidColumnName">Name of column with unique identifier</param>   
+        public SqlServer2008(string connectionStr, string tablename, string geometryColumnName, string oidColumnName)   
         {   
             //Provider=SQLOLEDB.1;Integrated Security=SSPI;Persist Security Info=False;Initial Catalog=ztTest;Data Source=<server>\<instance>   
-            this.ConnectionString = ConnectionStr;   
-            this.Table = tablename;   
-            this.GeometryColumn = geometryColumnName;   
-            this.ObjectIdColumn = OID_ColumnName;   
+            ConnectionString = connectionStr;   
+            Table = tablename;   
+            GeometryColumn = geometryColumnName;   
+            ObjectIdColumn = oidColumnName;   
         }   
   
         /// <summary>   
         /// Initializes a new connection to SQL Server   
         /// </summary>   
-        /// <param name="ConnectionStr">Connectionstring</param>   
+        /// <param name="connectionStr">Connectionstring</param>   
         /// <param name="tablename">Name of data table</param>   
-        /// <param name="OID_ColumnName">Name of column with unique identifier</param>   
-        public SqlServer2008(string ConnectionStr, string tablename, string OID_ColumnName) : this(ConnectionStr,tablename,"",OID_ColumnName)   
+        /// <param name="oidColumnName">Name of column with unique identifier</param>   
+        public SqlServer2008(string connectionStr, string tablename, string oidColumnName)
+            : this(connectionStr,tablename,"shape",oidColumnName)   
         {   
-            this.GeometryColumn = "shape";   
         }   
   
-        private bool _IsOpen;   
+        private bool _isOpen;   
   
         /// <summary>   
         /// Returns true if the datasource is currently open   
         /// </summary>   
         public bool IsOpen   
         {   
-            get { return _IsOpen; }   
+            get { return _isOpen; }   
         }   
   
         /// <summary>   
@@ -88,7 +90,7 @@ namespace SharpMap.Data.Providers
         public void Open()   
         {   
             //Don't really do anything.   
-            _IsOpen = true;   
+            _isOpen = true;   
         }   
         /// <summary>   
         /// Closes the datasource   
@@ -96,7 +98,7 @@ namespace SharpMap.Data.Providers
         public void Close()   
         {   
             //Don't really do anything.   
-           _IsOpen = false;   
+           _isOpen = false;   
        }  
 
        #region Disposers and finalizers   
@@ -132,68 +134,78 @@ namespace SharpMap.Data.Providers
        }  
        #endregion   
  
-       private string _ConnectionString;   
+       private string _connectionString;   
  
        /// <summary>   
        /// Connectionstring   
        /// </summary>   
        public string ConnectionString   
        {   
-           get { return _ConnectionString; }   
-           set { _ConnectionString = value; }   
+           get { return _connectionString; }   
+           set { _connectionString = value; }   
        }   
  
-       private string _Table;   
+       private string _table;   
  
        /// <summary>   
        /// Data table name   
        /// </summary>   
        public string Table   
        {   
-           get { return _Table; }   
-           set { _Table = value; }   
+           get { return _table; }   
+           set { _table = value; }   
        }   
  
-       private string _GeometryColumn;   
+       private string _geometryColumn;   
  
        /// <summary>   
        /// Name of geometry column   
        /// </summary>   
        public string GeometryColumn   
        {   
-           get { return _GeometryColumn; }   
-           set { _GeometryColumn = value; }   
+           get { return _geometryColumn; }   
+           set { _geometryColumn = value; }   
        }   
  
-       private string _ObjectIdColumn;   
+       private string _objectIdColumn;   
  
        /// <summary>   
        /// Name of column that contains the Object ID   
        /// </summary>   
        public string ObjectIdColumn   
        {   
-           get { return _ObjectIdColumn; }   
-           set { _ObjectIdColumn = value; }   
-       }   
- 
-       /// <summary>   
+           get { return _objectIdColumn; }   
+           set { _objectIdColumn = value; }   
+       }
+
+        private bool _makeValid;
+        /// <summary>
+        /// Gets/Sets whether all <see cref="SharpMap.Geometries"/> passed to SqlServer2008 should me made valid using this function.
+        /// </summary>
+       public Boolean ValidateGeometries { get { return _makeValid; } set { _makeValid = value; } }
+        private String MakeValidString
+        {
+            get { return _makeValid ? ".MakeValid()" : String.Empty; }
+        }
+
+        /// <summary>   
        /// Returns geometries within the specified bounding box   
        /// </summary>   
        /// <param name="bbox"></param>   
        /// <returns></returns>   
-       public Collection<Geometries.Geometry> GetGeometriesInView(SharpMap.Geometries.BoundingBox bbox)   
+       public Collection<Geometry> GetGeometriesInView(BoundingBox bbox)   
        {   
-           Collection<Geometries.Geometry> features = new Collection<SharpMap.Geometries.Geometry>();   
-           using (SqlConnection conn = new SqlConnection(_ConnectionString))   
+           Collection<Geometry> features = new Collection<Geometry>();   
+           using (SqlConnection conn = new SqlConnection(_connectionString))   
            {   
                //Get bounding box string   
                string strBbox = GetBoxFilterStr(bbox);   
  
-               string strSQL = "SELECT g." + this.GeometryColumn +".STAsBinary() ";   
-               strSQL += " FROM " + this.Table + " g WHERE ";   
+               string strSQL = "SELECT g." + GeometryColumn +".STAsBinary() ";   
+               strSQL += " FROM " + Table + " g WHERE ";   
  
                if (!String.IsNullOrEmpty(_defintionQuery))   
-                   strSQL += this.DefinitionQuery + " AND ";   
+                   strSQL += DefinitionQuery + " AND ";   
  
                strSQL += strBbox;   
  
@@ -206,7 +218,7 @@ namespace SharpMap.Data.Providers
                        {   
                            if (dr[0] != DBNull.Value)   
                            {   
-                               SharpMap.Geometries.Geometry geom = SharpMap.Converters.WellKnownBinary.GeometryFromWKB.Parse((byte[])dr[0]);   
+                               Geometry geom = Converters.WellKnownBinary.GeometryFromWKB.Parse((byte[])dr[0]);   
                                if(geom!=null)   
                                    features.Add(geom);   
                            }   
@@ -223,12 +235,12 @@ namespace SharpMap.Data.Providers
        /// </summary>   
        /// <param name="oid">Object ID</param>   
        /// <returns>geometry</returns>   
-       public SharpMap.Geometries.Geometry GetGeometryByID(uint oid)   
+       public Geometry GetGeometryByID(uint oid)   
        {   
-           SharpMap.Geometries.Geometry geom = null;   
-           using (SqlConnection conn = new SqlConnection(_ConnectionString))   
+           Geometry geom = null;   
+           using (SqlConnection conn = new SqlConnection(_connectionString))   
            {   
-               string strSQL = "SELECT g." + this.GeometryColumn + ".STAsBinary() FROM " + this.Table + " g WHERE " + this.ObjectIdColumn + "='" + oid.ToString() + "'";   
+               string strSQL = "SELECT g." + GeometryColumn + ".STAsBinary() FROM " + Table + " g WHERE " + ObjectIdColumn + "='" + oid.ToString() + "'";   
                conn.Open();   
                using (SqlCommand command = new SqlCommand(strSQL, conn))   
                {   
@@ -237,7 +249,7 @@ namespace SharpMap.Data.Providers
                        while (dr.Read())   
                        {   
                            if (dr[0] != DBNull.Value)   
-                               geom = SharpMap.Converters.WellKnownBinary.GeometryFromWKB.Parse((byte[])dr[0]);   
+                               geom = Converters.WellKnownBinary.GeometryFromWKB.Parse((byte[])dr[0]);   
                        }   
                    }   
                }   
@@ -250,20 +262,20 @@ namespace SharpMap.Data.Providers
        /// </summary>   
        /// <param name="bbox"></param>   
        /// <returns></returns>   
-       public Collection<uint> GetObjectIDsInView(SharpMap.Geometries.BoundingBox bbox)   
+       public Collection<uint> GetObjectIDsInView(BoundingBox bbox)   
        {   
            Collection<uint> objectlist = new Collection<uint>();   
-           using (SqlConnection conn = new SqlConnection(_ConnectionString))   
+           using (SqlConnection conn = new SqlConnection(_connectionString))   
            {   
  
                //Get bounding box string   
                string strBbox = GetBoxFilterStr(bbox);   
  
-               string strSQL = "SELECT g." + this.ObjectIdColumn + " ";   
-               strSQL += "FROM " + this.Table + " g WHERE ";   
+               string strSQL = "SELECT g." + ObjectIdColumn + " ";   
+               strSQL += "FROM " + Table + " g WHERE ";   
  
                if (!String.IsNullOrEmpty(_defintionQuery))   
-                   strSQL += this.DefinitionQuery + " AND ";   
+                   strSQL += DefinitionQuery + " AND ";   
  
                strSQL += strBbox;                   
  
@@ -292,17 +304,19 @@ namespace SharpMap.Data.Providers
        /// </summary>   
        /// <param name="bbox"></param>   
        /// <returns></returns>   
-       private string GetBoxFilterStr(SharpMap.Geometries.BoundingBox bbox) {   
+       private string GetBoxFilterStr(BoundingBox bbox) {   
            //geography::STGeomFromText('LINESTRING(47.656 -122.360, 47.656 -122.343)', 4326);   
-           SharpMap.Geometries.LinearRing lr = new SharpMap.Geometries.LinearRing();   
-           lr.Vertices.Add(new SharpMap.Geometries.Point(bbox.Left, bbox.Bottom));   
-           lr.Vertices.Add(new SharpMap.Geometries.Point(bbox.Right, bbox.Bottom));   
-           lr.Vertices.Add(new SharpMap.Geometries.Point(bbox.Right, bbox.Top));   
-           lr.Vertices.Add(new SharpMap.Geometries.Point(bbox.Left, bbox.Top));   
-           lr.Vertices.Add(new SharpMap.Geometries.Point(bbox.Left, bbox.Bottom));   
-           SharpMap.Geometries.Polygon p = new SharpMap.Geometries.Polygon(lr);   
-           string bboxText = SharpMap.Converters.WellKnownText.GeometryToWKT.Write((SharpMap.Geometries.IGeometry)p); // "";   
-           string whereClause = this.GeometryColumn + ".STIntersects(geometry::STGeomFromText('" + bboxText + "', " + this.SRID.ToString() + ")) = 1";   
+           LinearRing lr = new LinearRing();   
+           lr.Vertices.Add(new Point(bbox.Left, bbox.Bottom));   
+           lr.Vertices.Add(new Point(bbox.Right, bbox.Bottom));   
+           lr.Vertices.Add(new Point(bbox.Right, bbox.Top));   
+           lr.Vertices.Add(new Point(bbox.Left, bbox.Top));   
+           lr.Vertices.Add(new Point(bbox.Left, bbox.Bottom));   
+           Polygon p = new Polygon(lr);   
+           string bboxText = Converters.WellKnownText.GeometryToWKT.Write(p); // "";   
+           //string whereClause = GeometryColumn + ".STIntersects(geometry::STGeomFromText('" + bboxText + "', " + SRID + ")" + MakeValidString + ") = 1";   
+           string whereClause = String.Format("{0}{1}.STIntersects(geometry::STGeomFromText('{2}', {3})) = 1", 
+               GeometryColumn, MakeValidString, bboxText, SRID);
            return whereClause; // strBbox;   
        }   
  
@@ -311,25 +325,25 @@ namespace SharpMap.Data.Providers
        /// </summary>   
        /// <param name="geom"></param>   
        /// <param name="ds">FeatureDataSet to fill data into</param>   
-       public void ExecuteIntersectionQuery(SharpMap.Geometries.Geometry geom, FeatureDataSet ds)   
+       public void ExecuteIntersectionQuery(Geometry geom, FeatureDataSet ds)   
        {   
-           List<Geometries.Geometry> features = new List<SharpMap.Geometries.Geometry>();   
-           using (SqlConnection conn = new SqlConnection(_ConnectionString))   
+           List<Geometry> features = new List<Geometry>();   
+           using (SqlConnection conn = new SqlConnection(_connectionString))   
            {   
                //TODO: Convert to SQL Server   
                string strGeom = "geography::STGeomFromText('" + geom.AsText() + "', #SRID#)";   
  
-               if (this.SRID > 0) {   
-                   strGeom = strGeom.Replace("#SRID#", this.SRID.ToString());   
+               if (SRID > 0) {   
+                   strGeom = strGeom.Replace("#SRID#", SRID.ToString());   
                } else {   
                    strGeom = strGeom.Replace("#SRID#", "0");   
                }   
-               strGeom = this.GeometryColumn + ".STIntersects(" + strGeom + ") = 1";   
+               strGeom = GeometryColumn + ".STIntersects(" + strGeom + ") = 1";   
  
-               string strSQL = "SELECT g.* , g." + this.GeometryColumn + ").STAsBinary() As sharpmap_tempgeometry FROM " + this.Table + " g WHERE ";   
+               string strSQL = "SELECT g.* , g." + GeometryColumn + ").STAsBinary() As sharpmap_tempgeometry FROM " + Table + " g WHERE ";   
  
                if (!String.IsNullOrEmpty(_defintionQuery))   
-                   strSQL += this.DefinitionQuery + " AND ";   
+                   strSQL += DefinitionQuery + " AND ";   
  
                strSQL += strGeom;   
  
@@ -342,15 +356,15 @@ namespace SharpMap.Data.Providers
                    {   
                        FeatureDataTable fdt = new FeatureDataTable(ds.Tables[0]);   
                        foreach (System.Data.DataColumn col in ds.Tables[0].Columns)   
-                           if (col.ColumnName != this.GeometryColumn && col.ColumnName != "sharpmap_tempgeometry")   
+                           if (col.ColumnName != GeometryColumn && col.ColumnName != "sharpmap_tempgeometry")   
                                fdt.Columns.Add(col.ColumnName, col.DataType, col.Expression);   
                        foreach (System.Data.DataRow dr in ds.Tables[0].Rows)   
                        {   
-                           SharpMap.Data.FeatureDataRow fdr = fdt.NewRow();   
+                           Data.FeatureDataRow fdr = fdt.NewRow();   
                            foreach (System.Data.DataColumn col in ds.Tables[0].Columns)   
-                               if (col.ColumnName != this.GeometryColumn && col.ColumnName != "sharpmap_tempgeometry")   
+                               if (col.ColumnName != GeometryColumn && col.ColumnName != "sharpmap_tempgeometry")   
                                    fdr[col.ColumnName] = dr[col];   
-                           fdr.Geometry = SharpMap.Converters.WellKnownBinary.GeometryFromWKB.Parse((byte[])dr["sharpmap_tempgeometry"]);   
+                           fdr.Geometry = Converters.WellKnownBinary.GeometryFromWKB.Parse((byte[])dr["sharpmap_tempgeometry"]);   
                            fdt.AddRow(fdr);   
                        }   
                        ds.Tables.Add(fdt);   
@@ -364,15 +378,15 @@ namespace SharpMap.Data.Providers
        /// </summary>   
        /// <param name="WKT"></param>   
        /// <returns></returns>   
-       private SharpMap.Geometries.LineString WktToLineString(string WKT)   
+       private LineString WktToLineString(string WKT)   
        {   
-           SharpMap.Geometries.LineString line = new SharpMap.Geometries.LineString();   
+           LineString line = new LineString();   
            WKT = WKT.Substring(WKT.LastIndexOf('(') + 1).Split(')')[0];   
            string[] strPoints = WKT.Split(',');   
            foreach (string strPoint in strPoints)   
            {   
                string[] coord = strPoint.Split(' ');   
-               line.Vertices.Add(new SharpMap.Geometries.Point(double.Parse(coord[0], SharpMap.Map.NumberFormatEnUs), double.Parse(coord[1], SharpMap.Map.NumberFormatEnUs)));   
+               line.Vertices.Add(new Point(double.Parse(coord[0], Map.NumberFormatEnUs), double.Parse(coord[1], Map.NumberFormatEnUs)));   
            }   
            return line;   
        }   
@@ -384,11 +398,11 @@ namespace SharpMap.Data.Providers
        public int GetFeatureCount()   
        {   
            int count = 0;   
-           using (SqlConnection conn = new SqlConnection(_ConnectionString))   
+           using (SqlConnection conn = new SqlConnection(_connectionString))   
            {   
-               string strSQL = "SELECT COUNT(*) FROM " + this.Table;   
+               string strSQL = "SELECT COUNT(*) FROM " + Table;   
                if (!String.IsNullOrEmpty(_defintionQuery))   
-                   strSQL += " WHERE " + this.DefinitionQuery;   
+                   strSQL += " WHERE " + DefinitionQuery;   
                using (SqlCommand command = new SqlCommand(strSQL, conn))   
                {   
                    conn.Open();   
@@ -442,11 +456,11 @@ namespace SharpMap.Data.Providers
        /// </summary>   
        /// <param name="RowID"></param>   
        /// <returns>datarow</returns>   
-       public SharpMap.Data.FeatureDataRow GetFeature(uint RowID)   
+       public Data.FeatureDataRow GetFeature(uint RowID)   
        {   
-           using (SqlConnection conn = new SqlConnection(_ConnectionString))   
+           using (SqlConnection conn = new SqlConnection(_connectionString))   
            {   
-               string strSQL = "select g.* , g." + this.GeometryColumn + ".STAsBinary() As sharpmap_tempgeometry from " + this.Table + " g WHERE " + this.ObjectIdColumn + "=" + RowID.ToString() + "";   
+               string strSQL = "select g.* , g." + GeometryColumn + ".STAsBinary() As sharpmap_tempgeometry from " + Table + " g WHERE " + ObjectIdColumn + "=" + RowID.ToString() + "";   
                using (SqlDataAdapter adapter = new SqlDataAdapter(strSQL, conn))   
                {   
                    FeatureDataSet ds = new FeatureDataSet();   
@@ -457,16 +471,16 @@ namespace SharpMap.Data.Providers
                    {   
                        FeatureDataTable fdt = new FeatureDataTable(ds.Tables[0]);   
                        foreach (System.Data.DataColumn col in ds.Tables[0].Columns)   
-                           if (col.ColumnName != this.GeometryColumn && col.ColumnName != "sharpmap_tempgeometry")   
+                           if (col.ColumnName != GeometryColumn && col.ColumnName != "sharpmap_tempgeometry")   
                                fdt.Columns.Add(col.ColumnName, col.DataType, col.Expression);   
                        if(ds.Tables[0].Rows.Count>0)   
                        {   
                            System.Data.DataRow dr = ds.Tables[0].Rows[0];   
-                           SharpMap.Data.FeatureDataRow fdr = fdt.NewRow();   
+                           Data.FeatureDataRow fdr = fdt.NewRow();   
                            foreach (System.Data.DataColumn col in ds.Tables[0].Columns)   
-                               if (col.ColumnName != this.GeometryColumn && col.ColumnName != "sharpmap_tempgeometry")   
+                               if (col.ColumnName != GeometryColumn && col.ColumnName != "sharpmap_tempgeometry")   
                                    fdr[col.ColumnName] = dr[col];   
-                           fdr.Geometry = SharpMap.Converters.WellKnownBinary.GeometryFromWKB.Parse((byte[])dr["sharpmap_tempgeometry"]);   
+                           fdr.Geometry = Converters.WellKnownBinary.GeometryFromWKB.Parse((byte[])dr["sharpmap_tempgeometry"]);   
                            return fdr;   
                        }   
                        else  
@@ -483,24 +497,27 @@ namespace SharpMap.Data.Providers
        /// Boundingbox of dataset   
        /// </summary>   
        /// <returns>boundingbox</returns>   
-       public SharpMap.Geometries.BoundingBox GetExtents()   
+       public BoundingBox GetExtents()   
        {   
-           using (SqlConnection conn = new SqlConnection(_ConnectionString))   
+           using (SqlConnection conn = new SqlConnection(_connectionString))   
            {   
-               string strSQL = "SELECT g." + this.GeometryColumn + ".STEnvelope().STAsText() FROM " + this.Table + " g ";   
+               //string strSQL = "SELECT g." + GeometryColumn + ".STEnvelope().STAsText() FROM " + Table + " g ";   
+               var strSQL = String.Format("SELECT g.{0}{1}.STEnvelope().STAsText() FROM {2} g ",
+                   GeometryColumn, MakeValidString, Table);
+
                if (!String.IsNullOrEmpty(_defintionQuery))   
-                   strSQL += " WHERE " + this.DefinitionQuery;   
+                   strSQL += " WHERE " + DefinitionQuery;   
                using (SqlCommand command = new SqlCommand(strSQL, conn))   
                {   
                    conn.Open();   
-                   //SharpMap.Geometries.Geometry geom = null;   
-                   SharpMap.Geometries.BoundingBox bx = null;   
+                   //Geometry geom = null;   
+                   BoundingBox bx = null;   
                    SqlDataReader dr = command.ExecuteReader();   
                    while (dr.Read())   
                    {   
-                       string wkt = dr.GetString(0); //[this.GeometryColumn];   
-                       SharpMap.Geometries.Geometry g = SharpMap.Converters.WellKnownText.GeometryFromWKT.Parse(wkt);   
-                       SharpMap.Geometries.BoundingBox bb = g.GetBoundingBox();   
+                       string wkt = dr.GetString(0); //[GeometryColumn];   
+                       Geometry g = Converters.WellKnownText.GeometryFromWKT.Parse(wkt);   
+                       BoundingBox bb = g.GetBoundingBox();   
                        if (bx == null)   
                        {   
                            bx = bb;   
@@ -522,7 +539,7 @@ namespace SharpMap.Data.Providers
        /// </summary>   
        public string ConnectionID   
        {   
-           get { return _ConnectionString; }   
+           get { return _connectionString; }   
        }  
 
        #endregion  
@@ -534,19 +551,21 @@ namespace SharpMap.Data.Providers
        /// </summary>   
        /// <param name="bbox">view box</param>   
        /// <param name="ds">FeatureDataSet to fill data into</param>   
-       public void ExecuteIntersectionQuery(SharpMap.Geometries.BoundingBox bbox, SharpMap.Data.FeatureDataSet ds)   
+       public void ExecuteIntersectionQuery(BoundingBox bbox, FeatureDataSet ds)   
        {   
-           List<Geometries.Geometry> features = new List<SharpMap.Geometries.Geometry>();   
-           using (SqlConnection conn = new SqlConnection(_ConnectionString))   
+           List<Geometry> features = new List<Geometry>();   
+           using (SqlConnection conn = new SqlConnection(_connectionString))   
            {   
                //Get bounding box string   
                string strBbox = GetBoxFilterStr(bbox);   
  
-               string strSQL = "SELECT g.*, g." + this.GeometryColumn + ".STAsBinary() AS sharpmap_tempgeometry ";   
-               strSQL += "FROM " + this.Table + " g WHERE ";   
+               //string strSQL = "SELECT g.*, g." + GeometryColumn + ".STAsBinary() AS sharpmap_tempgeometry ";   
+               string strSQL = String.Format(
+                   "SELECT g.*, g.{0}{1}.STAsBinary() AS sharpmap_tempgeometry FROM {2} g WHERE",
+                   GeometryColumn, MakeValidString, Table);
  
                if (!String.IsNullOrEmpty(_defintionQuery))   
-                   strSQL += this.DefinitionQuery + " AND ";   
+                   strSQL += DefinitionQuery + " AND ";   
  
                strSQL += strBbox;   
  
@@ -560,15 +579,15 @@ namespace SharpMap.Data.Providers
                    {   
                        FeatureDataTable fdt = new FeatureDataTable(ds2.Tables[0]);   
                        foreach (System.Data.DataColumn col in ds2.Tables[0].Columns)   
-                           if (col.ColumnName != this.GeometryColumn && col.ColumnName != "sharpmap_tempgeometry")   
+                           if (col.ColumnName != GeometryColumn && col.ColumnName != "sharpmap_tempgeometry")   
                                fdt.Columns.Add(col.ColumnName,col.DataType,col.Expression);   
                        foreach (System.Data.DataRow dr in ds2.Tables[0].Rows)   
                        {   
-                           SharpMap.Data.FeatureDataRow fdr = fdt.NewRow();   
+                           Data.FeatureDataRow fdr = fdt.NewRow();   
                            foreach(System.Data.DataColumn col in ds2.Tables[0].Columns)   
-                               if (col.ColumnName != this.GeometryColumn && col.ColumnName != "sharpmap_tempgeometry")   
+                               if (col.ColumnName != GeometryColumn && col.ColumnName != "sharpmap_tempgeometry")   
                                    fdr[col.ColumnName] = dr[col];   
-                           fdr.Geometry = SharpMap.Converters.WellKnownBinary.GeometryFromWKB.Parse((byte[])dr["sharpmap_tempgeometry"]);   
+                           fdr.Geometry = Converters.WellKnownBinary.GeometryFromWKB.Parse((byte[])dr["sharpmap_tempgeometry"]);   
                            fdt.AddRow(fdr);   
                        }   
                        ds.Tables.Add(fdt);   

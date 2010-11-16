@@ -510,7 +510,7 @@ namespace SharpMap.Data.Providers
         /// <param name="ds">FeatureDataSet to fill data into</param>
         public void ExecuteIntersectionQuery(BoundingBox bbox, FeatureDataSet ds)
         {
-            List<Geometry> features = new List<Geometry>();
+            //List<Geometry> features = new List<Geometry>();
             using (NpgsqlConnection conn = new NpgsqlConnection(_ConnectionString))
             {
                 string strBbox = "box2d('BOX3D(" +
@@ -543,6 +543,7 @@ namespace SharpMap.Data.Providers
                         foreach (DataColumn col in ds2.Tables[0].Columns)
                             if (col.ColumnName != GeometryColumn && col.ColumnName != "sharpmap_tempgeometry")
                                 fdt.Columns.Add(col.ColumnName, col.DataType, col.Expression);
+
                         foreach (DataRow dr in ds2.Tables[0].Rows)
                         {
                             FeatureDataRow fdr = fdt.NewRow();
