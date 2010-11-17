@@ -17,8 +17,8 @@ namespace SharpMap.Web.Wms
     [Serializable]
     public class Client
     {
-        private XmlNode _VendorSpecificCapabilities;
-        private XmlNamespaceManager nsmgr;
+        private XmlNode _vendorSpecificCapabilities;
+        private XmlNamespaceManager _nsmgr;
 
         #region WMS Data structures
 
@@ -161,20 +161,20 @@ namespace SharpMap.Web.Wms
 
         #region Properties
 
-        private string[] _ExceptionFormats;
-        private Collection<string> _GetMapOutputFormats;
-        private WmsOnlineResource[] _GetMapRequests;
-        private WmsServerLayer _Layer;
-        private Capabilities.WmsServiceDescription _ServiceDescription;
+        private string[] _exceptionFormats;
+        private Collection<string> _getMapOutputFormats;
+        private WmsOnlineResource[] _getMapRequests;
+        private WmsServerLayer _layer;
+        private Capabilities.WmsServiceDescription _serviceDescription;
 
-        private string _WmsVersion;
+        private string _wmsVersion;
 
         /// <summary>
         /// Gets the service description
         /// </summary>
         public Capabilities.WmsServiceDescription ServiceDescription
         {
-            get { return _ServiceDescription; }
+            get { return _serviceDescription; }
         }
 
         /// <summary>
@@ -182,7 +182,7 @@ namespace SharpMap.Web.Wms
         /// </summary>
         public string WmsVersion
         {
-            get { return _WmsVersion; }
+            get { return _wmsVersion; }
         }
 
         /// <summary>
@@ -190,7 +190,7 @@ namespace SharpMap.Web.Wms
         /// </summary>
         public Collection<string> GetMapOutputFormats
         {
-            get { return _GetMapOutputFormats; }
+            get { return _getMapOutputFormats; }
         }
 
         /// <summary>
@@ -198,7 +198,7 @@ namespace SharpMap.Web.Wms
         /// </summary>
         public string[] ExceptionFormats
         {
-            get { return _ExceptionFormats; }
+            get { return _exceptionFormats; }
         }
 
         /// <summary>
@@ -206,7 +206,7 @@ namespace SharpMap.Web.Wms
         /// </summary>
         public WmsOnlineResource[] GetMapRequests
         {
-            get { return _GetMapRequests; }
+            get { return _getMapRequests; }
         }
 
         /// <summary>
@@ -214,7 +214,7 @@ namespace SharpMap.Web.Wms
         /// </summary>
         public WmsServerLayer Layer
         {
-            get { return _Layer; }
+            get { return _layer; }
         }
 
         #endregion
@@ -255,7 +255,7 @@ namespace SharpMap.Web.Wms
         /// </summary>
         public XmlNode VendorSpecificCapabilities
         {
-            get { return _VendorSpecificCapabilities; }
+            get { return _vendorSpecificCapabilities; }
         }
 
 
@@ -263,22 +263,28 @@ namespace SharpMap.Web.Wms
         /// Downloads servicedescription from WMS service  
         /// </summary>
         /// <returns>XmlDocument from Url. Null if Url is empty or inproper XmlDocument</returns>
-        private XmlDocument GetRemoteXml(string Url, WebProxy proxy)
+        private XmlDocument GetRemoteXml(string url, WebProxy proxy)
         {
             try
             {
-                WebRequest myRequest;
-                myRequest = WebRequest.Create(Url);
+                WebRequest myRequest = WebRequest.Create(url);
                 if (proxy != null) myRequest.Proxy = proxy;
+
                 WebResponse myResponse = myRequest.GetResponse();
+                if (myResponse == null)
+                    throw new ApplicationException("No web response");
+
                 Stream stream = myResponse.GetResponseStream();
-                XmlTextReader r = new XmlTextReader(Url, stream);
+                if (stream == null)
+                    throw new ApplicationException("No response stream");
+
+                XmlTextReader r = new XmlTextReader(url, stream);
                 r.XmlResolver = null;
                 XmlDocument doc = new XmlDocument();
                 doc.XmlResolver = null;
                 doc.Load(r);
                 stream.Close();
-                nsmgr = new XmlNamespaceManager(doc.NameTable);
+                _nsmgr = new XmlNamespaceManager(doc.NameTable);
                 return doc;
             }
             catch (Exception ex)
@@ -294,27 +300,25 @@ namespace SharpMap.Web.Wms
         /// <param name="doc">XmlDocument containing a valid Service Description</param>
         private void ParseCapabilities(XmlDocument doc)
         {
+            if (doc.DocumentElement == null)
+                throw new ApplicationException("No document element found");
+
             if (doc.DocumentElement.Attributes["version"] != null)
             {
-                _WmsVersion = doc.DocumentElement.Attributes["version"].Value;
-                if (_WmsVersion != "1.0.0" && _WmsVersion != "1.1.0" && _WmsVersion != "1.1.1" && _WmsVersion != "1.3.0")
-                    throw new ApplicationException("WMS Version " + _WmsVersion + " not supported");
+                _wmsVersion = doc.DocumentElement.Attributes["version"].Value;
+                if (_wmsVersion != "1.0.0" && _wmsVersion != "1.1.0" && _wmsVersion != "1.1.1" && _wmsVersion != "1.3.0")
+                    throw new ApplicationException("WMS Version " + _wmsVersion + " not supported");
 
-                nsmgr.AddNamespace(String.Empty, "http://www.opengis.net/wms");
-                if (_WmsVersion == "1.3.0")
-                {
-                    nsmgr.AddNamespace("sm", "http://www.opengis.net/wms");
-                }
-                else
-                    nsmgr.AddNamespace("sm", "");
-                nsmgr.AddNamespace("xlink", "http://www.w3.org/1999/xlink");
-                nsmgr.AddNamespace("xsi", "http://www.w3.org/2001/XMLSchema-instance");
+                _nsmgr.AddNamespace(String.Empty, "http://www.opengis.net/wms");
+                _nsmgr.AddNamespace("sm", _wmsVersion == "1.3.0" ? "http://www.opengis.net/wms" : "");
+                _nsmgr.AddNamespace("xlink", "http://www.w3.org/1999/xlink");
+                _nsmgr.AddNamespace("xsi", "http://www.w3.org/2001/XMLSchema-instance");
             }
             else
                 throw (new ApplicationException("No service version number found!"));
 
-            XmlNode xnService = doc.DocumentElement.SelectSingleNode("sm:Service", nsmgr);
-            XmlNode xnCapability = doc.DocumentElement.SelectSingleNode("sm:Capability", nsmgr);
+            XmlNode xnService = doc.DocumentElement.SelectSingleNode("sm:Service", _nsmgr);
+            XmlNode xnCapability = doc.DocumentElement.SelectSingleNode("sm:Capability", _nsmgr);
             if (xnService != null)
                 ParseServiceDescription(xnService);
             else
@@ -333,53 +337,53 @@ namespace SharpMap.Web.Wms
         /// <param name="xnlServiceDescription"></param>
         private void ParseServiceDescription(XmlNode xnlServiceDescription)
         {
-            XmlNode node = xnlServiceDescription.SelectSingleNode("sm:Title", nsmgr);
-            _ServiceDescription.Title = (node != null ? node.InnerText : null);
-            node = xnlServiceDescription.SelectSingleNode("sm:OnlineResource/@xlink:href", nsmgr);
-            _ServiceDescription.OnlineResource = (node != null ? node.InnerText : null);
-            node = xnlServiceDescription.SelectSingleNode("sm:Abstract", nsmgr);
-            _ServiceDescription.Abstract = (node != null ? node.InnerText : null);
-            node = xnlServiceDescription.SelectSingleNode("sm:Fees", nsmgr);
-            _ServiceDescription.Fees = (node != null ? node.InnerText : null);
-            node = xnlServiceDescription.SelectSingleNode("sm:AccessConstraints", nsmgr);
-            _ServiceDescription.AccessConstraints = (node != null ? node.InnerText : null);
+            XmlNode node = xnlServiceDescription.SelectSingleNode("sm:Title", _nsmgr);
+            _serviceDescription.Title = (node != null ? node.InnerText : null);
+            node = xnlServiceDescription.SelectSingleNode("sm:OnlineResource/@xlink:href", _nsmgr);
+            _serviceDescription.OnlineResource = (node != null ? node.InnerText : null);
+            node = xnlServiceDescription.SelectSingleNode("sm:Abstract", _nsmgr);
+            _serviceDescription.Abstract = (node != null ? node.InnerText : null);
+            node = xnlServiceDescription.SelectSingleNode("sm:Fees", _nsmgr);
+            _serviceDescription.Fees = (node != null ? node.InnerText : null);
+            node = xnlServiceDescription.SelectSingleNode("sm:AccessConstraints", _nsmgr);
+            _serviceDescription.AccessConstraints = (node != null ? node.InnerText : null);
 
-            XmlNodeList xnlKeywords = xnlServiceDescription.SelectNodes("sm:KeywordList/sm:Keyword", nsmgr);
+            XmlNodeList xnlKeywords = xnlServiceDescription.SelectNodes("sm:KeywordList/sm:Keyword", _nsmgr);
             if (xnlKeywords != null)
             {
-                _ServiceDescription.Keywords = new string[xnlKeywords.Count];
+                _serviceDescription.Keywords = new string[xnlKeywords.Count];
                 for (int i = 0; i < xnlKeywords.Count; i++)
                     ServiceDescription.Keywords[i] = xnlKeywords[i].InnerText;
             }
             //Contact information
-            _ServiceDescription.ContactInformation = new Capabilities.WmsContactInformation();
-            node = xnlServiceDescription.SelectSingleNode("sm:ContactInformation/sm:ContactAddress/sm:Address", nsmgr);
-            _ServiceDescription.ContactInformation.Address.Address = (node != null ? node.InnerText : null);
+            _serviceDescription.ContactInformation = new Capabilities.WmsContactInformation();
+            node = xnlServiceDescription.SelectSingleNode("sm:ContactInformation/sm:ContactAddress/sm:Address", _nsmgr);
+            _serviceDescription.ContactInformation.Address.Address = (node != null ? node.InnerText : null);
             node = xnlServiceDescription.SelectSingleNode("sm:ContactInformation/sm:ContactAddress/sm:AddressType",
-                                                          nsmgr);
-            _ServiceDescription.ContactInformation.Address.AddressType = (node != null ? node.InnerText : null);
-            node = xnlServiceDescription.SelectSingleNode("sm:ContactInformation/sm:ContactAddress/sm:City", nsmgr);
-            _ServiceDescription.ContactInformation.Address.City = (node != null ? node.InnerText : null);
-            node = xnlServiceDescription.SelectSingleNode("sm:ContactInformation/sm:ContactAddress/sm:Country", nsmgr);
-            _ServiceDescription.ContactInformation.Address.Country = (node != null ? node.InnerText : null);
-            node = xnlServiceDescription.SelectSingleNode("sm:ContactInformation/sm:ContactAddress/sm:PostCode", nsmgr);
-            _ServiceDescription.ContactInformation.Address.PostCode = (node != null ? node.InnerText : null);
-            node = xnlServiceDescription.SelectSingleNode("sm:ContactInformation/sm:ContactElectronicMailAddress", nsmgr);
-            _ServiceDescription.ContactInformation.Address.StateOrProvince = (node != null ? node.InnerText : null);
-            node = xnlServiceDescription.SelectSingleNode("sm:ContactInformation/sm:ContactElectronicMailAddress", nsmgr);
-            _ServiceDescription.ContactInformation.ElectronicMailAddress = (node != null ? node.InnerText : null);
-            node = xnlServiceDescription.SelectSingleNode("sm:ContactInformation/sm:ContactFacsimileTelephone", nsmgr);
-            _ServiceDescription.ContactInformation.FacsimileTelephone = (node != null ? node.InnerText : null);
+                                                          _nsmgr);
+            _serviceDescription.ContactInformation.Address.AddressType = (node != null ? node.InnerText : null);
+            node = xnlServiceDescription.SelectSingleNode("sm:ContactInformation/sm:ContactAddress/sm:City", _nsmgr);
+            _serviceDescription.ContactInformation.Address.City = (node != null ? node.InnerText : null);
+            node = xnlServiceDescription.SelectSingleNode("sm:ContactInformation/sm:ContactAddress/sm:Country", _nsmgr);
+            _serviceDescription.ContactInformation.Address.Country = (node != null ? node.InnerText : null);
+            node = xnlServiceDescription.SelectSingleNode("sm:ContactInformation/sm:ContactAddress/sm:PostCode", _nsmgr);
+            _serviceDescription.ContactInformation.Address.PostCode = (node != null ? node.InnerText : null);
+            node = xnlServiceDescription.SelectSingleNode("sm:ContactInformation/sm:ContactElectronicMailAddress", _nsmgr);
+            _serviceDescription.ContactInformation.Address.StateOrProvince = (node != null ? node.InnerText : null);
+            node = xnlServiceDescription.SelectSingleNode("sm:ContactInformation/sm:ContactElectronicMailAddress", _nsmgr);
+            _serviceDescription.ContactInformation.ElectronicMailAddress = (node != null ? node.InnerText : null);
+            node = xnlServiceDescription.SelectSingleNode("sm:ContactInformation/sm:ContactFacsimileTelephone", _nsmgr);
+            _serviceDescription.ContactInformation.FacsimileTelephone = (node != null ? node.InnerText : null);
             node =
                 xnlServiceDescription.SelectSingleNode(
-                    "sm:ContactInformation/sm:ContactPersonPrimary/sm:ContactOrganisation", nsmgr);
-            _ServiceDescription.ContactInformation.PersonPrimary.Organisation = (node != null ? node.InnerText : null);
+                    "sm:ContactInformation/sm:ContactPersonPrimary/sm:ContactOrganisation", _nsmgr);
+            _serviceDescription.ContactInformation.PersonPrimary.Organisation = (node != null ? node.InnerText : null);
             node =
                 xnlServiceDescription.SelectSingleNode(
-                    "sm:ContactInformation/sm:ContactPersonPrimary/sm:ContactPerson", nsmgr);
-            _ServiceDescription.ContactInformation.PersonPrimary.Person = (node != null ? node.InnerText : null);
-            node = xnlServiceDescription.SelectSingleNode("sm:ContactInformation/sm:ContactVoiceTelephone", nsmgr);
-            _ServiceDescription.ContactInformation.VoiceTelephone = (node != null ? node.InnerText : null);
+                    "sm:ContactInformation/sm:ContactPersonPrimary/sm:ContactPerson", _nsmgr);
+            _serviceDescription.ContactInformation.PersonPrimary.Person = (node != null ? node.InnerText : null);
+            node = xnlServiceDescription.SelectSingleNode("sm:ContactInformation/sm:ContactVoiceTelephone", _nsmgr);
+            _serviceDescription.ContactInformation.VoiceTelephone = (node != null ? node.InnerText : null);
         }
 
         /// <summary>
@@ -388,20 +392,20 @@ namespace SharpMap.Web.Wms
         /// <param name="xnCapability"></param>
         private void ParseCapability(XmlNode xnCapability)
         {
-            XmlNode xnRequest = xnCapability.SelectSingleNode("sm:Request", nsmgr);
+            XmlNode xnRequest = xnCapability.SelectSingleNode("sm:Request", _nsmgr);
             if (xnRequest == null)
                 throw (new Exception("Request parameter not specified in Service Description"));
             ParseRequest(xnRequest);
-            XmlNode xnLayer = xnCapability.SelectSingleNode("sm:Layer", nsmgr);
+            XmlNode xnLayer = xnCapability.SelectSingleNode("sm:Layer", _nsmgr);
             if (xnLayer == null)
                 throw (new Exception("No layer tag found in Service Description"));
-            _Layer = ParseLayer(xnLayer);
+            _layer = ParseLayer(xnLayer);
 
-            XmlNode xnException = xnCapability.SelectSingleNode("sm:Exception", nsmgr);
+            XmlNode xnException = xnCapability.SelectSingleNode("sm:Exception", _nsmgr);
             if (xnException != null)
                 ParseExceptions(xnException);
 
-            _VendorSpecificCapabilities = xnCapability.SelectSingleNode("sm:VendorSpecificCapabilities", nsmgr);
+            _vendorSpecificCapabilities = xnCapability.SelectSingleNode("sm:VendorSpecificCapabilities", _nsmgr);
         }
 
         /// <summary>
@@ -410,13 +414,13 @@ namespace SharpMap.Web.Wms
         /// <param name="xnlExceptionNode"></param>
         private void ParseExceptions(XmlNode xnlExceptionNode)
         {
-            XmlNodeList xnlFormats = xnlExceptionNode.SelectNodes("sm:Format", nsmgr);
+            XmlNodeList xnlFormats = xnlExceptionNode.SelectNodes("sm:Format", _nsmgr);
             if (xnlFormats != null)
             {
-                _ExceptionFormats = new string[xnlFormats.Count];
+                _exceptionFormats = new string[xnlFormats.Count];
                 for (int i = 0; i < xnlFormats.Count; i++)
                 {
-                    _ExceptionFormats[i] = xnlFormats[i].InnerText;
+                    _exceptionFormats[i] = xnlFormats[i].InnerText;
                 }
             }
         }
@@ -427,7 +431,7 @@ namespace SharpMap.Web.Wms
         /// <param name="xmlRequestNode"></param>
         private void ParseRequest(XmlNode xmlRequestNode)
         {
-            XmlNode xnGetMap = xmlRequestNode.SelectSingleNode("sm:GetMap", nsmgr);
+            XmlNode xnGetMap = xmlRequestNode.SelectSingleNode("sm:GetMap", _nsmgr);
             ParseGetMapRequest(xnGetMap);
             //TODO:
             //XmlNode xnGetFeatureInfo = xmlRequestNodes.SelectSingleNode("sm:GetFeatureInfo", nsmgr);
@@ -437,28 +441,30 @@ namespace SharpMap.Web.Wms
         /// <summary>
         /// Parses GetMap request nodes
         /// </summary>
-        /// <param name="GetMapRequestNodes"></param>
-        private void ParseGetMapRequest(XmlNode GetMapRequestNodes)
+        /// <param name="getMapRequestNodes"></param>
+        private void ParseGetMapRequest(XmlNode getMapRequestNodes)
         {
-            XmlNode xnlHttp = GetMapRequestNodes.SelectSingleNode("sm:DCPType/sm:HTTP", nsmgr);
+            XmlNode xnlHttp = getMapRequestNodes.SelectSingleNode("sm:DCPType/sm:HTTP", _nsmgr);
             if (xnlHttp != null && xnlHttp.HasChildNodes)
             {
-                _GetMapRequests = new WmsOnlineResource[xnlHttp.ChildNodes.Count];
+                _getMapRequests = new WmsOnlineResource[xnlHttp.ChildNodes.Count];
                 for (int i = 0; i < xnlHttp.ChildNodes.Count; i++)
                 {
                     WmsOnlineResource wor = new WmsOnlineResource();
                     wor.Type = xnlHttp.ChildNodes[i].Name;
-                    wor.OnlineResource =
-                        xnlHttp.ChildNodes[i].SelectSingleNode("sm:OnlineResource", nsmgr).Attributes["xlink:href"].
-                            InnerText;
-                    _GetMapRequests[i] = wor;
+                    XmlNode or = xnlHttp.ChildNodes[i].SelectSingleNode("sm:OnlineResource", _nsmgr);
+                    if (or == null || or.Attributes == null)
+                        throw new ApplicationException("Online resource not set");
+                    wor.OnlineResource = or.Attributes["xlink:href"].InnerText;
+                    _getMapRequests[i] = wor;
                 }
             }
-            XmlNodeList xnlFormats = GetMapRequestNodes.SelectNodes("sm:Format", nsmgr);
-            //_GetMapOutputFormats = new Collection<string>(xnlFormats.Count);
-            _GetMapOutputFormats = new Collection<string>();
-            for (int i = 0; i < xnlFormats.Count; i++)
-                _GetMapOutputFormats.Add(xnlFormats[i].InnerText);
+            _getMapOutputFormats = new Collection<string>();
+
+            XmlNodeList xnlFormats = getMapRequestNodes.SelectNodes("sm:Format", _nsmgr);
+            if (xnlFormats != null)
+                for (int i = 0; i < xnlFormats.Count; i++)
+                    _getMapOutputFormats.Add(xnlFormats[i].InnerText);
         }
 
         /// <summary>
@@ -469,66 +475,71 @@ namespace SharpMap.Web.Wms
         private WmsServerLayer ParseLayer(XmlNode xmlLayer)
         {
             WmsServerLayer layer = new WmsServerLayer();
-            XmlNode node = xmlLayer.SelectSingleNode("sm:Name", nsmgr);
+            XmlNode node = xmlLayer.SelectSingleNode("sm:Name", _nsmgr);
             layer.Name = (node != null ? node.InnerText : null);
-            node = xmlLayer.SelectSingleNode("sm:Title", nsmgr);
+            node = xmlLayer.SelectSingleNode("sm:Title", _nsmgr);
             layer.Title = (node != null ? node.InnerText : null);
-            node = xmlLayer.SelectSingleNode("sm:Abstract", nsmgr);
+            node = xmlLayer.SelectSingleNode("sm:Abstract", _nsmgr);
             layer.Abstract = (node != null ? node.InnerText : null);
-            XmlAttribute attr = xmlLayer.Attributes["queryable"];
-            layer.Queryable = (attr != null && attr.InnerText == "1");
+            if (xmlLayer.Attributes != null)
+            {
+                XmlAttribute attr = xmlLayer.Attributes["queryable"];
+                layer.Queryable = (attr != null && attr.InnerText == "1");
+            }
+            else
+                layer.Queryable = false;
             layer.SRIDBoundingBoxes = new List<SpatialReferencedBoundingBox>();
 
 
-            XmlNodeList xnlKeywords = xmlLayer.SelectNodes("sm:KeywordList/sm:Keyword", nsmgr);
+            XmlNodeList xnlKeywords = xmlLayer.SelectNodes("sm:KeywordList/sm:Keyword", _nsmgr);
             if (xnlKeywords != null)
             {
                 layer.Keywords = new string[xnlKeywords.Count];
                 for (int i = 0; i < xnlKeywords.Count; i++)
                     layer.Keywords[i] = xnlKeywords[i].InnerText;
             }
-            XmlNodeList xnlCrs = xmlLayer.SelectNodes("sm:CRS", nsmgr);
+            XmlNodeList xnlCrs = xmlLayer.SelectNodes("sm:CRS", _nsmgr);
             if (xnlCrs != null)
             {
                 layer.CRS = new string[xnlCrs.Count];
                 for (int i = 0; i < xnlCrs.Count; i++)
                     layer.CRS[i] = xnlCrs[i].InnerText;
             }
-            XmlNodeList xnlStyle = xmlLayer.SelectNodes("sm:Style", nsmgr);
+            XmlNodeList xnlStyle = xmlLayer.SelectNodes("sm:Style", _nsmgr);
             if (xnlStyle != null)
             {
                 layer.Style = new WmsLayerStyle[xnlStyle.Count];
                 for (int i = 0; i < xnlStyle.Count; i++)
                 {
-                    node = xnlStyle[i].SelectSingleNode("sm:Name", nsmgr);
+                    node = xnlStyle[i].SelectSingleNode("sm:Name", _nsmgr);
                     layer.Style[i].Name = (node != null ? node.InnerText : null);
-                    node = xnlStyle[i].SelectSingleNode("sm:Title", nsmgr);
+                    node = xnlStyle[i].SelectSingleNode("sm:Title", _nsmgr);
                     layer.Style[i].Title = (node != null ? node.InnerText : null);
-                    node = xnlStyle[i].SelectSingleNode("sm:Abstract", nsmgr);
+                    node = xnlStyle[i].SelectSingleNode("sm:Abstract", _nsmgr);
                     layer.Style[i].Abstract = (node != null ? node.InnerText : null);
-                    node = xnlStyle[i].SelectSingleNode("sm:LegendUrl", nsmgr);
-                    if (node != null)
+                    node = xnlStyle[i].SelectSingleNode("sm:LegendUrl", _nsmgr);
+                    if (node != null && node.Attributes != null)
                     {
                         layer.Style[i].LegendUrl = new WmsStyleLegend();
                         layer.Style[i].LegendUrl.Size = new Size(
                             int.Parse(node.Attributes["width"].InnerText),
                             int.Parse(node.Attributes["height"].InnerText));
                         layer.Style[i].LegendUrl.OnlineResource.OnlineResource =
-                            node.SelectSingleNode("sm:OnlineResource", nsmgr).Attributes["xlink:href"].InnerText;
+                            node.SelectSingleNode("sm:OnlineResource", _nsmgr).Attributes["xlink:href"].InnerText;
                         layer.Style[i].LegendUrl.OnlineResource.Type =
-                            node.SelectSingleNode("sm:Format", nsmgr).InnerText;
+                            node.SelectSingleNode("sm:Format", _nsmgr).InnerText;
                     }
-                    node = xnlStyle[i].SelectSingleNode("sm:StyleSheetURL", nsmgr);
+                    node = xnlStyle[i].SelectSingleNode("sm:StyleSheetURL", _nsmgr);
                     if (node != null)
                     {
                         layer.Style[i].StyleSheetUrl = new WmsOnlineResource();
                         layer.Style[i].StyleSheetUrl.OnlineResource =
-                            node.SelectSingleNode("sm:OnlineResource", nsmgr).Attributes["xlink:href"].InnerText;
+                            node.SelectSingleNode("sm:OnlineResource", _nsmgr).Attributes["xlink:href"].InnerText;
                         //layer.Style[i].StyleSheetUrl.OnlineResource = node.SelectSingleNode("sm:Format", nsmgr).InnerText;
                     }
                 }
             }
-            XmlNodeList xnlLayers = xmlLayer.SelectNodes("sm:Layer", nsmgr);
+            XmlNodeList xnlLayers = xmlLayer.SelectNodes("sm:Layer", _nsmgr);
             if (xnlLayers != null)
             {
                 layer.ChildLayers = new WmsServerLayer[xnlLayers.Count];
@@ -537,26 +548,26 @@ namespace SharpMap.Web.Wms
             }
 
             //LatLonBoundingBox is specific for WMS 1.1.1 servers    
-            node = xmlLayer.SelectSingleNode("sm:LatLonBoundingBox", nsmgr);
+            node = xmlLayer.SelectSingleNode("sm:LatLonBoundingBox", _nsmgr);
             if (node != null)
             {
                 double minx = ParseNodeAsDouble(node.Attributes["minx"], -180.0);
                 double miny = ParseNodeAsDouble(node.Attributes["miny"], -90.0);
                 double maxx = ParseNodeAsDouble(node.Attributes["maxx"], 180.0);
-                double maxy = ParseNodeAsDouble(node.Attributes["miny"], 90.0);
+                double maxy = ParseNodeAsDouble(node.Attributes["maxy"], 90.0);
                 layer.LatLonBoundingBox = new BoundingBox(minx, miny, maxx, maxy);
             }
             else
             {
                 //EX_GeographicBoundingBox is specific for WMS 1.3.0 servers   
-                node = xmlLayer.SelectSingleNode("sm:EX_GeographicBoundingBox", nsmgr);
+                node = xmlLayer.SelectSingleNode("sm:EX_GeographicBoundingBox", _nsmgr);
                 if (node != null)
                 {
                     //EX_GeographicBoundingBox is specific for WMS1.3.0 servers so this will be parsed if LatLonBoundingBox is null
-                    double minx = ParseNodeAsDouble(node.SelectSingleNode("sm:westBoundLongitude", nsmgr), -180.0);
-                    double miny = ParseNodeAsDouble(node.SelectSingleNode("sm:southBoundLatitude", nsmgr), -90.0);
-                    double maxx = ParseNodeAsDouble(node.SelectSingleNode("sm:eastBoundLongitude", nsmgr), 180.0);
-                    double maxy = ParseNodeAsDouble(node.SelectSingleNode("sm:northBoundLatitude", nsmgr), 90.0);
+                    double minx = ParseNodeAsDouble(node.SelectSingleNode("sm:westBoundLongitude", _nsmgr), -180.0);
+                    double miny = ParseNodeAsDouble(node.SelectSingleNode("sm:southBoundLatitude", _nsmgr), -90.0);
+                    double maxx = ParseNodeAsDouble(node.SelectSingleNode("sm:eastBoundLongitude", _nsmgr), 180.0);
+                    double maxy = ParseNodeAsDouble(node.SelectSingleNode("sm:northBoundLatitude", _nsmgr), 90.0);
                     layer.LatLonBoundingBox = new BoundingBox(minx, miny, maxx, maxy);
                 }
                 else
@@ -568,7 +579,7 @@ namespace SharpMap.Web.Wms
 
             //if the layer has a specific spatial reference system, the boundingbox in this reference system should be parsed and placed in 
             //the SRIDboundingbox
-            XmlNodeList bboxes = xmlLayer.SelectNodes("sm:BoundingBox", nsmgr);
+            XmlNodeList bboxes = xmlLayer.SelectNodes("sm:BoundingBox", _nsmgr);
             foreach (XmlNode bbox in bboxes)
             {
                 double minx;
@@ -590,38 +601,37 @@ namespace SharpMap.Web.Wms
 
         private static XmlNode FindEpsgNode(XmlNode bbox)
         {
-            XmlNode epsgNode;
-            epsgNode = bbox.Attributes["srs"];
-            if (epsgNode == null) epsgNode = bbox.Attributes["crs"];
-            if (epsgNode == null) epsgNode = bbox.Attributes["SRS"];
-            if (epsgNode == null) epsgNode = bbox.Attributes["CRS"];
+            if (bbox == null || bbox.Attributes == null)
+                throw new ArgumentNullException("bbox");
+
+            XmlNode epsgNode = ((bbox.Attributes["srs"] ?? bbox.Attributes["crs"]) ?? bbox.Attributes["SRS"]) ??
+                               bbox.Attributes["CRS"];
             return epsgNode;
         }
 
-        private bool TryParseNodeAsEpsg(XmlNode node, out int epsg)
+        private static bool TryParseNodeAsEpsg(XmlNode node, out int epsg)
         {
             epsg = default(int);
             if (node == null) return false;
             string epsgString = node.Value;
             if (String.IsNullOrEmpty(epsgString)) return false;
-            string prefix = "EPSG:";
+            const string prefix = "EPSG:";
             int index = epsgString.IndexOf(prefix);
             if (index < 0) return false;
             return (int.TryParse(epsgString.Substring(index + prefix.Length), NumberStyles.Any, Map.NumberFormatEnUs, out epsg));
         }
 
-        private double ParseNodeAsDouble(XmlNode node, double defaultValue)
+        private static double ParseNodeAsDouble(XmlNode node, double defaultValue)
         {
             if (node == null) return defaultValue;
             if (String.IsNullOrEmpty(node.InnerText)) return defaultValue;
             double value;
             if (Double.TryParse(node.InnerText, NumberStyles.Any, Map.NumberFormatEnUs, out value))
                 return value;
-            else
-                return defaultValue;
+            return defaultValue;
         }
 
-        private bool TryParseNodeAsDouble(XmlNode node, out double value)
+        private static bool TryParseNodeAsDouble(XmlNode node, out double value)
         {
             value = default(double);
             if (node == null) return false;
