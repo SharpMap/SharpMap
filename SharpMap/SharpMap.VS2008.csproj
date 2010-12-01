@@ -116,6 +116,7 @@
     <Compile Include="Layers\LayerGroup.cs" />
     <Compile Include="Layers\TiledWmsLayer.cs" />
     <Compile Include="Layers\TileLayer.cs" />
+    <Compile Include="Layers\VariableLayerCollection.cs" />
     <Compile Include="Layers\VectorLayer.cs" />
     <Compile Include="Layers\WmsLayer.cs" />
     <Compile Include="Map\Map.cs" />
