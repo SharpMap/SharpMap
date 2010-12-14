@@ -38,6 +38,7 @@ namespace SharpMap.Rendering
         {
             SizeOfString = SizeOfStringCeiling;
         }
+
         private static readonly Bitmap Defaultsymbol =
             (Bitmap)
             Image.FromStream(
@@ -138,7 +139,7 @@ namespace SharpMap.Rendering
             }
             else if (clipState == ClipState.Intersecting)
             {
-                PointF[] clippedPolygon = clipPolygon(polygon, width, height);
+                PointF[] clippedPolygon = ClipPolygon(polygon, width, height);
                 if (clippedPolygon.Length > 2)
                     gp.AddPolygon(clippedPolygon);
             }
@@ -296,36 +297,34 @@ namespace SharpMap.Rendering
         /// <param name="width">Width of map in image coordinates</param>
         /// <param name="height">Height of map in image coordinates</param>
         /// <returns>Clipped polygon</returns>
-        internal static PointF[] clipPolygon(PointF[] vertices, int width, int height)
+        internal static PointF[] ClipPolygon(PointF[] vertices, int width, int height)
         {
-            float deltax, deltay, xin, xout, yin, yout;
-            float tinx, tiny, toutx, touty, tin1, tin2, tout;
-            float x1, y1, x2, y2;
-
             List<PointF> line = new List<PointF>();
             if (vertices.Length <= 1) /* nothing to clip */
                 return vertices;
 
             for (int i = 0; i < vertices.Length - 1; i++)
             {
-                x1 = vertices[i].X;
-                y1 = vertices[i].Y;
-                x2 = vertices[i + 1].X;
-                y2 = vertices[i + 1].Y;
+                float x1 = vertices[i].X;
+                float y1 = vertices[i].Y;
+                float x2 = vertices[i + 1].X;
+                float y2 = vertices[i + 1].Y;
 
-                deltax = x2 - x1;
+                float deltax = x2 - x1;
                 if (deltax == 0)
                 {
                     // bump off of the vertical
                     deltax = (x1 > 0) ? -NearZero : NearZero;
                 }
-                deltay = y2 - y1;
+                float deltay = y2 - y1;
                 if (deltay == 0)
                 {
                     // bump off of the horizontal
                     deltay = (y1 > 0) ? -NearZero : NearZero;
                 }
 
+                float xin;
+                float xout;
                 if (deltax > 0)
                 {
                     //  points to right
@@ -338,6 +337,8 @@ namespace SharpMap.Rendering
                     xout = 0;
                 }
 
+                float yin;
+                float yout;
                 if (deltay > 0)
                 {
                     //  points up
@@ -350,9 +351,11 @@ namespace SharpMap.Rendering
                     yout = 0;
                 }
 
-                tinx = (xin - x1)/deltax;
-                tiny = (yin - y1)/deltay;
+                float tinx = (xin - x1)/deltax;
+                float tiny = (yin - y1)/deltay;
 
+                float tin1;
+                float tin2;
                 if (tinx < tiny)
                 {
                     // hits x first
@@ -373,10 +376,10 @@ namespace SharpMap.Rendering
 
                     if (1 >= tin2)
                     {
-                        toutx = (xout - x1)/deltax;
-                        touty = (yout - y1)/deltay;
+                        float toutx = (xout - x1)/deltax;
+                        float touty = (yout - y1)/deltay;
 
-                        tout = (toutx < touty) ? toutx : touty;
+                        float tout = (toutx < touty) ? toutx : touty;
 
                         if (0 < tin2 || 0 < tout)
                         {
@@ -384,28 +387,23 @@ namespace SharpMap.Rendering
                             {
                                 if (0 < tin2)
                                 {
-                                    if (tinx > tiny)
-                                        line.Add(new PointF(xin, y1 + tinx*deltay));
-                                    else
-                                        line.Add(new PointF(x1 + tiny*deltax, yin));
+                                    line.Add(tinx > tiny
+                                                 ? new PointF(xin, y1 + tinx*deltay)
+                                                 : new PointF(x1 + tiny*deltax, yin));
                                 }
 
                                 if (1 > tout)
                                 {
-                                    if (toutx < touty)
-                                        line.Add(new PointF(xout, y1 + toutx*deltay));
-                                    else
-                                        line.Add(new PointF(x1 + touty*deltax, yout));
+                                    line.Add(toutx < touty
+                                                 ? new PointF(xout, y1 + toutx*deltay)
+                                                 : new PointF(x1 + touty*deltax, yout));
                                 }
                                 else
                                     line.Add(new PointF(x2, y2));
                             }
                             else
                             {
-                                if (tinx > tiny)
-                                    line.Add(new PointF(xin, yout));
-                                else
-                                    line.Add(new PointF(xout, yin));
+                                line.Add(tinx > tiny ? new PointF(xin, yout) : new PointF(xout, yin));
                             }
                         }
                     }
@@ -432,16 +430,19 @@ namespace SharpMap.Rendering
         {
             if (point == null)
                 return;
+            
             if (symbol == null) //We have no point style - Use a default symbol
                 symbol = Defaultsymbol;
+
 
             PointF pp = Transform.WorldtoMap(point, map);
 
             if (rotation != 0 && !Single.IsNaN(rotation))
             {
                 Matrix startingTransform = g.Transform.Clone();
+                
                 Matrix transform = g.Transform;
-                PointF rotationCenter = PointF.Add(pp, new SizeF(symbol.Width/2f, symbol.Height/2f));
+                PointF rotationCenter = pp;
                 //Matrix transform = new Matrix();
                 transform.RotateAt(rotation, rotationCenter);
 
