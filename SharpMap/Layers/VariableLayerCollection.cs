@@ -28,12 +28,25 @@ namespace SharpMap.Layers
     public class VariableLayerCollection : LayerCollection
     {
         private readonly LayerCollection _staticLayers;
-        private readonly Timer _timer = new Timer();
+        private static Timer _timer = null;
+
+        private static bool touchTest = false;
+        public static void TouchTimer()
+        {
+            if (touchTest == true)
+            {
+                _timer.Start();
+            }
+            else
+            {
+                touchTest = true;
+            }
+        }
         
         /// <summary>
         /// Event fired every <see cref="Interval"/> to force requery;
         /// </summary>
-        public event VariableLayerCollectionRequeryHandler VariableLayerCollectionRequery;
+        public static event VariableLayerCollectionRequeryHandler VariableLayerCollectionRequery;
 
         /// <summary>
         /// Creates an instance of this class
@@ -42,41 +55,34 @@ namespace SharpMap.Layers
         public VariableLayerCollection(LayerCollection staticLayers)
         {
             _staticLayers = staticLayers;
-            _timer.Elapsed += new ElapsedEventHandler(TimerElapsed);
+            if (_timer == null)
+            {
+                _timer = new Timer();
+                _timer.Interval = 1000;
+                _timer.Elapsed += new ElapsedEventHandler(TimerElapsed);
+            }
         }
 
-        void TimerElapsed(object sender, ElapsedEventArgs e)
+        static void TimerElapsed(object sender, ElapsedEventArgs e)
         {
+            touchTest = false;
             OnRequery();
+            if (touchTest == false)
+            {
+                _timer.Stop();
+                touchTest = true;
+            }
         }
-
-        protected override void OnInsert(int index, object value)
+        protected override void OnAddingNew(System.ComponentModel.AddingNewEventArgs e)
         {
-            ILayer newLayer = (value as ILayer);
+            ILayer newLayer = (e.NewObject as ILayer);
             if (newLayer == null) throw new ArgumentNullException("value", "The passed argument is null or not an ILayer");
 
             TestLayerPresent(_staticLayers, newLayer);
 
-            base.OnInsert(index, value);
+            base.OnAddingNew(e);
         }
 
-        protected override void OnInsertComplete(int index, object value)
-        {
-            base.OnInsertComplete(index, value);
-            if (Count > 0) _timer.Start();
-        }
-
-        protected override void OnClearComplete()
-        {
-            base.OnClearComplete();
-            _timer.Stop();
-        }
-
-        protected override void OnRemoveComplete(int index, object value)
-        {
-            base.OnRemoveComplete(index, value);
-            if (Count == 0) _timer.Stop();
-        }
 
         private static void TestLayerPresent(LayerCollection layers, ILayer newLayer)
         {
@@ -90,27 +96,27 @@ namespace SharpMap.Layers
             
         }
 
-        private void OnRequery()
+        private static void OnRequery()
         {
-            if (Count == 0 || Pause) return;
+            if (Pause) return;
             if (VariableLayerCollectionRequery != null)
-                VariableLayerCollectionRequery(this, EventArgs.Empty);
+                VariableLayerCollectionRequery(null, EventArgs.Empty);
         }
 
         /// <summary>
         /// Gets/sets the interval in which to update layers
         /// </summary>
-        public double Interval
+        public static double Interval
         {
             get { return _timer.Interval; }
             set { _timer.Interval = value; }
         }
 
-        private bool _pause;
+        private static bool _pause;
         /// <summary>
         /// Gets/Sets whether this collection should currently be updated or not
         /// </summary>
-        public bool Pause
+        public static bool Pause
         {
             get { return _pause; }
             set { _pause = value; }

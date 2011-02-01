@@ -25,6 +25,7 @@ using SharpMap.Layers;
 using SharpMap.Rendering;
 using SharpMap.Utilities;
 using Point=SharpMap.Geometries.Point;
+using System.Drawing.Imaging;
 
 namespace SharpMap
 {
@@ -84,7 +85,8 @@ namespace SharpMap
         public Map(Size size)
         {
             Size = size;
-            Layers = new LayerCollection();
+            _Layers = new LayerCollection();
+            _Layers.ListChanged += new System.ComponentModel.ListChangedEventHandler(_Layers_ListChanged);
             _variableLayers = new VariableLayerCollection(_Layers);
             BackColor = Color.Transparent;
             _MaximumZoom = double.MaxValue;
@@ -94,6 +96,24 @@ namespace SharpMap
             _Center = new Point(0, 0);
             _Zoom = 1;
             _PixelAspectRatio = 1.0;
+        }
+
+        /// <summary>
+        /// Event handler to intercept when a new ITileAsymclayer is added to the Layers List and associate the MapNewTile Handler Event
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        void _Layers_ListChanged(object sender, System.ComponentModel.ListChangedEventArgs e)
+        {
+            if (e.ListChangedType == System.ComponentModel.ListChangedType.ItemAdded)
+            {
+
+                ILayer l = _Layers[e.NewIndex] as ILayer;
+                if (l is ITileAsyncLayer)
+                {
+                    ((ITileAsyncLayer)l).MapNewTileAvaliable += this.MapNewTileAvaliableHandler;
+                }
+            }
         }
 
         #region IDisposable Members
@@ -130,6 +150,8 @@ namespace SharpMap
         /// </summary>
         public delegate void MapViewChangedHandler();
 
+
+
         #endregion
 
         /// <summary>
@@ -148,6 +170,11 @@ namespace SharpMap
         /// </summary>
         public event MapRenderedEventHandler MapRendered;
 
+        /// <summary>
+        /// Event fired when a new Tile is available in a TileAsyncLayer
+        /// </summary>
+        public event MapNewTileAvaliabledHandler MapNewTileAvaliable;
+
         #endregion
 
         #region Methods
@@ -158,6 +185,8 @@ namespace SharpMap
         /// <returns>the map image</returns>
         public Image GetMap()
         {
+
+
             Image img = new Bitmap(Size.Width, Size.Height);
             Graphics g = Graphics.FromImage(img);
             RenderMap(g);
@@ -184,6 +213,14 @@ namespace SharpMap
              */
         }
 
+        public void MapNewTileAvaliableHandler(TileLayer sender, SharpMap.Geometries.BoundingBox bbox, Bitmap bm, int sourceWidth, int sourceHeight, ImageAttributes imageAttributes)
+        {
+            if (this.MapNewTileAvaliable != null)
+            {
+                this.MapNewTileAvaliable(sender, bbox, bm,sourceWidth,sourceHeight,imageAttributes);
+            }
+        }
+
         /// <summary>
         /// Renders the map using the provided <see cref="Graphics"/> object.
         /// </summary>
@@ -195,7 +232,7 @@ namespace SharpMap
             if (g == null)
                 throw new ArgumentNullException("g", "Cannot render map with null graphics object!");
 
-            VariableLayers.Pause = true;
+            VariableLayerCollection.Pause = true;
 
             if (Layers == null || Layers.Count == 0)
                 throw new InvalidOperationException("No layers to render");
@@ -217,7 +254,7 @@ namespace SharpMap
                     _variableLayers[i].Render(g, this);
             }
 
-            VariableLayers.Pause = false;
+            VariableLayerCollection.Pause = false;
 
             RenderDisclaimer(g);
 
@@ -234,10 +271,12 @@ namespace SharpMap
         /// <exception cref="InvalidOperationException">if there are no layers to render.</exception>
         public void RenderMap(Graphics g, LayerCollectionType layerCollectionType)
         {
+
+
             if (g == null)
                 throw new ArgumentNullException("g", "Cannot render map with null graphics object!");
 
-            VariableLayers.Pause = true;
+            VariableLayerCollection.Pause = true;
 
             LayerCollection lc = null;
             switch (layerCollectionType)
@@ -269,7 +308,7 @@ namespace SharpMap
             if (layerCollectionType == LayerCollectionType.Static)
                 RenderDisclaimer(g);
 
-            VariableLayers.Pause = false;
+            VariableLayerCollection.Pause = false;
 
         }
 
@@ -426,8 +465,8 @@ namespace SharpMap
 
         private Color _BackgroundColor;
         private Point _Center;
-        private LayerCollection _Layers;
-        private VariableLayerCollection _variableLayers;
+        private readonly LayerCollection _Layers;
+        private readonly VariableLayerCollection _variableLayers;
         private Matrix _MapTransform;
         private double _MaximumZoom;
         private double _MinimumZoom;
@@ -497,20 +536,21 @@ namespace SharpMap
         public LayerCollection Layers
         {
             get { return _Layers; }
-            set
-            {
-                int iBefore = 0;
-                if (_Layers != null)
-                    iBefore = _Layers.Count;
-                _Layers = value;
-                if (value != null)
-                {
-                    if (LayersChanged != null) //Layers changed. Fire event
-                        LayersChanged();
-                    if (MapViewOnChange != null)
-                        MapViewOnChange();
-                }
-            }
+            //set
+            //{
+            //    int iBefore = 0;
+            //    if (_Layers != null)
+            //        iBefore = _Layers.Count;
+            //    _Layers = value;
+            //    if (value != null)
+            //    {
+            //        _Layers.AddingNew += new System.ComponentModel.AddingNewEventHandler(Layers_AddingNew);
+            //        if (LayersChanged != null) //Layers changed. Fire event
+            //            LayersChanged();
+            //        if (MapViewOnChange != null)
+            //            MapViewOnChange();
+            //    }
+            //}
         }
 
         /// <summary>

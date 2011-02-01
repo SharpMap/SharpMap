@@ -12,6 +12,7 @@ using SharpMap.Geometries;
 
 namespace SharpMap.Layers
 {
+
     ///<summary>
     ///</summary>
     public class TileLayer : Layer
@@ -19,10 +20,10 @@ namespace SharpMap.Layers
         #region Fields
         
         //string layerName;
-        readonly ImageAttributes _imageAttributes = new ImageAttributes();
-        readonly ITileSource _source;
-        readonly MemoryCache<Bitmap> _bitmaps = new MemoryCache<Bitmap>(100, 200);
-        readonly bool _showErrorInTile = true;
+        protected readonly ImageAttributes _imageAttributes = new ImageAttributes();
+        protected readonly ITileSource _source;
+        protected readonly MemoryCache<Bitmap> _bitmaps = new MemoryCache<Bitmap>(100, 200);
+        protected readonly bool _showErrorInTile = true;
         InterpolationMode _interpolationMode = InterpolationMode.HighQualityBicubic;
 
         #endregion
@@ -90,6 +91,8 @@ namespace SharpMap.Layers
 
         #endregion
 
+        System.Collections.Hashtable cacheTiles = new System.Collections.Hashtable();
+
         #region Public methods
 
         public override void Render(Graphics graphics, Map map)
@@ -108,10 +111,9 @@ namespace SharpMap.Layers
 
             foreach (TileInfo info in tiles)
             {
-                if (_bitmaps.Find(info.Index) != null) continue;
-                AutoResetEvent waitHandle = new AutoResetEvent(false);
-                waitHandles.Add(waitHandle);
-                ThreadPool.QueueUserWorkItem(GetTileOnThread, new object[] { _source.Provider, info, _bitmaps, waitHandle });
+                    AutoResetEvent waitHandle = new AutoResetEvent(false);
+                    waitHandles.Add(waitHandle);
+                    ThreadPool.QueueUserWorkItem(GetTileOnThread, new object[] { _source.Provider, info, _bitmaps });
             }
 
             foreach (WaitHandle handle in waitHandles)
@@ -150,11 +152,11 @@ namespace SharpMap.Layers
         private void GetTileOnThread(object parameter)
         {
             object[] parameters = (object[])parameter;
-            if (parameters.Length != 4) throw new ArgumentException("Four parameters expected");
+            if (parameters.Length != 3) throw new ArgumentException("Three parameters expected");
             ITileProvider tileProvider = (ITileProvider)parameters[0];
             TileInfo tileInfo = (TileInfo)parameters[1];
             MemoryCache<Bitmap> bitmaps = (MemoryCache<Bitmap>)parameters[2];
-            AutoResetEvent autoResetEvent = (AutoResetEvent)parameters[3];
+            
 
             byte[] bytes;
             try
@@ -180,12 +182,7 @@ namespace SharpMap.Layers
             {
                 //todo: log and use other ways to report to user.
             }
-            finally
-            {
-                autoResetEvent.Set();
-            }
         }
-
         #endregion
     }
 }

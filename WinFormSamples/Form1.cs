@@ -157,5 +157,10 @@ namespace WinFormSamples
             }
         }
 
+        private void button1_Click(object sender, EventArgs e)
+        {
+            new DockAreaForm().Show();
+        }
+
     }
 }

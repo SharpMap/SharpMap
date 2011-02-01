@@ -23,6 +23,7 @@ using System.Reflection;
 using SharpMap.Geometries;
 using SharpMap.Utilities;
 using Point=SharpMap.Geometries.Point;
+using System.Runtime.CompilerServices;
 
 namespace SharpMap.Rendering
 {
@@ -51,6 +52,7 @@ namespace SharpMap.Rendering
         /// <param name="lines">MultiLineString to be rendered</param>
         /// <param name="pen">Pen style used for rendering</param>
         /// <param name="map">Map reference</param>
+        [MethodImpl(MethodImplOptions.Synchronized)]
         public static void DrawMultiLineString(Graphics g, MultiLineString lines, Pen pen, Map map)
         {
             for (int i = 0; i < lines.LineStrings.Count; i++)
@@ -64,6 +66,7 @@ namespace SharpMap.Rendering
         /// <param name="line">LineString to render</param>
         /// <param name="pen">Pen style used for rendering</param>
         /// <param name="map">Map reference</param>
+        [MethodImpl(MethodImplOptions.Synchronized)]
         public static void DrawLineString(Graphics g, LineString line, Pen pen, Map map)
         {
             if (line.Vertices.Count > 1)
@@ -83,6 +86,7 @@ namespace SharpMap.Rendering
         /// <param name="pen">Outline pen style (null if no outline)</param>
         /// <param name="clip">Specifies whether polygon clipping should be applied</param>
         /// <param name="map">Map reference</param>
+        [MethodImpl(MethodImplOptions.Synchronized)]
         public static void DrawMultiPolygon(Graphics g, MultiPolygon pols, Brush brush, Pen pen, bool clip, Map map)
         {
             for (int i = 0; i < pols.Polygons.Count; i++)
@@ -98,6 +102,7 @@ namespace SharpMap.Rendering
         /// <param name="pen">Outline pen style (null if no outline)</param>
         /// <param name="clip">Specifies whether polygon clipping should be applied</param>
         /// <param name="map">Map reference</param>
+        [MethodImpl(MethodImplOptions.Synchronized)]
         public static void DrawPolygon(Graphics g, Polygon pol, Brush brush, Pen pen, bool clip, Map map)
         {
             if (pol.ExteriorRing == null)
@@ -229,6 +234,7 @@ namespace SharpMap.Rendering
         /// <param name="rotation">Text rotation in degrees</param>
         /// <param name="text">Text to render</param>
         /// <param name="map">Map reference</param>
+        [MethodImpl(MethodImplOptions.Synchronized)]
         public static void DrawLabel(Graphics g, PointF labelPoint, PointF offset, Font font, Color forecolor,
                                      Brush backcolor, Pen halo, float rotation, string text, Map map)
         {
@@ -425,6 +431,7 @@ namespace SharpMap.Rendering
         /// <param name="offset">Symbol offset af scale=1</param>
         /// <param name="rotation">Symbol rotation in degrees</param>
         /// <param name="map">Map reference</param>
+        [MethodImpl(MethodImplOptions.Synchronized)]
         public static void DrawPoint(Graphics g, Point point, Image symbol, float symbolscale, PointF offset,
                                      float rotation, Map map)
         {
@@ -449,14 +456,16 @@ namespace SharpMap.Rendering
                 g.Transform = transform;
 
                 if (symbolscale == 1f)
-                    g.DrawImageUnscaled(symbol, (int) (pp.X - symbol.Width/2f + offset.X),
-                                        (int) (pp.Y - symbol.Height/2f + offset.Y));
+                {
+                        g.DrawImageUnscaled(symbol, (int)(pp.X - symbol.Width / 2f + offset.X),
+                                            (int)(pp.Y - symbol.Height / 2f + offset.Y));
+                }
                 else
                 {
-                    float width = symbol.Width*symbolscale;
-                    float height = symbol.Height*symbolscale;
-                    g.DrawImage(symbol, (int) pp.X - width/2 + offset.X*symbolscale,
-                                (int) pp.Y - height/2 + offset.Y*symbolscale, width, height);
+                    float width = symbol.Width * symbolscale;
+                    float height = symbol.Height * symbolscale;
+                        g.DrawImage(symbol, (int)pp.X - width / 2 + offset.X * symbolscale,
+                                    (int)pp.Y - height / 2 + offset.Y * symbolscale, width, height);
                 }
 
                 g.Transform = startingTransform;
@@ -464,14 +473,19 @@ namespace SharpMap.Rendering
             else
             {
                 if (symbolscale == 1f)
-                    g.DrawImageUnscaled(symbol, (int) (pp.X - symbol.Width/2f + offset.X),
-                                        (int) (pp.Y - symbol.Height/2f + offset.Y));
+                {
+                    lock (symbol)
+                    {
+                        g.DrawImageUnscaled(symbol, (int)(pp.X - symbol.Width / 2f + offset.X),
+                                            (int)(pp.Y - symbol.Height / 2f + offset.Y));
+                    }
+                }
                 else
                 {
-                    float width = symbol.Width*symbolscale;
-                    float height = symbol.Height*symbolscale;
-                    g.DrawImage(symbol, (int) pp.X - width/2 + offset.X*symbolscale,
-                                (int) pp.Y - height/2 + offset.Y*symbolscale, width, height);
+                    float width = symbol.Width * symbolscale;
+                    float height = symbol.Height * symbolscale;
+                        g.DrawImage(symbol, (int)pp.X - width / 2 + offset.X * symbolscale,
+                                    (int)pp.Y - height / 2 + offset.Y * symbolscale, width, height);
                 }
             }
         }
@@ -486,6 +500,7 @@ namespace SharpMap.Rendering
         /// <param name="offset">Symbol offset af scale=1</param>
         /// <param name="rotation">Symbol rotation in degrees</param>
         /// <param name="map">Map reference</param>
+        [MethodImpl(MethodImplOptions.Synchronized)]
         public static void DrawMultiPoint(Graphics g, MultiPoint points, Image symbol, float symbolscale, PointF offset,
                                           float rotation, Map map)
         {

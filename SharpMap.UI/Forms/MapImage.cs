@@ -139,7 +139,7 @@ namespace SharpMap.Forms
                 _map = value;
                 if (_map != null)
                 {
-                    _map.VariableLayers.VariableLayerCollectionRequery += new VariableLayerCollectionRequeryHandler(VariableLayersRequery);
+                    VariableLayerCollection.VariableLayerCollectionRequery += new VariableLayerCollectionRequeryHandler(VariableLayersRequery);
                     Refresh();
                 }
             }

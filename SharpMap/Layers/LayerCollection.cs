@@ -23,22 +23,8 @@ namespace SharpMap.Layers
     /// <summary>
     /// A collection of <see cref="ILayer"/> instances.
     /// </summary>
-    public class LayerCollection : CollectionBase
+    public class LayerCollection : System.ComponentModel.BindingList<ILayer>
     {
-        /// <summary>
-        /// Gets or sets the layer at the given <paramref name="index"/>.
-        /// </summary>
-        /// <param name="index">Index of the layer to get or set.</param>
-        /// <returns>The layer at the given <paramref name="index"/>.</returns>
-        /// <exception cref="ArgumentOutOfRangeException">
-        /// Thrown if <paramref name="index"/> is less than 0 or is 
-        /// greater or equal to <see cref="CollectionBase.Count"/>.
-        /// </exception>
-        public virtual ILayer this[int index]
-        {
-            get { return (ILayer) List[index]; }
-            set { List[index] = value; }
-        }
 
         /// <summary>
         /// Gets or sets the layer with the given <paramref name="layerName"/>.
@@ -67,53 +53,6 @@ namespace SharpMap.Layers
             }
         }
 
-        /// <summary>
-        /// Adds a layer to the collection.
-        /// </summary>
-        /// <param name="layer">The layer to add.</param>
-        public void Add(ILayer layer)
-        {
-            List.Add(layer);
-        }
-
-        /// <summary>
-        /// Removes the layer at the given index.
-        /// </summary>
-        /// <param name="index">
-        /// The index at which to remove the layer.
-        /// </param>
-        /// <exception cref="ArgumentOutOfRangeException">
-        /// <paramref name="index"/> is less than 0. 
-        /// or is equal to or greater than <see cref="CollectionBase.Count"/>.
-        /// </exception>
-        public new void RemoveAt(int index)
-        {
-            List.RemoveAt(index);
-        }
-
-        /// <summary>
-        /// Removes the given layer. No effect if <paramref name="layer"/>
-        /// is not in the collection.
-        /// </summary>
-        /// <param name="layer">The layer to remove. May be null.</param>
-        public void Remove(ILayer layer)
-        {
-            List.Remove(layer);
-        }
-
-        /// <summary>
-        /// Returns the index of the given <paramref name="layer"/>,
-        /// or -1 if the layer doesn't exist in the collection.
-        /// </summary>
-        /// <param name="layer">The layer to remove.</param>
-        /// <returns>
-        /// The index of the given <paramref name="layer"/>,
-        /// or -1 if the layer doesn't exist in the collection.
-        /// </returns>
-        public int IndexOf(ILayer layer)
-        {
-            return List.IndexOf(layer);
-        }
 
         /// <summary>
         /// Inserts the layer at the given <paramref name="index"/>.
@@ -131,12 +70,12 @@ namespace SharpMap.Layers
                 throw new ArgumentOutOfRangeException("index", index, "Index not in range");
             }
 
-            List.Insert(index, layer);
+            Items.Insert(index, layer);
         }
 
-        protected override void OnInsert(int index, object value)
+        protected override void  OnAddingNew(System.ComponentModel.AddingNewEventArgs e)
         {
-            ILayer newLayer = (value as ILayer);
+            ILayer newLayer = (e.NewObject as ILayer);
             if (newLayer == null) throw new ArgumentNullException("value","The passed argument is null or not an ILayer");
 
             foreach (ILayer layer in this)
@@ -147,7 +86,7 @@ namespace SharpMap.Layers
                 if (comparison == 0) throw new DuplicateLayerException(newLayer.LayerName);
             }
 
-            base.OnInsert(index, value);
+            base.OnAddingNew(new System.ComponentModel.AddingNewEventArgs(newLayer));
         }
 
         private ILayer GetLayerByName(string layerName)

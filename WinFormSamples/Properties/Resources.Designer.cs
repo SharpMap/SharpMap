@@ -59,5 +59,26 @@ namespace WinFormSamples.Properties {
                 resourceCulture = value;
             }
         }
+        
+        internal static System.Drawing.Bitmap view_left_right {
+            get {
+                object obj = ResourceManager.GetObject("view_left_right", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap view_top_bottom {
+            get {
+                object obj = ResourceManager.GetObject("view_top_bottom", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap ZoomToExtents1 {
+            get {
+                object obj = ResourceManager.GetObject("ZoomToExtents1", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
     }
 }

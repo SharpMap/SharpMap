@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
+using System.Threading;
 
 namespace WinFormSamples
 {
@@ -11,6 +12,7 @@ namespace WinFormSamples
         [STAThread]
         private static void Main()
         {
+            //ThreadPool.SetMaxThreads(80,80);
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new MainForm());

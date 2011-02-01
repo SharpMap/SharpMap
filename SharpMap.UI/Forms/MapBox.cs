@@ -23,6 +23,8 @@ using System;
 using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
+using SharpMap.Layers;
+using System.Drawing.Imaging;
 
 namespace SharpMap.Forms
 {
@@ -39,15 +41,15 @@ namespace SharpMap.Forms
     public class MapBox : Control
 #endif
     {
-#region PreviewModes enumerator
+        #region PreviewModes enumerator
         public enum PreviewModes
-        { 
+        {
             Best,
             Fast
         }
         #endregion
 
-#region Position enumerators
+        #region Position enumerators
         private enum XPosition
         {
             Center = 0,
@@ -63,7 +65,7 @@ namespace SharpMap.Forms
         }
         #endregion
 
-#region Tools enumerator
+        #region Tools enumerator
         /// <summary>
         /// Map tools enumeration
         /// </summary>
@@ -96,7 +98,7 @@ namespace SharpMap.Forms
         }
         #endregion
 
-#region Events
+        #region Events
         /// <summary>
         /// MouseEventtype fired from the MapImage control
         /// </summary>
@@ -175,11 +177,12 @@ namespace SharpMap.Forms
         private static Color[] m_DefaultColors = new Color[] { Color.DarkRed, Color.DarkGreen, Color.DarkBlue, Color.Orange, Color.Cyan, Color.Black, Color.Purple, Color.Yellow, Color.LightBlue, Color.Fuchsia };
         private const float MIN_DRAG_SCALING_BEFORE_REGEN = 0.3333f;
         private const float MAX_DRAG_SCALING_BEFORE_REGEN = 3f;
+        private ProgressBar _progressBar;
 
         public static void RandomizeLayerColors(Layers.VectorLayer layer)
         {
             layer.Style.EnableOutline = true;
-            layer.Style.Fill =  new SolidBrush(Color.FromArgb(80, m_DefaultColors[m_DefaultColorIndex % m_DefaultColors.Length]));
+            layer.Style.Fill = new SolidBrush(Color.FromArgb(80, m_DefaultColors[m_DefaultColorIndex % m_DefaultColors.Length]));
             layer.Style.Outline = new Pen(Color.FromArgb(100, m_DefaultColors[(m_DefaultColorIndex + ((int)(m_DefaultColors.Length * 0.5))) % m_DefaultColors.Length]), 1f);
             m_DefaultColorIndex++;
         }
@@ -198,8 +201,11 @@ namespace SharpMap.Forms
         private SolidBrush m_RectangleBrush = new SolidBrush(Color.FromArgb(210, 244, 244, 244));
         private Pen m_RectanglePen = new Pen(Color.FromArgb(244, 244, 244), 1);
         private float m_Scaling = 0;
-        private Image m_Image;
+        private Image m_Image = new Bitmap(1, 1);
+        private Image m_ImageStatic = new Bitmap(1, 1);
+        private Image m_ImageVariable = new Bitmap(1, 1);
         private PreviewModes m_PreviewMode;
+        private bool _isRefreshing;
 
         [Description("The color of selecting rectangle.")]
         [Category("Appearance")]
@@ -276,10 +282,50 @@ namespace SharpMap.Forms
             set
             {
                 m_Map = value;
-                
+
                 if (m_Map != null)
+                {
+                    VariableLayerCollection.VariableLayerCollectionRequery += this.VariableLayersRequery;
+                    m_Map.MapNewTileAvaliable += new MapNewTileAvaliabledHandler(m_Map_MapNewTileAvaliable);
                     Refresh();
+                }
             }
+        }
+
+        void m_Map_MapNewTileAvaliable(TileLayer sender, SharpMap.Geometries.BoundingBox box, Bitmap bm, int sourceWidth, int sourceHeight, ImageAttributes imageAttributes)
+        {
+            lock (m_ImageStatic)
+            {
+                try
+                {
+                    PointF min = m_Map.WorldToImage(new Geometries.Point(box.Min.X, box.Min.Y));
+                    PointF max = m_Map.WorldToImage(new Geometries.Point(box.Max.X, box.Max.Y));
+
+                    min = new PointF((float)Math.Round(min.X), (float)Math.Round(min.Y));
+                    max = new PointF((float)Math.Round(max.X), (float)Math.Round(max.Y));
+
+                    if (this.IsDisposed == false)
+                    {
+                        Graphics g = Graphics.FromImage(this.m_ImageStatic);
+
+                        g.DrawImage(bm,
+                            new Rectangle((int)min.X, (int)max.Y, (int)(max.X - min.X), (int)(min.Y - max.Y)),
+                            0, 0,
+                            sourceWidth, sourceHeight,
+                            GraphicsUnit.Pixel,
+                            imageAttributes);
+
+                        g.Dispose();
+                        UpdateImage(false);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    //this can be a GDI+ Hell Exception...
+                }
+            }
+
+
         }
 
         /// <summary>
@@ -318,11 +364,30 @@ namespace SharpMap.Forms
         public MapBox()
 #endif
         {
-            SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.ResizeRedraw | ControlStyles.UserPaint, true);
+            SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.UserPaint, true);
             DoubleBuffered = true;
             m_Map = new Map(ClientSize);
+            VariableLayerCollection.VariableLayerCollectionRequery += this.VariableLayersRequery;
+            m_Map.MapNewTileAvaliable += this.m_Map_MapNewTileAvaliable;
+
+
             m_ActiveTool = Tools.None;
             LostFocus += new EventHandler(MapBox_LostFocus);
+
+
+            _progressBar = new ProgressBar();
+            this.Controls.Add(_progressBar);
+            _progressBar.Style = ProgressBarStyle.Marquee;
+            _progressBar.Location = new Point(2, 2);
+            _progressBar.Size = new Size(50, 10);
+
+
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            VariableLayerCollection.VariableLayerCollectionRequery -= this.VariableLayersRequery;
+            base.Dispose(disposing);
         }
 
         void MapBox_LostFocus(object sender, EventArgs e)
@@ -333,6 +398,157 @@ namespace SharpMap.Forms
                 Invalidate(ClientRectangle);
             }
         }
+
+        /// <summary>
+        /// Handles need to requery of variable layers
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void VariableLayersRequery(object sender, EventArgs e)
+        {
+            Image oldRef = null;
+            lock (m_Map)
+            {
+                if (m_Dragging) return;
+                oldRef = m_ImageVariable;
+                m_ImageVariable = GetMap(m_Map.VariableLayers, LayerCollectionType.Variable);
+            }
+            UpdateImage(false);
+            if (oldRef != null)
+            {
+                oldRef.Dispose();
+                oldRef = null;
+                //                GC.Collect();
+            }
+
+            this.Invalidate();
+            Application.DoEvents();
+        }
+
+        private Image GetMap(LayerCollection layers, LayerCollectionType layerCollectionType)
+        {
+            if ((layers == null || layers.Count == 0 || Width == 0 || Height == 0))
+                return null;
+
+            Bitmap retval = new Bitmap(Width, Height);
+            lock (m_ImageStatic)
+            {
+                if (layerCollectionType == LayerCollectionType.Static)
+                {
+                    if (m_ImageStatic.Width != Width || m_ImageStatic.Height != Height)
+                    {
+                        retval = new Bitmap(Width, Height);
+                    }
+                    else
+                    {
+                        retval = (Bitmap)m_ImageStatic;
+                    }
+
+                }
+            }
+
+            Graphics g = Graphics.FromImage(retval);
+            m_Map.RenderMap(g, layerCollectionType);
+            g.Dispose();
+
+            if (layerCollectionType == LayerCollectionType.Variable)
+                retval.MakeTransparent(m_Map.BackColor);
+
+            return retval;
+
+        }
+
+        private void GetImagesAsync()
+        {
+            lock (m_Map)
+            {
+                m_ImageVariable = GetMap(m_Map.VariableLayers, LayerCollectionType.Variable);
+                lock (m_ImageStatic)
+                {
+                    m_ImageStatic = GetMap(m_Map.Layers, LayerCollectionType.Static);
+                }
+            }
+        }
+
+        private void GetImagesAsyncEnd(IAsyncResult res)
+        {
+            if (this.InvokeRequired)
+            {
+                this.Invoke(new AsyncCallback(this.GetImagesAsyncEnd), res);
+            }
+            else
+            {
+                Image oldRef = m_Image;
+                Bitmap bmp = new Bitmap(Width, Height);
+
+                Graphics g = Graphics.FromImage(bmp);
+
+                if (m_ImageStatic != null)
+                {
+                    try
+                    {
+                        g.DrawImageUnscaled(m_ImageStatic, 0, 0);
+                    }
+                    catch
+                    {
+                    }
+                }
+                if (m_ImageVariable != null)
+                    try
+                    {
+                        g.DrawImageUnscaled(m_ImageVariable, 0, 0);
+
+                    }
+                    catch
+                    {
+
+
+                    }
+
+                g.Dispose();
+
+                m_Image = bmp;
+                if (res != null)
+                {
+                    this.ActiveTool = (SharpMap.Forms.MapBox.Tools)res.AsyncState;
+                }
+
+                if (oldRef != null)
+                    oldRef.Dispose();
+                this.Invalidate();
+                this.m_DragEndPoint = new Point(0, 0);
+                _isRefreshing = false;
+                this.Enabled = true;
+                _progressBar.Enabled = false;
+                _progressBar.Visible = false;
+
+
+            }
+        }
+
+        private void UpdateImage(bool forceRefresh)
+        {
+            if ((!(m_ImageStatic == null && m_ImageVariable == null) || forceRefresh) &&
+                (Width != 0 && Height != 0))
+            {
+                if (forceRefresh && _isRefreshing == false)
+                {
+                    _isRefreshing = true;
+                    this.Enabled = false;
+                    SharpMap.Forms.MapBox.Tools oldTool = this.ActiveTool;
+                    this.ActiveTool = Tools.None;
+                    _progressBar.Visible = true;
+                    _progressBar.Enabled = true;
+                    new MethodInvoker(this.GetImagesAsync).BeginInvoke(this.GetImagesAsyncEnd, oldTool);
+                }
+                else
+                {
+                    GetImagesAsyncEnd(null);
+                }
+            }
+        }
+
+
 
         private void SetCursor()
         {
@@ -346,11 +562,13 @@ namespace SharpMap.Forms
                 Cursor = Cursors.Cross;
         }
 
+
         /// <summary>
         /// Refreshes the map
         /// </summary>
         public override void Refresh()
         {
+
             if (m_Map != null)
             {
                 m_Map.Size = ClientSize;
@@ -360,16 +578,17 @@ namespace SharpMap.Forms
                 {
                     Cursor c = Cursor;
                     Cursor = Cursors.WaitCursor;
-                    m_Image = m_Map.GetMap();
+                    UpdateImage(true);
                     Cursor = c;
                 }
-                
+
                 base.Refresh();
-                
+                this.Invalidate();
                 if (MapRefreshed != null)
                     MapRefreshed(this, null);
             }
-        }        
+
+        }
 
         protected override void OnKeyDown(KeyEventArgs e)
         {
@@ -427,7 +646,7 @@ namespace SharpMap.Forms
                     m_DragStartPoint = e.Location;
                     m_DragEndPoint = e.Location;
                 }
-                
+
                 if (MouseDown != null)
                     MouseDown(m_Map.ImageToWorld(new Point(e.X, e.Y)), e);
             }
@@ -531,7 +750,10 @@ namespace SharpMap.Forms
 
                 return bmp;
             }
-            return m_Image.Clone() as Bitmap;
+            if (m_Image.PixelFormat != System.Drawing.Imaging.PixelFormat.Undefined)
+                return m_Image.Clone() as Bitmap;
+            else
+                return null;
         }
 
         private Bitmap GeneratePartialBitmap(Geometries.Point center, XPosition xPos, YPosition yPos)
@@ -539,13 +761,13 @@ namespace SharpMap.Forms
             double x = center.X, y = center.Y;
 
             switch (xPos)
-            { 
+            {
                 case XPosition.Right:
                     x += m_Map.Envelope.Width;
                     break;
                 case XPosition.Left:
                     x -= m_Map.Envelope.Width;
-                    break;                
+                    break;
             }
 
             switch (yPos)
@@ -629,8 +851,20 @@ namespace SharpMap.Forms
                 }
             }
 
-            if (m_Image != null)
-                pe.Graphics.DrawImageUnscaled(m_Image, 0, 0);
+            if (m_Image != null && m_Image.PixelFormat != System.Drawing.Imaging.PixelFormat.Undefined)
+            {
+                if (m_DragEndPoint != null && m_DragEndPoint.X != 0 && m_DragEndPoint.Y != 0 && m_DragEndPoint != m_DragStartPoint)
+                {
+                    if (m_PreviewMode == PreviewModes.Best)
+                        pe.Graphics.DrawImageUnscaled(m_DragImage, new Point(-m_Map.Size.Width + m_DragEndPoint.X - m_DragStartPoint.X, -m_Map.Size.Height + m_DragEndPoint.Y - m_DragStartPoint.Y));
+                    else
+                        pe.Graphics.DrawImageUnscaled(m_DragImage, new Point(m_DragEndPoint.X - m_DragStartPoint.X, m_DragEndPoint.Y - m_DragStartPoint.Y));
+                }
+                else
+                {
+                    pe.Graphics.DrawImageUnscaled(m_Image, 0, 0);
+                }
+            }
             else
                 base.OnPaint(pe);
         }
@@ -658,7 +892,7 @@ namespace SharpMap.Forms
                         else
                         {
                             m_Map.Center = m_Map.ImageToWorld(new Point(e.X, e.Y));
-                            
+
                             if (MapCenterChanged != null)
                                 MapCenterChanged(m_Map.Center);
                         }
@@ -681,15 +915,16 @@ namespace SharpMap.Forms
                         else
                         {
                             m_Map.Center = m_Map.ImageToWorld(new Point(e.X, e.Y));
-                            
+
                             if (MapCenterChanged != null)
                                 MapCenterChanged(m_Map.Center);
                         }
 
                         m_Map.Zoom *= 1 / scale;
-                        
+
                         if (MapZoomChanged != null)
                             MapZoomChanged(m_Map.Zoom);
+
                     }
                     else if (m_ActiveTool == Tools.Pan)
                     {
@@ -697,14 +932,14 @@ namespace SharpMap.Forms
                         {
                             Point point = new Point(ClientSize.Width / 2 + (m_DragStartPoint.X - e.Location.X), ClientSize.Height / 2 + (m_DragStartPoint.Y - e.Location.Y));
                             m_Map.Center = m_Map.ImageToWorld(point);
-                            
+
                             if (MapCenterChanged != null)
                                 MapCenterChanged(m_Map.Center);
                         }
                         else
                         {
                             m_Map.Center = m_Map.ImageToWorld(new Point(e.X, e.Y));
-                            
+
                             if (MapCenterChanged != null)
                                 MapCenterChanged(m_Map.Center);
                         }
@@ -774,20 +1009,19 @@ namespace SharpMap.Forms
                             Geometries.Point lowerLeft;
                             Geometries.Point upperRight;
                             GetBounds(m_Map.ImageToWorld(m_DragStartPoint), m_Map.ImageToWorld(m_DragEndPoint), out lowerLeft, out upperRight);
+                            m_DragEndPoint.X = 0;
+                            m_DragEndPoint.Y = 0;
 
                             m_Map.ZoomToBox(new Geometries.BoundingBox(lowerLeft, upperRight));
+
                         }
                     }
                 }
 
-                if (m_DragImage != null)
-                {
-                    m_DragImage.Dispose();
-                    m_DragImage = null;
-                }
 
                 if (m_Dragging)
                 {
+
                     m_Dragging = false;
 
                     if (m_ActiveTool == Tools.Query)
@@ -797,13 +1031,27 @@ namespace SharpMap.Forms
                         m_Rectangle = Rectangle.Empty;
 
                     Refresh();
+
+                    if (m_ActiveTool != Tools.ZoomOut)
+                    {
+                        m_Image.Dispose();
+                        m_Image = null;
+                        m_Image = m_DragImage;
+                        this.Invalidate();
+                    }
+
+
                 }
-                else if (m_ActiveTool == Tools.ZoomIn || m_ActiveTool == Tools.ZoomOut || m_ActiveTool== Tools.Pan)
+                else if (m_ActiveTool == Tools.ZoomIn || m_ActiveTool == Tools.ZoomOut || m_ActiveTool == Tools.Pan)
+                {
                     Refresh();
+                }
+
+
             }
         }
 
-        private void GetBounds(Geometries.Point p1, Geometries.Point p2, 
+        private void GetBounds(Geometries.Point p1, Geometries.Point p2,
             out Geometries.Point lowerLeft, out Geometries.Point upperRight)
         {
             lowerLeft = new Geometries.Point(Math.Min(p1.X, p2.X), Math.Min(p1.Y, p2.Y));

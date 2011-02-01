@@ -168,7 +168,7 @@ namespace WinFormSamples.Samples
             vl.Theme = new CustomTheme(pttTrolley.GetStyle);
             vl.CoordinateTransformation = GetCoordinateTransformation();
             map.VariableLayers.Add(vl);
-            map.VariableLayers.Interval = 5000;
+            VariableLayerCollection.Interval = 5000;
 
             map.ZoomToBox(vl.Envelope);
 

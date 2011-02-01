@@ -42,9 +42,10 @@
         this.scMain = new System.Windows.Forms.SplitContainer();
         this.scMapProp = new System.Windows.Forms.SplitContainer();
         this.tbAngle = new System.Windows.Forms.TrackBar();
-        this.dataGridView1 = new System.Windows.Forms.DataGridView();
         this.mapImage = new SharpMap.Forms.MapImage();
         this.pgMap = new System.Windows.Forms.PropertyGrid();
+        this.dataGridView1 = new System.Windows.Forms.DataGridView();
+        this.button1 = new System.Windows.Forms.Button();
         this.flowLayoutPanel1.SuspendLayout();
         this.scMain.Panel1.SuspendLayout();
         this.scMain.Panel2.SuspendLayout();
@@ -53,8 +54,8 @@
         this.scMapProp.Panel2.SuspendLayout();
         this.scMapProp.SuspendLayout();
         ((System.ComponentModel.ISupportInitialize)(this.tbAngle)).BeginInit();
-        ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
         ((System.ComponentModel.ISupportInitialize)(this.mapImage)).BeginInit();
+        ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
         this.SuspendLayout();
         // 
         // flowLayoutPanel1
@@ -69,6 +70,7 @@
         this.flowLayoutPanel1.Controls.Add(this.radioButton8);
         this.flowLayoutPanel1.Controls.Add(this.radioButton9);
         this.flowLayoutPanel1.Controls.Add(this.radioButton10);
+        this.flowLayoutPanel1.Controls.Add(this.button1);
         this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Left;
         this.flowLayoutPanel1.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
         this.flowLayoutPanel1.Location = new System.Drawing.Point(0, 0);
@@ -246,15 +248,6 @@
         this.tbAngle.TickFrequency = 15;
         this.tbAngle.Scroll += new System.EventHandler(this.tbAngle_Scroll);
         // 
-        // dataGridView1
-        // 
-        this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-        this.dataGridView1.Dock = System.Windows.Forms.DockStyle.Fill;
-        this.dataGridView1.Location = new System.Drawing.Point(0, 0);
-        this.dataGridView1.Name = "dataGridView1";
-        this.dataGridView1.Size = new System.Drawing.Size(523, 126);
-        this.dataGridView1.TabIndex = 4;
-        // 
         // mapImage
         // 
         this.mapImage.ActiveTool = SharpMap.Forms.MapImage.Tools.None;
@@ -264,15 +257,16 @@
         this.mapImage.FineZoomFactor = 10D;
         this.mapImage.Location = new System.Drawing.Point(0, 0);
         this.mapImage.Name = "mapImage";
+        this.mapImage.PanOnClick = false;
         this.mapImage.QueryLayerIndex = 0;
         this.mapImage.Size = new System.Drawing.Size(383, 316);
         this.mapImage.TabIndex = 1;
         this.mapImage.TabStop = false;
         this.mapImage.WheelZoomMagnitude = 2D;
+        this.mapImage.ZoomOnDblClick = false;
         this.mapImage.MapRefreshed += new System.EventHandler(this.mapImage_MapRefreshed);
         this.mapImage.MapZoomChanged += new SharpMap.Forms.MapImage.MapZoomHandler(this.mapImage_MapZoomChanged);
         this.mapImage.MapZooming += new SharpMap.Forms.MapImage.MapZoomHandler(this.mapImage_MapZooming);
-        //this.mapImage.MapQueried += new SharpMap.Forms.MapImage.MapQueryHandler(this.mapImage_MapQueried);
         this.mapImage.MapQueriedDataSet += new SharpMap.Forms.MapImage.MapQueryDataSetHandler(this.mapImage_MapQueriedDataSet);
         this.mapImage.MapCenterChanged += new SharpMap.Forms.MapImage.MapCenterChangedHandler(this.mapImage_MapCenterChanged);
         this.mapImage.ActiveToolChanged += new SharpMap.Forms.MapImage.ActiveToolChangedHandler(this.mapImage_ActiveToolChanged);
@@ -286,6 +280,25 @@
         this.pgMap.SelectedObject = this.mapImage;
         this.pgMap.Size = new System.Drawing.Size(136, 316);
         this.pgMap.TabIndex = 3;
+        // 
+        // dataGridView1
+        // 
+        this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+        this.dataGridView1.Dock = System.Windows.Forms.DockStyle.Fill;
+        this.dataGridView1.Location = new System.Drawing.Point(0, 0);
+        this.dataGridView1.Name = "dataGridView1";
+        this.dataGridView1.Size = new System.Drawing.Size(523, 126);
+        this.dataGridView1.TabIndex = 4;
+        // 
+        // button1
+        // 
+        this.button1.Location = new System.Drawing.Point(13, 237);
+        this.button1.Name = "button1";
+        this.button1.Size = new System.Drawing.Size(97, 23);
+        this.button1.TabIndex = 9;
+        this.button1.Text = "DockWindow";
+        this.button1.UseVisualStyleBackColor = true;
+        this.button1.Click += new System.EventHandler(this.button1_Click);
         // 
         // MainForm
         // 
@@ -306,8 +319,8 @@
         this.scMapProp.Panel2.ResumeLayout(false);
         this.scMapProp.ResumeLayout(false);
         ((System.ComponentModel.ISupportInitialize)(this.tbAngle)).EndInit();
-        ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
         ((System.ComponentModel.ISupportInitialize)(this.mapImage)).EndInit();
+        ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
         this.ResumeLayout(false);
 
     }
@@ -331,6 +344,7 @@
     private System.Windows.Forms.PropertyGrid pgMap;
     private System.Windows.Forms.DataGridView dataGridView1;
     private System.Windows.Forms.TrackBar tbAngle;
+    private System.Windows.Forms.Button button1;
   }
 }
 

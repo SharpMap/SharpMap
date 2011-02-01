@@ -310,7 +310,7 @@ namespace WinFormSamples.Samples
             vl.SRID = 31466;
             vl.Style.Symbol = new Bitmap("Images/car.gif");
 
-            map.VariableLayers.Interval = 500;
+            VariableLayerCollection.Interval = 500;
             map.VariableLayers.Add(vl);
 
             //Restrict zoom
