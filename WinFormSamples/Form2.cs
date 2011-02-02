@@ -29,7 +29,6 @@ namespace WinFormSamples
             
             //TileAsyncLayer osmLayer= new TileAsyncLayer(new OsmTileSource(), "TileLayer - OSM");
             TileAsyncLayer bingLayer = new TileAsyncLayer(new BingTileSource(BingRequest.UrlBing, "",BingMapType.Roads), "TileLayer - Bing" );
-            //TileLayer googleLayer = new TileLayer(new GoogleTileSource(GoogleMapType.GoogleMap), "TileLayer - Google");
 
             this.mapBox1.Map.Layers.Add(bingLayer);
 
@@ -60,6 +59,31 @@ namespace WinFormSamples
 
         private void Form2_SizeChanged(object sender, EventArgs e)
         {
+            this.mapBox1.Refresh();
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            TileLayer googleLayer = new TileAsyncLayer(new GoogleTileSource(new BruTile.Web.GoogleRequest(GoogleMapType.GoogleMap),new BruTile.Cache.MemoryCache<byte[]>(100,1000)), "TileLayer - Google");
+            this.mapBox1.Map.Layers.Clear();
+            this.mapBox1.Map.Layers.Add(googleLayer);
+            this.mapBox1.Refresh();
+        }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            
+            TileAsyncLayer bingLayer = new TileAsyncLayer(new BingTileSource(BingRequest.UrlBing, "", BingMapType.Roads), "TileLayer - Bing");
+            this.mapBox1.Map.Layers.Clear();
+            this.mapBox1.Map.Layers.Add(bingLayer);
+            this.mapBox1.Refresh();
+        }
+
+        private void button6_Click(object sender, EventArgs e)
+        {
+            TileAsyncLayer osmLayer= new TileAsyncLayer(new OsmTileSource(), "TileLayer - OSM");
+            this.mapBox1.Map.Layers.Clear();
+            this.mapBox1.Map.Layers.Add(osmLayer);
             this.mapBox1.Refresh();
         }
     }
