@@ -26,12 +26,12 @@ namespace WinFormSamples
         private void Form2_Load(object sender, EventArgs e)
         {
 
-            TileLayer layer;
+            
             //TileAsyncLayer osmLayer= new TileAsyncLayer(new OsmTileSource(), "TileLayer - OSM");
-            //TileAsyncLayer bingLayer = new TileAsyncLayer(new BingTileSource(BingRequest.UrlBing, "",BingMapType.Roads), "TileLayer - Bing" );
-            TileAsyncLayer googleLayer = new TileAsyncLayer(new GoogleTileSource(GoogleMapType.GoogleMap), "TileLayer - Google");
+            TileAsyncLayer bingLayer = new TileAsyncLayer(new BingTileSource(BingRequest.UrlBing, "",BingMapType.Roads), "TileLayer - Bing" );
+            //TileLayer googleLayer = new TileLayer(new GoogleTileSource(GoogleMapType.GoogleMap), "TileLayer - Google");
 
-            this.mapBox1.Map.Layers.Add(googleLayer);
+            this.mapBox1.Map.Layers.Add(bingLayer);
 
 
             SharpMap.Geometries.BoundingBox geom = ProjNet.CoordinateSystems.Transformations.GeometryTransform.TransformBox(new SharpMap.Geometries.BoundingBox(-9.205626, 38.690993, -9.123736, 38.740837), LayerTools.Wgs84toGoogleMercator.MathTransform);

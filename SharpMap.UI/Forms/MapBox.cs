@@ -207,6 +207,11 @@ namespace SharpMap.Forms
         private PreviewModes m_PreviewMode;
         private bool _isRefreshing;
 
+        [Description("Define if the progress Bar is showed")]
+        [DefaultValue(true)]
+        [Category("Appearance")]
+        public bool ShowProgressUpdate { get; set; }
+
         [Description("The color of selecting rectangle.")]
         [Category("Appearance")]
         public Color SelectionBackColor
@@ -249,7 +254,6 @@ namespace SharpMap.Forms
 
         [Description("Mode used to create preview image while panning or zooming.")]
         [DefaultValue(PreviewModes.Best)]
-
         [Category("Behavior")]
         public PreviewModes PreviewMode
         {
@@ -364,6 +368,7 @@ namespace SharpMap.Forms
         public MapBox()
 #endif
         {
+            
             SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.UserPaint, true);
             DoubleBuffered = true;
             m_Map = new Map(ClientSize);
@@ -374,12 +379,13 @@ namespace SharpMap.Forms
             m_ActiveTool = Tools.None;
             LostFocus += new EventHandler(MapBox_LostFocus);
 
-
+            ShowProgressUpdate = true;
             _progressBar = new ProgressBar();
             this.Controls.Add(_progressBar);
             _progressBar.Style = ProgressBarStyle.Marquee;
             _progressBar.Location = new Point(2, 2);
             _progressBar.Size = new Size(50, 10);
+            _progressBar.Visible = false;
 
 
         }
@@ -478,51 +484,60 @@ namespace SharpMap.Forms
             }
             else
             {
-                Image oldRef = m_Image;
-                Bitmap bmp = new Bitmap(Width, Height);
-
-                Graphics g = Graphics.FromImage(bmp);
-
-                if (m_ImageStatic != null)
+                try
                 {
-                    try
+                    //All this code is thread-safe because in inside of an UI-Invoke
+                    Image oldRef = m_Image;
+                    Bitmap bmp = new Bitmap(Width, Height);
+
+                    Graphics g = Graphics.FromImage(bmp);
+
+                    if (m_ImageStatic != null)
                     {
-                        g.DrawImageUnscaled(m_ImageStatic, 0, 0);
+                        try
+                        {
+                            g.DrawImageUnscaled(m_ImageStatic, 0, 0);
+                        }
+                        catch
+                        {
+                        }
+
                     }
-                    catch
+                    if (m_ImageVariable != null)
+                        try
+                        {
+                            g.DrawImageUnscaled(m_ImageVariable, 0, 0);
+                        }
+                        catch
+                        {
+
+
+                        }
+
+                    g.Dispose();
+
+                    m_Image = bmp;
+                    if (res != null)
                     {
+                        this.ActiveTool = (SharpMap.Forms.MapBox.Tools)res.AsyncState;
                     }
+
+                    if (oldRef != null)
+                        oldRef.Dispose();
+                    this.Invalidate();
+                    this.m_DragEndPoint = new Point(0, 0);
+                    _isRefreshing = false;
+                    this.Enabled = true;
+                    if (ShowProgressUpdate == true)
+                    {
+                        _progressBar.Enabled = false;
+                        _progressBar.Visible = false;
+                    }
+
                 }
-                if (m_ImageVariable != null)
-                    try
-                    {
-                        g.DrawImageUnscaled(m_ImageVariable, 0, 0);
-
-                    }
-                    catch
-                    {
-
-
-                    }
-
-                g.Dispose();
-
-                m_Image = bmp;
-                if (res != null)
+                catch (Exception ex)
                 {
-                    this.ActiveTool = (SharpMap.Forms.MapBox.Tools)res.AsyncState;
                 }
-
-                if (oldRef != null)
-                    oldRef.Dispose();
-                this.Invalidate();
-                this.m_DragEndPoint = new Point(0, 0);
-                _isRefreshing = false;
-                this.Enabled = true;
-                _progressBar.Enabled = false;
-                _progressBar.Visible = false;
-
-
             }
         }
 
@@ -537,8 +552,11 @@ namespace SharpMap.Forms
                     this.Enabled = false;
                     SharpMap.Forms.MapBox.Tools oldTool = this.ActiveTool;
                     this.ActiveTool = Tools.None;
-                    _progressBar.Visible = true;
-                    _progressBar.Enabled = true;
+                    if (ShowProgressUpdate == true)
+                    {
+                        _progressBar.Visible = true;
+                        _progressBar.Enabled = true;
+                    }
                     new MethodInvoker(this.GetImagesAsync).BeginInvoke(this.GetImagesAsyncEnd, oldTool);
                 }
                 else
@@ -568,26 +586,30 @@ namespace SharpMap.Forms
         /// </summary>
         public override void Refresh()
         {
-
-            if (m_Map != null)
+            try
             {
-                m_Map.Size = ClientSize;
-                if (m_Map.Layers == null || m_Map.Layers.Count == 0)
-                    m_Image = null;
-                else
+                if (m_Map != null)
                 {
-                    Cursor c = Cursor;
-                    Cursor = Cursors.WaitCursor;
-                    UpdateImage(true);
-                    Cursor = c;
+                    m_Map.Size = ClientSize;
+                    if (m_Map.Layers == null || m_Map.Layers.Count == 0)
+                        m_Image = null;
+                    else
+                    {
+                        Cursor c = Cursor;
+                        Cursor = Cursors.WaitCursor;
+                        UpdateImage(true);
+                        Cursor = c;
+                    }
+
+                    base.Refresh();
+                    this.Invalidate();
+                    if (MapRefreshed != null)
+                        MapRefreshed(this, null);
                 }
-
-                base.Refresh();
-                this.Invalidate();
-                if (MapRefreshed != null)
-                    MapRefreshed(this, null);
             }
-
+            catch (Exception ex)
+            {
+            }
         }
 
         protected override void OnKeyDown(KeyEventArgs e)
