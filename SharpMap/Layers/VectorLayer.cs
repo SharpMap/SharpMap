@@ -287,10 +287,17 @@ namespace SharpMap.Layers
                 //if style is not enabled, we don't need to render anything
                 if (!Style.Enabled) return;
 
-                DataSource.Open();
+                // Is datasource already open?
+                bool alreadyOpen = DataSource.IsOpen;
 
+                // If not open yet, open it
+                if (!alreadyOpen) { DataSource.Open(); }
+
+                // Read data
                 Collection<Geometry> geoms = DataSource.GetGeometriesInView(envelope);
-                DataSource.Close();
+
+                // If was not open, close it
+                if (!alreadyOpen) { DataSource.Close(); }
 
                 if (CoordinateTransformation != null)
                     for (int i = 0; i < geoms.Count; i++)
