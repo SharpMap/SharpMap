@@ -65,7 +65,7 @@ namespace SharpMap.Layers
         /// </exception>
         public void Insert(int index, ILayer layer)
         {
-            if (index >= Count || index < 0)
+            if (index > Count || index < 0)
             {
                 throw new ArgumentOutOfRangeException("index", index, "Index not in range");
             }

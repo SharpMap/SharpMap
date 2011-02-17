@@ -86,5 +86,20 @@ namespace WinFormSamples
             this.mapBox1.Map.Layers.Add(osmLayer);
             this.mapBox1.Refresh();
         }
+
+        private void button7_Click(object sender, EventArgs e)
+        {
+            this.mapBox1.ActiveTool = SharpMap.Forms.MapBox.Tools.DrawPoint;
+        }
+
+        private void button8_Click(object sender, EventArgs e)
+        {
+            this.mapBox1.ActiveTool = SharpMap.Forms.MapBox.Tools.DrawLine;
+        }
+
+        private void button9_Click(object sender, EventArgs e)
+        {
+            this.mapBox1.ActiveTool = SharpMap.Forms.MapBox.Tools.DrawPolygon;
+        }
     }
 }

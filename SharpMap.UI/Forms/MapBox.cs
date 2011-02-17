@@ -92,6 +92,18 @@ namespace SharpMap.Forms
             /// </summary>
             ZoomWindow,
             /// <summary>
+            /// Define Point on Map
+            /// </summary>
+            DrawPoint,
+            /// <summary>
+            /// Define Line on Map
+            /// </summary>
+            DrawLine,
+            /// <summary>
+            /// Define Polygon on Map
+            /// </summary>
+            DrawPolygon,
+            /// <summary>
             /// No active tool
             /// </summary>
             None
@@ -171,6 +183,19 @@ namespace SharpMap.Forms
         /// Fired when the active map tool has changed
         /// </summary>
         public event ActiveToolChangedHandler ActiveToolChanged;
+
+        /// <summary>
+        /// Eventtype fired when a new geometry has been defined
+        /// </summary>
+        /// <param name="geometry">New Geometry</param>
+        public delegate void GeometryDefinedHandler(SharpMap.Geometries.Geometry geometry);
+
+        /// <summary>
+        /// Fired when a new polygon has been defined
+        /// </summary>
+        public event GeometryDefinedHandler GeometryDefined;
+
+
         #endregion
 
         private static int m_DefaultColorIndex;
@@ -206,11 +231,28 @@ namespace SharpMap.Forms
         private Image m_ImageVariable = new Bitmap(1, 1);
         private PreviewModes m_PreviewMode;
         private bool _isRefreshing;
+        private Point[] pointArray;
+		private bool _showProgress;
 
         [Description("Define if the progress Bar is showed")]
-        [DefaultValue(true)]
         [Category("Appearance")]
-        public bool ShowProgressUpdate { get; set; }
+        public bool ShowProgressUpdate
+        {
+            get
+            {
+                return _showProgress;
+            }
+
+            set
+            {
+                _showProgress = value;
+
+                if (_showProgress)
+                    this._progressBar.Visible = true;
+                else
+                    this._progressBar.Visible = false;
+            }
+        }
 
         [Description("The color of selecting rectangle.")]
         [Category("Appearance")]
@@ -354,6 +396,8 @@ namespace SharpMap.Forms
 
                 SetCursor();
 
+                this.pointArray = null;
+
                 if (check && ActiveToolChanged != null)
                     ActiveToolChanged(value);
             }
@@ -379,13 +423,12 @@ namespace SharpMap.Forms
             m_ActiveTool = Tools.None;
             LostFocus += new EventHandler(MapBox_LostFocus);
 
-            ShowProgressUpdate = true;
+
             _progressBar = new ProgressBar();
             this.Controls.Add(_progressBar);
             _progressBar.Style = ProgressBarStyle.Marquee;
             _progressBar.Location = new Point(2, 2);
             _progressBar.Size = new Size(50, 10);
-            _progressBar.Visible = false;
 
 
         }
@@ -552,11 +595,12 @@ namespace SharpMap.Forms
                     this.Enabled = false;
                     SharpMap.Forms.MapBox.Tools oldTool = this.ActiveTool;
                     this.ActiveTool = Tools.None;
-                    if (ShowProgressUpdate == true)
+                    if (this.ShowProgressUpdate == true)
                     {
                         _progressBar.Visible = true;
                         _progressBar.Enabled = true;
                     }
+
                     new MethodInvoker(this.GetImagesAsync).BeginInvoke(this.GetImagesAsyncEnd, oldTool);
                 }
                 else
@@ -577,6 +621,8 @@ namespace SharpMap.Forms
             else if (m_ActiveTool == Tools.Query)
                 Cursor = Cursors.Help;
             else if (m_ActiveTool == Tools.ZoomIn || m_ActiveTool == Tools.ZoomOut || m_ActiveTool == Tools.ZoomWindow)
+                Cursor = Cursors.Cross;
+            else if (m_ActiveTool == Tools.DrawPoint || m_ActiveTool == Tools.DrawPolygon || m_ActiveTool == Tools.DrawLine)
                 Cursor = Cursors.Cross;
         }
 
@@ -685,7 +731,8 @@ namespace SharpMap.Forms
                 if (MouseMove != null)
                     MouseMove(p, e);
 
-                if (m_Image != null && e.Location != m_DragStartPoint && !m_Dragging && e.Button == MouseButtons.Left)
+                if (m_Image != null && e.Location != m_DragStartPoint && !m_Dragging && e.Button == MouseButtons.Left &&
+                    !(this.m_ActiveTool == Tools.DrawLine || this.m_ActiveTool == Tools.DrawPoint || this.m_ActiveTool == Tools.DrawPolygon))
                 {
                     m_Dragging = true;
 
@@ -727,6 +774,20 @@ namespace SharpMap.Forms
                         m_DragEndPoint = ClipPoint(e.Location);
                         m_Rectangle = GenerateRectangle(m_DragStartPoint, m_DragEndPoint);
                         Invalidate(new Region(ClientRectangle));
+                    }
+                }
+                else
+                {
+                    if (m_ActiveTool == Tools.DrawPolygon || m_ActiveTool == Tools.DrawLine)
+                    {
+                        m_DragEndPoint = new Point(0, 0);
+                        if (pointArray != null)
+                        {
+                            pointArray[pointArray.GetUpperBound(0)] = ClipPoint(e.Location);
+                            Rectangle oldRectangle = m_Rectangle;
+                            m_Rectangle = GenerateRectangle(m_DragStartPoint, ClipPoint(e.Location));
+                            Invalidate(new Region(ClientRectangle));
+                        }
                     }
                 }
             }
@@ -871,6 +932,7 @@ namespace SharpMap.Forms
                     pe.Graphics.DrawImage(m_DragImage, rect);
                     return;
                 }
+
             }
 
             if (m_Image != null && m_Image.PixelFormat != System.Drawing.Imaging.PixelFormat.Undefined)
@@ -885,6 +947,26 @@ namespace SharpMap.Forms
                 else
                 {
                     pe.Graphics.DrawImageUnscaled(m_Image, 0, 0);
+
+                    //Draws current line or polygon (Draw Line or Draw Polygon tool)
+                    if (pointArray != null)
+                    {
+                        if (pointArray.GetUpperBound(0) == 1)
+                        {
+                            pe.Graphics.DrawLine(new Pen(Color.Gray, 2F), pointArray[0], pointArray[1]);
+                        }
+                        else
+                        {
+                            if (m_ActiveTool == Tools.DrawPolygon)
+                            {
+                                Color c = Color.FromArgb(127, Color.Gray);
+                                pe.Graphics.FillPolygon(new SolidBrush(c), pointArray);
+                                pe.Graphics.DrawPolygon(new Pen(Color.Gray, 2F), pointArray);
+                            }
+                            else
+                                pe.Graphics.DrawLines(new Pen(Color.Gray, 2F), pointArray);
+                        }
+                    }
                 }
             }
             else
@@ -1038,6 +1120,32 @@ namespace SharpMap.Forms
 
                         }
                     }
+                    else if (m_ActiveTool == Tools.DrawPoint)
+                    {
+                        if (GeometryDefined != null)
+                        {
+                            GeometryDefined(Map.ImageToWorld(new PointF(e.X, e.Y)));
+                        }
+                    }
+                    else if (m_ActiveTool == Tools.DrawPolygon || m_ActiveTool == Tools.DrawLine)
+                    {
+                        //pointArray = null;
+                        if (pointArray == null)
+                        {
+                            pointArray = new Point[2];
+                            pointArray[0] = e.Location;
+                            pointArray[1] = e.Location;
+                        }
+                        else
+                        {
+                            Point[] temp = new Point[pointArray.GetUpperBound(0) + 2];
+                            for (int i = 0; i <= pointArray.GetUpperBound(0); i++)
+                                temp[i] = pointArray[i];
+
+                            temp[temp.GetUpperBound(0)] = e.Location;
+                            pointArray = temp;
+                        }
+                    }
                 }
 
 
@@ -1072,6 +1180,39 @@ namespace SharpMap.Forms
 
             }
         }
+
+        protected override void OnMouseDoubleClick(MouseEventArgs e)
+        {
+            base.OnMouseDoubleClick(e);
+
+            if (m_ActiveTool == Tools.DrawPolygon)
+            {
+                if (GeometryDefined != null)
+                {
+                    SharpMap.Geometries.LinearRing ExtRing = new SharpMap.Geometries.LinearRing();
+                    for (int i = 0; i < pointArray.GetUpperBound(0); i++)
+                        ExtRing.Vertices.Add(Map.ImageToWorld(new PointF(pointArray[i].X, pointArray[i].Y)));
+
+                    ExtRing.Vertices.Add(Map.ImageToWorld(new PointF(pointArray[0].X, pointArray[0].Y)));
+
+                    GeometryDefined(new SharpMap.Geometries.Polygon(ExtRing));
+                }
+                ActiveTool = Tools.None;
+            }
+            else if (m_ActiveTool == Tools.DrawLine)
+            {
+                if (GeometryDefined != null)
+                {
+                    SharpMap.Geometries.LineString Line = new SharpMap.Geometries.LineString();
+                    for (int i = 0; i <= pointArray.GetUpperBound(0); i++)
+                        Line.Vertices.Add(Map.ImageToWorld(new PointF(pointArray[i].X, pointArray[i].Y)));
+
+                    GeometryDefined(Line);
+                }
+                ActiveTool = Tools.None;
+            }
+        }
+
 
         private void GetBounds(Geometries.Point p1, Geometries.Point p2,
             out Geometries.Point lowerLeft, out Geometries.Point upperRight)

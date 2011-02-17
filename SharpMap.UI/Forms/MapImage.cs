@@ -103,6 +103,7 @@ namespace SharpMap.Forms
             base.MouseDown += new System.Windows.Forms.MouseEventHandler(MapImage_MouseDown);
             base.MouseWheel += new System.Windows.Forms.MouseEventHandler(MapImage_Wheel);
             base.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(MapImage_DblClick);
+            VariableLayerCollection.VariableLayerCollectionRequery += this.VariableLayersRequery;
             Cursor = Cursors.Cross;
             DoubleBuffered = true;
         }

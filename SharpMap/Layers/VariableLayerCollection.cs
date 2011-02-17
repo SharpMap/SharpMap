@@ -35,6 +35,7 @@ namespace SharpMap.Layers
         {
             if (touchTest == true)
             {
+                System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(OnRequery));
                 _timer.Start();
             }
             else
@@ -58,7 +59,7 @@ namespace SharpMap.Layers
             if (_timer == null)
             {
                 _timer = new Timer();
-                _timer.Interval = 1000;
+                _timer.Interval = 500;
                 _timer.Elapsed += new ElapsedEventHandler(TimerElapsed);
             }
         }
@@ -66,7 +67,7 @@ namespace SharpMap.Layers
         static void TimerElapsed(object sender, ElapsedEventArgs e)
         {
             touchTest = false;
-            OnRequery();
+            OnRequery(null);
             if (touchTest == false)
             {
                 _timer.Stop();
@@ -96,7 +97,7 @@ namespace SharpMap.Layers
             
         }
 
-        private static void OnRequery()
+        private static void OnRequery(object obj)
         {
             if (Pause) return;
             if (VariableLayerCollectionRequery != null)

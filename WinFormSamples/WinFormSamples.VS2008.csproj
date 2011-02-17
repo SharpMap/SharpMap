@@ -74,6 +74,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FormDemoDrawGeometries.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormDemoDrawGeometries.Designer.cs">
+      <DependentUpon>FormDemoDrawGeometries.cs</DependentUpon>
+    </Compile>
     <Compile Include="DockAreaForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -194,6 +200,9 @@
     <Compile Include="Samples\OgrSample.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="FormDemoDrawGeometries.resx">
+      <DependentUpon>FormDemoDrawGeometries.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="DockAreaForm.resx">
       <DependentUpon>DockAreaForm.cs</DependentUpon>
     </EmbeddedResource>

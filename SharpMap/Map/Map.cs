@@ -171,6 +171,12 @@ namespace SharpMap
         public event MapRenderedEventHandler MapRendered;
 
         /// <summary>
+        /// Event fired when one layer have been rendered
+        /// </summary>
+        public event EventHandler LayerRendered;
+
+
+        /// <summary>
         /// Event fired when a new Tile is available in a TileAsyncLayer
         /// </summary>
         public event MapNewTileAvaliabledHandler MapNewTileAvaliable;
@@ -206,11 +212,26 @@ namespace SharpMap
             {
                 if (_Layers[i].Enabled && _Layers[i].MaxVisible >= Zoom && _Layers[i].MinVisible < Zoom)
                     _Layers[i].Render(g, this);
+
+                if (this.LayerRendered != null)
+                    this.LayerRendered(this, new EventArgs());
+
             }
             if (MapRendered != null) MapRendered(g); //Fire render event
             g.Dispose();
             return img;
              */
+        }
+
+        public Image GetMap(int resolution)
+        {
+            Image img = new Bitmap(Size.Width, Size.Height);
+            ((Bitmap)img).SetResolution(resolution, resolution);
+            Graphics g = Graphics.FromImage(img);
+            RenderMap(g);
+            g.Dispose();
+            return img;
+
         }
 
         public void MapNewTileAvaliableHandler(TileLayer sender, SharpMap.Geometries.BoundingBox bbox, Bitmap bm, int sourceWidth, int sourceHeight, ImageAttributes imageAttributes)
@@ -232,6 +253,7 @@ namespace SharpMap
             if (g == null)
                 throw new ArgumentNullException("g", "Cannot render map with null graphics object!");
 
+            //Pauses the timer for VariableLayer
             VariableLayerCollection.Pause = true;
 
             if (Layers == null || Layers.Count == 0)
@@ -241,19 +263,27 @@ namespace SharpMap
             g.Clear(BackColor);
             g.PageUnit = GraphicsUnit.Pixel;
 
+
             //int srid = (Layers.Count > 0 ? Layers[0].SRID : -1); //Get the SRID of the first layer
-            for (int i = 0; i < _Layers.Count; i++)
+            ILayer[] layerList = new ILayer[_Layers.Count];
+            _Layers.CopyTo(layerList, 0);
+
+            //int srid = (Layers.Count > 0 ? Layers[0].SRID : -1); //Get the SRID of the first layer
+            foreach (ILayer layer in layerList)
             {
-                if (_Layers[i].Enabled && _Layers[i].MaxVisible >= Zoom && _Layers[i].MinVisible < Zoom)
-                    _Layers[i].Render(g, this);
+                if (layer.Enabled && layer.MaxVisible >= Zoom && layer.MinVisible < Zoom)
+                    layer.Render(g, this);
             }
 
-            for (int i = 0; i < _variableLayers.Count; i++)
+            layerList = new ILayer[_variableLayers.Count];
+            _variableLayers.CopyTo(layerList, 0);
+            foreach (ILayer layer in layerList)
             {
-                if (_variableLayers[i].Enabled && _variableLayers[i].MaxVisible >= Zoom && _variableLayers[i].MinVisible < Zoom)
-                    _variableLayers[i].Render(g, this);
+                if (layer.Enabled && layer.MaxVisible >= Zoom && layer.MinVisible < Zoom)
+                    layer.Render(g, this);
             }
 
+            //Resets the timer for VariableLayer
             VariableLayerCollection.Pause = false;
 
             RenderDisclaimer(g);
@@ -297,8 +327,13 @@ namespace SharpMap
             g.Clear(BackColor);
             g.PageUnit = GraphicsUnit.Pixel;
 
+
             //int srid = (Layers.Count > 0 ? Layers[0].SRID : -1); //Get the SRID of the first layer
-            foreach (ILayer layer in lc)
+            ILayer[] layerList = new ILayer[lc.Count];
+            lc.CopyTo(layerList, 0);
+
+            //int srid = (Layers.Count > 0 ? Layers[0].SRID : -1); //Get the SRID of the first layer
+            foreach (ILayer layer in layerList)
             {
                 if (layer.Enabled && layer.MaxVisible >= Zoom && layer.MinVisible < Zoom)
                     layer.Render(g, this);
@@ -394,10 +429,13 @@ namespace SharpMap
         /// <param name="bbox"></param>
         public void ZoomToBox(BoundingBox bbox)
         {
-            _Zoom = bbox.Width; //Set the private center value so we only fire one MapOnViewChange event
-            if (Envelope.Height < bbox.Height)
-                _Zoom *= bbox.Height/Envelope.Height;
-            Center = bbox.GetCentroid();
+            if (bbox != null)
+            {
+                _Zoom = bbox.Width; //Set the private center value so we only fire one MapOnViewChange event
+                if (Envelope.Height < bbox.Height)
+                    _Zoom *= bbox.Height / Envelope.Height;
+                Center = bbox.GetCentroid();
+            }
         }
 
         /// <summary>
@@ -711,10 +749,27 @@ namespace SharpMap
             BoundingBox bbox = null;
             for (int i = 0; i < Layers.Count; i++)
             {
-                if (bbox == null)
-                    bbox = Layers[i].Envelope;
-                else
-                    bbox = bbox.Join(Layers[i].Envelope);
+
+                //Tries to get bb. Fails on some specific shapes and Mercator projects (World.shp)
+                BoundingBox bb = null;
+                try
+                {
+                    bb = Layers[i].Envelope;
+                }
+                catch (Exception)
+                {
+                    bb = new BoundingBox(-20037508.342789, -20037508.342789, 20037508.342789, 20037508.342789);
+                }
+
+                if (bb != null)
+                {
+
+                    if (bbox == null)
+                        bbox = bb;
+                    else
+                        bbox = bbox.Join(bb);
+                }
+
             }
             return bbox;
         }

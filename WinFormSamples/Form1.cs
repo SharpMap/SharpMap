@@ -162,5 +162,11 @@ namespace WinFormSamples
             new DockAreaForm().Show();
         }
 
+        private void button2_Click(object sender, EventArgs e)
+        {
+            new FormDemoDrawGeometries().ShowDialog();
+        }
+
+
     }
 }

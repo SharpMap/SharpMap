@@ -77,10 +77,7 @@ namespace SharpMap.Layers
             byte[] bytes;
             try
             {
-                System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
-                sw.Start();
                 bytes = tileProvider.GetTile(tileInfo);
-                Console.WriteLine("GetTile in " + sw.ElapsedMilliseconds  + "ms.");
                 Bitmap bitmap = new Bitmap(new MemoryStream(bytes));
                 bitmaps.Add(tileInfo.Index, bitmap);
 

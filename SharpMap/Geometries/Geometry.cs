@@ -83,6 +83,12 @@ namespace SharpMap.Geometries
         public abstract int Dimension { get; }
 
         /// <summary>
+        /// User Data Associated with the geometry object
+        /// </summary>
+        public object UserData { get; set; }
+
+
+        /// <summary>
         /// The minimum bounding box for this <see cref="Geometry"/>, returned as a <see cref="Geometry"/>. The
         /// polygon is defined by the corner points of the bounding box ((MINX, MINY), (MAXX, MINY), (MAXX,
         /// MAXY), (MINX, MAXY), (MINX, MINY)).
