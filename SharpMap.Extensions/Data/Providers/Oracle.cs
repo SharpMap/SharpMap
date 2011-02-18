@@ -1,5 +1,5 @@
 // Copyright 2006 - Humberto Ferreira
-// Oracle provider by Humberto Ferreira (humbertojdf@hotmail.com)
+// Oracle provider by Humberto Ferreira (humbertojdf@gmail.com)
 //
 // Date 2006-09-05
 //
@@ -46,7 +46,7 @@ namespace SharpMap.Data.Providers
     /// myLayer.DataSource = new SharpMap.Data.Providers.Oracle(ConnStr, "myTable", "GeomColumn", "OidColumn");
     /// </code>
     /// </example>
-    /// <para>SharpMap Oracle provider by Humberto Ferreira (humbertojdf at hotmail com).</para>
+    /// <para>SharpMap Oracle provider by Humberto Ferreira (humbertojdf at gmail com).</para>
     /// </remarks>
     [Serializable]
     public class Oracle : IProvider, IDisposable
