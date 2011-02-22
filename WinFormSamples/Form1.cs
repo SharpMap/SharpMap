@@ -167,6 +167,10 @@ namespace WinFormSamples
             new FormDemoDrawGeometries().ShowDialog();
         }
 
+        private void button3_Click(object sender, EventArgs e)
+        {
+            new FormAnimation().ShowDialog();
+        }
 
     }
 }

@@ -74,6 +74,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FormAnimation.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormAnimation.Designer.cs">
+      <DependentUpon>FormAnimation.cs</DependentUpon>
+    </Compile>
     <Compile Include="FormDemoDrawGeometries.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -200,6 +206,9 @@
     <Compile Include="Samples\OgrSample.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="FormAnimation.resx">
+      <DependentUpon>FormAnimation.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="FormDemoDrawGeometries.resx">
       <DependentUpon>FormDemoDrawGeometries.cs</DependentUpon>
     </EmbeddedResource>

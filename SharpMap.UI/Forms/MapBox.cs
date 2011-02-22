@@ -25,6 +25,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using SharpMap.Layers;
 using System.Drawing.Imaging;
+using System.Diagnostics;
 
 namespace SharpMap.Forms
 {
@@ -204,6 +205,9 @@ namespace SharpMap.Forms
         private const float MAX_DRAG_SCALING_BEFORE_REGEN = 3f;
         private ProgressBar _progressBar;
 
+        private Stopwatch watch = new Stopwatch();
+
+
         public static void RandomizeLayerColors(Layers.VectorLayer layer)
         {
             layer.Style.EnableOutline = true;
@@ -230,11 +234,11 @@ namespace SharpMap.Forms
         private Image m_ImageStatic = new Bitmap(1, 1);
         private Image m_ImageVariable = new Bitmap(1, 1);
         private PreviewModes m_PreviewMode;
-        private bool _isRefreshing;
+        private bool _isRefreshing = false;
         private Point[] pointArray;
-		private bool _showProgress;
+        private bool _showProgress;
 
-        [Description("Define if the progress Bar is showed")]
+        [Description("Define if the progress Bar is shown")]
         [Category("Appearance")]
         public bool ShowProgressUpdate
         {
@@ -270,7 +274,16 @@ namespace SharpMap.Forms
         [Category("Appearance")]
         public Image Image
         {
-            get { return m_Image; }
+            get
+            {
+                //Updates Map
+                lock (m_Map)
+                {
+                   GetImagesAsync();
+                   GetImagesAsyncEnd(null);
+                }
+                return m_Image;
+            }
         }
 
         [Description("The color of selectiong rectangle frame.")]
@@ -367,6 +380,7 @@ namespace SharpMap.Forms
                 }
                 catch (Exception ex)
                 {
+                    Console.WriteLine(ex.ToString());
                     //this can be a GDI+ Hell Exception...
                 }
             }
@@ -404,6 +418,12 @@ namespace SharpMap.Forms
         }
 
         /// <summary>
+        /// TimeSpan for refreshing maps
+        /// </summary>
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        public TimeSpan LastRefreshTime { get; set; }
+
+        /// <summary>
         /// Initializes a new map
         /// </summary>
 #if UseMapBoxAsMapImage
@@ -419,7 +439,6 @@ namespace SharpMap.Forms
             VariableLayerCollection.VariableLayerCollectionRequery += this.VariableLayersRequery;
             m_Map.MapNewTileAvaliable += this.m_Map_MapNewTileAvaliable;
 
-
             m_ActiveTool = Tools.None;
             LostFocus += new EventHandler(MapBox_LostFocus);
 
@@ -429,7 +448,6 @@ namespace SharpMap.Forms
             _progressBar.Style = ProgressBarStyle.Marquee;
             _progressBar.Location = new Point(2, 2);
             _progressBar.Size = new Size(50, 10);
-
 
         }
 
@@ -476,25 +494,11 @@ namespace SharpMap.Forms
 
         private Image GetMap(LayerCollection layers, LayerCollectionType layerCollectionType)
         {
+
             if ((layers == null || layers.Count == 0 || Width == 0 || Height == 0))
                 return null;
 
             Bitmap retval = new Bitmap(Width, Height);
-            lock (m_ImageStatic)
-            {
-                if (layerCollectionType == LayerCollectionType.Static)
-                {
-                    if (m_ImageStatic.Width != Width || m_ImageStatic.Height != Height)
-                    {
-                        retval = new Bitmap(Width, Height);
-                    }
-                    else
-                    {
-                        retval = (Bitmap)m_ImageStatic;
-                    }
-
-                }
-            }
 
             Graphics g = Graphics.FromImage(retval);
             m_Map.RenderMap(g, layerCollectionType);
@@ -504,14 +508,15 @@ namespace SharpMap.Forms
                 retval.MakeTransparent(m_Map.BackColor);
 
             return retval;
-
         }
+
 
         private void GetImagesAsync()
         {
             lock (m_Map)
             {
                 m_ImageVariable = GetMap(m_Map.VariableLayers, LayerCollectionType.Variable);
+
                 lock (m_ImageStatic)
                 {
                     m_ImageStatic = GetMap(m_Map.Layers, LayerCollectionType.Static);
@@ -541,21 +546,23 @@ namespace SharpMap.Forms
                         {
                             g.DrawImageUnscaled(m_ImageStatic, 0, 0);
                         }
-                        catch
+                        catch (Exception ex)
                         {
+                            Console.WriteLine(ex.ToString());
                         }
 
                     }
                     if (m_ImageVariable != null)
+                    {
                         try
                         {
                             g.DrawImageUnscaled(m_ImageVariable, 0, 0);
                         }
-                        catch
+                        catch (Exception ex)
                         {
-
-
+                            Console.WriteLine(ex.ToString());
                         }
+                    }
 
                     g.Dispose();
 
@@ -577,11 +584,23 @@ namespace SharpMap.Forms
                         _progressBar.Visible = false;
                     }
 
+
                 }
                 catch (Exception ex)
                 {
+                    Console.WriteLine(ex.ToString());
                 }
+
+                watch.Stop();
+                this.LastRefreshTime = watch.Elapsed;
+
+                if (MapRefreshed != null)
+                    MapRefreshed(this, null);
+
+
+
             }
+
         }
 
         private void UpdateImage(bool forceRefresh)
@@ -634,6 +653,9 @@ namespace SharpMap.Forms
         {
             try
             {
+                watch.Reset();
+                watch.Start();
+
                 if (m_Map != null)
                 {
                     m_Map.Size = ClientSize;
@@ -649,12 +671,12 @@ namespace SharpMap.Forms
 
                     base.Refresh();
                     this.Invalidate();
-                    if (MapRefreshed != null)
-                        MapRefreshed(this, null);
+
                 }
             }
             catch (Exception ex)
             {
+                Console.WriteLine(ex.ToString());
             }
         }
 
@@ -798,7 +820,10 @@ namespace SharpMap.Forms
             Cursor c = Cursor;
             Cursor = Cursors.WaitCursor;
             m_Map.Zoom /= m_Scaling;
-            m_Image = m_Map.GetMap();
+            lock (m_Map)
+            {
+                m_Image = m_Map.GetMap();
+            }
             m_Scaling = 1;
             m_DragImage = GenerateDragImage(PreviewModes.Best);
             m_DragStartPoint = m_DragEndPoint;

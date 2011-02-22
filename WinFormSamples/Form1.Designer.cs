@@ -40,13 +40,15 @@
         this.radioButton9 = new System.Windows.Forms.RadioButton();
         this.radioButton10 = new System.Windows.Forms.RadioButton();
         this.button1 = new System.Windows.Forms.Button();
+        this.button2 = new System.Windows.Forms.Button();
+        this.button3 = new System.Windows.Forms.Button();
         this.scMain = new System.Windows.Forms.SplitContainer();
         this.scMapProp = new System.Windows.Forms.SplitContainer();
         this.tbAngle = new System.Windows.Forms.TrackBar();
-        this.dataGridView1 = new System.Windows.Forms.DataGridView();
-        this.button2 = new System.Windows.Forms.Button();
         this.mapImage = new SharpMap.Forms.MapImage();
         this.pgMap = new System.Windows.Forms.PropertyGrid();
+        this.dataGridView1 = new System.Windows.Forms.DataGridView();
+        this.groupBox1 = new System.Windows.Forms.GroupBox();
         this.flowLayoutPanel1.SuspendLayout();
         this.scMain.Panel1.SuspendLayout();
         this.scMain.Panel2.SuspendLayout();
@@ -55,8 +57,9 @@
         this.scMapProp.Panel2.SuspendLayout();
         this.scMapProp.SuspendLayout();
         ((System.ComponentModel.ISupportInitialize)(this.tbAngle)).BeginInit();
-        ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
         ((System.ComponentModel.ISupportInitialize)(this.mapImage)).BeginInit();
+        ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
+        this.groupBox1.SuspendLayout();
         this.SuspendLayout();
         // 
         // flowLayoutPanel1
@@ -71,8 +74,7 @@
         this.flowLayoutPanel1.Controls.Add(this.radioButton8);
         this.flowLayoutPanel1.Controls.Add(this.radioButton9);
         this.flowLayoutPanel1.Controls.Add(this.radioButton10);
-        this.flowLayoutPanel1.Controls.Add(this.button1);
-        this.flowLayoutPanel1.Controls.Add(this.button2);
+        this.flowLayoutPanel1.Controls.Add(this.groupBox1);
         this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Left;
         this.flowLayoutPanel1.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
         this.flowLayoutPanel1.Location = new System.Drawing.Point(0, 0);
@@ -204,13 +206,33 @@
         // 
         // button1
         // 
-        this.button1.Location = new System.Drawing.Point(13, 237);
+        this.button1.Location = new System.Drawing.Point(15, 19);
         this.button1.Name = "button1";
         this.button1.Size = new System.Drawing.Size(97, 23);
         this.button1.TabIndex = 9;
         this.button1.Text = "DockWindow";
         this.button1.UseVisualStyleBackColor = true;
         this.button1.Click += new System.EventHandler(this.button1_Click);
+        // 
+        // button2
+        // 
+        this.button2.Location = new System.Drawing.Point(15, 48);
+        this.button2.Name = "button2";
+        this.button2.Size = new System.Drawing.Size(97, 23);
+        this.button2.TabIndex = 10;
+        this.button2.Text = "Draw Geometries";
+        this.button2.UseVisualStyleBackColor = true;
+        this.button2.Click += new System.EventHandler(this.button2_Click);
+        // 
+        // button3
+        // 
+        this.button3.Location = new System.Drawing.Point(15, 77);
+        this.button3.Name = "button3";
+        this.button3.Size = new System.Drawing.Size(97, 23);
+        this.button3.TabIndex = 11;
+        this.button3.Text = "Save Animation";
+        this.button3.UseVisualStyleBackColor = true;
+        this.button3.Click += new System.EventHandler(this.button3_Click);
         // 
         // scMain
         // 
@@ -260,25 +282,6 @@
         this.tbAngle.TickFrequency = 15;
         this.tbAngle.Scroll += new System.EventHandler(this.tbAngle_Scroll);
         // 
-        // dataGridView1
-        // 
-        this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-        this.dataGridView1.Dock = System.Windows.Forms.DockStyle.Fill;
-        this.dataGridView1.Location = new System.Drawing.Point(0, 0);
-        this.dataGridView1.Name = "dataGridView1";
-        this.dataGridView1.Size = new System.Drawing.Size(523, 126);
-        this.dataGridView1.TabIndex = 4;
-        // 
-        // button2
-        // 
-        this.button2.Location = new System.Drawing.Point(13, 266);
-        this.button2.Name = "button2";
-        this.button2.Size = new System.Drawing.Size(97, 23);
-        this.button2.TabIndex = 10;
-        this.button2.Text = "Draw Geometries";
-        this.button2.UseVisualStyleBackColor = true;
-        this.button2.Click += new System.EventHandler(this.button2_Click);
-        // 
         // mapImage
         // 
         this.mapImage.ActiveTool = SharpMap.Forms.MapImage.Tools.Pan;
@@ -312,6 +315,27 @@
         this.pgMap.Size = new System.Drawing.Size(136, 316);
         this.pgMap.TabIndex = 3;
         // 
+        // dataGridView1
+        // 
+        this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+        this.dataGridView1.Dock = System.Windows.Forms.DockStyle.Fill;
+        this.dataGridView1.Location = new System.Drawing.Point(0, 0);
+        this.dataGridView1.Name = "dataGridView1";
+        this.dataGridView1.Size = new System.Drawing.Size(523, 126);
+        this.dataGridView1.TabIndex = 4;
+        // 
+        // groupBox1
+        // 
+        this.groupBox1.Controls.Add(this.button1);
+        this.groupBox1.Controls.Add(this.button3);
+        this.groupBox1.Controls.Add(this.button2);
+        this.groupBox1.Location = new System.Drawing.Point(13, 237);
+        this.groupBox1.Name = "groupBox1";
+        this.groupBox1.Size = new System.Drawing.Size(134, 107);
+        this.groupBox1.TabIndex = 12;
+        this.groupBox1.TabStop = false;
+        this.groupBox1.Text = "Map Box Examples";
+        // 
         // MainForm
         // 
         this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -331,8 +355,9 @@
         this.scMapProp.Panel2.ResumeLayout(false);
         this.scMapProp.ResumeLayout(false);
         ((System.ComponentModel.ISupportInitialize)(this.tbAngle)).EndInit();
-        ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
         ((System.ComponentModel.ISupportInitialize)(this.mapImage)).EndInit();
+        ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
+        this.groupBox1.ResumeLayout(false);
         this.ResumeLayout(false);
 
     }
@@ -358,6 +383,8 @@
     private System.Windows.Forms.TrackBar tbAngle;
     private System.Windows.Forms.Button button1;
     private System.Windows.Forms.Button button2;
+    private System.Windows.Forms.Button button3;
+    private System.Windows.Forms.GroupBox groupBox1;
   }
 }
 

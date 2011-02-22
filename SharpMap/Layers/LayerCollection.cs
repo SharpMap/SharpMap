@@ -70,7 +70,11 @@ namespace SharpMap.Layers
                 throw new ArgumentOutOfRangeException("index", index, "Index not in range");
             }
 
-            Items.Insert(index, layer);
+
+            //Items.Insert(index, layer);
+            //Raise the Add New Event
+            base.InsertItem(0, layer);
+
         }
 
         protected override void  OnAddingNew(System.ComponentModel.AddingNewEventArgs e)
