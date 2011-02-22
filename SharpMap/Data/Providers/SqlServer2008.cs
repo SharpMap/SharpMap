@@ -561,7 +561,7 @@ namespace SharpMap.Data.Providers
  
                //string strSQL = "SELECT g.*, g." + GeometryColumn + ".STAsBinary() AS sharpmap_tempgeometry ";   
                string strSQL = String.Format(
-                   "SELECT g.*, g.{0}{1}.STAsBinary() AS sharpmap_tempgeometry FROM {2} g WHERE",
+                   "SELECT g.*, g.{0}{1}.STAsBinary() AS sharpmap_tempgeometry FROM {2} g WHERE ",
                    GeometryColumn, MakeValidString, Table);
  
                if (!String.IsNullOrEmpty(_defintionQuery))   
