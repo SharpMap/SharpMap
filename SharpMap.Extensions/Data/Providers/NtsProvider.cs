@@ -196,8 +196,7 @@ namespace SharpMap.Data.Providers
                 foreach (uint id in ids)
                 {
                     FeatureDataRow dataRow = provider.GetFeature(id);
-                    GisSharpBlog.NetTopologySuite.Geometries.Geometry geometry =
-                        GeometryConverter.ToNTSGeometry(dataRow.Geometry, geometryFactory);
+                    GeoAPI.Geometries.IGeometry geometry = GeometryConverter.ToNTSGeometry(dataRow.Geometry, geometryFactory);
                     AttributesTable attributes = new AttributesTable();
                     foreach (DataColumn column in dataRow.Table.Columns)
                     {
@@ -319,8 +318,7 @@ namespace SharpMap.Data.Providers
         /// <param name="ds"></param>
         public void ExecuteIntersectionQuery(Geometry geom, FeatureDataSet ds)
         {
-            GisSharpBlog.NetTopologySuite.Geometries.Geometry geometry = GeometryConverter.ToNTSGeometry(geom,
-                                                                                                         geometryFactory);
+            GeoAPI.Geometries.IGeometry geometry = GeometryConverter.ToNTSGeometry(geom, geometryFactory);
             FeatureDataTable dataTable = CreateFeatureDataTable();
 
             foreach (Feature feature in features)

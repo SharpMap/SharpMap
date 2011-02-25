@@ -19,6 +19,7 @@
 #endregion
 using System;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 using Microsoft.SqlServer.Types;
 using SMGeometry = SharpMap.Geometries.Geometry;
 using SMGeometryType = SharpMap.Geometries.GeometryType2;
@@ -34,11 +35,33 @@ using SMGeometryCollection = SharpMap.Geometries.GeometryCollection;
 
 namespace SharpMap.Converters.SqlServer2008SpatialObjects
 {
+    //[Serializable]
+    public class SqlGeometryConverterException : Exception
+    {
+        /// <summary>
+        /// The geometry to convert
+        /// </summary>
+        public readonly SMGeometry Geometry;
+
+        public SqlGeometryConverterException(SMGeometry geometry)
+            :this("Failed to convert SharpMapGeometry", geometry)
+        {
+            Geometry = geometry;
+        }
+
+        public SqlGeometryConverterException(string message, SMGeometry geometry)
+            : base(message)
+        {
+            Geometry = geometry;
+        }
+    }
+
     public static class SqlGeometryConverter
     {
         public static SqlGeometry ToSqlGeometry(SMGeometry smGeometry)
         {
             SqlGeometryBuilder builder = new SqlGeometryBuilder();
+            
 #if !DotSpatialProjections
             if (smGeometry.SpatialReference != null)
                 builder.SetSrid((int) smGeometry.SpatialReference.AuthorityCode);
@@ -54,6 +77,8 @@ namespace SharpMap.Converters.SqlServer2008SpatialObjects
             SqlGeometry g = builder.ConstructedGeometry;
             if (!g.STIsValid())
                 g.MakeValid();
+            if (!g.STIsValid())
+                throw new SqlGeometryConverterException(smGeometry);
 
             return g;
         }
@@ -161,7 +186,14 @@ namespace SharpMap.Converters.SqlServer2008SpatialObjects
 
         private static void AddRing(SqlGeometryBuilder builder, SMLinearRing linearRing)
         {
+            if (linearRing.NumPoints < 3)
+                return;
+
+            if (linearRing.Area == 0)
+                return;
+
             SMPoint pt = linearRing.StartPoint;
+
             builder.BeginFigure(pt.X, pt.Y);
             for (int i = 1; i < linearRing.NumPoints; i++)
             {

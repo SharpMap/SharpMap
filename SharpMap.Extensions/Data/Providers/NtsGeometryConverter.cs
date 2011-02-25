@@ -20,18 +20,21 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using GisSharpBlog.NetTopologySuite.Geometries;
 using SharpMap.Geometries;
-using Geometry=GisSharpBlog.NetTopologySuite.Geometries.Geometry;
-using GeometryCollection=GisSharpBlog.NetTopologySuite.Geometries.GeometryCollection;
-using LinearRing=GisSharpBlog.NetTopologySuite.Geometries.LinearRing;
-using LineString=GisSharpBlog.NetTopologySuite.Geometries.LineString;
-using MultiLineString=GisSharpBlog.NetTopologySuite.Geometries.MultiLineString;
-using MultiPoint=GisSharpBlog.NetTopologySuite.Geometries.MultiPoint;
-using MultiPolygon=GisSharpBlog.NetTopologySuite.Geometries.MultiPolygon;
-using Point=SharpMap.Geometries.Point;
-using Polygon=GisSharpBlog.NetTopologySuite.Geometries.Polygon;
+using NTSCoordinate = GeoAPI.Geometries.ICoordinate;
+using NTSGeometry=GeoAPI.Geometries.IGeometry;
+using NTSPoint = GeoAPI.Geometries.IPoint;
+using NTSLineString = GeoAPI.Geometries.ILineString;
+using NTSLinearRing = GeoAPI.Geometries.ILinearRing;
+using NTSPolygon = GeoAPI.Geometries.IPolygon;
+using NTSMultiPoint = GeoAPI.Geometries.IMultiPoint;
+using NTSMultiLineString = GeoAPI.Geometries.IMultiLineString;
+using NTSMultiPolygon = GeoAPI.Geometries.IMultiPolygon;
+using NTSGeometryCollection = GeoAPI.Geometries.IGeometryCollection;
 
 namespace SharpMap.Converters.NTS
 {
+    using GeoAPI.Geometries;
+
     /// <summary>
     /// Provides static methods that performs conversions 
     /// between geometric elements provides by SharpMap and NetTopologySuite libraries.
@@ -40,15 +43,12 @@ namespace SharpMap.Converters.NTS
     {
         /// <summary>
         /// Converts any <see cref="SharpMap.Geometries.Geometry"/> array to the correspondant 
-        /// <see cref=GisSharpBlog.NetTopologySuite.Geometries.Geometry"/> array.
+        /// <see cref="GisSharpBlog.NetTopologySuite.Geometries.Geometry" /> array.
         /// </summary>
-        /// <param name="geometries"></param>
-        /// <param name="factory"></param>
-        /// <returns></returns>
-        public static Geometry[] ToNTSGeometry(Geometries.Geometry[] geometries,
-                                               GeometryFactory factory)
+        public static NTSGeometry[] ToNTSGeometry(Geometries.Geometry[] geometries,
+            IGeometryFactory factory)
         {
-            Geometry[] converted = new Geometry[geometries.Length];
+            NTSGeometry[] converted = new NTSGeometry[geometries.Length];
             int index = 0;
             foreach (Geometries.Geometry geometry in geometries)
                 converted[index++] = ToNTSGeometry(geometry, factory);
@@ -58,52 +58,58 @@ namespace SharpMap.Converters.NTS
         }
 
         /// <summary>
-        /// Converts any <see cref=GisSharpBlog.NetTopologySuite.Geometries.Geometry"/> to the correspondant 
+        /// Converts any <see cref="GisSharpBlog.NetTopologySuite.Geometries.Geometry"/> to the correspondant 
         /// <see cref="SharpMap.Geometries.Geometry"/>.
         /// </summary>
-        /// <param name="geometry"></param>
-        /// <returns></returns>
-        public static Geometry ToNTSGeometry(Geometries.Geometry geometry,
-                                             GeometryFactory factory)
+        public static NTSGeometry ToNTSGeometry(Geometries.Geometry geometry, IGeometryFactory factory)
         {
             if (geometry == null)
                 throw new NullReferenceException("geometry");
 
-            if (geometry.GetType() == typeof (Point))
-                return ToNTSPoint(geometry as Point, factory);
+            if (TypeOf(geometry, typeof(Geometries.Point)))
+                return ToNTSPoint(geometry as Geometries.Point, factory);
 
-            else if (geometry.GetType() == typeof (Geometries.LineString))
+            if (TypeOf(geometry, typeof (Geometries.LineString)))
                 return ToNTSLineString(geometry as Geometries.LineString, factory);
 
-            else if (geometry.GetType() == typeof (Geometries.Polygon))
+            if (TypeOf(geometry, typeof (Geometries.Polygon)))
                 return ToNTSPolygon(geometry as Geometries.Polygon, factory);
 
-            else if (geometry.GetType() == typeof (Geometries.MultiPoint))
+            if (TypeOf(geometry, typeof (Geometries.MultiPoint)))
                 return ToNTSMultiPoint(geometry as Geometries.MultiPoint, factory);
 
-            else if (geometry.GetType() == typeof (Geometries.MultiLineString))
+            if (TypeOf(geometry, typeof (Geometries.MultiLineString)))
                 return ToNTSMultiLineString(geometry as Geometries.MultiLineString, factory);
 
-            else if (geometry.GetType() == typeof (Geometries.MultiPolygon))
+            if (TypeOf(geometry, typeof (Geometries.MultiPolygon)))
                 return ToNTSMultiPolygon(geometry as Geometries.MultiPolygon, factory);
 
-            else if (geometry.GetType() == typeof (Geometries.GeometryCollection))
+            if (TypeOf(geometry, typeof (Geometries.GeometryCollection)))
                 return ToNTSGeometryCollection(geometry as Geometries.GeometryCollection, factory);
 
-            else throw new NotSupportedException("Type " + geometry.GetType().FullName + " not supported");
+            var message = String.Format("Type {0} not supported", geometry.GetType().FullName);
+            throw new NotSupportedException(message);
+        }
+
+        private static bool TypeOf(Geometries.Geometry geometry, Type type)
+        {
+            if (geometry == null)
+                throw new ArgumentNullException("geometry");
+            if (type == null)
+                throw new ArgumentNullException("type");
+            
+            return geometry.GetType() == type;
         }
 
         /// <summary>
-        /// Converts any <see cref=GisSharpBlog.NetTopologySuite.Geometries.Geometry"/> array to the correspondant 
+        /// Converts any <see cref="GisSharpBlog.NetTopologySuite.Geometries.Geometry"/> array to the correspondant 
         /// <see cref="SharpMap.Geometries.Geometry"/> array.
         /// </summary>
-        /// <param name="geometries"></param>
-        /// <returns></returns>
-        public static Geometries.Geometry[] ToSharpMapGeometry(Geometry[] geometries)
+        public static Geometries.Geometry[] ToSharpMapGeometry(NTSGeometry[] geometries)
         {
             Geometries.Geometry[] converted = new Geometries.Geometry[geometries.Length];
             int index = 0;
-            foreach (Geometry geometry in geometries)
+            foreach (NTSGeometry geometry in geometries)
                 converted[index++] = ToSharpMapGeometry(geometry);
             if ((geometries.Length != converted.Length))
                 throw new ApplicationException("Conversion error");
@@ -112,45 +118,56 @@ namespace SharpMap.Converters.NTS
 
         /// <summary>
         /// Converts any <see cref="SharpMap.Geometries.Geometry"/> to the correspondant 
-        /// <see cref=GisSharpBlog.NetTopologySuite.Geometries.Geometry"/>.
+        /// <see cref="GisSharpBlog.NetTopologySuite.Geometries.Geometry"/>.
         /// </summary>
-        /// <param name="geometry"></param>
-        /// <returns></returns>
-        public static Geometries.Geometry ToSharpMapGeometry(Geometry geometry)
+        public static Geometries.Geometry ToSharpMapGeometry(NTSGeometry geometry)
         {
             if (geometry == null)
                 throw new NullReferenceException("geometry");
 
-            if (geometry.GetType() == typeof (GisSharpBlog.NetTopologySuite.Geometries.Point))
-                return ToSharpMapPoint(geometry as GisSharpBlog.NetTopologySuite.Geometries.Point);
+            if (TypeOf(geometry, typeof(NTSPoint)))
+                return ToSharpMapPoint(geometry as NTSPoint);
 
-            else if (geometry.GetType() == typeof (LineString))
-                return ToSharpMapLineString(geometry as LineString);
+            if (TypeOf(geometry, typeof (NTSLineString)))
+                return ToSharpMapLineString(geometry as NTSLineString);
 
-            else if (geometry.GetType() == typeof (Polygon))
-                return ToSharpMapPolygon(geometry as Polygon);
+            if (TypeOf(geometry, typeof (NTSPolygon)))
+                return ToSharpMapPolygon(geometry as NTSPolygon);
 
-            else if (geometry.GetType() == typeof (MultiPoint))
-                return ToSharpMapMultiPoint(geometry as MultiPoint);
+            if (TypeOf(geometry, typeof (NTSMultiPoint)))
+                return ToSharpMapMultiPoint(geometry as NTSMultiPoint);
 
-            else if (geometry.GetType() == typeof (MultiLineString))
-                return ToSharpMapMultiLineString(geometry as MultiLineString);
+            if (TypeOf(geometry, typeof (NTSMultiLineString)))
+                return ToSharpMapMultiLineString(geometry as NTSMultiLineString);
 
-            else if (geometry.GetType() == typeof (MultiPolygon))
-                return ToSharpMapMultiPolygon(geometry as MultiPolygon);
+            if (TypeOf(geometry, typeof (NTSMultiPolygon)))
+                return ToSharpMapMultiPolygon(geometry as NTSMultiPolygon);
 
-            else if (geometry.GetType() == typeof (GeometryCollection))
-                return ToSharpMapGeometryCollection(geometry as GeometryCollection);
+            if (TypeOf(geometry, typeof (NTSGeometryCollection)))
+                return ToSharpMapGeometryCollection(geometry as NTSGeometryCollection);
 
-            else throw new NotSupportedException("Type " + geometry.GetType().FullName + " not supported");
+            var message = String.Format("Type {0} not supported", geometry.GetType().FullName);
+            throw new NotSupportedException(message);
+        }
+
+        private static bool TypeOf(NTSGeometry geometry, Type type)
+        {
+            if (geometry == null)
+                throw new ArgumentNullException("geometry");
+            if (type == null)
+                throw new ArgumentNullException("type");
+
+            var interfaces = geometry.GetType().GetInterfaces();
+            foreach (Type item in interfaces)
+                if (item == type)
+                    return true;
+            return false;
         }
 
         /// <summary>
         /// Converts the <see cref="GisSharpBlog.NetTopologySuite.Geometries.Envelope"/> instance <paramref name="envelope"/>
         /// into a correspondant <see cref="SharpMap.Geometries.BoundingBox"/>.
         /// </summary>
-        /// <param name="envelope"></param>
-        /// <returns></returns>
         public static BoundingBox ToSharpMapBoundingBox(Envelope envelope)
         {
             return new BoundingBox(envelope.MinX, envelope.MinY, envelope.MaxX, envelope.MaxY);
@@ -160,8 +177,6 @@ namespace SharpMap.Converters.NTS
         /// Converts the <see cref="GisSharpBlog.NetTopologySuite.Geometries.Envelope"/> instance <paramref name="envelope"/>
         /// into a correspondant <see cref="SharpMap.Geometries.Geometry"/>.
         /// </summary>
-        /// <param name="envelope"></param>
-        /// <returns></returns>
         public static Geometries.Geometry ToSharpMapGeometry(Envelope envelope)
         {
             return ToSharpMapGeometry(new BoundingBox(envelope.MinX, envelope.MinY, envelope.MaxX, envelope.MaxY));
@@ -171,16 +186,14 @@ namespace SharpMap.Converters.NTS
         /// Converts the <see cref="SharpMap.Geometries.BoundingBox"/> instance <paramref name="boundingBox"/>
         /// into a correspondant <see cref="SharpMap.Geometries.Polygon"/>.
         /// </summary>
-        /// <param name="boundingBox"></param>
-        /// <returns></returns>
         public static Geometries.Geometry ToSharpMapGeometry(BoundingBox boundingBox)
         {
-            Collection<Point> vertices = new Collection<Point>();
-            vertices.Add(new Point(boundingBox.Min.X, boundingBox.Min.Y));
-            vertices.Add(new Point(boundingBox.Max.X, boundingBox.Min.Y));
-            vertices.Add(new Point(boundingBox.Max.X, boundingBox.Max.Y));
-            vertices.Add(new Point(boundingBox.Min.X, boundingBox.Max.Y));
-            vertices.Add(new Point(boundingBox.Min.X, boundingBox.Min.Y));
+            Collection<Geometries.Point> vertices = new Collection<Geometries.Point>();
+            vertices.Add(new Geometries.Point(boundingBox.Min.X, boundingBox.Min.Y));
+            vertices.Add(new Geometries.Point(boundingBox.Max.X, boundingBox.Min.Y));
+            vertices.Add(new Geometries.Point(boundingBox.Max.X, boundingBox.Max.Y));
+            vertices.Add(new Geometries.Point(boundingBox.Min.X, boundingBox.Max.Y));
+            vertices.Add(new Geometries.Point(boundingBox.Min.X, boundingBox.Min.Y));
             Geometries.LinearRing exterior = new Geometries.LinearRing(vertices);
             return new Geometries.Polygon(exterior);
         }
@@ -189,8 +202,6 @@ namespace SharpMap.Converters.NTS
         /// Converts the <see cref="SharpMap.Geometries.BoundingBox"/> instance <paramref name="boundingBox"/>
         /// into a correspondant <see cref="GisSharpBlog.NetTopologySuite.Geometries.Envelope"/>.
         /// </summary>
-        /// <param name="boundingBox"></param>
-        /// <returns></returns>
         public static Envelope ToNTSEnvelope(BoundingBox boundingBox)
         {
             return new Envelope(boundingBox.Min.X, boundingBox.Max.X, boundingBox.Min.Y, boundingBox.Max.Y);
@@ -198,159 +209,155 @@ namespace SharpMap.Converters.NTS
 
         #region Internal NTS Converters     
 
-        internal static Coordinate ToNTSCoordinate(Point point,
-                                                   GeometryFactory factory)
+        internal static NTSCoordinate ToNTSCoordinate(Geometries.Point geom, IGeometryFactory factory)
         {
-            return new Coordinate(point.X, point.Y);
+            return new Coordinate(geom.X, geom.Y);
         }
 
-        internal static GisSharpBlog.NetTopologySuite.Geometries.Point ToNTSPoint(Point point,
-                                                                                  GeometryFactory factory)
+        internal static NTSPoint ToNTSPoint(Geometries.Point point, IGeometryFactory factory)
         {
-            return
-                factory.CreatePoint(ToNTSCoordinate(point, factory)) as GisSharpBlog.NetTopologySuite.Geometries.Point;
+            return factory.CreatePoint(ToNTSCoordinate(point, factory));
         }
 
-        internal static LineString ToNTSLineString(Geometries.LineString lineString,
-                                                   GeometryFactory factory)
+        internal static NTSLineString ToNTSLineString(Geometries.LineString geom,
+            IGeometryFactory factory)
         {
-            Coordinate[] coordinates = new Coordinate[lineString.NumPoints];
+            NTSCoordinate[] coordinates = new NTSCoordinate[geom.NumPoints];
             int index = 0;
-            foreach (Point point in lineString.Vertices)
+            foreach (Geometries.Point point in geom.Vertices)
                 coordinates[index++] = ToNTSCoordinate(point, factory);
-            return factory.CreateLineString(coordinates) as LineString;
+            return factory.CreateLineString(coordinates) as NTSLineString;
         }
 
-        internal static LinearRing ToNTSLinearRing(Geometries.LinearRing linearRing,
-                                                   GeometryFactory factory)
+        internal static NTSLinearRing ToNTSLinearRing(Geometries.LinearRing geom,
+            IGeometryFactory factory)
         {
-            Coordinate[] coordinates = new Coordinate[linearRing.NumPoints];
+            NTSCoordinate[] coordinates = new NTSCoordinate[geom.NumPoints];
             int index = 0;
-            foreach (Point point in linearRing.Vertices)
+            foreach (Geometries.Point point in geom.Vertices)
                 coordinates[index++] = ToNTSCoordinate(point, factory);
-            return factory.CreateLinearRing(coordinates) as LinearRing;
+            return factory.CreateLinearRing(coordinates) as NTSLinearRing;
         }
 
-        internal static Polygon ToNTSPolygon(Geometries.Polygon polygon,
-                                             GeometryFactory factory)
+        internal static NTSPolygon ToNTSPolygon(Geometries.Polygon geom,
+            IGeometryFactory factory)
         {
-            LinearRing shell = ToNTSLinearRing(polygon.ExteriorRing, factory);
-            LinearRing[] holes = new LinearRing[polygon.InteriorRings.Count];
+            NTSLinearRing shell = ToNTSLinearRing(geom.ExteriorRing, factory);
+            NTSLinearRing[] holes = new NTSLinearRing[geom.InteriorRings.Count];
             int index = 0;
-            foreach (Geometries.LinearRing hole in polygon.InteriorRings)
+            foreach (Geometries.LinearRing hole in geom.InteriorRings)
                 holes[index++] = ToNTSLinearRing(hole, factory);
-            return factory.CreatePolygon(shell, holes) as Polygon;
+            return factory.CreatePolygon(shell, holes) as NTSPolygon;
         }
 
-        internal static MultiPoint ToNTSMultiPoint(Geometries.MultiPoint multiPoint,
-                                                   GeometryFactory factory)
+        internal static NTSMultiPoint ToNTSMultiPoint(Geometries.MultiPoint geom,
+            IGeometryFactory factory)
         {
-            GisSharpBlog.NetTopologySuite.Geometries.Point[] points =
-                new GisSharpBlog.NetTopologySuite.Geometries.Point[multiPoint.Points.Count];
+           NTSPoint[] points = new NTSPoint[geom.Points.Count];
             int index = 0;
-            foreach (Point point in multiPoint.Points)
+            foreach (Geometries.Point point in geom.Points)
                 points[index++] = ToNTSPoint(point, factory);
-            return factory.CreateMultiPoint(points) as MultiPoint;
+            return factory.CreateMultiPoint(points) as NTSMultiPoint;
         }
 
-        internal static MultiLineString ToNTSMultiLineString(Geometries.MultiLineString multiLineString,
-                                                             GeometryFactory factory)
+        internal static NTSMultiLineString ToNTSMultiLineString(Geometries.MultiLineString geom,
+            IGeometryFactory factory)
         {
-            LineString[] lstrings = new LineString[multiLineString.LineStrings.Count];
+            NTSLineString[] lstrings = new NTSLineString[geom.LineStrings.Count];
             int index = 0;
-            foreach (Geometries.LineString lstring in multiLineString.LineStrings)
+            foreach (Geometries.LineString lstring in geom.LineStrings)
                 lstrings[index++] = ToNTSLineString(lstring, factory);
-            return factory.CreateMultiLineString(lstrings) as MultiLineString;
+            return factory.CreateMultiLineString(lstrings) as NTSMultiLineString;
         }
 
-        internal static MultiPolygon ToNTSMultiPolygon(Geometries.MultiPolygon multiPolygon,
-                                                       GeometryFactory factory)
+        internal static NTSMultiPolygon ToNTSMultiPolygon(Geometries.MultiPolygon geom,
+            IGeometryFactory factory)
         {
-            Polygon[] polygons = new Polygon[multiPolygon.Polygons.Count];
+            NTSPolygon[] polygons = new NTSPolygon[geom.Polygons.Count];
             int index = 0;
-            foreach (Geometries.Polygon polygon in multiPolygon.Polygons)
+            foreach (Geometries.Polygon polygon in geom.Polygons)
                 polygons[index++] = ToNTSPolygon(polygon, factory);
-            return factory.CreateMultiPolygon(polygons) as MultiPolygon;
+            return factory.CreateMultiPolygon(polygons) as NTSMultiPolygon;
         }
 
-        internal static GeometryCollection ToNTSGeometryCollection(Geometries.GeometryCollection geometryCollection,
-                                                                   GeometryFactory factory)
+        internal static NTSGeometryCollection ToNTSGeometryCollection(Geometries.GeometryCollection geom,
+            IGeometryFactory factory)
         {
-            Geometry[] geometries = new Geometry[geometryCollection.Collection.Count];
+            NTSGeometry[] geometries = new NTSGeometry[geom.Collection.Count];
             int index = 0;
-            foreach (Geometries.Geometry geometry in geometryCollection.Collection)
+            foreach (Geometries.Geometry geometry in geom.Collection)
                 geometries[index++] = ToNTSGeometry(geometry, factory);
-            return factory.CreateGeometryCollection(geometries) as GeometryCollection;
+            return factory.CreateGeometryCollection(geometries) as NTSGeometryCollection;
         }
 
         #endregion
 
         #region Internal SharpMap Converters
 
-        internal static Point ToSharpMapPoint(Coordinate coordinate)
+        internal static Geometries.Point ToSharpMapPoint(NTSCoordinate coordinate)
         {
-            return new Point(coordinate.X, coordinate.Y);
+            return new Geometries.Point(coordinate.X, coordinate.Y);
         }
 
-        internal static Point ToSharpMapPoint(GisSharpBlog.NetTopologySuite.Geometries.Point point)
+        internal static Geometries.Point ToSharpMapPoint(NTSPoint geom)
         {
-            Debug.Assert(point.Coordinates.Length == 1);
-            return ToSharpMapPoint((point.Coordinate as Coordinate));
+            Debug.Assert(geom.Coordinates.Length == 1);
+            return ToSharpMapPoint((geom.Coordinate as Coordinate));
         }
 
-        internal static Geometries.LineString ToSharpMapLineString(LineString lineString)
+        internal static Geometries.LineString ToSharpMapLineString(NTSLineString geom)
         {
-            Collection<Point> vertices = new Collection<Point>();
-            foreach (Coordinate coordinate in lineString.Coordinates)
+            Collection<Geometries.Point> vertices = new Collection<Geometries.Point>();
+            foreach (Coordinate coordinate in geom.Coordinates)
                 vertices.Add(ToSharpMapPoint(coordinate));
             return new Geometries.LineString(vertices);
         }
 
-        internal static Geometries.LinearRing ToSharpMapLinearRing(LinearRing lineString)
+        internal static Geometries.LinearRing ToSharpMapLinearRing(NTSLinearRing geom)
         {
-            Collection<Point> vertices = new Collection<Point>();
-            foreach (Coordinate coordinate in lineString.Coordinates)
+            Collection<Geometries.Point> vertices = new Collection<Geometries.Point>();
+            foreach (Coordinate coordinate in geom.Coordinates)
                 vertices.Add(ToSharpMapPoint(coordinate));
             return new Geometries.LinearRing(vertices);
         }
 
-        internal static Geometries.Polygon ToSharpMapPolygon(Polygon polygon)
+        internal static Geometries.Polygon ToSharpMapPolygon(NTSPolygon geom)
         {
-            Geometries.LinearRing exteriorRing = ToSharpMapLinearRing((LinearRing) polygon.ExteriorRing);
+            Geometries.LinearRing exteriorRing = ToSharpMapLinearRing((NTSLinearRing) geom.ExteriorRing);
             Collection<Geometries.LinearRing> interiorRings = new Collection<Geometries.LinearRing>();
-            foreach (LineString interiorRing in polygon.InteriorRings)
-                interiorRings.Add(ToSharpMapLinearRing((LinearRing) interiorRing));
+            foreach (NTSLineString interiorRing in geom.InteriorRings)
+                interiorRings.Add(ToSharpMapLinearRing((NTSLinearRing) interiorRing));
             return new Geometries.Polygon(exteriorRing, interiorRings);
         }
 
-        internal static Geometries.MultiPoint ToSharpMapMultiPoint(MultiPoint multiPoint)
+        internal static Geometries.MultiPoint ToSharpMapMultiPoint(NTSMultiPoint geom)
         {
             Geometries.MultiPoint collection = new Geometries.MultiPoint();
-            foreach (GisSharpBlog.NetTopologySuite.Geometries.Point point in multiPoint.Geometries)
+            foreach (GisSharpBlog.NetTopologySuite.Geometries.Point point in geom.Geometries)
                 collection.Points.Add(ToSharpMapPoint(point));
             return collection;
         }
 
-        internal static Geometries.MultiLineString ToSharpMapMultiLineString(MultiLineString multiLineString)
+        internal static Geometries.MultiLineString ToSharpMapMultiLineString(NTSMultiLineString geom)
         {
             Geometries.MultiLineString collection = new Geometries.MultiLineString();
-            foreach (LineString lineString in multiLineString.Geometries)
+            foreach (NTSLineString lineString in geom.Geometries)
                 collection.LineStrings.Add(ToSharpMapLineString(lineString));
             return collection;
         }
 
-        internal static Geometries.MultiPolygon ToSharpMapMultiPolygon(MultiPolygon multiPolygon)
+        internal static Geometries.MultiPolygon ToSharpMapMultiPolygon(NTSMultiPolygon geom)
         {
             Geometries.MultiPolygon collection = new Geometries.MultiPolygon();
-            foreach (Polygon polygon in multiPolygon.Geometries)
+            foreach (NTSPolygon polygon in geom.Geometries)
                 collection.Polygons.Add(ToSharpMapPolygon(polygon));
             return collection;
         }
 
-        internal static Geometries.GeometryCollection ToSharpMapGeometryCollection(GeometryCollection geometryCollection)
+        internal static Geometries.GeometryCollection ToSharpMapGeometryCollection(NTSGeometryCollection geom)
         {
             Geometries.GeometryCollection collection = new Geometries.GeometryCollection();
-            foreach (Geometry geometry in geometryCollection.Geometries)
+            foreach (NTSGeometry geometry in geom.Geometries)
                 collection.Collection.Add(ToSharpMapGeometry(geometry));
             return collection;
         }

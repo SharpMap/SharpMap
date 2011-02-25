@@ -164,7 +164,7 @@ namespace WinFormSamples
 
         private void button2_Click(object sender, EventArgs e)
         {
-            new FormDemoDrawGeometries().ShowDialog();
+            new Form2().ShowDialog();
         }
 
         private void button3_Click(object sender, EventArgs e)

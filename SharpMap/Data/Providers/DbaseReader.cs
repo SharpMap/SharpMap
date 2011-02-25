@@ -49,6 +49,7 @@ namespace SharpMap.Data.Providers
         private bool HeaderIsParsed;
 
 
+
         public DbaseReader(string filename)
         {
             if (!File.Exists(filename))
@@ -149,6 +150,17 @@ namespace SharpMap.Data.Providers
         public DateTime LastUpdate
         {
             get { return _lastUpdate; }
+        }
+
+        public Boolean RecordDeleted(uint oid)
+        {
+            if (!_isOpen)
+                throw (new ApplicationException("An attempt was made to read from a closed DBF file"));
+            if (oid >= _NumberOfRecords)
+                throw (new ArgumentException("Invalid record requested at index " + oid));
+            fs.Seek(_HeaderLength + oid * _RecordLength, 0);
+
+            return br.ReadChar() == '*';
         }
 
         private void ParseDbfHeader(string filename)
@@ -466,17 +478,20 @@ namespace SharpMap.Data.Providers
         /// <returns></returns>
         internal FeatureDataRow GetFeature(uint oid, FeatureDataTable table)
         {
+            if (RecordDeleted(oid))
+                return null;
+            /*
             if (!_isOpen)
                 throw (new ApplicationException("An attempt was made to read from a closed DBF file"));
             if (oid >= _NumberOfRecords)
                 throw (new ArgumentException("Invalid DataRow requested at index " + oid));
             fs.Seek(_HeaderLength + oid*_RecordLength, 0);
 
-            FeatureDataRow dr = table.NewRow();
-
             if (br.ReadChar() == '*') //is record marked deleted?
                 return null;
+             */
 
+            var dr = table.NewRow();
             for (int i = 0; i < DbaseColumns.Length; i++)
             {
                 DbaseField dbf = DbaseColumns[i];

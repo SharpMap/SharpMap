@@ -927,6 +927,14 @@ namespace SharpMap.Data.Providers
 				HttpContext.Current.Cache.Insert(_Filename, tree, null, Cache.NoAbsoluteExpiration, TimeSpan.FromDays(1));
 		}
 
+        /*
+	    private delegate bool RecordDeletedFunction(uint oid);
+        private static bool NoRecordDeleted(uint oid)
+        {
+            return false;
+        }
+         */
+
 		/// <summary>
 		/// Reads all boundingboxes of features in the shapefile. This is used for spatial indexing.
 		/// </summary>
@@ -937,11 +945,18 @@ namespace SharpMap.Data.Providers
 
 			//List<BoundingBox> boxes = new List<BoundingBox>();
 
+            /*
+		    RecordDeletedFunction recDel = dbaseFile != null
+		                                       ? (RecordDeletedFunction) dbaseFile.RecordDeleted
+		                                       : NoRecordDeleted;
+             */
 			if (_ShapeType == ShapeType.Point)
 			{
 				for (int a = 0; a < _FeatureCount; ++a)
 				{
-					fsShapeFile.Seek(offsetOfRecord[a] + 8, 0); //skip record number and content length
+					//if (recDel((uint)a)) continue;
+
+                    fsShapeFile.Seek(offsetOfRecord[a] + 8, 0); //skip record number and content length
 					if ((ShapeType) brShapeFile.ReadInt32() != ShapeType.Null)
 					{
 						double x = brShapeFile.ReadDouble();
@@ -955,7 +970,8 @@ namespace SharpMap.Data.Providers
 			{
 				for (int a = 0; a < _FeatureCount; ++a)
 				{
-					fsShapeFile.Seek(offsetOfRecord[a] + 8, 0); //skip record number and content length
+                    //if (recDel((uint)a)) continue;
+                    fsShapeFile.Seek(offsetOfRecord[a] + 8, 0); //skip record number and content length
 					if ((ShapeType)brShapeFile.ReadInt32() != ShapeType.Null)
 						yield return new BoundingBox(brShapeFile.ReadDouble(), brShapeFile.ReadDouble(),
 													 brShapeFile.ReadDouble(), brShapeFile.ReadDouble());

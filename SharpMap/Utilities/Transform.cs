@@ -38,9 +38,9 @@ namespace SharpMap.Utilities
             //if (map.MapTransform != null && !map.MapTransform.IsIdentity)
             //	map.MapTransform.TransformPoints(new System.Drawing.PointF[] { p });
             PointF result = new System.Drawing.Point();
-            double Height = (map.Zoom*map.Size.Height)/map.Size.Width;
+            double height = (map.Zoom*map.Size.Height)/map.Size.Width;
             double left = map.Center.X - map.Zoom*0.5;
-            double top = map.Center.Y + Height*0.5*map.PixelAspectRatio;
+            double top = map.Center.Y + height*0.5*map.PixelAspectRatio;
             result.X = (float) ((p.X - left)/map.PixelWidth);
             result.Y = (float) ((top - p.Y)/map.PixelHeight);
             return result;

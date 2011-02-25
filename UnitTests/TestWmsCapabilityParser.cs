@@ -9,6 +9,7 @@ namespace UnitTests
     public class TestWmsCapabilityParser
     {
         [Test]
+        [Ignore("http://wms.iter.dk is no longer available")]
         [ExpectedException(typeof (ArgumentException))]
         public void AddLayerFail()
         {
@@ -17,6 +18,7 @@ namespace UnitTests
         }
 
         [Test]
+        [Ignore("http://wms.iter.dk is no longer available")]
         public void AddLayerOK()
         {
             WmsLayer layer = new WmsLayer("wms", "http://wms.iter.dk/example_capabilities_1_3_0.xml");
@@ -24,6 +26,7 @@ namespace UnitTests
         }
 
         [Test]
+        [Ignore("http://wms.iter.dk is no longer available")]
         public void Test130()
         {
             Client c = new Client("http://wms.iter.dk/example_capabilities_1_3_0.xml");
@@ -37,10 +40,10 @@ namespace UnitTests
         [Test]
         public void TestDemisv111()
         {
-            Client c = new Client("http://www2.demis.nl/mapserver/request.asp");
-            Assert.AreEqual("Demis World Map", c.ServiceDescription.Title);
+            Client c = new Client("http://www2.demis.nl/worldmap/wms.asp");
+            Assert.AreEqual("World Map", c.ServiceDescription.Title);
             Assert.AreEqual("1.1.1", c.WmsVersion);
-            Assert.AreEqual("http://www2.demis.nl/wms/wms.asp?wms=WorldMap&", c.GetMapRequests[0].OnlineResource);
+            Assert.AreEqual("http://www2.demis.nl/WMS/wms.ashx?wms=WorldMap&", c.GetMapRequests[0].OnlineResource);
             Assert.AreEqual("image/png", c.GetMapOutputFormats[0]);
             Assert.AreEqual(20, c.Layer.ChildLayers.Length);
         }

@@ -91,7 +91,7 @@ namespace SharpMap.Layers
 
         #endregion
 
-        System.Collections.Hashtable cacheTiles = new System.Collections.Hashtable();
+        System.Collections.Hashtable _cacheTiles = new System.Collections.Hashtable();
 
         #region Public methods
 
@@ -111,9 +111,10 @@ namespace SharpMap.Layers
 
             foreach (TileInfo info in tiles)
             {
-                    AutoResetEvent waitHandle = new AutoResetEvent(false);
-                    waitHandles.Add(waitHandle);
-                    ThreadPool.QueueUserWorkItem(GetTileOnThread, new object[] { _source.Provider, info, _bitmaps });
+                if (_bitmaps.Find(info.Index) != null) continue;
+                AutoResetEvent waitHandle = new AutoResetEvent(false);
+                waitHandles.Add(waitHandle);
+                ThreadPool.QueueUserWorkItem(GetTileOnThread, new object[] { _source.Provider, info, _bitmaps, waitHandle });
             }
 
             foreach (WaitHandle handle in waitHandles)
@@ -152,10 +153,11 @@ namespace SharpMap.Layers
         private void GetTileOnThread(object parameter)
         {
             object[] parameters = (object[])parameter;
-            if (parameters.Length != 3) throw new ArgumentException("Three parameters expected");
+            if (parameters.Length != 4) throw new ArgumentException("Three parameters expected");
             ITileProvider tileProvider = (ITileProvider)parameters[0];
             TileInfo tileInfo = (TileInfo)parameters[1];
             MemoryCache<Bitmap> bitmaps = (MemoryCache<Bitmap>)parameters[2];
+            AutoResetEvent autoResetEvent = (AutoResetEvent)parameters[3];
             
 
             byte[] bytes;
@@ -181,6 +183,10 @@ namespace SharpMap.Layers
             catch(Exception ex)
             {
                 //todo: log and use other ways to report to user.
+            }
+            finally
+            {
+                autoResetEvent.Set();
             }
         }
         #endregion
