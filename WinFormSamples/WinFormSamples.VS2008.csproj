@@ -74,6 +74,24 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FormMapBox.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormMapBox.Designer.cs">
+      <DependentUpon>FormMapBox.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DlgSamplesMenu.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DlgSamplesMenu.Designer.cs">
+      <DependentUpon>DlgSamplesMenu.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormMovingObjectOverTileLayer.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormMovingObjectOverTileLayer.Designer.cs">
+      <DependentUpon>FormMovingObjectOverTileLayer.cs</DependentUpon>
+    </Compile>
     <Compile Include="FormAnimation.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -206,6 +224,16 @@
     <Compile Include="Samples\OgrSample.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="FormMapBox.resx">
+      <DependentUpon>FormMapBox.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DlgSamplesMenu.resx">
+      <DependentUpon>DlgSamplesMenu.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormMovingObjectOverTileLayer.resx">
+      <DependentUpon>FormMovingObjectOverTileLayer.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="FormAnimation.resx">
       <DependentUpon>FormAnimation.cs</DependentUpon>
     </EmbeddedResource>
@@ -230,6 +258,7 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <Content Include="GeoData\MapInfo\citiesMapInfo.dat">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -396,6 +425,10 @@
     <Content Include="Images\Restaurant.gif">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <None Include="Resources\OutfallSmall.png" />
+    <None Include="Resources\PumpSmall.png" />
+    <None Include="Resources\Pump.png" />
+    <None Include="Resources\Quack-icon.gif" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SharpMap.Extensions\SharpMap.Extensions.VS2008.csproj">

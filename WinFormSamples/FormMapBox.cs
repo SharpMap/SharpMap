@@ -8,48 +8,48 @@ using WinFormSamples.Samples;
 
 namespace WinFormSamples
 {
-    public partial class MainForm : Form
+    public partial class FormMapBox : Form
     {
-        public MainForm()
+        public FormMapBox()
         {
             InitializeComponent();
-            mapImage.ActiveTool = MapImage.Tools.Pan;
+            mapBox1.ActiveTool = MapBox.Tools.Pan;
         }
 
         private void radioButton_Click(object sender, EventArgs e)
         {
+            Cursor mic = mapBox1.Cursor;
+            mapBox1.Cursor = Cursors.WaitCursor;
+            Cursor = Cursors.WaitCursor;
             try
             {
-                Cursor mic = mapImage.Cursor;
-                mapImage.Cursor = Cursors.WaitCursor;
-                Cursor = Cursors.WaitCursor;
                 //mapImage.ActiveTool = MapImage.Tools.None;
                 string text = ((RadioButton)sender).Text;
 
                 switch (text)
                 {
                     case "Shapefile":
-                        mapImage.Map = ShapefileSample.InitializeMap(tbAngle.Value);
+                        mapBox1.Map = ShapefileSample.InitializeMap(tbAngle.Value);
                         break;
                     case "GradientTheme":
-                        mapImage.Map = GradiantThemeSample.InitializeMap(tbAngle.Value);
+                        mapBox1.Map = GradiantThemeSample.InitializeMap(tbAngle.Value);
                         break;
                     case "WFS Client":
-                        mapImage.Map = WfsSample.InitializeMap(tbAngle.Value);
+                        mapBox1.Map = WfsSample.InitializeMap(tbAngle.Value);
                         break;
                     case "WMS Client":
-                        mapImage.Map = WmsSample.InitializeMap(tbAngle.Value);
+                        mapBox1.Map = WmsSample.InitializeMap(tbAngle.Value);
                         break;
                     case "OGR - MapInfo":
                     case "OGR - S-57":
-                        mapImage.Map = OgrSample.InitializeMap(tbAngle.Value);
+                        mapBox1.Map = OgrSample.InitializeMap(tbAngle.Value);
                         break;
                     case "GDAL - GeoTiff":
                     case "GDAL - '.DEM'":
                     case "GDAL - '.ASC'":
                     case "GDAL - '.VRT'":
-                        mapImage.Map = GdalSample.InitializeMap(tbAngle.Value);
-                        mapImage.ActiveTool = MapImage.Tools.Pan;
+                        mapBox1.Map = GdalSample.InitializeMap(tbAngle.Value);
+                        mapBox1.ActiveTool = MapBox.Tools.Pan;
                         break;
                     case "TileLayer - OSM":
                     case "TileLayer - Bing Roads":
@@ -63,30 +63,30 @@ namespace WinFormSamples
                         tbAngle.Visible = text.Equals("TileLayer - GoogleLabels");
                         if (!tbAngle.Visible) tbAngle.Value = 0;
                          */
-                        mapImage.Map = TileLayerSample.InitializeMap(tbAngle.Value);
-                        ((RadioButton) sender).Text = mapImage.Map.Layers[0].LayerName;
+                        mapBox1.Map = TileLayerSample.InitializeMap(tbAngle.Value);
+                        ((RadioButton)sender).Text = mapBox1.Map.Layers[0].LayerName;
                         break;
                     case "PostGis":
-                        mapImage.Map = PostGisSample.InitializeMap(tbAngle.Value);
+                        mapBox1.Map = PostGisSample.InitializeMap(tbAngle.Value);
                         break;
                     case "SpatiaLite":
-                        mapImage.Map = SpatiaLiteSample.InitializeMap(tbAngle.Value);
+                        mapBox1.Map = SpatiaLiteSample.InitializeMap(tbAngle.Value);
                         break;
                     case "Oracle":
-                        mapImage.Map = OracleSample.InitializeMap(tbAngle.Value);
+                        mapBox1.Map = OracleSample.InitializeMap(tbAngle.Value);
                         break;
                     default:
                         break;
                 }
-                mapImage.Map.Size = Size;
-                mapImage.Refresh();
-                Cursor = Cursors.Default;
-                mapImage.Cursor = mic;
+                mapBox1.Map.Size = Size;
+                mapBox1.Refresh();
             }
             catch (Exception ex)
             {
                 MessageBox.Show(this, ex.Message, "Error");
             }
+            Cursor = Cursors.Default;
+            mapBox1.Cursor = mic;
         }
 
         private void mapImage_MapQueried(SharpMap.Data.FeatureDataTable data)
@@ -130,20 +130,20 @@ namespace WinFormSamples
 
         private void mapImage_SizeChanged(object sender, EventArgs e)
         {
-            mapImage.Refresh();
+            mapBox1.Refresh();
         }
 
         private void tbAngle_Scroll(object sender, EventArgs e)
         {
             System.Drawing.Drawing2D.Matrix matrix = new Matrix(); 
             if (tbAngle.Value != 0f)
-                matrix.RotateAt(tbAngle.Value, new PointF(mapImage.Width * 0.5f, mapImage.Height*0.5f));
+                matrix.RotateAt(tbAngle.Value, new PointF(mapBox1.Width * 0.5f, mapBox1.Height * 0.5f));
 
-            mapImage.Map.MapTransform = matrix;
-            AdjustRotation(mapImage.Map.Layers, tbAngle.Value);
-            AdjustRotation(mapImage.Map.VariableLayers, tbAngle.Value);
+            mapBox1.Map.MapTransform = matrix;
+            AdjustRotation(mapBox1.Map.Layers, tbAngle.Value);
+            AdjustRotation(mapBox1.Map.VariableLayers, tbAngle.Value);
 
-            mapImage.Refresh();
+            mapBox1.Refresh();
         }
 
         private void AdjustRotation(LayerCollection lc, float angle)
@@ -155,26 +155,6 @@ namespace WinFormSamples
                 else if (layer is LabelLayer)
                     ((LabelLayer)layer).Style.Rotation = -angle;
             }
-        }
-
-        private void button1_Click(object sender, EventArgs e)
-        {
-            new DockAreaForm().Show();
-        }
-
-        private void button2_Click(object sender, EventArgs e)
-        {
-            new Form2().ShowDialog();
-        }
-
-        private void button3_Click(object sender, EventArgs e)
-        {
-            new FormAnimation().ShowDialog();
-        }
-
-        private void button4_Click(object sender, EventArgs e)
-        {
-            new FormMovingObjectOverTileLayer().ShowDialog();
         }
 
     }

@@ -86,7 +86,9 @@ namespace SharpMap
         {
             Size = size;
             _Layers = new LayerCollection();
-            _Layers.ListChanged += new System.ComponentModel.ListChangedEventHandler(_Layers_ListChanged);
+            _backgroundLayers = new LayerCollection();
+            _backgroundLayers.ListChanged += new System.ComponentModel.ListChangedEventHandler(_Layers_ListChanged);
+            //_Layers.ListChanged += new System.ComponentModel.ListChangedEventHandler(_Layers_ListChanged);
             _variableLayers = new VariableLayerCollection(_Layers);
             BackColor = Color.Transparent;
             _MaximumZoom = double.MaxValue;
@@ -108,7 +110,7 @@ namespace SharpMap
             if (e.ListChangedType == System.ComponentModel.ListChangedType.ItemAdded)
             {
 
-                ILayer l = _Layers[e.NewIndex] as ILayer;
+                ILayer l = _backgroundLayers[e.NewIndex] as ILayer;
                 if (l is ITileAsyncLayer)
                 {
                     ((ITileAsyncLayer)l).MapNewTileAvaliable += this.MapNewTileAvaliableHandler;
@@ -317,6 +319,9 @@ namespace SharpMap
                 case LayerCollectionType.Variable:
                     lc = VariableLayers;
                     break;
+                case LayerCollectionType.Background:
+                    lc = BackgroundLayer;
+                    break;
             }
 
             if (lc== null || lc.Count == 0)
@@ -504,6 +509,7 @@ namespace SharpMap
         private Color _BackgroundColor;
         private Point _Center;
         private readonly LayerCollection _Layers;
+        private readonly LayerCollection _backgroundLayers;
         private readonly VariableLayerCollection _variableLayers;
         private Matrix _MapTransform;
         private double _MaximumZoom;
@@ -589,6 +595,14 @@ namespace SharpMap
             //            MapViewOnChange();
             //    }
             //}
+        }
+
+        /// <summary>
+        /// Collection of background Layers
+        /// </summary>
+        public LayerCollection BackgroundLayer
+        {
+            get { return _backgroundLayers; }
         }
 
         /// <summary>
@@ -744,17 +758,30 @@ namespace SharpMap
         /// <returns>Full map extents</returns>
         public BoundingBox GetExtents()
         {
-            if (Layers == null || Layers.Count == 0)
+            if ((Layers == null || Layers.Count == 0) &&
+                (VariableLayers == null || VariableLayers.Count == 0) &&
+                (BackgroundLayer == null || BackgroundLayer.Count == 0))
                 throw (new InvalidOperationException("No layers to zoom to"));
+            
             BoundingBox bbox = null;
-            for (int i = 0; i < Layers.Count; i++)
-            {
 
+            extendBoxForCollection(this.Layers, ref bbox);
+            extendBoxForCollection(this.VariableLayers, ref bbox);
+            extendBoxForCollection(this.BackgroundLayer, ref bbox);
+
+            return bbox;
+        }
+
+        private void extendBoxForCollection(LayerCollection layersCollection, ref BoundingBox bbox)
+        {
+            foreach (ILayer l in layersCollection)
+            {
+                
                 //Tries to get bb. Fails on some specific shapes and Mercator projects (World.shp)
                 BoundingBox bb = null;
                 try
                 {
-                    bb = Layers[i].Envelope;
+                    bb = l.Envelope;
                 }
                 catch (Exception)
                 {
@@ -771,7 +798,6 @@ namespace SharpMap
                 }
 
             }
-            return bbox;
         }
 
         #endregion

@@ -29,14 +29,22 @@ namespace WinFormSamples
             
             //TileAsyncLayer osmLayer= new TileAsyncLayer(new OsmTileSource(), "TileLayer - OSM");
             TileAsyncLayer bingLayer = new TileAsyncLayer(new BingTileSource(BingRequest.UrlBing, "",BingMapType.Roads), "TileLayer - Bing" );
-
-            this.mapBox1.Map.Layers.Add(bingLayer);
-
+            this.mapBox1.Map.BackgroundLayer.Add(bingLayer);
 
             SharpMap.Geometries.BoundingBox geom = ProjNet.CoordinateSystems.Transformations.GeometryTransform.TransformBox(new SharpMap.Geometries.BoundingBox(-9.205626, 38.690993, -9.123736, 38.740837), LayerTools.Wgs84toGoogleMercator.MathTransform);
 
-                this.mapBox1.Map.ZoomToBox(geom);
-                this.mapBox1.Refresh();
+            //Adds a pushpin layer
+            VectorLayer pushPinLayer = new VectorLayer("PushPins");
+            List<SharpMap.Geometries.Geometry> geos = new List<SharpMap.Geometries.Geometry>();
+            geos.Add(geom.GetCentroid());
+            SharpMap.Data.Providers.GeometryProvider geoProvider = new SharpMap.Data.Providers.GeometryProvider(geos);
+            pushPinLayer.DataSource = geoProvider;
+            this.mapBox1.Map.Layers.Add(pushPinLayer);
+
+
+
+            this.mapBox1.Map.ZoomToBox(geom);
+            this.mapBox1.Refresh();
             
         }
 
@@ -65,8 +73,8 @@ namespace WinFormSamples
         private void button1_Click(object sender, EventArgs e)
         {
             TileLayer googleLayer = new TileAsyncLayer(new GoogleTileSource(new BruTile.Web.GoogleRequest(GoogleMapType.GoogleMap),new BruTile.Cache.MemoryCache<byte[]>(100,1000)), "TileLayer - Google");
-            this.mapBox1.Map.Layers.Clear();
-            this.mapBox1.Map.Layers.Add(googleLayer);
+            this.mapBox1.Map.BackgroundLayer.Clear();
+            this.mapBox1.Map.BackgroundLayer.Add(googleLayer);
             this.mapBox1.Refresh();
         }
 
@@ -74,32 +82,18 @@ namespace WinFormSamples
         {
             
             TileAsyncLayer bingLayer = new TileAsyncLayer(new BingTileSource(BingRequest.UrlBing, "", BingMapType.Roads), "TileLayer - Bing");
-            this.mapBox1.Map.Layers.Clear();
-            this.mapBox1.Map.Layers.Add(bingLayer);
+            this.mapBox1.Map.BackgroundLayer.Clear();
+            this.mapBox1.Map.BackgroundLayer.Add(bingLayer);
             this.mapBox1.Refresh();
         }
 
         private void button6_Click(object sender, EventArgs e)
         {
             TileAsyncLayer osmLayer= new TileAsyncLayer(new OsmTileSource(), "TileLayer - OSM");
-            this.mapBox1.Map.Layers.Clear();
-            this.mapBox1.Map.Layers.Add(osmLayer);
+            this.mapBox1.Map.BackgroundLayer.Clear();
+            this.mapBox1.Map.BackgroundLayer.Add(osmLayer);
             this.mapBox1.Refresh();
         }
 
-        private void button7_Click(object sender, EventArgs e)
-        {
-            this.mapBox1.ActiveTool = SharpMap.Forms.MapBox.Tools.DrawPoint;
-        }
-
-        private void button8_Click(object sender, EventArgs e)
-        {
-            this.mapBox1.ActiveTool = SharpMap.Forms.MapBox.Tools.DrawLine;
-        }
-
-        private void button9_Click(object sender, EventArgs e)
-        {
-            this.mapBox1.ActiveTool = SharpMap.Forms.MapBox.Tools.DrawPolygon;
-        }
     }
 }

@@ -1,6 +1,6 @@
 ﻿namespace WinFormSamples
 {
-  partial class MainForm
+    partial class FormMapBox
   {
     /// <summary>
     /// Required designer variable.
@@ -39,19 +39,13 @@
         this.radioButton8 = new System.Windows.Forms.RadioButton();
         this.radioButton9 = new System.Windows.Forms.RadioButton();
         this.radioButton10 = new System.Windows.Forms.RadioButton();
-        this.groupBox1 = new System.Windows.Forms.GroupBox();
-        this.button4 = new System.Windows.Forms.Button();
-        this.button1 = new System.Windows.Forms.Button();
-        this.button3 = new System.Windows.Forms.Button();
-        this.button2 = new System.Windows.Forms.Button();
         this.scMain = new System.Windows.Forms.SplitContainer();
         this.scMapProp = new System.Windows.Forms.SplitContainer();
         this.tbAngle = new System.Windows.Forms.TrackBar();
-        this.mapImage = new SharpMap.Forms.MapImage();
         this.pgMap = new System.Windows.Forms.PropertyGrid();
         this.dataGridView1 = new System.Windows.Forms.DataGridView();
+        this.mapBox1 = new SharpMap.Forms.MapBox();
         this.flowLayoutPanel1.SuspendLayout();
-        this.groupBox1.SuspendLayout();
         this.scMain.Panel1.SuspendLayout();
         this.scMain.Panel2.SuspendLayout();
         this.scMain.SuspendLayout();
@@ -59,7 +53,6 @@
         this.scMapProp.Panel2.SuspendLayout();
         this.scMapProp.SuspendLayout();
         ((System.ComponentModel.ISupportInitialize)(this.tbAngle)).BeginInit();
-        ((System.ComponentModel.ISupportInitialize)(this.mapImage)).BeginInit();
         ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
         this.SuspendLayout();
         // 
@@ -75,7 +68,6 @@
         this.flowLayoutPanel1.Controls.Add(this.radioButton8);
         this.flowLayoutPanel1.Controls.Add(this.radioButton9);
         this.flowLayoutPanel1.Controls.Add(this.radioButton10);
-        this.flowLayoutPanel1.Controls.Add(this.groupBox1);
         this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Left;
         this.flowLayoutPanel1.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
         this.flowLayoutPanel1.Location = new System.Drawing.Point(0, 0);
@@ -205,59 +197,6 @@
         this.radioButton10.UseVisualStyleBackColor = true;
         this.radioButton10.Click += new System.EventHandler(this.radioButton_Click);
         // 
-        // groupBox1
-        // 
-        this.groupBox1.Controls.Add(this.button4);
-        this.groupBox1.Controls.Add(this.button1);
-        this.groupBox1.Controls.Add(this.button3);
-        this.groupBox1.Controls.Add(this.button2);
-        this.groupBox1.Location = new System.Drawing.Point(13, 237);
-        this.groupBox1.Name = "groupBox1";
-        this.groupBox1.Size = new System.Drawing.Size(134, 137);
-        this.groupBox1.TabIndex = 12;
-        this.groupBox1.TabStop = false;
-        this.groupBox1.Text = "Map Box Examples";
-        // 
-        // button4
-        // 
-        this.button4.Location = new System.Drawing.Point(15, 106);
-        this.button4.Name = "button4";
-        this.button4.Size = new System.Drawing.Size(97, 23);
-        this.button4.TabIndex = 12;
-        this.button4.Text = "Moving Object";
-        this.button4.UseVisualStyleBackColor = true;
-        this.button4.Click += new System.EventHandler(this.button4_Click);
-        // 
-        // button1
-        // 
-        this.button1.Location = new System.Drawing.Point(15, 19);
-        this.button1.Name = "button1";
-        this.button1.Size = new System.Drawing.Size(97, 23);
-        this.button1.TabIndex = 9;
-        this.button1.Text = "DockWindow";
-        this.button1.UseVisualStyleBackColor = true;
-        this.button1.Click += new System.EventHandler(this.button1_Click);
-        // 
-        // button3
-        // 
-        this.button3.Location = new System.Drawing.Point(15, 77);
-        this.button3.Name = "button3";
-        this.button3.Size = new System.Drawing.Size(97, 23);
-        this.button3.TabIndex = 11;
-        this.button3.Text = "Save Animation";
-        this.button3.UseVisualStyleBackColor = true;
-        this.button3.Click += new System.EventHandler(this.button3_Click);
-        // 
-        // button2
-        // 
-        this.button2.Location = new System.Drawing.Point(15, 48);
-        this.button2.Name = "button2";
-        this.button2.Size = new System.Drawing.Size(97, 23);
-        this.button2.TabIndex = 10;
-        this.button2.Text = "Draw Geometries";
-        this.button2.UseVisualStyleBackColor = true;
-        this.button2.Click += new System.EventHandler(this.button2_Click);
-        // 
         // scMain
         // 
         this.scMain.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -284,8 +223,8 @@
         // 
         // scMapProp.Panel1
         // 
+        this.scMapProp.Panel1.Controls.Add(this.mapBox1);
         this.scMapProp.Panel1.Controls.Add(this.tbAngle);
-        this.scMapProp.Panel1.Controls.Add(this.mapImage);
         // 
         // scMapProp.Panel2
         // 
@@ -306,36 +245,12 @@
         this.tbAngle.TickFrequency = 15;
         this.tbAngle.Scroll += new System.EventHandler(this.tbAngle_Scroll);
         // 
-        // mapImage
-        // 
-        this.mapImage.ActiveTool = SharpMap.Forms.MapImage.Tools.Pan;
-        this.mapImage.BackColor = System.Drawing.Color.White;
-        this.mapImage.Cursor = System.Windows.Forms.Cursors.Hand;
-        this.mapImage.Dock = System.Windows.Forms.DockStyle.Fill;
-        this.mapImage.FineZoomFactor = 10;
-        this.mapImage.Location = new System.Drawing.Point(0, 0);
-        this.mapImage.Name = "mapImage";
-        this.mapImage.PanOnClick = false;
-        this.mapImage.QueryLayerIndex = 0;
-        this.mapImage.Size = new System.Drawing.Size(383, 316);
-        this.mapImage.TabIndex = 1;
-        this.mapImage.TabStop = false;
-        this.mapImage.WheelZoomMagnitude = 2;
-        this.mapImage.ZoomOnDblClick = false;
-        this.mapImage.MapZooming += new SharpMap.Forms.MapImage.MapZoomHandler(this.mapImage_MapZooming);
-        this.mapImage.MapQueriedDataSet += new SharpMap.Forms.MapImage.MapQueryDataSetHandler(this.mapImage_MapQueriedDataSet);
-        this.mapImage.MapRefreshed += new System.EventHandler(this.mapImage_MapRefreshed);
-        this.mapImage.MapZoomChanged += new SharpMap.Forms.MapImage.MapZoomHandler(this.mapImage_MapZoomChanged);
-        this.mapImage.ActiveToolChanged += new SharpMap.Forms.MapImage.ActiveToolChangedHandler(this.mapImage_ActiveToolChanged);
-        this.mapImage.SizeChanged += new System.EventHandler(this.mapImage_SizeChanged);
-        this.mapImage.MapCenterChanged += new SharpMap.Forms.MapImage.MapCenterChangedHandler(this.mapImage_MapCenterChanged);
-        // 
         // pgMap
         // 
         this.pgMap.Dock = System.Windows.Forms.DockStyle.Fill;
         this.pgMap.Location = new System.Drawing.Point(0, 0);
         this.pgMap.Name = "pgMap";
-        this.pgMap.SelectedObject = this.mapImage;
+        this.pgMap.SelectedObject = this.mapBox1;
         this.pgMap.Size = new System.Drawing.Size(136, 316);
         this.pgMap.TabIndex = 3;
         // 
@@ -348,18 +263,35 @@
         this.dataGridView1.Size = new System.Drawing.Size(523, 126);
         this.dataGridView1.TabIndex = 4;
         // 
-        // MainForm
+        // mapBox1
+        // 
+        this.mapBox1.ActiveTool = SharpMap.Forms.MapBox.Tools.Pan;
+        this.mapBox1.Cursor = System.Windows.Forms.Cursors.Hand;
+        this.mapBox1.Dock = System.Windows.Forms.DockStyle.Fill;
+        this.mapBox1.FineZoomFactor = 10;
+        this.mapBox1.Location = new System.Drawing.Point(0, 0);
+        this.mapBox1.Name = "mapBox1";
+        this.mapBox1.PreviewMode = SharpMap.Forms.MapBox.PreviewModes.Fast;
+        this.mapBox1.QueryLayerIndex = 0;
+        this.mapBox1.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(210)))), ((int)(((byte)(244)))), ((int)(((byte)(244)))), ((int)(((byte)(244)))));
+        this.mapBox1.SelectionForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(244)))), ((int)(((byte)(244)))));
+        this.mapBox1.ShowProgressUpdate = true;
+        this.mapBox1.Size = new System.Drawing.Size(383, 271);
+        this.mapBox1.TabIndex = 6;
+        this.mapBox1.Text = "mapBox1";
+        this.mapBox1.WheelZoomMagnitude = 2;
+        // 
+        // FormMapBox
         // 
         this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
         this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
         this.ClientSize = new System.Drawing.Size(689, 446);
         this.Controls.Add(this.scMain);
         this.Controls.Add(this.flowLayoutPanel1);
-        this.Name = "MainForm";
-        this.Text = "SharpMap Samples";
+        this.Name = "FormMapBox";
+        this.Text = "SharpMap Samples - MapBox";
         this.flowLayoutPanel1.ResumeLayout(false);
         this.flowLayoutPanel1.PerformLayout();
-        this.groupBox1.ResumeLayout(false);
         this.scMain.Panel1.ResumeLayout(false);
         this.scMain.Panel2.ResumeLayout(false);
         this.scMain.ResumeLayout(false);
@@ -368,7 +300,6 @@
         this.scMapProp.Panel2.ResumeLayout(false);
         this.scMapProp.ResumeLayout(false);
         ((System.ComponentModel.ISupportInitialize)(this.tbAngle)).EndInit();
-        ((System.ComponentModel.ISupportInitialize)(this.mapImage)).EndInit();
         ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
         this.ResumeLayout(false);
 
@@ -389,15 +320,10 @@
     private System.Windows.Forms.RadioButton radioButton10;
     private System.Windows.Forms.SplitContainer scMain;
     private System.Windows.Forms.SplitContainer scMapProp;
-    private SharpMap.Forms.MapImage mapImage;
     private System.Windows.Forms.PropertyGrid pgMap;
     private System.Windows.Forms.DataGridView dataGridView1;
     private System.Windows.Forms.TrackBar tbAngle;
-    private System.Windows.Forms.Button button1;
-    private System.Windows.Forms.Button button2;
-    private System.Windows.Forms.Button button3;
-    private System.Windows.Forms.GroupBox groupBox1;
-    private System.Windows.Forms.Button button4;
+    private SharpMap.Forms.MapBox mapBox1;
   }
 }
 

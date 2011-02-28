@@ -15,6 +15,11 @@ namespace WinFormSamples
             InitializeComponent();
         }
 
+        private void DockAreaForm_Load(object sender, EventArgs e)
+        {
+            toolStripButton1_Click(sender, e);
+        }
+
         private void toolStripButton1_Click(object sender, EventArgs e)
         {
             Form2 form = new Form2();
@@ -33,5 +38,6 @@ namespace WinFormSamples
             this.LayoutMdi(MdiLayout.TileHorizontal);
             
         }
+
     }
 }

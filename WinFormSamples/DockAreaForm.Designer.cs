@@ -95,6 +95,7 @@
             this.Name = "DockAreaForm";
             this.Text = "DockAreaForm";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
+            this.Load += new System.EventHandler(this.DockAreaForm_Load);
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();
             this.ResumeLayout(false);

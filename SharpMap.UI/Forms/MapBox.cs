@@ -231,6 +231,7 @@ namespace SharpMap.Forms
         private Pen m_RectanglePen = new Pen(Color.FromArgb(244, 244, 244), 1);
         private float m_Scaling = 0;
         private Image m_Image = new Bitmap(1, 1);
+        private Image m_ImageBackground = new Bitmap(1, 1);
         private Image m_ImageStatic = new Bitmap(1, 1);
         private Image m_ImageVariable = new Bitmap(1, 1);
         private PreviewModes m_PreviewMode;
@@ -279,7 +280,7 @@ namespace SharpMap.Forms
                 //Updates Map
                 lock (m_Map)
                 {
-                   GetImagesAsync();
+                   //GetImagesAsync();
                    GetImagesAsyncEnd(null);
                 }
                 return m_Image;
@@ -353,7 +354,7 @@ namespace SharpMap.Forms
 
         void m_Map_MapNewTileAvaliable(TileLayer sender, SharpMap.Geometries.BoundingBox box, Bitmap bm, int sourceWidth, int sourceHeight, ImageAttributes imageAttributes)
         {
-            lock (m_ImageStatic)
+            lock (m_ImageBackground)
             {
                 try
                 {
@@ -365,7 +366,7 @@ namespace SharpMap.Forms
 
                     if (this.IsDisposed == false)
                     {
-                        Graphics g = Graphics.FromImage(this.m_ImageStatic);
+                        Graphics g = Graphics.FromImage(this.m_ImageBackground);
 
                         g.DrawImage(bm,
                             new Rectangle((int)min.X, (int)max.Y, (int)(max.X - min.X), (int)(min.Y - max.Y)),
@@ -480,12 +481,12 @@ namespace SharpMap.Forms
                 oldRef = m_ImageVariable;
                 m_ImageVariable = GetMap(m_Map.VariableLayers, LayerCollectionType.Variable);
             }
+
             UpdateImage(false);
             if (oldRef != null)
             {
                 oldRef.Dispose();
                 oldRef = null;
-                //                GC.Collect();
             }
 
             this.Invalidate();
@@ -516,11 +517,8 @@ namespace SharpMap.Forms
             lock (m_Map)
             {
                 m_ImageVariable = GetMap(m_Map.VariableLayers, LayerCollectionType.Variable);
-
-                lock (m_ImageStatic)
-                {
-                    m_ImageStatic = GetMap(m_Map.Layers, LayerCollectionType.Static);
-                }
+                m_ImageStatic = GetMap(m_Map.Layers, LayerCollectionType.Static);
+                m_ImageBackground = GetMap(m_Map.BackgroundLayer, LayerCollectionType.Background);
             }
         }
 
@@ -540,6 +538,20 @@ namespace SharpMap.Forms
 
                     Graphics g = Graphics.FromImage(bmp);
 
+                    //Draws the background Image
+                    if (m_ImageBackground != null)
+                    {
+                        try
+                        {
+                            g.DrawImageUnscaled(m_ImageBackground, 0, 0);
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine(ex.ToString());
+                        }
+                    }
+
+                    //Draws the static images
                     if (m_ImageStatic != null)
                     {
                         try
@@ -552,6 +564,8 @@ namespace SharpMap.Forms
                         }
 
                     }
+
+                    //Draws the variable Images
                     if (m_ImageVariable != null)
                     {
                         try
@@ -605,7 +619,7 @@ namespace SharpMap.Forms
 
         private void UpdateImage(bool forceRefresh)
         {
-            if ((!(m_ImageStatic == null && m_ImageVariable == null) || forceRefresh) &&
+            if ((!(m_ImageStatic == null && m_ImageVariable == null && m_ImageBackground == null) || forceRefresh) &&
                 (Width != 0 && Height != 0))
             {
                 if (forceRefresh && _isRefreshing == false)
@@ -659,7 +673,9 @@ namespace SharpMap.Forms
                 if (m_Map != null)
                 {
                     m_Map.Size = ClientSize;
-                    if (m_Map.Layers == null || m_Map.Layers.Count == 0)
+                    if ((m_Map.Layers == null || m_Map.Layers.Count == 0) &&
+                        (m_Map.BackgroundLayer == null || m_Map.BackgroundLayer.Count == 0) &&
+                        (m_Map.VariableLayers == null || m_Map.VariableLayers.Count == 0))
                         m_Image = null;
                     else
                     {
@@ -1189,8 +1205,11 @@ namespace SharpMap.Forms
 
                     if (m_ActiveTool != Tools.ZoomOut)
                     {
-                        m_Image.Dispose();
-                        m_Image = null;
+                        if (m_Image != null)
+                        {
+                            m_Image.Dispose();
+                            m_Image = null;
+                        }
                         m_Image = m_DragImage;
                         this.Invalidate();
                     }

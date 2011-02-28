@@ -92,7 +92,7 @@ namespace WinFormSamples
 
         private void button3_Click(object sender, EventArgs e)
         {
-            this.mapBox1.ActiveTool = SharpMap.Forms.MapBox.Tools.ZoomWindow;
+            this.mapBox1.ActiveTool = SharpMap.Forms.MapBox.Tools.ZoomIn;
         }
 
         private void button2_Click(object sender, EventArgs e)

@@ -6,14 +6,19 @@ namespace SharpMap.Layers
     public enum LayerCollectionType
     {
         /// <summary>
-        /// Layer collection for layers with datasources that are more or less static
+        /// Layer collection for layers with datasources that are more or less static (e.g ShapeFiles)
         /// </summary>
         Static,
 
         /// <summary>
-        /// Layer collection for layers with datasources that update frequently
+        /// Layer collection for layers with datasources that update frequently (e.g. moving vehicle)
         /// </summary>
         Variable,
+
+        /// <summary>
+        /// Layer collection for layers are completely opaque and use as Background (e.g. WMS, OSM)
+        /// </summary>
+        Background,
     }
     /// <summary>
     /// Signature of function to handle VariableLayerCollectionRequery event
