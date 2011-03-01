@@ -103,6 +103,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DlgSamplesMenu.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DlgSamplesMenu.Designer.cs">
+      <DependentUpon>DlgSamplesMenu.cs</DependentUpon>
+    </Compile>
     <Compile Include="DockAreaForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -126,6 +132,24 @@
     </Compile>
     <Compile Include="FormAnimation.Designer.cs">
       <DependentUpon>FormAnimation.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormDemoDrawGeometries.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormDemoDrawGeometries.Designer.cs">
+      <DependentUpon>FormDemoDrawGeometries.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormMapBox.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormMapBox.Designer.cs">
+      <DependentUpon>FormMapBox.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormMovingObjectOverTileLayer.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormMovingObjectOverTileLayer.Designer.cs">
+      <DependentUpon>FormMovingObjectOverTileLayer.cs</DependentUpon>
     </Compile>
     <Compile Include="LayerTools.cs" />
     <Compile Include="Samples\GdalSample.cs" />
@@ -247,6 +271,9 @@
     <Compile Include="Samples\OgrSample.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="DlgSamplesMenu.resx">
+      <DependentUpon>DlgSamplesMenu.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="DockAreaForm.resx">
       <DependentUpon>DockAreaForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -259,6 +286,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FormAnimation.resx">
       <DependentUpon>FormAnimation.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormDemoDrawGeometries.resx">
+      <DependentUpon>FormDemoDrawGeometries.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormMapBox.resx">
+      <DependentUpon>FormMapBox.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormMovingObjectOverTileLayer.resx">
+      <DependentUpon>FormMovingObjectOverTileLayer.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
