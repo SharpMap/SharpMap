@@ -116,18 +116,32 @@ namespace SharpMap.Layers
         /// <param name="cachetime">Time for caching Service Description (ASP.NET only)</param>
         /// <param name="proxy">Proxy</param>
         public WmsLayer(string layername, string url, TimeSpan cachetime, WebProxy proxy)
+            : this(layername, url, new TimeSpan(24, 0, 0), proxy, null)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new layer, and downloads and parses the service description
+        /// </summary>
+        /// <param name="layername">Layername</param>
+        /// <param name="url">Url of WMS server</param>
+        /// <param name="cachetime">Time for caching Service Description (ASP.NET only)</param>
+        /// <param name="proxy">Proxy</param>
+        /// <param name="credentials"></param>
+        public WmsLayer(string layername, string url, TimeSpan cachetime, WebProxy proxy, ICredentials credentials)
         {
             _Proxy = proxy;
             _TimeOut = 10000;
             LayerName = layername;
             _ContinueOnError = true;
+            _Credentials = credentials;
             if (HttpContext.Current != null && HttpContext.Current.Cache["SharpMap_WmsClient_" + url] != null)
             {
                 wmsClient = (Client)HttpContext.Current.Cache["SharpMap_WmsClient_" + url];
             }
             else
             {
-                wmsClient = new Client(url, _Proxy);
+                wmsClient = new Client(url, _Proxy, _Credentials);
                 if (HttpContext.Current != null)
                     HttpContext.Current.Cache.Insert("SharpMap_WmsClient_" + url, wmsClient, null,
                                                      Cache.NoAbsoluteExpiration, cachetime);
@@ -587,6 +601,27 @@ namespace SharpMap.Layers
                 }
             }
             return box;
+        }
+
+        /// <summary>
+        /// Recursive method for adding all WMS layers to layer list
+        /// Skips "top level" layer if addFirstLayer is false
+        /// </summary>
+        /// <param name="layer"></param>
+        /// <param name="addFirstLayer"></param>
+        /// <returns></returns>
+        public void AddChildLayers(Client.WmsServerLayer layer, bool addFirstLayer)
+        {
+            if (addFirstLayer)
+                this.AddLayer(layer.Name);
+            else
+                addFirstLayer = true;
+
+
+            foreach (Client.WmsServerLayer childlayer in layer.ChildLayers)
+            {
+                AddChildLayers(childlayer, addFirstLayer);
+            }
         }
     }
 }

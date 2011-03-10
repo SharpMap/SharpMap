@@ -58,6 +58,8 @@ namespace SharpMap.Converters.SqlServer2008SpatialObjects
 
     public static class SqlGeometryConverter
     {
+        public static double ReduceTolerance = 1d;
+
         public static SqlGeometry ToSqlGeometry(SMGeometry smGeometry)
         {
             SqlGeometryBuilder builder = new SqlGeometryBuilder();
@@ -76,7 +78,11 @@ namespace SharpMap.Converters.SqlServer2008SpatialObjects
 
             SqlGeometry g = builder.ConstructedGeometry;
             if (!g.STIsValid())
+            {
+                g.Reduce(ReduceTolerance);
                 g.MakeValid();
+            }
+
             if (!g.STIsValid())
                 throw new SqlGeometryConverterException(smGeometry);
 

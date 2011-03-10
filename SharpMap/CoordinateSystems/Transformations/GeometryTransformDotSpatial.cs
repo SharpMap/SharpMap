@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using SharpMap.Geometries;
 
 #if DotSpatialProjections
+#pragma warning disable 1587
 
 namespace DotSpatial.Projections
 {
@@ -21,7 +22,7 @@ namespace DotSpatial.Projections
         /// <returns>Transformed BoundingBox</returns>
         public static BoundingBox TransformBox(BoundingBox box, ProjectionInfo from, ProjectionInfo to)
         {
-            double[] corners = new double[] { box.Left, box.Bottom, box.Left, box.Top, box.Right, box.Top, box.Right, box.Top };
+            var corners = new[] { box.Left, box.Bottom, box.Left, box.Top, box.Right, box.Top, box.Right, box.Bottom };
             Reproject.ReprojectPoints(corners, null, from, to, 0, 4);
 
             return new BoundingBox(corners[0], corners[1], corners[4], corners[5]).Join(
@@ -51,6 +52,8 @@ namespace DotSpatial.Projections
                 return TransformMultiLineString(g as MultiLineString, from, to);
             if (g is MultiPolygon)
                 return TransformMultiPolygon(g as MultiPolygon, from, to);
+            if (g is GeometryCollection)
+                return TransformGeometryCollection(g as GeometryCollection, from, to);
             throw new ArgumentException("Could not transform geometry type '" + g.GetType() + "'");
         }
 
@@ -132,10 +135,10 @@ namespace DotSpatial.Projections
         /// <returns>Transformed Polygon</returns>
         public static Polygon TransformPolygon(Polygon p, ProjectionInfo from, ProjectionInfo to)
         {
-            Polygon pOut = new Polygon(TransformLinearRing(p.ExteriorRing, from, to));
+            var pOut = new Polygon(TransformLinearRing(p.ExteriorRing, from, to))
+                           {InteriorRings = new Collection<LinearRing>()};
             //pOut.InteriorRings = new Collection<LinearRing>(p.InteriorRings.Count); //Pre-inialize array size for better performance
-            pOut.InteriorRings = new Collection<LinearRing>();
-            for (int i = 0; i < p.InteriorRings.Count; i++)
+            for (var i = 0; i < p.InteriorRings.Count; i++)
                 pOut.InteriorRings.Add(TransformLinearRing(p.InteriorRings[i], from, to));
             return pOut;
         }
@@ -149,9 +152,9 @@ namespace DotSpatial.Projections
         /// <returns>Transformed MultiPoint</returns>
         public static MultiPoint TransformMultiPoint(MultiPoint points, ProjectionInfo from, ProjectionInfo to)
         {
-            List<double[]> pts = new List<double[]>();
-            for (int i = 0; i < points.NumGeometries; i++)
-                pts.Add(new double[] {points[0].X, points[1].Y});
+            var pts = new List<double[]>();
+            for (var i = 0; i < points.NumGeometries; i++)
+                pts.Add(new[] {points[0].X, points[1].Y});
 
             return new MultiPoint(TransformList(pts, from, to));
         }
@@ -165,10 +168,9 @@ namespace DotSpatial.Projections
         /// <returns>Transformed MultiLineString</returns>
         public static MultiLineString TransformMultiLineString(MultiLineString lines, ProjectionInfo from, ProjectionInfo to)
         {
-            MultiLineString lOut = new MultiLineString();
-            //lOut.LineStrings = new Collection<LineString>(lines.LineStrings.Count); //Pre-inialize array size for better performance
-            lOut.LineStrings = new Collection<LineString>(); //Pre-inialize array size for better performance
-            for (int i = 0; i < lines.LineStrings.Count; i++)
+            var lOut = new MultiLineString {LineStrings = new Collection<LineString>()};
+
+            for (var i = 0; i < lines.LineStrings.Count; i++)
                 lOut.LineStrings.Add(TransformLineString(lines[i], from, to));
             return lOut;
         }
@@ -182,10 +184,8 @@ namespace DotSpatial.Projections
         /// <returns>Transformed MultiPolygon</returns>
         public static MultiPolygon TransformMultiPolygon(MultiPolygon polys, ProjectionInfo from, ProjectionInfo to)
         {
-            MultiPolygon pOut = new MultiPolygon();
-            //pOut.Polygons = new Collection<Polygon>(polys.Polygons.Count); //Pre-inialize array size for better performance
-            pOut.Polygons = new Collection<Polygon>();
-            for (int i = 0; i < polys.NumGeometries; i++)
+            var pOut = new MultiPolygon {Polygons = new Collection<Polygon>()};
+            for (var i = 0; i < polys.NumGeometries; i++)
                 pOut.Polygons.Add(TransformPolygon(polys[i], from, to));
             return pOut;
         }
@@ -199,10 +199,8 @@ namespace DotSpatial.Projections
         /// <returns>Transformed GeometryCollection</returns>
         public static GeometryCollection TransformGeometryCollection(GeometryCollection geoms, ProjectionInfo from, ProjectionInfo to)
         {
-            GeometryCollection gOut = new GeometryCollection();
-            //gOut.Collection = new Collection<Geometry>(geoms.Collection.Count); //Pre-inialize array size for better performance
-            gOut.Collection = new Collection<Geometry>(); //Pre-inialize array size for better performance
-            for (int i = 0; i < geoms.Collection.Count; i++)
+            var gOut = new GeometryCollection {Collection = new Collection<Geometry>()};
+            for (var i = 0; i < geoms.Collection.Count; i++)
                 gOut.Collection.Add(TransformGeometry(geoms[i], from, to));
             return gOut;
         }
@@ -218,6 +216,9 @@ namespace DotSpatial.Projections
 
     }
 
+    /// <summary>
+    /// Interface for coordiante transfromations
+    /// </summary>
     public interface ICoordinateTransformation
     {
         /// <summary>
@@ -230,22 +231,15 @@ namespace DotSpatial.Projections
         ProjectionInfo Target { get; }
     }
 
+    /// <summary>
+    /// Coordinate transformation class
+    /// </summary>
     public class CoordinateTransformation : ICoordinateTransformation
     {
-        private ProjectionInfo _origin;
-        private ProjectionInfo _destin;
+        public ProjectionInfo Source { get; set; }
 
-        public ProjectionInfo Source
-        {
-            get { return _origin; }
-            set { _origin = value; }
-        }
-
-        public ProjectionInfo Target
-        {
-            get { return _destin; }
-            set { _destin = value; }
-        }
+        public ProjectionInfo Target { get; set; }
     }
 }
+#pragma warning restore 1587
 #endif

@@ -20,6 +20,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Globalization;
+using System.IO;
 using SharpMap.Geometries;
 using SharpMap.Layers;
 using SharpMap.Rendering;
@@ -87,7 +88,7 @@ namespace SharpMap
             Size = size;
             _Layers = new LayerCollection();
             _backgroundLayers = new LayerCollection();
-            _backgroundLayers.ListChanged += new System.ComponentModel.ListChangedEventHandler(_Layers_ListChanged);
+            _backgroundLayers.ListChanged += _Layers_ListChanged;
             //_Layers.ListChanged += new System.ComponentModel.ListChangedEventHandler(_Layers_ListChanged);
             _variableLayers = new VariableLayerCollection(_Layers);
             BackColor = Color.Transparent;
@@ -110,10 +111,10 @@ namespace SharpMap
             if (e.ListChangedType == System.ComponentModel.ListChangedType.ItemAdded)
             {
 
-                ILayer l = _backgroundLayers[e.NewIndex] as ILayer;
+                ILayer l = _backgroundLayers[e.NewIndex];
                 if (l is ITileAsyncLayer)
                 {
-                    ((ITileAsyncLayer)l).MapNewTileAvaliable += this.MapNewTileAvaliableHandler;
+                    ((ITileAsyncLayer)l).MapNewTileAvaliable += MapNewTileAvaliableHandler;
                 }
             }
         }
@@ -148,6 +149,11 @@ namespace SharpMap
         public delegate void MapRenderedEventHandler(Graphics g);
 
         /// <summary>
+        /// EventHandler for event fired when all layers are about to be rendered
+        /// </summary>
+        public delegate void MapRenderingEventHandler(Graphics g);
+
+        /// <summary>
         /// EventHandler for event fired when the zoomlevel or the center point has been changed
         /// </summary>
         public delegate void MapViewChangedHandler();
@@ -159,13 +165,21 @@ namespace SharpMap
         /// <summary>
         /// Event fired when the maps layer list have been changed
         /// </summary>
+        [Obsolete("This event is never invoked since it has been made impossible to change the LayerCollection for a map instance.")]
+#pragma warning disable 67
         public event LayersChangedEventHandler LayersChanged;
+#pragma warning restore 67
 
         /// <summary>
         /// Event fired when the zoomlevel or the center point has been changed
         /// </summary>
         public event MapViewChangedHandler MapViewOnChange;
 
+
+        /// <summary>
+        /// Event fired when all layers are about to be rendered
+        /// </summary>
+        public event MapRenderedEventHandler MapRendering;
 
         /// <summary>
         /// Event fired when all layers have been rendered
@@ -175,8 +189,18 @@ namespace SharpMap
         /// <summary>
         /// Event fired when one layer have been rendered
         /// </summary>
-        public event EventHandler LayerRendered;
+        public event EventHandler<LayerRenderingEventArgs> LayerRendering;
 
+        /// <summary>
+        /// Event fired when one layer have been rendered
+        /// </summary>
+        public event EventHandler<LayerRenderingEventArgs> LayerRenderedEx;
+
+        ///<summary>
+        /// Event fired when a layer has been rendered
+        ///</summary>
+        [Obsolete("Use LayerRenderedEx")]
+        public event EventHandler LayerRendered;
 
         /// <summary>
         /// Event fired when a new Tile is available in a TileAsyncLayer
@@ -225,6 +249,11 @@ namespace SharpMap
              */
         }
 
+        /// <summary>
+        /// Renders the map to an image with the supplied resolution
+        /// </summary>
+        /// <param name="resolution">The resolution of the image</param>
+        /// <returns>The map image</returns>
         public Image GetMap(int resolution)
         {
             Image img = new Bitmap(Size.Width, Size.Height);
@@ -236,12 +265,73 @@ namespace SharpMap
 
         }
 
-        public void MapNewTileAvaliableHandler(TileLayer sender, SharpMap.Geometries.BoundingBox bbox, Bitmap bm, int sourceWidth, int sourceHeight, ImageAttributes imageAttributes)
+        /// <summary>
+        /// Renders the map to a Metafile (Vectorimage).
+        /// </summary>
+        /// <remarks>
+        /// A Metafile can be saved as WMF,EMF etc. or put onto the clipboard for paste in other applications such av Word-processors which will give
+        /// a high quality vector image in that application.
+        /// </remarks>
+        /// <returns>The current map rendered as to a Metafile</returns>
+        public Metafile GetMapAsMetafile()
         {
-            if (this.MapNewTileAvaliable != null)
+            return GetMapAsMetafile(String.Empty);
+        }
+
+        /// <summary>
+        /// Renders the map to a Metafile (Vectorimage).
+        /// </summary>
+        /// <param name="metafileName">The filename of the metafile. If this is null or empty the metafile is not saved.</param>
+        /// <remarks>
+        /// A Metafile can be saved as WMF,EMF etc. or put onto the clipboard for paste in other applications such av Word-processors which will give
+        /// a high quality vector image in that application.
+        /// </remarks>
+        /// <returns>The current map rendered as to a Metafile</returns>
+        public Metafile GetMapAsMetafile(string metafileName)
+        {
+            Metafile metafile;
+            Bitmap bm = new Bitmap(1, 1);
+            using (Graphics g = Graphics.FromImage(bm))
             {
-                this.MapNewTileAvaliable(sender, bbox, bm,sourceWidth,sourceHeight,imageAttributes);
-            }
+                 IntPtr hdc = g.GetHdc();
+                 using (MemoryStream stream = new MemoryStream())
+                 {
+                     metafile = new Metafile(stream, hdc, new RectangleF(0, 0, Size.Width, Size.Height),
+                                             MetafileFrameUnit.Pixel, EmfType.EmfPlusDual);
+
+                     using (Graphics metafileGraphics = Graphics.FromImage(metafile))
+                     {
+                         metafileGraphics.PageUnit = GraphicsUnit.Pixel;
+                         metafileGraphics.TransformPoints(CoordinateSpace.Page, CoordinateSpace.Device,
+                                                          new[] {new PointF(Size.Width, Size.Height)});
+
+                         //Render map to metafile
+                         RenderMap(metafileGraphics);
+                     }
+
+                     //Save metafile if desired
+                     if (!String.IsNullOrEmpty(metafileName))
+                         File.WriteAllBytes(metafileName, stream.ToArray());
+                 }
+                g.ReleaseHdc(hdc);
+             }
+            return metafile;
+        }
+
+        //ToDo: fill in the blanks
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="bbox"></param>
+        /// <param name="bm"></param>
+        /// <param name="sourceWidth"></param>
+        /// <param name="sourceHeight"></param>
+        /// <param name="imageAttributes"></param>
+        public void MapNewTileAvaliableHandler(TileLayer sender, BoundingBox bbox, Bitmap bm, int sourceWidth, int sourceHeight, ImageAttributes imageAttributes)
+        {
+            var e = MapNewTileAvaliable;
+            if (e != null)
+                e(sender, bbox, bm,sourceWidth,sourceHeight,imageAttributes);
         }
 
         /// <summary>
@@ -252,6 +342,8 @@ namespace SharpMap
         /// <exception cref="InvalidOperationException">if there are no layers to render.</exception>
         public void RenderMap(Graphics g)
         {
+            OnMapRendering(g);
+
             if (g == null)
                 throw new ArgumentNullException("g", "Cannot render map with null graphics object!");
 
@@ -273,8 +365,10 @@ namespace SharpMap
             //int srid = (Layers.Count > 0 ? Layers[0].SRID : -1); //Get the SRID of the first layer
             foreach (ILayer layer in layerList)
             {
+                OnLayerRendering(layer, LayerCollectionType.Static);
                 if (layer.Enabled && layer.MaxVisible >= Zoom && layer.MinVisible < Zoom)
                     layer.Render(g, this);
+                OnLayerRendered(layer, LayerCollectionType.Static);
             }
 
             layerList = new ILayer[_variableLayers.Count];
@@ -290,8 +384,35 @@ namespace SharpMap
 
             RenderDisclaimer(g);
 
-            if (MapRendered != null) MapRendered(g); //Fire render event
+            OnMapRendered(g);
+        }
 
+        protected virtual void OnMapRendering(Graphics g)
+        {
+            var e = MapRendering;
+            if (e != null) e(g);
+        }
+        protected virtual void OnMapRendered(Graphics g)
+        {
+            var e = MapRendered;
+            if (e != null) e(g); //Fire render event
+        }
+
+        protected virtual void OnLayerRendering(ILayer layer, LayerCollectionType layerCollectionType)
+        {
+            var e = LayerRendering;
+            if (e != null) e(this, new LayerRenderingEventArgs(layer, layerCollectionType));
+        }
+
+        protected virtual void OnLayerRendered(ILayer layer, LayerCollectionType layerCollectionType)
+        {
+#pragma warning disable 612,618
+            var e = LayerRendered;
+#pragma warning restore 612,618
+            if (e != null) e(this, EventArgs.Empty);
+
+            var eex = LayerRenderedEx;
+            if (eex != null) eex(this, new LayerRenderingEventArgs(layer, layerCollectionType));
         }
 
         /// <summary>
@@ -765,20 +886,20 @@ namespace SharpMap
             
             BoundingBox bbox = null;
 
-            extendBoxForCollection(this.Layers, ref bbox);
-            extendBoxForCollection(this.VariableLayers, ref bbox);
-            extendBoxForCollection(this.BackgroundLayer, ref bbox);
+            ExtendBoxForCollection(Layers, ref bbox);
+            ExtendBoxForCollection(VariableLayers, ref bbox);
+            ExtendBoxForCollection(BackgroundLayer, ref bbox);
 
             return bbox;
         }
 
-        private void extendBoxForCollection(LayerCollection layersCollection, ref BoundingBox bbox)
+        private static void ExtendBoxForCollection(LayerCollection layersCollection, ref BoundingBox bbox)
         {
             foreach (ILayer l in layersCollection)
             {
                 
                 //Tries to get bb. Fails on some specific shapes and Mercator projects (World.shp)
-                BoundingBox bb = null;
+                BoundingBox bb;
                 try
                 {
                     bb = l.Envelope;
@@ -789,13 +910,7 @@ namespace SharpMap
                 }
 
                 if (bb != null)
-                {
-
-                    if (bbox == null)
-                        bbox = bb;
-                    else
-                        bbox = bbox.Join(bb);
-                }
+                    bbox = bbox == null ? bb : bbox.Join(bb);
 
             }
         }
@@ -890,5 +1005,32 @@ namespace SharpMap
         //}
 
         //#endregion
+    }
+
+    /// <summary>
+    /// Layer rendering event argumens class
+    /// </summary>
+    public class LayerRenderingEventArgs : EventArgs
+    {
+        /// <summary>
+        /// The layer that is being or has been rendered
+        /// </summary>
+        public readonly ILayer Layer;
+
+        /// <summary>
+        /// The layer collection type the layer belongs to.
+        /// </summary>
+        public readonly LayerCollectionType LayerCollectionType;
+
+        /// <summary>
+        /// Creates an instance of this class
+        /// </summary>
+        /// <param name="layer">The layer that is being or has been rendered</param>
+        /// <param name="layerCollectionType">The layer collection type the layer belongs to.</param>
+        public LayerRenderingEventArgs(ILayer layer, LayerCollectionType layerCollectionType)
+        {
+            Layer = layer;
+            LayerCollectionType = layerCollectionType;
+        }
     }
 }

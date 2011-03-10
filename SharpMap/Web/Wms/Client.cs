@@ -16,10 +16,10 @@ namespace SharpMap.Web.Wms
     /// Class for requesting and parsing a WMS servers capabilities
     /// </summary>
     [Serializable]
-    public class Client
+    public class Client : IClient
     {
-        private XmlNode _vendorSpecificCapabilities;
         private XmlNamespaceManager _nsmgr;
+
 
         #region WMS Data structures
 
@@ -187,12 +187,14 @@ namespace SharpMap.Web.Wms
         private WmsServerLayer _layer;
         private Capabilities.WmsServiceDescription _serviceDescription;
 
-        private string _wmsVersion;
+        private string _version;
         private XmlDocument _xmlDoc;
         private string _baseUrl;
         private string _capabilitiesUrl;
         private WebProxy _proxy;
         private int _timeOut;
+        private ICredentials _credentials = null;
+        private XmlNode _vendorSpecificCapabilities;
 
         /// <summary>
         /// Timeout of webrequest in milliseconds.
@@ -201,6 +203,14 @@ namespace SharpMap.Web.Wms
         {
             get { return _timeOut; }
             set { _timeOut = value; }
+        }
+
+        ///<summary>
+        ///</summary>
+        public ICredentials Credentials
+        {
+            get { return _credentials; }
+            set { _credentials = value; }
         }
 
         /// <summary>
@@ -214,9 +224,18 @@ namespace SharpMap.Web.Wms
         /// <summary>
         /// Gets the version of the WMS server (ex. "1.3.0")
         /// </summary>
+        public string Version
+        {
+            get { return _version; }
+            set { _version = value; }
+        }
+
+        ///<summary>
+        ///</summary>
+        [Obsolete("Deprecated, use Version property instead.")]  
         public string WmsVersion
         {
-            get { return _wmsVersion; }
+            get { return _version; }
         }
 
         /// <summary>
@@ -427,21 +446,16 @@ namespace SharpMap.Web.Wms
         #region Constructors
 
         /// <summary>
-        /// Just use a default timout of 10 seconds
+        /// Just instantiate, no parameters
         /// </summary>
-        public Client()
-        {
-            _timeOut = 10000;
-        }
+        public Client() {}
 
         /// <summary>
         /// Initalizes WMS server and parses the Capabilities request
         /// </summary>
         /// <param name="url">URL of wms server</param>
-        public Client(string url)
-            : this(url, null)
-        {
-        }
+        public Client(string url) 
+            : this(url, null, 10000, null, "") { }
 
         /// <summary>
         /// This Initalizes WMS server and parses the Capabilities request
@@ -449,17 +463,25 @@ namespace SharpMap.Web.Wms
         /// <param name="url">URL of wms server</param>
         /// <param name="proxy">Proxy to use</param>
         public Client(string url, WebProxy proxy)
-        {
+            : this(url, proxy, 10000, null, "") { }
 
-            _timeOut = 5000;
-            _baseUrl = url;
-            _capabilitiesUrl = CreateCapabilitiesUrl(url);
-            _xmlDoc = GetRemoteXml();
+        /// <summary>
+        /// This Initalizes WMS server and parses the Capabilities request
+        /// </summary>
+        /// <param name="url">URL of wms server</param>
+        /// <param name="proxy">Proxy to use</param>
+        /// <param name="timeOut"></param>
+        public Client(string url, WebProxy proxy, int timeOut)
+            : this(url, proxy, timeOut, null, "") { }
 
-            ParseVersion();
-
-            ParseCapabilities();
-        }
+        /// <summary>
+        /// Initalizes WMS server and parses the Capabilities request
+        /// </summary>
+        /// <param name="url">URL of wms server</param>
+        /// <param name="proxy">Proxy to use</param>
+        /// <param name="credentials">Credentials for autenticating against remote WMS-server</param>
+        public Client(string url, WebProxy proxy, ICredentials credentials)
+            : this(url, proxy, 10000, credentials, "") { }
 
         /// <summary>
         /// Initalizes WMS server and parses the Capabilities request
@@ -467,16 +489,40 @@ namespace SharpMap.Web.Wms
         /// <param name="url">URL of wms server</param>
         /// <param name="proxy">Proxy to use</param>
         /// <param name="timeOut">Web request timeout</param>
-        public Client(string url, WebProxy proxy, int timeOut)
-        {
+        /// <param name="credentials">Credentials for autenticating against remote WMS-server</param>
+        public Client(string url, WebProxy proxy, int timeOut, ICredentials credentials)
+            : this(url, proxy, timeOut, credentials, "") { }
 
-            _timeOut = timeOut;
+        /// <summary>
+        /// Initalizes WMS server and parses the Capabilities request
+        /// </summary>
+        /// <param name="url">URL of wms server</param>
+        /// <param name="proxy">Proxy to use</param>
+        /// <param name="timeOut">Web request timeout</param>
+        /// <param name="version"></param>
+        public Client(string url, WebProxy proxy, int timeOut, string version)
+            : this(url, proxy, timeOut, null, version) { }
+
+        /// <summary>
+        /// Initalizes WMS server and parses the Capabilities request
+        /// </summary>
+        /// <param name="url">URL of wms server</param>
+        /// <param name="proxy">Proxy to use</param>
+        /// <param name="timeOut">Web request timeout</param>
+        /// <param name="version"></param>
+        /// <param name="credentials"></param>
+        public Client(string url, WebProxy proxy, int timeOut, ICredentials credentials, string version)
+        {
             _baseUrl = url;
+            _proxy = proxy;
+            _timeOut = timeOut;
+            _version = version;
+            _credentials = credentials;
+
             _capabilitiesUrl = CreateCapabilitiesUrl(url);
             _xmlDoc = GetRemoteXml();
 
             ParseVersion();
-
             ParseCapabilities();
         }
 
@@ -488,7 +534,7 @@ namespace SharpMap.Web.Wms
         public Client(byte[] byteXml)
         {
             Stream stream = new MemoryStream(byteXml);
-            XmlTextReader r = new XmlTextReader(stream);
+            var r = new XmlTextReader(stream);
             r.XmlResolver = null;
 
             _xmlDoc = new XmlDocument();
@@ -498,8 +544,13 @@ namespace SharpMap.Web.Wms
 
             _nsmgr = new XmlNamespaceManager(XmlDoc.NameTable);
 
+            _baseUrl = "";
+            _proxy = null;
+            _timeOut = 10000;
+            _version = "";
+            _credentials = null;
+
             ParseVersion();
-            
             ParseCapabilities();
         }
 
@@ -511,52 +562,27 @@ namespace SharpMap.Web.Wms
         /// Downloads servicedescription from WMS service  
         /// </summary>
         /// <returns>XmlDocument from Url. Null if Url is empty or inproper XmlDocument</returns>
-        private XmlDocument GetRemoteXml(string url, WebProxy proxy)
-        {
-            try
-            {
-                WebRequest myRequest = WebRequest.Create(url);
-                if (proxy != null) myRequest.Proxy = proxy;
-
-                WebResponse myResponse = myRequest.GetResponse();
-                if (myResponse == null)
-                    throw new ApplicationException("No web response");
-
-                Stream stream = myResponse.GetResponseStream();
-                if (stream == null)
-                    throw new ApplicationException("No response stream");
-
-                XmlTextReader r = new XmlTextReader(url, stream);
-                r.XmlResolver = null;
-                XmlDocument doc = new XmlDocument();
-                doc.XmlResolver = null;
-                doc.Load(r);
-                stream.Close();
-                _nsmgr = new XmlNamespaceManager(doc.NameTable);
-                return doc;
-            }
-            catch (Exception ex)
-            {
-                throw new ApplicationException("Could not download capabilities", ex);
-            }
-        }
-
-        /// <summary>
-        /// Downloads servicedescription from WMS service  
-        /// </summary>
-        /// <returns>XmlDocument from Url. Null if Url is empty or inproper XmlDocument</returns>
-        private XmlDocument GetRemoteXml()
+        public XmlDocument GetRemoteXml()
         {
             Stream stream = null;
 
             try
             {
-                WebRequest myRequest;
-                myRequest = WebRequest.Create(_capabilitiesUrl);
+                WebRequest myRequest = WebRequest.Create(_capabilitiesUrl);
+                if (_credentials != null)
+                    myRequest.Credentials = _credentials;
+
                 myRequest.Timeout = _timeOut;
                 if (_proxy != null) myRequest.Proxy = _proxy;
                 WebResponse myResponse = myRequest.GetResponse();
+
+                if (myResponse == null)
+                    throw new ApplicationException("No web response");
+
                 stream = myResponse.GetResponseStream();
+
+                if (stream == null)
+                    throw new ApplicationException("No response stream");
             }
             catch (Exception ex)
             {
@@ -568,11 +594,11 @@ namespace SharpMap.Web.Wms
                 XmlTextReader xmlTextReader = new XmlTextReader(_capabilitiesUrl, stream);
                 xmlTextReader.XmlResolver = null;
 
-                XmlDocument doc = new XmlDocument();
-                doc.XmlResolver = null;
-                doc.Load(xmlTextReader);
-                _nsmgr = new XmlNamespaceManager(doc.NameTable);
-                return doc;
+                _xmlDoc = new XmlDocument();
+                _xmlDoc.XmlResolver = null;
+                _xmlDoc.Load(xmlTextReader);
+                _nsmgr = new XmlNamespaceManager(_xmlDoc.NameTable);
+                return _xmlDoc;
             }
             catch (Exception ex)
             {
@@ -580,46 +606,9 @@ namespace SharpMap.Web.Wms
             }
             finally
             {
-                if(stream != null) stream.Close();
+                stream.Close();
             }
 
-        }
-
-        /// <summary>
-        /// Parses a servicedescription and stores the data in the ServiceDescription property
-        /// </summary>
-        /// <param name="doc">XmlDocument containing a valid Service Description</param>
-        private void ParseCapabilities(XmlDocument doc)
-        {
-            if (doc.DocumentElement == null)
-                throw new ApplicationException("No document element found");
-
-            if (doc.DocumentElement.Attributes["version"] != null)
-            {
-                _wmsVersion = doc.DocumentElement.Attributes["version"].Value;
-                if (_wmsVersion != "1.0.0" && _wmsVersion != "1.1.0" && _wmsVersion != "1.1.1" && _wmsVersion != "1.3.0")
-                    throw new ApplicationException("WMS Version " + _wmsVersion + " not supported");
-
-                _nsmgr.AddNamespace(String.Empty, "http://www.opengis.net/wms");
-                _nsmgr.AddNamespace("sm", _wmsVersion == "1.3.0" ? "http://www.opengis.net/wms" : "");
-                _nsmgr.AddNamespace("xlink", "http://www.w3.org/1999/xlink");
-                _nsmgr.AddNamespace("xsi", "http://www.w3.org/2001/XMLSchema-instance");
-            }
-            else
-                throw (new ApplicationException("No service version number found!"));
-
-            XmlNode xnService = doc.DocumentElement.SelectSingleNode("sm:Service", _nsmgr);
-            XmlNode xnCapability = doc.DocumentElement.SelectSingleNode("sm:Capability", _nsmgr);
-            if (xnService != null)
-                ParseServiceDescription(xnService);
-            else
-                throw (new ApplicationException("No service tag found!"));
-
-
-            if (xnCapability != null)
-                ParseCapability(xnCapability);
-            else
-                throw (new ApplicationException("No capability tag found!"));
         }
 
         /// <summary>
@@ -629,12 +618,12 @@ namespace SharpMap.Web.Wms
         {
             if (_xmlDoc.DocumentElement.Attributes["version"] != null)
             {
-                _wmsVersion = _xmlDoc.DocumentElement.Attributes["version"].Value;
-                if (_wmsVersion != "1.0.0" && _wmsVersion != "1.1.0" && _wmsVersion != "1.1.1" && _wmsVersion != "1.3.0")
-                    throw new ApplicationException("WMS Version " + _wmsVersion + " is not currently supported");
+                _version = _xmlDoc.DocumentElement.Attributes["version"].Value;
+                if (_version != "1.0.0" && _version != "1.1.0" && _version != "1.1.1" && _version != "1.3.0")
+                    throw new ApplicationException("WMS Version " + _version + " is not currently supported");
 
                 _nsmgr.AddNamespace(String.Empty, "http://www.opengis.net/wms");
-                if (_wmsVersion == "1.3.0")
+                if (_version == "1.3.0")
                 {
                     _nsmgr.AddNamespace("sm", "http://www.opengis.net/wms");
                 }
@@ -859,7 +848,7 @@ namespace SharpMap.Web.Wms
             }
 
             XmlNodeList xnlCrs = null;
-            if(_wmsVersion == "1.1.0" || _wmsVersion == "1.1.1")
+            if(_version == "1.1.0" || _version == "1.1.1")
                 xnlCrs = xmlLayer.SelectNodes("sm:SRS", _nsmgr); // <--I think this needs to be version specific
             else
                 xnlCrs = xmlLayer.SelectNodes("sm:CRS", _nsmgr);
@@ -916,10 +905,10 @@ namespace SharpMap.Web.Wms
             node = xmlLayer.SelectSingleNode("sm:LatLonBoundingBox", _nsmgr);
             if (node != null)
             {
-                double minx = ParseNodeAsDouble(node.Attributes["minx"], -180.0);
-                double miny = ParseNodeAsDouble(node.Attributes["miny"], -90.0);
-                double maxx = ParseNodeAsDouble(node.Attributes["maxx"], 180.0);
-                double maxy = ParseNodeAsDouble(node.Attributes["maxy"], 90.0);
+                double minx = WebUtilities.ParseNodeAsDouble(node.Attributes["minx"], -180.0);
+                double miny = WebUtilities.ParseNodeAsDouble(node.Attributes["miny"], -90.0);
+                double maxx = WebUtilities.ParseNodeAsDouble(node.Attributes["maxx"], 180.0);
+                double maxy = WebUtilities.ParseNodeAsDouble(node.Attributes["maxy"], 90.0);
                 layer.LatLonBoundingBox = new BoundingBox(minx, miny, maxx, maxy);
             }
             else
@@ -929,10 +918,10 @@ namespace SharpMap.Web.Wms
                 if (node != null)
                 {
                     //EX_GeographicBoundingBox is specific for WMS1.3.0 servers so this will be parsed if LatLonBoundingBox is null
-                    double minx = ParseNodeAsDouble(node.SelectSingleNode("sm:westBoundLongitude", _nsmgr), -180.0);
-                    double miny = ParseNodeAsDouble(node.SelectSingleNode("sm:southBoundLatitude", _nsmgr), -90.0);
-                    double maxx = ParseNodeAsDouble(node.SelectSingleNode("sm:eastBoundLongitude", _nsmgr), 180.0);
-                    double maxy = ParseNodeAsDouble(node.SelectSingleNode("sm:northBoundLatitude", _nsmgr), 90.0);
+                    double minx = WebUtilities.ParseNodeAsDouble(node.SelectSingleNode("sm:westBoundLongitude", _nsmgr), -180.0);
+                    double miny = WebUtilities.ParseNodeAsDouble(node.SelectSingleNode("sm:southBoundLatitude", _nsmgr), -90.0);
+                    double maxx = WebUtilities.ParseNodeAsDouble(node.SelectSingleNode("sm:eastBoundLongitude", _nsmgr), 180.0);
+                    double maxy = WebUtilities.ParseNodeAsDouble(node.SelectSingleNode("sm:northBoundLatitude", _nsmgr), 90.0);
                     layer.LatLonBoundingBox = new BoundingBox(minx, miny, maxx, maxy);
                 }
                 else
@@ -953,55 +942,15 @@ namespace SharpMap.Web.Wms
                 double maxy;
                 int epsg;
 
-                if (!TryParseNodeAsDouble(bbox.Attributes["minx"], out minx)) continue;
-                if (!TryParseNodeAsDouble(bbox.Attributes["miny"], out miny)) continue;
-                if (!TryParseNodeAsDouble(bbox.Attributes["maxx"], out maxx)) continue;
-                if (!TryParseNodeAsDouble(bbox.Attributes["maxy"], out maxy)) continue;
-                if (!TryParseNodeAsEpsg(FindEpsgNode(bbox), out epsg)) continue; 
+                if (!WebUtilities.TryParseNodeAsDouble(bbox.Attributes["minx"], out minx)) continue;
+                if (!WebUtilities.TryParseNodeAsDouble(bbox.Attributes["miny"], out miny)) continue;
+                if (!WebUtilities.TryParseNodeAsDouble(bbox.Attributes["maxx"], out maxx)) continue;
+                if (!WebUtilities.TryParseNodeAsDouble(bbox.Attributes["maxy"], out maxy)) continue;
+                if (!WebUtilities.TryParseNodeAsEpsg(WebUtilities.FindEpsgNode(bbox), out epsg)) continue; 
            
                 layer.SRIDBoundingBoxes.Add(new SpatialReferencedBoundingBox(minx, miny, maxx, maxy, epsg));
             }
             return layer;
-        }
-
-        private static XmlNode FindEpsgNode(XmlNode bbox)
-        {
-            if (bbox == null || bbox.Attributes == null)
-                throw new ArgumentNullException("bbox");
-
-            XmlNode epsgNode = ((bbox.Attributes["srs"] ?? bbox.Attributes["crs"]) ?? bbox.Attributes["SRS"]) ??
-                               bbox.Attributes["CRS"];
-            return epsgNode;
-        }
-
-        private static bool TryParseNodeAsEpsg(XmlNode node, out int epsg)
-        {
-            epsg = default(int);
-            if (node == null) return false;
-            string epsgString = node.Value;
-            if (String.IsNullOrEmpty(epsgString)) return false;
-            const string prefix = "EPSG:";
-            int index = epsgString.IndexOf(prefix);
-            if (index < 0) return false;
-            return (int.TryParse(epsgString.Substring(index + prefix.Length), NumberStyles.Any, Map.NumberFormatEnUs, out epsg));
-        }
-
-        private static double ParseNodeAsDouble(XmlNode node, double defaultValue)
-        {
-            if (node == null) return defaultValue;
-            if (String.IsNullOrEmpty(node.InnerText)) return defaultValue;
-            double value;
-            if (Double.TryParse(node.InnerText, NumberStyles.Any, Map.NumberFormatEnUs, out value))
-                return value;
-            return defaultValue;
-        }
-
-        private static bool TryParseNodeAsDouble(XmlNode node, out double value)
-        {
-            value = default(double);
-            if (node == null) return false;
-            if (String.IsNullOrEmpty(node.InnerText)) return false;
-            return Double.TryParse(node.InnerText, NumberStyles.Any, Map.NumberFormatEnUs, out value);
         }
 
         ///<summary>
@@ -1018,7 +967,7 @@ namespace SharpMap.Web.Wms
 
                 var settings = new XmlReaderSettings();
 
-                switch (_wmsVersion)
+                switch (_version)
                 {
                     case "1.1.0":
                         settings.ProhibitDtd = false;
@@ -1070,6 +1019,13 @@ namespace SharpMap.Web.Wms
                 strReq.AppendFormat("SERVICE=WMS&");
             if (!url.ToLower().Contains("request=getcapabilities"))
                 strReq.AppendFormat("REQUEST=GetCapabilities&");
+
+			//If version is NOT set at this point then add to query string
+            if(_version != "")
+                strReq.AppendFormat("VERSION=" + _version + "&");
+
+
+
             return strReq.ToString();
         }
 
@@ -1082,9 +1038,9 @@ namespace SharpMap.Web.Wms
             {
             if (_xmlDoc.DocumentElement.Attributes["version"] != null)
             {
-                _wmsVersion = _xmlDoc.DocumentElement.Attributes["version"].Value;
-                if (_wmsVersion != "1.0.0" && _wmsVersion != "1.1.0" && _wmsVersion != "1.1.1" && _wmsVersion != "1.3.0")
-                    throw new ApplicationException("WMS Version " + _wmsVersion + " is not currently supported");
+                _version = _xmlDoc.DocumentElement.Attributes["version"].Value;
+                if (_version != "1.0.0" && _version != "1.1.0" && _version != "1.1.1" && _version != "1.3.0")
+                    throw new ApplicationException("WMS Version " + _version + " is not currently supported");
             }
             else
                 throw (new ApplicationException("No service version number was found in the capabilities XML file!"));

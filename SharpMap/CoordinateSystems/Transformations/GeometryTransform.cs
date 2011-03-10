@@ -60,20 +60,21 @@ namespace ProjNet.CoordinateSystems.Transformations
         {
             if (g == null)
                 return null;
-            else if (g is Point)
+            if (g is Point)
                 return TransformPoint(g as Point, transform);
-            else if (g is LineString)
+            if (g is LineString)
                 return TransformLineString(g as LineString, transform);
-            else if (g is Polygon)
+            if (g is Polygon)
                 return TransformPolygon(g as Polygon, transform);
-            else if (g is MultiPoint)
+            if (g is MultiPoint)
                 return TransformMultiPoint(g as MultiPoint, transform);
-            else if (g is MultiLineString)
+            if (g is MultiLineString)
                 return TransformMultiLineString(g as MultiLineString, transform);
-            else if (g is MultiPolygon)
+            if (g is MultiPolygon)
                 return TransformMultiPolygon(g as MultiPolygon, transform);
-            else
-                throw new ArgumentException("Could not transform geometry type '" + g.GetType() + "'");
+            if (g is GeometryCollection)
+                return TransformGeometryCollection(g as GeometryCollection, transform);
+            throw new ArgumentException("Could not transform geometry type '" + g.GetType() + "'");
         }
 
         /// <summary>

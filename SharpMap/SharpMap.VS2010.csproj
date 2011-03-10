@@ -23,6 +23,7 @@
     <OldToolsVersion>3.5</OldToolsVersion>
     <UpgradeBackupLocation>
     </UpgradeBackupLocation>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
@@ -38,7 +39,7 @@
     <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -194,6 +195,12 @@
     <Compile Include="Utilities\Wfs\XPathQueryManager_DecoratorBase.cs" />
     <Compile Include="Web\Cache.cs" />
     <Compile Include="Web\HttpHandler.cs" />
+    <Compile Include="Web\IClient.cs" />
+    <Compile Include="Web\Wcs\Capabilities.cs" />
+    <Compile Include="Web\Wcs\Client.cs" />
+    <Compile Include="Web\WebUtilities.cs" />
+    <Compile Include="Web\Wfs\Capabilities.cs" />
+    <Compile Include="Web\Wfs\Client.cs" />
     <Compile Include="Web\Wms\Capabilities.cs" />
     <Compile Include="Web\Wms\Client.cs" />
     <Compile Include="Web\Wms\SpatialReferencedBoundingBox.cs" />
@@ -214,6 +221,42 @@
       <SubType>
       </SubType>
     </EmbeddedResource>
+    <None Include="Web\Wfs\Schemas\1.0.0\OGC-exception.xsd" />
+    <None Include="Web\Wfs\Schemas\1.0.0\WFS-basic.xsd" />
+    <None Include="Web\Wfs\Schemas\1.0.0\WFS-capabilities.xsd" />
+    <None Include="Web\Wfs\Schemas\1.0.0\WFS-transaction.xsd" />
+    <None Include="Web\Wfs\Schemas\1.1.0\wfs.xsd" />
+    <None Include="Web\Wfs\Schemas\1.1.0\wsdl\example-endpoints.wsdl" />
+    <None Include="Web\Wfs\Schemas\1.1.0\wsdl\example-GET-endpoints.wsdl" />
+    <None Include="Web\Wfs\Schemas\1.1.0\wsdl\example-POST-endpoints.wsdl" />
+    <None Include="Web\Wfs\Schemas\1.1.0\wsdl\example-SOAP-endpoints.wsdl" />
+    <None Include="Web\Wfs\Schemas\1.1.0\wsdl\wfs-http-bindings.wsdl" />
+    <None Include="Web\Wfs\Schemas\1.1.0\wsdl\wfs-kvp-bindings.wsdl" />
+    <None Include="Web\Wfs\Schemas\1.1.0\wsdl\wfs-kvp-interfaces.wsdl" />
+    <None Include="Web\Wfs\Schemas\1.1.0\wsdl\wfs-kvp.xsd" />
+    <None Include="Web\Wfs\Schemas\1.1.0\wsdl\wfs-responses.wsdl" />
+    <None Include="Web\Wfs\Schemas\1.1.0\wsdl\wfs-soap-bindings.wsdl" />
+    <None Include="Web\Wfs\Schemas\1.1.0\wsdl\wfs-util.xsd" />
+    <None Include="Web\Wfs\Schemas\1.1.0\wsdl\wfs-xml-interfaces.wsdl" />
+    <None Include="Web\Wfs\Schemas\1.1.0\wsdl\WSDL2Java.bat" />
+    <None Include="Web\Wfs\Schemas\2.0.0\examples\Common\BuildingSchema.xsd" />
+    <None Include="Web\Wfs\Schemas\2.0.0\examples\Common\PersonSchema.xsd" />
+    <None Include="Web\Wfs\Schemas\2.0.0\examples\Common\RoadSchema.xsd" />
+    <None Include="Web\Wfs\Schemas\2.0.0\examples\Common\SampleSchema.xsd" />
+    <None Include="Web\Wfs\Schemas\2.0.0\wfs.xsd" />
+    <None Include="Web\Wfs\Schemas\2.0.0\wsdl\example-endpoints.wsdl" />
+    <None Include="Web\Wfs\Schemas\2.0.0\wsdl\example-GET-endpoints.wsdl" />
+    <None Include="Web\Wfs\Schemas\2.0.0\wsdl\example-POST-endpoints.wsdl" />
+    <None Include="Web\Wfs\Schemas\2.0.0\wsdl\example-SOAP-endpoints.wsdl" />
+    <None Include="Web\Wfs\Schemas\2.0.0\wsdl\wfs-http-bindings.wsdl" />
+    <None Include="Web\Wfs\Schemas\2.0.0\wsdl\wfs-kvp-bindings.wsdl" />
+    <None Include="Web\Wfs\Schemas\2.0.0\wsdl\wfs-kvp-interfaces.wsdl" />
+    <None Include="Web\Wfs\Schemas\2.0.0\wsdl\wfs-kvp.xsd" />
+    <None Include="Web\Wfs\Schemas\2.0.0\wsdl\wfs-responses.wsdl" />
+    <None Include="Web\Wfs\Schemas\2.0.0\wsdl\wfs-soap-bindings.wsdl" />
+    <None Include="Web\Wfs\Schemas\2.0.0\wsdl\wfs-util.xsd" />
+    <None Include="Web\Wfs\Schemas\2.0.0\wsdl\wfs-xml-interfaces.wsdl" />
+    <None Include="Web\Wfs\Schemas\2.0.0\wsdl\WSDL2Java.bat" />
     <None Include="Web\Wms\Schemas\1.3.0\capabilities_1_3_0.xsx">
       <DependentUpon>capabilities_1_3_0.xsd</DependentUpon>
     </None>
@@ -226,7 +269,33 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Web\Wfs\" />
+    <Content Include="Web\Wfs\Schemas\1.1.0\examples\WFS_Capabilities_Sample.xml" />
+    <Content Include="Web\Wfs\Schemas\1.1.0\ReadMe.txt" />
+    <Content Include="Web\Wfs\Schemas\1.1.0\wsdl\dependencies.jpeg" />
+    <Content Include="Web\Wfs\Schemas\1.1.0\wsdl\readme.txt" />
+    <Content Include="Web\Wfs\Schemas\2.0.0\examples\Common\BuildingInstance.xml" />
+    <Content Include="Web\Wfs\Schemas\2.0.0\examples\Common\Exception.xml" />
+    <Content Include="Web\Wfs\Schemas\2.0.0\examples\Common\PersonInstance.xml" />
+    <Content Include="Web\Wfs\Schemas\2.0.0\examples\Common\SampleData.xml" />
+    <Content Include="Web\Wfs\Schemas\2.0.0\examples\GetCapabilities\GetCapabilities_Req_01.xml" />
+    <Content Include="Web\Wfs\Schemas\2.0.0\examples\GetCapabilities\GetCapabilities_Res_01.xml" />
+    <Content Include="Web\Wfs\Schemas\2.0.0\examples\GetCapabilities\GetCapabilities_Res_02.xml" />
+    <Content Include="Web\Wfs\Schemas\2.0.0\examples\GetCapabilities\GetCapabilities_Res_Min.xml" />
+    <Content Include="Web\Wfs\Schemas\2.0.0\ReadMe.txt" />
+    <Content Include="Web\Wfs\Schemas\2.0.0\wsdl\readme.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Brutile\trunk\BruTile\BruTile.csproj">
+      <Project>{70315167-2BF1-4C7B-9184-728CAABF30D7}</Project>
+      <Name>BruTile</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\SharpMapCS\SharpMap.CoordinateSystems\ProjNET.csproj">
+      <Project>{E028BDD2-55E1-4E5F-BE31-35FAEC8D6428}</Project>
+      <Name>ProjNET</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Web\Wcs\Schemas\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

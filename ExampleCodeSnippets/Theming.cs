@@ -1,6 +1,3 @@
-using System.Data;
-using SharpMap.Data.Providers;
-
 namespace ExampleCodeSnippets
 {
     public class SymbolRotationTheming
