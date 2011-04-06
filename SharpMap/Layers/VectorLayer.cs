@@ -270,12 +270,12 @@ namespace SharpMap.Layers
                             if (feature.Geometry is LineString)
                             {
                                 VectorRenderer.DrawLineString(g, feature.Geometry as LineString, outlineStyle.Outline,
-                                                                  map);
+                                                                  map, outlineStyle.LineOffset);
                             }
                             else if (feature.Geometry is MultiLineString)
                             {
                                 VectorRenderer.DrawMultiLineString(g, feature.Geometry as MultiLineString,
-                                                                   outlineStyle.Outline, map);
+                                                                   outlineStyle.Outline, map, outlineStyle.LineOffset);
                             }
                         }
                     }
@@ -328,9 +328,9 @@ namespace SharpMap.Layers
                         {
                             //Draw background of all line-outlines first
                             if (geom  is LineString)
-                                VectorRenderer.DrawLineString(g, geom as LineString, Style.Outline, map);
+                                VectorRenderer.DrawLineString(g, geom as LineString, Style.Outline, map, Style.LineOffset);
                             else if (geom is MultiLineString)
-                                VectorRenderer.DrawMultiLineString(g, geom as MultiLineString, Style.Outline, map);
+                                VectorRenderer.DrawMultiLineString(g, geom as MultiLineString, Style.Outline, map, Style.LineOffset);
                         }
                     }
                 }
@@ -374,16 +374,24 @@ namespace SharpMap.Layers
                     break;
                 case GeometryType2.LineString:
                 //case "SharpMap.Geometries.LineString":
-                    VectorRenderer.DrawLineString(g, (LineString) feature, style.Line, map);
-                    break;
+                        VectorRenderer.DrawLineString(g, (LineString) feature, style.Line, map, style.LinePerpendicularOffset);
+                   break;
                 case GeometryType2.MultiLineString:
                 //case "SharpMap.Geometries.MultiLineString":
-                    VectorRenderer.DrawMultiLineString(g, (MultiLineString) feature, style.Line, map);
+                    VectorRenderer.DrawMultiLineString(g, (MultiLineString) feature, style.Line, map, style.LineOffset);
                     break;
                 case GeometryType2.Point:
                 //case "SharpMap.Geometries.Point":
-                    VectorRenderer.DrawPoint(g, (Point) feature, style.Symbol, style.SymbolScale, style.SymbolOffset,
-                                             style.SymbolRotation, map);
+                    if (style.Symbol != null || style.PointColor == null)
+                    {
+                        VectorRenderer.DrawPoint(g, (Point)feature, style.Symbol, style.SymbolScale, style.SymbolOffset,
+                                                 style.SymbolRotation, map);
+                    }
+                    else
+                    {
+                        VectorRenderer.DrawPoint(g, (Point)feature, style.PointColor, style.PointSize, style.SymbolOffset, map);
+                    }
+
                     break;
                 case GeometryType2.MultiPoint:
                 //case "SharpMap.Geometries.MultiPoint":

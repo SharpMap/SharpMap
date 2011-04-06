@@ -10,15 +10,16 @@ namespace WinFormSamples.Samples
     {
         public static Map InitializeMap(float angle)
         {
-            string wmsUrl = "http://www2.demis.nl/worldmap/wms.asp";
+            string wmsUrl = "http://dev:8080/geoserver/ows?service=wms&version=1.1.1&request=GetCapabilities";
 
             Map map = new Map();
 
+
             WmsLayer layWms = new WmsLayer("Demis Map", wmsUrl);
-            
-            layWms.AddLayer("Bathymetry");
-            layWms.AddLayer("Topography");
-            layWms.AddLayer("Hillshading");
+
+            layWms.AddLayer("sf:roads");
+            //layWms.AddLayer("Topography");
+            //layWms.AddLayer("Hillshading");
 
             layWms.SetImageFormat(layWms.OutputFormats[0]);
             layWms.ContinueOnError = true;
@@ -38,6 +39,7 @@ namespace WinFormSamples.Samples
             mat.RotateAt(angle, map.WorldToImage(map.Center));
             map.MapTransform = mat;
 
+            map.ZoomToExtents();
             return map;
         }
     }

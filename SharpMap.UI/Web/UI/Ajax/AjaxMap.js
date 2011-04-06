@@ -70,8 +70,8 @@ function SharpMap_MozillaMouseWheel(event,obj)
 	var e = new Object;
 	e.type = 'mousewheel';
 	e.wheelDelta = -event.detail;
-	e.clientX = event.screenX;
-	e.clientY = event.screenY;
+	e.clientX = event.clientX;
+	e.clientY = event.clientY;
 	SharpMap_MouseWheel(e,obj);
 }
 var startDrag = null;

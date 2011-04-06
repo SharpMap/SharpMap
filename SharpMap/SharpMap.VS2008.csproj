@@ -144,6 +144,7 @@
     <Compile Include="Utilities\Wfs\HttpClientUtil.cs" />
     <Compile Include="Utilities\Wfs\IWFS_TextResources.cs" />
     <Compile Include="Utilities\Wfs\IXPathQueryManager.cs" />
+    <Compile Include="Utilities\LineOffset.cs" />
     <Compile Include="Utilities\Wfs\OGCFilter_FE1_1_0.cs" />
     <Compile Include="Utilities\Wfs\PathNode.cs" />
     <Compile Include="Utilities\Wfs\WFS1_0_0_XPathTextResources.cs" />

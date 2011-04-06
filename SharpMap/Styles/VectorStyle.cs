@@ -47,6 +47,7 @@ namespace SharpMap.Styles
         private bool _outline;
         private Pen _outlineStyle;
         private Image _symbol;
+        private float _lineOffset;
 
         #endregion
 
@@ -67,6 +68,11 @@ namespace SharpMap.Styles
             Fill = Brushes.Black;
             EnableOutline = false;
             SymbolScale = 1f;
+            PointColor = Brushes.Red;
+            PointSize = 10f;
+            _PerpendiculatOffset = 0;
+
+            LineOffset = 0;
         }
 
         #region Properties
@@ -74,6 +80,10 @@ namespace SharpMap.Styles
         private PointF _symbolOffset;
         private float _symbolRotation;
         private float _symbolScale;
+        private float _PointSize;
+        private float _PerpendiculatOffset;
+
+        private Brush _PointBrush = null;
 
         /// <summary>
         /// Linestyle for line geometries
@@ -82,6 +92,15 @@ namespace SharpMap.Styles
         {
             get { return _lineStyle; }
             set { _lineStyle = value; }
+        }
+
+        /// <summary>
+        /// Perpendicular Offset of Line symbols (in image units);
+        /// </summary>
+        public float LinePerpendicularOffset
+        {
+            get { return _PerpendiculatOffset; }
+            set { _PerpendiculatOffset = value; }
         }
 
         /// <summary>
@@ -109,6 +128,24 @@ namespace SharpMap.Styles
         {
             get { return _fillStyle; }
             set { _fillStyle = value; }
+        }
+
+        /// <summary>
+        /// Fillstyle for Point geometries (will be used if no Symbol is set)
+        /// </summary>
+        public Brush PointColor
+        {
+            get { return _PointBrush; }
+            set { _PointBrush = value; }
+        }
+
+        /// <summary>
+        /// Size for Point geometries (if drawn with PointColor), will not have affect for Points drawn with Symbol
+        /// </summary>
+        public float PointSize
+        {
+            get { return _PointSize; }
+            set { _PointSize= value; }
         }
 
         /// <summary>
@@ -151,6 +188,15 @@ namespace SharpMap.Styles
         {
             get { return _symbolRotation; }
             set { _symbolRotation = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets the offset by which line will be moved to right
+        /// </summary>
+        public float LineOffset
+        {
+            get { return _lineOffset; }
+            set { _lineOffset = value; }
         }
 
         #endregion

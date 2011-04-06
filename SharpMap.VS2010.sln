@@ -5,7 +5,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ExternalReferences", "ExternalReferences", "{3BB63704-345C-400C-9146-0AD46859D76D}"
 	ProjectSection(SolutionItems) = preProject
-		ExternalReferences\BruTile.dll = ExternalReferences\BruTile.dll
 		ExternalReferences\DotSpatial.Projections.dll = ExternalReferences\DotSpatial.Projections.dll
 		ExternalReferences\DotSpatial.Projections.pdb = ExternalReferences\DotSpatial.Projections.pdb
 		ExternalReferences\DotSpatial.Projections.XML = ExternalReferences\DotSpatial.Projections.XML

@@ -550,7 +550,12 @@ namespace SharpMap.Forms
         {
 
             if ((layers == null || layers.Count == 0 || Width == 0 || Height == 0))
+            {
+                if (layerCollectionType == LayerCollectionType.Background)
+                    return new Bitmap(1, 1);
+                else
                 return null;
+            }
 
             var retval = new Bitmap(Width, Height);
 

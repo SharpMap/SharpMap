@@ -115,7 +115,7 @@ namespace SharpMap.Web.Wms.Tiling
             foreach (XmlNode xnlTileSet in xnlTileSets)
             {
                 TileSet tileSet = ParseTileSetNode(xnlTileSet, nsmgr);
-                tileSets.Add(tileSet.Name, tileSet);
+                tileSets.Add(tileSet.Name+"-" + tileSet.Format +"-"+tileSet.Srs , tileSet);
             }
             return tileSets;
         }
@@ -188,12 +188,15 @@ namespace SharpMap.Web.Wms.Tiling
             if (xnResolutions != null)
             {
                 double resolution;
-                string[] resolutions = xnResolutions.InnerText.Split(new char[] {' '});
+                string[] resolutions = xnResolutions.InnerText.TrimEnd(' ').Split(new char[] {' '});
                 foreach (string resolutionStr in resolutions)
                 {
-                    if (!Double.TryParse(resolutionStr, NumberStyles.Any, Map.NumberFormatEnUs, out resolution))
-                        throw new ArgumentException("Invalid resolution on tileset '" + tileSet.Name + "'");
-                    tileSet.Resolutions.Add(resolution);
+                    if (resolutionStr != "")
+                    {
+                        if (!Double.TryParse(resolutionStr, NumberStyles.Any, Map.NumberFormatEnUs, out resolution))
+                            throw new ArgumentException("Invalid resolution on tileset '" + tileSet.Name + "'");
+                        tileSet.Resolutions.Add(resolution);
+                    }
                 }
             }
             return tileSet;

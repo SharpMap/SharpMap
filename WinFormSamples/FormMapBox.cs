@@ -38,7 +38,8 @@ namespace WinFormSamples
                         mapBox1.Map = WfsSample.InitializeMap(tbAngle.Value);
                         break;
                     case "WMS Client":
-                        mapBox1.Map = WmsSample.InitializeMap(tbAngle.Value);
+                        mapBox1.Map = TiledWmsSample.InitializeMap();
+                        //mapBox1.Map = WmsSample.InitializeMap(tbAngle.Value);
                         break;
                     case "OGR - MapInfo":
                     case "OGR - S-57":

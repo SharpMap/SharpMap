@@ -52,11 +52,59 @@ namespace SharpMap.Rendering
         /// <param name="lines">MultiLineString to be rendered</param>
         /// <param name="pen">Pen style used for rendering</param>
         /// <param name="map">Map reference</param>
+        /// <param name="offset">Offset by which line will be moved to right</param>
         [MethodImpl(MethodImplOptions.Synchronized)]
-        public static void DrawMultiLineString(Graphics g, MultiLineString lines, Pen pen, Map map)
+        public static void DrawMultiLineString(Graphics g, MultiLineString lines, Pen pen, Map map, float offset)
         {
             for (int i = 0; i < lines.LineStrings.Count; i++)
-                DrawLineString(g, lines.LineStrings[i], pen, map);
+                DrawLineString(g, lines.LineStrings[i], pen, map, offset);
+        }
+
+        /// <summary>
+        /// Offset drawn linestring by given pixel width
+        /// </summary>
+        /// <param name="points"></param>
+        /// <param name="offset"></param>
+        /// <returns></returns>
+        private static PointF[] OffsetRight(PointF[] points, float offset)
+        {
+            int length = points.Length;
+            PointF[] newPoints = new PointF[(length - 1) * 2];
+
+            float space = (offset * offset / 4) + 1;
+
+            //if there are more than two points
+            if (length > 2)
+            {
+                int counter = 0;
+                float a, b, x = 0, y = 0, c;
+                for (int i = 0; i < length - 1; i++)
+                {
+                    b = -(points[i + 1].X - points[i].X);
+                    if (b != 0)
+                    {
+                        a = points[i + 1].Y - points[i].Y;
+                        c = a / b;
+                        y = (float)Math.Sqrt(space / (c * c + 1));
+                        y = b < 0 ? y : -y;
+                        x = c * y;
+                        newPoints[counter] = new PointF(points[i].X + x, points[i].Y + y);
+                        newPoints[counter + 1] = new PointF(points[i + 1].X + x, points[i + 1].Y + y);
+                    }
+                    else
+                    {
+                        newPoints[counter] = new PointF(points[i].X + x, points[i].Y + y);
+                        newPoints[counter + 1] = new PointF(points[i + 1].X + x, points[i + 1].Y + y);
+                    }
+                    counter += 2;
+                }
+
+                return newPoints;
+            }
+            else
+            {
+                return points;
+            }
         }
 
         /// <summary>
@@ -66,13 +114,29 @@ namespace SharpMap.Rendering
         /// <param name="line">LineString to render</param>
         /// <param name="pen">Pen style used for rendering</param>
         /// <param name="map">Map reference</param>
+        /// <param name="offset">Offset by which line will be moved to right</param>
         [MethodImpl(MethodImplOptions.Synchronized)]
         public static void DrawLineString(Graphics g, LineString line, Pen pen, Map map)
+        {
+            DrawLineString(g, line, pen, map, 0);
+        }
+        /// <summary>
+        /// Renders a LineString to the map.
+        /// </summary>
+        /// <param name="g">Graphics reference</param>
+        /// <param name="line">LineString to render</param>
+        /// <param name="pen">Pen style used for rendering</param>
+        /// <param name="map">Map reference</param>
+        public static void DrawLineString(Graphics g, LineString line, Pen pen, Map map, float offset)
         {
             if (line.Vertices.Count > 1)
             {
                 GraphicsPath gp = new GraphicsPath();
-                gp.AddLines(LimitValues(line.TransformToImage(map), ExtremeValueLimit));
+                if (offset == 0)
+                    gp.AddLines(LimitValues(line.TransformToImage(map), ExtremeValueLimit));
+                else 
+                    gp.AddLines(OffsetRight(LimitValues(line.TransformToImage(map), ExtremeValueLimit), offset));
+    
                 g.DrawPath(pen, gp);
             }
         }
@@ -419,6 +483,31 @@ namespace SharpMap.Rendering
                 line.Add(new PointF(line[0].X, line[0].Y));
 
             return line.ToArray();
+        }
+
+        /// <summary>
+        /// Renders a point to the map.
+        /// </summary>
+        /// <param name="g">Graphics reference</param>
+        /// <param name="point">Point to render</param>
+        /// <param name="b">Brush reference</param>
+        /// <param name="size">Size of drawn Point</param>
+        /// <param name="offset">Symbol offset af scale=1</param>
+        /// <param name="map">Map reference</param>
+        [MethodImpl(MethodImplOptions.Synchronized)]
+        public static void DrawPoint(Graphics g, Point point, Brush b, float size, PointF offset, Map map)
+        {
+            if (point == null)
+                return;
+
+            PointF pp = Transform.WorldtoMap(point, map);
+            Matrix startingTransform = g.Transform;
+
+            float width = size;
+            float height = size;
+            g.FillEllipse(b, (int)pp.X - width / 2 + offset.X ,
+                        (int)pp.Y - height / 2 + offset.Y , width, height);
+
         }
 
         /// <summary>

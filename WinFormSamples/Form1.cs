@@ -38,7 +38,7 @@ namespace WinFormSamples
                         mapImage.Map = WfsSample.InitializeMap(tbAngle.Value);
                         break;
                     case "WMS Client":
-                        mapImage.Map = WmsSample.InitializeMap(tbAngle.Value);
+                        mapImage.Map = TiledWmsSample.InitializeMap();
                         break;
                     case "OGR - MapInfo":
                     case "OGR - S-57":

@@ -26,7 +26,7 @@
     <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -76,9 +76,8 @@
     <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="BruTile, Version=0.4.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\ExternalReferences\BruTile.dll</HintPath>
+    <Reference Include="BruTile">
+      <HintPath>..\..\..\NAX\Shared\ExternalLibs\BruTile.dll</HintPath>
     </Reference>
     <Reference Include="DotSpatial.Projections, Version=1.0.0.28088, Culture=neutral, PublicKeyToken=272632bddd08a38b, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -174,6 +173,7 @@
     <Compile Include="Utilities\Indexing\BinaryTree.cs" />
     <Compile Include="Utilities\Indexing\SpatialIndexing.cs" />
     <Compile Include="Utilities\LeastSquaresTransform.cs" />
+    <Compile Include="Utilities\LineOffset.cs" />
     <Compile Include="Utilities\Providers.cs" />
     <Compile Include="Utilities\Surrogates.cs" />
     <Compile Include="Utilities\Transform.cs" />

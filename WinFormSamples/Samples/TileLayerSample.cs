@@ -205,6 +205,8 @@ namespace WinFormSamples.Samples
             return map;
         }
 
+
+
         private static Map InitializeMapGoogle(GoogleMapType mt)
         {
             Map map = new Map();
@@ -212,6 +214,7 @@ namespace WinFormSamples.Samples
             GoogleRequest req;
             ITileSource tileSource;
             TileLayer tileLayer;
+           
             if (mt == (GoogleMapType.GoogleSatellite | GoogleMapType.GoogleLabels))
             {
                 req = new GoogleRequest(GoogleMapType.GoogleSatellite);

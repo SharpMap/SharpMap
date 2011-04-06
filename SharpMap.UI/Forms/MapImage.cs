@@ -108,7 +108,7 @@ namespace SharpMap.Forms
             DoubleBuffered = true;
         }
 
-        [Description("The amount which a single movement of the mouse wheel zooms by.")]
+        protected override void Dispose(bool disposing)        {            VariableLayerCollection.VariableLayerCollectionRequery -= this.VariableLayersRequery;            base.Dispose(disposing);        }        [Description("The amount which a single movement of the mouse wheel zooms by.")]
         [DefaultValue(-2)]
         [Category("Behavior")]
         public double WheelZoomMagnitude
