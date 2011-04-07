@@ -6,7 +6,6 @@ using System.Web.UI;
 using SharpMap;
 using ProjNet.CoordinateSystems;
 using ProjNet.CoordinateSystems.Transformations;
-using DotSpatial.Projections;
 using SharpMap.Data.Providers;
 using SharpMap.Geometries;
 using SharpMap.Layers;
