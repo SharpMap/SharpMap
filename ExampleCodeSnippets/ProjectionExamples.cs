@@ -1,3 +1,4 @@
+//#define alglib
 using SharpMap.Geometries;
 
 namespace ExampleCodeSnippets
@@ -44,7 +45,7 @@ namespace ExampleCodeSnippets
         }
 #endif
 
-#if !DotSpatialProjections
+#if !DotSpatialProjections && alglib
     /// <summary>
     /// Performs an affine 2D coordinate transfromation
     /// X' = _a*X + _b*Y + _c

@@ -1254,6 +1254,9 @@ namespace SharpMap.Forms
                             _dragEndPoint.Y = 0;
 
                             _map.ZoomToBox(new BoundingBox(lowerLeft, upperRight));
+                            
+                            if (MapZoomChanged != null)
+                                MapZoomChanged(_map.Zoom);
 
                         }
                     }

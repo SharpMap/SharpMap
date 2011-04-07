@@ -2,7 +2,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.21022</ProductVersion>
+    <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{C83777FC-AABB-47D9-911F-D76255D4D541}</ProjectGuid>
     <OutputType>Library</OutputType>
@@ -47,6 +47,14 @@
     <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="BruTile, Version=0.4.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\ExternalReferences\BruTile.dll</HintPath>
+    </Reference>
+    <Reference Include="ProjNET, Version=1.2.3882.19088, Culture=neutral, PublicKeyToken=a1f5bdcd9c6f5740, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\ExternalReferences\ProjNET.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
@@ -246,16 +254,6 @@
     <Content Include="Web\Wfs\Schemas\2.0.0\examples\GetCapabilities\GetCapabilities_Res_Min.xml" />
     <Content Include="Web\Wfs\Schemas\2.0.0\ReadMe.txt" />
     <Content Include="Web\Wfs\Schemas\2.0.0\wsdl\readme.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\..\Brutile\trunk\BruTile\BruTile.csproj">
-      <Project>{70315167-2BF1-4C7B-9184-728CAABF30D7}</Project>
-      <Name>BruTile</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\SharpMapCS\SharpMap.CoordinateSystems\ProjNET.csproj">
-      <Project>{E028BDD2-55E1-4E5F-BE31-35FAEC8D6428}</Project>
-      <Name>ProjNET</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Web\Wcs\Schemas\" />
