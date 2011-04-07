@@ -374,7 +374,7 @@ namespace SharpMap.Layers
                     break;
                 case GeometryType2.LineString:
                 //case "SharpMap.Geometries.LineString":
-                        VectorRenderer.DrawLineString(g, (LineString) feature, style.Line, map, style.LinePerpendicularOffset);
+                        VectorRenderer.DrawLineString(g, (LineString) feature, style.Line, map, style.LineOffset);
                    break;
                 case GeometryType2.MultiLineString:
                 //case "SharpMap.Geometries.MultiLineString":

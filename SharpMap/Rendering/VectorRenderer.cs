@@ -85,9 +85,16 @@ namespace SharpMap.Rendering
                     {
                         a = points[i + 1].Y - points[i].Y;
                         c = a / b;
-                        y = (float)Math.Sqrt(space / (c * c + 1));
+                        y = 2 * (float)Math.Sqrt(space / (c * c + 1));
                         y = b < 0 ? y : -y;
                         x = c * y;
+
+                        if (offset < 0)
+                        {
+                            y = -y;
+                            x = -x;
+                        }
+
                         newPoints[counter] = new PointF(points[i].X + x, points[i].Y + y);
                         newPoints[counter + 1] = new PointF(points[i + 1].X + x, points[i + 1].Y + y);
                     }
@@ -134,7 +141,7 @@ namespace SharpMap.Rendering
                 GraphicsPath gp = new GraphicsPath();
                 if (offset == 0)
                     gp.AddLines(LimitValues(line.TransformToImage(map), ExtremeValueLimit));
-                else 
+                else
                     gp.AddLines(OffsetRight(LimitValues(line.TransformToImage(map), ExtremeValueLimit), offset));
     
                 g.DrawPath(pen, gp);

@@ -70,8 +70,6 @@ namespace SharpMap.Styles
             SymbolScale = 1f;
             PointColor = Brushes.Red;
             PointSize = 10f;
-            _PerpendiculatOffset = 0;
-
             LineOffset = 0;
         }
 
@@ -81,7 +79,6 @@ namespace SharpMap.Styles
         private float _symbolRotation;
         private float _symbolScale;
         private float _PointSize;
-        private float _PerpendiculatOffset;
 
         private Brush _PointBrush = null;
 
@@ -92,15 +89,6 @@ namespace SharpMap.Styles
         {
             get { return _lineStyle; }
             set { _lineStyle = value; }
-        }
-
-        /// <summary>
-        /// Perpendicular Offset of Line symbols (in image units);
-        /// </summary>
-        public float LinePerpendicularOffset
-        {
-            get { return _PerpendiculatOffset; }
-            set { _PerpendiculatOffset = value; }
         }
 
         /// <summary>
@@ -191,7 +179,9 @@ namespace SharpMap.Styles
         }
 
         /// <summary>
-        /// Gets or sets the offset by which line will be moved to right
+        /// Gets or sets the offset (in pixel units) by which line will be offset from its original posision (perpendicular).
+        /// A positive value offsets the line to the right
+        /// A negative value offsets to the left
         /// </summary>
         public float LineOffset
         {
