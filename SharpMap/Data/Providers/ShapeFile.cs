@@ -175,6 +175,7 @@ namespace SharpMap.Data.Providers
 #endif
 		private bool _CoordsysReadFromFile = false;
 
+        private int _FileSize;
 		private BoundingBox _Envelope;
 		private int _FeatureCount;
 		private bool _FileBasedIndex;
@@ -191,8 +192,8 @@ namespace SharpMap.Data.Providers
 		private bool _UseMemoryCache;
 		private DateTime _lastCleanTimestamp = DateTime.Now;
 		private TimeSpan _cacheExpireTimeout = TimeSpan.FromMinutes(1);
-
 		private Dictionary <uint,FeatureDataRow> cacheDataTable = new Dictionary<uint,FeatureDataRow>();
+        private int[] _OffsetOfRecord;
 
 		/// <summary>
 		/// Tree used for fast query of data
@@ -280,7 +281,7 @@ namespace SharpMap.Data.Providers
 		/// </remarks>
 		/// <param name="filename">Path to shape file</param>
 		/// <param name="fileBasedIndex">Use file-based spatial index</param>
-		public ShapeFile(string filename, bool fileBasedIndex, bool useMemoryCache) : this(filename,fileBasedIndex)
+		public ShapeFile(string filename, bool fileBasedIndex, bool useMemoryCache) : this(filename, fileBasedIndex)
 		{
 			this._UseMemoryCache = useMemoryCache;
 		}
@@ -440,14 +441,21 @@ namespace SharpMap.Data.Providers
 
 			if (!_IsOpen )
 			{
+                if (File.Exists(_Filename.Remove(_Filename.Length - 4, 4) + ".shx"))
+                {
 					fsShapeIndex = new FileStream(_Filename.Remove(_Filename.Length - 4, 4) + ".shx", FileMode.Open,
 												  FileAccess.Read);
 					brShapeIndex = new BinaryReader(fsShapeIndex, Encoding.Unicode);
-					fsShapeFile = new FileStream(_Filename, FileMode.Open, FileAccess.Read);
-					brShapeFile = new BinaryReader(fsShapeFile);
-					InitializeShape(_Filename, _FileBasedIndex);
-					if (dbaseFile != null)
-						dbaseFile.Open();
+                }
+				fsShapeFile = new FileStream(_Filename, FileMode.Open, FileAccess.Read);
+				brShapeFile = new BinaryReader(fsShapeFile);
+
+                // Create array to hold the index array for this open session
+                _OffsetOfRecord = new int[_FeatureCount];
+                PopulateIndexes();
+				InitializeShape(_Filename, _FileBasedIndex);
+				if (dbaseFile != null)
+					dbaseFile.Open();
 				_IsOpen = true;
 
 			}
@@ -468,8 +476,15 @@ namespace SharpMap.Data.Providers
 				{
 					brShapeFile.Close();
 					fsShapeFile.Close();
-					brShapeIndex.Close();
-					fsShapeIndex.Close();
+                    if (brShapeIndex != null)
+                    {
+                        brShapeIndex.Close();
+                        fsShapeIndex.Close();
+                    }
+
+                    // Give back the memory from the index array.
+                    _OffsetOfRecord = null;
+
 					if (dbaseFile != null)
 						dbaseFile.Close();
 					_IsOpen = false;
@@ -503,7 +518,6 @@ namespace SharpMap.Data.Providers
 			if (objectlist.Count == 0) //no features found. Return an empty set
 				return new Collection<Geometry>();
 
-			//Collection<SharpMap.Geometries.Geometry> geometries = new Collection<SharpMap.Geometries.Geometry>(objectlist.Count);
 			Collection<Geometry> geometries = new Collection<Geometry>();
 
 			for (int i = 0; i < objectlist.Count; i++)
@@ -706,36 +720,64 @@ namespace SharpMap.Data.Providers
 		}
 
 		/// <summary>
-		/// Reads and parses the header of the .shx index file
+		/// Reads and parses the header of the .shp index file
 		/// </summary>
 		private void ParseHeader()
 		{
-			fsShapeIndex = new FileStream(Path.ChangeExtension(_Filename, ".shx"), FileMode.Open,
-										  FileAccess.Read);
-			brShapeIndex = new BinaryReader(fsShapeIndex, Encoding.Unicode);
+            fsShapeFile = new FileStream(_Filename, FileMode.Open, FileAccess.Read);
+            brShapeFile = new BinaryReader(fsShapeFile, Encoding.Unicode);
 
-			brShapeIndex.BaseStream.Seek(0, 0);
+            brShapeFile.BaseStream.Seek(0, 0);
 			//Check file header
-			if (brShapeIndex.ReadInt32() != 170328064)
+            if (brShapeFile.ReadInt32() != 170328064)
 				//File Code is actually 9994, but in Little Endian Byte Order this is '170328064'
-				throw (new ApplicationException("Invalid Shapefile Index (.shx)"));
+				throw (new ApplicationException("Invalid Shapefile (.shp)"));
 
-			brShapeIndex.BaseStream.Seek(24, 0); //seek to File Length
-			int IndexFileSize = SwapByteOrder(brShapeIndex.ReadInt32());
-				//Read filelength as big-endian. The length is based on 16bit words
-			_FeatureCount = (2*IndexFileSize - 100)/8;
-				//Calculate FeatureCount. Each feature takes up 8 bytes. The header is 100 bytes
-
-			brShapeIndex.BaseStream.Seek(32, 0); //seek to ShapeType
-			_ShapeType = (ShapeType) brShapeIndex.ReadInt32();
+            //Read filelength as big-endian. The length is based on 16bit words
+            brShapeFile.BaseStream.Seek(24, 0); //seek to File Length
+            _FileSize = 2 * SwapByteOrder(brShapeFile.ReadInt32());
+				
+            brShapeFile.BaseStream.Seek(32, 0); //seek to ShapeType
+            _ShapeType = (ShapeType)brShapeFile.ReadInt32();
 
 			//Read the spatial bounding box of the contents
-			brShapeIndex.BaseStream.Seek(36, 0); //seek to box
-			_Envelope = new BoundingBox(brShapeIndex.ReadDouble(), brShapeIndex.ReadDouble(), brShapeIndex.ReadDouble(),
-										brShapeIndex.ReadDouble());
+            brShapeFile.BaseStream.Seek(36, 0); //seek to box
+            _Envelope = new BoundingBox(brShapeFile.ReadDouble(), brShapeFile.ReadDouble(), brShapeFile.ReadDouble(),
+                                        brShapeFile.ReadDouble());
 
-			brShapeIndex.Close();
-			fsShapeIndex.Close();
+            // Work out the numberof features, if we have an index file use that
+            if (brShapeIndex != null)
+            {
+                fsShapeIndex = new FileStream(_Filename.Remove(_Filename.Length - 4, 4) + ".shx", FileMode.Open, FileAccess.Read);
+                brShapeIndex = new BinaryReader(fsShapeIndex, System.Text.Encoding.Unicode);
+
+                brShapeIndex.BaseStream.Seek(24, 0); //seek to File Length
+                int IndexFileSize = SwapByteOrder(brShapeIndex.ReadInt32()); //Read filelength as big-endian. The length is based on 16bit words
+                _FeatureCount = (2 * IndexFileSize - 100) / 8; //Calculate FeatureCount. Each feature takes up 8 bytes. The header is 100 bytes
+
+                brShapeIndex.Close();
+                fsShapeIndex.Close();
+            }
+            else
+            {
+                // Move to the start of the data
+                brShapeFile.BaseStream.Seek(100, 0); //Skip content length
+                long offset = 100; // Start of the data records
+
+                // Loop through the data to extablish the number of features contained within the data file
+                while (offset < _FileSize)
+                {
+                    ++_FeatureCount;
+
+                    brShapeFile.BaseStream.Seek(offset + 4, 0); //Skip content length
+                    int data_length = 2 * SwapByteOrder(brShapeFile.ReadInt32());
+                    offset += data_length; // Add Record data length
+                    offset += 8; //  Plus add the record header size
+                }
+                --_FeatureCount;
+            }
+            brShapeFile.Close();
+            fsShapeFile.Close();
 		}
 
 		/// <summary>
@@ -768,30 +810,47 @@ namespace SharpMap.Data.Providers
 		}
 
 		/// <summary>
-		/// Reads the record offsets from the .shx index file and returns the information in an array
+		/// If an index file is present (.shx) it reads the record offsets from the .shx index file and returns the information in an array.
+        /// IfF an indexd array is not present it works out the indexes from the data file, by going through the record headers, finding the
+        /// data lengths and workingout the offsets. Which ever method is used a array of index is popuated to be use by the other methods.
+        /// This array is created when the open method is called, and removed when the close method called.
 		/// </summary>
-		private int[] ReadIndex()
+        private void PopulateIndexes()
 		{
-			int[] OffsetOfRecord = new int[_FeatureCount];
-			brShapeIndex.BaseStream.Seek(100, 0); //skip the header
+            if (brShapeIndex != null)
+            {
+                brShapeIndex.BaseStream.Seek(100, 0);  //skip the header
 
-			for (int x = 0; x < _FeatureCount; ++x)
-			{
-				OffsetOfRecord[x] = 2*SwapByteOrder(brShapeIndex.ReadInt32()); //Read shape data position // ibuffer);
-				brShapeIndex.BaseStream.Seek(brShapeIndex.BaseStream.Position + 4, 0); //Skip content length
-			}
-			return OffsetOfRecord;
-		}
+                for (int x = 0; x < _FeatureCount; ++x)
+                {
+                    _OffsetOfRecord[x] = 2 * SwapByteOrder(brShapeIndex.ReadInt32()); //Read shape data position // ibuffer);
+                    brShapeIndex.BaseStream.Seek(brShapeIndex.BaseStream.Position + 4, 0); //Skip content length
+                }
+            }
+            else  
+            {
+                // we need to create an index from the shape file
 
-		/// <summary>
-		/// Gets the file position of the n'th shape
-		/// </summary>
-		/// <param name="n">Shape ID</param>
-		/// <returns></returns>
-		private int GetShapeIndex(uint n)
-		{
-			brShapeIndex.BaseStream.Seek(100 + n*8, 0); //seek to the position of the index
-			return 2*SwapByteOrder(brShapeIndex.ReadInt32()); //Read shape data position
+                // Record the current position pointer for later
+                long old_position = brShapeFile.BaseStream.Position;
+  
+                // Move to the start of the data
+                brShapeFile.BaseStream.Seek(100, 0); //Skip content length
+                long offset = 100; // Start of the data records
+                
+                for (int x = 0; x < _FeatureCount; ++x)
+                {
+                   _OffsetOfRecord[x] = (int)offset; 
+                   
+                    brShapeFile.BaseStream.Seek(offset + 4, 0); //Skip content length
+                    int data_length = 2 * SwapByteOrder(brShapeFile.ReadInt32());
+                    offset += data_length; // Add Record data length
+                    offset += 8; //  Plus add the record header size
+                }
+
+                // Return the position pointer
+                brShapeFile.BaseStream.Seek(old_position, 0);
+            }
 		}
 
 		///<summary>
@@ -941,8 +1000,6 @@ namespace SharpMap.Data.Providers
 		/// <returns></returns>
 		private IEnumerable<BoundingBox> GetAllFeatureBoundingBoxes()
 		{
-			int[] offsetOfRecord = ReadIndex(); //Read the whole .idx file
-
 			//List<BoundingBox> boxes = new List<BoundingBox>();
 
             /*
@@ -956,7 +1013,7 @@ namespace SharpMap.Data.Providers
 				{
 					//if (recDel((uint)a)) continue;
 
-                    fsShapeFile.Seek(offsetOfRecord[a] + 8, 0); //skip record number and content length
+                    fsShapeFile.Seek(_OffsetOfRecord[a] + 8, 0); //skip record number and content length
 					if ((ShapeType) brShapeFile.ReadInt32() != ShapeType.Null)
 					{
 						double x = brShapeFile.ReadDouble();
@@ -971,7 +1028,7 @@ namespace SharpMap.Data.Providers
 				for (int a = 0; a < _FeatureCount; ++a)
 				{
                     //if (recDel((uint)a)) continue;
-                    fsShapeFile.Seek(offsetOfRecord[a] + 8, 0); //skip record number and content length
+                    fsShapeFile.Seek(_OffsetOfRecord[a] + 8, 0); //skip record number and content length
 					if ((ShapeType)brShapeFile.ReadInt32() != ShapeType.Null)
 						yield return new BoundingBox(brShapeFile.ReadDouble(), brShapeFile.ReadDouble(),
 													 brShapeFile.ReadDouble(), brShapeFile.ReadDouble());
@@ -990,7 +1047,7 @@ namespace SharpMap.Data.Providers
 		/// <returns>geometry</returns>
 		private Geometry ReadGeometry(uint oid)
 		{
-			brShapeFile.BaseStream.Seek(GetShapeIndex(oid) + 8, 0); //Skip record number and content length
+            brShapeFile.BaseStream.Seek(_OffsetOfRecord[oid] + 8, 0); //Skip record number and content length
 			ShapeType type = (ShapeType) brShapeFile.ReadInt32(); //Shape type
 			if (type == ShapeType.Null)
 				return null;
