@@ -154,7 +154,7 @@ namespace DotSpatial.Projections
         {
             var pts = new List<double[]>();
             for (var i = 0; i < points.NumGeometries; i++)
-                pts.Add(new[] {points[0].X, points[1].Y});
+                pts.Add(new[] {points[i].X, points[i].Y});
 
             return new MultiPoint(TransformList(pts, from, to));
         }

@@ -167,7 +167,7 @@ namespace ProjNet.CoordinateSystems.Transformations
         {
             List<double[]> pts = new List<double[]>();
             for (int i = 0; i < points.NumGeometries; i++)
-                pts.Add(new double[2] {points[0].X, points[1].Y});
+                pts.Add(new double[2] {points[i].X, points[i].Y});
 
             return new MultiPoint(transform.TransformList(pts));
         }
