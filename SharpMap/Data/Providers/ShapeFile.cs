@@ -746,9 +746,10 @@ namespace SharpMap.Data.Providers
                                         brShapeFile.ReadDouble());
 
             // Work out the numberof features, if we have an index file use that
-            if (brShapeIndex != null)
+            if (File.Exists(Path.ChangeExtension(_Filename, ".shx")))
+            //if (brShapeIndex != null)
             {
-                fsShapeIndex = new FileStream(_Filename.Remove(_Filename.Length - 4, 4) + ".shx", FileMode.Open, FileAccess.Read);
+                fsShapeIndex = new FileStream(Path.ChangeExtension(_Filename, ".shx"), FileMode.Open, FileAccess.Read);
                 brShapeIndex = new BinaryReader(fsShapeIndex, System.Text.Encoding.Unicode);
 
                 brShapeIndex.BaseStream.Seek(24, 0); //seek to File Length
@@ -771,10 +772,18 @@ namespace SharpMap.Data.Providers
 
                     brShapeFile.BaseStream.Seek(offset + 4, 0); //Skip content length
                     int data_length = 2 * SwapByteOrder(brShapeFile.ReadInt32());
+
+                    // This is to cover the chance when the data is corupt
+                    // as seen with the sample counties file, in this example the index file
+                    // has been adjusted to cover the problem.
+                    if ((offset + data_length) > _FileSize)
+                    {
+                        --_FeatureCount;
+                    }
+
                     offset += data_length; // Add Record data length
                     offset += 8; //  Plus add the record header size
                 }
-                --_FeatureCount;
             }
             brShapeFile.Close();
             fsShapeFile.Close();
