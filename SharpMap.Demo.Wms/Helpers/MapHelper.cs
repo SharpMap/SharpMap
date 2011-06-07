@@ -11,6 +11,7 @@ namespace SharpMap.Demo.Wms.Helpers
     using ProjNet.CoordinateSystems;
     using ProjNet.CoordinateSystems.Transformations;
     using Rendering;
+    using Styles;
 
     public static class MapHelper
     {
@@ -18,6 +19,7 @@ namespace SharpMap.Demo.Wms.Helpers
         {
             public string LabelColumn { get; set; }
             public ICoordinateTransformation Transformation { get; set; }
+            public IStyle Style { get; set; }
         }
 
         private static readonly IDictionary<string, LayerData> layers;
@@ -25,11 +27,29 @@ namespace SharpMap.Demo.Wms.Helpers
         static MapHelper()
         {
             ICoordinateTransformation transformation = LatLonToGoogle();
+            LayerData landmarks = new LayerData
+            {
+                LabelColumn = "LANAME",
+                Transformation = transformation,
+                Style = new VectorStyle { EnableOutline = true, Fill = new SolidBrush(Color.FromArgb(192, Color.LightBlue)) }
+            };
+            LayerData roads = new LayerData
+            {
+                LabelColumn = "NAME",
+                Transformation = transformation,
+                Style = new VectorStyle { Line = new Pen(Color.FromArgb(200, Color.DarkBlue), 0.5f) }
+            };
+            LayerData pois = new LayerData
+            {
+                LabelColumn = "NAME",
+                Transformation = transformation,
+                Style = new VectorStyle { PointColor = new SolidBrush(Color.FromArgb(200, Color.DarkGreen)), PointSize = 10 }
+            };
             layers = new Dictionary<string, LayerData>
             {
-                { "poly_landmarks", new LayerData { LabelColumn = "LANAME", Transformation = transformation } },
-                { "tiger_roads", new LayerData { LabelColumn = "NAME", Transformation = transformation } } ,
-                { "poi", new LayerData { LabelColumn = "NAME", Transformation = transformation} }
+                { "poly_landmarks", landmarks },
+                { "tiger_roads", roads } ,
+                { "poi", pois }
             };
         }
 
@@ -46,7 +66,12 @@ namespace SharpMap.Demo.Wms.Helpers
 
                 LayerData data = layers[layer];
                 ShapeFile dataSource = new ShapeFile(path, true) { SRID = 900913 };
-                VectorLayer item = new VectorLayer(layer, dataSource) { CoordinateTransformation = data.Transformation };
+                VectorLayer item = new VectorLayer(layer, dataSource)
+                {
+                    CoordinateTransformation = data.Transformation,
+                    Style = (VectorStyle)data.Style,
+                    SmoothingMode = SmoothingMode.AntiAlias
+                };
                 map.Layers.Add(item);
 
                 // LabelLayer labels = CreateLabelLayer(item, data.LabelColumn);
