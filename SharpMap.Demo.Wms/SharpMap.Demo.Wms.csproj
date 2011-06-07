@@ -1,0 +1,529 @@
+﻿<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{7EF67DF8-D868-4177-8817-4CC2E94ABD66}</ProjectGuid>
+    <ProjectTypeGuids>{F85E285D-A4E0-4152-9332-AB1D724D3325};{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>SharpMap.Demo.Wms</RootNamespace>
+    <AssemblyName>SharpMap.Demo.Wms</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <MvcBuildViews>false</MvcBuildViews>
+    <TargetFrameworkSubset>
+    </TargetFrameworkSubset>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;DEBUG_STEPINTO</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="GeoAPI, Version=1.0.0.0, Culture=neutral, PublicKeyToken=a1a0da7def465678, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\ExternalReferences\References4SharpMap.Extensions\GeoAPI.dll</HintPath>
+    </Reference>
+    <Reference Include="ProjNET, Version=1.2.3882.19088, Culture=neutral, PublicKeyToken=a1f5bdcd9c6f5740, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\ExternalReferences\ProjNET.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core, Version=3.5.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.DataSetExtensions, Version=3.5.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Web.Extensions.Design, Version=3.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Extensions, Version=3.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="System.Web.Abstractions" />
+    <Reference Include="System.Web.Mvc, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="System.Web.Routing">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.EnterpriseServices" />
+    <Reference Include="System.Web.Mobile" />
+    <Reference Include="System.Xml.Linq, Version=3.5.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Global.asax.cs">
+      <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="Handlers\StdWmsMapHandler.cs" />
+    <Compile Include="Helpers\ExtensionMethods.cs" />
+    <Compile Include="Helpers\MapHelper.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Global.asax" />
+    <Content Include="Views\Web.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Home\Index.aspx" />
+    <Content Include="Wms.ashx" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SharpMap\SharpMap.VS2008.csproj">
+      <Project>{C83777FC-AABB-47D9-911F-D76255D4D541}</Project>
+      <Name>SharpMap</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Content\handheld.css" />
+    <Content Include="Content\style.css" />
+    <Content Include="crossdomain.xml" />
+    <Content Include="robots.txt" />
+    <Content Include="Scripts\dd_belatedpng.js" />
+    <Content Include="Scripts\jquery-1.4.4-vsdoc.js" />
+    <Content Include="Scripts\jquery-1.4.4.js" />
+    <Content Include="Scripts\jquery-1.4.4.min.js" />
+    <Content Include="Scripts\modernizr-1.5.min.js" />
+    <Content Include="Scripts\plugins.js" />
+    <Content Include="Scripts\profiling\charts.swf" />
+    <Content Include="Scripts\profiling\config.js" />
+    <Content Include="Scripts\profiling\yahoo-profiling.css" />
+    <Content Include="Scripts\profiling\yahoo-profiling.min.js" />
+    <Content Include="Views\Shared\Site.Master" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Content\Images\sorry.jpg" />
+    <Content Include="Content\polymaps.css" />
+    <Content Include="img\blank.gif" />
+    <Content Include="img\cloud-popup-relative.png" />
+    <Content Include="img\drag-rectangle-off.png" />
+    <Content Include="img\drag-rectangle-on.png" />
+    <Content Include="img\east-mini.png" />
+    <Content Include="img\layer-switcher-maximize.png" />
+    <Content Include="img\layer-switcher-minimize.png" />
+    <Content Include="img\marker-blue.png" />
+    <Content Include="img\marker-gold.png" />
+    <Content Include="img\marker-green.png" />
+    <Content Include="img\marker.png" />
+    <Content Include="img\measuring-stick-off.png" />
+    <Content Include="img\measuring-stick-on.png" />
+    <Content Include="img\north-mini.png" />
+    <Content Include="img\panning-hand-off.png" />
+    <Content Include="img\panning-hand-on.png" />
+    <Content Include="img\slider.png" />
+    <Content Include="img\south-mini.png" />
+    <Content Include="img\west-mini.png" />
+    <Content Include="img\zoom-minus-mini.png" />
+    <Content Include="img\zoom-plus-mini.png" />
+    <Content Include="img\zoom-world-mini.png" />
+    <Content Include="img\zoombar.png" />
+    <Content Include="lib\Firebug\errorIcon.png" />
+    <Content Include="lib\Firebug\firebug.css" />
+    <Content Include="lib\Firebug\firebug.html" />
+    <Content Include="lib\Firebug\firebug.js" />
+    <Content Include="lib\Firebug\firebugx.js" />
+    <Content Include="lib\Firebug\infoIcon.png" />
+    <Content Include="lib\Firebug\license.txt" />
+    <Content Include="lib\Firebug\readme.txt" />
+    <Content Include="lib\Firebug\warningIcon.png" />
+    <Content Include="lib\Gears\gears_init.js" />
+    <Content Include="lib\OpenLayers.js" />
+    <Content Include="lib\OpenLayers\Ajax.js" />
+    <Content Include="lib\OpenLayers\BaseTypes.js" />
+    <Content Include="lib\OpenLayers\BaseTypes\Bounds.js" />
+    <Content Include="lib\OpenLayers\BaseTypes\Class.js" />
+    <Content Include="lib\OpenLayers\BaseTypes\Element.js" />
+    <Content Include="lib\OpenLayers\BaseTypes\LonLat.js" />
+    <Content Include="lib\OpenLayers\BaseTypes\Pixel.js" />
+    <Content Include="lib\OpenLayers\BaseTypes\Size.js" />
+    <Content Include="lib\OpenLayers\Console.js" />
+    <Content Include="lib\OpenLayers\Control.js" />
+    <Content Include="lib\OpenLayers\Control\ArgParser.js" />
+    <Content Include="lib\OpenLayers\Control\Attribution.js" />
+    <Content Include="lib\OpenLayers\Control\Button.js" />
+    <Content Include="lib\OpenLayers\Control\DragFeature.js" />
+    <Content Include="lib\OpenLayers\Control\DragPan.js" />
+    <Content Include="lib\OpenLayers\Control\DrawFeature.js" />
+    <Content Include="lib\OpenLayers\Control\EditingToolbar.js" />
+    <Content Include="lib\OpenLayers\Control\GetFeature.js" />
+    <Content Include="lib\OpenLayers\Control\Graticule.js" />
+    <Content Include="lib\OpenLayers\Control\KeyboardDefaults.js" />
+    <Content Include="lib\OpenLayers\Control\LayerSwitcher.js" />
+    <Content Include="lib\OpenLayers\Control\Measure.js" />
+    <Content Include="lib\OpenLayers\Control\ModifyFeature.js" />
+    <Content Include="lib\OpenLayers\Control\MouseDefaults.js" />
+    <Content Include="lib\OpenLayers\Control\MousePosition.js" />
+    <Content Include="lib\OpenLayers\Control\MouseToolbar.js" />
+    <Content Include="lib\OpenLayers\Control\Navigation.js" />
+    <Content Include="lib\OpenLayers\Control\NavigationHistory.js" />
+    <Content Include="lib\OpenLayers\Control\NavToolbar.js" />
+    <Content Include="lib\OpenLayers\Control\OverviewMap.js" />
+    <Content Include="lib\OpenLayers\Control\Pan.js" />
+    <Content Include="lib\OpenLayers\Control\Panel.js" />
+    <Content Include="lib\OpenLayers\Control\PanPanel.js" />
+    <Content Include="lib\OpenLayers\Control\PanZoom.js" />
+    <Content Include="lib\OpenLayers\Control\PanZoomBar.js" />
+    <Content Include="lib\OpenLayers\Control\Permalink.js" />
+    <Content Include="lib\OpenLayers\Control\Scale.js" />
+    <Content Include="lib\OpenLayers\Control\ScaleLine.js" />
+    <Content Include="lib\OpenLayers\Control\SelectFeature.js" />
+    <Content Include="lib\OpenLayers\Control\SLDSelect.js" />
+    <Content Include="lib\OpenLayers\Control\Snapping.js" />
+    <Content Include="lib\OpenLayers\Control\Split.js" />
+    <Content Include="lib\OpenLayers\Control\TransformFeature.js" />
+    <Content Include="lib\OpenLayers\Control\WMSGetFeatureInfo.js" />
+    <Content Include="lib\OpenLayers\Control\WMTSGetFeatureInfo.js" />
+    <Content Include="lib\OpenLayers\Control\ZoomBox.js" />
+    <Content Include="lib\OpenLayers\Control\ZoomIn.js" />
+    <Content Include="lib\OpenLayers\Control\ZoomOut.js" />
+    <Content Include="lib\OpenLayers\Control\ZoomPanel.js" />
+    <Content Include="lib\OpenLayers\Control\ZoomToMaxExtent.js" />
+    <Content Include="lib\OpenLayers\Events.js" />
+    <Content Include="lib\OpenLayers\Feature.js" />
+    <Content Include="lib\OpenLayers\Feature\Vector.js" />
+    <Content Include="lib\OpenLayers\Feature\WFS.js" />
+    <Content Include="lib\OpenLayers\Filter.js" />
+    <Content Include="lib\OpenLayers\Filter\Comparison.js" />
+    <Content Include="lib\OpenLayers\Filter\FeatureId.js" />
+    <Content Include="lib\OpenLayers\Filter\Logical.js" />
+    <Content Include="lib\OpenLayers\Filter\Spatial.js" />
+    <Content Include="lib\OpenLayers\Format.js" />
+    <Content Include="lib\OpenLayers\Format\ArcXML.js" />
+    <Content Include="lib\OpenLayers\Format\ArcXML\Features.js" />
+    <Content Include="lib\OpenLayers\Format\Atom.js" />
+    <Content Include="lib\OpenLayers\Format\Context.js" />
+    <Content Include="lib\OpenLayers\Format\CSWGetDomain.js" />
+    <Content Include="lib\OpenLayers\Format\CSWGetDomain\v2_0_2.js" />
+    <Content Include="lib\OpenLayers\Format\CSWGetRecords.js" />
+    <Content Include="lib\OpenLayers\Format\CSWGetRecords\v2_0_2.js" />
+    <Content Include="lib\OpenLayers\Format\Filter.js" />
+    <Content Include="lib\OpenLayers\Format\Filter\v1.js" />
+    <Content Include="lib\OpenLayers\Format\Filter\v1_0_0.js" />
+    <Content Include="lib\OpenLayers\Format\Filter\v1_1_0.js" />
+    <Content Include="lib\OpenLayers\Format\GeoJSON.js" />
+    <Content Include="lib\OpenLayers\Format\GeoRSS.js" />
+    <Content Include="lib\OpenLayers\Format\GML.js" />
+    <Content Include="lib\OpenLayers\Format\GML\Base.js" />
+    <Content Include="lib\OpenLayers\Format\GML\v2.js" />
+    <Content Include="lib\OpenLayers\Format\GML\v3.js" />
+    <Content Include="lib\OpenLayers\Format\GPX.js" />
+    <Content Include="lib\OpenLayers\Format\JSON.js" />
+    <Content Include="lib\OpenLayers\Format\KML.js" />
+    <Content Include="lib\OpenLayers\Format\OSM.js" />
+    <Content Include="lib\OpenLayers\Format\OWSCommon\v1.js" />
+    <Content Include="lib\OpenLayers\Format\OWSCommon\v1_0_0.js" />
+    <Content Include="lib\OpenLayers\Format\OWSCommon\v1_1_0.js" />
+    <Content Include="lib\OpenLayers\Format\OWSContext.js" />
+    <Content Include="lib\OpenLayers\Format\OWSContext\v0_3_1.js" />
+    <Content Include="lib\OpenLayers\Format\SLD.js" />
+    <Content Include="lib\OpenLayers\Format\SLD\v1.js" />
+    <Content Include="lib\OpenLayers\Format\SLD\v1_0_0.js" />
+    <Content Include="lib\OpenLayers\Format\SOSCapabilities.js" />
+    <Content Include="lib\OpenLayers\Format\SOSCapabilities\v1_0_0.js" />
+    <Content Include="lib\OpenLayers\Format\SOSGetFeatureOfInterest.js" />
+    <Content Include="lib\OpenLayers\Format\SOSGetObservation.js" />
+    <Content Include="lib\OpenLayers\Format\Text.js" />
+    <Content Include="lib\OpenLayers\Format\WFS.js" />
+    <Content Include="lib\OpenLayers\Format\WFSCapabilities.js" />
+    <Content Include="lib\OpenLayers\Format\WFSCapabilities\v1.js" />
+    <Content Include="lib\OpenLayers\Format\WFSCapabilities\v1_0_0.js" />
+    <Content Include="lib\OpenLayers\Format\WFSCapabilities\v1_1_0.js" />
+    <Content Include="lib\OpenLayers\Format\WFSDescribeFeatureType.js" />
+    <Content Include="lib\OpenLayers\Format\WFST.js" />
+    <Content Include="lib\OpenLayers\Format\WFST\v1.js" />
+    <Content Include="lib\OpenLayers\Format\WFST\v1_0_0.js" />
+    <Content Include="lib\OpenLayers\Format\WFST\v1_1_0.js" />
+    <Content Include="lib\OpenLayers\Format\WKT.js" />
+    <Content Include="lib\OpenLayers\Format\WMC.js" />
+    <Content Include="lib\OpenLayers\Format\WMC\v1.js" />
+    <Content Include="lib\OpenLayers\Format\WMC\v1_0_0.js" />
+    <Content Include="lib\OpenLayers\Format\WMC\v1_1_0.js" />
+    <Content Include="lib\OpenLayers\Format\WMSCapabilities.js" />
+    <Content Include="lib\OpenLayers\Format\WMSCapabilities\v1.js" />
+    <Content Include="lib\OpenLayers\Format\WMSCapabilities\v1_1.js" />
+    <Content Include="lib\OpenLayers\Format\WMSCapabilities\v1_1_0.js" />
+    <Content Include="lib\OpenLayers\Format\WMSCapabilities\v1_1_1.js" />
+    <Content Include="lib\OpenLayers\Format\WMSCapabilities\v1_3.js" />
+    <Content Include="lib\OpenLayers\Format\WMSCapabilities\v1_3_0.js" />
+    <Content Include="lib\OpenLayers\Format\WMSDescribeLayer.js" />
+    <Content Include="lib\OpenLayers\Format\WMSDescribeLayer\v1_1.js" />
+    <Content Include="lib\OpenLayers\Format\WMSGetFeatureInfo.js" />
+    <Content Include="lib\OpenLayers\Format\WMTSCapabilities.js" />
+    <Content Include="lib\OpenLayers\Format\WMTSCapabilities\v1_0_0.js" />
+    <Content Include="lib\OpenLayers\Format\XML.js" />
+    <Content Include="lib\OpenLayers\Geometry.js" />
+    <Content Include="lib\OpenLayers\Geometry\Collection.js" />
+    <Content Include="lib\OpenLayers\Geometry\Curve.js" />
+    <Content Include="lib\OpenLayers\Geometry\LinearRing.js" />
+    <Content Include="lib\OpenLayers\Geometry\LineString.js" />
+    <Content Include="lib\OpenLayers\Geometry\MultiLineString.js" />
+    <Content Include="lib\OpenLayers\Geometry\MultiPoint.js" />
+    <Content Include="lib\OpenLayers\Geometry\MultiPolygon.js" />
+    <Content Include="lib\OpenLayers\Geometry\Point.js" />
+    <Content Include="lib\OpenLayers\Geometry\Polygon.js" />
+    <Content Include="lib\OpenLayers\Geometry\Rectangle.js" />
+    <Content Include="lib\OpenLayers\Geometry\Surface.js" />
+    <Content Include="lib\OpenLayers\Handler.js" />
+    <Content Include="lib\OpenLayers\Handler\Box.js" />
+    <Content Include="lib\OpenLayers\Handler\Click.js" />
+    <Content Include="lib\OpenLayers\Handler\Drag.js" />
+    <Content Include="lib\OpenLayers\Handler\Feature.js" />
+    <Content Include="lib\OpenLayers\Handler\Hover.js" />
+    <Content Include="lib\OpenLayers\Handler\Keyboard.js" />
+    <Content Include="lib\OpenLayers\Handler\MouseWheel.js" />
+    <Content Include="lib\OpenLayers\Handler\Path.js" />
+    <Content Include="lib\OpenLayers\Handler\Point.js" />
+    <Content Include="lib\OpenLayers\Handler\Polygon.js" />
+    <Content Include="lib\OpenLayers\Handler\RegularPolygon.js" />
+    <Content Include="lib\OpenLayers\Icon.js" />
+    <Content Include="lib\OpenLayers\Lang.js" />
+    <Content Include="lib\OpenLayers\Lang\ar.js" />
+    <Content Include="lib\OpenLayers\Lang\be-tarask.js" />
+    <Content Include="lib\OpenLayers\Lang\bg.js" />
+    <Content Include="lib\OpenLayers\Lang\br.js" />
+    <Content Include="lib\OpenLayers\Lang\ca.js" />
+    <Content Include="lib\OpenLayers\Lang\cs-CZ.js" />
+    <Content Include="lib\OpenLayers\Lang\da-DK.js" />
+    <Content Include="lib\OpenLayers\Lang\de.js" />
+    <Content Include="lib\OpenLayers\Lang\el.js" />
+    <Content Include="lib\OpenLayers\Lang\en-CA.js" />
+    <Content Include="lib\OpenLayers\Lang\en.js" />
+    <Content Include="lib\OpenLayers\Lang\es.js" />
+    <Content Include="lib\OpenLayers\Lang\fi.js" />
+    <Content Include="lib\OpenLayers\Lang\fr.js" />
+    <Content Include="lib\OpenLayers\Lang\fur.js" />
+    <Content Include="lib\OpenLayers\Lang\gl.js" />
+    <Content Include="lib\OpenLayers\Lang\gsw.js" />
+    <Content Include="lib\OpenLayers\Lang\hr.js" />
+    <Content Include="lib\OpenLayers\Lang\hsb.js" />
+    <Content Include="lib\OpenLayers\Lang\hu.js" />
+    <Content Include="lib\OpenLayers\Lang\ia.js" />
+    <Content Include="lib\OpenLayers\Lang\id.js" />
+    <Content Include="lib\OpenLayers\Lang\io.js" />
+    <Content Include="lib\OpenLayers\Lang\is.js" />
+    <Content Include="lib\OpenLayers\Lang\it.js" />
+    <Content Include="lib\OpenLayers\Lang\ja.js" />
+    <Content Include="lib\OpenLayers\Lang\km.js" />
+    <Content Include="lib\OpenLayers\Lang\ksh.js" />
+    <Content Include="lib\OpenLayers\Lang\nb.js" />
+    <Content Include="lib\OpenLayers\Lang\nds.js" />
+    <Content Include="lib\OpenLayers\Lang\nl.js" />
+    <Content Include="lib\OpenLayers\Lang\nn.js" />
+    <Content Include="lib\OpenLayers\Lang\oc.js" />
+    <Content Include="lib\OpenLayers\Lang\pt-BR.js" />
+    <Content Include="lib\OpenLayers\Lang\pt.js" />
+    <Content Include="lib\OpenLayers\Lang\ru.js" />
+    <Content Include="lib\OpenLayers\Lang\sk.js" />
+    <Content Include="lib\OpenLayers\Lang\sv-SE.js" />
+    <Content Include="lib\OpenLayers\Lang\te.js" />
+    <Content Include="lib\OpenLayers\Lang\vi.js" />
+    <Content Include="lib\OpenLayers\Lang\zh-CN.js" />
+    <Content Include="lib\OpenLayers\Lang\zh-TW.js" />
+    <Content Include="lib\OpenLayers\Layer.js" />
+    <Content Include="lib\OpenLayers\Layer\ArcGIS93Rest.js" />
+    <Content Include="lib\OpenLayers\Layer\ArcIMS.js" />
+    <Content Include="lib\OpenLayers\Layer\Boxes.js" />
+    <Content Include="lib\OpenLayers\Layer\EventPane.js" />
+    <Content Include="lib\OpenLayers\Layer\FixedZoomLevels.js" />
+    <Content Include="lib\OpenLayers\Layer\GeoRSS.js" />
+    <Content Include="lib\OpenLayers\Layer\GML.js" />
+    <Content Include="lib\OpenLayers\Layer\Google.js" />
+    <Content Include="lib\OpenLayers\Layer\Google\v3.js" />
+    <Content Include="lib\OpenLayers\Layer\Grid.js" />
+    <Content Include="lib\OpenLayers\Layer\HTTPRequest.js" />
+    <Content Include="lib\OpenLayers\Layer\Image.js" />
+    <Content Include="lib\OpenLayers\Layer\KaMap.js" />
+    <Content Include="lib\OpenLayers\Layer\KaMapCache.js" />
+    <Content Include="lib\OpenLayers\Layer\MapGuide.js" />
+    <Content Include="lib\OpenLayers\Layer\MapServer.js" />
+    <Content Include="lib\OpenLayers\Layer\MapServer\Untiled.js" />
+    <Content Include="lib\OpenLayers\Layer\Markers.js" />
+    <Content Include="lib\OpenLayers\Layer\MultiMap.js" />
+    <Content Include="lib\OpenLayers\Layer\PointTrack.js" />
+    <Content Include="lib\OpenLayers\Layer\SphericalMercator.js" />
+    <Content Include="lib\OpenLayers\Layer\Text.js" />
+    <Content Include="lib\OpenLayers\Layer\TileCache.js" />
+    <Content Include="lib\OpenLayers\Layer\TMS.js" />
+    <Content Include="lib\OpenLayers\Layer\Vector.js" />
+    <Content Include="lib\OpenLayers\Layer\Vector\RootContainer.js" />
+    <Content Include="lib\OpenLayers\Layer\VirtualEarth.js" />
+    <Content Include="lib\OpenLayers\Layer\WFS.js" />
+    <Content Include="lib\OpenLayers\Layer\WMS.js" />
+    <Content Include="lib\OpenLayers\Layer\WMS\Post.js" />
+    <Content Include="lib\OpenLayers\Layer\WMS\Untiled.js" />
+    <Content Include="lib\OpenLayers\Layer\WMTS.js" />
+    <Content Include="lib\OpenLayers\Layer\WorldWind.js" />
+    <Content Include="lib\OpenLayers\Layer\XYZ.js" />
+    <Content Include="lib\OpenLayers\Layer\Yahoo.js" />
+    <Content Include="lib\OpenLayers\Layer\Zoomify.js" />
+    <Content Include="lib\OpenLayers\Map.js" />
+    <Content Include="lib\OpenLayers\Marker.js" />
+    <Content Include="lib\OpenLayers\Marker\Box.js" />
+    <Content Include="lib\OpenLayers\Popup.js" />
+    <Content Include="lib\OpenLayers\Popup\Anchored.js" />
+    <Content Include="lib\OpenLayers\Popup\AnchoredBubble.js" />
+    <Content Include="lib\OpenLayers\Popup\Framed.js" />
+    <Content Include="lib\OpenLayers\Popup\FramedCloud.js" />
+    <Content Include="lib\OpenLayers\Projection.js" />
+    <Content Include="lib\OpenLayers\Protocol.js" />
+    <Content Include="lib\OpenLayers\Protocol\HTTP.js" />
+    <Content Include="lib\OpenLayers\Protocol\SOS.js" />
+    <Content Include="lib\OpenLayers\Protocol\SOS\v1_0_0.js" />
+    <Content Include="lib\OpenLayers\Protocol\SQL.js" />
+    <Content Include="lib\OpenLayers\Protocol\SQL\Gears.js" />
+    <Content Include="lib\OpenLayers\Protocol\WFS.js" />
+    <Content Include="lib\OpenLayers\Protocol\WFS\v1.js" />
+    <Content Include="lib\OpenLayers\Protocol\WFS\v1_0_0.js" />
+    <Content Include="lib\OpenLayers\Protocol\WFS\v1_1_0.js" />
+    <Content Include="lib\OpenLayers\Renderer.js" />
+    <Content Include="lib\OpenLayers\Renderer\Canvas.js" />
+    <Content Include="lib\OpenLayers\Renderer\Elements.js" />
+    <Content Include="lib\OpenLayers\Renderer\SVG.js" />
+    <Content Include="lib\OpenLayers\Renderer\VML.js" />
+    <Content Include="lib\OpenLayers\Request.js" />
+    <Content Include="lib\OpenLayers\Request\XMLHttpRequest.js" />
+    <Content Include="lib\OpenLayers\Rule.js" />
+    <Content Include="lib\OpenLayers\SingleFile.js" />
+    <Content Include="lib\OpenLayers\Strategy.js" />
+    <Content Include="lib\OpenLayers\Strategy\BBOX.js" />
+    <Content Include="lib\OpenLayers\Strategy\Cluster.js" />
+    <Content Include="lib\OpenLayers\Strategy\Filter.js" />
+    <Content Include="lib\OpenLayers\Strategy\Fixed.js" />
+    <Content Include="lib\OpenLayers\Strategy\Paging.js" />
+    <Content Include="lib\OpenLayers\Strategy\Refresh.js" />
+    <Content Include="lib\OpenLayers\Strategy\Save.js" />
+    <Content Include="lib\OpenLayers\Style.js" />
+    <Content Include="lib\OpenLayers\Style2.js" />
+    <Content Include="lib\OpenLayers\StyleMap.js" />
+    <Content Include="lib\OpenLayers\Symbolizer.js" />
+    <Content Include="lib\OpenLayers\Symbolizer\Line.js" />
+    <Content Include="lib\OpenLayers\Symbolizer\Point.js" />
+    <Content Include="lib\OpenLayers\Symbolizer\Polygon.js" />
+    <Content Include="lib\OpenLayers\Symbolizer\Raster.js" />
+    <Content Include="lib\OpenLayers\Symbolizer\Text.js" />
+    <Content Include="lib\OpenLayers\Tile.js" />
+    <Content Include="lib\OpenLayers\Tile\Image.js" />
+    <Content Include="lib\OpenLayers\Tile\Image\IFrame.js" />
+    <Content Include="lib\OpenLayers\Tile\WFS.js" />
+    <Content Include="lib\OpenLayers\Tween.js" />
+    <Content Include="lib\OpenLayers\Util.js" />
+    <Content Include="lib\Rico\Color.js" />
+    <Content Include="lib\Rico\Corner.js" />
+    <Content Include="Scripts\globalmaptiles.js" />
+    <Content Include="Scripts\polymaps.js" />
+    <Content Include="Scripts\script_ol.js" />
+    <Content Include="Scripts\script_pl.js" />
+    <Content Include="theme\default\framedCloud.css" />
+    <Content Include="theme\default\google.css" />
+    <Content Include="theme\default\ie6-style.css" />
+    <Content Include="theme\default\img\add_point_off.png" />
+    <Content Include="theme\default\img\add_point_on.png" />
+    <Content Include="theme\default\img\blank.gif" />
+    <Content Include="theme\default\img\close.gif" />
+    <Content Include="theme\default\img\drag-rectangle-off.png" />
+    <Content Include="theme\default\img\drag-rectangle-on.png" />
+    <Content Include="theme\default\img\draw_line_off.png" />
+    <Content Include="theme\default\img\draw_line_on.png" />
+    <Content Include="theme\default\img\draw_point_off.png" />
+    <Content Include="theme\default\img\draw_point_on.png" />
+    <Content Include="theme\default\img\draw_polygon_off.png" />
+    <Content Include="theme\default\img\draw_polygon_on.png" />
+    <Content Include="theme\default\img\editing_tool_bar.png" />
+    <Content Include="theme\default\img\move_feature_off.png" />
+    <Content Include="theme\default\img\move_feature_on.png" />
+    <Content Include="theme\default\img\navigation_history.png" />
+    <Content Include="theme\default\img\overview_replacement.gif" />
+    <Content Include="theme\default\img\pan-panel-NOALPHA.png" />
+    <Content Include="theme\default\img\pan-panel.png" />
+    <Content Include="theme\default\img\panning-hand-off.png" />
+    <Content Include="theme\default\img\panning-hand-on.png" />
+    <Content Include="theme\default\img\pan_off.png" />
+    <Content Include="theme\default\img\pan_on.png" />
+    <Content Include="theme\default\img\remove_point_off.png" />
+    <Content Include="theme\default\img\remove_point_on.png" />
+    <Content Include="theme\default\img\ruler.png" />
+    <Content Include="theme\default\img\save_features_off.png" />
+    <Content Include="theme\default\img\save_features_on.png" />
+    <Content Include="theme\default\img\view_next_off.png" />
+    <Content Include="theme\default\img\view_next_on.png" />
+    <Content Include="theme\default\img\view_previous_off.png" />
+    <Content Include="theme\default\img\view_previous_on.png" />
+    <Content Include="theme\default\img\zoom-panel-NOALPHA.png" />
+    <Content Include="theme\default\img\zoom-panel.png" />
+    <Content Include="theme\default\style.css" />
+    <Content Include="Views\Home\Poly.aspx" />
+    <Content Include="Web.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App_Data\nyc\poi.dbf" />
+    <None Include="App_Data\nyc\poi.prj" />
+    <None Include="App_Data\nyc\poi.shp" />
+    <None Include="App_Data\nyc\poi.shx" />
+    <None Include="App_Data\nyc\poly_landmarks.dbf" />
+    <None Include="App_Data\nyc\poly_landmarks.prj" />
+    <None Include="App_Data\nyc\poly_landmarks.shp" />
+    <None Include="App_Data\nyc\poly_landmarks.shx" />
+    <None Include="App_Data\nyc\tiger_roads.dbf" />
+    <None Include="App_Data\nyc\tiger_roads.prj" />
+    <None Include="App_Data\nyc\tiger_roads.shp" />
+    <None Include="App_Data\nyc\tiger_roads.shx" />
+    <None Include="art\arrows.svg" />
+    <None Include="art\layer-switcher-maximize.svg" />
+    <None Include="art\layer-switcher-minimize.svg" />
+    <None Include="art\marker.svg" />
+    <None Include="art\measuring-stick-off.svg" />
+    <None Include="art\measuring-stick-on.svg" />
+    <None Include="art\panning-hand-off.svg" />
+    <None Include="art\panning-hand-on.svg" />
+    <None Include="art\slider.svg" />
+    <None Include="art\zoom-world.svg" />
+    <None Include="art\zoombar.svg" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v9.0\WebApplications\Microsoft.WebApplication.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target> -->
+  <Target Name="AfterBuild" Condition="'$(MvcBuildViews)'=='true'">
+    <AspNetCompiler VirtualPath="temp" PhysicalPath="$(ProjectDir)" />
+  </Target>
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>False</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>53449</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>
+          </IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+</Project>

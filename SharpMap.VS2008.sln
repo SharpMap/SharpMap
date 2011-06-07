@@ -81,6 +81,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PostGisDb", "PostGisDb", "{
 		PostgisDemoDb\ReadMe.txt = PostgisDemoDb\ReadMe.txt
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpMap.Demo.Wms", "SharpMap.Demo.Wms\SharpMap.Demo.Wms.csproj", "{7EF67DF8-D868-4177-8817-4CC2E94ABD66}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|.NET = Debug|.NET
@@ -186,6 +188,16 @@ Global
 		{A4184D38-C5A6-4E01-9D1C-8C63791AF825}.Release|Any CPU.Build.0 = Release|Any CPU
 		{A4184D38-C5A6-4E01-9D1C-8C63791AF825}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{A4184D38-C5A6-4E01-9D1C-8C63791AF825}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{7EF67DF8-D868-4177-8817-4CC2E94ABD66}.Debug|.NET.ActiveCfg = Debug|Any CPU
+		{7EF67DF8-D868-4177-8817-4CC2E94ABD66}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7EF67DF8-D868-4177-8817-4CC2E94ABD66}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7EF67DF8-D868-4177-8817-4CC2E94ABD66}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{7EF67DF8-D868-4177-8817-4CC2E94ABD66}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{7EF67DF8-D868-4177-8817-4CC2E94ABD66}.Release|.NET.ActiveCfg = Release|Any CPU
+		{7EF67DF8-D868-4177-8817-4CC2E94ABD66}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7EF67DF8-D868-4177-8817-4CC2E94ABD66}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7EF67DF8-D868-4177-8817-4CC2E94ABD66}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{7EF67DF8-D868-4177-8817-4CC2E94ABD66}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
