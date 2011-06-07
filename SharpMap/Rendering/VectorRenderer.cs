@@ -604,6 +604,23 @@ namespace SharpMap.Rendering
                 DrawPoint(g, points.Points[i], symbol, symbolscale, offset, rotation, map);
         }
 
+        /// <summary>
+        /// Renders a <see cref="SharpMap.Geometries.MultiPoint"/> to the map.
+        /// </summary>
+        /// <param name="g">Graphics reference</param>
+        /// <param name="points">MultiPoint to render</param>
+        /// <param name="brush">Brush reference</param>
+        /// <param name="size">Size of drawn Point</param>
+        /// <param name="offset">Symbol offset af scale=1</param>
+        /// <param name="map">Map reference</param>
+        [MethodImpl(MethodImplOptions.Synchronized)]
+        public static void DrawMultiPoint(Graphics g, MultiPoint points, Brush brush, float size, PointF offset, Map map)
+        {
+            for (int i = 0; i < points.Points.Count; i++)
+                DrawPoint(g, points.Points[i], brush, size, offset, map);
+        }
+
+
         #region Nested type: ClipState
 
         private enum ClipState

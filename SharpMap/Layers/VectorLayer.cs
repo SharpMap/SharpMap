@@ -395,8 +395,15 @@ namespace SharpMap.Layers
                     break;
                 case GeometryType2.MultiPoint:
                 //case "SharpMap.Geometries.MultiPoint":
-                    VectorRenderer.DrawMultiPoint(g, (MultiPoint) feature, style.Symbol, style.SymbolScale,
+                    if (style.Symbol != null || style.PointColor == null)
+                    {
+                        VectorRenderer.DrawMultiPoint(g, (MultiPoint) feature, style.Symbol, style.SymbolScale,
                                                   style.SymbolOffset, style.SymbolRotation, map);
+                    }
+                    else
+                    {
+                        VectorRenderer.DrawMultiPoint(g, (MultiPoint)feature, style.PointColor, style.PointSize, style.SymbolOffset, map);
+                    }
                     break;
                 case GeometryType2.GeometryCollection:
                 //case "SharpMap.Geometries.GeometryCollection":
