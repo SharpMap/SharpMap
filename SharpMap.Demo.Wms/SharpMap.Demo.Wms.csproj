@@ -84,7 +84,7 @@
     <Content Include="Views\Web.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Home\Index.aspx" />
+    <Content Include="Views\Home\Openlayers.aspx" />
     <Content Include="Wms.ashx" />
   </ItemGroup>
   <ItemGroup>
@@ -470,7 +470,7 @@
     <Content Include="theme\default\img\zoom-panel-NOALPHA.png" />
     <Content Include="theme\default\img\zoom-panel.png" />
     <Content Include="theme\default\style.css" />
-    <Content Include="Views\Home\Poly.aspx" />
+    <Content Include="Views\Home\Polymaps.aspx" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>

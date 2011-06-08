@@ -6,10 +6,15 @@
     {
         public ActionResult Index()
         {
+            return this.RedirectToAction("Openlayers");
+        }
+
+        public ActionResult Openlayers()
+        {
             return this.View();
         }
 
-        public ActionResult Poly()
+        public ActionResult Polymaps()
         {
             return this.View();
         }
