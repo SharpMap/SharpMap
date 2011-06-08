@@ -350,7 +350,7 @@ namespace SharpMap
             //Pauses the timer for VariableLayer
             VariableLayerCollection.Pause = true;
 
-            if (Layers == null || Layers.Count == 0)
+            if ((Layers == null || Layers.Count == 0) && (BackgroundLayer == null || BackgroundLayer.Count == 0) && (_variableLayers == null || _variableLayers.Count == 0))
                 throw new InvalidOperationException("No layers to render");
 
             g.Transform = MapTransform;
@@ -359,24 +359,44 @@ namespace SharpMap
 
 
             //int srid = (Layers.Count > 0 ? Layers[0].SRID : -1); //Get the SRID of the first layer
-            ILayer[] layerList = new ILayer[_Layers.Count];
-            _Layers.CopyTo(layerList, 0);
-
-            //int srid = (Layers.Count > 0 ? Layers[0].SRID : -1); //Get the SRID of the first layer
-            foreach (ILayer layer in layerList)
+            ILayer[] layerList;
+            if (_backgroundLayers != null && _backgroundLayers.Count > 0)
             {
-                OnLayerRendering(layer, LayerCollectionType.Static);
-                if (layer.Enabled && layer.MaxVisible >= Zoom && layer.MinVisible < Zoom)
-                    layer.Render(g, this);
-                OnLayerRendered(layer, LayerCollectionType.Static);
+                layerList = new ILayer[_backgroundLayers.Count];
+                _backgroundLayers.CopyTo(layerList, 0);
+                foreach (ILayer layer in layerList)
+                {
+                    OnLayerRendering(layer, LayerCollectionType.Background);
+                    if (layer.Enabled && layer.MaxVisible >= Zoom && layer.MinVisible < Zoom)
+                        layer.Render(g, this);
+                    OnLayerRendered(layer, LayerCollectionType.Background);
+                }
             }
 
-            layerList = new ILayer[_variableLayers.Count];
-            _variableLayers.CopyTo(layerList, 0);
-            foreach (ILayer layer in layerList)
+            if (_Layers != null && _Layers.Count > 0)
             {
-                if (layer.Enabled && layer.MaxVisible >= Zoom && layer.MinVisible < Zoom)
-                    layer.Render(g, this);
+                layerList = new ILayer[_Layers.Count];
+                _Layers.CopyTo(layerList, 0);
+
+                //int srid = (Layers.Count > 0 ? Layers[0].SRID : -1); //Get the SRID of the first layer
+                foreach (ILayer layer in layerList)
+                {
+                    OnLayerRendering(layer, LayerCollectionType.Static);
+                    if (layer.Enabled && layer.MaxVisible >= Zoom && layer.MinVisible < Zoom)
+                        layer.Render(g, this);
+                    OnLayerRendered(layer, LayerCollectionType.Static);
+                }
+            }
+
+            if (_variableLayers != null && _variableLayers.Count > 0)
+            {
+                layerList = new ILayer[_variableLayers.Count];
+                _variableLayers.CopyTo(layerList, 0);
+                foreach (ILayer layer in layerList)
+                {
+                    if (layer.Enabled && layer.MaxVisible >= Zoom && layer.MinVisible < Zoom)
+                        layer.Render(g, this);
+                }
             }
 
             //Resets the timer for VariableLayer
