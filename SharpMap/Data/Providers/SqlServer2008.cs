@@ -80,9 +80,22 @@ namespace SharpMap.Data.Providers
         /// <param name="geometryColumnName">Name of geometry column</param>   
         /// <param name="oidColumnName">Name of column with unique identifier</param>   
         /// <param name="spatialObjectType">The type of the spatial object to use for spatial queries</param>
-        public SqlServer2008(string connectionStr, string tablename, string geometryColumnName, string oidColumnName, SqlServerSpatialObjectType spatialObjectType)   
+        public SqlServer2008(string connectionStr, string tablename, string geometryColumnName, string oidColumnName, SqlServerSpatialObjectType spatialObjectType)
+            :this(connectionStr,tablename,geometryColumnName, oidColumnName, spatialObjectType,false)
+        {
+        }
+
+        /// <summary>   
+        /// Initializes a new connection to SQL Server   
+        /// </summary>   
+        /// <param name="connectionStr">Connectionstring</param>   
+        /// <param name="tablename">Name of data table</param>   
+        /// <param name="geometryColumnName">Name of geometry column</param>   
+        /// <param name="oidColumnName">Name of column with unique identifier</param>   
+        /// <param name="spatialObjectType">The type of the spatial object to use for spatial queries</param>
+        /// <param name="useSpatialIndexExtentAsExtent">If true, the bounds of the spatial index is used for the GetExtents() method which heavily increases performance instead of reading through all features in the table</param>
+        public SqlServer2008(string connectionStr, string tablename, string geometryColumnName, string oidColumnName, SqlServerSpatialObjectType spatialObjectType, bool useSpatialIndexExtentAsExtent)   
         {   
-            //Provider=SQLOLEDB.1;Integrated Security=SSPI;Persist Security Info=False;Initial Catalog=ztTest;Data Source=<server>\<instance>   
             ConnectionString = connectionStr;   
             Table = tablename;   
             GeometryColumn = geometryColumnName;   
@@ -98,6 +111,8 @@ namespace SharpMap.Data.Providers
                     _spatialObject = "geography";
                     break;
             }
+
+            _UseSpatialIndexExtentAsExtent = useSpatialIndexExtentAsExtent;
         }
 
         /// <summary>   
@@ -123,6 +138,7 @@ namespace SharpMap.Data.Providers
         {
         }
 
+        private bool _UseSpatialIndexExtentAsExtent = false;
         private bool _isOpen;   
   
         /// <summary>   
@@ -557,30 +573,54 @@ namespace SharpMap.Data.Providers
        public BoundingBox GetExtents()   
        {   
            using (SqlConnection conn = new SqlConnection(_connectionString))   
-           {   
-               //string strSQL = "SELECT g." + GeometryColumn + ".STEnvelope().STAsText() FROM " + Table + " g ";   
-               var strSQL = String.Format("SELECT g.{0}{1}.STEnvelope().STAsText() FROM {2} g ",
-                   GeometryColumn, MakeValidString, Table);
+           {
 
-               if (!String.IsNullOrEmpty(_defintionQuery))   
-                   strSQL += " WHERE " + DefinitionQuery;   
-               using (SqlCommand command = new SqlCommand(strSQL, conn))   
-               {   
-                   conn.Open();   
-                   //Geometry geom = null;   
-                   BoundingBox bx = null;   
-                   SqlDataReader dr = command.ExecuteReader();   
-                   while (dr.Read())   
-                   {   
-                       string wkt = dr.GetString(0); //[GeometryColumn];   
-                       Geometry g = Converters.WellKnownText.GeometryFromWKT.Parse(wkt);   
-                       BoundingBox bb = g.GetBoundingBox();   
-                       bx = bx == null ? bb : bx.Join(bb);   
-                   }   
-                   dr.Close();   
-                   conn.Close();   
-                   return bx;   
-               }   
+               if (_UseSpatialIndexExtentAsExtent)
+               {
+                   var sql = "select bounding_box_xmin,bounding_box_xmax,bounding_box_ymin,bounding_box_ymax from sys.spatial_index_tessellations where object_id  = (select object_id from sys.tables where name = '" + _table + "' and type_desc = 'USER_TABLE')";
+                   using (SqlCommand command = new SqlCommand(sql, conn))
+                   {
+                       conn.Open();
+                       //Geometry geom = null;   
+                       BoundingBox bx = null;
+                        SqlDataReader dr = command.ExecuteReader();
+                        if (dr.Read())
+                        {
+                            bx = new BoundingBox(Convert.ToDouble(dr["bounding_box_xmin"]),
+                                Convert.ToDouble(dr["bounding_box_xmax"]),
+                                Convert.ToDouble(dr["bounding_box_ymin"]),
+                                Convert.ToDouble(dr["bounding_box_ymax"]));
+                        }
+                        dr.Close();
+                        return bx;                       
+                   }
+               }
+               else
+               {
+                   //string strSQL = "SELECT g." + GeometryColumn + ".STEnvelope().STAsText() FROM " + Table + " g ";   
+                   var strSQL = String.Format("SELECT g.{0}{1}.STEnvelope().STAsText() FROM {2} g ",
+                       GeometryColumn, MakeValidString, Table);
+
+                   if (!String.IsNullOrEmpty(_defintionQuery))
+                       strSQL += " WHERE " + DefinitionQuery;
+                   using (SqlCommand command = new SqlCommand(strSQL, conn))
+                   {
+                       conn.Open();
+                       //Geometry geom = null;   
+                       BoundingBox bx = null;
+                       SqlDataReader dr = command.ExecuteReader();
+                       while (dr.Read())
+                       {
+                           string wkt = dr.GetString(0); //[GeometryColumn];   
+                           Geometry g = Converters.WellKnownText.GeometryFromWKT.Parse(wkt);
+                           BoundingBox bb = g.GetBoundingBox();
+                           bx = bx == null ? bb : bx.Join(bb);
+                       }
+                       dr.Close();
+                       conn.Close();
+                       return bx;
+                   }
+               }
            }   
        }   
  
