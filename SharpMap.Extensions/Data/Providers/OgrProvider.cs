@@ -15,28 +15,29 @@
 // along with SharpMap; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
 
-using System;
-using System.Collections.ObjectModel;
-using System.Diagnostics;
-//using OSGeo.OGR;
-using SharpMap.Converters.WellKnownBinary;
-using SharpMap.Extensions.Data;
-using SharpMap.Geometries;
-using Geometry=SharpMap.Geometries.Geometry;
-using OgrOgr = OSGeo.OGR.Ogr;
-using OgrDataSource = OSGeo.OGR.DataSource;
-using OgrLayer = OSGeo.OGR.Layer;
-using OgrGeometry = OSGeo.OGR.Geometry;
-using OgrEnvelope = OSGeo.OGR.Envelope;
-using OgrFeature = OSGeo.OGR.Feature;
-using OgrFeatureDefn = OSGeo.OGR.FeatureDefn;
-using OgrFieldDefn = OSGeo.OGR.FieldDefn;
-using OgrFieldType = OSGeo.OGR.FieldType;
-using OsrSpatialReference = OSGeo.OSR.SpatialReference;
-using OgrGeometryType = OSGeo.OGR.wkbGeometryType;
-
 namespace SharpMap.Data.Providers
 {
+    using System;
+    using System.Collections.ObjectModel;
+    using System.Diagnostics;
+
+    using SharpMap.Converters.WellKnownBinary;
+    using SharpMap.Extensions.Data;
+    using SharpMap.Geometries;
+
+    using Geometry = SharpMap.Geometries.Geometry;
+    using OgrDataSource = OSGeo.OGR.DataSource;
+    using OgrEnvelope = OSGeo.OGR.Envelope;
+    using OgrFeature = OSGeo.OGR.Feature;
+    using OgrFeatureDefn = OSGeo.OGR.FeatureDefn;
+    using OgrFieldDefn = OSGeo.OGR.FieldDefn;
+    using OgrFieldType = OSGeo.OGR.FieldType;
+    using OgrGeometry = OSGeo.OGR.Geometry;
+    using OgrGeometryType = OSGeo.OGR.wkbGeometryType;
+    using OgrLayer = OSGeo.OGR.Layer;
+    using OgrOgr = OSGeo.OGR.Ogr;
+    using OsrSpatialReference = OSGeo.OSR.SpatialReference;
+
     /// <summary>
     /// Ogr provider for SharpMap
     /// Using the csharp and native dlls provided with FwTools. See version FWToolsVersion property below.
@@ -48,12 +49,6 @@ namespace SharpMap.Data.Providers
     [Serializable]
     public class Ogr : IProvider
     {
-        static Ogr()
-        {
-            FwToolsHelper.Configure();
-            OgrOgr.RegisterAll();
-        }
-
         #region Fields
 
         [NonSerialized]
@@ -63,7 +58,30 @@ namespace SharpMap.Data.Providers
         [NonSerialized]
         private OgrLayer _ogrLayer;
         private String _filename;
-        private String _definitionQuery = "";
+        private String _definitionQuery = string.Empty;
+
+        /// <summary>
+        /// Value indicating if the datasource is currently open or not
+        /// </summary>
+        private bool _isOpen;
+
+        /// <summary>
+        /// Spatial Reference ID
+        /// </summary>
+        private int _srid = -1;
+
+        #endregion
+
+        #region Static
+
+        /// <summary>
+        /// Initializes static members of the <see cref="Ogr"/> class.
+        /// </summary>
+        static Ogr()
+        {
+            FwToolsHelper.Configure();
+            OgrOgr.RegisterAll();
+        }
 
         #endregion
 
@@ -78,7 +96,7 @@ namespace SharpMap.Data.Providers
         }
 
         /// <summary>
-        /// return the file name of the datasource
+        /// Gets or sets the file name of the datasource
         /// </summary>
         public string Filename
         {
@@ -96,8 +114,7 @@ namespace SharpMap.Data.Providers
         {
             get
             {
-                Int32 numberOfLayers = 0;
-                numberOfLayers = _ogrDataSource.GetLayerCount();
+                int numberOfLayers = _ogrDataSource.GetLayerCount();;
                 return numberOfLayers;
             }
         }
@@ -135,10 +152,10 @@ namespace SharpMap.Data.Providers
         /// <summary>
         /// Get the name of the layer set or set the layer by its name
         /// </summary>
-        ///<remarks>
+        /// <remarks> 
         /// If the name set is not within the layer collection of the
         /// datasource the old layer is kept.
-        ///</remarks>
+        /// </remarks>
         public string LayerName
         {
             get { return _ogrLayer.GetLayerDefn().GetName(); }
@@ -181,16 +198,21 @@ namespace SharpMap.Data.Providers
         #region Constructors
 
         /// <summary>
-        /// Loads a Ogr datasource with the specified layer
+        /// Initializes a new instance of the <see cref="Ogr"/> class. 
         /// </summary>
-        /// <param name="filename">datasource</param>
-        /// <param name="layerName">name of layer</param>
-        ///If you want this functionality use
-        ///<example>
-        ///SharpMap.Data.Providers.Ogr prov = new SharpMap.Data.Providers.Ogr(datasource);
-        ///prov.LayerName = layerName;
-        ///</example>
-        ///</remarks>
+        /// <param name="filename">
+        /// datasource
+        /// </param>
+        /// <param name="layerName">
+        /// name of layer
+        /// </param>
+        /// <remarks>
+        /// If you want this functionality use
+        /// <example>
+        /// SharpMap.Data.Providers.Ogr prov = new SharpMap.Data.Providers.Ogr(datasource);
+        /// prov.LayerName = layerName;
+        /// </example>
+        /// </remarks>
         [Obsolete("This constructor does not work well with VB.NET. Use LayerName property instead")]
         public Ogr(string filename, string layerName)
         {
@@ -225,12 +247,13 @@ namespace SharpMap.Data.Providers
         /// <param name="datasource">datasource</param>
         /// <param name="layerNum">number of layer</param>
         /// <param name="name">Returns the name of the loaded layer</param>
-        ///If you want this functionality use
-        ///<example>
-        ///SharpMap.Data.Providers.Ogr prov = new SharpMap.Data.Providers.Ogr(datasource, layerNum);
-        ///string layerName = prov.Layername;
-        ///</example>
-        ///</remarks>
+        /// <remarks>
+        /// If you want this functionality use
+        /// <example>
+        /// SharpMap.Data.Providers.Ogr prov = new SharpMap.Data.Providers.Ogr(datasource, layerNum);
+        /// string layerName = prov.Layername;
+        /// </example>
+        /// </remarks>
         [Obsolete("This constructor does not work well with VB.NET. Use LayerName property instead")]
         public Ogr(string datasource, int layerNum, out string name)
             : this(datasource, layerNum)
@@ -252,14 +275,14 @@ namespace SharpMap.Data.Providers
         /// </summary>
         /// <param name="datasource">datasource</param>
         /// <param name="name">Returns the name of the loaded layer</param>
-        ///<remarks>
-        ///This constructor is obsolete!
-        ///If you want this functionality use
-        ///<example>
-        ///SharpMap.Data.Providers.Ogr prov = new SharpMap.Data.Providers.Ogr(datasource);
-        ///string layerName = prov.Layername;
-        ///</example>
-        ///</remarks>
+        /// <remarks>
+        /// This constructor is obsolete!
+        /// If you want this functionality use
+        /// <example>
+        /// SharpMap.Data.Providers.Ogr prov = new SharpMap.Data.Providers.Ogr(datasource);
+        /// string layerName = prov.Layername;
+        /// </example>
+        /// </remarks>
         [Obsolete("This constructor does not work well with VB.NET. Use LayerName property instead")]
         public Ogr(string datasource, out string name)
             : this(datasource, 0, out name)
@@ -268,8 +291,6 @@ namespace SharpMap.Data.Providers
 
         #endregion
 
-        private bool _isOpen;
-        private int _srid = -1;
 
         #region IProvider Members
 
@@ -379,7 +400,7 @@ namespace SharpMap.Data.Providers
         public Geometry GetGeometryByID(uint oid)
         {
             using (OgrFeature ogrFeature = _ogrLayer.GetFeature((int)oid))
-                return ParseOgrGeometry(ogrFeature.GetGeometryRef());
+                return OgrGeometryToGeometry(ogrFeature.GetGeometryRef());
         }
 
         /// <summary>
@@ -399,7 +420,7 @@ namespace SharpMap.Data.Providers
             {
                 while ((ogrFeature = _ogrLayer.GetNextFeature()) != null)
                 {
-                    Geometry geom = ParseOgrGeometry(ogrFeature.GetGeometryRef());
+                    Geometry geom = OgrGeometryToGeometry(ogrFeature.GetGeometryRef());
                     if (geom != null) geoms.Add(geom);
                     ogrFeature.Dispose();
                 }
@@ -413,7 +434,7 @@ namespace SharpMap.Data.Providers
         }
 
         /// <summary>
-        /// The spatial reference ID (CRS)
+        /// Gets or sets the spatial reference ID (CRS)
         /// </summary>
         public int SRID
         {
@@ -545,7 +566,7 @@ namespace SharpMap.Data.Providers
                                 break;
                             default:
                                 {
-                                    //fdt.Columns.Add(_OgrFldDef.GetName(), System.Type.GetType("System.String"));
+                                    // fdt.Columns.Add(_OgrFldDef.GetName(), System.Type.GetType("System.String"));
                                     Debug.WriteLine("Not supported type: " + type + " [" + ogrFldDef.GetName() + "]");
                                     break;
                                 }
@@ -555,61 +576,92 @@ namespace SharpMap.Data.Providers
             }
         }
 
-        private static Geometry ParseOgrGeometry(OgrGeometry ogrGeometry)
+        /// <summary>
+        /// Converts <see cref="OgrGeometry"/> to <see cref="Geometry"/>
+        /// </summary>
+        /// <param name="ogrGeometry">
+        /// The OGR geometry.
+        /// </param>
+        /// <returns>
+        /// The SharpMap geometry
+        /// </returns>
+        private static Geometry OgrGeometryToGeometry(OgrGeometry ogrGeometry)
         {
             if (ogrGeometry != null)
             {
-                //Just in case it isn't 2D
+                // Just in case it isn't 2D
                 ogrGeometry.FlattenTo2D();
                 byte[] wkbBuffer = new byte[ogrGeometry.WkbSize()];
                 ogrGeometry.ExportToWkb(wkbBuffer);
                 Geometry geom = GeometryFromWKB.Parse(wkbBuffer);
                 if (geom == null)
+                {
                     Debug.WriteLine(string.Format("Failed to parse '{0}'", ogrGeometry.GetGeometryType()));
+                }
+
                 return geom;
             }
             return null;
         }
 
-        private static FeatureDataRow OgrFeatureToFeatureDataRow(FeatureDataTable table, OSGeo.OGR.Feature ogrFeature)
+        /// <summary>
+        /// Converts an <see cref="OgrFeature"/> to a <see cref="FeatureDataRow"/>
+        /// </summary>
+        /// <remarks>The newly created row is not added to the table</remarks>
+        /// <param name="table">
+        /// The base table for the feature data row.
+        /// </param>
+        /// <param name="ogrFeature">
+        /// The ogr feature.
+        /// </param>
+        /// <returns>
+        /// The feature data row
+        /// </returns>
+        private static FeatureDataRow OgrFeatureToFeatureDataRow(FeatureDataTable table, OgrFeature ogrFeature)
         {
             FeatureDataRow fdr = table.NewRow();
-            Int32 fdrIndex = 0;
-            for (int iField = 0; iField < ogrFeature.GetFieldCount(); iField++)
+            int fdrIndex = 0;
+            for (int field = 0; field < ogrFeature.GetFieldCount(); field++)
             {
-                switch (ogrFeature.GetFieldType(iField))
+                if (!ogrFeature.IsFieldSet(field))
+                {
+                    fdr[fdrIndex++] = DBNull.Value;
+                    continue;
+                }
+
+                switch (ogrFeature.GetFieldType(field))
                 {
                     case OgrFieldType.OFTString:
                     case OgrFieldType.OFTWideString:
-                        fdr[fdrIndex++] = ogrFeature.GetFieldAsString(iField);
+                        fdr[fdrIndex++] = ogrFeature.GetFieldAsString(field);
                         break;
                     case OgrFieldType.OFTStringList:
                     case OgrFieldType.OFTWideStringList:
                         break;
                     case OgrFieldType.OFTInteger:
-                        fdr[fdrIndex++] = ogrFeature.GetFieldAsInteger(iField);
+                        fdr[fdrIndex++] = ogrFeature.GetFieldAsInteger(field);
                         break;
                     case OgrFieldType.OFTIntegerList:
                         break;
                     case OgrFieldType.OFTReal:
-                        fdr[fdrIndex++] = ogrFeature.GetFieldAsDouble(iField);
+                        fdr[fdrIndex++] = ogrFeature.GetFieldAsDouble(field);
                         break;
                     case OgrFieldType.OFTRealList:
                         break;
                     case OgrFieldType.OFTDate:
                     case OgrFieldType.OFTDateTime:
                     case OgrFieldType.OFTTime:
-                        Int32 y, m, d, h, mi, s, tz;
-                        ogrFeature.GetFieldAsDateTime(iField, out y, out m, out d, out h, out mi, out s, out tz);
+                        int y, m, d, h, mi, s, tz;
+                        ogrFeature.GetFieldAsDateTime(field, out y, out m, out d, out h, out mi, out s, out tz);
                         fdr[fdrIndex++] = new DateTime(y, m, d, h, mi, s);
                         break;
                     default:
-                        Debug.WriteLine(string.Format("Cannot handle Ogr DataType '{0}'", ogrFeature.GetFieldType(iField)));
+                        Debug.WriteLine(string.Format("Cannot handle Ogr DataType '{0}'", ogrFeature.GetFieldType(field)));
                         break;
                 }
             }
 
-            fdr.Geometry = ParseOgrGeometry(ogrFeature.GetGeometryRef());
+            fdr.Geometry = OgrGeometryToGeometry(ogrFeature.GetGeometryRef());
             return fdr;
         }
 
@@ -638,24 +690,8 @@ namespace SharpMap.Data.Providers
                 {
                     FeatureDataRow dr = OgrFeatureToFeatureDataRow(myDt, ogrFeature);
                     myDt.AddRow(dr);
-                    /*
-                    myDt.NewRow();
-                    for (int iField = 0; iField < ogrFeature.GetFieldCount(); iField++)
-                    {
-                        if (myDt.Columns[iField].DataType == Type.GetType("System.String"))
-                            dr[iField] = ogrFeature.GetFieldAsString(iField);
-                        else if (myDt.Columns[iField].GetType() == Type.GetType("System.Int32"))
-                            dr[iField] = ogrFeature.GetFieldAsInteger(iField);
-                        else if (myDt.Columns[iField].GetType() == Type.GetType("System.Double"))
-                            dr[iField] = ogrFeature.GetFieldAsDouble(iField);
-                        else
-                            dr[iField] = ogrFeature.GetFieldAsString(iField);
-                    }
-
-                    dr.Geometry = ParseOgrGeometry(ogrFeature.GetGeometryRef());
-                    myDt.AddRow(dr);
-                     */
                 }
+
                 ds.Tables.Add(myDt);
                 _ogrDataSource.ReleaseResultSet(results);
 
