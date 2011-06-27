@@ -318,15 +318,18 @@ namespace SharpMap.Layers
         {
             get
             {
-                if (DataSource == null)
-                    throw (new ApplicationException("DataSource property not set on layer '" + LayerName + "'"));
-
                 bool wasOpen = DataSource.IsOpen;
                 if (!wasOpen)
                     DataSource.Open();
                 BoundingBox box = DataSource.GetExtents();
                 if (!wasOpen) //Restore state
                     DataSource.Close();
+                if (CoordinateTransformation != null)
+#if !DotSpatialProjections
+                    return GeometryTransform.TransformBox(box, CoordinateTransformation.MathTransform);
+#else
+                    return GeometryTransform.TransformBox(box, CoordinateTransformation.Source, CoordinateTransformation.Target);
+#endif
                 return box;
             }
         }
