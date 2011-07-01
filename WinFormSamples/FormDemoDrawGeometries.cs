@@ -12,6 +12,12 @@ using SharpMap.Rendering.Thematics;
 using BruTile.Web;
 using SharpMap.Data.Providers;
 
+#if DotSpatialProjections
+using GeometryTransform = DotSpatial.Projections.GeometryTransform;
+#else
+using GeometryTransform = ProjNet.CoordinateSystems.Transformations.GeometryTransform;
+#endif
+
 namespace WinFormSamples
 {
     public partial class FormDemoDrawGeometries : Form
@@ -50,7 +56,24 @@ namespace WinFormSamples
             vl.DataSource = geoProvider;
             this.mapBox1.Map.Layers.Add(vl);
 
-            SharpMap.Geometries.BoundingBox geom = ProjNet.CoordinateSystems.Transformations.GeometryTransform.TransformBox(new SharpMap.Geometries.BoundingBox(-9.205626, 38.690993, -9.123736, 38.740837), LayerTools.Wgs84toGoogleMercator.MathTransform);
+            /*
+             * SharpMap.Geometries.BoundingBox geom = 
+             *     ProjNet.CoordinateSystems.Transformations.GeometryTransform.TransformBox(
+             *         new SharpMap.Geometries.BoundingBox(-9.205626, 38.690993, -9.123736, 38.740837), 
+             *         LayerTools.Wgs84toGoogleMercator.MathTransform);
+             */
+
+#if DotSpatialProjections
+            var mathTransform = LayerTools.Wgs84toGoogleMercator;
+            SharpMap.Geometries.BoundingBox geom = GeometryTransform.TransformBox(
+                new SharpMap.Geometries.BoundingBox(-9.205626, 38.690993, -9.123736, 38.740837),
+                mathTransform.Source, mathTransform.Target);
+#else
+            var mathTransform = LayerTools.Wgs84toGoogleMercator.MathTransform;
+            SharpMap.Geometries.BoundingBox geom = GeometryTransform.TransformBox(
+                new SharpMap.Geometries.BoundingBox(-9.205626, 38.690993, -9.123736, 38.740837),
+                mathTransform);
+#endif
 
             this.mapBox1.Map.ZoomToExtents(); //(geom);
             this.mapBox1.Refresh();

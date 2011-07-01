@@ -52,6 +52,7 @@ namespace WinFormSamples
                         mapImage.ActiveTool = MapImage.Tools.Pan;
                         break;
                     case "TileLayer - OSM":
+                    case "TileLayer - OSM with XLS":
                     case "TileLayer - Bing Roads":
                     case "TileLayer - Bing Aerial":
                     case "TileLayer - Bing Hybrid":

@@ -1,6 +1,3 @@
-using System;
-using System.Drawing.Drawing2D;
-
 namespace WinFormSamples.Samples
 {
     public static class SpatiaLiteSample
@@ -36,7 +33,7 @@ namespace WinFormSamples.Samples
                 DataSource, "rivers", "geom", "PK_UID");
             //Define a blue 3px wide pen
             layRivers.Style.Line = new System.Drawing.Pen(System.Drawing.Color.LightBlue, 2);
-            layRivers.Style.Line.CompoundArray = new float[] { 0.2f, 0.8f };
+            layRivers.Style.Line.CompoundArray = new[] { 0.2f, 0.8f };
             layRivers.Style.Outline = new System.Drawing.Pen(System.Drawing.Color.DarkBlue, 3);
             layRivers.Style.EnableOutline = true;
 
@@ -76,8 +73,8 @@ namespace WinFormSamples.Samples
                 PriorityColumn = "population",
                 PriorityDelegate = delegate(SharpMap.Data.FeatureDataRow fdr) 
                 { 
-                    Int32 retVal = 10000000 * ( (String)fdr["capital"] == "Y" ? 1 : 0 );
-                    return  retVal + Convert.ToInt32(fdr["population"]);
+                    System.Int32 retVal = 10000000 * ( (System.String)fdr["capital"] == "Y" ? 1 : 0 );
+                    return  retVal + System.Convert.ToInt32(fdr["population"]);
                 },
                 TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAlias,
                 SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias,
@@ -109,7 +106,7 @@ namespace WinFormSamples.Samples
 
             map.ZoomToExtents(); // = 360;
             //map.Center = new SharpMap.Geometries.Point(0, 0);
-            Matrix mat = new Matrix();
+            System.Drawing.Drawing2D.Matrix mat = new System.Drawing.Drawing2D.Matrix();
             mat.RotateAt(angle, map.WorldToImage(map.Center));
             map.MapTransform = mat;
 

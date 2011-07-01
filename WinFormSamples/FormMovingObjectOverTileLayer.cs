@@ -12,6 +12,12 @@ using SharpMap.Rendering.Thematics;
 using BruTile.Web;
 using WinFormSamples.Properties;
 
+#if DotSpatialProjections
+using GeometryTransform = DotSpatial.Projections.GeometryTransform;
+#else
+using GeometryTransform = ProjNet.CoordinateSystems.Transformations.GeometryTransform;
+#endif
+
 namespace WinFormSamples
 {
     public partial class FormMovingObjectOverTileLayer : Form
@@ -35,9 +41,19 @@ namespace WinFormSamples
         {
 
             //Lisbon...
-            SharpMap.Geometries.BoundingBox geom = ProjNet.CoordinateSystems.Transformations.GeometryTransform.TransformBox(new SharpMap.Geometries.BoundingBox(-9.205626, 38.690993, -9.123736, 38.740837), LayerTools.Wgs84toGoogleMercator.MathTransform);
+#if DotSpatialProjections
+            var mathTransform = LayerTools.Wgs84toGoogleMercator;
+            SharpMap.Geometries.BoundingBox geom = GeometryTransform.TransformBox(
+                new SharpMap.Geometries.BoundingBox(-9.205626, 38.690993, -9.123736, 38.740837),
+                mathTransform.Source, mathTransform.Target);
+#else
+            var mathTransform = LayerTools.Wgs84toGoogleMercator.MathTransform;
+            SharpMap.Geometries.BoundingBox geom = GeometryTransform.TransformBox(
+                new SharpMap.Geometries.BoundingBox(-9.205626, 38.690993, -9.123736, 38.740837),
+                mathTransform);
+#endif
 
-            
+
             //Google Background
             TileAsyncLayer bingLayer = new TileAsyncLayer(new BingTileSource(BingRequest.UrlBing, "",BingMapType.Roads), "TileLayer - Bing" );
             this.mapBox1.Map.BackgroundLayer.Add(bingLayer);

@@ -17,7 +17,7 @@ namespace WinFormSamples.Samples
         //Disclaimer
         //The used GeoData is from www.openstreetmap.org licenced CC-by-SA
         //Transformed to shapefile by Geofabrik (http://www.geofabrik.de)
-        private const string PathOsm = "GeoData/OSM";
+        public const string PathOsm = "GeoData/OSM";
 
 
         private static SharpMap.Geometries.BoundingBox _roadsExtents;

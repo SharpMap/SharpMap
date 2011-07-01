@@ -49,7 +49,7 @@
     <DefineConstants>TRACE;DEBUG</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <PlatformTarget>AnyCPU</PlatformTarget>
+    <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
@@ -67,7 +67,7 @@
     <OutputPath>bin\DebugDSProjection\</OutputPath>
     <DefineConstants>TRACE;DEBUG;DotSpatialProjections</DefineConstants>
     <DebugType>full</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
+    <PlatformTarget>x86</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisIgnoreBuiltInRuleSets>true</CodeAnalysisIgnoreBuiltInRuleSets>
     <CodeAnalysisIgnoreBuiltInRules>true</CodeAnalysisIgnoreBuiltInRules>
@@ -152,6 +152,7 @@
     </Compile>
     <Compile Include="LayerTools.cs" />
     <Compile Include="Samples\GdalSample.cs" />
+    <Compile Include="Samples\GeometryFeatureProviderSample.cs" />
     <Compile Include="Samples\GradiantThemeSample.cs" />
     <Compile Include="Samples\OracleSample.cs" />
     <None Include="Resources\view_top_bottom.png" />

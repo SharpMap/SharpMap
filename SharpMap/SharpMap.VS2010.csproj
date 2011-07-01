@@ -36,14 +36,14 @@
     <WarningLevel>4</WarningLevel>
     <UseVSHostingProcess>true</UseVSHostingProcess>
     <DocumentationFile>bin\Debug\SharpMap.XML</DocumentationFile>
-    <PlatformTarget>AnyCPU</PlatformTarget>
+    <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
+    <DefineConstants>TRACE;UseMapBox</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>bin\Release\SharpMap.XML</DocumentationFile>
@@ -54,7 +54,7 @@
     <TargetFrameworkProfile />
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\DebugDSProjection\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;DotSpatialProjections</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;DotSpatialProjections, UseMapBox</DefineConstants>
     <DocumentationFile>bin\Debug\SharpMap.XML</DocumentationFile>
     <DebugType>full</DebugType>
     <PlatformTarget>x86</PlatformTarget>
@@ -67,7 +67,7 @@
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <TargetFrameworkProfile />
     <OutputPath>bin\ReleaseDSProjection\</OutputPath>
-    <DefineConstants>TRACE;DotSpatialProjections</DefineConstants>
+    <DefineConstants>TRACE;DotSpatialProjections, UseMapBox</DefineConstants>
     <DocumentationFile>bin\Release\SharpMap.XML</DocumentationFile>
     <Optimize>true</Optimize>
     <DebugType>pdbonly</DebugType>
