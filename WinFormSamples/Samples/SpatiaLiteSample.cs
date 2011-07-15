@@ -1,3 +1,5 @@
+using System;
+
 namespace WinFormSamples.Samples
 {
     public static class SpatiaLiteSample
@@ -112,6 +114,38 @@ namespace WinFormSamples.Samples
 
             return map;
 
+        }
+
+        internal static SharpMap.Map InitializeMap(float angle, string[] filenames)
+        {
+            var map = new SharpMap.Map();
+
+            try
+            {
+                foreach (var filename in filenames)
+                {
+                    var connectionString = string.Format("Data Source={0}", filename);
+                    foreach (var provider in SharpMap.Data.Providers.SpatiaLite.GetSpatialTables(connectionString))
+                    {
+                        map.Layers.Add(
+                            new SharpMap.Layers.VectorLayer(
+                                string.Format("{0} - {1}", provider.Table, provider.GeometryColumn), provider) { Style = LayerTools.GetRandomVectorStyle() });
+                    }
+                }
+                if (map.Layers.Count > 0)
+                {
+                    map.ZoomToExtents();
+
+                    System.Drawing.Drawing2D.Matrix mat = new System.Drawing.Drawing2D.Matrix();
+                    mat.RotateAt(angle, map.WorldToImage(map.Center));
+                    map.MapTransform = mat;
+                    return map;
+                }
+            }
+            catch (TypeInitializationException ex)
+            {
+            }
+            return null;
         }
     }
 }

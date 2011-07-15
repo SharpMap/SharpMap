@@ -553,7 +553,6 @@ namespace SharpMap.Forms
             {
                 if (layerCollectionType == LayerCollectionType.Background)
                     return new Bitmap(1, 1);
-                else
                 return null;
             }
 
@@ -1386,7 +1385,7 @@ namespace SharpMap.Forms
         static extern bool CloseClipboard();
 
         [DllImport("gdi32.dll")]
-        static extern IntPtr CopyEnhMetaFile(IntPtr hemfSrc, IntPtr hNULL);
+        static extern IntPtr CopyEnhMetaFile(IntPtr hemfSrc, IntPtr hNull);
 
         [DllImport("gdi32.dll")]
         static extern bool DeleteEnhMetaFile(IntPtr hemf);
@@ -1406,25 +1405,24 @@ namespace SharpMap.Forms
         static public bool PutEnhMetafileOnClipboard(IntPtr hWnd, Metafile mf)
         {
             bool bResult = false;
-            IntPtr hEMF2;
-            IntPtr hEMF = mf.GetHenhmetafile();
+            IntPtr hEmf = mf.GetHenhmetafile();
 
-            if (!hEMF.Equals(new IntPtr(0)))
+            if (!hEmf.Equals(new IntPtr(0)))
             {
-                hEMF2 = CopyEnhMetaFile(hEMF, new IntPtr(0));
-                if (!hEMF2.Equals(new IntPtr(0)))
+                IntPtr hEmf2 = CopyEnhMetaFile(hEmf, new IntPtr(0));
+                if (!hEmf2.Equals(new IntPtr(0)))
                 {
                     if (OpenClipboard(hWnd))
                     {
                         if (EmptyClipboard())
                         {
-                            IntPtr hRes = SetClipboardData(14 /*CF_ENHMETAFILE*/, hEMF2);
-                            bResult = hRes.Equals(hEMF2);
+                            IntPtr hRes = SetClipboardData(14 /*CF_ENHMETAFILE*/, hEmf2);
+                            bResult = hRes.Equals(hEmf2);
                             CloseClipboard();
                         }
                     }
                 }
-                DeleteEnhMetaFile(hEMF);
+                DeleteEnhMetaFile(hEmf);
             }
             return bResult;
         }

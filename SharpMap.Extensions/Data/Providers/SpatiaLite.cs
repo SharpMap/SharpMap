@@ -16,11 +16,11 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Configuration;
 using System.Data;
 using System.Data.SQLite;
-using System.Text;
 using SharpMap.Converters.WellKnownBinary;
 using SharpMap.Converters.WellKnownText;
 using SharpMap.Geometries;
@@ -54,7 +54,7 @@ namespace SharpMap.Data.Providers
     /// <para>
     /// In order to use this provider with SharpMap, you need to 
     /// <list type="bullet">
-    /// <item>get your copy of the native spatialite binaries from http://www.gaia-gis.it/spatialite/,</item>
+    /// <item>get your copy of the native spatialite binaries from http://www.gaia-gis.it/spatialite/ ,</item>
     /// <item>copy them all in <strong>one</strong> directory,</item>
     /// <item>add a (or modify your) app.config- or web.config-file with key/value pairs SpatiaLitePath and SpatiaLiteNativeDll</item>
     /// </list>
@@ -73,7 +73,7 @@ namespace SharpMap.Data.Providers
         private readonly int _srid = -2;
         private string _table;
 
-        private Boolean _useSpatialIndex = false;
+        private Boolean _useSpatialIndex;
 
         private static readonly string SpatiaLitePath;
         private static readonly string SpatiaLiteNativeDll = "libspatialite-2.dll";
@@ -285,13 +285,13 @@ namespace SharpMap.Data.Providers
             {
                 string boxIntersect = GetBoxClause(bbox);
 
-                string strSQL = "SELECT AsBinary(" + GeometryColumn + ") AS Geom ";
-                strSQL += "FROM " + Table + " WHERE ";
-                strSQL += boxIntersect;
+                string strSql = "SELECT AsBinary(" + GeometryColumn + ") AS Geom ";
+                strSql += "FROM " + Table + " WHERE ";
+                strSql += boxIntersect;
                 if (!String.IsNullOrEmpty(_defintionQuery))
-                    strSQL += " AND " + DefinitionQuery;
+                    strSql += " AND " + DefinitionQuery;
 
-                using (SQLiteCommand command = new SQLiteCommand(strSQL, conn))
+                using (SQLiteCommand command = new SQLiteCommand(strSql, conn))
                 {
                     using (SQLiteDataReader dr = command.ExecuteReader())
                     {
@@ -316,15 +316,15 @@ namespace SharpMap.Data.Providers
             Collection<uint> objectlist = new Collection<uint>();
             using (SQLiteConnection conn = SpatiaLiteConnection(_connectionString))
             {
-                string strSQL = "SELECT " + ObjectIdColumn + " ";
-                strSQL += "FROM " + Table + " WHERE ";
+                string strSql = "SELECT " + ObjectIdColumn + " ";
+                strSql += "FROM " + Table + " WHERE ";
 
-                strSQL += GetBoxClause(bbox);
+                strSql += GetBoxClause(bbox);
 
                 if (!String.IsNullOrEmpty(_defintionQuery))
-                    strSQL += " AND " + DefinitionQuery + " AND ";
+                    strSql += " AND " + DefinitionQuery + " AND ";
 
-                using (SQLiteCommand command = new SQLiteCommand(strSQL, conn))
+                using (SQLiteCommand command = new SQLiteCommand(strSql, conn))
                 {
                     using (SQLiteDataReader dr = command.ExecuteReader())
                     {
@@ -348,9 +348,9 @@ namespace SharpMap.Data.Providers
             Geometry geom = null;
             using (SQLiteConnection conn = SpatiaLiteConnection(_connectionString))
             {
-                string strSQL = "SELECT AsBinary(" + GeometryColumn + ") AS Geom FROM " + Table + " WHERE " +
+                string strSql = "SELECT AsBinary(" + GeometryColumn + ") AS Geom FROM " + Table + " WHERE " +
                                 ObjectIdColumn + "='" + oid + "'";
-                using (SQLiteCommand command = new SQLiteCommand(strSQL, conn))
+                using (SQLiteCommand command = new SQLiteCommand(strSql, conn))
                 {
                     using (SQLiteDataReader dr = command.ExecuteReader())
                     {
@@ -372,14 +372,14 @@ namespace SharpMap.Data.Providers
         {
             using (SQLiteConnection conn = SpatiaLiteConnection(_connectionString))
             {
-                string strSQL = "SELECT *, AsBinary(" + GeometryColumn + ") AS sharpmap_tempgeometry ";
-                strSQL += "FROM " + Table + " WHERE ";
-                strSQL += GetOverlapsClause(geom);
+                string strSql = "SELECT *, AsBinary(" + GeometryColumn + ") AS sharpmap_tempgeometry ";
+                strSql += "FROM " + Table + " WHERE ";
+                strSql += GetOverlapsClause(geom);
 
                 if (!String.IsNullOrEmpty(_defintionQuery))
-                    strSQL += " AND " + DefinitionQuery;
+                    strSql += " AND " + DefinitionQuery;
 
-                using (SQLiteDataAdapter adapter = new SQLiteDataAdapter(strSQL, conn))
+                using (SQLiteDataAdapter adapter = new SQLiteDataAdapter(strSql, conn))
                 {
                     DataSet ds2 = new DataSet();
                     adapter.Fill(ds2);
@@ -412,14 +412,14 @@ namespace SharpMap.Data.Providers
         {
             using (SQLiteConnection conn = SpatiaLiteConnection(_connectionString))
             {
-                string strSQL = "SELECT *, AsBinary(" + GeometryColumn + ") AS sharpmap_tempgeometry ";
-                strSQL += "FROM " + Table + " WHERE ";
-                strSQL += GetBoxClause(box);
+                string strSql = "SELECT *, AsBinary(" + GeometryColumn + ") AS sharpmap_tempgeometry ";
+                strSql += "FROM " + Table + " WHERE ";
+                strSql += GetBoxClause(box);
 
                 if (!String.IsNullOrEmpty(_defintionQuery))
-                    strSQL += " AND " + DefinitionQuery;
+                    strSql += " AND " + DefinitionQuery;
 
-                using (SQLiteDataAdapter adapter = new SQLiteDataAdapter(strSQL, conn))
+                using (SQLiteDataAdapter adapter = new SQLiteDataAdapter(strSql, conn))
                 {
                     DataSet ds2 = new DataSet();
                     adapter.Fill(ds2);
@@ -453,10 +453,10 @@ namespace SharpMap.Data.Providers
             int count;
             using (SQLiteConnection conn = new SQLiteConnection(_connectionString))
             {
-                string strSQL = "SELECT COUNT(*) as numrecs FROM " + Table;
+                string strSql = "SELECT COUNT(*) as numrecs FROM " + Table;
                 if (!String.IsNullOrEmpty(_defintionQuery))
-                    strSQL += " WHERE " + DefinitionQuery;
-                using (SQLiteCommand command = new SQLiteCommand(strSQL, conn))
+                    strSql += " WHERE " + DefinitionQuery;
+                using (SQLiteCommand command = new SQLiteCommand(strSql, conn))
                 {
                     conn.Open();
                     SQLiteDataReader dtr = command.ExecuteReader();
@@ -511,7 +511,7 @@ namespace SharpMap.Data.Providers
             }
         }
 
-        private BoundingBox _cachedExtents = null;
+        private BoundingBox _cachedExtents;
 
         public BoundingBox GetExtents()
         {
@@ -657,5 +657,49 @@ namespace SharpMap.Data.Providers
             string retval = "Intersects(GeomFromText('" + wkt + "')," + _geometryColumn + ")=1";
             return retval;
         }
+
+        /// <summary>
+        /// Function to return an <see cref="IEnumerable{Spatialite}"/> for a given sqlite database.
+        /// </summary>
+        /// <param name="connectionString">The connection to the sqlite database.</param>
+        /// <returns>
+        /// An <see cref="IEnumerable{Spatialite}"/>.
+        /// </returns>
+        public static IEnumerable<SpatiaLite> GetSpatialTables(string connectionString)
+        {
+            IList<SpatiaLite> res = new List<SpatiaLite>();
+            using (var cn = new SQLiteConnection(connectionString))
+            {
+                try
+                {
+                    cn.Open();
+                    var cmd = new SQLiteCommand("SELECT * FROM geometry_columns;", cn);
+                    using (var dr = cmd.ExecuteReader())
+                    {
+                        while (dr.Read())
+                            res.Add(new SpatiaLite(connectionString, (string)dr["f_table_name"],
+                                                   (string)dr["f_geometry_column"], "ROWID"));
+                    }
+
+                    /*
+                     * Need to check
+                     *
+                    cmd = new SQLiteCommand("SELECT * FROM geometry_views;", cn);
+                    using (var dr = cmd.ExecuteReader())
+                    {
+                        while (dr.Read())
+                            res.Add(new SpatiaLite(connectionString, (string)dr["f_view_name"],
+                                                   (string)dr["f_geometry_column"], "ROWID"));
+                    }
+                     */
+                }
+                catch (Exception)
+                {
+                    Console.WriteLine();
+                }
+                return res;
+            }
+        }
+
     }
 }

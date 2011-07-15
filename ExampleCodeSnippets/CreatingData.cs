@@ -3,8 +3,35 @@
     /// <summary>
     /// Examples of creating spatial data 
     /// </summary>
-    public class CreatingData
+    public static class CreatingData
     {
+        private static readonly System.Random _rng = new System.Random();
+
+        public static System.Random RandomNumberGenerator
+        {
+            get { return _rng; }
+        }
+
+        /// <summary>
+        /// Creates an array of random values in the given range [<paramref name="min"/>, <paramref name="max"/>].
+        /// </summary>
+        /// <param name="size">The length of the array, aka the number of values</param>
+        /// <param name="min">The lower bound.</param>
+        /// <param name="max">The upper bound.</param>
+        /// <returns>An array of random values</returns>
+        public static System.Double[] GetRandomOrdinates(System.Int32 size, System.Double min, System.Double max)
+        {
+            System.Double[] arr = new System.Double[size];
+            System.Double width = max - min;
+            for (System.Int32 i = 0; i < size; i++)
+            {
+                System.Double randomValue = _rng.NextDouble();
+                arr[i] = min + randomValue * width;
+            }
+            return arr;
+        }
+
+        
         /// <summary>
         /// Creates a FeatureDataTable from arrays of x, y and z components
         /// </summary>
@@ -12,7 +39,7 @@
         /// <param name="ycomponents">an array of doubles representing the y ordinate values</param>
         /// <param name="zcomponents">an array of doubles representing the z ordinate values</param>
         /// <returns></returns>
-        public SharpMap.Data.FeatureDataTable CreatePointFeatureDataTableFromArrays(double[] xcomponents, 
+        public static SharpMap.Data.FeatureDataTable CreatePointFeatureDataTableFromArrays(double[] xcomponents, 
                                                                  double[] ycomponents,
                                                                  double[] zcomponents)
         {

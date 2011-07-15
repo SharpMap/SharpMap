@@ -1,4 +1,11 @@
-﻿namespace WinFormSamples
+﻿using System;
+using System.Drawing;
+using System.Drawing.Drawing2D;
+using System.Windows.Forms;
+using SharpMap.Forms;
+using WinFormSamples.Samples;
+
+namespace WinFormSamples
 {
     partial class FormMapBox
   {
@@ -28,280 +35,293 @@
     /// </summary>
     private void InitializeComponent()
     {
-        this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
-        this.radioButton2 = new System.Windows.Forms.RadioButton();
-        this.radioButton3 = new System.Windows.Forms.RadioButton();
-        this.radioButton4 = new System.Windows.Forms.RadioButton();
-        this.radioButton1 = new System.Windows.Forms.RadioButton();
-        this.radioButton5 = new System.Windows.Forms.RadioButton();
-        this.radioButton6 = new System.Windows.Forms.RadioButton();
-        this.radioButton7 = new System.Windows.Forms.RadioButton();
-        this.radioButton8 = new System.Windows.Forms.RadioButton();
-        this.radioButton9 = new System.Windows.Forms.RadioButton();
-        this.radioButton10 = new System.Windows.Forms.RadioButton();
-        this.scMain = new System.Windows.Forms.SplitContainer();
-        this.scMapProp = new System.Windows.Forms.SplitContainer();
-        this.tbAngle = new System.Windows.Forms.TrackBar();
-        this.pgMap = new System.Windows.Forms.PropertyGrid();
-        this.dataGridView1 = new System.Windows.Forms.DataGridView();
-        this.mapBox1 = new SharpMap.Forms.MapBox();
-        this.flowLayoutPanel1.SuspendLayout();
-        this.scMain.Panel1.SuspendLayout();
-        this.scMain.Panel2.SuspendLayout();
-        this.scMain.SuspendLayout();
-        this.scMapProp.Panel1.SuspendLayout();
-        this.scMapProp.Panel2.SuspendLayout();
-        this.scMapProp.SuspendLayout();
-        ((System.ComponentModel.ISupportInitialize)(this.tbAngle)).BeginInit();
-        ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
-        this.SuspendLayout();
-        // 
-        // flowLayoutPanel1
-        // 
-        this.flowLayoutPanel1.Controls.Add(this.radioButton2);
-        this.flowLayoutPanel1.Controls.Add(this.radioButton3);
-        this.flowLayoutPanel1.Controls.Add(this.radioButton4);
-        this.flowLayoutPanel1.Controls.Add(this.radioButton1);
-        this.flowLayoutPanel1.Controls.Add(this.radioButton5);
-        this.flowLayoutPanel1.Controls.Add(this.radioButton6);
-        this.flowLayoutPanel1.Controls.Add(this.radioButton7);
-        this.flowLayoutPanel1.Controls.Add(this.radioButton8);
-        this.flowLayoutPanel1.Controls.Add(this.radioButton9);
-        this.flowLayoutPanel1.Controls.Add(this.radioButton10);
-        this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Left;
-        this.flowLayoutPanel1.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-        this.flowLayoutPanel1.Location = new System.Drawing.Point(0, 0);
-        this.flowLayoutPanel1.Margin = new System.Windows.Forms.Padding(0);
-        this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-        this.flowLayoutPanel1.Padding = new System.Windows.Forms.Padding(10, 4, 4, 4);
-        this.flowLayoutPanel1.Size = new System.Drawing.Size(166, 446);
-        this.flowLayoutPanel1.TabIndex = 2;
-        // 
-        // radioButton2
-        // 
-        this.radioButton2.AutoSize = true;
-        this.radioButton2.Location = new System.Drawing.Point(13, 7);
-        this.radioButton2.Name = "radioButton2";
-        this.radioButton2.Size = new System.Drawing.Size(69, 17);
-        this.radioButton2.TabIndex = 0;
-        this.radioButton2.TabStop = true;
-        this.radioButton2.Text = "Shapefile";
-        this.radioButton2.UseVisualStyleBackColor = true;
-        this.radioButton2.Click += new System.EventHandler(this.radioButton_Click);
-        // 
-        // radioButton3
-        // 
-        this.radioButton3.AutoSize = true;
-        this.radioButton3.Location = new System.Drawing.Point(13, 30);
-        this.radioButton3.Name = "radioButton3";
-        this.radioButton3.Size = new System.Drawing.Size(98, 17);
-        this.radioButton3.TabIndex = 1;
-        this.radioButton3.TabStop = true;
-        this.radioButton3.Text = "GradientTheme";
-        this.radioButton3.UseVisualStyleBackColor = true;
-        this.radioButton3.Click += new System.EventHandler(this.radioButton_Click);
-        // 
-        // radioButton4
-        // 
-        this.radioButton4.AutoSize = true;
-        this.radioButton4.Location = new System.Drawing.Point(13, 53);
-        this.radioButton4.Name = "radioButton4";
-        this.radioButton4.Size = new System.Drawing.Size(81, 17);
-        this.radioButton4.TabIndex = 3;
-        this.radioButton4.TabStop = true;
-        this.radioButton4.Text = "WMS Client";
-        this.radioButton4.UseVisualStyleBackColor = true;
-        this.radioButton4.Click += new System.EventHandler(this.radioButton_Click);
-        // 
-        // radioButton1
-        // 
-        this.radioButton1.AutoSize = true;
-        this.radioButton1.Location = new System.Drawing.Point(13, 76);
-        this.radioButton1.Name = "radioButton1";
-        this.radioButton1.Size = new System.Drawing.Size(78, 17);
-        this.radioButton1.TabIndex = 2;
-        this.radioButton1.TabStop = true;
-        this.radioButton1.Text = "WFS Client";
-        this.radioButton1.UseVisualStyleBackColor = true;
-        this.radioButton1.Click += new System.EventHandler(this.radioButton_Click);
-        // 
-        // radioButton5
-        // 
-        this.radioButton5.AutoSize = true;
-        this.radioButton5.Location = new System.Drawing.Point(13, 99);
-        this.radioButton5.Name = "radioButton5";
-        this.radioButton5.Size = new System.Drawing.Size(97, 17);
-        this.radioButton5.TabIndex = 4;
-        this.radioButton5.TabStop = true;
-        this.radioButton5.Text = "OGR - MapInfo";
-        this.radioButton5.UseVisualStyleBackColor = true;
-        this.radioButton5.Click += new System.EventHandler(this.radioButton_Click);
-        // 
-        // radioButton6
-        // 
-        this.radioButton6.AutoSize = true;
-        this.radioButton6.Location = new System.Drawing.Point(13, 122);
-        this.radioButton6.Name = "radioButton6";
-        this.radioButton6.Size = new System.Drawing.Size(98, 17);
-        this.radioButton6.TabIndex = 4;
-        this.radioButton6.TabStop = true;
-        this.radioButton6.Text = "GDAL - GeoTiff";
-        this.radioButton6.UseVisualStyleBackColor = true;
-        this.radioButton6.Click += new System.EventHandler(this.radioButton_Click);
-        // 
-        // radioButton7
-        // 
-        this.radioButton7.AutoSize = true;
-        this.radioButton7.Location = new System.Drawing.Point(13, 145);
-        this.radioButton7.Name = "radioButton7";
-        this.radioButton7.Size = new System.Drawing.Size(101, 17);
-        this.radioButton7.TabIndex = 5;
-        this.radioButton7.TabStop = true;
-        this.radioButton7.Text = "TileLayer - OSM";
-        this.radioButton7.UseVisualStyleBackColor = true;
-        this.radioButton7.Click += new System.EventHandler(this.radioButton_Click);
-        // 
-        // radioButton8
-        // 
-        this.radioButton8.AutoSize = true;
-        this.radioButton8.Location = new System.Drawing.Point(13, 168);
-        this.radioButton8.Name = "radioButton8";
-        this.radioButton8.Size = new System.Drawing.Size(61, 17);
-        this.radioButton8.TabIndex = 6;
-        this.radioButton8.TabStop = true;
-        this.radioButton8.Text = "PostGis";
-        this.radioButton8.UseVisualStyleBackColor = true;
-        this.radioButton8.Click += new System.EventHandler(this.radioButton_Click);
-        // 
-        // radioButton9
-        // 
-        this.radioButton9.AutoSize = true;
-        this.radioButton9.Location = new System.Drawing.Point(13, 191);
-        this.radioButton9.Name = "radioButton9";
-        this.radioButton9.Size = new System.Drawing.Size(72, 17);
-        this.radioButton9.TabIndex = 7;
-        this.radioButton9.TabStop = true;
-        this.radioButton9.Text = "SpatiaLite";
-        this.radioButton9.UseVisualStyleBackColor = true;
-        this.radioButton9.Click += new System.EventHandler(this.radioButton_Click);
-        // 
-        // radioButton10
-        // 
-        this.radioButton10.AutoSize = true;
-        this.radioButton10.Location = new System.Drawing.Point(13, 214);
-        this.radioButton10.Name = "radioButton10";
-        this.radioButton10.Size = new System.Drawing.Size(56, 17);
-        this.radioButton10.TabIndex = 8;
-        this.radioButton10.TabStop = true;
-        this.radioButton10.Text = "Oracle";
-        this.radioButton10.UseVisualStyleBackColor = true;
-        this.radioButton10.Click += new System.EventHandler(this.radioButton_Click);
-        // 
-        // scMain
-        // 
-        this.scMain.Dock = System.Windows.Forms.DockStyle.Fill;
-        this.scMain.Location = new System.Drawing.Point(166, 0);
-        this.scMain.Name = "scMain";
-        this.scMain.Orientation = System.Windows.Forms.Orientation.Horizontal;
-        // 
-        // scMain.Panel1
-        // 
-        this.scMain.Panel1.Controls.Add(this.scMapProp);
-        // 
-        // scMain.Panel2
-        // 
-        this.scMain.Panel2.Controls.Add(this.dataGridView1);
-        this.scMain.Size = new System.Drawing.Size(523, 446);
-        this.scMain.SplitterDistance = 316;
-        this.scMain.TabIndex = 4;
-        // 
-        // scMapProp
-        // 
-        this.scMapProp.Dock = System.Windows.Forms.DockStyle.Fill;
-        this.scMapProp.Location = new System.Drawing.Point(0, 0);
-        this.scMapProp.Name = "scMapProp";
-        // 
-        // scMapProp.Panel1
-        // 
-        this.scMapProp.Panel1.Controls.Add(this.mapBox1);
-        this.scMapProp.Panel1.Controls.Add(this.tbAngle);
-        // 
-        // scMapProp.Panel2
-        // 
-        this.scMapProp.Panel2.Controls.Add(this.pgMap);
-        this.scMapProp.Size = new System.Drawing.Size(523, 316);
-        this.scMapProp.SplitterDistance = 383;
-        this.scMapProp.TabIndex = 2;
-        // 
-        // tbAngle
-        // 
-        this.tbAngle.Dock = System.Windows.Forms.DockStyle.Bottom;
-        this.tbAngle.Location = new System.Drawing.Point(0, 271);
-        this.tbAngle.Maximum = 180;
-        this.tbAngle.Minimum = -180;
-        this.tbAngle.Name = "tbAngle";
-        this.tbAngle.Size = new System.Drawing.Size(383, 45);
-        this.tbAngle.TabIndex = 5;
-        this.tbAngle.TickFrequency = 15;
-        this.tbAngle.Scroll += new System.EventHandler(this.tbAngle_Scroll);
-        // 
-        // pgMap
-        // 
-        this.pgMap.Dock = System.Windows.Forms.DockStyle.Fill;
-        this.pgMap.Location = new System.Drawing.Point(0, 0);
-        this.pgMap.Name = "pgMap";
-        this.pgMap.SelectedObject = this.mapBox1;
-        this.pgMap.Size = new System.Drawing.Size(136, 316);
-        this.pgMap.TabIndex = 3;
-        // 
-        // dataGridView1
-        // 
-        this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-        this.dataGridView1.Dock = System.Windows.Forms.DockStyle.Fill;
-        this.dataGridView1.Location = new System.Drawing.Point(0, 0);
-        this.dataGridView1.Name = "dataGridView1";
-        this.dataGridView1.Size = new System.Drawing.Size(523, 126);
-        this.dataGridView1.TabIndex = 4;
-        // 
-        // mapBox1
-        // 
-        this.mapBox1.ActiveTool = SharpMap.Forms.MapBox.Tools.Pan;
-        this.mapBox1.Cursor = System.Windows.Forms.Cursors.Hand;
-        this.mapBox1.Dock = System.Windows.Forms.DockStyle.Fill;
-        this.mapBox1.FineZoomFactor = 10;
-        this.mapBox1.Location = new System.Drawing.Point(0, 0);
-        this.mapBox1.Name = "mapBox1";
-        this.mapBox1.PreviewMode = SharpMap.Forms.MapBox.PreviewModes.Fast;
-        this.mapBox1.QueryLayerIndex = 0;
-        this.mapBox1.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(210)))), ((int)(((byte)(244)))), ((int)(((byte)(244)))), ((int)(((byte)(244)))));
-        this.mapBox1.SelectionForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(244)))), ((int)(((byte)(244)))));
-        this.mapBox1.ShowProgressUpdate = true;
-        this.mapBox1.Size = new System.Drawing.Size(383, 271);
-        this.mapBox1.TabIndex = 6;
-        this.mapBox1.Text = "mapBox1";
-        this.mapBox1.WheelZoomMagnitude = 2;
-        // 
-        // FormMapBox
-        // 
-        this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-        this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-        this.ClientSize = new System.Drawing.Size(689, 446);
-        this.Controls.Add(this.scMain);
-        this.Controls.Add(this.flowLayoutPanel1);
-        this.Name = "FormMapBox";
-        this.Text = "SharpMap Samples - MapBox";
-        this.flowLayoutPanel1.ResumeLayout(false);
-        this.flowLayoutPanel1.PerformLayout();
-        this.scMain.Panel1.ResumeLayout(false);
-        this.scMain.Panel2.ResumeLayout(false);
-        this.scMain.ResumeLayout(false);
-        this.scMapProp.Panel1.ResumeLayout(false);
-        this.scMapProp.Panel1.PerformLayout();
-        this.scMapProp.Panel2.ResumeLayout(false);
-        this.scMapProp.ResumeLayout(false);
-        ((System.ComponentModel.ISupportInitialize)(this.tbAngle)).EndInit();
-        ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
-        this.ResumeLayout(false);
+            this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
+            this.radioButton2 = new System.Windows.Forms.RadioButton();
+            this.radioButton3 = new System.Windows.Forms.RadioButton();
+            this.radioButton4 = new System.Windows.Forms.RadioButton();
+            this.radioButton1 = new System.Windows.Forms.RadioButton();
+            this.radioButton5 = new System.Windows.Forms.RadioButton();
+            this.radioButton6 = new System.Windows.Forms.RadioButton();
+            this.radioButton7 = new System.Windows.Forms.RadioButton();
+            this.radioButton8 = new System.Windows.Forms.RadioButton();
+            this.radioButton9 = new System.Windows.Forms.RadioButton();
+            this.radioButton10 = new System.Windows.Forms.RadioButton();
+            this.scMain = new System.Windows.Forms.SplitContainer();
+            this.scMapProp = new System.Windows.Forms.SplitContainer();
+            this.mapBox1 = new SharpMap.Forms.MapBox();
+            this.tbAngle = new System.Windows.Forms.TrackBar();
+            this.pgMap = new System.Windows.Forms.PropertyGrid();
+            this.dataGridView1 = new System.Windows.Forms.DataGridView();
+            this.flowLayoutPanel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.scMain)).BeginInit();
+            this.scMain.Panel1.SuspendLayout();
+            this.scMain.Panel2.SuspendLayout();
+            this.scMain.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.scMapProp)).BeginInit();
+            this.scMapProp.Panel1.SuspendLayout();
+            this.scMapProp.Panel2.SuspendLayout();
+            this.scMapProp.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.tbAngle)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
+            this.SuspendLayout();
+            // 
+            // flowLayoutPanel1
+            // 
+            this.flowLayoutPanel1.Controls.Add(this.radioButton2);
+            this.flowLayoutPanel1.Controls.Add(this.radioButton3);
+            this.flowLayoutPanel1.Controls.Add(this.radioButton4);
+            this.flowLayoutPanel1.Controls.Add(this.radioButton1);
+            this.flowLayoutPanel1.Controls.Add(this.radioButton5);
+            this.flowLayoutPanel1.Controls.Add(this.radioButton6);
+            this.flowLayoutPanel1.Controls.Add(this.radioButton7);
+            this.flowLayoutPanel1.Controls.Add(this.radioButton8);
+            this.flowLayoutPanel1.Controls.Add(this.radioButton9);
+            this.flowLayoutPanel1.Controls.Add(this.radioButton10);
+            this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Left;
+            this.flowLayoutPanel1.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
+            this.flowLayoutPanel1.Location = new System.Drawing.Point(0, 0);
+            this.flowLayoutPanel1.Margin = new System.Windows.Forms.Padding(0);
+            this.flowLayoutPanel1.Name = "flowLayoutPanel1";
+            this.flowLayoutPanel1.Padding = new System.Windows.Forms.Padding(10, 4, 4, 4);
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(166, 446);
+            this.flowLayoutPanel1.TabIndex = 2;
+            // 
+            // radioButton2
+            // 
+            this.radioButton2.AutoSize = true;
+            this.radioButton2.Location = new System.Drawing.Point(13, 7);
+            this.radioButton2.Name = "radioButton2";
+            this.radioButton2.Size = new System.Drawing.Size(69, 17);
+            this.radioButton2.TabIndex = 0;
+            this.radioButton2.TabStop = true;
+            this.radioButton2.Text = "Shapefile";
+            this.radioButton2.UseVisualStyleBackColor = true;
+            this.radioButton2.Click += new System.EventHandler(this.radioButton_Click);
+            this.radioButton2.MouseMove += new System.Windows.Forms.MouseEventHandler(this.radioButton2_MouseMove);
+            this.radioButton2.MouseUp += new System.Windows.Forms.MouseEventHandler(this.radioButton2_MouseUp);
+            // 
+            // radioButton3
+            // 
+            this.radioButton3.AutoSize = true;
+            this.radioButton3.Location = new System.Drawing.Point(13, 30);
+            this.radioButton3.Name = "radioButton3";
+            this.radioButton3.Size = new System.Drawing.Size(98, 17);
+            this.radioButton3.TabIndex = 1;
+            this.radioButton3.TabStop = true;
+            this.radioButton3.Text = "GradientTheme";
+            this.radioButton3.UseVisualStyleBackColor = true;
+            this.radioButton3.Click += new System.EventHandler(this.radioButton_Click);
+            // 
+            // radioButton4
+            // 
+            this.radioButton4.AutoSize = true;
+            this.radioButton4.Location = new System.Drawing.Point(13, 53);
+            this.radioButton4.Name = "radioButton4";
+            this.radioButton4.Size = new System.Drawing.Size(81, 17);
+            this.radioButton4.TabIndex = 3;
+            this.radioButton4.TabStop = true;
+            this.radioButton4.Text = "WMS Client";
+            this.radioButton4.UseVisualStyleBackColor = true;
+            this.radioButton4.Click += new System.EventHandler(this.radioButton_Click);
+            // 
+            // radioButton1
+            // 
+            this.radioButton1.AutoSize = true;
+            this.radioButton1.Location = new System.Drawing.Point(13, 76);
+            this.radioButton1.Name = "radioButton1";
+            this.radioButton1.Size = new System.Drawing.Size(78, 17);
+            this.radioButton1.TabIndex = 2;
+            this.radioButton1.TabStop = true;
+            this.radioButton1.Text = "WFS Client";
+            this.radioButton1.UseVisualStyleBackColor = true;
+            this.radioButton1.Click += new System.EventHandler(this.radioButton_Click);
+            // 
+            // radioButton5
+            // 
+            this.radioButton5.AutoSize = true;
+            this.radioButton5.Location = new System.Drawing.Point(13, 99);
+            this.radioButton5.Name = "radioButton5";
+            this.radioButton5.Size = new System.Drawing.Size(97, 17);
+            this.radioButton5.TabIndex = 4;
+            this.radioButton5.TabStop = true;
+            this.radioButton5.Text = "OGR - MapInfo";
+            this.radioButton5.UseVisualStyleBackColor = true;
+            this.radioButton5.Click += new System.EventHandler(this.radioButton_Click);
+            this.radioButton5.MouseUp += new System.Windows.Forms.MouseEventHandler(this.radioButton2_MouseUp);
+            // 
+            // radioButton6
+            // 
+            this.radioButton6.AutoSize = true;
+            this.radioButton6.Location = new System.Drawing.Point(13, 122);
+            this.radioButton6.Name = "radioButton6";
+            this.radioButton6.Size = new System.Drawing.Size(98, 17);
+            this.radioButton6.TabIndex = 4;
+            this.radioButton6.TabStop = true;
+            this.radioButton6.Text = "GDAL - GeoTiff";
+            this.radioButton6.UseVisualStyleBackColor = true;
+            this.radioButton6.Click += new System.EventHandler(this.radioButton_Click);
+            this.radioButton6.MouseUp += new System.Windows.Forms.MouseEventHandler(this.radioButton2_MouseUp);
+            // 
+            // radioButton7
+            // 
+            this.radioButton7.AutoSize = true;
+            this.radioButton7.Location = new System.Drawing.Point(13, 145);
+            this.radioButton7.Name = "radioButton7";
+            this.radioButton7.Size = new System.Drawing.Size(101, 17);
+            this.radioButton7.TabIndex = 5;
+            this.radioButton7.TabStop = true;
+            this.radioButton7.Text = "TileLayer - OSM";
+            this.radioButton7.UseVisualStyleBackColor = true;
+            this.radioButton7.Click += new System.EventHandler(this.radioButton_Click);
+            // 
+            // radioButton8
+            // 
+            this.radioButton8.AutoSize = true;
+            this.radioButton8.Location = new System.Drawing.Point(13, 168);
+            this.radioButton8.Name = "radioButton8";
+            this.radioButton8.Size = new System.Drawing.Size(61, 17);
+            this.radioButton8.TabIndex = 6;
+            this.radioButton8.TabStop = true;
+            this.radioButton8.Text = "PostGis";
+            this.radioButton8.UseVisualStyleBackColor = true;
+            this.radioButton8.Click += new System.EventHandler(this.radioButton_Click);
+            // 
+            // radioButton9
+            // 
+            this.radioButton9.AutoSize = true;
+            this.radioButton9.Location = new System.Drawing.Point(13, 191);
+            this.radioButton9.Name = "radioButton9";
+            this.radioButton9.Size = new System.Drawing.Size(72, 17);
+            this.radioButton9.TabIndex = 7;
+            this.radioButton9.TabStop = true;
+            this.radioButton9.Text = "SpatiaLite";
+            this.radioButton9.UseVisualStyleBackColor = true;
+            this.radioButton9.Click += new System.EventHandler(this.radioButton_Click);
+            this.radioButton9.MouseUp += new System.Windows.Forms.MouseEventHandler(this.radioButton2_MouseUp);
+            // 
+            // radioButton10
+            // 
+            this.radioButton10.AutoSize = true;
+            this.radioButton10.Location = new System.Drawing.Point(13, 214);
+            this.radioButton10.Name = "radioButton10";
+            this.radioButton10.Size = new System.Drawing.Size(56, 17);
+            this.radioButton10.TabIndex = 8;
+            this.radioButton10.TabStop = true;
+            this.radioButton10.Text = "Oracle";
+            this.radioButton10.UseVisualStyleBackColor = true;
+            this.radioButton10.Click += new System.EventHandler(this.radioButton_Click);
+            // 
+            // scMain
+            // 
+            this.scMain.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.scMain.Location = new System.Drawing.Point(166, 0);
+            this.scMain.Name = "scMain";
+            this.scMain.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            // 
+            // scMain.Panel1
+            // 
+            this.scMain.Panel1.Controls.Add(this.scMapProp);
+            // 
+            // scMain.Panel2
+            // 
+            this.scMain.Panel2.Controls.Add(this.dataGridView1);
+            this.scMain.Size = new System.Drawing.Size(523, 446);
+            this.scMain.SplitterDistance = 316;
+            this.scMain.TabIndex = 4;
+            // 
+            // scMapProp
+            // 
+            this.scMapProp.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.scMapProp.Location = new System.Drawing.Point(0, 0);
+            this.scMapProp.Name = "scMapProp";
+            // 
+            // scMapProp.Panel1
+            // 
+            this.scMapProp.Panel1.Controls.Add(this.mapBox1);
+            this.scMapProp.Panel1.Controls.Add(this.tbAngle);
+            // 
+            // scMapProp.Panel2
+            // 
+            this.scMapProp.Panel2.Controls.Add(this.pgMap);
+            this.scMapProp.Size = new System.Drawing.Size(523, 316);
+            this.scMapProp.SplitterDistance = 383;
+            this.scMapProp.TabIndex = 2;
+            // 
+            // mapBox1
+            // 
+            this.mapBox1.ActiveTool = SharpMap.Forms.MapBox.Tools.Pan;
+            this.mapBox1.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.mapBox1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.mapBox1.FineZoomFactor = 10D;
+            this.mapBox1.Location = new System.Drawing.Point(0, 0);
+            this.mapBox1.Name = "mapBox1";
+            this.mapBox1.PreviewMode = SharpMap.Forms.MapBox.PreviewModes.Fast;
+            this.mapBox1.QueryLayerIndex = 0;
+            this.mapBox1.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(210)))), ((int)(((byte)(244)))), ((int)(((byte)(244)))), ((int)(((byte)(244)))));
+            this.mapBox1.SelectionForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(244)))), ((int)(((byte)(244)))));
+            this.mapBox1.ShowProgressUpdate = true;
+            this.mapBox1.Size = new System.Drawing.Size(383, 271);
+            this.mapBox1.TabIndex = 6;
+            this.mapBox1.Text = "mapBox1";
+            this.mapBox1.WheelZoomMagnitude = 2D;
+            this.mapBox1.MapRefreshed += new System.EventHandler(this.mapImage_MapRefreshed);
+            this.mapBox1.MapZoomChanged += new SharpMap.Forms.MapBox.MapZoomHandler(this.mapImage_MapZoomChanged);
+            this.mapBox1.MapZooming += new SharpMap.Forms.MapBox.MapZoomHandler(this.mapImage_MapZooming);
+            this.mapBox1.MapQueried += new SharpMap.Forms.MapBox.MapQueryHandler(this.mapImage_MapQueried);
+            // 
+            // tbAngle
+            // 
+            this.tbAngle.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.tbAngle.Location = new System.Drawing.Point(0, 271);
+            this.tbAngle.Maximum = 180;
+            this.tbAngle.Minimum = -180;
+            this.tbAngle.Name = "tbAngle";
+            this.tbAngle.Size = new System.Drawing.Size(383, 45);
+            this.tbAngle.TabIndex = 5;
+            this.tbAngle.TickFrequency = 15;
+            this.tbAngle.Scroll += new System.EventHandler(this.tbAngle_Scroll);
+            // 
+            // pgMap
+            // 
+            this.pgMap.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pgMap.Location = new System.Drawing.Point(0, 0);
+            this.pgMap.Name = "pgMap";
+            this.pgMap.SelectedObject = this.mapBox1;
+            this.pgMap.Size = new System.Drawing.Size(136, 316);
+            this.pgMap.TabIndex = 3;
+            // 
+            // dataGridView1
+            // 
+            this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridView1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dataGridView1.Location = new System.Drawing.Point(0, 0);
+            this.dataGridView1.Name = "dataGridView1";
+            this.dataGridView1.Size = new System.Drawing.Size(523, 126);
+            this.dataGridView1.TabIndex = 4;
+            // 
+            // FormMapBox
+            // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.ClientSize = new System.Drawing.Size(689, 446);
+            this.Controls.Add(this.scMain);
+            this.Controls.Add(this.flowLayoutPanel1);
+            this.Name = "FormMapBox";
+            this.Text = "SharpMap Samples - MapBox";
+            this.flowLayoutPanel1.ResumeLayout(false);
+            this.flowLayoutPanel1.PerformLayout();
+            this.scMain.Panel1.ResumeLayout(false);
+            this.scMain.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.scMain)).EndInit();
+            this.scMain.ResumeLayout(false);
+            this.scMapProp.Panel1.ResumeLayout(false);
+            this.scMapProp.Panel1.PerformLayout();
+            this.scMapProp.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.scMapProp)).EndInit();
+            this.scMapProp.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.tbAngle)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
+            this.ResumeLayout(false);
 
     }
 
@@ -324,6 +344,164 @@
     private System.Windows.Forms.DataGridView dataGridView1;
     private System.Windows.Forms.TrackBar tbAngle;
     private SharpMap.Forms.MapBox mapBox1;
+
+        private void radioButton_Click(object sender, EventArgs e)
+        {
+            Cursor mic = mapBox1.Cursor;
+            mapBox1.Cursor = Cursors.WaitCursor;
+            Cursor = Cursors.WaitCursor;
+            try
+            {
+                //mapImage.ActiveTool = MapImage.Tools.None;
+                string text = ((RadioButton)sender).Text;
+
+                switch (text)
+                {
+                    case "Shapefile":
+                        mapBox1.Map = ShapefileSample.InitializeMap(tbAngle.Value);
+                        break;
+                    case "GradientTheme":
+                        mapBox1.Map = GradiantThemeSample.InitializeMap(tbAngle.Value);
+                        break;
+                    case "WFS Client":
+                        mapBox1.Map = WfsSample.InitializeMap(tbAngle.Value);
+                        break;
+                    case "WMS Client":
+                        mapBox1.Map = TiledWmsSample.InitializeMap();
+                        //mapBox1.Map = WmsSample.InitializeMap(tbAngle.Value);
+                        break;
+                    case "OGR - MapInfo":
+                    case "OGR - S-57":
+                        mapBox1.Map = OgrSample.InitializeMap(tbAngle.Value);
+                        break;
+                    case "GDAL - GeoTiff":
+                    case "GDAL - '.DEM'":
+                    case "GDAL - '.ASC'":
+                    case "GDAL - '.VRT'":
+                        mapBox1.Map = GdalSample.InitializeMap(tbAngle.Value);
+                        mapBox1.ActiveTool = MapBox.Tools.Pan;
+                        break;
+                    case "TileLayer - OSM":
+                    case "TileLayer - OSM with XLS":
+                    case "TileLayer - Bing Roads":
+                    case "TileLayer - Bing Aerial":
+                    case "TileLayer - Bing Hybrid":
+                    case "TileLayer - GoogleMap":
+                    case "TileLayer - GoogleSatellite":
+                    case "TileLayer - GoogleTerrain":
+                    case "TileLayer - GoogleLabels":
+                        /*
+                        tbAngle.Visible = text.Equals("TileLayer - GoogleLabels");
+                        if (!tbAngle.Visible) tbAngle.Value = 0;
+                         */
+                        mapBox1.Map = TileLayerSample.InitializeMap(tbAngle.Value);
+                        ((RadioButton)sender).Text = mapBox1.Map.Layers[0].LayerName;
+                        break;
+                    case "PostGis":
+                        mapBox1.Map = PostGisSample.InitializeMap(tbAngle.Value);
+                        break;
+                    case "SpatiaLite":
+                        mapBox1.Map = SpatiaLiteSample.InitializeMap(tbAngle.Value);
+                        break;
+                    case "Oracle":
+                        mapBox1.Map = OracleSample.InitializeMap(tbAngle.Value);
+                        break;
+                    default:
+                        break;
+                }
+                mapBox1.Map.Size = Size;
+                mapBox1.Refresh();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(this, ex.Message, "Error");
+            }
+            Cursor = Cursors.Default;
+            mapBox1.Cursor = mic;
+        }
+
+        private void mapImage_MapQueried(SharpMap.Data.FeatureDataTable data)
+        {
+            dataGridView1.DataSource = data as System.Data.DataTable;
+        }
+
+        private void mapImage_MapQueriedDataSet(SharpMap.Data.FeatureDataSet data)
+        {
+            dataGridView1.DataSource = data as System.Data.DataSet;
+        }
+
+        private void mapImage_ActiveToolChanged(MapImage.Tools tool)
+        {
+            UpdatePropertyGrid();
+        }
+
+        private void mapImage_MapCenterChanged(SharpMap.Geometries.Point center)
+        {
+            UpdatePropertyGrid();
+        }
+
+        private void mapImage_MapRefreshed(object sender, EventArgs e)
+        {
+            UpdatePropertyGrid();
+        }
+
+        private void mapImage_MapZoomChanged(double zoom)
+        {
+            UpdatePropertyGrid();
+        }
+
+        private void mapImage_MapZooming(double zoom)
+        {
+            UpdatePropertyGrid();
+        }
+
+        private void mapImage_SizeChanged(object sender, EventArgs e)
+        {
+            mapBox1.Refresh();
+        }
+
+        private void tbAngle_Scroll(object sender, EventArgs e)
+        {
+            System.Drawing.Drawing2D.Matrix matrix = new Matrix(); 
+            if (tbAngle.Value != 0f)
+                matrix.RotateAt(tbAngle.Value, new PointF(mapBox1.Width * 0.5f, mapBox1.Height * 0.5f));
+
+            mapBox1.Map.MapTransform = matrix;
+            AdjustRotation(mapBox1.Map.Layers, tbAngle.Value);
+            AdjustRotation(mapBox1.Map.VariableLayers, tbAngle.Value);
+
+            mapBox1.Refresh();
+        }
+
+        private void radioButton2_MouseUp(object sender, MouseEventArgs e)
+        {
+            var rb = sender as RadioButton;
+            if (rb== null) return;
+
+            if (e.Button != MouseButtons.Right) return;
+
+            SharpMap.Map map = null;
+            switch (rb.Name)
+            {
+                case "radioButton2": // ShapeFile
+                    map = Samples.ShapefileSample.InitializeMap(tbAngle.Value, GetOpenFileName("Shapefile|*.shp"));
+                    break;
+                case "radioButton5": // Ogr
+                    map = Samples.OgrSample.InitializeMap(tbAngle.Value, GetOpenFileName("Ogr Datasource|*.*"));
+                    break;
+                case "radioButton6": // Gdal
+                    map = Samples.GdalSample.InitializeMap(tbAngle.Value, GetOpenFileName("Gdal Datasource|*.*"));
+                    break;
+                case "radioButton9": // spatialite
+                    map = Samples.SpatiaLiteSample.InitializeMap(tbAngle.Value, GetOpenFileName("SpatiaLite 2|*.db,*.sqlite"));
+                    break;
+            }
+
+            if (map == null)
+                return;
+
+            mapBox1.Map = map;
+        }
   }
 }
 

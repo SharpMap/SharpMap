@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing.Imaging;
 using System.Text;
 using SharpMap.Layers;
 using System.Drawing;
 #if DotSpatialProjections
 using DotSpatial.Projections;
+using SharpMap.Styles;
+
 #else
 using ProjNet.CoordinateSystems.Transformations;
 using ProjNet.CoordinateSystems;
@@ -182,7 +185,78 @@ namespace WinFormSamples
             return labelLayer;
         }
 
+        private static readonly Random Rnd = new Random();
+        public static Color GetRandomColor()
+        {
+            return  Color.FromArgb(Rnd.Next(0, 127), Rnd.Next(0, 255), Rnd.Next(0,255), Rnd.Next(0,255));
+        }
 
+        public static Boolean GetRandomBoolean()
+        {
+            return Rnd.Next(0, 2) == 1;
+        }
 
+        public static Brush GetRandomBrush()
+        {
+            return new SolidBrush(GetRandomColor());
+        }
+
+        public static Pen GetRandomPen()
+        {
+            return GetRandomPen(1, 4);
+        }
+
+        /// <summary>
+        /// Generates a random symbol.
+        /// </summary>
+        /// <returns></returns>
+        public static Bitmap GetRandomSymbol()
+        {
+            var s = Rnd.Next(4, 12);
+            var f = new Font("WingDings", 2*s, GraphicsUnit.Pixel);
+            var bmp = new Bitmap(2*s + 2, 2*s + 2, PixelFormat.Format32bppArgb);
+            using (var g = Graphics.FromImage(bmp))
+            {
+                g.Clear(Color.Transparent);
+                g.DrawString(new string(Convert.ToChar((byte) Rnd.Next(15, 127)), 1), f, GetRandomBrush(), new PointF(s, s) ,
+                             new StringFormat
+                                 {Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center});
+            }
+
+            return bmp;
+        }
+
+        public static SharpMap.Styles.VectorStyle GetRandomVectorStyle()
+        {
+            return new SharpMap.Styles.VectorStyle
+                       {
+                           EnableOutline = GetRandomBoolean(),
+                           Outline = GetRandomPen(3, 7),
+                           Line = GetRandomPen(1, 4),
+                           Fill = GetRandomBrush(),
+                           Symbol = GetRandomSymbol(),
+                           //SymbolRotation = Rnd.Next(0, 359),
+                       };
+        }
+
+        private static Pen GetRandomPen(int min, int max)
+        {
+            return new Pen(GetRandomColor(), Rnd.Next(min, max));
+        }
+
+        public static SharpMap.Map GetMapForProviders(IEnumerable<SharpMap.Data.Providers.IProvider> providers)
+        {
+            var m = new SharpMap.Map();
+            foreach (var provider in providers)
+            {
+                var l = new VectorLayer(provider.ConnectionID, provider)
+                            {
+                                Style = GetRandomVectorStyle()
+                            };
+                m.Layers.Add(l);
+            }
+            m.ZoomToExtents();
+            return m;
+        }
     }
 }

@@ -82,6 +82,7 @@ namespace SharpMap.Styles
         private PointF _Offset;
         private VerticalAlignmentEnum _VerticalAlignment;
         private float _rotation;
+        private bool _ignoreLength;
 
         /// <summary>
         /// Initializes a new LabelStyle
@@ -195,6 +196,16 @@ namespace SharpMap.Styles
         {
             get { return _rotation; }
             set { _rotation = value % 360f; }
+        }
+
+        /// <summary>
+        /// Gets or sets if length of linestring should be ignored
+        /// </summary>
+        [System.ComponentModel.Category("Alignment")]
+        public bool IgnoreLength
+        {
+            get { return _ignoreLength; }
+            set { _ignoreLength = value; }
         }
 
     }

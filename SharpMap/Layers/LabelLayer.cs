@@ -566,7 +566,9 @@ namespace SharpMap.Layers
             if (feature is LineString)
             {
                 LineString line = feature as LineString;
-                if (line.Length/map.PixelSize > size.Width) //Only label feature if it is long enough
+
+                //Only label feature if it is long enough, or it is definately wanted                
+                if (line.Length/map.PixelSize > size.Width || style.IgnoreLength)
                     CalculateLabelOnLinestring(line, ref lbl, map);
                 else
                     return null;

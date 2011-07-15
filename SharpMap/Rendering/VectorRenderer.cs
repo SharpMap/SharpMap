@@ -21,6 +21,7 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Reflection;
 using SharpMap.Geometries;
+using SharpMap.Styles.Symbolizer;
 using SharpMap.Utilities;
 using Point=SharpMap.Geometries.Point;
 using System.Runtime.CompilerServices;
@@ -514,7 +515,24 @@ namespace SharpMap.Rendering
             float height = size;
             g.FillEllipse(b, (int)pp.X - width / 2 + offset.X ,
                         (int)pp.Y - height / 2 + offset.Y , width, height);
+            
+            System.Diagnostics.Debug.WriteLine(string.Format("DP {0}", new PointF(pp.X-width * 0.5f, pp.Y-height * 0.5f)));
+        }
 
+        /// <summary>
+        /// Renders a point to the map.
+        /// </summary>
+        /// <param name="g">Graphics reference</param>
+        /// <param name="point">Point to render</param>
+        /// <param name="symbolizer">Symbolizer to decorate point</param>
+        /// <param name="map">Map reference</param>
+        [MethodImpl(MethodImplOptions.Synchronized)]
+        public static void DrawPoint(IPointSymbolizer symbolizer, Graphics g, Point point, Map map)
+        {
+            if (point == null)
+                return; 
+
+            symbolizer.Render(map, point, g);
         }
 
         /// <summary>
@@ -609,6 +627,19 @@ namespace SharpMap.Rendering
         /// </summary>
         /// <param name="g">Graphics reference</param>
         /// <param name="points">MultiPoint to render</param>
+        /// <param name="symbolizer">Symbolizer to decorate point</param>
+        /// <param name="map">Map reference</param>
+        [MethodImpl(MethodImplOptions.Synchronized)]
+        public static void DrawMultiPoint(IPointSymbolizer symbolizer, Graphics g, MultiPoint points, Map map)
+        {
+            symbolizer.Render(map, points, g);
+        }
+
+        /// <summary>
+        /// Renders a <see cref="SharpMap.Geometries.MultiPoint"/> to the map.
+        /// </summary>
+        /// <param name="g">Graphics reference</param>
+        /// <param name="points">MultiPoint to render</param>
         /// <param name="brush">Brush reference</param>
         /// <param name="size">Size of drawn Point</param>
         /// <param name="offset">Symbol offset af scale=1</param>
@@ -619,7 +650,6 @@ namespace SharpMap.Rendering
             for (int i = 0; i < points.Points.Count; i++)
                 DrawPoint(g, points.Points[i], brush, size, offset, map);
         }
-
 
         #region Nested type: ClipState
 

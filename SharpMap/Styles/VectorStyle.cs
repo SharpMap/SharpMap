@@ -17,6 +17,7 @@
 
 using System.Drawing;
 using System.Reflection;
+using SharpMap.Styles.Symbolizer;
 
 namespace SharpMap.Styles
 {
@@ -81,6 +82,7 @@ namespace SharpMap.Styles
         private float _PointSize;
 
         private Brush _PointBrush = null;
+        private IPointSymbolizer _pointSymbolizer;
 
         /// <summary>
         /// Linestyle for line geometries
@@ -187,6 +189,19 @@ namespace SharpMap.Styles
         {
             get { return _lineOffset; }
             set { _lineOffset = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets the symbolizer for puntal geometries
+        /// </summary>
+        public IPointSymbolizer PointSymbolizer
+        {
+            get {
+                return _pointSymbolizer;
+            }
+            set {
+                _pointSymbolizer = value;
+            }
         }
 
         #endregion

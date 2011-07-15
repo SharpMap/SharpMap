@@ -1,5 +1,7 @@
 namespace ExampleCodeSnippets
 {
+    using cd = CreatingData;
+
     public class SymbolRotationTheming
     {
         /// <summary>
@@ -163,10 +165,9 @@ namespace ExampleCodeSnippets
             SharpMap.Map map = new SharpMap.Map(new System.Drawing.Size(720,360));
             
             //Create some random sample data
-            CreatingData cd = new CreatingData();
             SharpMap.Data.FeatureDataTable fdt =
-                cd.CreatePointFeatureDataTableFromArrays(GetRandomOrdinates(80, -180, 180),
-                                                         GetRandomOrdinates(80, -90, 90), null);
+                cd.CreatePointFeatureDataTableFromArrays(cd.GetRandomOrdinates(80, -180, 180),
+                                                         cd.GetRandomOrdinates(80, -90, 90), null);
 
             //Add rotation column and fill with random rotation values
             fdt.Columns.Add("Rotation", typeof (System.Double));
@@ -196,18 +197,18 @@ namespace ExampleCodeSnippets
     [NUnit.Framework.TestFixture]
     public class SymbolFromFeatureDataRowTest
     {
-        private static readonly System.Random _randomNumberGenerator = new System.Random();
-        static System.Double[] GetRandomOrdinates(System.Int32 size, System.Double min, System.Double max)
-        {
-            System.Double[] arr = new System.Double[size];
-            System.Double width = max - min;
-            for (System.Int32 i = 0; i < size; i++)
-            {
-                System.Double randomValue = _randomNumberGenerator.NextDouble();
-                arr[i] = min + randomValue * width;
-            }
-            return arr;
-        }
+        //private static readonly System.Random _randomNumberGenerator = new System.Random();
+        //static System.Double[] GetRandomOrdinates(System.Int32 size, System.Double min, System.Double max)
+        //{
+        //    System.Double[] arr = new System.Double[size];
+        //    System.Double width = max - min;
+        //    for (System.Int32 i = 0; i < size; i++)
+        //    {
+        //        System.Double randomValue = _randomNumberGenerator.NextDouble();
+        //        arr[i] = min + randomValue * width;
+        //    }
+        //    return arr;
+        //}
 
         [NUnit.Framework.Test]
         public void TestSymbolSelectionTheming()
@@ -216,15 +217,14 @@ namespace ExampleCodeSnippets
             SharpMap.Map map = new SharpMap.Map(new System.Drawing.Size(720, 360));
 
             //Create some random sample data
-            CreatingData cd = new CreatingData();
             SharpMap.Data.FeatureDataTable fdt =
-                cd.CreatePointFeatureDataTableFromArrays(GetRandomOrdinates(80, -180, 180),
-                                                         GetRandomOrdinates(80, -90, 90), null);
+                cd.CreatePointFeatureDataTableFromArrays(cd.GetRandomOrdinates(80, -180, 180),
+                                                         cd.GetRandomOrdinates(80, -90, 90), null);
 
             //Add rotation column and fill with random rotation values
             fdt.Columns.Add("Symbol", typeof(System.Byte[]));
             foreach (SharpMap.Data.FeatureDataRow row in fdt.Rows)
-                row["Symbol"] = RandomSymbol((int)System.Math.Floor(_randomNumberGenerator.NextDouble() * 360d));
+                row["Symbol"] = RandomSymbol((int)System.Math.Floor(cd.RandomNumberGenerator.NextDouble() * 360d));
 
 
             //Create layer and datasource

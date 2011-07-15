@@ -1,23 +1,15 @@
-using System;
-using System.Drawing;
-using System.Drawing.Drawing2D;
-using System.IO;
-using SharpMap;
-using SharpMap.Data.Providers;
-using SharpMap.Layers;
-
 namespace WinFormSamples.Samples
 {
     public static class GdalSample
     {
-        private static int _num = 0;
-        private static String _gdalSampleDataset;
-        public static String GdalSampleDataSet
+        private static int _num;
+        private static string _gdalSampleDataset;
+        public static string GdalSampleDataSet
         {
             get { return _gdalSampleDataset; }
         }
 
-        public static Map InitializeMap(float angle)
+        public static SharpMap.Map InitializeMap(float angle)
         {
             switch (_num++ % 9)
             {
@@ -32,61 +24,61 @@ namespace WinFormSamples.Samples
             }
         }
 
-        private static Map InitializeGeoTiff(Int32 index, float angle)
+        private static SharpMap.Map InitializeGeoTiff(int index, float angle)
         {
             try
             {
                 //Sample provided by Dan Brecht and Joel Wilson
-                Map map = new Map();
-                map.BackColor = Color.White;
+                var map = new SharpMap.Map();
+                map.BackColor = System.Drawing.Color.White;
                 const string relativePath = "GeoData/GeoTiff/";
 
-                GdalRasterLayer layer;
+                SharpMap.Layers.GdalRasterLayer layer;
 
                 switch (index)
                 {
                     case 2:
-                        layer = new GdalRasterLayer("GeoTiff", relativePath + "utm.tif");
+                        layer = new SharpMap.Layers.GdalRasterLayer("GeoTiff", relativePath + "utm.tif");
                         layer.UseRotation = true;
                         map.Layers.Add(layer);
                         break;
                     case 3:
-                        layer = new GdalRasterLayer("GeoTiff", relativePath + "utm.jp2");
+                        layer = new SharpMap.Layers.GdalRasterLayer("GeoTiff", relativePath + "utm.jp2");
                         layer.UseRotation = true;
                         map.Layers.Add(layer);
                         break;
 
                     case 4:
-                        layer = new GdalRasterLayer("GeoTiff", relativePath + "world_raster_mod.tif");
+                        layer = new SharpMap.Layers.GdalRasterLayer("GeoTiff", relativePath + "world_raster_mod.tif");
                         layer.UseRotation = true;
                         map.Layers.Add(layer);
                         break;
 
                     default:
-                        if (!File.Exists(relativePath + "format01-image_a.tif"))
+                        if (!System.IO.File.Exists(relativePath + "format01-image_a.tif"))
                         {
-                            throw new Exception("Make sure the data is in the relative directory: " + relativePath);
+                            throw new System.Exception("Make sure the data is in the relative directory: " + relativePath);
                         }
 
-                        layer = new GdalRasterLayer("GeoTiffA", relativePath + "format01-image_a.tif");
+                        layer = new SharpMap.Layers.GdalRasterLayer("GeoTiffA", relativePath + "format01-image_a.tif");
                         map.Layers.Add(layer);
-                        layer = new GdalRasterLayer("GeoTiffB", relativePath + "format01-image_b.tif");
+                        layer = new SharpMap.Layers.GdalRasterLayer("GeoTiffB", relativePath + "format01-image_b.tif");
                         map.Layers.Add(layer);
-                        layer = new GdalRasterLayer("GeoTiffC", relativePath + "format01-image_c.tif");
+                        layer = new SharpMap.Layers.GdalRasterLayer("GeoTiffC", relativePath + "format01-image_c.tif");
                         map.Layers.Add(layer);
-                        layer = new GdalRasterLayer("GeoTiffD", relativePath + "format01-image_d.tif");
+                        layer = new SharpMap.Layers.GdalRasterLayer("GeoTiffD", relativePath + "format01-image_d.tif");
                         map.Layers.Add(layer);
 
-                        VectorLayer shapeLayer;
+                        SharpMap.Layers.VectorLayer shapeLayer;
 
-                        if (!File.Exists(relativePath + "outline.shp"))
+                        if (!System.IO.File.Exists(relativePath + "outline.shp"))
                         {
-                            throw new Exception("Make sure the data is in the relative directory: " + relativePath);
+                            throw new System.Exception("Make sure the data is in the relative directory: " + relativePath);
                         }
 
-                        shapeLayer = new VectorLayer("outline", new ShapeFile(relativePath + "outline.shp"));
-                        shapeLayer.Style.Fill = Brushes.Transparent;
-                        shapeLayer.Style.Outline = Pens.Black;
+                        shapeLayer = new SharpMap.Layers.VectorLayer("outline", new SharpMap.Data.Providers.ShapeFile(relativePath + "outline.shp"));
+                        shapeLayer.Style.Fill = System.Drawing.Brushes.Transparent;
+                        shapeLayer.Style.Outline = System.Drawing.Pens.Black;
                         shapeLayer.Style.EnableOutline = true;
                         shapeLayer.Style.Enabled = true;
                         map.Layers.Add(shapeLayer);
@@ -95,7 +87,7 @@ namespace WinFormSamples.Samples
 
                 map.ZoomToExtents();
 
-                Matrix mat = new Matrix();
+                System.Drawing.Drawing2D.Matrix mat = new System.Drawing.Drawing2D.Matrix();
                 mat.RotateAt(angle, map.WorldToImage(map.Center));
                 map.MapTransform = mat;
 
@@ -103,45 +95,59 @@ namespace WinFormSamples.Samples
                 _gdalSampleDataset = "GeoTiff" + _num;
                 return map;
             }
-            catch (TypeInitializationException ex)
+            catch (System.TypeInitializationException ex)
             {
                 if (ex.Message == "The type initializer for 'OSGeo.GDAL.GdalPINVOKE' threw an exception.")
                 {
-                    throw new Exception(
-                        String.Format(
+                    throw new System.Exception(
+                        string.Format(
                             "The application threw a PINVOKE exception. You probably need to copy the unmanaged dll's to your bin directory. They are a part of fwtools {0}. You can download it from: http://home.gdal.org/fwtools/",
-                            GdalRasterLayer.FWToolsVersion));
+                            SharpMap.Layers.GdalRasterLayer.FWToolsVersion));
                 }
                 throw;
             }
 
         }
 
-        private static readonly string[] Vrts = new string[] { @"..\DEM\Golden_CO.dem", "contours_sample_polyline_play_polyline.asc", "contours_sample_polyline_play1_polyline.vrt", "contours_sample_polyline_play2_polyline.vrt", "contours_sample_polyline_play3_polyline.vrt", "contours_sample_polyline_play3_polyline.vrt" };
+        private static readonly string[] Vrts = new[] { @"..\DEM\Golden_CO.dem", "contours_sample_polyline_play_polyline.asc", "contours_sample_polyline_play1_polyline.vrt", "contours_sample_polyline_play2_polyline.vrt", "contours_sample_polyline_play3_polyline.vrt", "contours_sample_polyline_play3_polyline.vrt" };
         private const string RelativePath = "GeoData/VRT/";
-        private static Map InitializeVRT(ref Int32 index, float angle)
+        private static SharpMap.Map InitializeVRT(ref int index, float angle)
         {
-            Map map = new Map();
-            Int32 ind = index - 6;
+            SharpMap.Map map = new SharpMap.Map();
+            int ind = index - 6;
             if (ind >= Vrts.Length) ind = 0;
 
-            if (!File.Exists(RelativePath + Vrts[ind]))
+            if (!System.IO.File.Exists(RelativePath + Vrts[ind]))
             {
-                throw new Exception("Make sure the data is in the relative directory: " + RelativePath);
+                throw new System.Exception("Make sure the data is in the relative directory: " + RelativePath);
             }
 
-            GdalRasterLayer layer = new GdalRasterLayer("VirtualRasterTable", RelativePath + Vrts[ind]);
+            SharpMap.Layers.GdalRasterLayer layer = new SharpMap.Layers.GdalRasterLayer("VirtualRasterTable", RelativePath + Vrts[ind]);
+
+            var ext = System.IO.Path.GetExtension(layer.Filename);
             map.Layers.Add(layer);
-            _gdalSampleDataset = string.Format("'{0}'", Path.GetExtension(layer.Filename).ToUpper());
+            _gdalSampleDataset = string.Format("'{0}'", ext != null ? ext.ToUpper() : string.Empty);
             map.ZoomToExtents();
 
-            Matrix mat = new Matrix();
+            System.Drawing.Drawing2D.Matrix mat = new System.Drawing.Drawing2D.Matrix();
             mat.RotateAt(angle, map.WorldToImage(map.Center));
             map.MapTransform = mat;
             //index++;
             return map;
         }
 
+        public static SharpMap.Map InitializeMap(int angle, string[] filenames)
+        {
+            var map = new SharpMap.Map();
+            for (int i = 0; i < filenames.Length; i++)
+                map.Layers.Add(new SharpMap.Layers.GdalRasterLayer(System.IO.Path.GetFileName(filenames[i]), filenames[i]));
+
+            System.Drawing.Drawing2D.Matrix mat = new System.Drawing.Drawing2D.Matrix();
+            mat.RotateAt(angle, map.WorldToImage(map.Center));
+            map.MapTransform = mat;
+
+            return map;
+        }
     }
 
 }

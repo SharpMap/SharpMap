@@ -117,5 +117,22 @@ namespace WinFormSamples.Samples
 
             return map;
         }
+
+        internal static Map InitializeMap(float angle, string[] filenames)
+        {
+            var providers = new SharpMap.Data.Providers.ShapeFile[filenames.Length];
+            for (int i = 0; i < filenames.Length; i++)
+            {
+                providers[i] = new ShapeFile(filenames[i]);
+            }
+
+            var map = LayerTools.GetMapForProviders(providers);
+
+            Matrix mat = new Matrix();
+            mat.RotateAt(angle, map.WorldToImage(map.Center));
+            map.MapTransform = mat;
+
+            return map;
+        }
     }
 }

@@ -1,5 +1,6 @@
 namespace ExampleCodeSnippets
 {
+    using cd = CreatingData;
         [NUnit.Framework.TestFixture]
     public class EnsureVisibleSample
     {
@@ -22,15 +23,13 @@ public static void EnsureVisible(SharpMap.Map map, SharpMap.Geometries.Point pt)
     System.Console.WriteLine(string.Format("Valid envelope does not contain {0}", pt));
 
     //LineString from Map.Center -> to Point
-    var ls = new SharpMap.Geometries.LineString(
-        new SharpMap.Geometries.Point[] {evbb.GetCentroid(), pt});
+    var ls = new SharpMap.Geometries.LineString(new[] {evbb.GetCentroid(), pt});
     System.Console.WriteLine(string.Format("LineString Map.Center -> Point: {0}", ls));
 
     //Setup Linestring from BoundingBox
     var gf = new GisSharpBlog.NetTopologySuite.Geometries.GeometryFactory();
     var evbbpts = new System.Collections.Generic.List<SharpMap.Geometries.Point>(
-        new SharpMap.Geometries.Point[] {evbb.TopLeft, evbb.TopRight, 
-            evbb.BottomRight, evbb.BottomLeft, evbb.TopLeft });
+        new[] {evbb.TopLeft, evbb.TopRight, evbb.BottomRight, evbb.BottomLeft, evbb.TopLeft });
     var evbblinearring = new SharpMap.Geometries.LineString(evbbpts);
     System.Console.WriteLine(string.Format("Linestring of valid envelope: {0}", evbblinearring));
 
@@ -55,19 +54,6 @@ public static void EnsureVisible(SharpMap.Map map, SharpMap.Geometries.Point pt)
 
 }
 
-        private static readonly System.Random _randomNumberGenerator = new System.Random();
-        static System.Double[] GetRandomOrdinates(System.Int32 size, System.Double min, System.Double max)
-        {
-            System.Double[] arr = new System.Double[size];
-            System.Double width = max - min;
-            for(System.Int32 i = 0; i < size; i++)
-            {
-                System.Double randomValue = _randomNumberGenerator.NextDouble();
-                arr[i] = min + randomValue*width;
-            }
-            return arr;
-        }
-        
         [NUnit.Framework.Test]
         public void TestEnsureVisible()
         {
@@ -75,10 +61,9 @@ public static void EnsureVisible(SharpMap.Map map, SharpMap.Geometries.Point pt)
             SharpMap.Map map = new SharpMap.Map(new System.Drawing.Size(720,360));
             
             //Create some random sample data
-            CreatingData cd = new CreatingData();
             SharpMap.Data.FeatureDataTable fdt =
-                cd.CreatePointFeatureDataTableFromArrays(GetRandomOrdinates(80, -180, 180),
-                                                         GetRandomOrdinates(80, -90, 90), null);
+                cd.CreatePointFeatureDataTableFromArrays(cd.GetRandomOrdinates(80, -180, 180),
+                                                         cd.GetRandomOrdinates(80, -90, 90), null);
 
             //Create layer and datasource
             SharpMap.Layers.VectorLayer vl = new SharpMap.Layers.VectorLayer("Points", new SharpMap.Data.Providers.GeometryFeatureProvider(fdt));

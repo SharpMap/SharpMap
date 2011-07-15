@@ -168,6 +168,12 @@
     <Compile Include="Styles\IStyle.cs" />
     <Compile Include="Styles\LabelStyle.cs" />
     <Compile Include="Styles\Style.cs" />
+    <Compile Include="Styles\Symbolizer\CharacterPointSymbolizer.cs" />
+    <Compile Include="Styles\Symbolizer\IPointSymbolizer.cs" />
+    <Compile Include="Styles\Symbolizer\ListPointSymbolizer.cs" />
+    <Compile Include="Styles\Symbolizer\PathPointSymbolizer.cs" />
+    <Compile Include="Styles\Symbolizer\PointSymbolizer.cs" />
+    <Compile Include="Styles\Symbolizer\RasterPointSymbolizer.cs" />
     <Compile Include="Styles\VectorStyle.cs" />
     <Compile Include="Utilities\Algorithms.cs" />
     <Compile Include="Utilities\Indexing\BinaryTree.cs" />
