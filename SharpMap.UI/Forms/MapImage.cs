@@ -90,6 +90,7 @@ namespace SharpMap.Forms
         private Bitmap _variableMap;
 
         private bool _panOrQueryIsPan;
+        private bool _zoomToPointer = false;
 
         /// <summary>
         /// Initializes a new map
@@ -126,6 +127,18 @@ namespace SharpMap.Forms
         {
             get { return _fineZoomFactor; }
             set { _fineZoomFactor = value; }
+        }
+
+        /// <summary>
+        /// Sets whether the mouse wheel should zoom to the pointer location
+        /// </summary>
+        [Description("Sets whether the mouse wheel should zoom to the pointer location")]
+        [DefaultValue(false)]
+        [Category("Behavior")]
+        public bool ZoomToPointer
+        {
+            get { return _zoomToPointer; }
+            set { _zoomToPointer = value; }
         }
 
         /// <summary>
@@ -321,6 +334,9 @@ namespace SharpMap.Forms
         {
             if (_map != null)
             {
+                if (_zoomToPointer)
+                    _map.Center = _map.ImageToWorld(new System.Drawing.Point(e.X, e.Y), true);
+         
                 double scale = (e.Delta / 120.0);
                 double scaleBase = 1 + (_wheelZoomMagnitude / (10 * (_isCtrlPressed ? _fineZoomFactor : 1)));
 
@@ -328,6 +344,17 @@ namespace SharpMap.Forms
 
                 if (MapZoomChanged != null)
                     MapZoomChanged(_map.Zoom);
+
+                if (_zoomToPointer)
+                {
+                    int NewCenterX = (this.Width / 2) + ((this.Width / 2) - e.X);
+                    int NewCenterY = (this.Height / 2) + ((this.Height / 2) - e.Y);
+
+                    _map.Center = _map.ImageToWorld(new System.Drawing.Point(NewCenterX, NewCenterY), true);
+
+                    if (MapCenterChanged != null)
+                        MapCenterChanged(_map.Center);
+                }
 
                 Refresh();
             }
@@ -338,7 +365,7 @@ namespace SharpMap.Forms
             _panOrQueryIsPan = false;
             if (_map != null)
             {
-                if (e.Button == MouseButtons.Left) //dragging
+                if (e.Button == MouseButtons.Left || e.Button == MouseButtons.Middle) //dragging
                     _mousedrag = e.Location;
                 if (MouseDown != null)
                     MouseDown(_map.ImageToWorld(new System.Drawing.Point(e.X, e.Y), true), e);
@@ -376,7 +403,7 @@ namespace SharpMap.Forms
                 if (MouseMove != null)
                     MouseMove(p, e);
 
-                if (Image != null && e.Location != _mousedrag && !_mousedragging && e.Button == MouseButtons.Left)
+                if (Image != null && e.Location != _mousedrag && !_mousedragging && (e.Button == MouseButtons.Left|| e.Button == MouseButtons.Middle))
                 {
                     _mousedragImg = Image.Clone() as Image;
                     _mousedragging = true;
@@ -438,7 +465,7 @@ namespace SharpMap.Forms
                 if (MouseUp != null)
                     MouseUp(_map.ImageToWorld(new System.Drawing.Point(e.X, e.Y), true), e);
 
-                if (e.Button == MouseButtons.Left)
+                if (e.Button == MouseButtons.Left || e.Button == MouseButtons.Middle)
                 {
                     if (ActiveTool == Tools.ZoomOut)
                     {

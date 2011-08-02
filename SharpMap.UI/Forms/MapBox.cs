@@ -271,6 +271,7 @@ namespace SharpMap.Forms
         private bool _isRefreshing;
         private Point[] _pointArray;
         private bool _showProgress;
+        private bool _zoomToPointer = false;
 
         public static void RandomizeLayerColors(VectorLayer layer)
         {
@@ -294,6 +295,18 @@ namespace SharpMap.Forms
                 _showProgress = value;
                 _progressBar.Visible = _showProgress;
             }
+        }
+
+        /// <summary>
+        /// Sets whether the mouse wheel should zoom to the pointer location
+        /// </summary>
+        [Description("Sets whether the mouse wheel should zoom to the pointer location")]
+        [DefaultValue(false)]
+        [Category("Behavior")]
+        public bool ZoomToPointer
+        {
+            get { return _zoomToPointer; }
+            set { _zoomToPointer = value; }
         }
 
         [Description("The color of selecting rectangle.")]
@@ -793,6 +806,9 @@ namespace SharpMap.Forms
 
             if (_map != null)
             {
+                if (_zoomToPointer)
+                    _map.Center = _map.ImageToWorld(new System.Drawing.Point(e.X, e.Y), true);
+
                 double scale = (e.Delta / 120.0);
                 double scaleBase = 1 + (_wheelZoomMagnitude / (10 * (IsControlPressed ? _fineZoomFactor : 1)));
 
@@ -800,6 +816,17 @@ namespace SharpMap.Forms
 
                 if (MapZoomChanged != null)
                     MapZoomChanged(_map.Zoom);
+
+                if (_zoomToPointer)
+                {
+                    int NewCenterX = (this.Width / 2) + ((this.Width / 2) - e.X);
+                    int NewCenterY = (this.Height / 2) + ((this.Height / 2) - e.Y);
+
+                    _map.Center = _map.ImageToWorld(new System.Drawing.Point(NewCenterX, NewCenterY), true);
+
+                    if (MapCenterChanged != null)
+                        MapCenterChanged(_map.Center);
+                }
 
                 Refresh();
             }
@@ -811,7 +838,7 @@ namespace SharpMap.Forms
 
             if (_map != null)
             {
-                if (e.Button == MouseButtons.Left) //dragging
+                if (e.Button == MouseButtons.Left || e.Button == MouseButtons.Middle) //dragging
                 {
                     _dragStartPoint = e.Location;
                     _dragEndPoint = e.Location;
@@ -833,7 +860,7 @@ namespace SharpMap.Forms
                 if (MouseMove != null)
                     MouseMove(p, e);
 
-                if (_image != null && e.Location != _dragStartPoint && !_dragging && e.Button == MouseButtons.Left &&
+                if (_image != null && e.Location != _dragStartPoint && !_dragging && (e.Button == MouseButtons.Left || e.Button == MouseButtons.Middle) &&
                     !(_activeTool == Tools.DrawLine || _activeTool == Tools.DrawPoint || _activeTool == Tools.DrawPolygon))
                 {
                     _dragging = true;
@@ -1117,7 +1144,7 @@ namespace SharpMap.Forms
                 if (MouseUp != null)
                     MouseUp(_map.ImageToWorld(new Point(e.X, e.Y)), e);
 
-                if (e.Button == MouseButtons.Left)
+                if (e.Button == MouseButtons.Left || e.Button == MouseButtons.Middle)
                 {
                     if (_activeTool == Tools.ZoomOut)
                     {
