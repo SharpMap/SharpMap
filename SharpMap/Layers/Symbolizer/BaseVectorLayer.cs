@@ -5,7 +5,7 @@ using System.Drawing.Drawing2D;
 #if !DotSpatialProjections
 using ProjNet.CoordinateSystems.Transformations;
 #else
-using DotSpatial.Projections
+using DotSpatial.Projections;
 #endif
 using SharpMap.Data;
 using SharpMap.Data.Providers;
