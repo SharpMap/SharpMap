@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using System.Collections.Generic;
+using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Text;
 using SharpMap;
@@ -46,12 +47,17 @@ namespace WinFormSamples.Samples
                 ) {SRID = 4326};
 
             //Set up a river layer
+            var symbolizer = new CachedLineSymbolizer();
+            symbolizer.LineSymbolizeHandlers.AddRange( new [] {
+                new PlainLineSymbolizeHandler { Line = new Pen(Color.Blue, 3) { LineJoin = LineJoin.Round } },
+                new PlainLineSymbolizeHandler{ Line = new Pen(Color.Aqua, 1)}, });
+
             var layRivers = new SharpMap.Layers.Symbolizer.LinealVectorLayer("Rivers")
                                 {
                                     //Set the datasource to a shapefile in the App_data folder
                                     DataSource = new ShapeFile("GeoData/World/rivers.shp", true),
                                     //Define a blue 2px wide pen
-                                    Symbolizer = new BasicLineSymbolizer { Line = new Pen(Color.Aqua, 2) },
+                                    Symbolizer = symbolizer,
                                     SRID = 4326
                                 };
 
@@ -78,10 +84,10 @@ namespace WinFormSamples.Samples
                                                BackColor = new SolidBrush(Color.FromArgb(128, 255, 0, 0)),
                                                HorizontalAlignment = LabelStyle.HorizontalAlignmentEnum.Center
                                            },
-                                    MaxVisible = 90,
-                                    MinVisible = 30,
-                                    SRID = 4326,
-                                    MultipartGeometryBehaviour = LabelLayer.MultipartGeometryBehaviourEnum.Largest,
+                                   MaxVisible = 90,
+                                   MinVisible = 30,
+                                   SRID = 4326,
+                                   MultipartGeometryBehaviour = LabelLayer.MultipartGeometryBehaviourEnum.Largest,
 
                                };
 
@@ -91,7 +97,6 @@ namespace WinFormSamples.Samples
                                        DataSource = layCities.DataSource,
                                        Enabled = true,
                                        LabelColumn = "Name",
-                                       MaxVisible = layLabel.MinVisible,
                                        TextRenderingHint = TextRenderingHint.AntiAlias,
                                        SmoothingMode = SmoothingMode.AntiAlias,
                                        SRID = 4326,
@@ -106,7 +111,33 @@ namespace WinFormSamples.Samples
                                                    Offset = new PointF(3, 3),
                                                    CollisionDetection = true,
                                                    Halo = new Pen(Color.Yellow, 2)
-                                               }
+                                               }, 
+                                       MaxVisible = layLabel.MinVisible,
+                                   };
+
+            //Setup River label
+            var layRiverLabel = new LabelLayer("River labels")
+                                   {
+                                       DataSource = layRivers.DataSource,
+                                       Enabled = true,
+                                       LabelColumn = "Name",
+                                       TextRenderingHint = TextRenderingHint.AntiAlias,
+                                       SmoothingMode = SmoothingMode.AntiAlias,
+                                       SRID = 4326,
+                                       LabelFilter = LabelCollisionDetection.ThoroughCollisionDetection,
+                                       MultipartGeometryBehaviour = LabelLayer.MultipartGeometryBehaviourEnum.All,
+                                       Style =
+                                           new LabelStyle
+                                               {
+                                                   ForeColor = Color.DarkBlue,
+                                                   Font = new Font("Arial", 11),
+                                                   HorizontalAlignment = LabelStyle.HorizontalAlignmentEnum.Center,
+                                                   VerticalAlignment = LabelStyle.VerticalAlignmentEnum.Middle,
+                                                   //CollisionDetection = true,
+                                                   Halo = new Pen(Color.Azure, 2), 
+                                                   IgnoreLength =  true
+                                                   
+                                               }, 
                                    };
 
             //Add the layers to the map object.
@@ -114,6 +145,7 @@ namespace WinFormSamples.Samples
             map.Layers.Add(layCountries);
             map.Layers.Add(layRivers);
             map.Layers.Add(layCities);
+            map.Layers.Add(layRiverLabel);
             map.Layers.Add(layLabel);
             map.Layers.Add(layCityLabel);
 
