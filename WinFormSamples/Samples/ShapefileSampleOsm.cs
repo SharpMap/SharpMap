@@ -88,10 +88,12 @@ namespace WinFormSamples.Samples
             Map map = new Map();
             map.BackColor = Color.Cornsilk;
 
+            var encoding = System.Text.Encoding.GetEncoding(1252);
+
             //Set up the countries layer
             VectorLayer layNatural = new VectorLayer("Natural");
             //Set the datasource to a shapefile in the App_data folder
-            layNatural.DataSource = new ShapeFile(string.Format("{0}/natural.shp", PathOsm), true);
+            layNatural.DataSource = new ShapeFile(string.Format("{0}/natural.shp", PathOsm), true) { Encoding = encoding };
             //Set default style to draw nothing
             layNatural.Style = transparentStyle;
             //Set theme
@@ -134,7 +136,7 @@ namespace WinFormSamples.Samples
             layNatural.SRID = 31466;
 
             VectorLayer layRoads = new VectorLayer("Roads");
-            layRoads.DataSource = new ShapeFile(string.Format("{0}/roads.shp", PathOsm));
+            layRoads.DataSource = new ShapeFile(string.Format("{0}/roads.shp", PathOsm)) { Encoding = encoding };
             layRoads.DataSource.Open();
             _roadsExtents = layRoads.DataSource.GetExtents();
             //layRoads.DataSource.Close();
@@ -219,7 +221,7 @@ namespace WinFormSamples.Samples
             layRoads.SRID = 31466;
 
             VectorLayer layRail = new VectorLayer("Railways");
-            layRail.DataSource = new ShapeFile(string.Format("{0}/railways.shp", PathOsm));
+            layRail.DataSource = new ShapeFile(string.Format("{0}/railways.shp", PathOsm)) { Encoding = encoding };
             layRail.Style.Line.Brush = Brushes.White;
             layRail.Style.Line.DashPattern = new float[] {4f, 4f};//;System.Drawing.Drawing2D.DashStyle.Dash;
             layRail.Style.Line.Width = 4;
@@ -229,7 +231,7 @@ namespace WinFormSamples.Samples
 
             VectorLayer layWaterways = new VectorLayer("Waterways");
             layWaterways.Style = transparentStyle;
-            layWaterways.DataSource = new ShapeFile(string.Format("{0}/waterways.shp", PathOsm));
+            layWaterways.DataSource = new ShapeFile(string.Format("{0}/waterways.shp", PathOsm)) { Encoding = encoding };
             layRoads.Style = transparentStyle;
             ThemeViaDelegate themeWater = new ThemeViaDelegate(transparentStyle, "type");
             themeWater.GetStyleFunction = delegate(FeatureDataRow row)
@@ -263,7 +265,7 @@ namespace WinFormSamples.Samples
             layWaterways.SRID = 31466;
 
             VectorLayer layPoints = new VectorLayer("Points");
-            layPoints.DataSource = new ShapeFile(string.Format("{0}/points.shp", PathOsm));
+            layPoints.DataSource = new ShapeFile(string.Format("{0}/points.shp", PathOsm)) { Encoding = encoding };
             layPoints.Style = transparentStyle2;
             ThemeViaDelegate themePoints = new ThemeViaDelegate(transparentStyle2, "type");
             themePoints.GetStyleFunction = delegate(FeatureDataRow row)
@@ -298,14 +300,19 @@ namespace WinFormSamples.Samples
             layPoints.Theme = themePoints;
             layWaterways.SRID = 31466;
 
+            var layLabel = new LabelLayer("Road Labels");
+            layLabel.DataSource = layRoads.DataSource;
+            layLabel.LabelColumn = "Name";
+
             //Add layers to Map
             map.Layers.Add(layNatural);
             map.Layers.Add(layWaterways);
             map.Layers.Add(layRail);
             map.Layers.Add(layRoads);
             map.Layers.Add(layPoints);
+            map.Layers.Add(layLabel);
 
-            ShapeProvider sp = new ShapeProvider(string.Format("{0}/obepath.shp", PathOsm));
+            ShapeProvider sp = new ShapeProvider(string.Format("{0}/obepath.shp", PathOsm)) { Encoding = encoding };
             VectorLayer vl = new VectorLayer("obepath", sp);
             vl.SRID = 31466;
             vl.Style.Symbol = new Bitmap("Images/car.gif");

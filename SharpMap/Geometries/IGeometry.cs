@@ -26,7 +26,7 @@ namespace SharpMap.Geometries
     /// <summary>
     /// Defines basic interface for a Geometry
     /// </summary>
-    public interface IGeometry
+    public interface IGeometry : IGeometryClassifier
     {
         #region "Basic Methods on Geometry"
 

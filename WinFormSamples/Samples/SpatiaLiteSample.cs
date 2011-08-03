@@ -1,5 +1,3 @@
-using System;
-
 namespace WinFormSamples.Samples
 {
     public static class SpatiaLiteSample
@@ -94,11 +92,26 @@ namespace WinFormSamples.Samples
                 }
             };
 
+            var layRiverLabels = new SharpMap.Layers.LabelLayer("RiverLabels");
+            layRiverLabels.DataSource = layRivers.DataSource;
+            layRiverLabels.LabelColumn = "Name";
+            layRiverLabels.Style = new SharpMap.Styles.LabelStyle
+                                       {
+                                           Font = new System.Drawing.Font("Arial", 10, System.Drawing.FontStyle.Bold),
+                                           Halo = new System.Drawing.Pen(System.Drawing.Color.Azure, 2),
+                                           ForeColor = System.Drawing.Color.DarkCyan,
+                                           IgnoreLength = true,
+                                           Enabled = true,
+                                           CollisionDetection = true,
+                                           
+                                       };
+
             //Add the layers to the map object.
             //The order we add them in are the order they are drawn, so we add the rivers last to put them on top
             map.Layers.Add(layCountries);
             map.Layers.Add(layRivers);
             map.Layers.Add(layCities);
+            map.Layers.Add(layRiverLabels);
             map.Layers.Add(layLabel);
             map.Layers.Add(layCityLabel);
 
@@ -108,10 +121,9 @@ namespace WinFormSamples.Samples
 
             map.ZoomToExtents(); // = 360;
             //map.Center = new SharpMap.Geometries.Point(0, 0);
-            System.Drawing.Drawing2D.Matrix mat = new System.Drawing.Drawing2D.Matrix();
+            var mat = new System.Drawing.Drawing2D.Matrix();
             mat.RotateAt(angle, map.WorldToImage(map.Center));
             map.MapTransform = mat;
-
             return map;
 
         }
@@ -142,8 +154,9 @@ namespace WinFormSamples.Samples
                     return map;
                 }
             }
-            catch (TypeInitializationException ex)
+            catch (System.Exception ex)
             {
+                System.Diagnostics.Trace.WriteLine(ex.Message);
             }
             return null;
         }

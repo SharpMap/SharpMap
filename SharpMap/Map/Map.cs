@@ -24,6 +24,7 @@ using System.IO;
 using SharpMap.Geometries;
 using SharpMap.Layers;
 using SharpMap.Rendering;
+using SharpMap.Rendering.Decoration;
 using SharpMap.Utilities;
 using Point=SharpMap.Geometries.Point;
 using System.Drawing.Imaging;
@@ -75,7 +76,7 @@ namespace SharpMap
         /// <summary>
         /// Initializes a new map
         /// </summary>
-        public Map() : this(new Size(300, 150))
+        public Map() : this(new Size(640, 480))
         {
         }
 
@@ -217,36 +218,11 @@ namespace SharpMap
         /// <returns>the map image</returns>
         public Image GetMap()
         {
-
-
             Image img = new Bitmap(Size.Width, Size.Height);
             Graphics g = Graphics.FromImage(img);
             RenderMap(g);
             g.Dispose();
             return img;
-            /*
-            if (Layers == null || Layers.Count == 0)
-                throw new InvalidOperationException("No layers to render");
-
-            Image img = new Bitmap(Size.Width, Size.Height);
-            Graphics g = Graphics.FromImage(img);
-            g.Transform = MapTransform;
-            g.Clear(BackColor);
-            g.PageUnit = GraphicsUnit.Pixel;
-            int SRID = (Layers.Count > 0 ? Layers[0].SRID : -1); //Get the SRID of the first layer
-            for (int i = 0; i < _Layers.Count; i++)
-            {
-                if (_Layers[i].Enabled && _Layers[i].MaxVisible >= Zoom && _Layers[i].MinVisible < Zoom)
-                    _Layers[i].Render(g, this);
-
-                if (this.LayerRendered != null)
-                    this.LayerRendered(this, new EventArgs());
-
-            }
-            if (MapRendered != null) MapRendered(g); //Fire render event
-            g.Dispose();
-            return img;
-             */
         }
 
         /// <summary>
@@ -399,10 +375,15 @@ namespace SharpMap
                 }
             }
 
+            RenderDisclaimer(g);
+
+            // Render all map decorations
+            foreach (var mapDecoration in _decorations)
+            {
+                mapDecoration.Render(g, this);
+            }
             //Resets the timer for VariableLayer
             VariableLayerCollection.Pause = false;
-
-            RenderDisclaimer(g);
 
             OnMapRendered(g);
         }
@@ -487,7 +468,13 @@ namespace SharpMap
 
             g.Transform = transform;
             if (layerCollectionType == LayerCollectionType.Static)
+            {
                 RenderDisclaimer(g);
+                foreach (var mapDecoration in Decorations)
+                {
+                    mapDecoration.Render(g, this);
+                }
+            }
 
             VariableLayerCollection.Pause = false;
 
@@ -647,6 +634,8 @@ namespace SharpMap
 
         #region Properties
 
+        private readonly List<IMapDecoration> _decorations = new List<IMapDecoration>();
+
         private Color _BackgroundColor;
         private Point _Center;
         private readonly LayerCollection _Layers;
@@ -659,6 +648,14 @@ namespace SharpMap
         private Size _Size;
         private double _Zoom;
         internal Matrix MapTransformInverted;
+
+        /// <summary>
+        /// List of all map decorations
+        /// </summary>
+        public IList<IMapDecoration> Decorations
+        {
+            get { return _decorations; }
+        }
 
         /// <summary>
         /// Gets the extents of the current map based on the current zoom, center and mapsize

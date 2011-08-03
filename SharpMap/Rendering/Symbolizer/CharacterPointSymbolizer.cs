@@ -19,7 +19,7 @@ using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 
-namespace SharpMap.Styles.Symbolizer
+namespace SharpMap.Rendering.Symbolizer
 {
     /// <summary>
     /// Text Point Style

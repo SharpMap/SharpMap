@@ -21,7 +21,7 @@ using System.Drawing;
 using SharpMap.Geometries;
 using Point = SharpMap.Geometries.Point;
 
-namespace SharpMap.Styles.Symbolizer    
+namespace SharpMap.Rendering.Symbolizer    
 {
     /// <summary>
     /// ListPointSymbolizer class
@@ -57,26 +57,13 @@ namespace SharpMap.Styles.Symbolizer
         }
         #endregion
 
-
-        /// <summary>
-        /// Method to render the Point to the <see cref="Graphics"/> object.
-        /// </summary>
-        /// <param name="map">The map object</param>
-        /// <param name="point">Location where to render the Symbol</param>
-        /// <param name="g">The graphics object to use.</param>
-        public void Render(Map map, Point point, Graphics g)
-        {
-            foreach (var pointSymbolizer in Items)
-                pointSymbolizer.Render(map, point, g);
-        }
-
         /// <summary>
         /// Method to render the Point to the <see cref="Graphics"/> object.
         /// </summary>
         /// <param name="map">The map object</param>
         /// <param name="points">Location where to render the Symbol</param>
         /// <param name="g">The graphics object to use.</param>
-        public void Render(Map map, MultiPoint points, Graphics g)
+        public void Render(Map map, IPuntal points, Graphics g)
         {
             foreach (var pointSymbolizer in Items)
                 pointSymbolizer.Render(map, points, g);
@@ -130,7 +117,16 @@ namespace SharpMap.Styles.Symbolizer
         }
 
 
+        public void Begin(Graphics g, Map map, int aproximateNumberOfGeometries)
+        {
+        }
 
+        public void Symbolize(Graphics g, Map map)
+        {
+        }
 
+        public void End(Graphics g, Map map)
+        {
+        }
     }
 }

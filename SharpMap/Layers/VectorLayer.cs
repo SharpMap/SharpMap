@@ -202,6 +202,7 @@ namespace SharpMap.Layers
         /// </summary>
         /// <param name="g">Graphics object reference</param>
         /// <param name="map">Map which is rendered</param>
+        /// 
         public override void Render(Graphics g, Map map)
         {
             if (map.Center == null)
@@ -225,99 +226,117 @@ namespace SharpMap.Layers
             if (DataSource == null)
                 throw (new ApplicationException("DataSource property not set on layer '" + LayerName + "'"));
 
+
+
+
+
             //If thematics is enabled, we use a slighty different rendering approach
             if (Theme != null)
+                RenderInternal(g, map, envelope, Theme);
+            else
+                RenderInternal(g, map, envelope);
+
+
+            base.Render(g, map);
+        }
+
+        protected void RenderInternal(Graphics g, Map map, BoundingBox envelope, ITheme theme)
+        {
+            FeatureDataSet ds = new FeatureDataSet();
+            lock (_dataSource)
             {
-                FeatureDataSet ds = new FeatureDataSet();
-                lock (_dataSource)
-                {
-                    DataSource.Open();
-                    DataSource.ExecuteIntersectionQuery(envelope, ds);
-                    DataSource.Close();
-                }
+                DataSource.Open();
+                DataSource.ExecuteIntersectionQuery(envelope, ds);
+                DataSource.Close();
+            }
 
-                foreach (FeatureDataTable features in ds.Tables)
-                {
+            foreach (FeatureDataTable features in ds.Tables)
+            {
 
 
-                    if (CoordinateTransformation != null)
-                        for (int i = 0; i < features.Count; i++)
+                if (CoordinateTransformation != null)
+                    for (int i = 0; i < features.Count; i++)
 #if !DotSpatialProjections
-                            features[i].Geometry = GeometryTransform.TransformGeometry(features[i].Geometry,
-                                                                                       CoordinateTransformation.
-                                                                                           MathTransform);
+                    features[i].Geometry = GeometryTransform.TransformGeometry(features[i].Geometry,
+                                                                                CoordinateTransformation.
+                                                                                    MathTransform);
 #else
-                        features[i].Geometry = GeometryTransform.TransformGeometry(features[i].Geometry,
-                                                                                   CoordinateTransformation.Source,
-                                                                                   CoordinateTransformation.Target);
+                    features[i].Geometry = GeometryTransform.TransformGeometry(features[i].Geometry,
+                                                                                CoordinateTransformation.Source,
+                                                                                CoordinateTransformation.Target);
 
 #endif
 
-                    //Linestring outlines is drawn by drawing the layer once with a thicker line
-                    //before drawing the "inline" on top.
-                    if (Style.EnableOutline)
-                    {
-                        //foreach (SharpMap.Geometries.Geometry feature in features)
-                        for (int i = 0; i < features.Count; i++)
-                        {
-                            FeatureDataRow feature = features[i];
-                            VectorStyle outlineStyle = Theme.GetStyle(feature) as VectorStyle;
-                            if (outlineStyle == null) continue;
-                            if (!(outlineStyle.Enabled && outlineStyle.EnableOutline)) continue;
-                            if (!(outlineStyle.MinVisible <= map.Zoom && map.Zoom <= outlineStyle.MaxVisible)) continue;
-
-                            //Draw background of all line-outlines first
-                            if (feature.Geometry is LineString)
-                            {
-                                VectorRenderer.DrawLineString(g, feature.Geometry as LineString, outlineStyle.Outline,
-                                                                  map, outlineStyle.LineOffset);
-                            }
-                            else if (feature.Geometry is MultiLineString)
-                            {
-                                VectorRenderer.DrawMultiLineString(g, feature.Geometry as MultiLineString,
-                                                                   outlineStyle.Outline, map, outlineStyle.LineOffset);
-                            }
-                        }
-                    }
-
+                //Linestring outlines is drawn by drawing the layer once with a thicker line
+                //before drawing the "inline" on top.
+                if (Style.EnableOutline)
+                {
+                    //foreach (SharpMap.Geometries.Geometry feature in features)
                     for (int i = 0; i < features.Count; i++)
                     {
                         FeatureDataRow feature = features[i];
-                        VectorStyle style = Theme.GetStyle(feature) as VectorStyle;
-                        if (style == null) continue;
-                        if (!style.Enabled) continue;
-                        if (!(style.MinVisible <= map.Zoom && map.Zoom <= style.MaxVisible)) continue;
-                        RenderGeometry(g, map, feature.Geometry, style);
+                        VectorStyle outlineStyle = Theme.GetStyle(feature) as VectorStyle;
+                        if (outlineStyle == null) continue;
+                        if (!(outlineStyle.Enabled && outlineStyle.EnableOutline)) continue;
+                        if (!(outlineStyle.MinVisible <= map.Zoom && map.Zoom <= outlineStyle.MaxVisible)) continue;
+
+                        //Draw background of all line-outlines first
+                        if (feature.Geometry is LineString)
+                        {
+                            VectorRenderer.DrawLineString(g, feature.Geometry as LineString, outlineStyle.Outline,
+                                                                map, outlineStyle.LineOffset);
+                        }
+                        else if (feature.Geometry is MultiLineString)
+                        {
+                            VectorRenderer.DrawMultiLineString(g, feature.Geometry as MultiLineString,
+                                                                outlineStyle.Outline, map, outlineStyle.LineOffset);
+                        }
                     }
                 }
-            }
-            else
-            {
-                //if style is not enabled, we don't need to render anything
-                if (!Style.Enabled) return;
-                Collection<Geometry> geoms = null;
-                // Is datasource already open?
-                lock (_dataSource)
+
+                for (int i = 0; i < features.Count; i++)
                 {
-                    bool alreadyOpen = DataSource.IsOpen;
-
-                    // If not open yet, open it
-                    if (!alreadyOpen) { DataSource.Open(); }
-
-                    // Read data
-                    geoms = DataSource.GetGeometriesInView(envelope);
-
-                    // If was not open, close it
-                    if (!alreadyOpen) { DataSource.Close(); }
+                    FeatureDataRow feature = features[i];
+                    VectorStyle style = Theme.GetStyle(feature) as VectorStyle;
+                    if (style == null) continue;
+                    if (!style.Enabled) continue;
+                    if (!(style.MinVisible <= map.Zoom && map.Zoom <= style.MaxVisible)) continue;
+                    RenderGeometry(g, map, feature.Geometry, style);
                 }
-                if (CoordinateTransformation != null)
-                    for (int i = 0; i < geoms.Count; i++)
-#if !DotSpatialProjections
-                        geoms[i] = GeometryTransform.TransformGeometry(geoms[i], CoordinateTransformation.MathTransform);
-#else
-                        geoms[i] = GeometryTransform.TransformGeometry(geoms[i], CoordinateTransformation.Source, CoordinateTransformation.Target);
-#endif
+            }
+        }
 
+        protected void RenderInternal(Graphics g, Map map, BoundingBox envelope)
+        {
+            //if style is not enabled, we don't need to render anything
+            if (!Style.Enabled) return;
+            Collection<Geometry> geoms;
+            // Is datasource already open?
+            lock (_dataSource)
+            {
+                bool alreadyOpen = DataSource.IsOpen;
+
+                // If not open yet, open it
+                if (!alreadyOpen) { DataSource.Open(); }
+
+                // Read data
+                geoms = DataSource.GetGeometriesInView(envelope);
+                Console.Out.WriteLine(string.Format("Layer {0}, NumGeometries {1}", LayerName, geoms.Count));
+
+                // If was not open, close it
+                if (!alreadyOpen) { DataSource.Close(); }
+            }
+            if (CoordinateTransformation != null)
+                for (int i = 0; i < geoms.Count; i++)
+#if !DotSpatialProjections
+                    geoms[i] = GeometryTransform.TransformGeometry(geoms[i], CoordinateTransformation.MathTransform);
+#else
+                    geoms[i] = GeometryTransform.TransformGeometry(geoms[i], CoordinateTransformation.Source, CoordinateTransformation.Target);
+#endif
+            if (Style.LineSymbolizer != null) {
+                Style.LineSymbolizer.Begin(g, map, geoms.Count);
+            } 
+            else {
                 //Linestring outlines is drawn by drawing the layer once with a thicker line
                 //before drawing the "inline" on top.
                 if (Style.EnableOutline)
@@ -334,29 +353,27 @@ namespace SharpMap.Layers
                         }
                     }
                 }
-
-                for (int i = 0; i < geoms.Count; i++)
-                {
-                    if (geoms[i] != null)
-                        RenderGeometry(g, map, geoms[i], Style);
-                }
             }
 
+            for (int i = 0; i < geoms.Count; i++)
+            {
+                if (geoms[i] != null)
+                    RenderGeometry(g, map, geoms[i], Style);
+            }
 
-            base.Render(g, map);
+            if (Style.LineSymbolizer != null)
+            {
+                Style.LineSymbolizer.Symbolize(g, map);
+                Style.LineSymbolizer.End(g, map);
+            }
         }
 
         protected void RenderGeometry(Graphics g, Map map, Geometry feature, VectorStyle style)
         {
-            //ToDo: Add Property 'public GeometryType2 GeometryType { get; }' to remove this
             GeometryType2 geometryType = feature.GeometryType;
-            //(GeometryType2)Enum.Parse(typeof(GeometryType2), feature.GetType().Name);
-            
             switch (geometryType)
-            //switch (feature.GetType().FullName)
             {
                 case GeometryType2.Polygon:
-                //case "SharpMap.Geometries.Polygon":
                     if (style.EnableOutline)
                         VectorRenderer.DrawPolygon(g, (Polygon) feature, style.Fill, style.Outline, _clippingEnabled,
                                                    map);
@@ -364,7 +381,6 @@ namespace SharpMap.Layers
                         VectorRenderer.DrawPolygon(g, (Polygon) feature, style.Fill, null, _clippingEnabled, map);
                     break;
                 case GeometryType2.MultiPolygon:
-                //case "SharpMap.Geometries.MultiPolygon":
                     if (style.EnableOutline)
                         VectorRenderer.DrawMultiPolygon(g, (MultiPolygon) feature, style.Fill, style.Outline,
                                                         _clippingEnabled, map);
@@ -373,15 +389,22 @@ namespace SharpMap.Layers
                                                         map);
                     break;
                 case GeometryType2.LineString:
-                //case "SharpMap.Geometries.LineString":
-                        VectorRenderer.DrawLineString(g, (LineString) feature, style.Line, map, style.LineOffset);
-                   break;
+                    if (style.LineSymbolizer != null)
+                    {
+                        style.LineSymbolizer.Render(map, (LineString)feature, g);    
+                        return;
+                    }
+                    VectorRenderer.DrawLineString(g, (LineString) feature, style.Line, map, style.LineOffset);
+                    return;
                 case GeometryType2.MultiLineString:
-                //case "SharpMap.Geometries.MultiLineString":
+                    if (style.LineSymbolizer != null)
+                    {
+                        style.LineSymbolizer.Render(map, (MultiLineString)feature, g);    
+                        return;
+                    }
                     VectorRenderer.DrawMultiLineString(g, (MultiLineString) feature, style.Line, map, style.LineOffset);
                     break;
                 case GeometryType2.Point:
-                //case "SharpMap.Geometries.Point":
                     if (style.PointSymbolizer != null)
                     {
                         VectorRenderer.DrawPoint(style.PointSymbolizer, g, (Point)feature, map);

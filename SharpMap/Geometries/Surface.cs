@@ -27,7 +27,7 @@ namespace SharpMap.Geometries
     /// simple surfaces along their boundaries, polyhedral surfaces in three-dimensional space may not be planar as
     /// a whole.
     /// </remarks>
-    public abstract class Surface : Geometry
+    public abstract class Surface : Geometry, IPolygonal
     {
         /// <summary>
         /// The area of this Surface, as measured in the spatial reference system of this Surface.

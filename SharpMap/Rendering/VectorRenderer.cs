@@ -21,7 +21,7 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Reflection;
 using SharpMap.Geometries;
-using SharpMap.Styles.Symbolizer;
+using SharpMap.Rendering.Symbolizer;
 using SharpMap.Utilities;
 using Point=SharpMap.Geometries.Point;
 using System.Runtime.CompilerServices;
@@ -33,8 +33,8 @@ namespace SharpMap.Rendering
     /// </summary>
     public static class VectorRenderer
     {
-        private const float ExtremeValueLimit = 1E+8f;
-        private const float NearZero = 1E-30f; // 1/Infinity
+        internal const float ExtremeValueLimit = 1E+8f;
+        internal const float NearZero = 1E-30f; // 1/Infinity
 
         static VectorRenderer()
         {
@@ -109,10 +109,7 @@ namespace SharpMap.Rendering
 
                 return newPoints;
             }
-            else
-            {
-                return points;
-            }
+            return points;
         }
 
         /// <summary>
@@ -122,7 +119,6 @@ namespace SharpMap.Rendering
         /// <param name="line">LineString to render</param>
         /// <param name="pen">Pen style used for rendering</param>
         /// <param name="map">Map reference</param>
-        /// <param name="offset">Offset by which line will be moved to right</param>
         [MethodImpl(MethodImplOptions.Synchronized)]
         public static void DrawLineString(Graphics g, LineString line, Pen pen, Map map)
         {
@@ -135,15 +131,16 @@ namespace SharpMap.Rendering
         /// <param name="line">LineString to render</param>
         /// <param name="pen">Pen style used for rendering</param>
         /// <param name="map">Map reference</param>
+        /// <param name="offset">Offset by which line will be moved to right</param>
         public static void DrawLineString(Graphics g, LineString line, Pen pen, Map map, float offset)
         {
             if (line.Vertices.Count > 1)
             {
                 GraphicsPath gp = new GraphicsPath();
                 if (offset == 0)
-                    gp.AddLines(LimitValues(line.TransformToImage(map), ExtremeValueLimit));
+                    gp.AddLines(/*LimitValues(*/line.TransformToImage(map)/*, ExtremeValueLimit)*/);
                 else
-                    gp.AddLines(OffsetRight(LimitValues(line.TransformToImage(map), ExtremeValueLimit), offset));
+                    gp.AddLines(OffsetRight(/*LimitValues(*/line.TransformToImage(map)/*, ExtremeValueLimit)*/, offset));
     
                 g.DrawPath(pen, gp);
             }
@@ -186,14 +183,14 @@ namespace SharpMap.Rendering
 
                 //Add the exterior polygon
                 if (!clip)
-                    gp.AddPolygon(LimitValues(pol.ExteriorRing.TransformToImage(map), ExtremeValueLimit));
+                    gp.AddPolygon(/*LimitValues(*/pol.ExteriorRing.TransformToImage(map)/*, ExtremeValueLimit)*/);
                 else
                     DrawPolygonClipped(gp, pol.ExteriorRing.TransformToImage(map), map.Size.Width, map.Size.Height);
 
                 //Add the interior polygons (holes)
                 for (int i = 0; i < pol.InteriorRings.Count; i++)
                     if (!clip)
-                        gp.AddPolygon(LimitValues(pol.InteriorRings[i].TransformToImage(map), ExtremeValueLimit));
+                        gp.AddPolygon(/*LimitValues(*/pol.InteriorRings[i].TransformToImage(map)/*, ExtremeValueLimit)*/);
                     else
                         DrawPolygonClipped(gp, pol.InteriorRings[i].TransformToImage(map), map.Size.Width,
                                            map.Size.Height);

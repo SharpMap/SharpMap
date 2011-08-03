@@ -20,7 +20,7 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.Reflection;
 
-namespace SharpMap.Styles.Symbolizer
+namespace SharpMap.Rendering.Symbolizer
 {
     ///<summary>
     /// 

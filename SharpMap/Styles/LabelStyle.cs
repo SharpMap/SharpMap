@@ -99,6 +99,41 @@ namespace SharpMap.Styles
         }
 
         /// <summary>
+        /// Function to get a <see cref="StringFormat"/> with <see cref="StringFormat.Alignment"/> and <see cref="StringFormat.LineAlignment"/> properties according to 
+        /// <see cref="HorizontalAlignment"/> and <see cref="VerticalAlignment"/>
+        /// </summary>
+        /// <returns>A <see cref="StringFormat"/></returns>
+        internal StringFormat GetStringFormat()
+        {
+            var r = (StringFormat)StringFormat.GenericTypographic.Clone();
+            switch (HorizontalAlignment)
+            {
+                case HorizontalAlignmentEnum.Center:
+                    r.Alignment = StringAlignment.Center;
+                    break;
+                case HorizontalAlignmentEnum.Left:
+                    r.Alignment = StringAlignment.Near;
+                    break;
+                case HorizontalAlignmentEnum.Right:
+                    r.Alignment = StringAlignment.Far;
+                    break;
+            }
+            switch (VerticalAlignment)
+            {
+                case VerticalAlignmentEnum.Middle:
+                    r.LineAlignment = StringAlignment.Center;
+                    break;
+                case VerticalAlignmentEnum.Top:
+                    r.LineAlignment = StringAlignment.Near;
+                    break;
+                case VerticalAlignmentEnum.Bottom:
+                    r.LineAlignment = StringAlignment.Far;
+                    break;
+            }
+            return r;
+        }
+
+        /// <summary>
         /// Label Font
         /// </summary>
         public Font Font

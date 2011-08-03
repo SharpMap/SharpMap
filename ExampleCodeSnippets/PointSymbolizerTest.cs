@@ -12,7 +12,7 @@ namespace ExampleCodeSnippets
                 CreatingData.GetRandomOrdinates(50, -180, 180), CreatingData.GetRandomOrdinates(50, -90, 90), null);
             var geometryFeatureProvider = new SharpMap.Data.Providers.GeometryFeatureProvider(fdt);
             var layer = new SharpMap.Layers.VectorLayer("randompoints", geometryFeatureProvider);
-            var cps  = new SharpMap.Styles.Symbolizer.CharacterPointSymbolizer
+            var cps  = new SharpMap.Rendering.Symbolizer.CharacterPointSymbolizer
                                               {
                                                   Halo = 1,
                                                   HaloBrush = new System.Drawing.SolidBrush(System.Drawing.Color.Wheat),
@@ -46,7 +46,7 @@ namespace ExampleCodeSnippets
             var geometryFeatureProvider = new SharpMap.Data.Providers.GeometryFeatureProvider(fdt);
             var layer = new SharpMap.Layers.VectorLayer("randompoints", geometryFeatureProvider);
             var pps =
-                SharpMap.Styles.Symbolizer.PathPointSymbolizer.CreateSquare(new System.Drawing.Pen(System.Drawing.Color.Red, 2),
+                SharpMap.Rendering.Symbolizer.PathPointSymbolizer.CreateSquare(new System.Drawing.Pen(System.Drawing.Color.Red, 2),
                                                                     new System.Drawing.SolidBrush(
                                                                         System.Drawing.Color.DodgerBlue), 20);
             layer.Style.PointSymbolizer = pps;
@@ -67,9 +67,9 @@ namespace ExampleCodeSnippets
             var gpTriangle2 = new System.Drawing.Drawing2D.GraphicsPath();
             gpTriangle2.AddPolygon(new[] { new System.Drawing.Point(0, 0), new System.Drawing.Point(-5, -10), new System.Drawing.Point(-10, 0), new System.Drawing.Point(0, 0), });
             pps = new
-                SharpMap.Styles.Symbolizer.PathPointSymbolizer(new[]
+                SharpMap.Rendering.Symbolizer.PathPointSymbolizer(new[]
                                                         {
-                                                            new SharpMap.Styles.Symbolizer.PathPointSymbolizer.PathDefinition
+                                                            new SharpMap.Rendering.Symbolizer.PathPointSymbolizer.PathDefinition
                                                                 {
                                                                     Path = gpTriangle1,
                                                                     Line =
@@ -79,7 +79,7 @@ namespace ExampleCodeSnippets
                                                                         new System.Drawing.SolidBrush(
                                                                         System.Drawing.Color.DodgerBlue)
                                                                 },
-                                                            new SharpMap.Styles.Symbolizer.PathPointSymbolizer.PathDefinition
+                                                            new SharpMap.Rendering.Symbolizer.PathPointSymbolizer.PathDefinition
                                                                 {
                                                                     Path = gpTriangle2,
                                                                     Line =
@@ -107,7 +107,7 @@ namespace ExampleCodeSnippets
             var geometryFeatureProvider = new SharpMap.Data.Providers.GeometryFeatureProvider(fdt);
             var layer = new SharpMap.Layers.VectorLayer("randompoints", geometryFeatureProvider);
             var rps =
-                new SharpMap.Styles.Symbolizer.RasterPointSymbolizer {Symbol = new System.Drawing.Bitmap("women.png")};
+                new SharpMap.Rendering.Symbolizer.RasterPointSymbolizer {Symbol = new System.Drawing.Bitmap("women.png")};
 
             layer.Style.PointSymbolizer = rps;
             var map = new SharpMap.Map(new System.Drawing.Size(720, 360));
@@ -119,7 +119,7 @@ namespace ExampleCodeSnippets
             map.GetMap().Save("RasterPointSymbolizer2.bmp");
             rps.Rotation = 0;
 
-            var cps = new SharpMap.Styles.Symbolizer.CharacterPointSymbolizer
+            var cps = new SharpMap.Rendering.Symbolizer.CharacterPointSymbolizer
                           {
                               Halo = 1,
                               HaloBrush = new System.Drawing.SolidBrush(System.Drawing.Color.WhiteSmoke),
@@ -130,7 +130,7 @@ namespace ExampleCodeSnippets
                 
             };
 
-            var lps = new SharpMap.Styles.Symbolizer.ListPointSymbolizer { rps, cps };
+            var lps = new SharpMap.Rendering.Symbolizer.ListPointSymbolizer { rps, cps };
 
             layer.Style.PointSymbolizer = lps;
             map.Layers.Add(layer);
@@ -146,11 +146,11 @@ namespace ExampleCodeSnippets
             var geometryFeatureProvider = new SharpMap.Data.Providers.GeometryFeatureProvider(fdt);
             var layer = new SharpMap.Layers.VectorLayer("randompoints", geometryFeatureProvider);
             var pps =
-                SharpMap.Styles.Symbolizer.PathPointSymbolizer.CreateSquare(new System.Drawing.Pen(System.Drawing.Color.Red, 2),
+                SharpMap.Rendering.Symbolizer.PathPointSymbolizer.CreateSquare(new System.Drawing.Pen(System.Drawing.Color.Red, 2),
                                                                     new System.Drawing.SolidBrush(
                                                                         System.Drawing.Color.DodgerBlue), 20);
 
-            var cps = new SharpMap.Styles.Symbolizer.CharacterPointSymbolizer
+            var cps = new SharpMap.Rendering.Symbolizer.CharacterPointSymbolizer
             {
                 Halo = 1,
                 HaloBrush = new System.Drawing.SolidBrush(System.Drawing.Color.WhiteSmoke),
@@ -159,7 +159,7 @@ namespace ExampleCodeSnippets
                 CharacterIndex = 65
             };
 
-            var lps = new SharpMap.Styles.Symbolizer.ListPointSymbolizer { pps, cps };
+            var lps = new SharpMap.Rendering.Symbolizer.ListPointSymbolizer { pps, cps };
 
             layer.Style.PointSymbolizer = lps;
             var map = new SharpMap.Map(new System.Drawing.Size(720, 360));

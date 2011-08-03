@@ -23,15 +23,18 @@ using SharpMap.Styles;
 
 namespace SharpMap.Rendering.Thematics
 {
+    /// <summary>
+    /// Gradinent theme base class
+    /// </summary>
     public abstract class GradientThemeBase : ITheme
     {
-        private ColorBlend _FillColorBlend;
-        private ColorBlend _LineColorBlend;
+        private ColorBlend _fillColorBlend;
+        private ColorBlend _lineColorBlend;
         private double _max;
         private IStyle _maxStyle;
         private double _min;
         private IStyle _minStyle;
-        private ColorBlend _TextColorBlend;
+        private ColorBlend _textColorBlend;
 
         protected GradientThemeBase(double minValue, double maxValue, IStyle minStyle, IStyle maxStyle)
         {
@@ -40,8 +43,6 @@ namespace SharpMap.Rendering.Thematics
             _maxStyle = maxStyle;
             _minStyle = minStyle;
         }
-
-
 
         /// <summary>
         /// Gets or sets the minimum value of the gradient
@@ -84,8 +85,8 @@ namespace SharpMap.Rendering.Thematics
         /// </summary>
         public ColorBlend TextColorBlend
         {
-            get { return _TextColorBlend; }
-            set { _TextColorBlend = value; }
+            get { return _textColorBlend; }
+            set { _textColorBlend = value; }
         }
 
         /// <summary>
@@ -93,8 +94,8 @@ namespace SharpMap.Rendering.Thematics
         /// </summary>
         public ColorBlend LineColorBlend
         {
-            get { return _LineColorBlend; }
-            set { _LineColorBlend = value; }
+            get { return _lineColorBlend; }
+            set { _lineColorBlend = value; }
         }
 
         /// <summary>
@@ -102,8 +103,8 @@ namespace SharpMap.Rendering.Thematics
         /// </summary>
         public ColorBlend FillColorBlend
         {
-            get { return _FillColorBlend; }
-            set { _FillColorBlend = value; }
+            get { return _fillColorBlend; }
+            set { _fillColorBlend = value; }
         }
 
 
@@ -114,15 +115,15 @@ namespace SharpMap.Rendering.Thematics
             float fFrac = Convert.ToSingle(dFrac);
             style.Enabled = (dFrac > 0.5 ? min.Enabled : max.Enabled);
             style.EnableOutline = (dFrac > 0.5 ? min.EnableOutline : max.EnableOutline);
-            if (_FillColorBlend != null)
-                style.Fill = new SolidBrush(_FillColorBlend.GetColor(fFrac));
+            if (_fillColorBlend != null)
+                style.Fill = new SolidBrush(_fillColorBlend.GetColor(fFrac));
             else if (min.Fill != null && max.Fill != null)
                 style.Fill = InterpolateBrush(min.Fill, max.Fill, value);
 
             if (min.Line != null && max.Line != null)
                 style.Line = InterpolatePen(min.Line, max.Line, value);
-            if (_LineColorBlend != null)
-                style.Line.Color = _LineColorBlend.GetColor(fFrac);
+            if (_lineColorBlend != null)
+                style.Line.Color = _lineColorBlend.GetColor(fFrac);
 
             if (min.Outline != null && max.Outline != null)
                 style.Outline = InterpolatePen(min.Outline, max.Outline, value);
@@ -140,13 +141,13 @@ namespace SharpMap.Rendering.Thematics
             LabelStyle style = new LabelStyle();
             style.CollisionDetection = min.CollisionDetection;
             style.Enabled = InterpolateBool(min.Enabled, max.Enabled, value);
-            float FontSize = InterpolateFloat(min.Font.Size, max.Font.Size, value);
-            style.Font = new Font(min.Font.FontFamily, FontSize, min.Font.Style);
+            float fontSize = InterpolateFloat(min.Font.Size, max.Font.Size, value);
+            style.Font = new Font(min.Font.FontFamily, fontSize, min.Font.Style);
             if (min.BackColor != null && max.BackColor != null)
                 style.BackColor = InterpolateBrush(min.BackColor, max.BackColor, value);
 
-            if (_TextColorBlend != null)
-                style.ForeColor = _LineColorBlend.GetColor(Convert.ToSingle(Fraction(value)));
+            if (_textColorBlend != null)
+                style.ForeColor = _lineColorBlend.GetColor(Convert.ToSingle(Fraction(value)));
             else
                 style.ForeColor = InterpolateColor(min.ForeColor, max.ForeColor, value);
             if (min.Halo != null && max.Halo != null)
@@ -170,7 +171,7 @@ namespace SharpMap.Rendering.Thematics
         {
             double frac = Fraction(attr);
             if (frac > 0.5) return max;
-            else return min;
+            return min;
         }
 
         protected float InterpolateFloat(float min, float max, double attr)
@@ -185,7 +186,7 @@ namespace SharpMap.Rendering.Thematics
 
         protected SolidBrush InterpolateBrush(Brush min, Brush max, double attr)
         {
-            if (min.GetType() != typeof(SolidBrush) || max.GetType() != typeof(SolidBrush))
+            if (!(min is SolidBrush && max is SolidBrush))
                 throw (new ArgumentException("Only SolidBrush brushes are supported in GradientTheme"));
             return new SolidBrush(InterpolateColor((min as SolidBrush).Color, (max as SolidBrush).Color, attr));
         }
@@ -216,22 +217,23 @@ namespace SharpMap.Rendering.Thematics
         protected Color InterpolateColor(Color minCol, Color maxCol, double attr)
         {
             double frac = Fraction(attr);
+            
             if (frac == 1)
                 return maxCol;
-            else if (frac == 0)
+            
+            if (frac == 0)
                 return minCol;
-            else
-            {
-                double r = (maxCol.R - minCol.R) * frac + minCol.R;
-                double g = (maxCol.G - minCol.G) * frac + minCol.G;
-                double b = (maxCol.B - minCol.B) * frac + minCol.B;
-                double a = (maxCol.A - minCol.A) * frac + minCol.A;
-                if (r > 255) r = 255;
-                if (g > 255) g = 255;
-                if (b > 255) b = 255;
-                if (a > 255) a = 255;
-                return Color.FromArgb((int)a, (int)r, (int)g, (int)b);
-            }
+
+            double r = (maxCol.R - minCol.R) * frac + minCol.R;
+            double g = (maxCol.G - minCol.G) * frac + minCol.G;
+            double b = (maxCol.B - minCol.B) * frac + minCol.B;
+            double a = (maxCol.A - minCol.A) * frac + minCol.A;
+            if (r > 255) r = 255;
+            if (g > 255) g = 255;
+            if (b > 255) b = 255;
+            if (a > 255) a = 255;
+            
+            return Color.FromArgb((int)a, (int)r, (int)g, (int)b);
         }
 
         /// <summary>
@@ -242,7 +244,7 @@ namespace SharpMap.Rendering.Thematics
         /// <returns><see cref="SharpMap.Styles.IStyle">Style</see> calculated by a linear interpolation between the min/max styles</returns>
         public virtual IStyle GetStyle(FeatureDataRow row)
         {
-            double attr = 0;
+            double attr;
             try
             {
                 attr = GetAttributeValue(row);
@@ -274,7 +276,7 @@ namespace SharpMap.Rendering.Thematics
     /// </summary>
     public class GradientTheme : GradientThemeBase
     {
-        private string _ColumnName;
+        private string _columnName;
 
 
         /// <summary>
@@ -284,7 +286,7 @@ namespace SharpMap.Rendering.Thematics
         /// <para>The gradient theme interpolates linearly between two styles based on a numerical attribute in the datasource.
         /// This is useful for scaling symbols, line widths, line and fill colors from numerical attributes.</para>
         /// <para>Colors are interpolated between two colors, but if you want to interpolate through more colors (fx. a rainbow),
-        /// set the <see cref="TextColorBlend"/>, <see cref="LineColorBlend"/> and <see cref="FillColorBlend"/> properties
+        /// set the <see cref="GradientThemeBase.TextColorBlend"/>, <see cref="GradientThemeBase.LineColorBlend"/> and <see cref="GradientThemeBase.FillColorBlend"/> properties
         /// to a custom <see cref="ColorBlend"/>.
         /// </para>
         /// <para>The following properties are scaled (properties not mentioned here are not interpolated):
@@ -322,7 +324,7 @@ namespace SharpMap.Rendering.Thematics
         public GradientTheme(string columnName, double minValue, double maxValue, IStyle minStyle, IStyle maxStyle)
             : base(minValue, maxValue, minStyle, maxStyle)
         {
-            _ColumnName = columnName;
+            _columnName = columnName;
 
         }
 
@@ -331,13 +333,13 @@ namespace SharpMap.Rendering.Thematics
         /// </summary>
         public string ColumnName
         {
-            get { return _ColumnName; }
-            set { _ColumnName = value; }
+            get { return _columnName; }
+            set { _columnName = value; }
         }
 
         protected override double GetAttributeValue(FeatureDataRow row)
         {
-            return Convert.ToDouble(row[_ColumnName]);
+            return Convert.ToDouble(row[_columnName]);
         }
     }
 }

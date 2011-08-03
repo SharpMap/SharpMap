@@ -23,7 +23,7 @@ using SharpMap.Geometries;
 using SharpMap.Utilities;
 using Point = SharpMap.Geometries.Point;
 
-namespace SharpMap.Styles.Symbolizer
+namespace SharpMap.Rendering.Symbolizer
 {
     /// <summary>
     /// Base class for all possible Point symbolizers
@@ -78,13 +78,16 @@ namespace SharpMap.Styles.Symbolizer
             var result = new SizeF(Offset.X - Scale * (size.Width * 0.5f), Offset.Y - Scale * (size.Height * 0.5f));
             return result;
         }
+
+
+
         /// <summary>
         /// Function to render the symbol
         /// </summary>
         /// <param name="map">The map</param>
         /// <param name="point">The point to symbolize</param>
         /// <param name="g">The graphics object</param>
-        public void Render(Map map, Point point, Graphics g)
+        protected void RenderPoint(Map map, Point point, Graphics g)
         {
             if (point == null)
                 return;
@@ -119,6 +122,7 @@ namespace SharpMap.Styles.Symbolizer
         /// <param name="map">The map object</param>
         /// <param name="points">Locations where to render the Symbol</param>
         /// <param name="g">The graphics object to use.</param>
+        [Obsolete]
         public void Render(Map map, MultiPoint points, Graphics g)
         {
             if (points == null)
@@ -156,6 +160,35 @@ namespace SharpMap.Styles.Symbolizer
                            ImageAttributes = new ImageAttributes(),
                            Symbol = bitmap
                        };
+        }
+
+        public void Render(Map map, IPuntal geometry, Graphics graphics)
+        {
+            var mp = geometry as MultiPoint;
+            if (mp != null)
+            {
+                foreach (Point point in mp.Points)
+                    RenderPoint(map, point, graphics);
+                return;
+            }
+            RenderPoint(map, geometry as Point, graphics);
+
+        }
+
+        public void Begin(Graphics g, Map map, int aproximateNumberOfGeometries)
+        {
+            //Nothing to do
+        }
+
+        public void Symbolize(Graphics g, Map map)
+        {
+            //Nothing to do, all points have been rendered
+            //in the Render function call
+        }
+
+        public void End(Graphics g, Map map)
+        {
+            //Nothing to do
         }
     }
 }

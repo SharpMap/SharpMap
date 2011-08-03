@@ -26,7 +26,7 @@ namespace SharpMap.Geometries
     /// value and a y-coordinate value. The boundary of a Point is the empty set.
     /// </summary>
     [Serializable]
-    public class Point : Geometry, IComparable<Point>
+    public class Point : Geometry, IComparable<Point>, IPuntal
     {
         private bool _IsEmpty = false;
         private double _X;

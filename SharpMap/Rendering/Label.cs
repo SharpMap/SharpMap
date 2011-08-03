@@ -18,6 +18,7 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using SharpMap.Styles;
 
 namespace SharpMap.Rendering
@@ -148,11 +149,11 @@ namespace SharpMap.Rendering
     /// <summary>
     /// Class for storing a label instance
     /// </summary>
-    public class Label : IComparable<Label>, IComparer<Label>
+    public abstract class BaseLabel : IComparable<BaseLabel>, IComparer<BaseLabel>
     {
         private LabelBox _box;
         private Font _Font;
-        private PointF _LabelPoint;
+        //private PointF _LabelPoint;
         private int _Priority;
         private float _Rotation;
         private bool _show;
@@ -164,16 +165,15 @@ namespace SharpMap.Rendering
         /// Initializes a new Label instance
         /// </summary>
         /// <param name="text">Text to write</param>
-        /// <param name="labelpoint">Position of label</param>
         /// <param name="rotation">Rotation</param>
         /// <param name="priority">Label priority used for collision detection</param>
         /// <param name="collisionbox">Box around label for collision detection</param>
         /// <param name="style">The style of the label</param>
-        public Label(string text, PointF labelpoint, float rotation, int priority, LabelBox collisionbox,
+        protected BaseLabel(string text, float rotation, int priority, LabelBox collisionbox,
                      LabelStyle style)
         {
             _Text = text;
-            _LabelPoint = labelpoint;
+            //_LabelPoint = labelpoint;
             _Rotation = rotation;
             _Priority = priority;
             _box = collisionbox;
@@ -197,15 +197,6 @@ namespace SharpMap.Rendering
         {
             get { return _Text; }
             set { _Text = value; }
-        }
-
-        /// <summary>
-        /// Label position
-        /// </summary>
-        public PointF LabelPoint
-        {
-            get { return _LabelPoint; }
-            set { _LabelPoint = value; }
         }
 
         /// <summary>
@@ -260,21 +251,20 @@ namespace SharpMap.Rendering
         /// </summary>
         /// <param name="other"></param>
         /// <returns></returns>
-        public int CompareTo(Label other)
+        public int CompareTo(BaseLabel other)
         {
             if (this == other)
                 return 0;
-            else if (_box == null)
+            if (_box == null)
                 return -1;
-            else if (other.Box == null)
+            if (other.Box == null)
                 return 1;
-            else
-                return _box.CompareTo(other.Box);
+            return _box.CompareTo(other.Box);
         }
 
         #endregion
 
-        #region IComparer<Label> Members
+        #region IComparer<BaseLabel> Members
 
         /// <summary>
         /// Checks if two labels intersect
@@ -282,11 +272,57 @@ namespace SharpMap.Rendering
         /// <param name="x"></param>
         /// <param name="y"></param>
         /// <returns></returns>
-        public int Compare(Label x, Label y)
+        public int Compare(BaseLabel x, BaseLabel y)
         {
             return x.CompareTo(y);
         }
 
         #endregion
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <typeparam name="T">The type of the location</typeparam>
+    public abstract class BaseLabel<T> : BaseLabel
+    {
+        /// <param name="location">Position of label</param>
+        protected BaseLabel(string text, T location, float rotation, int priority, LabelBox collisionbox, LabelStyle style)
+            : base(text, rotation, priority, collisionbox, style)
+        {
+            if (!(location is PointF || location is GraphicsPath))
+                throw new ArgumentException("Invalid location type", "location");
+            Location = location;
+        }
+
+        /// <summary>
+        /// Gets or sets the location of the label
+        /// </summary>
+        public T Location { get; set; }
+    }
+
+    public class PathLabel : BaseLabel<GraphicsPath>
+    {
+        public PathLabel(string text, GraphicsPath location, float rotation, int priority, LabelBox collisionbox, LabelStyle style) : base(text, location, rotation, priority, collisionbox, style)
+        {
+        }
+    }
+
+    public class Label : BaseLabel<PointF>
+    {
+        public Label(string text, PointF location, float rotation, int priority, LabelBox collisionbox, LabelStyle style) : base(text, location, rotation, priority, collisionbox, style)
+        {
+        }
+
+        /// <summary>
+        /// Label position
+        /// </summary>
+        [Obsolete("Use Location")]
+        public PointF LabelPoint
+        {
+            get { return Location; }
+            set { Location = value; }
+        }
+        
     }
 }

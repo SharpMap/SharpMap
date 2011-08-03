@@ -19,29 +19,13 @@ using System.Drawing;
 using SharpMap.Geometries;
 using Point = SharpMap.Geometries.Point;
 
-namespace SharpMap.Styles.Symbolizer
+namespace SharpMap.Rendering.Symbolizer
 {
     /// <summary>
     /// Interface for all classes that can symbolize Points
     /// </summary>
-    public interface IPointSymbolizer
+    public interface IPointSymbolizer : ISymbolizer<IPuntal>
     {
-        /// <summary>
-        /// Method to render the Point to the <see cref="Graphics"/> object.
-        /// </summary>
-        /// <param name="map">The map object</param>
-        /// <param name="point">Location where to render the Symbol</param>
-        /// <param name="g">The graphics object to use.</param>
-        void Render(Map map, Point point, Graphics g);
-
-        /// <summary>
-        /// Method to render the Point to the <see cref="Graphics"/> object.
-        /// </summary>
-        /// <param name="map">The map object</param>
-        /// <param name="point">Location where to render the Symbol</param>
-        /// <param name="g">The graphics object to use.</param>
-        void Render(Map map, MultiPoint point, Graphics g);
-
         /// <summary>
         /// Offset of the point from the point
         /// </summary>

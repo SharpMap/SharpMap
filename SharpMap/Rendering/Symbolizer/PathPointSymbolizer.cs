@@ -19,7 +19,7 @@ using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 
-namespace SharpMap.Styles.Symbolizer
+namespace SharpMap.Rendering.Symbolizer
 {
     ///<summary>
     /// Symbolizer class that renders custom symbols made up of custom paths

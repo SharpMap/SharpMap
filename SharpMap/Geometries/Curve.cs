@@ -21,7 +21,7 @@ namespace SharpMap.Geometries
     /// A Curve is a one-dimensional geometric object usually stored as a sequence of points,
     /// with the subtype of Curve specifying the form of the interpolation between points.
     /// </summary>
-    public abstract class Curve : Geometry
+    public abstract class Curve : Geometry, ILineal
     {
         /// <summary>
         ///  The inherent dimension of this Geometry object, which must be less than or equal to the coordinate dimension.

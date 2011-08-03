@@ -25,7 +25,7 @@ namespace SharpMap.Geometries
     /// A MultiPoint is a 0 dimensional geometric collection. The elements of a MultiPoint are
     /// restricted to Points. The points are not connected or ordered.
     /// </summary>
-    public class MultiPoint : GeometryCollection
+    public class MultiPoint : GeometryCollection, IPuntal
     {
         private IList<Point> _Points;
 

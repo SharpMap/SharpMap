@@ -17,7 +17,8 @@
 
 using System.Drawing;
 using System.Reflection;
-using SharpMap.Styles.Symbolizer;
+using SharpMap.Geometries;
+using SharpMap.Rendering.Symbolizer;
 
 namespace SharpMap.Styles
 {
@@ -82,7 +83,6 @@ namespace SharpMap.Styles
         private float _PointSize;
 
         private Brush _PointBrush = null;
-        private IPointSymbolizer _pointSymbolizer;
 
         /// <summary>
         /// Linestyle for line geometries
@@ -182,9 +182,11 @@ namespace SharpMap.Styles
 
         /// <summary>
         /// Gets or sets the offset (in pixel units) by which line will be offset from its original posision (perpendicular).
+        /// </summary>
+        /// <remarks>
         /// A positive value offsets the line to the right
         /// A negative value offsets to the left
-        /// </summary>
+        /// </remarks>
         public float LineOffset
         {
             get { return _lineOffset; }
@@ -194,15 +196,20 @@ namespace SharpMap.Styles
         /// <summary>
         /// Gets or sets the symbolizer for puntal geometries
         /// </summary>
-        public IPointSymbolizer PointSymbolizer
-        {
-            get {
-                return _pointSymbolizer;
-            }
-            set {
-                _pointSymbolizer = value;
-            }
-        }
+        /// <remarks>Setting this property will lead to ignorance towards all <see cref="IPuntal"/> related style settings</remarks>
+        public IPointSymbolizer PointSymbolizer { get; set; }
+
+        /// <summary>
+        /// Gets or sets the symbolizer for lineal geometries
+        /// </summary>
+        /// <remarks>Setting this property will lead to ignorance towards all <see cref="ILineal"/> related style settings</remarks>
+        public ILineSymbolizer LineSymbolizer { get; set; }
+
+        /// <summary>
+        /// Gets or sets the symbolizer for polygonal geometries
+        /// </summary>
+        /// <remarks>Setting this property will lead to ignorance towards all <see cref="IPolygonal"/> related style settings</remarks>
+        public IPolygonSymbolizer PolygonSymbolizer { get; set; }
 
         #endregion
     }

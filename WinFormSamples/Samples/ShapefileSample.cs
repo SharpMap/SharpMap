@@ -5,6 +5,7 @@ using SharpMap;
 using SharpMap.Data.Providers;
 using SharpMap.Layers;
 using SharpMap.Rendering;
+using SharpMap.Rendering.Symbolizer;
 using SharpMap.Styles;
 using Point=SharpMap.Geometries.Point;
 
@@ -21,14 +22,115 @@ namespace WinFormSamples.Samples
                     _mapId++;
                     return InitializeMapOrig(angle);
                 case 1:
-                    _mapId--;
+                    _mapId++;
                     return InitializeMapOsm(angle);
+                case 2:
+                    _mapId-=2;
+                    return InitializeMapWithSymbolizerLayers(angle);
                 default:
                     _mapId = 0;
                     return InitializeMapOrig(angle);
             }
         }
-        
+
+        private static Map InitializeMapWithSymbolizerLayers(float angle)
+        {
+            //Initialize a new map of size 'imagesize'
+            Map map = new Map();
+
+            //Set up the countries layer
+            var layCountries = new SharpMap.Layers.Symbolizer.PolygonalVectorLayer(
+                "Countries",
+                new ShapeFile("GeoData/World/countries.shp", true),
+                new BasicPolygonSymbolizer {Fill = new SolidBrush(Color.Green), Outline = Pens.Black,}
+                ) {SRID = 4326};
+
+            //Set up a river layer
+            var layRivers = new SharpMap.Layers.Symbolizer.LinealVectorLayer("Rivers")
+                                {
+                                    //Set the datasource to a shapefile in the App_data folder
+                                    DataSource = new ShapeFile("GeoData/World/rivers.shp", true),
+                                    //Define a blue 2px wide pen
+                                    Symbolizer = new BasicLineSymbolizer { Line = new Pen(Color.Aqua, 2) },
+                                    SRID = 4326
+                                };
+
+            //Set up a cities layer
+            var layCities = new SharpMap.Layers.Symbolizer.PuntalVectorLayer("Cities")
+                                {
+                                    //Set the datasource to a shapefile in the App_data folder
+                                    DataSource = new ShapeFile("GeoData/World/cities.shp", true),
+                                    Symbolizer = new RasterPointSymbolizer() { Scale = 0.8f },
+                                    MaxVisible = 40
+                                } ;
+
+            //Set up a country label layer
+            var layLabel = new LabelLayer("Country labels")
+                               {
+                                   DataSource = layCountries.DataSource,
+                                   Enabled = true,
+                                   LabelColumn = "Name",
+                                   Style =
+                                       new LabelStyle
+                                           {
+                                               ForeColor = Color.White,
+                                               Font = new Font(FontFamily.GenericSerif, 12),
+                                               BackColor = new SolidBrush(Color.FromArgb(128, 255, 0, 0)),
+                                               HorizontalAlignment = LabelStyle.HorizontalAlignmentEnum.Center
+                                           },
+                                    MaxVisible = 90,
+                                    MinVisible = 30,
+                                    SRID = 4326,
+                                    MultipartGeometryBehaviour = LabelLayer.MultipartGeometryBehaviourEnum.Largest,
+
+                               };
+
+            //Set up a city label layer
+            var layCityLabel = new LabelLayer("City labels")
+                                   {
+                                       DataSource = layCities.DataSource,
+                                       Enabled = true,
+                                       LabelColumn = "Name",
+                                       MaxVisible = layLabel.MinVisible,
+                                       TextRenderingHint = TextRenderingHint.AntiAlias,
+                                       SmoothingMode = SmoothingMode.AntiAlias,
+                                       SRID = 4326,
+                                       LabelFilter = LabelCollisionDetection.ThoroughCollisionDetection,
+                                       Style =
+                                           new LabelStyle
+                                               {
+                                                   ForeColor = Color.Black,
+                                                   Font = new Font(FontFamily.GenericSerif, 11),
+                                                   HorizontalAlignment = LabelStyle.HorizontalAlignmentEnum.Left,
+                                                   VerticalAlignment = LabelStyle.VerticalAlignmentEnum.Bottom,
+                                                   Offset = new PointF(3, 3),
+                                                   CollisionDetection = true,
+                                                   Halo = new Pen(Color.Yellow, 2)
+                                               }
+                                   };
+
+            //Add the layers to the map object.
+            //The order we add them in are the order they are drawn, so we add the rivers last to put them on top
+            map.Layers.Add(layCountries);
+            map.Layers.Add(layRivers);
+            map.Layers.Add(layCities);
+            map.Layers.Add(layLabel);
+            map.Layers.Add(layCityLabel);
+
+
+            //limit the zoom to 360 degrees width
+            map.MaximumZoom = 360;
+            map.BackColor = Color.LightBlue;
+
+            map.Zoom = 360;
+            map.Center = new Point(0, 0);
+
+            Matrix mat = new Matrix();
+            mat.RotateAt(angle, map.WorldToImage(map.Center));
+            map.MapTransform = mat;
+
+            return map;
+        }
         private static Map InitializeMapOrig(float angle)
         {
             //Initialize a new map of size 'imagesize'

@@ -34,6 +34,7 @@ using SharpMap.Rendering.Thematics;
 using SharpMap.Styles;
 using Point=SharpMap.Geometries.Point;
 using Transform = SharpMap.Utilities.Transform;
+using SharpMap.Rendering.Symbolizer;
 
 namespace SharpMap.Layers
 {
@@ -397,7 +398,7 @@ namespace SharpMap.Layers
                 FeatureDataTable features = ds.Tables[0];
 
                 //Initialize label collection
-                List<Label> labels = new List<Label>();
+                List<BaseLabel> labels = new List<BaseLabel>();
 
                 //List<System.Drawing.Rectangle> LabelBoxes; //Used for collision detection
                 //Render labels
@@ -448,14 +449,14 @@ namespace SharpMap.Layers
                             {
                                 foreach (Geometry geom in (feature.Geometry as GeometryCollection))
                                 {
-                                    Label lbl = CreateLabel(geom, text, rotation, priority, style, map, g);
+                                    BaseLabel lbl = CreateLabel(geom, text, rotation, priority, style, map, g);
                                     if (lbl != null)
                                         labels.Add(lbl);
                                 }
                             }
                             else if (MultipartGeometryBehaviour == MultipartGeometryBehaviourEnum.CommonCenter)
                             {
-                                Label lbl = CreateLabel(feature.Geometry, text, rotation, priority, style, map, g);
+                                BaseLabel lbl = CreateLabel(feature.Geometry, text, rotation, priority, style, map, g);
                                 if (lbl != null)
                                     labels.Add(lbl);
                             }
@@ -463,7 +464,7 @@ namespace SharpMap.Layers
                             {
                                 if ((feature.Geometry as GeometryCollection).Collection.Count > 0)
                                 {
-                                    Label lbl = CreateLabel((feature.Geometry as GeometryCollection).Collection[0], text,
+                                    BaseLabel lbl = CreateLabel((feature.Geometry as GeometryCollection).Collection[0], text,
                                                             rotation, style, map, g);
                                     if (lbl != null)
                                         labels.Add(lbl);
@@ -501,7 +502,7 @@ namespace SharpMap.Layers
                                         }
                                     }
 
-                                    Label lbl = CreateLabel(coll.Geometry(idxOfLargest), text, rotation, priority, style,
+                                    BaseLabel lbl = CreateLabel(coll.Geometry(idxOfLargest), text, rotation, priority, style,
                                                             map, g);
                                     if (lbl != null)
                                         labels.Add(lbl);
@@ -510,7 +511,7 @@ namespace SharpMap.Layers
                         }
                         else
                         {
-                            Label lbl = CreateLabel(feature.Geometry, text, rotation, priority, style, map, g);
+                            BaseLabel lbl = CreateLabel(feature.Geometry, text, rotation, priority, style, map, g);
                             if (lbl != null)
                                 labels.Add(lbl);
                         }
@@ -520,23 +521,44 @@ namespace SharpMap.Layers
                 {
                     if (Style.CollisionDetection && _labelFilter != null)
                         _labelFilter(labels);
+                    
                     for (int i = 0; i < labels.Count; i++)
-                        if (labels[i].Show)
-                            VectorRenderer.DrawLabel(g, labels[i].LabelPoint, labels[i].Style.Offset,
-                                                     labels[i].Style.Font, labels[i].Style.ForeColor,
-                                                     labels[i].Style.BackColor, Style.Halo, labels[i].Rotation,
-                                                     labels[i].Text, map);
+                    {   
+                        // Don't show the label if not necessary
+                        if (!labels[i].Show)
+                        {
+                            continue;
+                        }
+
+                        if (labels[i] is Label)
+                        {
+                            var label = labels[i] as Label;
+                            VectorRenderer.DrawLabel(g, label.Location, label.Style.Offset,
+                                                        label.Style.Font, label.Style.ForeColor,
+                                                        label.Style.BackColor, Style.Halo, label.Rotation,
+                                                        label.Text, map);
+                        }
+                        else if (labels[i] is PathLabel)
+                        {
+                            var plbl = labels[i] as PathLabel;
+                            var lblStyle = plbl.Style;
+                            g.DrawString(lblStyle.Halo, new SolidBrush(lblStyle.ForeColor), plbl.Text,
+                                         lblStyle.Font.FontFamily, (int) lblStyle.Font.Style, lblStyle.Font.Size,
+                                         lblStyle.GetStringFormat(), lblStyle.IgnoreLength, plbl.Location);
+                        }
+                    }
                 }
             }
             base.Render(g, map);
         }
 
-        private Label CreateLabel(Geometry feature, string text, float rotation, LabelStyle style, Map map, Graphics g)
+
+        private BaseLabel CreateLabel(Geometry feature, string text, float rotation, LabelStyle style, Map map, Graphics g)
         {
             return CreateLabel(feature, text, rotation, Priority, style, map, g);
         }
 
-        private static Label CreateLabel(Geometry feature, string text, float rotation, int priority, LabelStyle style, Map map,
+        private static BaseLabel CreateLabel(Geometry feature, string text, float rotation, int priority, LabelStyle style, Map map,
                                   Graphics g)
         {
             //SizeF size = g.MeasureString(text, style.Font);
@@ -551,7 +573,7 @@ namespace SharpMap.Layers
                 position.Y - size.Height > map.Size.Height || position.Y + size.Height < 0)
                 return null;
 
-            Label lbl;
+            BaseLabel lbl;
             if (!style.CollisionDetection)
                 lbl = new Label(text, position, rotation, priority, null, style);
             else
@@ -565,11 +587,14 @@ namespace SharpMap.Layers
             }
             if (feature is LineString)
             {
-                LineString line = feature as LineString;
+                var line = feature as LineString;
 
                 //Only label feature if it is long enough, or it is definately wanted                
-                if (line.Length/map.PixelSize > size.Width || style.IgnoreLength)
-                    CalculateLabelOnLinestring(line, ref lbl, map);
+                if (line.Length / map.PixelSize > size.Width || style.IgnoreLength)
+                {
+                    /*CalculateLabelOnLinestring(line, ref lbl, map);*/
+                    WarpedLabel(line, ref lbl, map);
+                }
                 else
                     return null;
             }
@@ -577,9 +602,25 @@ namespace SharpMap.Layers
             return lbl;
         }
 
-        private static void CalculateLabelOnLinestring(LineString line, ref Label label, Map map)
+        private static void WarpedLabel(LineString line, ref BaseLabel baseLabel, Map map)
+        {
+            var path = LineToGraphicsPath(line, map);
+
+            var pathLabel = new PathLabel(baseLabel.Text, path, 0f, baseLabel.Priority, new LabelBox(path.GetBounds()), baseLabel.Style);
+            baseLabel = pathLabel;
+        }
+
+        private static GraphicsPath LineToGraphicsPath(LineString line, Map map)
+        {
+            GraphicsPath path = new GraphicsPath();
+            path.AddLines(line.TransformToImage(map));
+            return path;
+        }
+
+        private static void CalculateLabelOnLinestring(LineString line, ref BaseLabel baseLabel, Map map)
         {
             double dx, dy;
+            var label = baseLabel as Label;
 
             // first find the middle segment of the line
             int midPoint = (line.Vertices.Count - 1)/2;

@@ -31,7 +31,7 @@ namespace SharpMap.Rendering
         /// </summary>
         /// <param name="labels"></param>
         /// <returns></returns>
-        public delegate void LabelFilterMethod(List<Label> labels);
+        public delegate void LabelFilterMethod(List<BaseLabel> labels);
 
         #endregion
 
@@ -41,7 +41,7 @@ namespace SharpMap.Rendering
         /// Simple and fast label collision detection.
         /// </summary>
         /// <param name="labels"></param>
-        public static void SimpleCollisionDetection(List<Label> labels)
+        public static void SimpleCollisionDetection(List<BaseLabel> labels)
         {
             labels.Sort(); // sort labels by intersectiontests of labelbox
             //remove labels that intersect other labels
@@ -61,7 +61,7 @@ namespace SharpMap.Rendering
         /// Thorough label collision detection.
         /// </summary>
         /// <param name="labels"></param>
-        public static void ThoroughCollisionDetection(List<Label> labels)
+        public static void ThoroughCollisionDetection(List<BaseLabel> labels)
         {
             labels.Sort(); // sort labels by intersectiontests of labelbox
             //remove labels that intersect other labels

@@ -28,8 +28,8 @@ namespace SharpMap.Rendering.Thematics
         /// <summary>
         /// Returns the style based on a feature
         /// </summary>
-        /// <param name="attribute">Attribute to calculate color from</param>
-        /// <returns>Color</returns>
+        /// <param name="attribute">Set of attribute values to calculate the <see cref="IStyle"/> from</param>
+        /// <returns>The style</returns>
         IStyle GetStyle(FeatureDataRow attribute);
     }
 }
