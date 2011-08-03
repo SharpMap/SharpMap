@@ -84,7 +84,8 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="BruTile, Version=0.4.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\..\NAX\Shared\ExternalLibs\BruTile.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\ExternalReferences\BruTile.dll</HintPath>
     </Reference>
     <Reference Include="DotSpatial.Projections, Version=1.0.0.28088, Culture=neutral, PublicKeyToken=272632bddd08a38b, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
