@@ -738,6 +738,13 @@ namespace SharpMap.Forms
         {
             try
             {
+                //Protect against cross-thread operations...
+                //We need this since we're modifying the cursor
+                if (this.InvokeRequired)
+                {
+                    this.Invoke(new MethodInvoker(Refresh));
+                    return;
+                }
 #if DEBUG
                 _watch.Reset();
                 _watch.Start();
