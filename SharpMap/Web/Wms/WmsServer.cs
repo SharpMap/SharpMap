@@ -32,6 +32,72 @@ namespace SharpMap.Web.Wms
     /// </summary>
     public static class WmsServer
     {
+        
+		#region Delegates
+
+        public delegate SharpMap.Data.FeatureDataTable InterSectDelegate(SharpMap.Data.FeatureDataTable featureDataTable, SharpMap.Geometries.BoundingBox box);
+
+        #endregion
+
+        private static InterSectDelegate _intersectDelegate;
+        private static int _pixelSensitivity;
+        /// <summary>
+        /// Generates a WMS 1.3.0 compliant response based on a <see cref="SharpMap.Map"/> and the current HttpRequest.
+        /// </summary>
+        /// <remarks>
+        /// <para>
+        /// The Web Map Server implementation in SharpMap requires v1.3.0 compatible clients,
+        /// and support the basic operations "GetCapabilities" and "GetMap"
+        /// as required by the WMS v1.3.0 specification. SharpMap does not support the optional
+        /// GetFeatureInfo operation for querying.
+        /// </para>
+        /// <example>
+        /// Creating a WMS server in ASP.NET is very simple using the classes in the SharpMap.Web.Wms namespace.
+        /// <code lang="C#">
+        /// void page_load(object o, EventArgs e)
+        /// {
+        ///		//Get the path of this page
+        ///		string url = (Request.Url.Query.Length>0?Request.Url.AbsoluteUri.Replace(Request.Url.Query,""):Request.Url.AbsoluteUri);
+        ///		SharpMap.Web.Wms.Capabilities.WmsServiceDescription description =
+        ///			new SharpMap.Web.Wms.Capabilities.WmsServiceDescription("Acme Corp. Map Server", url);
+        ///		
+        ///		// The following service descriptions below are not strictly required by the WMS specification.
+        ///		
+        ///		// Narrative description and keywords providing additional information 
+        ///		description.Abstract = "Map Server maintained by Acme Corporation. Contact: webmaster@wmt.acme.com. High-quality maps showing roadrunner nests and possible ambush locations.";
+        ///		description.Keywords.Add("bird");
+        ///		description.Keywords.Add("roadrunner");
+        ///		description.Keywords.Add("ambush");
+        ///		
+        ///		//Contact information 
+        ///		description.ContactInformation.PersonPrimary.Person = "John Doe";
+        ///		description.ContactInformation.PersonPrimary.Organisation = "Acme Inc";
+        ///		description.ContactInformation.Address.AddressType = "postal";
+        ///		description.ContactInformation.Address.Country = "Neverland";
+        ///		description.ContactInformation.VoiceTelephone = "1-800-WE DO MAPS";
+        ///		//Impose WMS constraints
+        ///		description.MaxWidth = 1000; //Set image request size width
+        ///		description.MaxHeight = 500; //Set image request size height
+        ///		
+        ///		//Call method that sets up the map
+        ///		//We just add a dummy-size, since the wms requests will set the image-size
+        ///		SharpMap.Map myMap = MapHelper.InitializeMap(new System.Drawing.Size(1,1));
+        ///		
+        ///		//Parse the request and create a response
+        ///		SharpMap.Web.Wms.WmsServer.ParseQueryString(myMap,description);
+        /// }
+        /// </code>
+        /// </example>
+        /// </remarks>
+        /// <param name="map">Map to serve on WMS</param>
+        /// <param name="description">Description of map service</param>
+        /// <param name="intersectDelegate">Delegate for Getfeatureinfo intersecting, when null, the WMS will default to ICanQueryLayer implementation</param>
+        public static void ParseQueryString(Map map, Capabilities.WmsServiceDescription description, int pixelSensitivity, InterSectDelegate intersectDelegate)
+        {
+            _intersectDelegate = intersectDelegate;
+            _pixelSensitivity = pixelSensitivity;
+            ParseQueryString(map, description);
+        }
         /// <summary>
         /// Generates a WMS 1.3.0 compliant response based on a <see cref="SharpMap.Map"/> and the current HttpRequest.
         /// </summary>
@@ -84,6 +150,7 @@ namespace SharpMap.Web.Wms
         /// <param name="description">Description of map service</param>
         public static void ParseQueryString(Map map, Capabilities.WmsServiceDescription description)
         {
+            _pixelSensitivity = 1;
             if (map == null)
                 throw (new ArgumentException("Map for WMS is null"));
             if (map.Layers.Count == 0)
@@ -301,8 +368,19 @@ namespace SharpMap.Web.Wms
                             ICanQueryLayer queryLayer = mapLayer as ICanQueryLayer;
                             if (queryLayer.IsQueryEnabled)
                             {
+                                Single queryBoxMinX = x - (_pixelSensitivity);
+                                Single queryBoxMinY = y - (_pixelSensitivity);
+                                Single queryBoxMaxX = x + (_pixelSensitivity);
+                                Single queryBoxMaxY = y + (_pixelSensitivity);
+                                SharpMap.Geometries.Point minXY = map.ImageToWorld(new System.Drawing.PointF(queryBoxMinX, queryBoxMinY));
+                                SharpMap.Geometries.Point maxXY = map.ImageToWorld(new System.Drawing.PointF(queryBoxMaxX, queryBoxMaxY));
+                                BoundingBox queryBox = new BoundingBox(minXY, maxXY);
                                 SharpMap.Data.FeatureDataSet fds = new SharpMap.Data.FeatureDataSet();
-                                queryLayer.ExecuteIntersectionQuery(p.GetBoundingBox(), fds);
+                                queryLayer.ExecuteIntersectionQuery(queryBox, fds);
+								if (_intersectDelegate != null)
+                                {
+                                    fds.Tables[0] = _intersectDelegate(fds.Tables[0], queryBox);
+                                }
                                 if (fds.Tables.Count == 0)
                                 {
                                     vstr = vstr + "\nSearch returned no results on layer: " + requestLayer;
