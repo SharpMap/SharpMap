@@ -587,8 +587,8 @@ namespace SharpMap.Data.Providers
                         if (dr.Read())
                         {
                             bx = new BoundingBox(Convert.ToDouble(dr["bounding_box_xmin"]),
-                                Convert.ToDouble(dr["bounding_box_xmax"]),
                                 Convert.ToDouble(dr["bounding_box_ymin"]),
+                                Convert.ToDouble(dr["bounding_box_xmax"]),
                                 Convert.ToDouble(dr["bounding_box_ymax"]));
                         }
                         dr.Close();
