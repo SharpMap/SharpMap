@@ -162,6 +162,7 @@
     <Compile Include="Layers\WmsLayer.cs" />
     <Compile Include="Rendering\Decoration\Disclaimer.cs" />
     <Compile Include="Rendering\Decoration\EyeOfSight.cs" />
+    <Compile Include="Rendering\Decoration\GoogleMapsDisclamer.cs" />
     <Compile Include="Rendering\Decoration\IMapDecoration.cs" />
     <Compile Include="Rendering\Decoration\MapDecoration.cs" />
     <Compile Include="Rendering\Decoration\MapDecorationAnchor.cs" />
