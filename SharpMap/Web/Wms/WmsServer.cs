@@ -606,7 +606,7 @@ namespace SharpMap.Web.Wms
         /// <summary>
         /// Used for setting up output format of image file
         /// </summary>
-        private static ImageCodecInfo GetEncoderInfo(String mimeType)
+        public static ImageCodecInfo GetEncoderInfo(String mimeType)
         {
             foreach (ImageCodecInfo encoder in ImageCodecInfo.GetImageEncoders())
                 if (encoder.MimeType == mimeType)
@@ -619,7 +619,7 @@ namespace SharpMap.Web.Wms
         /// </summary>
         /// <param name="strBBOX">string representation of a boundingbox</param>
         /// <returns>Boundingbox or null if invalid parameter</returns>
-        private static BoundingBox ParseBBOX(string strBBOX)
+        public static BoundingBox ParseBBOX(string strBBOX)
         {
             string[] strVals = strBBOX.Split(new[] { ',' });
             if (strVals.Length != 4)

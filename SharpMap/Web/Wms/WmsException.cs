@@ -22,14 +22,14 @@ namespace SharpMap.Web.Wms
     /// <summary>
     /// Class for throwing WMS exceptions to client
     /// </summary>
-    internal class WmsException
+    public class WmsException
     {
-        internal static void ThrowWmsException(string Message)
+        public static void ThrowWmsException(string Message)
         {
             ThrowWmsException(WmsExceptionCode.NotApplicable, Message);
         }
 
-        internal static void ThrowWmsException(WmsExceptionCode code, string Message)
+        public static void ThrowWmsException(WmsExceptionCode code, string Message)
         {
             HttpResponse Response = HttpContext.Current.Response;
             Response.Clear();
@@ -50,7 +50,7 @@ namespace SharpMap.Web.Wms
         /// <summary>
         /// WMS Exception codes
         /// </summary>
-        internal enum WmsExceptionCode
+        public enum WmsExceptionCode
         {
             /// <summary>
             /// Request contains a Format not offered by the server.
