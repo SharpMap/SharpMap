@@ -25,13 +25,16 @@ namespace SharpMap.Rendering.Decoration
     /// </summary>
     public class GoogleMapsDisclaimer : MapDecoration
     {
-        public enum MapType { Map = 0, Images=2, Labels = 1, Hybrid = 3 };
+        public enum MapType { Map = 0, Images=2, Hybrid = 3 };
         MapType m_MapType = MapType.Map;
         IMathTransform m_MathTransform = null;
         string m_Language = "us-EN";
         EventHandler m_DownloadComplete = null;
         bool m_RunAsync = false;
         ITileSource m_TileSource = null;
+
+        string m_MapPrefix = "Mapdata ©";
+        string m_SatPrefix = "Images ©";
 
         /// <summary>
         /// Initialize with custom parameters
@@ -46,7 +49,6 @@ namespace SharpMap.Rendering.Decoration
             m_RunAsync = downloadAsync;
             m_DownloadComplete = disclaimerDownloaded;
             m_MapType = mapType;
-            m_TileSource = new BruTile.Web.GoogleTileSource(BruTile.Web.GoogleMapType.GoogleMap);
         }
 
         /// <summary>
@@ -57,9 +59,11 @@ namespace SharpMap.Rendering.Decoration
             m_MathTransform = null; //Assuming WGS84
             m_Font = new Font("Arial", (float)Math.Floor((11.0 * 72 / 96)));
             m_Language = System.Threading.Thread.CurrentThread.CurrentCulture.Name;
+            m_TileSource = new BruTile.Web.GoogleTileSource(BruTile.Web.GoogleMapType.GoogleMap);
         }
 
-        Regex rex = new Regex("resp && resp\\( \\[\"(?<text>.*?)\",");
+        //Regex rex = new Regex("resp && resp\\( \\[\"(?<text>.*?)\",");
+        Regex rex = new Regex("GAddCopyright\\(\"(?<type>.*?)\",\".*?\",(?<miny>[0-9\\.-]+),(?<minx>[0-9\\.-]+),(?<maxy>[0-9\\.-]+),(?<maxx>[0-9\\.-]+),(?<minlevel>\\d+),\"(?<txt>.*?)\",(?<maxlevel>\\d+),.*?\\);", RegexOptions.Singleline);
         string m_DisclaymerText = "";
         Font m_Font = new Font("Arial",12f);
 
@@ -99,6 +103,7 @@ namespace SharpMap.Rendering.Decoration
                 double[] lr = m_MathTransform != null ?
                     m_MathTransform.Transform(new double[] { map.Envelope.Right, map.Envelope.Bottom }) : new double[] { map.Envelope.Right, map.Envelope.Bottom };
 
+
                 if (m_RunAsync)
                 {
                     DownloadDisclaimerAsync(ul, lr, level);
@@ -126,17 +131,91 @@ namespace SharpMap.Rendering.Decoration
 
         private void DownloadDisclaimer(double[] ul, double[] lr, int level)
         {
-            WebRequest rq = HttpWebRequest.Create(string.Format(CultureInfo.InvariantCulture, "http://maps.googleapis.com/maps/api/js/ViewportInfoService.GetViewportInfo?1m6&1m2&1d{0}&2d{1}&2m2&1d{2}&2d{3}&2u{7}&4s{4}&5e{6}&callback=resp&token={5}",
-                lr[1], ul[0], ul[1], lr[0], m_Language, 12345, (int)m_MapType, level));
-            string jSon = new StreamReader(rq.GetResponse().GetResponseStream()).ReadToEnd();
-
-            if (rex.IsMatch(jSon))
+            try
             {
-                Match m = rex.Match(jSon);
-                if (m.Groups["text"].Success)
+                //level = m_TileSource.Schema.Resolutions.Count - level;
+                string mapType = "";
+                if (m_MapType == MapType.Images)
+                    mapType = "k";
+                else if (m_MapType == MapType.Hybrid)
                 {
-                    m_DisclaymerText = m.Groups["text"].Value;
+                    mapType = "h";
                 }
+               
+                //string url = string.Format(CultureInfo.InvariantCulture, "http://maps.googleapis.com/maps/api/js/ViewportInfoService.GetViewportInfo?1m6&1m2&1d{0}&2d{1}&2m2&1d{2}&2d{3}&2u{7}&4s{4}&5e{6}&callback=resp&token={5}", lr[1], ul[0], ul[1], lr[0], m_Language, 12345, (int)m_MapType, level);
+                string url = string.Format(CultureInfo.InvariantCulture, "http://maps.google.com/maps/vp?spn={0},{1}&t={5}&z={2}&key=&mapclient=jsapi&vp={3},{4}&ev=mk",
+                    ul[1] - lr[1], lr[0] - ul[0], level, (lr[1] + ul[1]) / 2.0, (ul[0] + lr[0]) / 2.0, mapType);
+                WebRequest rq = HttpWebRequest.Create(url);
+                (rq as HttpWebRequest).Referer = "http://localhost";
+                (rq as HttpWebRequest).UserAgent = "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.1 (KHTML, like Gecko) Chrome/13.0.782.112 Safari/535.1";
+                string jSon = new StreamReader(rq.GetResponse().GetResponseStream()).ReadToEnd();
+
+                List<string> mstrs = new List<string>();
+                List<string> kstrs = new List<string>();
+
+                BoundingBox bbox = new BoundingBox(ul[0],lr[1],lr[0],ul[1]);
+                foreach (Match m in rex.Matches(jSon))
+                {
+                    if (m.Groups["txt"].Success && !string.IsNullOrEmpty(m.Groups["txt"].Value))
+                    {
+                        int minLevel = int.Parse(m.Groups["minlevel"].Value);
+                        int maxLevel = int.Parse(m.Groups["maxlevel"].Value);
+                        if (level < minLevel || level > maxLevel)
+                            continue;
+                        double minx = double.Parse(m.Groups["minx"].Value, CultureInfo.InvariantCulture);
+                        double miny = double.Parse(m.Groups["miny"].Value, CultureInfo.InvariantCulture);
+                        double maxx = double.Parse(m.Groups["maxx"].Value, CultureInfo.InvariantCulture);
+                        double maxy = double.Parse(m.Groups["maxy"].Value, CultureInfo.InvariantCulture);
+
+
+                        
+                        if (bbox.Intersects(new BoundingBox(minx, miny, maxx, maxy)))
+                        {
+
+                            if (m.Groups["type"].Value == "m")
+                            {
+                                if (!mstrs.Contains(m.Groups["txt"].Value))
+                                    mstrs.Add(m.Groups["txt"].Value);
+                            }
+                            else
+                            {
+                                if (!kstrs.Contains(m.Groups["txt"].Value))
+                                {
+                                kstrs.Add(m.Groups["txt"].Value);
+                                }
+                            }
+                        }
+                    }
+                }
+
+                string txt = "";
+                if (m_MapType == MapType.Map || m_MapType == MapType.Hybrid)
+                {
+                    txt = m_MapPrefix + " " + string.Join(",", mstrs);
+                }
+                else if ( m_MapType == MapType.Images)
+                {
+                    txt = m_SatPrefix + " " + string.Join(",",kstrs);
+                }
+
+
+                if (m_MapType == MapType.Hybrid)
+                {
+                    txt += ", " + m_SatPrefix + " " + string.Join(",", kstrs);
+                }
+
+                m_DisclaymerText = txt;
+                /*if (rex.IsMatch(jSon))
+                {
+                    Match m = rex.Match(jSon);
+                    if (m.Groups["text"].Success)
+                    {
+                        m_DisclaymerText = m.Groups["text"].Value;
+                    }
+                }*/
+            }
+            catch
+            {
             }
         }
 
