@@ -667,12 +667,12 @@ namespace SharpMap.Data.Providers
 		/// <summary>
 		/// Gets a datarow from the datasource at the specified index
 		/// </summary>
-		/// <param name="RowID"></param>
+		/// <param name="rowId"></param>
 		/// <returns></returns>
-		public FeatureDataRow GetFeature(uint RowID)
+		public FeatureDataRow GetFeature(uint rowId)
 		{
 			//return GetFeature(RowID, null);
-			return GetFeature(RowID, dbaseFile.NewTable);
+			return GetFeature(rowId, dbaseFile.NewTable);
 		}
 
 		/// <summary>

@@ -94,9 +94,9 @@ namespace SharpMap.Data.Providers
         /// <summary>
         /// Returns a <see cref="SharpMap.Data.FeatureDataRow"/> based on a RowID
         /// </summary>
-        /// <param name="RowID"></param>
+        /// <param name="rowId"></param>
         /// <returns>datarow</returns>
-        FeatureDataRow GetFeature(uint RowID);
+        FeatureDataRow GetFeature(uint rowId);
 
         /// <summary>
         /// <see cref="SharpMap.Geometries.BoundingBox"/> of dataset

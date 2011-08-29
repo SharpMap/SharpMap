@@ -303,14 +303,14 @@ namespace SharpMap.Data.Providers
         /// <summary>
         /// Returns a datarow based on a RowID
         /// </summary>
-        /// <param name="RowID"></param>
+        /// <param name="rowId"></param>
         /// <returns>datarow</returns>
-        public FeatureDataRow GetFeature(uint RowID)
+        public FeatureDataRow GetFeature(uint rowId)
         {
             using (SqlConnection conn = new SqlConnection(_ConnectionString))
             {
                 string strSQL = "SELECT *, " + GeometryColumn + " AS sharpmap_tempgeometry FROM " + Table + " WHERE " +
-                                ObjectIdColumn + "='" + RowID.ToString() + "'";
+                                ObjectIdColumn + "='" + rowId.ToString() + "'";
                 using (SqlDataAdapter adapter = new SqlDataAdapter(strSQL, conn))
                 {
                     DataSet ds = new DataSet();

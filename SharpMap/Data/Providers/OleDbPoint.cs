@@ -312,13 +312,13 @@ namespace SharpMap.Data.Providers
         /// <summary>
         /// Returns a datarow based on a RowID
         /// </summary>
-        /// <param name="RowID"></param>
+        /// <param name="rowId"></param>
         /// <returns>datarow</returns>
-        public FeatureDataRow GetFeature(uint RowID)
+        public FeatureDataRow GetFeature(uint rowId)
         {
             using (OleDbConnection conn = new OleDbConnection(_ConnectionString))
             {
-                string strSQL = "select * from " + Table + " WHERE " + ObjectIdColumn + "=" + RowID.ToString();
+                string strSQL = "select * from " + Table + " WHERE " + ObjectIdColumn + "=" + rowId.ToString();
 
                 using (OleDbDataAdapter adapter = new OleDbDataAdapter(strSQL, conn))
                 {

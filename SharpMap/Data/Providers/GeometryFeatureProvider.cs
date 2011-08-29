@@ -212,11 +212,11 @@ namespace SharpMap.Data.Providers
         /// <summary>
         /// Throws an NotSupportedException. Attribute data is not supported by this datasource
         /// </summary>
-        /// <param name="RowID"></param>
+        /// <param name="rowId"></param>
         /// <returns></returns>
-        public FeatureDataRow GetFeature(uint RowID)
+        public FeatureDataRow GetFeature(uint rowId)
         {
-            return _features[(int) RowID];
+            return _features[(int) rowId];
         }
 
         /// <summary>

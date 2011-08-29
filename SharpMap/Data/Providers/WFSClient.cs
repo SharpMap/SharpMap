@@ -592,7 +592,7 @@ namespace SharpMap.Data.Providers
             throw new Exception("The method or operation is not implemented.");
         }
 
-        public FeatureDataRow GetFeature(uint RowID)
+        public FeatureDataRow GetFeature(uint rowId)
         {
             throw new Exception("The method or operation is not implemented.");
         }
