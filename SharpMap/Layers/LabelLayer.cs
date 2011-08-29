@@ -370,12 +370,16 @@ namespace SharpMap.Layers
         {
             if (Style.Enabled && Style.MaxVisible >= map.Zoom && Style.MinVisible < map.Zoom)
             {
+                
                 if (DataSource == null)
                     throw (new ApplicationException("DataSource property not set on layer '" + LayerName + "'"));
                 g.TextRenderingHint = TextRenderingHint;
                 g.SmoothingMode = SmoothingMode;
 
                 BoundingBox envelope = map.Envelope; //View to render
+                var lineClipping = new CohenSutherlandLineClipping(envelope.Min.X, envelope.Min.Y,
+                                                                   envelope.Max.X, envelope.Max.Y);
+
                 if (CoordinateTransformation != null)
                 {
 #if !DotSpatialProjections
@@ -395,7 +399,9 @@ namespace SharpMap.Layers
                     base.Render(g, map);
                     return;
                 }
+
                 FeatureDataTable features = ds.Tables[0];
+
 
                 //Initialize label collection
                 List<BaseLabel> labels = new List<BaseLabel>();
@@ -424,7 +430,7 @@ namespace SharpMap.Layers
                     float rotationStyle = style != null ? style.Rotation : 0f;
                     float rotationColumn = 0f;
                     if (!String.IsNullOrEmpty(RotationColumn))
-                        float.TryParse(feature[RotationColumn].ToString(), NumberStyles.Any, Map.NumberFormatEnUs,
+                        Single.TryParse(feature[RotationColumn].ToString(), NumberStyles.Any, Map.NumberFormatEnUs,
                                        out rotationColumn);
                     float rotation = rotationStyle + rotationColumn;
 
@@ -432,7 +438,7 @@ namespace SharpMap.Layers
                     if (_getPriorityMethod != null)
                         priority = _getPriorityMethod(feature);
                     else if (!String.IsNullOrEmpty(PriorityColumn))
-                        int.TryParse(feature[PriorityColumn].ToString(), NumberStyles.Any, Map.NumberFormatEnUs,
+                        Int32.TryParse(feature[PriorityColumn].ToString(), NumberStyles.Any, Map.NumberFormatEnUs,
                                      out priority);
 
                     string text;
@@ -443,6 +449,15 @@ namespace SharpMap.Layers
 
                     if (!String.IsNullOrEmpty(text))
                     {
+                        // for lineal geometries, try clipping to ensure proper labeling
+                        if (feature.Geometry is ILineal)
+                        {
+                            if (feature.Geometry is LineString)
+                                feature.Geometry = lineClipping.ClipLineString(feature.Geometry as LineString);
+                            else if (feature.Geometry is MultiLineString)
+                                feature.Geometry = lineClipping.ClipLineString(feature.Geometry as MultiLineString);
+                        }
+
                         if (feature.Geometry is GeometryCollection)
                         {
                             if (MultipartGeometryBehaviour == MultipartGeometryBehaviourEnum.All)
@@ -561,10 +576,32 @@ namespace SharpMap.Layers
         private static BaseLabel CreateLabel(Geometry feature, string text, float rotation, int priority, LabelStyle style, Map map,
                                   Graphics g)
         {
-            //SizeF size = g.MeasureString(text, style.Font);
+            BaseLabel lbl = null;
 
+            if (feature is ILineal)
+            {
+                var line = feature as LineString;
+                if (line != null)
+                {
+                    var positiveLineString = PositiveLineString(line, false);
+                    var lineStringPath = LineStringToPath(positiveLineString, map/*, false*/);
+                    var rect = lineStringPath.GetBounds();
+                    
+                    if (style.CollisionDetection)
+                    {
+                        var cbx = style.CollisionBuffer.Width;
+                        var cby = style.CollisionBuffer.Height;
+                        rect.Inflate(2* cbx, 2* cby);
+                        rect.Offset( -cbx, -cby);
+                    }
+                    var labelBox = new LabelBox(rect);
+                    
+                    lbl = new PathLabel(text, lineStringPath, 0, priority, labelBox, style);
+                }
+                return lbl;
+            }
+            
             SizeF size = VectorRenderer.SizeOfString(g, text, style.Font);
-            //PointF position = map.WorldToImage(feature.GetBoundingBox().GetCentroid());
             PointF position = Transform.WorldtoMap(feature.GetBoundingBox().GetCentroid(), map);
 
             position.X = position.X - size.Width*(short) style.HorizontalAlignment*0.5f;
@@ -573,7 +610,6 @@ namespace SharpMap.Layers
                 position.Y - size.Height > map.Size.Height || position.Y + size.Height < 0)
                 return null;
 
-            BaseLabel lbl;
             if (!style.CollisionDetection)
                 lbl = new Label(text, position, rotation, priority, null, style);
             else
@@ -585,6 +621,8 @@ namespace SharpMap.Layers
                                              size.Width + 2f*style.CollisionBuffer.Width,
                                              size.Height + style.CollisionBuffer.Height*2f), style);
             }
+
+            /*
             if (feature is LineString)
             {
                 var line = feature as LineString;
@@ -592,30 +630,119 @@ namespace SharpMap.Layers
                 //Only label feature if it is long enough, or it is definately wanted                
                 if (line.Length / map.PixelSize > size.Width || style.IgnoreLength)
                 {
-                    /*CalculateLabelOnLinestring(line, ref lbl, map);*/
-                    WarpedLabel(line, ref lbl, map);
+                    CalculateLabelOnLinestring(line, ref lbl, map);
                 }
                 else
                     return null;
             }
-
+            */
             return lbl;
         }
 
-        private static void WarpedLabel(LineString line, ref BaseLabel baseLabel, Map map)
+        /// <summary>
+        /// Very basic test to check for positve direction of Linestring
+        /// </summary>
+        /// <param name="line">The linestring to test</param>
+        /// <param name="isRightToLeft">Value indicating whether labels are to be printed right to left</param>
+        /// <returns>The positively directed linestring</returns>
+        private static LineString PositiveLineString(LineString line, bool isRightToLeft)
         {
-            var path = LineToGraphicsPath(line, map);
+            var s = line.StartPoint;
+            var e = line.EndPoint;
 
-            var pathLabel = new PathLabel(baseLabel.Text, path, 0f, baseLabel.Priority, new LabelBox(path.GetBounds()), baseLabel.Style);
-            baseLabel = pathLabel;
+            var dx = e.X - s.X;
+            if (isRightToLeft && dx < 0)
+                return line;
+            
+            if (!isRightToLeft && dx >= 0)
+                return line;
+
+            var revCoord = new Stack<Point>(line.Vertices);
+            return new LineString(revCoord.ToArray());
         }
 
-        private static GraphicsPath LineToGraphicsPath(LineString line, Map map)
+        //private static void WarpedLabel(MultiLineString line, ref BaseLabel baseLabel, Map map)
+        //{
+        //    var path = MultiLineStringToPath(line, map, true);
+
+        //    var pathLabel = new PathLabel(baseLabel.Text, path, 0f, baseLabel.Priority, new LabelBox(path.GetBounds()), baseLabel.Style);
+        //    baseLabel = pathLabel;
+        //}
+
+        //private static void WarpedLabel(LineString line, ref BaseLabel baseLabel, Map map)
+        //{
+            
+        //    var path = LineStringToPath(line, map, false);
+
+        //    var pathLabel = new PathLabel(baseLabel.Text, path, 0f, baseLabel.Priority, new LabelBox(path.GetBounds()), baseLabel.Style);
+        //    baseLabel = pathLabel;
+        //}
+
+
+        /// <summary>
+        /// Function to transform a linestring to a graphics path for further processing
+        /// </summary>
+        /// <param name="lineString">The Linestring</param>
+        /// <param name="map">The map</param>
+        ///// <param name="useClipping">A value indicating whether clipping should be applied or not</param>
+        /// <returns>A GraphicsPath</returns>
+        public static GraphicsPath LineStringToPath(LineString lineString, Map map/*, bool useClipping*/)
         {
-            GraphicsPath path = new GraphicsPath();
-            path.AddLines(line.TransformToImage(map));
-            return path;
+            var gp = new GraphicsPath(FillMode.Alternate);
+            //if (!useClipping)
+                gp.AddLines(lineString.TransformToImage(map));
+            //else
+            //{
+            //    var bb = map.Envelope;
+            //    var cohenSutherlandLineClipping = new CohenSutherlandLineClipping(bb.Left, bb.Bottom, bb.Right, bb.Top);
+            //    var clippedLineStrings = cohenSutherlandLineClipping.ClipLineString(lineString);
+            //    foreach (var clippedLineString in clippedLineStrings.LineStrings)
+            //    {
+            //        var s = clippedLineString.StartPoint;
+            //        var e = clippedLineString.EndPoint;
+                    
+            //        var dx = e.X - s.X;
+            //        //var dy = e.Y - s.Y;
+
+            //        LineString revcls = null;
+            //        if (dx < 0)
+            //            revcls = ReverseLineString(clippedLineString);
+                    
+            //        gp.StartFigure();
+            //        gp.AddLines(revcls == null ? clippedLineString.TransformToImage(map) : revcls.TransformToImage(map));
+            //    }
+            //}
+            return gp;
         }
+
+        //private static LineString ReverseLineString(LineString clippedLineString)
+        //{
+        //    var coords = new Stack<Point>(clippedLineString.Vertices);
+        //    return new LineString(coords.ToArray());
+        //}
+
+        ///// <summary>
+        ///// Function to transform a linestring to a graphics path for further processing
+        ///// </summary>
+        ///// <param name="multiLineString">The Linestring</param>
+        ///// <param name="map">The map</param>
+        ///// <param name="useClipping">A value indicating whether clipping should be applied or not</param>
+        ///// <returns>A GraphicsPath</returns>
+        //public static GraphicsPath MultiLineStringToPath(MultiLineString multiLineString, Map map, bool useClipping)
+        //{
+        //    var gp = new GraphicsPath(FillMode.Alternate);
+        //    foreach (var lineString in multiLineString.LineStrings)
+        //        gp.AddPath(LineStringToPath(lineString, map, useClipping), false);
+
+        //    return gp;
+        //}
+
+        //private static GraphicsPath LineToGraphicsPath(LineString line, Map map)
+        //{
+        //    GraphicsPath path = new GraphicsPath();
+        //    path.AddLines(line.TransformToImage(map));
+        //    return path;
+        //}
 
         private static void CalculateLabelOnLinestring(LineString line, ref BaseLabel baseLabel, Map map)
         {

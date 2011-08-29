@@ -16,6 +16,7 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
 
 using System.Drawing;
+using System.Drawing.Drawing2D;
 
 namespace SharpMap.Styles
 {
@@ -168,7 +169,12 @@ namespace SharpMap.Styles
         public Pen Halo
         {
             get { return _Halo; }
-            set { _Halo = value; }
+            set
+            {
+                _Halo = value;
+                if (_Halo != null)
+                    _Halo.LineJoin = LineJoin.Round;
+            }
         }
 
 

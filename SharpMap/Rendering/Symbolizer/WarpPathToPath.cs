@@ -264,8 +264,8 @@ namespace SharpMap.Rendering.Symbolizer
         {
             var rect = path.GetBounds();
 
-            double maxX = rect.Left;
-            double minX = rect.Right;
+            double maxX = rect.Right;
+            double minX = rect.Left;
 
             /*
             PointF[] pathPoints = path.PathPoints;
@@ -419,6 +419,9 @@ namespace SharpMap.Rendering.Symbolizer
         /// <param name="path"></param>
         public static void DrawString(this Graphics self, Pen halo, Brush fill, string text, FontFamily fontFamily, int style, float emSize, StringFormat format, bool ignoreLength, GraphicsPath path)
         {
+            if (path == null || path.PointCount == 0)
+                return;
+            
             var gp = new GraphicsPath();
             gp.AddString(text, fontFamily, style, emSize, new Point(0, 0), format);
 

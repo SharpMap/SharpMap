@@ -95,6 +95,7 @@ namespace WinFormSamples.Samples
             var layRiverLabels = new SharpMap.Layers.LabelLayer("RiverLabels");
             layRiverLabels.DataSource = layRivers.DataSource;
             layRiverLabels.LabelColumn = "Name";
+            layRiverLabels.PriorityDelegate = GetRiverLength;
             layRiverLabels.Style = new SharpMap.Styles.LabelStyle
                                        {
                                            Font = new System.Drawing.Font("Arial", 10, System.Drawing.FontStyle.Bold),
@@ -103,8 +104,9 @@ namespace WinFormSamples.Samples
                                            IgnoreLength = true,
                                            Enabled = true,
                                            CollisionDetection = true,
-                                           
+                                          
                                        };
+            layRiverLabels.LabelFilter = SharpMap.Rendering.LabelCollisionDetection.ThoroughCollisionDetection;
 
             //Add the layers to the map object.
             //The order we add them in are the order they are drawn, so we add the rivers last to put them on top
@@ -159,6 +161,21 @@ namespace WinFormSamples.Samples
                 System.Diagnostics.Trace.WriteLine(ex.Message);
             }
             return null;
+        }
+
+        internal static int GetRiverLength(SharpMap.Data.FeatureDataRow row)
+        {
+            if (row == null) return 0;
+            if (row.Geometry == null)
+                return 0;
+            var ml = row.Geometry as SharpMap.Geometries.MultiLineString;
+            if (ml != null)
+                return System.Convert.ToInt32(ml.Length);
+
+            var l = row.Geometry as SharpMap.Geometries.LineString;
+            if (l != null)
+                return System.Convert.ToInt32(l.Length);
+            return 0;
         }
     }
 }

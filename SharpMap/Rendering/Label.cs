@@ -286,10 +286,15 @@ namespace SharpMap.Rendering
     /// <typeparam name="T">The type of the location</typeparam>
     public abstract class BaseLabel<T> : BaseLabel
     {
+        /// <param name="text">The label's text</param>
         /// <param name="location">Position of label</param>
         protected BaseLabel(string text, T location, float rotation, int priority, LabelBox collisionbox, LabelStyle style)
             : base(text, rotation, priority, collisionbox, style)
         {
+            //if (typeof(T) is ValueType)
+            if (location==null)
+                return;
+
             if (!(location is PointF || location is GraphicsPath))
                 throw new ArgumentException("Invalid location type", "location");
             Location = location;

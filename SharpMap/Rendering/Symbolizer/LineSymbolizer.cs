@@ -1,8 +1,6 @@
 using System.Drawing;
 using System.Drawing.Drawing2D;
-using SharpMap.Data;
 using SharpMap.Geometries;
-using SharpMap.Rendering.Thematics;
 
 namespace SharpMap.Rendering.Symbolizer
 {
@@ -49,18 +47,10 @@ namespace SharpMap.Rendering.Symbolizer
         /// <param name="map">The map</param>
         ///// <param name="useClipping">A value indicating whether clipping should be applied or not</param>
         /// <returns>A GraphicsPath</returns>
-        public static GraphicsPath LineStringToPath(LineString lineString, Map map /*, bool useClipping */)
+        public static GraphicsPath LineStringToPath(LineString lineString, Map map)
         {
             var gp = new GraphicsPath(FillMode.Alternate);
-            //if (!useClipping)
-                gp.AddLines(lineString.TransformToImage(map));
-            /*
-            else
-            {
-                //ToDo
-                gp.AddLines(lineString.TransformToImage(map));
-            }
-             */
+            gp.AddLines(lineString.TransformToImage(map));
             return gp;
         }
 
@@ -84,6 +74,5 @@ namespace SharpMap.Rendering.Symbolizer
         }
         
         #endregion
-
     }
 }

@@ -111,6 +111,7 @@
     <Compile Include="Geometries\PolygonTests.cs" />
     <Compile Include="MapDecorationTest.cs" />
     <Compile Include="MapTest.cs" />
+    <Compile Include="Rendering\Symbolizer\CohenSutherlandLineClippingTest.cs" />
     <Compile Include="Rendering\Thematics\ColorBlendTest.cs" />
     <Compile Include="TestWmsCapabilityParser.cs" />
   </ItemGroup>

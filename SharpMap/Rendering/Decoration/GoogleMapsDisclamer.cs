@@ -1,20 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Net;
-using ProjNet.CoordinateSystems.Transformations;
+#if !DotSpatialProjections
+using IMathTransform = ProjNet.CoordinateSystems.Transformations;
+#else
+using DotSpatial.Projections;
+using IMathTransform = DotSpatial.Projections.ProjectionInfo;
+#endif
 using System.Globalization;
 using System.IO;
 using System.Text.RegularExpressions;
 using System.Drawing;
-using System.Drawing.Drawing2D;
 using SharpMap.Geometries;
 using System.Threading;
 using BruTile;
 
 namespace SharpMap.Rendering.Decoration
 {
+    
     /// <summary>
     /// Displays Disclaimer-information as on maps.google.com
     /// 
@@ -26,11 +29,15 @@ namespace SharpMap.Rendering.Decoration
     public class GoogleMapsDisclaimer : MapDecoration
     {
         public enum MapType { Map = 0, Images=2, Hybrid = 3 };
-        MapType m_MapType = MapType.Map;
+
+        readonly MapType m_MapType = MapType.Map;
         IMathTransform m_MathTransform = null;
+#if DotSpatialProjections
+        private readonly IMathTransform _to = KnownCoordinateSystems.Geographic.World.WGS1984;
+#endif
         string m_Language = "us-EN";
         EventHandler m_DownloadComplete = null;
-        bool m_RunAsync = false;
+        readonly bool m_RunAsync = false;
         ITileSource m_TileSource = null;
 
         string m_MapPrefix = "Mapdata ©";
@@ -63,9 +70,9 @@ namespace SharpMap.Rendering.Decoration
         }
 
         //Regex rex = new Regex("resp && resp\\( \\[\"(?<text>.*?)\",");
-        Regex rex = new Regex("GAddCopyright\\(\"(?<type>.*?)\",\".*?\",(?<miny>[0-9\\.-]+),(?<minx>[0-9\\.-]+),(?<maxy>[0-9\\.-]+),(?<maxx>[0-9\\.-]+),(?<minlevel>\\d+),\"(?<txt>.*?)\",(?<maxlevel>\\d+),.*?\\);", RegexOptions.Singleline);
+        readonly Regex _rex = new Regex("GAddCopyright\\(\"(?<type>.*?)\",\".*?\",(?<miny>[0-9\\.-]+),(?<minx>[0-9\\.-]+),(?<maxy>[0-9\\.-]+),(?<maxx>[0-9\\.-]+),(?<minlevel>\\d+),\"(?<txt>.*?)\",(?<maxlevel>\\d+),.*?\\);", RegexOptions.Singleline);
         string m_DisclaymerText = "";
-        Font m_Font = new Font("Arial",12f);
+        readonly Font m_Font = new Font("Arial",12f);
 
         protected override Size InternalSize(Graphics g, Map map)
         {
@@ -97,11 +104,23 @@ namespace SharpMap.Rendering.Decoration
             else
             {
                 int level = BruTile.Utilities.GetNearestLevel(m_TileSource.Schema.Resolutions, map.PixelSize);
+#if !DotSpatialProjections
                 double[] ul = m_MathTransform != null ?
                     m_MathTransform.Transform(new double[] { map.Envelope.Left, map.Envelope.Top }) : new double[] { map.Envelope.Left, map.Envelope.Top };
+#else
+                var ul = new[] { map.Envelope.Left, map.Envelope.Top };
+                if (m_MathTransform != null)
+                    Reproject.ReprojectPoints(ul, null, m_MathTransform, _to, 0, 1);
+#endif
 
+#if !DotSpatialProjections
                 double[] lr = m_MathTransform != null ?
                     m_MathTransform.Transform(new double[] { map.Envelope.Right, map.Envelope.Bottom }) : new double[] { map.Envelope.Right, map.Envelope.Bottom };
+#else
+                var lr = new[] {map.Envelope.Right, map.Envelope.Bottom};
+                if (m_MathTransform != null)
+                    Reproject.ReprojectPoints(lr, null, m_MathTransform, _to, 0, 1);
+#endif
 
 
                 if (m_RunAsync)
@@ -154,7 +173,7 @@ namespace SharpMap.Rendering.Decoration
                 List<string> kstrs = new List<string>();
 
                 BoundingBox bbox = new BoundingBox(ul[0],lr[1],lr[0],ul[1]);
-                foreach (Match m in rex.Matches(jSon))
+                foreach (Match m in _rex.Matches(jSon))
                 {
                     if (m.Groups["txt"].Success && !string.IsNullOrEmpty(m.Groups["txt"].Value))
                     {
