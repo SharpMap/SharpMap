@@ -284,9 +284,9 @@ namespace SharpMap.Data.Providers
         /// <summary>
         /// Returns a datarow based on a RowID
         /// </summary>
-        /// <param name="RowID"></param>
+        /// <param name="rowId"></param>
         /// <returns>datarow</returns>
-        public FeatureDataRow GetFeature(uint RowID)
+        public FeatureDataRow GetFeature(uint rowId)
         {
             throw new NotSupportedException();
         }

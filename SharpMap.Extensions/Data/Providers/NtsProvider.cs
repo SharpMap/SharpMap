@@ -243,13 +243,13 @@ namespace SharpMap.Data.Providers
         }
 
         /// <summary>
-        /// Gets the feature identified from the given <paramref name="rowID" />.
+        /// Gets the feature identified from the given <paramref name="rowId" />.
         /// </summary>
-        /// <param name="rowID">The row ID.</param>
+        /// <param name="rowId">The row ID.</param>
         /// <returns></returns>
-        public FeatureDataRow GetFeature(uint rowID)
+        public FeatureDataRow GetFeature(uint rowId)
         {
-            Feature feature = features[Convert.ToInt32(rowID)];
+            Feature feature = features[Convert.ToInt32(rowId)];
             FeatureDataTable dataTable = new FeatureDataTable();
             foreach (string columnName in feature.Attributes.GetNames())
                 dataTable.Columns.Add(new DataColumn(columnName, feature.Attributes.GetType(columnName)));

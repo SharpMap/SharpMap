@@ -383,15 +383,15 @@ namespace SharpMap.Data.Providers
         /// <summary>
         /// Returns a datarow based on a RowID
         /// </summary>
-        /// <param name="RowID"></param>
+        /// <param name="rowId"></param>
         /// <returns>datarow</returns>
-        public FeatureDataRow GetFeature(uint RowID)
+        public FeatureDataRow GetFeature(uint rowId)
         {
             using (PgConnection conn = new PgConnection(_ConnectionString))
             {
                 string strSQL =
                     String.Format("select * , AsBinary({0}) As sharpmap_tempgeometry from {1} WHERE {2} = '{3}'",
-                                  GeometryColumn, Table, ObjectIdColumn, RowID);
+                                  GeometryColumn, Table, ObjectIdColumn, rowId);
 
                 using (PgDataAdapter adapter = new PgDataAdapter(strSQL, conn))
                 {

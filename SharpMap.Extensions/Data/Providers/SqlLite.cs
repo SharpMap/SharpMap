@@ -245,12 +245,12 @@ namespace SharpMap.Data.Providers
             return count;
         }
 
-        public FeatureDataRow GetFeature(uint RowID)
+        public FeatureDataRow GetFeature(uint rowId)
         {
             using (SQLiteConnection conn = new SQLiteConnection(_connectionString))
             {
                 string strSQL = "SELECT *, " + GeometryColumn + " AS sharpmap_tempgeometry FROM " + Table + " WHERE " +
-                                ObjectIdColumn + "='" + RowID.ToString() + "'";
+                                ObjectIdColumn + "='" + rowId.ToString() + "'";
                 using (SQLiteDataAdapter adapter = new SQLiteDataAdapter(strSQL, conn))
                 {
                     DataSet ds = new DataSet();

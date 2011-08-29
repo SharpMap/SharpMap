@@ -408,14 +408,14 @@ namespace SharpMap.Data.Providers
         /// <summary>
         /// Returns a datarow based on a RowID
         /// </summary>
-        /// <param name="RowID"></param>
+        /// <param name="rowId"></param>
         /// <returns>datarow</returns>
-        public FeatureDataRow GetFeature(uint RowID)
+        public FeatureDataRow GetFeature(uint rowId)
         {
             using (OracleConnection conn = new OracleConnection(_ConnectionString))
             {
                 string strSQL = "select g.* , g." + GeometryColumn + ").Get_WKB() As sharpmap_tempgeometry from " +
-                                Table + " g WHERE " + ObjectIdColumn + "='" + RowID.ToString() + "'";
+                                Table + " g WHERE " + ObjectIdColumn + "='" + rowId.ToString() + "'";
                 using (OracleDataAdapter adapter = new OracleDataAdapter(strSQL, conn))
                 {
                     FeatureDataSet ds = new FeatureDataSet();

@@ -422,14 +422,14 @@ namespace SharpMap.Data.Providers
         /// <summary>
         /// Returns a datarow based on a RowID
         /// </summary>
-        /// <param name="RowID"></param>
+        /// <param name="rowId"></param>
         /// <returns>datarow</returns>
-        public FeatureDataRow GetFeature(uint RowID)
+        public FeatureDataRow GetFeature(uint rowId)
         {
             using (NpgsqlConnection conn = new NpgsqlConnection(_ConnectionString))
             {
                 string strSQL = "select * , AsBinary(\"" + GeometryColumn + "\") As sharpmap_tempgeometry from " +
-                                QualifiedTable + " WHERE \"" + ObjectIdColumn + "\"='" + RowID + "'";
+                                QualifiedTable + " WHERE \"" + ObjectIdColumn + "\"='" + rowId + "'";
                 using (NpgsqlDataAdapter adapter = new NpgsqlDataAdapter(strSQL, conn))
                 {
                     FeatureDataSet ds = new FeatureDataSet();
