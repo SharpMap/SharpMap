@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Net;
 #if !DotSpatialProjections
-using IMathTransform = ProjNet.CoordinateSystems.Transformations;
+using IMathTransform = ProjNet.CoordinateSystems.Transformations.MathTransform;
 #else
 using DotSpatial.Projections;
 using IMathTransform = DotSpatial.Projections.ProjectionInfo;

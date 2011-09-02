@@ -399,6 +399,7 @@ namespace WinFormSamples
                     case "TileLayer - GoogleSatellite":
                     case "TileLayer - GoogleTerrain":
                     case "TileLayer - GoogleLabels":
+                    case "Eniro":
                         /*
                         tbAngle.Visible = text.Equals("TileLayer - GoogleLabels");
                         if (!tbAngle.Visible) tbAngle.Value = 0;
