@@ -210,17 +210,17 @@ namespace SharpMap.Rendering.Decoration
                 string txt = "";
                 if (m_MapType == MapType.Map || m_MapType == MapType.Hybrid)
                 {
-                    txt = m_MapPrefix + " " + string.Join(",", mstrs);
+                    txt = m_MapPrefix + " " + string.Join(",", mstrs.ToArray());
                 }
                 else if ( m_MapType == MapType.Images)
                 {
-                    txt = m_SatPrefix + " " + string.Join(",",kstrs);
+                    txt = m_SatPrefix + " " + string.Join(",",kstrs.ToArray());
                 }
 
 
                 if (m_MapType == MapType.Hybrid)
                 {
-                    txt += ", " + m_SatPrefix + " " + string.Join(",", kstrs);
+                    txt += ", " + m_SatPrefix + " " + string.Join(",", kstrs.ToArray());
                 }
 
                 m_DisclaymerText = txt;
