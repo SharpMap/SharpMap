@@ -123,11 +123,6 @@ namespace SharpMap.Layers
         private LabelCollisionDetection.LabelFilterMethod _labelFilter;
 
         /// <summary>
-        /// A value indicating the labeling technique use in case of MultiPart geometries
-        /// </summary>
-        private MultipartGeometryBehaviourEnum _multipartGeometryBehaviour;
-
-        /// <summary>
         /// A value indication the priority of the label in cases of label-collision detection
         /// </summary>
         private int _priority;
@@ -137,7 +132,6 @@ namespace SharpMap.Layers
         private string _priorityColumn = "";
 
         private string _rotationColumn;
-        private SmoothingMode _smoothingMode;
         //private LabelStyle _Style;
         private TextRenderingHint _textRenderingHint;
 
@@ -153,7 +147,7 @@ namespace SharpMap.Layers
             LayerName = layername;
             SmoothingMode = SmoothingMode.AntiAlias;
             TextRenderingHint = TextRenderingHint.AntiAlias;
-            _multipartGeometryBehaviour = MultipartGeometryBehaviourEnum.All;
+            MultipartGeometryBehaviour = MultipartGeometryBehaviourEnum.All;
             _labelFilter = LabelCollisionDetection.SimpleCollisionDetection;
         }
 
@@ -161,11 +155,7 @@ namespace SharpMap.Layers
         /// Gets or sets labelling behavior on multipart geometries
         /// </summary>
         /// <remarks>Default value is <see cref="MultipartGeometryBehaviourEnum.All"/></remarks>
-        public MultipartGeometryBehaviourEnum MultipartGeometryBehaviour
-        {
-            get { return _multipartGeometryBehaviour; }
-            set { _multipartGeometryBehaviour = value; }
-        }
+        public MultipartGeometryBehaviourEnum MultipartGeometryBehaviour { get; set; }
 
         /// <summary>
         /// Filtermethod delegate for performing filtering
@@ -183,11 +173,7 @@ namespace SharpMap.Layers
         /// <summary>
         /// Render whether smoothing (antialiasing) is applied to lines and curves and the edges of filled areas
         /// </summary>
-        public SmoothingMode SmoothingMode
-        {
-            get { return _smoothingMode; }
-            set { _smoothingMode = value; }
-        }
+        public SmoothingMode SmoothingMode { get; set; }
 
         /// <summary>
         /// Specifies the quality of text rendering
@@ -578,30 +564,34 @@ namespace SharpMap.Layers
         {
             BaseLabel lbl = null;
 
+            SizeF size = VectorRenderer.SizeOfString(g, text, style.Font);
+
             if (feature is ILineal)
             {
                 var line = feature as LineString;
                 if (line != null)
                 {
-                    var positiveLineString = PositiveLineString(line, false);
-                    var lineStringPath = LineStringToPath(positiveLineString, map/*, false*/);
-                    var rect = lineStringPath.GetBounds();
-                    
-                    if (style.CollisionDetection)
+                    if (size.Width < 0.95 * line.Length / map.PixelWidth || !style.IgnoreLength)
                     {
-                        var cbx = style.CollisionBuffer.Width;
-                        var cby = style.CollisionBuffer.Height;
-                        rect.Inflate(2* cbx, 2* cby);
-                        rect.Offset( -cbx, -cby);
+                        var positiveLineString = PositiveLineString(line, false);
+                        var lineStringPath = LineStringToPath(positiveLineString, map /*, false*/);
+                        var rect = lineStringPath.GetBounds();
+
+                        if (style.CollisionDetection && !style.CollisionBuffer.IsEmpty)
+                        {
+                            var cbx = style.CollisionBuffer.Width;
+                            var cby = style.CollisionBuffer.Height;
+                            rect.Inflate(2*cbx, 2*cby);
+                            rect.Offset(-cbx, -cby);
+                        }
+                        var labelBox = new LabelBox(rect);
+
+                        lbl = new PathLabel(text, lineStringPath, 0, priority, labelBox, style);
                     }
-                    var labelBox = new LabelBox(rect);
-                    
-                    lbl = new PathLabel(text, lineStringPath, 0, priority, labelBox, style);
                 }
                 return lbl;
             }
             
-            SizeF size = VectorRenderer.SizeOfString(g, text, style.Font);
             PointF position = Transform.WorldtoMap(feature.GetBoundingBox().GetCentroid(), map);
 
             position.X = position.X - size.Width*(short) style.HorizontalAlignment*0.5f;

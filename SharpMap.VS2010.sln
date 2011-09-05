@@ -85,6 +85,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExampleCodeSnippets.VS2010"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpMap.SqlServerSpatialObjects.VS2010", "SharpMap.SqlServerSpatialObjects\SharpMap.SqlServerSpatialObjects.VS2010.csproj", "{6D681045-8EF1-44EA-A19D-C7A63A6D0F76}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpMap.OpenGL", "SharpMap.OpenGL\SharpMap.OpenGL.csproj", "{BF910286-BD58-4BC4-9545-53A004780F65}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BuildTools", "BuildTools", "{8E57A35D-CD7B-4EEE-98BF-0E414F1A4E44}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|.NET = Debug|.NET
@@ -284,6 +288,26 @@ Global
 		{6D681045-8EF1-44EA-A19D-C7A63A6D0F76}.ReleaseDSProjection|Any CPU.Build.0 = ReleaseDSProjection|Any CPU
 		{6D681045-8EF1-44EA-A19D-C7A63A6D0F76}.ReleaseDSProjection|Mixed Platforms.ActiveCfg = ReleaseDSProjection|Any CPU
 		{6D681045-8EF1-44EA-A19D-C7A63A6D0F76}.ReleaseDSProjection|Mixed Platforms.Build.0 = ReleaseDSProjection|Any CPU
+		{BF910286-BD58-4BC4-9545-53A004780F65}.Debug|.NET.ActiveCfg = Debug|Any CPU
+		{BF910286-BD58-4BC4-9545-53A004780F65}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BF910286-BD58-4BC4-9545-53A004780F65}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BF910286-BD58-4BC4-9545-53A004780F65}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{BF910286-BD58-4BC4-9545-53A004780F65}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{BF910286-BD58-4BC4-9545-53A004780F65}.DebugDSProjection|.NET.ActiveCfg = Debug|Any CPU
+		{BF910286-BD58-4BC4-9545-53A004780F65}.DebugDSProjection|Any CPU.ActiveCfg = DebugDSProjection|Any CPU
+		{BF910286-BD58-4BC4-9545-53A004780F65}.DebugDSProjection|Any CPU.Build.0 = DebugDSProjection|Any CPU
+		{BF910286-BD58-4BC4-9545-53A004780F65}.DebugDSProjection|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{BF910286-BD58-4BC4-9545-53A004780F65}.DebugDSProjection|Mixed Platforms.Build.0 = Debug|Any CPU
+		{BF910286-BD58-4BC4-9545-53A004780F65}.Release|.NET.ActiveCfg = Release|Any CPU
+		{BF910286-BD58-4BC4-9545-53A004780F65}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BF910286-BD58-4BC4-9545-53A004780F65}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BF910286-BD58-4BC4-9545-53A004780F65}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{BF910286-BD58-4BC4-9545-53A004780F65}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{BF910286-BD58-4BC4-9545-53A004780F65}.ReleaseDSProjection|.NET.ActiveCfg = Release|Any CPU
+		{BF910286-BD58-4BC4-9545-53A004780F65}.ReleaseDSProjection|Any CPU.ActiveCfg = ReleaseDSProjection|Any CPU
+		{BF910286-BD58-4BC4-9545-53A004780F65}.ReleaseDSProjection|Any CPU.Build.0 = ReleaseDSProjection|Any CPU
+		{BF910286-BD58-4BC4-9545-53A004780F65}.ReleaseDSProjection|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{BF910286-BD58-4BC4-9545-53A004780F65}.ReleaseDSProjection|Mixed Platforms.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

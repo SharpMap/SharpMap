@@ -63,7 +63,7 @@ namespace SharpMap.Layers
         /// Thrown if <paramref name="index"/> is less than 0 or is 
         /// greater or equal to <see cref="CollectionBase.Count"/>.
         /// </exception>
-        public void Insert(int index, ILayer layer)
+        public new void Insert(int index, ILayer layer)
         {
             if (index > Count || index < 0)
             {

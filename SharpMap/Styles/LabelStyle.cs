@@ -17,6 +17,7 @@
 
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using SharpMap.Rendering.Thematics;
 
 namespace SharpMap.Styles
 {
@@ -192,6 +193,7 @@ namespace SharpMap.Styles
         /// Gets or sets whether Collision Detection is enabled for the labels.
         /// If set to true, label collision will be tested.
         /// </summary>
+        /// <remarks>Just setting this property in a <see cref="ITheme.GetStyle"/> method does not lead to the desired result. You must set it to for the whole layer using the default Style.</remarks>
         [System.ComponentModel.Category("Collision Detection")]
         public bool CollisionDetection
         {
