@@ -80,13 +80,12 @@
     <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="BruTile, Version=0.4.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\ExternalReferences\BruTile.dll</HintPath>
+    <Reference Include="BruTile, Version=0.5.1.0, Culture=neutral, PublicKeyToken=00e75fd79e391f40, processorArchitecture=MSIL">
+      <HintPath>..\packages\BruTile.0.5.1\lib\net35\BruTile.dll</HintPath>
     </Reference>
-    <Reference Include="DotSpatial.Projections, Version=1.0.0.28088, Culture=neutral, PublicKeyToken=272632bddd08a38b, processorArchitecture=MSIL">
+    <Reference Include="DotSpatial.Projections, Version=1.0.2011.52, Culture=neutral, PublicKeyToken=272632bddd08a38b, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\ExternalReferences\DotSpatial.Projections.dll</HintPath>
+      <HintPath>..\packages\DotSpatial.Projections.1.0.2011.52\lib\net35\DotSpatial.Projections.dll</HintPath>
     </Reference>
     <Reference Condition="'$(Configuration)' == 'Debug' Or '$(Configuration)' == 'Release'" Include="ProjNET, Version=1.0.2794.16965, Culture=neutral, PublicKeyToken=a1f5bdcd9c6f5740, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -153,6 +152,7 @@
     <Compile Include="Samples\GeometryFeatureProviderSample.cs" />
     <Compile Include="Samples\GradiantThemeSample.cs" />
     <Compile Include="Samples\OracleSample.cs" />
+    <None Include="packages.config" />
     <None Include="Resources\view_top_bottom.png" />
     <None Include="Resources\view_left_right.png" />
     <None Include="Resources\ZoomToExtents1.png" />
@@ -506,7 +506,9 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PreBuildEvent>if not exist "$(ProjectDir)app.config" copy /y "$(ProjectDir)app.vs2010" "$(ProjectDir)app.config"</PreBuildEvent>
+    <PreBuildEvent>if not exist "$(ProjectDir)app.config" copy /y "$(ProjectDir)app.vs2010" "$(ProjectDir)app.config"
+echo "$(SolutionDir)BuildTools\nuget.exe" install "$(ProjectDir)packages.config -o "$(SolutionDir)Packages"
+"$(SolutionDir)BuildTools\nuget.exe" install "$(ProjectDir)packages.config" -o "$(SolutionDir)Packages"</PreBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

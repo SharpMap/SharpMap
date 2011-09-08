@@ -53,7 +53,11 @@ namespace WinFormSamples.Samples
                     _num = 0;
                     return InitializeMapGoogle(GoogleMapType.GoogleLabels);
                 case 0:
-                    return InitializeMapOsmWithVariableLayerCollection(angle);
+                    _num++;
+                    return InitializeMapOsmWithXls(angle);
+                    
+                    //Does not work anymore!
+                    //return InitializeMapOsmWithVariableLayerCollection(angle);
                 case 1:
                     return InitializeMapOsmWithXls(angle);
 
