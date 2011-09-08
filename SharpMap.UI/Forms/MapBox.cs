@@ -272,6 +272,7 @@ namespace SharpMap.Forms
         private Point[] _pointArray;
         private bool _showProgress;
         private bool _zoomToPointer = false;
+        private bool _setActiveToolNoneDuringRedraw = true;
 
         public static void RandomizeLayerColors(VectorLayer layer)
         {
@@ -307,6 +308,18 @@ namespace SharpMap.Forms
         {
             get { return _zoomToPointer; }
             set { _zoomToPointer = value; }
+        }
+
+        /// <summary>
+        /// Sets ActiveTool to None (and changing cursor) while redrawing the map
+        /// </summary>
+        [Description("Sets ActiveTool to None (and changing cursor) while redrawing the map")]
+        [DefaultValue(true)]
+        [Category("Behavior")]
+        public bool SetToolsNoneWhileRedrawing
+        {
+            get { return _setActiveToolNoneDuringRedraw; }
+            set { _setActiveToolNoneDuringRedraw = value; }
         }
 
         [Description("The color of selecting rectangle.")]
@@ -471,7 +484,7 @@ namespace SharpMap.Forms
                                    Size = new Size(50, 10)
                                };
             Controls.Add(_progressBar);
-
+            _progressBar.Visible = false;
         }
 
         protected override void Dispose(bool disposing)
@@ -596,7 +609,15 @@ namespace SharpMap.Forms
         {
             if (InvokeRequired)
             {
-                Invoke(new AsyncCallback(GetImagesAsyncEnd), res);
+                try
+                {
+                    BeginInvoke(new AsyncCallback(GetImagesAsyncEnd), res);
+
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.ToString());
+                }
             }
             else
             {
@@ -654,7 +675,8 @@ namespace SharpMap.Forms
                     _image = bmp;
                     if (res != null)
                     {
-                        ActiveTool = (Tools)res.AsyncState;
+                        if (_setActiveToolNoneDuringRedraw)
+                            ActiveTool = (Tools)res.AsyncState;
                     }
 
                     if (oldRef != null)
@@ -662,7 +684,10 @@ namespace SharpMap.Forms
                     Invalidate();
                     _dragEndPoint = new Point(0, 0);
                     _isRefreshing = false;
-                    Enabled = true;
+                    
+                    if (_setActiveToolNoneDuringRedraw)
+                        Enabled = true;
+
                     if (ShowProgressUpdate)
                     {
                         _progressBar.Enabled = false;
@@ -698,9 +723,13 @@ namespace SharpMap.Forms
             if (forceRefresh && _isRefreshing == false)
             {
                 _isRefreshing = true;
-                Enabled = false;
                 Tools oldTool = ActiveTool;
-                ActiveTool = Tools.None;
+                if (_setActiveToolNoneDuringRedraw)
+                {
+                    ActiveTool = Tools.None;
+                    Enabled = false;
+                }
+
                 if (ShowProgressUpdate)
                 {
                     _progressBar.Visible = true;
@@ -718,6 +747,12 @@ namespace SharpMap.Forms
 
         private void SetCursor()
         {
+            if (InvokeRequired)
+            {
+                BeginInvoke(new MethodInvoker(SetCursor));
+                return;
+            }
+
             if (_activeTool == Tools.None)
                 Cursor = Cursors.Default;
             if (_activeTool == Tools.Pan)
@@ -759,9 +794,15 @@ namespace SharpMap.Forms
                     else
                     {
                         Cursor c = Cursor;
-                        Cursor = Cursors.WaitCursor;
+                        if (_setActiveToolNoneDuringRedraw)
+                        {
+                            Cursor = Cursors.WaitCursor;
+                        }
                         UpdateImage(true);
-                        Cursor = c;
+                        if (_setActiveToolNoneDuringRedraw)
+                        {
+                            Cursor = c;
+                        }
                     }
 
                     base.Refresh();
