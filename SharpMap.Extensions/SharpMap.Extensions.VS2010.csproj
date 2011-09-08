@@ -71,9 +71,23 @@
     <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Condition="'$(Configuration)' == 'DebugDSProjection' Or '$(Configuration)' == 'ReleaseDSProjection'" Include="DotSpatial.Projections">
+    <Reference Condition="'$(Configuration)' == 'DebugDSProjection' Or '$(Configuration)' == 'ReleaseDSProjection'" Include="DotSpatial.Projections, Version=1.0.2011.52, Culture=neutral, PublicKeyToken=272632bddd08a38b, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\ExternalReferences\DotSpatial.Projections.dll</HintPath>
+      <HintPath>..\packages\DotSpatial.Projections.1.0.2011.52\lib\net35\DotSpatial.Projections.dll</HintPath>
+    </Reference>
+    <Reference Include="GeoAPI, Version=1.4.0.0, Culture=neutral, PublicKeyToken=a1a0da7def465678, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\NetTopologySuite.1.10\lib\net35\GeoAPI.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Security, Version=2.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
+      <HintPath>..\packages\Npgsql.2.0.11\lib\Net40\Mono.Security.dll</HintPath>
+    </Reference>
+    <Reference Include="NetTopologySuite, Version=1.10.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\NetTopologySuite.1.10\lib\net35\NetTopologySuite.dll</HintPath>
+    </Reference>
+    <Reference Include="Npgsql">
+      <HintPath>..\packages\Npgsql.2.0.11\lib\Net40\Npgsql.dll</HintPath>
     </Reference>
     <Reference Condition="'$(Configuration)' == 'Debug' Or '$(Configuration)' == 'Release'" Include="ProjNET, Version=1.0.2794.16965, Culture=neutral, PublicKeyToken=a1f5bdcd9c6f5740, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -82,18 +96,6 @@
     <Reference Include="gdal_csharp, Version=1.0.3462.17845, Culture=neutral, PublicKeyToken=db5a52b08dc5b321">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\ExternalReferences\References4SharpMap.Extensions\gdal_csharp.dll</HintPath>
-    </Reference>
-    <Reference Include="GeoAPI, Version=1.0.0.0, Culture=neutral, PublicKeyToken=a1a0da7def465678, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\ExternalReferences\References4SharpMap.Extensions\GeoAPI.dll</HintPath>
-    </Reference>
-    <Reference Include="NetTopologySuite, Version=1.7.1.29911, Culture=neutral, PublicKeyToken=f580a05016ebada1, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\ExternalReferences\NetTopologySuite.dll</HintPath>
-    </Reference>
-    <Reference Include="Npgsql, Version=0.99.3.0, Culture=neutral, PublicKeyToken=5d8b90d52f46fda7, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\ExternalReferences\References4SharpMap.Extensions\Npgsql.dll</HintPath>
     </Reference>
     <Reference Include="ogr_csharp, Version=1.0.3462.17845, Culture=neutral, PublicKeyToken=db5a52b08dc5b321">
       <SpecificVersion>False</SpecificVersion>
@@ -145,7 +147,14 @@
       <Name>SharpMap.VS2010</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>echo "$(SolutionDir)BuildTools\nuget.exe" install "$(ProjectDir)packages.config -o "$(SolutionDir)Packages"
+"$(SolutionDir)BuildTools\nuget.exe" install "$(ProjectDir)packages.config" -o "$(SolutionDir)Packages"</PreBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

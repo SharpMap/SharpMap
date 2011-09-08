@@ -19,8 +19,9 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data;
-using GisSharpBlog.NetTopologySuite.Features;
-using GisSharpBlog.NetTopologySuite.Geometries;
+using GeoAPI.Geometries;
+using NetTopologySuite.Features;
+using NetTopologySuite.Geometries;
 using SharpMap.Converters.NTS;
 using SharpMap.Geometries;
 using Geometry=SharpMap.Geometries.Geometry;
@@ -47,7 +48,7 @@ namespace SharpMap.Data.Providers
     ///		map.Layers.Add(layRivers);
     /// }
     /// //Define geoprocessing delegate that buffers all geometries with a distance of 0.5 mapunits
-    /// public static void NtsOperation(List<GisSharpBlog.NetTopologySuite.Features.Feature> geoms)
+    /// public static void NtsOperation(List&tl;NetTopologySuite.Features.Feature&gt> geoms)
     /// {
     ///		foreach (GisSharpBlog.NetTopologySuite.Features.Feature f in geoms)
     /// 		f.Geometry = f.Geometry.Buffer(0.5);
@@ -69,18 +70,18 @@ namespace SharpMap.Data.Providers
         #region Fields
 
         // Factory for NTS features
-        private readonly GeometryFactory geometryFactory;
+        private readonly GeometryFactory _geometryFactory;
 
         // NTS features
-        private List<Feature> features;
+        private List<Feature> _features;
 
         #endregion
 
         #region Constructor
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="T:NtsProvider"/> class
-        /// using a default <see cref="GisSharpBlog.NetTopologySuite.Geometries.PrecisionModel"/> 
+        /// Initializes a new instance of the <see cref="NtsProvider"/> class
+        /// using a default <see cref="NetTopologySuite.Geometries.PrecisionModel"/> 
         /// with Floating precision.
         /// </summary>        
         protected internal NtsProvider() : this(new PrecisionModel())
@@ -88,22 +89,22 @@ namespace SharpMap.Data.Providers
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="T:NtsProvider"/> class
+        /// Initializes a new instance of the <see cref="NtsProvider"/> class
         /// using the given <paramref name="precisionModel"/>.
         /// </summary>
         /// <param name="precisionModel">
-        /// The <see cref="GisSharpBlog.NetTopologySuite.Geometries.PrecisionModel"/>  
+        /// The <see cref="NetTopologySuite.Geometries.PrecisionModel"/>  
         /// to use for define the precision of the geometry operations.
         /// </param>
-        /// <seealso cref="GisSharpBlog.NetTopologySuite.Geometries.PrecisionModels"/>
-        /// <seealso cref="GisSharpBlog.NetTopologySuite.Geometries.GeometryFactory"/>
+        /// <seealso cref="NetTopologySuite.Geometries.PrecisionModel"/>
+        /// <seealso cref="NetTopologySuite.Geometries.GeometryFactory"/>
         protected internal NtsProvider(PrecisionModel precisionModel)
         {
-            geometryFactory = new GeometryFactory(precisionModel);
+            _geometryFactory = new GeometryFactory(precisionModel);
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="T:NtsProvider"/> class 
+        /// Initializes a new instance of the <see cref="NtsProvider"/> class 
         /// from another <see cref="SharpMap.Data.Providers.IProvider" />.
         /// </summary>
         /// <param name="provider">
@@ -116,7 +117,7 @@ namespace SharpMap.Data.Providers
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="T:NtsProvider"/> class
+        /// Initializes a new instance of the <see cref="NtsProvider"/> class
         /// from another <see cref="SharpMap.Data.Providers.IProvider" />.
         /// </summary>
         /// <param name="provider">
@@ -124,11 +125,11 @@ namespace SharpMap.Data.Providers
         /// from witch initialize the <see cref="NtsProvider"/> instance.
         /// </param>
         /// <param name="precisionModel">
-        /// The <see cref="GisSharpBlog.NetTopologySuite.Geometries.PrecisionModel"/>  
+        /// The <see cref="NetTopologySuite.Geometries.PrecisionModel"/>  
         /// to use for define the precision of the geometry operations.
         /// </param>
-        /// <seealso cref="GisSharpBlog.NetTopologySuite.Geometries.PrecisionModels"/>     
-        /// <seealso cref="GisSharpBlog.NetTopologySuite.Geometries.GeometryFactory"/>
+        /// <seealso cref="NetTopologySuite.Geometries.PrecisionModel"/>     
+        /// <seealso cref="NetTopologySuite.Geometries.GeometryFactory"/>
         public NtsProvider(IProvider provider,
                            PrecisionModel precisionModel) : this(precisionModel)
         {
@@ -136,7 +137,7 @@ namespace SharpMap.Data.Providers
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="T:NtsProvider"/> class
+        /// Initializes a new instance of the <see cref="NtsProvider"/> class
         /// from another <see cref="SharpMap.Data.Providers.IProvider" />.
         /// </summary>
         /// <param name="provider">
@@ -149,11 +150,11 @@ namespace SharpMap.Data.Providers
         /// </param>  
         public NtsProvider(IProvider provider, GeometryOperationDelegate operation) : this(provider)
         {
-            operation(features);
+            operation(_features);
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="T:NtsProvider"/> class
+        /// Initializes a new instance of the <see cref="NtsProvider"/> class
         /// from another <see cref="SharpMap.Data.Providers.IProvider" />.
         /// </summary>
         /// <param name="provider">
@@ -165,15 +166,15 @@ namespace SharpMap.Data.Providers
         /// to all geometry elements in the <paramref name="provider"/>.
         /// </param>         
         /// <param name="precisionModel">
-        /// The <see cref="GisSharpBlog.NetTopologySuite.Geometries.PrecisionModel"/>  
+        /// The <see cref="NetTopologySuite.Geometries.PrecisionModel"/>  
         /// to use for define the precision of the geometry operations.
         /// </param>
-        /// <seealso cref="GisSharpBlog.NetTopologySuite.Geometries.PrecisionModels"/> 
-        /// <seealso cref="GisSharpBlog.NetTopologySuite.Geometries.GeometryFactory"/>
+        /// <seealso cref="NetTopologySuite.Geometries.PrecisionModel"/> 
+        /// <seealso cref="NetTopologySuite.Geometries.GeometryFactory"/>
         public NtsProvider(IProvider provider, GeometryOperationDelegate operation,
                            PrecisionModel precisionModel) : this(provider, precisionModel)
         {
-            operation(features);
+            operation(_features);
         }
 
         /// <summary>
@@ -186,7 +187,7 @@ namespace SharpMap.Data.Providers
         private void BuildFromProvider(IProvider provider)
         {
             // Features list initialization
-            features = new List<Feature>(provider.GetFeatureCount());
+            _features = new List<Feature>(provider.GetFeatureCount());
 
             try
             {
@@ -196,15 +197,15 @@ namespace SharpMap.Data.Providers
                 foreach (uint id in ids)
                 {
                     FeatureDataRow dataRow = provider.GetFeature(id);
-                    GeoAPI.Geometries.IGeometry geometry = GeometryConverter.ToNTSGeometry(dataRow.Geometry, geometryFactory);
+                    GeoAPI.Geometries.IGeometry geometry = GeometryConverter.ToNTSGeometry(dataRow.Geometry, _geometryFactory);
                     AttributesTable attributes = new AttributesTable();
                     foreach (DataColumn column in dataRow.Table.Columns)
                     {
-                        if (dataRow[column] == null || dataRow[column].GetType() == typeof (DBNull))
+                        if (dataRow[column] == null || dataRow[column] is DBNull)
                             throw new ApplicationException("Null values not supported");
                         attributes.AddAttribute(column.ColumnName, dataRow[column]);
                     }
-                    features.Add(new Feature(geometry, attributes));
+                    _features.Add(new Feature(geometry, attributes));
                 }
             }
             finally
@@ -216,7 +217,7 @@ namespace SharpMap.Data.Providers
 
         #endregion
 
-        private int _SRID = -1;
+        private int _srid = -1;
 
         #region IProvider Members
 
@@ -237,7 +238,7 @@ namespace SharpMap.Data.Providers
         public BoundingBox GetExtents()
         {
             Envelope envelope = new Envelope();
-            foreach (Feature feature in features)
+            foreach (Feature feature in _features)
                 envelope.ExpandToInclude(feature.Geometry.EnvelopeInternal);
             return GeometryConverter.ToSharpMapBoundingBox(envelope);
         }
@@ -249,7 +250,7 @@ namespace SharpMap.Data.Providers
         /// <returns></returns>
         public FeatureDataRow GetFeature(uint rowId)
         {
-            Feature feature = features[Convert.ToInt32(rowId)];
+            Feature feature = _features[Convert.ToInt32(rowId)];
             FeatureDataTable dataTable = new FeatureDataTable();
             foreach (string columnName in feature.Attributes.GetNames())
                 dataTable.Columns.Add(new DataColumn(columnName, feature.Attributes.GetType(columnName)));
@@ -257,7 +258,7 @@ namespace SharpMap.Data.Providers
             FeatureDataRow dataRow = dataTable.NewRow();
             dataRow.Geometry =
                 GeometryConverter.ToSharpMapGeometry(
-                    feature.Geometry as GisSharpBlog.NetTopologySuite.Geometries.Geometry);
+                    feature.Geometry as NetTopologySuite.Geometries.Geometry);
             foreach (string columnName in feature.Attributes.GetNames())
                 dataRow[columnName] = feature.Attributes[columnName];
             return dataRow;
@@ -269,7 +270,7 @@ namespace SharpMap.Data.Providers
         /// <returns>number of features</returns>
         public int GetFeatureCount()
         {
-            return features.Count;
+            return _features.Count;
         }
 
         /// <summary>
@@ -282,11 +283,11 @@ namespace SharpMap.Data.Providers
             // Identifies all the features within the given BoundingBox
             Envelope envelope = GeometryConverter.ToNTSEnvelope(bbox);
             Collection<Geometry> geoms = new Collection<Geometry>();
-            foreach (Feature feature in features)
+            foreach (Feature feature in _features)
                 if (envelope.Intersects(feature.Geometry.EnvelopeInternal))
                     geoms.Add(
                         GeometryConverter.ToSharpMapGeometry(
-                            feature.Geometry as GisSharpBlog.NetTopologySuite.Geometries.Geometry));
+                            feature.Geometry as NetTopologySuite.Geometries.Geometry));
             return geoms;
         }
 
@@ -299,8 +300,8 @@ namespace SharpMap.Data.Providers
         {
             // Identifies all the features within the given BoundingBox
             Envelope envelope = GeometryConverter.ToNTSEnvelope(box);
-            List<Feature> results = new List<Feature>(features.Count);
-            foreach (Feature feature in features)
+            List<Feature> results = new List<Feature>(_features.Count);
+            foreach (Feature feature in _features)
                 if (envelope.Intersects(feature.Geometry.EnvelopeInternal))
                     results.Add(feature);
 
@@ -318,10 +319,10 @@ namespace SharpMap.Data.Providers
         /// <param name="ds"></param>
         public void ExecuteIntersectionQuery(Geometry geom, FeatureDataSet ds)
         {
-            GeoAPI.Geometries.IGeometry geometry = GeometryConverter.ToNTSGeometry(geom, geometryFactory);
+            GeoAPI.Geometries.IGeometry geometry = GeometryConverter.ToNTSGeometry(geom, _geometryFactory);
             FeatureDataTable dataTable = CreateFeatureDataTable();
 
-            foreach (Feature feature in features)
+            foreach (Feature feature in _features)
                 if (feature.Geometry.Intersects(geometry))
                     CreateNewRow(dataTable, feature);
 
@@ -335,10 +336,10 @@ namespace SharpMap.Data.Providers
         /// <returns></returns>
         public Geometry GetGeometryByID(uint oid)
         {
-            Feature feature = features[Convert.ToInt32(oid)];
+            Feature feature = _features[Convert.ToInt32(oid)];
             return
                 GeometryConverter.ToSharpMapGeometry(
-                    feature.Geometry as GisSharpBlog.NetTopologySuite.Geometries.Geometry);
+                    feature.Geometry as NetTopologySuite.Geometries.Geometry);
         }
 
         /// <summary>
@@ -351,8 +352,8 @@ namespace SharpMap.Data.Providers
             // Identifies all the features within the given BoundingBox
             Envelope envelope = GeometryConverter.ToNTSEnvelope(bbox);
             Collection<uint> geoms = new Collection<uint>();
-            for (int i = 0; i < features.Count; i++)
-                if (envelope.Intersects(features[i].Geometry.EnvelopeInternal))
+            for (int i = 0; i < _features.Count; i++)
+                if (envelope.Intersects(_features[i].Geometry.EnvelopeInternal))
                     geoms.Add(Convert.ToUInt32(i));
             return geoms;
         }
@@ -371,7 +372,7 @@ namespace SharpMap.Data.Providers
         /// <value><c>true</c> if this instance is open; otherwise, <c>false</c>.</value>
         public bool IsOpen
         {
-            get { return features.Count > 0; }
+            get { return _features.Count > 0; }
         }
 
         /// <summary>
@@ -387,8 +388,8 @@ namespace SharpMap.Data.Providers
         /// </summary>
         public int SRID
         {
-            get { return _SRID; }
-            set { _SRID = value; }
+            get { return _srid; }
+            set { _srid = value; }
         }
 
         /// <summary>
@@ -402,7 +403,7 @@ namespace SharpMap.Data.Providers
 
         /// <summary>
         /// Creates a new row in the given <see cref="SharpMap.Data.FeatureDataTable"/> <paramref name="dataTable"/>
-        /// using data in <see cref="GisSharpBlog.NetTopologySuite.Features.Feature"/> <paramref name="feature"/>.
+        /// using data in <see cref="NetTopologySuite.Features.Feature"/> <paramref name="feature"/>.
         /// </summary>
         /// <param name="dataTable">The <see cref="SharpMap.Data.FeatureDataTable"/> to fill.</param>
         /// <param name="feature">Data to insert in the <see cref="SharpMap.Data.FeatureDataTable"/>.</param>
@@ -411,7 +412,7 @@ namespace SharpMap.Data.Providers
             FeatureDataRow dataRow = dataTable.NewRow();
             dataRow.Geometry =
                 GeometryConverter.ToSharpMapGeometry(
-                    feature.Geometry as GisSharpBlog.NetTopologySuite.Geometries.Geometry);
+                    feature.Geometry as NetTopologySuite.Geometries.Geometry);
             foreach (string columnName in feature.Attributes.GetNames())
                 dataRow[columnName] = feature.Attributes[columnName];
             dataTable.AddRow(dataRow);
@@ -424,8 +425,8 @@ namespace SharpMap.Data.Providers
         private FeatureDataTable CreateFeatureDataTable()
         {
             FeatureDataTable dataTable = new FeatureDataTable();
-            foreach (string columnName in features[0].Attributes.GetNames())
-                dataTable.Columns.Add(new DataColumn(columnName, features[0].Attributes.GetType(columnName)));
+            foreach (string columnName in _features[0].Attributes.GetNames())
+                dataTable.Columns.Add(new DataColumn(columnName, _features[0].Attributes.GetType(columnName)));
             return dataTable;
         }
 

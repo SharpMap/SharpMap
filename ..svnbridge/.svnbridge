@@ -9,4 +9,16 @@ Release
 *.user
 *.aps
 *.eto
+</Value></Property><Property><Name>svn:ignore</Name><Value>*.suo
+*.user
+*.vssscc
+_ReSharper.*
+[Pp]ackages
+</Value></Property><Property><Name>ignore</Name><Value>bin
+obj
+Debug
+Release
+*.user
+*.aps
+*.eto
 </Value></Property></Properties></ItemProperties>

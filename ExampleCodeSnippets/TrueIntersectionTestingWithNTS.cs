@@ -6,11 +6,11 @@
 
 #region Using Statements
 
-using GisSharpBlog.NetTopologySuite.Geometries;
+using NetTopologySuite.Geometries;
 using SharpMap.Converters.NTS;
 using SharpMap.Data;
 using SharpMap.Data.Providers;
-using Geometry=SharpMap.Geometries.Geometry;
+using SMGeometry=SharpMap.Geometries.Geometry;
 
 #endregion
 
@@ -31,7 +31,7 @@ namespace ExampleCodeSnippets
         /// <param name="pathToShapefile">The path to the shapefile</param>
         /// <param name="testGeometry">The geometry that we want to test against</param>
         /// <returns></returns>
-        public FeatureDataTable GetIntersectingFeaturesUsingFilterDelegate(string pathToShapefile, Geometry testGeometry)
+        public FeatureDataTable GetIntersectingFeaturesUsingFilterDelegate(string pathToShapefile, SMGeometry testGeometry)
         {
             //create a new shapefile provider 
             using (ShapeFile shapefile = new ShapeFile(pathToShapefile))
@@ -42,7 +42,7 @@ namespace ExampleCodeSnippets
                 //convert the testGeometry into the equivalent NTS geometry
                 GeoAPI.Geometries.IGeometry testGeometryAsNtsGeom = GeometryConverter.ToNTSGeometry(testGeometry, geometryFactory);
 
-                Geometry check = GeometryConverter.ToSharpMapGeometry(testGeometryAsNtsGeom);
+                SMGeometry check = GeometryConverter.ToSharpMapGeometry(testGeometryAsNtsGeom);
                 if (!check.Equals(testGeometry))
                     throw new ApplicationException("conversion error");
 
@@ -51,7 +51,7 @@ namespace ExampleCodeSnippets
                 shapefile.FilterDelegate = delegate(FeatureDataRow featureDataRow)
                                                {
                                                    //get the geometry from the featureDataRow
-                                                   Geometry rowGeometry = featureDataRow.Geometry;
+                                                   SMGeometry rowGeometry = featureDataRow.Geometry;
                                                    //convert it to the equivalent NTS geometry
                                                    GeoAPI.Geometries.IGeometry compareGeometryAsNtsGeometry =
                                                            GeometryConverter.ToNTSGeometry(rowGeometry, geometryFactory);
@@ -82,10 +82,10 @@ namespace ExampleCodeSnippets
         /// </summary>
         /// <param name="featureDataTable">The FeatureDataTable instance to filter</param>
         /// <param name="testGeometry">the geometry to compare against</param>
-        public void PostFilterExistingFeatureDataTable(FeatureDataTable featureDataTable, Geometry testGeometry)
+        public void PostFilterExistingFeatureDataTable(FeatureDataTable featureDataTable, SMGeometry testGeometry)
         {
             //first we create a new GeometryFactory.
-            GeometryFactory geometryFactory = new GeometryFactory();
+            var geometryFactory = new GeometryFactory();
 
 
             //then we convert the testGeometry into the equivalent NTS geometry
@@ -98,7 +98,7 @@ namespace ExampleCodeSnippets
                 //we get each row
                 FeatureDataRow featureDataRow = featureDataTable.Rows[i] as FeatureDataRow;
                 //and get the rows' geometry
-                Geometry compareGeometry = featureDataRow.Geometry;
+                SMGeometry compareGeometry = featureDataRow.Geometry;
                 //convert the rows' geometry into the equivalent NTS geometry
                 GeoAPI.Geometries.IGeometry compareGeometryAsNts = GeometryConverter.ToNTSGeometry(compareGeometry, geometryFactory);
                 //now test for intesection (note other operations such as Contains, Within, Disjoint etc can all be done the same way)

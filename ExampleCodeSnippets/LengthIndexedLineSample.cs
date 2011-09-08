@@ -12,17 +12,17 @@ public SharpMap.Geometries.MultiLineString SplitLineString(
     if (lineString == null || lineString.IsEmpty())
         throw new System.ArgumentException("Linestring is null or Empty", "lineString");
 
-    var gf = new GisSharpBlog.NetTopologySuite.Geometries.GeometryFactory();
-    var ntsLine = (GisSharpBlog.NetTopologySuite.Geometries.LineString)
+    var gf = new NetTopologySuite.Geometries.GeometryFactory();
+    var ntsLine = (NetTopologySuite.Geometries.LineString)
                     SharpMap.Converters.NTS.GeometryConverter.ToNTSGeometry(lineString, gf);
 
     var ret = new SharpMap.Geometries.MultiLineString();
-    var lil = new GisSharpBlog.NetTopologySuite.LinearReferencing.LengthIndexedLine(ntsLine);
+    var lil = new NetTopologySuite.LinearReferencing.LengthIndexedLine(ntsLine);
 
     double currentLength = 0d;
     while (currentLength  < ntsLine.Length)
     {
-        var tmpLine = (GisSharpBlog.NetTopologySuite.Geometries.LineString)
+        var tmpLine = (NetTopologySuite.Geometries.LineString)
             lil.ExtractLine(currentLength, currentLength + length);
         ret.LineStrings.Add((SharpMap.Geometries.LineString)
             SharpMap.Converters.NTS.GeometryConverter.ToSharpMapGeometry(tmpLine));

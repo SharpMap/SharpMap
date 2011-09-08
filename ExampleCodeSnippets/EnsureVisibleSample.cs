@@ -27,21 +27,21 @@ public static void EnsureVisible(SharpMap.Map map, SharpMap.Geometries.Point pt)
     System.Console.WriteLine(string.Format("LineString Map.Center -> Point: {0}", ls));
 
     //Setup Linestring from BoundingBox
-    var gf = new GisSharpBlog.NetTopologySuite.Geometries.GeometryFactory();
+    var gf = new NetTopologySuite.Geometries.GeometryFactory();
     var evbbpts = new System.Collections.Generic.List<SharpMap.Geometries.Point>(
         new[] {evbb.TopLeft, evbb.TopRight, evbb.BottomRight, evbb.BottomLeft, evbb.TopLeft });
     var evbblinearring = new SharpMap.Geometries.LineString(evbbpts);
     System.Console.WriteLine(string.Format("Linestring of valid envelope: {0}", evbblinearring));
 
     // convert geometries to NTS
-    var ntsevbb = (GisSharpBlog.NetTopologySuite.Geometries.LineString)
+    var ntsevbb = (NetTopologySuite.Geometries.LineString)
         SharpMap.Converters.NTS.GeometryConverter.ToNTSGeometry(evbblinearring, gf);
-    var ntsls = (GisSharpBlog.NetTopologySuite.Geometries.LineString)
+    var ntsls = (NetTopologySuite.Geometries.LineString)
         SharpMap.Converters.NTS.GeometryConverter.ToNTSGeometry(ls, gf);
 
     // Get intersection point
     var intGeo = ntsevbb.Intersection(ntsls);
-    var intPt = (GisSharpBlog.NetTopologySuite.Geometries.Point)intGeo;
+    var intPt = (NetTopologySuite.Geometries.Point)intGeo;
     System.Console.WriteLine(string.Format("Intersection point is: {0}", intPt));
 
     //Compute offset
