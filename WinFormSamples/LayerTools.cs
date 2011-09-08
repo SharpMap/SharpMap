@@ -82,7 +82,7 @@ namespace WinFormSamples
                 {
 #if DotSpatialProjections
                     var piSource = new ProjectionInfo();
-                    piSource.ReadEPSGCode(31466);
+                    piSource.ReadEpsgCode(31466);
 
                     wgs84toGoogle = new CoordinateTransformation()
                     {
