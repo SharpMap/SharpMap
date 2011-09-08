@@ -273,6 +273,7 @@ namespace SharpMap.Forms
         private bool _showProgress;
         private bool _zoomToPointer = false;
         private bool _setActiveToolNoneDuringRedraw = true;
+        private bool _shiftButtonDragRectangleZoom = false;
 
         public static void RandomizeLayerColors(VectorLayer layer)
         {
@@ -393,6 +394,15 @@ namespace SharpMap.Forms
         {
             get { return _fineZoomFactor; }
             set { _fineZoomFactor = value; }
+        }
+
+        [Description("Enables shortcut to rectangle-zoom by holding down shift-button and drag rectangle")]
+        [DefaultValue(false)]
+        [Category("Behavior")]
+        public bool EnableShiftButtonDragRectangleZoom
+        {
+            get { return _shiftButtonDragRectangleZoom; }
+            set { _shiftButtonDragRectangleZoom = value; }
         }
 
         /// <summary>
@@ -908,8 +918,11 @@ namespace SharpMap.Forms
                 if (MouseMove != null)
                     MouseMove(p, e);
 
-                if (_image != null && e.Location != _dragStartPoint && !_dragging && (e.Button == MouseButtons.Left || e.Button == MouseButtons.Middle) &&
-                    !(_activeTool == Tools.DrawLine || _activeTool == Tools.DrawPoint || _activeTool == Tools.DrawPolygon))
+                bool isStartDrag = _image != null && e.Location != _dragStartPoint && !_dragging &&
+                    (e.Button == MouseButtons.Left || e.Button == MouseButtons.Middle) &&   //Left of middle button can start drag
+                    !(_activeTool == Tools.DrawLine || _activeTool == Tools.DrawPoint || _activeTool == Tools.DrawPolygon); //It should not be any of these tools
+
+                if (isStartDrag)
                 {
                     _dragging = true;
 
@@ -924,7 +937,7 @@ namespace SharpMap.Forms
                     if (MouseDrag != null)
                         MouseDrag(p, e);
 
-                    if (_activeTool == Tools.Pan)
+                    if (_activeTool == Tools.Pan && !(_shiftButtonDragRectangleZoom && (Control.ModifierKeys & Keys.Shift) != Keys.None))
                     {
                         _dragEndPoint = ClipPoint(e.Location);
                         Invalidate(ClientRectangle);
@@ -946,7 +959,7 @@ namespace SharpMap.Forms
 
                         Invalidate(ClientRectangle);
                     }
-                    else if (_activeTool == Tools.ZoomWindow || _activeTool == Tools.Query)
+                    else if (_activeTool == Tools.ZoomWindow || _activeTool == Tools.Query || (_shiftButtonDragRectangleZoom && (Control.ModifierKeys & Keys.Shift) != Keys.None))
                     {
                         _dragEndPoint = ClipPoint(e.Location);
                         _rectangle = GenerateRectangle(_dragStartPoint, _dragEndPoint);
@@ -975,6 +988,8 @@ namespace SharpMap.Forms
         // _map.GetMapAsMetaFile does not work as expected,
         // therefore it is commented out.
         // 
+
+
 
 #if EnableMetafileClipboardSupport
 
@@ -1093,7 +1108,7 @@ namespace SharpMap.Forms
         {
             if (_dragging)
             {
-                if (_activeTool == Tools.ZoomWindow || _activeTool == Tools.Query)
+                if (_activeTool == Tools.ZoomWindow || _activeTool == Tools.Query || (_shiftButtonDragRectangleZoom && (Control.ModifierKeys & Keys.Shift) != Keys.None))
                 {
                     //Reset image to normal view
                     Bitmap patch = _dragImage.Clone(pe.ClipRectangle, PixelFormat.DontCare);
@@ -1241,7 +1256,7 @@ namespace SharpMap.Forms
                             MapZoomChanged(_map.Zoom);
 
                     }
-                    else if (_activeTool == Tools.Pan)
+                    else if (_activeTool == Tools.Pan && !(_shiftButtonDragRectangleZoom && (Control.ModifierKeys & Keys.Shift) != Keys.None))
                     {
                         if (_dragging)
                         {
@@ -1317,7 +1332,7 @@ namespace SharpMap.Forms
                         else
                             MessageBox.Show("No active layer to query");
                     }
-                    else if (_activeTool == Tools.ZoomWindow)
+                    else if (_activeTool == Tools.ZoomWindow || (_shiftButtonDragRectangleZoom && (Control.ModifierKeys & Keys.Shift) != Keys.None))
                     {
                         if (_rectangle.Width > 0 && _rectangle.Height > 0)
                         {
