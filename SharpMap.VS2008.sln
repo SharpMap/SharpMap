@@ -73,7 +73,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MsSqlSpatialDemoDb", "MsSql
 		MsSqlSpatialDemoDb\SharpMapMsSqlSpatialDemoDb.bak = MsSqlSpatialDemoDb\SharpMapMsSqlSpatialDemoDb.bak
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExampleCodeSnippets", "ExampleCodeSnippets\ExampleCodeSnippets.csproj", "{A4184D38-C5A6-4E01-9D1C-8C63791AF825}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExampleCodeSnippets.VS2008", "ExampleCodeSnippets\ExampleCodeSnippets.VS2008.csproj", "{A4184D38-C5A6-4E01-9D1C-8C63791AF825}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PostGisDb", "PostGisDb", "{826696BD-A157-45A5-A196-6652FE469D94}"
 	ProjectSection(SolutionItems) = preProject
@@ -200,6 +200,7 @@ Global
 		{6D681045-8EF1-44EA-A19D-C7A63A6D0F76}.Debug|x86.ActiveCfg = Debug|Any CPU
 		{6D681045-8EF1-44EA-A19D-C7A63A6D0F76}.Release|.NET.ActiveCfg = Release|Any CPU
 		{6D681045-8EF1-44EA-A19D-C7A63A6D0F76}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6D681045-8EF1-44EA-A19D-C7A63A6D0F76}.Release|Any CPU.Build.0 = Release|Any CPU
 		{6D681045-8EF1-44EA-A19D-C7A63A6D0F76}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{6D681045-8EF1-44EA-A19D-C7A63A6D0F76}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{6D681045-8EF1-44EA-A19D-C7A63A6D0F76}.Release|x86.ActiveCfg = Release|Any CPU

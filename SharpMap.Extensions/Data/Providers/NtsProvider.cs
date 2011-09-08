@@ -20,8 +20,16 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data;
 using GeoAPI.Geometries;
+#if GisSharpBlog
+using GisSharpBlog.NetTopologySuite.Features;
+using GisSharpBlog.NetTopologySuite.Geometries;
+using NtsGeometry = GisSharpBlog.NetTopologySuite.Geometries.Geometry;
+#else
 using NetTopologySuite.Features;
 using NetTopologySuite.Geometries;
+using NtsGeometry = NetTopologySuite.Geometries.Geometry;
+#endif
+
 using SharpMap.Converters.NTS;
 using SharpMap.Geometries;
 using Geometry=SharpMap.Geometries.Geometry;
@@ -258,7 +266,7 @@ namespace SharpMap.Data.Providers
             FeatureDataRow dataRow = dataTable.NewRow();
             dataRow.Geometry =
                 GeometryConverter.ToSharpMapGeometry(
-                    feature.Geometry as NetTopologySuite.Geometries.Geometry);
+                    feature.Geometry as NtsGeometry);
             foreach (string columnName in feature.Attributes.GetNames())
                 dataRow[columnName] = feature.Attributes[columnName];
             return dataRow;
@@ -287,7 +295,7 @@ namespace SharpMap.Data.Providers
                 if (envelope.Intersects(feature.Geometry.EnvelopeInternal))
                     geoms.Add(
                         GeometryConverter.ToSharpMapGeometry(
-                            feature.Geometry as NetTopologySuite.Geometries.Geometry));
+                            feature.Geometry as NtsGeometry));
             return geoms;
         }
 
@@ -339,7 +347,7 @@ namespace SharpMap.Data.Providers
             Feature feature = _features[Convert.ToInt32(oid)];
             return
                 GeometryConverter.ToSharpMapGeometry(
-                    feature.Geometry as NetTopologySuite.Geometries.Geometry);
+                    feature.Geometry as NtsGeometry);
         }
 
         /// <summary>
@@ -407,12 +415,11 @@ namespace SharpMap.Data.Providers
         /// </summary>
         /// <param name="dataTable">The <see cref="SharpMap.Data.FeatureDataTable"/> to fill.</param>
         /// <param name="feature">Data to insert in the <see cref="SharpMap.Data.FeatureDataTable"/>.</param>
-        private void CreateNewRow(FeatureDataTable dataTable, Feature feature)
+        private static void CreateNewRow(FeatureDataTable dataTable, Feature feature)
         {
             FeatureDataRow dataRow = dataTable.NewRow();
             dataRow.Geometry =
-                GeometryConverter.ToSharpMapGeometry(
-                    feature.Geometry as NetTopologySuite.Geometries.Geometry);
+                GeometryConverter.ToSharpMapGeometry(feature.Geometry as NtsGeometry);
             foreach (string columnName in feature.Attributes.GetNames())
                 dataRow[columnName] = feature.Attributes[columnName];
             dataTable.AddRow(dataRow);

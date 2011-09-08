@@ -18,7 +18,11 @@
 using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+#if GisSharpBlog
+using GisSharpBlog.NetTopologySuite.Geometries;
+#else
 using NetTopologySuite.Geometries;
+#endif
 using SharpMap.Geometries;
 using NTSCoordinate = GeoAPI.Geometries.ICoordinate;
 using NTSGeometry=GeoAPI.Geometries.IGeometry;
@@ -333,7 +337,7 @@ namespace SharpMap.Converters.NTS
         internal static Geometries.MultiPoint ToSharpMapMultiPoint(NTSMultiPoint geom)
         {
             Geometries.MultiPoint collection = new Geometries.MultiPoint();
-            foreach (NetTopologySuite.Geometries.Point point in geom.Geometries)
+            foreach (NTSPoint point in geom.Geometries)
                 collection.Points.Add(ToSharpMapPoint(point));
             return collection;
         }

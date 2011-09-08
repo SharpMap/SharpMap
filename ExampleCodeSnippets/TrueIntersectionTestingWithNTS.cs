@@ -6,11 +6,15 @@
 
 #region Using Statements
 
-using NetTopologySuite.Geometries;
 using SharpMap.Converters.NTS;
 using SharpMap.Data;
 using SharpMap.Data.Providers;
 using SMGeometry=SharpMap.Geometries.Geometry;
+#if GisSharpBlog
+using GisSharpBlog.NetTopologySuite.Geometries;
+#else
+using NetTopologySuite.Geometries;
+#endif
 
 #endregion
 
