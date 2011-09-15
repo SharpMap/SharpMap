@@ -416,6 +416,7 @@ namespace SharpMap
             if (eex != null) eex(this, new LayerRenderingEventArgs(layer, layerCollectionType));
         }
 
+
         /// <summary>
         /// Renders the map using the provided <see cref="Graphics"/> object.
         /// </summary>
@@ -425,8 +426,19 @@ namespace SharpMap
         /// <exception cref="InvalidOperationException">if there are no layers to render.</exception>
         public void RenderMap(Graphics g, LayerCollectionType layerCollectionType)
         {
+            RenderMap(g, layerCollectionType, true);
+        }
 
-
+        /// <summary>
+        /// Renders the map using the provided <see cref="Graphics"/> object.
+        /// </summary>
+        /// <param name="g">the <see cref="Graphics"/> object to use</param>
+        /// <param name="layerCollectionType">the <see cref="LayerCollectionType"/> to use</param>
+        /// <param name="drawMapDecorations">Set wether to draw map decorations on the map (if such are set)</param>
+        /// <exception cref="ArgumentNullException">if <see cref="Graphics"/> object is null.</exception>
+        /// <exception cref="InvalidOperationException">if there are no layers to render.</exception>
+        public void RenderMap(Graphics g, LayerCollectionType layerCollectionType, bool drawMapDecorations)
+        {
             if (g == null)
                 throw new ArgumentNullException("g", "Cannot render map with null graphics object!");
 
@@ -470,9 +482,12 @@ namespace SharpMap
             if (layerCollectionType == LayerCollectionType.Static)
             {
                 RenderDisclaimer(g);
-                foreach (var mapDecoration in Decorations)
+                if (drawMapDecorations)
                 {
-                    mapDecoration.Render(g, this);
+                    foreach (var mapDecoration in Decorations)
+                    {
+                        mapDecoration.Render(g, this);
+                    }
                 }
             }
 
@@ -953,7 +968,7 @@ namespace SharpMap
                         _disclaimerFont = new Font(FontFamily.GenericSansSerif, 8f);
                 }
             }
-        }
+        }        
 
         private Font _disclaimerFont;
         /// <summary>

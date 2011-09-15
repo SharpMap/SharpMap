@@ -546,7 +546,9 @@ namespace WinFormSamples
             {
                 IMapDecoration ins = Activator.CreateInstance(mdType) as IMapDecoration;
                 if (ins != null)
-                    mapBox1.Map.Decorations.Add(ins);
+                {
+                       mapBox1.Map.Decorations.Add(ins);
+                }
             }
             else
             {

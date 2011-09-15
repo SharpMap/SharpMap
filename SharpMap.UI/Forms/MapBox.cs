@@ -595,7 +595,7 @@ namespace SharpMap.Forms
             var retval = new Bitmap(Width, Height);
 
             Graphics g = Graphics.FromImage(retval);
-            _map.RenderMap(g, layerCollectionType);
+            _map.RenderMap(g, layerCollectionType, false);
             g.Dispose();
 
             if (layerCollectionType == LayerCollectionType.Variable)
@@ -1122,9 +1122,8 @@ namespace SharpMap.Forms
                         Rectangle border = new Rectangle(_rectangle.X + (int)_rectanglePen.Width / 2, _rectangle.Y + (int)_rectanglePen.Width / 2, _rectangle.Width - (int)_rectanglePen.Width, _rectangle.Height - (int)_rectanglePen.Width);
                         pe.Graphics.DrawRectangle(_rectanglePen, border);
                     }
-                    return;
                 }
-                if (_activeTool == Tools.Pan)
+                else if (_activeTool == Tools.Pan)
                 {
                     pe.Graphics.DrawImageUnscaled(_dragImage,
                                                   _previewMode == PreviewModes.Best
@@ -1133,9 +1132,8 @@ namespace SharpMap.Forms
                                                             -_map.Size.Height + _dragEndPoint.Y - _dragStartPoint.Y)
                                                       : new Point(_dragEndPoint.X - _dragStartPoint.X,
                                                                   _dragEndPoint.Y - _dragStartPoint.Y));
-                    return;
                 }
-                if (_activeTool == Tools.ZoomIn || _activeTool == Tools.ZoomOut)
+                else if (_activeTool == Tools.ZoomIn || _activeTool == Tools.ZoomOut)
                 {
                     RectangleF rect = new RectangleF(0, 0, _map.Size.Width, _map.Size.Height);
 
@@ -1153,12 +1151,9 @@ namespace SharpMap.Forms
                     rect.Offset(_map.Size.Width / 2f - rect.Width / 2, _map.Size.Height / 2f - rect.Height / 2);
 
                     pe.Graphics.DrawImage(_dragImage, rect);
-                    return;
                 }
-
             }
-
-            if (_image != null && _image.PixelFormat != PixelFormat.Undefined)
+            else if (_image != null && _image.PixelFormat != PixelFormat.Undefined)
             {
                 if (/*_dragEndPoint != null &&*/ _dragEndPoint.X != 0 && _dragEndPoint.Y != 0 && _dragEndPoint != _dragStartPoint)
                 {
@@ -1197,6 +1192,15 @@ namespace SharpMap.Forms
             }
             else
                 base.OnPaint(pe);
+
+            /*Draw Floating Map-Decorations*/
+            if (_map != null && _map.Decorations != null)
+            {
+                foreach (SharpMap.Rendering.Decoration.IMapDecoration md in _map.Decorations)
+                {
+                    md.Render(pe.Graphics, _map);
+                }
+            }
         }
 
         protected override void OnMouseUp(MouseEventArgs e)
