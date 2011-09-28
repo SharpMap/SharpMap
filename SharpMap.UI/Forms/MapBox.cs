@@ -258,7 +258,6 @@ namespace SharpMap.Forms
         private Bitmap _dragImage;
         private Rectangle _rectangle = Rectangle.Empty;
         private bool _dragging;
-        
         private readonly SolidBrush _rectangleBrush = new SolidBrush(Color.FromArgb(210, 244, 244, 244));
         private readonly Pen _rectanglePen = new Pen(Color.FromArgb(244, 244, 244), 1);
         
@@ -274,6 +273,8 @@ namespace SharpMap.Forms
         private bool _zoomToPointer = false;
         private bool _setActiveToolNoneDuringRedraw = true;
         private bool _shiftButtonDragRectangleZoom = false;
+        private bool _focusOnHover = false;
+        IMessageFilter _mousePreviewFilter = null;
 
         public static void RandomizeLayerColors(VectorLayer layer)
         {
@@ -296,6 +297,24 @@ namespace SharpMap.Forms
             {
                 _showProgress = value;
                 _progressBar.Visible = _showProgress;
+            }
+        }
+
+        /// <summary>
+        /// Sets whether the mapcontrol should automatically grab focus when mouse is hovering the control
+        /// </summary>
+        [Description("Sets whether the mapcontrol should automatically grab focus when mouse is hovering the control")]
+        [DefaultValue(false)]
+        [Category("Behavior")]
+        public bool TakeFocusOnHover
+        {
+            get
+            {
+                return _focusOnHover;
+            }
+            set
+            {
+                _focusOnHover = value;
             }
         }
 
@@ -495,6 +514,10 @@ namespace SharpMap.Forms
                                };
             Controls.Add(_progressBar);
             _progressBar.Visible = false;
+
+            _mousePreviewFilter = new MouseWheelGrabber(this);
+            Application.AddMessageFilter(_mousePreviewFilter);
+
         }
 
         protected override void Dispose(bool disposing)
@@ -502,6 +525,9 @@ namespace SharpMap.Forms
             VariableLayerCollection.VariableLayerCollectionRequery -= HandleVariableLayersRequery;
             _map.MapNewTileAvaliable -= HandleMapNewTileAvaliable;
             LostFocus -= HandleMapBoxLostFocus;
+
+            if (_mousePreviewFilter != null)
+                Application.RemoveMessageFilter(_mousePreviewFilter);
 
             base.Dispose(disposing);
         }
@@ -849,13 +875,18 @@ namespace SharpMap.Forms
 
         protected override void OnMouseHover(EventArgs e)
         {
+            if (_focusOnHover)
+                TestAndGrabFocus();
+            base.OnMouseHover(e);
+        }
+
+        private void TestAndGrabFocus()
+        {
             if (!Focused)
             {
                 bool isFocused = Focus();
                 Debug.WriteLine("Focused: " + isFocused);
             }
-
-            base.OnMouseHover(e);
         }
 
         protected override void OnMouseWheel(MouseEventArgs e)
@@ -893,7 +924,6 @@ namespace SharpMap.Forms
         protected override void OnMouseDown(MouseEventArgs e)
         {
             base.OnMouseDown(e);
-
             if (_map != null)
             {
                 if (e.Button == MouseButtons.Left || e.Button == MouseButtons.Middle) //dragging
@@ -1461,7 +1491,40 @@ namespace SharpMap.Forms
             Debug.WriteLine("lowerLeft: " + lowerLeft);
             Debug.WriteLine("upperRight: " + upperRight);
         }
+
+         /// <summary>
+    /// MouseWheelGrabber is a MessageFilter that enables mousewheelcapture on mapcontrol even if the control does 
+    /// not have focus as long as the mouse is positioned over the control
+    /// </summary>
+    class MouseWheelGrabber : IMessageFilter
+    {
+        private MapBox redirectHandle = null;
+        public MouseWheelGrabber(MapBox redirectHandle)
+        {
+            this.redirectHandle = redirectHandle;
+        }
+
+        public bool PreFilterMessage(ref Message m)
+        {
+            if (m.Msg == 0x020A)
+            {
+                int delta = ((int)(m.WParam.ToInt64() & 0xFFFF0000) >> 16);
+                Point pt = redirectHandle.PointToClient(new Point(m.LParam.ToInt32()));
+                if (redirectHandle.ClientRectangle.Contains(pt))
+                {
+                    redirectHandle.OnMouseWheel(new MouseEventArgs(System.Windows.Forms.MouseButtons.Middle, 0, pt.X, pt.Y, delta));
+                    return true;
+                }
+
+            }
+
+            return false;
+        }
+
     }
+    }
+
+   
 
 #if EnableMetafileClipboardSupport
     public class ClipboardMetafileHelper
