@@ -1136,100 +1136,107 @@ namespace SharpMap.Forms
 
         protected override void OnPaint(PaintEventArgs pe)
         {
-            if (_dragging)
+            try
             {
-                if (_activeTool == Tools.ZoomWindow || _activeTool == Tools.Query || (_shiftButtonDragRectangleZoom && (Control.ModifierKeys & Keys.Shift) != Keys.None))
+                if (_dragging)
                 {
-                    //Reset image to normal view
-                    Bitmap patch = _dragImage.Clone(pe.ClipRectangle, PixelFormat.DontCare);
-                    pe.Graphics.DrawImageUnscaled(patch, pe.ClipRectangle);
-                    patch.Dispose();
-
-                    //Draw selection rectangle
-                    if (_rectangle.Width > 0 && _rectangle.Height > 0)
+                    if (_activeTool == Tools.ZoomWindow || _activeTool == Tools.Query || (_shiftButtonDragRectangleZoom && (Control.ModifierKeys & Keys.Shift) != Keys.None))
                     {
-                        pe.Graphics.FillRectangle(_rectangleBrush, _rectangle);
-                        Rectangle border = new Rectangle(_rectangle.X + (int)_rectanglePen.Width / 2, _rectangle.Y + (int)_rectanglePen.Width / 2, _rectangle.Width - (int)_rectanglePen.Width, _rectangle.Height - (int)_rectanglePen.Width);
-                        pe.Graphics.DrawRectangle(_rectanglePen, border);
+                        //Reset image to normal view
+                        Bitmap patch = _dragImage.Clone(pe.ClipRectangle, PixelFormat.DontCare);
+                        pe.Graphics.DrawImageUnscaled(patch, pe.ClipRectangle);
+                        patch.Dispose();
+
+                        //Draw selection rectangle
+                        if (_rectangle.Width > 0 && _rectangle.Height > 0)
+                        {
+                            pe.Graphics.FillRectangle(_rectangleBrush, _rectangle);
+                            Rectangle border = new Rectangle(_rectangle.X + (int)_rectanglePen.Width / 2, _rectangle.Y + (int)_rectanglePen.Width / 2, _rectangle.Width - (int)_rectanglePen.Width, _rectangle.Height - (int)_rectanglePen.Width);
+                            pe.Graphics.DrawRectangle(_rectanglePen, border);
+                        }
+                    }
+                    else if (_activeTool == Tools.Pan)
+                    {
+                        pe.Graphics.DrawImageUnscaled(_dragImage,
+                                                      _previewMode == PreviewModes.Best
+                                                          ? new Point(
+                                                                -_map.Size.Width + _dragEndPoint.X - _dragStartPoint.X,
+                                                                -_map.Size.Height + _dragEndPoint.Y - _dragStartPoint.Y)
+                                                          : new Point(_dragEndPoint.X - _dragStartPoint.X,
+                                                                      _dragEndPoint.Y - _dragStartPoint.Y));
+                    }
+                    else if (_activeTool == Tools.ZoomIn || _activeTool == Tools.ZoomOut)
+                    {
+                        RectangleF rect = new RectangleF(0, 0, _map.Size.Width, _map.Size.Height);
+
+                        if (_map.Zoom / _scaling < _map.MinimumZoom)
+                            _scaling = (float)Math.Round(_map.Zoom / _map.MinimumZoom, 4);
+
+                        //System.Diagnostics.Debug.WriteLine("Scaling: " + m_Scaling);
+
+                        if (_previewMode == PreviewModes.Best)
+                            _scaling *= 3;
+
+                        rect.Width *= _scaling;
+                        rect.Height *= _scaling;
+
+                        rect.Offset(_map.Size.Width / 2f - rect.Width / 2, _map.Size.Height / 2f - rect.Height / 2);
+
+                        pe.Graphics.DrawImage(_dragImage, rect);
                     }
                 }
-                else if (_activeTool == Tools.Pan)
+                else if (_image != null && _image.PixelFormat != PixelFormat.Undefined)
                 {
-                    pe.Graphics.DrawImageUnscaled(_dragImage,
-                                                  _previewMode == PreviewModes.Best
-                                                      ? new Point(
-                                                            -_map.Size.Width + _dragEndPoint.X - _dragStartPoint.X,
-                                                            -_map.Size.Height + _dragEndPoint.Y - _dragStartPoint.Y)
-                                                      : new Point(_dragEndPoint.X - _dragStartPoint.X,
-                                                                  _dragEndPoint.Y - _dragStartPoint.Y));
-                }
-                else if (_activeTool == Tools.ZoomIn || _activeTool == Tools.ZoomOut)
-                {
-                    RectangleF rect = new RectangleF(0, 0, _map.Size.Width, _map.Size.Height);
-
-                    if (_map.Zoom / _scaling < _map.MinimumZoom)
-                        _scaling = (float)Math.Round(_map.Zoom / _map.MinimumZoom, 4);
-
-                    //System.Diagnostics.Debug.WriteLine("Scaling: " + m_Scaling);
-
-                    if (_previewMode == PreviewModes.Best)
-                        _scaling *= 3;
-
-                    rect.Width *= _scaling;
-                    rect.Height *= _scaling;
-
-                    rect.Offset(_map.Size.Width / 2f - rect.Width / 2, _map.Size.Height / 2f - rect.Height / 2);
-
-                    pe.Graphics.DrawImage(_dragImage, rect);
-                }
-            }
-            else if (_image != null && _image.PixelFormat != PixelFormat.Undefined)
-            {
-                if (/*_dragEndPoint != null &&*/ _dragEndPoint.X != 0 && _dragEndPoint.Y != 0 && _dragEndPoint != _dragStartPoint)
-                {
-                    pe.Graphics.DrawImageUnscaled(_dragImage,
-                                                  _previewMode == PreviewModes.Best
-                                                      ? new Point(
-                                                            -_map.Size.Width + _dragEndPoint.X - _dragStartPoint.X,
-                                                            -_map.Size.Height + _dragEndPoint.Y - _dragStartPoint.Y)
-                                                      : new Point(_dragEndPoint.X - _dragStartPoint.X,
-                                                                  _dragEndPoint.Y - _dragStartPoint.Y));
-                }
-                else
-                {
-                    pe.Graphics.DrawImageUnscaled(_image, 0, 0);
-
-                    //Draws current line or polygon (Draw Line or Draw Polygon tool)
-                    if (_pointArray != null)
+                    if (/*_dragEndPoint != null &&*/ _dragEndPoint.X != 0 && _dragEndPoint.Y != 0 && _dragEndPoint != _dragStartPoint)
                     {
-                        if (_pointArray.GetUpperBound(0) == 1)
+                        pe.Graphics.DrawImageUnscaled(_dragImage,
+                                                      _previewMode == PreviewModes.Best
+                                                          ? new Point(
+                                                                -_map.Size.Width + _dragEndPoint.X - _dragStartPoint.X,
+                                                                -_map.Size.Height + _dragEndPoint.Y - _dragStartPoint.Y)
+                                                          : new Point(_dragEndPoint.X - _dragStartPoint.X,
+                                                                      _dragEndPoint.Y - _dragStartPoint.Y));
+                    }
+                    else
+                    {
+                        pe.Graphics.DrawImageUnscaled(_image, 0, 0);
+
+                        //Draws current line or polygon (Draw Line or Draw Polygon tool)
+                        if (_pointArray != null)
                         {
-                            pe.Graphics.DrawLine(new Pen(Color.Gray, 2F), _pointArray[0], _pointArray[1]);
-                        }
-                        else
-                        {
-                            if (_activeTool == Tools.DrawPolygon)
+                            if (_pointArray.GetUpperBound(0) == 1)
                             {
-                                Color c = Color.FromArgb(127, Color.Gray);
-                                pe.Graphics.FillPolygon(new SolidBrush(c), _pointArray);
-                                pe.Graphics.DrawPolygon(new Pen(Color.Gray, 2F), _pointArray);
+                                pe.Graphics.DrawLine(new Pen(Color.Gray, 2F), _pointArray[0], _pointArray[1]);
                             }
                             else
-                                pe.Graphics.DrawLines(new Pen(Color.Gray, 2F), _pointArray);
+                            {
+                                if (_activeTool == Tools.DrawPolygon)
+                                {
+                                    Color c = Color.FromArgb(127, Color.Gray);
+                                    pe.Graphics.FillPolygon(new SolidBrush(c), _pointArray);
+                                    pe.Graphics.DrawPolygon(new Pen(Color.Gray, 2F), _pointArray);
+                                }
+                                else
+                                    pe.Graphics.DrawLines(new Pen(Color.Gray, 2F), _pointArray);
+                            }
                         }
                     }
                 }
-            }
-            else
-                base.OnPaint(pe);
+                else
+                    base.OnPaint(pe);
 
-            /*Draw Floating Map-Decorations*/
-            if (_map != null && _map.Decorations != null)
-            {
-                foreach (SharpMap.Rendering.Decoration.IMapDecoration md in _map.Decorations)
+                /*Draw Floating Map-Decorations*/
+                if (_map != null && _map.Decorations != null)
                 {
-                    md.Render(pe.Graphics, _map);
+                    foreach (SharpMap.Rendering.Decoration.IMapDecoration md in _map.Decorations)
+                    {
+                        md.Render(pe.Graphics, _map);
+                    }
                 }
+            }
+            catch (Exception ee)
+            {
+                Debug.WriteLine(ee.Message);
             }
         }
 

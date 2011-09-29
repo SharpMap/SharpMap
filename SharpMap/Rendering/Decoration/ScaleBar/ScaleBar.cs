@@ -17,7 +17,6 @@ namespace SharpMap.Rendering.Decoration.ScaleBar
     /// </summary>
     public class ScaleBar : MapDecoration
     {
-
         #region Constants
 
         private const int PowerRangeMin = -5;
@@ -41,11 +40,10 @@ namespace SharpMap.Rendering.Decoration.ScaleBar
         private const int DefaultWidth = 180;
 
         private const double VerySmall = 0.0000001;
-
         #endregion
 
         private static readonly Dictionary<int, UnitInfo> Units = new Dictionary<int, UnitInfo>();
-
+        
         static ScaleBar()
         {
             Units.Add((int)Unit.Custom, new UnitInfo((int)Unit.Custom, 1.0, "Unknown", "Unknown"));
@@ -475,8 +473,20 @@ namespace SharpMap.Rendering.Decoration.ScaleBar
             {
                 double value = scaleBarUnitsPerTic*i;
                 string text = value.ToString(format, System.Globalization.CultureInfo.CurrentUICulture);
+                int offsetX = 0;
+                if (i == tics)
+                {
+                    //Make sure this text is not overdrawn... (should be aligned with ticmark)
+                    var size = MeasureDisplayStringWidthExact(g, text, _font);
+                    int endX = (int)(x + ticWidth * i + size);
+                    if (endX > base._boundingRectangle.Right)
+                    {
+                        offsetX = base._boundingRectangle.Right - endX;
+                    }
 
-                RenderTextWithFormat(g, text, x + ticWidth*i, y, TopCenter, ref lastX);
+                }
+
+                RenderTextWithFormat(g, text, x + ticWidth * i + offsetX, y, TopCenter, ref lastX);
             }
         }
 
@@ -1014,6 +1024,25 @@ namespace SharpMap.Rendering.Decoration.ScaleBar
                     precision++;
             }
             return precision;
+        }
+
+        static public int MeasureDisplayStringWidthExact(Graphics graphics, string text,
+                                            Font font)
+        {
+            System.Drawing.StringFormat format = new System.Drawing.StringFormat();
+            System.Drawing.RectangleF rect = new System.Drawing.RectangleF(0, 0,
+                                                                          1000, 1000);
+            System.Drawing.CharacterRange[] ranges = 
+                                       { new System.Drawing.CharacterRange(0, 
+                                                               text.Length) };
+            System.Drawing.Region[] regions = new System.Drawing.Region[1];
+
+            format.SetMeasurableCharacterRanges(ranges);
+
+            regions = graphics.MeasureCharacterRanges(text, font, rect, format);
+            rect = regions[0].GetBounds(graphics);
+
+            return (int)(rect.Right + 1.0f);
         }
 
         #endregion

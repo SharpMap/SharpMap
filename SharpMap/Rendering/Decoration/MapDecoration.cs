@@ -14,8 +14,8 @@ namespace SharpMap.Rendering.Decoration
     [Serializable]
     public abstract class MapDecoration : /* Component, */IMapDecoration
     {
-        private Size _cachedSize;
-        private Rectangle _boundingRectangle;
+        protected Size _cachedSize;
+        protected Rectangle _boundingRectangle;
 
         protected MapDecoration()
         {
