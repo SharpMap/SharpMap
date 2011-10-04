@@ -52,7 +52,8 @@ namespace SharpMap.Layers
 
         #endregion
 
-        private ICoordinateTransformation _coordinateTransform;
+        private ICoordinateTransformation _coordinateTransform = null;
+        private ICoordinateTransformation _reverseCoordinateTransform = null;
 
         private string _layerName;
         private Style _style;
@@ -90,6 +91,19 @@ namespace SharpMap.Layers
             get { return _coordinateTransform; }
             set { _coordinateTransform = value; }
         }
+
+#if !DotSpatialProjections
+        /// <summary>
+        /// Certain Transformations cannot be inverted in ProjNet, in those cases use this property to set the reverse <see cref="ProjNet.CoordinateSystems.Transformations.ICoordinateTransformation"/> (of CoordinateTransformation) to fetch data from Datasource
+        /// 
+        /// If your CoordinateTransformation can be inverted you can leave this property to null
+        /// </summary>
+        public virtual ICoordinateTransformation ReverseCoordinateTransformation
+        {
+            get { return _reverseCoordinateTransform; }
+            set { _reverseCoordinateTransform= value; }
+        }
+#endif
 
         #region ILayer Members
 
