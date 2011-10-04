@@ -52,7 +52,7 @@ namespace SharpMap.Layers
     /// myLayer.AddLayer("Topography");
     /// myLayer.AddLayer("Hillshading");
     /// myLayer.SetImageFormat(layWms.OutputFormats[0]);
-    /// myLayer.SpatialReferenceSystem = "EPSG:4326";	
+    /// myLayer.SRID = 4326;	
     /// myMap.Layers.Add(myLayer);
     /// myMap.Center = new SharpMap.Geometries.Point(0, 0);
     /// myMap.Zoom = 360;
@@ -168,6 +168,18 @@ namespace SharpMap.Layers
             _StylesList = new Collection<string>();
         }
 
+        /// <summary>
+        /// Can be used to force the OnlineResourceUrl for services that return incorrect (often internal) onlineresources
+        /// </summary>
+        /// <param name="url">Url without any OGC specific parameters</param>
+        public void ForceOnlineResourceUrl(string url)
+        {
+            for (int i = 0; i < wmsClient.GetMapRequests.Length; i++)
+            {
+                wmsClient.GetMapRequests[i].OnlineResource = url;
+            }        
+        }
+
 
         /// <summary>
         /// Gets the list of enabled layers
@@ -230,11 +242,12 @@ namespace SharpMap.Layers
         }
 
         /// <summary>
-        /// Gets the WMS Server version of this service
+        /// Gets or sets the WMS Server version of this service
         /// </summary>
         public string Version
         {
-            get { return wmsClient.WmsVersion; }
+            get { return wmsClient.Version; }
+            set { wmsClient.Version = value; }
         }
 
         /// <summary>
