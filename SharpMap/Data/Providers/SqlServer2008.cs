@@ -539,7 +539,7 @@ namespace SharpMap.Data.Providers
                string strSQL = "select g.* , g." + GeometryColumn + ".STAsBinary() As sharpmap_tempgeometry from " + Table + " g WHERE " + ObjectIdColumn + "=" + rowId + "";   
                using (SqlDataAdapter adapter = new SqlDataAdapter(strSQL, conn))   
                {   
-                   FeatureDataSet ds = new FeatureDataSet();   
+                   System.Data.DataSet ds = new System.Data.DataSet();
                    conn.Open();   
                    adapter.Fill(ds);   
                    conn.Close();   
