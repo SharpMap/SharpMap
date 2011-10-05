@@ -15,14 +15,20 @@ namespace SharpMap.Layers
     public class TileAsyncLayer : TileLayer, ITileAsyncLayer
     {
         public TileAsyncLayer(ITileSource tileSource, string layerName)
-            : base(tileSource, layerName, new Color(), true)
+            : base(tileSource, layerName, new Color(), true, null)
         {
         }
 
         public TileAsyncLayer(ITileSource tileSource, string layerName, Color transparentColor, bool showErrorInTile)
-            : base(tileSource, layerName, transparentColor, showErrorInTile)
+            : base(tileSource, layerName, transparentColor, showErrorInTile, null)
         {
         }
+
+        public TileAsyncLayer(ITileSource tileSource, string layerName, Color transparentColor, bool showErrorInTile, string fileCacheDir)
+            : base(tileSource, layerName, transparentColor, showErrorInTile, fileCacheDir)
+        {
+        }
+
         /// <summary>
         /// EventHandler for event fired when a new Tile is available for rendering
         /// </summary>
@@ -41,9 +47,13 @@ namespace SharpMap.Layers
             {
                 if (_bitmaps.Find(info.Index) != null)
                 {
-                    //OnMapNewTileAvaliable(info, _bitmaps.Find(info.Index));
-                    ThreadPool.QueueUserWorkItem(OnMapNewtileAvailableHelper, new object[]{info,_bitmaps.Find(info.Index)});
-                    
+                    ThreadPool.QueueUserWorkItem(OnMapNewtileAvailableHelper, new object[]{info,_bitmaps.Find(info.Index)});   
+                }
+                else if (_fileCache != null && _fileCache.Exists(info.Index))
+                {
+                    Bitmap img = GetImageFromFileCache(info) as Bitmap;
+                    _bitmaps.Add(info.Index, img);
+                    ThreadPool.QueueUserWorkItem(OnMapNewtileAvailableHelper, new object[] { info, img });
                 }
                 else
                 {
@@ -80,6 +90,10 @@ namespace SharpMap.Layers
                 bytes = tileProvider.GetTile(tileInfo);
                 Bitmap bitmap = new Bitmap(new MemoryStream(bytes));
                 bitmaps.Add(tileInfo.Index, bitmap);
+                if (!_fileCache.Exists(tileInfo.Index))
+                {
+                    AddImageToFileCache(tileInfo, bitmap);
+                }
 
                 OnMapNewTileAvaliable(tileInfo, bitmap);
             }

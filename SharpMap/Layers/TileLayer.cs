@@ -23,6 +23,8 @@ namespace SharpMap.Layers
         protected readonly ImageAttributes _imageAttributes = new ImageAttributes();
         protected readonly ITileSource _source;
         protected readonly MemoryCache<Bitmap> _bitmaps = new MemoryCache<Bitmap>(100, 200);
+        protected FileCache _fileCache = null;
+        protected ImageFormat _ImageFormat = null;
         protected readonly bool _showErrorInTile = true;
         InterpolationMode _interpolationMode = InterpolationMode.HighQualityBicubic;
 
@@ -64,7 +66,12 @@ namespace SharpMap.Layers
         /// <param name="tileSource">the source to get the tiles from</param>
         /// <param name="layerName">name of the layer</param>
         public TileLayer(ITileSource tileSource, string layerName)
-            : this(tileSource, layerName, new Color(), true)
+            : this(tileSource, layerName, new Color(), true, null)
+        {
+        }
+
+        public TileLayer(ITileSource tileSource, string layerName, Color transparentColor, bool showErrorInTile)
+            : this(tileSource,layerName, transparentColor, showErrorInTile,null)
         {
         }
 
@@ -75,8 +82,9 @@ namespace SharpMap.Layers
         /// <param name="layerName">name of the layer</param>
         /// <param name="transparentColor">transparent color off</param>
         /// <param name="showErrorInTile">generate an error tile if it could not be retrieved from source</param>
+        /// <param name="fileCacheDir">If the layer should use a file-cache so store tiles, set this to that directory. Set to null to avoid filecache</param>
         /// <remarks>If <see cref="showErrorInTile"/> is set to false, tile source keeps trying to get the tile in every request</remarks>
-        public TileLayer(ITileSource tileSource, string layerName, Color transparentColor, bool showErrorInTile)
+        public TileLayer(ITileSource tileSource, string layerName, Color transparentColor, bool showErrorInTile, string fileCacheDir)
         {
             _source = tileSource;
             LayerName = layerName;
@@ -87,6 +95,11 @@ namespace SharpMap.Layers
 #if !PocketPC
             _imageAttributes.SetWrapMode(WrapMode.TileFlipXY);
 #endif
+            if (!string.IsNullOrEmpty(fileCacheDir))
+            {
+                _fileCache = new BruTile.Cache.FileCache(fileCacheDir, "png");
+                _ImageFormat = ImageFormat.Png;
+            }
         }
 
         #endregion
@@ -112,6 +125,12 @@ namespace SharpMap.Layers
             foreach (TileInfo info in tiles)
             {
                 if (_bitmaps.Find(info.Index) != null) continue;
+                if (_fileCache != null && _fileCache.Exists(info.Index))
+                {
+                    _bitmaps.Add(info.Index, GetImageFromFileCache(info) as Bitmap);
+                    continue;
+                }
+
                 AutoResetEvent waitHandle = new AutoResetEvent(false);
                 waitHandles.Add(waitHandle);
                 ThreadPool.QueueUserWorkItem(GetTileOnThread, new object[] { _source.Provider, info, _bitmaps, waitHandle });
@@ -131,11 +150,18 @@ namespace SharpMap.Layers
                 min = new PointF((float)Math.Round(min.X), (float)Math.Round(min.Y));
                 max = new PointF((float)Math.Round(max.X), (float)Math.Round(max.Y));
 
-                g.DrawImage(bitmap,
-                    new Rectangle((int)min.X, (int)max.Y, (int)(max.X - min.X), (int)(min.Y - max.Y)),
-                    0, 0, _source.Schema.Width, _source.Schema.Height,
-                    GraphicsUnit.Pixel,
-                    _imageAttributes);
+                try
+                {
+                    g.DrawImage(bitmap,
+                        new Rectangle((int)min.X, (int)max.Y, (int)(max.X - min.X), (int)(min.Y - max.Y)),
+                        0, 0, _source.Schema.Width, _source.Schema.Height,
+                        GraphicsUnit.Pixel,
+                        _imageAttributes);
+                }
+                catch (Exception ee)
+                {
+                    /*GDI+ Hell*/
+                }
 
             }
 
@@ -166,6 +192,10 @@ namespace SharpMap.Layers
                 bytes = tileProvider.GetTile(tileInfo);
                 Bitmap bitmap = new Bitmap(new MemoryStream(bytes));
                 bitmaps.Add(tileInfo.Index, bitmap);
+                if (_fileCache != null)
+                {
+                    AddImageToFileCache(tileInfo, bitmap);
+                }
             }
             catch (WebException ex)
             {
@@ -188,6 +218,25 @@ namespace SharpMap.Layers
             {
                 autoResetEvent.Set();
             }
+        }
+
+        protected void AddImageToFileCache(TileInfo tileInfo, Bitmap bitmap)
+        {
+            MemoryStream ms = new MemoryStream();
+            bitmap.Save(ms, _ImageFormat);
+            ms.Seek(0, SeekOrigin.Begin);
+            byte[] data = new byte[ms.Length];
+            ms.Read(data, 0, data.Length);
+            ms.Dispose();
+            _fileCache.Add(tileInfo.Index, data);
+        }
+
+        protected Image GetImageFromFileCache(TileInfo info)
+        {
+            MemoryStream ms = new MemoryStream(_fileCache.Find(info.Index));
+            Image img = Image.FromStream(ms);
+            ms.Dispose();
+            return img;
         }
         #endregion
     }
