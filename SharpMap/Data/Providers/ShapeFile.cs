@@ -921,7 +921,7 @@ namespace SharpMap.Data.Providers
 
         static ShapeFile()
         {
-            SpatialIndexCreationOption = SpatialIndexCreation.Linear;
+            SpatialIndexCreationOption = SpatialIndexCreation.Recursive;
         }
 
         /// <summary>
