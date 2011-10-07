@@ -20,6 +20,9 @@ namespace SharpMap.Rendering.Symbolizer
         /// </summary>
         public Brush Fill { get; set; }
 
+        /// <summary>
+        /// The render origin for brushes (Texture, Gradient, ...)
+        /// </summary>
         public Point RenderOrigin { get; set; }
 
         /// <summary>

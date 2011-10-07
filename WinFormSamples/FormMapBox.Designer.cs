@@ -55,12 +55,12 @@ namespace WinFormSamples
             this.radioButton10 = new System.Windows.Forms.RadioButton();
             this.lvwDecorations = new System.Windows.Forms.ListView();
             this.pgMapDecoration = new System.Windows.Forms.PropertyGrid();
-            //((System.ComponentModel.ISupportInitialize)(this.scMain)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.scMain)).BeginInit();
             this.scMain.Panel2.SuspendLayout();
             this.scMain.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.tbAngle)).BeginInit();
-            //((System.ComponentModel.ISupportInitialize)(this.scMapProp)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.scMapProp)).BeginInit();
             this.scMapProp.Panel1.SuspendLayout();
             this.scMapProp.Panel2.SuspendLayout();
             this.scMapProp.SuspendLayout();
@@ -192,6 +192,7 @@ namespace WinFormSamples
             this.radioButton2.Text = "Shapefile";
             this.radioButton2.UseVisualStyleBackColor = true;
             this.radioButton2.Click += new System.EventHandler(this.radioButton_Click);
+            this.radioButton2.MouseUp += new System.Windows.Forms.MouseEventHandler(this.radioButton2_MouseUp);
             // 
             // radioButton3
             // 
@@ -240,6 +241,7 @@ namespace WinFormSamples
             this.radioButton5.Text = "OGR - MapInfo";
             this.radioButton5.UseVisualStyleBackColor = true;
             this.radioButton5.Click += new System.EventHandler(this.radioButton_Click);
+            this.radioButton5.MouseUp += new System.Windows.Forms.MouseEventHandler(this.radioButton2_MouseUp);
             // 
             // radioButton6
             // 
@@ -252,6 +254,7 @@ namespace WinFormSamples
             this.radioButton6.Text = "GDAL - GeoTiff";
             this.radioButton6.UseVisualStyleBackColor = true;
             this.radioButton6.Click += new System.EventHandler(this.radioButton_Click);
+            this.radioButton6.MouseUp += new System.Windows.Forms.MouseEventHandler(this.radioButton2_MouseUp);
             // 
             // radioButton7
             // 
@@ -288,6 +291,7 @@ namespace WinFormSamples
             this.radioButton9.Text = "SpatiaLite";
             this.radioButton9.UseVisualStyleBackColor = true;
             this.radioButton9.Click += new System.EventHandler(this.radioButton_Click);
+            this.radioButton9.MouseUp += new System.Windows.Forms.MouseEventHandler(this.radioButton2_MouseUp);
             // 
             // radioButton10
             // 
@@ -334,14 +338,14 @@ namespace WinFormSamples
             this.Name = "FormMapBox";
             this.Text = "SharpMap Samples - MapBox";
             this.scMain.Panel2.ResumeLayout(false);
-            //((System.ComponentModel.ISupportInitialize)(this.scMain)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.scMain)).EndInit();
             this.scMain.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.tbAngle)).EndInit();
             this.scMapProp.Panel1.ResumeLayout(false);
             this.scMapProp.Panel1.PerformLayout();
             this.scMapProp.Panel2.ResumeLayout(false);
-            //((System.ComponentModel.ISupportInitialize)(this.scMapProp)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.scMapProp)).EndInit();
             this.scMapProp.ResumeLayout(false);
             this.flowLayoutPanel1.ResumeLayout(false);
             this.flowLayoutPanel1.PerformLayout();

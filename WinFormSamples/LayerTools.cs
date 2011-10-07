@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.Text;
 using SharpMap.Layers;
@@ -241,7 +242,10 @@ namespace WinFormSamples
 
         private static Pen GetRandomPen(int min, int max)
         {
-            return new Pen(GetRandomColor(), Rnd.Next(min, max));
+            var p = new Pen(GetRandomColor(), Rnd.Next(min, max));
+            p.LineJoin = LineJoin.MiterClipped;
+            p.MiterLimit = 2f;
+            return p;
         }
 
         public static SharpMap.Map GetMapForProviders(IEnumerable<SharpMap.Data.Providers.IProvider> providers)

@@ -115,7 +115,11 @@ namespace SharpMap.Geometries
         public Point Min
         {
             get { return _Min; }
-            set { _Min = value; }
+            set
+            {
+                _Min = value;
+                _centroid = null;
+            }
         }
 
         /// <summary>
@@ -124,7 +128,11 @@ namespace SharpMap.Geometries
         public Point Max
         {
             get { return _Max; }
-            set { _Max = value; }
+            set 
+            { 
+                _Max = value;
+                _centroid = null;
+            }
         }
 
         /// <summary>
@@ -220,6 +228,19 @@ namespace SharpMap.Geometries
                 }
                 return la;
             }
+        }
+
+        /// <summary>
+        /// This bounding box only contains valid ordinates
+        /// </summary>
+        public bool IsValid
+        {
+            get
+            {
+                return (!double.IsNaN(_Min.X) && !double.IsNaN(_Max.X) &&
+                        !double.IsNaN(_Min.Y) && !double.IsNaN(_Max.Y));
+            }
+            //set { throw new NotImplementedException(); }
         }
 
         #region IEquatable<BoundingBox> Members
@@ -526,12 +547,13 @@ namespace SharpMap.Geometries
             return Math.Sqrt(ret);
         }
 
+        private Point _centroid ;
         /// <summary>
         /// Returns the center of the bounding box
         /// </summary>
         public Point GetCentroid()
         {
-            return (_Min + _Max)*.5f;
+            return (_centroid ?? (_centroid = (_Min + _Max) * .5f));
         }
 
         /// <summary>
