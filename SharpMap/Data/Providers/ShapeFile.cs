@@ -811,7 +811,7 @@ namespace SharpMap.Data.Providers
 				{
 					string wkt = File.ReadAllText(projfile);
 #if !DotSpatialProjections
-					_CoordinateSystem = (ICoordinateSystem) CoordinateSystemWktReader.Parse(wkt);
+					_coordinateSystem = (ICoordinateSystem) CoordinateSystemWktReader.Parse(wkt);
 #else
 					_coordinateSystem = new ProjectionInfo();
 					_coordinateSystem.ReadEsriString(wkt);
