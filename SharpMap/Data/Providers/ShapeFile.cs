@@ -894,7 +894,12 @@ namespace SharpMap.Data.Providers
 			{
 				try
 				{
-					return QuadTree.FromFile(filename + ".sidx");
+				    var sw = new Stopwatch();
+                    sw.Start();
+                    var tree = QuadTree.FromFile(filename + ".sidx");
+                    sw.Stop();
+                    Debug.WriteLine(string.Format("Linear creation of QuadTree took {0}ms", sw.ElapsedMilliseconds));
+				    return tree;
 				}
 				catch (QuadTree.ObsoleteFileFormatException)
 				{

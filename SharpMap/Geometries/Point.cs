@@ -28,9 +28,14 @@ namespace SharpMap.Geometries
     [Serializable]
     public class Point : Geometry, IComparable<Point>, IPuntal
     {
-        private bool _IsEmpty = false;
-        private double _X;
-        private double _Y;
+        //private bool _isEmpty;
+        private double _x;
+        private double _y;
+
+        /// <summary>
+        /// Null ordinate value
+        /// </summary>
+        public static readonly double NullOrdinate = Double.NaN;
 
         /// <summary>
         /// Initializes a new Point
@@ -39,16 +44,16 @@ namespace SharpMap.Geometries
         /// <param name="y">Y coordinate</param>
         public Point(double x, double y)
         {
-            _X = x;
-            _Y = y;
+            _x = x;
+            _y = y;
         }
 
         /// <summary>
         /// Initializes a new empty Point
         /// </summary>
-        public Point() : this(0, 0)
+        public Point() : this(NullOrdinate, NullOrdinate) //: this(0d, 0d)
         {
-            _IsEmpty = true;
+            //_isEmpty = true;
         }
 
         /// <summary>
@@ -60,8 +65,8 @@ namespace SharpMap.Geometries
             if (point.Length < 2)
                 throw new Exception("Only 2 dimensions are supported for points");
 
-            _X = point[0];
-            _Y = point[1];
+            _x = point[0];
+            _y = point[1];
         }
 
         /// <summary>
@@ -69,7 +74,16 @@ namespace SharpMap.Geometries
         /// </summary>
         protected bool SetIsEmpty
         {
-            set { _IsEmpty = value; }
+            set
+            { 
+                if (value)
+                    _x = NullOrdinate;// _isEmpty = value;
+                else
+                {
+                    _x = 0d;
+                    _y = 0d;
+                }
+            }
         }
 
         /// <summary>
@@ -79,14 +93,14 @@ namespace SharpMap.Geometries
         {
             get
             {
-                if (!_IsEmpty)
-                    return _X;
-                else throw new ApplicationException("Point is empty");
+                if (!IsEmptyPoint)
+                    return _x;
+                throw new ApplicationException("Point is empty");
             }
             set
             {
-                _X = value;
-                _IsEmpty = false;
+                _x = value;
+                //_isEmpty = false;
             }
         }
 
@@ -97,14 +111,14 @@ namespace SharpMap.Geometries
         {
             get
             {
-                if (!_IsEmpty)
-                    return _Y;
-                else throw new ApplicationException("Point is empty");
+                if (!IsEmptyPoint)
+                    return _y;
+                throw new ApplicationException("Point is empty");
             }
             set
             {
-                _Y = value;
-                _IsEmpty = false;
+                _y = value;
+                //_isEmpty = false;
             }
         }
 
@@ -117,15 +131,14 @@ namespace SharpMap.Geometries
         {
             get
             {
-                if (_IsEmpty)
+                if (IsEmptyPoint)
                     throw new ApplicationException("Point is empty");
-                else if (index == 0)
+                if (index == 0)
                     return X;
-                else if
+                if
                     (index == 1)
                     return Y;
-                else
-                    throw (new Exception("Point index out of bounds"));
+                throw (new Exception("Point index out of bounds"));
             }
             set
             {
@@ -135,7 +148,7 @@ namespace SharpMap.Geometries
                     Y = value;
                 else
                     throw (new Exception("Point index out of bounds"));
-                _IsEmpty = false;
+                //_isEmpty = false;
             }
         }
 
@@ -158,10 +171,9 @@ namespace SharpMap.Geometries
         {
             if (X < other.X || X == other.X && Y < other.Y)
                 return -1;
-            else if (X > other.X || X == other.X && Y > other.Y)
+            if (X > other.X || X == other.X && Y > other.Y)
                 return 1;
-            else // (this.X == other.X && this.Y == other.Y)
-                return 0;
+            return 0;
         }
 
         #endregion
@@ -172,7 +184,7 @@ namespace SharpMap.Geometries
         /// <returns></returns>
         public double[] ToDoubleArray()
         {
-            return new double[2] {_X, _Y};
+            return new[] {_x, _y};
         }
 
         /// <summary>
@@ -199,7 +211,7 @@ namespace SharpMap.Geometries
         /// <returns><see cref="Point"/></returns>
         public Point AsPoint()
         {
-            return new Point(_X, _Y);
+            return new Point(_x, _y);
         }
 
         /// <summary>
@@ -284,7 +296,7 @@ namespace SharpMap.Geometries
         /// <returns></returns>
         public virtual bool Equals(Point p)
         {
-            return p != null && p.X == _X && p.Y == _Y && _IsEmpty == p.IsEmpty();
+            return p != null && p.X == _x && p.Y == _y && IsEmptyPoint == p.IsEmptyPoint;
         }
 
         /// <summary>
@@ -294,8 +306,10 @@ namespace SharpMap.Geometries
         /// <returns>A hash code for the current <see cref="GetHashCode"/>.</returns>
         public override int GetHashCode()
         {
-            return _X.GetHashCode() ^ _Y.GetHashCode() ^ _IsEmpty.GetHashCode();
+            return _x.GetHashCode() ^ _y.GetHashCode() ^ IsEmptyPoint.GetHashCode();
         }
+
+        protected bool IsEmptyPoint { get { return double.IsNaN(_x); } }
 
         /// <summary>
         /// If true, then this Geometry represents the empty point set, Ø, for the coordinate space. 
@@ -303,7 +317,7 @@ namespace SharpMap.Geometries
         /// <returns>Returns 'true' if this Geometry is the empty geometry</returns>
         public override bool IsEmpty()
         {
-            return _IsEmpty;
+            return IsEmptyPoint;
         }
 
         /// <summary>
@@ -336,11 +350,10 @@ namespace SharpMap.Geometries
         {
             if (geom.GetType() == typeof (Point))
             {
-                Point p = geom as Point;
+                var p = geom as Point;
                 return Math.Sqrt(Math.Pow(X - p.X, 2) + Math.Pow(Y - p.Y, 2));
             }
-            else
-                throw new Exception("The method or operation is not implemented for this geometry type.");
+            throw new Exception("The method or operation is not implemented for this geometry type.");
         }
 
         /// <summary>

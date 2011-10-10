@@ -281,19 +281,19 @@ namespace SharpMap.Utilities.SpatialIndexing
         /// <returns></returns>
         public static QuadTree FromFile(string filename)
         {
-            FileStream fs = new FileStream(filename, FileMode.Open, FileAccess.Read);
-            BinaryReader br = new BinaryReader(fs);
-            if (br.ReadDouble() != INDEXFILEVERSION) //Check fileindex version
+            using (var fs = new FileStream(filename, FileMode.Open, FileAccess.Read))
+            using (var br = new BinaryReader(fs))
             {
-                fs.Close();
-                fs.Dispose();
-                throw new ObsoleteFileFormatException(
-                    "Invalid index file version. Please rebuild the spatial index by either deleting the index");
+                if (br.ReadDouble() != INDEXFILEVERSION) //Check fileindex version
+                {
+                    fs.Close();
+                    fs.Dispose();
+                    throw new ObsoleteFileFormatException(
+                        "Invalid index file version. Please rebuild the spatial index by either deleting the index");
+                }
+                var node = ReadNode(0, br);
+                return node;
             }
-            QuadTree node = ReadNode(0, ref br);
-            br.Close();
-            fs.Close();
-            return node;
         }
 
         /// <summary>
@@ -302,9 +302,9 @@ namespace SharpMap.Utilities.SpatialIndexing
         /// <param name="depth">Current depth</param>
         /// <param name="br">Binary reader reference</param>
         /// <returns></returns>
-        private static QuadTree ReadNode(uint depth, ref BinaryReader br)
+        private static QuadTree ReadNode(uint depth, BinaryReader br)
         {
-            var bbox = new BoundingBox(br.ReadDouble(), br.ReadDouble(), br.ReadDouble(), br.ReadDouble());
+            var bbox = new BoundingBox(br);
             var node = new QuadTree(bbox, depth);
             
             var isLeaf = br.ReadBoolean();
@@ -315,15 +315,15 @@ namespace SharpMap.Utilities.SpatialIndexing
                 for (int i = 0; i < featureCount; i++)
                 {
                     var box = new BoxObjects();
-                    box.Box = new BoundingBox(br.ReadDouble(), br.ReadDouble(), br.ReadDouble(), br.ReadDouble());
+                    box.Box = new BoundingBox(br);
                     box.ID = (uint) br.ReadInt32();
                     node._objList.Add(box);
                 }
             }
             else
             {
-                node.Child0 = ReadNode(depth + 1, ref br);
-                node.Child1 = ReadNode(depth + 1, ref br);
+                node.Child0 = ReadNode(depth + 1, br);
+                node.Child1 = ReadNode(depth + 1, br);
             }
             return node;
         }
@@ -334,12 +334,12 @@ namespace SharpMap.Utilities.SpatialIndexing
         /// <param name="filename"></param>
         public void SaveIndex(string filename)
         {
-            FileStream fs = new FileStream(filename, FileMode.Create);
-            BinaryWriter bw = new BinaryWriter(fs);
-            bw.Write(INDEXFILEVERSION); //Save index version
-            SaveNode(this, ref bw);
-            bw.Close();
-            fs.Close();
+            using (var fs = new FileStream(filename, FileMode.Create))
+            using (var bw = new BinaryWriter(fs))
+            {
+                bw.Write(INDEXFILEVERSION); //Save index version
+                SaveNode(this, bw);
+            }
         }
 
         /// <summary>
@@ -347,7 +347,7 @@ namespace SharpMap.Utilities.SpatialIndexing
         /// </summary>
         /// <param name="node">Node to save</param>
         /// <param name="sw">Reference to BinaryWriter</param>
-        private void SaveNode(QuadTree node, ref BinaryWriter sw)
+        private static void SaveNode(QuadTree node, BinaryWriter sw)
         {
             //Write node boundingbox
             sw.Write(node.Box.Min.X);
@@ -357,7 +357,7 @@ namespace SharpMap.Utilities.SpatialIndexing
             sw.Write(node.IsLeaf);
             if (node.IsLeaf || node.Child0 == null)
             {
-                if (node.Child0 == null)
+                if (node._objList == null)
                 {
                     sw.Write(0);
                     return;
@@ -375,8 +375,8 @@ namespace SharpMap.Utilities.SpatialIndexing
             }
             else if (!node.IsLeaf) //Save next node
             {
-                SaveNode(node.Child0, ref sw);
-                SaveNode(node.Child1, ref sw);
+                SaveNode(node.Child0, sw);
+                SaveNode(node.Child1, sw);
             }
         }
 

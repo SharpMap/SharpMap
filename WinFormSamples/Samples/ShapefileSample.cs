@@ -260,7 +260,8 @@ namespace WinFormSamples.Samples
             var providers = new SharpMap.Data.Providers.ShapeFile[filenames.Length];
             for (int i = 0; i < filenames.Length; i++)
             {
-                providers[i] = new ShapeFile(filenames[i]);
+                providers[i] = new ShapeFile(filenames[i], true);
+                providers[i].Open();
             }
 
             var map = LayerTools.GetMapForProviders(providers);

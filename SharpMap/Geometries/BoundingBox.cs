@@ -17,6 +17,7 @@
 
 using System;
 using System.Collections.ObjectModel;
+using System.IO;
 
 namespace SharpMap.Geometries
 {
@@ -29,8 +30,8 @@ namespace SharpMap.Geometries
     [Serializable]
     public class BoundingBox : IEquatable<BoundingBox>
     {
-        private Point _Max;
-        private Point _Min;
+        private Point _max;
+        private Point _min;
 
         /// <summary>
         /// Initializes a bounding box
@@ -44,9 +45,21 @@ namespace SharpMap.Geometries
         /// <param name="maxY">top</param>
         public BoundingBox(double minX, double minY, double maxX, double maxY)
         {
-            _Min = new Point(minX, minY);
-            _Max = new Point(maxX, maxY);
+            _min = new Point(minX, minY);
+            _max = new Point(maxX, maxY);
             CheckMinMax();
+        }
+
+        internal BoundingBox(BinaryReader br)
+        {
+            var bytes = new byte[32];
+            br.Read(bytes, 0, 32);
+
+            var doubles = new double[4];
+            Buffer.BlockCopy(bytes, 0, doubles, 0, 32);
+            
+            _min = new Point(doubles[0], doubles[1]);
+            _max = new Point(doubles[2], doubles[3]);
         }
 
         /// <summary>
@@ -67,20 +80,20 @@ namespace SharpMap.Geometries
         {
             if (objects == null || objects.Count == 0)
             {
-                _Min = null;
-                _Max = null;
+                _min = null;
+                _max = null;
                 return;
             }
-            _Min = objects[0].GetBoundingBox().Min.Clone();
-            _Max = objects[0].GetBoundingBox().Max.Clone();
+            _min = objects[0].GetBoundingBox().Min.Clone();
+            _max = objects[0].GetBoundingBox().Max.Clone();
             CheckMinMax();
             for (int i = 1; i < objects.Count; i++)
             {
                 BoundingBox box = objects[i].GetBoundingBox();
-                _Min.X = Math.Min(box.Min.X, Min.X);
-                _Min.Y = Math.Min(box.Min.Y, Min.Y);
-                _Max.X = Math.Max(box.Max.X, Max.X);
-                _Max.Y = Math.Max(box.Max.Y, Max.Y);
+                _min.X = Math.Min(box.Min.X, Min.X);
+                _min.Y = Math.Min(box.Min.Y, Min.Y);
+                _max.X = Math.Max(box.Max.X, Max.X);
+                _max.Y = Math.Max(box.Max.Y, Max.Y);
             }
         }
 
@@ -92,19 +105,19 @@ namespace SharpMap.Geometries
         {
             if (objects.Count == 0)
             {
-                _Max = null;
-                _Min = null;
+                _max = null;
+                _min = null;
             }
             else
             {
-                _Min = objects[0].Min.Clone();
-                _Max = objects[0].Max.Clone();
+                _min = objects[0].Min.Clone();
+                _max = objects[0].Max.Clone();
                 for (int i = 1; i < objects.Count; i++)
                 {
-                    _Min.X = Math.Min(objects[i].Min.X, Min.X);
-                    _Min.Y = Math.Min(objects[i].Min.Y, Min.Y);
-                    _Max.X = Math.Max(objects[i].Max.X, Max.X);
-                    _Max.Y = Math.Max(objects[i].Max.Y, Max.Y);
+                    _min.X = Math.Min(objects[i].Min.X, Min.X);
+                    _min.Y = Math.Min(objects[i].Min.Y, Min.Y);
+                    _max.X = Math.Max(objects[i].Max.X, Max.X);
+                    _max.Y = Math.Max(objects[i].Max.Y, Max.Y);
                 }
             }
         }
@@ -114,10 +127,10 @@ namespace SharpMap.Geometries
         /// </summary>
         public Point Min
         {
-            get { return _Min; }
+            get { return _min; }
             set
             {
-                _Min = value;
+                _min = value;
                 _centroid = null;
             }
         }
@@ -127,10 +140,10 @@ namespace SharpMap.Geometries
         /// </summary>
         public Point Max
         {
-            get { return _Max; }
+            get { return _max; }
             set 
             { 
-                _Max = value;
+                _max = value;
                 _centroid = null;
             }
         }
@@ -140,7 +153,7 @@ namespace SharpMap.Geometries
         /// </summary>
         public Double Left
         {
-            get { return _Min.X; }
+            get { return _min.X; }
         }
 
         /// <summary>
@@ -148,7 +161,7 @@ namespace SharpMap.Geometries
         /// </summary>
         public Double Right
         {
-            get { return _Max.X; }
+            get { return _max.X; }
         }
 
         /// <summary>
@@ -156,7 +169,7 @@ namespace SharpMap.Geometries
         /// </summary>
         public Double Top
         {
-            get { return _Max.Y; }
+            get { return _max.Y; }
         }
 
         /// <summary>
@@ -164,24 +177,36 @@ namespace SharpMap.Geometries
         /// </summary>
         public Double Bottom
         {
-            get { return _Min.Y; }
+            get { return _min.Y; }
         }
 
+        /// <summary>
+        /// The upper left <see cref="Point"/> of this bounding box
+        /// </summary>
         public Point TopLeft
         {
             get { return new Point(Left, Top); }
         }
 
+        /// <summary>
+        /// The upper right <see cref="Point"/> of this bounding box
+        /// </summary>
         public Point TopRight
         {
             get { return new Point(Right, Top); }
         }
 
+        /// <summary>
+        /// The lower left <see cref="Point"/> of this bounding box
+        /// </summary>
         public Point BottomLeft
         {
             get { return new Point(Left, Bottom); }
         }
 
+        /// <summary>
+        /// The lower right <see cref="Point"/> of this bounding box
+        /// </summary>
         public Point BottomRight
         {
             get { return new Point(Right, Bottom); }
@@ -193,7 +218,7 @@ namespace SharpMap.Geometries
         /// <returns>Width of boundingbox</returns>
         public double Width
         {
-            get { return Math.Abs(_Max.X - _Min.X); }
+            get { return Math.Abs(_max.X - _min.X); }
         }
 
         /// <summary>
@@ -202,7 +227,7 @@ namespace SharpMap.Geometries
         /// <returns>Height of boundingbox</returns>
         public double Height
         {
-            get { return Math.Abs(_Max.Y - _Min.Y); }
+            get { return Math.Abs(_max.Y - _min.Y); }
         }
 
         /// <summary>
@@ -237,8 +262,8 @@ namespace SharpMap.Geometries
         {
             get
             {
-                return (!double.IsNaN(_Min.X) && !double.IsNaN(_Max.X) &&
-                        !double.IsNaN(_Min.Y) && !double.IsNaN(_Max.Y));
+                return (!double.IsNaN(_min.X) && !double.IsNaN(_max.X) &&
+                        !double.IsNaN(_min.Y) && !double.IsNaN(_max.Y));
             }
             //set { throw new NotImplementedException(); }
         }
@@ -264,8 +289,8 @@ namespace SharpMap.Geometries
         /// <param name="vector">Offset vector</param>
         public void Offset(Point vector)
         {
-            _Min += vector;
-            _Max += vector;
+            _min += vector;
+            _max += vector;
         }
 
         /// <summary>
@@ -275,18 +300,18 @@ namespace SharpMap.Geometries
         public bool CheckMinMax()
         {
             bool wasSwapped = false;
-            if (_Min.X > _Max.X)
+            if (_min.X > _max.X)
             {
-                double tmp = _Min.X;
-                _Min.X = _Max.X;
-                _Max.X = tmp;
+                double tmp = _min.X;
+                _min.X = _max.X;
+                _max.X = tmp;
                 wasSwapped = true;
             }
-            if (_Min.Y > _Max.Y)
+            if (_min.Y > _max.Y)
             {
-                double tmp = _Min.Y;
-                _Min.Y = _Max.Y;
-                _Max.Y = tmp;
+                double tmp = _min.Y;
+                _min.Y = _max.Y;
+                _max.Y = tmp;
                 wasSwapped = true;
             }
             return wasSwapped;
@@ -423,9 +448,9 @@ namespace SharpMap.Geometries
         {
             if (box == null)
                 return Clone();
-            else
-                return new BoundingBox(Math.Min(Min.X, box.Min.X), Math.Min(Min.Y, box.Min.Y),
-                                       Math.Max(Max.X, box.Max.X), Math.Max(Max.Y, box.Max.Y));
+
+            return new BoundingBox(Math.Min(Min.X, box.Min.X), Math.Min(Min.Y, box.Min.Y),
+                                   Math.Max(Max.X, box.Max.X), Math.Max(Max.Y, box.Max.Y));
         }
 
         /// <summary>
@@ -438,10 +463,10 @@ namespace SharpMap.Geometries
         {
             if (box1 == null && box2 == null)
                 return null;
-            else if (box1 == null)
+            if (box1 == null)
                 return box2.Clone();
-            else
-                return box1.Join(box2);
+            
+            return box1.Join(box2);
         }
 
         /// <summary>
@@ -553,7 +578,7 @@ namespace SharpMap.Geometries
         /// </summary>
         public Point GetCentroid()
         {
-            return (_centroid ?? (_centroid = (_Min + _Max) * .5f));
+            return (_centroid ?? (_centroid = (_min + _max) * .5f));
         }
 
         /// <summary>
@@ -562,7 +587,7 @@ namespace SharpMap.Geometries
         /// <returns></returns>
         public BoundingBox Clone()
         {
-            return new BoundingBox(_Min.X, _Min.Y, _Max.X, _Max.Y);
+            return new BoundingBox(_min.X, _min.Y, _max.X, _max.Y);
         }
 
         /// <summary>
@@ -581,9 +606,10 @@ namespace SharpMap.Geometries
         /// <returns></returns>
         public override bool Equals(object obj)
         {
-            BoundingBox box = obj as BoundingBox;
-            if (obj == null) return false;
-            else return Equals(box);
+            var box = obj as BoundingBox;
+            if (obj == null) 
+                return false;
+            return Equals(box);
         }
 
         /// <summary>
