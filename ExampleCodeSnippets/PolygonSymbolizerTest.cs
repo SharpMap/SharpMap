@@ -2,9 +2,64 @@ namespace ExampleCodeSnippets
 {
     public class PolygonSymbolizerTest
     {
+        private class ModifiedBasicPolygonSymbolizer : SharpMap.Rendering.Symbolizer.BasicPolygonSymbolizer
+        {
+            protected override void OnRenderInternal(SharpMap.Map map, SharpMap.Geometries.Polygon polygon, System.Drawing.Graphics g)
+            {
+                var pt = polygon.Centroid;
+                var oldRo = g.RenderingOrigin;
+                g.RenderingOrigin = 
+                    System.Drawing.Point.Truncate(SharpMap.Utilities.Transform.WorldtoMap(pt, map));
+                base.OnRenderInternal(map, polygon, g);
+                g.RenderingOrigin = oldRo;
+            }
+        }
+
         [NUnit.Framework.Test]
         public void TestPlainPolygonSymbolizer()
-        {}
+        {
+            var provider = new SharpMap.Data.Providers.ShapeFile(
+                "..\\..\\..\\WinFormSamples\\GeoData\\World\\countries.shp", true);
+            var l = new SharpMap.Layers.Symbolizer.PolygonalVectorLayer("Countries", provider);
+            l.Symbolizer = new ModifiedBasicPolygonSymbolizer
+                {
+                    Fill = new System.Drawing.Drawing2D.HatchBrush(
+                            System.Drawing.Drawing2D.HatchStyle.WideDownwardDiagonal, 
+                            System.Drawing.Color.Red /*,
+                            System.Drawing.Color.LightPink*/),
+                    UseClipping = false,
+                    //Outline = System.Drawing.Pens.AliceBlue
+                };
 
+            var m = new SharpMap.Map(new System.Drawing.Size(1440, 1080)) { BackColor = System.Drawing.Color.Cornsilk };
+            m.Layers.Add(l);
+
+            m.ZoomToExtents();
+
+            var sw = new System.Diagnostics.Stopwatch();
+            sw.Start();
+            var img = m.GetMap();
+            img.Save("PolygonSymbolizer-1.bmp", System.Drawing.Imaging.ImageFormat.Bmp);
+            sw.Stop();
+            System.Console.WriteLine(string.Format("Rendering new method:{0}ms", sw.ElapsedMilliseconds));
+
+            l.Symbolizer = new SharpMap.Rendering.Symbolizer.BasicPolygonSymbolizer()
+            {
+                Fill = new System.Drawing.Drawing2D.HatchBrush(
+                        System.Drawing.Drawing2D.HatchStyle.WideDownwardDiagonal,
+                        System.Drawing.Color.Red/*,
+                        System.Drawing.Color.LightPink*/),
+                UseClipping = false,
+                //Outline = System.Drawing.Pens.AliceBlue
+            };
+
+            sw.Restart();
+            img = m.GetMap();
+            img.Save("PolygonSymbolizer-2.bmp", System.Drawing.Imaging.ImageFormat.Bmp);
+            sw.Stop();
+            System.Console.WriteLine(string.Format("Rendering new method:{0}ms", sw.ElapsedMilliseconds));
+        
+        }
     }
+
 }
