@@ -329,7 +329,10 @@ namespace SharpMap
             if ((Layers == null || Layers.Count == 0) && (BackgroundLayer == null || BackgroundLayer.Count == 0) && (_variableLayers == null || _variableLayers.Count == 0))
                 throw new InvalidOperationException("No layers to render");
 
-            g.Transform = MapTransform;
+            lock (MapTransform)
+            {
+                g.Transform = MapTransform.Clone();
+            }
             g.Clear(BackColor);
             g.PageUnit = GraphicsUnit.Pixel;
 
@@ -462,7 +465,10 @@ namespace SharpMap
                 throw new InvalidOperationException("No layers to render");
 
             Matrix transform = g.Transform;
-            g.Transform = MapTransform;
+            lock (MapTransform)
+            {
+                g.Transform = MapTransform.Clone();
+            }
             g.Clear(BackColor);
             g.PageUnit = GraphicsUnit.Pixel;
 
@@ -493,6 +499,33 @@ namespace SharpMap
 
             VariableLayerCollection.Pause = false;
 
+        }
+
+        public Map Clone()
+        {
+            Map clone = new Map()
+            {
+                BackColor = BackColor,
+                Center = Center,
+                Disclaimer = Disclaimer,
+                DisclaimerFont = DisclaimerFont,
+                DisclaimerLocation = DisclaimerLocation,
+                MapTransform = MapTransform,
+                MaximumZoom = MaximumZoom,
+                MinimumZoom = MinimumZoom,
+                PixelAspectRatio = PixelAspectRatio,
+                Size = Size,
+                Zoom = Zoom
+            };
+            foreach (var lay in BackgroundLayer)
+                clone.BackgroundLayer.Add(lay);
+            foreach (var dec in Decorations)
+                clone.Decorations.Add(dec);
+            foreach (var lay in Layers)
+                clone.Layers.Add(lay);
+            foreach (var lay in VariableLayers)
+                clone.VariableLayers.Add(lay);
+            return clone;
         }
 
         private void RenderDisclaimer(Graphics g)
@@ -596,11 +629,14 @@ namespace SharpMap
         public PointF WorldToImage(Point p, bool careAboutMapTransform)
         {
             PointF pTmp = Transform.WorldtoMap(p, this);
-            if (careAboutMapTransform && !MapTransform.IsIdentity)
+            lock (MapTransform)
             {
-                PointF[] pts = new PointF[] { pTmp };
-                MapTransform.TransformPoints(pts);
-                pTmp = pts[0];
+                if (careAboutMapTransform && !MapTransform.IsIdentity)
+                {
+                    PointF[] pts = new PointF[] { pTmp };
+                    MapTransform.TransformPoints(pts);
+                    pTmp = pts[0];
+                }
             }
             return pTmp;
         }
