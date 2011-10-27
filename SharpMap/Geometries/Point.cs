@@ -309,7 +309,7 @@ namespace SharpMap.Geometries
             return _x.GetHashCode() ^ _y.GetHashCode() ^ IsEmptyPoint.GetHashCode();
         }
 
-        protected bool IsEmptyPoint { get { return double.IsNaN(_x); } }
+        protected bool IsEmptyPoint { get { return double.IsNaN(_x) || double.IsNaN(_y); } }
 
         /// <summary>
         /// If true, then this Geometry represents the empty point set, Ø, for the coordinate space. 

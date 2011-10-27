@@ -715,6 +715,8 @@ namespace SharpMap
         {
             get
             {
+                if (double.IsNaN(MapHeight))
+                    return new BoundingBox(0, 0, 0, 0);
 
                 Point ll = new Point(Center.X - Zoom * .5, Center.Y - MapHeight * .5);
                 Point ur = new Point(Center.X + Zoom * .5, Center.Y + MapHeight * .5);
