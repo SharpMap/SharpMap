@@ -206,6 +206,7 @@
     <Compile Include="Rendering\Symbolizer\WarpPathToPath.cs" />
     <Compile Include="Styles\VectorStyle.cs" />
     <Compile Include="Utilities\Algorithms.cs" />
+    <Compile Include="Utilities\CGAlgoritm.cs" />
     <Compile Include="Utilities\GeoSpatialMath.cs" />
     <Compile Include="Utilities\Indexing\BinaryTree.cs" />
     <Compile Include="Utilities\Indexing\SpatialIndexing.cs" />
