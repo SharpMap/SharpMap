@@ -353,7 +353,16 @@ namespace SharpMap.Geometries
                 var p = geom as Point;
                 return Math.Sqrt(Math.Pow(X - p.X, 2) + Math.Pow(Y - p.Y, 2));
             }
-            throw new Exception("The method or operation is not implemented for this geometry type.");
+            else if (geom is LineString)
+            {
+                return geom.Distance(this);
+            }
+            else if (geom is MultiLineString)
+            {
+                return geom.Distance(this);
+            }
+            else
+                throw new Exception("The method or operation is not implemented for this geometry type.");
         }
 
         /// <summary>

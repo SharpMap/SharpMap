@@ -18,6 +18,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using SharpMap.Utilities;
 
 namespace SharpMap.Geometries
 {
@@ -139,6 +140,50 @@ namespace SharpMap.Geometries
         /// <returns>Shortest distance between any two points in the two geometries</returns>
         public override double Distance(Geometry geom)
         {
+            if (geom is Point)
+            {
+                Point coord = geom as Point;
+                // brute force approach!
+                double minDist = double.MaxValue;
+                foreach (var ls in _LineStrings)
+                {
+                    IList<Point> coord0 = ls.Vertices;
+                    for (int i = 0; i < coord0.Count - 1; i++)
+                    {
+                        double dist = CGAlgorithms.DistancePointLine(coord, coord0[i], coord0[i + 1]);
+                        if (dist < minDist)
+                        {
+                            minDist = dist;
+                        }
+                    }
+                }
+                return minDist;
+            }
+            else if (geom is LineString)
+            {
+                IList<Point> coord1 = (geom as LineString).Vertices;
+                // brute force approach!
+                double _minDistance = double.MaxValue;
+                foreach (var ls in _LineStrings)
+                {
+                    IList<Point> coord0 = ls.Vertices;
+                    for (int i = 0; i < coord0.Count - 1; i++)
+                    {
+                        for (int j = 0; j < coord1.Count - 1; j++)
+                        {
+                            double dist = CGAlgorithms.DistanceLineLine(
+                                                            coord0[i], coord0[i + 1],
+                                                            coord1[j], coord1[j + 1]);
+                            if (dist < _minDistance)
+                            {
+                                _minDistance = dist;
+                            }
+                        }
+                    }
+                }
+                return _minDistance;
+            }
+
             throw new NotImplementedException();
         }
 
