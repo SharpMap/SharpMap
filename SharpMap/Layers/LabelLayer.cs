@@ -76,6 +76,12 @@ namespace SharpMap.Layers
         /// <returns>the priority value</returns>
         public delegate int GetPriorityMethod(FeatureDataRow fdr);
 
+        /// <summary>
+        /// Delegate method for advanced placement of the label position
+        /// </summary>
+        /// <param name="fdr">the <see cref="FeatureDataRow"/> to compute the label position from</param>
+        /// <returns>the priority value</returns>
+        public delegate Point GetLocationMethod(FeatureDataRow fdr);
         #endregion
 
         #region MultipartGeometryBehaviourEnum enum
@@ -111,6 +117,7 @@ namespace SharpMap.Layers
         private IProvider _dataSource;
         private GetLabelMethod _getLabelMethod;
         private GetPriorityMethod _getPriorityMethod;
+        private GetLocationMethod _getLocationMethod;
 
         /// <summary>
         /// Name of the column that holds the value for the label.
@@ -242,6 +249,27 @@ namespace SharpMap.Layers
         {
             get { return _getLabelMethod; }
             set { _getLabelMethod = value; }
+        }
+        /// <summary>
+        /// Gets or sets the method for creating a custom position based on a feature.
+        /// </summary>
+        /// <remarks>
+        /// <para>If this method is not null, it will override the position based on the centroid of the boundingbox of the feature </para>
+        /// <para>The label delegate must take a <see cref="SharpMap.Data.FeatureDataRow"/> and return a SharpMap.Geometries.Point.</para>
+        /// <para>If the delegate returns a null, the centroid of the feature will be used</para>
+        /// <example>
+        /// Creating a custom position by using X and Y values from the FeatureDataRow attributes "LabelX" and "LabelY", using
+        /// an anonymous delegate:
+        /// <code lang="C#">
+        /// myLabelLayer.LabelPositionDelegate = delegate(SharpMap.Data.FeatureDataRow fdr)
+        ///				{ return new SharpMap.Geometries.Point(Convert.ToDouble(fdr["LabelX"]), Convert.ToDouble(fdr["LabelY"]));};
+        /// </code>
+        /// </example>
+        /// </remarks>
+        public GetLocationMethod LabelPositionDelegate
+        {
+            get { return _getLocationMethod; }
+            set { _getLocationMethod = value; }
         }
 
 
@@ -450,14 +478,14 @@ namespace SharpMap.Layers
                             {
                                 foreach (Geometry geom in (feature.Geometry as GeometryCollection))
                                 {
-                                    BaseLabel lbl = CreateLabel(geom, text, rotation, priority, style, map, g);
+                                    BaseLabel lbl = CreateLabel(feature,geom, text, rotation, priority, style, map, g, _getLocationMethod);
                                     if (lbl != null)
                                         labels.Add(lbl);
                                 }
                             }
                             else if (MultipartGeometryBehaviour == MultipartGeometryBehaviourEnum.CommonCenter)
                             {
-                                BaseLabel lbl = CreateLabel(feature.Geometry, text, rotation, priority, style, map, g);
+                                BaseLabel lbl = CreateLabel(feature, feature.Geometry, text, rotation, priority, style, map, g, _getLocationMethod);
                                 if (lbl != null)
                                     labels.Add(lbl);
                             }
@@ -465,7 +493,7 @@ namespace SharpMap.Layers
                             {
                                 if ((feature.Geometry as GeometryCollection).Collection.Count > 0)
                                 {
-                                    BaseLabel lbl = CreateLabel((feature.Geometry as GeometryCollection).Collection[0], text,
+                                    BaseLabel lbl = CreateLabel(feature, (feature.Geometry as GeometryCollection).Collection[0], text,
                                                             rotation, style, map, g);
                                     if (lbl != null)
                                         labels.Add(lbl);
@@ -503,8 +531,8 @@ namespace SharpMap.Layers
                                         }
                                     }
 
-                                    BaseLabel lbl = CreateLabel(coll.Geometry(idxOfLargest), text, rotation, priority, style,
-                                                            map, g);
+                                    BaseLabel lbl = CreateLabel(feature, coll.Geometry(idxOfLargest), text, rotation, priority, style,
+                                                            map, g, _getLocationMethod);
                                     if (lbl != null)
                                         labels.Add(lbl);
                                 }
@@ -512,7 +540,7 @@ namespace SharpMap.Layers
                         }
                         else
                         {
-                            BaseLabel lbl = CreateLabel(feature.Geometry, text, rotation, priority, style, map, g);
+                            BaseLabel lbl = CreateLabel(feature, feature.Geometry, text, rotation, priority, style, map, g, _getLocationMethod);
                             if (lbl != null)
                                 labels.Add(lbl);
                         }
@@ -554,13 +582,12 @@ namespace SharpMap.Layers
         }
 
 
-        private BaseLabel CreateLabel(Geometry feature, string text, float rotation, LabelStyle style, Map map, Graphics g)
+        private BaseLabel CreateLabel(FeatureDataRow fdr, Geometry feature, string text, float rotation, LabelStyle style, Map map, Graphics g)
         {
-            return CreateLabel(feature, text, rotation, Priority, style, map, g);
+            return CreateLabel(fdr, feature, text, rotation, Priority, style, map, g, _getLocationMethod);
         }
 
-        private static BaseLabel CreateLabel(Geometry feature, string text, float rotation, int priority, LabelStyle style, Map map,
-                                  Graphics g)
+        private static BaseLabel CreateLabel(FeatureDataRow fdr, Geometry feature, string text, float rotation, int priority, LabelStyle style, Map map, Graphics g, GetLocationMethod _getLocationMethod)
         {
             BaseLabel lbl = null;
 
@@ -593,7 +620,12 @@ namespace SharpMap.Layers
             }
             
             PointF position = Transform.WorldtoMap(feature.GetBoundingBox().GetCentroid(), map);
-
+            if (_getLocationMethod != null)
+            {
+                Point p = _getLocationMethod(fdr);
+                if (p !=null)
+                    position = Transform.WorldtoMap(p, map);
+            }
             position.X = position.X - size.Width*(short) style.HorizontalAlignment*0.5f;
             position.Y = position.Y - size.Height*(short) (2-(int)style.VerticalAlignment)*0.5f;
             if (position.X - size.Width > map.Size.Width || position.X + size.Width < 0 ||
