@@ -74,6 +74,14 @@ namespace SharpMap
         public static NumberFormatInfo NumberFormatEnUs = new CultureInfo("en-US", false).NumberFormat;
 
         /// <summary>
+        /// Specifies wether to trigger a dispose on all layers (and their datasources) contained in this map when the map-object is disposed.
+        /// The default behaviour is true unless the map is a result of a Map.Clone() operation in which case the value is false
+        /// 
+        /// If you reuse your datasources or layers between many map-objects you should set this property to false in order for them to keep existing after a map.dispose()
+        /// </summary>
+        public bool DisposeLayersOnDispose = true;
+
+        /// <summary>
         /// Initializes a new map
         /// </summary>
         public Map() : this(new Size(640, 480))
@@ -127,9 +135,27 @@ namespace SharpMap
         /// </summary>
         public void Dispose()
         {
-            foreach (Layer layer in Layers)
-                if (layer is IDisposable)
-                    ((IDisposable) layer).Dispose();
+            if (DisposeLayersOnDispose)
+            {
+                if (Layers != null)
+                {
+                    foreach (Layer layer in Layers)
+                        if (layer is IDisposable)
+                            ((IDisposable)layer).Dispose();
+                }
+                if (BackgroundLayer != null)
+                {
+                    foreach (Layer layer in BackgroundLayer)
+                        if (layer is IDisposable)
+                            ((IDisposable)layer).Dispose();
+                }
+                if (VariableLayers != null)
+                {
+                    foreach (Layer layer in VariableLayers)
+                        if (layer is IDisposable)
+                            ((IDisposable)layer).Dispose();
+                }
+            }
             Layers.Clear();
         }
 
@@ -501,6 +527,12 @@ namespace SharpMap
 
         }
 
+        /// <summary>
+        /// Returns a cloned copy of this map-object
+        /// Layers are not cloned. The same instances are referenced from the cloned copy as from the original
+        /// The property DisposeLayersOnDispose is however false on this object (which prevents layers beeing disposed and then not usable from the original map)
+        /// </summary>
+        /// <returns>Instance of <see cref="Map"/></returns>
         public Map Clone()
         {
             Map clone = new Map()
@@ -515,7 +547,8 @@ namespace SharpMap
                 MinimumZoom = MinimumZoom,
                 PixelAspectRatio = PixelAspectRatio,
                 Size = Size,
-                Zoom = Zoom
+                Zoom = Zoom,
+                DisposeLayersOnDispose = false
             };
             foreach (var lay in BackgroundLayer)
                 clone.BackgroundLayer.Add(lay);
