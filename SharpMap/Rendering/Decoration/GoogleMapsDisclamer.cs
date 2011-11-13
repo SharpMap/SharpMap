@@ -45,6 +45,8 @@ namespace SharpMap.Rendering.Decoration
 
         /// <summary>
         /// Initialize with custom parameters
+        /// 
+        /// IMPORTANT: In Async mode you need to use UpdateBoundingBox when the MapBox/MapImage center or ZoomLevel changes, else the text will be wrong
         /// </summary>
         /// <param name="mapToWgs84Transform">Transformation to transform MapCoordinates to WGS84</param>
         /// <param name="mapType">Type of Map Displayed</param>
@@ -94,6 +96,38 @@ namespace SharpMap.Rendering.Decoration
 
             //base.OnRender(g, map);
         }
+       
+        public void UpdateBoundingBox(Map map)
+        {
+            int level = BruTile.Utilities.GetNearestLevel(m_TileSource.Schema.Resolutions, map.PixelSize);
+#if !DotSpatialProjections
+            double[] ul = m_MathTransform != null ?
+                m_MathTransform.Transform(new double[] { map.Envelope.Left, map.Envelope.Top }) : new double[] { map.Envelope.Left, map.Envelope.Top };
+#else
+                var ul = new[] { map.Envelope.Left, map.Envelope.Top };
+                if (m_MathTransform != null)
+                    Reproject.ReprojectPoints(ul, null, m_MathTransform, _to, 0, 1);
+#endif
+
+#if !DotSpatialProjections
+            double[] lr = m_MathTransform != null ?
+                m_MathTransform.Transform(new double[] { map.Envelope.Right, map.Envelope.Bottom }) : new double[] { map.Envelope.Right, map.Envelope.Bottom };
+#else
+                var lr = new[] {map.Envelope.Right, map.Envelope.Bottom};
+                if (m_MathTransform != null)
+                    Reproject.ReprojectPoints(lr, null, m_MathTransform, _to, 0, 1);
+#endif
+
+
+            if (m_RunAsync)
+            {
+                DownloadDisclaimerAsync(ul, lr, level);
+            }
+            else
+            {
+                DownloadDisclaimer(ul, lr, level);
+            }
+        }
 
         BoundingBox m_CurDisclaymerRect = null;
         private void RequestDisclaimer(Map map)
@@ -123,11 +157,8 @@ namespace SharpMap.Rendering.Decoration
 #endif
 
 
-                if (m_RunAsync)
-                {
-                    DownloadDisclaimerAsync(ul, lr, level);
-                }
-                else
+                ///Download only when run in Sync mode, else rely on setting SetBoundingBox (else we will flood google with requests during panning
+                if (!m_RunAsync)
                 {
                     DownloadDisclaimer(ul, lr, level);
                 }
