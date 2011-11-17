@@ -278,6 +278,7 @@ namespace SharpMap.Forms
         private bool _setActiveToolNoneDuringRedraw = true;
         private bool _shiftButtonDragRectangleZoom = false;
         private bool _focusOnHover = false;
+        private bool _panOnClick = true;
         IMessageFilter _mousePreviewFilter = null;
 
         public static void RandomizeLayerColors(VectorLayer layer)
@@ -301,6 +302,23 @@ namespace SharpMap.Forms
             {
                 _showProgress = value;
                 _progressBar.Visible = _showProgress;
+            }
+        }
+
+        /// <summary>
+        /// Sets whether the "go-to-cursor-on-click" feature is enabled or not (even if enabled it works only if the active tool is Pan)
+        /// </summary>
+        [Description("Sets whether the \"go-to-cursor-on-click\" feature is enabled or not (even if enabled it works only if the active tool is Pan)")]
+        [DefaultValue(true)]
+        [Category("Behavior")]
+        public bool PanOnClick
+        {
+            get { return _panOnClick; }
+            set
+            {
+                ActiveTool = Tools.Pan;
+                _panOnClick = value;
+
             }
         }
 
@@ -1380,10 +1398,13 @@ namespace SharpMap.Forms
                         }
                         else
                         {
-                            _map.Center = _map.ImageToWorld(new Point(e.X, e.Y));
+                            if (_panOnClick)
+                            {
+                                _map.Center = _map.ImageToWorld(new Point(e.X, e.Y));
 
-                            if (MapCenterChanged != null)
-                                MapCenterChanged(_map.Center);
+                                if (MapCenterChanged != null)
+                                    MapCenterChanged(_map.Center);
+                            }
                         }
                     }
                     else if (_activeTool == Tools.Query)
