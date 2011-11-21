@@ -90,7 +90,7 @@ namespace SharpMap.Layers
                 bytes = tileProvider.GetTile(tileInfo);
                 Bitmap bitmap = new Bitmap(new MemoryStream(bytes));
                 bitmaps.Add(tileInfo.Index, bitmap);
-                if (!_fileCache.Exists(tileInfo.Index))
+                if (_fileCache != null && !_fileCache.Exists(tileInfo.Index))
                 {
                     AddImageToFileCache(tileInfo, bitmap);
                 }
