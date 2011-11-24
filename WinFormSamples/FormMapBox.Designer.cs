@@ -519,7 +519,7 @@ namespace WinFormSamples
                     map = Samples.GdalSample.InitializeMap(tbAngle.Value, GetOpenFileName("Gdal Datasource|*.*"));
                     break;
                 case "radioButton9": // spatialite
-                    map = Samples.SpatiaLiteSample.InitializeMap(tbAngle.Value, GetOpenFileName("SpatiaLite 2|*.db,*.sqlite"));
+                    map = Samples.SpatiaLiteSample.InitializeMap(tbAngle.Value, GetOpenFileName("SpatiaLite 2|*.db;*.sqlite"));
                     break;
             }
 

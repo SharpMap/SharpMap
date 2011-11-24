@@ -638,9 +638,10 @@ namespace SharpMap.Forms
 
             var retval = new Bitmap(Width, Height);
 
-            Graphics g = Graphics.FromImage(retval);
-            map.RenderMap(g, layerCollectionType, false);
-            g.Dispose();
+            using(var g = Graphics.FromImage(retval))
+            {
+                map.RenderMap(g, layerCollectionType, false);
+            }
 
             if (layerCollectionType == LayerCollectionType.Variable)
                 retval.MakeTransparent(_map.BackColor);

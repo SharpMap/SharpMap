@@ -35,7 +35,7 @@ using SMGeometryCollection = SharpMap.Geometries.GeometryCollection;
 
 namespace SharpMap.Converters.SqlServer2008SpatialObjects
 {
-    //[Serializable]
+    [Serializable]
     public class SqlGeometryConverterException : Exception
     {
         /// <summary>
@@ -43,10 +43,18 @@ namespace SharpMap.Converters.SqlServer2008SpatialObjects
         /// </summary>
         public readonly SMGeometry Geometry;
 
+        public SqlGeometryConverterException()
+        {}
+
         public SqlGeometryConverterException(SMGeometry geometry)
             :this("Failed to convert SharpMapGeometry", geometry)
         {
             Geometry = geometry;
+        }
+
+        public SqlGeometryConverterException(Exception inner, SMGeometry geometry)
+            : this("Failed to convert SharpMapGeometry", inner, geometry)
+        {
         }
 
         public SqlGeometryConverterException(string message, SMGeometry geometry)
@@ -54,6 +62,19 @@ namespace SharpMap.Converters.SqlServer2008SpatialObjects
         {
             Geometry = geometry;
         }
+
+        public SqlGeometryConverterException(string message, Exception inner, SMGeometry geometry)
+            : base(message, inner)
+        {
+            Geometry = geometry;
+        }
+
+        protected SqlGeometryConverterException(SerializationInfo info, StreamingContext context) 
+            : base(info, context)
+        {
+            //Geometry = (SMGeometry) info.GetValue("geom", typeof (SMGeometry));
+        }
+
     }
 
     public static class SqlGeometryConverter
@@ -63,7 +84,6 @@ namespace SharpMap.Converters.SqlServer2008SpatialObjects
         public static SqlGeometry ToSqlGeometry(SMGeometry smGeometry)
         {
             SqlGeometryBuilder builder = new SqlGeometryBuilder();
-            
 #if !DotSpatialProjections
             if (smGeometry.SpatialReference != null)
                 builder.SetSrid((int) smGeometry.SpatialReference.AuthorityCode);
@@ -79,8 +99,15 @@ namespace SharpMap.Converters.SqlServer2008SpatialObjects
             SqlGeometry g = builder.ConstructedGeometry;
             if (!g.STIsValid())
             {
-                g.Reduce(ReduceTolerance);
-                g.MakeValid();
+                try
+                {
+                    g.Reduce(ReduceTolerance);
+                    g.MakeValid();
+                }
+                catch (Exception ex)
+                {
+                    throw new SqlGeometryConverterException(ex, smGeometry);
+                }
             }
 
             if (!g.STIsValid())

@@ -528,9 +528,9 @@ namespace SharpMap
         }
 
         /// <summary>
-        /// Returns a cloned copy of this map-object
-        /// Layers are not cloned. The same instances are referenced from the cloned copy as from the original
-        /// The property DisposeLayersOnDispose is however false on this object (which prevents layers beeing disposed and then not usable from the original map)
+        /// Returns a cloned copy of this map-object.
+        /// Layers are not cloned. The same instances are referenced from the cloned copy as from the original.
+        /// The property <see cref="DisposeLayersOnDispose"/> is however false on this object (which prevents layers beeing disposed and then not usable from the original map)
         /// </summary>
         /// <returns>Instance of <see cref="Map"/></returns>
         public Map Clone()

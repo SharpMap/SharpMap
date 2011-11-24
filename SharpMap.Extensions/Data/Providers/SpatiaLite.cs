@@ -21,6 +21,7 @@ using System.Collections.ObjectModel;
 using System.Configuration;
 using System.Data;
 using System.Data.SQLite;
+using System.Diagnostics;
 using SharpMap.Converters.WellKnownBinary;
 using SharpMap.Converters.WellKnownText;
 using SharpMap.Geometries;
@@ -73,6 +74,8 @@ namespace SharpMap.Data.Providers
         private readonly int _srid = -2;
         private string _table;
 
+        private int _numOrdinateDimensions = 2;
+
         private Boolean _useSpatialIndex;
 
         private static readonly string SpatiaLitePath;
@@ -93,7 +96,7 @@ namespace SharpMap.Data.Providers
             }
             catch
             {
-                System.Diagnostics.Trace.WriteLine("Path to native SpatiaLite binaries not configured, assuming they are in applications directory");
+                Trace.WriteLine("Path to native SpatiaLite binaries not configured, assuming they are in applications directory");
             }
 
             try
@@ -113,6 +116,11 @@ namespace SharpMap.Data.Providers
             if (!System.IO.File.Exists(System.IO.Path.Combine(SpatiaLitePath, SpatiaLiteNativeDll)))
                 throw new System.IO.FileNotFoundException("SpatiaLite binaries not found under given path and filename");
         }
+
+        /// <summary>
+        /// Gets or sets whether geometry definition lookup should use sql LIKE operator for name comparison.
+        /// </summary>
+        public static bool UseLike { get; set; }
 
         /// <summary>
         /// Function to provide an SqLiteConnection with SpatiaLite extension loaded.
@@ -155,21 +163,41 @@ namespace SharpMap.Data.Providers
 
             try
             {
-
+                var op = UseLike ? "LIKE" : "=";
                 using (SQLiteConnection cn = new SQLiteConnection(connectionStr))
                 {
                     cn.Open();
                     SQLiteCommand cm = new SQLiteCommand(
                         String.Format(
-                            "SELECT srid, spatial_index_enabled FROM geometry_columns WHERE(f_table_name='{0}' AND f_geometry_column='{1}');",
-                            tablename, geometryColumnName), cn);
+                            "SELECT \"srid\", \"coord_dimension\", \"spatial_index_enabled\" FROM \"geometry_columns\" WHERE(\"f_table_name\" {2} '{0}' AND \"f_geometry_column\" {2} '{1}');",
+                            tablename, geometryColumnName, op), cn);
                     SQLiteDataReader dr = cm.ExecuteReader();
                     if (dr.HasRows)
                     {
                         dr.Read();
                         _srid = dr.GetInt32(0);
 
-                        switch (dr.GetInt32(1))
+                        switch (dr.GetString(1))
+                        {
+                            case "2":
+                            case "XY":
+                                _numOrdinateDimensions = 2;
+                                break;
+                            case "3":
+                            case "XYZ":
+                            case "XYM":
+                                _numOrdinateDimensions = 3;
+                                break;
+                            case "4":
+                            case "XYZM":
+                                _numOrdinateDimensions = 4;
+                                break;
+                            default:
+                                throw new Exception("Cannot evaluate number of ordinate dimensions");
+
+                        }
+
+                        switch (dr.GetInt32(2))
                         {
                             case 1: //RTree
                                 String indexName = string.Format(@"idx_{0}_{1}", tablename, geometryColumnName);
@@ -195,6 +223,21 @@ namespace SharpMap.Data.Providers
                 _srid = -1;
                 _spatiaLiteIndex = SpatiaLiteIndex.None;
                 _useSpatialIndex = false;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the extent for this data source
+        /// </summary>
+        public BoundingBox CachedExtent 
+        {
+            get
+            {
+                return _cachedExtents ?? (_cachedExtents = GetExtents());
+            }
+            set
+            {
+                _cachedExtents = value;
             }
         }
 
@@ -268,11 +311,7 @@ namespace SharpMap.Data.Providers
             get { return _defintionQuery; }
             set
             {
-                if (value != _defintionQuery)
-                {
-                    _cachedExtents = null;
-                    _defintionQuery = value;
-                }
+                _defintionQuery = value;
             }
         }
 
@@ -513,12 +552,117 @@ namespace SharpMap.Data.Providers
 
         private BoundingBox _cachedExtents;
 
+        private struct RTreeNodeEntry
+        {
+            public readonly long NodeId;
+            public readonly Single XMin;
+            public readonly Single XMax;
+            public readonly Single YMin;
+            public readonly Single YMax;
+
+            public RTreeNodeEntry(byte[] buffer)
+            {
+                Array.Reverse(buffer, 0, 8);
+                NodeId = BitConverter.ToInt64(buffer, 0);
+                Array.Reverse(buffer, 8, 4);
+                XMin = BitConverter.ToSingle(buffer, 8);
+                Array.Reverse(buffer, 12, 4);
+                XMax = BitConverter.ToSingle(buffer, 12);
+                Array.Reverse(buffer, 16, 4);
+                YMin = BitConverter.ToSingle(buffer, 16);
+                Array.Reverse(buffer, 20, 4);
+                YMax = BitConverter.ToSingle(buffer, 20);
+            }
+
+        }
+
+        private class RTreeNode
+        {
+            private readonly short _treedepth;
+            public readonly short NodesCount;
+            public readonly RTreeNodeEntry[] Entries;
+
+            public readonly Single XMin;
+            public readonly Single XMax;
+            public readonly Single YMin;
+            public readonly Single YMax;
+
+            public RTreeNode(byte[] buffer)
+            {
+                Debug.Assert(buffer.Length == 960, "buffer.Length == 960");
+
+                Array.Reverse(buffer, 0, 2);
+                _treedepth = BitConverter.ToInt16(buffer, 0);
+                Array.Reverse(buffer, 2, 2);
+                NodesCount = BitConverter.ToInt16(buffer, 2);
+
+                Entries = new RTreeNodeEntry[NodesCount];
+                var entry = new byte[24];
+                Buffer.BlockCopy(buffer, 4, entry, 0, 24);
+                Entries[0] = new RTreeNodeEntry(entry);
+                XMin = Entries[0].XMin;
+                XMax = Entries[0].XMax;
+                YMin = Entries[0].YMin;
+                YMax = Entries[0].YMax;
+                
+                var offset = 28;
+                for (var i = 1; i < NodesCount; i++)
+                {
+                    Buffer.BlockCopy(buffer, offset, entry, 0, 24);
+                    Entries[i] = new RTreeNodeEntry(entry);
+
+                    if (Entries[i].XMin < XMin) XMin = Entries[i].XMin;
+                    if (Entries[i].XMax > XMax) XMax = Entries[i].XMax;
+                    if (Entries[i].YMin < YMin) YMin = Entries[i].YMin;
+                    if (Entries[i].YMax > YMax) YMax = Entries[i].YMax;
+                    
+                    offset += 24;
+                }
+            }
+        }
         public BoundingBox GetExtents()
         {
             if (_cachedExtents != null)
                 return _cachedExtents;
 
             BoundingBox box = null;
+
+            if (_spatiaLiteIndex == SpatiaLiteIndex.RTree)
+            {
+                using (var conn = new SQLiteConnection(_connectionString))
+                {   
+                    conn.Open();
+                    var strSQL = string.Format("SELECT \"data\" FROM \"idx_{0}_{1}_node\" WHERE \"nodeno\"=1;", 
+                                                _table, _geometryColumn);
+                    
+                    using (var cmd = conn.CreateCommand())
+                    {
+                        cmd.CommandText = strSQL;
+                        var result = cmd.ExecuteScalar();
+                        if (result != null && result != DBNull.Value)
+                        {
+                            var buffer = (byte[]) result;
+                            var node = new RTreeNode(buffer);
+
+                            _cachedExtents = new BoundingBox(node.XMin, node.YMin, node.XMax, node.YMax);
+                            return _cachedExtents;
+
+                            //var entities = new float[2*_numOrdinateDimensions];
+                            //var offset = 12;
+                            //for (var i = 0; i < 2*_numOrdinateDimensions; i++)
+                            //{
+                            //    Array.Reverse(buffer, offset, 4);
+                            //    entities[i] = BitConverter.ToSingle(buffer, offset);
+                            //    offset += 4;
+                            //}
+                            //return new BoundingBox(entities[0], entities[2], entities[1], entities[3]);
+
+                        }
+                        throw new Exception();
+                    }
+                }
+            }
+
             using (SQLiteConnection conn = SpatiaLiteConnection(_connectionString))
             {
                 //string strSQL = "SELECT Min(minx) AS MinX, Min(miny) AS MinY, Max(maxx) AS MaxX, Max(maxy) AS MaxY FROM " + this.Table;
@@ -541,6 +685,9 @@ namespace SharpMap.Data.Providers
                     using (SQLiteDataReader dr = command.ExecuteReader())
                         if (dr.Read())
                         {
+                            if (dr.IsDBNull(0))
+                                return new BoundingBox(0,0,0,0);
+
                             box = new BoundingBox(
                                 (double) dr["minx"], (double) dr["miny"], 
                                 (double) dr["maxx"], (double) dr["maxy"]);

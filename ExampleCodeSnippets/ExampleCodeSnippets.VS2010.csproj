@@ -64,13 +64,17 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\DotSpatial.Projections.1.0.2011.52\lib\net35\DotSpatial.Projections.dll</HintPath>
     </Reference>
-    <Reference Include="GeoAPI, Version=1.4.0.0, Culture=neutral, PublicKeyToken=a1a0da7def465678, processorArchitecture=MSIL">
+    <Reference Include="GeoAPI, Version=1.5.4307.26530, Culture=neutral, PublicKeyToken=a1a0da7def465678, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\NetTopologySuite.1.10\lib\net35\GeoAPI.dll</HintPath>
+      <HintPath>..\packages\GeoAPI.1.5.0\lib\net35\GeoAPI.dll</HintPath>
     </Reference>
-    <Reference Include="NetTopologySuite, Version=1.10.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="NetTopologySuite, Version=1.11.4307.26530, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\NetTopologySuite.1.10\lib\net35\NetTopologySuite.dll</HintPath>
+      <HintPath>..\packages\NetTopologySuite.1.11.0\lib\net35\NetTopologySuite.dll</HintPath>
+    </Reference>
+    <Reference Include="PowerCollections, Version=1.0.4307.26530, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\NetTopologySuite.1.11.0\lib\net35\PowerCollections.dll</HintPath>
     </Reference>
     <Reference Condition="'$(Configuration)' == 'Debug' Or '$(Configuration)' == 'Release'" Include="ProjNET, Version=1.0.2794.16965, Culture=neutral, PublicKeyToken=a1f5bdcd9c6f5740, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>

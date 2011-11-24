@@ -85,7 +85,8 @@ namespace SharpMap.Geometries
             set
             {
                 _z = value;
-                SetIsEmpty = false;
+                if (IsEmptyPoint)
+                    SetIsEmpty = false;
             }
         }
 
@@ -111,7 +112,7 @@ namespace SharpMap.Geometries
                 if (index == 2)
                 {
                     Z = value;
-                    SetIsEmpty = false;
+                    //SetIsEmpty = false;
                 }
                 else base[index] = value;
             }
