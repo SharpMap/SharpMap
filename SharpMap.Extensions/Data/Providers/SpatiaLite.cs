@@ -177,7 +177,13 @@ namespace SharpMap.Data.Providers
                         dr.Read();
                         _srid = dr.GetInt32(0);
 
-                        switch (dr.GetString(1))
+                        string coordDim;
+                        if (dr.GetFieldType(1) == typeof(long))
+                            coordDim = dr.GetInt64(1).ToString();
+                        else 
+                            coordDim = dr.GetString(1);
+                        
+                        switch (coordDim)
                         {
                             case "2":
                             case "XY":

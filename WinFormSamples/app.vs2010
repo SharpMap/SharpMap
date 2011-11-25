@@ -15,6 +15,7 @@
     <add key="SpatiaLitePath" value="D:\GIS\SpatiaLite\2.4.0_RC3\x86"/>
     <add key="SpatiaLiteNativeDll" value="libspatialite-2.dll"/>
     <add key="ClientSettingsProvider.ServiceUri" value=""/>
+    <add key="GoogleMapsApiKey" value="Your Google Maps Api Key goes here!"/>
   </appSettings>
   <system.net>
     <authenticationModules ></authenticationModules>

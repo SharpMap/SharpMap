@@ -129,6 +129,12 @@
     <Compile Include="FormAnimation.Designer.cs">
       <DependentUpon>FormAnimation.cs</DependentUpon>
     </Compile>
+    <Compile Include="FormCreateTilesSample.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormCreateTilesSample.Designer.cs">
+      <DependentUpon>FormCreateTilesSample.cs</DependentUpon>
+    </Compile>
     <Compile Include="FormDemoDrawGeometries.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -148,11 +154,17 @@
       <DependentUpon>FormMovingObjectOverTileLayer.cs</DependentUpon>
     </Compile>
     <Compile Include="LayerTools.cs" />
+    <Compile Include="Samples\CreateTilesSample.cs" />
     <Compile Include="Samples\GdalSample.cs" />
     <Compile Include="Samples\GeometryFeatureProviderSample.cs" />
     <Compile Include="Samples\GradiantThemeSample.cs" />
     <Compile Include="Samples\OracleSample.cs" />
-    <None Include="packages.config" />
+    <None Include="Samples\SharpMapTilesDemo.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Resources\view_top_bottom.png" />
     <None Include="Resources\view_left_right.png" />
     <None Include="Resources\ZoomToExtents1.png" />
@@ -284,6 +296,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FormAnimation.resx">
       <DependentUpon>FormAnimation.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormCreateTilesSample.resx">
+      <DependentUpon>FormCreateTilesSample.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FormDemoDrawGeometries.resx">
       <DependentUpon>FormDemoDrawGeometries.cs</DependentUpon>

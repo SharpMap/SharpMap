@@ -40,8 +40,6 @@ namespace WinFormSamples
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.tbAngle = new System.Windows.Forms.TrackBar();
             this.scMapProp = new System.Windows.Forms.SplitContainer();
-            this.mapBox1 = new SharpMap.Forms.MapBox();
-            this.pgMap = new System.Windows.Forms.PropertyGrid();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.radioButton2 = new System.Windows.Forms.RadioButton();
             this.radioButton3 = new System.Windows.Forms.RadioButton();
@@ -53,8 +51,11 @@ namespace WinFormSamples
             this.radioButton8 = new System.Windows.Forms.RadioButton();
             this.radioButton9 = new System.Windows.Forms.RadioButton();
             this.radioButton10 = new System.Windows.Forms.RadioButton();
+            this.btnCreateTiles = new System.Windows.Forms.Button();
             this.lvwDecorations = new System.Windows.Forms.ListView();
             this.pgMapDecoration = new System.Windows.Forms.PropertyGrid();
+            this.pgMap = new System.Windows.Forms.PropertyGrid();
+            this.mapBox1 = new SharpMap.Forms.MapBox();
             ((System.ComponentModel.ISupportInitialize)(this.scMain)).BeginInit();
             this.scMain.Panel2.SuspendLayout();
             this.scMain.SuspendLayout();
@@ -125,39 +126,6 @@ namespace WinFormSamples
             this.scMapProp.SplitterDistance = 600;
             this.scMapProp.TabIndex = 2;
             // 
-            // mapBox1
-            // 
-            this.mapBox1.ActiveTool = SharpMap.Forms.MapBox.Tools.Pan;
-            this.mapBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.mapBox1.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.mapBox1.FineZoomFactor = 10D;
-            this.mapBox1.Location = new System.Drawing.Point(3, 0);
-            this.mapBox1.Name = "mapBox1";
-            this.mapBox1.PreviewMode = SharpMap.Forms.MapBox.PreviewModes.Fast;
-            this.mapBox1.QueryLayerIndex = 0;
-            this.mapBox1.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(210)))), ((int)(((byte)(244)))), ((int)(((byte)(244)))), ((int)(((byte)(244)))));
-            this.mapBox1.SelectionForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(244)))), ((int)(((byte)(244)))));
-            this.mapBox1.ShowProgressUpdate = true;
-            this.mapBox1.Size = new System.Drawing.Size(594, 404);
-            this.mapBox1.TabIndex = 6;
-            this.mapBox1.Text = "mapBox1";
-            this.mapBox1.WheelZoomMagnitude = 2D;
-            this.mapBox1.MapRefreshed += new System.EventHandler(this.mapImage_MapRefreshed);
-            this.mapBox1.MapZoomChanged += new SharpMap.Forms.MapBox.MapZoomHandler(this.mapImage_MapZoomChanged);
-            this.mapBox1.MapZooming += new SharpMap.Forms.MapBox.MapZoomHandler(this.mapImage_MapZooming);
-            this.mapBox1.MapQueried += new SharpMap.Forms.MapBox.MapQueryHandler(this.mapImage_MapQueried);
-            // 
-            // pgMap
-            // 
-            this.pgMap.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pgMap.Location = new System.Drawing.Point(0, 0);
-            this.pgMap.Name = "pgMap";
-            this.pgMap.SelectedObject = this.mapBox1;
-            this.pgMap.Size = new System.Drawing.Size(218, 449);
-            this.pgMap.TabIndex = 3;
-            // 
             // flowLayoutPanel1
             // 
             this.flowLayoutPanel1.Controls.Add(this.radioButton2);
@@ -170,6 +138,7 @@ namespace WinFormSamples
             this.flowLayoutPanel1.Controls.Add(this.radioButton8);
             this.flowLayoutPanel1.Controls.Add(this.radioButton9);
             this.flowLayoutPanel1.Controls.Add(this.radioButton10);
+            this.flowLayoutPanel1.Controls.Add(this.btnCreateTiles);
             this.flowLayoutPanel1.Controls.Add(this.lvwDecorations);
             this.flowLayoutPanel1.Controls.Add(this.pgMapDecoration);
             this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Left;
@@ -305,13 +274,23 @@ namespace WinFormSamples
             this.radioButton10.UseVisualStyleBackColor = true;
             this.radioButton10.Click += new System.EventHandler(this.radioButton_Click);
             // 
+            // btnCreateTiles
+            // 
+            this.btnCreateTiles.Location = new System.Drawing.Point(13, 237);
+            this.btnCreateTiles.Name = "btnCreateTiles";
+            this.btnCreateTiles.Size = new System.Drawing.Size(147, 23);
+            this.btnCreateTiles.TabIndex = 11;
+            this.btnCreateTiles.Text = "Create tiles";
+            this.btnCreateTiles.UseVisualStyleBackColor = true;
+            this.btnCreateTiles.Click += new System.EventHandler(this.btnCreateTiles_Click);
+            // 
             // lvwDecorations
             // 
             this.lvwDecorations.CheckBoxes = true;
-            this.lvwDecorations.Location = new System.Drawing.Point(13, 237);
+            this.lvwDecorations.Location = new System.Drawing.Point(13, 266);
             this.lvwDecorations.MultiSelect = false;
             this.lvwDecorations.Name = "lvwDecorations";
-            this.lvwDecorations.Size = new System.Drawing.Size(147, 89);
+            this.lvwDecorations.Size = new System.Drawing.Size(147, 58);
             this.lvwDecorations.TabIndex = 4;
             this.lvwDecorations.UseCompatibleStateImageBehavior = false;
             this.lvwDecorations.View = System.Windows.Forms.View.List;
@@ -321,11 +300,44 @@ namespace WinFormSamples
             // pgMapDecoration
             // 
             this.pgMapDecoration.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.pgMapDecoration.Location = new System.Drawing.Point(15, 332);
+            this.pgMapDecoration.Location = new System.Drawing.Point(15, 330);
             this.pgMapDecoration.Name = "pgMapDecoration";
             this.pgMapDecoration.SelectedObject = this.lvwDecorations;
             this.pgMapDecoration.Size = new System.Drawing.Size(143, 291);
             this.pgMapDecoration.TabIndex = 9;
+            // 
+            // pgMap
+            // 
+            this.pgMap.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pgMap.Location = new System.Drawing.Point(0, 0);
+            this.pgMap.Name = "pgMap";
+            this.pgMap.SelectedObject = this.mapBox1;
+            this.pgMap.Size = new System.Drawing.Size(218, 449);
+            this.pgMap.TabIndex = 3;
+            // 
+            // mapBox1
+            // 
+            this.mapBox1.ActiveTool = SharpMap.Forms.MapBox.Tools.Pan;
+            this.mapBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.mapBox1.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.mapBox1.FineZoomFactor = 10D;
+            this.mapBox1.Location = new System.Drawing.Point(3, 3);
+            this.mapBox1.Name = "mapBox1";
+            this.mapBox1.PreviewMode = SharpMap.Forms.MapBox.PreviewModes.Fast;
+            this.mapBox1.QueryLayerIndex = 0;
+            this.mapBox1.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(210)))), ((int)(((byte)(244)))), ((int)(((byte)(244)))), ((int)(((byte)(244)))));
+            this.mapBox1.SelectionForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(244)))), ((int)(((byte)(244)))));
+            this.mapBox1.ShowProgressUpdate = true;
+            this.mapBox1.Size = new System.Drawing.Size(594, 404);
+            this.mapBox1.TabIndex = 6;
+            this.mapBox1.Text = "mapBox1";
+            this.mapBox1.WheelZoomMagnitude = 2D;
+            this.mapBox1.MapRefreshed += new System.EventHandler(this.mapImage_MapRefreshed);
+            this.mapBox1.MapZoomChanged += new SharpMap.Forms.MapBox.MapZoomHandler(this.mapImage_MapZoomChanged);
+            this.mapBox1.MapZooming += new SharpMap.Forms.MapBox.MapZoomHandler(this.mapImage_MapZooming);
+            this.mapBox1.MapQueried += new SharpMap.Forms.MapBox.MapQueryHandler(this.mapImage_MapQueried);
             // 
             // FormMapBox
             // 
@@ -621,6 +633,7 @@ namespace WinFormSamples
         private RadioButton radioButton10;
         private ListView lvwDecorations;
         private PropertyGrid pgMapDecoration;
+        private Button btnCreateTiles;
   }
 }
 

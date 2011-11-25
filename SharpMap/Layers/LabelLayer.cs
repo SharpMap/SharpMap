@@ -341,7 +341,11 @@ namespace SharpMap.Layers
                     DataSource.Close();
                 if (CoordinateTransformation != null)
 #if !DotSpatialProjections
-                    return GeometryTransform.TransformBox(box, CoordinateTransformation.MathTransform);
+                {
+                    var boxTrans = GeometryTransform.TransformBox(box, CoordinateTransformation.MathTransform);
+                    return boxTrans.Intersection(CoordinateTransformation.TargetCS.DefaultEnvelope);
+
+                }
 #else
                     return GeometryTransform.TransformBox(box, CoordinateTransformation.Source, CoordinateTransformation.Target);
 #endif

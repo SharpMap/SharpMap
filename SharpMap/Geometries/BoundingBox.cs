@@ -620,5 +620,25 @@ namespace SharpMap.Geometries
         {
             return Min.GetHashCode() ^ Max.GetHashCode();
         }
+
+        /// <summary>
+        /// Returns the intersection of this bounding box and a default envelope
+        /// </summary>
+        /// <param name="defaultEnvelope"></param>
+        /// <returns></returns>
+        public BoundingBox Intersection(double[] defaultEnvelope)
+        {
+            if (defaultEnvelope == null)
+                return this;
+            
+            System.Diagnostics.Debug.Assert(defaultEnvelope.Length == 4);
+
+            var minX = Min.X > defaultEnvelope[0] ? Min.X : defaultEnvelope[0];
+            var minY = Min.Y > defaultEnvelope[1] ? Min.Y : defaultEnvelope[1];
+            var maxX = Max.X < defaultEnvelope[2] ? Max.X : defaultEnvelope[2];
+            var maxY = Max.Y < defaultEnvelope[3] ? Max.Y : defaultEnvelope[3];
+            
+            return new BoundingBox(minX, minY, maxX, maxY);
+        }
     }
 }

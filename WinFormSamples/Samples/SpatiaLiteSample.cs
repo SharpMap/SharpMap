@@ -132,6 +132,9 @@ namespace WinFormSamples.Samples
 
         internal static SharpMap.Map InitializeMap(float angle, string[] filenames)
         {
+            if (filenames == null)
+                return null;
+
             var map = new SharpMap.Map();
 
             try

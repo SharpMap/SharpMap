@@ -61,6 +61,8 @@ namespace WinFormSamples
                       "Google Mercator", wgs84, projection, LinearUnit.Metre, new AxisInfo("East", AxisOrientationEnum.East),
                       new AxisInfo("North", AxisOrientationEnum.North));
 
+                    ((CoordinateSystem)epsg900913).DefaultEnvelope = new [] { -20037508.342789, -20037508.342789, 20037508.342789, 20037508.342789 };
+
                     wgs84toGoogle = ctFac.CreateFromCoordinateSystems(wgs84, epsg900913);
 #endif
                 }

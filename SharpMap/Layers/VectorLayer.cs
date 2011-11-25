@@ -161,7 +161,12 @@ namespace SharpMap.Layers
                 }
                 if (CoordinateTransformation != null)
 #if !DotSpatialProjections
-                    return GeometryTransform.TransformBox(box, CoordinateTransformation.MathTransform);
+                {
+                    var boxTrans = GeometryTransform.TransformBox(box, CoordinateTransformation.MathTransform);
+                    return boxTrans.Intersection(CoordinateTransformation.TargetCS.DefaultEnvelope);
+                }
+                //return GeometryTransform.TransformBox(box, CoordinateTransformation.MathTransform);
+            
 #else
                     return GeometryTransform.TransformBox(box, CoordinateTransformation.Source, CoordinateTransformation.Target);
 #endif

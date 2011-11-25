@@ -39,10 +39,14 @@ namespace ProjNet.CoordinateSystems.Transformations
             if (box == null)
                 return null;
             Point[] corners = new Point[4];
-            corners[0] = new Point(transform.Transform(box.Min.ToDoubleArray())); //LL
-            corners[1] = new Point(transform.Transform(box.Max.ToDoubleArray())); //UR
-            corners[2] = new Point(transform.Transform(new Point(box.Min.X, box.Max.Y).ToDoubleArray())); //UL
-            corners[3] = new Point(transform.Transform(new Point(box.Max.X, box.Min.Y).ToDoubleArray())); //LR
+            var ll = box.Min.ToDoubleArray();
+            var ur = box.Max.ToDoubleArray();
+            var llTrans = transform.Transform(ll);
+            var urTrans = transform.Transform(ur);
+            corners[0] = new Point(llTrans); //LL
+            corners[1] = new Point(urTrans); //UR
+            corners[2] = new Point(llTrans[0], urTrans[1]); //UL
+            corners[3] = new Point(llTrans[1], urTrans[0]); //LR
 
             BoundingBox result = corners[0].GetBoundingBox();
             for (int i = 1; i < 4; i++)
