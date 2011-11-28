@@ -145,7 +145,7 @@ namespace WinFormSamples.Samples
             System.Drawing.Drawing2D.Matrix mat = new System.Drawing.Drawing2D.Matrix();
             mat.RotateAt(angle, map.WorldToImage(map.Center));
             map.MapTransform = mat;
-
+            map.ZoomToExtents();
             return map;
         }
     }

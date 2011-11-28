@@ -538,6 +538,7 @@ namespace WinFormSamples
             if (map == null)
                 return;
 
+            
             //Add checked Map decorations
             foreach (ListViewItem checkedItem in lvwDecorations.CheckedItems)
             {

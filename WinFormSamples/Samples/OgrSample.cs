@@ -251,7 +251,7 @@ namespace WinFormSamples.Samples
             Matrix mat = new Matrix();
             mat.RotateAt(angle, map.WorldToImage(map.Center));
             map.MapTransform = mat;
-
+            map.ZoomToExtents();
             return map;
         }
     }
