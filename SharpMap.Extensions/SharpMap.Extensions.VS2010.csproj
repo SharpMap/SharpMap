@@ -136,6 +136,7 @@
     <Compile Include="Data\Providers\Oracle.cs" />
     <Compile Include="Data\Providers\PostGIS.cs" />
     <Compile Include="Data\Providers\PostGIS2.cs" />
+    <Compile Include="Data\Providers\ShapeFileEx.cs" />
     <Compile Include="Data\Providers\SqlLite.cs" />
     <Compile Include="Data\Providers\SpatiaLite.cs" />
     <Compile Include="Layers\GdalRasterLayer.cs">

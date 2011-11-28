@@ -42,7 +42,7 @@ namespace WinFormSamples.Samples
             //Set up the countries layer
             var layCountries = new SharpMap.Layers.Symbolizer.PolygonalVectorLayer(
                 "Countries",
-                new ShapeFile("GeoData/World/countries.shp", true),
+                new ShapeFileEx("GeoData/World/countries.shp", true),
                 new BasicPolygonSymbolizer {Fill = new SolidBrush(Color.Green), Outline = Pens.Black,}
                 ) {SRID = 4326};
 
@@ -55,7 +55,7 @@ namespace WinFormSamples.Samples
             var layRivers = new SharpMap.Layers.Symbolizer.LinealVectorLayer("Rivers")
                                 {
                                     //Set the datasource to a shapefile in the App_data folder
-                                    DataSource = new ShapeFile("GeoData/World/rivers.shp", true),
+                                    DataSource = new ShapeFileEx("GeoData/World/rivers.shp", true),
                                     //Define a blue 2px wide pen
                                     Symbolizer = symbolizer,
                                     SRID = 4326
@@ -65,7 +65,7 @@ namespace WinFormSamples.Samples
             var layCities = new SharpMap.Layers.Symbolizer.PuntalVectorLayer("Cities")
                                 {
                                     //Set the datasource to a shapefile in the App_data folder
-                                    DataSource = new ShapeFile("GeoData/World/cities.shp", true),
+                                    DataSource = new ShapeFileEx("GeoData/World/cities.shp", true),
                                     Symbolizer = new RasterPointSymbolizer() { Scale = 0.8f },
                                     MaxVisible = 40
                                 } ;
@@ -171,7 +171,7 @@ namespace WinFormSamples.Samples
             //Set up the countries layer
             VectorLayer layCountries = new VectorLayer("Countries");
             //Set the datasource to a shapefile in the App_data folder
-            layCountries.DataSource = new ShapeFile("GeoData/World/countries.shp", true);
+            layCountries.DataSource = new ShapeFileEx("GeoData/World/countries.shp", true);
             //Set fill-style to green
             layCountries.Style.Fill = new SolidBrush(Color.Green);
             //Set the polygons to have a black outline
@@ -182,7 +182,7 @@ namespace WinFormSamples.Samples
             //Set up a river layer
             VectorLayer layRivers = new VectorLayer("Rivers");
             //Set the datasource to a shapefile in the App_data folder
-            layRivers.DataSource = new ShapeFile("GeoData/World/rivers.shp", true);
+            layRivers.DataSource = new ShapeFileEx("GeoData/World/rivers.shp", true);
             //Define a blue 1px wide pen
             layRivers.Style.Line = new Pen(Color.Blue, 1);
             layRivers.SRID = 4326;
@@ -190,7 +190,7 @@ namespace WinFormSamples.Samples
             //Set up a cities layer
             VectorLayer layCities = new VectorLayer("Cities");
             //Set the datasource to a shapefile in the App_data folder
-            layCities.DataSource = new ShapeFile("GeoData/World/cities.shp", true);
+            layCities.DataSource = new ShapeFileEx("GeoData/World/cities.shp", true);
             layCities.Style.SymbolScale = 0.8f;
             layCities.MaxVisible = 40;
             layCities.SRID = 4326;
@@ -260,7 +260,7 @@ namespace WinFormSamples.Samples
             var providers = new SharpMap.Data.Providers.ShapeFile[filenames.Length];
             for (int i = 0; i < filenames.Length; i++)
             {
-                providers[i] = new ShapeFile(filenames[i], true);
+                providers[i] = new ShapeFileEx(filenames[i], true);
                 providers[i].Open();
             }
 

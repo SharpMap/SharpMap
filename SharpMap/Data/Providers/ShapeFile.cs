@@ -187,7 +187,7 @@ namespace SharpMap.Data.Providers
 		private int _srid = -1;
 		private BinaryReader _brShapeFile;
 		private BinaryReader _brShapeIndex;
-		private DbaseReader _dbaseFile;
+	    protected DbaseReader DbaseFile;
 		private FileStream _fsShapeFile;
 		private FileStream _fsShapeIndex;
 		private readonly bool _useMemoryCache;
@@ -263,7 +263,7 @@ namespace SharpMap.Data.Providers
 			//Initialize DBF
 			string dbffile = Path.ChangeExtension(filename, ".dbf");
 			if (File.Exists(dbffile))
-				_dbaseFile = new DbaseReader(dbffile);
+				DbaseFile = new DbaseReader(dbffile);
 
 			//By Default disable _MemoryCache
 			_useMemoryCache = false;
@@ -348,7 +348,7 @@ namespace SharpMap.Data.Providers
 
                     var dbffile = Path.ChangeExtension(value, ".dbf");
                     if (File.Exists(dbffile))
-                        _dbaseFile = new DbaseReader(dbffile);
+                        DbaseFile = new DbaseReader(dbffile);
 
 					ParseHeader();
 					ParseProjection();
@@ -365,8 +365,8 @@ namespace SharpMap.Data.Providers
 		/// </remarks>
 		public Encoding Encoding
 		{
-			get { return _dbaseFile.Encoding; }
-			set { _dbaseFile.Encoding = value; }
+			get { return DbaseFile.Encoding; }
+			set { DbaseFile.Encoding = value; }
 		}
 
 		/// <summary>
@@ -465,8 +465,8 @@ namespace SharpMap.Data.Providers
                 _offsetOfRecord = new int[_featureCount];
                 PopulateIndexes();
 				InitializeShape(_filename, _fileBasedIndex);
-				if (_dbaseFile != null)
-					_dbaseFile.Open();
+				if (DbaseFile != null)
+					DbaseFile.Open();
 				_isOpen = true;
 
 			}
@@ -496,8 +496,8 @@ namespace SharpMap.Data.Providers
                     // Give back the memory from the index array.
                     _offsetOfRecord = null;
 
-					if (_dbaseFile != null)
-						_dbaseFile.Close();
+					if (DbaseFile != null)
+						DbaseFile.Close();
 					_isOpen = false;
 				}
 			}
@@ -558,7 +558,7 @@ namespace SharpMap.Data.Providers
 		{
 			//Use the spatial index to get a list of features whose boundingbox intersects bbox
 			Collection<uint> objectlist = GetObjectIDsInView(bbox);
-			FeatureDataTable dt = _dbaseFile.NewTable;
+			FeatureDataTable dt = DbaseFile.NewTable;
 
 			for (int i = 0; i < objectlist.Count; i++)
 			{
@@ -635,7 +635,7 @@ namespace SharpMap.Data.Providers
 		/// </summary>
 		/// <param name="geom"></param>
 		/// <param name="ds">FeatureDataSet to fill data into</param>
-		public void ExecuteIntersectionQuery(Geometry geom, FeatureDataSet ds)
+		public virtual void ExecuteIntersectionQuery(Geometry geom, FeatureDataSet ds)
 		{
 			var bbox = geom.GetBoundingBox();
 
@@ -681,7 +681,7 @@ namespace SharpMap.Data.Providers
 		/// <returns></returns>
 		public FeatureDataRow GetFeature(uint rowId)
 		{
-			return GetFeature(rowId, _dbaseFile.NewTable);
+			return GetFeature(rowId, DbaseFile.NewTable);
 		}
 
 		/// <summary>
@@ -710,7 +710,7 @@ namespace SharpMap.Data.Providers
 		/// <summary>
 		/// Gets or sets the spatial reference ID (CRS)
 		/// </summary>
-		public int SRID
+		public virtual int SRID
 		{
 			get { return _srid; }
 			set { _srid = value; }
@@ -1281,7 +1281,7 @@ namespace SharpMap.Data.Providers
 		public FeatureDataRow GetFeature(uint rowId, FeatureDataTable dt)
 		{
 			Debug.Assert(dt != null);
-			if (_dbaseFile != null)
+			if (DbaseFile != null)
 			{
 				//MemoryCache
 				if (_useMemoryCache)
@@ -1290,7 +1290,7 @@ namespace SharpMap.Data.Providers
 					_cacheDataTable.TryGetValue(rowId, out dr2);
 					if (dr2 == null)
 					{
-						dr2 = _dbaseFile.GetFeature(rowId, dt);
+						dr2 = DbaseFile.GetFeature(rowId, dt);
 						dr2.Geometry = ReadGeometry(rowId);
 						_cacheDataTable.Add(rowId, dr2);
 					}
@@ -1306,7 +1306,7 @@ namespace SharpMap.Data.Providers
 				}
 
 			    //FeatureDataRow dr = (FeatureDataRow)dbaseFile.GetFeature(RowID, (dt == null) ? dbaseFile.NewTable : dt);
-			    FeatureDataRow dr = _dbaseFile.GetFeature(rowId, dt);
+			    FeatureDataRow dr = DbaseFile.GetFeature(rowId, dt);
 			    dr.Geometry = ReadGeometry(rowId);
 			    if (FilterDelegate == null || FilterDelegate(dr))
 			        return dr;

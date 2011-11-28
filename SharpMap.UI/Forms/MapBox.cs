@@ -108,10 +108,22 @@ namespace SharpMap.Forms
             /// Zoom out
             /// </summary>
             ZoomOut,
+
+            /// <summary>
+            /// Query bounding boxes for intersection
+            /// </summary>
+            QueryBox,
+
             /// <summary>
             /// Query tool
             /// </summary>
-            Query,
+            Query = QueryBox,
+
+            /// <summary>
+            /// Attempt true intersection query on geometry
+            /// </summary>
+            QueryGeometry,
+
             /// <summary>
             /// Zoom window tool
             /// </summary>
@@ -279,7 +291,9 @@ namespace SharpMap.Forms
         private bool _shiftButtonDragRectangleZoom = false;
         private bool _focusOnHover = false;
         private bool _panOnClick = true;
-        IMessageFilter _mousePreviewFilter = null;
+        private float _queryGrowFactor = 5f;
+
+        readonly IMessageFilter _mousePreviewFilter = null;
 
         public static void RandomizeLayerColors(VectorLayer layer)
         {
@@ -363,6 +377,23 @@ namespace SharpMap.Forms
             get { return _setActiveToolNoneDuringRedraw; }
             set { _setActiveToolNoneDuringRedraw = value; }
         }
+
+        /// <summary>
+        /// Gets or sets the number of pixels by which a bounding box around the query point should be "grown" prior to perform the query
+        /// </summary>
+        /// <remarks>Does not apply when querying against boxes.</remarks>
+        [Description("Gets or sets the number of pixels by which a bounding box around the query point should be \"grown\" prior to perform the query")]
+        [DefaultValue(5)]
+        [Category("Behavior")]
+        public float QueryGrowFactor { get { return _queryGrowFactor; } 
+            set
+            {
+                if (value < 0) value = 0;
+                //if (value > 10)
+                    _queryGrowFactor = value;
+            }
+        }
+
 
         [Description("The color of selecting rectangle.")]
         [Category("Appearance")]
@@ -845,7 +876,7 @@ namespace SharpMap.Forms
                 Cursor = Cursors.Default;
             if (_activeTool == Tools.Pan)
                 Cursor = Cursors.Hand;
-            else if (_activeTool == Tools.Query)
+            else if (_activeTool == Tools.Query || _activeTool == Tools.QueryGeometry)
                 Cursor = Cursors.Help;
             else if (_activeTool == Tools.ZoomIn || _activeTool == Tools.ZoomOut || _activeTool == Tools.ZoomWindow)
                 Cursor = Cursors.Cross;
@@ -1017,7 +1048,7 @@ namespace SharpMap.Forms
                     bool isZoomOperation = _activeTool == Tools.ZoomIn || _activeTool == Tools.ZoomOut;
 
                     //Tool ZoomWindow or ShiftButtonDragRectangle
-                    bool isZoomWindowOperation = _activeTool == Tools.ZoomWindow || _activeTool == Tools.Query || (_shiftButtonDragRectangleZoom && (Control.ModifierKeys & Keys.Shift) != Keys.None);
+                    bool isZoomWindowOperation = _activeTool == Tools.ZoomWindow || _activeTool == Tools.Query || _activeTool == Tools.QueryGeometry || (_shiftButtonDragRectangleZoom && (Control.ModifierKeys & Keys.Shift) != Keys.None);
 
                     if (isPanOperation)
                     {
@@ -1408,7 +1439,7 @@ namespace SharpMap.Forms
                             }
                         }
                     }
-                    else if (_activeTool == Tools.Query)
+                    else if (_activeTool == Tools.Query || _activeTool == Tools.QueryGeometry)
                     {
                         if (_map.Layers.Count > _queryLayerIndex && _queryLayerIndex > -1)
                         {
@@ -1416,7 +1447,7 @@ namespace SharpMap.Forms
                             if (layer != null)
                             {
                                 BoundingBox bounding;
-
+                                bool isPoint = false;
                                 if (_dragging)
                                 {
                                     GeoPoint lowerLeft;
@@ -1426,10 +1457,26 @@ namespace SharpMap.Forms
                                     bounding = new BoundingBox(lowerLeft, upperRight);
                                 }
                                 else
-                                    bounding = _map.ImageToWorld(new Point(e.X, e.Y)).GetBoundingBox().Grow(_map.PixelSize * 5);
+                                {
+                                    bounding =
+                                        _map.ImageToWorld(new Point(e.X, e.Y)).GetBoundingBox().Grow(_map.PixelSize*
+                                                                                                     _queryGrowFactor);
+                                    isPoint = true;
+                                }
 
                                 Data.FeatureDataSet ds = new Data.FeatureDataSet();
-                                layer.ExecuteIntersectionQuery(bounding, ds);
+                                if (_activeTool == Tools.Query)
+                                    layer.ExecuteIntersectionQuery(bounding, ds);
+                                else
+                                {
+                                    Geometry geom;
+                                    if (isPoint && QueryGrowFactor == 0)
+                                        geom = _map.ImageToWorld(new Point(e.X, e.Y));
+                                    else    
+                                        geom = bounding.ToGeometry();
+                                    layer.ExecuteIntersectionQuery(geom, ds);
+                                }
+
                                 if (ds.Tables.Count > 0)
                                     if (MapQueried != null) MapQueried(ds.Tables[0]);
                                     else if (MapQueried != null) MapQueried(new Data.FeatureDataTable());

@@ -27,7 +27,7 @@ using SharpMap.Utilities.Indexing;
 
 namespace SharpMap.Data.Providers
 {
-    internal class DbaseReader : IDisposable
+    public class DbaseReader : IDisposable
     {
         private struct DbaseField
         {
@@ -433,7 +433,7 @@ namespace SharpMap.Data.Providers
                 baseTable.Columns.Add(dbf.ColumnName, dbf.DataType);
         }
 
-        internal FeatureDataTable NewTable
+        public FeatureDataTable NewTable
         {
             get { return baseTable.Clone(); }
         }

@@ -16,6 +16,7 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
 
 using System;
+using System.Collections.Concurrent;
 using System.Collections.ObjectModel;
 using System.IO;
 
@@ -639,6 +640,22 @@ namespace SharpMap.Geometries
             var maxY = Max.Y < defaultEnvelope[3] ? Max.Y : defaultEnvelope[3];
             
             return new BoundingBox(minX, minY, maxX, maxY);
+        }
+
+        /// <summary>
+        /// Creates a geometry (Polygon) that resembles this bounding box.
+        /// </summary>
+        /// <returns></returns>
+        public Geometry ToGeometry()
+        {
+            var linearRing =
+                new LinearRing(new[]
+                                   {
+                                       Min.Clone(), new Point(Min.X, Max.Y), 
+                                       Max.Clone(), new Point(Max.X, Min.Y),
+                                       Min.Clone()
+                                   });
+            return new Polygon(linearRing, null);
         }
     }
 }
