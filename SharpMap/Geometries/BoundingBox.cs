@@ -263,7 +263,7 @@ namespace SharpMap.Geometries
         {
             get
             {
-                return (!double.IsNaN(_min.X) && !double.IsNaN(_max.X) &&
+                return (_min != null && _max != null && !double.IsNaN(_min.X) && !double.IsNaN(_max.X) &&
                         !double.IsNaN(_min.Y) && !double.IsNaN(_max.Y));
             }
             //set { throw new NotImplementedException(); }

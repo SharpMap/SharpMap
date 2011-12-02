@@ -542,7 +542,7 @@ namespace SharpMap
                 Disclaimer = Disclaimer,
                 DisclaimerFont = DisclaimerFont,
                 DisclaimerLocation = DisclaimerLocation,
-                MapTransform = MapTransform,
+                MapTransform = MapTransform.Clone(),
                 MaximumZoom = MaximumZoom,
                 MinimumZoom = MinimumZoom,
                 PixelAspectRatio = PixelAspectRatio,
@@ -643,8 +643,9 @@ namespace SharpMap
         /// <param name="bbox"></param>
         public void ZoomToBox(BoundingBox bbox)
         {
-            if (bbox != null)
+            if (bbox != null && bbox.IsValid)
             {
+                
                 _Zoom = bbox.Width; //Set the private center value so we only fire one MapOnViewChange event
                 if (Envelope.Height < bbox.Height)
                     _Zoom *= bbox.Height / Envelope.Height;
@@ -704,13 +705,15 @@ namespace SharpMap
         /// <returns>Point in world coordinates</returns>
         public Point ImageToWorld(PointF p, bool careAboutMapTransform)
         {
-
-            if (careAboutMapTransform && !MapTransform.IsIdentity)
+            lock (MapTransform)
             {
-                PointF[] pts = new PointF[] { p };
-                MapTransformInverted.TransformPoints(pts);
-                p = pts[0];
-            }            
+                if (careAboutMapTransform && !MapTransform.IsIdentity)
+                {
+                    PointF[] pts = new PointF[] { p };
+                    MapTransformInverted.TransformPoints(pts);
+                    p = pts[0];
+                }
+            }
             return Transform.MapToWorld(p, this);
         }
 
