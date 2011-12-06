@@ -535,29 +535,37 @@ namespace SharpMap
         /// <returns>Instance of <see cref="Map"/></returns>
         public Map Clone()
         {
-            Map clone = new Map()
-            {
-                BackColor = BackColor,
-                Center = Center,
-                Disclaimer = Disclaimer,
-                DisclaimerFont = DisclaimerFont,
-                DisclaimerLocation = DisclaimerLocation,
-                MapTransform = MapTransform.Clone(),
-                MaximumZoom = MaximumZoom,
-                MinimumZoom = MinimumZoom,
-                PixelAspectRatio = PixelAspectRatio,
-                Size = Size,
-                Zoom = Zoom,
-                DisposeLayersOnDispose = false
-            };
-            foreach (var lay in BackgroundLayer)
-                clone.BackgroundLayer.Add(lay);
-            foreach (var dec in Decorations)
-                clone.Decorations.Add(dec);
-            foreach (var lay in Layers)
-                clone.Layers.Add(lay);
-            foreach (var lay in VariableLayers)
-                clone.VariableLayers.Add(lay);
+             Map clone = null;
+             lock (MapTransform)
+             {
+                 clone = new Map()
+                 {
+                     BackColor = BackColor,
+                     Center = Center,
+                     Disclaimer = Disclaimer,
+                     DisclaimerFont = DisclaimerFont,
+                     DisclaimerLocation = DisclaimerLocation,
+                     MapTransform = MapTransform.Clone(),
+                     MaximumZoom = MaximumZoom,
+                     MinimumZoom = MinimumZoom,
+                     PixelAspectRatio = PixelAspectRatio,
+                     Size = Size,
+                     Zoom = Zoom,
+                     DisposeLayersOnDispose = false
+                 };
+
+             }
+             if (clone != null)
+             {
+                 foreach (var lay in BackgroundLayer)
+                     clone.BackgroundLayer.Add(lay);
+                 foreach (var dec in Decorations)
+                     clone.Decorations.Add(dec);
+                 foreach (var lay in Layers)
+                     clone.Layers.Add(lay);
+                 foreach (var lay in VariableLayers)
+                     clone.VariableLayers.Add(lay);
+             }
             return clone;
         }
 
