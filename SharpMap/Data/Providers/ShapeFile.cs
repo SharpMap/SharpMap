@@ -188,8 +188,26 @@ namespace SharpMap.Data.Providers
 		private BinaryReader _brShapeFile;
 		private BinaryReader _brShapeIndex;
 	    protected DbaseReader DbaseFile;
-		private FileStream _fsShapeFile;
-		private FileStream _fsShapeIndex;
+		private Stream _fsShapeFile;
+
+#if USE_MEMORYMAPPED_FILE
+        private static Dictionary<string,System.IO.MemoryMappedFiles.MemoryMappedFile> _memMappedFiles;
+        private static Dictionary<string, int> _memMappedFilesRefConter;
+        private bool _haveRegistredForUsage = false;
+        private bool _haveRegistredForShxUsage = false;
+        static ShapeFile()
+        {
+            _memMappedFiles = new Dictionary<string, System.IO.MemoryMappedFiles.MemoryMappedFile>();
+            _memMappedFilesRefConter = new Dictionary<string, int>();
+            SpatialIndexCreationOption = SpatialIndexCreation.Recursive;
+        }
+#else
+        static ShapeFile()
+        {
+            SpatialIndexCreationOption = SpatialIndexCreation.Recursive;
+        }
+#endif
+        private Stream _fsShapeIndex;
 		private readonly bool _useMemoryCache;
 		private DateTime _lastCleanTimestamp = DateTime.Now;
 		private readonly TimeSpan _cacheExpireTimeout = TimeSpan.FromMinutes(1);
@@ -420,10 +438,34 @@ namespace SharpMap.Data.Providers
 			if (!_disposed)
 			{
 				if (disposing)
-				{
-					Close();
-					_envelope = null;
-					_tree = null;
+                {
+                    Close();
+                    _envelope = null;
+                    _tree = null;
+#if USE_MEMORYMAPPED_FILE
+                    if (_memMappedFilesRefConter.ContainsKey(_filename))
+                    {
+                        _memMappedFilesRefConter[_filename]--;
+                        if (_memMappedFilesRefConter[_filename] == 0)
+                        {
+                            _memMappedFiles[_filename].Dispose();
+                            _memMappedFiles.Remove(_filename);
+                            _memMappedFilesRefConter.Remove(_filename);
+                        }
+                    }
+                    string shxFile = Path.ChangeExtension(_filename,".shx");
+                    if (_memMappedFilesRefConter.ContainsKey(shxFile))
+                    {
+                        _memMappedFilesRefConter[shxFile]--;
+                        if (_memMappedFilesRefConter[shxFile] <= 0)
+                        {
+                            _memMappedFiles[shxFile].Dispose();
+                            _memMappedFilesRefConter.Remove(shxFile);
+                            _memMappedFiles.Remove(shxFile);
+
+                        }
+                    }
+#endif
 				}
 				_disposed = true;
 			}
@@ -455,12 +497,20 @@ namespace SharpMap.Data.Providers
 			    string shxFile = Path.ChangeExtension(_filename, "shx");
                 if (File.Exists(shxFile))
                 {
+#if USE_MEMORYMAPPED_FILE
+                    _fsShapeIndex = CheckCreateMemoryMappedStream(shxFile, ref _haveRegistredForShxUsage);
+#else
 					_fsShapeIndex = new FileStream(shxFile, FileMode.Open, FileAccess.Read);
-					_brShapeIndex = new BinaryReader(_fsShapeIndex, Encoding.Unicode);
+#endif
+                    _brShapeIndex = new BinaryReader(_fsShapeIndex, Encoding.Unicode);
                 }
-				_fsShapeFile = new FileStream(_filename, FileMode.Open, FileAccess.Read);
-				_brShapeFile = new BinaryReader(_fsShapeFile);
+#if USE_MEMORYMAPPED_FILE
 
+                _fsShapeFile = CheckCreateMemoryMappedStream(_filename, ref _haveRegistredForUsage);
+#else
+                _fsShapeFile = new FileStream(_filename, FileMode.Open, FileAccess.Read);
+#endif
+                _brShapeFile = new BinaryReader(_fsShapeFile);
                 // Create array to hold the index array for this open session
                 _offsetOfRecord = new int[_featureCount];
                 PopulateIndexes();
@@ -471,6 +521,27 @@ namespace SharpMap.Data.Providers
 
 			}
 		}
+#if USE_MEMORYMAPPED_FILE
+        private Stream CheckCreateMemoryMappedStream(string filename, ref bool haveRegistredForUsage)
+        {
+            if (!_memMappedFiles.ContainsKey(filename))
+            {
+                System.IO.MemoryMappedFiles.MemoryMappedFile memMappedFile = System.IO.MemoryMappedFiles.MemoryMappedFile.CreateFromFile(filename, FileMode.Open);
+                _memMappedFiles.Add(filename, memMappedFile);
+            }
+            if (!haveRegistredForUsage)
+            {
+                if (_memMappedFilesRefConter.ContainsKey(filename))
+                    _memMappedFilesRefConter[filename]++;
+                else
+                    _memMappedFilesRefConter.Add(filename, 1);
+
+                haveRegistredForUsage = true;
+            }
+
+            return _memMappedFiles[filename].CreateViewStream();
+        }
+#endif
 
 		/// <summary>
 		/// Closes the datasource
@@ -479,11 +550,7 @@ namespace SharpMap.Data.Providers
 		{
 			if (!_disposed)
 			{
-				//TODO: (ConnectionPooling)
-				/*	if (connector != null)
-					{ Pooling.ConnectorPool.ConnectorPoolManager.Release...()
-				}*/
-				if (_isOpen)
+                if (_isOpen)
 				{
 					_brShapeFile.Close();
 					_fsShapeFile.Close();
@@ -500,7 +567,7 @@ namespace SharpMap.Data.Providers
 						DbaseFile.Close();
 					_isOpen = false;
 				}
-			}
+            }
 		}
 
 		/// <summary>
@@ -733,7 +800,11 @@ namespace SharpMap.Data.Providers
 		/// </summary>
 		private void ParseHeader()
 		{
+#if USE_MEMORYMAPPED_FILE
+            _fsShapeFile = CheckCreateMemoryMappedStream(_filename, ref _haveRegistredForUsage);
+#else
             _fsShapeFile = new FileStream(_filename, FileMode.Open, FileAccess.Read);
+#endif
             _brShapeFile = new BinaryReader(_fsShapeFile, Encoding.Unicode);
 
             _brShapeFile.BaseStream.Seek(0, 0);
@@ -758,7 +829,11 @@ namespace SharpMap.Data.Providers
             if (File.Exists(Path.ChangeExtension(_filename, ".shx")))
             //if (brShapeIndex != null)
             {
+#if USE_MEMORYMAPPED_FILE
+                _fsShapeIndex = CheckCreateMemoryMappedStream(Path.ChangeExtension(_filename, ".shx"), ref _haveRegistredForShxUsage);
+#else
                 _fsShapeIndex = new FileStream(Path.ChangeExtension(_filename, ".shx"), FileMode.Open, FileAccess.Read);
+#endif
                 _brShapeIndex = new BinaryReader(_fsShapeIndex, Encoding.Unicode);
 
                 _brShapeIndex.BaseStream.Seek(24, 0); //seek to File Length
@@ -796,6 +871,7 @@ namespace SharpMap.Data.Providers
             }
             _brShapeFile.Close();
             _fsShapeFile.Close();
+
 		}
 
 		/// <summary>
@@ -923,11 +999,6 @@ namespace SharpMap.Data.Providers
             //tree.SaveIndex(filename + ".sidx");
 		    //return tree;
 		}
-
-        static ShapeFile()
-        {
-            SpatialIndexCreationOption = SpatialIndexCreation.Recursive;
-        }
 
         /// <summary>
 		/// Generates a spatial index for a specified shape file.

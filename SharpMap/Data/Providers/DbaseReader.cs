@@ -24,6 +24,7 @@ using System.Globalization;
 using System.IO;
 using System.Text;
 using SharpMap.Utilities.Indexing;
+using System.Collections.Generic;
 
 namespace SharpMap.Data.Providers
 {
@@ -44,10 +45,20 @@ namespace SharpMap.Data.Providers
         private Int16 _RecordLength;
         private string _filename;
         private DbaseField[] DbaseColumns;
-        private FileStream fs;
+        private Stream fs;
         private BinaryReader br;
         private bool HeaderIsParsed;
 
+#if USE_MEMORYMAPPED_FILE
+        private static Dictionary<string,System.IO.MemoryMappedFiles.MemoryMappedFile> _memMappedFiles;
+        private static Dictionary<string, int> _memMappedFilesRefConter;
+        private bool _haveRegistredForUsage = false;
+        static DbaseReader()
+        {
+            _memMappedFiles = new Dictionary<string, System.IO.MemoryMappedFiles.MemoryMappedFile>();
+            _memMappedFilesRefConter = new Dictionary<string, int>();
+        }
+#endif
 
 
         public DbaseReader(string filename)
@@ -68,7 +79,26 @@ namespace SharpMap.Data.Providers
 
         public void Open()
         {
+#if USE_MEMORYMAPPED_FILE
+            if (!_memMappedFiles.ContainsKey(_filename))
+            {
+                System.IO.MemoryMappedFiles.MemoryMappedFile memMappedFile = System.IO.MemoryMappedFiles.MemoryMappedFile.CreateFromFile(_filename, FileMode.Open);
+                _memMappedFiles.Add(_filename, memMappedFile);
+            }
+            if (!_haveRegistredForUsage)
+            {
+                if (_memMappedFilesRefConter.ContainsKey(_filename))
+                    _memMappedFilesRefConter[_filename]++;
+                else
+                    _memMappedFilesRefConter.Add(_filename, 1);
+
+                _haveRegistredForUsage = true;
+            }
+
+            fs = _memMappedFiles[_filename].CreateViewStream();
+#else
             fs = new FileStream(_filename, FileMode.Open, FileAccess.Read);
+#endif
             br = new BinaryReader(fs);
             _isOpen = true;
             if (!HeaderIsParsed) //Don't read the header if it's already parsed
@@ -77,6 +107,7 @@ namespace SharpMap.Data.Providers
 
         public void Close()
         {
+
             br.Close();
             fs.Close();
             _isOpen = false;
@@ -88,6 +119,18 @@ namespace SharpMap.Data.Providers
                 Close();
             br = null;
             fs = null;
+#if USE_MEMORYMAPPED_FILE
+            if (_memMappedFilesRefConter.ContainsKey(_filename))
+            {
+                _memMappedFilesRefConter[_filename]--;
+                if (_memMappedFilesRefConter[_filename] <= 0)
+                {
+                    _memMappedFiles[_filename].Dispose();
+                    _memMappedFiles.Remove(_filename);
+                    _memMappedFilesRefConter.Remove(_filename);
+                }
+            }
+#endif
         }
 
         // Binary Tree not working yet on Mono 
