@@ -57,20 +57,16 @@ namespace SharpMap.Utilities
         /// <returns>Point in WCS</returns>
         public static Point MapToWorld(PointF p, Map map)
         {
-            //if (this.MapTransform != null && !this.MapTransform.IsIdentity)
-            //{
-            //    System.Drawing.PointF[] p2 = new System.Drawing.PointF[] { p };
-            //    this.MapTransform.TransformPoints(new System.Drawing.PointF[] { p });
-            //    this.MapTransformInverted.TransformPoints(p2);
-            //    return Utilities.Transform.MapToWorld(p2[0], this);
-            //}
-            //else 
-            Point ul = new Point(map.Center.X - map.Zoom * .5, map.Center.Y + map.MapHeight * .5);
-            return new Point(ul.X + p.X * map.PixelWidth,
-                             ul.Y - p.Y * map.PixelHeight);
-            //BoundingBox env = map.Envelope;
-            //return new Point(env.Min.X + p.X*map.PixelWidth,
-            //                 env.Max.Y - p.Y*map.PixelHeight);
+            if (map.Center.IsEmpty() || double.IsNaN(map.MapHeight))
+            {
+                return new Point(0, 0);
+            }
+            else
+            {
+                Point ul = new Point(map.Center.X - map.Zoom * .5, map.Center.Y + map.MapHeight * .5);
+                return new Point(ul.X + p.X * map.PixelWidth,
+                                 ul.Y - p.Y * map.PixelHeight);
+            }
         }
     }
 }
