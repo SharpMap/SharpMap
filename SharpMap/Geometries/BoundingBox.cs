@@ -263,7 +263,7 @@ namespace SharpMap.Geometries
         {
             get
             {
-                return (_min != null && _max != null && !double.IsNaN(_min.X) && !double.IsNaN(_max.X) &&
+                return (!_min.IsEmpty() && !_max.IsEmpty() && _min != null && _max != null && !double.IsNaN(_min.X) && !double.IsNaN(_max.X) &&
                         !double.IsNaN(_min.Y) && !double.IsNaN(_max.Y));
             }
             //set { throw new NotImplementedException(); }
@@ -301,19 +301,22 @@ namespace SharpMap.Geometries
         public bool CheckMinMax()
         {
             bool wasSwapped = false;
-            if (_min.X > _max.X)
+            if (!_min.IsEmpty() && !_max.IsEmpty())
             {
-                double tmp = _min.X;
-                _min.X = _max.X;
-                _max.X = tmp;
-                wasSwapped = true;
-            }
-            if (_min.Y > _max.Y)
-            {
-                double tmp = _min.Y;
-                _min.Y = _max.Y;
-                _max.Y = tmp;
-                wasSwapped = true;
+                if (_min.X > _max.X)
+                {
+                    double tmp = _min.X;
+                    _min.X = _max.X;
+                    _max.X = tmp;
+                    wasSwapped = true;
+                }
+                if (_min.Y > _max.Y)
+                {
+                    double tmp = _min.Y;
+                    _min.Y = _max.Y;
+                    _max.Y = tmp;
+                    wasSwapped = true;
+                }
             }
             return wasSwapped;
         }

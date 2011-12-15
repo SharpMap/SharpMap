@@ -729,59 +729,63 @@ namespace SharpMap.Forms
                 try
                 {
                     var oldRef = _image;
-                    var bmp = new Bitmap(Width, Height);
-
-                    lock (_map)
+                    if (Width > 0 && Height > 0)
                     {
-                        using (var g = Graphics.FromImage(bmp))
+
+                        var bmp = new Bitmap(Width, Height);
+
+                        lock (_map)
                         {
-                            //Draws the background Image
-                            if (_imageBackground != null)
+                            using (var g = Graphics.FromImage(bmp))
                             {
-                                try
+                                //Draws the background Image
+                                if (_imageBackground != null)
                                 {
-                                    g.DrawImageUnscaled(_imageBackground, 0, 0);
+                                    try
+                                    {
+                                        g.DrawImageUnscaled(_imageBackground, 0, 0);
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        Console.WriteLine(ex.ToString());
+                                    }
                                 }
-                                catch (Exception ex)
+
+                                //Draws the static images
+                                if (_imageStatic != null)
                                 {
-                                    Console.WriteLine(ex.ToString());
+                                    try
+                                    {
+                                        g.DrawImageUnscaled(_imageStatic, 0, 0);
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        Console.WriteLine(ex.ToString());
+                                    }
+
                                 }
+
+                                //Draws the variable Images
+                                if (_imageVariable != null)
+                                {
+                                    try
+                                    {
+                                        g.DrawImageUnscaled(_imageVariable, 0, 0);
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        Console.WriteLine(ex.ToString());
+                                    }
+                                }
+
+                                g.Dispose();
                             }
 
-                            //Draws the static images
-                            if (_imageStatic != null)
-                            {
-                                try
-                                {
-                                    g.DrawImageUnscaled(_imageStatic, 0, 0);
-                                }
-                                catch (Exception ex)
-                                {
-                                    Console.WriteLine(ex.ToString());
-                                }
 
-                            }
 
-                            //Draws the variable Images
-                            if (_imageVariable != null)
-                            {
-                                try
-                                {
-                                    g.DrawImageUnscaled(_imageVariable, 0, 0);
-                                }
-                                catch (Exception ex)
-                                {
-                                    Console.WriteLine(ex.ToString());
-                                }
-                            }
-
-                            g.Dispose();
+                            _image = bmp;
+                            _imageBoundingBox = res.bbox;
                         }
-
-
-
-                        _image = bmp;
-                        _imageBoundingBox = res.bbox;
                     }
 
                     if (res.Tool.HasValue)
@@ -817,12 +821,17 @@ namespace SharpMap.Forms
                 LastRefreshTime = _watch.Elapsed;
 #endif
 
-                if (MapRefreshed != null)
+                try
                 {
-                    BeginInvoke(new MethodInvoker(delegate
+                    if (MapRefreshed != null)
                     {
                         MapRefreshed(this, null);
-                    }));
+                    }
+                }
+                catch (Exception ee)
+                {
+                    //Trap errors that occured when calling the eventhandlers
+                    Console.WriteLine(ee.ToString());
                 }
             }
         }
@@ -894,7 +903,7 @@ namespace SharpMap.Forms
             {
                 //Protect against cross-thread operations...
                 //We need this since we're modifying the cursor
-                if (_setActiveToolNoneDuringRedraw && this.InvokeRequired)
+                if (this.InvokeRequired)
                 {
                     this.Invoke(new MethodInvoker(Refresh));
                     return;

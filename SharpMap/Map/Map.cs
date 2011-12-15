@@ -759,7 +759,7 @@ namespace SharpMap
         {
             get
             {
-                if (double.IsNaN(MapHeight))
+                if (double.IsNaN(MapHeight) || double.IsInfinity(MapHeight))
                     return new BoundingBox(0, 0, 0, 0);
 
                 Point ll = new Point(Center.X - Zoom * .5, Center.Y - MapHeight * .5);
