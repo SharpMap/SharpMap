@@ -1,0 +1,36 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpMap.VS2010", "SharpMap\SharpMap.VS2010.csproj", "{C83777FC-AABB-47D9-911F-D76255D4D541}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpMapServer", "SharpMapServer\SharpMapServer.csproj", "{FCA0E48D-9803-4F63-BA14-AB8F8810709B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		DebugDSProjection|Any CPU = DebugDSProjection|Any CPU
+		Release|Any CPU = Release|Any CPU
+		ReleaseDSProjection|Any CPU = ReleaseDSProjection|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C83777FC-AABB-47D9-911F-D76255D4D541}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C83777FC-AABB-47D9-911F-D76255D4D541}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C83777FC-AABB-47D9-911F-D76255D4D541}.DebugDSProjection|Any CPU.ActiveCfg = DebugDSProjection|Any CPU
+		{C83777FC-AABB-47D9-911F-D76255D4D541}.DebugDSProjection|Any CPU.Build.0 = DebugDSProjection|Any CPU
+		{C83777FC-AABB-47D9-911F-D76255D4D541}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C83777FC-AABB-47D9-911F-D76255D4D541}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C83777FC-AABB-47D9-911F-D76255D4D541}.ReleaseDSProjection|Any CPU.ActiveCfg = ReleaseDSProjection|Any CPU
+		{C83777FC-AABB-47D9-911F-D76255D4D541}.ReleaseDSProjection|Any CPU.Build.0 = ReleaseDSProjection|Any CPU
+		{FCA0E48D-9803-4F63-BA14-AB8F8810709B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FCA0E48D-9803-4F63-BA14-AB8F8810709B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FCA0E48D-9803-4F63-BA14-AB8F8810709B}.DebugDSProjection|Any CPU.ActiveCfg = Debug|Any CPU
+		{FCA0E48D-9803-4F63-BA14-AB8F8810709B}.DebugDSProjection|Any CPU.Build.0 = Debug|Any CPU
+		{FCA0E48D-9803-4F63-BA14-AB8F8810709B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FCA0E48D-9803-4F63-BA14-AB8F8810709B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FCA0E48D-9803-4F63-BA14-AB8F8810709B}.ReleaseDSProjection|Any CPU.ActiveCfg = Release|Any CPU
+		{FCA0E48D-9803-4F63-BA14-AB8F8810709B}.ReleaseDSProjection|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
