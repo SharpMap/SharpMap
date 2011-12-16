@@ -24,6 +24,7 @@ using System.Web;
 using System.Xml;
 using SharpMap.Geometries;
 using SharpMap.Layers;
+using System.Collections.Generic;
 
 namespace SharpMap.Web.Wms
 {
@@ -352,85 +353,22 @@ namespace SharpMap.Web.Wms
                 {
                     fc = 1;
                 }
-                String vstr = "GetFeatureInfo results: \n";
-                string[] requestLayers = context.Request.Params["QUERY_LAYERS"].Split(new[] { ',' });
-                foreach (string requestLayer in requestLayers)
-                {
-                    bool found = false;
-                    foreach (ILayer mapLayer in map.Layers)
-                    {
-                        if (String.Equals(mapLayer.LayerName, requestLayer,
-                                          StringComparison.InvariantCultureIgnoreCase))
-                        {
-                            found = true;
-                            if (!(mapLayer is ICanQueryLayer)) continue;
+                //default to text if an invalid format is requested
+                string infoFormat = context.Request.Params["INFO_FORMAT"];
 
-                            ICanQueryLayer queryLayer = mapLayer as ICanQueryLayer;
-                            if (queryLayer.IsQueryEnabled)
-                            {
-                                Single queryBoxMinX = x - (_pixelSensitivity);
-                                Single queryBoxMinY = y - (_pixelSensitivity);
-                                Single queryBoxMaxX = x + (_pixelSensitivity);
-                                Single queryBoxMaxY = y + (_pixelSensitivity);
-                                SharpMap.Geometries.Point minXY = map.ImageToWorld(new System.Drawing.PointF(queryBoxMinX, queryBoxMinY));
-                                SharpMap.Geometries.Point maxXY = map.ImageToWorld(new System.Drawing.PointF(queryBoxMaxX, queryBoxMaxY));
-                                BoundingBox queryBox = new BoundingBox(minXY, maxXY);
-                                SharpMap.Data.FeatureDataSet fds = new SharpMap.Data.FeatureDataSet();
-                                queryLayer.ExecuteIntersectionQuery(queryBox, fds);
-								if (_intersectDelegate != null)
-                                {
-                                    fds.Tables[0] = _intersectDelegate(fds.Tables[0], queryBox);
-                                }
-                                if (fds.Tables.Count == 0)
-                                {
-                                    vstr = vstr + "\nSearch returned no results on layer: " + requestLayer;
-                                }
-                                else
-                                {
-                                    if (fds.Tables[0].Rows.Count == 0)
-                                    {
-                                        vstr = vstr + "\nSearch returned no results on layer: " + requestLayer + " ";
-                                    }
-                                    else
-                                    {
-                                        //if featurecount < fds...count, select smallest bbox, because most likely to be clicked
-                                        vstr = vstr + "\n Layer: '" + requestLayer + "'\n Featureinfo:\n";
-                                        int[] keys = new int[fds.Tables[0].Rows.Count];
-                                        double[] area = new double[fds.Tables[0].Rows.Count];
-                                        for (int l = 0; l < fds.Tables[0].Rows.Count; l++)
-                                        {
-                                            SharpMap.Data.FeatureDataRow fdr = fds.Tables[0].Rows[l] as SharpMap.Data.FeatureDataRow;
-                                            area[l] = fdr.Geometry.GetBoundingBox().GetArea();
-                                            keys[l] = l;
-                                        }
-                                        Array.Sort(area, keys);
-                                        if (fds.Tables[0].Rows.Count < fc)
-                                        {
-                                            fc = fds.Tables[0].Rows.Count;
-                                        }
-                                        for (int k = 0; k < fc; k++)
-                                        {
-                                            for (int j = 0; j < fds.Tables[0].Rows[keys[k]].ItemArray.Length; j++)
-                                            {
-                                                vstr = vstr + " '" + fds.Tables[0].Rows[keys[k]].ItemArray[j].ToString() + "'";
-                                            }
-                                            if ((k + 1) < fc)
-                                                vstr = vstr + ",\n";
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    if (found == false)
-                    {
-                        WmsException.ThrowWmsException(WmsException.WmsExceptionCode.LayerNotDefined,
-                                                       "Unknown layer '" + requestLayer + "'");
-                        return;
-                    }
+                string vstr = "";
+                string[] requestLayers = context.Request.Params["QUERY_LAYERS"].Split(new[] { ',' });
+                if (String.Compare(context.Request.Params["INFO_FORMAT"], "text/json", ignorecase) == 0)
+                {
+                    vstr = CreateFeatureInfoGeoJSON(map, requestLayers, x, y, fc);
+                    context.Response.ContentType = "text/json";
                 }
-                context.Response.Clear();
-                context.Response.ContentType = "text/plain";
+                else
+                {
+                    vstr = CreateFeatureInfoPlain(map, requestLayers, x, y, fc);
+                    context.Response.ContentType = "text/plain";
+                }
+                context.Response.Clear();                
                 context.Response.Charset = "windows-1252";
                 context.Response.Write(vstr);
                 context.Response.Flush();
@@ -643,6 +581,140 @@ namespace SharpMap.Web.Wms
                 return null;
 
             return new BoundingBox(minx, miny, maxx, maxy);
+        }
+        /// <summary>
+        /// Gets FeatureInfo as text/plain
+        /// </summary>
+        /// <param name="strBBOX">string representation of a boundingbox</param>
+        /// <returns>Plain text string with featureinfo results</returns>
+        public static string CreateFeatureInfoPlain(SharpMap.Map map, string[] requestedLayers, Single x, Single y, int featureCount)
+        {
+            string vstr = "GetFeatureInfo results: \n";
+            foreach (string requestLayer in requestedLayers)
+            {
+                bool found = false;
+                foreach (ILayer mapLayer in map.Layers)
+                {
+                    if (String.Equals(mapLayer.LayerName, requestLayer,
+                                      StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        found = true;
+                        if (!(mapLayer is ICanQueryLayer)) continue;
+
+                        ICanQueryLayer queryLayer = mapLayer as ICanQueryLayer;
+                        if (queryLayer.IsQueryEnabled)
+                        {
+                            Single queryBoxMinX = x - (_pixelSensitivity);
+                            Single queryBoxMinY = y - (_pixelSensitivity);
+                            Single queryBoxMaxX = x + (_pixelSensitivity);
+                            Single queryBoxMaxY = y + (_pixelSensitivity);
+                            SharpMap.Geometries.Point minXY = map.ImageToWorld(new System.Drawing.PointF(queryBoxMinX, queryBoxMinY));
+                            SharpMap.Geometries.Point maxXY = map.ImageToWorld(new System.Drawing.PointF(queryBoxMaxX, queryBoxMaxY));
+                            BoundingBox queryBox = new BoundingBox(minXY, maxXY);
+                            SharpMap.Data.FeatureDataSet fds = new SharpMap.Data.FeatureDataSet();
+                            queryLayer.ExecuteIntersectionQuery(queryBox, fds);
+                            if (_intersectDelegate != null)
+                            {
+                                fds.Tables[0] = _intersectDelegate(fds.Tables[0], queryBox);
+                            }
+                            if (fds.Tables.Count == 0)
+                            {
+                                vstr = vstr + "\nSearch returned no results on layer: " + requestLayer;
+                            }
+                            else
+                            {
+                                if (fds.Tables[0].Rows.Count == 0)
+                                {
+                                    vstr = vstr + "\nSearch returned no results on layer: " + requestLayer + " ";
+                                }
+                                else
+                                {
+                                    //if featurecount < fds...count, select smallest bbox, because most likely to be clicked
+                                    vstr = vstr + "\n Layer: '" + requestLayer + "'\n Featureinfo:\n";
+                                    int[] keys = new int[fds.Tables[0].Rows.Count];
+                                    double[] area = new double[fds.Tables[0].Rows.Count];
+                                    for (int l = 0; l < fds.Tables[0].Rows.Count; l++)
+                                    {
+                                        SharpMap.Data.FeatureDataRow fdr = fds.Tables[0].Rows[l] as SharpMap.Data.FeatureDataRow;
+                                        area[l] = fdr.Geometry.GetBoundingBox().GetArea();
+                                        keys[l] = l;
+                                    }
+                                    Array.Sort(area, keys);
+                                    if (fds.Tables[0].Rows.Count < featureCount)
+                                    {
+                                        featureCount = fds.Tables[0].Rows.Count;
+                                    }
+                                    for (int k = 0; k < featureCount; k++)
+                                    {
+                                        for (int j = 0; j < fds.Tables[0].Rows[keys[k]].ItemArray.Length; j++)
+                                        {
+                                            vstr = vstr + " '" + fds.Tables[0].Rows[keys[k]].ItemArray[j].ToString() + "'";
+                                        }
+                                        if ((k + 1) < featureCount)
+                                            vstr = vstr + ",\n";
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                if (found == false)
+                {
+                    WmsException.ThrowWmsException(WmsException.WmsExceptionCode.LayerNotDefined,
+                                                   "Unknown layer '" + requestLayer + "'");                    
+                }
+            }
+            return vstr;
+        }
+        /// <summary>
+        /// Gets FeatureInfo as GeoJSON
+        /// </summary>
+        /// <param name="strBBOX">string representation of a boundingbox</param>
+        /// <returns>GeoJSON string with featureinfo results</returns>
+        public static string CreateFeatureInfoGeoJSON(SharpMap.Map map, string[] requestedLayers, Single x, Single y, int featureCount)
+        {
+            List<SharpMap.Converters.GeoJSON.GeoJSON> items = new List<SharpMap.Converters.GeoJSON.GeoJSON>();
+            foreach (string requestLayer in requestedLayers)
+            {
+                bool found = false;
+                foreach (ILayer mapLayer in map.Layers)
+                {
+                    if (String.Equals(mapLayer.LayerName, requestLayer,
+                                      StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        found = true;
+                        if (!(mapLayer is ICanQueryLayer)) continue;
+
+                        ICanQueryLayer queryLayer = mapLayer as ICanQueryLayer;
+                        if (queryLayer.IsQueryEnabled)
+                        {
+                            Single queryBoxMinX = x - (_pixelSensitivity);
+                            Single queryBoxMinY = y - (_pixelSensitivity);
+                            Single queryBoxMaxX = x + (_pixelSensitivity);
+                            Single queryBoxMaxY = y + (_pixelSensitivity);
+                            SharpMap.Geometries.Point minXY = map.ImageToWorld(new System.Drawing.PointF(queryBoxMinX, queryBoxMinY));
+                            SharpMap.Geometries.Point maxXY = map.ImageToWorld(new System.Drawing.PointF(queryBoxMaxX, queryBoxMaxY));
+                            BoundingBox queryBox = new BoundingBox(minXY, maxXY);
+                            SharpMap.Data.FeatureDataSet fds = new SharpMap.Data.FeatureDataSet();
+                            queryLayer.ExecuteIntersectionQuery(queryBox, fds);
+                            if (_intersectDelegate != null)
+                            {
+                                fds.Tables[0] = _intersectDelegate(fds.Tables[0], queryBox);
+                            }
+                            IEnumerable<SharpMap.Converters.GeoJSON.GeoJSON> data = SharpMap.Converters.GeoJSON.GeoJSONHelper.GetData(fds);
+                            items.AddRange(data);
+                        }
+                    }
+                }
+                if (found == false)
+                {
+                    WmsException.ThrowWmsException(WmsException.WmsExceptionCode.LayerNotDefined,
+                                                   "Unknown layer '" + requestLayer + "'");
+                }
+            }
+            StringWriter writer = new StringWriter();
+            SharpMap.Converters.GeoJSON.GeoJSONWriter.Write(items, writer);
+            return writer.ToString();            
         }
     }
 }

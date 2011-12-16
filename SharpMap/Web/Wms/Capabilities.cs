@@ -152,6 +152,7 @@ namespace SharpMap.Web.Wms
             RequestNode.AppendChild(GetCapabilitiesNode);
             XmlNode GetFeatureInfoNode = capabilities.CreateNode(XmlNodeType.Element, "GetFeatureInfo", wmsNamespaceURI);
             GetFeatureInfoNode.AppendChild(CreateElement("Format", "text/plain", capabilities, false, wmsNamespaceURI));
+            GetFeatureInfoNode.AppendChild(CreateElement("Format", "text/json", capabilities, false, wmsNamespaceURI));
             GetFeatureInfoNode.AppendChild(GenerateDCPTypeNode(capabilities, OnlineResource));
             RequestNode.AppendChild(GetFeatureInfoNode);
             XmlNode GetMapNode = capabilities.CreateNode(XmlNodeType.Element, "GetMap", wmsNamespaceURI);
