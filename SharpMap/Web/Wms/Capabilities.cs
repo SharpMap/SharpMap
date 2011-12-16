@@ -24,6 +24,7 @@ using System.Xml;
 using System.Xml.Schema;
 using SharpMap.Geometries;
 using SharpMap.Layers;
+using System.Collections.Generic;
 
 namespace SharpMap.Web.Wms
 {
@@ -292,6 +293,16 @@ namespace SharpMap.Web.Wms
             XmlNode LayerNode = doc.CreateNode(XmlNodeType.Element, "Layer", wmsNamespaceURI);
             LayerNode.AppendChild(CreateElement("Name", layer.LayerName, doc, false, wmsNamespaceURI));
             LayerNode.AppendChild(CreateElement("Title", layer.LayerName, doc, false, wmsNamespaceURI));
+			//if this is a vector layer with themes property set, add the Styles
+            if (layer.GetType() == typeof(VectorLayer))
+                if ((layer as VectorLayer).Themes != null)
+                    foreach (KeyValuePair<string,SharpMap.Rendering.Thematics.ITheme> kvp in (layer as VectorLayer).Themes)
+                    {
+                        XmlNode styleNode = doc.CreateNode(XmlNodeType.Element, "Style", wmsNamespaceURI);
+                        styleNode.AppendChild(CreateElement("Name", kvp.Key, doc, false, wmsNamespaceURI));
+                        styleNode.AppendChild(CreateElement("Title", kvp.Key, doc, false, wmsNamespaceURI));
+                        LayerNode.AppendChild(styleNode);
+                    }
             //If this is a grouplayer, add childlayers recursively
             if (layer.GetType() == typeof (LayerGroup))
                 foreach (Layer childlayer in ((LayerGroup) layer).Layers)

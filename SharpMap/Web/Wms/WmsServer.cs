@@ -486,6 +486,79 @@ namespace SharpMap.Web.Wms
                 map.PixelAspectRatio = (width / (double)height) / (bbox.Width / bbox.Height);
                 map.Center = bbox.GetCentroid();
                 map.Zoom = bbox.Width;
+				//set Styles for layers
+                //first, if the request ==  STYLES=, set all the vectorlayers with Themes not null the Theme to the first theme from Themes
+                if (String.IsNullOrEmpty(context.Request.Params["STYLES"]))
+                {
+                    foreach (ILayer layer in map.Layers)
+                    {
+                        if (layer.GetType() == typeof(VectorLayer))
+                        {
+                            if ((layer as VectorLayer).Themes != null)
+                            {
+                                if ((layer as VectorLayer).Themes.Count > 0)
+                                {
+                                    foreach (KeyValuePair<string, SharpMap.Rendering.Thematics.ITheme> kvp in (layer as VectorLayer).Themes)
+                                    {
+                                        (layer as VectorLayer).Theme = kvp.Value;
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    if (!String.IsNullOrEmpty(context.Request.Params["LAYERS"]))
+                    {
+                        string[] layerz = context.Request.Params["LAYERS"].Split(new[] { ',' });
+                        string[] styles = context.Request.Params["STYLES"].Split(new[] { ',' });
+                        //test whether the lengt of the layers and the styles is the same. WMS spec is unclear on what to do if there is no one-to-one correspondence
+                        if (layerz.Length == styles.Length)
+                        {
+                            foreach (ILayer layer in map.Layers)
+                            {
+                                if (layer.GetType() == typeof(VectorLayer))
+                                {
+                                    if ((layer as VectorLayer).Themes != null)
+                                    {
+                                        if ((layer as VectorLayer).Themes.Count > 0)
+                                        {
+                                            for (int i = 0; i < layerz.Length; i++)
+                                            {
+                                                if (String.Equals(layer.LayerName, layerz[i], StringComparison.InvariantCultureIgnoreCase))
+                                                {
+                                                    //take default style if style is empty
+                                                    if (styles[i] =="")
+                                                    {
+                                                        foreach (KeyValuePair<string, SharpMap.Rendering.Thematics.ITheme> kvp in (layer as VectorLayer).Themes)
+                                                        {
+                                                            (layer as VectorLayer).Theme = kvp.Value;
+                                                            break;
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        if ((layer as VectorLayer).Themes.ContainsKey(styles[i]))
+                                                        {
+                                                            (layer as VectorLayer).Theme = (layer as VectorLayer).Themes[styles[i]];
+                                                        }
+                                                        else
+                                                        {
+                                                            WmsException.ThrowWmsException(WmsException.WmsExceptionCode.StyleNotDefined, "Style not advertised for this layer");
+                                                        }
+                                                    }
+                                                }                                                
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                }
 
                 //Set layers on/off
                 if (!String.IsNullOrEmpty(context.Request.Params["LAYERS"]))

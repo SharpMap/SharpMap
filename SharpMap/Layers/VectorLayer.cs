@@ -31,6 +31,7 @@ using SharpMap.Rendering;
 using SharpMap.Rendering.Thematics;
 using SharpMap.Styles;
 using Point=SharpMap.Geometries.Point;
+using System.Collections.Generic;
 
 namespace SharpMap.Layers
 {
@@ -86,6 +87,16 @@ namespace SharpMap.Layers
         {
             _dataSource = dataSource;
         }
+		/// <summary>
+        /// Gets or sets a Dictionary with themes suitable for this layer. A theme in the dictionary can be used for rendering be setting the Theme Property using a delegate function
+        /// </summary>
+        public Dictionary<string, ITheme> Themes
+        {
+            get;
+            set;
+        }
+
+
 
         /// <summary>
         /// Gets or sets thematic settings for the layer. Set to null to ignore thematics
