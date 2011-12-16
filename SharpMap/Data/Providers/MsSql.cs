@@ -45,6 +45,7 @@ namespace SharpMap.Data.Providers
     /// </example>
     /// </remarks>
     [Serializable]
+    [Obsolete("Use MsSqlSpatial provider instead")]
     public class MsSql : IProvider, IDisposable
     {
         private string _ConnectionString;
