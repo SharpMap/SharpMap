@@ -26,6 +26,7 @@ using System.Diagnostics;
 using Npgsql;
 using SharpMap.Converters.WellKnownBinary;
 using SharpMap.Geometries;
+using System.Globalization;
 #if DEBUG
 
 #endif
@@ -34,6 +35,8 @@ namespace SharpMap.Data.Providers
 {
     /// <summary>
     /// PostGreSQL / PostGIS dataprovider
+    /// Uses NPGSQL for communicating with database.
+    /// Detect PostGIS version and uses ST_Intersects method for PG_Verions >= 1.3 and && (bbox comparison) for others)
     /// </summary>
     /// <example>
     /// Adding a datasource to a layer:
@@ -54,6 +57,8 @@ namespace SharpMap.Data.Providers
         private string _Schema = "public";
         private int _srid = -2;
         private string _Table;
+        private double _PostGisVersion = 0;
+        private bool _SupportSTIntersects = false;
 
         /// <summary>
         /// Initializes a new connection to PostGIS
@@ -68,6 +73,8 @@ namespace SharpMap.Data.Providers
             Table = tablename;
             GeometryColumn = geometryColumnName;
             ObjectIdColumn = OID_ColumnName;
+            _PostGisVersion = GetPostGISVersion();
+            _SupportSTIntersects = _PostGisVersion >= 1.3;
         }
 
         /// <summary>
@@ -202,7 +209,14 @@ namespace SharpMap.Data.Providers
                 if (!String.IsNullOrEmpty(_defintionQuery))
                     strSQL += DefinitionQuery + " AND ";
 
-                strSQL += "\"" + GeometryColumn + "\" && " + strBbox;
+                if (_SupportSTIntersects)
+                {
+                    strSQL += "ST_Intersects(\"" + GeometryColumn + "\"," + strBbox + ")";
+                }
+                else
+                {
+                    strSQL += "\"" + GeometryColumn + "\" && " + strBbox;
+                }
 
 #if DEBUG
                 Debug.WriteLine(string.Format("{0}\n{1}", "GetGeometriesInView: executing sql:", strSQL));
@@ -527,7 +541,14 @@ namespace SharpMap.Data.Providers
                 if (!String.IsNullOrEmpty(_defintionQuery))
                     strSQL += DefinitionQuery + " AND ";
 
-                strSQL += "\"" + GeometryColumn + "\" && " + strBbox;
+                if (_SupportSTIntersects)
+                {
+                    strSQL += "ST_Intersects(\"" + GeometryColumn + "\"," + strBbox + ")";
+                }
+                else
+                {
+                    strSQL += "\"" + GeometryColumn + "\" && " + strBbox;
+                }
 #if DEBUG
                 Debug.WriteLine(string.Format("{0}\n{1}\n", "ExecuteIntersectionQuery: executing sql:", strSQL));
 #endif
@@ -704,6 +725,28 @@ namespace SharpMap.Data.Providers
                 if (columnname == DBNull.Value)
                     throw new ApplicationException("Table '" + Table + "' does not contain a geometry column");
                 return (string) columnname;
+            }
+        }
+
+        /// <summary>
+        /// Reads the postgis version installed on the server
+        /// </summary>
+        /// <returns></returns>
+        private double GetPostGISVersion()
+        {
+            string strSQL = "select postgis_version()";
+            using (NpgsqlConnection conn = new NpgsqlConnection(_ConnectionString))
+            using (NpgsqlCommand command = new NpgsqlCommand(strSQL, conn))
+            {
+                conn.Open();
+                object version = command.ExecuteScalar();
+                conn.Close();
+                if (version == DBNull.Value)
+                    return 0;
+                string vPart = version.ToString();
+                if (vPart.Contains(" "))
+                    vPart = vPart.Split(' ')[0];
+                return Convert.ToDouble(vPart, CultureInfo.InvariantCulture);
             }
         }
 

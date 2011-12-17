@@ -29,6 +29,7 @@ namespace SharpMap.Data.Providers
 {
     /// <summary>
     /// PostGreSQL / PostGIS dataprovider
+    /// Uses PG-Connection for Connection against PostGIS
     /// </summary>
     /// <example>
     /// Adding a datasource to a layer:
