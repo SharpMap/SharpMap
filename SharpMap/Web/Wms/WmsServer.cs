@@ -608,7 +608,7 @@ namespace SharpMap.Web.Wms
                 context.Response.Clear();
                 context.Response.ContentType = imageEncoder.MimeType;
                 context.Response.OutputStream.Write(buffer, 0, buffer.Length);
-                context.Response.End();
+                //context.Response.End();
             }
             else
                 WmsException.ThrowWmsException(WmsException.WmsExceptionCode.OperationNotSupported, "Invalid request");

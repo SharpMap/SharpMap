@@ -302,6 +302,7 @@ namespace SharpMap.Layers
                         if (outlineStyle == null) continue;
                         if (!(outlineStyle.Enabled && outlineStyle.EnableOutline)) continue;
                         if (!(outlineStyle.MinVisible <= map.Zoom && map.Zoom <= outlineStyle.MaxVisible)) continue;
+                        outlineStyle = outlineStyle.Clone();
 
                         //Draw background of all line-outlines first
                         if (feature.Geometry is LineString)
@@ -324,7 +325,7 @@ namespace SharpMap.Layers
                     if (style == null) continue;
                     if (!style.Enabled) continue;
                     if (!(style.MinVisible <= map.Zoom && map.Zoom <= style.MaxVisible)) continue;
-                    RenderGeometry(g, map, feature.Geometry, style);
+                    RenderGeometry(g, map, feature.Geometry, style.Clone());
                 }
             }
         }
@@ -333,6 +334,8 @@ namespace SharpMap.Layers
         {
             //if style is not enabled, we don't need to render anything
             if (!Style.Enabled) return;
+
+            VectorStyle vStyle = Style.Clone();
             Collection<Geometry> geoms;
             // Is datasource already open?
             lock (_dataSource)
@@ -356,13 +359,13 @@ namespace SharpMap.Layers
 #else
                     geoms[i] = GeometryTransform.TransformGeometry(geoms[i], CoordinateTransformation.Source, CoordinateTransformation.Target);
 #endif
-            if (Style.LineSymbolizer != null) {
-                Style.LineSymbolizer.Begin(g, map, geoms.Count);
+            if (vStyle.LineSymbolizer != null) {
+                vStyle.LineSymbolizer.Begin(g, map, geoms.Count);
             } 
             else {
                 //Linestring outlines is drawn by drawing the layer once with a thicker line
                 //before drawing the "inline" on top.
-                if (Style.EnableOutline)
+                if (vStyle.EnableOutline)
                 {
                     foreach (Geometry geom in geoms)
                     {
@@ -370,9 +373,9 @@ namespace SharpMap.Layers
                         {
                             //Draw background of all line-outlines first
                             if (geom  is LineString)
-                                VectorRenderer.DrawLineString(g, geom as LineString, Style.Outline, map, Style.LineOffset);
+                                VectorRenderer.DrawLineString(g, geom as LineString, vStyle.Outline, map, vStyle.LineOffset);
                             else if (geom is MultiLineString)
-                                VectorRenderer.DrawMultiLineString(g, geom as MultiLineString, Style.Outline, map, Style.LineOffset);
+                                VectorRenderer.DrawMultiLineString(g, geom as MultiLineString, vStyle.Outline, map, vStyle.LineOffset);
                         }
                     }
                 }
@@ -381,13 +384,13 @@ namespace SharpMap.Layers
             for (int i = 0; i < geoms.Count; i++)
             {
                 if (geoms[i] != null)
-                    RenderGeometry(g, map, geoms[i], Style);
+                    RenderGeometry(g, map, geoms[i], vStyle);
             }
 
-            if (Style.LineSymbolizer != null)
+            if (vStyle.LineSymbolizer != null)
             {
-                Style.LineSymbolizer.Symbolize(g, map);
-                Style.LineSymbolizer.End(g, map);
+                vStyle.LineSymbolizer.Symbolize(g, map);
+                vStyle.LineSymbolizer.End(g, map);
             }
         }
 

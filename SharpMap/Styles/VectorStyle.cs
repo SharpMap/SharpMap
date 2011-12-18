@@ -41,6 +41,33 @@ namespace SharpMap.Styles
             if (rs != null)
                 DefaultSymbol = Image.FromStream(rs);
         }
+
+        public VectorStyle Clone()
+        {
+            VectorStyle vs = null;
+            lock (_fillStyle)
+            {
+                vs = new VectorStyle()
+                {
+                    _fillStyle = _fillStyle.Clone() as Brush,
+                    _lineOffset = _lineOffset,
+                    _lineStyle = _lineStyle.Clone() as Pen,
+                    _outline = _outline,
+                    _outlineStyle = _outlineStyle.Clone() as Pen,
+                    _PointBrush = _PointBrush.Clone() as Brush,
+                    _PointSize = _PointSize,
+                    _symbol = (_symbol != null ? _symbol.Clone() as Image : null),
+                    _symbolOffset = new PointF(_symbolOffset.X, _symbolOffset.Y),
+                    _symbolRotation = _symbolRotation,
+                    _symbolScale = _symbolScale,
+                    PointSymbolizer = PointSymbolizer,
+                    LineSymbolizer = LineSymbolizer,
+                    PolygonSymbolizer = PolygonSymbolizer
+
+                };
+            }
+            return vs;
+        }
         
         #region Privates
 
