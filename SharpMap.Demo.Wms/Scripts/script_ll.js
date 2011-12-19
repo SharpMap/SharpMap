@@ -8,11 +8,11 @@
         var bounds, url, options, layer, type;
         bounds = e.target.getBounds();
         url = [
-           '/wms.ashx?MAP_TYPE=PM&HEIGHT=256&WIDTH=256&STYLES=&',
-            'CRS=EPSG%3A4326&FORMAT=text%2Fjson&SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&',
-            'EXCEPTIONS=application%2Fvnd.ogc.se_inimage&transparent=true&',
-            'LAYERS=poly_landmarks,tiger_roads,poi',
-            '&BBOX=', bounds._southWest.lng, ',', bounds._southWest.lat, ',', bounds._northEast.lng, ',', bounds._northEast.lat
+           '/json.ashx?MAP_TYPE=PM&BBOX=',
+            bounds._southWest.lng, ',',
+            bounds._southWest.lat, ',',
+            bounds._northEast.lng, ',', 
+            bounds._northEast.lat
         ].join('');
 
         options = {

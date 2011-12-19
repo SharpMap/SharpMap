@@ -6,9 +6,9 @@
     using Data;
     using Geometries;
 
-    internal static class GeoJSONHelper
+    public static class GeoJSONHelper
     {
-        internal static IEnumerable<GeoJSON> GetData(FeatureDataSet data)
+        public static IEnumerable<GeoJSON> GetData(FeatureDataSet data)
         {
             if (data == null)
                 throw new ArgumentNullException("data");

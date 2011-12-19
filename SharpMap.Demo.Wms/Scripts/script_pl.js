@@ -37,15 +37,9 @@
     };
 
     layer = po.geoJson().url(function(data) {
-        var size, bounds, url;
-        size = map.tileSize();
+        var bounds, url;
         bounds = mercator.TileLatLonBounds(data.column, data.row, data.zoom)
-        url = ['/wms.ashx?MAP_TYPE=PM&STYLES=&',
-            'CRS=EPSG%3A4326&FORMAT=text%2Fjson&SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&',
-            'EXCEPTIONS=application%2Fvnd.ogc.se_inimage&transparent=true&',
-            '&WIDTH=', size.x, '&HEIGHT=', size.y,
-            '&LAYERS=poly_landmarks,tiger_roads,poi',
-            '&BBOX=', bounds[1], ',', -bounds[2], ',', bounds[3], ',', -bounds[0]
+        url = ['/json.ashx?MAP_TYPE=PM&BBOX=', bounds[1], ',', -bounds[2], ',', bounds[3], ',', -bounds[0]
         ].join('');
         log(url);
         return url;

@@ -44,6 +44,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\ExternalReferences\References4SharpMap.Extensions\GeoAPI.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=3.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\ExternalReferences\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="ProjNET, Version=1.2.3882.19088, Culture=neutral, PublicKeyToken=a1f5bdcd9c6f5740, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\ExternalReferences\ProjNET.dll</HintPath>
@@ -75,6 +78,8 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Handlers\AbstractStdMapHandler.cs" />
+    <Compile Include="Handlers\StdJsonMapHandler.cs" />
     <Compile Include="Handlers\StdWmsMapHandler.cs" />
     <Compile Include="Helpers\ExtensionMethods.cs" />
     <Compile Include="Helpers\MapHelper.cs" />
@@ -541,6 +546,7 @@
     <None Include="art\slider.svg" />
     <None Include="art\zoom-world.svg" />
     <None Include="art\zoombar.svg" />
+    <Content Include="Json.ashx" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SharpMap\SharpMap.VS2010.csproj">
