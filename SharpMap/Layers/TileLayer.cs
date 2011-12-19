@@ -102,6 +102,30 @@ namespace SharpMap.Layers
             }
         }
 
+        /// <summary>
+        /// Creates an instance of this class
+        /// </summary>
+        /// <param name="tileSource">the source to get the tiles from</param>
+        /// <param name="layerName">name of the layer</param>
+        /// <param name="transparentColor">transparent color off</param>
+        /// <param name="showErrorInTile">generate an error tile if it could not be retrieved from source</param>
+        /// <param name="fileCache">If the layer should use a file-cache so store tiles, set this to a fileCacheProvider. Set to null to avoid filecache</param>
+        /// <param name="imgFormat">Set the format of the tiles to be used</param>
+        public TileLayer(ITileSource tileSource, string layerName, Color transparentColor, bool showErrorInTile, BruTile.Cache.FileCache fileCache, ImageFormat imgFormat)
+        {
+            _source = tileSource;
+            LayerName = layerName;
+            if (!transparentColor.IsEmpty)
+                _imageAttributes.SetColorKey(transparentColor, transparentColor);
+            _showErrorInTile = showErrorInTile;
+
+#if !PocketPC
+            _imageAttributes.SetWrapMode(WrapMode.TileFlipXY);
+#endif
+            _fileCache = fileCache;
+            _ImageFormat = imgFormat;
+        }
+
         #endregion
 
         System.Collections.Hashtable _cacheTiles = new System.Collections.Hashtable();
