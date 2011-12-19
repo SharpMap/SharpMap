@@ -1,4 +1,4 @@
-/* Copyright (c) 2006-2010 by OpenLayers Contributors (see authors.txt for 
+/* Copyright (c) 2006-2011 by OpenLayers Contributors (see authors.txt for 
  * full list of contributors). Published under the Clear BSD license.  
  * See http://svn.openlayers.org/trunk/openlayers/license.txt for the
  * full text of the license. */
@@ -207,7 +207,8 @@ OpenLayers.Control.GetFeature = OpenLayers.Class(OpenLayers.Control, {
      *
      * Parameters:
      * options - {Object} A configuration object which at least has to contain
-     *     a <protocol> property
+     *     a <protocol> property (if not, it has to be set before a request is
+     *     made)
      */
     initialize: function(options) {
         // concatenate events specific to vector with those from the base
@@ -477,7 +478,7 @@ OpenLayers.Control.GetFeature = OpenLayers.Class(OpenLayers.Control, {
         if(!this.modifiers.multiple && !this.modifiers.toggle) {
             this.unselectAll();
         }
-        if(!(features instanceof Array)) {
+        if(!(OpenLayers.Util.isArray(features))) {
             features = [features];
         }
         

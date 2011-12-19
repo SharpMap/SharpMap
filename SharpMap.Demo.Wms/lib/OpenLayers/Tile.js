@@ -1,12 +1,14 @@
-/* Copyright (c) 2006-2010 by OpenLayers Contributors (see authors.txt for 
+/* Copyright (c) 2006-2011 by OpenLayers Contributors (see authors.txt for 
  * full list of contributors). Published under the Clear BSD license.  
  * See http://svn.openlayers.org/trunk/openlayers/license.txt for the
  * full text of the license. */
 
 
-/*
+/**
+ * @requires OpenLayers/BaseTypes/Class.js
  * @requires OpenLayers/Util.js
  * @requires OpenLayers/Console.js
+ * @requires OpenLayers/Lang.js
  */
 
 /*
@@ -94,18 +96,23 @@ OpenLayers.Tile = OpenLayers.Class({
      * bounds - {<OpenLayers.Bounds>}
      * url - {<String>}
      * size - {<OpenLayers.Size>}
+     * options - {Object}
      */   
-    initialize: function(layer, position, bounds, url, size) {
+    initialize: function(layer, position, bounds, url, size, options) {
         this.layer = layer;
         this.position = position.clone();
         this.bounds = bounds.clone();
         this.url = url;
-        this.size = size.clone();
+        if (size) {
+            this.size = size.clone();
+        }
 
         //give the tile a unique id based on its BBOX.
         this.id = OpenLayers.Util.createUniqueID("Tile_");
         
         this.events = new OpenLayers.Events(this, null, this.EVENT_TYPES);
+
+        OpenLayers.Util.extend(this, options);
     },
 
     /**

@@ -1,10 +1,11 @@
-/* Copyright (c) 2006-2010 by OpenLayers Contributors (see authors.txt for 
+/* Copyright (c) 2006-2011 by OpenLayers Contributors (see authors.txt for 
  * full list of contributors). Published under the Clear BSD license.  
  * See http://svn.openlayers.org/trunk/openlayers/license.txt for the
  * full text of the license. */
 /**
  * @requires OpenLayers/Format/Filter.js
  * @requires OpenLayers/Format/XML.js
+ * @requires OpenLayers/Filter/Function.js
  */
 
 /**
@@ -186,6 +187,10 @@ OpenLayers.Format.Filter.v1 = OpenLayers.Class(OpenLayers.Format.XML, {
             "Distance": function(node, obj) {
                 obj.distance = parseInt(this.getChildValue(node));
                 obj.distanceUnits = node.getAttribute("units");
+            },
+            "Function": function(node, obj) {
+                //TODO write decoder for it
+                return;
             }
         }
     },
@@ -234,6 +239,28 @@ OpenLayers.Format.Filter.v1 = OpenLayers.Class(OpenLayers.Format.XML, {
     },
 
     /**
+     * Method: writeOgcExpression
+     * Limited support for writing OGC expressions. Currently it supports
+     * (<OpenLayers.Filter.Function> || String || Number)
+     *
+     * Parameters:
+     * value - (<OpenLayers.Filter.Function> || String || Number)
+     * node - {DOMElement} A parent DOM element 
+     *
+     * Returns:
+     * {DOMElement} Updated node element.
+     */
+    writeOgcExpression: function(value, node) {
+        if(value instanceof OpenLayers.Filter.Function){
+            var child = this.writeNode("Function", value, node);
+            node.appendChild(child);
+        } else {
+            this.writeNode("Literal", value, node);
+        }
+        return node;
+    },    
+    
+    /**
      * Method: write
      *
      * Parameters:
@@ -247,6 +274,19 @@ OpenLayers.Format.Filter.v1 = OpenLayers.Class(OpenLayers.Format.XML, {
     },
     
     /**
+     * Method: writeFeatureIdNodes
+     * 
+     * Parameters:
+     * filter - {<OpenLayers.Filter.FeatureId}
+     * node - {DOMElement}
+     */
+    writeFeatureIdNodes: function(filter, node) {
+        for (var i=0, ii=filter.fids.length; i<ii; ++i) {
+            this.writeNode("FeatureId", filter.fids[i], node);
+        }
+    },
+    
+    /**
      * Property: writers
      * As a compliment to the readers property, this structure contains public
      *     writing functions grouped by namespace alias and named like the
@@ -256,11 +296,8 @@ OpenLayers.Format.Filter.v1 = OpenLayers.Class(OpenLayers.Format.XML, {
         "ogc": {
             "Filter": function(filter) {
                 var node = this.createElementNSPlus("ogc:Filter");
-                var sub = filter.CLASS_NAME.split(".").pop();
-                if(sub == "FeatureId") {
-                    for(var i=0; i<filter.fids.length; ++i) {
-                        this.writeNode("FeatureId", filter.fids[i], node);
-                    }
+                if (filter.type === "FID") {
+                    this.writeFeatureIdNodes(filter, node);
                 } else {
                     this.writeNode(this.getFilterType(filter), filter, node);
                 }
@@ -274,64 +311,80 @@ OpenLayers.Format.Filter.v1 = OpenLayers.Class(OpenLayers.Format.XML, {
             "And": function(filter) {
                 var node = this.createElementNSPlus("ogc:And");
                 var childFilter;
-                for(var i=0; i<filter.filters.length; ++i) {
+                for (var i=0, ii=filter.filters.length; i<ii; ++i) {
                     childFilter = filter.filters[i];
+                    if (childFilter.type === "FID") {
+                        this.writeFeatureIdNodes(childFilter, node);
+                    } else {
                     this.writeNode(
                         this.getFilterType(childFilter), childFilter, node
                     );
+                }
                 }
                 return node;
             },
             "Or": function(filter) {
                 var node = this.createElementNSPlus("ogc:Or");
                 var childFilter;
-                for(var i=0; i<filter.filters.length; ++i) {
+                for (var i=0, ii=filter.filters.length; i<ii; ++i) {
                     childFilter = filter.filters[i];
+                    if (childFilter.type === "FID") {
+                        this.writeFeatureIdNodes(childFilter, node);
+                    } else {
                     this.writeNode(
                         this.getFilterType(childFilter), childFilter, node
                     );
+                }
                 }
                 return node;
             },
             "Not": function(filter) {
                 var node = this.createElementNSPlus("ogc:Not");
                 var childFilter = filter.filters[0];
+                if (childFilter.type === "FID") {
+                    this.writeFeatureIdNodes(childFilter, node);
+                } else {
                 this.writeNode(
                     this.getFilterType(childFilter), childFilter, node
                 );
+                }
                 return node;
             },
             "PropertyIsLessThan": function(filter) {
                 var node = this.createElementNSPlus("ogc:PropertyIsLessThan");
-                // no ogc:expression handling for now
+                // no ogc:expression handling for PropertyName for now
                 this.writeNode("PropertyName", filter, node);
-                this.writeNode("Literal", filter.value, node);                
+                // handle Literals or Functions for now
+                this.writeOgcExpression(filter.value, node);
                 return node;
             },
             "PropertyIsGreaterThan": function(filter) {
                 var node = this.createElementNSPlus("ogc:PropertyIsGreaterThan");
-                // no ogc:expression handling for now
+                // no ogc:expression handling for PropertyName for now
                 this.writeNode("PropertyName", filter, node);
-                this.writeNode("Literal", filter.value, node);
+                // handle Literals or Functions for now
+                this.writeOgcExpression(filter.value, node);
                 return node;
             },
             "PropertyIsLessThanOrEqualTo": function(filter) {
                 var node = this.createElementNSPlus("ogc:PropertyIsLessThanOrEqualTo");
-                // no ogc:expression handling for now
+                // no ogc:expression handling for PropertyName for now
                 this.writeNode("PropertyName", filter, node);
-                this.writeNode("Literal", filter.value, node);
+                // handle Literals or Functions for now
+                this.writeOgcExpression(filter.value, node);
                 return node;
             },
             "PropertyIsGreaterThanOrEqualTo": function(filter) {
                 var node = this.createElementNSPlus("ogc:PropertyIsGreaterThanOrEqualTo");
-                // no ogc:expression handling for now
+                // no ogc:expression handling for PropertyName for now
                 this.writeNode("PropertyName", filter, node);
-                this.writeNode("Literal", filter.value, node);
+                // handle Literals or Functions for now
+                this.writeOgcExpression(filter.value, node);
                 return node;
             },
             "PropertyIsBetween": function(filter) {
                 var node = this.createElementNSPlus("ogc:PropertyIsBetween");
-                // no ogc:expression handling for now
+                // no ogc:expression handling for PropertyName for now
                 this.writeNode("PropertyName", filter, node);
                 this.writeNode("LowerBoundary", filter, node);
                 this.writeNode("UpperBoundary", filter, node);
@@ -350,13 +403,13 @@ OpenLayers.Format.Filter.v1 = OpenLayers.Class(OpenLayers.Format.XML, {
                 });
             },
             "LowerBoundary": function(filter) {
-                // no ogc:expression handling for now
+                // handle Literals or Functions for now
                 var node = this.createElementNSPlus("ogc:LowerBoundary");
-                this.writeNode("Literal", filter.lowerBoundary, node);
+                this.writeOgcExpression(filter.lowerBoundary, node);
                 return node;
             },
             "UpperBoundary": function(filter) {
-                // no ogc:expression handling for now
+                // handle Literals or Functions for now
                 var node = this.createElementNSPlus("ogc:UpperBoundary");
                 this.writeNode("Literal", filter.upperBoundary, node);
                 return node;
@@ -382,6 +435,18 @@ OpenLayers.Format.Filter.v1 = OpenLayers.Class(OpenLayers.Format.XML, {
                     },
                     value: filter.distance
                 });
+            },
+            "Function": function(filter) {
+                var node = this.createElementNSPlus("ogc:Function", {
+                    attributes: {
+                        name: filter.name
+                    }
+                });
+                var params = filter.params;
+                for(var i=0, len=params.length; i<len; i++){
+                    this.writeOgcExpression(params[i], node);
+                }
+                return node;
             }
         }
     },
@@ -418,7 +483,8 @@ OpenLayers.Format.Filter.v1 = OpenLayers.Class(OpenLayers.Format.XML, {
         "DWITHIN": "DWITHIN",
         "WITHIN": "WITHIN",
         "CONTAINS": "CONTAINS",
-        "INTERSECTS": "INTERSECTS"
+        "INTERSECTS": "INTERSECTS",
+        "FID": "FeatureId"
     },
 
     CLASS_NAME: "OpenLayers.Format.Filter.v1" 

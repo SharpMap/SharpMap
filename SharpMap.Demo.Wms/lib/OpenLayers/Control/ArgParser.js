@@ -1,4 +1,4 @@
-/* Copyright (c) 2006-2010 by OpenLayers Contributors (see authors.txt for 
+/* Copyright (c) 2006-2011 by OpenLayers Contributors (see authors.txt for 
  * full list of contributors). Published under the Clear BSD license.  
  * See http://svn.openlayers.org/trunk/openlayers/license.txt for the
  * full text of the license. */
@@ -60,10 +60,26 @@ OpenLayers.Control.ArgParser = OpenLayers.Class(OpenLayers.Control, {
      * Parameters:
      * options - {Object}
      */
-    initialize: function(options) {
-        OpenLayers.Control.prototype.initialize.apply(this, arguments);
-    },
 
+    /**
+     * Method: getParameters
+     */    
+    getParameters: function(url) {
+        url = url || window.location.href;
+        var parameters = OpenLayers.Util.getParameters(url);
+
+        // If we have an chchor in the url use it to split the url
+        var index = url.indexOf('#');
+        if (index > 0) {
+            // create an url to parce on the getParameters
+            url = '?' + url.substring(index + 1, url.length);
+
+            OpenLayers.Util.extend(parameters,
+                    OpenLayers.Util.getParameters(url));
+        }
+        return parameters;
+    },
+    
     /**
      * Method: setMap
      * Set the map property for the control. 
@@ -92,7 +108,7 @@ OpenLayers.Control.ArgParser = OpenLayers.Class(OpenLayers.Control, {
         }
         if (i == this.map.controls.length) {
 
-            var args = OpenLayers.Util.getParameters();
+            var args = this.getParameters();
             // Be careful to set layer first, to not trigger unnecessary layer loads
             if (args.layers) {
                 this.layers = args.layers;

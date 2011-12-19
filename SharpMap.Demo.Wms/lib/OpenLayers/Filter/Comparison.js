@@ -1,4 +1,4 @@
-/* Copyright (c) 2006-2010 by OpenLayers Contributors (see authors.txt for 
+/* Copyright (c) 2006-2011 by OpenLayers Contributors (see authors.txt for 
  * full list of contributors). Published under the Clear BSD license.  
  * See http://svn.openlayers.org/trunk/openlayers/license.txt for the
  * full text of the license. */
@@ -55,7 +55,7 @@ OpenLayers.Filter.Comparison = OpenLayers.Class(OpenLayers.Filter, {
      *     elements.  This property will be serialized with those elements only
      *     if using the v1.1.0 filter format. However, when evaluating filters
      *     here, the matchCase property will always be respected (for EQUAL_TO
-     *     and NOT_EQUAL_TO).  Default is true.
+     *     and NOT_EQUAL_TO).  Default is true. 
      */
     matchCase: true,
     
@@ -90,6 +90,12 @@ OpenLayers.Filter.Comparison = OpenLayers.Class(OpenLayers.Filter, {
      */
     initialize: function(options) {
         OpenLayers.Filter.prototype.initialize.apply(this, [options]);
+        // since matchCase on PropertyIsLike is not schema compliant, we only
+        // want to use this if explicitly asked for
+        if (this.type === OpenLayers.Filter.Comparison.LIKE 
+            && options.matchCase === undefined) {
+                this.matchCase = null;
+        }
     },
 
     /**
@@ -109,9 +115,10 @@ OpenLayers.Filter.Comparison = OpenLayers.Class(OpenLayers.Filter, {
         }
         var result = false;
         var got = context[this.property];
+        var exp;
         switch(this.type) {
             case OpenLayers.Filter.Comparison.EQUAL_TO:
-                var exp = this.value;
+                exp = this.value;
                 if(!this.matchCase &&
                    typeof got == "string" && typeof exp == "string") {
                     result = (got.toUpperCase() == exp.toUpperCase());
@@ -120,7 +127,7 @@ OpenLayers.Filter.Comparison = OpenLayers.Class(OpenLayers.Filter, {
                 }
                 break;
             case OpenLayers.Filter.Comparison.NOT_EQUAL_TO:
-                var exp = this.value;
+                exp = this.value;
                 if(!this.matchCase &&
                    typeof got == "string" && typeof exp == "string") {
                     result = (got.toUpperCase() != exp.toUpperCase());

@@ -1,4 +1,4 @@
-/* Copyright (c) 2006-2010 by OpenLayers Contributors (see authors.txt for 
+/* Copyright (c) 2006-2011 by OpenLayers Contributors (see authors.txt for 
  * full list of contributors). Published under the Clear BSD license.  
  * See http://svn.openlayers.org/trunk/openlayers/license.txt for the
  * full text of the license. */
@@ -40,9 +40,6 @@ OpenLayers.Format.GeoJSON = OpenLayers.Class(OpenLayers.Format.JSON, {
      * options - {Object} An optional object whose properties will be set on
      *     this instance.
      */
-    initialize: function(options) {
-        OpenLayers.Format.JSON.prototype.initialize.apply(this, [options]);
-    },
 
     /**
      * APIMethod: read
@@ -222,7 +219,7 @@ OpenLayers.Format.GeoJSON = OpenLayers.Class(OpenLayers.Format.JSON, {
         }
         var geometry, collection = false;
         if(obj.type == "GeometryCollection") {
-            if(!(obj.geometries instanceof Array)) {
+            if(!(OpenLayers.Util.isArray(obj.geometries))) {
                 throw "GeometryCollection must have geometries array: " + obj;
             }
             var numGeom = obj.geometries.length;
@@ -235,7 +232,7 @@ OpenLayers.Format.GeoJSON = OpenLayers.Class(OpenLayers.Format.JSON, {
             geometry = new OpenLayers.Geometry.Collection(components);
             collection = true;
         } else {
-            if(!(obj.coordinates instanceof Array)) {
+            if(!(OpenLayers.Util.isArray(obj.coordinates))) {
                 throw "Geometry must have coordinates array: " + obj;
             }
             if(!this.parseCoords[obj.type.toLowerCase()]) {
@@ -453,7 +450,7 @@ OpenLayers.Format.GeoJSON = OpenLayers.Class(OpenLayers.Format.JSON, {
         var geojson = {
             "type": null
         };
-        if(obj instanceof Array) {
+        if(OpenLayers.Util.isArray(obj)) {
             geojson.type = "FeatureCollection";
             var numFeatures = obj.length;
             geojson.features = new Array(numFeatures);
@@ -498,16 +495,16 @@ OpenLayers.Format.GeoJSON = OpenLayers.Class(OpenLayers.Format.JSON, {
            var code = parseInt(proj.substring(proj.indexOf(":") + 1));
            if (code == 4326) {
                crs = {
-                   "type": "OGC",
+                   "type": "name",
                    "properties": {
-                       "urn": "urn:ogc:def:crs:OGC:1.3:CRS84"
+                       "name": "urn:ogc:def:crs:OGC:1.3:CRS84"
                    }
                };
            } else {    
                crs = {
-                   "type": "EPSG",
+                   "type": "name",
                    "properties": {
-                       "code": code 
+                       "name": "EPSG:" + code
                    }
                };
            }    
@@ -533,12 +530,15 @@ OpenLayers.Format.GeoJSON = OpenLayers.Class(OpenLayers.Format.JSON, {
          */
         'feature': function(feature) {
             var geom = this.extract.geometry.apply(this, [feature.geometry]);
-            return {
+            var json = {
                 "type": "Feature",
-                "id": feature.fid == null ? feature.id : feature.fid,
                 "properties": feature.attributes,
                 "geometry": geom
             };
+            if (feature.fid != null) {
+                json.id = feature.fid;
+            }
+            return json;
         },
         
         /**

@@ -1,4 +1,4 @@
-/* Copyright (c) 2006-2010 by OpenLayers Contributors (see authors.txt for 
+/* Copyright (c) 2006-2011 by OpenLayers Contributors (see authors.txt for 
  * full list of contributors). Published under the Clear BSD license.  
  * See http://svn.openlayers.org/trunk/openlayers/license.txt for the
  * full text of the license. */
@@ -95,7 +95,7 @@ OpenLayers.Layer.SphericalMercator = {
     initMercatorParameters: function() {
         // set up properties for Mercator - assume EPSG:900913
         this.RESOLUTIONS = [];
-        var maxResolution = 156543.0339;
+        var maxResolution = 156543.03390625;
         for(var zoom=0; zoom<=this.MAX_ZOOM_LEVEL; ++zoom) {
             this.RESOLUTIONS[zoom] = maxResolution / Math.pow(2, zoom);
         }
@@ -186,11 +186,32 @@ OpenLayers.Layer.SphericalMercator = {
 };
 
 /**
- * Note: Two transforms declared
- * Transforms from EPSG:4326 to EPSG:900913 and from EPSG:900913 to EPSG:4326
- *     are set by this class.
+ * Note: Transforms for web mercator <-> EPSG:4326
+ * OpenLayers recognizes EPSG:3857, EPSG:900913, EPSG:102113 and EPSG:102100.
+ * OpenLayers originally started referring to EPSG:900913 as web mercator.
+ * The EPSG has declared EPSG:3857 to be web mercator.  
+ * ArcGIS 10 recognizes the EPSG:3857, EPSG:102113, and EPSG:102100 as 
+ * equivalent.  See http://blogs.esri.com/Dev/blogs/arcgisserver/archive/2009/11/20/ArcGIS-Online-moving-to-Google-_2F00_-Bing-tiling-scheme_3A00_-What-does-this-mean-for-you_3F00_.aspx#12084
  */
-OpenLayers.Projection.addTransform("EPSG:4326", "EPSG:900913",
-    OpenLayers.Layer.SphericalMercator.projectForward);
-OpenLayers.Projection.addTransform("EPSG:900913", "EPSG:4326",
-    OpenLayers.Layer.SphericalMercator.projectInverse);
+(function() {
+    
+    // list of equivalent codes for web mercator
+    var codes = ["EPSG:900913", "EPSG:3857", "EPSG:102113", "EPSG:102100"];
+    
+    var add = OpenLayers.Projection.addTransform;
+    var merc = OpenLayers.Layer.SphericalMercator;
+    var same = OpenLayers.Projection.nullTransform;
+    
+    var i, len, code, other, j;
+    for (i=0, len=codes.length; i<len; ++i) {
+        code = codes[i];
+        add("EPSG:4326", code, merc.projectForward);
+        add(code, "EPSG:4326", merc.projectInverse);
+        for (j=i+1; j<len; ++j) {
+            other = codes[j];
+            add(code, other, same);
+            add(other, code, same);
+        }
+    }
+    
+})();

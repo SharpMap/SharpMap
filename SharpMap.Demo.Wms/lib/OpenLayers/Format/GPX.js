@@ -1,4 +1,4 @@
-/* Copyright (c) 2006-2010 by OpenLayers Contributors (see authors.txt for 
+/* Copyright (c) 2006-2011 by OpenLayers Contributors (see authors.txt for 
  * full list of contributors). Published under the Clear BSD license.  
  * See http://svn.openlayers.org/trunk/openlayers/license.txt for the
  * full text of the license. */
@@ -134,7 +134,7 @@ OpenLayers.Format.GPX = OpenLayers.Class(OpenLayers.Format.XML, {
     * Method: extractSegment
     *
     * Parameters:
-    * segment - {<DOMElement>} a trkseg or rte node to parse
+    * segment - {DOMElement} a trkseg or rte node to parse
     * segmentType - {String} nodeName of waypoints that form the line
     *
     * Returns:
@@ -162,10 +162,10 @@ OpenLayers.Format.GPX = OpenLayers.Class(OpenLayers.Format.XML, {
         // node is either a wpt, trk or rte
         // attributes are children of the form <attr>value</attr>
         var attributes = {};
-        var attrNode = node.firstChild;
+        var attrNode = node.firstChild, value, name;
         while(attrNode) {
             if(attrNode.nodeType == 1) {
-                var value = attrNode.firstChild;
+                value = attrNode.firstChild;
                 if(value.nodeType == 3 || value.nodeType == 4) {
                     name = (attrNode.prefix) ?
                         attrNode.nodeName.split(":")[1] :

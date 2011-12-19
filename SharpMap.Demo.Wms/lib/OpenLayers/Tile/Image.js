@@ -1,4 +1,4 @@
-/* Copyright (c) 2006-2010 by OpenLayers Contributors (see authors.txt for 
+/* Copyright (c) 2006-2011 by OpenLayers Contributors (see authors.txt for 
  * full list of contributors). Published under the Clear BSD license.  
  * See http://svn.openlayers.org/trunk/openlayers/license.txt for the
  * full text of the license. */
@@ -52,14 +52,6 @@ OpenLayers.Tile.Image = OpenLayers.Class(OpenLayers.Tile, {
     isBackBuffer: false,
     
     /**
-     * Property: lastRatio
-     * {Float} Used in transition code only.  This is the previous ratio
-     *     of the back buffer tile resolution to the map resolution.  Compared
-     *     with the current ratio to determine if zooming occurred.
-     */
-    lastRatio: 1,
-
-    /**
      * Property: isFirstDraw
      * {Boolean} Is this the first time the tile is being drawn?
      *     This is used to force resetBackBuffer to synchronize
@@ -76,7 +68,24 @@ OpenLayers.Tile.Image = OpenLayers.Class(OpenLayers.Tile, {
      *     effects when the tile is moved or changes resolution.
      */
     backBufferTile: null,
-
+    
+    /**
+     * APIProperty: maxGetUrlLength
+     * {Number} If set, requests that would result in GET urls with more
+     * characters than the number provided will be made using form-encoded
+     * HTTP POST. It is good practice to avoid urls that are longer than 2048
+     * characters.
+     *
+     * Caution:
+     * Older versions of Gecko based browsers (e.g. Firefox < 3.5) and
+     * Opera < 10.0 do not fully support this option.
+     *
+     * Note:
+     * Do not use this option for layers that have a transitionEffect
+     * configured - IFrame tiles from POST requests can not be resized.
+     */
+    maxGetUrlLength: null,
+    
     /** TBD 3.0 - reorder the parameters to the init function to remove 
      *             URL. the getUrl() function on the layer gets called on 
      *             each draw(), so no need to specify it here.
@@ -90,9 +99,14 @@ OpenLayers.Tile.Image = OpenLayers.Class(OpenLayers.Tile, {
      * bounds - {<OpenLayers.Bounds>}
      * url - {<String>} Deprecated. Remove me in 3.0.
      * size - {<OpenLayers.Size>}
+     * options - {Object}
      */   
-    initialize: function(layer, position, bounds, url, size) {
+    initialize: function(layer, position, bounds, url, size, options) {
         OpenLayers.Tile.prototype.initialize.apply(this, arguments);
+
+        if (this.maxGetUrlLength != null) {
+            OpenLayers.Util.extend(this, OpenLayers.Tile.Image.IFrame);
+        }
 
         this.url = url; //deprecated remove me
         
@@ -100,7 +114,7 @@ OpenLayers.Tile.Image = OpenLayers.Class(OpenLayers.Tile, {
         this.frame.style.overflow = 'hidden'; 
         this.frame.style.position = 'absolute'; 
 
-        this.layerAlphaHack = this.layer.alpha && OpenLayers.Util.alphaHack();
+        this.layerAlphaHack = this.layer.alpha && OpenLayers.Util.alphaHack();        
     },
 
     /** 
@@ -109,22 +123,7 @@ OpenLayers.Tile.Image = OpenLayers.Class(OpenLayers.Tile, {
      */
     destroy: function() {
         if (this.imgDiv != null)  {
-            if (this.layerAlphaHack) {
-                // unregister the "load" handler
-                OpenLayers.Event.stopObservingElement(this.imgDiv.childNodes[0]);                
-            }
-
-            // unregister the "load" and "error" handlers. Only the "error" handler if
-            // this.layerAlphaHack is true.
-            OpenLayers.Event.stopObservingElement(this.imgDiv);
-            
-            if (this.imgDiv.parentNode == this.frame) {
-                this.frame.removeChild(this.imgDiv);
-                this.imgDiv.map = null;
-            }
-            this.imgDiv.urls = null;
-            // abort any currently loading image
-            this.imgDiv.src = OpenLayers.Util.getImagesLocation() + "blank.gif";
+            this.removeImgDiv();
         }
         this.imgDiv = null;
         if ((this.frame != null) && (this.frame.parentNode == this.layer.div)) { 
@@ -142,7 +141,7 @@ OpenLayers.Tile.Image = OpenLayers.Class(OpenLayers.Tile, {
         
         OpenLayers.Tile.prototype.destroy.apply(this, arguments);
     },
-
+    
     /**
      * Method: clone
      *
@@ -281,13 +280,8 @@ OpenLayers.Tile.Image = OpenLayers.Class(OpenLayers.Tile, {
      *     position it correctly, and set its url.
      */
     renderTile: function() {
-        if (this.imgDiv == null) {
-            this.initImgDiv();
-        }
-
-        this.imgDiv.viewRequestID = this.layer.map.viewRequestID;
-        
         if (this.layer.async) {
+            this.initImgDiv();
             // Asyncronous image requests call the asynchronous getURL method
             // on the layer to fetch an image that covers 'this.bounds', in the scope of
             // 'this', setting the 'url' property of the layer itself, and running
@@ -297,12 +291,9 @@ OpenLayers.Tile.Image = OpenLayers.Class(OpenLayers.Tile, {
             // syncronous image requests get the url and position the frame immediately,
             // and don't wait for an image request to come back.
           
-            // needed for changing to a different server for onload error
-            if (this.layer.url instanceof Array) {
-                this.imgDiv.urls = this.layer.url.slice();
-            }
-          
             this.url = this.layer.getURL(this.bounds);
+
+            this.initImgDiv();
           
             // position the frame immediately
             this.positionImage(); 
@@ -356,94 +347,129 @@ OpenLayers.Tile.Image = OpenLayers.Class(OpenLayers.Tile, {
      * Creates the imgDiv property on the tile.
      */
     initImgDiv: function() {
+        if (this.imgDiv == null) {
+            var offset = this.layer.imageOffset; 
+            var size = this.layer.getImageSize(this.bounds); 
+
+            if (this.layerAlphaHack) {
+                this.imgDiv = OpenLayers.Util.createAlphaImageDiv(null,
+                                                               offset,
+                                                               size,
+                                                               null,
+                                                               "relative",
+                                                               null,
+                                                               null,
+                                                               null,
+                                                               true);
+            } else {
+                this.imgDiv = OpenLayers.Util.createImage(null,
+                                                          offset,
+                                                          size,
+                                                          null,
+                                                          "relative",
+                                                          null,
+                                                          null,
+                                                          true);
+            }
+
+            // needed for changing to a different server for onload error
+            if (OpenLayers.Util.isArray(this.layer.url)) {
+                this.imgDiv.urls = this.layer.url.slice();
+            }
+      
+            this.imgDiv.className = 'olTileImage';
+
+            /* checkImgURL used to be used to called as a work around, but it
+               ended up hiding problems instead of solving them and broke things
+               like relative URLs. See discussion on the dev list:
+               http://openlayers.org/pipermail/dev/2007-January/000205.html
+
+            OpenLayers.Event.observe( this.imgDiv, "load",
+                OpenLayers.Function.bind(this.checkImgURL, this) );
+            */
+            this.frame.style.zIndex = this.isBackBuffer ? 0 : 1;
+            this.frame.appendChild(this.imgDiv); 
+            this.layer.div.appendChild(this.frame); 
+
+            if(this.layer.opacity != null) {
+
+                OpenLayers.Util.modifyDOMElement(this.imgDiv, null, null, null,
+                                                 null, null, null, 
+                                                 this.layer.opacity);
+            }
+
+            // we need this reference to check back the viewRequestID
+            this.imgDiv.map = this.layer.map;
+
+            //bind a listener to the onload of the image div so that we 
+            // can register when a tile has finished loading.
+            var onload = function() {
+
+                //normally isLoading should always be true here but there are some 
+                // right funky conditions where loading and then reloading a tile
+                // with the same url *really*fast*. this check prevents sending 
+                // a 'loadend' if the msg has already been sent
+                //
+                if (this.isLoading) { 
+                    this.isLoading = false; 
+                    this.events.triggerEvent("loadend"); 
+                }
+            };
+
+            if (this.layerAlphaHack) { 
+                OpenLayers.Event.observe(this.imgDiv.childNodes[0], 'load', 
+                                         OpenLayers.Function.bind(onload, this));    
+            } else { 
+                OpenLayers.Event.observe(this.imgDiv, 'load', 
+                                     OpenLayers.Function.bind(onload, this)); 
+            } 
+
+
+            // Bind a listener to the onerror of the image div so that we
+            // can registere when a tile has finished loading with errors.
+            var onerror = function() {
+
+                // If we have gone through all image reload attempts, it is time
+                // to realize that we are done with this image. Since
+                // OpenLayers.Util.onImageLoadError already has taken care about
+                // the error, we can continue as if the image was loaded
+                // successfully.
+                if (this.imgDiv._attempts > OpenLayers.IMAGE_RELOAD_ATTEMPTS) {
+                    onload.call(this);
+                }
+            };
+            OpenLayers.Event.observe(this.imgDiv, "error",
+                                     OpenLayers.Function.bind(onerror, this));
+        }
         
-        var offset = this.layer.imageOffset; 
-        var size = this.layer.getImageSize(this.bounds); 
-     
-        if (this.layerAlphaHack) {
-            this.imgDiv = OpenLayers.Util.createAlphaImageDiv(null,
-                                                           offset,
-                                                           size,
-                                                           null,
-                                                           "relative",
-                                                           null,
-                                                           null,
-                                                           null,
-                                                           true);
+        this.imgDiv.viewRequestID = this.layer.map.viewRequestID;
+    },
+
+    /**
+     * Method: removeImgDiv
+     * Removes the imgDiv from the DOM and stops listening to events on it.
+     */
+    removeImgDiv: function() {
+        // unregister the "load" and "error" handlers. Only the "error" handler if
+        // this.layerAlphaHack is true.
+        OpenLayers.Event.stopObservingElement(this.imgDiv);
+        
+        if (this.imgDiv.parentNode == this.frame) {
+            this.frame.removeChild(this.imgDiv);
+            this.imgDiv.map = null;
+        }
+        this.imgDiv.urls = null;
+
+        var child = this.imgDiv.firstChild;
+        //check for children (alphaHack img or IFrame)
+        if (child) {
+            OpenLayers.Event.stopObservingElement(child);
+            this.imgDiv.removeChild(child);
+            delete child;
         } else {
-            this.imgDiv = OpenLayers.Util.createImage(null,
-                                                      offset,
-                                                      size,
-                                                      null,
-                                                      "relative",
-                                                      null,
-                                                      null,
-                                                      true);
+            // abort any currently loading image
+            this.imgDiv.src = OpenLayers.Util.getImagesLocation() + "blank.gif";
         }
-        
-        this.imgDiv.className = 'olTileImage';
-
-        /* checkImgURL used to be used to called as a work around, but it
-           ended up hiding problems instead of solving them and broke things
-           like relative URLs. See discussion on the dev list:
-           http://openlayers.org/pipermail/dev/2007-January/000205.html
-
-        OpenLayers.Event.observe( this.imgDiv, "load",
-            OpenLayers.Function.bind(this.checkImgURL, this) );
-        */
-        this.frame.style.zIndex = this.isBackBuffer ? 0 : 1;
-        this.frame.appendChild(this.imgDiv); 
-        this.layer.div.appendChild(this.frame); 
-
-        if(this.layer.opacity != null) {
-            
-            OpenLayers.Util.modifyDOMElement(this.imgDiv, null, null, null,
-                                             null, null, null, 
-                                             this.layer.opacity);
-        }
-
-        // we need this reference to check back the viewRequestID
-        this.imgDiv.map = this.layer.map;
-
-        //bind a listener to the onload of the image div so that we 
-        // can register when a tile has finished loading.
-        var onload = function() {
-            
-            //normally isLoading should always be true here but there are some 
-            // right funky conditions where loading and then reloading a tile
-            // with the same url *really*fast*. this check prevents sending 
-            // a 'loadend' if the msg has already been sent
-            //
-            if (this.isLoading) { 
-                this.isLoading = false; 
-                this.events.triggerEvent("loadend"); 
-            }
-        };
-        
-        if (this.layerAlphaHack) { 
-            OpenLayers.Event.observe(this.imgDiv.childNodes[0], 'load', 
-                                     OpenLayers.Function.bind(onload, this));    
-        } else { 
-            OpenLayers.Event.observe(this.imgDiv, 'load', 
-                                 OpenLayers.Function.bind(onload, this)); 
-        } 
-        
-
-        // Bind a listener to the onerror of the image div so that we
-        // can registere when a tile has finished loading with errors.
-        var onerror = function() {
-
-            // If we have gone through all image reload attempts, it is time
-            // to realize that we are done with this image. Since
-            // OpenLayers.Util.onImageLoadError already has taken care about
-            // the error, we can continue as if the image was loaded
-            // successfully.
-            if (this.imgDiv._attempts > OpenLayers.IMAGE_RELOAD_ATTEMPTS) {
-                onload.call(this);
-            }
-        };
-        OpenLayers.Event.observe(this.imgDiv, "error",
-                                 OpenLayers.Function.bind(onerror, this));
     },
 
     /**
@@ -498,7 +524,7 @@ OpenLayers.Tile.Image = OpenLayers.Class(OpenLayers.Tile, {
         
         // if the ratio is not the same as it was last time (i.e. we are
         // zooming), then we need to adjust the backBuffer tile
-        if (ratio != this.lastRatio) {
+        if (ratio != 1) {
             if (this.layer.transitionEffect == 'resize') {
                 // In this case, we can just immediately resize the 
                 // backBufferTile.
@@ -541,7 +567,6 @@ OpenLayers.Tile.Image = OpenLayers.Class(OpenLayers.Tile, {
                 this.backBufferTile.hide();
             }
         }
-        this.lastRatio = ratio;
 
     },
     
@@ -555,7 +580,7 @@ OpenLayers.Tile.Image = OpenLayers.Class(OpenLayers.Tile, {
         // before continuing execution.
         if (OpenLayers.Util.indexOf(this.layer.SUPPORTED_TRANSITIONS, 
                 this.layer.transitionEffect) != -1) {
-            if (navigator.userAgent.toLowerCase().indexOf("gecko") != -1) { 
+            if (OpenLayers.IS_GECKO === true) { 
                 this.frame.scrollLeft = this.frame.scrollLeft; 
             } 
         }
@@ -574,5 +599,5 @@ OpenLayers.Tile.Image = OpenLayers.Class(OpenLayers.Tile, {
 );
 
 OpenLayers.Tile.Image.useBlankTile = ( 
-    OpenLayers.Util.getBrowserName() == "safari" || 
-    OpenLayers.Util.getBrowserName() == "opera"); 
+    OpenLayers.BROWSER_NAME == "safari" || 
+    OpenLayers.BROWSER_NAME == "opera"); 

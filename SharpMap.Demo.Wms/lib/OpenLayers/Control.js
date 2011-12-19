@@ -1,9 +1,10 @@
-/* Copyright (c) 2006-2010 by OpenLayers Contributors (see authors.txt for 
+/* Copyright (c) 2006-2011 by OpenLayers Contributors (see authors.txt for 
  * full list of contributors). Published under the Clear BSD license.  
  * See http://svn.openlayers.org/trunk/openlayers/license.txt for the
  * full text of the license. */
 
 /**
+ * @requires OpenLayers/BaseTypes/Class.js
  * @requires OpenLayers/Console.js
  */
 
@@ -70,13 +71,14 @@ OpenLayers.Control = OpenLayers.Class({
     map: null,
 
     /** 
-     * Property: div 
-     * {DOMElement} 
+     * APIProperty: div 
+     * {DOMElement} The element that contains the control, if not present the 
+     *     control is placed inside the map.
      */
     div: null,
 
     /** 
-     * Property: type 
+     * APIProperty: type 
      * {Number} Controls can have a 'type'. The type determines the type of
      * interactions which are possible with them when they are placed in an
      * <OpenLayers.Control.Panel>. 
@@ -100,7 +102,7 @@ OpenLayers.Control = OpenLayers.Class({
     displayClass: "",
     
     /**
-    * Property: title  
+    * APIProperty: title  
     * {string}  This property is used for showing a tooltip over the  
     * Control.  
     */ 
@@ -114,8 +116,9 @@ OpenLayers.Control = OpenLayers.Class({
     autoActivate: false,
 
     /** 
-     * Property: active 
-     * {Boolean} The control is active.
+     * APIProperty: active 
+     * {Boolean} The control is active (read-only).  Use <activate> and 
+     *     <deactivate> to change control state.
      */
     active: null,
 
@@ -135,9 +138,9 @@ OpenLayers.Control = OpenLayers.Class({
     eventListeners: null,
 
     /** 
-     * Property: events
-     * {<OpenLayers.Events>} Events instance for triggering control specific
-     *     events.
+     * APIProperty: events
+     * {<OpenLayers.Events>} Events instance for listeners and triggering
+     *     control specific events.
      */
     events: null,
 
@@ -227,6 +230,7 @@ OpenLayers.Control = OpenLayers.Class({
             this.map.removeControl(this);
             this.map = null;
         }
+        this.div = null;
     },
 
     /** 
@@ -295,7 +299,7 @@ OpenLayers.Control = OpenLayers.Class({
     },
 
     /**
-     * Method: activate
+     * APIMethod: activate
      * Explicitly activates a control and it's associated
      * handler if one has been set.  Controls can be
      * deactivated by calling the deactivate() method.
@@ -323,7 +327,7 @@ OpenLayers.Control = OpenLayers.Class({
     },
     
     /**
-     * Method: deactivate
+     * APIMethod: deactivate
      * Deactivates a control and it's associated handler if any.  The exact
      * effect of this depends on the control itself.
      * 

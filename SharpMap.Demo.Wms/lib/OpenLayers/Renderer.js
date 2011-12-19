@@ -1,7 +1,11 @@
-/* Copyright (c) 2006-2010 by OpenLayers Contributors (see authors.txt for 
+/* Copyright (c) 2006-2011 by OpenLayers Contributors (see authors.txt for 
  * full list of contributors). Published under the Clear BSD license.  
  * See http://svn.openlayers.org/trunk/openlayers/license.txt for the
  * full text of the license. */
+
+/**
+ * @requires OpenLayers/BaseTypes/Class.js
+ */
 
 /**
  * Class: OpenLayers.Renderer 
@@ -79,6 +83,7 @@ OpenLayers.Renderer = OpenLayers.Class({
      */
     initialize: function(containerID, options) {
         this.container = OpenLayers.Util.getElement(containerID);
+        OpenLayers.Util.extend(this, options);
     },
     
     /**
@@ -181,8 +186,8 @@ OpenLayers.Renderer = OpenLayers.Class({
                 if(style.display != "none" && style.label && rendered !== false) {
                     var location = feature.geometry.getCentroid(); 
                     if(style.labelXOffset || style.labelYOffset) {
-                        xOffset = isNaN(style.labelXOffset) ? 0 : style.labelXOffset;
-                        yOffset = isNaN(style.labelYOffset) ? 0 : style.labelYOffset;
+                        var xOffset = isNaN(style.labelXOffset) ? 0 : style.labelXOffset;
+                        var yOffset = isNaN(style.labelYOffset) ? 0 : style.labelYOffset;
                         var res = this.getResolution();
                         location.move(xOffset*res, yOffset*res);
                     }
@@ -262,7 +267,7 @@ OpenLayers.Renderer = OpenLayers.Class({
      * features - {Array(<OpenLayers.Feature.Vector>)} 
      */
     eraseFeatures: function(features) {
-        if(!(features instanceof Array)) {
+        if(!(OpenLayers.Util.isArray(features))) {
             features = [features];
         }
         for(var i=0, len=features.length; i<len; ++i) {

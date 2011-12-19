@@ -1,16 +1,17 @@
-/* Copyright (c) 2006-2010 by OpenLayers Contributors (see authors.txt for 
+/* Copyright (c) 2006-2011 by OpenLayers Contributors (see authors.txt for 
  * full list of contributors). Published under the Clear BSD license.  
  * See http://svn.openlayers.org/trunk/openlayers/license.txt for the
  * full text of the license. */
 
 /**
  * @requires OpenLayers/Control.js
- * @requires OpenLayers/Layer/WMS/Post.js
+ * @requires OpenLayers/Layer/WMS.js
  * @requires OpenLayers/Handler/RegularPolygon.js
  * @requires OpenLayers/Handler/Polygon.js
  * @requires OpenLayers/Handler/Path.js
  * @requires OpenLayers/Handler/Click.js
  * @requires OpenLayers/Filter/Spatial.js
+ * @requires OpenLayers/Format/SLD/v1_0_0.js
  */
 
 /**
@@ -119,7 +120,7 @@ OpenLayers.Control.SLDSelect = OpenLayers.Class(OpenLayers.Control, {
      * APIProperty: layerCache
      * {Object} Cache to use for storing references to the selection layers.
      *     Normally each source layer will have exactly 1 selection layer of
-     *     type OpenLayers.Layer.WMS.Post. If not provided, layers will
+     *     type OpenLayers.Layer.WMS. If not provided, layers will
      *     be cached on the prototype. Note that if <clearOnDeactivate> is
      *     true, the layer will no longer be cached after deactivating the
      *     control.
@@ -158,7 +159,8 @@ OpenLayers.Control.SLDSelect = OpenLayers.Class(OpenLayers.Control, {
             click: this.select}, this.callbacks);
         this.handlerOptions = this.handlerOptions || {};
         this.layerOptions = OpenLayers.Util.applyDefaults(this.layerOptions, {
-            displayInLayerSwitcher: false
+            displayInLayerSwitcher: false,
+            tileOptions: {maxGetUrlLength: 2048}
         });
         if (this.sketchStyle) {
             this.handlerOptions.layerOptions = OpenLayers.Util.applyDefaults(
@@ -207,14 +209,14 @@ OpenLayers.Control.SLDSelect = OpenLayers.Class(OpenLayers.Control, {
      *     is performed.
      *
      * Returns:
-     * {<OpenLayers.Layer.WMS.Post>} A WMS Post layer since SLD selections can
-     *     easily get quite long.
+     * {<OpenLayers.Layer.WMS>} A WMS layer with maxGetUrlLength configured to 2048
+     *     since SLD selections can easily get quite long.
      */
     createSelectionLayer: function(source) {
         // check if we already have a selection layer for the source layer
         var selectionLayer;
         if (!this.layerCache[source.id]) {
-            selectionLayer = new OpenLayers.Layer.WMS.Post(source.name, 
+            selectionLayer = new OpenLayers.Layer.WMS(source.name, 
                 source.url, source.params, 
                 OpenLayers.Util.applyDefaults(
                     this.layerOptions,
@@ -271,7 +273,7 @@ OpenLayers.Control.SLDSelect = OpenLayers.Class(OpenLayers.Control, {
                     maxScaleDenominator: layer.options.minScale})
             ]});
         }
-        return new OpenLayers.Format.SLD().write(sld);
+        return new OpenLayers.Format.SLD({srsName: this.map.getProjection()}).write(sld);
     },
 
     /**

@@ -1,4 +1,4 @@
-/* Copyright (c) 2006-2010 by OpenLayers Contributors (see authors.txt for 
+/* Copyright (c) 2006-2011 by OpenLayers Contributors (see authors.txt for 
  * full list of contributors). Published under the Clear BSD license.  
  * See http://svn.openlayers.org/trunk/openlayers/license.txt for the
  * full text of the license. */
@@ -83,9 +83,6 @@ OpenLayers.Format.GeoRSS = OpenLayers.Class(OpenLayers.Format.XML, {
      * options - {Object} An optional object whose properties will be set on
      *     this instance.
      */
-    initialize: function(options) {
-        OpenLayers.Format.XML.prototype.initialize.apply(this, [options]);
-    },
     
     /**
      * Method: createGeometryFromItem
@@ -253,7 +250,7 @@ OpenLayers.Format.GeoRSS = OpenLayers.Class(OpenLayers.Format.XML, {
         var eles = this.getElementsByTagNameNS(node, nsuri, name);
         if(eles && eles[0] && eles[0].firstChild
             && eles[0].firstChild.nodeValue) {
-            value = eles[0].firstChild.nodeValue;
+            value = OpenLayers.Format.XML.prototype.getChildValue(eles[0]);
         } else {
             value = (def == undefined) ? "" : def;
         }
@@ -263,12 +260,12 @@ OpenLayers.Format.GeoRSS = OpenLayers.Class(OpenLayers.Format.XML, {
     /**
      * APIMethod: read
      * Return a list of features from a GeoRSS doc
-     
+     *
      * Parameters:
-     * data - {Element} 
+     * doc - {Element} 
      *
      * Returns:
-     * An Array of <OpenLayers.Feature.Vector>s
+     * {Array(<OpenLayers.Feature.Vector>)}
      */
     read: function(doc) {
         if (typeof doc == "string") { 
@@ -300,7 +297,7 @@ OpenLayers.Format.GeoRSS = OpenLayers.Class(OpenLayers.Format.XML, {
      */
     write: function(features) {
         var georss;
-        if(features instanceof Array) {
+        if(OpenLayers.Util.isArray(features)) {
             georss = this.createElementNS(this.rssns, "rss");
             for(var i=0, len=features.length; i<len; i++) {
                 georss.appendChild(this.createFeatureXML(features[i]));

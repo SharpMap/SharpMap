@@ -1,4 +1,4 @@
-/* Copyright (c) 2006-2010 by OpenLayers Contributors (see authors.txt for 
+/* Copyright (c) 2006-2011 by OpenLayers Contributors (see authors.txt for 
  * full list of contributors). Published under the Clear BSD license.  
  * See http://svn.openlayers.org/trunk/openlayers/license.txt for the
  * full text of the license. */
@@ -8,11 +8,16 @@
  * @requires OpenLayers/Layer/SphericalMercator.js
  * @requires OpenLayers/Layer/EventPane.js
  * @requires OpenLayers/Layer/FixedZoomLevels.js
+ * @requires OpenLayers/Lang.js
  */
 
 /**
  * Class: OpenLayers.Layer.VirtualEarth
- * 
+ * Instances of OpenLayers.Layer.VirtualEarth are used to display the data from
+ *     the Bing Maps AJAX Control (see e.g. 
+ *     http://msdn.microsoft.com/library/bb429619.aspx). Create a VirtualEarth 
+ *     layer with the <OpenLayers.Layer.VirtualEarth> constructor.
+ *     
  * Inherits from:
  *  - <OpenLayers.Layer.EventPane>
  *  - <OpenLayers.Layer.FixedZoomLevels>
@@ -93,6 +98,22 @@ OpenLayers.Layer.VirtualEarth = OpenLayers.Class(
 
     /** 
      * Constructor: OpenLayers.Layer.VirtualEarth
+     * Creates a new instance of a OpenLayers.Layer.VirtualEarth. If you use an
+     *     instance of OpenLayers.Layer.VirtualEarth in you map, you should set 
+     *     the <OpenLayers.Map> option restrictedExtent to a meaningful value,
+     *     e.g.:
+     * (code)
+     * var map = new OpenLayers.Map( 'map', {
+     *     // other map options
+     *     restrictedExtent : OpenLayers.Bounds(-20037508, -20037508, 20037508, 20037508)
+     * } );
+     * 
+     * var veLayer = new OpenLayers.Layer.VirtualEarth (
+     *     "Virtual Earth Layer"
+     * );
+     * 
+     * map.addLayer( veLayer );
+     * (end)
      * 
      * Parameters:
      * name - {String}

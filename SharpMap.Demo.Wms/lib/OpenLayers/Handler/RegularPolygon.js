@@ -1,4 +1,4 @@
-/* Copyright (c) 2006-2010 by OpenLayers Contributors (see authors.txt for 
+/* Copyright (c) 2006-2011 by OpenLayers Contributors (see authors.txt for 
  * full list of contributors). Published under the Clear BSD license.  
  * See http://svn.openlayers.org/trunk/openlayers/license.txt for the
  * full text of the license. */
@@ -16,7 +16,7 @@
  *     instance with the <OpenLayers.Handler.RegularPolygon> constructor.
  * 
  * Inherits from:
- *  - <OpenLayers.Handler>
+ *  - <OpenLayers.Handler.Drag>
  */
 OpenLayers.Handler.RegularPolygon = OpenLayers.Class(OpenLayers.Handler.Drag, {
     
@@ -141,7 +141,7 @@ OpenLayers.Handler.RegularPolygon = OpenLayers.Class(OpenLayers.Handler.Drag, {
             this.style = OpenLayers.Util.extend(OpenLayers.Feature.Vector.style['default'], {});
         }
 
-        OpenLayers.Handler.prototype.initialize.apply(this,
+        OpenLayers.Handler.Drag.prototype.initialize.apply(this,
                                                 [control, callbacks, options]);
         this.options = (options) ? options : {};
     },
@@ -166,7 +166,7 @@ OpenLayers.Handler.RegularPolygon = OpenLayers.Class(OpenLayers.Handler.Drag, {
      */
     activate: function() {
         var activated = false;
-        if(OpenLayers.Handler.prototype.activate.apply(this, arguments)) {
+        if(OpenLayers.Handler.Drag.prototype.activate.apply(this, arguments)) {
             // create temporary vector layer for rendering geometry sketch
             var options = OpenLayers.Util.extend({
                 displayInLayerSwitcher: false,

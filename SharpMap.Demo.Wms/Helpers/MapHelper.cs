@@ -18,7 +18,6 @@ namespace SharpMap.Demo.Wms.Helpers
         private class LayerData
         {
             public string LabelColumn { get; set; }
-            public ICoordinateTransformation Transformation { get; set; }
             public IStyle Style { get; set; }
         }
 
@@ -26,23 +25,19 @@ namespace SharpMap.Demo.Wms.Helpers
 
         static MapHelper()
         {
-            ICoordinateTransformation transformation = LatLonToGoogle();
             LayerData landmarks = new LayerData
             {
                 LabelColumn = "LANAME",
-                Transformation = transformation,
                 Style = new VectorStyle { EnableOutline = true, Fill = new SolidBrush(Color.FromArgb(192, Color.LightBlue)) }
             };
             LayerData roads = new LayerData
             {
                 LabelColumn = "NAME",
-                Transformation = transformation,
                 Style = new VectorStyle { Line = new Pen(Color.FromArgb(200, Color.DarkBlue), 0.5f) }
             };
             LayerData pois = new LayerData
             {
                 LabelColumn = "NAME",
-                Transformation = transformation,
                 Style = new VectorStyle { PointColor = new SolidBrush(Color.FromArgb(200, Color.DarkGreen)), PointSize = 10 }
             };
             layers = new Dictionary<string, LayerData>
@@ -53,8 +48,9 @@ namespace SharpMap.Demo.Wms.Helpers
             };
         }
 
-        public static Map InitializeMap()
+        public static Map OpenLayers()
         {
+            ICoordinateTransformation transformation = LatLonToGoogle();
             HttpContext context = HttpContext.Current;
             Map map = new Map(new Size(1, 1));
             foreach (string layer in layers.Keys)
@@ -67,15 +63,35 @@ namespace SharpMap.Demo.Wms.Helpers
                 LayerData data = layers[layer];
                 ShapeFile dataSource = new ShapeFile(path, true) { SRID = 900913 };
                 VectorLayer item = new VectorLayer(layer, dataSource)
-                {
-                    CoordinateTransformation = data.Transformation,
+                {                    
+                    Style = (VectorStyle)data.Style,
+                    SmoothingMode = SmoothingMode.AntiAlias,
+                    CoordinateTransformation = transformation
+                };
+                map.Layers.Add(item);
+            }
+            return map;
+        }
+
+        public static Map PolyMaps()
+        {            
+            HttpContext context = HttpContext.Current;
+            Map map = new Map(new Size(1, 1));
+            foreach (string layer in layers.Keys)
+            {
+                string format = String.Format("~/App_Data/nyc/{0}.shp", layer);
+                string path = context.Server.MapPath(format);
+                if (!File.Exists(path))
+                    throw new FileNotFoundException("file not found", path);
+
+                LayerData data = layers[layer];
+                ShapeFile dataSource = new ShapeFile(path, true) { SRID = 4326 };
+                VectorLayer item = new VectorLayer(layer, dataSource)
+                {                    
                     Style = (VectorStyle)data.Style,
                     SmoothingMode = SmoothingMode.AntiAlias
                 };
                 map.Layers.Add(item);
-
-                // LabelLayer labels = CreateLabelLayer(item, data.LabelColumn);
-                // map.Layers.Add(labels);
             }
             return map;
         }

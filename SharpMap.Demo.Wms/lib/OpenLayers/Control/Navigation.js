@@ -1,4 +1,4 @@
-/* Copyright (c) 2006-2010 by OpenLayers Contributors (see authors.txt for 
+/* Copyright (c) 2006-2011 by OpenLayers Contributors (see authors.txt for 
  * full list of contributors). Published under the Clear BSD license.  
  * See http://svn.openlayers.org/trunk/openlayers/license.txt for the
  * full text of the license. */
@@ -32,10 +32,22 @@ OpenLayers.Control.Navigation = OpenLayers.Class(OpenLayers.Control, {
     dragPan: null,
 
     /**
-     * APIProprety: dragPanOptions
+     * APIProperty: dragPanOptions
      * {Object} Options passed to the DragPan control.
      */
     dragPanOptions: null,
+
+    /**
+     * Property: pinchZoom
+     * {<OpenLayers.Control.PinchZoom>}
+     */
+    pinchZoom: null,
+
+    /**
+     * APIProperty: pinchZoomOptions
+     * {Object} Options passed to the PinchZoom control.
+     */
+    pinchZoomOptions: null,
 
     /**
      * APIProperty: documentDrag
@@ -124,6 +136,12 @@ OpenLayers.Control.Navigation = OpenLayers.Class(OpenLayers.Control, {
             this.zoomBox.destroy();
         }
         this.zoomBox = null;
+
+        if (this.pinchZoom) {
+            this.pinchZoom.destroy();
+        }
+        this.pinchZoom = null;
+
         OpenLayers.Control.prototype.destroy.apply(this,arguments);
     },
     
@@ -139,6 +157,9 @@ OpenLayers.Control.Navigation = OpenLayers.Class(OpenLayers.Control, {
         if (this.zoomBoxEnabled) {
             this.zoomBox.activate();
         }
+        if (this.pinchZoom) {
+            this.pinchZoom.activate();
+        }
         return OpenLayers.Control.prototype.activate.apply(this,arguments);
     },
 
@@ -146,6 +167,9 @@ OpenLayers.Control.Navigation = OpenLayers.Class(OpenLayers.Control, {
      * Method: deactivate
      */
     deactivate: function() {
+        if (this.pinchZoom) {
+            this.pinchZoom.deactivate();
+        }
         this.zoomBox.deactivate();
         this.dragPan.deactivate();
         this.handlers.click.deactivate();
@@ -163,6 +187,7 @@ OpenLayers.Control.Navigation = OpenLayers.Class(OpenLayers.Control, {
         }
 
         var clickCallbacks = { 
+            'click': this.defaultClick,
             'dblclick': this.defaultDblClick, 
             'dblrightclick': this.defaultDblRightClick 
         };
@@ -187,6 +212,23 @@ OpenLayers.Control.Navigation = OpenLayers.Class(OpenLayers.Control, {
                                     this, {"up"  : this.wheelUp,
                                            "down": this.wheelDown},
                                     this.mouseWheelOptions );
+        if (OpenLayers.Control.PinchZoom) {
+            this.pinchZoom = new OpenLayers.Control.PinchZoom(
+                OpenLayers.Util.extend(
+                    {map: this.map}, this.pinchZoomOptions));
+        }
+    },
+
+    /**
+     * Method: defaultClick
+     *
+     * Parameters:
+     * evt - {Event}
+     */
+    defaultClick: function (evt) {
+        if (evt.lastTouches && evt.lastTouches.length == 2) {
+            this.map.zoomOut();
+        }
     },
 
     /**

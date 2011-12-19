@@ -1,5 +1,5 @@
 $(document).ready(function() {
-    var options, init;
+    var options, init, showInfo;
 
     OpenLayers.DOTS_PER_INCH = 25.4 / 0.28;
     OpenLayers.IMAGE_RELOAD_ATTEMPTS = 5;
@@ -8,7 +8,7 @@ $(document).ready(function() {
         this.src = '/Content/Images/sorry.jpg';
         this.style.backgroundColor = OpenLayers.Util.onImageLoadErrorColor;
     };
-    
+
     options = {
         wms: 'WMS',
         wmslayers: ['poly_landmarks', 'tiger_roads', 'poi'].join(),
@@ -43,27 +43,31 @@ $(document).ready(function() {
             0.004665345964021981
         ],
         numZoomLevels: 24,
-        projection: new OpenLayers.Projection("EPSG:900913"),
-        displayProjection: new OpenLayers.Projection("EPSG:4326"),
-        units: "meters",
-        format: "image/png"
+        projection: new OpenLayers.Projection('EPSG:900913'),
+        displayProjection: new OpenLayers.Projection('EPSG:4326'),
+        units: 'meters',
+        format: 'image/png',
+        wmsparams: {
+            'MAP_TYPE': 'OL'
+        }
     };
 
     init = function() {
         var lon = -73.9529;
         var lat = 40.7723;
         var zoom = 10;
-        var map, sharpmap, center;
+        var map, sharpmap, click, toolbar, center;
 
         map = new OpenLayers.Map('map', options);
         map.addControl(new OpenLayers.Control.LayerSwitcher());
-        map.addControl(new OpenLayers.Control.NavToolbar());
         map.addControl(new OpenLayers.Control.PanZoom({
             position: new OpenLayers.Pixel(2, 10)
         }));
         map.addControl(new OpenLayers.Control.MousePosition());
+        map.addControl(new OpenLayers.Control.LoadingPanel());
 
-        sharpmap = new OpenLayers.Layer.WMS('SharpMap WMS',
+        sharpmap = new OpenLayers.Layer.WMS(
+            'SharpMap WMS',
             '/wms.ashx', {
                 layers: options.wmslayers,
                 service: options.wms,
@@ -79,7 +83,27 @@ $(document).ready(function() {
                 ratio: 1.5,
                 yx: []
             });
+        sharpmap.mergeNewParams(options.wmsparams);
         map.addLayers([new OpenLayers.Layer.OSM(), sharpmap]);
+
+        click = new OpenLayers.Control.WMSGetFeatureInfo({
+            url: '/wms.ashx',
+            title: 'Identify features by clicking',
+            layers: [sharpmap],
+            vendorParams: options.wmsparams,
+            queryVisible: true
+        });
+        click.events.register("getfeatureinfo", this, function(evt) {
+            alert(evt.text);
+        });
+
+        toolbar = OpenLayers.Class(OpenLayers.Control.NavToolbar, {
+            initialize: function() {
+                OpenLayers.Control.NavToolbar.prototype.initialize.apply(this, [options]);
+                this.addControls([click]);
+            }
+        });
+        map.addControl(new toolbar());
 
         center = new OpenLayers.LonLat(lon, lat);
         center.transform(options.displayProjection, options.projection);

@@ -1,4 +1,4 @@
-/* Copyright (c) 2006-2010 by OpenLayers Contributors (see authors.txt for 
+/* Copyright (c) 2006-2011 by OpenLayers Contributors (see authors.txt for 
  * full list of contributors). Published under the Clear BSD license.  
  * See http://svn.openlayers.org/trunk/openlayers/license.txt for the
  * full text of the license. */
@@ -56,6 +56,7 @@ OpenLayers.Format.WKT = OpenLayers.Class(OpenLayers.Format, {
      */
     read: function(wkt) {
         var features, type, str;
+        wkt = wkt.replace(/[\n\r]/g, " ");
         var matches = this.regExes.typeStr.exec(wkt);
         if(matches) {
             type = matches[1].toLowerCase();
@@ -95,7 +96,7 @@ OpenLayers.Format.WKT = OpenLayers.Class(OpenLayers.Format, {
      */
     write: function(features) {
         var collection, geometry, type, data, isCollection;
-        if(features.constructor == Array) {
+        if (features.constructor == Array) {
             collection = features;
             isCollection = true;
         } else {
@@ -103,30 +104,44 @@ OpenLayers.Format.WKT = OpenLayers.Class(OpenLayers.Format, {
             isCollection = false;
         }
         var pieces = [];
-        if(isCollection) {
+        if (isCollection) {
             pieces.push('GEOMETRYCOLLECTION(');
         }
-        for(var i=0, len=collection.length; i<len; ++i) {
-            if(isCollection && i>0) {
+        for (var i=0, len=collection.length; i<len; ++i) {
+            if (isCollection && i>0) {
                 pieces.push(',');
             }
             geometry = collection[i].geometry;
-            type = geometry.CLASS_NAME.split('.')[2].toLowerCase();
-            if(!this.extract[type]) {
-                return null;
-            }
-            if (this.internalProjection && this.externalProjection) {
-                geometry = geometry.clone();
-                geometry.transform(this.internalProjection, 
-                                   this.externalProjection);
-            }                       
-            data = this.extract[type].apply(this, [geometry]);
-            pieces.push(type.toUpperCase() + '(' + data + ')');
+            pieces.push(this.extractGeometry(geometry));
         }
-        if(isCollection) {
+        if (isCollection) {
             pieces.push(')');
         }
         return pieces.join('');
+    },
+
+    /**
+     * Method: extractGeometry
+     * Entry point to construct the WKT for a single Geometry object.
+     *
+     * Parameters:
+     * geometry - {<OpenLayers.Geometry.Geometry>}
+     *
+     * Returns:
+     * {String} A WKT string of representing the geometry
+     */
+    extractGeometry: function(geometry) {
+        var type = geometry.CLASS_NAME.split('.')[2].toLowerCase();
+        if (!this.extract[type]) {
+            return null;
+        }
+        if (this.internalProjection && this.externalProjection) {
+            geometry = geometry.clone();
+            geometry.transform(this.internalProjection, this.externalProjection);
+        }                       
+        var wktType = type == 'collection' ? 'GEOMETRYCOLLECTION' : type.toUpperCase();
+        var data = wktType + '(' + this.extract[type].apply(this, [geometry]) + ')';
+        return data;
     },
     
     /**
@@ -207,7 +222,7 @@ OpenLayers.Format.WKT = OpenLayers.Class(OpenLayers.Format, {
         /**
          * Return an array of polygon arrays from a multipolygon.
          * @param {<OpenLayers.Geometry.MultiPolygon>} multipolygon
-         * @returns {Array} An array of polygon arrays representing
+         * @returns {String} An array of polygon arrays representing
          *                  the multipolygon
          */
         'multipolygon': function(multipolygon) {
@@ -216,6 +231,19 @@ OpenLayers.Format.WKT = OpenLayers.Class(OpenLayers.Format, {
                 array.push('(' +
                            this.extract.polygon.apply(this, [multipolygon.components[i]]) +
                            ')');
+            }
+            return array.join(',');
+        },
+
+        /**
+         * Return the WKT portion between 'GEOMETRYCOLLECTION(' and ')' for an <OpenLayers.Geometry.Collection>
+         * @param {<OpenLayers.Geometry.Collection>} collection
+         * @returns {String} internal WKT representation of the collection
+         */
+        'collection': function(collection) {
+            var array = [];
+            for(var i=0, len=collection.components.length; i<len; ++i) {
+                array.push(this.extractGeometry.apply(this, [collection.components[i]]));
             }
             return array.join(',');
         }
@@ -248,7 +276,7 @@ OpenLayers.Format.WKT = OpenLayers.Class(OpenLayers.Format, {
          */
         'multipoint': function(str) {
             var point;
-            var points = OpenLayers.String.trim(str).split(this.regExes.parenComma);
+            var points = OpenLayers.String.trim(str).split(',');
             var components = [];
             for(var i=0, len=points.length; i<len; ++i) {
                 point = points[i].replace(this.regExes.trimParens, '$1');

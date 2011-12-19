@@ -1,9 +1,10 @@
-/* Copyright (c) 2006-2010 by OpenLayers Contributors (see authors.txt for 
+/* Copyright (c) 2006-2011 by OpenLayers Contributors (see authors.txt for 
  * full list of contributors). Published under the Clear BSD license.  
  * See http://svn.openlayers.org/trunk/openlayers/license.txt for the
  * full text of the license. */
 
 /**
+ * @requires OpenLayers/BaseTypes/Date.js
  * @requires OpenLayers/Format/XML.js
  * @requires OpenLayers/Feature/Vector.js
  * @requires OpenLayers/Geometry/Point.js
@@ -12,6 +13,7 @@
  * @requires OpenLayers/Geometry/Collection.js
  * @requires OpenLayers/Request/XMLHttpRequest.js
  * @requires OpenLayers/Console.js
+ * @requires OpenLayers/Lang.js
  * @requires OpenLayers/Projection.js
  */
 
@@ -353,11 +355,10 @@ OpenLayers.Format.KML = OpenLayers.Class(OpenLayers.Format.XML, {
         
         var types = ["LineStyle", "PolyStyle", "IconStyle", "BalloonStyle", 
                      "LabelStyle"];
-        var type, nodeList, geometry, parser;
+        var type, styleTypeNode, nodeList, geometry, parser;
         for(var i=0, len=types.length; i<len; ++i) {
             type = types[i];
-            styleTypeNode = this.getElementsByTagNameNS(node, 
-                                                   "*", type)[0];
+            styleTypeNode = this.getElementsByTagNameNS(node, "*", type)[0];
             if(!styleTypeNode) { 
                 continue;
             }
@@ -1125,13 +1126,13 @@ OpenLayers.Format.KML = OpenLayers.Class(OpenLayers.Format.XML, {
      * Accept Feature Collection, and return a string. 
      * 
      * Parameters:
-     * features - {Array(<OpenLayers.Feature.Vector>} An array of features.
+     * features - {Array(<OpenLayers.Feature.Vector>)} An array of features.
      *
      * Returns:
      * {String} A KML string.
      */
     write: function(features) {
-        if(!(features instanceof Array)) {
+        if(!(OpenLayers.Util.isArray(features))) {
             features = [features];
         }
         var kml = this.createElementNS(this.kmlns, "kml");
@@ -1222,11 +1223,6 @@ OpenLayers.Format.KML = OpenLayers.Class(OpenLayers.Format.XML, {
      * {DOMElement}
      */
     buildGeometryNode: function(geometry) {
-        if (this.internalProjection && this.externalProjection) {
-            geometry = geometry.clone();
-            geometry.transform(this.internalProjection, 
-                               this.externalProjection);
-        }                       
         var className = geometry.CLASS_NAME;
         var type = className.substring(className.lastIndexOf(".") + 1);
         var builder = this.buildGeometry[type.toLowerCase()];
@@ -1411,12 +1407,12 @@ OpenLayers.Format.KML = OpenLayers.Class(OpenLayers.Format.XML, {
             var parts = new Array(numPoints);
             for(var i=0; i<numPoints; ++i) {
                 point = points[i];
-                parts[i] = point.x + "," + point.y;
+                parts[i] = this.buildCoordinates(point);
             }
             path = parts.join(" ");
         } else {
             // Point
-            path = geometry.x + "," + geometry.y;
+            path = this.buildCoordinates(geometry);
         }
         
         var txtNode = this.createTextNode(path);
@@ -1424,6 +1420,24 @@ OpenLayers.Format.KML = OpenLayers.Class(OpenLayers.Format.XML, {
         
         return coordinatesNode;
     },    
+    
+    /**
+     * Method: buildCoordinates
+     *
+     * Parameters:
+     * point - {<OpenLayers.Geometry.Point>}
+     *
+     * Returns
+     * {String} a coordinate pair
+     */
+    buildCoordinates: function(point) {
+        if (this.internalProjection && this.externalProjection) {
+            point = point.clone();
+            point.transform(this.internalProjection, 
+                               this.externalProjection);
+        }
+        return point.x + "," + point.y;                     
+    },
 
     CLASS_NAME: "OpenLayers.Format.KML" 
 });

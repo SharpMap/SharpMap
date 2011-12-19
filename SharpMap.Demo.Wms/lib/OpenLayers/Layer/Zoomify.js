@@ -1,4 +1,4 @@
-/* Copyright (c) 2006-2010 by OpenLayers Contributors (see authors.txt for 
+/* Copyright (c) 2006-2011 by OpenLayers Contributors (see authors.txt for 
  * full list of contributors). Published under the Clear BSD license.  
  * See http://svn.openlayers.org/trunk/openlayers/license.txt for the
  * full text of the license. */
@@ -44,6 +44,12 @@ OpenLayers.Layer.Zoomify = OpenLayers.Class(OpenLayers.Layer.Grid, {
      * {Integer} The size of a standard (non-border) square tile in pixels.
      */
     standardTileSize: 256,
+
+    /** 
+     * Property: tileOriginCorner
+     * {String} This layer uses top-left as tile origin
+     **/
+    tileOriginCorner: "tl",
 
     /**
      * Property: numberOfTiers
@@ -105,7 +111,7 @@ OpenLayers.Layer.Zoomify = OpenLayers.Class(OpenLayers.Layer.Grid, {
      */
     initializeZoomify: function( size ) {
 
-        var imageSize = size.clone()
+        var imageSize = size.clone();
         var tiles = new OpenLayers.Size(
             Math.ceil( imageSize.w / this.standardTileSize ),
             Math.ceil( imageSize.h / this.standardTileSize )
@@ -151,9 +157,9 @@ OpenLayers.Layer.Zoomify = OpenLayers.Class(OpenLayers.Layer.Grid, {
         OpenLayers.Layer.Grid.prototype.destroy.apply(this, arguments);
 
         // Remove from memory the Zoomify pyramid - is that enough?
-        this.tileCountUpToTier.length = 0
-        this.tierSizeInTiles.length = 0
-        this.tierImageSize.length = 0
+        this.tileCountUpToTier.length = 0;
+        this.tierSizeInTiles.length = 0;
+        this.tierImageSize.length = 0;
 
     },
 
@@ -205,7 +211,7 @@ OpenLayers.Layer.Zoomify = OpenLayers.Class(OpenLayers.Layer.Grid, {
         var path = "TileGroup" + Math.floor( (tileIndex) / 256 ) +
             "/" + z + "-" + x + "-" + y + ".jpg";
         var url = this.url;
-        if (url instanceof Array) {
+        if (OpenLayers.Util.isArray(url)) {
             url = this.selectUrl(path, url);
         }
         return url + path;
@@ -219,7 +225,7 @@ OpenLayers.Layer.Zoomify = OpenLayers.Class(OpenLayers.Layer.Grid, {
      */
     getImageSize: function() {
         if (arguments.length > 0) {
-            bounds = this.adjustBounds(arguments[0]);
+            var bounds = this.adjustBounds(arguments[0]);
             var res = this.map.getResolution();
             var x = Math.round((bounds.left - this.tileOrigin.lon) / (res * this.tileSize.w));
             var y = Math.round((this.tileOrigin.lat - bounds.top) / (res * this.tileSize.h));
@@ -236,22 +242,6 @@ OpenLayers.Layer.Zoomify = OpenLayers.Class(OpenLayers.Layer.Grid, {
         } else {
             return this.tileSize;
         }
-    },
-
-    /**
-     * Method: addTile
-     * addTile creates a tile, initializes it, and adds it to the layer div.
-     *
-     * Parameters:
-     * bounds - {<OpenLayers.Bounds>}
-     * position - {<OpenLayers.Pixel>}
-     *
-     * Returns:
-     * {<OpenLayers.Tile.Image>} The added OpenLayers.Tile.Image
-     */
-    addTile:function(bounds,position) {
-        return new OpenLayers.Tile.Image(this, position, bounds,
-                                         null, this.tileSize);
     },
 
     /**
@@ -274,28 +264,28 @@ OpenLayers.Layer.Zoomify = OpenLayers.Class(OpenLayers.Layer.Grid, {
      *
      * Parameters:
      * bounds - {<OpenLayers.Bound>}
-     * extent - {<OpenLayers.Bounds>}
+     * origin - {<OpenLayers.LonLat>}
      * resolution - {Number}
      *
      * Returns:
      * Object containing properties tilelon, tilelat, tileoffsetlat,
      * tileoffsetlat, tileoffsetx, tileoffsety
      */
-    calculateGridLayout: function(bounds, extent, resolution) {
+    calculateGridLayout: function(bounds, origin, resolution) {
         var tilelon = resolution * this.tileSize.w;
         var tilelat = resolution * this.tileSize.h;
 
-        var offsetlon = bounds.left - extent.left;
+        var offsetlon = bounds.left - origin.lon;
         var tilecol = Math.floor(offsetlon/tilelon) - this.buffer;
         var tilecolremain = offsetlon/tilelon - tilecol;
         var tileoffsetx = -tilecolremain * this.tileSize.w;
-        var tileoffsetlon = extent.left + tilecol * tilelon;
+        var tileoffsetlon = origin.lon + tilecol * tilelon;
 
-        var offsetlat = extent.top - bounds.top + tilelat;
+        var offsetlat = origin.lat - bounds.top + tilelat;
         var tilerow = Math.floor(offsetlat/tilelat) - this.buffer;
         var tilerowremain = tilerow - offsetlat/tilelat;
         var tileoffsety = tilerowremain * this.tileSize.h;
-        var tileoffsetlat = extent.top - tilelat*tilerow;
+        var tileoffsetlat = origin.lat - tilelat*tilerow;
 
         return {
           tilelon: tilelon, tilelat: tilelat,

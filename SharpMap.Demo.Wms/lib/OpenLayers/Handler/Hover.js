@@ -1,4 +1,4 @@
-/* Copyright (c) 2006-2010 by OpenLayers Contributors (see authors.txt for 
+/* Copyright (c) 2006-2011 by OpenLayers Contributors (see authors.txt for 
  * full list of contributors). Published under the Clear BSD license.  
  * See http://svn.openlayers.org/trunk/openlayers/license.txt for the
  * full text of the license. */
@@ -110,7 +110,7 @@ OpenLayers.Handler.Hover = OpenLayers.Class(OpenLayers.Handler, {
      * {Boolean} Continue propagating this event.
      */
     mouseout: function(evt) {
-        if (OpenLayers.Util.mouseLeft(evt, this.map.div)) {
+        if (OpenLayers.Util.mouseLeft(evt, this.map.eventsDiv)) {
             this.clearTimer();
             this.callback('move', [evt]);
         }

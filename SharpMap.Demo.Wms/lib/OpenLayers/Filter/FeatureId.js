@@ -1,4 +1,4 @@
-/* Copyright (c) 2006-2010 by OpenLayers Contributors (see authors.txt for 
+/* Copyright (c) 2006-2011 by OpenLayers Contributors (see authors.txt for 
  * full list of contributors). Published under the Clear BSD license.  
  * See http://svn.openlayers.org/trunk/openlayers/license.txt for the
  * full text of the license. */
@@ -24,6 +24,12 @@ OpenLayers.Filter.FeatureId = OpenLayers.Class(OpenLayers.Filter, {
      * To be passed inside the params object.
      */
     fids: null,
+    
+    /** 
+     * Property: type
+     * {String} Type to identify this filter.
+     */
+    type: "FID",
     
     /** 
      * Constructor: OpenLayers.Filter.FeatureId

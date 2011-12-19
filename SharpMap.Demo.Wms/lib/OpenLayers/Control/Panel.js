@@ -1,4 +1,4 @@
-/* Copyright (c) 2006-2010 by OpenLayers Contributors (see authors.txt for 
+/* Copyright (c) 2006-2011 by OpenLayers Contributors (see authors.txt for 
  * full list of contributors). Published under the Clear BSD license.  
  * See http://svn.openlayers.org/trunk/openlayers/license.txt for the
  * full text of the license. */
@@ -46,6 +46,14 @@ OpenLayers.Control.Panel = OpenLayers.Class(OpenLayers.Control, {
      */
     saveState: false,
       
+    /**
+     * APIProperty: allowDepress
+     * {Boolean} If is true the <OpenLayers.Control.TYPE_TOOL> controls can 
+     *     be deactivated by clicking the icon that represents them.  Default 
+     *     is false.
+     */
+    allowDepress: false,
+    
     /**
      * Property: activeState
      * {Object} stores the active state of this panel's controls.
@@ -96,16 +104,16 @@ OpenLayers.Control.Panel = OpenLayers.Class(OpenLayers.Control, {
      */
     destroy: function() {
         OpenLayers.Control.prototype.destroy.apply(this, arguments);
-        for(var i = this.controls.length - 1 ; i >= 0; i--) {
-            if(this.controls[i].events) {
-                this.controls[i].events.un({
-                    "activate": this.redraw,
-                    "deactivate": this.redraw,
-                    scope: this
+        for (var ctl, i = this.controls.length - 1; i >= 0; i--) {
+            ctl = this.controls[i];
+            if (ctl.events) {
+                ctl.events.un({
+                    activate: this.iconOn,
+                    deactivate: this.iconOff
                 });
             }
-            OpenLayers.Event.stopObservingElement(this.controls[i].panel_div);
-            this.controls[i].panel_div = null;
+            OpenLayers.Event.stopObservingElement(ctl.panel_div);
+            ctl.panel_div = null;
         }
         this.activeState = null;
     },
@@ -143,6 +151,7 @@ OpenLayers.Control.Panel = OpenLayers.Class(OpenLayers.Control, {
                 control = this.controls[i];
                 this.activeState[control.id] = control.deactivate();
             }    
+            this.redraw();
             return true;
         } else {
             return false;
@@ -165,21 +174,13 @@ OpenLayers.Control.Panel = OpenLayers.Class(OpenLayers.Control, {
      * Method: redraw
      */
     redraw: function() {
-        if (this.div.children.length>0) {
-            for (var l=this.div.children.length, i=l-1 ; i>=0 ; i--) {
-                this.div.removeChild(this.div.children[i]);
-            }
+        for (var l=this.div.childNodes.length, i=l-1; i>=0; i--) {
+            this.div.removeChild(this.div.childNodes[i]);
         }
         this.div.innerHTML = "";
         if (this.active) {
             for (var i=0, len=this.controls.length; i<len; i++) {
-                var element = this.controls[i].panel_div;
-                if (this.controls[i].active) {
-                    element.className = this.controls[i].displayClass + "ItemActive";
-                } else {    
-                    element.className = this.controls[i].displayClass + "ItemInactive";
-                }    
-                this.div.appendChild(element);
+                this.div.appendChild(this.controls[i].panel_div);
             }
         }
     },
@@ -196,7 +197,6 @@ OpenLayers.Control.Panel = OpenLayers.Class(OpenLayers.Control, {
         if (!this.active) { return false; }
         if (control.type == OpenLayers.Control.TYPE_BUTTON) {
             control.trigger();
-            this.redraw();
             return;
         }
         if (control.type == OpenLayers.Control.TYPE_TOGGLE) {
@@ -205,18 +205,21 @@ OpenLayers.Control.Panel = OpenLayers.Class(OpenLayers.Control, {
             } else {
                 control.activate();
             }
-            this.redraw();
             return;
         }
-        var c;
-        for (var i=0, len=this.controls.length; i<len; i++) {
-            c = this.controls[i];
-            if (c != control &&
-               (c.type === OpenLayers.Control.TYPE_TOOL || c.type == null)) {
-                c.deactivate();
+        if (this.allowDepress && control.active) {
+            control.deactivate();
+        } else {
+            var c;
+            for (var i=0, len=this.controls.length; i<len; i++) {
+                c = this.controls[i];
+                if (c != control &&
+                   (c.type === OpenLayers.Control.TYPE_TOOL || c.type == null)) {
+                    c.deactivate();
+                }
             }
+            control.activate();
         }
-        control.activate();
     },
 
     /**
@@ -229,7 +232,7 @@ OpenLayers.Control.Panel = OpenLayers.Class(OpenLayers.Control, {
      * controls - {<OpenLayers.Control>} Controls to add in the panel.
      */    
     addControls: function(controls) {
-        if (!(controls instanceof Array)) {
+        if (!(OpenLayers.Util.isArray(controls))) {
             controls = [controls];
         }
         this.controls = this.controls.concat(controls);
@@ -241,6 +244,7 @@ OpenLayers.Control.Panel = OpenLayers.Class(OpenLayers.Control, {
         // since they need to pass through.
         for (var i=0, len=controls.length; i<len; i++) {
             var element = document.createElement("div");
+            element.className = controls[i].displayClass + "ItemInactive";
             controls[i].panel_div = element;
             if (controls[i].title != "") {
                 controls[i].panel_div.title = controls[i].title;
@@ -279,11 +283,28 @@ OpenLayers.Control.Panel = OpenLayers.Class(OpenLayers.Control, {
                 control.deactivate();
             }
             control.events.on({
-                "activate": this.redraw,
-                "deactivate": this.redraw,
-                scope: this
+                activate: this.iconOn,
+                deactivate: this.iconOff
             });
         }  
+    },
+
+    /**
+     * Method: iconOn
+     * Internal use, for use only with "controls[i].events.on/un".
+     */
+     iconOn: function() {
+        var d = this.panel_div; // "this" refers to a control on panel!
+        d.className = d.className.replace(/ItemInactive$/, "ItemActive");
+    },
+
+    /**
+     * Method: iconOff
+     * Internal use, for use only with "controls[i].events.on/un".
+     */
+     iconOff: function() {
+        var d = this.panel_div; // "this" refers to a control on panel!
+        d.className = d.className.replace(/ItemActive$/, "ItemInactive");
     },
 
     /**

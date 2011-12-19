@@ -1,4 +1,4 @@
-/* Copyright (c) 2006-2010 by OpenLayers Contributors (see authors.txt for 
+/* Copyright (c) 2006-2011 by OpenLayers Contributors (see authors.txt for 
  * full list of contributors). Published under the Clear BSD license.  
  * See http://svn.openlayers.org/trunk/openlayers/license.txt for the
  * full text of the license. */
@@ -297,7 +297,7 @@ OpenLayers.Control.Split = OpenLayers.Class(OpenLayers.Control, {
      * Remove a feature from a list based on the given geometry.
      *
      * Parameters:
-     * features - {Array(<OpenLayers.Feature.Vector>} A list of features.
+     * features - {Array(<OpenLayers.Feature.Vector>)} A list of features.
      * geometry - {<OpenLayers.Geometry>} A geometry.
      */
     removeByGeometry: function(features, geometry) {
@@ -340,7 +340,7 @@ OpenLayers.Control.Split = OpenLayers.Class(OpenLayers.Control, {
      *     will be split if eligible.
      *
      * Parameters:
-     * feature - {<OpenLayers.Feature.Vector}} The newly created or modified
+     * feature - {<OpenLayers.Feature.Vector>} The newly created or modified
      *     feature.
      *
      * Returns:

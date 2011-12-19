@@ -1,4 +1,4 @@
-/* Copyright (c) 2006-2010 by OpenLayers Contributors (see authors.txt for 
+/* Copyright (c) 2006-2011 by OpenLayers Contributors (see authors.txt for 
  * full list of contributors). Published under the Clear BSD license.  
  * See http://svn.openlayers.org/trunk/openlayers/license.txt for the
  * full text of the license. */
@@ -29,7 +29,8 @@ OpenLayers.Handler.Feature = OpenLayers.Class(OpenLayers.Handler, {
         'mousemove': {'in': 'over', 'out': 'out'},
         'dblclick': {'in': 'dblclick', 'out': null},
         'mousedown': {'in': null, 'out': null},
-        'mouseup': {'in': null, 'out': null}
+        'mouseup': {'in': null, 'out': null},
+        'touchstart': {'in': 'click', 'out': 'clickout'}
     },
 
     /**
@@ -55,6 +56,13 @@ OpenLayers.Handler.Feature = OpenLayers.Class(OpenLayers.Handler, {
      * {<OpenLayers.Pixel>} The location of the last mouseup.
      */
     up: null,
+
+    /**
+     * Property: touch
+     * {Boolean} When a touchstart event is fired, touch will be true and all
+     *     mouse related listeners will do nothing.
+     */
+    touch: false,
     
     /**
      * Property: clickTolerance
@@ -117,6 +125,44 @@ OpenLayers.Handler.Feature = OpenLayers.Class(OpenLayers.Handler, {
         this.layer = layer;
     },
 
+    /**
+     * Method: touchstart
+     * Handle touchstart events
+     *
+     * Parameters:
+     * evt - {Event}
+     *
+     * Returns:
+     * {Boolean} Let the event propagate.
+     */
+    touchstart: function(evt) {
+        if(!this.touch) {
+            this.touch =  true;
+            this.map.events.un({
+                mousedown: this.mousedown,
+                mouseup: this.mouseup,
+                mousemove: this.mousemove,
+                click: this.click,
+                dblclick: this.dblclick,
+                scope: this
+            });
+        }
+        return OpenLayers.Event.isMultiTouch(evt) ?
+                true : this.mousedown(evt);
+    },
+
+    /**
+     * Method: touchmove
+     * Handle touchmove events. We just prevent the browser default behavior,
+     *    for Android Webkit not to select text when moving the finger after
+     *    selecting a feature.
+     *
+     * Parameters:
+     * evt - {Event}
+     */
+    touchmove: function(evt) {
+        OpenLayers.Event.stop(evt);
+    },
 
     /**
      * Method: mousedown
@@ -226,7 +272,7 @@ OpenLayers.Handler.Feature = OpenLayers.Class(OpenLayers.Handler, {
         var type = evt.type;
         var handled = false;
         var previouslyIn = !!(this.feature); // previously in a feature
-        var click = (type == "click" || type == "dblclick");
+        var click = (type == "click" || type == "dblclick" || type == "touchstart");
         this.feature = this.layer.getFeatureFromEvent(evt);
         if(this.feature && !this.feature.layer) {
             // feature has been destroyed
@@ -237,6 +283,11 @@ OpenLayers.Handler.Feature = OpenLayers.Class(OpenLayers.Handler, {
             this.lastFeature = null;
         }
         if(this.feature) {
+            if(type === "touchstart") {
+                // stop the event to prevent Android Webkit from
+                // "flashing" the map div
+                OpenLayers.Event.stop(evt);
+            }
             var inNew = (this.feature != this.lastFeature);
             if(this.geometryTypeMatches(this.feature)) {
                 // in to a feature
@@ -335,6 +386,7 @@ OpenLayers.Handler.Feature = OpenLayers.Class(OpenLayers.Handler, {
             this.lastFeature = null;
             this.down = null;
             this.up = null;
+            this.touch = false;
             this.map.events.un({
                 "removelayer": this.handleMapEvents,
                 "changelayer": this.handleMapEvents,
@@ -352,7 +404,7 @@ OpenLayers.Handler.Feature = OpenLayers.Class(OpenLayers.Handler, {
      * evt - {Object}
      */
     handleMapEvents: function(evt) {
-        if (!evt.property || evt.property == "order") {
+        if (evt.type == "removelayer" || evt.property == "order") {
             this.moveLayerToTop();
         }
     },

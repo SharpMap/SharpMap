@@ -1,9 +1,10 @@
-/* Copyright (c) 2006-2010 by OpenLayers Contributors (see authors.txt for 
+/* Copyright (c) 2006-2011 by OpenLayers Contributors (see authors.txt for 
  * full list of contributors). Published under the Clear BSD license.  
  * See http://svn.openlayers.org/trunk/openlayers/license.txt for the
  * full text of the license. */
 
 /**
+ * @requires OpenLayers/BaseTypes.js
  * @requires OpenLayers/Console.js
  */
 
@@ -58,7 +59,7 @@ OpenLayers.Lang = {
     setCode: function(code) {
         var lang;
         if(!code) {
-            code = (OpenLayers.Util.getBrowserName() == "msie") ?
+            code = (OpenLayers.BROWSER_NAME == "msie") ?
                 navigator.userLanguage : navigator.language;
         }
         var parts = code.split('-');
@@ -101,7 +102,7 @@ OpenLayers.Lang = {
      */
     translate: function(key, context) {
         var dictionary = OpenLayers.Lang[OpenLayers.Lang.getCode()];
-        var message = dictionary[key];
+        var message = dictionary && dictionary[key];
         if(!message) {
             // Message not found, fall back to message key
             message = key;

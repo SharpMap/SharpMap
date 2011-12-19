@@ -1,9 +1,10 @@
-/* Copyright (c) 2006-2010 by OpenLayers Contributors (see authors.txt for 
+/* Copyright (c) 2006-2011 by OpenLayers Contributors (see authors.txt for 
  * full list of contributors). Published under the Clear BSD license.  
  * See http://svn.openlayers.org/trunk/openlayers/license.txt for the
  * full text of the license. */
  
 /**
+ * @requires OpenLayers/BaseTypes/Class.js
  * @requires OpenLayers/Format/WKT.js
  * @requires OpenLayers/Feature/Vector.js
  */
@@ -273,7 +274,7 @@ OpenLayers.Geometry.fromWKT = function(wkt) {
     var result = format.read(wkt);
     if(result instanceof OpenLayers.Feature.Vector) {
         geom = result.geometry;
-    } else if(result instanceof Array) {
+    } else if(OpenLayers.Util.isArray(result)) {
         var len = result.length;
         var components = new Array(len);
         for(var i=0; i<len; ++i) {

@@ -1,4 +1,4 @@
-/* Copyright (c) 2006-2010 by OpenLayers Contributors (see authors.txt for 
+/* Copyright (c) 2006-2011 by OpenLayers Contributors (see authors.txt for 
  * full list of contributors). Published under the Clear BSD license.  
  * See http://svn.openlayers.org/trunk/openlayers/license.txt for the
  * full text of the license. */
@@ -37,22 +37,7 @@ OpenLayers.Control.KeyboardDefaults = OpenLayers.Class(OpenLayers.Control, {
     /**
      * Constructor: OpenLayers.Control.KeyboardDefaults
      */
-    initialize: function() {
-        OpenLayers.Control.prototype.initialize.apply(this, arguments);
-    },
-    
-    /**
-     * APIMethod: destroy
-     */
-    destroy: function() {
-        if (this.handler) {
-            this.handler.destroy();
-        }        
-        this.handler = null;
         
-        OpenLayers.Control.prototype.destroy.apply(this, arguments);
-    },
-    
     /**
      * Method: draw
      * Create handler.

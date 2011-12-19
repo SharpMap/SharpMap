@@ -1,4 +1,4 @@
-/* Copyright (c) 2006-2010 by OpenLayers Contributors (see authors.txt for 
+/* Copyright (c) 2006-2011 by OpenLayers Contributors (see authors.txt for 
  * full list of contributors). Published under the Clear BSD license.  
  * See http://svn.openlayers.org/trunk/openlayers/license.txt for the
  * full text of the license. */
@@ -80,9 +80,6 @@ OpenLayers.Control.ScaleLine = OpenLayers.Class(OpenLayers.Control, {
      * options - {Object} An optional object whose properties will be used
      *     to extend the control.
      */
-    initialize: function(options) {
-        OpenLayers.Control.prototype.initialize.apply(this, [options]);     
-    },
 
     /**
      * Method: draw

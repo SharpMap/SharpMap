@@ -1,9 +1,10 @@
-/* Copyright (c) 2006-2010 by OpenLayers Contributors (see authors.txt for 
+/* Copyright (c) 2006-2011 by OpenLayers Contributors (see authors.txt for 
  * full list of contributors). Published under the Clear BSD license.  
  * See http://svn.openlayers.org/trunk/openlayers/license.txt for the
  * full text of the license. */
 
 /**
+ * @requires OpenLayers/BaseTypes/Class.js
  * @requires OpenLayers/Util.js
  */
 
@@ -26,6 +27,12 @@ OpenLayers.Projection = OpenLayers.Class({
      * {String}
      */
     projCode: null,
+    
+    /**
+     * Property: titleRegEx
+     * {RegExp} regular expression to strip the title from a proj4js definition
+     */
+    titleRegEx: /\+title=[^\+]*/,
 
     /**
      * Constructor: OpenLayers.Projection
@@ -92,11 +99,20 @@ OpenLayers.Projection = OpenLayers.Class({
      * {Boolean} The two projections are equivalent.
      */
     equals: function(projection) {
-        if (projection && projection.getCode) {
-            return this.getCode() == projection.getCode();
-        } else {
-            return false;
-        }    
+        var p = projection, equals = false;
+        if (p) {
+            if (window.Proj4js && this.proj.defData && p.proj.defData) {
+                equals = this.proj.defData.replace(this.titleRegEx, "") ==
+                    p.proj.defData.replace(this.titleRegEx, "");
+            } else if (p.getCode) {
+                var source = this.getCode(), target = p.getCode();
+                equals = source == target ||
+                    !!OpenLayers.Projection.transforms[source] &&
+                    OpenLayers.Projection.transforms[source][target] ===
+                        OpenLayers.Projection.nullTransform;
+            }
+        }
+        return equals;   
     },
 
     /* Method: destroy
@@ -158,10 +174,10 @@ OpenLayers.Projection.addTransform = function(from, to, method) {
  *     the input point is transformed in place.
  * 
  * Parameters:
- * point - {{OpenLayers.Geometry.Point> | Object} An object with x and y
+ * point - {<OpenLayers.Geometry.Point> | Object} An object with x and y
  *     properties representing coordinates in those dimensions.
- * sourceProj - {OpenLayers.Projection} Source map coordinate system
- * destProj - {OpenLayers.Projection} Destination map coordinate system
+ * source - {OpenLayers.Projection} Source map coordinate system
+ * dest - {OpenLayers.Projection} Destination map coordinate system
  *
  * Returns:
  * point - {object} A transformed coordinate.  The original point is modified.
@@ -174,5 +190,25 @@ OpenLayers.Projection.transform = function(point, source, dest) {
                OpenLayers.Projection.transforms[source.getCode()][dest.getCode()]) {
         OpenLayers.Projection.transforms[source.getCode()][dest.getCode()](point); 
     }
+    return point;
+};
+
+/**
+ * APIFunction: nullTransform
+ * A null transformation - useful for defining projection aliases when
+ * proj4js is not available:
+ *
+ * (code)
+ * OpenLayers.Projection.addTransform("EPSG:4326", "EPSG:3857",
+ *     OpenLayers.Layer.SphericalMercator.projectForward);
+ * OpenLayers.Projection.addTransform("EPSG:3857", "EPSG:3857",
+ *     OpenLayers.Layer.SphericalMercator.projectInverse);
+ * OpenLayers.Projection.addTransform("EPSG:3857", "EPSG:900913",
+ *     OpenLayers.Projection.nullTransform);
+ * OpenLayers.Projection.addTransform("EPSG:900913", "EPSG:3857",
+ *     OpenLayers.Projection.nullTransform);
+ * (end)
+ */
+OpenLayers.Projection.nullTransform = function(point) {
     return point;
 };

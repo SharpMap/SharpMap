@@ -1,4 +1,4 @@
-/* Copyright (c) 2006-2010 by OpenLayers Contributors (see authors.txt for 
+/* Copyright (c) 2006-2011 by OpenLayers Contributors (see authors.txt for 
  * full list of contributors). Published under the Clear BSD license.  
  * See http://svn.openlayers.org/trunk/openlayers/license.txt for the
  * full text of the license. */
@@ -443,23 +443,6 @@ OpenLayers.Layer.ArcIMS = OpenLayers.Class(OpenLayers.Layer.Grid, {
         // copy/set any non-init, non-simple values here
 
         return obj;
-    },
-    
-    /**
-     * Method: addTile
-     * addTile creates a tile, initializes it, and adds it to the layer div. 
-     *
-     * Parameters:
-     * bounds - {<OpenLayers.Bounds>}
-     * position - {<OpenLayers.Pixel>}
-     * 
-     * Returns:
-     * {<OpenLayers.Tile.Image>} The added image tile.
-     */
-    addTile:function(bounds,position) {
-        return new OpenLayers.Tile.Image(
-            this, position, bounds, null, this.tileSize
-        );
     },
     
     CLASS_NAME: "OpenLayers.Layer.ArcIMS"

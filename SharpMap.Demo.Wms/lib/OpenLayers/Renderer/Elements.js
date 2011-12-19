@@ -1,4 +1,4 @@
-/* Copyright (c) 2006-2010 by OpenLayers Contributors (see authors.txt for 
+/* Copyright (c) 2006-2011 by OpenLayers Contributors (see authors.txt for 
  * full list of contributors). Published under the Clear BSD license.  
  * See http://svn.openlayers.org/trunk/openlayers/license.txt for the
  * full text of the license. */
@@ -57,10 +57,8 @@ OpenLayers.ElementsIndexer = OpenLayers.Class({
         this.compare = yOrdering ? 
             OpenLayers.ElementsIndexer.IndexingMethods.Z_ORDER_Y_ORDER :
             OpenLayers.ElementsIndexer.IndexingMethods.Z_ORDER_DRAWING_ORDER;
-            
-        this.order = [];
-        this.indices = {};
-        this.maxZIndex = 0;
+
+        this.clear();
     },
     
     /**
@@ -390,7 +388,7 @@ OpenLayers.Renderer.Elements = OpenLayers.Class(OpenLayers.Renderer, {
     BACKGROUND_ID_SUFFIX: "_background",
     
     /**
-     * Constant: BACKGROUND_ID_SUFFIX
+     * Constant: LABEL_ID_SUFFIX
      * {String}
      */
     LABEL_ID_SUFFIX: "_label",
@@ -509,10 +507,13 @@ OpenLayers.Renderer.Elements = OpenLayers.Class(OpenLayers.Renderer, {
         };
 
         rendered = false;
+        var removeBackground = false;
         if (style.display != "none") {
             if (style.backgroundGraphic) {
                 this.redrawBackgroundNode(geometry.id, geometry, style,
                     featureId);
+            } else {
+                removeBackground = true;
             }
             rendered = this.redrawNode(geometry.id, geometry, style,
                 featureId);
@@ -521,9 +522,15 @@ OpenLayers.Renderer.Elements = OpenLayers.Class(OpenLayers.Renderer, {
             var node = document.getElementById(geometry.id);
             if (node) {
                 if (node._style.backgroundGraphic) {
-                    node.parentNode.removeChild(document.getElementById(
-                        geometry.id + this.BACKGROUND_ID_SUFFIX));
+                    removeBackground = true;
                 }
+                node.parentNode.removeChild(node);
+            }
+        }
+        if (removeBackground) {
+            var node = document.getElementById(
+                geometry.id + this.BACKGROUND_ID_SUFFIX);
+            if (node) {
                 node.parentNode.removeChild(node);
             }
         }

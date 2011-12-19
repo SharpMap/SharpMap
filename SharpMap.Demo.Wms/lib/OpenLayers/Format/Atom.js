@@ -1,4 +1,4 @@
-/* Copyright (c) 2006-2010 by OpenLayers Contributors (see authors.txt for 
+/* Copyright (c) 2006-2011 by OpenLayers Contributors (see authors.txt for 
  * full list of contributors). Published under the Clear BSD license.  
  * See http://svn.openlayers.org/trunk/openlayers/license.txt for the
  * full text of the license. */
@@ -67,9 +67,6 @@ OpenLayers.Format.Atom = OpenLayers.Class(OpenLayers.Format.XML, {
      * options - {Object} An optional object whose properties will be set on
      *     this instance.
      */
-    initialize: function(options) {
-        OpenLayers.Format.XML.prototype.initialize.apply(this, [options]);
-    },
     
     /**
      * APIMethod: read
@@ -102,7 +99,7 @@ OpenLayers.Format.Atom = OpenLayers.Class(OpenLayers.Format.XML, {
      */
     write: function(features) {
         var doc;
-        if (features instanceof Array) {
+        if (OpenLayers.Util.isArray(features)) {
             doc = this.createElementNSPlus("atom:feed");
             doc.appendChild(
                 this.createElementNSPlus("atom:title", {
@@ -186,7 +183,7 @@ OpenLayers.Format.Atom = OpenLayers.Class(OpenLayers.Format.XML, {
         
         // atom:author
         if (atomAttrib.authors) {
-            var authors = atomAttrib.authors instanceof Array ?
+            var authors = OpenLayers.Util.isArray(atomAttrib.authors) ?
                 atomAttrib.authors : [atomAttrib.authors];
             for (var i=0, ii=authors.length; i<ii; i++) {
                 entryNode.appendChild(
@@ -199,7 +196,7 @@ OpenLayers.Format.Atom = OpenLayers.Class(OpenLayers.Format.XML, {
         
         // atom:category
         if (atomAttrib.categories) {
-            var categories = atomAttrib.categories instanceof Array ?
+            var categories = OpenLayers.Util.isArray(atomAttrib.categories) ?
                 atomAttrib.categories : [atomAttrib.categories];
             var category;
             for (var i=0, ii=categories.length; i<ii; i++) {
@@ -223,7 +220,7 @@ OpenLayers.Format.Atom = OpenLayers.Class(OpenLayers.Format.XML, {
         
         // atom:contributor
         if (atomAttrib.contributors) {
-            var contributors = atomAttrib.contributors instanceof Array ?
+            var contributors = OpenLayers.Util.isArray(atomAttrib.contributors) ?
                 atomAttrib.contributors : [atomAttrib.contributors];
             for (var i=0, ii=contributors.length; i<ii; i++) {
                 entryNode.appendChild(
@@ -246,7 +243,7 @@ OpenLayers.Format.Atom = OpenLayers.Class(OpenLayers.Format.XML, {
         
         // atom:link
         if (atomAttrib.links) {
-            var links = atomAttrib.links instanceof Array ?
+            var links = OpenLayers.Util.isArray(atomAttrib.links) ?
                 atomAttrib.links : [atomAttrib.links];
             var link;
             for (var i=0, ii=links.length; i<ii; i++) {

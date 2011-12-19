@@ -1,4 +1,4 @@
-/* Copyright (c) 2006-2010 by OpenLayers Contributors (see authors.txt for 
+/* Copyright (c) 2006-2011 by OpenLayers Contributors (see authors.txt for 
  * full list of contributors). Published under the Clear BSD license.  
  * See http://svn.openlayers.org/trunk/openlayers/license.txt for the
  * full text of the license. */
@@ -9,6 +9,7 @@
  * @requires OpenLayers/StyleMap.js
  * @requires OpenLayers/Feature/Vector.js
  * @requires OpenLayers/Console.js
+ * @requires OpenLayers/Lang.js
  */
 
 /**
@@ -64,6 +65,10 @@ OpenLayers.Layer.Vector = OpenLayers.Class(OpenLayers.Layer, {
      * featuresremoved - Triggered after features are removed. The event
      *      object passed to listeners will have a *features* property with a
      *      reference to an array of removed features.
+     * beforefeatureselected - Triggered after a feature is selected.  Listeners
+     *      will receive an object with a *feature* property referencing the
+     *      feature to be selected. To stop the feature from being selectd, a
+     *      listener should return false.
      * featureselected - Triggered after a feature is selected.  Listeners
      *      will receive an object with a *feature* property referencing the
      *      selected feature.
@@ -85,6 +90,12 @@ OpenLayers.Layer.Vector = OpenLayers.Class(OpenLayers.Layer, {
      *      property referencing the vertex modified (always a point geometry),
      *      and a *pixel* property referencing the pixel location of the
      *      modification.
+     * vertexremoved - Triggered when a vertex within any feature geometry
+     *      has been deleted.  Listeners will receive an object with a
+     *      *feature* property referencing the modified feature, a *vertex*
+     *      property referencing the vertex modified (always a point geometry),
+     *      and a *pixel* property referencing the pixel location of the
+     *      removal.
      * sketchstarted - Triggered when a feature sketch bound for this layer
      *      is started.  Listeners will receive an object with a *feature*
      *      property referencing the new sketch feature and a *vertex* property
@@ -105,8 +116,8 @@ OpenLayers.Layer.Vector = OpenLayers.Class(OpenLayers.Layer, {
                   "beforefeaturesremoved", "featureremoved", "featuresremoved",
                   "beforefeatureselected", "featureselected", "featureunselected", 
                   "beforefeaturemodified", "featuremodified", "afterfeaturemodified",
-                  "vertexmodified", "sketchstarted", "sketchmodified",
-                  "sketchcomplete", "refresh"],
+                  "vertexmodified", "vertexremoved", "sketchstarted",
+                  "sketchmodified", "sketchcomplete", "refresh"],
 
     /**
      * APIProperty: isBaseLayer
@@ -122,12 +133,6 @@ OpenLayers.Layer.Vector = OpenLayers.Class(OpenLayers.Layer, {
      */
     isFixed: false,
 
-    /** 
-     * APIProperty: isVector
-     * {Boolean} Whether the layer is a vector layer.
-     */
-    isVector: true,
-    
     /** 
      * APIProperty: features
      * {Array(<OpenLayers.Feature.Vector>)} 
@@ -467,34 +472,38 @@ OpenLayers.Layer.Vector = OpenLayers.Class(OpenLayers.Layer, {
     moveTo: function(bounds, zoomChanged, dragging) {
         OpenLayers.Layer.prototype.moveTo.apply(this, arguments);
         
-        var coordSysUnchanged = true;
+        var ng = (OpenLayers.Renderer.NG && this.renderer instanceof OpenLayers.Renderer.NG);
+        if (ng) {
+            dragging || this.renderer.updateDimensions(zoomChanged);
+        } else {
+            var coordSysUnchanged = true;
 
-        if (!dragging) {
-            this.renderer.root.style.visibility = "hidden";
+            if (!dragging) {
+                this.renderer.root.style.visibility = "hidden";
             
-            this.div.style.left = -parseInt(this.map.layerContainerDiv.style.left) + "px";
-            this.div.style.top = -parseInt(this.map.layerContainerDiv.style.top) + "px";
-            var extent = this.map.getExtent();
-            coordSysUnchanged = this.renderer.setExtent(extent, zoomChanged);
+                this.div.style.left = -parseInt(this.map.layerContainerDiv.style.left) + "px";
+                this.div.style.top = -parseInt(this.map.layerContainerDiv.style.top) + "px";
+                var extent = this.map.getExtent();
+                coordSysUnchanged = this.renderer.setExtent(extent, zoomChanged);
             
-            this.renderer.root.style.visibility = "visible";
+                this.renderer.root.style.visibility = "visible";
 
-            // Force a reflow on gecko based browsers to prevent jump/flicker.
-            // This seems to happen on only certain configurations; it was originally
-            // noticed in FF 2.0 and Linux.
-            if (navigator.userAgent.toLowerCase().indexOf("gecko") != -1) {
-                this.div.scrollLeft = this.div.scrollLeft;
-            }
+                // Force a reflow on gecko based browsers to prevent jump/flicker.
+                // This seems to happen on only certain configurations; it was originally
+                // noticed in FF 2.0 and Linux.
+                if (OpenLayers.IS_GECKO === true) {
+                    this.div.scrollLeft = this.div.scrollLeft;
+                }
             
-            if(!zoomChanged && coordSysUnchanged) {
-                for(var i in this.unrenderedFeatures) {
-                    var feature = this.unrenderedFeatures[i];
-                    this.drawFeature(feature);
+                if(!zoomChanged && coordSysUnchanged) {
+                    for(var i in this.unrenderedFeatures) {
+                        var feature = this.unrenderedFeatures[i];
+                        this.drawFeature(feature);
+                    }
                 }
             }
         }
-        
-        if (!this.drawn || zoomChanged || !coordSysUnchanged) {
+        if (!this.drawn || (!ng && (zoomChanged || !coordSysUnchanged))) {
             this.drawn = true;
             var feature;
             for(var i=0, len=this.features.length; i<len; i++) {
@@ -503,6 +512,20 @@ OpenLayers.Layer.Vector = OpenLayers.Class(OpenLayers.Layer, {
                 this.drawFeature(feature);
             }
         }    
+    },
+    
+    /**
+     * APIMethod: redraw
+     * Redraws the layer.  Returns true if the layer was redrawn, false if not.
+     *
+     * Returns:
+     * {Boolean} The layer was redrawn.
+     */
+    redraw: function() {
+        if (OpenLayers.Renderer.NG && this.renderer instanceof OpenLayers.Renderer.NG) {
+            this.drawn = false;
+        }
+        return OpenLayers.Layer.prototype.redraw.apply(this, arguments);
     },
     
     /** 
@@ -531,7 +554,7 @@ OpenLayers.Layer.Vector = OpenLayers.Class(OpenLayers.Layer, {
      * options - {Object}
      */
     addFeatures: function(features, options) {
-        if (!(features instanceof Array)) {
+        if (!(OpenLayers.Util.isArray(features))) {
             features = [features];
         }
         
@@ -574,7 +597,7 @@ OpenLayers.Layer.Vector = OpenLayers.Class(OpenLayers.Layer, {
                 if(this.events.triggerEvent("beforefeatureadded",
                                             {feature: feature}) === false) {
                     continue;
-                };
+                }
                 this.preFeatureInsert(feature);
             }
 
@@ -620,7 +643,7 @@ OpenLayers.Layer.Vector = OpenLayers.Class(OpenLayers.Layer, {
         if (features === this.features) {
             return this.removeAllFeatures(options);
         }
-        if (!(features instanceof Array)) {
+        if (!(OpenLayers.Util.isArray(features))) {
             features = [features];
         }
         if (features === this.selectedFeatures) {
@@ -774,7 +797,7 @@ OpenLayers.Layer.Vector = OpenLayers.Class(OpenLayers.Layer, {
         // don't try to draw the feature with the renderer if the layer is not 
         // drawn itself
         if (!this.drawn) {
-            return
+            return;
         }
         if (typeof style != "object") {
             if(!style && feature.state === OpenLayers.State.DELETE) {
@@ -787,11 +810,13 @@ OpenLayers.Layer.Vector = OpenLayers.Class(OpenLayers.Layer, {
             }
         }
         
-        if (!this.renderer.drawFeature(feature, style)) {
+        var drawn = this.renderer.drawFeature(feature, style);
+        //TODO remove the check for null when we get rid of Renderer.SVG
+        if (drawn === false || drawn === null) {
             this.unrenderedFeatures[feature.id] = feature;
         } else {
             delete this.unrenderedFeatures[feature.id];
-        };
+        }
     },
     
     /**
@@ -820,9 +845,17 @@ OpenLayers.Layer.Vector = OpenLayers.Class(OpenLayers.Layer, {
         if (!this.renderer) {
             OpenLayers.Console.error(OpenLayers.i18n("getFeatureError")); 
             return null;
-        }    
+        }
+        var feature = null;
         var featureId = this.renderer.getFeatureIdFromEvent(evt);
-        return this.getFeatureById(featureId);
+        if (featureId) {
+            if (typeof featureId === "string") {
+                feature = this.getFeatureById(featureId);
+            } else {
+                feature = featureId;
+            }
+        }
+        return feature;
     },
 
     /**
@@ -878,6 +911,36 @@ OpenLayers.Layer.Vector = OpenLayers.Class(OpenLayers.Layer, {
     getFeatureByFid: function(featureFid) {
         return this.getFeatureBy('fid', featureFid);
     },
+    
+    /**
+     * APIMethod: getFeaturesByAttribute
+     * Returns an array of features that have the given attribute key set to the
+     * given value. Comparison of attribute values takes care of datatypes, e.g.
+     * the string '1234' is not equal to the number 1234.
+     *
+     * Parameters:
+     * attrName - {String}
+     * attrValue - {Mixed}
+     *
+     * Returns:
+     * Array(<OpenLayers.Feature.Vector>) An array of features that have the 
+     * passed named attribute set to the given value.
+     */
+    getFeaturesByAttribute: function(attrName, attrValue) {
+        var i,
+            feature,    
+            len = this.features.length,
+            foundFeatures = [];
+        for(i = 0; i < len; i++) {            
+            feature = this.features[i];
+            if(feature && feature.attributes) {
+                if (feature.attributes[attrName] === attrValue) {
+                    foundFeatures.push(feature);
+                }
+            }
+        }
+        return foundFeatures;
+    },
 
     /**
      * Unselect the selected features
@@ -925,17 +988,20 @@ OpenLayers.Layer.Vector = OpenLayers.Class(OpenLayers.Layer, {
      * Calculates the max extent which includes all of the features.
      * 
      * Returns:
-     * {<OpenLayers.Bounds>}
+     * {<OpenLayers.Bounds>} or null if the layer has no features with
+     * geometries.
      */
     getDataExtent: function () {
         var maxExtent = null;
         var features = this.features;
         if(features && (features.length > 0)) {
-            maxExtent = new OpenLayers.Bounds();
             var geometry = null;
             for(var i=0, len=features.length; i<len; i++) {
                 geometry = features[i].geometry;
                 if (geometry) {
+                    if (maxExtent === null) {
+                        maxExtent = new OpenLayers.Bounds();
+                    }
                     maxExtent.extend(geometry.getBounds());
                 }
             }

@@ -17,8 +17,8 @@
     </FileUpgradeFlags>
     <OldToolsVersion>3.5</OldToolsVersion>
     <UpgradeBackupLocation />
-    <UseIISExpress>false</UseIISExpress>
     <TargetFrameworkProfile />
+    <UseIISExpress>false</UseIISExpress>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -81,23 +81,37 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\Images\ajax-loader.gif" />
-    <Content Include="Content\Images\marker-shadow.png" />
-    <Content Include="Content\Images\marker.png" />
-    <Content Include="Content\Images\popup-close.png" />
-    <Content Include="Content\Images\zoom-in.png" />
-    <Content Include="Content\Images\zoom-out.png" />
     <Content Include="Global.asax" />
-    <Content Include="Scripts\ol\LoadingPanel.js" />
-    <Content Include="Scripts\ol\Resources.js" />
-    <Content Include="Scripts\ol\SelectFeatureEx.js" />
-    <Content Include="Scripts\rx.aggregates.js" />
-    <Content Include="Scripts\rx.jQuery.js" />
-    <Content Include="Scripts\rx.js" />
-    <Content Include="Scripts\rx.OpenLayers.js" />
-    <Content Include="theme\default\google.tidy.css" />
-    <Content Include="theme\default\ie6-style.tidy.css" />
-    <Content Include="theme\default\style.tidy.css" />
+    <Content Include="lib\OpenLayers\BaseTypes\Date.js" />
+    <Content Include="lib\OpenLayers\Control\Geolocate.js" />
+    <Content Include="lib\OpenLayers\Control\PinchZoom.js" />
+    <Content Include="lib\OpenLayers\Control\TouchNavigation.js" />
+    <Content Include="lib\OpenLayers\Filter\Function.js" />
+    <Content Include="lib\OpenLayers\Format\CQL.js" />
+    <Content Include="lib\OpenLayers\Format\OGCExceptionReport.js" />
+    <Content Include="lib\OpenLayers\Format\OWSCommon.js" />
+    <Content Include="lib\OpenLayers\Format\QueryStringFilter.js" />
+    <Content Include="lib\OpenLayers\Format\WCSGetCoverage.js" />
+    <Content Include="lib\OpenLayers\Format\WMSCapabilities\v1_1_1_WMSC.js" />
+    <Content Include="lib\OpenLayers\Format\WPSCapabilities.js" />
+    <Content Include="lib\OpenLayers\Format\WPSCapabilities\v1_0_0.js" />
+    <Content Include="lib\OpenLayers\Format\WPSDescribeProcess.js" />
+    <Content Include="lib\OpenLayers\Format\WPSExecute.js" />
+    <Content Include="lib\OpenLayers\Format\XLS.js" />
+    <Content Include="lib\OpenLayers\Format\XLS\v1.js" />
+    <Content Include="lib\OpenLayers\Format\XLS\v1_1_0.js" />
+    <Content Include="lib\OpenLayers\Format\XML\VersionedOGC.js" />
+    <Content Include="lib\OpenLayers\Handler\Pinch.js" />
+    <Content Include="lib\OpenLayers\Kinetic.js" />
+    <Content Include="lib\OpenLayers\Lang\lt.js" />
+    <Content Include="lib\OpenLayers\Layer\ArcGISCache.js" />
+    <Content Include="lib\OpenLayers\Layer\Bing.js" />
+    <Content Include="lib\OpenLayers\Layer\PointGrid.js" />
+    <Content Include="lib\OpenLayers\Protocol\Script.js" />
+    <Content Include="lib\OpenLayers\Renderer\NG.js" />
+    <Content Include="lib\OpenLayers\Renderer\SVG2.js" />
+    <Content Include="Scripts\profiling\charts.swf" />
+    <Content Include="Scripts\script_geojs.js" />
     <Content Include="Views\Web.config" />
   </ItemGroup>
   <ItemGroup>
@@ -115,13 +129,21 @@
     <Content Include="Scripts\jquery-1.4.4.min.js" />
     <Content Include="Scripts\modernizr-1.5.min.js" />
     <Content Include="Scripts\plugins.js" />
-    <Content Include="Scripts\profiling\charts.swf" />
     <Content Include="Scripts\profiling\config.js" />
     <Content Include="Scripts\profiling\yahoo-profiling.css" />
     <Content Include="Scripts\profiling\yahoo-profiling.min.js" />
     <Content Include="Views\Shared\Site.Master" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\Images\ajax-loader.gif" />
+    <Content Include="Content\Images\marker-shadow.png" />
+    <Content Include="Content\Images\marker.png" />
+    <Content Include="Content\Images\popup-close.png" />
+    <Content Include="Content\Images\zoom-in.png" />
+    <Content Include="Content\Images\zoom-out.png" />
+    <Content Include="Content\leaflet.css" />
+    <Content Include="Content\leaflet.ie.css" />
+    <Content Include="Content\openlayers.css" />
     <Content Include="Content\Images\sorry.jpg" />
     <Content Include="Content\polymaps.css" />
     <Content Include="img\blank.gif" />
@@ -439,6 +461,15 @@
     <Content Include="lib\OpenLayers\Util.js" />
     <Content Include="lib\Rico\Color.js" />
     <Content Include="lib\Rico\Corner.js" />
+    <Content Include="Scripts\script_ll.js" />
+    <Content Include="Scripts\leaflet.js" />
+    <Content Include="Scripts\ol\LoadingPanel.js" />
+    <Content Include="Scripts\ol\Resources.js" />
+    <Content Include="Scripts\ol\SelectFeatureEx.js" />
+    <Content Include="Scripts\rx.aggregates.js" />
+    <Content Include="Scripts\rx.jQuery.js" />
+    <Content Include="Scripts\rx.js" />
+    <Content Include="Scripts\rx.OpenLayers.js" />
     <Content Include="Scripts\globalmaptiles.js" />
     <Content Include="Scripts\polymaps.js" />
     <Content Include="Scripts\script_ol.js" />
@@ -481,6 +512,8 @@
     <Content Include="theme\default\img\zoom-panel-NOALPHA.png" />
     <Content Include="theme\default\img\zoom-panel.png" />
     <Content Include="theme\default\style.css" />
+    <Content Include="Views\Home\Leaflet.aspx" />
+    <Content Include="Views\Home\Geojson.aspx" />
     <Content Include="Views\Home\Polymaps.aspx" />
     <Content Include="Web.config" />
   </ItemGroup>

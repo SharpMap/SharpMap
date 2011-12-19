@@ -1,4 +1,4 @@
-/* Copyright (c) 2006-2010 by OpenLayers Contributors (see authors.txt for 
+/* Copyright (c) 2006-2011 by OpenLayers Contributors (see authors.txt for 
  * full list of contributors). Published under the Clear BSD license.  
  * See http://svn.openlayers.org/trunk/openlayers/license.txt for the
  * full text of the license. */
@@ -291,7 +291,7 @@ OpenLayers.Format.OSM = OpenLayers.Class(OpenLayers.Format.XML, {
      * features - {Array(<OpenLayers.Feature.Vector>)}
      */
     write: function(features) { 
-        if (!(features instanceof Array)) {
+        if (!(OpenLayers.Util.isArray(features))) {
             features = [features];
         }
         
@@ -347,6 +347,13 @@ OpenLayers.Format.OSM = OpenLayers.Class(OpenLayers.Format.XML, {
         'point': function(point) {
             var id = null;
             var geometry = point.geometry ? point.geometry : point;
+            
+            if (this.internalProjection && this.externalProjection) {
+                geometry = geometry.clone();
+                geometry.transform(this.internalProjection, 
+                                   this.externalProjection);
+            }                       
+            
             var already_exists = false; // We don't return anything if the node
                                         // has already been created
             if (point.osm_id) {
@@ -374,13 +381,14 @@ OpenLayers.Format.OSM = OpenLayers.Class(OpenLayers.Format.XML, {
             return already_exists ? [] : [node];
         }, 
         linestring: function(feature) {
+            var id;
             var nodes = [];
             var geometry = feature.geometry;
             if (feature.osm_id) {
                 id = feature.osm_id;
             } else {
-               id = -this.osm_id;
-               this.osm_id++; 
+                id = -this.osm_id;
+                this.osm_id++; 
             }
             var way = this.createElementNS(null, "way");
             way.setAttribute("id", id);

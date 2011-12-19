@@ -18,5 +18,15 @@
         {
             return this.View();
         }
+
+        public ActionResult Leaflet()
+        {
+            return this.View();
+        }
+
+        public ActionResult Geojson()
+        {
+            return this.View();
+        }
     }
 }

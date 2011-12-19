@@ -1,10 +1,12 @@
-/* Copyright (c) 2006-2010 by OpenLayers Contributors (see authors.txt for 
+/* Copyright (c) 2006-2011 by OpenLayers Contributors (see authors.txt for 
  * full list of contributors). Published under the Clear BSD license.  
  * See http://svn.openlayers.org/trunk/openlayers/license.txt for the
  * full text of the license. */
 
 /**
+ * @requires OpenLayers/BaseTypes/Class.js
  * @requires OpenLayers/Console.js
+ * @requires OpenLayers/Lang.js
  */
 
 /**
@@ -81,6 +83,24 @@ OpenLayers.Pixel = OpenLayers.Class({
                       (isNaN(this.x) && isNaN(this.y) && isNaN(px.x) && isNaN(px.y)));
         }
         return equals;
+    },
+
+    /**
+     * APIMethod: distanceTo
+     * Returns the distance to the pixel point passed in as a parameter.
+     *
+     * Parameters:
+     * px - {<OpenLayers.Pixel>}
+     *
+     * Returns:
+     * {Float} The pixel point passed in as parameter to calculate the
+     *     distance to.
+     */
+    distanceTo:function(px) {
+        return Math.sqrt(
+            Math.pow(this.x - px.x, 2) +
+            Math.pow(this.y - px.y, 2)
+        );
     },
 
     /**

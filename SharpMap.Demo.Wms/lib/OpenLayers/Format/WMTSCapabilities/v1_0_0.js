@@ -1,4 +1,4 @@
-/* Copyright (c) 2006-2010 by OpenLayers Contributors (see authors.txt for 
+/* Copyright (c) 2006-2011 by OpenLayers Contributors (see authors.txt for 
  * full list of contributors). Published under the Clear BSD license.  
  * See http://svn.openlayers.org/trunk/openlayers/license.txt for the
  * full text of the license. */
@@ -191,7 +191,14 @@ OpenLayers.Format.WMTSCapabilities.v1_0_0 = OpenLayers.Class(
             },
             "MatrixHeight": function(node, obj) {
                 obj.matrixHeight = parseInt(this.getChildValue(node)); 
-            },        
+            },
+            "ResourceURL": function(node, obj) {
+                obj.resourceUrl = obj.resourceUrl || {};
+                obj.resourceUrl[node.getAttribute("resourceType")] = {
+                    format: node.getAttribute("format"),
+                    template: node.getAttribute("template")
+                };
+            },
             // not used for now, can be added in the future though
             /*"Themes": function(node, obj) {
                 obj.themes = [];

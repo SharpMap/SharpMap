@@ -1,4 +1,4 @@
-/* Copyright (c) 2006-2010 by OpenLayers Contributors (see authors.txt for 
+/* Copyright (c) 2006-2011 by OpenLayers Contributors (see authors.txt for 
  * full list of contributors). Published under the Clear BSD license.  
  * See http://svn.openlayers.org/trunk/openlayers/license.txt for the
  * full text of the license. */
@@ -8,8 +8,8 @@
  */
 
 /**
- * Function: OpenLayers.Format.CSWGetDomain.
- *     Default version is 2.0.2.
+ * Class: OpenLayers.Format.CSWGetDomain
+ * Default version is 2.0.2.
  *
  * Returns:
  * {<OpenLayers.Format>} A CSWGetDomain format of the given version.
@@ -26,7 +26,7 @@ OpenLayers.Format.CSWGetDomain = function(options) {
 };
 
 /**
- * Constant: OpenLayers.Format.CSWGetDomain.DEFAULTS
+ * Constant: DEFAULTS
  * {Object} Default properties for the CSWGetDomain format.
  */
 OpenLayers.Format.CSWGetDomain.DEFAULTS = {

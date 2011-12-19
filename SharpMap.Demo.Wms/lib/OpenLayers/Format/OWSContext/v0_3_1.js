@@ -1,4 +1,4 @@
-/* Copyright (c) 2006-2010 by OpenLayers Contributors (see authors.txt for 
+/* Copyright (c) 2006-2011 by OpenLayers Contributors (see authors.txt for 
  * full list of contributors). Published under the Clear BSD license.  
  * See http://svn.openlayers.org/trunk/openlayers/license.txt for the
  * full text of the license. */
@@ -178,10 +178,11 @@ OpenLayers.Format.OWSContext.v0_3_1 = OpenLayers.Class(OpenLayers.Format.XML, {
      */
     decomposeNestingPath: function(nPath){
         var a = [];
-        if (nPath instanceof Array) {
-            while (nPath.length > 0) {
-                a.push(nPath.slice());
-                nPath.pop();
+        if (OpenLayers.Util.isArray(nPath)) {
+            var path = nPath.slice();
+            while (path.length > 0) {
+                a.push(path.slice());
+                path.pop();
             }
             a.reverse();
         }
@@ -440,7 +441,9 @@ OpenLayers.Format.OWSContext.v0_3_1 = OpenLayers.Class(OpenLayers.Format.XML, {
                 var node = this.createElementNSPlus("Style");
                 this.writeNode("Name", style, node);
                 this.writeNode("Title", style, node);
-                this.writeNode("LegendURL", style, node);
+                if (style.legend) {
+                    this.writeNode("LegendURL", style, node);
+                }
                 return node;
             },
             "Name": function(obj) {

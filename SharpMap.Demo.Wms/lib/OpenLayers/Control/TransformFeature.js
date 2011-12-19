@@ -1,4 +1,4 @@
-/* Copyright (c) 2006-2010 by OpenLayers Contributors (see authors.txt for 
+/* Copyright (c) 2006-2011 by OpenLayers Contributors (see authors.txt for 
  * full list of contributors). Published under the Clear BSD license.  
  * See http://svn.openlayers.org/trunk/openlayers/license.txt for the
  * full text of the license. */
@@ -232,6 +232,9 @@ OpenLayers.Control.TransformFeature = OpenLayers.Class(OpenLayers.Control, {
             this.dragControl.deactivate();
             deactivated = true;
         }
+        if (deactivated) {
+        	this.unsetFeature();
+        }
         return deactivated;
     },
     
@@ -265,13 +268,15 @@ OpenLayers.Control.TransformFeature = OpenLayers.Class(OpenLayers.Control, {
             scale: 1,
             ratio: 1
         });
-        var evt = {feature: feature};
-        
+
         var oldRotation = this.rotation;
         var oldCenter = this.center;
         OpenLayers.Util.extend(this, initialParams);
 
-        if(this.events.triggerEvent("beforesetfeature", evt) === false) {
+        var cont = this.events.triggerEvent("beforesetfeature",
+            {feature: feature}
+        );
+        if (cont === false) {
             return;
         }
 
@@ -303,7 +308,23 @@ OpenLayers.Control.TransformFeature = OpenLayers.Class(OpenLayers.Control, {
         
         delete this._setfeature;
 
-        this.events.triggerEvent("setfeature", evt);
+        this.events.triggerEvent("setfeature", {feature: feature});
+    },
+    
+    /**
+     * APIMethod: unsetFeature
+     * Remove the transformation box off any feature.
+     * If the control is active, it will be deactivated first.
+     */
+    unsetFeature: function() {
+    	if (this.active) {
+    		this.deactivate();
+    	} else {
+	    	this.feature = null;
+	    	this.rotation = 0;
+	    	this.scale = 1;
+	    	this.ratio = 1;
+    	}
     },
     
     /**

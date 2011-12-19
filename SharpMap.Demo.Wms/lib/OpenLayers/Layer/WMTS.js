@@ -1,4 +1,4 @@
-/* Copyright (c) 2006-2010 by OpenLayers Contributors (see authors.txt for 
+/* Copyright (c) 2006-2011 by OpenLayers Contributors (see authors.txt for 
  * full list of contributors). Published under the Clear BSD license.  
  * See http://svn.openlayers.org/trunk/openlayers/license.txt for the
  * full text of the license. */
@@ -408,7 +408,7 @@ OpenLayers.Layer.WMTS = OpenLayers.Class(OpenLayers.Layer.Grid, {
                 path = path + this.matrixSet + "/" + this.matrix.identifier + 
                     "/" + info.row + "/" + info.col + "." + this.formatSuffix;
                 
-                if (this.url instanceof Array) {
+                if (OpenLayers.Util.isArray(this.url)) {
                     url = this.selectUrl(path, this.url);
                 } else {
                     url = this.url;
@@ -454,22 +454,6 @@ OpenLayers.Layer.WMTS = OpenLayers.Class(OpenLayers.Layer.Grid, {
                 this, [OpenLayers.Util.upperCaseObject(newParams)]
             );
         }
-    },
-
-    /**
-     * Method: addTile
-     * Create a tile, initialize it, and add it to the layer div. 
-     * 
-     * Parameters:
-     * bounds - {<OpenLayers.Bounds>}
-     * position - {<OpenLayers.Pixel>}
-     * 
-     * Returns:
-     * {<OpenLayers.Tile.Image>} The added OpenLayers.Tile.Image
-     */
-    addTile: function(bounds,position) {
-        return new OpenLayers.Tile.Image(this, position, bounds, 
-                                         null, this.tileSize);
     },
 
     CLASS_NAME: "OpenLayers.Layer.WMTS"

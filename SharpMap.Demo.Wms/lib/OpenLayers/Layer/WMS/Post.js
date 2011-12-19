@@ -1,4 +1,4 @@
-/* Copyright (c) 2006-2010 by OpenLayers Contributors (see authors.txt for 
+/* Copyright (c) 2006-2011 by OpenLayers Contributors (see authors.txt for 
  * full list of contributors). Published under the Clear BSD license.  
  * See http://svn.openlayers.org/trunk/openlayers/license.txt for the
  * full text of the license. */
@@ -15,16 +15,14 @@
  * Web Mapping Services via HTTP-POST (application/x-www-form-urlencoded). 
  * Create a new WMS layer with the <OpenLayers.Layer.WMS.Post> constructor.
  *
+ * *Deprecated*. Instead of this layer, use <OpenLayers.Layer.WMS> with
+ * <OpenLayers.Tile.Image.maxGetUrlLength> configured in the layer's
+ * <OpenLayers.Layer.WMS.tileOptions>.
+ *
  * Inherits from:
  *  - <OpenLayers.Layer.WMS>
  */
 OpenLayers.Layer.WMS.Post = OpenLayers.Class(OpenLayers.Layer.WMS, {
-
-    /**
-     * Property: tileClass
-     * {Object} Class, used to create tiles.
-     */
-    tileClass: null,
 
     /**
      * APIProperty: unsupportedBrowsers
@@ -35,7 +33,7 @@ OpenLayers.Layer.WMS.Post = OpenLayers.Class(OpenLayers.Layer.WMS, {
      * effects of viewport-shaking when panning the map. Both browsers, Opera
      * and Firefox/Mozilla, have no problem with long urls, which is the reason
      * for using POST instead of GET. The strings to pass to this array are
-     * the ones returned by <OpenLayers.Util.getBrowserName()>.
+     * the ones returned by <OpenLayers.BROWSER_NAME>.
      */
     unsupportedBrowsers: ["mozilla", "firefox", "opera"],
 
@@ -46,6 +44,12 @@ OpenLayers.Layer.WMS.Post = OpenLayers.Class(OpenLayers.Layer.WMS, {
      * possible to modify the initialized tiles (iframes)
      */
     SUPPORTED_TRANSITIONS: [],
+    
+    /**
+     * Property: usePost
+     * {Boolean}
+     */
+    usePost: null,
 
     /**
      * Constructor: OpenLayers.Layer.WMS.Post
@@ -72,10 +76,8 @@ OpenLayers.Layer.WMS.Post = OpenLayers.Class(OpenLayers.Layer.WMS, {
         newArguments.push(name, url, params, options);
         OpenLayers.Layer.WMS.prototype.initialize.apply(this, newArguments);
 
-        this.tileClass = OpenLayers.Util.indexOf(
-            this.unsupportedBrowsers, OpenLayers.Util.getBrowserName()) != -1
-                ? OpenLayers.Tile.Image
-                : OpenLayers.Tile.Image.IFrame;
+        this.usePost = OpenLayers.Util.indexOf(
+            this.unsupportedBrowsers, OpenLayers.BROWSER_NAME) == -1;
     },
     
     /**
@@ -91,8 +93,10 @@ OpenLayers.Layer.WMS.Post = OpenLayers.Class(OpenLayers.Layer.WMS, {
      * {<OpenLayers.Tile.Image.IFrame>} The added OpenLayers.Tile.Image.IFrame
      */
     addTile: function(bounds,position) {
-        return new this.tileClass(
-            this, position, bounds, null, this.tileSize);
+        return new OpenLayers.Tile.Image(
+            this, position, bounds, null, this.tileSize, {
+                maxGetUrlLength: this.usePost ? 0 : null
+            });
     },
 
     CLASS_NAME: 'OpenLayers.Layer.WMS.Post'

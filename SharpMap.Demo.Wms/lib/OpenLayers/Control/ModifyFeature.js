@@ -1,4 +1,4 @@
-/* Copyright (c) 2006-2010 by OpenLayers Contributors (see authors.txt for 
+/* Copyright (c) 2006-2011 by OpenLayers Contributors (see authors.txt for 
  * full list of contributors). Published under the Clear BSD license.  
  * See http://svn.openlayers.org/trunk/openlayers/license.txt for the
  * full text of the license. */
@@ -113,6 +113,15 @@ OpenLayers.Control.ModifyFeature = OpenLayers.Class(OpenLayers.Control, {
      * {Object} A symbolizer to be used for virtual vertices.
      */
     virtualStyle: null,
+    
+    /**
+     * APIProperty: vertexRenderIntent
+     * {String} The renderIntent to use for vertices. If no <virtualStyle> is
+     * provided, this renderIntent will also be used for virtual vertices, with
+     * a fillOpacity and strokeOpacity of 0.3. Default is null, which means
+     * that the layer's default style will be used for vertices.
+     */
+    vertexRenderIntent: null,
 
     /**
      * APIProperty: mode
@@ -193,17 +202,20 @@ OpenLayers.Control.ModifyFeature = OpenLayers.Class(OpenLayers.Control, {
      *     control.
      */
     initialize: function(layer, options) {
+        options = options || {};
         this.layer = layer;
         this.vertices = [];
         this.virtualVertices = [];
         this.virtualStyle = OpenLayers.Util.extend({},
-            this.layer.style || this.layer.styleMap.createSymbolizer());
+            this.layer.style ||
+            this.layer.styleMap.createSymbolizer(null, options.vertexRenderIntent)
+        );
         this.virtualStyle.fillOpacity = 0.3;
         this.virtualStyle.strokeOpacity = 0.3;
         this.deleteCodes = [46, 68];
         this.mode = OpenLayers.Control.ModifyFeature.RESHAPE;
         OpenLayers.Control.prototype.initialize.apply(this, [options]);
-        if(!(this.deleteCodes instanceof Array)) {
+        if(!(OpenLayers.Util.isArray(this.deleteCodes))) {
             this.deleteCodes = [this.deleteCodes];
         }
         var control = this;
@@ -339,18 +351,28 @@ OpenLayers.Control.ModifyFeature = OpenLayers.Class(OpenLayers.Control, {
     },
 
     /**
-     * Method: selectFeature
-     * Called when the select feature control selects a feature.
+     * APIMethod: selectFeature
+     * Select a feature for modification in standalone mode. In non-standalone
+     * mode, this method is called when the select feature control selects a
+     * feature. Register a listener to the beforefeaturemodified event and
+     * return false to prevent feature modification.
      *
      * Parameters:
      * feature - {<OpenLayers.Feature.Vector>} the selected feature.
      */
     selectFeature: function(feature) {
-        this.feature = feature;
-        this.modified = false;
-        this.resetVertices();
-        this.dragControl.activate();
-        this.onModificationStart(this.feature);
+        if (!this.standalone || this.beforeSelectFeature(feature) !== false) {
+            this.feature = feature;
+            this.modified = false;
+            this.resetVertices();
+            this.dragControl.activate();
+            this.onModificationStart(this.feature);
+        }
+        // keep track of geometry modifications
+        var modified = feature.modified;
+        if (feature.geometry && !(modified && modified.geometry)) {
+            this._originalGeometry = feature.geometry.clone();
+        }
     },
 
     /**
@@ -522,6 +544,13 @@ OpenLayers.Control.ModifyFeature = OpenLayers.Class(OpenLayers.Control, {
         if(this.feature.state != OpenLayers.State.INSERT &&
            this.feature.state != OpenLayers.State.DELETE) {
             this.feature.state = OpenLayers.State.UPDATE;
+            if (this.modified && this._originalGeometry) {
+                var feature = this.feature;
+                feature.modified = OpenLayers.Util.extend(feature.modified, {
+                    geometry: this._originalGeometry
+                });
+                delete this._originalGeometry;
+            }
         }
     },
     
@@ -596,9 +625,15 @@ OpenLayers.Control.ModifyFeature = OpenLayers.Class(OpenLayers.Control, {
                vertex.geometry.parent) {
                 // remove the vertex
                 vertex.geometry.parent.removeComponent(vertex.geometry);
+                this.layer.events.triggerEvent("vertexremoved", {
+                    vertex: vertex.geometry,
+                    feature: this.feature,
+                    pixel: evt.xy
+                });
                 this.layer.drawFeature(this.feature, this.standalone ?
                                        undefined :
                                        this.selectControl.renderIntent);
+                this.modified = true;
                 this.resetVertices();
                 this.setFeatureState();
                 this.onModification(this.feature);
@@ -622,6 +657,7 @@ OpenLayers.Control.ModifyFeature = OpenLayers.Class(OpenLayers.Control, {
             if(geometry.CLASS_NAME == "OpenLayers.Geometry.Point") {
                 vertex = new OpenLayers.Feature.Vector(geometry);
                 vertex._sketch = true;
+                vertex.renderIntent = control.vertexRenderIntent;
                 control.vertices.push(vertex);
             } else {
                 var numVert = geometry.components.length;
@@ -633,6 +669,7 @@ OpenLayers.Control.ModifyFeature = OpenLayers.Class(OpenLayers.Control, {
                     if(component.CLASS_NAME == "OpenLayers.Geometry.Point") {
                         vertex = new OpenLayers.Feature.Vector(component);
                         vertex._sketch = true;
+                        vertex.renderIntent = control.vertexRenderIntent;
                         control.vertices.push(vertex);
                     } else {
                         collectComponentVertices(component);

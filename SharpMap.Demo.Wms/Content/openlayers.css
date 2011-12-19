@@ -1,0 +1,21 @@
+.olControlLoadingPanel
+{
+	background-image: url(Images/ajax-loader.gif);
+	background-color: Transparent;
+	position: relative;
+	width: 66px;
+	height: 66px;
+	top: 4%;
+	left: 8%;
+	background-position: center;
+	background-repeat: no-repeat;
+	display: inline;
+}
+
+.olControlNavToolbar .olControlWMSGetFeatureInfoItemInactive {
+    background-position: -77px -1px;
+}
+
+.olControlNavToolbar .olControlWMSGetFeatureInfoItemActive {
+    background-position: -77px -24px;
+}

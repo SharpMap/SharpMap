@@ -1,10 +1,10 @@
-/* Copyright (c) 2006-2010 by OpenLayers Contributors (see authors.txt for 
+/* Copyright (c) 2006-2011 by OpenLayers Contributors (see authors.txt for 
  * full list of contributors). Published under the Clear BSD license.  
  * See http://svn.openlayers.org/trunk/openlayers/license.txt for the
  * full text of the license. */
 
 /**
- * @requires OpenLayers/Format/XML.js
+ * @requires OpenLayers/Format/XML/VersionedOGC.js
  */
 
 /**
@@ -12,21 +12,24 @@
  * Read WFS Capabilities.
  * 
  * Inherits from:
- *  - <OpenLayers.Format.XML>
+ *  - <OpenLayers.Format.XML.VersionedOGC>
  */
-OpenLayers.Format.WFSCapabilities = OpenLayers.Class(OpenLayers.Format.XML, {
+OpenLayers.Format.WFSCapabilities = OpenLayers.Class(OpenLayers.Format.XML.VersionedOGC, {
     
     /**
      * APIProperty: defaultVersion
      * {String} Version number to assume if none found.  Default is "1.1.0".
      */
     defaultVersion: "1.1.0",
-    
+ 
     /**
-     * APIProperty: version
-     * {String} Specify a version string if one is known.
+     * APIProperty: errorProperty
+     * {String} Which property of the returned object to check for in order to
+     * determine whether or not parsing has failed. In the case that the
+     * errorProperty is undefined on the returned object, the document will be
+     * run through an OGCExceptionReport parser.
      */
-    version: null,
+    errorProperty: "service",
 
     /**
      * Constructor: OpenLayers.Format.WFSCapabilities
@@ -36,10 +39,6 @@ OpenLayers.Format.WFSCapabilities = OpenLayers.Class(OpenLayers.Format.XML, {
      * options - {Object} An optional object whose properties will be set on
      *     this instance.
      */
-    initialize: function(options) {
-        OpenLayers.Format.XML.prototype.initialize.apply(this, [options]);
-        this.options = options;
-    },
 
     /**
      * APIMethod: read
@@ -51,29 +50,6 @@ OpenLayers.Format.WFSCapabilities = OpenLayers.Class(OpenLayers.Format.XML, {
      * Returns:
      * {Array} List of named layers.
      */
-    read: function(data) {
-        if(typeof data == "string") {
-            data = OpenLayers.Format.XML.prototype.read.apply(this, [data]);
-        }
-        var root = data.documentElement;
-        var version = this.version;
-        if(!version) {
-            version = root.getAttribute("version");
-            if(!version) {
-                version = this.defaultVersion;
-            }
-        }
-        var constr = OpenLayers.Format.WFSCapabilities[
-            "v" + version.replace(/\./g, "_")
-        ];
-        if(!constr) {
-            throw "Can't find a WFS capabilities parser for version " + version;
-        }
-        var parser = new constr(this.options);
-        var capabilities = parser.read(data);
-        capabilities.version = version;
-        return capabilities;
-    },
     
     CLASS_NAME: "OpenLayers.Format.WFSCapabilities" 
 

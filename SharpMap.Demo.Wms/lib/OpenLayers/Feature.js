@@ -1,13 +1,12 @@
-/* Copyright (c) 2006-2010 by OpenLayers Contributors (see authors.txt for 
+/* Copyright (c) 2006-2011 by OpenLayers Contributors (see authors.txt for 
  * full list of contributors). Published under the Clear BSD license.  
  * See http://svn.openlayers.org/trunk/openlayers/license.txt for the
  * full text of the license. */
 
 
 /**
+ * @requires OpenLayers/BaseTypes/Class.js
  * @requires OpenLayers/Util.js
- * @requires OpenLayers/Marker.js
- * @requires OpenLayers/Popup/AnchoredBubble.js
  */
 
 /**
@@ -52,7 +51,7 @@ OpenLayers.Feature = OpenLayers.Class({
      * {<OpenLayers.Class>} The class which will be used to instantiate
      *     a new Popup. Default is <OpenLayers.Popup.AnchoredBubble>.
      */
-    popupClass: OpenLayers.Popup.AnchoredBubble,
+    popupClass: null,
 
     /** 
      * Property: popup 
@@ -186,17 +185,16 @@ OpenLayers.Feature = OpenLayers.Class({
     createPopup: function(closeBox) {
 
         if (this.lonlat != null) {
-            
-            var id = this.id + "_popup";
-            var anchor = (this.marker) ? this.marker.icon : null;
-
             if (!this.popup) {
-                this.popup = new this.popupClass(id, 
-                                                 this.lonlat,
-                                                 this.data.popupSize,
-                                                 this.data.popupContentHTML,
-                                                 anchor, 
-                                                 closeBox); 
+                var anchor = (this.marker) ? this.marker.icon : null;
+                var popupClass = this.popupClass ? 
+                    this.popupClass : OpenLayers.Popup.AnchoredBubble;
+                this.popup = new popupClass(this.id + "_popup", 
+                                            this.lonlat,
+                                            this.data.popupSize,
+                                            this.data.popupContentHTML,
+                                            anchor, 
+                                            closeBox); 
             }    
             if (this.data.overflow != null) {
                 this.popup.contentDiv.style.overflow = this.data.overflow;

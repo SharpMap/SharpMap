@@ -1,7 +1,11 @@
-/* Copyright (c) 2006-2010 by OpenLayers Contributors (see authors.txt for 
+/* Copyright (c) 2006-2011 by OpenLayers Contributors (see authors.txt for 
  * full list of contributors). Published under the Clear BSD license.  
  * See http://svn.openlayers.org/trunk/openlayers/license.txt for the
  * full text of the license. */
+
+/**
+ * @requires OpenLayers/BaseTypes/Class.js
+ */
 
 /**
  * Class: OpenLayers.Size
@@ -41,7 +45,7 @@ OpenLayers.Size = OpenLayers.Class({
      *
      * Returns:
      * {String} The string representation of OpenLayers.Size object. 
-     * (ex. <i>"w=55,h=66"</i>)
+     * (e.g. <i>"w=55,h=66"</i>)
      */
     toString:function() {
         return ("w=" + this.w + ",h=" + this.h);

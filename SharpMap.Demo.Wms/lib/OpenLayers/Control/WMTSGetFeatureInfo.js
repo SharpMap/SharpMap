@@ -1,4 +1,4 @@
-/* Copyright (c) 2006-2010 by OpenLayers Contributors (see authors.txt for 
+/* Copyright (c) 2006-2011 by OpenLayers Contributors (see authors.txt for 
  * full list of contributors). Published under the Clear BSD license.  
  * See http://svn.openlayers.org/trunk/openlayers/license.txt for the
  * full text of the license. */
@@ -213,35 +213,6 @@ OpenLayers.Control.WMTSGetFeatureInfo = OpenLayers.Class(OpenLayers.Control, {
     },
 
     /**
-     * Method: activate
-     * Activates the control.
-     * 
-     * Returns:
-     * {Boolean} The control was effectively activated.
-     */
-    activate: function () {
-        if (!this.active) {
-            this.handler.activate();
-        }
-        return OpenLayers.Control.prototype.activate.apply(
-            this, arguments
-        );
-    },
-
-    /**
-     * Method: deactivate
-     * Deactivates the control.
-     * 
-     * Returns:
-     * {Boolean} The control was effectively deactivated.
-     */
-    deactivate: function () {
-        return OpenLayers.Control.prototype.deactivate.apply(
-            this, arguments
-        );
-    },
-    
-    /**
      * Method: getInfoForClick 
      * Called on click
      *
@@ -328,7 +299,7 @@ OpenLayers.Control.WMTSGetFeatureInfo = OpenLayers.Class(OpenLayers.Control, {
         });
         OpenLayers.Util.applyDefaults(params, this.vendorParams);
         return {
-            url: layer.url instanceof Array ? layer.url[0] : layer.url,
+            url: OpenLayers.Util.isArray(layer.url) ? layer.url[0] : layer.url,
             params: OpenLayers.Util.upperCaseObject(params),
             callback: function(request) {
                 this.handleResponse(xy, request, layer);
@@ -424,18 +395,6 @@ OpenLayers.Control.WMTSGetFeatureInfo = OpenLayers.Class(OpenLayers.Control, {
                 });
             }
         }
-    },
-   
-    /** 
-     * Method: setMap
-     * Set the map property for the control. 
-     * 
-     * Parameters:
-     * map - {<OpenLayers.Map>} 
-     */
-    setMap: function(map) {
-        this.handler.setMap(map);
-        OpenLayers.Control.prototype.setMap.apply(this, arguments);
     },
 
     CLASS_NAME: "OpenLayers.Control.WMTSGetFeatureInfo"

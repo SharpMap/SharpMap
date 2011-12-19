@@ -1,4 +1,4 @@
-/* Copyright (c) 2006-2010 by OpenLayers Contributors (see authors.txt for 
+/* Copyright (c) 2006-2011 by OpenLayers Contributors (see authors.txt for 
  * full list of contributors). Published under the Clear BSD license.  
  * See http://svn.openlayers.org/trunk/openlayers/license.txt for the
  * full text of the license. */
@@ -50,20 +50,6 @@ OpenLayers.Renderer.SVG = OpenLayers.Class(OpenLayers.Renderer.Elements, {
     symbolMetrics: null,
     
     /**
-     * Property: isGecko
-     * {Boolean}
-     */
-    isGecko: null,
-
-    /**
-     * Property: supportUse
-     * {Boolean} true if defs/use is supported - known to not work as expected
-     * at least in some applewebkit/5* builds.
-     * See https://bugs.webkit.org/show_bug.cgi?id=33322
-     */
-    supportUse: null,
-
-    /**
      * Constructor: OpenLayers.Renderer.SVG
      * 
      * Parameters:
@@ -76,19 +62,10 @@ OpenLayers.Renderer.SVG = OpenLayers.Class(OpenLayers.Renderer.Elements, {
         OpenLayers.Renderer.Elements.prototype.initialize.apply(this, 
                                                                 arguments);
         this.translationParameters = {x: 0, y: 0};
-        this.supportUse = (navigator.userAgent.toLowerCase().indexOf("applewebkit/5") == -1);
-        this.isGecko = (navigator.userAgent.toLowerCase().indexOf("gecko/") != -1);
         
         this.symbolMetrics = {};
     },
 
-    /**
-     * APIMethod: destroy
-     */
-    destroy: function() {
-        OpenLayers.Renderer.Elements.prototype.destroy.apply(this, arguments);
-    },
-    
     /**
      * APIMethod: supported
      * 
@@ -222,7 +199,7 @@ OpenLayers.Renderer.SVG = OpenLayers.Class(OpenLayers.Renderer.Elements, {
                 if (style.externalGraphic) {
                     nodeType = "image";
                 } else if (this.isComplexSymbol(style.graphicName)) {
-                    nodeType = this.supportUse === false ? "svg" : "use";
+                    nodeType = "svg";
                 } else {
                     nodeType = "circle";
                 }
@@ -276,6 +253,10 @@ OpenLayers.Renderer.SVG = OpenLayers.Class(OpenLayers.Renderer.Elements, {
                 
                 if (style.graphicTitle) {
                     node.setAttributeNS(null, "title", style.graphicTitle);
+                    //Standards-conformant SVG
+                    var label = this.nodeFactory(null, "title");
+                    label.textContent = style.graphicTitle;
+                    node.appendChild(label);
                 }
                 if (style.graphicWidth && style.graphicHeight) {
                   node.setAttributeNS(null, "preserveAspectRatio", "none");
@@ -297,13 +278,14 @@ OpenLayers.Renderer.SVG = OpenLayers.Class(OpenLayers.Renderer.Elements, {
                 node.setAttributeNS(null, "height", height);
                 node.setAttributeNS(this.xlinkns, "href", style.externalGraphic);
                 node.setAttributeNS(null, "style", "opacity: "+opacity);
+                node.onclick = OpenLayers.Renderer.SVG.preventDefault;
             } else if (this.isComplexSymbol(style.graphicName)) {
                 // the symbol viewBox is three times as large as the symbol
                 var offset = style.pointRadius * 3;
                 var size = offset * 2;
-                var id = this.importSymbol(style.graphicName);
+                var src = this.importSymbol(style.graphicName);
                 pos = this.getPosition(node);
-                widthFactor = this.symbolMetrics[id][0] * 3 / size;
+                widthFactor = this.symbolMetrics[src.id][0] * 3 / size;
                 
                 // remove the node from the dom before we modify it. This
                 // prevents various rendering issues in Safari and FF
@@ -313,17 +295,16 @@ OpenLayers.Renderer.SVG = OpenLayers.Class(OpenLayers.Renderer.Elements, {
                     parent.removeChild(node);
                 }
                 
-                if(this.supportUse === false) {
-                    // workaround for webkit versions that cannot do defs/use
-                    // (see https://bugs.webkit.org/show_bug.cgi?id=33322):
-                    // copy the symbol instead of referencing it
-                    var src = document.getElementById(id);
-                    node.firstChild && node.removeChild(node.firstChild);
-                    node.appendChild(src.firstChild.cloneNode(true));
-                    node.setAttributeNS(null, "viewBox", src.getAttributeNS(null, "viewBox"));
-                } else {
-                    node.setAttributeNS(this.xlinkns, "href", "#" + id);
-                }
+                // The more appropriate way to implement this would be use/defs,
+                // but due to various issues in several browsers, it is safer to
+                // copy the symbols instead of referencing them. 
+                // See e.g. ticket http://trac.osgeo.org/openlayers/ticket/2985 
+                // and this email thread
+                // http://osgeo-org.1803224.n2.nabble.com/Select-Control-Ctrl-click-on-Feature-with-a-graphicName-opens-new-browser-window-tc5846039.html
+                node.firstChild && node.removeChild(node.firstChild);
+                node.appendChild(src.firstChild.cloneNode(true));
+                node.setAttributeNS(null, "viewBox", src.getAttributeNS(null, "viewBox"));
+                
                 node.setAttributeNS(null, "width", size);
                 node.setAttributeNS(null, "height", size);
                 node.setAttributeNS(null, "x", pos.x - offset);
@@ -341,18 +322,20 @@ OpenLayers.Renderer.SVG = OpenLayers.Class(OpenLayers.Renderer.Elements, {
             }
 
             var rotation = style.rotation;
+            
             if ((rotation !== undefined || node._rotation !== undefined) && pos) {
                 node._rotation = rotation;
                 rotation |= 0;
-                if(node.nodeName !== "svg") {
-                    node.setAttributeNS(null, "transform",
-                        "rotate(" + rotation + " " + pos.x + " " +
-                        pos.y + ")");
+                if (node.nodeName !== "svg") { 
+                    node.setAttributeNS(null, "transform", 
+                        "rotate(" + rotation + " " + pos.x + " " + 
+                        pos.y + ")"); 
                 } else {
-                     var metrics = this.symbolMetrics[id];
-                     node.firstChild.setAttributeNS(null, "transform",
-                     "rotate(" + style.rotation + " " + metrics[1] +
-                         " " +  metrics[2] + ")");
+                    var metrics = this.symbolMetrics[src.id];
+                    node.firstChild.setAttributeNS(null, "transform", "rotate(" 
+                        + rotation + " " 
+                        + metrics[1] + " "
+                        + metrics[2] + ")");
                 }
             }
         }
@@ -689,24 +672,23 @@ OpenLayers.Renderer.SVG = OpenLayers.Class(OpenLayers.Renderer.Elements, {
     /**
      * Method: drawText
      * This method is only called by the renderer itself.
-     * 
-     * Parameters: 
+     *
+     * Parameters:
      * featureId - {String}
      * style -
      * location - {<OpenLayers.Geometry.Point>}
      */
     drawText: function(featureId, style, location) {
         var resolution = this.getResolution();
-        
+
         var x = (location.x / resolution + this.left);
         var y = (location.y / resolution - this.top);
-        
+
         var label = this.nodeFactory(featureId + this.LABEL_ID_SUFFIX, "text");
-        var tspan = this.nodeFactory(featureId + this.LABEL_ID_SUFFIX + "_tspan", "tspan");
 
         label.setAttributeNS(null, "x", x);
         label.setAttributeNS(null, "y", -y);
-        
+
         if (style.fontColor) {
             label.setAttributeNS(null, "fill", style.fontColor);
         }
@@ -722,12 +704,12 @@ OpenLayers.Renderer.SVG = OpenLayers.Class(OpenLayers.Renderer.Elements, {
         if (style.fontWeight) {
             label.setAttributeNS(null, "font-weight", style.fontWeight);
         }
-        if(style.labelSelect === true) {
+        if (style.fontStyle) {
+            label.setAttributeNS(null, "font-style", style.fontStyle);
+        }
+        if (style.labelSelect === true) {
             label.setAttributeNS(null, "pointer-events", "visible");
             label._featureId = featureId;
-            tspan._featureId = featureId;
-            tspan._geometry = location;
-            tspan._geometryClass = location.CLASS_NAME;
         } else {
             label.setAttributeNS(null, "pointer-events", "none");
         }
@@ -735,20 +717,46 @@ OpenLayers.Renderer.SVG = OpenLayers.Class(OpenLayers.Renderer.Elements, {
         label.setAttributeNS(null, "text-anchor",
             OpenLayers.Renderer.SVG.LABEL_ALIGN[align[0]] || "middle");
 
-        if (this.isGecko) {
+        if (OpenLayers.IS_GECKO === true) {
             label.setAttributeNS(null, "dominant-baseline",
                 OpenLayers.Renderer.SVG.LABEL_ALIGN[align[1]] || "central");
-        } else {
-            tspan.setAttributeNS(null, "baseline-shift",
-                OpenLayers.Renderer.SVG.LABEL_VSHIFT[align[1]] || "-35%");
         }
 
-        tspan.textContent = style.label;
-        
-        if(!label.parentNode) {
-            label.appendChild(tspan);
+        var labelRows = style.label.split('\n');
+        var numRows = labelRows.length;
+        while (label.childNodes.length > numRows) {
+            label.removeChild(label.lastChild);
+        }
+        for (var i = 0; i < numRows; i++) {
+            var tspan = this.nodeFactory(featureId + this.LABEL_ID_SUFFIX + "_tspan_" + i, "tspan");
+            if (style.labelSelect === true) {
+                tspan._featureId = featureId;
+                tspan._geometry = location;
+                tspan._geometryClass = location.CLASS_NAME;
+            }
+            if (OpenLayers.IS_GECKO === false) {
+                tspan.setAttributeNS(null, "baseline-shift",
+                    OpenLayers.Renderer.SVG.LABEL_VSHIFT[align[1]] || "-35%");
+            }
+            tspan.setAttribute("x", x);
+            if (i == 0) {
+                var vfactor = OpenLayers.Renderer.SVG.LABEL_VFACTOR[align[1]];
+                if (vfactor == null) {
+                     vfactor = -.5;
+                }
+                tspan.setAttribute("dy", (vfactor*(numRows-1)) + "em");
+            } else {
+                tspan.setAttribute("dy", "1em");
+            }
+            tspan.textContent = (labelRows[i] === '') ? ' ' : labelRows[i];
+            if (!tspan.parentNode) {
+                label.appendChild(tspan);
+            }
+        }
+
+        if (!label.parentNode) {
             this.textRoot.appendChild(label);
-        }   
+        }
     },
     
     /** 
@@ -809,9 +817,9 @@ OpenLayers.Renderer.SVG = OpenLayers.Class(OpenLayers.Renderer.Elements, {
      * inside the valid range.
      * 
      * Parameters:
-     * badComponent - {<OpenLayers.Geometry.Point>)} original geometry of the
+     * badComponent - {<OpenLayers.Geometry.Point>} original geometry of the
      *     invalid point
-     * goodComponent - {<OpenLayers.Geometry.Point>)} original geometry of the
+     * goodComponent - {<OpenLayers.Geometry.Point>} original geometry of the
      *     valid point
      * Returns
      * {String} the SVG coordinate pair of the clipped point (like
@@ -890,7 +898,7 @@ OpenLayers.Renderer.SVG = OpenLayers.Class(OpenLayers.Renderer.Elements, {
      * graphicName - {String} name of the symbol to import
      * 
      * Returns:
-     * {String} - id of the imported symbol
+     * {DOMElement} - the imported symbol
      */      
     importSymbol: function (graphicName)  {
         if (!this.defs) {
@@ -900,8 +908,9 @@ OpenLayers.Renderer.SVG = OpenLayers.Class(OpenLayers.Renderer.Elements, {
         var id = this.container.id + "-" + graphicName;
         
         // check if symbol already exists in the defs
-        if (document.getElementById(id) != null) {
-            return id;
+        var existing = document.getElementById(id)
+        if (existing != null) {
+            return existing;
         }
         
         var symbol = OpenLayers.Renderer.symbol[graphicName];
@@ -943,7 +952,7 @@ OpenLayers.Renderer.SVG = OpenLayers.Class(OpenLayers.Renderer.Elements, {
         ];
         
         this.defs.appendChild(symbolNode);
-        return symbolNode.id;
+        return symbolNode;
     },
     
     /**
@@ -958,7 +967,7 @@ OpenLayers.Renderer.SVG = OpenLayers.Class(OpenLayers.Renderer.Elements, {
      */
     getFeatureIdFromEvent: function(evt) {
         var featureId = OpenLayers.Renderer.Elements.prototype.getFeatureIdFromEvent.apply(this, arguments);
-        if(this.supportUse === false && !featureId) {
+        if(!featureId) {
             var target = evt.target;
             featureId = target.parentNode && target != this.rendererRoot &&
                 target.parentNode._featureId;
@@ -992,4 +1001,22 @@ OpenLayers.Renderer.SVG.LABEL_VSHIFT = {
     // the center of the baseline.
     "t": "-70%",
     "b": "0"    
+};
+
+/**
+ * Constant: OpenLayers.Renderer.SVG.LABEL_VFACTOR
+ * {Object}
+ */
+OpenLayers.Renderer.SVG.LABEL_VFACTOR = {
+    "t": 0,
+    "b": -1
+};
+
+/**
+ * Function: OpenLayers.Renderer.SVG.preventDefault
+ * Used to prevent default events (especially opening images in a new tab on
+ * ctrl-click) from being executed for externalGraphic symbols
+ */
+OpenLayers.Renderer.SVG.preventDefault = function(e) {
+    e.preventDefault && e.preventDefault();
 };

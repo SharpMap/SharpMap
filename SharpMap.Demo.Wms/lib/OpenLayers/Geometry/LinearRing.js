@@ -1,4 +1,4 @@
-/* Copyright (c) 2006-2010 by OpenLayers Contributors (see authors.txt for 
+/* Copyright (c) 2006-2011 by OpenLayers Contributors (see authors.txt for 
  * full list of contributors). Published under the Clear BSD license.  
  * See http://svn.openlayers.org/trunk/openlayers/license.txt for the
  * full text of the license. */
@@ -91,10 +91,13 @@ OpenLayers.Geometry.LinearRing = OpenLayers.Class(
      *
      * Parameters:
      * point - {<OpenLayers.Geometry.Point>}
+     *
+     * Returns: 
+     * {Boolean} The component was removed.
      */
     removeComponent: function(point) {
-        if (this.components.length > 4) {
-
+        var removed = this.components && (this.components.length > 3);
+        if (removed) {
             //remove last point
             this.components.pop();
             
@@ -106,6 +109,7 @@ OpenLayers.Geometry.LinearRing = OpenLayers.Class(
             OpenLayers.Geometry.Collection.prototype.addComponent.apply(this, 
                                                                 [firstPoint]);
         }
+        return removed;
     },
     
     /**

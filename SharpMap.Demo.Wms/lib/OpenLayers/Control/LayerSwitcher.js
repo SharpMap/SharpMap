@@ -1,10 +1,12 @@
-/* Copyright (c) 2006-2010 by OpenLayers Contributors (see authors.txt for 
+/* Copyright (c) 2006-2011 by OpenLayers Contributors (see authors.txt for 
  * full list of contributors). Published under the Clear BSD license.  
  * See http://svn.openlayers.org/trunk/openlayers/license.txt for the
  * full text of the license. */
 
 /** 
  * @requires OpenLayers/Control.js
+ * @requires OpenLayers/Lang.js
+ * @requires Rico/Corner.js
  */
 
 /**
@@ -314,7 +316,7 @@ OpenLayers.Control.LayerSwitcher =
                 
                 // create span
                 var labelSpan = document.createElement("span");
-                OpenLayers.Element.addClass(labelSpan, "labelSpan")
+                OpenLayers.Element.addClass(labelSpan, "labelSpan");
                 if (!baseLayer && !layer.inRange) {
                     labelSpan.style.color = "gray";
                 }
@@ -503,14 +505,14 @@ OpenLayers.Control.LayerSwitcher =
         OpenLayers.Element.addClass(this.layersDiv, "layersDiv");
 
         this.baseLbl = document.createElement("div");
-        this.baseLbl.innerHTML = OpenLayers.i18n("baseLayer");
+        this.baseLbl.innerHTML = OpenLayers.i18n("Base Layer");
         OpenLayers.Element.addClass(this.baseLbl, "baseLbl");
         
         this.baseLayersDiv = document.createElement("div");
         OpenLayers.Element.addClass(this.baseLayersDiv, "baseLayersDiv");
 
         this.dataLbl = document.createElement("div");
-        this.dataLbl.innerHTML = OpenLayers.i18n("overlays");
+        this.dataLbl.innerHTML = OpenLayers.i18n("Overlays");
         OpenLayers.Element.addClass(this.dataLbl, "dataLbl");
         
         this.dataLayersDiv = document.createElement("div");

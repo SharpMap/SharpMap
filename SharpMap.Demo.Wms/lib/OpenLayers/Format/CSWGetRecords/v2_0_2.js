@@ -1,4 +1,4 @@
-/* Copyright (c) 2006-2010 by OpenLayers Contributors (see authors.txt for 
+/* Copyright (c) 2006-2011 by OpenLayers Contributors (see authors.txt for 
  * full list of contributors). Published under the Clear BSD license.  
  * See http://svn.openlayers.org/trunk/openlayers/license.txt for the
  * full text of the license. */
@@ -27,12 +27,14 @@ OpenLayers.Format.CSWGetRecords.v2_0_2 = OpenLayers.Class(OpenLayers.Format.XML,
      * {Object} Mapping of namespace aliases to namespace URIs.
      */
     namespaces: {
-        xlink: "http://www.w3.org/1999/xlink",
-        xsi: "http://www.w3.org/2001/XMLSchema-instance",
         csw: "http://www.opengis.net/cat/csw/2.0.2",
         dc: "http://purl.org/dc/elements/1.1/",
         dct: "http://purl.org/dc/terms/",
-        ows: "http://www.opengis.net/ows"
+        geonet: "http://www.fao.org/geonetwork",
+        ogc: "http://www.opengis.net/ogc",
+        ows: "http://www.opengis.net/ows",
+        xlink: "http://www.w3.org/1999/xlink",
+        xsi: "http://www.w3.org/2001/XMLSchema-instance"
     },
     
     /**
@@ -232,6 +234,17 @@ OpenLayers.Format.CSWGetRecords.v2_0_2 = OpenLayers.Class(OpenLayers.Format.XML,
                 var record = {type: "Record"};
                 this.readChildNodes(node, record);
                 obj.records.push(record);
+            },
+            "*": function(node, obj) {
+                var name = node.localName || node.nodeName.split(":").pop();
+                obj[name] = this.getChildValue(node);
+            }
+        },
+        "geonet": {
+            "info": function(node, obj) {
+                var gninfo = {};
+                this.readChildNodes(node, gninfo);
+                obj.gninfo = gninfo;
             }
         },
         "dc": {
@@ -240,7 +253,7 @@ OpenLayers.Format.CSWGetRecords.v2_0_2 = OpenLayers.Class(OpenLayers.Format.XML,
             // rightsHolder, source, subject, title, type, URI
             "*": function(node, obj) {
                 var name = node.localName || node.nodeName.split(":").pop();
-                if (!(obj[name] instanceof Array)) {
+                if (!(OpenLayers.Util.isArray(obj[name]))) {
                     obj[name] = new Array();
                 }
                 var dc_element = {};
@@ -256,7 +269,7 @@ OpenLayers.Format.CSWGetRecords.v2_0_2 = OpenLayers.Class(OpenLayers.Format.XML,
             // abstract, modified, spatial
             "*": function(node, obj) {
                 var name = node.localName || node.nodeName.split(":").pop();
-                if (!(obj[name] instanceof Array)) {
+                if (!(OpenLayers.Util.isArray(obj[name]))) {
                     obj[name] = new Array();
                 }
                 obj[name].push(this.getChildValue(node));
@@ -329,7 +342,7 @@ OpenLayers.Format.CSWGetRecords.v2_0_2 = OpenLayers.Class(OpenLayers.Format.XML,
                     );
                 }
                 var ResponseHandler = options.ResponseHandler || this.ResponseHandler;
-                if (ResponseHandler instanceof Array && ResponseHandler.length > 0) {
+                if (OpenLayers.Util.isArray(ResponseHandler) && ResponseHandler.length > 0) {
                     // ResponseHandler must be a non-empty array
                     for(var i=0, len=ResponseHandler.length; i<len; i++) {
                         this.writeNode(
@@ -366,7 +379,7 @@ OpenLayers.Format.CSWGetRecords.v2_0_2 = OpenLayers.Class(OpenLayers.Format.XML,
                     }
                 });
                 var ElementName = options.ElementName;
-                if (ElementName instanceof Array && ElementName.length > 0) {
+                if (OpenLayers.Util.isArray(ElementName) && ElementName.length > 0) {
                     // ElementName must be a non-empty array
                     for(var i=0, len=ElementName.length; i<len; i++) {
                         this.writeNode(
@@ -389,14 +402,13 @@ OpenLayers.Format.CSWGetRecords.v2_0_2 = OpenLayers.Class(OpenLayers.Format.XML,
                         node
                     );
                 }
-                //TODO: not implemented in ogc filters?
-                //if (options.SortBy) {
-                    //this.writeNode(
-                        //"ogc:SortBy",
-                        //options.SortBy,
-                        //node
-                    //);
-                //}
+                if (options.SortBy) {
+                    this.writeNode(
+                        "ogc:SortBy",
+                        options.SortBy,
+                        node
+                    );
+                }
                 return node;
             },
             "ElementName": function(options) {
@@ -433,7 +445,8 @@ OpenLayers.Format.CSWGetRecords.v2_0_2 = OpenLayers.Class(OpenLayers.Format.XML,
                 }
                 return node;
             }
-        }
+        },
+        "ogc": OpenLayers.Format.Filter.v1_1_0.prototype.writers["ogc"]
     },
    
     CLASS_NAME: "OpenLayers.Format.CSWGetRecords.v2_0_2" 

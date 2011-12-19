@@ -1,4 +1,4 @@
-/* Copyright (c) 2006-2010 by OpenLayers Contributors (see authors.txt for 
+/* Copyright (c) 2006-2011 by OpenLayers Contributors (see authors.txt for 
  * full list of contributors). Published under the Clear BSD license.  
  * See http://svn.openlayers.org/trunk/openlayers/license.txt for the
  * full text of the license. */
@@ -24,6 +24,32 @@ OpenLayers.Layer.Grid = OpenLayers.Class(OpenLayers.Layer.HTTPRequest, {
      * {<OpenLayers.Size>}
      */
     tileSize: null,
+
+    /**
+     * Property: tileOriginCorner
+     * {String} If the <tileOrigin> property is not provided, the tile origin 
+     *     will be derived from the layer's <maxExtent>.  The corner of the 
+     *     <maxExtent> used is determined by this property.  Acceptable values
+     *     are "tl" (top left), "tr" (top right), "bl" (bottom left), and "br"
+     *     (bottom right).  Default is "bl".
+     */
+    tileOriginCorner: "bl",
+    
+    /**
+     * APIProperty: tileOrigin
+     * {<OpenLayers.LonLat>} Optional origin for aligning the grid of tiles.
+     *     If provided, requests for tiles at all resolutions will be aligned
+     *     with this location (no tiles shall overlap this location).  If
+     *     not provided, the grid of tiles will be aligned with the layer's
+     *     <maxExtent>.  Default is ``null``.
+     */
+    tileOrigin: null,
+    
+    /** APIProperty: tileOptions
+     *  {Object} optional configuration options for <OpenLayers.Tile> instances
+     *  created by this Layer, if supported by the tile class.
+     */
+    tileOptions: null,
     
     /**
      * Property: grid
@@ -52,14 +78,30 @@ OpenLayers.Layer.Grid = OpenLayers.Class(OpenLayers.Layer.HTTPRequest, {
      * {Integer} Used only when in gridded mode, this specifies the number of 
      *           extra rows and colums of tiles on each side which will
      *           surround the minimum grid tiles to cover the map.
+     *           For very slow loading layers, a larger value may increase
+     *           performance somewhat when dragging, but will increase bandwidth
+     *           use significantly. 
      */
-    buffer: 2,
+    buffer: 0,
 
     /**
      * APIProperty: numLoadingTiles
      * {Integer} How many tiles are still loading?
      */
     numLoadingTiles: 0,
+
+    /**
+     * APIProperty: tileLoadingDelay
+     * {Integer} - Number of milliseconds before we shift and load
+     *     tiles. Default is 100.
+     */
+    tileLoadingDelay: 100,
+
+    /**
+     * Property: timerId
+     * {Number} - The id of the tileLoadingDelay timer.
+     */
+    timerId: null,
 
     /**
      * Constructor: OpenLayers.Layer.Grid
@@ -83,6 +125,24 @@ OpenLayers.Layer.Grid = OpenLayers.Class(OpenLayers.Layer.HTTPRequest, {
         this.events.addEventType("tileloaded");
 
         this.grid = [];
+        
+        this._moveGriddedTiles = OpenLayers.Function.bind(
+            this.moveGriddedTiles, this
+        );
+    },
+
+    /**
+     * Method: removeMap
+     * Called when the layer is removed from the map.
+     *
+     * Parameters:
+     * map - {<OpenLayers.Map>} The map.
+     */
+    removeMap: function(map) {
+        if(this.timerId != null) {
+            window.clearTimeout(this.timerId);
+            this.timerId = null;
+        }
     },
 
     /**
@@ -191,11 +251,38 @@ OpenLayers.Layer.Grid = OpenLayers.Class(OpenLayers.Layer.HTTPRequest, {
                 if (forceReTile || !tilesBounds.containsBounds(bounds, true)) {
                     this.initGriddedTiles(bounds);
                 } else {
-                    //we might have to shift our buffer tiles
-                    this.moveGriddedTiles(bounds);
+                    this.scheduleMoveGriddedTiles();
                 }
             }
         }
+    },
+
+    /**
+     * Method: moveByPx
+     * Move the layer based on pixel vector.
+     *
+     * Parameters:
+     * dx - {Number}
+     * dy - {Number}
+     */
+    moveByPx: function(dx, dy) {
+        if (!this.singleTile) {
+            this.scheduleMoveGriddedTiles();
+        }
+    },
+
+    /**
+     * Method: scheduleMoveGriddedTiles
+     * Schedule the move of tiles.
+     */
+    scheduleMoveGriddedTiles: function() {
+        if (this.timerId != null) {
+            window.clearTimeout(this.timerId);
+        }
+        this.timerId = window.setTimeout(
+            this._moveGriddedTiles,
+            this.tileLoadingDelay
+        );
     },
     
     /**
@@ -303,32 +390,32 @@ OpenLayers.Layer.Grid = OpenLayers.Class(OpenLayers.Layer.HTTPRequest, {
 
     /** 
      * Method: calculateGridLayout
-     * Generate parameters for the grid layout. This  
+     * Generate parameters for the grid layout.
      *
      * Parameters:
      * bounds - {<OpenLayers.Bound>}
-     * extent - {<OpenLayers.Bounds>}
+     * origin - {<OpenLayers.LonLat>}
      * resolution - {Number}
      *
      * Returns:
      * Object containing properties tilelon, tilelat, tileoffsetlat,
      * tileoffsetlat, tileoffsetx, tileoffsety
      */
-    calculateGridLayout: function(bounds, extent, resolution) {
+    calculateGridLayout: function(bounds, origin, resolution) {
         var tilelon = resolution * this.tileSize.w;
         var tilelat = resolution * this.tileSize.h;
         
-        var offsetlon = bounds.left - extent.left;
+        var offsetlon = bounds.left - origin.lon;
         var tilecol = Math.floor(offsetlon/tilelon) - this.buffer;
         var tilecolremain = offsetlon/tilelon - tilecol;
         var tileoffsetx = -tilecolremain * this.tileSize.w;
-        var tileoffsetlon = extent.left + tilecol * tilelon;
+        var tileoffsetlon = origin.lon + tilecol * tilelon;
         
-        var offsetlat = bounds.top - (extent.bottom + tilelat);  
+        var offsetlat = bounds.top - (origin.lat + tilelat);  
         var tilerow = Math.ceil(offsetlat/tilelat) + this.buffer;
         var tilerowremain = tilerow - offsetlat/tilelat;
         var tileoffsety = -tilerowremain * this.tileSize.h;
-        var tileoffsetlat = extent.bottom + tilerow * tilelat;
+        var tileoffsetlat = origin.lat + tilerow * tilelat;
         
         return { 
           tilelon: tilelon, tilelat: tilelat,
@@ -336,6 +423,32 @@ OpenLayers.Layer.Grid = OpenLayers.Class(OpenLayers.Layer.HTTPRequest, {
           tileoffsetx: tileoffsetx, tileoffsety: tileoffsety
         };
 
+    },
+    
+    /**
+     * Method: getTileOrigin
+     * Determine the origin for aligning the grid of tiles.  If a <tileOrigin>
+     *     property is supplied, that will be returned.  Otherwise, the origin
+     *     will be derived from the layer's <maxExtent> property.  In this case,
+     *     the tile origin will be the corner of the <maxExtent> given by the 
+     *     <tileOriginCorner> property.
+     *
+     * Returns:
+     * {<OpenLayers.LonLat>} The tile origin.
+     */
+    getTileOrigin: function() {
+        var origin = this.tileOrigin;
+        if (!origin) {
+            var extent = this.getMaxExtent();
+            var edges = ({
+                "tl": ["left", "top"],
+                "tr": ["right", "top"],
+                "bl": ["left", "bottom"],
+                "br": ["right", "bottom"]
+            })[this.tileOriginCorner];
+            origin = new OpenLayers.LonLat(extent[edges[0]], extent[edges[1]]);
+        }
+        return origin;
     },
 
     /**
@@ -355,10 +468,10 @@ OpenLayers.Layer.Grid = OpenLayers.Class(OpenLayers.Layer.HTTPRequest, {
         var minCols = Math.ceil(viewSize.w/this.tileSize.w) +
                       Math.max(1, 2 * this.buffer);
         
-        var extent = this.getMaxExtent();
+        var origin = this.getTileOrigin();
         var resolution = this.map.getResolution();
         
-        var tileLayout = this.calculateGridLayout(bounds, extent, resolution);
+        var tileLayout = this.calculateGridLayout(bounds, origin, resolution);
 
         var tileoffsetx = Math.round(tileLayout.tileoffsetx); // heaven help us
         var tileoffsety = Math.round(tileLayout.tileoffsety);
@@ -518,9 +631,7 @@ OpenLayers.Layer.Grid = OpenLayers.Class(OpenLayers.Layer.HTTPRequest, {
 
     /**
      * APIMethod: addTile
-     * Gives subclasses of Grid the opportunity to create an 
-     * OpenLayer.Tile of their choosing. The implementer should initialize 
-     * the new tile and take whatever steps necessary to display it.
+     * Create a tile, initialize it, and add it to the layer div. 
      *
      * Parameters
      * bounds - {<OpenLayers.Bounds>}
@@ -530,7 +641,8 @@ OpenLayers.Layer.Grid = OpenLayers.Class(OpenLayers.Layer.HTTPRequest, {
      * {<OpenLayers.Tile>} The added OpenLayers.Tile
      */
     addTile:function(bounds, position) {
-        // Should be implemented by subclasses
+        return new OpenLayers.Tile.Image(this, position, bounds, null, 
+                                         this.tileSize, this.tileOptions);
     },
     
     /** 
@@ -584,28 +696,31 @@ OpenLayers.Layer.Grid = OpenLayers.Class(OpenLayers.Layer.HTTPRequest, {
     
     /**
      * Method: moveGriddedTiles
-     * 
-     * Parameters:
-     * bounds - {<OpenLayers.Bounds>}
      */
-    moveGriddedTiles: function(bounds) {
+    moveGriddedTiles: function() {
+        var shifted = true;
         var buffer = this.buffer || 1;
-        while (true) {
-            var tlLayer = this.grid[0][0].position;
-            var tlViewPort = 
-                this.map.getViewPortPxFromLayerPx(tlLayer);
-            if (tlViewPort.x > -this.tileSize.w * (buffer - 1)) {
-                this.shiftColumn(true);
-            } else if (tlViewPort.x < -this.tileSize.w * buffer) {
-                this.shiftColumn(false);
-            } else if (tlViewPort.y > -this.tileSize.h * (buffer - 1)) {
-                this.shiftRow(true);
-            } else if (tlViewPort.y < -this.tileSize.h * buffer) {
-                this.shiftRow(false);
-            } else {
-                break;
-            }
-        };
+        var tlLayer = this.grid[0][0].position;
+        var offsetX = parseInt(this.map.layerContainerDiv.style.left);
+        var offsetY = parseInt(this.map.layerContainerDiv.style.top);
+        var tlViewPort = tlLayer.add(offsetX, offsetY);
+        if (tlViewPort.x > -this.tileSize.w * (buffer - 1)) {
+            this.shiftColumn(true);
+        } else if (tlViewPort.x < -this.tileSize.w * buffer) {
+            this.shiftColumn(false);
+        } else if (tlViewPort.y > -this.tileSize.h * (buffer - 1)) {
+            this.shiftRow(true);
+        } else if (tlViewPort.y < -this.tileSize.h * buffer) {
+            this.shiftRow(false);
+        } else {
+            shifted = false;
+        }
+        if (shifted) {
+            // we may have other row or columns to shift, schedule it
+            // with a setTimeout, to give the user a chance to sneak
+            // in moveTo's
+            this.timerId = window.setTimeout(this._moveGriddedTiles, 0);
+        }
     },
 
     /**
@@ -685,7 +800,7 @@ OpenLayers.Layer.Grid = OpenLayers.Class(OpenLayers.Layer.HTTPRequest, {
      * 
      * Parameters:
      * rows - {Integer} Maximum number of rows we want our grid to have.
-     * colums - {Integer} Maximum number of columns we want our grid to have.
+     * columns - {Integer} Maximum number of columns we want our grid to have.
      */
     removeExcessTiles: function(rows, columns) {
         

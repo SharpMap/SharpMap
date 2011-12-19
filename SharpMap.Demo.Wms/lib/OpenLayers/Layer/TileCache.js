@@ -1,4 +1,4 @@
-/* Copyright (c) 2006-2010 by OpenLayers Contributors (see authors.txt for 
+/* Copyright (c) 2006-2011 by OpenLayers Contributors (see authors.txt for 
  * full list of contributors). Published under the Clear BSD license.  
  * See http://svn.openlayers.org/trunk/openlayers/license.txt for the
  * full text of the license. */
@@ -6,6 +6,7 @@
 
 /**
  * @requires OpenLayers/Layer/Grid.js
+ * @requires OpenLayers/Tile/Image.js
  */
 
 /**
@@ -137,28 +138,11 @@ OpenLayers.Layer.TileCache = OpenLayers.Class(OpenLayers.Layer.Grid, {
         ];
         var path = components.join('/'); 
         var url = this.url;
-        if (url instanceof Array) {
+        if (OpenLayers.Util.isArray(url)) {
             url = this.selectUrl(path, url);
         }
         url = (url.charAt(url.length - 1) == '/') ? url : url + '/';
         return url + path;
-    },
-
-    /**
-     * Method: addTile
-     * Create a tile, initialize it, and add it to the layer div. 
-     *
-     * Parameters: 
-     * bounds - {<OpenLayers.Bounds>} 
-     * position - {<OpenLayers.Pixel>}
-     *
-     * Returns:
-     * {<OpenLayers.Tile.Image>} The added <OpenLayers.Tile.Image>
-     */
-    addTile:function(bounds, position) {
-        var url = this.getURL(bounds);
-        return new OpenLayers.Tile.Image(this, position, bounds, 
-                                             url, this.tileSize);
     },
     
     CLASS_NAME: "OpenLayers.Layer.TileCache"

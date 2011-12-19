@@ -1,4 +1,4 @@
-/* Copyright (c) 2006-2010 by OpenLayers Contributors (see authors.txt for 
+/* Copyright (c) 2006-2011 by OpenLayers Contributors (see authors.txt for 
  * full list of contributors). Published under the Clear BSD license.  
  * See http://svn.openlayers.org/trunk/openlayers/license.txt for the
  * full text of the license. */
@@ -34,6 +34,11 @@ OpenLayers.Request = {
         failure: null,
         scope: null
     },
+    
+    /**
+     * Constant: URL_SPLIT_REGEX
+     */
+    URL_SPLIT_REGEX: /([^:]*:)\/\/([^:]*:?[^@]*@)?([^:\/\?]*):?([^\/\?]*)/,
     
     /**
      * APIProperty: events
@@ -120,19 +125,30 @@ OpenLayers.Request = {
 
         // create request, open, and set headers
         var request = new OpenLayers.Request.XMLHttpRequest();
-        var url = config.url;
-        if(config.params) {
-            var paramString = OpenLayers.Util.getParameterString(config.params);
-            if(paramString.length > 0) {
-                var separator = (url.indexOf('?') > -1) ? '&' : '?';
-                url += separator + paramString;
+        var url = OpenLayers.Util.urlAppend(config.url, 
+            OpenLayers.Util.getParameterString(config.params || {}));
+        var sameOrigin = !(url.indexOf("http") == 0);
+        var urlParts = !sameOrigin && url.match(this.URL_SPLIT_REGEX);
+        if (urlParts) {
+            var location = window.location;
+            sameOrigin =
+                urlParts[1] == location.protocol &&
+                urlParts[3] == location.hostname;
+            var uPort = urlParts[4], lPort = location.port;
+            if (uPort != 80 && uPort != "" || lPort != "80" && lPort != "") {
+                sameOrigin = sameOrigin && uPort == lPort;
             }
         }
-        if(config.proxy && (url.indexOf("http") == 0)) {
-            if(typeof config.proxy == "function") {
-                url = config.proxy(url);
+        if (!sameOrigin) {
+            if (config.proxy) {
+                if (typeof config.proxy == "function") {
+                    url = config.proxy(url);
+                } else {
+                    url = config.proxy + encodeURIComponent(url);
+                }
             } else {
-                url = config.proxy + encodeURIComponent(url);
+                OpenLayers.Console.warn(
+                    OpenLayers.i18n("proxyNeeded"), {url: url});
             }
         }
         request.open(
@@ -169,7 +185,7 @@ OpenLayers.Request = {
             request.send(config.data);
         } else {
             window.setTimeout(function(){
-                if (request._aborted !== true) {
+                if (request.readyState !== 0) { // W3C: 0-UNSENT
                     request.send(config.data);
                 }
             }, 0);
@@ -213,6 +229,10 @@ OpenLayers.Request = {
                 config.failure;
         }
 
+        if (OpenLayers.Util.createUrlObject(config.url).protocol == "file:" &&
+                                                        request.responseText) {
+            request.status = 200;
+        }
         complete(request);
 
         if (!request.status || (request.status >= 200 && request.status < 300)) {

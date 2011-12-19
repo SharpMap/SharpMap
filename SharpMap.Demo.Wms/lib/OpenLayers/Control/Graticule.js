@@ -1,10 +1,11 @@
-/* Copyright (c) 2006-2010 by OpenLayers Contributors (see authors.txt for 
+/* Copyright (c) 2006-2011 by OpenLayers Contributors (see authors.txt for 
  * full list of contributors). Published under the Clear BSD license.  
  * See http://svn.openlayers.org/trunk/openlayers/license.txt for the
  * full text of the license. */
 
 /**
  * @requires OpenLayers/Control.js
+ * @requires OpenLayers/Lang.js
  */
 
 /**
@@ -112,7 +113,7 @@ OpenLayers.Control.Graticule = OpenLayers.Class(OpenLayers.Control, {
      */
     initialize: function(options) {
         options = options || {};
-        options.layerName = options.layerName || OpenLayers.i18n("graticule");
+        options.layerName = options.layerName || OpenLayers.i18n("Graticule");
         OpenLayers.Control.prototype.initialize.apply(this, [options]);
         
         this.labelSymbolizer.stroke = false;
