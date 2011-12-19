@@ -1,10 +1,10 @@
-$(document).ready(function() {
+$(document).ready(function () {
     var options, init;
 
     OpenLayers.DOTS_PER_INCH = 25.4 / 0.28;
     OpenLayers.IMAGE_RELOAD_ATTEMPTS = 5;
     OpenLayers.Util.onImageLoadErrorColor = 'transparent';
-    OpenLayers.Util.onImageLoadError = function() {
+    OpenLayers.Util.onImageLoadError = function () {
         this.src = '/Content/Images/sorry.jpg';
         this.style.backgroundColor = OpenLayers.Util.onImageLoadErrorColor;
     };
@@ -48,7 +48,7 @@ $(document).ready(function() {
         format: 'text/json'
     };
 
-    init = function() {
+    init = function () {
         var lon = -73.9529;
         var lat = 40.7723;
         var zoom = 10;
@@ -69,15 +69,17 @@ $(document).ready(function() {
             '?SERVICE=', options.wms,
             '&FORMAT=', options.format,
             '&CRS=', options.projection.getCode(),
-            '&REQUEST=GETMAP&VERSION=1.3.0&STYLES=&WIDTH=0&HEIGHT=0&MAP_TYPE=OL'
-        ].join('')
+            '&REQUEST=GETFEATUREINFO&VERSION=1.3.0&STYLES=&WIDTH=20&HEIGHT=20&I=10&J=10&MAP_TYPE=OL&LAYERS=poi,tiger_roads,poly_landmarks',
+            '&FEATURE_COUNT=0', // NOTE: ignored for json requests
+            '&INFO_FORMAT=', options.format
+        ].join('');
 
         layers.push(
             new OpenLayers.Layer.Vector(
                 'POI', {
                     strategies: [new OpenLayers.Strategy.BBOX()],
                     protocol: new OpenLayers.Protocol.HTTP({
-                        url: [url, '&LAYERS=poi'].join(''),
+                        url: [url, '&QUERY_LAYERS=poi'].join(''),
                         format: new OpenLayers.Format.GeoJSON()
                     }),
                     styleMap: OpenLayers.Resources.Styles.Layers.editable,
@@ -88,7 +90,7 @@ $(document).ready(function() {
                 'Roads', {
                     strategies: [new OpenLayers.Strategy.BBOX()],
                     protocol: new OpenLayers.Protocol.HTTP({
-                        url: [url, '&LAYERS=tiger_roads'].join(''),
+                        url: [url, '&QUERY_LAYERS=tiger_roads'].join(''),
                         format: new OpenLayers.Format.GeoJSON()
                     }),
                     styleMap: OpenLayers.Resources.Styles.Layers.editable,
@@ -99,7 +101,7 @@ $(document).ready(function() {
                 'Landmarks', {
                     strategies: [new OpenLayers.Strategy.BBOX()],
                     protocol: new OpenLayers.Protocol.HTTP({
-                        url: [url, '&LAYERS=poly_landmarks'].join(''),
+                        url: [url, '&QUERY_LAYERS=poly_landmarks'].join(''),
                         format: new OpenLayers.Format.GeoJSON()
                     }),
                     styleMap: OpenLayers.Resources.Styles.Layers.editable,

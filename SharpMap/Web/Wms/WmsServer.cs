@@ -20,14 +20,16 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Web;
 using System.Xml;
 using SharpMap.Geometries;
 using SharpMap.Layers;
 using System.Collections.Generic;
+using ProjNet.CoordinateSystems.Transformations;
 
 namespace SharpMap.Web.Wms
-{
+{    
     /// <summary>
     /// This is a helper class designed to make it easy to create a WMS Service
     /// </summary>
@@ -775,6 +777,24 @@ namespace SharpMap.Web.Wms
                                 fds.Tables[0] = _intersectDelegate(fds.Tables[0], queryBox);
                             }
                             IEnumerable<SharpMap.Converters.GeoJSON.GeoJSON> data = SharpMap.Converters.GeoJSON.GeoJSONHelper.GetData(fds);
+
+                            // Reproject geometries if needed
+                            IMathTransform transform = null;
+                            if (queryLayer is VectorLayer)
+                            {
+                                ICoordinateTransformation transformation = (queryLayer as VectorLayer).CoordinateTransformation;
+                                transform = transformation == null ? null : transformation.MathTransform;
+                            }
+                            if (transform != null)
+                            {
+                                data = data.Select(d =>
+                                {
+                                    Geometry converted = GeometryTransform.TransformGeometry(d.Geometry, transform);
+                                    d.SetGeometry(converted);
+                                    return d;
+                                });
+                            }
+
                             items.AddRange(data);
                         }
                     }

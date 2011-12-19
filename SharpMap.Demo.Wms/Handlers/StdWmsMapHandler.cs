@@ -16,7 +16,7 @@
                 string url = GetFixedUrl(request);
                 Capabilities.WmsServiceDescription description = GetDescription(url);
                 Map map = this.GetMap(request);
-                WmsServer.ParseQueryString(map, description);
+                WmsServer.ParseQueryString(map, description, 10, null);
             }
             catch (Exception ex)
             {

@@ -28,7 +28,6 @@ namespace SharpMap.Demo.Wms.Handlers
                     return;
                 }
 
-                
                 BoundingBox bbox = WmsServer.ParseBBOX(s);
                 if (bbox == null)
                 {
@@ -79,13 +78,12 @@ namespace SharpMap.Demo.Wms.Handlers
                 }
                 if (transform != null)
                 {
-                    data = data.Select(
-                        d =>
-                            {
-                                Geometry converted = GeometryTransform.TransformGeometry(d.Geometry, transform);
-                                d.SetGeometry(converted);
-                                return d;
-                            });
+                    data = data.Select(d =>
+                    {
+                        Geometry converted = GeometryTransform.TransformGeometry(d.Geometry, transform);
+                        d.SetGeometry(converted);
+                        return d;
+                    });
                 }
 
                 items.AddRange(data);
