@@ -27,7 +27,7 @@ namespace SharpMap.Web.Wcs
         private XmlDocument _xmlDoc;
         private string _baseUrl;
         private string _capabilitiesUrl;
-        private WebProxy _proxy;
+        private IWebProxy _proxy;
         private int _timeOut;
         private ICredentials _credentials = null;
         private XmlNode _vendorSpecificCapabilities;
@@ -61,7 +61,7 @@ namespace SharpMap.Web.Wcs
         /// <summary>
         /// 
         /// </summary>
-        public WebProxy Proxy
+        public IWebProxy Proxy
         {
             get
             {
@@ -171,7 +171,7 @@ namespace SharpMap.Web.Wcs
         /// </summary>
         /// <param name="url">URL of wms server</param>
         /// <param name="proxy">Proxy to use</param>
-        public Client(string url, WebProxy proxy)
+        public Client(string url, IWebProxy proxy)
             : this(url, proxy, 10000, null, "") { }
 
         /// <summary>
@@ -180,7 +180,7 @@ namespace SharpMap.Web.Wcs
         /// <param name="url">URL of wms server</param>
         /// <param name="proxy">Proxy to use</param>
         /// <param name="timeOut"></param>
-        public Client(string url, WebProxy proxy, int timeOut)
+        public Client(string url, IWebProxy proxy, int timeOut)
             : this(url, proxy, timeOut, null, "") { }
 
         /// <summary>
@@ -189,7 +189,7 @@ namespace SharpMap.Web.Wcs
         /// <param name="url">URL of wms server</param>
         /// <param name="proxy">Proxy to use</param>
         /// <param name="credentials">Credentials for autenticating against remote WMS-server</param>
-        public Client(string url, WebProxy proxy, ICredentials credentials)
+        public Client(string url, IWebProxy proxy, ICredentials credentials)
             : this(url, proxy, 10000, credentials, "") { }
 
         /// <summary>
@@ -199,7 +199,7 @@ namespace SharpMap.Web.Wcs
         /// <param name="proxy">Proxy to use</param>
         /// <param name="timeOut">Web request timeout</param>
         /// <param name="credentials">Credentials for autenticating against remote WMS-server</param>
-        public Client(string url, WebProxy proxy, int timeOut, ICredentials credentials)
+        public Client(string url, IWebProxy proxy, int timeOut, ICredentials credentials)
             : this(url, proxy, timeOut, credentials, "") { }
 
         /// <summary>
@@ -209,7 +209,7 @@ namespace SharpMap.Web.Wcs
         /// <param name="proxy">Proxy to use</param>
         /// <param name="timeOut">Web request timeout</param>
         /// <param name="version"></param>
-        public Client(string url, WebProxy proxy, int timeOut, string version)
+        public Client(string url, IWebProxy proxy, int timeOut, string version)
             : this(url, proxy, timeOut, null, version) { }
 
         /// <summary>
@@ -220,7 +220,7 @@ namespace SharpMap.Web.Wcs
         /// <param name="timeOut">Web request timeout</param>
         /// <param name="version"></param>
         /// <param name="credentials"></param>
-        public Client(string url, WebProxy proxy, int timeOut, ICredentials credentials, string version)
+        public Client(string url, IWebProxy proxy, int timeOut, ICredentials credentials, string version)
         {
             _baseUrl = url;
             _proxy = proxy;

@@ -8,7 +8,7 @@ namespace SharpMap.Web
         //Properties
         XmlNode VendorSpecificCapabilities { get; }
         int TimeOut { get; set; }
-        WebProxy Proxy { get; set; }
+        IWebProxy Proxy { get; set; }
         ICredentials Credentials { get; set; }
         string BaseUrl { get; set; }
         string CapabilitiesUrl { get; }

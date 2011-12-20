@@ -67,7 +67,7 @@ namespace SharpMap.Layers
         private ImageAttributes _ImageAttributes;
         private Collection<string> _LayerList;
         private string _MimeType = "";
-        private WebProxy _Proxy;
+        private IWebProxy _Proxy;
         private Collection<string> _StylesList;
         private int _TimeOut;
         private Client wmsClient;
@@ -103,7 +103,7 @@ namespace SharpMap.Layers
         /// <param name="layername">Layername</param>
         /// <param name="url">Url of WMS server</param>
         /// <param name="proxy">Proxy</param>
-        public WmsLayer(string layername, string url, WebProxy proxy)
+        public WmsLayer(string layername, string url, IWebProxy proxy)
             : this(layername, url, new TimeSpan(24, 0, 0), proxy)
         {
         }
@@ -115,7 +115,7 @@ namespace SharpMap.Layers
         /// <param name="url">Url of WMS server</param>
         /// <param name="cachetime">Time for caching Service Description (ASP.NET only)</param>
         /// <param name="proxy">Proxy</param>
-        public WmsLayer(string layername, string url, TimeSpan cachetime, WebProxy proxy)
+        public WmsLayer(string layername, string url, TimeSpan cachetime, IWebProxy proxy)
             : this(layername, url, new TimeSpan(24, 0, 0), proxy, null)
         {
         }
@@ -128,7 +128,7 @@ namespace SharpMap.Layers
         /// <param name="cachetime">Time for caching Service Description (ASP.NET only)</param>
         /// <param name="proxy">Proxy</param>
         /// <param name="credentials"></param>
-        public WmsLayer(string layername, string url, TimeSpan cachetime, WebProxy proxy, ICredentials credentials)
+        public WmsLayer(string layername, string url, TimeSpan cachetime, IWebProxy proxy, ICredentials credentials)
         {
             _Proxy = proxy;
             _TimeOut = 10000;
@@ -331,7 +331,7 @@ namespace SharpMap.Layers
         /// <summary>
         /// Gets or sets the proxy used for requesting a webresource
         /// </summary>
-        public WebProxy Proxy
+        public IWebProxy Proxy
         {
             get { return _Proxy; }
             set { _Proxy = value; }
