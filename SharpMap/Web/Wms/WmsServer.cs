@@ -43,7 +43,7 @@ namespace SharpMap.Web.Wms
         #endregion
 
         private static InterSectDelegate _intersectDelegate;
-        private static int _pixelSensitivity;
+        private static int _pixelSensitivity = -1;
         /// <summary>
         /// Generates a WMS 1.3.0 compliant response based on a <see cref="SharpMap.Map"/> and the current HttpRequest.
         /// </summary>
@@ -98,7 +98,8 @@ namespace SharpMap.Web.Wms
         public static void ParseQueryString(Map map, Capabilities.WmsServiceDescription description, int pixelSensitivity, InterSectDelegate intersectDelegate)
         {
             _intersectDelegate = intersectDelegate;
-            _pixelSensitivity = pixelSensitivity;
+            if (pixelSensitivity > 0)
+                _pixelSensitivity = pixelSensitivity;
             ParseQueryString(map, description);
         }
         /// <summary>
@@ -153,7 +154,8 @@ namespace SharpMap.Web.Wms
         /// <param name="description">Description of map service</param>
         public static void ParseQueryString(Map map, Capabilities.WmsServiceDescription description)
         {
-            _pixelSensitivity = 1;
+            if (_pixelSensitivity ==-1)
+                _pixelSensitivity = 1;
             if (map == null)
                 throw (new ArgumentException("Map for WMS is null"));
             if (map.Layers.Count == 0)
