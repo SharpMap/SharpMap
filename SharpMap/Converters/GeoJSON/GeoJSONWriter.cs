@@ -238,9 +238,7 @@ namespace SharpMap.Converters.GeoJSON
             writer.WriteStartArray();
             foreach (LineString line in lines)
             {
-                writer.WriteStartArray();
                 WriteCoord(line.Vertices, writer);
-                writer.WriteEndArray();
             }
             writer.WriteEndArray();
             writer.WriteEndObject();
