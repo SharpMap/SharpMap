@@ -5,7 +5,7 @@
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation; either version 2 of the License, or
 // (at your option) any later version.
-// 
+//
 // SharpMap is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -13,9 +13,10 @@
 
 // You should have received a copy of the GNU Lesser General Public License
 // along with SharpMap; if not, write to the Free Software
-// Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
+// Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #if !DotSpatialProjections
+
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -43,10 +44,10 @@ namespace ProjNet.CoordinateSystems.Transformations
             var ur = box.Max.ToDoubleArray();
             var llTrans = transform.Transform(ll);
             var urTrans = transform.Transform(ur);
-            corners[0] = new Point(llTrans); //LL
-            corners[1] = new Point(urTrans); //UR
-            corners[2] = new Point(llTrans[0], urTrans[1]); //UL
-            corners[3] = new Point(llTrans[1], urTrans[0]); //LR
+            corners[0] = new Point(llTrans);                //lower left
+            corners[2] = new Point(llTrans[0], urTrans[1]); //upper left
+            corners[1] = new Point(urTrans);                //upper right
+            corners[3] = new Point(urTrans[0], llTrans[1]); //lower right
 
             BoundingBox result = corners[0].GetBoundingBox();
             for (int i = 1; i < 4; i++)
@@ -112,7 +113,7 @@ namespace ProjNet.CoordinateSystems.Transformations
                 List<double[]> points = new List<double[]>();
 
                 for (int i = 0; i < l.Vertices.Count; i++)
-                    points.Add(new double[2] {l.Vertices[i].X, l.Vertices[i].Y});
+                    points.Add(new double[2] { l.Vertices[i].X, l.Vertices[i].Y });
 
                 return new LineString(transform.TransformList(points));
             }
@@ -135,7 +136,7 @@ namespace ProjNet.CoordinateSystems.Transformations
                 List<double[]> points = new List<double[]>();
 
                 for (int i = 0; i < r.Vertices.Count; i++)
-                    points.Add(new double[2] {r.Vertices[i].X, r.Vertices[i].Y});
+                    points.Add(new double[2] { r.Vertices[i].X, r.Vertices[i].Y });
 
                 return new LinearRing(transform.TransformList(points));
             }
@@ -171,7 +172,7 @@ namespace ProjNet.CoordinateSystems.Transformations
         {
             List<double[]> pts = new List<double[]>();
             for (int i = 0; i < points.NumGeometries; i++)
-                pts.Add(new double[2] {points[i].X, points[i].Y});
+                pts.Add(new double[2] { points[i].X, points[i].Y });
 
             return new MultiPoint(transform.TransformList(pts));
         }
@@ -225,4 +226,5 @@ namespace ProjNet.CoordinateSystems.Transformations
         }
     }
 }
+
 #endif
