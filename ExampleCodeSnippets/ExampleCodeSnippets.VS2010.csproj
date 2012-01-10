@@ -120,7 +120,7 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>copy /b /y "$(SolutionDir)DemoWinForm\Resources\Women.png" $(TargetDir)Women.png</PostBuildEvent>
+    <PostBuildEvent>copy /b /y "$(SolutionDir)DemoWinForm\Resources\Women.png" "$(TargetDir)Women.png"</PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
     <PreBuildEvent>"$(SolutionDir)BuildTools\nuget.exe" install "$(ProjectDir)packages.config" -o "$(SolutionDir)Packages"</PreBuildEvent>
