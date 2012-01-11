@@ -270,6 +270,15 @@ namespace SharpMap.Data.Providers
             set { _Label = value; }
         }
 
+        /// <summary>
+        /// Gets or sets the network credentials used for authenticating the request with the Internet resource
+        /// </summary>
+        public ICredentials Credentials
+        {
+            get { return _HttpClientUtil.Credentials; }
+            set { _HttpClientUtil.Credentials = value; }
+        }
+
         #endregion
 
         #region Constructors

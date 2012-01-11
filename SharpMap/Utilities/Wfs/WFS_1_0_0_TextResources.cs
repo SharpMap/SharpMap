@@ -80,7 +80,7 @@ namespace SharpMap.Utilities.Wfs
 
             return "?SERVICE=WFS&Version=1.0.0&REQUEST=GetFeature&TYPENAME=" + qualification + featureTypeInfo.Name +
                    "&PROPERTYNAME=" + qualification + featureTypeInfo.Geometry._GeometryName +
-                   "&SRS =" + featureTypeInfo.SRID + filterBuilder;
+                   "&SRS=" + featureTypeInfo.SRID + filterBuilder;
         }
 
         /// <summary>

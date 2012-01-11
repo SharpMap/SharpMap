@@ -24,6 +24,7 @@ namespace SharpMap.Utilities.Wfs
         private string _Url;
         private HttpWebRequest _WebRequest;
         private HttpWebResponse _WebResponse;
+        private ICredentials _Credentials;
 
         /// <summary>
         /// Gets ans sets the Url of the request.
@@ -49,6 +50,15 @@ namespace SharpMap.Utilities.Wfs
         public byte[] PostData
         {
             set { _PostData = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets the network credentials used for authenticating the request with the Internet resource
+        /// </summary>
+        public ICredentials Credentials
+        {
+            get { return _Credentials; }
+            set { _Credentials = value; }
         }
 
         #endregion
@@ -112,6 +122,12 @@ namespace SharpMap.Utilities.Wfs
             try
             {
                 _WebRequest.Headers.Add(_RequestHeaders);
+
+                if (Credentials != null)
+                {
+                    _WebRequest.UseDefaultCredentials = false;
+                    _WebRequest.Credentials = Credentials;
+                }
 
                 /* HTTP POST */
                 if (_PostData != null)

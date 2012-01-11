@@ -468,4 +468,40 @@ namespace SharpMap.Utilities.Wfs
         /// </summary>
         /// <returns>An XML string</returns>
     }
+
+    /// <summary>
+    /// This class provides an interface for creating an OGC PropertyIsNullFilter Version 1.1.0.
+    /// </summary>
+    public class PropertyIsNullFilter_FE1_1_0 : OGCFilterBase, IFilter
+    {
+        #region Constructors
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PropertyIsNullFilter_FE1_1_0 "/> class.
+        /// </summary>
+        public PropertyIsNullFilter_FE1_1_0(string id)
+            : base(new[] { id })
+        {
+        }
+
+        #endregion
+
+        #region IFilter Member
+
+        /// <summary>
+        /// This method encodes the filter in XML.
+        /// </summary>
+        /// <returns>An XML string</returns>
+        public string Encode()
+        {
+            return
+                @"
+            <PropertyIsNull>
+                <PropertyName>" +
+                _Args[0] + @"</PropertyName>
+            </PropertyIsNull>";
+        }
+
+        #endregion
+    }
 }

@@ -194,7 +194,7 @@ namespace SharpMap.Utilities.Wfs
                 double c1 = Convert.ToDouble(coordinateValues[i++], _FormatInfo);
                 double c2 = Convert.ToDouble(coordinateValues[i++], _FormatInfo);
 
-                if (name.Equals("coordinates"))
+                if (name.Equals("coordinates") || name.Equals("pos"))
                     vertices.Add(new Point(c1, c2));
                 else
                     vertices.Add(new Point(c2, c1));
@@ -309,13 +309,15 @@ namespace SharpMap.Utilities.Wfs
                                                      (NameTable) _XmlReader.NameTable);
             IPathNode posListNode = new PathNode("http://www.opengis.net/gml", "posList",
                                                  (NameTable) _XmlReader.NameTable);
+            IPathNode posNode = new PathNode("http://www.opengis.net/gml", "pos",
+                                                 (NameTable)_XmlReader.NameTable);
             IPathNode ogcServiceExceptionNode = new PathNode("http://www.opengis.net/ogc", "ServiceException",
                                                              (NameTable) _XmlReader.NameTable);
             IPathNode serviceExceptionNode = new PathNode("", "ServiceException", (NameTable) _XmlReader.NameTable);
                 //ServiceExceptions without ogc prefix are returned by deegree. PDD.
             IPathNode exceptionTextNode = new PathNode("http://www.opengis.net/ows", "ExceptionText",
                                                        (NameTable) _XmlReader.NameTable);
-            _CoordinatesNode = new AlternativePathNodesCollection(coordinatesNode, posListNode);
+            _CoordinatesNode = new AlternativePathNodesCollection(coordinatesNode, posListNode, posNode);
             _ServiceExceptionNode = new AlternativePathNodesCollection(ogcServiceExceptionNode, exceptionTextNode,
                                                                        serviceExceptionNode);
             _FeatureNode = new PathNode(_FeatureTypeInfo.FeatureTypeNamespace, _FeatureTypeInfo.Name,

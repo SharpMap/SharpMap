@@ -72,7 +72,12 @@ namespace SharpMap.Utilities.Wfs
                                      featureTypeInfo.FeatureTypeNamespace + "%22");
                     //added by PDD to get it to work for deegree default sample
             }
-            filterBuilder.Append("%3E%3CBBOX%3E%3CPropertyName%3E");
+            filterBuilder.Append("%3E");
+            if (filter != null)
+            {
+                filterBuilder.Append("%3CAnd%3E");
+            }
+            filterBuilder.Append("%3CBBOX%3E%3CPropertyName%3E");
             filterBuilder.Append(qualification);
             filterBuilder.Append(featureTypeInfo.Geometry._GeometryName);
             filterBuilder.Append("%3C/PropertyName%3E%3Cgml:Box%20srsName='EPSG:" + featureTypeInfo.SRID + "'%3E");
@@ -83,6 +88,10 @@ namespace SharpMap.Utilities.Wfs
             filterBuilder.Append(XmlConvert.ToString(boundingBox.Top));
             filterBuilder.Append("%3C/gml:coordinates%3E%3C/gml:Box%3E%3C/BBOX%3E");
             filterBuilder.Append(filterString);
+            if (filter != null)
+            {
+                filterBuilder.Append("%3C/And%3E");
+            }
             filterBuilder.Append("%3C/Filter%3E");
 
             if (!string.IsNullOrEmpty(featureTypeInfo.Prefix))
@@ -94,7 +103,7 @@ namespace SharpMap.Utilities.Wfs
 
             return "?SERVICE=WFS&Version=1.1.0&REQUEST=GetFeature&TYPENAME=" + qualification + featureTypeInfo.Name +
                    "&PROPERTYNAME=" + qualification + featureTypeInfo.Geometry._GeometryName +
-                   "&SRS =" + featureTypeInfo.SRID + filterBuilder;
+                   "&SRS=" + featureTypeInfo.SRID + filterBuilder;
         }
 
         /// <summary>
