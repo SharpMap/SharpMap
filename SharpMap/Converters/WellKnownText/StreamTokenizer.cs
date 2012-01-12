@@ -60,7 +60,7 @@ namespace SharpMap.Converters.WellKnownText.IO
     internal class StreamTokenizer
     {
         private int _colNumber = 1;
-        private string _currentToken;
+        private StringBuilder _currentToken;
         private TokenType _currentTokenType;
         private bool _ignoreWhitespace = false;
         private int _lineNumber = 1;
@@ -81,6 +81,7 @@ namespace SharpMap.Converters.WellKnownText.IO
             }
             _reader = reader;
             _ignoreWhitespace = ignoreWhitespace;
+            _currentToken = new StringBuilder();
         }
 
         #endregion
@@ -132,7 +133,7 @@ namespace SharpMap.Converters.WellKnownText.IO
         /// </summary>
         public string GetStringValue()
         {
-            return _currentToken;
+            return _currentToken.ToString();
         }
 
         /// <summary>
@@ -176,26 +177,18 @@ namespace SharpMap.Converters.WellKnownText.IO
         {
             TokenType nextTokenType = TokenType.Eof;
             char[] chars = new char[1];
-            _currentToken = "";
+            _currentToken.Clear();
             _currentTokenType = TokenType.Eof;
             int finished = _reader.Read(chars, 0, 1);
 
             bool isNumber = false;
             bool isWord = false;
-            byte[] ba = null;
-            ASCIIEncoding AE = new ASCIIEncoding();
-            char[] ascii = null;
             Char currentCharacter;
             Char nextCharacter;
             while (finished != 0)
             {
-                // convert int to char
-                ba = new Byte[] {(byte) _reader.Peek()};
-
-                ascii = AE.GetChars(ba);
-
                 currentCharacter = chars[0];
-                nextCharacter = ascii[0];
+                nextCharacter = (char)_reader.Peek();
                 _currentTokenType = GetType(currentCharacter);
                 nextTokenType = GetType(nextCharacter);
 
@@ -263,7 +256,7 @@ namespace SharpMap.Converters.WellKnownText.IO
                     _colNumber = 1;
                 }
 
-                _currentToken = _currentToken + currentCharacter;
+                _currentToken.Append(currentCharacter);
                 //if (_currentTokenType==TokenType.Word && nextCharacter=='_')
                 //{
                 // enable words with _ inbetween
