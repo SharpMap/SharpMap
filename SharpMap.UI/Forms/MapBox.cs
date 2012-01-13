@@ -859,12 +859,12 @@ namespace SharpMap.Forms
                 }
 
                 int generation = ++_imageGeneration;
-                new Thread(new ThreadStart(
+                ThreadPool.QueueUserWorkItem(
                     delegate
                     {
                         GetImagesAsync(bbox);
                         GetImagesAsyncEnd(new GetImageEndResult {Tool = oldTool, bbox= bbox, generation = generation });
-                    })).Start();
+                    });
             }
             else
             {
