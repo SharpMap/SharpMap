@@ -6,6 +6,7 @@
 </asp:Content>
 <asp:Content ID="jsContent" ContentPlaceHolderID="CustomJsContent" runat="server">
     <script type="text/javascript" src="<%=this.Url.Content("~/lib/OpenLayers.js?v=1")%>"></script>    
+    <script type="text/javascript" src="<%=this.Url.Content("~/Scripts/ol/LoadingPanel.js?v=1")%>"></script>
     <script type="text/javascript" src="<%=this.Url.Content("~/Scripts/ole/Editor.js?v=1")%>"></script>
     <script type="text/javascript" src="<%=this.Url.Content("~/Scripts/ole/Editor/Control/CleanFeature.js?v=1")%>"></script>
     <script type="text/javascript" src="<%=this.Url.Content("~/Scripts/ole/Editor/Control/DeleteFeature.js?v=1")%>"></script>

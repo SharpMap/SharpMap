@@ -1,4 +1,4 @@
-$(document).ready(function() {
+﻿$(document).ready(function () {
     var options, init;
 
     OpenLayers.DOTS_PER_INCH = 25.4 / 0.28;
@@ -56,10 +56,9 @@ $(document).ready(function() {
         var lon = -73.9529;
         var lat = 40.7723;
         var zoom = 10;
-        var map, sharpmap, click, toolbar, center;
+        var map, sharpmap, center, editor;
 
         map = new OpenLayers.Map('map', options);
-        map.addControl(new OpenLayers.Control.LayerSwitcher());
         map.addControl(new OpenLayers.Control.PanZoom({
             position: new OpenLayers.Pixel(2, 10)
         }));
@@ -86,28 +85,15 @@ $(document).ready(function() {
         sharpmap.mergeNewParams(options.wmsparams);
         map.addLayers([new OpenLayers.Layer.OSM(), sharpmap]);
 
-        click = new OpenLayers.Control.WMSGetFeatureInfo({
-            url: '/wms.ashx',
-            title: 'Identify features by clicking',
-            layers: [sharpmap],
-            vendorParams: options.wmsparams,
-            queryVisible: true
-        });
-        click.events.register("getfeatureinfo", this, function(evt) {
-            alert(evt.text);
-        });
-
-        toolbar = OpenLayers.Class(OpenLayers.Control.NavToolbar, {
-            initialize: function() {
-                OpenLayers.Control.NavToolbar.prototype.initialize.apply(this, [options]);
-                this.addControls([click]);
-            }
-        });
-        map.addControl(new toolbar());
-
         center = new OpenLayers.LonLat(lon, lat);
         center.transform(options.displayProjection, options.projection);
         map.setCenter(center, zoom);
+
+        editor = new OpenLayers.Editor(map, {
+            activeControls: ['Navigation', 'SnappingSettings', 'Separator', 'DeleteFeature', 'SelectFeature', 'Separator', 'DrawHole'],
+            featureTypes: ['polygon', 'path', 'point']
+        });
+        editor.startEditMode();
     };
     init();
 });
