@@ -86,6 +86,24 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\geosilk.css" />
+    <Content Include="Content\img\bg-map.png" />
+    <Content Include="Content\img\cleanFeature.png" />
+    <Content Include="Content\img\deleteFeature.png" />
+    <Content Include="Content\img\dragFeature.png" />
+    <Content Include="Content\img\drawHole.png" />
+    <Content Include="Content\img\drawLine.png" />
+    <Content Include="Content\img\drawPath.png" />
+    <Content Include="Content\img\drawPoint.png" />
+    <Content Include="Content\img\drawPolygon.png" />
+    <Content Include="Content\img\importFeature.png" />
+    <Content Include="Content\img\mergeFeature.png" />
+    <Content Include="Content\img\modifyFeature.png" />
+    <Content Include="Content\img\navigation.png" />
+    <Content Include="Content\img\selectFeature.png" />
+    <Content Include="Content\img\snappingActive.png" />
+    <Content Include="Content\img\snappingInactive.png" />
+    <Content Include="Content\img\splitFeature.png" />
     <Content Include="Global.asax" />
     <Content Include="lib\OpenLayers\BaseTypes\Date.js" />
     <Content Include="lib\OpenLayers\Control\Geolocate.js" />
@@ -115,8 +133,31 @@
     <Content Include="lib\OpenLayers\Protocol\Script.js" />
     <Content Include="lib\OpenLayers\Renderer\NG.js" />
     <Content Include="lib\OpenLayers\Renderer\SVG2.js" />
+    <Content Include="Scripts\script_editor.js" />
+    <Content Include="Scripts\ole\Editor.js" />
+    <Content Include="Scripts\ole\Editor\Control\CleanFeature.js" />
+    <Content Include="Scripts\ole\Editor\Control\DeleteFeature.js" />
+    <Content Include="Scripts\ole\Editor\Control\Dialog.js" />
+    <Content Include="Scripts\ole\Editor\Control\DragFeature.js" />
+    <Content Include="Scripts\ole\Editor\Control\DrawHole.js" />
+    <Content Include="Scripts\ole\Editor\Control\DrawPath.js" />
+    <Content Include="Scripts\ole\Editor\Control\DrawPoint.js" />
+    <Content Include="Scripts\ole\Editor\Control\DrawPolygon.js" />
+    <Content Include="Scripts\ole\Editor\Control\EditorPanel.js" />
+    <Content Include="Scripts\ole\Editor\Control\FilterFeature.js" />
+    <Content Include="Scripts\ole\Editor\Control\ImportFeature.js" />
+    <Content Include="Scripts\ole\Editor\Control\LayerSettings.js" />
+    <Content Include="Scripts\ole\Editor\Control\MergeFeature.js" />
+    <Content Include="Scripts\ole\Editor\Control\SaveFeature.js" />
+    <Content Include="Scripts\ole\Editor\Control\SnappingSettings.js" />
+    <Content Include="Scripts\ole\Editor\Control\SplitFeature.js" />
+    <Content Include="Scripts\ole\Editor\Control\UndoRedo.js" />
+    <Content Include="Scripts\ole\Editor\Lang\ca.js" />
+    <Content Include="Scripts\ole\Editor\Lang\de.js" />
+    <Content Include="Scripts\ole\Editor\Lang\en.js" />
     <Content Include="Scripts\profiling\charts.swf" />
     <Content Include="Scripts\script_geojs.js" />
+    <Content Include="Views\Home\Editor.aspx" />
     <Content Include="Views\Web.config" />
   </ItemGroup>
   <ItemGroup>
@@ -571,8 +612,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>53449</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>
-          </IISUrl>
+          <IISUrl>http://localhost/SharpMap.Demo.Wms</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>
