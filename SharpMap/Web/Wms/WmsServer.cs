@@ -561,7 +561,29 @@ namespace SharpMap.Web.Wms
                             }
                         }
                     }
+                }
 
+                if (context.Request.Params["CQL_FILTER"] != null)
+                {
+                    foreach (ILayer layer in map.Layers)
+                    {
+                        if (layer.GetType() == typeof(VectorLayer))
+                        {
+                            if ((layer as VectorLayer).DataSource.GetType() == typeof(SharpMap.Data.Providers.ShapeFile))
+                            {
+                                SharpMap.Data.Providers.ShapeFile shape = (SharpMap.Data.Providers.ShapeFile)(layer as VectorLayer).DataSource;
+                                shape.FilterDelegate = new Data.Providers.ShapeFile.FilterMethod(delegate(SharpMap.Data.FeatureDataRow row) { return CQLFilter(row, context.Request.Params["CQL_FILTER"]); });
+                            }
+                        }
+                        else if(layer.GetType() == typeof(LabelLayer))
+                        {
+                            if ((layer as VectorLayer).DataSource.GetType() == typeof(SharpMap.Data.Providers.ShapeFile))
+                            {
+                                SharpMap.Data.Providers.ShapeFile shape = (SharpMap.Data.Providers.ShapeFile)(layer as VectorLayer).DataSource;
+                                shape.FilterDelegate = new Data.Providers.ShapeFile.FilterMethod(delegate(SharpMap.Data.FeatureDataRow row) { return CQLFilter(row, context.Request.Params["CQL_FILTER"]); });
+                            }
+                        }
+                    }
                 }
 
                 //Set layers on/off
@@ -811,5 +833,176 @@ namespace SharpMap.Web.Wms
             SharpMap.Converters.GeoJSON.GeoJSONWriter.Write(items, writer);
             return writer.ToString();            
         }
+        /// <summary>
+        ///Filters the features to be processed by a CQL filter
+        /// </summary>
+        /// <param name="row">FeatureDataRow </param>
+        /// <param name="cqlString">CQL String with the filter </param>
+        /// <returns>GeoJSON string with featureinfo results</returns>
+        private static bool CQLFilter(SharpMap.Data.FeatureDataRow row, string cqlString)
+        {
+            bool toreturn = true;
+            //check on filter type (AND, OR, NOT)
+            string[] splitstring =new string[1]{" "};
+            string[] cqlStringItems = cqlString.Split(splitstring, StringSplitOptions.RemoveEmptyEntries);
+            string[] comparers = new string[9] { "==", "!=", "<", ">", "<=", ">=", "BETWEEN", "LIKE", "IN" };
+            for (int i = 0; i < cqlStringItems.Length; i++)
+            {
+                bool result = true;
+                //check first on AND OR NOT, only the case if multiple checks have to be done
+                bool AND = true;
+                bool OR = false;
+                bool NOT = false;
+                if (cqlStringItems[i] == "AND") { i++; }
+                if (cqlStringItems[i] == "OR") { AND = false; OR = true; i++; }
+                if (cqlStringItems[i] == "NOT"){AND = false; NOT = true;i++;}
+                if ((NOT && !toreturn) || (AND && !toreturn))
+                    break;
+                else
+                {
+                    if (i > 1)
+                    {
+                        var test = 1 + 1;
+                    }
+                }
+                //valid cql starts always with the column name
+                string column = cqlStringItems[i];
+                int columnIndex = row.Table.Columns.IndexOf(column);
+                Type t = row.Table.Columns[columnIndex].DataType;
+                if (columnIndex <0)
+                    break;
+                i++;
+                string comparer = cqlStringItems[i];
+                i++;
+                //if the comparer isn't in the comparerslist stop
+                if (!comparers.Contains(comparer))
+                    break;
+                
+                if (comparer == comparers[8])//IN
+                {
+                    //read all the items until the list is closed by ')'
+                    //all items are assumed to be separated by space
+                    List<string> items = new List<string>();
+                    while (!cqlStringItems[i].Contains(")"))
+                    {
+                        items.Add(cqlStringItems[i].Replace("\',", "").Replace("'","").Replace("(",""));
+                        i++;
+                    }
+                    //add last item
+                    items.Add(cqlStringItems[i].Replace("')", "").Replace("'", ""));
+                    result = items.Contains(Convert.ToString(row[columnIndex]));                    
+                }
+                else if (comparer == comparers[7])//LIKE
+                {
+                    //to implement
+                    result = true;
+                }
+                else if (comparer == comparers[6])//BETWEEN
+                {
+                    //get type number of string
+                    if (t == typeof(string))
+                    {
+                        string string1 = cqlStringItems[i];
+                        i += 2; //skip the AND in BETWEEN
+                        string string2 = cqlStringItems[i];
+                        result = 0 < Convert.ToString(row[columnIndex]).CompareTo(string1) && 0 > Convert.ToString(row[columnIndex]).CompareTo(string2);
+
+                    }
+                    else if (t == typeof(double))
+                    {
+                        double value1 = Convert.ToDouble(cqlStringItems[i]);
+                        i += 2; //skip the AND in BETWEEN
+                        double value2 = Convert.ToDouble(cqlStringItems[i]);
+                        result = value1 < Convert.ToDouble(row[columnIndex]) && value2 > Convert.ToDouble(row[columnIndex]);
+                    }
+                    else if (t == typeof(int))
+                    {
+                        int value1 = Convert.ToInt32(cqlStringItems[i]);
+                        i += 2;
+                        int value2 = Convert.ToInt32(cqlStringItems[i]);
+                        result = value1 < Convert.ToInt32(row[columnIndex]) && value2 > Convert.ToInt32(row[columnIndex]);
+                    }
+                }
+                else
+                {
+                    if (t == typeof(string))
+                    {
+                        string cqlValue = Convert.ToString(cqlStringItems[i]);
+                        string rowValue = Convert.ToString(row[columnIndex]);
+                        if (comparer == comparers[5])//>=
+                        {
+                            result = 0 <= rowValue.CompareTo(cqlValue);
+                        }
+                        else if (comparer == comparers[4])//<=
+                        {
+                            result = 0 >= rowValue.CompareTo(cqlValue);
+                        }
+                        else if (comparer == comparers[3])//>
+                        {
+                            result = 0 < rowValue.CompareTo(cqlValue);
+                        }
+                        else if (comparer == comparers[2])//<
+                        {
+                            result = 0 > rowValue.CompareTo(cqlValue);
+                        }
+                        else if (comparer == comparers[1])//!=
+                        {
+                            result = rowValue != cqlValue;
+                        }
+                        else if (comparer == comparers[0])//==
+                        {
+                            result = rowValue == cqlValue;
+                        }
+                    }
+                    else
+                    {
+                        double value = Convert.ToDouble(cqlStringItems[i]);
+                        if (comparer == comparers[5])//>=
+                        {
+                            result = Convert.ToDouble(row[columnIndex]) >= value;
+                        }
+                        else if (comparer == comparers[4])//<=
+                        {
+                            result = Convert.ToDouble(row[columnIndex]) <= value;
+                        }
+                        else if (comparer == comparers[3])//>
+                        {
+                            result = Convert.ToDouble(row[columnIndex]) > value;
+                        }
+                        else if (comparer == comparers[2])//<
+                        {
+                            result = Convert.ToDouble(row[columnIndex]) < value;
+                        }
+                        else if (comparer == comparers[1])//!=
+                        {
+                            result = Convert.ToDouble(row[columnIndex]) != value;
+                        }
+                        else if (comparer == comparers[0])//==
+                        {
+                            result = Convert.ToDouble(row[columnIndex]) == value;
+                        }
+                    }
+                }
+                if (AND)
+                        toreturn = result;
+                    if (OR && result)
+                        toreturn = result;
+                    if (toreturn && NOT && result)
+                        toreturn = !result;
+
+            }
+                //OpenLayers.Filter.Comparison.EQUAL_TO = “==”;
+                //OpenLayers.Filter.Comparison.NOT_EQUAL_TO = “!=”;
+                //OpenLayers.Filter.Comparison.LESS_THAN = “<”;
+                //OpenLayers.Filter.Comparison.GREATER_THAN = “>”;
+                //OpenLayers.Filter.Comparison.LESS_THAN_OR_EQUAL_TO = “<=”;
+                //OpenLayers.Filter.Comparison.GREATER_THAN_OR_EQUAL_TO = “>=”;
+                //OpenLayers.Filter.Comparison.BETWEEN = “..”;
+                //OpenLayers.Filter.Comparison.LIKE = “~”;
+                //IN (,,)
+            
+            return toreturn;
+        }
+        
     }
 }
