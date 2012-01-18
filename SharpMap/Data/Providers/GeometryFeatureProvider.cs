@@ -56,7 +56,7 @@ namespace SharpMap.Data.Providers
     /// </code>
     /// </example>
     /// </remarks>
-    public class GeometryFeatureProvider : IProvider, IDisposable
+    public class GeometryFeatureProvider : FilterProvider, IProvider, IDisposable
     {
         private readonly FeatureDataTable _features;
         private int _SRID = -1;
@@ -131,8 +131,11 @@ namespace SharpMap.Data.Providers
 
             foreach (FeatureDataRow fdr in _features.Rows)
                 if (!fdr.Geometry.IsEmpty())
-                    if (fdr.Geometry.GetBoundingBox().Intersects(bbox))
-                        list.Add(fdr.Geometry);
+                    if (FilterDelegate == null || FilterDelegate(fdr))
+                    {
+                        if (fdr.Geometry.GetBoundingBox().Intersects(bbox))
+                            list.Add(fdr.Geometry);
+                    }
             return list;
         }
 
@@ -171,10 +174,13 @@ namespace SharpMap.Data.Providers
             fdt = _features.Clone();
 
             foreach (FeatureDataRow fdr in _features)
-                if (fdr.Geometry.GetBoundingBox().Intersects(geom))
+                if (FilterDelegate == null || FilterDelegate(fdr))
                 {
-                    fdt.LoadDataRow(fdr.ItemArray, false);
-                    (fdt.Rows[fdt.Rows.Count - 1] as FeatureDataRow).Geometry = fdr.Geometry;
+                    if (fdr.Geometry.GetBoundingBox().Intersects(geom))
+                    {
+                        fdt.LoadDataRow(fdr.ItemArray, false);
+                        (fdt.Rows[fdt.Rows.Count - 1] as FeatureDataRow).Geometry = fdr.Geometry;
+                    }
                 }
 
             ds.Tables.Add(fdt);
@@ -191,10 +197,16 @@ namespace SharpMap.Data.Providers
             fdt = _features.Clone();
 
             foreach (FeatureDataRow fdr in _features)
-                if (fdr.Geometry.GetBoundingBox().Intersects(box))
+                if (fdr.Geometry != null)
                 {
-                    fdt.LoadDataRow(fdr.ItemArray, false);
-                    (fdt.Rows[fdt.Rows.Count - 1] as FeatureDataRow).Geometry = fdr.Geometry;
+                    if (FilterDelegate == null || FilterDelegate(fdr))
+                    {
+                        if (fdr.Geometry.GetBoundingBox().Intersects(box))
+                        {                        
+                            fdt.LoadDataRow(fdr.ItemArray, false);
+                            (fdt.Rows[fdt.Rows.Count - 1] as FeatureDataRow).Geometry = fdr.Geometry;
+                        }
+                    }
                 }
 
             ds.Tables.Add(fdt);
@@ -216,7 +228,10 @@ namespace SharpMap.Data.Providers
         /// <returns></returns>
         public FeatureDataRow GetFeature(uint rowId)
         {
-            return _features[(int) rowId];
+            if (FilterDelegate == null || FilterDelegate(_features[(int) rowId]))
+                return _features[(int) rowId];
+
+            return null;
         }
 
         /// <summary>

@@ -359,17 +359,22 @@ namespace SharpMap.Web.Wms
                 }
                 //default to text if an invalid format is requested
                 string infoFormat = context.Request.Params["INFO_FORMAT"];
+                string cqlFilter = null;
+                if (context.Request.Params["CQL_FILTER"] != null)
+                {
+                    cqlFilter = context.Request.Params["CQL_FILTER"];
+                }
 
                 string vstr = "";
                 string[] requestLayers = context.Request.Params["QUERY_LAYERS"].Split(new[] { ',' });
                 if (String.Compare(context.Request.Params["INFO_FORMAT"], "text/json", ignorecase) == 0)
                 {
-                    vstr = CreateFeatureInfoGeoJSON(map, requestLayers, x, y, fc);
+                    vstr = CreateFeatureInfoGeoJSON(map, requestLayers, x, y, fc, cqlFilter);
                     context.Response.ContentType = "text/json";
                 }
                 else
                 {
-                    vstr = CreateFeatureInfoPlain(map, requestLayers, x, y, fc);
+                    vstr = CreateFeatureInfoPlain(map, requestLayers, x, y, fc, cqlFilter);
                     context.Response.ContentType = "text/plain";
                 }
                 context.Response.Clear();                
@@ -569,18 +574,18 @@ namespace SharpMap.Web.Wms
                     {
                         if (layer.GetType() == typeof(VectorLayer))
                         {
-                            if ((layer as VectorLayer).DataSource.GetType() == typeof(SharpMap.Data.Providers.ShapeFile))
+                            if (typeof(SharpMap.Data.Providers.FilterProvider).IsAssignableFrom((layer as VectorLayer).DataSource.GetType()))
                             {
-                                SharpMap.Data.Providers.ShapeFile shape = (SharpMap.Data.Providers.ShapeFile)(layer as VectorLayer).DataSource;
-                                shape.FilterDelegate = new Data.Providers.ShapeFile.FilterMethod(delegate(SharpMap.Data.FeatureDataRow row) { return CQLFilter(row, context.Request.Params["CQL_FILTER"]); });
+                                SharpMap.Data.Providers.FilterProvider shape = (SharpMap.Data.Providers.FilterProvider)(layer as VectorLayer).DataSource;
+                                shape.FilterDelegate = new Data.Providers.FilterProvider.FilterMethod(delegate(SharpMap.Data.FeatureDataRow row) { return CQLFilter(row, context.Request.Params["CQL_FILTER"]); });
                             }
                         }
                         else if(layer.GetType() == typeof(LabelLayer))
                         {
-                            if ((layer as VectorLayer).DataSource.GetType() == typeof(SharpMap.Data.Providers.ShapeFile))
+                            if (typeof(SharpMap.Data.Providers.FilterProvider).IsAssignableFrom((layer as VectorLayer).DataSource.GetType()))
                             {
-                                SharpMap.Data.Providers.ShapeFile shape = (SharpMap.Data.Providers.ShapeFile)(layer as VectorLayer).DataSource;
-                                shape.FilterDelegate = new Data.Providers.ShapeFile.FilterMethod(delegate(SharpMap.Data.FeatureDataRow row) { return CQLFilter(row, context.Request.Params["CQL_FILTER"]); });
+                                SharpMap.Data.Providers.FilterProvider shape = (SharpMap.Data.Providers.FilterProvider)(layer as VectorLayer).DataSource;
+                                shape.FilterDelegate = new Data.Providers.FilterProvider.FilterMethod(delegate(SharpMap.Data.FeatureDataRow row) { return CQLFilter(row, context.Request.Params["CQL_FILTER"]); });
                             }
                         }
                     }
@@ -686,7 +691,7 @@ namespace SharpMap.Web.Wms
         /// </summary>
         /// <param name="strBBOX">string representation of a boundingbox</param>
         /// <returns>Plain text string with featureinfo results</returns>
-        public static string CreateFeatureInfoPlain(SharpMap.Map map, string[] requestedLayers, Single x, Single y, int featureCount)
+        public static string CreateFeatureInfoPlain(SharpMap.Map map, string[] requestedLayers, Single x, Single y, int featureCount, string cqlFilter)
         {
             string vstr = "GetFeatureInfo results: \n";
             foreach (string requestLayer in requestedLayers)
@@ -712,6 +717,7 @@ namespace SharpMap.Web.Wms
                             BoundingBox queryBox = new BoundingBox(minXY, maxXY);
                             SharpMap.Data.FeatureDataSet fds = new SharpMap.Data.FeatureDataSet();
                             queryLayer.ExecuteIntersectionQuery(queryBox, fds);
+                            
                             if (_intersectDelegate != null)
                             {
                                 fds.Tables[0] = _intersectDelegate(fds.Tables[0], queryBox);
@@ -728,6 +734,17 @@ namespace SharpMap.Web.Wms
                                 }
                                 else
                                 {
+                                    //filter the rows with the CQLFilter if one is provided
+                                    if (cqlFilter != null)
+                                    {
+                                        for (int i = fds.Tables[0].Rows.Count - 1; i >= 0; i--)
+                                        {
+                                            if (!CQLFilter((SharpMap.Data.FeatureDataRow)fds.Tables[0].Rows[i], cqlFilter))
+                                            {
+                                                fds.Tables[0].Rows.RemoveAt(i);
+                                            }
+                                        }
+                                    }
                                     //if featurecount < fds...count, select smallest bbox, because most likely to be clicked
                                     vstr = vstr + "\n Layer: '" + requestLayer + "'\n Featureinfo:\n";
                                     int[] keys = new int[fds.Tables[0].Rows.Count];
@@ -770,7 +787,7 @@ namespace SharpMap.Web.Wms
         /// </summary>
         /// <param name="strBBOX">string representation of a boundingbox</param>
         /// <returns>GeoJSON string with featureinfo results</returns>
-        public static string CreateFeatureInfoGeoJSON(SharpMap.Map map, string[] requestedLayers, Single x, Single y, int featureCount)
+        public static string CreateFeatureInfoGeoJSON(SharpMap.Map map, string[] requestedLayers, Single x, Single y, int featureCount, string cqlFilter)
         {
             List<SharpMap.Converters.GeoJSON.GeoJSON> items = new List<SharpMap.Converters.GeoJSON.GeoJSON>();
             foreach (string requestLayer in requestedLayers)
@@ -796,9 +813,21 @@ namespace SharpMap.Web.Wms
                             BoundingBox queryBox = new BoundingBox(minXY, maxXY);
                             SharpMap.Data.FeatureDataSet fds = new SharpMap.Data.FeatureDataSet();
                             queryLayer.ExecuteIntersectionQuery(queryBox, fds);
+                            //
                             if (_intersectDelegate != null)
                             {
                                 fds.Tables[0] = _intersectDelegate(fds.Tables[0], queryBox);
+                            }
+                            //filter the rows with the CQLFilter if one is provided
+                            if (cqlFilter != null)
+                            {
+                                for (int i = fds.Tables[0].Rows.Count-1; i >=0 ; i--)
+                                {
+                                    if (!CQLFilter((SharpMap.Data.FeatureDataRow)fds.Tables[0].Rows[i], cqlFilter))
+                                    {
+                                        fds.Tables[0].Rows.RemoveAt(i);
+                                    }
+                                }
                             }
                             IEnumerable<SharpMap.Converters.GeoJSON.GeoJSON> data = SharpMap.Converters.GeoJSON.GeoJSONHelper.GetData(fds);
 
@@ -857,14 +886,7 @@ namespace SharpMap.Web.Wms
                 if (cqlStringItems[i] == "OR") { AND = false; OR = true; i++; }
                 if (cqlStringItems[i] == "NOT"){AND = false; NOT = true;i++;}
                 if ((NOT && !toreturn) || (AND && !toreturn))
-                    break;
-                else
-                {
-                    if (i > 1)
-                    {
-                        var test = 1 + 1;
-                    }
-                }
+                    break;                
                 //valid cql starts always with the column name
                 string column = cqlStringItems[i];
                 int columnIndex = row.Table.Columns.IndexOf(column);
