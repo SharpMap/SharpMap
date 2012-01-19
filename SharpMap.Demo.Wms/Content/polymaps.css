@@ -75,21 +75,21 @@ svg
 	shape-rendering: crispEdges;
 }
 
-.poly
-{
-	fill: rgb(0,0,180);
-	opacity: .6;
-	stroke: #fff;
-	stroke-width: 1.5px;
-	vector-effect: non-scaling-stroke;
-	stroke-opacity: 0.9;
-}
-
 .line
 {
-	stroke: rgb(180,0,0);
+	fill:  none;
+    stroke: rgb(180,0,0);
 	stroke-width: 1px;
 	vector-effect: non-scaling-stroke;
 	stroke-opacity: 0.8;
 }
 
+.poly
+{
+	fill: rgb(0,0,180);
+	opacity: 0.6;
+	stroke: #fff;
+	stroke-width: 1px;
+	vector-effect: non-scaling-stroke;
+	stroke-opacity: 0.8;
+}

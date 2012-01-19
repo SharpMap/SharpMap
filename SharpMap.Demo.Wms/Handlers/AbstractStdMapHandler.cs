@@ -38,7 +38,7 @@ namespace SharpMap.Demo.Wms.Handlers
             if (String.Equals(type, "OL", StringComparison.InvariantCultureIgnoreCase)) 
                 return MapHelper.OpenLayers();
             if (String.Equals(type, "PM", StringComparison.InvariantCultureIgnoreCase)) 
-                return MapHelper.PolyMaps();            
+                return MapHelper.PolyMaps();
             string format = String.Format("unsupported map type: '{0}'", type);
             throw new NotSupportedException(format);
         }

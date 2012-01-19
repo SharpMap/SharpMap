@@ -37,7 +37,7 @@ namespace SharpMap.Demo.Wms.Handlers
 
                 Map map = this.GetMap(context.Request);
                 IEnumerable<GeoJSON> items = GeoData(map, bbox);
-
+                
                 StringWriter writer = new StringWriter();
                 GeoJSONWriter.Write(items, writer);
                 string buffer = writer.ToString();
@@ -60,14 +60,16 @@ namespace SharpMap.Demo.Wms.Handlers
             List<GeoJSON> items = new List<GeoJSON>();
 
             // Only queryable data!
-            IQueryable<ICanQueryLayer> collection =
-                map.Layers.AsQueryable().OfType<ICanQueryLayer>().Where(l => l.Enabled && l.IsQueryEnabled);
+            IQueryable<ICanQueryLayer> collection = map.Layers
+                .AsQueryable()
+                .OfType<ICanQueryLayer>()
+                .Where(l => l.Enabled && l.IsQueryEnabled);
             foreach (ICanQueryLayer layer in collection)
             {
                 // Query for data
                 FeatureDataSet ds = new FeatureDataSet();
                 layer.ExecuteIntersectionQuery(bbox, ds);
-                IEnumerable<GeoJSON> data = GeoJSONHelper.GetData(ds);
+                IEnumerable<GeoJSON> data = GeoJSONHelper.GetData(ds);               
 
                 // Reproject geometries if needed
                 IMathTransform transform = null;

@@ -1,4 +1,4 @@
-﻿$(document).ready(function() {
+﻿$(document).ready(function () {
     var po = org.polymaps, mercator, container, map, load, layer;
 
     mercator = new GlobalMercator();
@@ -9,15 +9,14 @@
         .zoom(10)
         .add(po.interact())
         .add(po.hash());
-    map.container().setAttribute('class', 'PuBu');
 
     map.add(po.image().url(
         po.url(['http://{S}tile.cloudmade.com', '/1a1b06b230af4efdbb989ea99e9841af', '/998/256/{Z}/{X}/{Y}.png'].join(''))
             .hosts(['a.', 'b.', 'c.', ''])));
 
-    load = function(e) {
-        var type, node, parent;
-        $.each(e.features, function() {
+    load = function (e) {
+        $.each(e.features, function () {
+            var type, node, parent;
             type = this.data.geometry.type;
             if (type === 'Polygon' || type === 'MultiPolygon') {
                 this.element.setAttribute('class', 'poly');
@@ -31,20 +30,21 @@
                 this.element.setAttribute('class', 'point');
                 node = document.createTextNode(this.data.properties.NAME);
             }
-            parent = po.svg('title').appendChild(node).parentNode;
-            this.element.appendChild(parent);
+
+            if (node != null) {
+                parent = po.svg('title').appendChild(node).parentNode;
+                this.element.appendChild(parent);
+            }
         });
     };
 
-    layer = po.geoJson().url(function(data) {
+    layer = po.geoJson().url(function (data) {
         var bounds, url;
-        bounds = mercator.TileLatLonBounds(data.column, data.row, data.zoom)
+        bounds = mercator.TileLatLonBounds(data.column, data.row, data.zoom);
         url = ['/json.ashx?MAP_TYPE=PM&BBOX=', bounds[1], ',', -bounds[2], ',', bounds[3], ',', -bounds[0]
         ].join('');
-        log(url);
         return url;
     }).on('load', load);
-    layer.container().setAttribute('class', 'poly_landmarks');
     map.add(layer);
 
     map.add(po.grid());
