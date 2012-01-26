@@ -78,7 +78,7 @@ OpenLayers.Protocol.SQL.Gears = OpenLayers.Class(OpenLayers.Protocol.SQL, {
      * Property: db
      * {GearsDatabase}
      */
-    db: null,
+    _db: null,
 
     /**
      * Constructor: OpenLayers.Protocol.SQL.Gears
@@ -101,9 +101,9 @@ OpenLayers.Protocol.SQL.Gears = OpenLayers.Class(OpenLayers.Protocol.SQL, {
      * Method: initializeDatabase
      */
     initializeDatabase: function() {
-        this.db = google.gears.factory.create('beta.database');
-        this.db.open(this.databaseName);
-        this.db.execute(
+        this._db = google.gears.factory.create('beta.database');
+        this._db.open(this.databaseName);
+        this._db.execute(
             "CREATE TABLE IF NOT EXISTS " + this.tableName +
             " (fid TEXT UNIQUE, geometry TEXT, properties TEXT," +
             "  state TEXT)");
@@ -114,8 +114,8 @@ OpenLayers.Protocol.SQL.Gears = OpenLayers.Class(OpenLayers.Protocol.SQL, {
      * Clean up the protocol.
      */
     destroy: function() {
-        this.db.close();
-        this.db = null;
+        this._db.close();
+        this._db = null;
 
         this.jsonParser = null;
         this.wktParser = null;
@@ -159,7 +159,7 @@ OpenLayers.Protocol.SQL.Gears = OpenLayers.Class(OpenLayers.Protocol.SQL, {
         options = OpenLayers.Util.applyDefaults(options, this.options);
 
         var feature, features = [];
-        var rs = this.db.execute("SELECT * FROM " + this.tableName);
+        var rs = this._db.execute("SELECT * FROM " + this.tableName);
         while (rs.isValidRow()) {
             feature = this.unfreezeFeature(rs);
             if (this.evaluateFilter(feature, options.filter)) {
@@ -312,7 +312,7 @@ OpenLayers.Protocol.SQL.Gears = OpenLayers.Class(OpenLayers.Protocol.SQL, {
         for (i = 0; i < len; i++) {
             feature = features[i];
             var params = this.freezeFeature(feature);
-            this.db.execute(
+            this._db.execute(
                 "REPLACE INTO " + this.tableName + 
                 " (fid, geometry, properties, state)" + 
                 " VALUES (?, ?, ?, ?)",
@@ -420,7 +420,7 @@ OpenLayers.Protocol.SQL.Gears = OpenLayers.Class(OpenLayers.Protocol.SQL, {
                 toDelete.state = feature.state;
                 this.createOrUpdate(toDelete);
             } else {
-                this.db.execute(
+                this._db.execute(
                     "DELETE FROM " + this.tableName +
                     " WHERE fid = ?", [feature.fid]);
             }
@@ -534,7 +534,7 @@ OpenLayers.Protocol.SQL.Gears = OpenLayers.Class(OpenLayers.Protocol.SQL, {
      * Removes all rows of the table.
      */
     clear: function() {
-        this.db.execute("DELETE FROM " + this.tableName);
+        this._db.execute("DELETE FROM " + this.tableName);
     },
 
     /**

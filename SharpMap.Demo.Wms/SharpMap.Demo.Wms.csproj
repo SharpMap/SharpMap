@@ -133,6 +133,8 @@
     <Content Include="lib\OpenLayers\Protocol\Script.js" />
     <Content Include="lib\OpenLayers\Renderer\NG.js" />
     <Content Include="lib\OpenLayers\Renderer\SVG2.js" />
+    <Content Include="Scripts\pl\queue.js" />
+    <Content Include="Scripts\script_off.js" />
     <Content Include="Scripts\script_editor.js" />
     <Content Include="Scripts\ole\Editor.js" />
     <Content Include="Scripts\ole\Editor\Control\CleanFeature.js" />
@@ -157,6 +159,8 @@
     <Content Include="Scripts\ole\Editor\Lang\en.js" />
     <Content Include="Scripts\profiling\charts.swf" />
     <Content Include="Scripts\script_geojs.js" />
+    <Content Include="Scripts\pl\webdb.js" />
+    <Content Include="Views\Home\Offline.aspx" />
     <Content Include="Views\Home\Editor.aspx" />
     <Content Include="Views\Web.config" />
   </ItemGroup>

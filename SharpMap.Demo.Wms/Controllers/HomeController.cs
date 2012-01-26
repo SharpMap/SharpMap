@@ -32,6 +32,11 @@
         public ActionResult Editor()
         {
             return this.View();
-        }        
+        }
+
+        public ActionResult Offline()
+        {
+            return this.View();
+        }
     }
 }
