@@ -105,6 +105,8 @@
     <Content Include="Content\img\snappingInactive.png" />
     <Content Include="Content\img\splitFeature.png" />
     <Content Include="Global.asax" />
+    <Content Include="jsoncanvas.html" />
+    <Content Include="jsoncanvas.js" />
     <Content Include="lib\OpenLayers\BaseTypes\Date.js" />
     <Content Include="lib\OpenLayers\Control\Geolocate.js" />
     <Content Include="lib\OpenLayers\Control\PinchZoom.js" />
@@ -133,6 +135,7 @@
     <Content Include="lib\OpenLayers\Protocol\Script.js" />
     <Content Include="lib\OpenLayers\Renderer\NG.js" />
     <Content Include="lib\OpenLayers\Renderer\SVG2.js" />
+    <Content Include="Scripts\jquery-1.7.1.min.js" />
     <Content Include="Scripts\pl\queue.js" />
     <Content Include="Scripts\script_off.js" />
     <Content Include="Scripts\script_editor.js" />
@@ -174,9 +177,6 @@
     <Content Include="crossdomain.xml" />
     <Content Include="robots.txt" />
     <Content Include="Scripts\dd_belatedpng.js" />
-    <Content Include="Scripts\jquery-1.4.4-vsdoc.js" />
-    <Content Include="Scripts\jquery-1.4.4.js" />
-    <Content Include="Scripts\jquery-1.4.4.min.js" />
     <Content Include="Scripts\modernizr-1.5.min.js" />
     <Content Include="Scripts\plugins.js" />
     <Content Include="Scripts\profiling\config.js" />
