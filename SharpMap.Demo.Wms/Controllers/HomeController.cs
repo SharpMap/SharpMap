@@ -38,5 +38,10 @@
         {
             return this.View();
         }
+
+        public ActionResult TileCanvas()
+        {
+            return this.View();
+        }
     }
 }

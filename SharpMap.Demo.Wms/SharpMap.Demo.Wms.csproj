@@ -105,8 +105,6 @@
     <Content Include="Content\img\snappingInactive.png" />
     <Content Include="Content\img\splitFeature.png" />
     <Content Include="Global.asax" />
-    <Content Include="jsoncanvas.html" />
-    <Content Include="jsoncanvas.js" />
     <Content Include="lib\OpenLayers\BaseTypes\Date.js" />
     <Content Include="lib\OpenLayers\Control\Geolocate.js" />
     <Content Include="lib\OpenLayers\Control\PinchZoom.js" />
@@ -135,6 +133,7 @@
     <Content Include="lib\OpenLayers\Protocol\Script.js" />
     <Content Include="lib\OpenLayers\Renderer\NG.js" />
     <Content Include="lib\OpenLayers\Renderer\SVG2.js" />
+    <Content Include="Scripts\script_tc.js" />
     <Content Include="Scripts\jquery-1.7.1.min.js" />
     <Content Include="Scripts\pl\queue.js" />
     <Content Include="Scripts\script_off.js" />
@@ -163,6 +162,8 @@
     <Content Include="Scripts\profiling\charts.swf" />
     <Content Include="Scripts\script_geojs.js" />
     <Content Include="Scripts\pl\webdb.js" />
+    <Content Include="Scripts\ll\TileLayer.TileJSON.js" />
+    <Content Include="Views\Home\TileCanvas.aspx" />
     <Content Include="Views\Home\Offline.aspx" />
     <Content Include="Views\Home\Editor.aspx" />
     <Content Include="Views\Web.config" />

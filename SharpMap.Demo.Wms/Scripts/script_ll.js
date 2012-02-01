@@ -1,34 +1,34 @@
-﻿$(document).ready(function() {
+﻿$(document).ready(function () {
     var lon = -73.9529;
     var lat = 40.7723;
     var zoom = 10;
 
     var map = new L.Map('map'), center, cloudmade;
-    map.on('load', function(e) {
+    map.on('load', function (e) {
         var bounds, url, options, layer, type;
         bounds = e.target.getBounds();
         url = [
            '/json.ashx?MAP_TYPE=PM&BBOX=',
             bounds._southWest.lng, ',',
             bounds._southWest.lat, ',',
-            bounds._northEast.lng, ',', 
+            bounds._northEast.lng, ',',
             bounds._northEast.lat
         ].join('');
 
         options = {
             radius: 8,
-            fillColor: "#ff7800",
-            color: "#000",
+            fillColor: "#FF7800",
+            color: "#000000",
             weight: 1,
             opacity: 1,
             fillOpacity: 0.8
         };
         layer = new L.GeoJSON(null, {
-            pointToLayer: function(p) {
+            pointToLayer: function (p) {
                 return new L.CircleMarker(p, options);
             }
         });
-        layer.on('featureparse', function(e) {
+        layer.on('featureparse', function (e) {
             type = e.geometryType;
             if (type === 'Polygon' || type === 'MultiPolygon') {
                 e.layer.setStyle({
@@ -45,10 +45,10 @@
                 });
             }
         });
-        $.getJSON(url, function(e) {
-            $.each(e.features, function() {
+        $.getJSON(url, function (e) {
+            $.each(e.features, function () {
                 layer.addGeoJSON(this);
-            })
+            });
             map.addLayer(layer);
         });
     });
