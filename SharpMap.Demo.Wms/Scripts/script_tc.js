@@ -8,15 +8,21 @@
     map.addLayer(cloudmade);
 
     var tile = new L.TileLayer.TileJSON({
-        debug: true,
+        debug: false,
         point: {
-            fill: 'rgb(252,146,114)'
+            color: 'rgba(252,146,114,0.6)',
+            radius: 5
         },
         linestring: {
-            fill: 'rgb(161,217,155)'
+            color: 'rgba(161,217,155,0.8)',
+            size: 3
         },
         polygon: {
-            fill: 'rgb(43,140,190)'
+            color: 'rgba(43,140,190,0.4)',
+            outline: {
+                color: 'rgb(0,0,0)',
+                size: 1
+            }
         }
     });
     tile.createUrl = function (bounds) {

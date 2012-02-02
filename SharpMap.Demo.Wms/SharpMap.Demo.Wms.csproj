@@ -87,6 +87,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\geosilk.css" />
+    <Content Include="Content\Images\layers.png" />
     <Content Include="Content\img\bg-map.png" />
     <Content Include="Content\img\cleanFeature.png" />
     <Content Include="Content\img\deleteFeature.png" />
@@ -104,6 +105,8 @@
     <Content Include="Content\img\snappingActive.png" />
     <Content Include="Content\img\snappingInactive.png" />
     <Content Include="Content\img\splitFeature.png" />
+    <Content Include="Content\leaflet.css" />
+    <Content Include="Content\leaflet.ie.css" />
     <Content Include="Global.asax" />
     <Content Include="lib\OpenLayers\BaseTypes\Date.js" />
     <Content Include="lib\OpenLayers\Control\Geolocate.js" />
@@ -192,8 +195,6 @@
     <Content Include="Content\Images\popup-close.png" />
     <Content Include="Content\Images\zoom-in.png" />
     <Content Include="Content\Images\zoom-out.png" />
-    <Content Include="Content\leaflet.css" />
-    <Content Include="Content\leaflet.ie.css" />
     <Content Include="Content\openlayers.css" />
     <Content Include="Content\Images\sorry.jpg" />
     <Content Include="Content\polymaps.css" />
