@@ -25,19 +25,16 @@ L.TileLayer.TileJSON = L.TileLayer.Canvas.extend({
     _drawDebugInfo: function (ctx) {
         var max = this.tileSize;
         var g = ctx.canvas.getContext('2d');
-        g.beginPath();
         g.strokeStyle = '#000000';
-        g.strokeRect(0, 0, max, max);
         g.fillStyle = '#FFFF00';
+        g.strokeRect(0, 0, max, max);
+        g.font = "12px Arial";
         g.fillRect(0, 0, 5, 5);
         g.fillRect(0, max - 5, 5, 5);
         g.fillRect(max - 5, 0, 5, 5);
         g.fillRect(max - 5, max - 5, 5, 5);
         g.fillRect(max / 2 - 5, max / 2 - 5, 10, 10);
-        g.font = "12px Arial";
         g.strokeText(ctx.tile.x + ' ' + ctx.tile.y + ' ' + ctx.zoom, max / 2 - 30, max / 2 - 10);
-
-        g.closePath();
     },
 
     _tilePoint: function (ctx, coords) {
@@ -54,19 +51,6 @@ L.TileLayer.TileJSON = L.TileLayer.Canvas.extend({
             x: x,
             y: y
         };
-    },
-
-    _drawPoint: function (ctx, geom) {
-        var p = this._tilePoint(ctx, geom);
-        var style = this.options.point;
-        var c = ctx.canvas;
-        var g = c.getContext('2d');
-        g.beginPath();
-        g.fillStyle = style.color;
-        g.arc(p.x, p.y, style.radius, 0, Math.PI * 2);
-        g.closePath();
-        g.fill();
-        g.restore();        
     },
 
     _clip: function (ctx, points) {
@@ -90,50 +74,91 @@ L.TileLayer.TileJSON = L.TileLayer.Canvas.extend({
         return out;
     },
 
+    _isActuallyVisible: function (coords) {
+        var coord = coords[0];
+        var min = [coord.x, coord.y], max = [coord.x, coord.y];
+        for (var i = 1; i < coords.length; i++) {
+            coord = coords[i];
+            min[0] = Math.min(min[0], coord.x);
+            min[1] = Math.min(min[1], coord.y);
+            max[0] = Math.max(max[0], coord.x);
+            max[1] = Math.max(max[1], coord.y);
+        }
+        var diff0 = max[0] - min[0];
+        var diff1 = max[1] - min[1];
+        if (this.options.debug) {
+            console.log(diff0 + ' ' + diff1);
+        }
+        var visible = diff0 > 1 || diff1 > 1;
+        return visible;
+    },
+
+    _drawPoint: function (ctx, geom) {
+        var p = this._tilePoint(ctx, geom);
+        var style = this.options.point;
+        var c = ctx.canvas;
+        var g = c.getContext('2d');
+        g.beginPath();
+        g.fillStyle = style.color;
+        g.arc(p.x, p.y, style.radius, 0, Math.PI * 2);
+        g.closePath();
+        g.fill();
+        g.restore();
+    },
+
     _drawLineString: function (ctx, geom) {
-        var coords = geom;
+        var coords = geom, proj = [], i;
         coords = this._clip(ctx, coords);
         coords = L.LineUtil.simplify(coords, 1);
-        var style = this.options.linestring;
+        for (i = 0; i < coords.length; i++) {
+            proj.push(this._tilePoint(ctx, coords[i]));
+        }
+        if (!this._isActuallyVisible(proj)) {
+            return;
+        }
+
         var g = ctx.canvas.getContext('2d');
+        var style = this.options.linestring;
         g.strokeStyle = style.color;
         g.lineWidth = style.size;
         g.beginPath();
-        for (var i = 0; i < coords.length; i++) {
-            var coord = coords[i];
-            var p = this._tilePoint(ctx, coord);
+        for (i = 0; i < proj.length; i++) {
             var method = (i === 0 ? 'move' : 'line') + 'To';
-            g[method](p.x, p.y);
+            g[method](proj[i].x, proj[i].y);
         }
         g.stroke();
         g.restore();
     },
 
     _drawPolygon: function (ctx, geom) {
-        var style = this.options.polygon;
-        var outline = style.outline;
-        var g = ctx.canvas.getContext('2d');
-        for (var i = 0; i < geom.length; i++) {
+        for (var el = 0; el < geom.length; el++) {
+            var coords = geom[el], proj = [], i;
+            coords = this._clip(ctx, coords);
+            for (i = 0; i < coords.length; i++) {
+                proj.push(this._tilePoint(ctx, coords[i]));
+            }
+            if (!this._isActuallyVisible(proj)) {
+                continue;
+            }
+
+            var g = ctx.canvas.getContext('2d');
+            var style = this.options.polygon;
+            var outline = style.outline;
             g.fillStyle = style.color;
             if (outline) {
                 g.strokeStyle = outline.color;
                 g.lineWidth = outline.size;
             }
             g.beginPath();
-            var coords = geom[i];
-            coords = this._clip(ctx, coords);
-            for (var j = 0; j < coords.length; j++) {
-                var coord = coords[j];
-                var p = this._tilePoint(ctx, coord);
-                var method = (j === 0 ? 'move' : 'line') + 'To';
-                g[method](p.x, p.y);
+            for (i = 0; i < proj.length; i++) {
+                var method = (i === 0 ? 'move' : 'line') + 'To';
+                g[method](proj[i].x, proj[i].y);
             }
             g.closePath();
             g.fill();
             if (outline) {
                 g.stroke();
             }
-            g.restore();
         }
     },
 
