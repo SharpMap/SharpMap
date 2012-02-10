@@ -4,7 +4,11 @@
     var zoom = 10;
 
     var map = new L.Map('map');
-    var cloudmade = new L.TileLayer('http://{s}.tile.cloudmade.com/1a1b06b230af4efdbb989ea99e9841af/997/256/{z}/{x}/{y}.png', { maxZoom: 18 });
+    var url = ['http://{s}tile.cloudmade.com', '/1a235b638b614b458deeb77c7dae4f80', '/997/256/{z}/{x}/{y}.png'].join('');
+    var cloudmade = new L.TileLayer(url, {
+         maxZoom: 18,
+         subdomains: ['a.', 'b.', 'c.', '']
+    });
     map.addLayer(cloudmade);
 
     var tile = new L.TileLayer.TileJSON({

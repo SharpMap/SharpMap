@@ -11,7 +11,7 @@
         .add(po.hash());
 
     map.add(po.image().url(
-        po.url(['http://{S}tile.cloudmade.com', '/1a1b06b230af4efdbb989ea99e9841af', '/998/256/{Z}/{X}/{Y}.png'].join(''))
+        po.url(['http://{S}tile.cloudmade.com', '/1a235b638b614b458deeb77c7dae4f80', '/998/256/{Z}/{X}/{Y}.png'].join(''))
             .hosts(['a.', 'b.', 'c.', ''])));
 
     load = function (e) {

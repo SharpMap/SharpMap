@@ -3,7 +3,7 @@
     var lat = 40.7723;
     var zoom = 10;
 
-    var map = new L.Map('map'), center, cloudmade;
+    var map = new L.Map('map'), center, url, cloudmade;
     map.on('load', function (e) {
         var bounds, url, options, layer, type;
         bounds = e.target.getBounds();
@@ -56,7 +56,11 @@
     center = new L.LatLng(lat, lon);
     map.setView(center, zoom);
 
-    cloudmade = new L.TileLayer('http://{s}.tile.cloudmade.com/1a1b06b230af4efdbb989ea99e9841af/997/256/{z}/{x}/{y}.png', { maxZoom: 18 });
+    url = ['http://{s}tile.cloudmade.com', '/1a235b638b614b458deeb77c7dae4f80', '/998/256/{z}/{x}/{y}.png'].join('');
+    cloudmade = new L.TileLayer(url, {
+         maxZoom: 18,
+         subdomains: ['a.', 'b.', 'c.', '']
+    });
     map.addLayer(cloudmade);
 
 
