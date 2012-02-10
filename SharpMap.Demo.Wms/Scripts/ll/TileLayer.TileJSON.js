@@ -93,9 +93,12 @@ L.TileLayer.TileJSON = L.TileLayer.Canvas.extend({
         return visible;
     },
 
-    _drawPoint: function (ctx, geom) {
+    _drawPoint: function (ctx, geom, style) {
+        if (!style) {
+            return;
+        }
+        
         var p = this._tilePoint(ctx, geom);
-        var style = this.options.point;
         var c = ctx.canvas;
         var g = c.getContext('2d');
         g.beginPath();
@@ -106,7 +109,11 @@ L.TileLayer.TileJSON = L.TileLayer.Canvas.extend({
         g.restore();
     },
 
-    _drawLineString: function (ctx, geom) {
+    _drawLineString: function (ctx, geom, style) {
+        if (!style) {
+            return;
+        }
+        
         var coords = geom, proj = [], i;
         coords = this._clip(ctx, coords);
         coords = L.LineUtil.simplify(coords, 1);
@@ -118,7 +125,6 @@ L.TileLayer.TileJSON = L.TileLayer.Canvas.extend({
         }
 
         var g = ctx.canvas.getContext('2d');
-        var style = this.options.linestring;
         g.strokeStyle = style.color;
         g.lineWidth = style.size;
         g.beginPath();
@@ -130,7 +136,11 @@ L.TileLayer.TileJSON = L.TileLayer.Canvas.extend({
         g.restore();
     },
 
-    _drawPolygon: function (ctx, geom) {
+    _drawPolygon: function (ctx, geom, style) {
+        if (!style) {
+            return;
+        }
+        
         for (var el = 0; el < geom.length; el++) {
             var coords = geom[el], proj = [], i;
             coords = this._clip(ctx, coords);
@@ -142,7 +152,6 @@ L.TileLayer.TileJSON = L.TileLayer.Canvas.extend({
             }
 
             var g = ctx.canvas.getContext('2d');
-            var style = this.options.polygon;
             var outline = style.outline;
             g.fillStyle = style.color;
             if (outline) {
@@ -177,38 +186,39 @@ L.TileLayer.TileJSON = L.TileLayer.Canvas.extend({
         loader(url, function (data) {
             for (var i = 0; i < data.features.length; i++) {
                 var feature = data.features[i];
+                var style = self.styleFor(feature);
+
                 var type = feature.geometry.type;
                 var geom = feature.geometry.coordinates;
                 var len = geom.length;
-
                 switch (type) {
                     case 'Point':
-                        self._drawPoint(ctx, geom);
+                        self._drawPoint(ctx, geom, style);
                         break;
 
                     case 'MultiPoint':
                         for (j = 0; j < len; j++) {
-                            self._drawPoint(ctx, geom[j]);
+                            self._drawPoint(ctx, geom[j], style);
                         }
                         break;
 
                     case 'LineString':
-                        self._drawLineString(ctx, geom);
+                        self._drawLineString(ctx, geom, style);
                         break;
 
                     case 'MultiLineString':
                         for (j = 0; j < len; j++) {
-                            self._drawLineString(ctx, geom[j]);
+                            self._drawLineString(ctx, geom[j], style);
                         }
                         break;
 
                     case 'Polygon':
-                        self._drawPolygon(ctx, geom);
+                        self._drawPolygon(ctx, geom, style);
                         break;
 
                     case 'MultiPolygon':
                         for (j = 0; j < len; j++) {
-                            self._drawPolygon(ctx, geom[j]);
+                            self._drawPolygon(ctx, geom[j], style);
                         }
                         break;
 
@@ -221,6 +231,11 @@ L.TileLayer.TileJSON = L.TileLayer.Canvas.extend({
 
     // NOTE: a placeholder for a function that, given a tile context, returns a string to a GeoJSON service that retrieve features for that context
     createUrl: function (bounds) {
+        // override with your code
+    },
+
+    // NOTE: a placeholder for a function that, given a feature, returns a style object used to render the feature itself
+    styleFor: function (feature) {
         // override with your code
     }
 });
