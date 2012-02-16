@@ -148,7 +148,7 @@ namespace WinFormSamples
 
         private void button6_Click(object sender, EventArgs e)
         {
-            this.mapBox1.ActiveTool = SharpMap.Forms.MapBox.Tools.Edit;
+            
         }
     }
 }

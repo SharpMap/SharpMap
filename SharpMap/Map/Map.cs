@@ -655,7 +655,7 @@ namespace SharpMap
             {
                 
                 _Zoom = bbox.Width; //Set the private center value so we only fire one MapOnViewChange event
-                if (Envelope.Height < bbox.Height)
+                if (Envelope.Height < bbox.Height && Envelope.Height > 0)
                     _Zoom *= bbox.Height / Envelope.Height;
                 if (_Zoom < _MinimumZoom)
                     _Zoom = _MinimumZoom;
