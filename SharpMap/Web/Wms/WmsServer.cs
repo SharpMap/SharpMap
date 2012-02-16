@@ -26,7 +26,9 @@ using System.Xml;
 using SharpMap.Geometries;
 using SharpMap.Layers;
 using System.Collections.Generic;
+#if !DotSpatialProjections
 using ProjNet.CoordinateSystems.Transformations;
+#endif
 
 namespace SharpMap.Web.Wms
 {    
@@ -831,6 +833,9 @@ namespace SharpMap.Web.Wms
                             }
                             IEnumerable<SharpMap.Converters.GeoJSON.GeoJSON> data = SharpMap.Converters.GeoJSON.GeoJSONHelper.GetData(fds);
 
+#if DotSpatialProjections
+                            throw new NotImplementedException();
+#else
                             // Reproject geometries if needed
                             IMathTransform transform = null;
                             if (queryLayer is VectorLayer)
@@ -838,6 +843,7 @@ namespace SharpMap.Web.Wms
                                 ICoordinateTransformation transformation = (queryLayer as VectorLayer).CoordinateTransformation;
                                 transform = transformation == null ? null : transformation.MathTransform;
                             }
+
                             if (transform != null)
                             {
                                 data = data.Select(d =>
@@ -847,7 +853,7 @@ namespace SharpMap.Web.Wms
                                     return d;
                                 });
                             }
-
+#endif
                             items.AddRange(data);
                         }
                     }

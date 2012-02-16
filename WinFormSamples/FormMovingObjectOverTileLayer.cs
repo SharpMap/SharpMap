@@ -55,8 +55,10 @@ namespace WinFormSamples
 
 
             //Google Background
-            TileAsyncLayer bingLayer = new TileAsyncLayer(new BingTileSource(BingRequest.UrlBing, "",BingMapType.Roads), "TileLayer - Bing" );
-            this.mapBox1.Map.BackgroundLayer.Add(bingLayer);
+            TileAsyncLayer layer2 = new TileAsyncLayer(new OsmTileSource(), "TileLayer - OSM");
+
+            TileLayer layer = new TileLayer(new OsmTileSource(), "tile");
+            this.mapBox1.Map.BackgroundLayer.Add(layer);
 
             //Adds a static layer
             VectorLayer staticLayer = new VectorLayer("Fixed Marker");

@@ -25,7 +25,7 @@ namespace WinFormSamples
         {
    
             InitializeComponent();
-            this.SetStyle(ControlStyles.DoubleBuffer | ControlStyles.UserPaint | ControlStyles.AllPaintingInWmPaint, true);
+           // this.SetStyle(ControlStyles.DoubleBuffer | ControlStyles.UserPaint | ControlStyles.AllPaintingInWmPaint, true);
             this.UpdateStyles();
         }
 
@@ -35,6 +35,7 @@ namespace WinFormSamples
             
             //TileAsyncLayer osmLayer= new TileAsyncLayer(new OsmTileSource(), "TileLayer - OSM");
             TileAsyncLayer bingLayer = new TileAsyncLayer(new BingTileSource(BingRequest.UrlBing, "",BingMapType.Roads), "TileLayer - Bing" );
+            
             this.mapBox1.Map.BackgroundLayer.Add(bingLayer);
 
 #if DotSpatialProjections
@@ -55,11 +56,11 @@ namespace WinFormSamples
             geos.Add(geom.GetCentroid());
             SharpMap.Data.Providers.GeometryProvider geoProvider = new SharpMap.Data.Providers.GeometryProvider(geos);
             pushPinLayer.DataSource = geoProvider;
-            this.mapBox1.Map.Layers.Add(pushPinLayer);
-
-
+            //this.mapBox1.Map.Layers.Add(pushPinLayer);
 
             this.mapBox1.Map.ZoomToBox(geom);
+            this.mapBox1.Map.Zoom = 8500;
+           
             this.mapBox1.Refresh();
             
         }
@@ -91,6 +92,7 @@ namespace WinFormSamples
             TileLayer googleLayer = new TileAsyncLayer(new GoogleTileSource(new BruTile.Web.GoogleRequest(GoogleMapType.GoogleMap),new BruTile.Cache.MemoryCache<byte[]>(100,1000)), "TileLayer - Google");
             this.mapBox1.Map.BackgroundLayer.Clear();
             this.mapBox1.Map.BackgroundLayer.Add(googleLayer);
+            this.mapBox1.Map.ZoomToExtents();
             this.mapBox1.Refresh();
         }
 

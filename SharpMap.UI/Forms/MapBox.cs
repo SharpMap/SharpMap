@@ -632,6 +632,7 @@ namespace SharpMap.Forms
 
                     if (IsDisposed == false)
                     {
+                        
                         Graphics g = Graphics.FromImage(_imageBackground);
 
                         g.DrawImage(bm,
@@ -642,6 +643,7 @@ namespace SharpMap.Forms
                             imageAttributes);
 
                         g.Dispose();
+                        
                         UpdateImage(false);
                     }
                 }
@@ -686,10 +688,14 @@ namespace SharpMap.Forms
             Map safeMap = null;
             lock (_map)
             {
+
                 safeMap = _map.Clone();
                 _imageVariable = GetMap(safeMap, _map.VariableLayers, LayerCollectionType.Variable, extent);
                 _imageStatic = GetMap(safeMap, _map.Layers, LayerCollectionType.Static, extent);
-                _imageBackground = GetMap(safeMap, _map.BackgroundLayer, LayerCollectionType.Background, extent);
+                lock (_imageBackground)
+                {
+                    _imageBackground = GetMap(safeMap, _map.BackgroundLayer, LayerCollectionType.Background, extent);
+                }
             }
         }
 
@@ -736,18 +742,22 @@ namespace SharpMap.Forms
 
                         lock (_map)
                         {
+                            
                             using (var g = Graphics.FromImage(bmp))
                             {
-                                //Draws the background Image
-                                if (_imageBackground != null)
+                                lock (_imageBackground)
                                 {
-                                    try
+                                    //Draws the background Image
+                                    if (_imageBackground != null)
                                     {
-                                        g.DrawImageUnscaled(_imageBackground, 0, 0);
-                                    }
-                                    catch (Exception ex)
-                                    {
-                                        Console.WriteLine(ex.ToString());
+                                        try
+                                        {
+                                            g.DrawImageUnscaled(_imageBackground, 0, 0);
+                                        }
+                                        catch (Exception ex)
+                                        {
+                                            Console.WriteLine(ex.ToString());
+                                        }
                                     }
                                 }
 

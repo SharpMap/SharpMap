@@ -45,26 +45,27 @@ namespace SharpMap.Styles
         public VectorStyle Clone()
         {
             VectorStyle vs = null;
-            lock (_fillStyle)
+            lock (this)
             {
-                vs = new VectorStyle()
-                {
-                    _fillStyle = _fillStyle.Clone() as Brush,
-                    _lineOffset = _lineOffset,
-                    _lineStyle = _lineStyle.Clone() as Pen,
-                    _outline = _outline,
-                    _outlineStyle = _outlineStyle.Clone() as Pen,
-                    _PointBrush = _PointBrush.Clone() as Brush,
-                    _PointSize = _PointSize,
-                    _symbol = (_symbol != null ? _symbol.Clone() as Image : null),
-                    _symbolOffset = new PointF(_symbolOffset.X, _symbolOffset.Y),
-                    _symbolRotation = _symbolRotation,
-                    _symbolScale = _symbolScale,
-                    PointSymbolizer = PointSymbolizer,
-                    LineSymbolizer = LineSymbolizer,
-                    PolygonSymbolizer = PolygonSymbolizer
+                vs = new VectorStyle();
 
-                };
+                if (_fillStyle != null)
+                {
+                    vs._fillStyle = _fillStyle.Clone() as Brush;
+                }
+                vs._lineOffset = _lineOffset;
+                vs._lineStyle = _lineStyle.Clone() as Pen;
+                vs._outline = _outline;
+                vs._outlineStyle = _outlineStyle.Clone() as Pen;
+                vs._PointBrush = _PointBrush.Clone() as Brush;
+                vs._PointSize = _PointSize;
+                vs._symbol = (_symbol != null ? _symbol.Clone() as Image : null);
+                vs._symbolOffset = new PointF(_symbolOffset.X, _symbolOffset.Y);
+                vs._symbolRotation = _symbolRotation;
+                vs._symbolScale = _symbolScale;
+                vs.PointSymbolizer = PointSymbolizer;
+                vs.LineSymbolizer = LineSymbolizer;
+                vs.PolygonSymbolizer = PolygonSymbolizer;
             }
             return vs;
         }

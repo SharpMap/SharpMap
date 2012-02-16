@@ -58,11 +58,17 @@ namespace SharpMap.Layers
         int SRID { get; set; }
 
         /// <summary>
+        /// Proj4 String Projection
+        /// </summary>
+        string Proj4Projection { get; set; }
+
+        /// <summary>
         /// Renders the layer
         /// </summary>
         /// <param name="g">Graphics object reference</param>
         /// <param name="map">Map which is rendered</param>
         void Render(Graphics g, Map map);
+
 
         //SharpMap.CoordinateSystems.CoordinateSystem CoordinateSystem { get; set; }
     }

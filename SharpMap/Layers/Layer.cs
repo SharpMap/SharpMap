@@ -148,6 +148,7 @@ namespace SharpMap.Layers
 
         #region Properties
 
+        public string Proj4Projection { get; set; }
         /*
         private bool _Enabled = true;
         private double _MaxVisible = double.MaxValue;

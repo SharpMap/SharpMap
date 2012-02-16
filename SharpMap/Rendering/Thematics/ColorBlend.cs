@@ -149,6 +149,73 @@ namespace SharpMap.Rendering.Thematics
         #region Predefined color scales
 
         /// <summary>
+        /// Gets a linear gradient scale with nine colours making a RAINBOW like used in MOHID.
+        /// </summary>
+        /// <remarks>
+        /// Colors pass from Dark Blue over Green , Yellow to Dark Red
+        /// </remarks>
+        public static ColorBlend RainbowMOHID
+        {
+            get
+            {
+                return new ColorBlend(
+                    new Color[] {Color.FromArgb(0,0,127),   Color.FromArgb(0,0,255),   Color.FromArgb(0,255,255), Color.FromArgb(0,255,0), 
+                                 Color.FromArgb(127,255,0), Color.FromArgb(255,255,0), Color.FromArgb(255,127,0), Color.FromArgb(255,0,0), 
+                                 Color.FromArgb(127,0,0)},
+                    new float[] { 0f, 0.125f, 0.25f, 0.375f, 0.5f, 0.625f, 0.75f, 0.875f, 1f });
+            }
+        }
+
+
+        /// <summary>
+        /// Gets a linear gradient scale with nine colours making a INVERSE RAINBOW like used in MOHID.
+        /// </summary>
+        /// <remarks>
+        /// Colors pass from Dark Red, over Yellow and Green to Dark Blue
+        /// </remarks>
+        public static ColorBlend InverseRainbowMOHID
+        {
+            get
+            {
+                return new ColorBlend(
+                    new Color[] {Color.FromArgb(127,0,0), Color.FromArgb(255,0,0), Color.FromArgb(255,127,0), Color.FromArgb(255,255,0),  
+                                 Color.FromArgb(127,255,0), Color.FromArgb(0,255,0), Color.FromArgb(0,255,255), Color.FromArgb(0,0,255),
+                                 Color.FromArgb(0,0,127)},
+                    new float[] { 0f, 0.125f, 0.25f, 0.375f, 0.5f, 0.625f, 0.75f, 0.875f, 1f });
+            }
+        }
+
+        /// <summary>
+        /// Gets a linear gradient scale with nine colours making a DTM like used in MOHID.
+        /// </summary>
+        /// <remarks>
+        /// Colors pass from Dark Blue over Green , Yellow to Dark Red
+        /// </remarks>
+        public static ColorBlend DigitalTerrainModelMOHID
+        {
+            get
+            {
+                return new ColorBlend(
+                    new Color[] 
+                    {Color.FromArgb(16, 56, 0), Color.FromArgb(38, 127, 0), Color.FromArgb(58, 193, 0), Color.FromArgb(255, 247, 176), 
+                        Color.FromArgb(244, 170, 81), Color.FromArgb(239, 139, 2), Color.FromArgb(205, 112, 9), Color.FromArgb(148, 82, 17),
+                        Color.FromArgb(99, 66, 3)},
+                    new float[] { 0f, 0.125f, 0.25f, 0.375f, 0.5f, 0.625f, 0.75f, 0.875f, 1f });
+            }
+        }
+
+        public static ColorBlend BathymetryMOHID
+        {
+            get
+            {
+                return new ColorBlend(
+                    new Color[] {Color.FromArgb(254, 255, 255), Color.FromArgb(223, 241, 251), Color.FromArgb(187, 228, 246), 
+                                 Color.FromArgb(133,208, 239), Color.FromArgb(63,189, 237), Color.FromArgb(87, 153, 203)},
+                    new float[] { 0f, 0.2f, 0.4f, 0.6f, 0.8f, 1.0f });
+            }
+        }
+
+        /// <summary>
         /// Gets a linear gradient scale with seven colours making a rainbow from red to violet.
         /// </summary>
         /// <remarks>

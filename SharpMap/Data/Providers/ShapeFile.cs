@@ -283,8 +283,8 @@ namespace SharpMap.Data.Providers
 			if (File.Exists(dbffile))
 				DbaseFile = new DbaseReader(dbffile);
 
-			//By Default disable _MemoryCache
-			_useMemoryCache = false;
+			//By Default enable _MemoryCache
+			_useMemoryCache = true;
 			//Parse shape header
 			ParseHeader();
 			//Read projection file
@@ -685,7 +685,7 @@ namespace SharpMap.Data.Providers
 				if (fdr == null)
 				{
                     fdr = GetFeature(oid);
-                    _cacheDataTable.Add(oid, fdr);
+                   
                 }
 
 			    return fdr.Geometry;

@@ -53,7 +53,7 @@
     <TargetFrameworkProfile />
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\DebugDSProjection\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;DotSpatialProjections, UseMapBox</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;DotSpatialProjections, UseMapBox, USE_MEMORYMAPPED_FILE</DefineConstants>
     <DocumentationFile>bin\Debug\SharpMap.XML</DocumentationFile>
     <DebugType>full</DebugType>
     <PlatformTarget>x86</PlatformTarget>

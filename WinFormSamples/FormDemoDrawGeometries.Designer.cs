@@ -40,6 +40,7 @@ namespace WinFormSamples
             this.mapBox1 = new SharpMap.Forms.MapBox();
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
             this.label2 = new System.Windows.Forms.Label();
+            this.button6 = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // button2
@@ -104,7 +105,7 @@ namespace WinFormSamples
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(13, 236);
+            this.button1.Location = new System.Drawing.Point(15, 271);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(83, 23);
             this.button1.TabIndex = 6;
@@ -137,10 +138,11 @@ namespace WinFormSamples
             this.mapBox1.ActiveTool = SharpMap.Forms.MapBox.Tools.Pan;
             this.mapBox1.Cursor = System.Windows.Forms.Cursors.Hand;
             this.mapBox1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.mapBox1.FineZoomFactor = 10;
+            this.mapBox1.FineZoomFactor = 10D;
             this.mapBox1.Location = new System.Drawing.Point(0, 0);
             this.mapBox1.Name = "mapBox1";
             this.mapBox1.PreviewMode = SharpMap.Forms.MapBox.PreviewModes.Fast;
+            this.mapBox1.QueryGrowFactor = 5F;
             this.mapBox1.QueryLayerIndex = 0;
             this.mapBox1.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(210)))), ((int)(((byte)(244)))), ((int)(((byte)(244)))), ((int)(((byte)(244)))));
             this.mapBox1.SelectionForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(244)))), ((int)(((byte)(244)))));
@@ -148,19 +150,19 @@ namespace WinFormSamples
             this.mapBox1.Size = new System.Drawing.Size(669, 503);
             this.mapBox1.TabIndex = 2;
             this.mapBox1.Text = "mapBox1";
-            this.mapBox1.WheelZoomMagnitude = 2;
+            this.mapBox1.WheelZoomMagnitude = 2D;
             // 
             // richTextBox1
             // 
-            this.richTextBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.richTextBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.richTextBox1.Location = new System.Drawing.Point(110, 425);
             this.richTextBox1.Name = "richTextBox1";
             this.richTextBox1.Size = new System.Drawing.Size(547, 66);
             this.richTextBox1.TabIndex = 9;
             this.richTextBox1.Text = "Draw Geometries Sample.\nPoints: Will be drawn on the mouse up event\nLines: Each m" +
-                "ouse up event adds a vertex. Double click to finish\nPolygons: Each mouse up even" +
-                "t adds a vertex. Double click to finish";
+    "ouse up event adds a vertex. Double click to finish\nPolygons: Each mouse up even" +
+    "t adds a vertex. Double click to finish";
             // 
             // label2
             // 
@@ -172,6 +174,16 @@ namespace WinFormSamples
             this.label2.TabIndex = 10;
             this.label2.Text = "label2";
             // 
+            // button6
+            // 
+            this.button6.Location = new System.Drawing.Point(13, 226);
+            this.button6.Name = "button6";
+            this.button6.Size = new System.Drawing.Size(83, 23);
+            this.button6.TabIndex = 6;
+            this.button6.Text = "edit geos";
+            this.button6.UseVisualStyleBackColor = true;
+            this.button6.Click += new System.EventHandler(this.button6_Click);
+            // 
             // FormDemoDrawGeometries
             // 
             this.ClientSize = new System.Drawing.Size(669, 503);
@@ -179,6 +191,7 @@ namespace WinFormSamples
             this.Controls.Add(this.richTextBox1);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.button5);
+            this.Controls.Add(this.button6);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.button9);
             this.Controls.Add(this.button8);
@@ -212,5 +225,6 @@ namespace WinFormSamples
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.RichTextBox richTextBox1;
         private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Button button6;
     }
 }

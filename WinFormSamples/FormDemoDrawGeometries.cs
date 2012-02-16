@@ -14,6 +14,7 @@ using SharpMap.Data.Providers;
 
 #if DotSpatialProjections
 using GeometryTransform = DotSpatial.Projections.GeometryTransform;
+using WinFormSamples.Samples;
 #else
 using GeometryTransform = ProjNet.CoordinateSystems.Transformations.GeometryTransform;
 #endif
@@ -36,18 +37,9 @@ namespace WinFormSamples
         private void FormDemoDrawGeometries_Load(object sender, EventArgs e)
         {
 
-            //Set up the countries layer
-            VectorLayer layCountries = new VectorLayer("Countries");
-            //Set the datasource to a shapefile in the App_data folder
-            layCountries.DataSource = new ShapeFile("GeoData/World/countries.shp", true);
-            //Set fill-style to green
-            layCountries.Style.Fill = new SolidBrush(Color.Green);
-            //Set the polygons to have a black outline
-            layCountries.Style.Outline = Pens.Black;
-            layCountries.Style.EnableOutline = true;
-            layCountries.SRID = 4326;
 
-            this.mapBox1.Map.Layers.Add(layCountries);
+
+            this.mapBox1.Map = ShapefileSample.InitializeMap(0);
 
 
 
@@ -152,6 +144,11 @@ namespace WinFormSamples
         private void button5_Click(object sender, EventArgs e)
         {
             this.mapBox1.ActiveTool = SharpMap.Forms.MapBox.Tools.ZoomWindow;
+        }
+
+        private void button6_Click(object sender, EventArgs e)
+        {
+            this.mapBox1.ActiveTool = SharpMap.Forms.MapBox.Tools.Edit;
         }
     }
 }

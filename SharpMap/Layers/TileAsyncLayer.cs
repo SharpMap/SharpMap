@@ -14,6 +14,7 @@ namespace SharpMap.Layers
 {
     public class TileAsyncLayer : TileLayer, ITileAsyncLayer
     {
+        private List<Thread> threadList = new List<Thread>();
         public TileAsyncLayer(ITileSource tileSource, string layerName)
             : base(tileSource, layerName, new Color(), true, null)
         {
@@ -43,26 +44,78 @@ namespace SharpMap.Layers
             int level = BruTile.Utilities.GetNearestLevel(_source.Schema.Resolutions, map.PixelSize);
             IList<TileInfo> tiles = _source.Schema.GetTilesInView(extent, level);
 
+            foreach (Thread t in threadList)
+            {
+                if (t.IsAlive)
+                {
+                    t.Abort();
+                    t.Join();
+                }
+            }
+            threadList.Clear();
+
             foreach (TileInfo info in tiles)
             {
                 if (_bitmaps.Find(info.Index) != null)
                 {
-                    ThreadPool.QueueUserWorkItem(OnMapNewtileAvailableHelper, new object[]{info,_bitmaps.Find(info.Index)});   
+                    //ThreadPool.QueueUserWorkItem(OnMapNewtileAvailableHelper, new object[] { info, _bitmaps.Find(info.Index) });
+                    //draws directly the bitmap
+                    BoundingBox bb = new BoundingBox(info.Extent.MinX, info.Extent.MinY, info.Extent.MaxX, info.Extent.MaxY);
+                    HandleMapNewTileAvaliable(map,graphics, bb, _bitmaps.Find(info.Index), _source.Schema.Width, _source.Schema.Height, _imageAttributes);
                 }
                 else if (_fileCache != null && _fileCache.Exists(info.Index))
                 {
+                    
                     Bitmap img = GetImageFromFileCache(info) as Bitmap;
                     _bitmaps.Add(info.Index, img);
-                    ThreadPool.QueueUserWorkItem(OnMapNewtileAvailableHelper, new object[] { info, img });
+                    
+                    //ThreadPool.QueueUserWorkItem(OnMapNewtileAvailableHelper, new object[] { info, img });
+                    //draws directly the bitmap
+                    BoundingBox bb = new BoundingBox(info.Extent.MinX, info.Extent.MinY, info.Extent.MaxX, info.Extent.MaxY);
+                    HandleMapNewTileAvaliable(map, graphics, bb, _bitmaps.Find(info.Index), _source.Schema.Width, _source.Schema.Height, _imageAttributes);
                 }
                 else
                 {
-                    ThreadPool.QueueUserWorkItem(GetTileOnThread, new object[] { _source.Provider, info, _bitmaps });
+                    Thread t = new Thread(new ParameterizedThreadStart(GetTileOnThread));
+                    t.Name = info.ToString();
+                    t.IsBackground = true;
+                    t.Start(new object[] { _source.Provider, info, _bitmaps });
+                    threadList.Add(t);
                 }
             }
 
         }
 
+
+        void HandleMapNewTileAvaliable(Map _map, Graphics g, BoundingBox box, Bitmap bm, int sourceWidth, int sourceHeight, ImageAttributes imageAttributes)
+        {
+
+            try
+            {
+                PointF min = _map.WorldToImage(new SharpMap.Geometries.Point(box.Min.X, box.Min.Y));
+                PointF max = _map.WorldToImage(new SharpMap.Geometries.Point(box.Max.X, box.Max.Y));
+
+                min = new PointF((float)Math.Round(min.X), (float)Math.Round(min.Y));
+                max = new PointF((float)Math.Round(max.X), (float)Math.Round(max.Y));
+
+                
+                    g.DrawImage(bm,
+                        new Rectangle((int)min.X, (int)max.Y, (int)(max.X - min.X), (int)(min.Y - max.Y)),
+                        0, 0,
+                        sourceWidth, sourceHeight,
+                        GraphicsUnit.Pixel,
+                        imageAttributes);
+
+                   // g.Dispose();
+                
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                //this can be a GDI+ Hell Exception...
+            }
+
+        }
         private void OnMapNewtileAvailableHelper(object parameter)
         {
             //this is to wait for the main UI thread to finalize rendering ... (buggy code here)...
@@ -107,11 +160,20 @@ namespace SharpMap.Layers
                     Graphics graphics = Graphics.FromImage(bitmap);
                     graphics.DrawString(ex.Message, new Font(FontFamily.GenericSansSerif, 12), new SolidBrush(Color.Black),
                         new RectangleF(0, 0, _source.Schema.Width, _source.Schema.Height));
-                    bitmaps.Add(tileInfo.Index, bitmap);
+                    //Draw the Timeout Tile
+                    OnMapNewTileAvaliable(tileInfo, bitmap);
+                    
+                    //With timeout we don't add to the internal cache
+                    //bitmaps.Add(tileInfo.Index, bitmap);
                 }
+            }
+            catch (ThreadAbortException tex)
+            {
+                Console.WriteLine("TileAsyncLayer - Thread aborting: " + System.Threading.Thread.CurrentThread.Name);
             }
             catch (Exception ex)
             {
+                Console.WriteLine("TileAsyncLayer - GetTileOnThread Exception: " + ex.ToString());
                 //todo: log and use other ways to report to user.
             }
         }
