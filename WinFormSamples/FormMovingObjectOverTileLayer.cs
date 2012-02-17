@@ -57,8 +57,8 @@ namespace WinFormSamples
             //Google Background
             TileAsyncLayer layer2 = new TileAsyncLayer(new OsmTileSource(), "TileLayer - OSM");
 
-            TileLayer layer = new TileLayer(new OsmTileSource(), "tile");
-            this.mapBox1.Map.BackgroundLayer.Add(layer);
+
+            this.mapBox1.Map.BackgroundLayer.Add(layer2);
 
             //Adds a static layer
             VectorLayer staticLayer = new VectorLayer("Fixed Marker");
@@ -131,6 +131,11 @@ namespace WinFormSamples
         private void Form2_SizeChanged(object sender, EventArgs e)
         {
             this.mapBox1.Refresh();
+        }
+
+        private void FormMovingObjectOverTileLayer_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            this.timer1.Stop();
         }
 
 

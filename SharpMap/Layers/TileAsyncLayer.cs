@@ -44,6 +44,7 @@ namespace SharpMap.Layers
             int level = BruTile.Utilities.GetNearestLevel(_source.Schema.Resolutions, map.PixelSize);
             IList<TileInfo> tiles = _source.Schema.GetTilesInView(extent, level);
 
+            //Abort previous running Threads
             foreach (Thread t in threadList)
             {
                 if (t.IsAlive)
@@ -98,16 +99,15 @@ namespace SharpMap.Layers
                 min = new PointF((float)Math.Round(min.X), (float)Math.Round(min.Y));
                 max = new PointF((float)Math.Round(max.X), (float)Math.Round(max.Y));
 
-                
-                    g.DrawImage(bm,
-                        new Rectangle((int)min.X, (int)max.Y, (int)(max.X - min.X), (int)(min.Y - max.Y)),
-                        0, 0,
-                        sourceWidth, sourceHeight,
-                        GraphicsUnit.Pixel,
-                        imageAttributes);
+                g.DrawImage(bm,
+                    new Rectangle((int)min.X, (int)max.Y, (int)(max.X - min.X), (int)(min.Y - max.Y)),
+                    0, 0,
+                    sourceWidth, sourceHeight,
+                    GraphicsUnit.Pixel,
+                    imageAttributes);
 
-                   // g.Dispose();
-                
+                // g.Dispose();
+
             }
             catch (Exception ex)
             {

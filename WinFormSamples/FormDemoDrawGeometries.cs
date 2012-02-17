@@ -39,8 +39,10 @@ namespace WinFormSamples
 
 
 
-            this.mapBox1.Map = ShapefileSample.InitializeMap(0);
-
+            //this.mapBox1.Map = ShapefileSample.InitializeMap(0);
+            //Google Background
+            TileAsyncLayer bingLayer = new TileAsyncLayer(new BingTileSource(BingRequest.UrlBing, "", BingMapType.Roads), "TileLayer - Bing");
+            this.mapBox1.Map.BackgroundLayer.Add(bingLayer);
 
 
             SharpMap.Layers.VectorLayer vl = new VectorLayer("My Geometries");

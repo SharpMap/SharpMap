@@ -740,62 +740,59 @@ namespace SharpMap.Forms
 
                         var bmp = new Bitmap(Width, Height);
 
-                        lock (_map)
+
+                        using (var g = Graphics.FromImage(bmp))
                         {
-                            
-                            using (var g = Graphics.FromImage(bmp))
+                            lock (_imageBackground)
                             {
-                                lock (_imageBackground)
-                                {
-                                    //Draws the background Image
-                                    if (_imageBackground != null)
-                                    {
-                                        try
-                                        {
-                                            g.DrawImageUnscaled(_imageBackground, 0, 0);
-                                        }
-                                        catch (Exception ex)
-                                        {
-                                            Console.WriteLine(ex.ToString());
-                                        }
-                                    }
-                                }
-
-                                //Draws the static images
-                                if (_imageStatic != null)
+                                //Draws the background Image
+                                if (_imageBackground != null)
                                 {
                                     try
                                     {
-                                        g.DrawImageUnscaled(_imageStatic, 0, 0);
-                                    }
-                                    catch (Exception ex)
-                                    {
-                                        Console.WriteLine(ex.ToString());
-                                    }
-
-                                }
-
-                                //Draws the variable Images
-                                if (_imageVariable != null)
-                                {
-                                    try
-                                    {
-                                        g.DrawImageUnscaled(_imageVariable, 0, 0);
+                                        g.DrawImageUnscaled(_imageBackground, 0, 0);
                                     }
                                     catch (Exception ex)
                                     {
                                         Console.WriteLine(ex.ToString());
                                     }
                                 }
-
-                                g.Dispose();
                             }
 
+                            //Draws the static images
+                            if (_imageStatic != null)
+                            {
+                                try
+                                {
+                                    g.DrawImageUnscaled(_imageStatic, 0, 0);
+                                }
+                                catch (Exception ex)
+                                {
+                                    Console.WriteLine(ex.ToString());
+                                }
 
+                            }
 
-                            _image = bmp;
-                            _imageBoundingBox = res.bbox;
+                            //Draws the variable Images
+                            if (_imageVariable != null)
+                            {
+                                try
+                                {
+                                    g.DrawImageUnscaled(_imageVariable, 0, 0);
+                                }
+                                catch (Exception ex)
+                                {
+                                    Console.WriteLine(ex.ToString());
+                                }
+                            }
+
+                            g.Dispose();
                         }
+
+
+
+                        _image = bmp;
+                        _imageBoundingBox = res.bbox;
                     }
 
                     if (res.Tool.HasValue)
@@ -1577,7 +1574,7 @@ namespace SharpMap.Forms
                 if (GeometryDefined != null)
                 {
                     Geometries.LinearRing extRing = new Geometries.LinearRing();
-                    for (int i = 0; i < _pointArray.GetUpperBound(0); i++)
+                    for (int i = 0; i < _pointArray.GetUpperBound(0) -1; i++)
                         extRing.Vertices.Add(_pointArray[i]);
 
                     extRing.Vertices.Add(_pointArray[0]);

@@ -60,10 +60,11 @@
             this.mapBox1.ActiveTool = SharpMap.Forms.MapBox.Tools.Pan;
             this.mapBox1.Cursor = System.Windows.Forms.Cursors.Hand;
             this.mapBox1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.mapBox1.FineZoomFactor = 10;
+            this.mapBox1.FineZoomFactor = 10D;
             this.mapBox1.Location = new System.Drawing.Point(0, 0);
             this.mapBox1.Name = "mapBox1";
             this.mapBox1.PreviewMode = SharpMap.Forms.MapBox.PreviewModes.Fast;
+            this.mapBox1.QueryGrowFactor = 5F;
             this.mapBox1.QueryLayerIndex = 0;
             this.mapBox1.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(210)))), ((int)(((byte)(244)))), ((int)(((byte)(244)))), ((int)(((byte)(244)))));
             this.mapBox1.SelectionForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(244)))), ((int)(((byte)(244)))));
@@ -71,7 +72,7 @@
             this.mapBox1.Size = new System.Drawing.Size(669, 503);
             this.mapBox1.TabIndex = 2;
             this.mapBox1.Text = "mapBox1";
-            this.mapBox1.WheelZoomMagnitude = 2;
+            this.mapBox1.WheelZoomMagnitude = 2D;
             // 
             // timer1
             // 
@@ -88,6 +89,7 @@
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Name = "FormMovingObjectOverTileLayer";
             this.Text = "Map";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormMovingObjectOverTileLayer_FormClosing);
             this.Load += new System.EventHandler(this.FormMovingObjectOverTileLayer_Load);
             this.SizeChanged += new System.EventHandler(this.Form2_SizeChanged);
             this.ResumeLayout(false);
