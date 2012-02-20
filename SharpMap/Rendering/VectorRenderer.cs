@@ -74,8 +74,8 @@ namespace SharpMap.Rendering
 
             float space = (offset * offset / 4) + 1;
 
-            //if there are more than two points
-            if (length > 2)
+            //if there are two or more points
+            if (length >= 2)
             {
                 int counter = 0;
                 float a, b, x = 0, y = 0, c;
