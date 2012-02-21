@@ -139,19 +139,19 @@ namespace SharpMap
             {
                 if (Layers != null)
                 {
-                    foreach (Layer layer in Layers)
+                    foreach (ILayer layer in Layers)
                         if (layer is IDisposable)
                             ((IDisposable)layer).Dispose();
                 }
                 if (BackgroundLayer != null)
                 {
-                    foreach (Layer layer in BackgroundLayer)
+                    foreach (ILayer layer in BackgroundLayer)
                         if (layer is IDisposable)
                             ((IDisposable)layer).Dispose();
                 }
                 if (VariableLayers != null)
                 {
-                    foreach (Layer layer in VariableLayers)
+                    foreach (ILayer layer in VariableLayers)
                         if (layer is IDisposable)
                             ((IDisposable)layer).Dispose();
                 }

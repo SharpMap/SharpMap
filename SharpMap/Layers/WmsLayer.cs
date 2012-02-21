@@ -223,6 +223,23 @@ namespace SharpMap.Layers
         }
 
         /// <summary>
+        /// Set the opacity on the drawn image, this method updates the ImageAttributes with opacity-values and is used when sharpmap draws the image, the the wms-server
+        /// 1.0 = No tranparency
+        /// 0.0 = full transparency
+        /// </summary>
+        /// <param name="opacity"></param>
+        public void SetOpacity(float opacity)
+        {
+            ColorMatrix cmxPic = new ColorMatrix();
+            cmxPic.Matrix33 = opacity;
+            ImageAttributes attrs = ImageAttributes;
+            if (attrs == null)
+                attrs = new System.Drawing.Imaging.ImageAttributes();
+            attrs.SetColorMatrix(cmxPic, ColorMatrixFlag.Default, ColorAdjustType.Bitmap);
+            ImageAttributes = attrs;
+        }
+
+        /// <summary>
         /// Sets the optional backgroundcolor. 
         /// </summary>
         public Color BgColor
