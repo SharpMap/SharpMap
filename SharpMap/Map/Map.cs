@@ -541,18 +541,23 @@ namespace SharpMap
                  clone = new Map()
                  {
                      BackColor = BackColor,
-                     Center = Center,
                      Disclaimer = Disclaimer,
-                     DisclaimerFont = DisclaimerFont,
                      DisclaimerLocation = DisclaimerLocation,
-                     MapTransform = MapTransform.Clone(),
                      MaximumZoom = MaximumZoom,
                      MinimumZoom = MinimumZoom,
                      PixelAspectRatio = PixelAspectRatio,
-                     Size = Size,
                      Zoom = Zoom,
                      DisposeLayersOnDispose = false
                  };
+
+                 if (DisclaimerFont != null)
+                     clone.DisclaimerFont = (Font)DisclaimerFont.Clone();
+                 if (MapTransform != null)
+                     clone.MapTransform = MapTransform.Clone();
+                 if (Size != null)
+                     clone.Size = new Size(Size.Width, Size.Height);
+                 if (Center != null)
+                     clone.Center = Center.Clone();
 
              }
              if (clone != null)

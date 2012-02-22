@@ -134,66 +134,69 @@ namespace SharpMap.Layers
 
         public override void Render(Graphics graphics, Map map)
         {
-            Bitmap bmp = new Bitmap(map.Size.Width, map.Size.Height, PixelFormat.Format32bppArgb);
-            Graphics g = Graphics.FromImage(bmp);
-
-            g.InterpolationMode = InterpolationMode;
-            g.Transform = graphics.Transform.Clone();
-
-            Extent extent = new Extent(map.Envelope.Min.X, map.Envelope.Min.Y, map.Envelope.Max.X, map.Envelope.Max.Y);
-            int level = BruTile.Utilities.GetNearestLevel(_source.Schema.Resolutions, map.PixelSize);
-            IList<TileInfo> tiles = _source.Schema.GetTilesInView(extent, level);
-            
-            IList<WaitHandle> waitHandles = new List<WaitHandle>();
-
-            foreach (TileInfo info in tiles)
+            if (!map.Size.IsEmpty && map.Size.Width > 0 && map.Size.Height > 0)
             {
-                if (_bitmaps.Find(info.Index) != null) continue;
-                if (_fileCache != null && _fileCache.Exists(info.Index))
+                Bitmap bmp = new Bitmap(map.Size.Width, map.Size.Height, PixelFormat.Format32bppArgb);
+                Graphics g = Graphics.FromImage(bmp);
+
+                g.InterpolationMode = InterpolationMode;
+                g.Transform = graphics.Transform.Clone();
+
+                Extent extent = new Extent(map.Envelope.Min.X, map.Envelope.Min.Y, map.Envelope.Max.X, map.Envelope.Max.Y);
+                int level = BruTile.Utilities.GetNearestLevel(_source.Schema.Resolutions, map.PixelSize);
+                IList<TileInfo> tiles = _source.Schema.GetTilesInView(extent, level);
+
+                IList<WaitHandle> waitHandles = new List<WaitHandle>();
+
+                foreach (TileInfo info in tiles)
                 {
-                    _bitmaps.Add(info.Index, GetImageFromFileCache(info) as Bitmap);
-                    continue;
+                    if (_bitmaps.Find(info.Index) != null) continue;
+                    if (_fileCache != null && _fileCache.Exists(info.Index))
+                    {
+                        _bitmaps.Add(info.Index, GetImageFromFileCache(info) as Bitmap);
+                        continue;
+                    }
+
+                    AutoResetEvent waitHandle = new AutoResetEvent(false);
+                    waitHandles.Add(waitHandle);
+                    ThreadPool.QueueUserWorkItem(GetTileOnThread, new object[] { _source.Provider, info, _bitmaps, waitHandle });
                 }
 
-                AutoResetEvent waitHandle = new AutoResetEvent(false);
-                waitHandles.Add(waitHandle);
-                ThreadPool.QueueUserWorkItem(GetTileOnThread, new object[] { _source.Provider, info, _bitmaps, waitHandle });
+                foreach (WaitHandle handle in waitHandles)
+                    handle.WaitOne();
+
+                foreach (TileInfo info in tiles)
+                {
+                    Bitmap bitmap = _bitmaps.Find(info.Index);
+                    if (bitmap == null) continue;
+
+                    PointF min = map.WorldToImage(new Geometries.Point(info.Extent.MinX, info.Extent.MinY));
+                    PointF max = map.WorldToImage(new Geometries.Point(info.Extent.MaxX, info.Extent.MaxY));
+
+                    min = new PointF((float)Math.Round(min.X), (float)Math.Round(min.Y));
+                    max = new PointF((float)Math.Round(max.X), (float)Math.Round(max.Y));
+
+                    try
+                    {
+                        g.DrawImage(bitmap,
+                            new Rectangle((int)min.X, (int)max.Y, (int)(max.X - min.X), (int)(min.Y - max.Y)),
+                            0, 0, _source.Schema.Width, _source.Schema.Height,
+                            GraphicsUnit.Pixel,
+                            _imageAttributes);
+                    }
+                    catch (Exception ee)
+                    {
+                        /*GDI+ Hell*/
+                    }
+
+                }
+
+                graphics.Transform = new Matrix();
+                graphics.DrawImageUnscaled(bmp, 0, 0);
+                graphics.Transform = g.Transform;
+
+                g.Dispose();
             }
-
-            foreach (WaitHandle handle in waitHandles)
-                handle.WaitOne();
-
-            foreach (TileInfo info in tiles)
-            {
-                Bitmap bitmap = _bitmaps.Find(info.Index);
-                if (bitmap == null) continue;
-
-                PointF min = map.WorldToImage(new Geometries.Point(info.Extent.MinX, info.Extent.MinY));
-                PointF max = map.WorldToImage(new Geometries.Point(info.Extent.MaxX, info.Extent.MaxY));
-
-                min = new PointF((float)Math.Round(min.X), (float)Math.Round(min.Y));
-                max = new PointF((float)Math.Round(max.X), (float)Math.Round(max.Y));
-
-                try
-                {
-                    g.DrawImage(bitmap,
-                        new Rectangle((int)min.X, (int)max.Y, (int)(max.X - min.X), (int)(min.Y - max.Y)),
-                        0, 0, _source.Schema.Width, _source.Schema.Height,
-                        GraphicsUnit.Pixel,
-                        _imageAttributes);
-                }
-                catch (Exception ee)
-                {
-                    /*GDI+ Hell*/
-                }
-
-            }
-
-            graphics.Transform = new Matrix();
-            graphics.DrawImageUnscaled(bmp, 0, 0);
-            graphics.Transform = g.Transform;
-
-            g.Dispose();
         }
 
         #endregion
