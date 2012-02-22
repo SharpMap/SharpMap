@@ -63,6 +63,53 @@ namespace UnitTests
         }
 
         [Test]
+        public void Map_InsertLayer()
+        {
+            Map m = new Map();
+            VectorLayer vlay1 = new VectorLayer("1");
+            m.Layers.Add(vlay1);
+            VectorLayer vlay2 = new VectorLayer("2");
+            m.Layers.Add(vlay2);
+
+            VectorLayer vlay3 = new VectorLayer("3");
+            m.Layers.Insert(1, vlay3);
+
+            Assert.AreEqual("1", m.Layers[0].LayerName);
+            Assert.AreEqual("3", m.Layers[1].LayerName);
+            Assert.AreEqual("2", m.Layers[2].LayerName);
+        }
+
+        [Test]
+        public void Map_GetLayerByNameInGroupLayer()
+        {
+            Map m = new Map();
+            VectorLayer vlay1 = new VectorLayer("1");
+            VectorLayer vlay2 = new VectorLayer("2");
+            VectorLayer vlay3 = new VectorLayer("3");
+            m.Layers.Add(vlay1);
+
+            LayerGroup lg = new LayerGroup("Group");
+            lg.Layers.Add(vlay2);
+            lg.Layers.Add(vlay3);
+            m.Layers.Add(lg);
+
+
+            var lay = m.GetLayerByName("1");
+            Assert.IsNotNull(lay);
+            Assert.AreEqual("1",lay.LayerName);
+            lay = m.GetLayerByName("2");
+            Assert.IsNotNull(lay);
+            Assert.AreEqual("2", lay.LayerName);
+            lay = m.GetLayerByName("3");
+            Assert.IsNotNull(lay);
+            Assert.AreEqual("3", lay.LayerName);
+            lay = m.GetLayerByName("Group");
+            Assert.IsNotNull(lay);
+            Assert.AreEqual("Group", lay.LayerName);
+            
+        }
+
+        [Test]
         public void GetExtents_ValidDatasource()
         {
             Map map = new Map(new Size(400, 200));

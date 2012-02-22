@@ -624,12 +624,21 @@ namespace SharpMap
         /// <returns>Layer</returns>
         public ILayer GetLayerByName(string name)
         {
-            //return _Layers.Find(delegate(SharpMap.Layers.ILayer layer) { return layer.LayerName.Equals(name); });
-            for (int i = 0; i < _Layers.Count; i++)
-                if (String.Equals(_Layers[i].LayerName, name, StringComparison.InvariantCultureIgnoreCase))
-                    return _Layers[i];
+            ILayer lay  = null;
+            if (Layers != null)
+            {
+                lay = Layers.GetLayerByName(name);
+            }
+            if (lay == null && BackgroundLayer != null)
+            {
+                lay = BackgroundLayer.GetLayerByName(name);
+            }
+            if (lay == null && VariableLayers != null)
+            {
+                lay = VariableLayers.GetLayerByName(name);
+            }
 
-            return null;
+            return lay;
         }
 
         /// <summary>

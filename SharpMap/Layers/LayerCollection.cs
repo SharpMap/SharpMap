@@ -70,11 +70,7 @@ namespace SharpMap.Layers
                 throw new ArgumentOutOfRangeException("index", index, "Index not in range");
             }
 
-
-            //Items.Insert(index, layer);
-            //Raise the Add New Event
-            base.InsertItem(0, layer);
-
+            base.InsertItem(index, layer);
         }
 
         protected override void  OnAddingNew(System.ComponentModel.AddingNewEventArgs e)
@@ -93,14 +89,29 @@ namespace SharpMap.Layers
             base.OnAddingNew(new System.ComponentModel.AddingNewEventArgs(newLayer));
         }
 
-        private ILayer GetLayerByName(string layerName)
+        public ILayer GetLayerByName(string layerName)
         {
-            foreach (ILayer layer in this)
+            LayerCollection lays = this;
+            return GetLayerByNameInternal(layerName, lays);
+        }
+
+        private static ILayer GetLayerByNameInternal(string layerName, System.Collections.Generic.IEnumerable<ILayer> lays)
+        {
+            foreach (ILayer layer in lays)
             {
                 int comparison = String.Compare(layer.LayerName,
                                                 layerName, StringComparison.CurrentCultureIgnoreCase);
 
                 if (comparison == 0) return layer;
+
+                //If this is a layergroup, check sublayers also
+                if (layer is LayerGroup)
+                {
+                    LayerGroup lg = layer as LayerGroup;
+                    ILayer lay = GetLayerByNameInternal(layerName, lg.Layers);
+                    if (lay != null)
+                        return lay;
+                }
             }
 
             return null;
