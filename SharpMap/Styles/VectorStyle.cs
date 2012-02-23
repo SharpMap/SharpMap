@@ -53,6 +53,10 @@ namespace SharpMap.Styles
                 {
                     vs._fillStyle = _fillStyle.Clone() as Brush;
                 }
+                else
+                {
+                    vs._fillStyle = null;
+                }
                 vs._lineOffset = _lineOffset;
                 vs._lineStyle = _lineStyle.Clone() as Pen;
                 vs._outline = _outline;

@@ -15,6 +15,7 @@ namespace SharpMap.Layers
     public class TileAsyncLayer : TileLayer, ITileAsyncLayer
     {
         private List<Thread> threadList = new List<Thread>();
+        private Random r = new Random(DateTime.Now.Second);
         public TileAsyncLayer(ITileSource tileSource, string layerName)
             : base(tileSource, layerName, new Color(), true, null)
         {
@@ -45,15 +46,18 @@ namespace SharpMap.Layers
             IList<TileInfo> tiles = _source.Schema.GetTilesInView(extent, level);
 
             //Abort previous running Threads
-            foreach (Thread t in threadList)
+            lock (threadList)
             {
-                if (t.IsAlive)
+                foreach (Thread t in threadList)
                 {
-                    t.Abort();
-                    t.Join();
+                    if (t.IsAlive)
+                    {
+                        t.Abort();
+                        t.Join();
+                    }
                 }
+                threadList.Clear();
             }
-            threadList.Clear();
 
             foreach (TileInfo info in tiles)
             {
@@ -80,8 +84,11 @@ namespace SharpMap.Layers
                     Thread t = new Thread(new ParameterizedThreadStart(GetTileOnThread));
                     t.Name = info.ToString();
                     t.IsBackground = true;
-                    t.Start(new object[] { _source.Provider, info, _bitmaps });
-                    threadList.Add(t);
+                    t.Start(new object[] { _source.Provider, info, _bitmaps, true });
+                    lock (threadList)
+                    {
+                        threadList.Add(t);
+                    }
                 }
             }
 
@@ -130,11 +137,13 @@ namespace SharpMap.Layers
 
         private void GetTileOnThread(object parameter)
         {
+            System.Threading.Thread.Sleep(50 + (r.Next(5)*10));
             object[] parameters = (object[])parameter;
-            if (parameters.Length != 3) throw new ArgumentException("Three parameters expected");
+            if (parameters.Length != 4) throw new ArgumentException("Four parameters expected");
             ITileProvider tileProvider = (ITileProvider)parameters[0];
             TileInfo tileInfo = (TileInfo)parameters[1];
             MemoryCache<Bitmap> bitmaps = (MemoryCache<Bitmap>)parameters[2];
+            bool retry = (bool)parameters[3];
 
 
             byte[] bytes;
@@ -152,19 +161,27 @@ namespace SharpMap.Layers
             }
             catch (WebException ex)
             {
-                if (_showErrorInTile)
+                if (retry == true)
                 {
-                    //an issue with this method is that one an error tile is in the memory cache it will stay even
-                    //if the error is resolved. PDD.
-                    Bitmap bitmap = new Bitmap(_source.Schema.Width, _source.Schema.Height);
-                    Graphics graphics = Graphics.FromImage(bitmap);
-                    graphics.DrawString(ex.Message, new Font(FontFamily.GenericSansSerif, 12), new SolidBrush(Color.Black),
-                        new RectangleF(0, 0, _source.Schema.Width, _source.Schema.Height));
-                    //Draw the Timeout Tile
-                    OnMapNewTileAvaliable(tileInfo, bitmap);
-                    
-                    //With timeout we don't add to the internal cache
-                    //bitmaps.Add(tileInfo.Index, bitmap);
+                    parameters[3] = false;
+                    GetTileOnThread(parameters);
+                }
+                else
+                {
+                    if (_showErrorInTile)
+                    {
+                        //an issue with this method is that one an error tile is in the memory cache it will stay even
+                        //if the error is resolved. PDD.
+                        Bitmap bitmap = new Bitmap(_source.Schema.Width, _source.Schema.Height);
+                        Graphics graphics = Graphics.FromImage(bitmap);
+                        graphics.DrawString(ex.Message, new Font(FontFamily.GenericSansSerif, 12), new SolidBrush(Color.Black),
+                            new RectangleF(0, 0, _source.Schema.Width, _source.Schema.Height));
+                        //Draw the Timeout Tile
+                        OnMapNewTileAvaliable(tileInfo, bitmap);
+
+                        //With timeout we don't add to the internal cache
+                        //bitmaps.Add(tileInfo.Index, bitmap);
+                    }
                 }
             }
             catch (ThreadAbortException tex)
