@@ -33,21 +33,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="EntityFramework, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\EFCodeFirst.0.8\lib\EntityFramework.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Data.Entity" />
-    <Reference Include="System.Data.SqlServerCe, Version=4.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\SqlServerCompact.4.0.8482.1\lib\System.Data.SqlServerCe.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Data.SqlServerCe.Entity, Version=4.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\EntityFramework.SqlServerCompact.4.1.8482.2\lib\System.Data.SqlServerCe.Entity.dll</HintPath>
-    </Reference>
     <Reference Include="System.Transactions" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
@@ -64,9 +52,6 @@
     <Reference Include="System.Configuration" />
     <Reference Include="System.Web.Services" />
     <Reference Include="System.EnterpriseServices" />
-    <Reference Include="WebActivator">
-      <HintPath>..\packages\WebActivator.1.0.0.0\lib\WebActivator.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="css\custom-theme\images\ui-bg_flat_0_aaaaaa_40x100.png" />
@@ -83,14 +68,76 @@
     <Content Include="css\custom-theme\images\ui-icons_888888_256x240.png" />
     <Content Include="css\custom-theme\images\ui-icons_cd0a0a_256x240.png" />
     <Content Include="css\custom-theme\jquery-ui-1.8.16.custom.css" />
+    <Content Include="css\img\add_point_off.png" />
+    <Content Include="css\img\add_point_on.png" />
+    <Content Include="css\img\blank.gif" />
+    <Content Include="css\img\close.gif" />
+    <Content Include="css\img\drag-rectangle-off.png" />
+    <Content Include="css\img\drag-rectangle-on.png" />
+    <Content Include="css\img\draw_line_off.png" />
+    <Content Include="css\img\draw_line_on.png" />
+    <Content Include="css\img\draw_point_off.png" />
+    <Content Include="css\img\draw_point_on.png" />
+    <Content Include="css\img\draw_polygon_off.png" />
+    <Content Include="css\img\draw_polygon_on.png" />
+    <Content Include="css\img\editing_tool_bar.png" />
+    <Content Include="css\img\move_feature_off.png" />
+    <Content Include="css\img\move_feature_on.png" />
+    <Content Include="css\img\navigation_history.png" />
+    <Content Include="css\img\overview_replacement.gif" />
+    <Content Include="css\img\pan-panel-NOALPHA.png" />
+    <Content Include="css\img\pan-panel.png" />
+    <Content Include="css\img\panning-hand-off.png" />
+    <Content Include="css\img\panning-hand-on.png" />
+    <Content Include="css\img\pan_off.png" />
+    <Content Include="css\img\pan_on.png" />
+    <Content Include="css\img\remove_point_off.png" />
+    <Content Include="css\img\remove_point_on.png" />
+    <Content Include="css\img\ruler.png" />
+    <Content Include="css\img\save_features_off.png" />
+    <Content Include="css\img\save_features_on.png" />
+    <Content Include="css\img\view_next_off.png" />
+    <Content Include="css\img\view_next_on.png" />
+    <Content Include="css\img\view_previous_off.png" />
+    <Content Include="css\img\view_previous_on.png" />
+    <Content Include="css\img\zoom-panel-NOALPHA.png" />
+    <Content Include="css\img\zoom-panel.png" />
+    <Content Include="css\openlayers.css" />
     <Content Include="Default.aspx" />
+    <Content Include="Demo.aspx" />
     <Content Include="Global.asax" />
+    <Content Include="images\blank.gif" />
+    <Content Include="images\cloud-popup-relative.png" />
+    <Content Include="images\drag-rectangle-off.png" />
+    <Content Include="images\drag-rectangle-on.png" />
+    <Content Include="images\east-mini.png" />
+    <Content Include="images\layer-switcher-maximize.png" />
+    <Content Include="images\layer-switcher-minimize.png" />
+    <Content Include="images\marker-blue.png" />
+    <Content Include="images\marker-gold.png" />
+    <Content Include="images\marker-green.png" />
+    <Content Include="images\marker.png" />
+    <Content Include="images\measuring-stick-off.png" />
+    <Content Include="images\measuring-stick-on.png" />
+    <Content Include="images\north-mini.png" />
+    <Content Include="images\panning-hand-off.png" />
+    <Content Include="images\panning-hand-on.png" />
     <Content Include="images\SharpMapBanner.png" />
+    <Content Include="images\slider.png" />
+    <Content Include="images\south-mini.png" />
+    <Content Include="images\west-mini.png" />
+    <Content Include="images\zoom-minus-mini.png" />
+    <Content Include="images\zoom-plus-mini.png" />
+    <Content Include="images\zoom-world-mini.png" />
+    <Content Include="images\zoombar.png" />
     <Content Include="js\jquery-1.6.2.min.js" />
     <Content Include="js\jquery-1.6.4.js" />
     <Content Include="js\jquery-ui-1.8.16.custom.min.js" />
+    <Content Include="js\OpenLayers.js" />
     <Content Include="js\SharpMapServer.js" />
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
@@ -100,13 +147,19 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AdminServices.cs" />
-    <Compile Include="App_Start\EntityFramework.SqlServerCompact.cs" />
     <Compile Include="Default.aspx.cs">
       <DependentUpon>Default.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Default.aspx.designer.cs">
       <DependentUpon>Default.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Demo.aspx.cs">
+      <DependentUpon>Demo.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Demo.aspx.designer.cs">
+      <DependentUpon>Demo.aspx</DependentUpon>
     </Compile>
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -123,9 +176,6 @@
       <Project>{C83777FC-AABB-47D9-911F-D76255D4D541}</Project>
       <Name>SharpMap.VS2010</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -159,10 +209,7 @@
   </ProjectExtensions>
   <PropertyGroup>
     <PostBuildEvent>
-if not exist "$(TargetDir)x86" md "$(TargetDir)x86"
-xcopy /s /y "$(SolutionDir)packages\SqlServerCompact.4.0.8482.1\NativeBinaries\x86\*.*" "$(TargetDir)x86"
-if not exist "$(TargetDir)amd64" md "$(TargetDir)amd64"
-xcopy /s /y "$(SolutionDir)packages\SqlServerCompact.4.0.8482.1\NativeBinaries\amd64\*.*" "$(TargetDir)amd64"</PostBuildEvent>
+    </PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

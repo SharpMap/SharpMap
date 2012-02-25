@@ -9,73 +9,71 @@ using SharpMapServer.Model;
 using SharpMap.Layers;
 using System.IO;
 using System.Reflection;
+using System.Xml.Serialization;
 namespace SharpMapServer
 {
     public class Global : System.Web.HttpApplication
     {
         protected void Application_Start(object sender, EventArgs e)
         {
-            Database.SetInitializer<SharpMapContext>(new DropCreateDatabaseIfModelChanges<SharpMapContext>());
-            using (var _ctx = new SharpMapContext())
+            string settingsfile = Server.MapPath("~/App_Data/settings.xml");
+            XmlSerializer serializer = new XmlSerializer(typeof(SharpMapContext));
+            if (!System.IO.File.Exists(settingsfile))
             {
-                var caps = _ctx.Capabilities.FirstOrDefault();
-                if (caps == null)
+                /*create default settings*/
+                SharpMapContext ctx = new SharpMapContext();
+                ctx.Capabilities = new WmsCapabilities()
                 {
-                    /*create default*/
-                    caps = new WmsCapabilities
-                    {
-                        Title = "SharpMap Demo Server",
-                        Abstract = "This is an example SharpMap server",
-                    };
-                    caps.Keywords = "SharpMap,WMS";
-                    _ctx.Capabilities.Add(caps);
-
-                }
-
-                WMSServer.m_Capabilities = new SharpMap.Web.Wms.Capabilities.WmsServiceDescription
-                {
-                    Abstract = caps.Abstract,
-                    AccessConstraints = caps.AccessConstraints,
-                    Fees = caps.Fees,
-                    Keywords = caps.Keywords.Split(','),
-                    LayerLimit = caps.LayerLimit,
-                    MaxHeight = caps.MaxHeight,
-                    MaxWidth = caps.MaxWidth,
-                    OnlineResource = caps.OnlineResource,
-                    Title = caps.Title
+                    Title = "SharpMap Demo Server",
+                    Abstract = "This is an example SharpMap server",
+                    Keywords = "SharpMap,WMS"
                 };
 
-                if (_ctx.Users.Count() == 0)
-                {
-                    _ctx.Users.Add(new User { UserName = "admin", Password = "sharpmap" });
-                }
+                ctx.Users = new List<User>();
+                ctx.Users.Add(new User { UserName = "admin", Password = "sharpmap" });
 
-                if (_ctx.Layers.Count() == 0)
-                {
-                    /*add default layer*/
-                    _ctx.Layers.Add(new SharpMapServer.Model.WmsLayer() { Name = "States", Description = "Demo data over US States", Provider = "Shapefile", DataSource = "states.shp" });
-                }
-
-                WMSServer.m_Map = new SharpMap.Map();
-                foreach (var l in _ctx.Layers)
-                {
-                    switch (l.Provider)
-                    {
-                        case "Shapefile":
-                            VectorLayer lay = new VectorLayer(l.Name);
-                            string ds = l.DataSource;
-                            if (!Path.IsPathRooted(ds))
-                                ds = Server.MapPath(ds);
-
-                            lay.DataSource = new SharpMap.Data.Providers.ShapeFile(ds);
-                            WMSServer.m_Map.Layers.Add(lay);
-                            break;
-                    }
-                }
-
-                _ctx.SaveChanges();
+                /*add default layer*/
+                ctx.Layers = new List<SharpMapServer.Model.WmsLayer>();
+                ctx.Layers.Add(new SharpMapServer.Model.WmsLayer() { Name = "States", Description = "Demo data over US States", Provider = "Shapefile", DataSource = "states.shp" });                
+                FileStream fs = File.Create(settingsfile);
+                serializer.Serialize(fs, ctx);
+                fs.Close();
             }
 
+            FileStream settingsStream = File.OpenRead(settingsfile);
+            var settings = (SharpMapContext)serializer.Deserialize(settingsStream);
+            settingsStream.Close();
+
+            WMSServer.m_Capabilities = new SharpMap.Web.Wms.Capabilities.WmsServiceDescription
+            {
+                Abstract = settings.Capabilities.Abstract,
+                AccessConstraints = settings.Capabilities.AccessConstraints,
+                Fees = settings.Capabilities.Fees,
+                Keywords = settings.Capabilities.Keywords.Split(','),
+                LayerLimit = settings.Capabilities.LayerLimit,
+                MaxHeight = settings.Capabilities.MaxHeight,
+                MaxWidth = settings.Capabilities.MaxWidth,
+                OnlineResource = settings.Capabilities.OnlineResource,
+                Title = settings.Capabilities.Title
+            };
+
+            WMSServer.m_Map = new SharpMap.Map();
+            foreach (var l in settings.Layers)
+            {
+                switch (l.Provider)
+                {
+                    case "Shapefile":
+                        VectorLayer lay = new VectorLayer(l.Name);
+                        string ds = l.DataSource;
+                        if (!Path.IsPathRooted(ds))
+                            ds = Server.MapPath(ds);
+
+                        lay.DataSource = new SharpMap.Data.Providers.ShapeFile(ds);
+                        lay.SRID = 4326;
+                        WMSServer.m_Map.Layers.Add(lay);
+                        break;
+                }
+            }
         }
 
         protected void Session_Start(object sender, EventArgs e)

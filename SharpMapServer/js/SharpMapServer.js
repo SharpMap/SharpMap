@@ -24,7 +24,7 @@ SharpMap.Server = function () {
                 $("#wmsLayerList").html("");
                 var html = "";
                 for (i = 0; i < data.layers.length; i++) {
-                    html += i + ". <b>" + data.layers[i].Name + "</b><br/>";
+                    html += i + ". <b>" + data.layers[i].Name + "</b> | <a href=\"Demo.aspx?layerName=" + encodeURIComponent(data.layers[i].Name) + "\" target=\"_blank\">Demo</a><br/>";
                 }
                 $("#wmsLayerList").html(html);
             }

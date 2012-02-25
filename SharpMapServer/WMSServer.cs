@@ -16,7 +16,11 @@ namespace SharpMapServer
 
         public void ProcessRequest(HttpContext context)
         {
-            SharpMap.Web.Wms.WmsServer.ParseQueryString(m_Map, m_Capabilities);
+            //Clone the map-instance since the parse-query-string request will modify sice etc.
+            using (var safeMap = m_Map.Clone())
+            {
+                SharpMap.Web.Wms.WmsServer.ParseQueryString(safeMap, m_Capabilities);
+            }
         }
     }
 }
