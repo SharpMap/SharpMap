@@ -9,12 +9,13 @@ using BruTile.Cache;
 using System.IO;
 using System.Net;
 using SharpMap.Geometries;
+using System.ComponentModel;
 
 namespace SharpMap.Layers
 {
     public class TileAsyncLayer : TileLayer, ITileAsyncLayer
     {
-        private List<Thread> threadList = new List<Thread>();
+        private List<BackgroundWorker> threadList = new List<BackgroundWorker>();
         private Random r = new Random(DateTime.Now.Second);
         public TileAsyncLayer(ITileSource tileSource, string layerName)
             : base(tileSource, layerName, new Color(), true, null)
@@ -48,12 +49,11 @@ namespace SharpMap.Layers
             //Abort previous running Threads
             lock (threadList)
             {
-                foreach (Thread t in threadList)
+                foreach (BackgroundWorker t in threadList)
                 {
-                    if (t.IsAlive)
+                    if (t.IsBusy)
                     {
-                        t.Abort();
-                        t.Join();
+                        t.CancelAsync();
                     }
                 }
                 threadList.Clear();
@@ -81,17 +81,27 @@ namespace SharpMap.Layers
                 }
                 else
                 {
-                    Thread t = new Thread(new ParameterizedThreadStart(GetTileOnThread));
-                    t.Name = info.ToString();
-                    t.IsBackground = true;
-                    t.Start(new object[] { _source.Provider, info, _bitmaps, true });
+                    BackgroundWorker b = new BackgroundWorker();
+                    b.WorkerSupportsCancellation = true;
+                    b.DoWork += new DoWorkEventHandler(b_DoWork);
+                    b.RunWorkerAsync(new object[] { _source.Provider, info, _bitmaps, true });
+                    //Thread t = new Thread(new ParameterizedThreadStart(GetTileOnThread));
+                    //t.Name = info.ToString();
+                    //t.IsBackground = true;
+                    //t.Start();
                     lock (threadList)
                     {
-                        threadList.Add(t);
+                        threadList.Add(b);
                     }
                 }
             }
 
+        }
+
+        void b_DoWork(object sender, DoWorkEventArgs e)
+        {
+            this.GetTileOnThread((BackgroundWorker) sender, e.Argument);
+            
         }
 
 
@@ -135,7 +145,7 @@ namespace SharpMap.Layers
         }
 
 
-        private void GetTileOnThread(object parameter)
+        private void GetTileOnThread(BackgroundWorker worker, object parameter)
         {
             System.Threading.Thread.Sleep(50 + (r.Next(5)*10));
             object[] parameters = (object[])parameter;
@@ -149,7 +159,12 @@ namespace SharpMap.Layers
             byte[] bytes;
             try
             {
+                
+                if (worker.CancellationPending == true)
+                    return;
                 bytes = tileProvider.GetTile(tileInfo);
+                if (worker.CancellationPending == true)
+                    return;
                 Bitmap bitmap = new Bitmap(new MemoryStream(bytes));
                 bitmaps.Add(tileInfo.Index, bitmap);
                 if (_fileCache != null && !_fileCache.Exists(tileInfo.Index))
@@ -157,14 +172,18 @@ namespace SharpMap.Layers
                     AddImageToFileCache(tileInfo, bitmap);
                 }
 
+                if (worker.CancellationPending == true)
+                    return;
                 OnMapNewTileAvaliable(tileInfo, bitmap);
+                if (worker.CancellationPending == true)
+                    return;
             }
             catch (WebException ex)
             {
                 if (retry == true)
                 {
                     parameters[3] = false;
-                    GetTileOnThread(parameters);
+                    GetTileOnThread( worker, parameters);
                 }
                 else
                 {
