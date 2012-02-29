@@ -414,7 +414,7 @@ namespace SharpMap.Data.Providers
                strGeom = strGeom.Replace("#SRID#", SRID > 0 ? SRID.ToString() : "0");
                strGeom = GeometryColumn + ".STIntersects(" + strGeom + ") = 1";   
  
-               string strSQL = "SELECT g.* , g." + GeometryColumn + ").STAsBinary() As sharpmap_tempgeometry FROM " + Table + " g WHERE ";   
+               string strSQL = "SELECT g.* , g." + GeometryColumn + ".STAsBinary() As sharpmap_tempgeometry FROM " + Table + " g WHERE ";   
  
                if (!String.IsNullOrEmpty(_defintionQuery))   
                    strSQL += DefinitionQuery + " AND ";   
