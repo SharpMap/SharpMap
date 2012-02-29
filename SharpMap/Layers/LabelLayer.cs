@@ -602,7 +602,7 @@ namespace SharpMap.Layers
                 var line = feature as LineString;
                 if (line != null)
                 {
-                    if (size.Width < 0.95 * line.Length / map.PixelWidth || !style.IgnoreLength)
+                    if (size.Width < 0.95 * line.Length / map.PixelWidth || style.IgnoreLength)
                     {
                         var positiveLineString = PositiveLineString(line, false);
                         var lineStringPath = LineStringToPath(positiveLineString, map /*, false*/);
