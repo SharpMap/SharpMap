@@ -58,10 +58,17 @@ namespace SharpMap.Styles
                     vs._fillStyle = null;
                 }
                 vs._lineOffset = _lineOffset;
-                vs._lineStyle = _lineStyle.Clone() as Pen;
+                if (_lineStyle != null)
+                    vs._lineStyle = _lineStyle.Clone() as Pen;
+                
                 vs._outline = _outline;
+                
+                if (_outlineStyle != null)
                 vs._outlineStyle = _outlineStyle.Clone() as Pen;
-                vs._PointBrush = _PointBrush.Clone() as Brush;
+                
+                if (_PointBrush != null)
+                    vs._PointBrush = _PointBrush.Clone() as Brush;
+
                 vs._PointSize = _PointSize;
                 vs._symbol = (_symbol != null ? _symbol.Clone() as Image : null);
                 vs._symbolOffset = new PointF(_symbolOffset.X, _symbolOffset.Y);

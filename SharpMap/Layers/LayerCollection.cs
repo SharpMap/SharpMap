@@ -25,7 +25,6 @@ namespace SharpMap.Layers
     /// </summary>
     public class LayerCollection : System.ComponentModel.BindingList<ILayer>
     {
-
         /// <summary>
         /// Gets or sets the layer with the given <paramref name="layerName"/>.
         /// </summary>
@@ -37,19 +36,50 @@ namespace SharpMap.Layers
             get { return GetLayerByName(layerName); }
             set
             {
-                for (int i = 0; i < Count; i++)
+                lock (this)
                 {
-                    int comparison = String.Compare(this[i].LayerName,
-                                                    layerName, StringComparison.CurrentCultureIgnoreCase);
-
-                    if (comparison == 0)
+                    for (int i = 0; i < Count; i++)
                     {
-                        this[i] = value;
-                        return;
-                    }
-                }
+                        int comparison = String.Compare(this[i].LayerName,
+                                                        layerName, StringComparison.CurrentCultureIgnoreCase);
 
-                Add(value);
+                        if (comparison == 0)
+                        {
+                            this[i] = value;
+                            return;
+                        }
+                    }
+
+                    Add(value);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Returns a cloned copy of the LayerCollection (the layer instances are the same as in the original Collection)
+        /// </summary>
+        /// <returns></returns>
+        public LayerCollection Clone()
+        {
+            lock (this)
+            {
+                LayerCollection newColl = new LayerCollection();
+                foreach (ILayer lay in this)
+                {
+                    newColl.Add(lay);
+                }
+                return newColl;
+            }
+        }
+
+        public void AddCollection(LayerCollection other)
+        {
+            lock (this)
+            {
+                foreach (ILayer lay in other)
+                {
+                    Add(lay);
+                }
             }
         }
 
@@ -65,12 +95,15 @@ namespace SharpMap.Layers
         /// </exception>
         public new void Insert(int index, ILayer layer)
         {
-            if (index > Count || index < 0)
+            lock (this)
             {
-                throw new ArgumentOutOfRangeException("index", index, "Index not in range");
-            }
+                if (index > Count || index < 0)
+                {
+                    throw new ArgumentOutOfRangeException("index", index, "Index not in range");
+                }
 
-            base.InsertItem(index, layer);
+                base.InsertItem(index, layer);
+            }
         }
 
         protected override void  OnAddingNew(System.ComponentModel.AddingNewEventArgs e)
@@ -78,12 +111,15 @@ namespace SharpMap.Layers
             ILayer newLayer = (e.NewObject as ILayer);
             if (newLayer == null) throw new ArgumentNullException("value","The passed argument is null or not an ILayer");
 
-            foreach (ILayer layer in this)
+            lock (this)
             {
-                int comparison = String.Compare(layer.LayerName,
-                                                newLayer.LayerName, StringComparison.CurrentCultureIgnoreCase);
+                foreach (ILayer layer in this)
+                {
+                    int comparison = String.Compare(layer.LayerName,
+                                                    newLayer.LayerName, StringComparison.CurrentCultureIgnoreCase);
 
-                if (comparison == 0) throw new DuplicateLayerException(newLayer.LayerName);
+                    if (comparison == 0) throw new DuplicateLayerException(newLayer.LayerName);
+                }
             }
 
             base.OnAddingNew(new System.ComponentModel.AddingNewEventArgs(newLayer));
@@ -91,8 +127,11 @@ namespace SharpMap.Layers
 
         public ILayer GetLayerByName(string layerName)
         {
-            LayerCollection lays = this;
-            return GetLayerByNameInternal(layerName, lays);
+            lock (this)
+            {
+                LayerCollection lays = this;
+                return GetLayerByNameInternal(layerName, lays);
+            }
         }
 
         private static ILayer GetLayerByNameInternal(string layerName, System.Collections.Generic.IEnumerable<ILayer> lays)

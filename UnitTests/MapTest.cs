@@ -55,6 +55,23 @@ namespace UnitTests
         }
 
         [Test]
+        public void TestClone()
+        {
+            Map map = new Map(new Size(2, 1));
+            map.Layers.Add(new VectorLayer("Layer 1"));
+            map.Layers.Add(new VectorLayer("Layer 3"));
+            map.Layers.Add(new VectorLayer("Layer 2"));
+            map.Layers.Add(new VectorLayer("Layer 4"));
+
+            var clone = map.Clone();
+
+            Assert.AreEqual(map.BackgroundLayer.Count, clone.BackgroundLayer.Count);
+            Assert.AreEqual(map.Layers.Count, clone.Layers.Count);
+            Assert.AreEqual(map.VariableLayers.Count, clone.VariableLayers.Count);
+            Assert.AreEqual(map.Decorations.Count, clone.Decorations.Count);
+        }
+
+        [Test]
         [ExpectedException(typeof (InvalidOperationException))]
         public void GetExtents_EmptyMap_ThrowInvalidOperationException()
         {

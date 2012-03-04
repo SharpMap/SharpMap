@@ -535,42 +535,46 @@ namespace SharpMap
         /// <returns>Instance of <see cref="Map"/></returns>
         public Map Clone()
         {
-             Map clone = null;
-             lock (MapTransform)
-             {
-                 clone = new Map()
-                 {
-                     BackColor = BackColor,
-                     Disclaimer = Disclaimer,
-                     DisclaimerLocation = DisclaimerLocation,
-                     MaximumZoom = MaximumZoom,
-                     MinimumZoom = MinimumZoom,
-                     PixelAspectRatio = PixelAspectRatio,
-                     Zoom = Zoom,
-                     DisposeLayersOnDispose = false
-                 };
+            Map clone = null;
+            lock (MapTransform)
+            {
+                clone = new Map()
+                {
+                    BackColor = BackColor,
+                    Disclaimer = Disclaimer,
+                    DisclaimerLocation = DisclaimerLocation,
+                    MaximumZoom = MaximumZoom,
+                    MinimumZoom = MinimumZoom,
+                    PixelAspectRatio = PixelAspectRatio,
+                    Zoom = Zoom,
+                    DisposeLayersOnDispose = false
+                };
 
-                 if (DisclaimerFont != null)
-                     clone.DisclaimerFont = (Font)DisclaimerFont.Clone();
-                 if (MapTransform != null)
-                     clone.MapTransform = MapTransform.Clone();
-                 if (Size != null)
-                     clone.Size = new Size(Size.Width, Size.Height);
-                 if (Center != null)
-                     clone.Center = Center.Clone();
+                if (DisclaimerFont != null)
+                    clone.DisclaimerFont = (Font)DisclaimerFont.Clone();
+                if (MapTransform != null)
+                    clone.MapTransform = MapTransform.Clone();
+                if (Size != null)
+                    clone.Size = new Size(Size.Width, Size.Height);
+                if (Center != null)
+                    clone.Center = Center.Clone();
 
-             }
-             if (clone != null)
-             {
-                 foreach (var lay in BackgroundLayer)
-                     clone.BackgroundLayer.Add(lay);
-                 foreach (var dec in Decorations)
-                     clone.Decorations.Add(dec);
-                 foreach (var lay in Layers)
-                     clone.Layers.Add(lay);
-                 foreach (var lay in VariableLayers)
-                     clone.VariableLayers.Add(lay);
-             }
+            }
+            if (clone != null)
+            {
+                if (BackgroundLayer != null)
+                    clone.BackgroundLayer.AddCollection(BackgroundLayer.Clone());
+
+                for (int i = 0; i < Decorations.Count; i++)
+                    clone.Decorations.Add(Decorations[i]);
+
+                if (Layers != null)
+                    clone.Layers.AddCollection(Layers.Clone());
+
+                if (VariableLayers != null)
+                    clone.VariableLayers.AddCollection(VariableLayers.Clone());
+
+            }
             return clone;
         }
 
