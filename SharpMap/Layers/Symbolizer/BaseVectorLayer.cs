@@ -135,9 +135,16 @@ namespace SharpMap.Layers.Symbolizer
             if (CoordinateTransformation != null)
             {
 #if !DotSpatialProjections
-                CoordinateTransformation.MathTransform.Invert();
-                envelope = GeometryTransform.TransformBox(envelope, CoordinateTransformation.MathTransform);
-                CoordinateTransformation.MathTransform.Invert();
+                if (ReverseCoordinateTransformation != null)
+                {
+                    envelope = GeometryTransform.TransformBox(envelope, ReverseCoordinateTransformation.MathTransform);
+                }
+                else
+                {
+                    CoordinateTransformation.MathTransform.Invert();
+                    envelope = GeometryTransform.TransformBox(envelope, CoordinateTransformation.MathTransform);
+                    CoordinateTransformation.MathTransform.Invert();
+                }
 #else
                 envelope = GeometryTransform.TransformBox(envelope, CoordinateTransformation.Target, CoordinateTransformation.Source);
 #endif
@@ -221,9 +228,16 @@ namespace SharpMap.Layers.Symbolizer
             if (CoordinateTransformation != null)
             {
 #if !DotSpatialProjections
-                CoordinateTransformation.MathTransform.Invert();
-                box = GeometryTransform.TransformBox(box, CoordinateTransformation.MathTransform);
-                CoordinateTransformation.MathTransform.Invert();
+                if (ReverseCoordinateTransformation != null)
+                {
+                    box = GeometryTransform.TransformBox(box, ReverseCoordinateTransformation.MathTransform);
+                }
+                else
+                {
+                    CoordinateTransformation.MathTransform.Invert();
+                    box = GeometryTransform.TransformBox(box, CoordinateTransformation.MathTransform);
+                    CoordinateTransformation.MathTransform.Invert();
+                }
 #else
                 box = GeometryTransform.TransformBox(box, CoordinateTransformation.Target, CoordinateTransformation.Source);
 #endif
@@ -247,9 +261,16 @@ namespace SharpMap.Layers.Symbolizer
             if (CoordinateTransformation != null)
             {
 #if !DotSpatialProjections
-                CoordinateTransformation.MathTransform.Invert();
-                geometry = GeometryTransform.TransformGeometry(geometry, CoordinateTransformation.MathTransform);
-                CoordinateTransformation.MathTransform.Invert();
+                if (ReverseCoordinateTransformation != null)
+                {
+                    geometry = GeometryTransform.TransformGeometry(geometry, ReverseCoordinateTransformation.MathTransform);
+                }
+                else
+                {
+                    CoordinateTransformation.MathTransform.Invert();
+                    geometry = GeometryTransform.TransformGeometry(geometry, CoordinateTransformation.MathTransform);
+                    CoordinateTransformation.MathTransform.Invert();
+                }
 #else
                 geometry = GeometryTransform.TransformGeometry(geometry, CoordinateTransformation.Target, CoordinateTransformation.Source);
 #endif

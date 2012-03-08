@@ -401,9 +401,16 @@ namespace SharpMap.Layers
                 if (CoordinateTransformation != null)
                 {
 #if !DotSpatialProjections
-                    CoordinateTransformation.MathTransform.Invert();
-                    envelope = GeometryTransform.TransformBox(envelope, CoordinateTransformation.MathTransform);
-                    CoordinateTransformation.MathTransform.Invert();
+                    if (ReverseCoordinateTransformation != null)
+                    {
+                        envelope = GeometryTransform.TransformBox(envelope, ReverseCoordinateTransformation.MathTransform);
+                    }
+                    else
+                    {
+                        CoordinateTransformation.MathTransform.Invert();
+                        envelope = GeometryTransform.TransformBox(envelope, CoordinateTransformation.MathTransform);
+                        CoordinateTransformation.MathTransform.Invert();
+                    }
 #else
                     envelope = GeometryTransform.TransformBox(envelope, CoordinateTransformation.Target, CoordinateTransformation.Source);
 #endif

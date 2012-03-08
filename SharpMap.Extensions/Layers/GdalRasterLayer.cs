@@ -1937,9 +1937,16 @@ namespace SharpMap.Layers
             if (CoordinateTransformation != null)
             {
 #if !DotSpatialProjections
-                CoordinateTransformation.MathTransform.Invert();
-                pt = GeometryTransform.TransformPoint(pt, CoordinateTransformation.MathTransform);
-                CoordinateTransformation.MathTransform.Invert();
+                if (ReverseCoordinateTransformation != null)
+                {
+                    pt = GeometryTransform.TransformPoint(pt, ReverseCoordinateTransformation.MathTransform);
+                }
+                else
+                {
+                    CoordinateTransformation.MathTransform.Invert();
+                    pt = GeometryTransform.TransformPoint(pt, CoordinateTransformation.MathTransform);
+                    CoordinateTransformation.MathTransform.Invert();
+                }
 #else
                 pt = GeometryTransform.TransformPoint(pt, CoordinateTransformation.Target, CoordinateTransformation.Source);
 #endif
