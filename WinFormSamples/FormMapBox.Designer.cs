@@ -273,6 +273,19 @@ namespace WinFormSamples
             this.radioButton10.Text = "Oracle";
             this.radioButton10.UseVisualStyleBackColor = true;
             this.radioButton10.Click += new System.EventHandler(this.radioButton_Click);
+
+            // 
+            // radioButton11
+            // 
+            this.radioButton10.AutoSize = true;
+            this.radioButton10.Location = new System.Drawing.Point(13, 227);
+            this.radioButton10.Name = "radioButton11";
+            this.radioButton10.Size = new System.Drawing.Size(80, 17);
+            this.radioButton10.TabIndex = 9;
+            this.radioButton10.TabStop = true;
+            this.radioButton10.Text = "shp_TextOnPath";
+            this.radioButton10.UseVisualStyleBackColor = true;
+            this.radioButton10.Click += new System.EventHandler(this.radioButton_Click);
             // 
             // btnCreateTiles
             // 
@@ -431,6 +444,9 @@ namespace WinFormSamples
                         break;
                     case "Oracle":
                         mapBox1.Map = OracleSample.InitializeMap(tbAngle.Value);
+                        break;
+                    case "shp_TextOnPath":
+                        mapBox1.Map=TextOnPathSample.InitializeMapOrig(tbAngle.Value);
                         break;
                     default:
                         break;
@@ -632,6 +648,7 @@ namespace WinFormSamples
         private RadioButton radioButton8;
         private RadioButton radioButton9;
         private RadioButton radioButton10;
+        private RadioButton radioButton11;
         private ListView lvwDecorations;
         private PropertyGrid pgMapDecoration;
         private Button btnCreateTiles;
