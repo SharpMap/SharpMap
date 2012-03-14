@@ -24,12 +24,13 @@ namespace WinFormSamples.Samples
             VectorLayer layRoads = new VectorLayer("Roads");
             //Set the datasource to a shapefile in the App_data folder
             layRoads.DataSource = new ShapeFile("GeoData/World/shp_textonpath/DeMo_Quan5.shp", false);
+            (layRoads.DataSource as ShapeFile).Encoding = Encoding.UTF8;
             //Set fill-style to green
             layRoads.Style.Fill = new SolidBrush(Color.Yellow);
             layRoads.Style.Line = new Pen(Color.Yellow, 4);
             //Set the polygons to have a black outline
-           // layRoads.Style.Outline = new Pen(Color.Black, 5); ;
-           // layRoads.Style.EnableOutline = true;
+            layRoads.Style.Outline = new Pen(Color.Black, 5); ;
+            layRoads.Style.EnableOutline = true;
             layRoads.SRID = 4326;
 
             //Set up a country label layer
@@ -39,8 +40,9 @@ namespace WinFormSamples.Samples
             layLabel.LabelColumn = "tenduong";
             layLabel.LabelFilter = SharpMap.Rendering.LabelCollisionDetection.ThoroughCollisionDetection;
             layLabel.Style = new LabelStyle();
-            layLabel.Style.ForeColor = Color.Blue;
-            layLabel.Style.Font = new Font("Times New Roman", 12, FontStyle.Regular);
+            layLabel.Style.ForeColor = Color.White;
+            layLabel.Style.Font = new Font("Times New Roman", 9, FontStyle.Bold);
+            layLabel.Style.Halo = new Pen(Color.Black, 2f);
             layLabel.Style.IsTextOnPath = true;
             layLabel.Style.CollisionDetection = true;
             //layLabel.Style.BackColor = new SolidBrush(Color.FromArgb(128, 255, 0, 0));
