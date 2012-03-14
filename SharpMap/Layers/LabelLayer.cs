@@ -573,10 +573,26 @@ namespace SharpMap.Layers
                         if (labels[i] is Label)
                         {
                             var label = labels[i] as Label;
-                            VectorRenderer.DrawLabel(g, label.Location, label.Style.Offset,
-                                                        label.Style.Font, label.Style.ForeColor,
-                                                        label.Style.BackColor, Style.Halo, label.Rotation,
-                                                        label.Text, map);
+                            if (label.Style.IsTextOnPath == false)
+                            {
+                                VectorRenderer.DrawLabel(g, label.Location, label.Style.Offset,
+                                                            label.Style.Font, label.Style.ForeColor,
+                                                            label.Style.BackColor, Style.Halo, label.Rotation,
+                                                            label.Text, map);
+                            }
+                            else
+                            {
+                                if (label.Style.BackColor != null && label.Style.BackColor != System.Drawing.Brushes.Transparent)
+                                {
+                                    //draw background
+                                    if (label.TextOnPathLabel.RegionList.Count > 0)
+                                    {
+                                        g.FillRectangles(labels[i].Style.BackColor, labels[i].TextOnPathLabel.RegionList.ToArray());
+                                        //g.FillPolygon(labels[i].Style.BackColor, labels[i].TextOnPathLabel.PointsText.ToArray());
+                                    }
+                                }
+                                label.TextOnPathLabel.DrawTextOnPath();
+                            }
                         }
                         else if (labels[i] is PathLabel)
                         {
@@ -609,22 +625,35 @@ namespace SharpMap.Layers
                 var line = feature as LineString;
                 if (line != null)
                 {
-                    if (size.Width < 0.95 * line.Length / map.PixelWidth || style.IgnoreLength)
+                    if (style.IsTextOnPath == false)
                     {
-                        var positiveLineString = PositiveLineString(line, false);
-                        var lineStringPath = LineStringToPath(positiveLineString, map /*, false*/);
-                        var rect = lineStringPath.GetBounds();
-
-                        if (style.CollisionDetection && !style.CollisionBuffer.IsEmpty)
+                        if (size.Width < 0.95 * line.Length / map.PixelWidth || style.IgnoreLength)
                         {
-                            var cbx = style.CollisionBuffer.Width;
-                            var cby = style.CollisionBuffer.Height;
-                            rect.Inflate(2*cbx, 2*cby);
-                            rect.Offset(-cbx, -cby);
-                        }
-                        var labelBox = new LabelBox(rect);
+                            var positiveLineString = PositiveLineString(line, false);
+                            var lineStringPath = LineStringToPath(positiveLineString, map /*, false*/);
+                            var rect = lineStringPath.GetBounds();
 
-                        lbl = new PathLabel(text, lineStringPath, 0, priority, labelBox, style);
+                            if (style.CollisionDetection && !style.CollisionBuffer.IsEmpty)
+                            {
+                                var cbx = style.CollisionBuffer.Width;
+                                var cby = style.CollisionBuffer.Height;
+                                rect.Inflate(2 * cbx, 2 * cby);
+                                rect.Offset(-cbx, -cby);
+                            }
+                            var labelBox = new LabelBox(rect);
+
+                            lbl = new PathLabel(text, lineStringPath, 0, priority, labelBox, style);
+                        }
+                    }
+                    else
+                    {
+                        //get centriod
+                        System.Drawing.PointF position2 = map.WorldToImage(feature.GetBoundingBox().GetCentroid());
+                        lbl = new Label(text, position2, rotation, priority, style);
+                        if (size.Width < 0.95 * line.Length / map.PixelWidth || !style.IgnoreLength)
+                        {
+                            CalculateLabelAroundOnLineString(line, ref lbl, map, g, size);
+                        }
                     }
                 }
                 return lbl;
@@ -809,6 +838,185 @@ namespace SharpMap.Layers
             double tmpx = line.Vertices[midPoint].X + (dx*0.5);
             double tmpy = line.Vertices[midPoint].Y + (dy*0.5);
             label.LabelPoint = map.WorldToImage(new Point(tmpx, tmpy));
+        }
+        private static void CalculateLabelAroundOnLineString(SharpMap.Geometries.LineString line, ref BaseLabel label, Map map, System.Drawing.Graphics g, System.Drawing.SizeF textSize)
+        {
+            IList<SharpMap.Geometries.Point> sPoints = line.Vertices;
+
+            // only get point in enverlop of map
+            Collection<System.Drawing.PointF> colPoint = new Collection<System.Drawing.PointF>();
+            bool bCheckStarted = false;
+            for (int j = 0; j < sPoints.Count; j++)
+            {
+                if (map.Envelope.Grow(map.PixelSize * 10).Contains(sPoints[j]))
+                {
+                    //points[j] = map.WorldToImage(sPoints[j]);
+                    colPoint.Add(map.WorldToImage(sPoints[j]));
+                    bCheckStarted = true;
+                }
+                else if (bCheckStarted == true)
+                {
+                    // fix bug curved line out of map in center segment of line
+                    break;
+                }
+            }
+
+            if (colPoint.Count > 1)
+            {
+                label.TextOnPathLabel = new SharpMap.Rendering.TextOnPath();
+                switch (label.Style.HorizontalAlignment)
+                {
+                    case SharpMap.Styles.LabelStyle.HorizontalAlignmentEnum.Left:
+                        label.TextOnPathLabel.TextPathAlignTop = SharpMap.Rendering.TextPathAlign.Left;
+                        break;
+                    case SharpMap.Styles.LabelStyle.HorizontalAlignmentEnum.Right:
+                        label.TextOnPathLabel.TextPathAlignTop = SharpMap.Rendering.TextPathAlign.Right;
+                        break;
+                    case SharpMap.Styles.LabelStyle.HorizontalAlignmentEnum.Center:
+                        label.TextOnPathLabel.TextPathAlignTop = SharpMap.Rendering.TextPathAlign.Center;
+                        break;
+                    default:
+                        label.TextOnPathLabel.TextPathAlignTop = SharpMap.Rendering.TextPathAlign.Center;
+                        break;
+                }
+                switch (label.Style.VerticalAlignment)
+                {
+                    case SharpMap.Styles.LabelStyle.VerticalAlignmentEnum.Bottom:
+                        label.TextOnPathLabel.TextPathPathPosition = SharpMap.Rendering.TextPathPosition.UnderPath;
+                        break;
+                    case SharpMap.Styles.LabelStyle.VerticalAlignmentEnum.Top:
+                        label.TextOnPathLabel.TextPathPathPosition = SharpMap.Rendering.TextPathPosition.OverPath;
+                        break;
+                    case SharpMap.Styles.LabelStyle.VerticalAlignmentEnum.Middle:
+                        label.TextOnPathLabel.TextPathPathPosition = SharpMap.Rendering.TextPathPosition.CenterPath;
+                        break;
+                    default:
+                        label.TextOnPathLabel.TextPathPathPosition = SharpMap.Rendering.TextPathPosition.CenterPath;
+                        break;
+                }
+                int idxStartPath = 0;
+                int numberPoint = colPoint.Count;
+                // start Optimzes Path points                
+                int step = 100;
+                if (colPoint.Count >= step * 2)
+                {
+                    numberPoint = step * 2; ;
+                    switch (label.Style.HorizontalAlignment)
+                    {
+                        case SharpMap.Styles.LabelStyle.HorizontalAlignmentEnum.Left:
+                            //label.TextOnPathLabel.TextPathAlignTop = SharpMap.Rendering.TextPathAlign.Left;
+                            idxStartPath = 0;
+                            break;
+                        case SharpMap.Styles.LabelStyle.HorizontalAlignmentEnum.Right:
+                            //label.TextOnPathLabel.TextPathAlignTop = SharpMap.Rendering.TextPathAlign.Right;
+                            idxStartPath = colPoint.Count - step;
+                            break;
+                        case SharpMap.Styles.LabelStyle.HorizontalAlignmentEnum.Center:
+                            //label.TextOnPathLabel.TextPathAlignTop = SharpMap.Rendering.TextPathAlign.Center;
+                            idxStartPath = (int)colPoint.Count / 2 - step;
+                            break;
+                        default:
+                            //label.TextOnPathLabel.TextPathAlignTop = SharpMap.Rendering.TextPathAlign.Center;
+                            idxStartPath = (int)colPoint.Count / 2 - step;
+                            break;
+                    }
+                }
+                // end optimize path point
+                System.Drawing.PointF[] points = new System.Drawing.PointF[numberPoint];
+                int count = 0;
+                if (colPoint[0].X <= colPoint[colPoint.Count - 1].X)
+                {
+                    for (int l = idxStartPath; l < numberPoint + idxStartPath; l++)
+                    {
+                        points[count] = colPoint[l];
+                        count++;
+                    }
+                }
+                else
+                {
+                    //reverse the path                    
+                    for (int k = numberPoint - 1 + idxStartPath; k >= idxStartPath; k--)
+                    {
+                        points[count] = colPoint[k];
+                        count++;
+                    }
+                }
+                //get text size in page units ie pixels
+                float textheight = label.Style.Font.Size;
+                switch (label.Style.Font.Unit)
+                {
+                    case System.Drawing.GraphicsUnit.Display:
+                        textheight = textheight * g.DpiY / 75;
+                        break;
+                    case System.Drawing.GraphicsUnit.Document:
+                        textheight = textheight * g.DpiY / 300;
+                        break;
+                    case System.Drawing.GraphicsUnit.Inch:
+                        textheight = textheight * g.DpiY;
+                        break;
+                    case System.Drawing.GraphicsUnit.Millimeter:
+                        textheight = (float)(textheight / 25.4 * g.DpiY);
+                        break;
+                    case System.Drawing.GraphicsUnit.Pixel:
+                        //do nothing
+                        break;
+                    case System.Drawing.GraphicsUnit.Point:
+                        textheight = textheight * g.DpiY / 72;
+                        break;
+                }
+                System.Drawing.Font topFont = new System.Drawing.Font(label.Style.Font.FontFamily, textheight, label.Style.Font.Style);
+                //
+                System.Drawing.Drawing2D.GraphicsPath path = new System.Drawing.Drawing2D.GraphicsPath();
+                path.AddLines(points);
+
+                label.TextOnPathLabel.PathColorTop = System.Drawing.Color.Transparent;
+                label.TextOnPathLabel.Text = label.Text;
+                label.TextOnPathLabel.LetterSpacePercentage = 90;
+                label.TextOnPathLabel.FillColorTop = new System.Drawing.SolidBrush(label.Style.ForeColor);
+                label.TextOnPathLabel.Font = topFont;
+                label.TextOnPathLabel.PathDataTop = path.PathData;
+                label.TextOnPathLabel.Graphics = g;
+                //label.TextOnPathLabel.ShowPath=true;
+                //label.TextOnPathLabel.PathColorTop = System.Drawing.Color.YellowGreen;
+                if (label.Style.Halo != null)
+                {
+                    label.TextOnPathLabel.ColorHalo = label.Style.Halo;
+                }
+                else
+                {
+                    label.TextOnPathLabel.ColorHalo = null;// new System.Drawing.Pen(label.Style.ForeColor, (float)0.5); 
+                }
+                path.Dispose();
+
+                // MeasureString to get region
+                label.TextOnPathLabel.MeasureString = true;
+                label.TextOnPathLabel.DrawTextOnPath();
+                label.TextOnPathLabel.MeasureString = false;
+                // Get Region label for CollissionDetection here.
+                System.Drawing.Drawing2D.GraphicsPath pathRegion = new System.Drawing.Drawing2D.GraphicsPath();
+
+                if (label.TextOnPathLabel.RegionList.Count > 0)
+                {
+                    //int idxCenter = (int)label.TextOnPathLabel.PointsText.Count / 2;
+                    //System.Drawing.Drawing2D.Matrix rotationMatrix = g.Transform.Clone();// new Matrix();
+                    //rotationMatrix.RotateAt(label.TextOnPathLabel.Angles[idxCenter], label.TextOnPathLabel.PointsText[idxCenter]);
+                    //if (label.TextOnPathLabel.PointsTextUp.Count > 0)
+                    //{
+                    //    for (int up = label.TextOnPathLabel.PointsTextUp.Count - 1; up >= 0; up--)
+                    //    {
+                    //        label.TextOnPathLabel.PointsText.Add(label.TextOnPathLabel.PointsTextUp[up]);
+                    //    }
+
+                    //}                 
+                    pathRegion.AddRectangles(label.TextOnPathLabel.RegionList.ToArray());
+
+                    // get box for detect colission here              
+                    label.Box = new LabelBox(pathRegion.GetBounds());
+                    //g.FillRectangle(System.Drawing.Brushes.YellowGreen, label.Box);
+                }
+                pathRegion.Dispose();
+            }
+
         }
     }
 }

@@ -141,7 +141,7 @@ namespace SharpMap.Rendering
                     gp.AddLines(/*LimitValues(*/line.TransformToImage(map)/*, ExtremeValueLimit)*/);
                 else
                     gp.AddLines(OffsetRight(/*LimitValues(*/line.TransformToImage(map)/*, ExtremeValueLimit)*/, offset));
-    
+
                 g.DrawPath(pen, gp);
             }
         }

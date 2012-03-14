@@ -85,7 +85,15 @@ namespace SharpMap.Styles
         private VerticalAlignmentEnum _VerticalAlignment;
         private float _rotation;
         private bool _ignoreLength;
-
+        private bool _isTextOnPath = false;
+        /// <summary>
+        /// get or set label on path
+        /// </summary>
+        public bool IsTextOnPath
+        {
+            get { return _isTextOnPath; }
+            set { _isTextOnPath = value; }
+        }
         /// <summary>
         /// Initializes a new LabelStyle
         /// </summary>

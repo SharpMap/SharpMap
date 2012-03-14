@@ -187,6 +187,7 @@
     <Compile Include="Rendering\RenderExceptions.cs" />
     <Compile Include="Rendering\Symbolizer\CohenSutherlandLineClipping.cs" />
     <Compile Include="Rendering\Symbolizer\Utility.cs" />
+    <Compile Include="Rendering\TextOnPath.cs" />
     <Compile Include="Rendering\Thematics\ColorBlend.cs" />
     <Compile Include="Rendering\Thematics\CustomTheme.cs" />
     <Compile Include="Rendering\Thematics\GradientTheme.cs" />

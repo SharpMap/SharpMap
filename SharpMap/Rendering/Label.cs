@@ -111,7 +111,7 @@ namespace SharpMap.Rendering
         {
             get { return _top - _height; }
         }
-
+       
         #region IComparable<LabelBox> Members
 
         /// <summary>
@@ -160,7 +160,15 @@ namespace SharpMap.Rendering
         private LabelStyle _Style;
 
         private string _Text;
-
+        private TextOnPath _textOnPath = null;
+        /// <summary>
+        /// Render text on path
+        /// </summary>
+        public TextOnPath TextOnPathLabel
+        {
+            get { return _textOnPath; }
+            set { _textOnPath = value; }
+        }
         /// <summary>
         /// Initializes a new Label instance
         /// </summary>
@@ -177,6 +185,23 @@ namespace SharpMap.Rendering
             _Rotation = rotation;
             _Priority = priority;
             _box = collisionbox;
+            _Style = style;
+            _show = true;
+        }
+        /// <summary>
+        /// Initializes a new Label instance
+        /// </summary>
+        /// <param name="text"></param>
+        /// <param name="rotation"></param>
+        /// <param name="priority"></param>
+        /// <param name="style"></param>
+        protected BaseLabel(string text, float rotation, int priority,
+                    LabelStyle style)
+        {
+            _Text = text;
+            //_LabelPoint = labelpoint;
+            _Rotation = rotation;
+            _Priority = priority;            
             _Style = style;
             _show = true;
         }
@@ -253,6 +278,10 @@ namespace SharpMap.Rendering
         /// <returns></returns>
         public int CompareTo(BaseLabel other)
         {
+            if (this.TextOnPathLabel != null)
+            {
+                return CompareToTextOnPath(other);
+            }
             if (this == other)
                 return 0;
             if (_box == null)
@@ -261,7 +290,27 @@ namespace SharpMap.Rendering
                 return 1;
             return _box.CompareTo(other.Box);
         }
-
+        private int CompareToTextOnPath(BaseLabel other)
+        {
+            if (this == other)
+                return 0;
+            else if (this.TextOnPathLabel == null)
+                return -1;
+            else if (other.TextOnPathLabel == null)
+                return 1;
+            else
+            {
+                for (int i = 0; i < this.TextOnPathLabel._regionList.Count; i++)
+                {
+                    for (int j = 0; j < other.TextOnPathLabel._regionList.Count; j++)
+                    {
+                        if (this.TextOnPathLabel._regionList[i].IntersectsWith(other.TextOnPathLabel._regionList[j]))
+                            return 0;
+                    }
+                }
+                return _box.CompareTo(other.Box);
+            }
+        }
         #endregion
 
         #region IComparer<BaseLabel> Members
@@ -299,7 +348,16 @@ namespace SharpMap.Rendering
                 throw new ArgumentException("Invalid location type", "location");
             Location = location;
         }
+        public BaseLabel(string text, T location, float rotation, int priority, LabelStyle style)
+            : base(text, rotation, priority, style)
+        {
+            if (location == null)
+                return;
 
+            if (!(location is PointF || location is GraphicsPath))
+                throw new ArgumentException("Invalid location type", "location");
+            Location = location;
+        }
         /// <summary>
         /// Gets or sets the location of the label
         /// </summary>
@@ -318,7 +376,9 @@ namespace SharpMap.Rendering
         public Label(string text, PointF location, float rotation, int priority, LabelBox collisionbox, LabelStyle style) : base(text, location, rotation, priority, collisionbox, style)
         {
         }
-
+        public Label(string text, PointF location, float rotation, int priority, LabelStyle style): base(text, location, rotation, priority, style)
+        {
+        }
         /// <summary>
         /// Label position
         /// </summary>
