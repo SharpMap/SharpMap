@@ -308,6 +308,10 @@ namespace SharpMap.Rendering
                             return 0;
                     }
                 }
+                if (_box == null)
+                    return -1;
+                if (other.Box == null)
+                    return 1;
                 return _box.CompareTo(other.Box);
             }
         }
