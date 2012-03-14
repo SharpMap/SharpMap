@@ -312,7 +312,11 @@ namespace SharpMap.Rendering
                     return -1;
                 if (other.Box == null)
                     return 1;
-                return _box.CompareTo(other.Box);
+                if (other.Box.Left > this.Box.Right ||
+                     other.Box.Bottom > this.Box.Top)
+                    return 1;
+                else
+                    return -1;
             }
         }
         #endregion
