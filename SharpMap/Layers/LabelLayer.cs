@@ -574,7 +574,7 @@ namespace SharpMap.Layers
                         if (labels[i] is Label)
                         {
                             var label = labels[i] as Label;
-                            if (label.Style.IsTextOnPath == false)
+                            if (label.Style.IsTextOnPath == false || label.TextOnPathLabel==null)
                             {
                                 VectorRenderer.DrawLabel(g, label.Location, label.Style.Offset,
                                                             label.Style.Font, label.Style.ForeColor,
