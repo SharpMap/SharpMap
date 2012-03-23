@@ -57,12 +57,17 @@ namespace SharpMap.Rendering.Symbolizer
         /// </summary>
         public GraphicsPath Pattern { get; set; }
 
+        /// <summary>
+        /// Gets or sets the interval with witch to repeat the pattern
+        /// </summary>
+        public float Interval { get; set; }
+
         public void SymbolizePaths(Graphics g, IEnumerable<GraphicsPath> paths)
         {
             foreach (var graphicsPath in paths)
             {
                 var clonedPattern = (GraphicsPath)Pattern.Clone();
-                var warpedPath = WarpPathToPath.Warp(graphicsPath, clonedPattern, true, 0f);
+                var warpedPath = WarpPathToPath.Warp(graphicsPath, clonedPattern, true, Interval);
                 
                 if (warpedPath == null) continue;
 
@@ -106,6 +111,9 @@ namespace SharpMap.Rendering.Symbolizer
             }
         }
 
+        /// <summary>
+        /// The line symbolizers to apply to the <see cref="Paths"/>.
+        /// </summary>
         public List<ILineSymbolizeHandler> LineSymbolizeHandlers
         {
             get { return _lineSymbolizeHandlers; }
@@ -121,8 +129,19 @@ namespace SharpMap.Rendering.Symbolizer
         {
             var gp = new GraphicsPath();
             gp.AddLines(/*LimitValues(*/lineString.TransformToImage(map)/*)*/);
-            _graphicsPaths.Add(gp);
+            if (ImmediateMode)
+            {
+                var tmp = new List<GraphicsPath>(new[] {gp});
+                Symbolize(g, map, tmp);
+            }
+            else
+                _graphicsPaths.Add(gp);
         }
+
+        /// <summary>
+        /// Do not cache the geometries paths
+        /// </summary>
+        public bool ImmediateMode { get; set; }
 
         /// <summary>
         /// Method to indicate that the symbolizer has to be prepared.
@@ -138,12 +157,17 @@ namespace SharpMap.Rendering.Symbolizer
         /// </summary>
         public override void Symbolize(Graphics g, Map map)
         {
+            Symbolize(g, map, Paths);
+        }
+
+        private void Symbolize(Graphics graphics, Map map, List<GraphicsPath> paths)
+        {
             if (_lineSymbolizeHandlers.Count == 0)
-                    _fallback.SymbolizePaths(g, Paths);
+                _fallback.SymbolizePaths(graphics, paths);
             else
             {
                 foreach (var lineSymbolizeHandler in _lineSymbolizeHandlers)
-                    lineSymbolizeHandler.SymbolizePaths(g, Paths);
+                    lineSymbolizeHandler.SymbolizePaths(graphics, paths);
             }
         }
 

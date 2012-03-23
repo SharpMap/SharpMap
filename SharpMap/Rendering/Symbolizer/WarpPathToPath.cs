@@ -289,9 +289,9 @@ namespace SharpMap.Rendering.Symbolizer
             {
                 GraphicsPath patternPath = new GraphicsPath();
                 double pathLength = maxX;
-                Matrix m = new Matrix(1f, 0f, 0f, 1f, (float)maxX, 0f);
                 interval = interval - pathLength;
                 if (interval < pathLength) interval = pathLength;
+                Matrix m = new Matrix(1f, 0f, 0f, 1f, (float)interval, 0f);
                 while (maxX < totalPathLength)
                 {
                     patternPath.StartFigure();

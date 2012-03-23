@@ -1,9 +1,7 @@
 using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
-using SharpMap.Data;
 using SharpMap.Geometries;
-using SharpMap.Rendering.Thematics;
 
 namespace SharpMap.Rendering.Symbolizer
 {
@@ -13,27 +11,15 @@ namespace SharpMap.Rendering.Symbolizer
     [Serializable]
     public class WarpedLineSymbolizer : LineSymbolizer
     {
-        private GraphicsPath _pattern;
-
-        private float _interval;
-
         /// <summary>
         /// Pattern to warp to
         /// </summary>
-        public GraphicsPath Pattern
-        {
-            get { return _pattern; }
-            set { _pattern = value; }
-        }
+        public GraphicsPath Pattern { get; set; }
 
         /// <summary>
         /// The interval between each pattern object
         /// </summary>
-        public float Interval
-        {
-            get { return _interval; } 
-            set { _interval = value; }
-        }
+        public float Interval { get; set; }
 
         /// <summary>
         /// Creates a pattern symbolizing a linestring like this <c>&gt;&gt;&gt;&gt;&gt;</c>
@@ -72,15 +58,84 @@ namespace SharpMap.Rendering.Symbolizer
         /// <summary>
         /// Creates a triangle pattern
         /// </summary>
+        /// <param name="size">The base length of the triangle</param>
+        /// <param name="orientation">The orientation of the triangle
+        /// <list type="Bullet"><item>0 ... Up</item>
+        /// <item>1 ... Left</item>
+        /// <item>2 ... Down</item>
+        /// <item>3 ... Right</item>
+        /// </list><para/>All other values are reduced using modulo operation</param>
+        /// <returns></returns>
+        public static GraphicsPath GetTriangle(float size, int orientation)
+        {
+            orientation = orientation%4;
+            var half = 0.5f*size;
+            var twoThirds = 2f*size/3f;
+            var gp = new GraphicsPath();
+            switch (orientation)
+            {
+                case 0:
+                    gp.AddPolygon(new[] { 
+                        new PointF(size, 0f), new PointF(0f, 0f), 
+                        new PointF(half, twoThirds), new PointF(size, 0f) 
+                    });
+                    break;
+                case 1:
+                    gp.AddPolygon(new[] {
+                        new PointF(0f, -half), new PointF(0f, half),
+                        new PointF(twoThirds, 0), new PointF(0f, -half)
+                    });
+                    break;
+                case 2:
+                    gp.AddPolygon(new[] {
+                        new PointF(size, 0f), new PointF(0f, 0f), 
+                        new PointF(half, -twoThirds), new PointF(size, 0f)
+                    });
+                    break;
+                case 3:
+                    gp.AddPolygon(new[] {
+                        new PointF(twoThirds, half), new PointF(twoThirds, -half),
+                        new PointF(0, 0), new PointF(twoThirds, half)
+                    });
+                    break;
+            }
+            gp.CloseFigure();
+
+            return gp;
+        }
+
+        /// <summary>
+        /// Creates a triangle pattern
+        /// </summary>
         /// <param name="x">The base length of the triangle</param>
         /// <param name="y">The location of the next triangle</param>
         /// <returns></returns>
+        [Obsolete("Use GetTriangle along with Interval")]
         public static GraphicsPath GetTriangleSeries(float x, float y)
         {
             var gp = new GraphicsPath();
             gp.AddPolygon(new[] { new PointF(x, 0f), new PointF(0f, 0f), new PointF(0.5f*x, 2f*x/3f), new PointF(x, 0f) });
             gp.CloseFigure();
             
+            //Just to move to a new position
+            gp.AddEllipse(y, 0f, 0f, 0f);
+            gp.CloseFigure();
+            return gp;
+        }
+
+        /// <summary>
+        /// Creates a forward oriented triangle pattern
+        /// </summary>
+        /// <param name="x">The base length of the triangle</param>
+        /// <param name="y">The location of the next triangle</param>
+        /// <returns></returns>
+        [Obsolete("Use GetTriangle along with Interval")]
+        public static GraphicsPath GetTriangleSeriesForward(float x, float y)
+        {
+            var gp = new GraphicsPath();
+            gp.AddPolygon(new[] { new PointF(0f, -0.5f*x), new PointF(0f, 0.5f*x), new PointF(2f * x / 3f, 0), new PointF(0f, -0.5f*x) });
+            gp.CloseFigure();
+
             //Just to move to a new position
             gp.AddEllipse(y, 0f, 0f, 0f);
             gp.CloseFigure();
@@ -95,7 +150,7 @@ namespace SharpMap.Rendering.Symbolizer
         protected override void OnRenderInternal(Map map, LineString linestring, Graphics g)
         {
             var clonedPattern = (GraphicsPath) Pattern.Clone();
-            var graphicsPath = WarpPathToPath.Warp(LineStringToPath(linestring, map), clonedPattern, true, _interval);
+            var graphicsPath = WarpPathToPath.Warp(LineStringToPath(linestring, map), clonedPattern, true, Interval);
             
             if (graphicsPath == null) return;
 
