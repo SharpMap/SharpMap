@@ -463,7 +463,7 @@ namespace SharpMap.Geometries
         /// <returns>true if they touch</returns>
         public override bool Touches(Geometry geom)
         {
-            if (geom is Point && Equals(geom)) return true;
+            if (geom is Point) return Equals(geom);
             throw new NotImplementedException("Touches not implemented for this feature type");
         }
 

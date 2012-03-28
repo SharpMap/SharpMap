@@ -20,7 +20,7 @@ namespace SharpMap.Web.Wms
         /// </summary>
         /// <remarks>This class is used to communicate all the boundingboxes of a WMS server between client.cs and wmslayer.cs</remarks>
         /// <param name="BoundingBox">BoundingBox</param>
-        /// <param name="SRID">Spatial Reference ID</param>
+        /// <param name="srid">Spatial Reference ID</param>
         public SpatialReferencedBoundingBox(double minX, double minY, double maxX, double maxY, int srid) : base(minX, minY, maxX, maxY)
         {
             _SRID = srid;

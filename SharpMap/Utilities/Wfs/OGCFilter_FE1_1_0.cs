@@ -456,6 +456,10 @@ namespace SharpMap.Utilities.Wfs
 
         #region IFilter Member
 
+        /// <summary>
+        /// This method encodes the filter in XML.
+        /// </summary>
+        /// <returns>An XML string</returns>
         public string Encode()
         {
             return "<FeatureId fid=" + _Args[0] + "/>";
@@ -463,10 +467,6 @@ namespace SharpMap.Utilities.Wfs
 
         #endregion
 
-        /// <summary>
-        /// This method encodes the filter in XML.
-        /// </summary>
-        /// <returns>An XML string</returns>
     }
 
     /// <summary>

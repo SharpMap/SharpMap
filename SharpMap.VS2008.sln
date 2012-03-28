@@ -69,7 +69,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpMap.SqlServerSpatialOb
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MsSqlSpatialDemoDb", "MsSqlSpatialDemoDb", "{3BDECA7F-3A75-41BF-9753-D4AAC02DFE36}"
 	ProjectSection(SolutionItems) = preProject
-		ReadMe.txt = ReadMe.txt
+		MsSqlSpatialDemoDb\ReadMe.txt = MsSqlSpatialDemoDb\ReadMe.txt
 		MsSqlSpatialDemoDb\SharpMapMsSqlSpatialDemoDb.bak = MsSqlSpatialDemoDb\SharpMapMsSqlSpatialDemoDb.bak
 	EndProjectSection
 EndProject

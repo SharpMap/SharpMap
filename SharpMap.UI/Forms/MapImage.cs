@@ -61,11 +61,11 @@ namespace SharpMap.Forms
             /// </summary>
             Query,
             /// <summary>
-            /// No active tool
+            /// Pan on drag, Query on click
             /// </summary>
             PanOrQuery,
             /// <summary>
-            /// Pan on drag, Query on click
+            /// No active tool
             /// </summary>
             None
         }

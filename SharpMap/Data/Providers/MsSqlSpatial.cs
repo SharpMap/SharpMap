@@ -74,9 +74,9 @@ namespace SharpMap.Data.Providers
         /// <summary>
         /// Initializes a new connection to MsSqlSpatial
         /// </summary>
-        /// <param name="ConnectionStr">Connectionstring</param>
-        /// <param name="tablename">Name of data table</param>
-        /// <param name="OID_ColumnName">Name of column with unique identifier</param>
+        /// <param name="connectionString">Connectionstring</param>
+        /// <param name="tableName">Name of data table</param>
+        /// <param name="identifierColumnName">Name of column with unique identifier</param>
         public MsSqlSpatial(string connectionString, string tableName, string identifierColumnName)
             : this(connectionString, tableName, "", identifierColumnName)
         {

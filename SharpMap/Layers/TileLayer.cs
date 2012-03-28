@@ -83,7 +83,7 @@ namespace SharpMap.Layers
         /// <param name="transparentColor">transparent color off</param>
         /// <param name="showErrorInTile">generate an error tile if it could not be retrieved from source</param>
         /// <param name="fileCacheDir">If the layer should use a file-cache so store tiles, set this to that directory. Set to null to avoid filecache</param>
-        /// <remarks>If <see cref="showErrorInTile"/> is set to false, tile source keeps trying to get the tile in every request</remarks>
+        /// <remarks>If <paramref name="showErrorInTile"/> is set to false, tile source keeps trying to get the tile in every request</remarks>
         public TileLayer(ITileSource tileSource, string layerName, Color transparentColor, bool showErrorInTile, string fileCacheDir)
         {
             _source = tileSource;

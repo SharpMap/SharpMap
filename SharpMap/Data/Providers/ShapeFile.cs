@@ -181,7 +181,7 @@ namespace SharpMap.Data.Providers
 		private bool _fileBasedIndex;
 	    private readonly bool _fileBasedIndexWanted;
 		private string _filename;
-		private FilterMethod _filterDelegate;
+		//private FilterMethod _filterDelegate;
 		private bool _isOpen;
 		private ShapeType _shapeType;
 		private int _srid = -1;
@@ -1232,7 +1232,7 @@ namespace SharpMap.Data.Providers
 		/// <summary>
 		/// Reads and parses the geometry with ID 'oid' from the ShapeFile
 		/// </summary>
-		/// <remarks><see cref="FilterDelegate">Filtering</see> is not applied to this method</remarks>
+		/// <!--<remarks><see cref="FilterDelegate">Filtering</see> is not applied to this method</remarks>-->
 		/// <param name="oid">Object ID</param>
 		/// <returns>geometry</returns>
 		private Geometry ReadGeometry(uint oid)

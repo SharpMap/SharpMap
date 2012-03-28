@@ -39,7 +39,7 @@ namespace SharpMap.Utilities.Wfs
 
         #region IXPathQueryManager Member
 
-        //// <summary>
+        /// <summary>
         /// This method compiles an XPath string, if not already saved.  
         /// Otherwise it returns the available XPath compilation. 
         /// </summary>

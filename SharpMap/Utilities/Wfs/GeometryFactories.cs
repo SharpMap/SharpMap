@@ -208,7 +208,7 @@ namespace SharpMap.Utilities.Wfs
         /// </summary>
         /// <param name="reader">An XmlReader instance that is the origin of a created sub-reader</param>
         /// <param name="labelValue">A string array for recording a found label value. Pass 'null' to ignore searching for label values</param>
-        /// <param name="pathNodes">A list of <see cref="PathNodeDepr"/> instances defining the context of the retrieved reader</param>
+        /// <param name="pathNodes">A list of <see cref="IPathNode"/> instances defining the context of the retrieved reader</param>
         /// <returns>A sub-reader of the XmlReader given as argument</returns>
         protected XmlReader GetSubReaderOf(XmlReader reader, string[] labelValue, params IPathNode[] pathNodes)
         {
@@ -223,7 +223,7 @@ namespace SharpMap.Utilities.Wfs
         /// </summary>
         /// <param name="reader">An XmlReader instance that is the origin of a created sub-reader</param>
         /// <param name="labelValue">A string array for recording a found label value. Pass 'null' to ignore searching for label values</param>
-        /// <param name="pathNodes">A list of <see cref="PathNodeDepr"/> instances defining the context of the retrieved reader</param>
+        /// <param name="pathNodes">A list of <see cref="IPathNode"/> instances defining the context of the retrieved reader</param>
         /// <returns>A sub-reader of the XmlReader given as argument</returns>
         protected XmlReader GetSubReaderOf(XmlReader reader, string[] labelValue, List<IPathNode> pathNodes)
         {

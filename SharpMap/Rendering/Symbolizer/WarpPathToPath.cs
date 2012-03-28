@@ -70,7 +70,7 @@ namespace SharpMap.Rendering.Symbolizer
         /// </summary>
         /// <param name="pathToWarpTo">The path to warp to. This path is flattened before being used, so there is no need to call <see cref="GraphicsPath.Flatten()"/> prior to this function call.</param>
         /// <param name="pathToWarp">The path to warp</param>
-        /// <param name="isPattern">Defines whether <see cref="pathToWarp"/> is a pattern or not. If <see cref="pathToWarp"/> is a pattern, it is repeated until it has the total length of <see paramref="pathToWarpTo"/></param>
+        /// <param name="isPattern">Defines whether <paramref name="pathToWarp"/> is a pattern or not. If <paramref name="pathToWarp"/> is a pattern, it is repeated until it has the total length of <see paramref="pathToWarpTo"/></param>
         /// <param name="interval">The interval in which the pattern should be repeated</param>
         /// <returns>Warped <see cref="GraphicsPath"/></returns>
         /// <exception cref="ArgumentNullException">If either pathToWarpTo or pathToWarp is null</exception>

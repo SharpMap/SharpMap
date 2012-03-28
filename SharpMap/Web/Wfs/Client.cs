@@ -190,7 +190,7 @@ namespace SharpMap.Web.Wfs
         /// </summary>
         /// <param name="url">URL of wms server</param>
         /// <param name="proxy">Proxy to use</param>
-        /// <param name="timeOut"></param>
+        /// <param name="timeOut">Web request timeout</param>
         public Client(string url, IWebProxy proxy, int timeOut)
             : this(url, proxy, timeOut, null, "") { }
 
@@ -199,7 +199,6 @@ namespace SharpMap.Web.Wfs
         /// </summary>
         /// <param name="url">URL of wms server</param>
         /// <param name="proxy">Proxy to use</param>
-        /// <param name="timeOut">Web request timeout</param>
         /// <param name="credentials">Credentials for autenticating against remote WMS-server</param>
         public Client(string url, IWebProxy proxy, ICredentials credentials)
             : this(url, proxy, 10000, credentials, "") { }
@@ -231,7 +230,7 @@ namespace SharpMap.Web.Wfs
         /// <param name="proxy">Proxy to use</param>
         /// <param name="timeOut">Web request timeout</param>
         /// <param name="version"></param>
-        /// <param name="credentials"></param>
+        /// <param name="credentials">Credentials for autenticating against remote WMS-server</param>
         public Client(string url, IWebProxy proxy, int timeOut, ICredentials credentials, string version)
         {
             _baseUrl = url;

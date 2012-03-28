@@ -98,7 +98,7 @@ namespace SharpMap.Utilities.Wfs
         /// Initializes a new instance of the <see cref="XPathQueryManager"/> class.
         /// </summary>
         /// <param name="xPathDoc">An XmlDocument instance</param>
-        /// <param name="xIter">An XPathNodeIterator instance</param
+        /// <param name="xIter">An XPathNodeIterator instance</param>
         /// <param name="paramContext">A <see cref="XPathQueryManager.CustomQueryContext"/> instance for parameterized XPath expressions</param>
         private XPathQueryManager(XPathDocument xPathDoc, XPathNodeIterator xIter, CustomQueryContext paramContext)
             : this(xPathDoc)

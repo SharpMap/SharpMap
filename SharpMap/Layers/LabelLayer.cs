@@ -747,7 +747,7 @@ namespace SharpMap.Layers
         /// </summary>
         /// <param name="lineString">The Linestring</param>
         /// <param name="map">The map</param>
-        ///// <param name="useClipping">A value indicating whether clipping should be applied or not</param>
+        /// <!--<param name="useClipping">A value indicating whether clipping should be applied or not</param>-->
         /// <returns>A GraphicsPath</returns>
         public static GraphicsPath LineStringToPath(LineString lineString, Map map/*, bool useClipping*/)
         {
