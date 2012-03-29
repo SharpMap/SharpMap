@@ -13,9 +13,12 @@
         {
             List<DemoItem> items = new List<DemoItem>();
             Type type = this.GetType();
+
+            // how to retrieve all public instance methods? 
+            // BindingFlags.Public | BindingFlags.DeclaredOnly returns an empty array...
             MethodInfo[] methods = type.GetMethods();
             foreach (MethodInfo method in methods)
-            {
+            {                
                 bool valid = method.ReturnType == typeof(ActionResult);
                 if (!valid) 
                     continue;
@@ -23,7 +26,6 @@
                 object[] attributes = method.GetCustomAttributes(typeof(ObsoleteAttribute), false);
                 if (attributes.Length != 0)
                     continue;
-                
 
                 int i = type.Name.IndexOf("Controller", StringComparison.Ordinal);
                 string url = String.Format("{0}/{1}", type.Name.Substring(0, i), method.Name);
