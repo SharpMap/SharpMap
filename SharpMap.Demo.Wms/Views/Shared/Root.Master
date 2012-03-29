@@ -1,0 +1,26 @@
+<%@ Master Language="C#" Inherits="System.Web.Mvc.ViewMasterPage" %>
+
+<!DOCTYPE html> 
+<html>
+    <head runat="server">
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1"> 
+        <title>SharpMap Demos</title> 
+        <link rel="stylesheet" href="~/Content/jquery.mobile-1.1.0-rc.1.min.css">                
+    </head> 
+    <body>
+        <div data-role="page">
+            <div data-role="header" data-position="fixed" data-id="navhead">
+                <h1>SharpMap Demos</h1>                
+            </div>
+            <div data-role="content">
+                <asp:ContentPlaceHolder ID="CustomContent" runat="server" />                
+            </div>
+            <div data-role="footer" data-position="fixed" data-id="navfoot">
+                <h4>&copy; 2012 <a href="http://sharpmap.codeplex.com">SharpMap Project</a></h4>
+            </div>
+        </div>
+        <script src="<%=this.Url.Content("~/Scripts/jquery-1.7.1.min.js")%>"> </script>        
+        <script src="<%=this.Url.Content("~/Scripts/jquery.mobile-1.1.0-rc.1.min.js")%>"> </script>        
+    </body>
+</html>

@@ -83,10 +83,17 @@
     <Compile Include="Handlers\StdWmsMapHandler.cs" />
     <Compile Include="Helpers\ExtensionMethods.cs" />
     <Compile Include="Helpers\MapHelper.cs" />
+    <Compile Include="Models\DemoItem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\geosilk.css" />
+    <Content Include="Content\Images\ajax-loader.gif" />
+    <Content Include="Content\Images\ajax-loader.png" />
+    <Content Include="Content\Images\icons-18-black.png" />
+    <Content Include="Content\Images\icons-18-white.png" />
+    <Content Include="Content\Images\icons-36-black.png" />
+    <Content Include="Content\Images\icons-36-white.png" />
     <Content Include="Content\Images\layers.png" />
     <Content Include="Content\img\bg-map.png" />
     <Content Include="Content\img\cleanFeature.png" />
@@ -105,6 +112,7 @@
     <Content Include="Content\img\snappingActive.png" />
     <Content Include="Content\img\snappingInactive.png" />
     <Content Include="Content\img\splitFeature.png" />
+    <Content Include="Content\jquery.mobile-1.1.0-rc.1.min.css" />
     <Content Include="Content\leaflet.css" />
     <Content Include="Content\leaflet.ie.css" />
     <Content Include="Global.asax" />
@@ -136,6 +144,7 @@
     <Content Include="lib\OpenLayers\Protocol\Script.js" />
     <Content Include="lib\OpenLayers\Renderer\NG.js" />
     <Content Include="lib\OpenLayers\Renderer\SVG2.js" />
+    <Content Include="Scripts\jquery.mobile-1.1.0-rc.1.min.js" />
     <Content Include="Scripts\script_tc.js" />
     <Content Include="Scripts\jquery-1.7.1.min.js" />
     <Content Include="Scripts\pl\queue.js" />
@@ -166,6 +175,7 @@
     <Content Include="Scripts\script_geojs.js" />
     <Content Include="Scripts\pl\webdb.js" />
     <Content Include="Scripts\ll\TileLayer.TileJSON.js" />
+    <Content Include="Views\Home\Index.aspx" />
     <Content Include="Views\Home\TileCanvas.aspx" />
     <Content Include="Views\Home\Offline.aspx" />
     <Content Include="Views\Home\Editor.aspx" />
@@ -189,7 +199,6 @@
     <Content Include="Views\Shared\Site.Master" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\Images\ajax-loader.gif" />
     <Content Include="Content\Images\marker-shadow.png" />
     <Content Include="Content\Images\marker.png" />
     <Content Include="Content\Images\popup-close.png" />
@@ -594,6 +603,7 @@
     <None Include="art\zoom-world.svg" />
     <None Include="art\zoombar.svg" />
     <Content Include="Json.ashx" />
+    <Content Include="Views\Shared\Root.Master" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SharpMap\SharpMap.VS2010.csproj">
