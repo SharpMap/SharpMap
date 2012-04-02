@@ -578,6 +578,28 @@ namespace SharpMap.Forms
             if (_mousePreviewFilter != null)
                 Application.RemoveMessageFilter(_mousePreviewFilter);
 
+            if (_map != null)
+                _map.Dispose();
+
+            _map = null;
+
+            if (_imageStatic != null)
+                _imageStatic.Dispose();
+            if (_imageBackground != null)
+                _imageBackground.Dispose();
+            if (_imageVariable != null)
+                _imageVariable.Dispose();
+            if (_image != null)
+                _image.Dispose();
+
+            if (_dragImage != null)
+                _dragImage.Dispose();
+
+            if (_rectanglePen != null)
+                _rectanglePen.Dispose();
+            if (_rectangleBrush != null)
+                _rectangleBrush.Dispose();
+
             base.Dispose(disposing);
         }
 
@@ -774,7 +796,10 @@ namespace SharpMap.Forms
                             {
                                 try
                                 {
-                                    g.DrawImageUnscaled(_imageStatic, 0, 0);
+                                    if (_imageStatic != null)
+                                    {
+                                        g.DrawImageUnscaled(_imageStatic, 0, 0);
+                                    }
                                 }
                                 catch (Exception ex)
                                 {

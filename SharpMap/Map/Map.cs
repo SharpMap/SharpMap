@@ -156,7 +156,19 @@ namespace SharpMap
                             ((IDisposable)layer).Dispose();
                 }
             }
-            Layers.Clear();
+            if (Layers != null)
+            {
+                Layers.Clear();
+            }
+            if (BackgroundLayer != null)
+            {
+                BackgroundLayer.Clear();
+            }
+            if (VariableLayers != null)
+            {
+                VariableLayers.Clear();
+            }
+
         }
 
         #endregion
