@@ -569,10 +569,17 @@ namespace SharpMap.Forms
 
         }
 
+        bool isDisposed = false;
         protected override void Dispose(bool disposing)
         {
+            if (isDisposed)
+                return;
+
             VariableLayerCollection.VariableLayerCollectionRequery -= HandleVariableLayersRequery;
-            _map.MapNewTileAvaliable -= HandleMapNewTileAvaliable;
+            if (_map != null)
+            {
+                _map.MapNewTileAvaliable -= HandleMapNewTileAvaliable;
+            }
             LostFocus -= HandleMapBoxLostFocus;
 
             if (_mousePreviewFilter != null)
@@ -584,23 +591,43 @@ namespace SharpMap.Forms
             _map = null;
 
             if (_imageStatic != null)
+            {
                 _imageStatic.Dispose();
+                _imageStatic = null;
+            }
             if (_imageBackground != null)
+            {
                 _imageBackground.Dispose();
+                _imageBackground = null;
+            }
             if (_imageVariable != null)
+            {
                 _imageVariable.Dispose();
+                _imageVariable = null;
+            }
             if (_image != null)
+            {
                 _image.Dispose();
+                _image = null;
+            }
 
             if (_dragImage != null)
+            {
                 _dragImage.Dispose();
+                _dragImage = null;
+            }
 
             if (_rectanglePen != null)
+            {
                 _rectanglePen.Dispose();
+            }
             if (_rectangleBrush != null)
+            {
                 _rectangleBrush.Dispose();
+            }
 
             base.Dispose(disposing);
+            isDisposed = true;
         }
 
         #region event handling
