@@ -569,10 +569,10 @@ namespace SharpMap.Forms
 
         }
 
-        bool isDisposed = false;
+        volatile bool isDisposed = false;
         protected override void Dispose(bool disposing)
         {
-            if (isDisposed)
+            if (isDisposed || IsDisposed)
                 return;
 
             VariableLayerCollection.VariableLayerCollectionRequery -= HandleVariableLayersRequery;
@@ -585,49 +585,49 @@ namespace SharpMap.Forms
             if (_mousePreviewFilter != null)
                 Application.RemoveMessageFilter(_mousePreviewFilter);
 
-            if (_map != null)
-                _map.Dispose();
+            lock (maplocker)
+            {
+                _map = null;
 
-            _map = null;
+                if (_imageStatic != null)
+                {
+                    _imageStatic.Dispose();
+                    _imageStatic = null;
+                }
+                if (_imageBackground != null)
+                {
+                    _imageBackground.Dispose();
+                    _imageBackground = null;
+                }
+                if (_imageVariable != null)
+                {
+                    _imageVariable.Dispose();
+                    _imageVariable = null;
+                }
+                if (_image != null)
+                {
+                    _image.Dispose();
+                    _image = null;
+                }
 
-            if (_imageStatic != null)
-            {
-                _imageStatic.Dispose();
-                _imageStatic = null;
-            }
-            if (_imageBackground != null)
-            {
-                _imageBackground.Dispose();
-                _imageBackground = null;
-            }
-            if (_imageVariable != null)
-            {
-                _imageVariable.Dispose();
-                _imageVariable = null;
-            }
-            if (_image != null)
-            {
-                _image.Dispose();
-                _image = null;
-            }
+                if (_dragImage != null)
+                {
+                    _dragImage.Dispose();
+                    _dragImage = null;
+                }
 
-            if (_dragImage != null)
-            {
-                _dragImage.Dispose();
-                _dragImage = null;
-            }
+                if (_rectanglePen != null)
+                {
+                    _rectanglePen.Dispose();
+                }
+                if (_rectangleBrush != null)
+                {
+                    _rectangleBrush.Dispose();
+                }
 
-            if (_rectanglePen != null)
-            {
-                _rectanglePen.Dispose();
+                base.Dispose(disposing);
+                isDisposed = true;
             }
-            if (_rectangleBrush != null)
-            {
-                _rectangleBrush.Dispose();
-            }
-
-            base.Dispose(disposing);
-            isDisposed = true;
         }
 
         #region event handling
@@ -651,8 +651,11 @@ namespace SharpMap.Forms
         /// <param name="e"></param>
         private void HandleVariableLayersRequery(object sender, EventArgs e)
         {
+            if (IsDisposed || isDisposed)
+                return;
+
             Image oldRef;
-            lock (_map)
+            lock (maplocker)
             {
                 if (_dragging) return;
                 oldRef = _imageVariable;
@@ -679,7 +682,7 @@ namespace SharpMap.Forms
                     min = new PointF((float)Math.Round(min.X), (float)Math.Round(min.Y));
                     max = new PointF((float)Math.Round(max.X), (float)Math.Round(max.Y));
 
-                    if (IsDisposed == false)
+                    if (IsDisposed == false && isDisposed == false)
                     {
                         
                         Graphics g = Graphics.FromImage(_imageBackground);
@@ -735,11 +738,15 @@ namespace SharpMap.Forms
         private object lockerStaticImages = new object();
         private object lockerBackgroundImages = new object();
         private object lockerPaintImage = new object();
+        private object maplocker = new object();
         private void GetImagesAsync(BoundingBox extent, int imageGeneration)
         {
             Map safeMap = null;
-            lock (_map)
+            lock (maplocker)
             {
+                if (isDisposed)
+                    return;
+
                 if (imageGeneration < _imageGeneration)
                 {
                     /*we're to old*/
@@ -767,7 +774,7 @@ namespace SharpMap.Forms
         private void GetImagesAsyncEnd(GetImageEndResult res)
         {
             //draw only if generation is larger than the current, else we have aldready drawn something newer
-            if (res == null || res.generation < _imageGeneration)
+            if (res == null || res.generation < _imageGeneration || isDisposed)
                 return;
 
 #if DEBUG
@@ -912,6 +919,9 @@ namespace SharpMap.Forms
 
         private void UpdateImage(bool forceRefresh)
         {
+            if (isDisposed || IsDisposed)
+                return;
+
             if (((_imageStatic == null && _imageVariable == null && _imageBackground == null) && !forceRefresh) ||
                 (Width == 0 || Height == 0)) return;
 
@@ -1228,7 +1238,7 @@ namespace SharpMap.Forms
             Cursor c = Cursor;
             Cursor = Cursors.WaitCursor;
             _map.Zoom /= _scaling;
-            lock (_map)
+            lock (maplocker)
             {
                 _image = _map.GetMap();
             }
