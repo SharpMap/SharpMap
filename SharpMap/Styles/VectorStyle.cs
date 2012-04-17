@@ -25,7 +25,7 @@ namespace SharpMap.Styles
     /// <summary>
     /// Defines a style used for rendering vector data
     /// </summary>
-    public class VectorStyle : Style
+    public class VectorStyle : Style, System.IDisposable
     {
         /// <summary>
         /// Default Symbol
@@ -251,5 +251,46 @@ namespace SharpMap.Styles
         public IPolygonSymbolizer PolygonSymbolizer { get; set; }
 
         #endregion
+
+        bool isDisposed = false;
+        public void Dispose()
+        {
+            if (isDisposed)
+                return;
+
+            if (_fillStyle != null)
+            {
+                _fillStyle.Dispose();
+                _fillStyle = null;
+            }
+
+            if (_lineStyle != null)
+            {
+                _lineStyle.Dispose();
+                _lineStyle = null;
+            }
+
+
+            if (_outlineStyle != null)
+            {
+                _outlineStyle.Dispose();
+                _outlineStyle = null;
+            }
+
+            if (_PointBrush != null)
+            {
+                _PointBrush.Dispose();
+                _PointBrush = null;
+            }
+
+
+            if (_symbol != null)
+            {
+                _symbol.Dispose();
+                _symbol = null;
+            }
+
+            isDisposed = true;
+        }
     }
 }
