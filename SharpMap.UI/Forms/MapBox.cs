@@ -713,15 +713,17 @@ namespace SharpMap.Forms
 
         private Image GetMap(Map map, LayerCollection layers, LayerCollectionType layerCollectionType, BoundingBox extent)
         {
+            int width = Width;
+            int height = Height;
 
-            if ((layers == null || layers.Count == 0 || Width == 0 || Height == 0))
+            if ((layers == null || layers.Count == 0 || width <= 0 || height <= 0))
             {
                 if (layerCollectionType == LayerCollectionType.Background)
                     return new Bitmap(1, 1);
                 return null;
             }
 
-            var retval = new Bitmap(Width, Height);
+            var retval = new Bitmap(width, height);
 
             using(var g = Graphics.FromImage(retval))
             {
