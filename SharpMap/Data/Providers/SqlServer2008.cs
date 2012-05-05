@@ -301,7 +301,7 @@ namespace SharpMap.Data.Providers
        /// </summary>   
        /// <param name="bbox"></param>   
        /// <returns></returns>   
-       public Collection<Geometry> GetGeometriesInView(BoundingBox bbox)   
+       public virtual Collection<Geometry> GetGeometriesInView(BoundingBox bbox)   
        {   
            Collection<Geometry> features = new Collection<Geometry>();   
            using (SqlConnection conn = new SqlConnection(_connectionString))   
@@ -343,7 +343,7 @@ namespace SharpMap.Data.Providers
        /// </summary>   
        /// <param name="oid">Object ID</param>   
        /// <returns>geometry</returns>   
-       public Geometry GetGeometryByID(uint oid)   
+       public virtual Geometry GetGeometryByID(uint oid)   
        {   
            Geometry geom = null;   
            using (SqlConnection conn = new SqlConnection(_connectionString))   
@@ -412,7 +412,7 @@ namespace SharpMap.Data.Providers
        /// </summary>   
        /// <param name="bbox"></param>   
        /// <returns></returns>   
-       private string GetBoxFilterStr(BoundingBox bbox) {   
+       protected string GetBoxFilterStr(BoundingBox bbox) {   
            //geography::STGeomFromText('LINESTRING(47.656 -122.360, 47.656 -122.343)', 4326);   
            LinearRing lr = new LinearRing();   
            lr.Vertices.Add(new Point(bbox.Left, bbox.Bottom));   
@@ -433,7 +433,7 @@ namespace SharpMap.Data.Providers
        /// </summary>   
        /// <param name="geom"></param>   
        /// <param name="ds">FeatureDataSet to fill data into</param>   
-       public void ExecuteIntersectionQuery(Geometry geom, FeatureDataSet ds)   
+       public virtual void ExecuteIntersectionQuery(Geometry geom, FeatureDataSet ds)   
        {   
            //List<Geometry> features = new List<Geometry>();   
            using (SqlConnection conn = new SqlConnection(_connectionString))   
@@ -562,7 +562,7 @@ namespace SharpMap.Data.Providers
        /// </summary>   
        /// <param name="rowId"></param>   
        /// <returns>datarow</returns>   
-       public FeatureDataRow GetFeature(uint rowId)   
+       public virtual FeatureDataRow GetFeature(uint rowId)   
        {   
            using (SqlConnection conn = new SqlConnection(_connectionString))   
            {   
@@ -703,7 +703,7 @@ namespace SharpMap.Data.Providers
        /// </summary>   
        /// <param name="bbox">view box</param>   
        /// <param name="ds">FeatureDataSet to fill data into</param>   
-       public void ExecuteIntersectionQuery(BoundingBox bbox, FeatureDataSet ds)   
+       public virtual void ExecuteIntersectionQuery(BoundingBox bbox, FeatureDataSet ds)   
        {   
            //List<Geometry> features = new List<Geometry>();   
            using (SqlConnection conn = new SqlConnection(_connectionString))   
@@ -804,7 +804,7 @@ namespace SharpMap.Data.Providers
        /// Builds the WITH clause containing all specified table hints
        /// </summary>
        /// <returns>The WITH clause</returns>
-       private string BuildTableHints()
+       protected string BuildTableHints()
        {
            if (ForceSeekHint || NoLockHint || !string.IsNullOrEmpty(ForceIndex))
            {

@@ -48,6 +48,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Converters\SqlServer2008SpatialObjects\SqlGeometryConverter.cs" />
+    <Compile Include="Data\Providers\SqlServer2008Ex.cs" />
     <Compile Include="Geometries\SpatialRelationsEx.cs" />
     <Compile Include="Geometries\SpatialOperationsEx.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
