@@ -21,6 +21,7 @@
   
 using System;
 using System.Collections.ObjectModel;
+using System.Collections.Generic;
 using System.Data.SqlClient;
 using SharpMap.Geometries;
 
@@ -42,6 +43,25 @@ namespace SharpMap.Data.Providers
         Geography,
     }
     
+    /// <summary>
+    /// Method used to determine extents of all features
+    /// </summary>
+    public enum SqlServer2008ExtentsMode
+    {
+        /// <summary>
+        /// Reads through all features in the table to determine extents
+        /// </summary>
+        QueryIndividualFeatures,
+        /// <summary>
+        /// Directly reads the bounds of the spatial index from the system tables (very fast, but does not take <see cref="SqlServer2008.DefinitionQuery"/> into account)
+        /// </summary>
+        SpatialIndex,
+        /// <summary>
+        /// Uses the EnvelopeAggregate aggregate function introduced in SQL Server 2012
+        /// </summary>
+        EnvelopeAggregate
+    }
+
     /// <summary>   
     /// SQL Server 2008 data provider   
     /// </summary>   
@@ -51,8 +71,8 @@ namespace SharpMap.Data.Providers
     /// Adding a datasource to a layer:   
     /// <code lang="C#">   
     /// Layers.VectorLayer myLayer = new Layers.VectorLayer("My layer");   
-    /// string ConnStr = "Provider=SQLOLEDB.1;Integrated Security=SSPI;Persist Security Info=False;Initial Catalog=myDB;Data Source=myServer\myInstance";   
-    /// myLayer.DataSource = new Data.Providers.Katmai(ConnStr, "myTable", "GeomColumn", "OidColumn");   
+    /// string ConnStr = @"Integrated Security=SSPI;Persist Security Info=False;Initial Catalog=myDB;Data Source=myServer\myInstance";   
+    /// myLayer.DataSource = new Data.Providers.SqlServer2008(ConnStr, "myTable", "GeomColumn", "OidColumn");   
     /// </code>   
     /// </example>   
     /// <para>SQL Server 2008 provider by Bill Dollins (dollins.bill@gmail.com). Based on the Oracle provider written by Humberto Ferreira.</para>   
@@ -112,7 +132,7 @@ namespace SharpMap.Data.Providers
                     break;
             }
 
-            _UseSpatialIndexExtentAsExtent = useSpatialIndexExtentAsExtent;
+            _ExtentsMode = (useSpatialIndexExtentAsExtent ? SqlServer2008ExtentsMode.SpatialIndex : SqlServer2008ExtentsMode.QueryIndividualFeatures);
         }
 
         /// <summary>   
@@ -138,7 +158,17 @@ namespace SharpMap.Data.Providers
         {
         }
 
-        private bool _UseSpatialIndexExtentAsExtent = false;
+        private SqlServer2008ExtentsMode _ExtentsMode = SqlServer2008ExtentsMode.QueryIndividualFeatures;
+
+        /// <summary>
+        /// Gets or sets the method used in the <see cref="GetExtends"/> method.
+        /// </summary>
+        public SqlServer2008ExtentsMode ExtentsMode
+        {
+            get { return _ExtentsMode; }
+            set { _ExtentsMode = value; }
+        }
+
         private bool _isOpen;   
   
         /// <summary>   
@@ -245,7 +275,7 @@ namespace SharpMap.Data.Providers
 
         private bool _makeValid;
         /// <summary>
-        /// Gets/Sets whether all <see cref="SharpMap.Geometries"/> passed to SqlServer2008 should me made valid using this function.
+        /// Gets/Sets whether all <see cref="SharpMap.Geometries"/> passed to SqlServer2008 should be made valid using this function.
         /// </summary>
         public Boolean ValidateGeometries { get { return _makeValid; } set { _makeValid = value; } }
 
@@ -282,7 +312,7 @@ namespace SharpMap.Data.Providers
                string strSQL = "SELECT g." + GeometryColumn +".STAsBinary() ";   
                strSQL += " FROM " + Table + " g WHERE ";   
  
-               if (!String.IsNullOrEmpty(_defintionQuery))   
+               if (!String.IsNullOrEmpty(_definitionQuery))   
                    strSQL += DefinitionQuery + " AND ";   
  
                strSQL += strBbox;   
@@ -352,7 +382,7 @@ namespace SharpMap.Data.Providers
                string strSQL = "SELECT g." + ObjectIdColumn + " ";   
                strSQL += "FROM " + Table + " g WHERE ";   
  
-               if (!String.IsNullOrEmpty(_defintionQuery))   
+               if (!String.IsNullOrEmpty(_definitionQuery))   
                    strSQL += DefinitionQuery + " AND ";   
  
                strSQL += strBbox;                   
@@ -414,9 +444,9 @@ namespace SharpMap.Data.Providers
                strGeom = strGeom.Replace("#SRID#", SRID > 0 ? SRID.ToString() : "0");
                strGeom = GeometryColumn + ".STIntersects(" + strGeom + ") = 1";   
  
-               string strSQL = "SELECT g.* , g." + GeometryColumn + ".STAsBinary() As sharpmap_tempgeometry FROM " + Table + " g WHERE ";   
+               string strSQL = "SELECT g.* , g." + GeometryColumn + ".STAsBinary() As sharpmap_tempgeometry FROM " + Table + " g " + BuildTableHints() + " WHERE ";   
  
-               if (!String.IsNullOrEmpty(_defintionQuery))   
+               if (!String.IsNullOrEmpty(_definitionQuery))   
                    strSQL += DefinitionQuery + " AND ";   
  
                strSQL += strGeom;   
@@ -477,7 +507,7 @@ namespace SharpMap.Data.Providers
            using (SqlConnection conn = new SqlConnection(_connectionString))   
            {   
                string strSQL = "SELECT COUNT(*) FROM " + Table;   
-               if (!String.IsNullOrEmpty(_defintionQuery))   
+               if (!String.IsNullOrEmpty(_definitionQuery))   
                    strSQL += " WHERE " + DefinitionQuery;   
                using (SqlCommand command = new SqlCommand(strSQL, conn))   
                {   
@@ -491,15 +521,15 @@ namespace SharpMap.Data.Providers
 
        #region IProvider Members   
  
-       private string _defintionQuery;   
+       private string _definitionQuery;   
  
        /// <summary>   
        /// Definition query used for limiting dataset   
        /// </summary>   
        public string DefinitionQuery   
        {   
-           get { return _defintionQuery; }   
-           set { _defintionQuery = value; }   
+           get { return _definitionQuery; }
+           set { _definitionQuery = value; }   
        }   
  
        /// <summary>   
@@ -575,7 +605,7 @@ namespace SharpMap.Data.Providers
            using (SqlConnection conn = new SqlConnection(_connectionString))   
            {
 
-               if (_UseSpatialIndexExtentAsExtent)
+               if (_ExtentsMode == SqlServer2008ExtentsMode.SpatialIndex)
                {
                    var sql = "select bounding_box_xmin,bounding_box_xmax,bounding_box_ymin,bounding_box_ymax from sys.spatial_index_tessellations where object_id  = (select object_id from sys.tables where name = '" + _table + "' and type_desc = 'USER_TABLE')";
                    using (SqlCommand command = new SqlCommand(sql, conn))
@@ -595,13 +625,18 @@ namespace SharpMap.Data.Providers
                         return bx;                       
                    }
                }
-               else
+               else if (_ExtentsMode == SqlServer2008ExtentsMode.QueryIndividualFeatures)
                {
+                   if (_spatialObjectType == SqlServerSpatialObjectType.Geography)
+                   {
+                       // The geography datatype does not have the STEnvelope method. If using SQL2012, EnvelopeAggregate provides an alternative
+                       throw new NotSupportedException("STEnvelope does not work with geography!");
+                   }
                    //string strSQL = "SELECT g." + GeometryColumn + ".STEnvelope().STAsText() FROM " + Table + " g ";   
                    var strSQL = String.Format("SELECT g.{0}{1}.STEnvelope().STAsText() FROM {2} g ",
                        GeometryColumn, MakeValidString, Table);
 
-                   if (!String.IsNullOrEmpty(_defintionQuery))
+                   if (!String.IsNullOrEmpty(_definitionQuery))
                        strSQL += " WHERE " + DefinitionQuery;
                    using (SqlCommand command = new SqlCommand(strSQL, conn))
                    {
@@ -620,6 +655,33 @@ namespace SharpMap.Data.Providers
                        conn.Close();
                        return bx;
                    }
+               }
+               else if (_ExtentsMode == SqlServer2008ExtentsMode.EnvelopeAggregate)
+               {
+                   var strSQL = String.Format("SELECT {3}::EnvelopeAggregate(g.{0}{1}).STAsText() FROM {2} g ",
+                       GeometryColumn, MakeValidString, Table, _spatialObject);
+
+                   if (!String.IsNullOrEmpty(_definitionQuery))
+                       strSQL += " WHERE " + DefinitionQuery;
+                   using (SqlCommand command = new SqlCommand(strSQL, conn))
+                   {
+                       conn.Open();
+                       BoundingBox bx = null;
+                       SqlDataReader dr = command.ExecuteReader();
+                       if (dr.Read())
+                       {
+                           string wkt = dr.GetString(0);
+                           Geometry g = Converters.WellKnownText.GeometryFromWKT.Parse(wkt);
+                           bx = g.GetBoundingBox();
+                       }
+                       dr.Close();
+                       conn.Close();
+                       return bx;
+                   }
+               }
+               else
+               {
+                   throw new NotSupportedException();
                }
            }   
        }   
@@ -651,10 +713,10 @@ namespace SharpMap.Data.Providers
  
                //string strSQL = "SELECT g.*, g." + GeometryColumn + ".STAsBinary() AS sharpmap_tempgeometry ";   
                string strSQL = String.Format(
-                   "SELECT g.*, g.{0}{1}.STAsBinary() AS sharpmap_tempgeometry FROM {2} g WHERE ",
-                   GeometryColumn, MakeValidString, Table);
+                   "SELECT g.*, g.{0}{1}.STAsBinary() AS sharpmap_tempgeometry FROM {2} g {3} WHERE ",
+                   GeometryColumn, MakeValidString, Table, BuildTableHints());
  
-               if (!String.IsNullOrEmpty(_defintionQuery))   
+               if (!String.IsNullOrEmpty(_definitionQuery))   
                    strSQL += DefinitionQuery + " AND ";   
  
                strSQL += strBbox;   
@@ -686,5 +748,85 @@ namespace SharpMap.Data.Providers
            }   
        }  
        #endregion   
-   }   
+
+       private bool _ForceSeekHint;
+
+       /// <summary>
+       /// When <code>true</code>, uses the FORCESEEK table hint.
+       /// </summary>   
+       public bool ForceSeekHint
+       {
+           get
+           {
+               return _ForceSeekHint;
+           }
+           set
+           {
+               _ForceSeekHint = value;
+           }
+       }
+
+       private bool _NoLockHint;
+
+       /// <summary>
+       /// When <code>true</code>, uses the NOLOCK table hint.
+       /// </summary>   
+       public bool NoLockHint
+       {
+           get
+           {
+               return _NoLockHint;
+           }
+           set
+           {
+               _NoLockHint = value;
+           }
+       }
+
+       private string _ForceIndex;
+
+       /// <summary>
+       /// When set, forces use of the specified index
+       /// </summary>   
+       public string ForceIndex
+       {
+           get
+           {
+               return _ForceIndex;
+           }
+           set
+           {
+               _ForceIndex = value;
+           }
+       }
+
+       /// <summary>
+       /// Builds the WITH clause containing all specified table hints
+       /// </summary>
+       /// <returns>The WITH clause</returns>
+       private string BuildTableHints()
+       {
+           if (ForceSeekHint || NoLockHint || !string.IsNullOrEmpty(ForceIndex))
+           {
+               List<string> hints = new List<string>(3);
+               if (!string.IsNullOrEmpty(ForceIndex))
+               {
+                   hints.Add("INDEX(" + ForceIndex + ")");
+               }
+               if (NoLockHint)
+               {
+                   hints.Add("NOLOCK");
+               }
+               if (ForceSeekHint)
+               {
+                   hints.Add("FORCESEEK");
+               }
+               return "WITH (" + string.Join(",", hints.ToArray()) + ")";
+           }
+           else
+           {
+               return string.Empty;
+           }
+       }
+    }   
 }
