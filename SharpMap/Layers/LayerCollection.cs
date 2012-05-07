@@ -5,7 +5,7 @@
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation; either version 2 of the License, or
 // (at your option) any later version.
-// 
+//
 // SharpMap is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -17,6 +17,8 @@
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace SharpMap.Layers
 {
@@ -83,14 +85,13 @@ namespace SharpMap.Layers
             }
         }
 
-
         /// <summary>
         /// Inserts the layer at the given <paramref name="index"/>.
         /// </summary>
         /// <param name="index">The index at which to add the layer.</param>
         /// <param name="layer">The layer to insert.</param>
         /// <exception cref="ArgumentOutOfRangeException">
-        /// Thrown if <paramref name="index"/> is less than 0 or is 
+        /// Thrown if <paramref name="index"/> is less than 0 or is
         /// greater or equal to <see cref="CollectionBase.Count"/>.
         /// </exception>
         public new void Insert(int index, ILayer layer)
@@ -106,10 +107,10 @@ namespace SharpMap.Layers
             }
         }
 
-        protected override void  OnAddingNew(System.ComponentModel.AddingNewEventArgs e)
+        protected override void OnAddingNew(System.ComponentModel.AddingNewEventArgs e)
         {
             ILayer newLayer = (e.NewObject as ILayer);
-            if (newLayer == null) throw new ArgumentNullException("value","The passed argument is null or not an ILayer");
+            if (newLayer == null) throw new ArgumentNullException("value", "The passed argument is null or not an ILayer");
 
             lock (this)
             {
@@ -147,7 +148,7 @@ namespace SharpMap.Layers
                 if (layer is LayerGroup)
                 {
                     LayerGroup lg = layer as LayerGroup;
-                    ILayer lay = GetLayerByNameInternal(layerName, lg.Layers);
+                    ILayer lay = GetLayerByNameInternal(layerName, ToILayerEnumberable(lg.Layers));
                     if (lay != null)
                         return lay;
                 }
@@ -156,5 +157,14 @@ namespace SharpMap.Layers
             return null;
         }
 
+        private static IEnumerable<ILayer> ToILayerEnumberable(IEnumerable<Layer> layers)
+        {
+            foreach (var layer in layers)
+            {
+                var ilayer = layer as ILayer;
+                if (ilayer != null)
+                    yield return ilayer;
+            }
+        }
     }
 }

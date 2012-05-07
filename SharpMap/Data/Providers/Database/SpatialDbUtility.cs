@@ -16,9 +16,8 @@ namespace SharpMap.Data.Providers
         /// Creates an instance of this class using the default decorator strings
         /// </summary>
         public SpatialDbUtility()
-            :this("\"{0}\"", "'{0}'", "@P{0}")
+            : this("\"{0}\"", "'{0}'", "@P{0}")
         {
-            
         }
 
         /// <summary>
@@ -28,7 +27,7 @@ namespace SharpMap.Data.Providers
         /// <param name="literalDecoratorFormat">The format string to decorate literals (strings)</param>
         /// <param name="parameterDecoratorFormat">The format string to decorate parameters</param>
         public SpatialDbUtility(string entityDecoratorFormat, string literalDecoratorFormat, string parameterDecoratorFormat)
-            :this(entityDecoratorFormat, literalDecoratorFormat, parameterDecoratorFormat,
+            : this(entityDecoratorFormat, literalDecoratorFormat, parameterDecoratorFormat,
             new WKBReader(), new WKBWriter())
         {
         }
@@ -43,8 +42,6 @@ namespace SharpMap.Data.Providers
         /// <param name="writer"> </param>
         public SpatialDbUtility(string entityDecoratorFormat, string literalDecoratorFormat, string parameterDecoratorFormat,
             IBinaryGeometryReader reader, IBinaryGeometryWriter writer)
-
-
         {
             EntityDecoratorFormat = entityDecoratorFormat;
             LiteralDecoratorFormat = literalDecoratorFormat;
@@ -58,7 +55,8 @@ namespace SharpMap.Data.Providers
 
             Reader = reader;
             Writer = writer;
-        }        
+        }
+
         /// <summary>
         /// Gets the database entity decorator format.
         /// <para/>
@@ -70,7 +68,7 @@ namespace SharpMap.Data.Providers
         /// Gets the database literal (string) decorator
         /// </summary>
         public string LiteralDecoratorFormat { get; private set; }
-        
+
         /// <summary>
         /// Gets the database parameter decorator
         /// </summary>
@@ -99,7 +97,7 @@ namespace SharpMap.Data.Providers
             var sb = new StringBuilder();
             var pc = command.Parameters;
             var pNr = pc.Count;
-            
+
             foreach (var o in parameters)
             {
                 var p = command.CreateParameter();
@@ -120,7 +118,16 @@ namespace SharpMap.Data.Providers
         /// Decorates the table name
         /// </summary>
         /// <returns>The decorated table name</returns>
-        public string DecorateTable(string schema, string table, string asSuffix = null)
+        public string DecorateTable(string schema, string table)
+        {
+            return DecorateTable(schema, table, null);
+        }
+
+        /// <summary>
+        /// Decorates the table name
+        /// </summary>
+        /// <returns>The decorated table name</returns>
+        public string DecorateTable(string schema, string table, string asSuffix)
         {
             var sb = new StringBuilder();
 
@@ -142,9 +149,19 @@ namespace SharpMap.Data.Providers
         /// Decorates a colum name, optionally with a prefix
         /// </summary>
         /// <param name="columnName">The column name</param>
+        /// <returns>The decorated column name</returns>
+        public string DecorateColumn(string columnName)
+        {
+            return DecorateColumn(columnName, null);
+        }
+
+        /// <summary>
+        /// Decorates a colum name, optionally with a prefix
+        /// </summary>
+        /// <param name="columnName">The column name</param>
         /// <param name="prefix">The (optional) prefix</param>
         /// <returns>The decorated column name</returns>
-        public string DecorateColumn(string columnName, string prefix = null)
+        public string DecorateColumn(string columnName, string prefix)
         {
             var sb = new StringBuilder();
             if (!string.IsNullOrEmpty(prefix))
@@ -157,9 +174,19 @@ namespace SharpMap.Data.Providers
         /// Renames an already decorated entity using the SQL AS statement
         /// </summary>
         /// <param name="decoratedEntity">The decorated entity</param>
+        /// <returns>The decorated entity</returns>
+        public string DecorateAs(string decoratedEntity)
+        {
+            return DecorateAs(decoratedEntity, null);
+        }
+
+        /// <summary>
+        /// Renames an already decorated entity using the SQL AS statement
+        /// </summary>
+        /// <param name="decoratedEntity">The decorated entity</param>
         /// <param name="asSuffix">The suffix</param>
         /// <returns>The decorated entity</returns>
-        public string DecorateAs(string decoratedEntity, string asSuffix = null)
+        public string DecorateAs(string decoratedEntity, string asSuffix)
         {
             var sb = new StringBuilder();
             sb.Append(decoratedEntity);
@@ -187,7 +214,7 @@ namespace SharpMap.Data.Providers
         public string SetSridDecoratorFormat { get; set; }
 
         /// <summary>
-        /// Decorator for the format to transform a geometry to a specified 
+        /// Decorator for the format to transform a geometry to a specified
         /// </summary>
         /// <remarks>
         /// The format must have
@@ -250,6 +277,6 @@ namespace SharpMap.Data.Providers
         /// </summary>
         public IBinaryGeometryWriter Writer { get; private set; }
 
-        #endregion
+        #endregion SpatialFunctions
     }
 }

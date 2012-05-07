@@ -1,7 +1,9 @@
 using System;
-using System.IO;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.IO;
+using NetTopologySuite;
+
 //using Gtk;
 
 namespace TestGtk
@@ -15,6 +17,8 @@ namespace TestGtk
         {
             try
             {
+                GeoAPI.GeometryServiceProvider.Instance = new NtsGeometryServices();
+
                 Build();
 
                 Size mapSize = new Size(800, 500);
@@ -32,15 +36,15 @@ namespace TestGtk
                 myMap.Layers.Add(layWorld);
                 myMap.MaximumZoom = 360;
                 myMap.BackColor = Color.LightBlue;
-                myMap.Center = new SharpMap.Geometries.Point(0, 0);
+                myMap.Center = new GeoAPI.Geometries.Coordinate(0, 0);
                 myMap.Zoom = 360;
 
-                Bitmap img = (Bitmap) myMap.GetMap();
+                Bitmap img = (Bitmap)myMap.GetMap();
                 image3.Pixbuf = ImageToPixbuf(img);
             }
             catch (Exception ex)
             {
-                label1.Text = ex.Message.ToString();
+                label1.Text = ex.Message;
             }
         }
 
@@ -49,7 +53,6 @@ namespace TestGtk
             Gtk.Application.Quit();
             a.RetVal = true;
         }
-
 
         private static Gdk.Pixbuf ImageToPixbuf(System.Drawing.Image image)
         {
@@ -67,7 +70,7 @@ namespace TestGtk
         {
             double dX = args.Event.X;
             double dY = args.Event.Y;
-            System.Drawing.PointF oPointF = new System.Drawing.PointF((float) dX, (float) dY);
+            System.Drawing.PointF oPointF = new System.Drawing.PointF((float)dX, (float)dY);
 
             label1.Text = dX.ToString() + " , " + dY.ToString();
 
@@ -75,7 +78,6 @@ namespace TestGtk
 
             if (radPan.Active)
             {
-
                 myMap.Zoom *= 1;
             }
             else if (radZoomIn.Active)
@@ -87,9 +89,8 @@ namespace TestGtk
                 myMap.Zoom *= 1.5;
             }
 
-            Bitmap img = (Bitmap) myMap.GetMap();
+            Bitmap img = (Bitmap)myMap.GetMap();
             image3.Pixbuf = ImageToPixbuf(img);
-
         }
     }
 }

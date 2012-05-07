@@ -115,7 +115,7 @@ namespace SharpMap.Styles
         {
             Outline = new Pen(Color.Black, 1);
             Line = new Pen(Color.Black, 1);
-            Fill = Brushes.Black;
+            Fill = new SolidBrush (Color.FromArgb(192, Color.Black));
             EnableOutline = false;
             SymbolScale = 1f;
             PointColor = Brushes.Red;

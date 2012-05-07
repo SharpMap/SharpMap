@@ -29,7 +29,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;GisSharpBlog</DefineConstants>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
@@ -51,13 +51,13 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\ExternalReferences\References4SharpMap.Extensions\gdal_csharp.dll</HintPath>
     </Reference>
-    <Reference Include="GeoAPI, Version=1.0.0.0, Culture=neutral, PublicKeyToken=a1a0da7def465678, processorArchitecture=MSIL">
+    <Reference Include="GeoAPI, Version=1.6.4448.22541, Culture=neutral, PublicKeyToken=a1a0da7def465678, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\ExternalReferences\References4SharpMap.Extensions\GeoAPI.dll</HintPath>
+      <HintPath>..\Packages\GeoAPI.1.6.0\lib\net35\GeoAPI.dll</HintPath>
     </Reference>
-    <Reference Include="NetTopologySuite, Version=1.7.1.29911, Culture=neutral, PublicKeyToken=f580a05016ebada1, processorArchitecture=MSIL">
+    <Reference Include="NetTopologySuite, Version=1.12.4448.22555, Culture=neutral, PublicKeyToken=f580a05016ebada1, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\ExternalReferences\NetTopologySuite.dll</HintPath>
+      <HintPath>..\Packages\NetTopologySuite.1.12.0\lib\net35\NetTopologySuite.dll</HintPath>
     </Reference>
     <Reference Include="Npgsql, Version=0.99.3.0, Culture=neutral, PublicKeyToken=5d8b90d52f46fda7, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -75,9 +75,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\ExternalReferences\References4SharpMap.Extensions\osr_csharp.dll</HintPath>
     </Reference>
-    <Reference Include="PostgreSql.Data.PostgreSqlClient, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="PowerCollections, Version=1.0.4448.22540, Culture=neutral, PublicKeyToken=2573bf8a1bdddcd5, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\ExternalReferences\References4SharpMap.Extensions\PostgreSql.Data.PostgreSqlClient.dll</HintPath>
+      <HintPath>..\Packages\NetTopologySuite.1.12.0\lib\net35\PowerCollections.dll</HintPath>
     </Reference>
     <Reference Include="ProjNET, Version=1.0.2794.16965, Culture=neutral, PublicKeyToken=a1f5bdcd9c6f5740, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -99,12 +99,10 @@
   <ItemGroup>
     <Compile Include="Data\Providers\DataTablePoint.cs" />
     <Compile Include="Data\FwToolsHelper.cs" />
-    <Compile Include="Data\Providers\NtsGeometryConverter.cs" />
     <Compile Include="Data\Providers\NtsProvider.cs" />
     <Compile Include="Data\Providers\OgrProvider.cs" />
     <Compile Include="Data\Providers\Oracle.cs" />
     <Compile Include="Data\Providers\PostGIS.cs" />
-    <Compile Include="Data\Providers\PostGIS2.cs" />
     <Compile Include="Data\Providers\SqlLite.cs" />
     <Compile Include="Data\Providers\SpatiaLite.cs" />
     <Compile Include="Layers\GdalRasterLayer.cs">
@@ -128,4 +126,8 @@
   <!--<PropertyGroup>
     <PostBuildEvent>xcopy /Y "$(ProjectDir)..\ExternalReferences\References4SharpMap.Extensions\FWToolsUnmanaged2.4.2\*.dll" $(TargetDir)</PostBuildEvent>
   </PropertyGroup>-->
+  <PropertyGroup>
+    <PreBuildEvent>echo "$(SolutionDir)BuildTools\nuget.exe" install "$(ProjectDir)packages.config -o "$(SolutionDir)Packages"
+"$(SolutionDir)BuildTools\nuget.exe" install "$(ProjectDir)packages.config" -o "$(SolutionDir)Packages"</PreBuildEvent>
+  </PropertyGroup>
 </Project>

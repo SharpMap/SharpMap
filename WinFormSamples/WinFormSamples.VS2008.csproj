@@ -64,6 +64,18 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\ExternalReferences\BruTile.dll</HintPath>
     </Reference>
+    <Reference Include="GeoAPI, Version=1.6.4448.22541, Culture=neutral, PublicKeyToken=a1a0da7def465678, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Packages\GeoAPI.1.6.0\lib\net35\GeoAPI.dll</HintPath>
+    </Reference>
+    <Reference Include="NetTopologySuite, Version=1.12.4448.22555, Culture=neutral, PublicKeyToken=f580a05016ebada1, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Packages\NetTopologySuite.1.12.0\lib\net35\NetTopologySuite.dll</HintPath>
+    </Reference>
+    <Reference Include="PowerCollections, Version=1.0.4448.22540, Culture=neutral, PublicKeyToken=2573bf8a1bdddcd5, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Packages\NetTopologySuite.1.12.0\lib\net35\PowerCollections.dll</HintPath>
+    </Reference>
     <Reference Include="ProjNET, Version=1.2.3882.19088, Culture=neutral, PublicKeyToken=a1f5bdcd9c6f5740, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\ExternalReferences\ProjNET.dll</HintPath>
@@ -79,6 +91,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FormCreateTilesSample.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormCreateTilesSample.Designer.cs">
+      <DependentUpon>FormCreateTilesSample.cs</DependentUpon>
+    </Compile>
     <Compile Include="FormMapBox.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -128,6 +146,7 @@
       <DependentUpon>Form2.cs</DependentUpon>
     </Compile>
     <Compile Include="LayerTools.cs" />
+    <Compile Include="Samples\CreateTilesSample.cs" />
     <Compile Include="Samples\GdalSample.cs" />
     <Compile Include="Samples\GradiantThemeSample.cs" />
     <Compile Include="Samples\OracleSample.cs" />
@@ -229,6 +248,9 @@
     <Compile Include="Samples\OgrSample.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="FormCreateTilesSample.resx">
+      <DependentUpon>FormCreateTilesSample.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="FormMapBox.resx">
       <DependentUpon>FormMapBox.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -382,6 +404,7 @@
     </Compile>
     <Compile Include="Samples\PostGisSample.cs" />
     <Compile Include="Samples\ShapefileSample.cs" />
+    <Compile Include="Samples\TextOnPathSample.cs" />
     <Compile Include="Samples\TiledWmsSample.cs" />
     <Compile Include="Samples\WfsSample.cs" />
     <Compile Include="Samples\WmsSample.cs" />

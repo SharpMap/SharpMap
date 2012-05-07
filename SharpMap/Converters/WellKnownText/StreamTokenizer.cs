@@ -5,7 +5,7 @@
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation; either version 2 of the License, or
 // (at your option) any later version.
-// 
+//
 // SharpMap is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -13,11 +13,11 @@
 
 // You should have received a copy of the GNU Lesser General Public License
 // along with SharpMap; if not, write to the Free Software
-// Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
+// Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 // SOURCECODE IS MODIFIED FROM ANOTHER WORK AND IS ORIGINALLY BASED ON GeoTools.NET:
 /*
- *  Copyright (C) 2002 Urban Science Applications, Inc. 
+ *  Copyright (C) 2002 Urban Science Applications, Inc.
  *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
@@ -41,7 +41,7 @@ using System;
 using System.IO;
 using System.Text;
 
-#endregion
+#endregion Using
 
 // http://java.sun.com/j2se/1.4/docs/api/java/io/StreamTokenizer.html
 // a better implementation could be written. Here is a good Java implementation of StreamTokenizer.
@@ -84,7 +84,7 @@ namespace SharpMap.Converters.WellKnownText.IO
             _currentToken = new StringBuilder();
         }
 
-        #endregion
+        #endregion Constructors
 
         #region Properties
 
@@ -104,12 +104,12 @@ namespace SharpMap.Converters.WellKnownText.IO
             get { return _colNumber; }
         }
 
-        #endregion
+        #endregion Properties
 
         #region Methods
 
         /// <summary>
-        /// If the current token is a number, this field contains the value of that number. 
+        /// If the current token is a number, this field contains the value of that number.
         /// </summary>
         /// <remarks>
         /// If the current token is a number, this field contains the value of that number. The current token is a number when the value of the ttype field is TT_NUMBER.
@@ -129,7 +129,7 @@ namespace SharpMap.Converters.WellKnownText.IO
         }
 
         /// <summary>
-        /// If the current token is a word token, this field contains a string giving the characters of the word token. 
+        /// If the current token is a word token, this field contains a string giving the characters of the word token.
         /// </summary>
         public string GetStringValue()
         {
@@ -177,7 +177,8 @@ namespace SharpMap.Converters.WellKnownText.IO
         {
             TokenType nextTokenType = TokenType.Eof;
             char[] chars = new char[1];
-            _currentToken.Clear();
+            //_currentToken.Clear();
+            _currentToken.Length = 0;
             _currentTokenType = TokenType.Eof;
             int finished = _reader.Read(chars, 0, 1);
 
@@ -236,7 +237,6 @@ namespace SharpMap.Converters.WellKnownText.IO
                     nextTokenType = TokenType.Number;
                 }
 
-
                 // this handles numbers with a decimal point
                 if (isNumber && nextTokenType == TokenType.Number && currentCharacter == '.')
                 {
@@ -247,7 +247,6 @@ namespace SharpMap.Converters.WellKnownText.IO
                     nextTokenType = TokenType.Number;
                     isNumber = true;
                 }
-
 
                 _colNumber++;
                 if (_currentTokenType == TokenType.Eol)
@@ -322,6 +321,6 @@ namespace SharpMap.Converters.WellKnownText.IO
             return tokentype;
         }
 
-        #endregion
+        #endregion Methods
     }
 }

@@ -25,12 +25,13 @@ namespace SharpMap.Data.Providers
         private readonly SharpMapFeatureColumn _geometryColumn;
 
         private readonly SharpMapFeatureColumns _featureColumns;
-        
+
         private string _definitionQuery;
         private string _orderQuery;
         private int _targetSrid;
 
         private SpatialDbUtility _dbUtility;
+
         protected SpatialDbUtility DbUtility
         {
             get { return _dbUtility; }
@@ -44,11 +45,10 @@ namespace SharpMap.Data.Providers
         }
 
         protected virtual string From { get { return _dbUtility.DecorateTable(_schema, _table); } }
-        
 
         [NonSerialized]
         private Envelope _cachedExtent;
-        
+
         [NonSerialized]
         private int _cachedFeatureCount = -1;
 
@@ -174,13 +174,13 @@ namespace SharpMap.Data.Providers
             : base(0)
         {
             ConnectionID = connectionString;
-            
+
             _dbUtility = spatialDbUtility;
             _schema = schema;
             _table = table;
-            
-            _oidColumn = new SharpMapFeatureColumn {Column = oidColumn};
-            _geometryColumn = new SharpMapFeatureColumn {Column = geometryColumn};
+
+            _oidColumn = new SharpMapFeatureColumn { Column = oidColumn };
+            _geometryColumn = new SharpMapFeatureColumn { Column = geometryColumn };
 
             // Additional columns
             _featureColumns = new SharpMapFeatureColumns(this, spatialDbUtility);
@@ -193,13 +193,14 @@ namespace SharpMap.Data.Providers
             base.ReleaseManagedResources();
         }
 
-        #endregion
-        
+        #endregion construction and disposal
+
         /// <summary>
         /// Convenience function to create and open a connection to the database backend.
         /// </summary>
         /// <returns>An open connection to the database backend.</returns>
         protected abstract DbConnection CreateOpenDbConnection();
+
         /// <summary>
         /// Convenience function to create a data adapter.
         /// </summary>
@@ -212,21 +213,21 @@ namespace SharpMap.Data.Providers
         protected void Initialize()
         {
             CheckDisposed();
-            
+
             if (Initialized)
                 return;
-            
+
             // make sure the cached extent gets cleared
             _cachedExtent = null;
             _cachedFeatureCount = -1;
-            
+
             InitializeInternal();
         }
 
         protected abstract void InitializeInternal();
 
         /// <summary>
-        /// Gets the connection string. 
+        /// Gets the connection string.
         /// </summary>
         public string ConnectionString
         {
@@ -297,7 +298,6 @@ namespace SharpMap.Data.Providers
             }
         }
 
-
         /// <summary>
         /// Gets or sets the name oft the geometry column
         /// </summary>
@@ -353,14 +353,12 @@ namespace SharpMap.Data.Providers
             get { return _geometryExpression ?? "{0}"; }
             set
             {
-                
                 _geometryExpression = value;
             }
         }
 
-
         /// <summary>
-        /// Gets or sets the area of interest. Setting this property 
+        /// Gets or sets the area of interest. Setting this property
         /// </summary>
         public Envelope AreaOfInterest
         {
@@ -370,13 +368,12 @@ namespace SharpMap.Data.Providers
                 if (value != _areaOfInterest)
                 {
                     if (value != null && value.Equals(_areaOfInterest))
-                            return;
+                        return;
                     _areaOfInterest = value;
                     OnAreaOfInterestChanged(EventArgs.Empty);
                 }
             }
         }
-
 
         /// <summary>
         /// Gets or sets the target SRID. Setting this helps to avoid using on-the-fly reprojection
@@ -402,14 +399,14 @@ namespace SharpMap.Data.Providers
         /// </summary>
         public bool NeedsTransfrom
         {
-            get { return TargetSRID > - 1 && TargetSRID != SRID; }
+            get { return TargetSRID > -1 && TargetSRID != SRID; }
         }
 
         public override sealed Envelope GetExtents()
         {
             if (_areaOfInterest != null)
                 return _areaOfInterest;
-            
+
             if (_cachedExtent != null)
                 return _cachedExtent;
 
@@ -440,7 +437,7 @@ namespace SharpMap.Data.Providers
                         sql.AppendFormat(" WHERE {0}", DefinitionQuery);
                     else
                         sql.Append(FeatureColumns.GetWhereClause());
-                
+
                     sql.Append(";");
 
                     command.CommandText = sql.ToString();
@@ -468,11 +465,16 @@ namespace SharpMap.Data.Providers
         private FeatureDataTable _baseTable;
         private string _geometryExpression;
 
-        protected virtual FeatureDataTable CreateNewTable(bool force = false)
+        protected virtual FeatureDataTable CreateNewTable()
+        {
+            return CreateNewTable(false);
+        }
+
+        protected virtual FeatureDataTable CreateNewTable(bool force)
         {
             if (force || _baseTable == null)
             {
-                var fdt = new FeatureDataTable {TableName = Name};
+                var fdt = new FeatureDataTable { TableName = Name };
 
                 using (var cn = CreateOpenDbConnection())
                 {
@@ -482,18 +484,18 @@ namespace SharpMap.Data.Providers
                         using (var da = CreateDataAdapter())
                         {
                             da.SelectCommand = cmd;
-                            fdt = (FeatureDataTable) da.FillSchema(fdt, SchemaType.Source);
+                            fdt = (FeatureDataTable)da.FillSchema(fdt, SchemaType.Source);
                         }
                     }
                 }
 
                 //Remove the geometry column, which is always the last!
-                fdt.Columns.RemoveAt(fdt.Columns.Count-1);
+                fdt.Columns.RemoveAt(fdt.Columns.Count - 1);
                 if (_baseTable == null)
                 {
                     _baseTable = fdt;
                     return _baseTable;
-                } 
+                }
                 return fdt;
             }
             return _baseTable;
@@ -502,7 +504,6 @@ namespace SharpMap.Data.Providers
             var resColumns = res.Columns;
             foreach (var column in dt.Columns)
             {
-                
                 resColumns.Add(new DataColumn(column.))
             }
             res.PrimaryKey = new [] {res.Columns[0]};
@@ -518,13 +519,13 @@ namespace SharpMap.Data.Providers
                 {
                     cmd.CommandText = FeatureColumns.GetSelectClause(From)
                                       + string.Format(" WHERE {0}={1};", _dbUtility.DecorateEntity("_smOid_"), oid);
-                    
+
                     using (var dr = cmd.ExecuteReader())
                     {
                         if (dr.HasRows)
                         {
                             var fdr = CreateNewTable().NewRow();
-                            fdr.Geometry = GeometryFromWKB.Parse((byte[]) dr.GetValue(1), Factory);
+                            fdr.Geometry = GeometryFromWKB.Parse((byte[])dr.GetValue(1), Factory);
                             fdr[0] = dr.GetValue(0);
                             for (var i = 2; i < dr.FieldCount; i++)
                                 fdr[i - 1] = dr.GetValue(i);
@@ -576,13 +577,13 @@ namespace SharpMap.Data.Providers
             {
                 using (var cmd = cn.CreateCommand())
                 {
-                    cmd.CommandText = FeatureColumns.GetSelectColumnClause(cmd, FeatureColumns.GetGeometryColumn(true), spatialWhere: GetSpatialWhere(bbox, cmd));
+                    cmd.CommandText = FeatureColumns.GetSelectColumnClause(cmd, FeatureColumns.GetGeometryColumn(true), GetSpatialWhere(bbox, cmd));
                     using (var dr = cmd.ExecuteReader())
                     {
                         if (dr.HasRows)
                         {
                             while (dr.Read())
-                                res.Add(GeometryFromWKB.Parse((byte[]) dr.GetValue(0), Factory));
+                                res.Add(GeometryFromWKB.Parse((byte[])dr.GetValue(0), Factory));
                         }
                     }
                 }
@@ -608,7 +609,7 @@ namespace SharpMap.Data.Providers
             {
                 using (var cmd = cn.CreateCommand())
                 {
-                    cmd.CommandText = FeatureColumns.GetSelectColumnClause(cmd, _dbUtility.DecorateEntity(ObjectIdColumn), spatialWhere: GetSpatialWhere(bbox, cmd));
+                    cmd.CommandText = FeatureColumns.GetSelectColumnClause(cmd, _dbUtility.DecorateEntity(ObjectIdColumn), GetSpatialWhere(bbox, cmd));
                     using (var dr = cmd.ExecuteReader())
                     {
                         if (dr.HasRows)
@@ -631,18 +632,18 @@ namespace SharpMap.Data.Providers
         protected virtual void ExecuteIntersectionQueryInternal(object spatialWhere, FeatureDataSet fds)
         {
             var fdt = CreateNewTable(true);
-            
+
             fdt.BeginLoadData();
-            
+
             using (var cn = CreateOpenDbConnection())
             {
-                using(var cmd = cn.CreateCommand())
+                using (var cmd = cn.CreateCommand())
                 {
                     string from = null;
 
                     var spatialWhereString = string.Empty;
                     var env = spatialWhere as Envelope;
-                    
+
                     if (env != null)
                     {
                         from = GetFrom(env, cmd);
@@ -662,11 +663,11 @@ namespace SharpMap.Data.Providers
                           FeatureColumns.GetSelectClause(from)
                         + (string.IsNullOrEmpty(DefinitionQuery)
                                ? FeatureColumns.GetWhereClause(spatialWhereString)
-                               : (" WHERE " + _definitionQuery + 
-                                    ( string.IsNullOrEmpty(spatialWhereString) 
-                                            ? "" 
+                               : (" WHERE " + _definitionQuery +
+                                    (string.IsNullOrEmpty(spatialWhereString)
+                                            ? ""
                                             : " AND " + spatialWhereString)))
-                        
+
                         + FeatureColumns.GetGroupByClause()
                         + FeatureColumns.GetOrderByClause();
 
@@ -680,13 +681,13 @@ namespace SharpMap.Data.Providers
                         {
                             var loadData = new object[geomIndex];
                             Array.Copy(data, 0, loadData, 0, geomIndex);
-                            var row = (FeatureDataRow) fdt.LoadDataRow(data, true);
-                            row.Geometry = GeometryFromWKB.Parse((byte[]) data[geomIndex], Factory);
+                            var row = (FeatureDataRow)fdt.LoadDataRow(data, true);
+                            row.Geometry = GeometryFromWKB.Parse((byte[])data[geomIndex], Factory);
                         }
                     }
                 }
             }
-            
+
             fdt.EndLoadData();
 
             fds.Tables.Add(fdt);
@@ -729,6 +730,5 @@ namespace SharpMap.Data.Providers
             Initialized = false;
             base.OnSridChanged(eventArgs);
         }
-
     }
 }

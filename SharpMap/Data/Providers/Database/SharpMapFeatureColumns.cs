@@ -30,7 +30,7 @@ namespace SharpMap.Data.Providers
         /// </summary>
         /// <param name="provider">The provider</param>
         /// <param name="dbUtility">The db utility object</param>
-        public SharpMapFeatureColumns(SpatialDbProvider provider, 
+        public SharpMapFeatureColumns(SpatialDbProvider provider,
                                       SpatialDbUtility dbUtility)
         {
             _provider = provider;
@@ -73,27 +73,37 @@ namespace SharpMap.Data.Providers
         }
 
         private string _selectClause;
-        
+
         /// <summary>
         /// Gets the main select clause
         /// </summary>
         /// <returns>The plain select clause without any constraints or order clauses</returns>
-        public string GetSelectClause(string from = null)
+        public string GetSelectClause()
+        {
+            return GetSelectClause(null);
+        }
+
+        /// <summary>
+        /// Gets the main select clause
+        /// </summary>
+        /// <param name="from">The from clause to use (if it is not schema.table)</param>
+        /// <returns>The plain select clause without any constraints or order clauses</returns>
+        public string GetSelectClause(string from)
         {
             if (string.IsNullOrEmpty(from))
                 from = _spatialDbUtility.DecorateTable(_provider.Schema, _provider.Table);
-            
+
             if (string.IsNullOrEmpty(_selectClause))
             {
                 var sqlBuilder = new StringBuilder("SELECT ");
                 sqlBuilder.Append(_spatialDbUtility.DecorateAs(_provider.ObjectIdColumn));
-                
+
                 foreach (var fc in this)
                 {
                     if (!fc.Display) continue;
 
                     sqlBuilder.AppendFormat(", {0}", _spatialDbUtility.DecorateAs(
-                        string.IsNullOrEmpty(fc.Function) ? GetFunctionColumn(fc) : fc.Column, 
+                        string.IsNullOrEmpty(fc.Function) ? GetFunctionColumn(fc) : fc.Column,
                         fc.As));
                 }
                 sqlBuilder.AppendFormat(", {0}", GetGeometryColumn(true));
@@ -111,33 +121,76 @@ namespace SharpMap.Data.Providers
         /// </summary>
         /// <param name="command">The command object</param>
         /// <param name="column">The column</param>
+        /// <returns>The sql string to select the column</returns>
+        public string GetSelectColumnClause(DbCommand command, string column)
+        {
+            return GetSelectColumnClause(command, column, 0xffffffff, null);
+        }
+
+        /// <summary>
+        /// Gets a select clause for querying a column (mainly the geometry column is our focus)
+        /// </summary>
+        /// <param name="command">The command object</param>
+        /// <param name="column">The column</param>
+        /// <param name="oid">The (optional) object id constraint</param>
+        /// <returns>The sql string to select the column</returns>
+        public string GetSelectColumnClause(DbCommand command, string column, uint oid)
+        {
+            return GetSelectColumnClause(command, column, oid, null);
+        }
+
+        /// <summary>
+        /// Gets a select clause for querying a column (mainly the geometry column is our focus)
+        /// </summary>
+        /// <param name="command">The command object</param>
+        /// <param name="column">The column</param>
+        /// <param name="spatialWhere">The (optional) spatial constraint</param>
+        /// <returns>The sql string to select the column</returns>
+        public string GetSelectColumnClause(DbCommand command, string column, string spatialWhere)
+        {
+            return GetSelectColumnClause(command, column, 0xffffffff, spatialWhere);
+        }
+
+        /// <summary>
+        /// Gets a select clause for querying a column (mainly the geometry column is our focus)
+        /// </summary>
+        /// <param name="command">The command object</param>
+        /// <param name="column">The column</param>
         /// <param name="oid">The (optional) object id constraint</param>
         /// <param name="spatialWhere">The (optional) spatial constraint</param>
         /// <returns>The sql string to select the column</returns>
-        public string GetSelectColumnClause(DbCommand command, string column, uint oid = 0xffffffff, string spatialWhere = null)
+        public string GetSelectColumnClause(DbCommand command, string column, uint oid, string spatialWhere)
         {
             var sqlBuilder = new StringBuilder("SELECT ");
             sqlBuilder.Append(_spatialDbUtility.DecorateColumn(column));
             sqlBuilder.AppendFormat(" FROM {0}", _spatialDbUtility.DecorateTable(_provider.Schema, _provider.Table));
             if (oid == 0xffffffff)
-                sqlBuilder.AppendFormat(" WHERE {0}", 
+                sqlBuilder.AppendFormat(" WHERE {0}",
                     _spatialDbUtility.DecorateEntityConstraintWithParameter(command, _provider.ObjectIdColumn, "= {0}", oid));
             else
                 sqlBuilder.Append(GetWhereClause(spatialWhere));
             sqlBuilder.AppendFormat(" {0};", GetGroupByClause());
-            
+
             return sqlBuilder.ToString();
         }
 
         private string _whereClause;
 
         /// <summary>
-        /// Gets the where clause 
+        /// Gets the where clause
+        /// </summary>
+        public string GetWhereClause()
+        {
+            return GetWhereClause(null);
+        }
+
+        /// <summary>
+        /// Gets the where clause
         /// </summary>
         ///// <param name="command">A command object to add parameters to</param>
         /// <param name="spatialWhere">An optional spatial constraint</param>
         /// <returns>The </returns>
-        public string GetWhereClause(/*DbCommand command,*/ string spatialWhere = null)
+        public string GetWhereClause(/*DbCommand command,*/ string spatialWhere)
         {
             if (_whereClause == null)
             {
@@ -154,7 +207,6 @@ namespace SharpMap.Data.Providers
                                             : GetFunctionColumn(fc);
 
                         sqlBuilder.AppendFormat("{0} {1}", column, fc.Constraint);
-
                     }
                 }
                 _whereClause = sqlBuilder.ToString().Trim();
@@ -220,8 +272,17 @@ namespace SharpMap.Data.Providers
             par[0] = _spatialDbUtility.DecorateEntity(fc.Column);
             if (fc.FunctionParameters != null)
                 Array.Copy(fc.FunctionParameters, 0, par, 1, par.Length - 2);
-            
+
             return string.Format(fc.Function, par);
+        }
+
+        /// <summary>
+        /// Gets the geometry column
+        /// </summary>
+        /// <returns>The geometry column.</returns>
+        public string GetGeometryColumn()
+        {
+            return GetGeometryColumn(false);
         }
 
         /// <summary>
@@ -229,7 +290,7 @@ namespace SharpMap.Data.Providers
         /// </summary>
         /// <param name="usAs">Uses AS</param>
         /// <returns>The geometry column.</returns>
-        public string GetGeometryColumn(bool usAs = false)
+        public string GetGeometryColumn(bool usAs)
         {
             var res = _provider.NeedsTransfrom
                           ? string.Format(_spatialDbUtility.ToGeometryDecoratorFormat, _provider.GeometryColumn, _provider.TargetSRID)
