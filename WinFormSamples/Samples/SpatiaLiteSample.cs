@@ -171,11 +171,11 @@ namespace WinFormSamples.Samples
             if (row == null) return 0;
             if (row.Geometry == null)
                 return 0;
-            var ml = row.Geometry as SharpMap.Geometries.MultiLineString;
+            var ml = row.Geometry as GeoAPI.Geometries.IMultiLineString;
             if (ml != null)
                 return System.Convert.ToInt32(ml.Length);
 
-            var l = row.Geometry as SharpMap.Geometries.LineString;
+            var l = row.Geometry as GeoAPI.Geometries.ILineString;
             if (l != null)
                 return System.Convert.ToInt32(l.Length);
             return 0;

@@ -15,13 +15,15 @@
 // along with SharpMap; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
 
+using System;
 using System.Drawing;
 #if !DotSpatialProjections
 using ProjNet.CoordinateSystems.Transformations;
 #else
 using DotSpatial.Projections;
 #endif
-using SharpMap.Geometries;
+using GeoAPI.Geometries;
+using SharpMap.Base;
 using SharpMap.Styles;
 
 namespace SharpMap.Layers
@@ -30,7 +32,7 @@ namespace SharpMap.Layers
     /// Abstract class for common layer properties
     /// Implement this class instead of the ILayer interface to save a lot of common code.
     /// </summary>
-    public abstract class Layer : ILayer
+    public abstract class Layer : DisposableObject, ILayer
     {
         #region Events
 
@@ -50,10 +52,44 @@ namespace SharpMap.Layers
         /// </summary>
         public event LayerRenderedEventHandler LayerRendered;
 
+        /// <summary>
+        /// Event raised when the layer's <see cref="SRID"/> property has changed
+        /// </summary>
+        public event EventHandler SridChanged;
+
+        protected virtual void OnSridChanged(EventArgs eventArgs)
+        {
+            if (SridChanged != null)
+                SridChanged(this, eventArgs);
+        }
+
+        /// <summary>
+        /// Event raised when the layer's <see cref="Style"/> property has changed
+        /// </summary>
+        public event EventHandler StyleChanged;
+
+        protected virtual void OnStyleChanged(EventArgs eventArgs)
+        {
+            if (StyleChanged != null)
+                StyleChanged(this, eventArgs);
+        }
+
+        /// <summary>
+        /// Event raised when the layers's <see cref="LayerName"/> property has changed
+        /// </summary>
+        public event EventHandler LayerNameChanged;
+
+        protected virtual void OnLayerNameChanged(EventArgs eventArgs)
+        {
+            if (LayerNameChanged != null)
+                LayerNameChanged(this, eventArgs);
+        }
+
         #endregion
 
-        private ICoordinateTransformation _coordinateTransform = null;
-        private ICoordinateTransformation _reverseCoordinateTransform = null;
+
+        private ICoordinateTransformation _coordinateTransform;
+        private ICoordinateTransformation _reverseCoordinateTransform;
 
         private string _layerName;
         private Style _style;
@@ -74,6 +110,15 @@ namespace SharpMap.Layers
         protected Layer() //Style style)
         {
             _style = new Style();
+        }
+
+        protected override void ReleaseManagedResources()
+        {
+            _coordinateTransform = null;
+            _reverseCoordinateTransform = null;
+            _style = null;
+            
+            base.ReleaseManagedResources();
         }
 
 #if !DotSpatialProjections
@@ -123,7 +168,14 @@ namespace SharpMap.Layers
         public virtual int SRID
         {
             get { return _srid; }
-            set { _srid = value; }
+            set
+            {
+                if (value != _srid)
+                {
+                    _srid = value;
+                    OnSridChanged(EventArgs.Empty);
+                }
+            }
         }
 
         public int TargetSRID
@@ -142,14 +194,15 @@ namespace SharpMap.Layers
         /// <param name="map">Map which is rendered</param>
         public virtual void Render(Graphics g, Map map)
         {
-            if (LayerRendered != null) LayerRendered(this, g); //Fire event
+            if (LayerRendered != null) 
+                LayerRendered(this, g); //Fire event
         }
 
         /// <summary>
         /// Returns the extent of the layer
         /// </summary>
         /// <returns>Bounding box corresponding to the extent of the features in the layer</returns>
-        public abstract BoundingBox Envelope { get; }
+        public abstract Envelope Envelope { get; }
 
         #endregion
 
@@ -216,7 +269,14 @@ namespace SharpMap.Layers
         public virtual Style Style
         {
             get { return _style; }
-            set { _style = value; }
+            set
+            {
+                if (value != _style && _style.Equals(value))
+                {
+                    _style = value;
+                    OnStyleChanged(EventArgs.Empty);
+                }
+            }
         }
 
         #endregion

@@ -3,7 +3,7 @@ using System.Drawing;
 using System.Globalization;
 using System.Web.UI;
 using SharpMap;
-using Point=SharpMap.Geometries.Point;
+using Point=GeoAPI.Geometries.Coordinate;
 
 public partial class Gradient : Page
 {

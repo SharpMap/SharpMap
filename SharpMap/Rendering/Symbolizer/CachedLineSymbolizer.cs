@@ -2,7 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
-using SharpMap.Geometries;
+using GeoAPI.Geometries;
+using SharpMap.Base;
 
 namespace SharpMap.Rendering.Symbolizer
 {
@@ -10,7 +11,7 @@ namespace SharpMap.Rendering.Symbolizer
     /// <summary>
     /// Interface for all classes providing Line symbolization handling routine
     /// </summary>
-    public interface ILineSymbolizeHandler
+    public interface ILineSymbolizeHandler : IDisposableEx
     {
         /// <summary>
         /// Function to symbolize the graphics path to the graphics object
@@ -23,7 +24,7 @@ namespace SharpMap.Rendering.Symbolizer
     /// <summary>
     /// Line symbolize helper class that plainly draws a line.
     /// </summary>
-    public class PlainLineSymbolizeHandler : ILineSymbolizeHandler
+    public class PlainLineSymbolizeHandler : DisposableObject, ILineSymbolizeHandler
     {
         /// <summary>
         /// Gets or sets the <see cref="Pen"/> to use
@@ -35,13 +36,33 @@ namespace SharpMap.Rendering.Symbolizer
             foreach (var graphicsPath in path)
                 g.DrawPath(Line, graphicsPath);
         }
+
+        protected override void ReleaseManagedResources()
+        {
+            if (Line != null)
+                Line.Dispose();
+
+            base.ReleaseManagedResources();
+        }
     }
 
     /// <summary>
     /// Class that symbolizes a path by warping a <see cref="Pattern"/> to the provided graphics path.
     /// </summary>
-    public class WarpedLineSymbolizeHander : ILineSymbolizeHandler
+    public class WarpedLineSymbolizeHander : DisposableObject, ILineSymbolizeHandler
     {
+        protected override void ReleaseManagedResources()
+        {
+            if (Line != null)
+                Line.Dispose();
+            if (Fill != null)
+                Fill.Dispose();
+            if (Pattern != null)
+                Pattern.Dispose();
+            
+            base.ReleaseManagedResources();
+        }
+
         /// <summary>
         /// Gets or sets the <see cref="Pen"/> to draw the graphics path
         /// </summary>
@@ -96,7 +117,41 @@ namespace SharpMap.Rendering.Symbolizer
             _graphicsPaths = new List<GraphicsPath>();
             _lineSymbolizeHandlers = new List<ILineSymbolizeHandler>();
         }
-        
+
+        protected override void ReleaseManagedResources()
+        {
+            if (_graphicsPaths != null)
+            {
+                foreach (var graphicsPath in Paths)
+                    graphicsPath.Dispose();
+                _graphicsPaths = null;
+            }
+
+            if (_lineSymbolizeHandlers != null)
+            {
+                foreach (var lineSymbolizeHandler in _lineSymbolizeHandlers)
+                    lineSymbolizeHandler.Dispose();
+                _lineSymbolizeHandlers.Clear();
+            }
+
+            if (_fallback != null)
+                _fallback.Dispose();
+            
+            base.ReleaseManagedResources();
+        }
+
+        /// <summary>
+        /// Erstellt ein neues Objekt, das eine Kopie der aktuellen Instanz darstellt.
+        /// </summary>
+        /// <returns>
+        /// Ein neues Objekt, das eine Kopie dieser Instanz darstellt.
+        /// </returns>
+        /// <filterpriority>2</filterpriority>
+        public override object Clone()
+        {
+            throw new NotImplementedException();
+        }
+
         /// <summary>
         /// The cached path
         /// </summary>
@@ -125,7 +180,7 @@ namespace SharpMap.Rendering.Symbolizer
         /// <param name="map"></param>
         /// <param name="lineString"></param>
         /// <param name="g"></param>
-        protected override void OnRenderInternal(Map map, LineString lineString, Graphics g)
+        protected override void OnRenderInternal(Map map, ILineString lineString, Graphics g)
         {
             var gp = new GraphicsPath();
             gp.AddLines(/*LimitValues(*/lineString.TransformToImage(map)/*)*/);

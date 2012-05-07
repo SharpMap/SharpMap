@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using SharpMap.Converters.WellKnownBinary;
 using SharpMap.Converters.WellKnownText;
-using SharpMap.Geometries;
+using GeoAPI.Geometries;
 
 namespace SharpMap.Data.Providers
 {
@@ -56,18 +56,27 @@ namespace SharpMap.Data.Providers
     /// </code>
     /// </example>
     /// </remarks>
-    public class GeometryProvider : IProvider, IDisposable
+    public class GeometryProvider : PreparedGeometryProvider
     {
-        private IList<Geometry> _Geometries;
-        private int _SRID = -1;
+        private List<IGeometry> _geometries;
 
         /// <summary>
         /// Gets or sets the geometries this datasource contains
         /// </summary>
-        public IList<Geometry> Geometries
+        public IList<IGeometry> Geometries
         {
-            get { return _Geometries; }
-            set { _Geometries = value; }
+            get { return _geometries; }
+            set
+            {
+                if (value != _geometries)
+                {
+                    var list = value as List<IGeometry> ?? new List<IGeometry>(value);
+                    _geometries = list;
+
+                    if (_geometries != null && _geometries.Count > 0)
+                        SRID = _geometries[0].SRID;
+                }
+            }
         }
 
         #region constructors
@@ -76,9 +85,9 @@ namespace SharpMap.Data.Providers
         /// Initializes a new instance of the <see cref="GeometryProvider"/>
         /// </summary>
         /// <param name="geometries">Set of geometries that this datasource should contain</param>
-        public GeometryProvider(IList<Geometry> geometries)
+        public GeometryProvider(IEnumerable<IGeometry> geometries)
         {
-            _Geometries = geometries;
+            Geometries = new List<IGeometry>(geometries);
         }
 
         /// <summary>
@@ -87,8 +96,7 @@ namespace SharpMap.Data.Providers
         /// <param name="feature">Feature to be in this datasource</param>
         public GeometryProvider(FeatureDataRow feature)
         {
-            _Geometries = new Collection<Geometry>();
-            _Geometries.Add(feature.Geometry);
+            Geometries = new List<IGeometry> {feature.Geometry};
         }
 
         /// <summary>
@@ -97,33 +105,34 @@ namespace SharpMap.Data.Providers
         /// <param name="features">Features to be included in this datasource</param>
         public GeometryProvider(FeatureDataTable features)
         {
-            _Geometries = new Collection<Geometry>();
-            for (int i = 0; i < features.Count; i++)
-                _Geometries.Add(features[i].Geometry);
+            var geometries = new List<IGeometry>();
+            for (var i = 0; i < features.Count; i++)
+                geometries.Add(features[i].Geometry);
+            Geometries = geometries;
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GeometryProvider"/>
         /// </summary>
         /// <param name="geometry">Geometry to be in this datasource</param>
-        public GeometryProvider(Geometry geometry)
+        public GeometryProvider(IGeometry geometry)
         {
-            _Geometries = new Collection<Geometry>();
-            _Geometries.Add(geometry);
+            Geometries = new List<IGeometry> {geometry};
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GeometryProvider"/>
         /// </summary>
-        /// <param name="wellKnownBinaryGeometry"><see cref="SharpMap.Geometries.Geometry"/> as Well-known Binary to be included in this datasource</param>
-        public GeometryProvider(byte[] wellKnownBinaryGeometry) : this(GeometryFromWKB.Parse(wellKnownBinaryGeometry))
+        /// <param name="wellKnownBinaryGeometry"><see cref="GeoAPI.Geometries.IGeometry"/> as Well-known Binary to be included in this datasource</param>
+        public GeometryProvider(byte[] wellKnownBinaryGeometry) 
+            : this(GeometryFromWKB.Parse(wellKnownBinaryGeometry, GeoAPI.GeometryServiceProvider.Instance.CreateGeometryFactory()))
         {
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GeometryProvider"/>
         /// </summary>
-        /// <param name="wellKnownTextGeometry"><see cref="SharpMap.Geometries.Geometry"/> as Well-known Text to be included in this datasource</param>
+        /// <param name="wellKnownTextGeometry"><see cref="GeoAPI.Geometries.IGeometry"/> as Well-known Text to be included in this datasource</param>
         public GeometryProvider(string wellKnownTextGeometry) : this(GeometryFromWKT.Parse(wellKnownTextGeometry))
         {
         }
@@ -137,13 +146,13 @@ namespace SharpMap.Data.Providers
         /// </summary>
         /// <param name="bbox"></param>
         /// <returns></returns>
-        public Collection<Geometry> GetGeometriesInView(BoundingBox bbox)
+        public override Collection<IGeometry> GetGeometriesInView(Envelope bbox)
         {
-            Collection<Geometry> list = new Collection<Geometry>();
-            for (int i = 0; i < _Geometries.Count; i++)
-                if (!_Geometries[i].IsEmpty())
-                    if (_Geometries[i].GetBoundingBox().Intersects(bbox))
-                        list.Add(_Geometries[i]);
+            var list = new Collection<IGeometry>();
+            for (var i = 0; i < _geometries.Count; i++)
+                if (!_geometries[i].IsEmpty)
+                    if (bbox.Intersects(_geometries[i].EnvelopeInternal))
+                        list.Add(_geometries[i]);
             return list;
         }
 
@@ -152,11 +161,11 @@ namespace SharpMap.Data.Providers
         /// </summary>
         /// <param name="bbox"></param>
         /// <returns></returns>
-        public Collection<uint> GetObjectIDsInView(BoundingBox bbox)
+        public override Collection<uint> GetObjectIDsInView(Envelope bbox)
         {
-            Collection<uint> list = new Collection<uint>();
-            for (int i = 0; i < _Geometries.Count; i++)
-                if (_Geometries[i].GetBoundingBox().Intersects(bbox))
+            var list = new Collection<uint>();
+            for (int i = 0; i < _geometries.Count; i++)
+                if (bbox.Intersects(_geometries[i].EnvelopeInternal))
                     list.Add((uint) i);
             return list;
         }
@@ -166,9 +175,9 @@ namespace SharpMap.Data.Providers
         /// </summary>
         /// <param name="oid">Object ID</param>
         /// <returns>geometry</returns>
-        public Geometry GetGeometryByID(uint oid)
+        public override IGeometry GetGeometryByID(uint oid)
         {
-            return _Geometries[(int) oid];
+            return _geometries[(int) oid];
         }
 
         /// <summary>
@@ -176,7 +185,7 @@ namespace SharpMap.Data.Providers
         /// </summary>
         /// <param name="geom"></param>
         /// <param name="ds">FeatureDataSet to fill data into</param>
-        public void ExecuteIntersectionQuery(Geometry geom, FeatureDataSet ds)
+        protected override void OnExecuteIntersectionQuery(IGeometry geom, FeatureDataSet ds)
         {
             throw new NotSupportedException("Attribute data is not supported by the GeometryProvider.");
         }
@@ -186,7 +195,7 @@ namespace SharpMap.Data.Providers
         /// </summary>
         /// <param name="box"></param>
         /// <param name="ds">FeatureDataSet to fill data into</param>
-        public void ExecuteIntersectionQuery(BoundingBox box, FeatureDataSet ds)
+        public override void ExecuteIntersectionQuery(Envelope box, FeatureDataSet ds)
         {
             throw new NotSupportedException("Attribute data is not supported by the GeometryProvider.");
         }
@@ -195,9 +204,9 @@ namespace SharpMap.Data.Providers
         /// Returns the number of features in the dataset
         /// </summary>
         /// <returns>number of features</returns>
-        public int GetFeatureCount()
+        public override int GetFeatureCount()
         {
-            return _Geometries.Count;
+            return _geometries.Count;
         }
 
         /// <summary>
@@ -205,7 +214,7 @@ namespace SharpMap.Data.Providers
         /// </summary>
         /// <param name="rowId"></param>
         /// <returns></returns>
-        public FeatureDataRow GetFeature(uint rowId)
+        public override FeatureDataRow GetFeature(uint rowId)
         {
             throw new NotSupportedException("Attribute data is not supported by the GeometryProvider.");
         }
@@ -214,69 +223,30 @@ namespace SharpMap.Data.Providers
         /// Boundingbox of dataset
         /// </summary>
         /// <returns>boundingbox</returns>
-        public BoundingBox GetExtents()
+        public override Envelope GetExtents()
         {
-            if (_Geometries.Count == 0)
+            if (_geometries.Count == 0)
                 return null;
-            BoundingBox box = null; // _Geometries[0].GetBoundingBox();
-            for (int i = 0; i < _Geometries.Count; i++)
-                if (!_Geometries[i].IsEmpty())
-                    box = box == null ? _Geometries[i].GetBoundingBox() : box.Join(_Geometries[i].GetBoundingBox());
+            var box = new Envelope(_geometries[0].EnvelopeInternal);
 
+            for (var i = 0; i < _geometries.Count; i++)
+            {
+                if (!_geometries[i].IsEmpty)
+                    box.ExpandToInclude(_geometries[i].EnvelopeInternal);
+            }
             return box;
-        }
-
-        /// <summary>
-        /// Gets the connection ID of the datasource
-        /// </summary>
-        /// <remarks>
-        /// The ConnectionID is meant for Connection Pooling which doesn't apply to this datasource. Instead
-        /// <c>String.Empty</c> is returned.
-        /// </remarks>
-        public string ConnectionID
-        {
-            get { return String.Empty; }
-        }
-
-        /// <summary>
-        /// Opens the datasource
-        /// </summary>
-        public void Open()
-        {
-            //Do nothing;
-        }
-
-        /// <summary>
-        /// Closes the datasource
-        /// </summary>
-        public void Close()
-        {
-            //Do nothing;
-        }
-
-        /// <summary>
-        /// Returns true if the datasource is currently open
-        /// </summary>
-        public bool IsOpen
-        {
-            get { return true; }
-        }
-
-        /// <summary>
-        /// The spatial reference ID (CRS)
-        /// </summary>
-        public int SRID
-        {
-            get { return _SRID; }
-            set { _SRID = value; }
         }
 
         /// <summary>
         /// Disposes the object
         /// </summary>
-        public void Dispose()
+        protected override void ReleaseManagedResources()
         {
-            _Geometries = null;
+            if (_geometries != null)
+            {
+                _geometries.Clear();
+                _geometries = null;
+            }
         }
 
         #endregion

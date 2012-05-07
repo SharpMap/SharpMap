@@ -19,6 +19,7 @@
 using System;
 using Microsoft.SqlServer.Types;
 using SharpMap.Converters.SqlServer2008SpatialObjects;
+using Geometry = GeoAPI.Geometries.IGeometry;
 
 namespace SharpMap.Geometries
 {

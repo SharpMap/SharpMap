@@ -1,7 +1,8 @@
 using System;
 using System.Drawing;
+using GeoAPI.Geometries;
 using SharpMap.Data;
-using SharpMap.Geometries;
+using GeoAPI.Geometries;
 using SharpMap.Rendering.Thematics;
 
 namespace SharpMap.Rendering.Symbolizer
@@ -13,7 +14,12 @@ namespace SharpMap.Rendering.Symbolizer
     [Serializable]
     public class BasicLineSymbolizer : LineSymbolizer
     {
-        protected override void OnRenderInternal(Map map, LineString linestring, Graphics g)
+        public override object Clone()
+        {
+            return new BasicLineSymbolizer {Line = (Pen) Line.Clone()};
+        }
+
+        protected override void OnRenderInternal(Map map, ILineString linestring, Graphics g)
         {
             g.DrawLines(Line, /*LimitValues(*/linestring.TransformToImage(map)/*)*/);
         }
@@ -27,14 +33,19 @@ namespace SharpMap.Rendering.Symbolizer
     [Serializable]
     public class BasicLineSymbolizerWithOffset : LineSymbolizer
     {
+        public override object Clone()
+        {
+            return new BasicLineSymbolizerWithOffset {Line = (Pen) Line.Clone(), Offset = Offset};
+        }
+
         /// <summary>
-        /// Gets or sets the Offset 
+        /// Gets or sets the affset to the right (as defined by its coordinate sequence) of the lines
         /// </summary>
         public float Offset { get; set; }
 
-        protected override void OnRenderInternal(Map map, LineString linestring, Graphics g)
+        protected override void OnRenderInternal(Map map, ILineString linestring, Graphics g)
         {
-            var pts = /*LimitValues(*/ linestring.TransformToImage(map) /*)*/;
+            var pts = /*LimitValues(*/ VectorRenderer.OffsetRight(linestring.TransformToImage(map), Offset) /*)*/;
             g.DrawLines(Line, pts);
         }
 

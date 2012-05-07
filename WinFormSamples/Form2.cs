@@ -5,6 +5,8 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
+using GeoAPI.Geometries;
+using NetTopologySuite.Geometries;
 using SharpMap.Layers;
 using SharpMap.Data;
 using SharpMap.Styles;
@@ -37,7 +39,7 @@ namespace WinFormSamples
             TileAsyncLayer bingLayer = new TileAsyncLayer(new BingTileSource(BingRequest.UrlBing, "",BingMapType.Roads), "TileLayer - Bing" );
             
             this.mapBox1.Map.BackgroundLayer.Add(bingLayer);
-
+            var gf = new GeometryFactory(new PrecisionModel(), 3857);
 #if DotSpatialProjections
             var mathTransform = LayerTools.Wgs84toGoogleMercator;
             SharpMap.Geometries.BoundingBox geom = GeometryTransform.TransformBox(
@@ -45,15 +47,15 @@ namespace WinFormSamples
                 mathTransform.Source, mathTransform.Target);
 #else
             var mathTransform = LayerTools.Wgs84toGoogleMercator.MathTransform;
-            SharpMap.Geometries.BoundingBox geom = GeometryTransform.TransformBox(
-                new SharpMap.Geometries.BoundingBox(-9.205626, 38.690993, -9.123736, 38.740837), 
+            var geom = GeometryTransform.TransformBox(
+                new Envelope(-9.205626, -9.123736, 38.690993, 38.740837), 
                 mathTransform);
 #endif
 
             //Adds a pushpin layer
             VectorLayer pushPinLayer = new VectorLayer("PushPins");
-            List<SharpMap.Geometries.Geometry> geos = new List<SharpMap.Geometries.Geometry>();
-            geos.Add(geom.GetCentroid());
+            var geos = new List<GeoAPI.Geometries.IGeometry>();
+            geos.Add(gf.CreatePoint(geom.Centre));
             SharpMap.Data.Providers.GeometryProvider geoProvider = new SharpMap.Data.Providers.GeometryProvider(geos);
             pushPinLayer.DataSource = geoProvider;
             //this.mapBox1.Map.Layers.Add(pushPinLayer);

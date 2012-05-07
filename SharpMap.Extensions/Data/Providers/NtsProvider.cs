@@ -30,9 +30,9 @@ using NetTopologySuite.Geometries;
 using NtsGeometry = NetTopologySuite.Geometries.Geometry;
 #endif
 
-using SharpMap.Converters.NTS;
-using SharpMap.Geometries;
-using Geometry=SharpMap.Geometries.Geometry;
+using Geometry=GeoAPI.Geometries.IGeometry;
+using BoundingBox = GeoAPI.Geometries.Envelope;
+
 
 namespace SharpMap.Data.Providers
 {
@@ -63,7 +63,7 @@ namespace SharpMap.Data.Providers
     /// }
     /// </code>
     /// </remarks>
-    public class NtsProvider : IProvider
+    public class NtsProvider : PreparedGeometryProvider
     {
         #region Delegates
 
@@ -204,8 +204,8 @@ namespace SharpMap.Data.Providers
                 Collection<uint> ids = provider.GetObjectIDsInView(provider.GetExtents());
                 foreach (uint id in ids)
                 {
-                    FeatureDataRow dataRow = provider.GetFeature(id);
-                    GeoAPI.Geometries.IGeometry geometry = GeometryConverter.ToNTSGeometry(dataRow.Geometry, _geometryFactory);
+                    var dataRow = provider.GetFeature(id);
+                    var geometry = dataRow.Geometry;
                     AttributesTable attributes = new AttributesTable();
                     foreach (DataColumn column in dataRow.Table.Columns)
                     {
@@ -225,30 +225,18 @@ namespace SharpMap.Data.Providers
 
         #endregion
 
-        private int _srid = -1;
-
         #region IProvider Members
-
-        /// <summary>
-        /// Gets the connection ID.
-        /// </summary>
-        /// <value>The connection ID.</value>
-        [Obsolete("Does nothing at all")]
-        public string ConnectionID
-        {
-            get { return String.Empty; }
-        }
 
         /// <summary>
         /// Returns the BoundingBox of the dataset.
         /// </summary>
         /// <returns>BoundingBox</returns>
-        public BoundingBox GetExtents()
+        public override BoundingBox GetExtents()
         {
-            Envelope envelope = new Envelope();
-            foreach (Feature feature in _features)
+            var envelope = new Envelope();
+            foreach (var feature in _features)
                 envelope.ExpandToInclude(feature.Geometry.EnvelopeInternal);
-            return GeometryConverter.ToSharpMapBoundingBox(envelope);
+            return envelope;
         }
 
         /// <summary>
@@ -256,18 +244,17 @@ namespace SharpMap.Data.Providers
         /// </summary>
         /// <param name="rowId">The row ID.</param>
         /// <returns></returns>
-        public FeatureDataRow GetFeature(uint rowId)
+        public override FeatureDataRow GetFeature(uint rowId)
         {
-            Feature feature = _features[Convert.ToInt32(rowId)];
-            FeatureDataTable dataTable = new FeatureDataTable();
-            foreach (string columnName in feature.Attributes.GetNames())
+            var feature = _features[Convert.ToInt32(rowId)];
+            
+            var dataTable = new FeatureDataTable();
+            foreach (var columnName in feature.Attributes.GetNames())
                 dataTable.Columns.Add(new DataColumn(columnName, feature.Attributes.GetType(columnName)));
 
-            FeatureDataRow dataRow = dataTable.NewRow();
-            dataRow.Geometry =
-                GeometryConverter.ToSharpMapGeometry(
-                    feature.Geometry as NtsGeometry);
-            foreach (string columnName in feature.Attributes.GetNames())
+            var dataRow = dataTable.NewRow();
+            dataRow.Geometry = (Geometry)feature.Geometry.Clone();
+            foreach (var columnName in feature.Attributes.GetNames())
                 dataRow[columnName] = feature.Attributes[columnName];
             return dataRow;
         }
@@ -276,7 +263,7 @@ namespace SharpMap.Data.Providers
         /// Returns the number of features in the dataset.
         /// </summary>
         /// <returns>number of features</returns>
-        public int GetFeatureCount()
+        public override int GetFeatureCount()
         {
             return _features.Count;
         }
@@ -284,39 +271,35 @@ namespace SharpMap.Data.Providers
         /// <summary>
         /// Returns features within the specified bounding box.
         /// </summary>
-        /// <param name="bbox"></param>
+        /// <param name="envelope"></param>
         /// <returns></returns>
-        public Collection<Geometry> GetGeometriesInView(BoundingBox bbox)
+        public override Collection<Geometry> GetGeometriesInView(BoundingBox envelope)
         {
             // Identifies all the features within the given BoundingBox
-            Envelope envelope = GeometryConverter.ToNTSEnvelope(bbox);
-            Collection<Geometry> geoms = new Collection<Geometry>();
-            foreach (Feature feature in _features)
+            var geoms = new Collection<Geometry>();
+            foreach (var feature in _features)
                 if (envelope.Intersects(feature.Geometry.EnvelopeInternal))
-                    geoms.Add(
-                        GeometryConverter.ToSharpMapGeometry(
-                            feature.Geometry as NtsGeometry));
+                    geoms.Add(feature.Geometry);
             return geoms;
         }
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="box"></param>
+        /// <param name="envelope"></param>
         /// <param name="ds"></param>
-        public void ExecuteIntersectionQuery(BoundingBox box, FeatureDataSet ds)
+        public override void ExecuteIntersectionQuery(BoundingBox envelope, FeatureDataSet ds)
         {
             // Identifies all the features within the given BoundingBox
-            Envelope envelope = GeometryConverter.ToNTSEnvelope(box);
-            List<Feature> results = new List<Feature>(_features.Count);
+            var dataTable = CreateFeatureDataTable();
+            dataTable.BeginLoadData();
             foreach (Feature feature in _features)
+            {
                 if (envelope.Intersects(feature.Geometry.EnvelopeInternal))
-                    results.Add(feature);
+                    CreateNewRow(dataTable, feature);
+            }
+            dataTable.EndLoadData();
 
-            // Fill DataSet
-            FeatureDataTable dataTable = CreateFeatureDataTable();
-            foreach (Feature feature in results)
-                CreateNewRow(dataTable, feature);
             ds.Tables.Add(dataTable);
         }
 
@@ -325,14 +308,14 @@ namespace SharpMap.Data.Providers
         /// </summary>
         /// <param name="geom"></param>
         /// <param name="ds"></param>
-        public void ExecuteIntersectionQuery(Geometry geom, FeatureDataSet ds)
+        protected override void OnExecuteIntersectionQuery(Geometry geom, FeatureDataSet ds)
         {
-            GeoAPI.Geometries.IGeometry geometry = GeometryConverter.ToNTSGeometry(geom, _geometryFactory);
             FeatureDataTable dataTable = CreateFeatureDataTable();
-
+            dataTable.BeginLoadData();
             foreach (Feature feature in _features)
-                if (feature.Geometry.Intersects(geometry))
+                if (PreparedGeometry.Intersects(feature.Geometry))
                     CreateNewRow(dataTable, feature);
+            dataTable.EndLoadData();
 
             ds.Tables.Add(dataTable);
         }
@@ -342,12 +325,10 @@ namespace SharpMap.Data.Providers
         /// </summary>
         /// <param name="oid">The oid.</param>
         /// <returns></returns>
-        public Geometry GetGeometryByID(uint oid)
+        public override Geometry GetGeometryByID(uint oid)
         {
-            Feature feature = _features[Convert.ToInt32(oid)];
-            return
-                GeometryConverter.ToSharpMapGeometry(
-                    feature.Geometry as NtsGeometry);
+            var feature = _features[Convert.ToInt32(oid)];
+            return feature.Geometry;
         }
 
         /// <summary>
@@ -355,10 +336,10 @@ namespace SharpMap.Data.Providers
         /// </summary>
         /// <param name="bbox">The bbox.</param>
         /// <returns></returns>
-        public Collection<uint> GetObjectIDsInView(BoundingBox bbox)
+        public override Collection<uint> GetObjectIDsInView(BoundingBox bbox)
         {
             // Identifies all the features within the given BoundingBox
-            Envelope envelope = GeometryConverter.ToNTSEnvelope(bbox);
+            Envelope envelope = bbox;
             Collection<uint> geoms = new Collection<uint>();
             for (int i = 0; i < _features.Count; i++)
                 if (envelope.Intersects(_features[i].Geometry.EnvelopeInternal))
@@ -367,44 +348,21 @@ namespace SharpMap.Data.Providers
         }
 
         /// <summary>
-        /// Opens this instance.
-        /// </summary>
-        [Obsolete("Does nothing at all")]
-        public void Open()
-        {
-        }
-
-        /// <summary>
         /// Gets a value indicating whether this instance is open.
         /// </summary>
         /// <value><c>true</c> if this instance is open; otherwise, <c>false</c>.</value>
-        public bool IsOpen
+        public override bool IsOpen
         {
             get { return _features.Count > 0; }
         }
 
         /// <summary>
-        /// Closes this instance.
-        /// </summary>
-        [Obsolete("Does nothing at all")]
-        public void Close()
-        {
-        }
-
-        /// <summary>
-        /// The spatial reference ID (CRS)
-        /// </summary>
-        public int SRID
-        {
-            get { return _srid; }
-            set { _srid = value; }
-        }
-
-        /// <summary>
         /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
         /// </summary>
-        public void Dispose()
+        protected override void ReleaseManagedResources()
         {
+            _features.Clear();
+            base.ReleaseManagedResources();
         }
 
         #endregion
@@ -417,12 +375,8 @@ namespace SharpMap.Data.Providers
         /// <param name="feature">Data to insert in the <see cref="SharpMap.Data.FeatureDataTable"/>.</param>
         private static void CreateNewRow(FeatureDataTable dataTable, Feature feature)
         {
-            FeatureDataRow dataRow = dataTable.NewRow();
-            dataRow.Geometry =
-                GeometryConverter.ToSharpMapGeometry(feature.Geometry as NtsGeometry);
-            foreach (string columnName in feature.Attributes.GetNames())
-                dataRow[columnName] = feature.Attributes[columnName];
-            dataTable.AddRow(dataRow);
+            var row = (FeatureDataRow) dataTable.LoadDataRow(feature.Attributes.GetValues(), true);
+            row.Geometry = feature.Geometry;
         }
 
         /// <summary>
@@ -431,8 +385,8 @@ namespace SharpMap.Data.Providers
         /// <returns><see cref="SharpMap.Data.FeatureDataTable"/></returns>
         private FeatureDataTable CreateFeatureDataTable()
         {
-            FeatureDataTable dataTable = new FeatureDataTable();
-            foreach (string columnName in _features[0].Attributes.GetNames())
+            var dataTable = new FeatureDataTable();
+            foreach (var columnName in _features[0].Attributes.GetNames())
                 dataTable.Columns.Add(new DataColumn(columnName, _features[0].Attributes.GetType(columnName)));
             return dataTable;
         }

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Drawing;
+using GeoAPI.Geometries;
 using SharpMap.Data;
-using SharpMap.Geometries;
 using SharpMap.Rendering.Thematics;
 
 namespace SharpMap.Rendering.Symbolizer
@@ -10,19 +10,33 @@ namespace SharpMap.Rendering.Symbolizer
     /// Multi geometry symbolizer class
     /// </summary>
     [Serializable]
-    public class GeometrySymbolizer : ISymbolizer<Geometry>
+    public class GeometrySymbolizer : ISymbolizer<IGeometry>
     {
         private IPointSymbolizer _pointSymbolizer;
         private ILineSymbolizer _lineSymbolizer;
         private IPolygonSymbolizer _polygonSymbolizer;
 
+        /// <summary>
+        /// Creates an instance of this class
+        /// </summary>
         public GeometrySymbolizer()
         {
             _pointSymbolizer = new RasterPointSymbolizer();
             _lineSymbolizer = new BasicLineSymbolizer();
             _polygonSymbolizer = new BasicPolygonSymbolizer();
         }
-        
+
+        public object Clone()
+        {
+            return new GeometrySymbolizer
+                       {
+                           _pointSymbolizer = (IPointSymbolizer) _pointSymbolizer.Clone(),
+                           _lineSymbolizer = (ILineSymbolizer) _lineSymbolizer.Clone(),
+                           _polygonSymbolizer = (IPolygonSymbolizer) _polygonSymbolizer.Clone()
+                       };
+
+        }
+
         /// <summary>
         /// Gets or sets the point symbolizer
         /// </summary>
@@ -59,27 +73,27 @@ namespace SharpMap.Rendering.Symbolizer
         /// <param name="map">The map object, mainly needed for transformation purposes.</param>
         /// <param name="geometry">The geometry to symbolize.</param>
         /// <param name="graphics">The graphics object to use.</param>
-        public void Render(Map map, Geometry geometry, Graphics graphics)
+        public void Render(Map map, IGeometry geometry, Graphics graphics)
         {
-            switch (geometry.GeometryType)
+            switch (geometry.OgcGeometryType)
             {
-                case GeometryType2.Point:
-                case GeometryType2.MultiPoint:
+                case OgcGeometryType.Point:
+                case OgcGeometryType.MultiPoint:
                     _pointSymbolizer.Render(map, (IPuntal)geometry, graphics);
                     return;
 
-                case GeometryType2.LineString:
-                case GeometryType2.MultiLineString:
+                case OgcGeometryType.LineString:
+                case OgcGeometryType.MultiLineString:
                     _lineSymbolizer.Render(map, (ILineal)geometry, graphics);
                     return;
 
-                case GeometryType2.Polygon:
-                case GeometryType2.MultiPolygon:
+                case OgcGeometryType.Polygon:
+                case OgcGeometryType.MultiPolygon:
                     _polygonSymbolizer.Render(map, (IPolygonal)geometry, graphics);
                     return;
 
-                case GeometryType2.GeometryCollection:
-                    foreach (Geometry g in ((GeometryCollection)geometry).Collection)
+                case OgcGeometryType.GeometryCollection:
+                    foreach (var g in ((IGeometryCollection)geometry))
                     {
                         Render(map, g, graphics);
                     }

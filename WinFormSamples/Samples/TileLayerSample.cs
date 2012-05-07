@@ -9,6 +9,8 @@ using System.Text;
 using System.Timers;
 using System.Xml;
 #if !DotSpatialProjections
+using GeoAPI.Geometries;
+using NetTopologySuite.Geometries;
 using ProjNet.CoordinateSystems.Transformations;
 #else
 using DotSpatial.Projections;
@@ -21,7 +23,7 @@ using BruTile.Web;
 using SharpMap;
 using SharpMap.Rendering.Thematics;
 using SharpMap.Styles;
-using Point = SharpMap.Geometries.Point;
+using Point = GeoAPI.Geometries.Coordinate;
 
 namespace WinFormSamples.Samples
 {
@@ -350,7 +352,7 @@ namespace WinFormSamples.Samples
             /// timeout for map connections
             /// </summary>
             private int Timeout = 30 * 1000;
-            
+            private GeoAPI.Geometries.IGeometryFactory _factory = new GeometryFactory(new PrecisionModel(PrecisionModels.Floating), 4326);
             /// <summary>
             /// gets realtime data from public transport in city vilnius of lithuania
             /// </summary>
@@ -468,7 +470,7 @@ namespace WinFormSamples.Samples
 
                         if (lat.HasValue && lng.HasValue)
                         {
-                            dr.Geometry = new Point(lng.Value, lat.Value);
+                            dr.Geometry = _factory.CreatePoint(new Point(lng.Value, lat.Value));
                             fdt.Rows.Add(dr);
                         }
                     }

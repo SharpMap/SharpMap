@@ -1,19 +1,32 @@
 using System.Drawing;
 using System.Drawing.Drawing2D;
-using SharpMap.Geometries;
+using GeoAPI.Geometries;
+using SharpMap.Base;
 
 namespace SharpMap.Rendering.Symbolizer
 {
     /// <summary>
     /// Abstract base class for all line symbolizer classes
     /// </summary>
-    public abstract class LineSymbolizer : ILineSymbolizer
+    public abstract class LineSymbolizer : DisposableObject, ILineSymbolizer
     {
         protected LineSymbolizer()
         {
             Line = new Pen(Utility.RandomKnownColor(), 1);
         }
-        
+
+        protected override void ReleaseManagedResources()
+        {
+            CheckDisposed();
+
+            if (Line != null) 
+                Line.Dispose();
+            
+            base.ReleaseManagedResources();
+        }
+
+        public abstract object Clone();
+
         /// <summary>
         /// Method to render a LineString to the <see cref="Graphics"/> object.
         /// </summary>
@@ -22,14 +35,17 @@ namespace SharpMap.Rendering.Symbolizer
         /// <param name="g">The graphics object to use.</param>
         public void Render(Map map, ILineal lineal, Graphics g)
         {
-            var ms = lineal as MultiLineString;
+            var ms = lineal as IMultiLineString;
             if (ms != null)
             {
-                foreach (LineString lineString in ms.LineStrings)
+                for (var i = 0; i < ms.NumGeometries; i++)
+                {
+                    var lineString = (ILineString) ms[i];
                     OnRenderInternal(map, lineString, g);
+                }
                 return;
             }
-            OnRenderInternal(map, (LineString)lineal, g);
+            OnRenderInternal(map, (ILineString)lineal, g);
         }
 
         /// <summary>
@@ -38,7 +54,7 @@ namespace SharpMap.Rendering.Symbolizer
         /// <param name="map">The map</param>
         /// <param name="lineString">The line string to symbolize.</param>
         /// <param name="graphics">The graphics</param>
-        protected abstract void OnRenderInternal(Map map, LineString lineString, Graphics graphics);
+        protected abstract void OnRenderInternal(Map map, ILineString lineString, Graphics graphics);
 
         /// <summary>
         /// Function to transform a linestring to a graphics path for further processing
@@ -47,7 +63,7 @@ namespace SharpMap.Rendering.Symbolizer
         /// <param name="map">The map</param>
         /// <!--<param name="useClipping">A value indicating whether clipping should be applied or not</param>-->
         /// <returns>A GraphicsPath</returns>
-        public static GraphicsPath LineStringToPath(LineString lineString, Map map)
+        public static GraphicsPath LineStringToPath(ILineString lineString, Map map)
         {
             var gp = new GraphicsPath(FillMode.Alternate);
             gp.AddLines(lineString.TransformToImage(map));

@@ -19,7 +19,7 @@ using System;
 using System.Collections.ObjectModel;
 using System.Data;
 using System.Data.OleDb;
-using SharpMap.Geometries;
+using GeoAPI.Geometries;
 
 namespace SharpMap.Data.Providers
 {
@@ -31,78 +31,56 @@ namespace SharpMap.Data.Providers
     /// and an integer-type column containing a unique identifier for each row.</para>
     /// <para>To get good performance, make sure you have applied indexes on ID, xColumn and yColumns in your datasource table.</para>
     /// </remarks>
-    public class OleDbPoint : IProvider, IDisposable
+    [Serializable]
+    public class OleDbPoint : PreparedGeometryProvider
     {
-        private string _ConnectionString;
         private string _defintionQuery;
-        private bool _IsOpen;
-        private string _ObjectIdColumn;
-        private int _SRID = -1;
-        private string _Table;
-        private string _XColumn;
-        private string _YColumn;
 
         /// <summary>
         /// Initializes a new instance of the OleDbPoint provider
         /// </summary>
-        /// <param name="ConnectionStr"></param>
+        /// <param name="connectionStr"></param>
         /// <param name="tablename"></param>
-        /// <param name="OID_ColumnName"></param>
+        /// <param name="oidColumnName"></param>
         /// <param name="xColumn"></param>
         /// <param name="yColumn"></param>
-        public OleDbPoint(string ConnectionStr, string tablename, string OID_ColumnName, string xColumn, string yColumn)
+        public OleDbPoint(string connectionStr, string tablename, string oidColumnName, string xColumn, string yColumn)
         {
             Table = tablename;
             XColumn = xColumn;
             YColumn = yColumn;
-            ObjectIdColumn = OID_ColumnName;
-            ConnectionString = ConnectionStr;
+            ObjectIdColumn = oidColumnName;
+            ConnectionString = connectionStr;
         }
 
         /// <summary>
         /// Data table name
         /// </summary>
-        public string Table
-        {
-            get { return _Table; }
-            set { _Table = value; }
-        }
+        public string Table { get; set; }
 
 
         /// <summary>
         /// Name of column that contains the Object ID
         /// </summary>
-        public string ObjectIdColumn
-        {
-            get { return _ObjectIdColumn; }
-            set { _ObjectIdColumn = value; }
-        }
+        public string ObjectIdColumn { get; set; }
 
         /// <summary>
         /// Name of column that contains X coordinate
         /// </summary>
-        public string XColumn
-        {
-            get { return _XColumn; }
-            set { _XColumn = value; }
-        }
+        public string XColumn { get; set; }
 
         /// <summary>
         /// Name of column that contains Y coordinate
         /// </summary>
-        public string YColumn
-        {
-            get { return _YColumn; }
-            set { _YColumn = value; }
-        }
+        public string YColumn { get; set; }
 
         /// <summary>
         /// Connectionstring
         /// </summary>
         public string ConnectionString
         {
-            get { return _ConnectionString; }
-            set { _ConnectionString = value; }
+            get { return ConnectionID; }
+            set { ConnectionID = value; }
         }
 
         /// <summary>
@@ -114,39 +92,41 @@ namespace SharpMap.Data.Providers
             set { _defintionQuery = value; }
         }
 
-        #region IProvider Members
-
         /// <summary>
         /// Returns geometries within the specified bounding box
         /// </summary>
         /// <param name="bbox"></param>
         /// <returns></returns>
-        public Collection<Geometry> GetGeometriesInView(BoundingBox bbox)
+        public override Collection<IGeometry> GetGeometriesInView(Envelope bbox)
         {
-            Collection<Geometry> features = new Collection<Geometry>();
-            using (OleDbConnection conn = new OleDbConnection(_ConnectionString))
+            var features = new Collection<IGeometry>();
+            using (var conn = new OleDbConnection(ConnectionString))
             {
-                string strSQL = "Select " + XColumn + ", " + YColumn + " FROM " + Table + " WHERE ";
+                //open the connection
+                conn.Open();
+
+                var strSQL = "Select " + XColumn + ", " + YColumn + " FROM " + Table + " WHERE ";
                 if (!String.IsNullOrEmpty(_defintionQuery))
                     strSQL += _defintionQuery + " AND ";
                 //Limit to the points within the boundingbox
-                strSQL += XColumn + " BETWEEN " + bbox.Left.ToString(Map.NumberFormatEnUs) + " AND " +
-                          bbox.Right.ToString(Map.NumberFormatEnUs) + " AND " +
-                          YColumn + " BETWEEN " + bbox.Bottom.ToString(Map.NumberFormatEnUs) + " AND " +
-                          bbox.Top.ToString(Map.NumberFormatEnUs);
+                strSQL += XColumn + " BETWEEN " + bbox.Left().ToString(Map.NumberFormatEnUs) + " AND " +
+                          bbox.Right().ToString(Map.NumberFormatEnUs) + " AND " +
+                          YColumn + " BETWEEN " + bbox.Bottom().ToString(Map.NumberFormatEnUs) + " AND " +
+                          bbox.Top().ToString(Map.NumberFormatEnUs);
 
-                using (OleDbCommand command = new OleDbCommand(strSQL, conn))
+                using (var command = new OleDbCommand(strSQL, conn))
                 {
-                    conn.Open();
-                    using (OleDbDataReader dr = command.ExecuteReader())
+                    using (var dr = command.ExecuteReader())
                     {
-                        while (dr.Read())
+                        if (dr != null && dr.HasRows)
                         {
-                            if (dr[0] != DBNull.Value && dr[1] != DBNull.Value)
-                                features.Add(new Point((double) dr[0], (double) dr[1]));
+                            while (dr.Read())
+                            {
+                                if (dr[0] != DBNull.Value && dr[1] != DBNull.Value)
+                                    features.Add(Factory.CreatePoint(new Coordinate((double) dr[0], (double) dr[1])));
+                            }
                         }
                     }
-                    conn.Close();
                 }
             }
             return features;
@@ -157,28 +137,33 @@ namespace SharpMap.Data.Providers
         /// </summary>
         /// <param name="bbox"></param>
         /// <returns></returns>
-        public Collection<uint> GetObjectIDsInView(BoundingBox bbox)
+        public override Collection<uint> GetObjectIDsInView(Envelope bbox)
         {
-            Collection<uint> objectlist = new Collection<uint>();
-            using (OleDbConnection conn = new OleDbConnection(_ConnectionString))
+            var objectlist = new Collection<uint>();
+            using (var conn = new OleDbConnection(ConnectionString))
             {
-                string strSQL = "Select " + ObjectIdColumn + " FROM " + Table + " WHERE ";
+                //open the connection
+                conn.Open();
+
+                var strSQL = "Select " + ObjectIdColumn + " FROM " + Table + " WHERE ";
                 if (!String.IsNullOrEmpty(_defintionQuery))
                     strSQL += _defintionQuery + " AND ";
                 //Limit to the points within the boundingbox
-                strSQL += XColumn + " BETWEEN " + bbox.Left.ToString(Map.NumberFormatEnUs) + " AND " +
-                          bbox.Right.ToString(Map.NumberFormatEnUs) + " AND " + YColumn +
-                          " BETWEEN " + bbox.Bottom.ToString(Map.NumberFormatEnUs) + " AND " +
-                          bbox.Top.ToString(Map.NumberFormatEnUs);
+                strSQL += XColumn + " BETWEEN " + bbox.Left().ToString(Map.NumberFormatEnUs) + " AND " +
+                          bbox.Right().ToString(Map.NumberFormatEnUs) + " AND " + YColumn +
+                          " BETWEEN " + bbox.Bottom().ToString(Map.NumberFormatEnUs) + " AND " +
+                          bbox.Top().ToString(Map.NumberFormatEnUs);
 
-                using (OleDbCommand command = new OleDbCommand(strSQL, conn))
+                using (var command = new OleDbCommand(strSQL, conn))
                 {
-                    conn.Open();
-                    using (OleDbDataReader dr = command.ExecuteReader())
+                    using (var dr = command.ExecuteReader())
                     {
-                        while (dr.Read())
-                            if (dr[0] != DBNull.Value)
-                                objectlist.Add((uint) (int) dr[0]);
+                        if (dr != null && dr.HasRows)
+                        {
+                            while (dr.Read())
+                                if (dr[0] != DBNull.Value)
+                                    objectlist.Add((uint) (int) dr[0]);
+                        }
                     }
                     conn.Close();
                 }
@@ -191,52 +176,32 @@ namespace SharpMap.Data.Providers
         /// </summary>
         /// <param name="oid">Object ID</param>
         /// <returns>geometry</returns>
-        public Geometry GetGeometryByID(uint oid)
+        public override IGeometry GetGeometryByID(uint oid)
         {
-            Geometry geom = null;
-            using (OleDbConnection conn = new OleDbConnection(_ConnectionString))
+            using (var conn = new OleDbConnection(ConnectionString))
             {
-                string strSQL = "Select " + XColumn + ", " + YColumn + " FROM " + Table + " WHERE " + ObjectIdColumn +
-                                "=" + oid.ToString();
-                using (OleDbCommand command = new OleDbCommand(strSQL, conn))
+                var strSQL = "Select " + XColumn + ", " + YColumn + " FROM " + Table + " WHERE " + ObjectIdColumn +
+                                "=" + oid.ToString(Map.NumberFormatEnUs);
+
+                using (var command = new OleDbCommand(strSQL, conn))
                 {
                     conn.Open();
-                    using (OleDbDataReader dr = command.ExecuteReader())
+                    using (var dr = command.ExecuteReader())
                     {
-                        if (dr.Read())
+                        if (dr != null && dr.HasRows)
                         {
-                            //If the read row is OK, create a point geometry from the XColumn and YColumn and return it
-                            if (dr[0] != DBNull.Value && dr[1] != DBNull.Value)
-                                geom = new Point((double) dr[0], (double) dr[1]);
+                            if (dr.Read())
+                            {
+                                //If the read row is OK, create a point geometry from the XColumn and YColumn and return it
+                                if (dr[0] != DBNull.Value && dr[1] != DBNull.Value)
+                                    return Factory.CreatePoint(new Coordinate((double) dr[0], (double) dr[1]));
+                            }
                         }
                     }
                     conn.Close();
                 }
             }
-            return geom;
-        }
-
-        /// <summary>
-        /// Throws NotSupportedException. 
-        /// </summary>
-        /// <param name="geom"></param>
-        /// <param name="ds">FeatureDataSet to fill data into</param>
-        public void ExecuteIntersectionQuery(Geometry geom, FeatureDataSet ds)
-        {
-            throw new NotSupportedException(
-                "ExecuteIntersectionQuery(Geometry) is not supported by the OleDbPointProvider.");
-            //When relation model has been implemented the following will complete the query
-            /*
-			ExecuteIntersectionQuery(geom.GetBoundingBox(), ds);
-			if (ds.Tables.Count > 0)
-			{
-				for(int i=ds.Tables[0].Count-1;i>=0;i--)
-				{
-					if (!geom.Intersects(ds.Tables[0][i].Geometry))
-						ds.Tables.RemoveAt(i);
-				}
-			}
-			*/
+            return null;
         }
 
         /// <summary>
@@ -244,40 +209,51 @@ namespace SharpMap.Data.Providers
         /// </summary>
         /// <param name="bbox">view box</param>
         /// <param name="ds">FeatureDataSet to fill data into</param>
-        public void ExecuteIntersectionQuery(BoundingBox bbox, FeatureDataSet ds)
+        public override void ExecuteIntersectionQuery(Envelope bbox, FeatureDataSet ds)
         {
             //List<Geometries.Geometry> features = new List<SharpMap.Geometries.Geometry>();
-            using (OleDbConnection conn = new OleDbConnection(_ConnectionString))
+            using (var conn = new OleDbConnection(ConnectionString))
             {
-                string strSQL = "Select * FROM " + Table + " WHERE ";
+                var strSQL = "Select * FROM " + Table + " WHERE ";
                 if (!String.IsNullOrEmpty(_defintionQuery))
                     //If a definition query has been specified, add this as a filter on the query
                     strSQL += _defintionQuery + " AND ";
                 //Limit to the points within the boundingbox
-                strSQL += XColumn + " BETWEEN " + bbox.Left.ToString(Map.NumberFormatEnUs) + " AND " +
-                          bbox.Right.ToString(Map.NumberFormatEnUs) + " AND " + YColumn +
-                          " BETWEEN " + bbox.Bottom.ToString(Map.NumberFormatEnUs) + " AND " +
-                          bbox.Top.ToString(Map.NumberFormatEnUs);
+                strSQL += XColumn + " BETWEEN " + bbox.Left().ToString(Map.NumberFormatEnUs) + " AND " +
+                          bbox.Right().ToString(Map.NumberFormatEnUs) + " AND " + YColumn +
+                          " BETWEEN " + bbox.Bottom().ToString(Map.NumberFormatEnUs) + " AND " +
+                          bbox.Top().ToString(Map.NumberFormatEnUs);
 
-                using (OleDbDataAdapter adapter = new OleDbDataAdapter(strSQL, conn))
+                using (var adapter = new OleDbDataAdapter(strSQL, conn))
                 {
                     conn.Open();
-                    DataSet ds2 = new DataSet();
+                    var ds2 = new DataSet();
                     adapter.Fill(ds2);
                     conn.Close();
                     if (ds2.Tables.Count > 0)
                     {
-                        FeatureDataTable fdt = new FeatureDataTable(ds2.Tables[0]);
+                        var fdt = new FeatureDataTable(ds2.Tables[0]);
                         foreach (DataColumn col in ds2.Tables[0].Columns)
                             fdt.Columns.Add(col.ColumnName, col.DataType, col.Expression);
+                        
                         foreach (DataRow dr in ds2.Tables[0].Rows)
                         {
-                            FeatureDataRow fdr = fdt.NewRow();
-                            foreach (DataColumn col in ds2.Tables[0].Columns)
-                                fdr[col.ColumnName] = dr[col];
+                            IGeometry geom;
                             if (dr[XColumn] != DBNull.Value && dr[YColumn] != DBNull.Value)
-                                fdr.Geometry = new Point((double) dr[XColumn], (double) dr[YColumn]);
-                            fdt.AddRow(fdr);
+                                geom = Factory.CreatePoint(new Coordinate((double)dr[XColumn], (double)dr[YColumn]));
+                            else
+                                continue;
+
+                            if (bbox.Intersects(geom.Coordinate))
+                            {
+                                var fdr = fdt.NewRow();
+
+                                foreach (DataColumn col in ds2.Tables[0].Columns)
+                                    fdr[col.Ordinal] = dr[col];
+                                fdr.Geometry = geom;
+
+                                fdt.AddRow(fdr);
+                            }
                         }
                         ds.Tables.Add(fdt);
                     }
@@ -289,24 +265,19 @@ namespace SharpMap.Data.Providers
         /// Returns the number of features in the dataset
         /// </summary>
         /// <returns>Total number of features</returns>
-        public int GetFeatureCount()
+        public override int GetFeatureCount()
         {
-            int count = 0;
-            using (OleDbConnection conn = new OleDbConnection(_ConnectionString))
+            using (var conn = new OleDbConnection(ConnectionString))
             {
-                string strSQL = "Select Count(*) FROM " + Table;
+                conn.Open();
+
+                var strSQL = "SELECT Count(*) FROM " + Table;
                 if (!String.IsNullOrEmpty(_defintionQuery))
                     //If a definition query has been specified, add this as a filter on the query
                     strSQL += " WHERE " + _defintionQuery;
 
-                using (OleDbCommand command = new OleDbCommand(strSQL, conn))
-                {
-                    conn.Open();
-                    count = (int) command.ExecuteScalar();
-                    conn.Close();
-                }
+                return (int)new OleDbCommand(strSQL, conn).ExecuteScalar();
             }
-            return count;
         }
 
         /// <summary>
@@ -314,38 +285,37 @@ namespace SharpMap.Data.Providers
         /// </summary>
         /// <param name="rowId"></param>
         /// <returns>datarow</returns>
-        public FeatureDataRow GetFeature(uint rowId)
+        public override FeatureDataRow GetFeature(uint rowId)
         {
-            using (OleDbConnection conn = new OleDbConnection(_ConnectionString))
+            using (var conn = new OleDbConnection(ConnectionString))
             {
-                string strSQL = "select * from " + Table + " WHERE " + ObjectIdColumn + "=" + rowId.ToString();
+                var strSQL = "SELECT * FROM " + Table + " WHERE " + ObjectIdColumn + "=" + rowId.ToString(Map.NumberFormatEnUs);
 
-                using (OleDbDataAdapter adapter = new OleDbDataAdapter(strSQL, conn))
+                using (var adapter = new OleDbDataAdapter(strSQL, conn))
                 {
                     conn.Open();
-                    DataSet ds = new DataSet();
+                    var ds = new DataSet();
                     adapter.Fill(ds);
                     conn.Close();
                     if (ds.Tables.Count > 0)
                     {
-                        FeatureDataTable fdt = new FeatureDataTable(ds.Tables[0]);
+                        var fdt = new FeatureDataTable(ds.Tables[0]);
                         foreach (DataColumn col in ds.Tables[0].Columns)
                             fdt.Columns.Add(col.ColumnName, col.DataType, col.Expression);
                         if (ds.Tables[0].Rows.Count > 0)
                         {
-                            DataRow dr = ds.Tables[0].Rows[0];
-                            FeatureDataRow fdr = fdt.NewRow();
+                            var dr = ds.Tables[0].Rows[0];
+                            var fdr = fdt.NewRow();
                             foreach (DataColumn col in ds.Tables[0].Columns)
-                                fdr[col.ColumnName] = dr[col];
+                                fdr[col.Ordinal] = dr[col];
                             if (dr[XColumn] != DBNull.Value && dr[YColumn] != DBNull.Value)
-                                fdr.Geometry = new Point((double) dr[XColumn], (double) dr[YColumn]);
+                                fdr.Geometry =
+                                    Factory.CreatePoint(new Coordinate((double) dr[XColumn], (double) dr[YColumn]));
                             return fdr;
                         }
-                        else
-                            return null;
-                    }
-                    else
                         return null;
+                    }
+                    return null;
                 }
             }
         }
@@ -354,112 +324,37 @@ namespace SharpMap.Data.Providers
         /// Boundingbox of dataset
         /// </summary>
         /// <returns>boundingbox</returns>
-        public BoundingBox GetExtents()
+        public override Envelope GetExtents()
         {
-            BoundingBox box = null;
-            using (OleDbConnection conn = new OleDbConnection(_ConnectionString))
+            using (var conn = new OleDbConnection(ConnectionString))
             {
-                string strSQL = "Select Min(" + XColumn + ") as MinX, Min(" + YColumn + ") As MinY, " +
+                conn.Open();
+                var strSQL = "SELECT Min(" + XColumn + ") as MinX, Min(" + YColumn + ") As MinY, " +
                                 "Max(" + XColumn + ") As MaxX, Max(" + YColumn + ") As MaxY FROM " + Table;
                 if (!String.IsNullOrEmpty(_defintionQuery))
                     //If a definition query has been specified, add this as a filter on the query
                     strSQL += " WHERE " + _defintionQuery;
 
-                using (OleDbCommand command = new OleDbCommand(strSQL, conn))
+                using (var command = new OleDbCommand(strSQL, conn))
                 {
-                    conn.Open();
-                    using (OleDbDataReader dr = command.ExecuteReader())
+                    using (var dr = command.ExecuteReader())
                     {
+                        if (dr != null && dr.HasRows )
                         if (dr.Read())
                         {
                             //If the read row is OK, create a point geometry from the XColumn and YColumn and return it
                             if (dr[0] != DBNull.Value && dr[1] != DBNull.Value && dr[2] != DBNull.Value &&
                                 dr[3] != DBNull.Value)
-                                box = new BoundingBox((double) dr[0], (double) dr[1], (double) dr[2], (double) dr[3]);
+                                return new Envelope(new Coordinate((float)dr[0], (float)dr[1]), new Coordinate((float)dr[2], (float)dr[3]));
                         }
                     }
                     conn.Close();
                 }
             }
-            return box;
+            return null;
         }
-
-        /// <summary>
-        /// Gets the connection ID of the datasource
-        /// </summary>
-        public string ConnectionID
-        {
-            get { return _ConnectionString; }
-        }
-
-        /// <summary>
-        /// Opens the datasource
-        /// </summary>
-        public void Open()
-        {
-            //Don't really do anything. OleDb's ConnectionPooling takes over here
-            _IsOpen = true;
-        }
-
-        /// <summary>
-        /// Closes the datasource
-        /// </summary>
-        public void Close()
-        {
-            //Don't really do anything. OleDb's ConnectionPooling takes over here
-            _IsOpen = false;
-        }
-
-        /// <summary>
-        /// Returns true if the datasource is currently open
-        /// </summary>
-        public bool IsOpen
-        {
-            get { return _IsOpen; }
-        }
-
-        /// <summary>
-        /// The spatial reference ID (CRS)
-        /// </summary>
-        public int SRID
-        {
-            get { return _SRID; }
-            set { _SRID = value; }
-        }
-
-        #endregion
 
         #region Disposers and finalizers
-
-        private bool disposed = false;
-
-        /// <summary>
-        /// Disposes the object
-        /// </summary>
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        internal void Dispose(bool disposing)
-        {
-            if (!disposed)
-            {
-                if (disposing)
-                {
-                }
-                disposed = true;
-            }
-        }
-
-        /// <summary>
-        /// Finalizer
-        /// </summary>
-        ~OleDbPoint()
-        {
-            Dispose();
-        }
 
         #endregion
     }

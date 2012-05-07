@@ -20,7 +20,7 @@ using System.Collections.ObjectModel;
 using System.Data;
 using System.Data.SqlClient;
 using SharpMap.Converters.WellKnownBinary;
-using SharpMap.Geometries;
+using GeoAPI.Geometries;
 
 namespace SharpMap.Data.Providers
 {
@@ -56,6 +56,8 @@ namespace SharpMap.Data.Providers
         private int _srid = -2;
 
         private string _Table;
+
+        public IGeometryFactory Factory { get; set; }
 
         /// <summary>
         /// Initializes a new connection to MS Sql Server
@@ -159,10 +161,10 @@ namespace SharpMap.Data.Providers
         /// </summary>
         /// <param name="bbox"></param>
         /// <returns></returns>
-        public Collection<Geometry> GetGeometriesInView(BoundingBox bbox)
+        public Collection<IGeometry> GetGeometriesInView(Envelope bbox)
         {
-            Collection<Geometry> features = new Collection<Geometry>();
-            using (SqlConnection conn = new SqlConnection(_ConnectionString))
+            var features = new Collection<IGeometry>();
+            using (var conn = new SqlConnection(_ConnectionString))
             {
                 string BoxIntersect = GetBoxClause(bbox);
 
@@ -181,7 +183,7 @@ namespace SharpMap.Data.Providers
                         {
                             if (dr[0] != DBNull.Value)
                             {
-                                Geometry geom = GeometryFromWKB.Parse((byte[]) dr[0]);
+                                var geom = GeometryFromWKB.Parse((byte[]) dr[0], Factory);
                                 if (geom != null)
                                     features.Add(geom);
                             }
@@ -198,9 +200,9 @@ namespace SharpMap.Data.Providers
         /// </summary>
         /// <param name="oid">Object ID</param>
         /// <returns>geometry</returns>
-        public Geometry GetGeometryByID(uint oid)
+        public IGeometry GetGeometryByID(uint oid)
         {
-            Geometry geom = null;
+            IGeometry geom = null;
             using (SqlConnection conn = new SqlConnection(_ConnectionString))
             {
                 string strSQL = "SELECT " + GeometryColumn + " AS Geom FROM " + Table + " WHERE " + ObjectIdColumn +
@@ -213,7 +215,7 @@ namespace SharpMap.Data.Providers
                         while (dr.Read())
                         {
                             if (dr[0] != DBNull.Value)
-                                geom = GeometryFromWKB.Parse((byte[]) dr[0]);
+                                geom = GeometryFromWKB.Parse((byte[]) dr[0], Factory);
                         }
                     }
                 }
@@ -227,7 +229,7 @@ namespace SharpMap.Data.Providers
         /// </summary>
         /// <param name="bbox"></param>
         /// <returns></returns>
-        public Collection<uint> GetObjectIDsInView(BoundingBox bbox)
+        public Collection<uint> GetObjectIDsInView(Envelope bbox)
         {
             Collection<uint> objectlist = new Collection<uint>();
             using (SqlConnection conn = new SqlConnection(_ConnectionString))
@@ -265,7 +267,7 @@ namespace SharpMap.Data.Providers
         /// </summary>
         /// <param name="geom"></param>
         /// <param name="ds">FeatureDataSet to fill data into</param>
-        public void ExecuteIntersectionQuery(Geometry geom, FeatureDataSet ds)
+        public void ExecuteIntersectionQuery(IGeometry geom, FeatureDataSet ds)
         {
             throw new NotImplementedException();
         }
@@ -334,7 +336,7 @@ namespace SharpMap.Data.Providers
                                     !col.ColumnName.StartsWith("Envelope_"))
                                     fdr[col.ColumnName] = dr[col];
                             if (dr["sharpmap_tempgeometry"] != DBNull.Value)
-                                fdr.Geometry = GeometryFromWKB.Parse((byte[]) dr["sharpmap_tempgeometry"]);
+                                fdr.Geometry = GeometryFromWKB.Parse((byte[]) dr["sharpmap_tempgeometry"], Factory);
                             return fdr;
                         }
                         else
@@ -350,9 +352,9 @@ namespace SharpMap.Data.Providers
         /// Boundingbox of dataset
         /// </summary>
         /// <returns>boundingbox</returns>
-        public BoundingBox GetExtents()
+        public Envelope GetExtents()
         {
-            BoundingBox box = null;
+            Envelope box = null;
             using (SqlConnection conn = new SqlConnection(_ConnectionString))
             {
                 string strSQL =
@@ -366,7 +368,7 @@ namespace SharpMap.Data.Providers
                     using (SqlDataReader dr = command.ExecuteReader())
                         if (dr.Read())
                         {
-                            box = new BoundingBox((float) dr[0], (float) dr[1], (float) dr[2], (float) dr[3]);
+                            box = new Envelope(new Coordinate((float) dr[0], (float) dr[1]), new Coordinate((float) dr[2], (float) dr[3]));
                         }
                     conn.Close();
                 }
@@ -387,9 +389,9 @@ namespace SharpMap.Data.Providers
         /// </summary>
         /// <param name="bbox">view box</param>
         /// <param name="ds">FeatureDataSet to fill data into</param>
-        public void ExecuteIntersectionQuery(BoundingBox bbox, FeatureDataSet ds)
+        public void ExecuteIntersectionQuery(Envelope bbox, FeatureDataSet ds)
         {
-            //List<Geometries.Geometry> features = new List<SharpMap.Geometries.Geometry>();
+            //List<Geometries.Geometry> features = new List<GeoAPI.Geometries.IGeometry>();
             using (SqlConnection conn = new SqlConnection(_ConnectionString))
             {
                 string strSQL = "SELECT *, " + GeometryColumn + " AS sharpmap_tempgeometry ";
@@ -420,7 +422,7 @@ namespace SharpMap.Data.Providers
                                     !col.ColumnName.StartsWith("Envelope_"))
                                     fdr[col.ColumnName] = dr[col];
                             if (dr["sharpmap_tempgeometry"] != DBNull.Value)
-                                fdr.Geometry = GeometryFromWKB.Parse((byte[]) dr["sharpmap_tempgeometry"]);
+                                fdr.Geometry = GeometryFromWKB.Parse((byte[]) dr["sharpmap_tempgeometry"], Factory);
                             fdt.AddRow(fdr);
                         }
                         ds.Tables.Add(fdt);
@@ -466,11 +468,11 @@ namespace SharpMap.Data.Providers
 
         #endregion
 
-        private string GetBoxClause(BoundingBox bbox)
+        private static string GetBoxClause(Envelope bbox)
         {
             return String.Format(Map.NumberFormatEnUs,
                                  "(Envelope_MinX < {0} AND Envelope_MaxX > {1} AND Envelope_MinY < {2} AND Envelope_MaxY > {3})",
-                                 bbox.Max.X, bbox.Min.X, bbox.Max.Y, bbox.Min.Y);
+                                 bbox.MaxX, bbox.MinX, bbox.MaxY, bbox.MinY);
         }
 
         /// <summary>
@@ -577,11 +579,11 @@ namespace SharpMap.Data.Providers
                     {
                         command.Parameters["@WKB_Geometry"].Value = feature.Geometry.AsBinary();
                             //Add the geometry as Well-Known Binary
-                        BoundingBox box = feature.Geometry.GetBoundingBox();
-                        command.Parameters["@Envelope_MinX"].Value = box.Left;
-                        command.Parameters["@Envelope_MinY"].Value = box.Bottom;
-                        command.Parameters["@Envelope_MaxX"].Value = box.Right;
-                        command.Parameters["@Envelope_MaxY"].Value = box.Top;
+                        Envelope  box = feature.Geometry.EnvelopeInternal;
+                        command.Parameters["@Envelope_MinX"].Value = box.MinX;
+                        command.Parameters["@Envelope_MinY"].Value = box.MinY;
+                        command.Parameters["@Envelope_MaxX"].Value = box.MaxX;
+                        command.Parameters["@Envelope_MaxY"].Value = box.MaxY;
                     }
                     else
                     {

@@ -24,7 +24,8 @@ using ProjNet.CoordinateSystems.Transformations;
 #else
 using DotSpatial.Projections;
 #endif
-using SharpMap.Geometries;
+using BoundingBox = GeoAPI.Geometries.Envelope;
+using Geometry = GeoAPI.Geometries.IGeometry;
 using Point = System.Drawing.Point;
 
 namespace SharpMap.Layers

@@ -22,7 +22,7 @@ using System.Reflection;
 using System.Web;
 using System.Xml;
 using System.Xml.Schema;
-using SharpMap.Geometries;
+using GeoAPI.Geometries;
 using SharpMap.Layers;
 
 namespace SharpMap.Web.Wfs

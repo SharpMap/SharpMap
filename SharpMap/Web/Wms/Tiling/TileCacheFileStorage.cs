@@ -21,7 +21,7 @@ using System.Drawing.Imaging;
 using System.Globalization;
 using System.IO;
 using System.Reflection;
-using SharpMap.Geometries;
+using GeoAPI.Geometries;
 
 namespace SharpMap.Web.Wms.Tiling
 {
@@ -49,17 +49,17 @@ namespace SharpMap.Web.Wms.Tiling
 
         #region ITileCache Members
 
-        public void AddTile(BoundingBox box, Bitmap bitmap)
+        public void AddTile(Envelope box, Bitmap bitmap)
         {
             bitmap.Save(GetFileName(box), ImageFormat.Png);
         }
 
-        public Bitmap GetTile(BoundingBox box)
+        public Bitmap GetTile(Envelope box)
         {
             return new Bitmap(GetFileName(box));
         }
 
-        public bool ContainsTile(BoundingBox box)
+        public bool ContainsTile(Envelope box)
         {
             return File.Exists(GetFileName(box));
         }
@@ -75,17 +75,17 @@ namespace SharpMap.Web.Wms.Tiling
         /// <returns></returns>
         public static string GenerateDirectoryPath(string layerName, string tileSetName)
         {
-            string dataDir = Environment.GetEnvironmentVariable("AppData");
-            string appName = Assembly.GetEntryAssembly().GetName().Name.ToString();
+            var dataDir = Environment.GetEnvironmentVariable("AppData");
+            var appName = Assembly.GetEntryAssembly().GetName().Name;
             return dataDir + "/" + appName + "/TileCache/Layer_" + layerName + "/TileSet_" + tileSetName;
         }
 
-        private string GetFileName(BoundingBox boundingBox)
+        private string GetFileName(Envelope boundingBox)
         {
             return String.Format("{0}/{1}_{2}_{3}_{4}.{5}", directory,
-                                 boundingBox.Left.ToString("r", cultureInfo), boundingBox.Top.ToString("r", cultureInfo),
-                                 boundingBox.Right.ToString("r", cultureInfo),
-                                 boundingBox.Bottom.ToString("r", cultureInfo),
+                                 boundingBox.Left().ToString("r", cultureInfo), boundingBox.Top().ToString("r", cultureInfo),
+                                 boundingBox.Right().ToString("r", cultureInfo),
+                                 boundingBox.Bottom().ToString("r", cultureInfo),
                                  "png");
         }
     }

@@ -6,11 +6,11 @@ using System.Web.UI;
 using SharpMap;
 using SharpMap.Data;
 using SharpMap.Data.Providers;
-using SharpMap.Geometries;
+using GeoAPI.Geometries;
 using SharpMap.Layers;
 using SharpMap.Styles;
 using SharpMap.Web;
-using Point=SharpMap.Geometries.Point;
+using Point=GeoAPI.Geometries.Coordinate;
 
 public partial class GeometryFeature : Page
 {
@@ -18,20 +18,16 @@ public partial class GeometryFeature : Page
 
     public VectorLayer CreateGeometryLayer()
     {
-        FeatureDataTable fdt = new FeatureDataTable();
+        var gf = new NetTopologySuite.Geometries.GeometryFactory();
+        var fdt = new FeatureDataTable();
         fdt.Columns.Add(new DataColumn("Name", typeof (String)));
 
-        FeatureDataRow fdr;
+        fdt.BeginLoadData();
+        var fdr = (FeatureDataRow)fdt.LoadDataRow(new[] {(object) "Mayence"}, true);
+        fdr.Geometry = gf.CreatePoint(new Point(8.1, 50.0));
+        fdt.EndLoadData();
 
-        fdr = fdt.NewRow();
-
-        fdr["Name"] = "Mayence";
-        fdr.Geometry = (Geometry) new Point(8.1, 50.0);
-
-        fdt.AddRow(fdr);
-
-
-        VectorLayer vLayer = new VectorLayer("GeometryProvider");
+        var vLayer = new VectorLayer("GeometryProvider");
         vLayer.DataSource = new GeometryFeatureProvider(fdt);
         vLayer.SRID = 4326;
 

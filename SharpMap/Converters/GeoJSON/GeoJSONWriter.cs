@@ -4,7 +4,7 @@ namespace SharpMap.Converters.GeoJSON
     using System.Collections.Generic;
     using System.Globalization;
     using System.IO;
-    using Geometries;
+    using GeoAPI.Geometries;
     using Newtonsoft.Json;
 
     public class GeoJSONWriter
@@ -54,7 +54,7 @@ namespace SharpMap.Converters.GeoJSON
             return String.Format("{0}_{1}", master, id);
         }
 
-        public static void WriteCoord(Point coordinate, JsonTextWriter writer)
+        public static void WriteCoord(Coordinate coordinate, JsonTextWriter writer)
         {
             if (coordinate == null)
                 return;
@@ -67,7 +67,7 @@ namespace SharpMap.Converters.GeoJSON
             writer.WriteEndArray();
         }
 
-        public static void WriteCoord(Point coordinate, TextWriter writer)
+        public static void WriteCoord(Coordinate coordinate, TextWriter writer)
         {
             if (coordinate == null)
                 return;
@@ -78,7 +78,7 @@ namespace SharpMap.Converters.GeoJSON
             WriteCoord(coordinate, jwriter);
         }
 
-        public static void WriteCoord(IEnumerable<Point> coordinates, JsonTextWriter writer)
+        public static void WriteCoord(IEnumerable<Coordinate> coordinates, JsonTextWriter writer)
         {
             if (coordinates == null)
                 return;
@@ -86,12 +86,12 @@ namespace SharpMap.Converters.GeoJSON
                 throw new ArgumentNullException("writer", "A valid JSON writer object is required");
 
             writer.WriteStartArray();
-            foreach (Point entry in coordinates)
+            foreach (var entry in coordinates)
                 WriteCoord(entry, writer);
             writer.WriteEndArray();
         }
 
-        public static void WriteCoord(IEnumerable<Point> coordinates, TextWriter writer)
+        public static void WriteCoord(IEnumerable<Coordinate> coordinates, TextWriter writer)
         {
             if (coordinates == null)
                 return;
@@ -102,30 +102,30 @@ namespace SharpMap.Converters.GeoJSON
             WriteCoord(coordinates, jwriter);
         }
 
-        public static void Write(Geometry geometry, JsonTextWriter writer)
+        public static void Write(IGeometry geometry, JsonTextWriter writer)
         {
             if (geometry == null)
                 return;
             if (writer == null)
                 throw new ArgumentNullException("writer", "A valid JSON writer object is required");
 
-            if (geometry is Point)
-                Write(geometry as Point, writer);
-            else if (geometry is LineString)
-                Write(geometry as LineString, writer);
-            else if (geometry is Polygon)
-                Write(geometry as Polygon, writer);
-            else if (geometry is MultiPoint)
-                Write(geometry as MultiPoint, writer);
-            else if (geometry is MultiLineString)
-                Write(geometry as MultiLineString, writer);
-            else if (geometry is MultiPolygon)
-                Write(geometry as MultiPolygon, writer);
-            else if (geometry is GeometryCollection)
-                Write(geometry as GeometryCollection, writer);
+            if (geometry is IPoint)
+                Write(geometry as IPoint, writer);
+            else if (geometry is ILineString)
+                Write(geometry as ILineString, writer);
+            else if (geometry is IPolygon)
+                Write(geometry as IPolygon, writer);
+            else if (geometry is IMultiPoint)
+                Write(geometry as IMultiPoint, writer);
+            else if (geometry is IMultiLineString)
+                Write(geometry as IMultiLineString, writer);
+            else if (geometry is IMultiPolygon)
+                Write(geometry as IMultiPolygon, writer);
+            else if (geometry is IGeometryCollection)
+                Write(geometry as IGeometryCollection, writer);
         }
 
-        public static void Write(Geometry geometry, TextWriter writer)
+        public static void Write(IGeometry geometry, TextWriter writer)
         {
             if (geometry == null)
                 return;
@@ -135,7 +135,7 @@ namespace SharpMap.Converters.GeoJSON
             Write(geometry, CreateWriter(writer));
         }
 
-        public static void Write(Point point, JsonTextWriter writer)
+        public static void Write(IPoint point, JsonTextWriter writer)
         {
             if (point == null)
                 return;
@@ -156,7 +156,7 @@ namespace SharpMap.Converters.GeoJSON
             writer.WriteEndObject();
         }
 
-        public static void Write(Point point, TextWriter writer)
+        public static void Write(IPoint point, TextWriter writer)
         {
             if (point == null)
                 return;
@@ -167,7 +167,7 @@ namespace SharpMap.Converters.GeoJSON
             Write(point, jwriter);
         }
 
-        public static void Write(MultiPoint points, JsonTextWriter writer)
+        public static void Write(IMultiPoint points, JsonTextWriter writer)
         {
             if (points == null)
                 return;
@@ -178,14 +178,17 @@ namespace SharpMap.Converters.GeoJSON
             writer.WritePropertyName("type");
             writer.WriteValue("MultiPoint");
             writer.WritePropertyName("coordinates");
+            /*
             writer.WriteStartArray();
-            foreach (Point entry in points)
+            foreach (var entry in points.Coordinates)
                 WriteCoord(entry, writer);
             writer.WriteEndArray();
+             */
+            WriteCoord(points.Coordinates, writer);
             writer.WriteEndObject();
         }
 
-        public static void Write(MultiPoint points, TextWriter writer)
+        public static void Write(IMultiPoint points, TextWriter writer)
         {
             if (points == null)
                 return;
@@ -196,7 +199,7 @@ namespace SharpMap.Converters.GeoJSON
             Write(points, jwriter);
         }
 
-        public static void Write(LineString line, JsonTextWriter writer)
+        public static void Write(ILineString line, JsonTextWriter writer)
         {
             if (line == null)
                 return;
@@ -207,14 +210,16 @@ namespace SharpMap.Converters.GeoJSON
             writer.WritePropertyName("type");
             writer.WriteValue("LineString");
             writer.WritePropertyName("coordinates");
-            writer.WriteStartArray();
-            foreach (Point entry in line.Vertices)
+            /*writer.WriteStartArray();
+            foreach (var entry in line.Coordinates)
                 WriteCoord(entry, writer);
             writer.WriteEndArray();
+             */
+            WriteCoord(line.Coordinates, writer);
             writer.WriteEndObject();
         }
 
-        public static void Write(LineString line, TextWriter writer)
+        public static void Write(ILineString line, TextWriter writer)
         {
             if (line == null)
                 return;
@@ -224,7 +229,7 @@ namespace SharpMap.Converters.GeoJSON
             Write(line, CreateWriter(writer));
         }
 
-        public static void Write(MultiLineString lines, JsonTextWriter writer)
+        public static void Write(IMultiLineString lines, JsonTextWriter writer)
         {
             if (lines == null)
                 return;
@@ -236,15 +241,16 @@ namespace SharpMap.Converters.GeoJSON
             writer.WriteValue("MultiLineString");
             writer.WritePropertyName("coordinates");
             writer.WriteStartArray();
-            foreach (LineString line in lines)
+            for (var i = 0; i < lines.Count; i++)
             {
-                WriteCoord(line.Vertices, writer);
+                var line = (ILineString)lines[i];
+                WriteCoord(line.Coordinates, writer);
             }
             writer.WriteEndArray();
             writer.WriteEndObject();
         }
 
-        public static void Write(MultiLineString lines, TextWriter writer)
+        public static void Write(IMultiLineString lines, TextWriter writer)
         {
             if (lines == null)
                 return;
@@ -254,7 +260,7 @@ namespace SharpMap.Converters.GeoJSON
             Write(lines, CreateWriter(writer));
         }
 
-        public static void Write(Polygon area, JsonTextWriter writer)
+        public static void Write(IPolygon area, JsonTextWriter writer)
         {
             if (area == null)
                 return;
@@ -266,14 +272,14 @@ namespace SharpMap.Converters.GeoJSON
             writer.WriteValue("Polygon");
             writer.WritePropertyName("coordinates");
             writer.WriteStartArray();
-            WriteCoord(area.ExteriorRing.Vertices, writer);
-            foreach (LinearRing hole in area.InteriorRings)
-                WriteCoord(hole.Vertices, writer);
+            WriteCoord(area.ExteriorRing.Coordinates, writer);
+            foreach (ILinearRing hole in area.InteriorRings)
+                WriteCoord(hole.Coordinates, writer);
             writer.WriteEndArray();
             writer.WriteEndObject();
         }
 
-        public static void Write(Polygon area, TextWriter writer)
+        public static void Write(IPolygon area, TextWriter writer)
         {
             if (area == null)
                 return;
@@ -283,7 +289,7 @@ namespace SharpMap.Converters.GeoJSON
             Write(area, CreateWriter(writer));
         }
 
-        public static void Write(MultiPolygon areas, JsonTextWriter writer)
+        public static void Write(IMultiPolygon areas, JsonTextWriter writer)
         {
             if (areas == null)
                 return;
@@ -295,19 +301,21 @@ namespace SharpMap.Converters.GeoJSON
             writer.WriteValue("MultiPolygon");
             writer.WritePropertyName("coordinates");
             writer.WriteStartArray();
-            foreach (Polygon area in areas)
+            for ( var i = 0; i < areas.NumGeometries; i++)
             {
+                var area = (IPolygon) areas[i];
+
                 writer.WriteStartArray();
-                WriteCoord(area.ExteriorRing.Vertices, writer);
-                foreach (LinearRing hole in area.InteriorRings)
-                    WriteCoord(hole.Vertices, writer);
+                WriteCoord(area.ExteriorRing.Coordinates, writer);
+                foreach (ILinearRing hole in area.InteriorRings)
+                    WriteCoord(hole.Coordinates, writer);
                 writer.WriteEndArray();
             }
             writer.WriteEndArray();
             writer.WriteEndObject();
         }
 
-        public static void Write(MultiPolygon areas, TextWriter writer)
+        public static void Write(IMultiPolygon areas, TextWriter writer)
         {
             if (areas == null)
                 return;
@@ -317,7 +325,7 @@ namespace SharpMap.Converters.GeoJSON
             Write(areas, CreateWriter(writer));
         }
 
-        public static void Write(GeometryCollection geometries, JsonTextWriter writer)
+        public static void Write(IGeometryCollection geometries, JsonTextWriter writer)
         {
             if (geometries == null)
                 return;
@@ -329,13 +337,16 @@ namespace SharpMap.Converters.GeoJSON
             writer.WriteValue("GeometryCollection");
             writer.WritePropertyName("geometries");
             writer.WriteStartArray();
-            foreach (Geometry geometry in geometries)
+            for (var i = 0; i < geometries.NumGeometries; i++)
+            {
+                var geometry = geometries[i];
                 Write(geometry, writer);
+            }
             writer.WriteEndArray();
             writer.WriteEndObject();
         }
 
-        public static void Write(GeometryCollection geometries, TextWriter writer)
+        public static void Write(IGeometryCollection geometries, TextWriter writer)
         {
             if (geometries == null)
                 return;

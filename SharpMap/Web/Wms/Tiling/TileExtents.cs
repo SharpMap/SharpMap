@@ -17,7 +17,7 @@
 
 using System;
 using System.Collections.Generic;
-using SharpMap.Geometries;
+using GeoAPI.Geometries;
 
 namespace SharpMap.Web.Wms.Tiling
 {
@@ -30,38 +30,38 @@ namespace SharpMap.Web.Wms.Tiling
         /// <param name="extent">The BoundingBox of the map</param>
         /// <param name="mapResolution">The resolution of the map</param>
         /// <returns></returns>
-        public static List<BoundingBox> GetTileExtents(TileSet tileSet, BoundingBox extent, double mapResolution)
+        public static List<Envelope> GetTileExtents(TileSet tileSet, Envelope extent, double mapResolution)
         {
             tileSet.Resolutions.Sort();
 
             double tileResolution = GetTileResolution(tileSet.Resolutions, mapResolution);
 
-            List<BoundingBox> tileExtents = new List<BoundingBox>();
+            var tileExtents = new List<Envelope>();
 
-            double xOrigin = tileSet.BoundingBox.Left;
-            double yOrigin = tileSet.BoundingBox.Bottom;
+            double xOrigin = tileSet.BoundingBox.MinX;
+            double yOrigin = tileSet.BoundingBox.MinY;
 
             double tileWorldUnits = tileResolution*tileSet.Width;
 
-            BoundingBox tileBbox = new BoundingBox(
-                Math.Floor((extent.Left - xOrigin)/tileWorldUnits)*tileWorldUnits + xOrigin,
-                Math.Floor((extent.Bottom - yOrigin)/tileWorldUnits)*tileWorldUnits + yOrigin,
-                Math.Ceiling((extent.Right - xOrigin)/tileWorldUnits)*tileWorldUnits + xOrigin,
-                Math.Ceiling((extent.Top - yOrigin)/tileWorldUnits)*tileWorldUnits + yOrigin);
+            var tileBbox = new Envelope(
+                Math.Floor((extent.MinX - xOrigin)/tileWorldUnits)*tileWorldUnits + xOrigin,
+                Math.Floor((extent.MinY - yOrigin)/tileWorldUnits)*tileWorldUnits + yOrigin,
+                Math.Ceiling((extent.MaxX - xOrigin)/tileWorldUnits)*tileWorldUnits + xOrigin,
+                Math.Ceiling((extent.MaxY - yOrigin)/tileWorldUnits)*tileWorldUnits + yOrigin);
 
-            int tileCountX = (int) Math.Round((tileBbox.Right - tileBbox.Left)/tileWorldUnits);
-            int tileCountY = (int) Math.Round((tileBbox.Top - tileBbox.Bottom)/tileWorldUnits);
+            int tileCountX = (int) Math.Round((tileBbox.MaxX - tileBbox.MinX)/tileWorldUnits);
+            int tileCountY = (int) Math.Round((tileBbox.MaxY - tileBbox.MinY)/tileWorldUnits);
 
             for (int x = 0; x < tileCountX; x++)
             {
                 for (int y = 0; y < tileCountY; y++)
                 {
-                    double x1 = tileBbox.Left + x*tileWorldUnits;
-                    double y1 = tileBbox.Bottom + y*tileWorldUnits;
+                    double x1 = tileBbox.MinX    + x*tileWorldUnits;
+                    double y1 = tileBbox.MinY + y*tileWorldUnits;
                     double x2 = x1 + tileWorldUnits;
                     double y2 = y1 + tileWorldUnits;
 
-                    BoundingBox tileExtent = new BoundingBox(x1, y1, x2, y2);
+                    var tileExtent = new Envelope(x1, x2, y1, y2);
 
                     if (CheckForBounds(tileSet.BoundingBox, tileExtent))
                     {
@@ -79,21 +79,21 @@ namespace SharpMap.Web.Wms.Tiling
         /// outside of the bottom left. That is how it is defined in WMS-C.
         /// </summary>
         /// <returns>Returns true if the tile with this extent is part of the tile collection on the server</returns>
-        private static bool CheckForBounds(BoundingBox boundingBox, BoundingBox tileExtent)
+        private static bool CheckForBounds(Envelope boundingBox, Envelope tileExtent)
         {
-            if (tileExtent.Left < boundingBox.Left)
+            if (tileExtent.MinX < boundingBox.MinX)
             {
                 return false;
             }
-            if (tileExtent.Bottom < boundingBox.Bottom)
+            if (tileExtent.MinY < boundingBox.MinY)
             {
                 return false;
             }
-            if (tileExtent.Left > boundingBox.Right)
+            if (tileExtent.MinX > boundingBox.MaxX)
             {
                 return false;
             }
-            if (tileExtent.Bottom > boundingBox.Top)
+            if (tileExtent.MinY > boundingBox.MaxY)
             {
                 return false;
             }

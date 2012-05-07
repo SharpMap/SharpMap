@@ -17,7 +17,8 @@
 
 using System;
 using System.Collections.ObjectModel;
-using SharpMap.Geometries;
+using GeoAPI.Geometries;
+using IGeometry = GeoAPI.Geometries.IGeometry;
 
 namespace SharpMap.Data.Providers
 {
@@ -47,43 +48,43 @@ namespace SharpMap.Data.Providers
         int SRID { get; set; }
 
         /// <summary>
-        /// Gets the features within the specified <see cref="SharpMap.Geometries.BoundingBox"/>
+        /// Gets the features within the specified <see cref="GeoAPI.Geometries.Envelope"/>
         /// </summary>
         /// <param name="bbox"></param>
-        /// <returns>Features within the specified <see cref="SharpMap.Geometries.BoundingBox"/></returns>
-        Collection<Geometry> GetGeometriesInView(BoundingBox bbox);
+        /// <returns>Features within the specified <see cref="GeoAPI.Geometries.Envelope"/></returns>
+        Collection<IGeometry> GetGeometriesInView(Envelope bbox);
 
         /// <summary>
-        /// Returns all objects whose <see cref="SharpMap.Geometries.BoundingBox"/> intersects 'bbox'.
+        /// Returns all objects whose <see cref="GeoAPI.Geometries.Envelope"/> intersects 'bbox'.
         /// </summary>
         /// <remarks>
         /// This method is usually much faster than the QueryFeatures method, because intersection tests
-        /// are performed on objects simplifed by their <see cref="SharpMap.Geometries.BoundingBox"/>, and using the Spatial Index
+        /// are performed on objects simplifed by their <see cref="GeoAPI.Geometries.Envelope"/>, and using the Spatial Index
         /// </remarks>
         /// <param name="bbox">Box that objects should intersect</param>
         /// <returns></returns>
-        Collection<uint> GetObjectIDsInView(BoundingBox bbox);
+        Collection<uint> GetObjectIDsInView(Envelope bbox);
 
         /// <summary>
         /// Returns the geometry corresponding to the Object ID
         /// </summary>
         /// <param name="oid">Object ID</param>
         /// <returns>geometry</returns>
-        Geometry GetGeometryByID(uint oid);
+        IGeometry GetGeometryByID(uint oid);
 
         /// <summary>
         /// Returns the data associated with all the geometries that are intersected by 'geom'
         /// </summary>
         /// <param name="geom">Geometry to intersect with</param>
         /// <param name="ds">FeatureDataSet to fill data into</param>
-        void ExecuteIntersectionQuery(Geometry geom, FeatureDataSet ds);
+        void ExecuteIntersectionQuery(IGeometry geom, FeatureDataSet ds);
 
         /// <summary>
         /// Returns the data associated with all the geometries that are intersected by 'geom'
         /// </summary>
         /// <param name="box">Geometry to intersect with</param>
         /// <param name="ds">FeatureDataSet to fill data into</param>
-        void ExecuteIntersectionQuery(BoundingBox box, FeatureDataSet ds);
+        void ExecuteIntersectionQuery(Envelope box, FeatureDataSet ds);
 
         /// <summary>
         /// Returns the number of features in the dataset
@@ -99,10 +100,10 @@ namespace SharpMap.Data.Providers
         FeatureDataRow GetFeature(uint rowId);
 
         /// <summary>
-        /// <see cref="SharpMap.Geometries.BoundingBox"/> of dataset
+        /// <see cref="Envelope"/> of dataset
         /// </summary>
         /// <returns>boundingbox</returns>
-        BoundingBox GetExtents();
+        Envelope GetExtents();
 
         /// <summary>
         /// Opens the datasource

@@ -16,14 +16,14 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
 
 using System.Drawing;
-using SharpMap.Geometries;
+using GeoAPI.Geometries;
 
 namespace SharpMap.Web.Wms.Tiling
 {
     public interface ITileCache
     {
-        void AddTile(BoundingBox box, Bitmap bitmap);
-        Bitmap GetTile(BoundingBox box);
-        bool ContainsTile(BoundingBox box);
+        void AddTile(Envelope box, Bitmap bitmap);
+        Bitmap GetTile(Envelope box);
+        bool ContainsTile(Envelope box);
     }
 }

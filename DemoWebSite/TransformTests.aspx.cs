@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Web.UI;
 using ProjNet.CoordinateSystems;
 using ProjNet.CoordinateSystems.Transformations;
-using SharpMap.Geometries;
+using GeoAPI.Geometries;
 
 public partial class TransformTests : Page
 {
@@ -50,11 +50,13 @@ public partial class TransformTests : Page
         ICoordinateTransformation trans = new CoordinateTransformationFactory().CreateFromCoordinateSystems(gcs,
                                                                                                             coordsys);
 
-        Point pGeo = new Point(120, -3);
-        Point pUtm = new Point(trans.MathTransform.Transform(pGeo.ToDoubleArray()));
-        Point pGeo2 = new Point(trans.MathTransform.Inverse().Transform(pUtm.ToDoubleArray()));
+        var pGeo = new Coordinate(120, -3);
+        var pUtm = Transform(trans.MathTransform, pGeo);
+        trans.MathTransform.Invert();
+        var pGeo2 = Transform(trans.MathTransform, pUtm);
+        trans.MathTransform.Invert();
 
-        result.Text += PrintResultTable(gcs, coordsys, pGeo, pUtm, new Point(5009726.58, 569150.82), pGeo2,
+        result.Text += PrintResultTable(gcs, coordsys, pGeo, pUtm, new Coordinate(5009726.58, 569150.82), pGeo2,
                                         "Mercator_1SP test");
     }
 
@@ -86,12 +88,22 @@ public partial class TransformTests : Page
         ICoordinateTransformation trans = new CoordinateTransformationFactory().CreateFromCoordinateSystems(gcs,
                                                                                                             coordsys);
 
-        Point pGeo = new Point(53, 53);
-        Point pUtm = new Point(trans.MathTransform.Transform(pGeo.ToDoubleArray()));
-        Point pGeo2 = new Point(trans.MathTransform.Inverse().Transform(pUtm.ToDoubleArray()));
+        var pGeo = new Coordinate(53, 53);
+        var pUtm = Transform(trans.MathTransform, pGeo);
+        trans.MathTransform.Invert();
+        var pGeo2 = Transform(trans.MathTransform, pUtm);
+        trans.MathTransform.Invert();
 
-        result.Text += PrintResultTable(gcs, coordsys, pGeo, pUtm, new Point(165704.29, 5171848.07), pGeo2,
+        result.Text += PrintResultTable(gcs, coordsys, pGeo, pUtm, new Coordinate(165704.29, 5171848.07), pGeo2,
                                         "Mercator_2SP test");
+    }
+
+    private static Coordinate Transform (IMathTransform transform, Coordinate input)
+    {
+        var ordinates = transform.Transform(input.ToDoubleArray());
+        if (ordinates.Length == 2)
+            return new Coordinate(ordinates[0], ordinates[1]);
+        return new Coordinate(ordinates[0], ordinates[1], ordinates[2]);
     }
 
     private void TestTransverseMercator()
@@ -126,11 +138,13 @@ public partial class TransformTests : Page
         ICoordinateTransformation trans = new CoordinateTransformationFactory().CreateFromCoordinateSystems(gcs,
                                                                                                             coordsys);
 
-        Point pGeo = new Point(0.5, 50.5);
-        Point pUtm = new Point(trans.MathTransform.Transform(pGeo.ToDoubleArray()));
-        Point pGeo2 = new Point(trans.MathTransform.Inverse().Transform(pUtm.ToDoubleArray()));
+        var pGeo = new Coordinate(0.5, 50.5);
+        var pUtm = Transform(trans.MathTransform, pGeo);
+        trans.MathTransform.Invert();
+        var pGeo2 = Transform(trans.MathTransform, pUtm);
+        trans.MathTransform.Invert();
 
-        result.Text += PrintResultTable(gcs, coordsys, pGeo, pUtm, new Point(577274.99, 69740.50), pGeo2,
+        result.Text += PrintResultTable(gcs, coordsys, pGeo, pUtm, new Coordinate(577274.99, 69740.50), pGeo2,
                                         "Transverse Mercator test");
     }
 
@@ -169,11 +183,13 @@ public partial class TransformTests : Page
         ICoordinateTransformation trans = new CoordinateTransformationFactory().CreateFromCoordinateSystems(gcs,
                                                                                                             coordsys);
 
-        Point pGeo = new Point(-96, 28.5);
-        Point pUtm = new Point(trans.MathTransform.Transform(pGeo.ToDoubleArray()));
-        Point pGeo2 = new Point(trans.MathTransform.Inverse().Transform(pUtm.ToDoubleArray()));
+        var pGeo = new Coordinate(-96, 28.5);
+        var pUtm = Transform(trans.MathTransform, pGeo);
+        trans.MathTransform.Invert();
+        var pGeo2 = Transform(trans.MathTransform, pUtm);
+        trans.MathTransform.Invert();
 
-        result.Text += PrintResultTable(gcs, coordsys, pGeo, pUtm, new Point(2963503.91, 254759.80), pGeo2,
+        result.Text += PrintResultTable(gcs, coordsys, pGeo, pUtm, new Coordinate(2963503.91, 254759.80), pGeo2,
                                         "Lambert Conic Conformal 2SP test");
     }
 
@@ -212,11 +228,13 @@ public partial class TransformTests : Page
         ICoordinateTransformation trans = new CoordinateTransformationFactory().CreateFromCoordinateSystems(gcs,
                                                                                                             coordsys);
 
-        Point pGeo = new Point(-75, 35);
-        Point pUtm = new Point(trans.MathTransform.Transform(pGeo.ToDoubleArray()));
-        Point pGeo2 = new Point(trans.MathTransform.Inverse().Transform(pUtm.ToDoubleArray()));
+        var pGeo = new Coordinate(-75, 35);
+        var pUtm = Transform(trans.MathTransform, pGeo);
+        trans.MathTransform.Invert();
+        var pGeo2 = Transform(trans.MathTransform, pUtm);
+        trans.MathTransform.Invert();
 
-        result.Text += PrintResultTable(gcs, coordsys, pGeo, pUtm, new Point(1885472.7, 1535925), pGeo2,
+        result.Text += PrintResultTable(gcs, coordsys, pGeo, pUtm, new Coordinate(1885472.7, 1535925), pGeo2,
                                         "Albers Conical Equal Area test");
     }
 
@@ -237,18 +255,20 @@ public partial class TransformTests : Page
 
         ICoordinateTransformation trans = new CoordinateTransformationFactory().CreateFromCoordinateSystems(gcs, geoccs);
 
-        Point3D pGeo = new Point3D(2.12955, 53.80939444, 73);
-        Point3D pGc = new Point3D(trans.MathTransform.Transform(pGeo.ToDoubleArray()));
-        Point3D pGeo2 = new Point3D(trans.MathTransform.Inverse().Transform(pGc.ToDoubleArray()));
+        var pGeo = new Coordinate(2.12955, 53.80939444, 73);
+        var pGc = Transform(trans.MathTransform, pGeo);
+        trans.MathTransform.Invert();
+        var pGeo2 = Transform(trans.MathTransform, pGc);
+        trans.MathTransform.Invert();
 
-        result.Text += PrintResultTable(gcs, geoccs, pGeo, pGc, new Point3D(3771793.97, 140253.34, 5124304.35), pGeo2,
+        result.Text += PrintResultTable(gcs, geoccs, pGeo, pGc, new Coordinate(3771793.97, 140253.34, 5124304.35), pGeo2,
                                         "Geocentric test");
 
         return;
     }
 
-    private string PrintResultTable(ICoordinateSystem fromCoordSys, ICoordinateSystem toCoordSys, Point fromPnt,
-                                    Point toPnt, Point refPnt, Point backPnt, string header)
+    private static string PrintResultTable(ICoordinateSystem fromCoordSys, ICoordinateSystem toCoordSys, Coordinate fromPnt,
+                                    Coordinate toPnt, Coordinate refPnt, Coordinate backPnt, string header)
     {
         string table = "<table style=\"border: 1px solid #000; margin: 10px;\">";
         table += "<tr><td colspan=\"2\"><h3>" + header + "</h3></td></tr>";
@@ -257,9 +277,9 @@ public partial class TransformTests : Page
         table += "<tr><td>Input coordinate:</td><td>" + fromPnt + "</td></tr>";
         table += "<tr><td>Ouput coordinate:</td><td>" + toPnt + "</td></tr>";
         table += "<tr><td>Expected coordinate:</td><td>" + refPnt + "</td></tr>";
-        table += "<tr><td>Difference:</td><td>" + (refPnt - toPnt) + "</td></tr>";
+        table += "<tr><td>Difference:</td><td>" + (refPnt.Subtract(toPnt)) + "</td></tr>";
         table += "<tr><td>Reverse transform:</td><td>" + backPnt + "</td></tr>";
-        table += "<tr><td>Difference:</td><td>" + (backPnt - fromPnt) + "</td></tr>";
+        table += "<tr><td>Difference:</td><td>" + (backPnt.Subtract(fromPnt)) + "</td></tr>";
         table += "</table>";
         return table;
     }

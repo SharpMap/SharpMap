@@ -5,6 +5,7 @@ using Microsoft.SqlServer.Types;
 using SharpMap.Converters.SqlServer2008SpatialObjects;
 using SharpMap.Converters.WellKnownText;
 using SharpMap.Geometries;
+using Geometry = GeoAPI.Geometries.IGeometry;
 
 namespace UnitTests.Converters
 {

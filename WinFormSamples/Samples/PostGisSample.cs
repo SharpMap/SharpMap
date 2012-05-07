@@ -98,7 +98,7 @@ namespace WinFormSamples.Samples
             map.BackColor = System.Drawing.Color.LightBlue;
 
             map.ZoomToExtents(); // = 360;
-            map.Center = new SharpMap.Geometries.Point(0, 0);
+            map.Center = new GeoAPI.Geometries.Coordinate(0, 0);
 
             Matrix mat = new Matrix();
             mat.RotateAt(angle, map.WorldToImage(map.Center));

@@ -24,7 +24,7 @@ using System.Web.UI;
 using System.Web.UI.HtmlControls;
 using System.Web.UI.WebControls;
 using Image=System.Web.UI.WebControls.Image;
-using Point=SharpMap.Geometries.Point;
+using Point=GeoAPI.Geometries.Coordinate;
 
 namespace SharpMap.Web.UI.Ajax
 {
@@ -366,7 +366,7 @@ namespace SharpMap.Web.UI.Ajax
                                    (_DisplayStatusBar ? _StatusBarText : "") + "','" + UniqueID + "');" + newline;
             setvarsScript +=
                 obj + ".zoom = " + map.Zoom.ToString(numberFormat_EnUS) + ";" + newline +
-                obj + ".minX = " + map.Envelope.Left.ToString(numberFormat_EnUS) + ";" + newline +
+                obj + ".minX = " + map.Envelope.MinX.ToString(numberFormat_EnUS) + ";" + newline +
                 obj + ".maxY = " + map.Center.Y.ToString(numberFormat_EnUS) + "+" + obj + ".zoom/" + obj +
                 ".container.offsetWidth*" + obj + ".container.offsetHeight*0.5;" + newline +
                 obj + ".minZoom = " + map.MinimumZoom.ToString(numberFormat_EnUS) + ";" + newline +

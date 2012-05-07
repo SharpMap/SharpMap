@@ -1,6 +1,8 @@
+using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
-using SharpMap.Geometries;
+using GeoAPI.Geometries;
+using SharpMap.Base;
 using Point = System.Drawing.Point;
 
 namespace SharpMap.Rendering.Symbolizer
@@ -8,13 +10,26 @@ namespace SharpMap.Rendering.Symbolizer
     /// <summary>
     /// Base class for all geometry symbolizers
     /// </summary>
-    public abstract class PolygonSymbolizer : IPolygonSymbolizer
+    public abstract class PolygonSymbolizer : DisposableObject, IPolygonSymbolizer
     {
         protected PolygonSymbolizer()
         {
             Fill = new SolidBrush(Utility.RandomKnownColor());
         }
-        
+
+        protected override void ReleaseManagedResources()
+        {
+            if (Fill != null)
+            {
+                Fill.Dispose();
+                Fill = null;
+            }
+
+            base.ReleaseManagedResources();
+        }
+
+        public abstract object Clone();
+
         /// <summary>
         /// Gets or sets the brush to fill the polygon
         /// </summary>
@@ -32,17 +47,20 @@ namespace SharpMap.Rendering.Symbolizer
 
         public void Render(Map map, IPolygonal geometry, Graphics graphics)
         {
-            var mp = geometry as MultiPolygon;
+            var mp = geometry as IMultiPolygon;
             if (mp != null)
             {
-                foreach (Polygon poly in mp.Polygons)
+                for (var i = 0; i < mp.NumGeometries;i++)
+                {
+                    var poly = (IPolygon) mp[0];
                     OnRenderInternal(map, poly, graphics);
+                }
                 return;
             }
-            OnRenderInternal(map, (Polygon)geometry, graphics);
+            OnRenderInternal(map, (IPolygon)geometry, graphics);
         }
 
-        protected abstract void OnRenderInternal(Map mpa, Polygon polygon, Graphics g);
+        protected abstract void OnRenderInternal(Map mpa, IPolygon polygon, Graphics g);
 
         private Point _renderOrigin;
         public virtual void Begin(Graphics g, Map map, int aproximateNumberOfGeometries)
@@ -60,7 +78,7 @@ namespace SharpMap.Rendering.Symbolizer
             g.RenderingOrigin = _renderOrigin;
         }
 
-        protected static GraphicsPath PolygonToGraphicsPath(Map map, Polygon polygon)
+        protected static GraphicsPath PolygonToGraphicsPath(Map map, IPolygon polygon)
         {
             var gp = new GraphicsPath(FillMode.Alternate);
             gp.AddPolygon(polygon.TransformToImage(map));

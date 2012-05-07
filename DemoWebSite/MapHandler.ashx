@@ -7,7 +7,7 @@ using System.Globalization;
 using System.IO;
 using System.Web;
 using SharpMap;
-using Point=SharpMap.Geometries.Point;
+using Point=GeoAPI.Geometries.Coordinate;
 
 /// <summary>
 /// The maphandler class takes a set of GET or POST parameters and returns a map as PNG (this reminds in many ways of the way a WMS server work).

@@ -113,7 +113,7 @@ namespace SharpMap.Rendering.Symbolizer
         /// Path definition class
         /// </summary>
         [Serializable]
-        public class PathDefinition
+        public class PathDefinition : IDisposable, ICloneable
         {
             /// <summary>
             /// Gets or sets the <see cref="Pen"/> to draw the path
@@ -129,6 +129,38 @@ namespace SharpMap.Rendering.Symbolizer
             /// The <see cref="GraphicsPath"/> to be drawn and/or filled
             /// </summary>
             public GraphicsPath Path { get; set; }
+
+            #region Implementation of IDisposable
+
+            public void Dispose()
+            {
+                if (Fill != null) Fill.Dispose();
+                if (Line != null) Line.Dispose();
+                if (Path != null) Path.Dispose();
+            }
+
+            #endregion
+
+            #region Implementation of ICloneable
+
+            /// <summary>
+            /// Erstellt ein neues Objekt, das eine Kopie der aktuellen Instanz darstellt.
+            /// </summary>
+            /// <returns>
+            /// Ein neues Objekt, das eine Kopie dieser Instanz darstellt.
+            /// </returns>
+            /// <filterpriority>2</filterpriority>
+            public object Clone()
+            {
+                return new PathDefinition
+                           {
+                               Fill = (Brush) (Fill != null ? Fill.Clone() : null),
+                               Line = (Pen) (Line != null ? Line.Clone() : null),
+                               Path = (GraphicsPath) (Path != null ? Path.Clone() : null),
+                           };
+            }
+
+            #endregion
         }
 
 
@@ -142,6 +174,27 @@ namespace SharpMap.Rendering.Symbolizer
         public PathPointSymbolizer(PathDefinition[] paths)
         {
             _paths = paths;
+        }
+
+        protected override void ReleaseManagedResources()
+        {
+            if (_paths != null)
+            {
+                foreach (var t in _paths)
+                {
+                    if (t != null) t.Dispose();
+                }
+            }
+            base.ReleaseManagedResources();
+        }
+
+        public override object Clone()
+        {
+            var pathDefinitions = new PathDefinition[_paths.Length];
+            for (var i = 0; i < _paths.Length; i++)
+                pathDefinitions[i] = (PathDefinition) _paths[i].Clone();
+            
+            return new PathPointSymbolizer(pathDefinitions);
         }
 
         public override Size Size

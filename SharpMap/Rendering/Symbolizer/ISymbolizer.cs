@@ -1,15 +1,12 @@
 using System;
 using System.Drawing;
-using SharpMap.Data;
-using SharpMap.Geometries;
-using SharpMap.Rendering.Thematics;
 
 namespace SharpMap.Rendering.Symbolizer
 {
     /// <summary>
     /// Basic interface for all symbolizers
     /// </summary>
-    public interface ISymbolizer
+    public interface ISymbolizer : ICloneable
     {
         /// <summary>
         /// Method to indicate that the symbolizer has to be prepared.
@@ -39,7 +36,7 @@ namespace SharpMap.Rendering.Symbolizer
     /// </summary>
     /// <typeparam name="TGeometry">The allowed type of geometries to symbolize</typeparam>
     public interface ISymbolizer<TGeometry> : ISymbolizer
-        where TGeometry : class, IGeometryClassifier
+        where TGeometry : class
     {
         /// <summary>
         /// Function to render the geometry

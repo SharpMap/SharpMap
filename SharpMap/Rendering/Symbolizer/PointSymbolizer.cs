@@ -19,9 +19,10 @@ using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
-using SharpMap.Geometries;
+using GeoAPI.Geometries;
+using SharpMap.Base;
 using SharpMap.Utilities;
-using Point = SharpMap.Geometries.Point;
+using Point = GeoAPI.Geometries.IPoint;
 
 namespace SharpMap.Rendering.Symbolizer
 {
@@ -29,7 +30,7 @@ namespace SharpMap.Rendering.Symbolizer
     /// Base class for all possible Point symbolizers
     /// </summary>
     [Serializable]
-    public abstract class PointSymbolizer : IPointSymbolizer
+    public abstract class PointSymbolizer : DisposableObject, IPointSymbolizer
     {
         private float _scale = 1f;
 
@@ -87,7 +88,7 @@ namespace SharpMap.Rendering.Symbolizer
         /// <param name="map">The map</param>
         /// <param name="point">The point to symbolize</param>
         /// <param name="g">The graphics object</param>
-        protected void RenderPoint(Map map, Point point, Graphics g)
+        protected void RenderPoint(Map map, Coordinate point, Graphics g)
         {
             if (point == null)
                 return;
@@ -114,22 +115,6 @@ namespace SharpMap.Rendering.Symbolizer
             {
                 OnRenderInternal(pp, g);
             }
-        }
-
-        /// <summary>
-        /// Method to render the <see cref="MultiPoint"/> to the <see cref="Graphics"/> object.
-        /// </summary>
-        /// <param name="map">The map object</param>
-        /// <param name="points">Locations where to render the Symbol</param>
-        /// <param name="g">The graphics object to use.</param>
-        [Obsolete]
-        public void Render(Map map, MultiPoint points, Graphics g)
-        {
-            if (points == null)
-                return;
-            
-            foreach (Point point in points)
-                Render(map, point, g);
         }
 
         /// <summary>
@@ -164,14 +149,14 @@ namespace SharpMap.Rendering.Symbolizer
 
         public void Render(Map map, IPuntal geometry, Graphics graphics)
         {
-            var mp = geometry as MultiPoint;
+            var mp = geometry as IMultiPoint;
             if (mp != null)
             {
-                foreach (Point point in mp.Points)
+                foreach (var point in mp.Coordinates)
                     RenderPoint(map, point, graphics);
                 return;
             }
-            RenderPoint(map, geometry as Point, graphics);
+            RenderPoint(map, ((IPoint)geometry).Coordinate, graphics);
 
         }
 
@@ -190,5 +175,11 @@ namespace SharpMap.Rendering.Symbolizer
         {
             //Nothing to do
         }
+
+        #region Implementation of ICloneable
+
+        public abstract object Clone();
+
+        #endregion
     }
 }

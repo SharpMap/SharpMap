@@ -17,7 +17,8 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
 
 using System;
-using SharpMap.Geometries;
+using GeoAPI.Geometries;
+using Point = GeoAPI.Geometries.Coordinate;
 
 namespace SharpMap.Layers
 {
@@ -31,7 +32,7 @@ namespace SharpMap.Layers
     internal class GeoTransform
     {
         private readonly double[] _inverseTransform = new double[6];
-        internal double[] _transform = new double[6];
+        internal double[] Transform = new double[6];
 
         #region public properties
 
@@ -42,8 +43,8 @@ namespace SharpMap.Layers
         /// <returns>value depedent on i</returns>
         public double this[int i]
         {
-            get { return _transform[i]; }
-            set { _transform[i] = value; }
+            get { return Transform[i]; }
+            set { Transform[i] = value; }
         }
 
         public double[] Inverse
@@ -52,15 +53,15 @@ namespace SharpMap.Layers
         }
 
         /// <summary>
-        /// returns true if no values were fetched
+        /// Returns true if no values were fetched
         /// </summary>
-        private bool IsTrivial
+        public bool IsTrivial
         {
             get
             {
-                return _transform[0] == 0 && _transform[1] == 1 &&
-                       _transform[2] == 0 && _transform[3] == 0 &&
-                       _transform[4] == 0 && _transform[5] == 1;
+                return Transform[0] == 0 && Transform[1] == 1 &&
+                       Transform[2] == 0 && Transform[3] == 0 &&
+                       Transform[4] == 0 && Transform[5] == 1;
             }
         }
 
@@ -69,7 +70,7 @@ namespace SharpMap.Layers
         /// </summary>       
         public double Left
         {
-            get { return _transform[0]; }
+            get { return Transform[0]; }
         }
 
 
@@ -85,7 +86,7 @@ namespace SharpMap.Layers
         /// </summary>
         public double Top
         {
-            get { return _transform[3]; }
+            get { return Transform[3]; }
         }
 
         /// <summary>
@@ -100,8 +101,8 @@ namespace SharpMap.Layers
         /// </summary>
         public double HorizontalPixelResolution
         {
-            get { return _transform[1]; }
-            set { _transform[1] = value; }
+            get { return Transform[1]; }
+            set { Transform[1] = value; }
         }
 
         /// <summary>
@@ -109,20 +110,20 @@ namespace SharpMap.Layers
         /// </summary>
         public double VerticalPixelResolution
         {
-            get { return _transform[5]; }
-            set { _transform[5] = value; }
+            get { return Transform[5]; }
+            set { Transform[5] = value; }
         }
 
         public double XRotation
         {
-            get { return _transform[2]; }
-            set { _transform[2] = value; }
+            get { return Transform[2]; }
+            set { Transform[2] = value; }
         }
 
         public double YRotation
         {
-            get { return _transform[4]; }
-            set { _transform[4] = value; }
+            get { return Transform[4]; }
+            set { Transform[4] = value; }
         }
 
         #endregion
@@ -134,13 +135,13 @@ namespace SharpMap.Layers
         /// </summary>
         public GeoTransform()
         {
-            _transform = new double[6];
-            _transform[0] = 999.5; /* x */
-            _transform[1] = 1; /* w-e pixel resolution */
-            _transform[2] = 0; /* rotation, 0 if image is "north up" */
-            _transform[3] = 1000.5; /* y */
-            _transform[4] = 0; /* rotation, 0 if image is "north up" */
-            _transform[5] = -1; /* n-s pixel resolution */
+            Transform = new double[6];
+            Transform[0] = 999.5; /* x */
+            Transform[1] = 1; /* w-e pixel resolution */
+            Transform[2] = 0; /* rotation, 0 if image is "north up" */
+            Transform[3] = 1000.5; /* y */
+            Transform[4] = 0; /* rotation, 0 if image is "north up" */
+            Transform[5] = -1; /* n-s pixel resolution */
             CreateInverse();
         }
 
@@ -152,28 +153,25 @@ namespace SharpMap.Layers
         {
             if (array.Length != 6)
                 throw new ApplicationException("GeoTransform constructor invoked with invalid sized array");
-            _transform = array;
+            Transform = array;
             CreateInverse();
         }
 
         private void CreateInverse()
         {
-            double det;
-            double[] tempSix = new double[6];
-
             // compute determinant
-            det = _transform[1] * _transform[5] - _transform[2] * _transform[4];
+            var det = Transform[1] * Transform[5] - Transform[2] * Transform[4];
             if (det == 0.0) return;
 
             // inverse rot/scale portion
-            _inverseTransform[1] = _transform[5] / det;
-            _inverseTransform[2] = -_transform[2] / det;
-            _inverseTransform[4] = -_transform[4] / det;
-            _inverseTransform[5] = _transform[1] / det;
+            _inverseTransform[1] = Transform[5] / det;
+            _inverseTransform[2] = -Transform[2] / det;
+            _inverseTransform[4] = -Transform[4] / det;
+            _inverseTransform[5] = Transform[1] / det;
 
             // compute translation elements
-            _inverseTransform[0] = -_inverseTransform[1] * _transform[0] - _inverseTransform[2] * _transform[3];
-            _inverseTransform[3] = -_inverseTransform[4] * _transform[0] - _inverseTransform[5] * _transform[3];
+            _inverseTransform[0] = -_inverseTransform[1] * Transform[0] - _inverseTransform[2] * Transform[3];
+            _inverseTransform[3] = -_inverseTransform[4] * Transform[0] - _inverseTransform[5] * Transform[3];
         }
 
         #endregion
@@ -188,7 +186,7 @@ namespace SharpMap.Layers
         /// <returns>projected x coordinate</returns>
         public double ProjectedX(double imgX, double imgY)
         {
-            return _transform[0] + _transform[1] * imgX + _transform[2] * imgY;
+            return Transform[0] + Transform[1] * imgX + Transform[2] * imgY;
         }
 
         /// <summary>
@@ -199,139 +197,124 @@ namespace SharpMap.Layers
         /// <returns>projected y coordinate</returns>
         public double ProjectedY(double imgX, double imgY)
         {
-            return _transform[3] + _transform[4] * imgX + _transform[5] * imgY;
+            return Transform[3] + Transform[4] * imgX + Transform[5] * imgY;
         }
 
-        public Point ImageToGround(Point imagePoint)
+        public Coordinate ImageToGround(Coordinate imagePoint)
         {
-            Point groundPoint = new Point();
-
-            groundPoint.X = _transform[0] + _transform[1] * imagePoint.X + _transform[2] * imagePoint.Y;
-            groundPoint.Y = _transform[3] + _transform[4] * imagePoint.X + _transform[5] * imagePoint.Y;
-
-            return groundPoint;
+            return new Point
+                       {
+                           X = Transform[0] + Transform[1]*imagePoint.X + Transform[2]*imagePoint.Y,
+                           Y = Transform[3] + Transform[4]*imagePoint.X + Transform[5]*imagePoint.Y
+                       };
         }
 
         public Point GroundToImage(Point groundPoint)
         {
-            Point imagePoint = new Point();
-
-            imagePoint.X = _inverseTransform[0] + _inverseTransform[1] * groundPoint.X +
-                           _inverseTransform[2] * groundPoint.Y;
-            imagePoint.Y = _inverseTransform[3] + _inverseTransform[4] * groundPoint.X +
-                           _inverseTransform[5] * groundPoint.Y;
-
-            return imagePoint;
+            return new Point
+                       {
+                           X = _inverseTransform[0] + _inverseTransform[1]*groundPoint.X +
+                               _inverseTransform[2]*groundPoint.Y,
+                           Y = _inverseTransform[3] + _inverseTransform[4]*groundPoint.X +
+                               _inverseTransform[5]*groundPoint.Y
+                       };
         }
 
         public double GndW(double imgWidth, double imgHeight)
         {
             // check for funky case
-            if (_transform[2] < 0 && _transform[4] < 0 && _transform[5] < 0)
-                return Math.Abs((_transform[1] * imgWidth) + (_transform[2] * imgHeight));
-            else
-                return Math.Abs((_transform[1] * imgWidth) - (_transform[2] * imgHeight));
+            if (Transform[2] < 0 && Transform[4] < 0 && Transform[5] < 0)
+                return Math.Abs((Transform[1] * imgWidth) + (Transform[2] * imgHeight));
+            return Math.Abs((Transform[1] * imgWidth) - (Transform[2] * imgHeight));
         }
 
         public double GndH(double imgWidth, double imgHeight)
         {
             // check for funky case
-            if (_transform[2] < 0 && _transform[4] < 0 && _transform[5] < 0)
-                return Math.Abs((_transform[4] * imgWidth) - (_transform[5] * imgHeight));
-            else
-                return Math.Abs((_transform[4] * imgWidth) - (_transform[5] * imgHeight));
+            if (Transform[2] < 0 && Transform[4] < 0 && Transform[5] < 0)
+                return Math.Abs((Transform[4] * imgWidth) - (Transform[5] * imgHeight));
+            return Math.Abs((Transform[4] * imgWidth) - (Transform[5] * imgHeight));
         }
 
         // finds leftmost pixel location (handles rotation)
         public double EnvelopeLeft(double imgWidth, double imgHeight)
         {
-            double left;
-
-            left = Math.Min(_transform[0], _transform[0] + (_transform[1] * imgWidth));
-            left = Math.Min(left, _transform[0] + (_transform[2] * imgHeight));
-            left = Math.Min(left, _transform[0] + (_transform[1] * imgWidth) + (_transform[2] * imgHeight));
+            var left = Math.Min(Transform[0], Transform[0] + (Transform[1] * imgWidth));
+            left = Math.Min(left, Transform[0] + (Transform[2] * imgHeight));
+            left = Math.Min(left, Transform[0] + (Transform[1] * imgWidth) + (Transform[2] * imgHeight));
             return left;
         }
 
         // finds rightmost pixel location (handles rotation)
         public double EnvelopeRight(double imgWidth, double imgHeight)
         {
-            double right;
-
-            right = Math.Max(_transform[0], _transform[0] + (_transform[1] * imgWidth));
-            right = Math.Max(right, _transform[0] + (_transform[2] * imgHeight));
-            right = Math.Max(right, _transform[0] + (_transform[1] * imgWidth) + (_transform[2] * imgHeight));
+            var right = Math.Max(Transform[0], Transform[0] + (Transform[1] * imgWidth));
+            right = Math.Max(right, Transform[0] + (Transform[2] * imgHeight));
+            right = Math.Max(right, Transform[0] + (Transform[1] * imgWidth) + (Transform[2] * imgHeight));
             return right;
         }
 
         // finds topmost pixel location (handles rotation)
         public double EnvelopeTop(double imgWidth, double imgHeight)
         {
-            double top;
-
-            top = Math.Max(_transform[3], _transform[3] + (_transform[4] * imgWidth));
-            top = Math.Max(top, _transform[3] + (_transform[5] * imgHeight));
-            top = Math.Max(top, _transform[3] + (_transform[4] * imgWidth) + (_transform[5] * imgHeight));
+            var top = Math.Max(Transform[3], Transform[3] + (Transform[4] * imgWidth));
+            top = Math.Max(top, Transform[3] + (Transform[5] * imgHeight));
+            top = Math.Max(top, Transform[3] + (Transform[4] * imgWidth) + (Transform[5] * imgHeight));
             return top;
         }
 
         // finds bottommost pixel location (handles rotation)
         public double EnvelopeBottom(double imgWidth, double imgHeight)
         {
-            double bottom;
-
-            bottom = Math.Min(_transform[3], _transform[3] + (_transform[4] * imgWidth));
-            bottom = Math.Min(bottom, _transform[3] + (_transform[5] * imgHeight));
-            bottom = Math.Min(bottom, _transform[3] + (_transform[4] * imgWidth) + (_transform[5] * imgHeight));
+            var bottom = Math.Min(Transform[3], Transform[3] + (Transform[4] * imgWidth));
+            bottom = Math.Min(bottom, Transform[3] + (Transform[5] * imgHeight));
+            bottom = Math.Min(bottom, Transform[3] + (Transform[4] * imgWidth) + (Transform[5] * imgHeight));
             return bottom;
         }
 
         // image was flipped horizontally
         public bool HorzFlip()
         {
-            return _transform[4] > 0;
+            return Transform[4] > 0;
         }
 
         // image was flipped vertically
         public bool VertFlip()
         {
-            return _transform[2] > 0;
+            return Transform[2] > 0;
         }
 
         public double PixelX(double lat)
         {
-            return (_transform[0] - lat) / (_transform[1] - _transform[2]);
+            return (Transform[0] - lat) / (Transform[1] - Transform[2]);
         }
 
         public double PixelY(double lon)
         {
-            return Math.Abs(_transform[3] - lon) / (_transform[4] + _transform[5]);
+            return Math.Abs(Transform[3] - lon) / (Transform[4] + Transform[5]);
         }
 
         public double PixelXwidth(double lat)
         {
-            return Math.Abs(lat / (_transform[1] - _transform[2]));
+            return Math.Abs(lat / (Transform[1] - Transform[2]));
         }
 
         public double PixelYwidth(double lon)
         {
-            return Math.Abs(lon / (_transform[5] + _transform[4]));
+            return Math.Abs(lon / (Transform[5] + Transform[4]));
         }
 
         public double RotationAngle()
         {
-            if (_transform[5] != 0)
-                return Math.Atan(_transform[2] / _transform[5]) * 57.2957795;
+            if (Transform[5] != 0)
+                return Math.Atan(Transform[2] / Transform[5]) * 57.2957795;
 
             return 0;
         }
 
         public bool IsFlipped()
         {
-            if (_transform[5] > 0)
-                return true;
-
-            return false;
+            return Transform[5] > 0;
         }
 
         #endregion

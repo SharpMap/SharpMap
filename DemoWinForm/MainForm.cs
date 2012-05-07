@@ -22,12 +22,13 @@ using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
 using DemoWinForm.Properties;
+using NetTopologySuite.Geometries;
 using SharpMap.Data;
 using SharpMap.Data.Providers;
 using SharpMap.Forms;
-using SharpMap.Geometries;
+using GeoAPI.Geometries;
 using SharpMap.Layers;
-using GeoPoint = SharpMap.Geometries.Point;
+using GeoPoint = GeoAPI.Geometries.Coordinate;
 
 namespace DemoWinForm
 {
@@ -89,15 +90,15 @@ namespace DemoWinForm
         private void addNewRandomGeometryLayer()
         {
             Random rndGen = new Random();
-            Collection<Geometry> geometry = new Collection<Geometry>();
+            Collection<IGeometry> geometry = new Collection<IGeometry>();
 
             VectorLayer layer = new VectorLayer(String.Empty);
-
+            var gf = new GeometryFactory();
             switch (rndGen.Next(3))
             {
                 case 0:
                     {
-                        generatePoints(geometry, rndGen);
+                        GeneratePoints(gf, geometry, rndGen);
                         KeyValuePair<string, Bitmap> symbolEntry = getSymbolEntry(rndGen.Next(_symbolTable.Count));
                         layer.Style.Symbol = symbolEntry.Value;
                         layer.LayerName = symbolEntry.Key;
@@ -105,7 +106,7 @@ namespace DemoWinForm
                     break;
                 case 1:
                     {
-                        generateLines(geometry, rndGen);
+                        GenerateLines(gf, geometry, rndGen);
                         KeyValuePair<string, Color> colorEntry = getColorEntry(rndGen.Next(_colorTable.Count));
                         layer.Style.Line = new Pen(colorEntry.Value);
                         layer.LayerName = String.Format("{0} lines", colorEntry.Key);
@@ -113,7 +114,7 @@ namespace DemoWinForm
                     break;
                 case 2:
                     {
-                        generatePolygons(geometry, rndGen);
+                        GeneratePolygons(gf, geometry, rndGen);
                         KeyValuePair<string, Color> colorEntry = getColorEntry(rndGen.Next(_colorTable.Count));
                         layer.Style.Fill = new SolidBrush(colorEntry.Value);
                         layer.LayerName = String.Format("{0} squares", colorEntry.Key);
@@ -123,7 +124,7 @@ namespace DemoWinForm
                     throw new NotSupportedException();
             }
 
-            GeometryProvider provider = new GeometryProvider(geometry);
+            var provider = new GeometryProvider(geometry);
             layer.DataSource = provider;
 
             addLayer(layer);
@@ -151,79 +152,73 @@ namespace DemoWinForm
             throw new InvalidOperationException();
         }
 
-        private Color getRandomColor(Random rndGen)
+        private Color GetRandomColor(Random rndGen)
         {
             return Color.FromArgb(rndGen.Next(255), rndGen.Next(255), rndGen.Next(255));
         }
 
-        private void generatePolygons(Collection<Geometry> geometry, Random rndGen)
+        private static void GeneratePolygons(IGeometryFactory factory, ICollection<IGeometry> geometry, Random rndGen)
         {
             int numPolygons = rndGen.Next(10, 100);
-            for (int polyIndex = 0; polyIndex < numPolygons; polyIndex++)
+            for (var polyIndex = 0; polyIndex < numPolygons; polyIndex++)
             {
-                Polygon polygon = new Polygon();
-                Collection<GeoPoint> verticies = new Collection<GeoPoint>();
-                GeoPoint upperLeft = new GeoPoint(rndGen.NextDouble()*1000, rndGen.NextDouble()*1000);
-                double sideLength = rndGen.NextDouble()*50;
+                var vertices = new GeoPoint[5];
+                var upperLeft = new GeoPoint(rndGen.NextDouble()*1000, rndGen.NextDouble()*1000);
+                var sideLength = rndGen.NextDouble()*50;
 
                 // Make a square
-                verticies.Add(upperLeft);
-                verticies.Add(new GeoPoint(upperLeft.X + sideLength, upperLeft.Y));
-                verticies.Add(new GeoPoint(upperLeft.X + sideLength, upperLeft.Y - sideLength));
-                verticies.Add(new GeoPoint(upperLeft.X, upperLeft.Y - sideLength));
-                polygon.ExteriorRing = new LinearRing(verticies);
-
-                geometry.Add(polygon);
+                vertices[0] = new GeoPoint(upperLeft);
+                vertices[1] = new GeoPoint(upperLeft.X + sideLength, upperLeft.Y);
+                vertices[2] = new GeoPoint(upperLeft.X + sideLength, upperLeft.Y - sideLength);
+                vertices[3] = new GeoPoint(upperLeft.X, upperLeft.Y - sideLength);
+                vertices[4] = upperLeft;
+                
+                geometry.Add(factory.CreatePolygon(factory.CreateLinearRing(vertices), null));
             }
         }
 
-        private void generateLines(Collection<Geometry> geometry, Random rndGen)
+        private static void GenerateLines(IGeometryFactory factory, ICollection<IGeometry> geometry, Random rndGen)
         {
-            int numLines = rndGen.Next(10, 100);
-            for (int lineIndex = 0; lineIndex < numLines; lineIndex++)
+            var numLines = rndGen.Next(10, 100);
+            for (var lineIndex = 0; lineIndex < numLines; lineIndex++)
             {
-                LineString line = new LineString();
-                Collection<GeoPoint> verticies = new Collection<GeoPoint>();
+                var numVerticies = rndGen.Next(4, 15);
+                var vertices = new GeoPoint[numVerticies];
 
-                int numVerticies = rndGen.Next(4, 15);
+                var lastPoint = new GeoPoint(rndGen.NextDouble()*1000, rndGen.NextDouble()*1000);
+                vertices[0] = lastPoint;
 
-                GeoPoint lastPoint = new GeoPoint(rndGen.NextDouble()*1000, rndGen.NextDouble()*1000);
-                verticies.Add(lastPoint);
-
-                for (int vertexIndex = 0; vertexIndex < numVerticies; vertexIndex++)
+                for (var vertexIndex = 1; vertexIndex < numVerticies; vertexIndex++)
                 {
-                    GeoPoint nextPoint = new GeoPoint(lastPoint.X + rndGen.Next(-50, 50),
-                                                      lastPoint.Y + rndGen.Next(-50, 50));
-                    verticies.Add(nextPoint);
+                    var nextPoint = new GeoPoint(lastPoint.X + rndGen.Next(-50, 50),
+                                                 lastPoint.Y + rndGen.Next(-50, 50));
+                    vertices[vertexIndex] = nextPoint;
 
                     lastPoint = nextPoint;
                 }
-
-                line.Vertices = verticies;
-
-                geometry.Add(line);
+                geometry.Add(factory.CreateLineString(vertices));
             }
         }
 
-        private void generatePoints(Collection<Geometry> geometry, Random rndGen)
+        private static void GeneratePoints(IGeometryFactory factory, ICollection<IGeometry> geometry, Random rndGen)
         {
-            int numPoints = rndGen.Next(10, 100);
-            for (int pointIndex = 0; pointIndex < numPoints; pointIndex++)
+            var numPoints = rndGen.Next(10, 100);
+            for (var pointIndex = 0; pointIndex < numPoints; pointIndex++)
             {
-                GeoPoint point = new GeoPoint(rndGen.NextDouble()*1000, rndGen.NextDouble()*1000);
-                geometry.Add(point);
+                var point = new GeoPoint(rndGen.NextDouble()*1000, rndGen.NextDouble()*1000);
+                geometry.Add(factory.CreatePoint(point));
             }
         }
 
-        private void loadLayer()
+        private void LoadLayer()
         {
-            DialogResult result = AddLayerDialog.ShowDialog(this);
+            var result = AddLayerDialog.ShowDialog(this);
 
             if (result == DialogResult.OK)
             {
-                foreach (string fileName in AddLayerDialog.FileNames)
+                foreach (var fileName in AddLayerDialog.FileNames)
                 {
-                    string extension = Path.GetExtension(fileName);
+                    var extension = Path.GetExtension(fileName);
                     ILayerFactory layerFactory = null;
 
                     if (!_layerFactoryCatalog.TryGetValue(extension, out layerFactory))
@@ -240,7 +235,7 @@ namespace DemoWinForm
             }
         }
 
-        private void removeLayer()
+        private void RemoveLayer()
         {
             if (LayersDataGridView.SelectedRows.Count == 0)
                 return;
@@ -340,22 +335,22 @@ namespace DemoWinForm
 
         private void AddLayerToolStripButton_Click(object sender, EventArgs e)
         {
-            BeginInvoke((MethodInvoker) delegate { loadLayer(); });
+            BeginInvoke((MethodInvoker) delegate { LoadLayer(); });
         }
 
         private void RemoveLayerToolStripButton_Click(object sender, EventArgs e)
         {
-            BeginInvoke((MethodInvoker) delegate { removeLayer(); });
+            BeginInvoke((MethodInvoker) delegate { RemoveLayer(); });
         }
 
         private void AddLayerToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            BeginInvoke((MethodInvoker) delegate { loadLayer(); });
+            BeginInvoke((MethodInvoker) delegate { LoadLayer(); });
         }
 
         private void RemoveLayerToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            BeginInvoke((MethodInvoker) delegate { removeLayer(); });
+            BeginInvoke((MethodInvoker) delegate { RemoveLayer(); });
         }
 
         private void ZoomToExtentsToolStripButton_Click(object sender, EventArgs e)

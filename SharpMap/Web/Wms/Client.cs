@@ -8,7 +8,7 @@ using System.Net;
 using System.Text;
 using System.Xml;
 using System.Xml.Schema;
-using SharpMap.Geometries;
+using GeoAPI.Geometries;
 
 namespace SharpMap.Web.Wms
 {
@@ -108,7 +108,7 @@ namespace SharpMap.Web.Wms
             /// <summary>
             /// Latitudal/longitudal extent of this layer
             /// </summary>
-            public BoundingBox LatLonBoundingBox;
+            public Envelope LatLonBoundingBox;
 
             /// <summary>
             /// Extent of this layer in spatial reference system
@@ -909,7 +909,7 @@ namespace SharpMap.Web.Wms
                 double miny = WebUtilities.ParseNodeAsDouble(node.Attributes["miny"], -90.0);
                 double maxx = WebUtilities.ParseNodeAsDouble(node.Attributes["maxx"], 180.0);
                 double maxy = WebUtilities.ParseNodeAsDouble(node.Attributes["maxy"], 90.0);
-                layer.LatLonBoundingBox = new BoundingBox(minx, miny, maxx, maxy);
+                layer.LatLonBoundingBox = new Envelope(minx, maxx, miny, maxy);
             }
             else
             {
@@ -922,7 +922,7 @@ namespace SharpMap.Web.Wms
                     double miny = WebUtilities.ParseNodeAsDouble(node.SelectSingleNode("sm:southBoundLatitude", _nsmgr), -90.0);
                     double maxx = WebUtilities.ParseNodeAsDouble(node.SelectSingleNode("sm:eastBoundLongitude", _nsmgr), 180.0);
                     double maxy = WebUtilities.ParseNodeAsDouble(node.SelectSingleNode("sm:northBoundLatitude", _nsmgr), 90.0);
-                    layer.LatLonBoundingBox = new BoundingBox(minx, miny, maxx, maxy);
+                    layer.LatLonBoundingBox = new Envelope(minx, maxx, miny, maxy);
                 }
                 else
                 {

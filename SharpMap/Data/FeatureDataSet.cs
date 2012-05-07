@@ -26,7 +26,7 @@ using System.IO;
 using System.Runtime.Serialization;
 using System.Xml;
 using System.Xml.Schema;
-using SharpMap.Geometries;
+using GeoAPI.Geometries;
 
 namespace SharpMap.Data
 {
@@ -318,7 +318,7 @@ namespace SharpMap.Data
 
         private void InitClass()
         {
-            //this.columnFeatureGeometry = new DataColumn("FeatureGeometry", typeof(SharpMap.Geometries.Geometry), null, System.Data.MappingType.Element);
+            //this.columnFeatureGeometry = new DataColumn("FeatureGeometry", typeof(GeoAPI.Geometries.IGeometry), null, System.Data.MappingType.Element);
             //this.Columns.Add(this.columnFeatureGeometry);
         }
 
@@ -438,7 +438,7 @@ namespace SharpMap.Data
     {
         //private FeatureDataTable tableFeatureTable;
 
-        private Geometry _Geometry;
+        private IGeometry _Geometry;
 
         internal FeatureDataRow(DataRowBuilder rb) : base(rb)
         {
@@ -447,7 +447,7 @@ namespace SharpMap.Data
         /// <summary>
         /// The geometry of the current feature
         /// </summary>
-        public Geometry Geometry
+        public IGeometry Geometry
         {
             get { return _Geometry; }
             set { _Geometry = value; }

@@ -2,14 +2,15 @@ using System;
 using System.Drawing;
 using System.Web;
 using System.Web.UI;
+using GeoAPI.Geometries;
 using SharpMap;
 using SharpMap.Data;
-using SharpMap.Geometries;
+//using SharpMap.Geometries;
 using SharpMap.Layers;
 using SharpMap.Rendering.Thematics;
 using SharpMap.Styles;
 using SharpMap.Web;
-using Point=SharpMap.Geometries.Point;
+using Point = GeoAPI.Geometries.Coordinate;
 
 public partial class Bins : Page
 {
@@ -46,8 +47,8 @@ public partial class Bins : Page
             return style;
         }
             // If geometry is a (multi)polygon and the area of the polygon is less than 30, make it cyan
-        else if (row.Geometry.GetType() == typeof (MultiPolygon) && (row.Geometry as MultiPolygon).Area < 30 ||
-                 row.Geometry.GetType() == typeof (Polygon) && (row.Geometry as Polygon).Area < 30)
+        else if (row.Geometry is IMultiPolygon && (row.Geometry as IMultiPolygon).Area < 30 ||
+                 row.Geometry is IPolygon && (row.Geometry as IPolygon).Area < 30)
         {
             style.Fill = Brushes.Cyan;
             return style;

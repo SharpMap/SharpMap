@@ -18,9 +18,9 @@
 using System;
 using System.Collections.ObjectModel;
 using System.Data.SqlClient;
-using SharpMap.Geometries;
 using SharpMap.Converters.SqlServer2008SpatialObjects;
-
+using BoundingBox = GeoAPI.Geometries.Envelope;
+using Geometry = GeoAPI.Geometries.IGeometry;
 
 namespace SharpMap.Data.Providers
 {
@@ -132,7 +132,7 @@ namespace SharpMap.Data.Providers
         /// </summary>   
         /// <param name="geom"></param>   
         /// <param name="ds">FeatureDataSet to fill data into</param>   
-        public override void ExecuteIntersectionQuery(Geometry geom, FeatureDataSet ds)
+        protected override void OnExecuteIntersectionQuery(Geometry geom, FeatureDataSet ds)
         {
             using (SqlConnection conn = new SqlConnection(ConnectionString))
             {

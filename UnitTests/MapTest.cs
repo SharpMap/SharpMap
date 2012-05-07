@@ -1,38 +1,51 @@
 using System;
 using System.Collections.ObjectModel;
 using System.Drawing;
+using GeoAPI.Geometries;
 using NUnit.Framework;
+using NetTopologySuite.Geometries;
+using NetTopologySuite.IO;
 using SharpMap;
 using SharpMap.Data.Providers;
-using SharpMap.Geometries;
+using Geometry = GeoAPI.Geometries.IGeometry;
 using SharpMap.Layers;
-using Point=SharpMap.Geometries.Point;
+using Point=GeoAPI.Geometries.Coordinate;
+using BoundingBox = GeoAPI.Geometries.Envelope;
 
 namespace UnitTests
 {
     [TestFixture]
     public class MapTest
     {
-        private IProvider CreateDatasource()
+        private static readonly IGeometryFactory Factory = new GeometryFactory();
+        private static readonly WKTReader WktReader = new WKTReader(Factory);
+
+        public static IGeometry GeomFromText(string wkt)
         {
-            Collection<Geometry> geoms = new Collection<Geometry>();
-            geoms.Add(Geometry.GeomFromText("POINT EMPTY"));
-            geoms.Add(
-                Geometry.GeomFromText("GEOMETRYCOLLECTION (POINT (10 10), POINT (30 30), LINESTRING (15 15, 20 20))"));
-            geoms.Add(
-                Geometry.GeomFromText("MULTIPOLYGON (((0 0, 10 0, 10 10, 0 10, 0 0)), ((5 5, 7 5, 7 7, 5 7, 5 5)))"));
-            geoms.Add(Geometry.GeomFromText("LINESTRING (20 20, 20 30, 30 30, 30 20, 40 20)"));
-            geoms.Add(
-                Geometry.GeomFromText("MULTILINESTRING ((10 10, 40 50), (20 20, 30 20), (20 20, 50 20, 50 60, 20 20))"));
-            geoms.Add(
-                Geometry.GeomFromText(
-                    "POLYGON ((20 20, 20 30, 30 30, 30 20, 20 20), (21 21, 29 21, 29 29, 21 29, 21 21), (23 23, 23 27, 27 27, 27 23, 23 23))"));
-            geoms.Add(Geometry.GeomFromText("POINT (20.564 346.3493254)"));
-            geoms.Add(Geometry.GeomFromText("MULTIPOINT (20.564 346.3493254, 45 32, 23 54)"));
-            geoms.Add(Geometry.GeomFromText("MULTIPOLYGON EMPTY"));
-            geoms.Add(Geometry.GeomFromText("MULTILINESTRING EMPTY"));
-            geoms.Add(Geometry.GeomFromText("MULTIPOINT EMPTY"));
-            geoms.Add(Geometry.GeomFromText("LINESTRING EMPTY"));
+            return WktReader.Read(wkt);
+        }
+
+        private static IProvider CreateDatasource()
+        {
+            var geoms = new Collection<Geometry>
+                            {
+                                GeomFromText("POINT EMPTY"),
+                                GeomFromText(
+                                    "GEOMETRYCOLLECTION (POINT (10 10), POINT (30 30), LINESTRING (15 15, 20 20))"),
+                                GeomFromText(
+                                    "MULTIPOLYGON (((0 0, 10 0, 10 10, 0 10, 0 0)), ((5 5, 7 5, 7 7, 5 7, 5 5)))"),
+                                GeomFromText("LINESTRING (20 20, 20 30, 30 30, 30 20, 40 20)"),
+                                GeomFromText(
+                                    "MULTILINESTRING ((10 10, 40 50), (20 20, 30 20), (20 20, 50 20, 50 60, 20 20))"),
+                                GeomFromText(
+                                    "POLYGON ((20 20, 20 30, 30 30, 30 20, 20 20), (21 21, 29 21, 29 29, 21 29, 21 21), (23 23, 23 27, 27 27, 27 23, 23 23))"),
+                                GeomFromText("POINT (20.564 346.3493254)"),
+                                GeomFromText("MULTIPOINT (20.564 346.3493254, 45 32, 23 54)"),
+                                GeomFromText("MULTIPOLYGON EMPTY"),
+                                GeomFromText("MULTILINESTRING EMPTY"),
+                                GeomFromText("MULTIPOINT EMPTY"),
+                                GeomFromText("LINESTRING EMPTY")
+                            };
             return new GeometryProvider(geoms);
         }
 
@@ -133,7 +146,7 @@ namespace UnitTests
             VectorLayer vLayer = new VectorLayer("Geom layer", CreateDatasource());
             map.Layers.Add(vLayer);
             BoundingBox box = map.GetExtents();
-            Assert.AreEqual(new BoundingBox(0, 0, 50, 346.3493254), box);
+            Assert.AreEqual(new BoundingBox(0, 50, 0, 346.3493254), box);
         }
 
         [Test]
@@ -346,7 +359,7 @@ namespace UnitTests
         public void ZoomToBox_NoAspectCorrection()
         {
             Map map = new Map(new Size(400, 200));
-            map.ZoomToBox(new BoundingBox(20, 50, 100, 80));
+            map.ZoomToBox(new BoundingBox(20, 100, 50, 80));
             Assert.AreEqual(new Point(60, 65), map.Center);
             Assert.AreEqual(80, map.Zoom);
         }
@@ -355,7 +368,7 @@ namespace UnitTests
         public void ZoomToBox_WithAspectCorrection()
         {
             Map map = new Map(new Size(400, 200));
-            map.ZoomToBox(new BoundingBox(20, 10, 100, 180));
+            map.ZoomToBox(new BoundingBox(20, 100, 10, 180));
             Assert.AreEqual(new Point(60, 95), map.Center);
             Assert.AreEqual(340, map.Zoom);
         }

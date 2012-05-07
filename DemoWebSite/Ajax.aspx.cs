@@ -1,7 +1,7 @@
 using System;
 using System.Drawing;
 using System.Web.UI;
-using Point=SharpMap.Geometries.Point;
+using Point=GeoAPI.Geometries.Coordinate;
 
 public partial class Ajax : Page
 {

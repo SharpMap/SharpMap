@@ -1,49 +1,60 @@
+using GeoAPI.Geometries;
 using NUnit.Framework;
-using SharpMap.Geometries;
+using NetTopologySuite.Geometries;
+using NetTopologySuite.IO;
 
 namespace UnitTests.Converters.WKT
 {
     [TestFixture]
     public class WktGeometryTests
     {
+        private static readonly IGeometryFactory Factory = new GeometryFactory();
+        private static readonly WKTReader WktReader = new WKTReader(Factory);
+
+        public static IGeometry GeomFromText(string wkt)
+        {
+            return WktReader.Read(wkt);
+        }
+
+
         [Test]
         public void ParseGeometryCollection()
         {
             string geomCollection = "GEOMETRYCOLLECTION (POINT (10 10), POINT (30 30), LINESTRING (15 15, 20 20))";
-            GeometryCollection geom = Geometry.GeomFromText(geomCollection) as GeometryCollection;
+            var geom = GeomFromText(geomCollection) as IGeometryCollection;
             Assert.IsNotNull(geom);
             Assert.AreEqual(3, geom.NumGeometries);
             Assert.IsTrue(geom[0] is Point);
             Assert.IsTrue(geom[1] is Point);
             Assert.IsTrue(geom[2] is LineString);
             Assert.AreEqual(geomCollection, geom.AsText());
-            geom = Geometry.GeomFromText("GEOMETRYCOLLECTION EMPTY") as GeometryCollection;
+            geom = GeomFromText("GEOMETRYCOLLECTION EMPTY") as GeometryCollection;
             Assert.IsNotNull(geom);
             Assert.AreEqual(0, geom.NumGeometries);
             geomCollection = "GEOMETRYCOLLECTION (POINT (10 10), LINESTRING EMPTY, POINT (20 49))";
-            geom = Geometry.GeomFromText(geomCollection) as GeometryCollection;
+            geom = GeomFromText(geomCollection) as GeometryCollection;
             Assert.IsNotNull(geom);
-            Assert.IsTrue(geom[1].IsEmpty());
+            Assert.IsTrue(geom[1].IsEmpty);
             Assert.AreEqual(3, geom.NumGeometries);
             Assert.AreEqual(geomCollection, geom.AsText());
-            Assert.AreEqual("GEOMETRYCOLLECTION EMPTY", new GeometryCollection().AsText());
+            Assert.AreEqual("GEOMETRYCOLLECTION EMPTY", Factory.CreateGeometryCollection(null).AsText());
         }
 
         [Test]
         public void ParseLineString()
         {
             string linestring = "LINESTRING (20 20, 20 30, 30 30, 30 20, 40 20)";
-            LineString geom = Geometry.GeomFromText(linestring) as LineString;
+            var geom = GeomFromText(linestring) as ILineString;
             Assert.IsNotNull(geom);
             Assert.AreEqual(40, geom.Length);
             Assert.IsFalse(geom.IsRing);
             Assert.AreEqual(linestring, geom.AsText());
 
-            Assert.IsTrue((Geometry.GeomFromText("LINESTRING EMPTY") as LineString).IsEmpty());
-            Assert.AreEqual("LINESTRING EMPTY", new LineString().AsText());
+            Assert.IsTrue((GeomFromText("LINESTRING EMPTY") as ILineString).IsEmpty);
+            Assert.AreEqual("LINESTRING EMPTY", Factory.CreateLineString((Coordinate[])null).AsText());
 
             linestring = "LINESTRING (-3.32348670085011 56.3658879665301, 5.72037855874896E-05 53.5353372259589)";
-            geom = Geometry.GeomFromText(linestring) as LineString;
+            geom = GeomFromText(linestring) as LineString;
             Assert.IsNotNull(geom);
         }
 
@@ -51,85 +62,85 @@ namespace UnitTests.Converters.WKT
         public void ParseMultiLineString()
         {
             string multiLinestring = "MULTILINESTRING ((10 10, 40 50), (20 20, 30 20), (20 20, 50 20, 50 60, 20 20))";
-            MultiLineString geom = Geometry.GeomFromText(multiLinestring) as MultiLineString;
+            var geom = GeomFromText(multiLinestring) as IMultiLineString;
             Assert.IsNotNull(geom);
             Assert.AreEqual(3, geom.NumGeometries);
             Assert.AreEqual(180, geom.Length);
             Assert.AreEqual(120, geom[2].Length);
-            Assert.IsFalse(geom[0].IsClosed, "[0].IsClosed");
-            Assert.IsFalse(geom[1].IsClosed, "[1].IsClosed");
-            Assert.IsTrue(geom[2].IsClosed, "[2].IsClosed");
-            Assert.IsTrue(geom[0].IsSimple(), "[0].IsSimple");
-            Assert.IsTrue(geom[1].IsSimple(), "[1].IsSimple");
-            Assert.IsTrue(geom[2].IsSimple(), "[2].IsSimple");
-            Assert.IsTrue(geom[2].IsRing, "Third line is a ring");
+            Assert.IsFalse(((ILineString)geom[0]).IsClosed, "[0].IsClosed");
+            Assert.IsFalse(((ILineString)geom[1]).IsClosed, "[1].IsClosed");
+            Assert.IsTrue(((ILineString)geom[2]).IsClosed, "[2].IsClosed");
+            Assert.IsTrue(geom[0].IsSimple, "[0].IsSimple");
+            Assert.IsTrue(geom[1].IsSimple, "[1].IsSimple");
+            Assert.IsTrue(geom[2].IsSimple, "[2].IsSimple");
+            Assert.IsTrue(((ILineString)geom[2]).IsRing, "Third line is a ring");
             Assert.AreEqual(multiLinestring, geom.AsText());
-            Assert.IsTrue(Geometry.GeomFromText("MULTILINESTRING EMPTY").IsEmpty());
+            Assert.IsTrue(GeomFromText("MULTILINESTRING EMPTY").IsEmpty);
             geom =
-                Geometry.GeomFromText(
+                GeomFromText(
                     "MULTILINESTRING ((10 10, 40 50), (20 20, 30 20), EMPTY, (20 20, 50 20, 50 60, 20 20))") as
-                MultiLineString;
+                IMultiLineString;
             Assert.IsNotNull(geom);
-            Assert.IsTrue(geom[2].IsEmpty());
+            Assert.IsTrue(geom[2].IsEmpty);
             Assert.AreEqual(4, geom.NumGeometries);
-            Assert.AreEqual("MULTILINESTRING EMPTY", new MultiLineString().AsText());
+            Assert.AreEqual("MULTILINESTRING EMPTY", Factory.CreateMultiLineString(null).AsText());
         }
 
         [Test]
         public void ParseMultiPoint()
         {
             string multipoint = "MULTIPOINT (20.564 346.3493254, 45 32, 23 54)";
-            MultiPoint geom = Geometry.GeomFromText(multipoint) as MultiPoint;
+            var geom = GeomFromText(multipoint) as IMultiPoint;
             Assert.IsNotNull(geom);
-            Assert.AreEqual(20.564, geom[0].X);
-            Assert.AreEqual(54, geom[2].Y);
+            Assert.AreEqual(20.564, ((IPoint)geom[0]).X);
+            Assert.AreEqual(54, ((IPoint)geom[2]).Y);
             Assert.AreEqual(multipoint, geom.AsText());
-            Assert.IsTrue(Geometry.GeomFromText("MULTIPOINT EMPTY").IsEmpty());
-            Assert.AreEqual("MULTIPOINT EMPTY", new MultiPoint().AsText());
+            Assert.IsTrue(GeomFromText("MULTIPOINT EMPTY").IsEmpty);
+            Assert.AreEqual("MULTIPOINT EMPTY", Factory.CreateMultiPoint((Coordinate[])null).AsText());
         }
 
         [Test]
         public void ParseMultipolygon()
         {
             string multipolygon = "MULTIPOLYGON (((0 0, 10 0, 10 10, 0 10, 0 0)), ((5 5, 7 5, 7 7, 5 7, 5 5)))";
-            MultiPolygon geom = Geometry.GeomFromText(multipolygon) as MultiPolygon;
+            var geom = GeomFromText(multipolygon) as IMultiPolygon;
             Assert.IsNotNull(geom);
             Assert.AreEqual(2, geom.NumGeometries);
             Assert.AreEqual(new Point(5, 5), geom[0].Centroid);
             Assert.AreEqual(multipolygon, geom.AsText());
-            Assert.IsNotNull(Geometry.GeomFromText("MULTIPOLYGON EMPTY"));
-            Assert.IsTrue(Geometry.GeomFromText("MULTIPOLYGON EMPTY").IsEmpty());
+            Assert.IsNotNull(GeomFromText("MULTIPOLYGON EMPTY"));
+            Assert.IsTrue(GeomFromText("MULTIPOLYGON EMPTY").IsEmpty);
             geom =
-                Geometry.GeomFromText(
+                GeomFromText(
                     "MULTIPOLYGON (((0 0, 10 0, 10 10, 0 10, 0 0)), EMPTY, ((5 5, 7 5, 7 7, 5 7, 5 5)))") as
-                MultiPolygon;
+                IMultiPolygon;
             Assert.IsNotNull(geom);
-            Assert.IsTrue(geom[1].IsEmpty());
-            Assert.AreEqual(new Point(5, 5), geom[2].ExteriorRing.EndPoint);
-            Assert.AreEqual(new Point(5, 5), geom[2].ExteriorRing.StartPoint);
-            Assert.AreEqual(geom[2].ExteriorRing.StartPoint, geom[2].ExteriorRing.EndPoint);
+            Assert.IsTrue(geom[1].IsEmpty);
+            Assert.AreEqual(new Point(5, 5), ((IPolygon)geom[2]).ExteriorRing.EndPoint);
+            Assert.AreEqual(new Point(5, 5), ((IPolygon)geom[2]).ExteriorRing.StartPoint);
+            Assert.AreEqual(((IPolygon)geom[2]).ExteriorRing.StartPoint, ((IPolygon)geom[2]).ExteriorRing.EndPoint);
             Assert.AreEqual(3, geom.NumGeometries);
-            Assert.AreEqual("MULTIPOLYGON EMPTY", new MultiPolygon().AsText());
+            Assert.AreEqual("MULTIPOLYGON EMPTY", Factory.CreateMultiPolygon(null).AsText());
         }
 
         [Test]
         public void ParsePoint()
         {
             string point = "POINT (20.564 346.3493254)";
-            Point geom = Geometry.GeomFromText(point) as Point;
+            var geom = GeomFromText(point) as IPoint;
             Assert.IsNotNull(geom);
             Assert.AreEqual(20.564, geom.X);
             Assert.AreEqual(346.3493254, geom.Y);
             Assert.AreEqual(point, geom.AsText());
-            Assert.IsTrue(Geometry.GeomFromText("POINT EMPTY").IsEmpty());
-            Assert.AreEqual("POINT EMPTY", new Point().AsText());
+            Assert.IsTrue(GeomFromText("POINT EMPTY").IsEmpty);
+            Assert.AreEqual("POINT EMPTY", Factory.CreatePoint((Coordinate)null).AsText());
         }
 
         [Test]
         public void ParsePolygon()
         {
             string polygon = "POLYGON ((20 20, 20 30, 30 30, 30 20, 20 20))";
-            Polygon geom = Geometry.GeomFromText(polygon) as Polygon;
+            var geom = GeomFromText(polygon) as IPolygon;
             Assert.IsNotNull(geom);
             Assert.AreEqual(40, geom.ExteriorRing.Length);
             Assert.AreEqual(100, geom.Area);
@@ -137,16 +148,16 @@ namespace UnitTests.Converters.WKT
             //Test interior rings
             polygon =
                 "POLYGON ((20 20, 20 30, 30 30, 30 20, 20 20), (21 21, 29 21, 29 29, 21 29, 21 21), (23 23, 23 27, 27 27, 27 23, 23 23))";
-            geom = Geometry.GeomFromText(polygon) as Polygon;
+            geom = GeomFromText(polygon) as IPolygon;
             Assert.IsNotNull(geom);
             Assert.AreEqual(40, geom.ExteriorRing.Length);
-            Assert.AreEqual(2, geom.InteriorRings.Count);
+            Assert.AreEqual(2, geom.NumInteriorRings);
             Assert.AreEqual(52, geom.Area);
             Assert.AreEqual(geom.ExteriorRing.Area - geom.InteriorRings[0].Area + geom.InteriorRings[1].Area, geom.Area);
             Assert.AreEqual(polygon, geom.AsText());
             //Test empty geometry WKT
-            Assert.IsTrue(Geometry.GeomFromText("POLYGON EMPTY").IsEmpty());
-            Assert.AreEqual("POLYGON EMPTY", new Polygon().AsText());
+            Assert.IsTrue(GeomFromText("POLYGON EMPTY").IsEmpty);
+            Assert.AreEqual("POLYGON EMPTY", Factory.CreatePolygon(null, null).AsText());
         }
     }
 }

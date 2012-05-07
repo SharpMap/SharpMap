@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
+using GeoAPI.Geometries;
 using SharpMap.Layers;
 using SharpMap.Data;
 using SharpMap.Styles;
@@ -65,12 +66,12 @@ namespace WinFormSamples
         {
             if (this.folderBrowserDialog1.ShowDialog() == DialogResult.OK)
             {
-                SharpMap.Geometries.BoundingBox bb = this.mapBox1.Map.Envelope;
+                var bb = this.mapBox1.Map.Envelope;
 
                 for (int i = 0; i < 50; i=i+5)
                 {
 
-                    this.mapBox1.Map.ZoomToBox(new SharpMap.Geometries.BoundingBox(bb.Left - i, bb.Bottom - i, bb.Right + i, bb.Top + i));
+                    this.mapBox1.Map.ZoomToBox(new Envelope(bb.MinX - i, bb.MaxX + i, bb.MinY - i, bb.MaxY+ i));
                     this.mapBox1.Refresh();
 
                     Image image = mapBox1.Image;

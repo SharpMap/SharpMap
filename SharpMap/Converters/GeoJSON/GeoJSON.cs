@@ -1,10 +1,12 @@
-﻿namespace SharpMap.Converters.GeoJSON
+﻿using GeoAPI;
+
+namespace SharpMap.Converters.GeoJSON
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Text;
-    using Geometries;
+    using GeoAPI.Geometries;
     using Newtonsoft.Json;
 
     [JsonObject(MemberSerialization = MemberSerialization.OptOut, Description = "featureType")]
@@ -14,17 +16,19 @@
         {
             get
             {
-                GeometryCollection geometry = new GeometryCollection();
+                var factory = GeometryServiceProvider.Instance.CreateGeometryFactory();
+                IGeometryCollection geometry =  factory.CreateGeometryCollection(new IGeometry[0]);
+
                 Dictionary<string, object> dictionary = new Dictionary<string, object>();
                 return new GeoJSON(geometry, dictionary);
             }
         }
 
-        public Geometry Geometry { get; private set; }
+        public IGeometry Geometry { get; private set; }
 
         public IDictionary<string, object> Values { get; private set; }
 
-        public GeoJSON(Geometry geometry, IDictionary<string, object> values)
+        public GeoJSON(IGeometry geometry, IDictionary<string, object> values)
         {
             if (values == null)
                 throw new ArgumentNullException("values");
@@ -33,7 +37,7 @@
             this.Values = values;
         }
 
-        public void SetGeometry(Geometry converted)
+        public void SetGeometry(IGeometry converted)
         {
             if (converted == null)
                 throw new ArgumentNullException("converted");

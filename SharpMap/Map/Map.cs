@@ -21,12 +21,13 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Globalization;
 using System.IO;
-using SharpMap.Geometries;
+using GeoAPI.Geometries;
+using NetTopologySuite.Geometries;
 using SharpMap.Layers;
 using SharpMap.Rendering;
 using SharpMap.Rendering.Decoration;
 using SharpMap.Utilities;
-using Point=SharpMap.Geometries.Point;
+using Point = GeoAPI.Geometries.Coordinate;
 using System.Drawing.Imaging;
 
 namespace SharpMap
@@ -94,6 +95,7 @@ namespace SharpMap
         /// <param name="size">Size of map in pixels</param>
         public Map(Size size)
         {
+            Factory = new GeometryFactory();
             Size = size;
             _Layers = new LayerCollection();
             _backgroundLayers = new LayerCollection();
@@ -341,7 +343,7 @@ namespace SharpMap
         /// <param name="sourceWidth"></param>
         /// <param name="sourceHeight"></param>
         /// <param name="imageAttributes"></param>
-        public void MapNewTileAvaliableHandler(TileLayer sender, BoundingBox bbox, Bitmap bm, int sourceWidth, int sourceHeight, ImageAttributes imageAttributes)
+        public void MapNewTileAvaliableHandler(TileLayer sender, Envelope bbox, Bitmap bm, int sourceWidth, int sourceHeight, ImageAttributes imageAttributes)
         {
             var e = MapNewTileAvaliable;
             if (e != null)
@@ -566,10 +568,10 @@ namespace SharpMap
                     clone.DisclaimerFont = (Font)DisclaimerFont.Clone();
                 if (MapTransform != null)
                     clone.MapTransform = MapTransform.Clone();
-                if (Size != null)
+                if (!Size.IsEmpty)
                     clone.Size = new Size(Size.Width, Size.Height);
                 if (Center != null)
-                    clone.Center = Center.Clone();
+                    clone.Center = (Coordinate)Center.Clone();
 
             }
             if (clone != null)
@@ -679,9 +681,9 @@ namespace SharpMap
         /// the bounding box, thus making the resulting envelope larger!
         /// </remarks>
         /// <param name="bbox"></param>
-        public void ZoomToBox(BoundingBox bbox)
+        public void ZoomToBox(Envelope bbox)
         {
-            if (bbox != null && bbox.IsValid)
+            if (bbox != null && !bbox.IsNull)
             {
                 
                 _Zoom = bbox.Width; //Set the private center value so we only fire one MapOnViewChange event
@@ -691,7 +693,7 @@ namespace SharpMap
                     _Zoom = _MinimumZoom;
                 if (_Zoom > _MaximumZoom)
                     _Zoom = _MaximumZoom;
-                Center = bbox.GetCentroid();
+                Center = bbox.Centre;
             }
         }
 
@@ -702,7 +704,7 @@ namespace SharpMap
         /// <param name="p">Point in world coordinates</param>
         /// <param name="careAboutMapTransform">Indicates whether MapTransform should be taken into account</param>
         /// <returns>Point in image coordinates</returns>
-        public PointF WorldToImage(Point p, bool careAboutMapTransform)
+        public PointF WorldToImage(Coordinate p, bool careAboutMapTransform)
         {
             PointF pTmp = Transform.WorldtoMap(p, this);
             lock (MapTransform)
@@ -789,15 +791,15 @@ namespace SharpMap
         /// <summary>
         /// Gets the extents of the current map based on the current zoom, center and mapsize
         /// </summary>
-        public BoundingBox Envelope
+        public Envelope Envelope
         {
             get
             {
                 if (double.IsNaN(MapHeight) || double.IsInfinity(MapHeight))
-                    return new BoundingBox(0, 0, 0, 0);
+                    return new Envelope(0, 0, 0, 0);
 
-                Point ll = new Point(Center.X - Zoom * .5, Center.Y - MapHeight * .5);
-                Point ur = new Point(Center.X + Zoom * .5, Center.Y + MapHeight * .5);
+                var ll = new Coordinate(Center.X - Zoom * .5, Center.Y - MapHeight * .5);
+                var ur = new Coordinate(Center.X + Zoom * .5, Center.Y + MapHeight * .5);
                 PointF ptfll = WorldToImage(ll, true);
                 ptfll = new PointF(Math.Abs(ptfll.X), Math.Abs(Size.Height - ptfll.Y));
                 if (!ptfll.IsEmpty)
@@ -807,7 +809,7 @@ namespace SharpMap
                     ur.X = ur.X + ptfll.X * PixelWidth;
                     ur.Y = ur.Y + ptfll.Y * PixelHeight;
                 }
-                return new BoundingBox(ll, ur);
+                return new Envelope(ll, ur);
                 
                 //Point lb = new Point(Center.X - Zoom*.5, Center.Y - MapHeight*.5);
                 //Point rt = new Point(Center.X + Zoom*.5, Center.Y + MapHeight*.5);
@@ -1025,14 +1027,14 @@ namespace SharpMap
         /// Gets the extents of the map based on the extents of all the layers in the layers collection
         /// </summary>
         /// <returns>Full map extents</returns>
-        public BoundingBox GetExtents()
+        public Envelope GetExtents()
         {
             if ((Layers == null || Layers.Count == 0) &&
                 (VariableLayers == null || VariableLayers.Count == 0) &&
                 (BackgroundLayer == null || BackgroundLayer.Count == 0))
                 throw (new InvalidOperationException("No layers to zoom to"));
-            
-            BoundingBox bbox = null;
+
+            Envelope bbox = null;
 
             ExtendBoxForCollection(Layers, ref bbox);
             ExtendBoxForCollection(VariableLayers, ref bbox);
@@ -1041,24 +1043,26 @@ namespace SharpMap
             return bbox;
         }
 
-        private static void ExtendBoxForCollection(LayerCollection layersCollection, ref BoundingBox bbox)
+        private static void ExtendBoxForCollection(LayerCollection layersCollection, ref Envelope bbox)
         {
-            foreach (ILayer l in layersCollection)
+            foreach (var l in layersCollection)
             {
                 
                 //Tries to get bb. Fails on some specific shapes and Mercator projects (World.shp)
-                BoundingBox bb;
+                Envelope bb;
                 try
                 {
                     bb = l.Envelope;
                 }
                 catch (Exception)
                 {
-                    bb = new BoundingBox(-20037508.342789, -20037508.342789, 20037508.342789, 20037508.342789);
+                    bb = new Envelope(new Coordinate(-20037508.342789, -20037508.342789), new Coordinate(20037508.342789, 20037508.342789));
                 }
 
-                if (bb != null)
-                    bbox = bbox == null ? bb : bbox.Join(bb);
+                if (bbox == null)
+                    bbox = bb;
+                else
+                    bbox.ExpandToInclude(bb);
 
             }
         }
@@ -1112,6 +1116,8 @@ namespace SharpMap
             get { return _disclaimerLocation; }
             set { _disclaimerLocation = value%4; }
         }
+
+        public IGeometryFactory Factory { get; private set; }
 
         #endregion
 

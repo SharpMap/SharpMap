@@ -18,7 +18,9 @@
 using System;
 using System.Collections.ObjectModel;
 using System.Data;
-using SharpMap.Geometries;
+using GeoAPI.Geometries;
+using Geometry = GeoAPI.Geometries.IGeometry;
+using BoundingBox = GeoAPI.Geometries.Envelope;
 
 namespace SharpMap.Data.Providers
 {
@@ -33,13 +35,11 @@ namespace SharpMap.Data.Providers
     /// and an integer-type column containing a unique identifier for each row.
     /// </para>
     /// </remarks>
-    public class DataTablePoint : IProvider, IDisposable
+    public class DataTablePoint : PreparedGeometryProvider, IDisposable
     {
         private string _ConnectionString;
         private string _defintionQuery;
-        private bool _IsOpen;
         private string _ObjectIdColumn;
-        private int _SRID = -1;
         private DataTable _Table;
         private string _XColumn;
         private string _YColumn;
@@ -130,26 +130,26 @@ namespace SharpMap.Data.Providers
         /// </summary>
         /// <param name="bbox"></param>
         /// <returns></returns>
-        public Collection<Geometry> GetGeometriesInView(BoundingBox bbox)
+        public override Collection<IGeometry> GetGeometriesInView(Envelope bbox)
         {
             DataRow[] drow;
-            Collection<Geometry> features = new Collection<Geometry>();
+            var features = new Collection<IGeometry>();
 
             if (Table.Rows.Count == 0)
             {
                 return null;
             }
 
-            string strSQL = XColumn + " > " + bbox.Left.ToString(Map.NumberFormatEnUs) + " AND " +
-                            XColumn + " < " + bbox.Right.ToString(Map.NumberFormatEnUs) + " AND " +
-                            YColumn + " > " + bbox.Bottom.ToString(Map.NumberFormatEnUs) + " AND " +
-                            YColumn + " < " + bbox.Top.ToString(Map.NumberFormatEnUs);
+            string strSQL = XColumn + " > " + bbox.Left().ToString(Map.NumberFormatEnUs) + " AND " +
+                            XColumn + " < " + bbox.Right().ToString(Map.NumberFormatEnUs) + " AND " +
+                            YColumn + " > " + bbox.Bottom().ToString(Map.NumberFormatEnUs) + " AND " +
+                            YColumn + " < " + bbox.Top().ToString(Map.NumberFormatEnUs);
 
             drow = Table.Select(strSQL);
 
             foreach (DataRow dr in drow)
             {
-                features.Add(new Point((double) dr[XColumn], (double) dr[YColumn]));
+                features.Add(Factory.CreatePoint(new Coordinate((double) dr[XColumn], (double) dr[YColumn])));
             }
 
             return features;
@@ -160,7 +160,7 @@ namespace SharpMap.Data.Providers
         /// </summary>
         /// <param name="bbox"></param>
         /// <returns></returns>
-        public Collection<uint> GetObjectIDsInView(BoundingBox bbox)
+        public override Collection<uint> GetObjectIDsInView(BoundingBox bbox)
         {
             DataRow[] drow;
             Collection<uint> objectlist = new Collection<uint>();
@@ -170,10 +170,10 @@ namespace SharpMap.Data.Providers
                 return null;
             }
 
-            string strSQL = XColumn + " > " + bbox.Left.ToString(Map.NumberFormatEnUs) + " AND " +
-                            XColumn + " < " + bbox.Right.ToString(Map.NumberFormatEnUs) + " AND " +
-                            YColumn + " > " + bbox.Bottom.ToString(Map.NumberFormatEnUs) + " AND " +
-                            YColumn + " < " + bbox.Top.ToString(Map.NumberFormatEnUs);
+            string strSQL = XColumn + " > " + bbox.Left().ToString(Map.NumberFormatEnUs) + " AND " +
+                            XColumn + " < " + bbox.Right().ToString(Map.NumberFormatEnUs) + " AND " +
+                            YColumn + " > " + bbox.Bottom().ToString(Map.NumberFormatEnUs) + " AND " +
+                            YColumn + " < " + bbox.Top().ToString(Map.NumberFormatEnUs);
 
             drow = Table.Select(strSQL);
 
@@ -190,7 +190,7 @@ namespace SharpMap.Data.Providers
         /// </summary>
         /// <param name="oid">Object ID</param>
         /// <returns>geometry</returns>
-        public Geometry GetGeometryByID(uint oid)
+        public override Geometry GetGeometryByID(uint oid)
         {
             DataRow[] rows;
             Geometry geom = null;
@@ -206,32 +206,10 @@ namespace SharpMap.Data.Providers
 
             foreach (DataRow dr in rows)
             {
-                geom = new Point((double) dr[XColumn], (double) dr[YColumn]);
+                geom = Factory.CreatePoint(new Coordinate((double) dr[XColumn], (double) dr[YColumn]));
             }
 
             return geom;
-        }
-
-        /// <summary>
-        /// Throws NotSupportedException. 
-        /// </summary>
-        /// <param name="geom"></param>
-        /// <param name="ds">FeatureDataSet to fill data into</param>
-        public void ExecuteIntersectionQuery(Geometry geom, FeatureDataSet ds)
-        {
-            throw new NotSupportedException("ExecuteIntersectionQuery(Geometry) is not supported by the DataTablePoint.");
-            //When relation model has been implemented the following will complete the query
-            /*
-            ExecuteIntersectionQuery(geom.GetBoundingBox(), ds);
-            if (ds.Tables.Count > 0)
-            {
-                for(int i=ds.Tables[0].Count-1;i>=0;i--)
-                {
-                    if (!geom.Intersects(ds.Tables[0][i].Geometry))
-                        ds.Tables.RemoveAt(i);
-                }
-            }
-            */
         }
 
         /// <summary>
@@ -239,7 +217,7 @@ namespace SharpMap.Data.Providers
         /// </summary>
         /// <param name="bbox">Bounds of the region to search.</param>
         /// <param name="ds">FeatureDataSet to fill data into</param>
-        public void ExecuteIntersectionQuery(BoundingBox bbox, FeatureDataSet ds)
+        public override void ExecuteIntersectionQuery(BoundingBox bbox, FeatureDataSet ds)
         {
             DataRow[] rows;
 
@@ -248,10 +226,10 @@ namespace SharpMap.Data.Providers
                 return;
             }
 
-            string statement = XColumn + " > " + bbox.Left.ToString(Map.NumberFormatEnUs) + " AND " +
-                               XColumn + " < " + bbox.Right.ToString(Map.NumberFormatEnUs) + " AND " +
-                               YColumn + " > " + bbox.Bottom.ToString(Map.NumberFormatEnUs) + " AND " +
-                               YColumn + " < " + bbox.Top.ToString(Map.NumberFormatEnUs);
+            string statement = XColumn + " > " + bbox.Left().ToString(Map.NumberFormatEnUs) + " AND " +
+                               XColumn + " < " + bbox.Right().ToString(Map.NumberFormatEnUs) + " AND " +
+                               YColumn + " > " + bbox.Bottom().ToString(Map.NumberFormatEnUs) + " AND " +
+                               YColumn + " < " + bbox.Top().ToString(Map.NumberFormatEnUs);
 
             rows = Table.Select(statement);
 
@@ -266,7 +244,7 @@ namespace SharpMap.Data.Providers
             {
                 fdt.ImportRow(dr);
                 FeatureDataRow fdr = fdt.Rows[fdt.Rows.Count - 1] as FeatureDataRow;
-                fdr.Geometry = new Point((double) dr[XColumn], (double) dr[YColumn]);
+                fdr.Geometry = Factory.CreatePoint(new Coordinate((double) dr[XColumn], (double) dr[YColumn]));
             }
 
             ds.Tables.Add(fdt);
@@ -276,7 +254,7 @@ namespace SharpMap.Data.Providers
         /// Returns the number of features in the dataset
         /// </summary>
         /// <returns>Total number of features</returns>
-        public int GetFeatureCount()
+        public override int GetFeatureCount()
         {
             return Table.Rows.Count;
         }
@@ -286,7 +264,7 @@ namespace SharpMap.Data.Providers
         /// </summary>
         /// <param name="rowId"></param>
         /// <returns>datarow</returns>
-        public FeatureDataRow GetFeature(uint rowId)
+        public override FeatureDataRow GetFeature(uint rowId)
         {
             throw new NotSupportedException();
         }
@@ -299,7 +277,7 @@ namespace SharpMap.Data.Providers
         /// A BoundingBox instance which minimally bounds all the features
         /// available in this data source.
         /// </returns>
-        public BoundingBox GetExtents()
+        public override BoundingBox GetExtents()
         {
             if (Table.Rows.Count == 0)
             {
@@ -321,84 +299,9 @@ namespace SharpMap.Data.Providers
                 if (maxY < (double) dr[YColumn]) maxY = (double) dr[YColumn];
             }
 
-            box = new BoundingBox(minX, minY, maxX, maxY);
+            box = new BoundingBox(minX, maxX, minY, maxY);
 
             return box;
-        }
-
-        /// <summary>
-        /// Gets the connection ID of the datasource.
-        /// </summary>
-        public string ConnectionID
-        {
-            get { return _ConnectionString; }
-        }
-
-        /// <summary>
-        /// Opens the datasource.
-        /// </summary>
-        public void Open()
-        {
-            _IsOpen = true;
-        }
-
-        /// <summary>
-        /// Closes the datasource.
-        /// </summary>
-        public void Close()
-        {
-            _IsOpen = false;
-        }
-
-        /// <summary>
-        /// Gets true if the datasource is currently open.
-        /// </summary>
-        public bool IsOpen
-        {
-            get { return _IsOpen; }
-        }
-
-        /// <summary>
-        /// The spatial reference ID (CRS)
-        /// </summary>
-        public int SRID
-        {
-            get { return _SRID; }
-            set { _SRID = value; }
-        }
-
-        #endregion
-
-        #region Disposers and finalizers
-
-        private bool disposed = false;
-
-        /// <summary>
-        /// Disposes the object
-        /// </summary>
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        internal void Dispose(bool disposing)
-        {
-            if (!disposed)
-            {
-                if (disposing)
-                {
-                }
-                disposed = true;
-            }
-        }
-
-        /// <summary>
-        /// Finalizer
-        /// </summary>
-        ~DataTablePoint()
-        {
-            Dispose();
         }
 
         #endregion

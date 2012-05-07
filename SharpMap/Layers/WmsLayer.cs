@@ -26,7 +26,7 @@ using System.Net;
 using System.Text;
 using System.Web;
 using System.Web.Caching;
-using SharpMap.Geometries;
+using GeoAPI.Geometries;
 using SharpMap.Rendering.Exceptions;
 using SharpMap.Web.Wms;
 
@@ -302,21 +302,28 @@ namespace SharpMap.Layers
         /// Returns the extent of the layer
         /// </summary>
         /// <returns>Bounding box corresponding to the extent of the features in the layer</returns>
-        public override BoundingBox Envelope
+        public override Envelope Envelope
         {
             //There are two boundingboxes available: 1 as EPSG:4326 with LatLonCoordinates and or one with the coordinates of the FIRST BoundingBox with SRID of the layer
             //If the request is using EPSG:4326, it should use the boundingbox with LatLon coordinates, else, it should use the boundingbox with the coordinates in the SRID
             get
             {
-                Collection<BoundingBox> boxes = new Collection<BoundingBox>();
-                List<SpatialReferencedBoundingBox> SRIDBoxes = getBoundingBoxes(RootLayer);
-                foreach (SpatialReferencedBoundingBox SRIDbox in SRIDBoxes)
+                var boxes = new Collection<Envelope>();
+                var sridBoxes = getBoundingBoxes(RootLayer);
+                foreach (var sridBox in sridBoxes)
                 {
-                    if (SRID == SRIDbox.SRID)
-                        boxes.Add(SRIDbox);
+                    if (SRID == sridBox.SRID)
+                        boxes.Add(sridBox);
                 }
+
                 if (boxes.Count > 0)
-                    return new BoundingBox(boxes);
+                {
+                    var res = new Envelope();
+                    foreach (var envelope in boxes)
+                        res.ExpandToInclude(envelope);
+
+                    return res;
+                }
 
                 if (SRID == 4326)
                     return RootLayer.LatLonBoundingBox;
@@ -562,7 +569,7 @@ namespace SharpMap.Layers
         /// <param name="box">Area the WMS request should cover</param>
         /// <param name="size">Size of image</param>
         /// <returns>URL for WMS request</returns>
-        public string GetRequestUrl(BoundingBox box, Size size)
+        public string GetRequestUrl(Envelope box, Size size)
         {
             Client.WmsOnlineResource resource = GetPreferredMethod();
             StringBuilder strReq = new StringBuilder(resource.OnlineResource);
@@ -572,7 +579,7 @@ namespace SharpMap.Layers
                 strReq.Append("&");
 
             strReq.AppendFormat(Map.NumberFormatEnUs, "REQUEST=GetMap&BBOX={0},{1},{2},{3}",
-                                box.Min.X, box.Min.Y, box.Max.X, box.Max.Y);
+                                box.MinX, box.MinY, box.MaxX, box.MaxY);
             strReq.AppendFormat("&WIDTH={0}&Height={1}", size.Width, size.Height);
             strReq.Append("&Layers=");
             if (_LayerList != null && _LayerList.Count > 0)

@@ -10,7 +10,7 @@ using SharpMap.Rendering;
 using SharpMap.Rendering.Thematics;
 using SharpMap.Styles;
 using ColorBlend=SharpMap.Rendering.Thematics.ColorBlend;
-using Point=SharpMap.Geometries.Point;
+using Point = GeoAPI.Geometries.Coordinate;
 
 namespace WinFormSamples.Samples
 {
@@ -24,7 +24,7 @@ namespace WinFormSamples.Samples
             //Set up countries layer
             VectorLayer layCountries = new VectorLayer("Countries");
             //Set the datasource to a shapefile in the App_data folder
-            layCountries.DataSource = new ShapeFileEx("GeoData/World/countries.shp", true);
+            layCountries.DataSource = new ShapeFile("GeoData/World/countries.shp", true);
             //Set fill-style to green
             layCountries.Style.Fill = new SolidBrush(Color.Green);
             //Set the polygons to have a black outline
@@ -36,7 +36,7 @@ namespace WinFormSamples.Samples
             //set up cities layer
             VectorLayer layCities = new VectorLayer("Cities");
             //Set the datasource to a shapefile in the App_data folder
-            layCities.DataSource = new ShapeFileEx("GeoData/World/cities.shp", true);
+            layCities.DataSource = new ShapeFile("GeoData/World/cities.shp", true);
             layCities.Style.SymbolScale = 0.8f;
             layCities.MaxVisible = 40;
             layCities.SRID = 4326;

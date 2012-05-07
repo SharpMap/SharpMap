@@ -55,43 +55,42 @@ public class wms : IHttpHandler
     /// This method takes a pre-populated FeatureDataTable and removes rows that do not truly intersect testGeometry
     /// </summary>
     /// <param name="featureDataTable">The FeatureDataTable instance to filter</param>
-    /// <param name="testGeometry">the geometry to compare against</param>
-    public SharpMap.Data.FeatureDataTable PostFilterExistingFeatureDataTable(SharpMap.Data.FeatureDataTable featureDataTable, SharpMap.Geometries.BoundingBox testGeometry)
+    /// <param name="testEnvelope">the envelope to compare against</param>
+    public SharpMap.Data.FeatureDataTable PostFilterExistingFeatureDataTable(SharpMap.Data.FeatureDataTable featureDataTable, GeoAPI.Geometries.Envelope testEnvelope)
     {
-        //make a geometry from the boundingbox
-        SharpMap.Geometries.Polygon envelope = new SharpMap.Geometries.Polygon();
-        envelope.ExteriorRing.Vertices.Add(testGeometry.Min); //minx miny
-        envelope.ExteriorRing.Vertices.Add(new SharpMap.Geometries.Point(testGeometry.Max.X, testGeometry.Min.Y)); //maxx miny
-        envelope.ExteriorRing.Vertices.Add(testGeometry.Max); //maxx maxy
-        envelope.ExteriorRing.Vertices.Add(new SharpMap.Geometries.Point(testGeometry.Min.X, testGeometry.Max.Y)); //minx maxy
-        envelope.ExteriorRing.Vertices.Add(envelope.ExteriorRing.StartPoint); //close ring
+        if (featureDataTable == null || featureDataTable.Rows.Count == 0)
+            return featureDataTable;
         
+        //first we get a GeometryFactory.
+        var geometryFactory = ((SharpMap.Data.FeatureDataRow)featureDataTable.Rows[0]).Geometry.Factory;
+
+        //create a test polygon from testenvelope
+	    var testPolygon = geometryFactory.ToGeometry(testEnvelope);
         
-        //first we create a new GeometryFactory.
-        GisSharpBlog.NetTopologySuite.Geometries.GeometryFactory geometryFactory = new GisSharpBlog.NetTopologySuite.Geometries.GeometryFactory();
-
-
-        //then we convert the testGeometry into the equivalent NTS geometry
-        GeoAPI.Geometries.IGeometry testGeometryAsNtsGeom =
-            SharpMap.Converters.NTS.GeometryConverter.ToNTSGeometry(envelope, geometryFactory);
-
+        //make a prepared geometry from the boundingbox
+	    var pp = NetTopologySuite.Geometries.Prepared.PreparedGeometryFactory.Prepare(testPolygon);
 
         //now we loop backwards through the FeatureDataTable 
-        for (int i = featureDataTable.Rows.Count - 1; i > -1; i--)
+        for (var i = featureDataTable.Rows.Count - 1; i > -1; i--)
         {
             //we get each row
-            SharpMap.Data.FeatureDataRow featureDataRow = featureDataTable.Rows[i] as SharpMap.Data.FeatureDataRow;
-            //and get the rows' geometry
-            SharpMap.Geometries.Geometry compareGeometry = featureDataRow.Geometry;
-            //convert the rows' geometry into the equivalent NTS geometry
-            GeoAPI.Geometries.IGeometry compareGeometryAsNts =
-                SharpMap.Converters.NTS.GeometryConverter.ToNTSGeometry(compareGeometry, geometryFactory);
-            //now test for intesection (note other operations such as Contains, Within, Disjoint etc can all be done the same way)
-            bool intersects = compareGeometryAsNts.Intersects(testGeometryAsNtsGeom);
+            var featureDataRow = featureDataTable.Rows[i] as SharpMap.Data.FeatureDataRow;
+            if (featureDataRow != null)
+            {
+                //and get the rows' geometry
+                GeoAPI.Geometries.IGeometry compareGeometry = featureDataRow.Geometry;
 
-            //if it doesn't intersect remove the row.
-            if (!intersects)
+                //now test for intesection (note other operations such as Contains, Within, Disjoint etc can all be done the same way)
+                var intersects = pp.Intersects(compareGeometry);
+
+                //if it doesn't intersect remove the row.
+                if (!intersects)
+                    featureDataTable.Rows.RemoveAt(i);
+            }
+            else
+            {
                 featureDataTable.Rows.RemoveAt(i);
+            }
         }
         return featureDataTable;
     }

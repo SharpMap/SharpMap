@@ -6,7 +6,7 @@ using System.Collections;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Net;
-using SharpMap.Geometries;
+using GeoAPI.Geometries;
 using SharpMap.Utilities.Wfs;
 
 namespace SharpMap.Data.Providers
@@ -450,11 +450,11 @@ namespace SharpMap.Data.Providers
 
         #region IProvider Member
 
-        public Collection<Geometry> GetGeometriesInView(BoundingBox bbox)
+        public Collection<IGeometry> GetGeometriesInView(Envelope bbox)
         {
             if (_FeatureTypeInfo == null) return null;
 
-            Collection<Geometry> geoms = new Collection<Geometry>();
+            Collection<IGeometry> geoms = new Collection<IGeometry>();
 
             string geometryTypeString = _FeatureTypeInfo.Geometry._GeometryType;
 
@@ -570,17 +570,17 @@ namespace SharpMap.Data.Providers
             }
         }
 
-        public Collection<uint> GetObjectIDsInView(BoundingBox bbox)
+        public Collection<uint> GetObjectIDsInView(Envelope bbox)
         {
             throw new Exception("The method or operation is not implemented.");
         }
 
-        public Geometry GetGeometryByID(uint oid)
+        public IGeometry GetGeometryByID(uint oid)
         {
             throw new Exception("The method or operation is not implemented.");
         }
 
-        public void ExecuteIntersectionQuery(Geometry geom, FeatureDataSet ds)
+        public void ExecuteIntersectionQuery(IGeometry geom, FeatureDataSet ds)
         {
             if (_LabelInfo == null) return;
             ds.Tables.Add(_LabelInfo);
@@ -588,7 +588,7 @@ namespace SharpMap.Data.Providers
             _LabelInfo = null;
         }
 
-        public void ExecuteIntersectionQuery(BoundingBox box, FeatureDataSet ds)
+        public void ExecuteIntersectionQuery(Envelope box, FeatureDataSet ds)
         {
             if (_LabelInfo == null) return;
             ds.Tables.Add(_LabelInfo);
@@ -606,12 +606,10 @@ namespace SharpMap.Data.Providers
             throw new Exception("The method or operation is not implemented.");
         }
 
-        public BoundingBox GetExtents()
+        public Envelope GetExtents()
         {
-            return new BoundingBox(_FeatureTypeInfo.BBox._MinLong,
-                                   _FeatureTypeInfo.BBox._MinLat,
-                                   _FeatureTypeInfo.BBox._MaxLong,
-                                   _FeatureTypeInfo.BBox._MaxLat);
+            return new Envelope(new Coordinate(_FeatureTypeInfo.BBox._MinLong, _FeatureTypeInfo.BBox._MinLat),
+                                new Coordinate(_FeatureTypeInfo.BBox._MaxLong, _FeatureTypeInfo.BBox._MaxLat));
         }
 
         /// <summary>
@@ -1071,7 +1069,7 @@ namespace SharpMap.Data.Providers
             /// </summary>
             internal HttpClientUtil configureForWfsGetFeatureRequest(HttpClientUtil httpClientUtil,
                                                                      WfsFeatureTypeInfo featureTypeInfo,
-                                                                     string labelProperty, BoundingBox boundingBox,
+                                                                     string labelProperty, Envelope boundingBox,
                                                                      IFilter filter, bool GET)
             {
                 httpClientUtil.Reset();

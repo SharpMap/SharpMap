@@ -18,8 +18,9 @@
 using System;
 using System.Collections.ObjectModel;
 using System.Drawing;
-using SharpMap.Geometries;
-using Point = SharpMap.Geometries.Point;
+using GeoAPI.Geometries;
+using SharpMap.Base;
+using Point = GeoAPI.Geometries.IPoint;
 
 namespace SharpMap.Rendering.Symbolizer    
 {
@@ -27,7 +28,7 @@ namespace SharpMap.Rendering.Symbolizer
     /// ListPointSymbolizer class
     /// </summary>
     [Serializable]
-    public class ListPointSymbolizer : Collection<PointSymbolizer>, IPointSymbolizer
+    public class ListPointSymbolizer : Collection<PointSymbolizer>, IPointSymbolizer, IDisposableEx
     {
         private Size _size;
 
@@ -128,5 +129,55 @@ namespace SharpMap.Rendering.Symbolizer
         public void End(Graphics g, Map map)
         {
         }
+
+        #region Implementation of ICloneable
+
+        /// <summary>
+        /// Erstellt ein neues Objekt, das eine Kopie der aktuellen Instanz darstellt.
+        /// </summary>
+        /// <returns>
+        /// Ein neues Objekt, das eine Kopie dieser Instanz darstellt.
+        /// </returns>
+        /// <filterpriority>2</filterpriority>
+        public object Clone()
+        {
+            var res = new ListPointSymbolizer();
+            foreach (var pointSymbolizer in Items)
+                res.Add((PointSymbolizer)pointSymbolizer.Clone());
+            return res;
+        }
+
+        #endregion
+
+        #region Implementation of IDisposable
+
+        /// <summary>
+        /// Führt anwendungsspezifische Aufgaben durch, die mit der Freigabe, der Zurückgabe oder dem Zurücksetzen von nicht verwalteten Ressourcen zusammenhängen.
+        /// </summary>
+        /// <filterpriority>2</filterpriority>
+        public void Dispose()
+        {
+            if (!IsDisposed)
+            {
+                foreach (IDisposable pointSymbolizer in Items)
+                {
+                    pointSymbolizer.Dispose();
+                }
+                ClearItems();
+            }
+            IsDisposed = true;
+            GC.SuppressFinalize(this);
+        }
+
+        #endregion
+
+        #region Implementation of IDisposableEx
+
+        /// <summary>
+        /// Gets whether this object was already disposed
+        /// </summary>
+        public bool IsDisposed { get; private set; }
+
+        #endregion
     }
 }

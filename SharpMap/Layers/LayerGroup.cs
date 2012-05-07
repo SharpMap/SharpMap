@@ -19,7 +19,7 @@ using System;
 using System.Collections.ObjectModel;
 using System.Drawing;
 using SharpMap.Data;
-using SharpMap.Geometries;
+using GeoAPI.Geometries;
 using SharpMap.Styles;
 
 namespace SharpMap.Layers
@@ -65,15 +65,15 @@ namespace SharpMap.Layers
         /// Returns the extent of the layer
         /// </summary>
         /// <returns>Bounding box corresponding to the extent of the features in the layer</returns>
-        public override BoundingBox Envelope
+        public override Envelope Envelope
         {
             get
             {
                 if (Layers.Count == 0)
                     return null;
-                BoundingBox bbox = Layers[0].Envelope;
+                var bbox = new Envelope(Layers[0].Envelope);
                 for (int i = 1; i < Layers.Count; i++)
-                    bbox = bbox.Join(Layers[i].Envelope);
+                    bbox.ExpandToInclude(Layers[i].Envelope);
                 return bbox;
             }
         }
@@ -128,7 +128,7 @@ namespace SharpMap.Layers
         /// </summary>
         /// <param name="box">Geometry to intersect with</param>
         /// <param name="ds">FeatureDataSet to fill data into</param>
-        public void ExecuteIntersectionQuery(BoundingBox box, FeatureDataSet ds)
+        public void ExecuteIntersectionQuery(Envelope box, FeatureDataSet ds)
         {
             foreach (Layer layer in Layers)
             {
@@ -146,7 +146,7 @@ namespace SharpMap.Layers
         /// </summary>
         /// <param name="geometry">Geometry to intersect with</param>
         /// <param name="ds">FeatureDataSet to fill data into</param>
-        public void ExecuteIntersectionQuery(Geometry geometry, FeatureDataSet ds)
+        public void ExecuteIntersectionQuery(IGeometry geometry, FeatureDataSet ds)
         {
             foreach (Layer layer in Layers)
             {

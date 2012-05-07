@@ -7,10 +7,10 @@ using SharpMap;
 using ProjNet.CoordinateSystems;
 using ProjNet.CoordinateSystems.Transformations;
 using SharpMap.Data.Providers;
-using SharpMap.Geometries;
+using GeoAPI.Geometries;
 using SharpMap.Layers;
 using SharpMap.Web;
-using Point=SharpMap.Geometries.Point;
+using Point=GeoAPI.Geometries.Coordinate;
 
 #if !DotSpatialProjections
 public partial class Transformation : Page
@@ -64,8 +64,8 @@ public partial class Transformation : Page
         Image img = myMap.GetMap();
         string imgID = Caching.InsertIntoCache(1, img);
         imgMap.ImageUrl = "getmap.aspx?ID=" + HttpUtility.UrlEncode(imgID);
-        litEnvelope.Text = myMap.Envelope.Left.ToString("#.##") + "," + myMap.Envelope.Bottom.ToString("#.##") + " -> " +
-                           myMap.Envelope.Right.ToString("#.##") + "," + myMap.Envelope.Top.ToString("#.##") +
+        litEnvelope.Text = myMap.Envelope.MinX.ToString("#.##") + "," + myMap.Envelope.MinY.ToString("#.##") + " -> " +
+                           myMap.Envelope.MaxX.ToString("#.##") + "," + myMap.Envelope.MaxY.ToString("#.##") +
                            " (Projected coordinate system)";
     }
 
@@ -76,19 +76,19 @@ public partial class Transformation : Page
         string SelectedProj = ddlProjection.SelectedValue;
 
         //Points defining the current view 
-        Point left = new Point(myMap.Envelope.Left, myMap.Center.Y);
-        Point right = new Point(myMap.Envelope.Right, myMap.Center.Y);
+        Point left = new Point(myMap.Envelope.MinX, myMap.Center.Y);
+        Point right = new Point(myMap.Envelope.MaxX, myMap.Center.Y);
         Point center = myMap.Center;
 
         if (PreviousProj != "Pseudo")
         {
             //Transform current view back to geographic coordinates
             ProjNet.CoordinateSystems.Transformations.ICoordinateTransformation trans = GetTransform(PreviousProj);
-            left = GeometryTransform.TransformPoint(new Point(myMap.Envelope.Left, myMap.Center.Y),
+            left = GeometryTransform.TransformCoordinate(new Point(myMap.Envelope.MinX, myMap.Center.Y),
                                                     trans.MathTransform.Inverse());
-            right = GeometryTransform.TransformPoint(new Point(myMap.Envelope.Right, myMap.Center.Y),
+            right = GeometryTransform.TransformCoordinate(new Point(myMap.Envelope.MaxX, myMap.Center.Y),
                                                      trans.MathTransform.Inverse());
-            center = GeometryTransform.TransformPoint(myMap.Center, trans.MathTransform.Inverse());
+            center = GeometryTransform.TransformCoordinate(myMap.Center, trans.MathTransform.Inverse());
         }
         //If both PreviousSRID and SelectedSRID are projected coordsys, first transform to geographic
 
@@ -101,12 +101,12 @@ public partial class Transformation : Page
         {
             //Transform back to geographic and over to new projection
             ProjNet.CoordinateSystems.Transformations.ICoordinateTransformation trans = GetTransform(SelectedProj);
-            left = GeometryTransform.TransformPoint(left, trans.MathTransform);
-            right = GeometryTransform.TransformPoint(right, trans.MathTransform);
-            center = GeometryTransform.TransformPoint(center, trans.MathTransform);
+            left = GeometryTransform.TransformCoordinate(left, trans.MathTransform);
+            right = GeometryTransform.TransformCoordinate(right, trans.MathTransform);
+            center = GeometryTransform.TransformCoordinate(center, trans.MathTransform);
             myMap.Center = center;
             myMap.Zoom = Math.Abs(right.X - left.X);
-            BoundingBox envelopeGcs = GeometryTransform.TransformBox(myMap.Envelope, trans.MathTransform.Inverse());
+            var envelopeGcs = GeometryTransform.TransformBox(myMap.Envelope, trans.MathTransform.Inverse());
             litEnvelopeLatLong.Text = envelopeGcs.ToString();
         }
         GenerateMap();

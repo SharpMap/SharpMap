@@ -2,6 +2,8 @@ using System;
 using System.Collections.ObjectModel;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using GeoAPI;
+using GeoAPI.Geometries;
 #if !DotSpatialProjections
 using ProjNet.CoordinateSystems.Transformations;
 #else
@@ -9,8 +11,8 @@ using DotSpatial.Projections;
 #endif
 using SharpMap.Data;
 using SharpMap.Data.Providers;
-using SharpMap.Geometries;
 using SharpMap.Rendering.Symbolizer;
+using IGeometry = GeoAPI.Geometries.IGeometry;
 
 namespace SharpMap.Layers.Symbolizer
 {
@@ -19,7 +21,7 @@ namespace SharpMap.Layers.Symbolizer
     /// </summary>
     /// <typeparam name="TGeometry">The geometry type</typeparam>
     public abstract class BaseVectorLayer<TGeometry> : Layer, ICanQueryLayer, IDisposable
-        where TGeometry : class, IGeometryClassifier
+        where TGeometry : class//, IGeometry
     {
         #region Private fields
 
@@ -91,14 +93,14 @@ namespace SharpMap.Layers.Symbolizer
         /// Returns the extent of the layer
         /// </summary>
         /// <returns>Bounding box corresponding to the extent of the features in the layer</returns>
-        public override BoundingBox Envelope
+        public override Envelope Envelope
         {
             get
             {
                 if (DataSource == null)
                     throw (new ApplicationException("DataSource property not set on layer '" + LayerName + "'"));
-                
-                BoundingBox box;
+
+                Envelope box;
                 lock (_dataSource)
                 {
                     bool wasOpen = DataSource.IsOpen;
@@ -119,7 +121,7 @@ namespace SharpMap.Layers.Symbolizer
         }
 
         private SmoothingMode _oldSmoothingMode;
-        private Collection<Geometry> _geometries;
+        private Collection<IGeometry> _geometries;
 
         /// <summary>
         /// Method called to initialize the rendering process
@@ -129,7 +131,7 @@ namespace SharpMap.Layers.Symbolizer
         protected virtual void OnRender(Graphics graphics, Map map)
         {
             // Get query envelope
-            BoundingBox envelope = map.Envelope;
+            var envelope = map.Envelope;
 
             // Convert bounding box to datasource's coordinate system
             if (CoordinateTransformation != null)
@@ -182,7 +184,7 @@ namespace SharpMap.Layers.Symbolizer
             //    AttributedGeometry<TGeometry> ag = _geometrys.Dequeue();
             //    Symbolizer.Render(map, ag.Geometry, graphics);
             //}
-            foreach (Geometry geometry in _geometries)
+            foreach (var geometry in _geometries)
             {
                 Symbolizer.Render(map, geometry as TGeometry, graphics);
             }
@@ -223,7 +225,7 @@ namespace SharpMap.Layers.Symbolizer
         /// </summary>
         /// <param name="box">Geometry to intersect with</param>
         /// <param name="ds">FeatureDataSet to fill data into</param>
-        public void ExecuteIntersectionQuery(BoundingBox box, FeatureDataSet ds)
+        public void ExecuteIntersectionQuery(Envelope box, FeatureDataSet ds)
         {
             if (CoordinateTransformation != null)
             {
@@ -256,19 +258,21 @@ namespace SharpMap.Layers.Symbolizer
         /// </summary>
         /// <param name="geometry">Geometry to intersect with</param>
         /// <param name="ds">FeatureDataSet to fill data into</param>
-        public void ExecuteIntersectionQuery(Geometry geometry, FeatureDataSet ds)
+        public void ExecuteIntersectionQuery(IGeometry geometry, FeatureDataSet ds)
         {
             if (CoordinateTransformation != null)
             {
 #if !DotSpatialProjections
                 if (ReverseCoordinateTransformation != null)
                 {
-                    geometry = GeometryTransform.TransformGeometry(geometry, ReverseCoordinateTransformation.MathTransform);
+                    geometry = GeometryTransform.TransformGeometry(geometry, ReverseCoordinateTransformation.MathTransform,
+                            GeometryServiceProvider.Instance.CreateGeometryFactory((int)ReverseCoordinateTransformation.TargetCS.AuthorityCode));
                 }
                 else
                 {
                     CoordinateTransformation.MathTransform.Invert();
-                    geometry = GeometryTransform.TransformGeometry(geometry, CoordinateTransformation.MathTransform);
+                    geometry = GeometryTransform.TransformGeometry(geometry, CoordinateTransformation.MathTransform,
+                            GeometryServiceProvider.Instance.CreateGeometryFactory((int)CoordinateTransformation.SourceCS.AuthorityCode));
                     CoordinateTransformation.MathTransform.Invert();
                 }
 #else

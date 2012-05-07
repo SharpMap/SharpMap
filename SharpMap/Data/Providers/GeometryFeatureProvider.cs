@@ -20,7 +20,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data;
-using SharpMap.Geometries;
+using GeoAPI.Geometries;
 
 namespace SharpMap.Data.Providers
 {
@@ -45,7 +45,7 @@ namespace SharpMap.Data.Providers
     /// <example>
     /// Adding points of interest to the map. This is useful for vehicle tracking etc.
     /// <code lang="C#">
-    /// List&#60;SharpMap.Geometries.Geometry&#62; geometries = new List&#60;SharpMap.Geometries.Geometry&#62;();
+    /// List&#60;GeoAPI.Geometries.IGeometry&#62; geometries = new List&#60;GeoAPI.Geometries.IGeometry&#62;();
     /// //Add two points
     /// geometries.Add(new SharpMap.Geometries.Point(23.345,64.325));
     /// geometries.Add(new SharpMap.Geometries.Point(23.879,64.194));
@@ -56,7 +56,7 @@ namespace SharpMap.Data.Providers
     /// </code>
     /// </example>
     /// </remarks>
-    public class GeometryFeatureProvider : FilterProvider, IProvider, IDisposable
+    public class GeometryFeatureProvider : FilterProvider, IProvider
     {
         private readonly FeatureDataTable _features;
         private int _SRID = -1;
@@ -67,12 +67,12 @@ namespace SharpMap.Data.Providers
         /// Initializes a new instance of the <see cref="GeometryProvider"/>
         /// </summary>
         /// <param name="geometries">Set of geometries that this datasource should contain</param>
-        public GeometryFeatureProvider(IEnumerable<Geometry> geometries)
+        public GeometryFeatureProvider(IEnumerable<IGeometry> geometries)
         {
             _features = new FeatureDataTable();
-            foreach (Geometry geom in geometries)
+            foreach (var geom in geometries)
             {
-                FeatureDataRow fdr = _features.NewRow();
+                var fdr = _features.NewRow();
                 fdr.Geometry = geom;
                 _features.AddRow(fdr);
             }
@@ -93,10 +93,10 @@ namespace SharpMap.Data.Providers
         /// Initializes a new instance of the <see cref="GeometryProvider"/>
         /// </summary>
         /// <param name="geometry">Geometry to be in this datasource</param>
-        public GeometryFeatureProvider(Geometry geometry)
+        public GeometryFeatureProvider(IGeometry geometry)
         {
             _features = new FeatureDataTable();
-            FeatureDataRow fdr = _features.NewRow();
+            var fdr = _features.NewRow();
             fdr.Geometry = geometry;
             _features.AddRow(fdr);
             _features.TableCleared += HandleFeaturesCleared;
@@ -125,15 +125,15 @@ namespace SharpMap.Data.Providers
         /// </summary>
         /// <param name="bbox"></param>
         /// <returns></returns>
-        public Collection<Geometry> GetGeometriesInView(BoundingBox bbox)
+        public Collection<IGeometry> GetGeometriesInView(Envelope bbox)
         {
-            Collection<Geometry> list = new Collection<Geometry>();
+            var list = new Collection<IGeometry>();
 
             foreach (FeatureDataRow fdr in _features.Rows)
-                if (!fdr.Geometry.IsEmpty())
+                if (!fdr.Geometry.IsEmpty)
                     if (FilterDelegate == null || FilterDelegate(fdr))
                     {
-                        if (fdr.Geometry.GetBoundingBox().Intersects(bbox))
+                        if (bbox.Intersects(fdr.Geometry.EnvelopeInternal))
                             list.Add(fdr.Geometry);
                     }
             return list;
@@ -144,12 +144,20 @@ namespace SharpMap.Data.Providers
         /// </summary>
         /// <param name="bbox"></param>
         /// <returns></returns>
-        public Collection<uint> GetObjectIDsInView(BoundingBox bbox)
+        public Collection<uint> GetObjectIDsInView(Envelope bbox)
         {
-            Collection<uint> list = new Collection<uint>();
-            for (int i = 0; i < _features.Rows.Count; i++)
-                if ((_features.Rows[i] as FeatureDataRow).Geometry.GetBoundingBox().Intersects(bbox))
-                    list.Add((uint) i);
+            var list = new Collection<uint>();
+            uint i = 0;
+            foreach (FeatureDataRow fdr in _features.Rows)
+            {
+                i++;
+                if (!fdr.Geometry.IsEmpty)
+                    if (FilterDelegate == null || FilterDelegate(fdr))
+                    {
+                        if (bbox.Intersects(fdr.Geometry.EnvelopeInternal))
+                            list.Add(i);
+                    }
+            }
             return list;
         }
 
@@ -158,9 +166,9 @@ namespace SharpMap.Data.Providers
         /// </summary>
         /// <param name="oid">Object ID</param>
         /// <returns>geometry</returns>
-        public Geometry GetGeometryByID(uint oid)
+        public IGeometry GetGeometryByID(uint oid)
         {
-            return (_features.Rows[(int) oid] as FeatureDataRow).Geometry;
+            return ((FeatureDataRow)_features.Rows[(int)oid]).Geometry;
         }
 
         /// <summary>
@@ -168,18 +176,18 @@ namespace SharpMap.Data.Providers
         /// </summary>
         /// <param name="geom"></param>
         /// <param name="ds">FeatureDataSet to fill data into</param>
-        public void ExecuteIntersectionQuery(Geometry geom, FeatureDataSet ds)
+        public void ExecuteIntersectionQuery(IGeometry geom, FeatureDataSet ds)
         {
-            FeatureDataTable fdt = new FeatureDataTable();
+            var fdt = new FeatureDataTable();
             fdt = _features.Clone();
 
             foreach (FeatureDataRow fdr in _features)
                 if (FilterDelegate == null || FilterDelegate(fdr))
                 {
-                    if (fdr.Geometry.GetBoundingBox().Intersects(geom))
+                    if (fdr.Geometry.EnvelopeInternal.Intersects(geom.EnvelopeInternal))
                     {
                         fdt.LoadDataRow(fdr.ItemArray, false);
-                        (fdt.Rows[fdt.Rows.Count - 1] as FeatureDataRow).Geometry = fdr.Geometry;
+                        ((FeatureDataRow)fdt.Rows[fdt.Rows.Count - 1]).Geometry = fdr.Geometry;
                     }
                 }
 
@@ -191,9 +199,9 @@ namespace SharpMap.Data.Providers
         /// </summary>
         /// <param name="box"></param>
         /// <param name="ds">FeatureDataSet to fill data into</param>
-        public void ExecuteIntersectionQuery(BoundingBox box, FeatureDataSet ds)
+        public void ExecuteIntersectionQuery(Envelope box, FeatureDataSet ds)
         {
-            FeatureDataTable fdt = new FeatureDataTable();
+            var fdt = new FeatureDataTable();
             fdt = _features.Clone();
 
             foreach (FeatureDataRow fdr in _features)
@@ -201,7 +209,7 @@ namespace SharpMap.Data.Providers
                 {
                     if (FilterDelegate == null || FilterDelegate(fdr))
                     {
-                        if (fdr.Geometry.GetBoundingBox().Intersects(box))
+                        if (fdr.Geometry.EnvelopeInternal.Intersects(box))
                         {                        
                             fdt.LoadDataRow(fdr.ItemArray, false);
                             (fdt.Rows[fdt.Rows.Count - 1] as FeatureDataRow).Geometry = fdr.Geometry;
@@ -238,14 +246,15 @@ namespace SharpMap.Data.Providers
         /// Boundingbox of dataset
         /// </summary>
         /// <returns>boundingbox</returns>
-        public BoundingBox GetExtents()
+        public Envelope GetExtents()
         {
             if (_features.Rows.Count == 0)
                 return null;
-            BoundingBox box = null;
+            var box = new Envelope();
+
             foreach (FeatureDataRow fdr in _features.Rows)
-                if (fdr.Geometry != null && !fdr.Geometry.IsEmpty())
-                    box = box == null ? fdr.Geometry.GetBoundingBox() : box.Join(fdr.Geometry.GetBoundingBox());
+                if (fdr.Geometry != null && !fdr.Geometry.IsEmpty)
+                    box.ExpandToInclude(fdr.Geometry.EnvelopeInternal);
 
             return box;
         }

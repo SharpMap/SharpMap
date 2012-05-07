@@ -20,16 +20,18 @@ using System.Data;
 using NUnit.Framework;
 using SharpMap.Data;
 using SharpMap.Data.Providers;
-using SharpMap.Geometries;
+using Geometry = GeoAPI.Geometries.IGeometry;
+using BoundingBox = GeoAPI.Geometries.Envelope;
+using Point = GeoAPI.Geometries.Coordinate;
 
 namespace UnitTests.Data.Providers
 {
     [TestFixture]
     public class DataTablePointTests
     {
-        private static DataTable createDataTableSource()
+        private static DataTable CreateDataTableSource()
         {
-            DataTable source = new DataTable("PointSource", "http://www.codeplex.com/SharpMap/v1/UnitTests");
+            var source = new DataTable("PointSource", "http://www.codeplex.com/SharpMap/v1/UnitTests");
             source.Columns.AddRange(new[]
                                         {
                                             new DataColumn("oid", typeof (uint)),
@@ -38,7 +40,7 @@ namespace UnitTests.Data.Providers
                                             new DataColumn("y", typeof (double))
                                         });
 
-            Random rnd = new Random();
+            var rnd = new Random();
             for (int i = 0; i < 100; i++)
             {
                 DataRow row = source.NewRow();
@@ -55,7 +57,7 @@ namespace UnitTests.Data.Providers
         [Test]
         public void CreateDataTablePoints()
         {
-            DataTable source = createDataTableSource();
+            DataTable source = CreateDataTableSource();
             DataTablePoint provider = new DataTablePoint(source, "oid", "x", "y");
             Assert.IsNotNull(provider);
             Assert.AreSame(source, provider.Table);
@@ -67,10 +69,10 @@ namespace UnitTests.Data.Providers
         [Test]
         public void ExecuteIntersectionQueryReturnsExpectedFeatures()
         {
-            DataTable source = createDataTableSource();
+            DataTable source = CreateDataTableSource();
             DataTablePoint provider = new DataTablePoint(source, "oid", "x", "y");
 
-            BoundingBox query = new BoundingBox(400, 400, 600, 600);
+            var query = new BoundingBox(400, 600, 400, 600);
 
             FeatureDataTable expected = new FeatureDataTable();
             expected.TableName = "PointSource";
@@ -111,7 +113,7 @@ namespace UnitTests.Data.Providers
         [Test]
         public void GetExtentsComputation()
         {
-            DataTable source = createDataTableSource();
+            DataTable source = CreateDataTableSource();
             DataTablePoint provider = new DataTablePoint(source, "oid", "x", "y");
 
             double minX = Double.PositiveInfinity,
@@ -127,7 +129,7 @@ namespace UnitTests.Data.Providers
                 if (maxY < (double) rowView["y"]) maxY = (double) rowView["y"];
             }
 
-            BoundingBox expectedBounds = new BoundingBox(minX, minY, maxX, maxY);
+            BoundingBox expectedBounds = new BoundingBox(minX, maxX, minY, maxY);
             BoundingBox actualBounds = provider.GetExtents();
 
             Assert.AreEqual(expectedBounds, actualBounds);
@@ -136,7 +138,7 @@ namespace UnitTests.Data.Providers
         [Test]
         public void GetGeometryByIDReturnsExpectedGeometry()
         {
-            DataTable source = createDataTableSource();
+            DataTable source = CreateDataTableSource();
             DataTablePoint provider = new DataTablePoint(source, "oid", "x", "y");
 
             DataRow row = source.Select("oid = 43")[0];
@@ -152,7 +154,7 @@ namespace UnitTests.Data.Providers
         [Test]
         public void OpenAndCloseUpdatesIsOpenPropertyCorrectly()
         {
-            DataTable source = createDataTableSource();
+            DataTable source = CreateDataTableSource();
             DataTablePoint provider = new DataTablePoint(source, "oid", "x", "y");
             Assert.AreEqual(false, provider.IsOpen);
             provider.Open();

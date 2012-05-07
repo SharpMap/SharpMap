@@ -16,6 +16,7 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
 
 using System;
+using SharpMap.Base;
 
 namespace SharpMap.Styles
 {
@@ -23,7 +24,7 @@ namespace SharpMap.Styles
     /// Defines a style used for for defining layer styles
     /// </summary>
     [Serializable]
-    public class Style : IStyle
+    public class Style : DisposableObject, IStyle
     {
         private double _maxVisible;
         private double _minVisible;

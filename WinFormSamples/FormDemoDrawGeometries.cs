@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
+using GeoAPI.Geometries;
 using SharpMap.Layers;
 using SharpMap.Data;
 using SharpMap.Styles;
@@ -46,7 +47,7 @@ namespace WinFormSamples
 
 
             SharpMap.Layers.VectorLayer vl = new VectorLayer("My Geometries");
-            geoProvider = new SharpMap.Data.Providers.GeometryProvider(new List<SharpMap.Geometries.Geometry>());
+            geoProvider = new SharpMap.Data.Providers.GeometryProvider(new List<IGeometry>());
             vl.DataSource = geoProvider;
             this.mapBox1.Map.Layers.Add(vl);
 
@@ -64,8 +65,8 @@ namespace WinFormSamples
                 mathTransform.Source, mathTransform.Target);
 #else
             var mathTransform = LayerTools.Wgs84toGoogleMercator.MathTransform;
-            SharpMap.Geometries.BoundingBox geom = GeometryTransform.TransformBox(
-                new SharpMap.Geometries.BoundingBox(-9.205626, 38.690993, -9.123736, 38.740837),
+            var geom = GeometryTransform.TransformBox(
+                new Envelope(-9.205626, -9.123736, 38.690993, 38.740837),
                 mathTransform);
 #endif
 
@@ -79,7 +80,7 @@ namespace WinFormSamples
             this.mapBox1.MouseMove += new SharpMap.Forms.MapBox.MouseEventHandler(mapBox1_MouseMove);
         }
 
-        void mapBox1_MouseMove(SharpMap.Geometries.Point worldPos, MouseEventArgs imagePos)
+        void mapBox1_MouseMove(GeoAPI.Geometries.Coordinate worldPos, MouseEventArgs imagePos)
         {
             this.label2.Text = worldPos.X.ToString("N4") + "/" + worldPos.Y.ToString("N4");
         }
@@ -89,9 +90,9 @@ namespace WinFormSamples
             this.label1.Text = this.mapBox1.ActiveTool.ToString();
         }
 
-        void mapBox1_GeometryDefined(SharpMap.Geometries.Geometry geometry)
+        void mapBox1_GeometryDefined(GeoAPI.Geometries.IGeometry geometry)
         {
-            MessageBox.Show("Geometry defined!\r\n"+geometry.ToString());
+            MessageBox.Show("Geometry defined!\r\n"+geometry);
 
             geoProvider.Geometries.Add(geometry);
 

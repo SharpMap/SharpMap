@@ -5,7 +5,7 @@ using System.IO;
 using System.Text;
 using System.Xml;
 using SharpMap.Data.Providers;
-using SharpMap.Geometries;
+using GeoAPI.Geometries;
 
 namespace SharpMap.Utilities.Wfs
 {
@@ -46,7 +46,7 @@ namespace SharpMap.Utilities.Wfs
         /// <param name="featureTypeInfo">A <see cref="Wfs.WfsFeatureTypeInfo"/> instance providing metadata of the featuretype to query</param>
         /// <param name="boundingBox">The bounding box of the query</param>
         /// <param name="filter">An instance implementing <see cref="IFilter"/></param>
-        public string GetFeatureGETRequest(WfsFeatureTypeInfo featureTypeInfo, BoundingBox boundingBox, IFilter filter)
+        public string GetFeatureGETRequest(WfsFeatureTypeInfo featureTypeInfo, Envelope boundingBox, IFilter filter)
         {
             string qualification = string.IsNullOrEmpty(featureTypeInfo.Prefix)
                                        ? string.Empty
@@ -82,10 +82,10 @@ namespace SharpMap.Utilities.Wfs
             filterBuilder.Append(featureTypeInfo.Geometry._GeometryName);
             filterBuilder.Append("%3C/PropertyName%3E%3Cgml:Box%20srsName='EPSG:" + featureTypeInfo.SRID + "'%3E");
             filterBuilder.Append("%3Cgml:coordinates%3E");
-            filterBuilder.Append(XmlConvert.ToString(boundingBox.Left) + ",");
-            filterBuilder.Append(XmlConvert.ToString(boundingBox.Bottom) + "%20");
-            filterBuilder.Append(XmlConvert.ToString(boundingBox.Right) + ",");
-            filterBuilder.Append(XmlConvert.ToString(boundingBox.Top));
+            filterBuilder.Append(XmlConvert.ToString(boundingBox.MinX) + ",");
+            filterBuilder.Append(XmlConvert.ToString(boundingBox.MinY) + "%20");
+            filterBuilder.Append(XmlConvert.ToString(boundingBox.MaxX) + ",");
+            filterBuilder.Append(XmlConvert.ToString(boundingBox.MaxY));
             filterBuilder.Append("%3C/gml:coordinates%3E%3C/gml:Box%3E%3C/BBOX%3E");
             filterBuilder.Append(filterString);
             if (filter != null)
@@ -114,7 +114,7 @@ namespace SharpMap.Utilities.Wfs
         /// <param name="boundingBox">The bounding box of the query</param>
         /// <param name="filter">An instance implementing <see cref="IFilter"/></param>
         public byte[] GetFeaturePOSTRequest(WfsFeatureTypeInfo featureTypeInfo, string labelProperty,
-                                            BoundingBox boundingBox, IFilter filter)
+                                            Envelope boundingBox, IFilter filter)
         {
             string qualification = string.IsNullOrEmpty(featureTypeInfo.Prefix)
                                        ? string.Empty
@@ -152,11 +152,11 @@ namespace SharpMap.Utilities.Wfs
                     xWriter.WriteAttributeString("srsName",
                                                  "http://www.opengis.net/gml/srs/epsg.xml#" + featureTypeInfo.SRID);
                     xWriter.WriteElementString("lowerCorner", NSGML,
-                                               XmlConvert.ToString(boundingBox.Left) + " " +
-                                               XmlConvert.ToString(boundingBox.Bottom));
+                                               XmlConvert.ToString(boundingBox.MinX) + " " +
+                                               XmlConvert.ToString(boundingBox.MinY));
                     xWriter.WriteElementString("upperCorner", NSGML,
-                                               XmlConvert.ToString(boundingBox.Right) + " " +
-                                               XmlConvert.ToString(boundingBox.Top));
+                                               XmlConvert.ToString(boundingBox.MaxX) + " " +
+                                               XmlConvert.ToString(boundingBox.MaxY));
                     xWriter.WriteEndElement();
                     xWriter.WriteEndElement();
                     if (filter != null) xWriter.WriteRaw(filter.Encode());

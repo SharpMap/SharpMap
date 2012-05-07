@@ -11,11 +11,11 @@ namespace ExampleCodeSnippets
                 base.Begin(g, map, aproximateNumberOfGeometries);
                 _oldRenderOrigin = g.RenderingOrigin;
             }
-            protected override void OnRenderInternal(SharpMap.Map map, SharpMap.Geometries.Polygon polygon, System.Drawing.Graphics g)
+            protected override void OnRenderInternal(SharpMap.Map map, GeoAPI.Geometries.IPolygon polygon, System.Drawing.Graphics g)
             {
                 var pt = polygon.Centroid;
                 g.RenderingOrigin = 
-                    System.Drawing.Point.Truncate(SharpMap.Utilities.Transform.WorldtoMap(pt, map));
+                    System.Drawing.Point.Truncate(SharpMap.Utilities.Transform.WorldtoMap(pt.Coordinate, map));
                 base.OnRenderInternal(map, polygon, g);
             }
             public override void End(System.Drawing.Graphics g, SharpMap.Map map)

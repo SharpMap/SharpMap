@@ -11,7 +11,7 @@ using System.Globalization;
 using System.IO;
 using System.Text.RegularExpressions;
 using System.Drawing;
-using SharpMap.Geometries;
+using GeoAPI.Geometries;
 using System.Threading;
 using BruTile;
 
@@ -101,8 +101,8 @@ namespace SharpMap.Rendering.Decoration
         {
             int level = BruTile.Utilities.GetNearestLevel(m_TileSource.Schema.Resolutions, map.PixelSize);
 #if !DotSpatialProjections
-            double[] ul = m_MathTransform != null ?
-                m_MathTransform.Transform(new double[] { map.Envelope.Left, map.Envelope.Top }) : new double[] { map.Envelope.Left, map.Envelope.Top };
+            var ul = m_MathTransform != null ?
+                m_MathTransform.Transform(new[] { map.Envelope.MinX, map.Envelope.MaxY }) : new[] { map.Envelope.MinX, map.Envelope.MaxY };
 #else
                 var ul = new[] { map.Envelope.Left, map.Envelope.Top };
                 if (m_MathTransform != null)
@@ -111,7 +111,7 @@ namespace SharpMap.Rendering.Decoration
 
 #if !DotSpatialProjections
             double[] lr = m_MathTransform != null ?
-                m_MathTransform.Transform(new double[] { map.Envelope.Right, map.Envelope.Bottom }) : new double[] { map.Envelope.Right, map.Envelope.Bottom };
+                m_MathTransform.Transform(new[] { map.Envelope.MaxX, map.Envelope.MinY }) : new[] { map.Envelope.MaxX, map.Envelope.MinY };
 #else
                 var lr = new[] {map.Envelope.Right, map.Envelope.Bottom};
                 if (m_MathTransform != null)
@@ -129,7 +129,7 @@ namespace SharpMap.Rendering.Decoration
             }
         }
 
-        BoundingBox m_CurDisclaymerRect = null;
+        Envelope m_CurDisclaymerRect;
         private void RequestDisclaimer(Map map)
         {
             if (m_CurDisclaymerRect != null && m_CurDisclaymerRect.Equals(map.Envelope))
@@ -139,8 +139,8 @@ namespace SharpMap.Rendering.Decoration
             {
                 int level = BruTile.Utilities.GetNearestLevel(m_TileSource.Schema.Resolutions, map.PixelSize);
 #if !DotSpatialProjections
-                double[] ul = m_MathTransform != null ?
-                    m_MathTransform.Transform(new double[] { map.Envelope.Left, map.Envelope.Top }) : new double[] { map.Envelope.Left, map.Envelope.Top };
+                var ul = m_MathTransform != null ?
+                    m_MathTransform.Transform(new[] { map.Envelope.MinX, map.Envelope.MaxY }) : new[] { map.Envelope.MinX, map.Envelope.MinY };
 #else
                 var ul = new[] { map.Envelope.Left, map.Envelope.Top };
                 if (m_MathTransform != null)
@@ -148,8 +148,8 @@ namespace SharpMap.Rendering.Decoration
 #endif
 
 #if !DotSpatialProjections
-                double[] lr = m_MathTransform != null ?
-                    m_MathTransform.Transform(new double[] { map.Envelope.Right, map.Envelope.Bottom }) : new double[] { map.Envelope.Right, map.Envelope.Bottom };
+                var lr = m_MathTransform != null ?
+                    m_MathTransform.Transform(new[] { map.Envelope.MaxX, map.Envelope.MinY }) : new[] { map.Envelope.MaxX, map.Envelope.MinY };
 #else
                 var lr = new[] {map.Envelope.Right, map.Envelope.Bottom};
                 if (m_MathTransform != null)
@@ -157,7 +157,12 @@ namespace SharpMap.Rendering.Decoration
 #endif
 
 
-                ///Download only when run in Sync mode, else rely on setting SetBoundingBox (else we will flood google with requests during panning
+                /*
+                 * Download only when run in Sync mode, 
+                 * else rely on setting SetBoundingBox 
+                 * (else we will flood google with requests 
+                 * during panning
+                 */
                 if (!m_RunAsync)
                 {
                     DownloadDisclaimer(ul, lr, level);
@@ -203,7 +208,7 @@ namespace SharpMap.Rendering.Decoration
                 List<string> mstrs = new List<string>();
                 List<string> kstrs = new List<string>();
 
-                BoundingBox bbox = new BoundingBox(ul[0],lr[1],lr[0],ul[1]);
+                var bbox = new Envelope(new Coordinate(ul[0],lr[1]),new Coordinate(lr[0],ul[1]));
                 foreach (Match m in _rex.Matches(jSon))
                 {
                     if (m.Groups["txt"].Success && !string.IsNullOrEmpty(m.Groups["txt"].Value))
@@ -218,8 +223,8 @@ namespace SharpMap.Rendering.Decoration
                         double maxy = double.Parse(m.Groups["maxy"].Value, CultureInfo.InvariantCulture);
 
 
-                        
-                        if (bbox.Intersects(new BoundingBox(minx, miny, maxx, maxy)))
+
+                        if (bbox.Intersects(new Envelope(minx, maxx, miny, maxy)))
                         {
 
                             if (m.Groups["type"].Value == "m")

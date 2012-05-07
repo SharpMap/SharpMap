@@ -43,7 +43,40 @@ namespace SharpMap.Rendering.Symbolizer
             HaloBrush = Brushes.Transparent;
             StringFormat = new StringFormat(StringFormatFlags.NoClip){ Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center, Trimming = StringTrimming.None };
         }
-        
+
+        protected override void ReleaseManagedResources()
+        {
+            if (Font != null)
+            {
+                Font.Dispose();
+                Font = null;
+            }
+
+            if (Foreground != null)
+            {
+                Foreground.Dispose();
+                Foreground = null;
+            }
+
+            if (HaloBrush != null)
+            {
+                HaloBrush.Dispose();
+                HaloBrush = null;
+            }
+
+            base.ReleaseManagedResources();
+        }
+
+        public override object Clone()
+        {
+            var res = (CharacterPointSymbolizer) MemberwiseClone();
+            res.Font = (Font) Font.Clone();
+            res.Foreground = (Brush) Foreground.Clone();
+            res.HaloBrush = (Brush) HaloBrush.Clone();
+            
+            return res;
+        }
+
         /// <summary>
         /// Gets or sets the font to symbolize
         /// </summary>

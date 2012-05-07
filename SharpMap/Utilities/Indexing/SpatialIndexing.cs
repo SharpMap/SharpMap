@@ -19,7 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
-using SharpMap.Geometries;
+using GeoAPI.Geometries;
 
 namespace SharpMap.Utilities.SpatialIndexing
 {
@@ -56,7 +56,7 @@ namespace SharpMap.Utilities.SpatialIndexing
     /// </summary>
     public class QuadTree : IDisposable
     {
-        private BoundingBox _box;
+        private Envelope _box;
         
         private QuadTree _child0;
         private QuadTree _child1;
@@ -94,7 +94,7 @@ namespace SharpMap.Utilities.SpatialIndexing
 
         /// <summary>
         /// Creates a node and either splits the objects recursively into sub-nodes, or stores them at the node depending on the heuristics.
-        /// Tree is built top->down
+        /// Tree is built top-&gt;down
         /// </summary>
         /// <param name="objList">Geometries to index</param>
         /// <param name="depth">Current depth of tree</param>
@@ -104,8 +104,8 @@ namespace SharpMap.Utilities.SpatialIndexing
             _depth = depth;
 
             _box = objList[0].Box;
-            for (int i = 0; i < objList.Count; i++)
-                _box = _box.Join(objList[i].Box);
+            for (var i = 1; i < objList.Count; i++)
+                _box.ExpandToInclude(objList[i].Box);
 
             // test our build heuristic - if passes, make children
             if (depth < heurdata.maxdepth && objList.Count > heurdata.mintricnt &&
@@ -115,17 +115,17 @@ namespace SharpMap.Utilities.SpatialIndexing
                 objBuckets[0] = new List<BoxObjects>();
                 objBuckets[1] = new List<BoxObjects>();
 
-                uint longaxis = _box.LongestAxis; // longest axis
-                double geoavg = 0; // geometric average - midpoint of ALL the objects
+                var longaxis = _box.LongestAxis(); // longest axis
+                var geoavg = 0d; // geometric average - midpoint of ALL the objects
 
                 // go through all bbox and calculate the average of the midpoints
-                double frac = 1.0f/objList.Count;
-                for (int i = 0; i < objList.Count; i++)
-                    geoavg += objList[i].Box.GetCentroid()[longaxis]*frac;
+                var frac = 1.0d/objList.Count;
+                for (var i = 0; i < objList.Count; i++)
+                    geoavg += objList[i].Box.Centre[longaxis]*frac;
 
                 // bucket bbox based on their midpoint's side of the geo average in the longest axis
-                for (int i = 0; i < objList.Count; i++)
-                    objBuckets[geoavg > objList[i].Box.GetCentroid()[longaxis] ? 1 : 0].Add(objList[i]);
+                for (var i = 0; i < objList.Count; i++)
+                    objBuckets[geoavg > objList[i].Box.Centre[longaxis] ? 1 : 0].Add(objList[i]);
 
                 //If objects couldn't be splitted, just store them at the leaf
                 //TODO: Try splitting on another axis
@@ -162,7 +162,7 @@ namespace SharpMap.Utilities.SpatialIndexing
         /// </summary>
         private const double SplitRatio = 0.55d;
 
-        private static void SplitBoundingBox(BoundingBox input, out BoundingBox out1, out BoundingBox out2)
+        private static void SplitBoundingBox(Envelope input, out Envelope out1, out Envelope out2)
         {
             double range;
 
@@ -173,8 +173,8 @@ namespace SharpMap.Utilities.SpatialIndexing
             {
                 range = input.Width*SplitRatio;
 
-                out1 = new BoundingBox(input.BottomLeft.Clone(), new Point(input.Left + range, input.Top));
-                out2 = new BoundingBox(new Point(input.Right - range, input.Bottom), input.TopRight.Clone());
+                out1 = new Envelope(input.BottomLeft(), new Coordinate(input.Left() + range, input.Top()));
+                out2 = new Envelope(new Coordinate(input.Right() - range, input.Bottom()), input.TopRight());
             }
 
                 /* -------------------------------------------------------------------- */
@@ -184,8 +184,8 @@ namespace SharpMap.Utilities.SpatialIndexing
             {
                 range = input.Height*SplitRatio;
 
-                out1 = new BoundingBox(input.BottomLeft.Clone(), new Point(input.Right, input.Bottom + range));
-                out2 = new BoundingBox(new Point(input.Left, input.Top - range), input.TopRight.Clone());
+                out1 = new Envelope(input.BottomLeft(), new Coordinate(input.Right(), input.Bottom() + range));
+                out2 = new Envelope(new Coordinate(input.Left(), input.Top() - range), input.TopRight());
             }
             //Debug.Assert(out1.Intersects(out2));
         }
@@ -203,9 +203,9 @@ namespace SharpMap.Utilities.SpatialIndexing
           /* -------------------------------------------------------------------- */
             if (_child0 != null && _depth < h.maxdepth)
             {
-                if (_child0.Box.Contains(o.Box.GetCentroid()))
+                if (_child0.Box.Contains(o.Box.Centre))
                     _child0.AddNode(o, h);
-                else if (_child1.Box.Contains(o.Box.GetCentroid()))
+                else if (_child1.Box.Contains(o.Box.Centre))
                     _child1.AddNode(o, h);
                 return;
             }
@@ -216,18 +216,18 @@ namespace SharpMap.Utilities.SpatialIndexing
             /* -------------------------------------------------------------------- */
             if( h.maxdepth > _depth && !IsLeaf )
             {
-                BoundingBox half1, half2;
+                Envelope half1, half2;
                 SplitBoundingBox(Box, out half1, out half2);
             
 
-                if( half1.Contains(o.Box.GetCentroid())) 
+                if( half1.Contains(o.Box.Centre)) 
                 {
                     _child0 = new QuadTree(half1, _depth + 1);
                     _child1 = new QuadTree(half2, _depth + 1);
                     _child0.AddNode(o, h);
                     return;
                 }    
-	            if(half2.Contains(o.Box.GetCentroid()))
+	            if(half2.Contains(o.Box.Centre))
 	            {
                     _child0 = new QuadTree(half1, _depth + 1);
                     _child1 = new QuadTree(half2, _depth + 1);
@@ -244,8 +244,7 @@ namespace SharpMap.Utilities.SpatialIndexing
             if (_objList == null)
                 _objList = new List<BoxObjects>();
 
-            if (!Box.Contains(o.Box))
-                Box = Box.Join(o.Box);
+            Box.ExpandToInclude(o.Box); 
             
             _objList.Add(o);
 
@@ -264,7 +263,7 @@ namespace SharpMap.Utilities.SpatialIndexing
         /// </summary>
         /// <param name="box">The initial bounding box</param>
         /// <param name="depth">The depth</param>
-        private QuadTree(BoundingBox box, uint depth)
+        private QuadTree(Envelope box, uint depth)
         {
             _box = box;
             _depth = depth;
@@ -304,7 +303,8 @@ namespace SharpMap.Utilities.SpatialIndexing
         /// <returns></returns>
         private static QuadTree ReadNode(uint depth, BinaryReader br)
         {
-            var bbox = new BoundingBox(br);
+            var bbox = new Envelope(new Coordinate(br.ReadDouble(), br.ReadDouble()),
+                                    new Coordinate(br.ReadDouble(), br.ReadDouble()));
             var node = new QuadTree(bbox, depth);
             
             var isLeaf = br.ReadBoolean();
@@ -315,7 +315,8 @@ namespace SharpMap.Utilities.SpatialIndexing
                 for (int i = 0; i < featureCount; i++)
                 {
                     var box = new BoxObjects();
-                    box.Box = new BoundingBox(br);
+                    box.Box = new Envelope(new Coordinate(br.ReadDouble(), br.ReadDouble()),
+                                           new Coordinate(br.ReadDouble(), br.ReadDouble()));
                     box.ID = (uint) br.ReadInt32();
                     node._objList.Add(box);
                 }
@@ -350,10 +351,10 @@ namespace SharpMap.Utilities.SpatialIndexing
         private static void SaveNode(QuadTree node, BinaryWriter sw)
         {
             //Write node boundingbox
-            sw.Write(node.Box.Min.X);
-            sw.Write(node.Box.Min.Y);
-            sw.Write(node.Box.Max.X);
-            sw.Write(node.Box.Max.Y);
+            sw.Write(node.Box.MinX);
+            sw.Write(node.Box.MinY);
+            sw.Write(node.Box.MaxX);
+            sw.Write(node.Box.MaxY);
             sw.Write(node.IsLeaf);
             if (node.IsLeaf || node.Child0 == null)
             {
@@ -366,10 +367,10 @@ namespace SharpMap.Utilities.SpatialIndexing
                 sw.Write(node._objList.Count); //Write number of features at node
                 for (int i = 0; i < node._objList.Count; i++) //Write each featurebox
                 {
-                    sw.Write(node._objList[i].Box.Min.X);
-                    sw.Write(node._objList[i].Box.Min.Y);
-                    sw.Write(node._objList[i].Box.Max.X);
-                    sw.Write(node._objList[i].Box.Max.Y);
+                    sw.Write(node._objList[i].Box.MinX);
+                    sw.Write(node._objList[i].Box.MinY);
+                    sw.Write(node._objList[i].Box.MaxX);
+                    sw.Write(node._objList[i].Box.MaxY);
                     sw.Write(node._objList[i].ID);
                 }
             }
@@ -385,7 +386,7 @@ namespace SharpMap.Utilities.SpatialIndexing
         /// </summary>
         /// <param name="b">The root bounding box</param>
         /// <returns>The root node for the quadtree</returns>
-        public static QuadTree CreateRootNode(BoundingBox b)
+        public static QuadTree CreateRootNode(Envelope b)
         {
             return new QuadTree(b, 0);
         }
@@ -424,7 +425,7 @@ namespace SharpMap.Utilities.SpatialIndexing
         /// <summary>
         /// Gets/sets the Axis Aligned Bounding Box
         /// </summary>
-        public BoundingBox Box
+        public Envelope Box
         {
             get { return _box; }
             set { _box = value; }
@@ -475,9 +476,9 @@ namespace SharpMap.Utilities.SpatialIndexing
         /// Calculate the floating point error metric 
         /// </summary>
         /// <returns></returns>
-        public static double ErrorMetric(BoundingBox box)
+        public static double ErrorMetric(Envelope box)
         {
-            Point temp = new Point(1, 1) + (box.Max - box.Min);
+            var temp = new Coordinate(1, 1).Add(box.Max().Subtract(box.Min()));
             return temp.X*temp.Y;
         }
 
@@ -485,7 +486,7 @@ namespace SharpMap.Utilities.SpatialIndexing
         /// Searches the tree and looks for intersections with the boundingbox 'bbox'
         /// </summary>
         /// <param name="box">Boundingbox to intersect with</param>
-        public Collection<uint> Search(BoundingBox box)
+        public Collection<uint> Search(Envelope box)
         {
             Collection<uint> objectlist = new Collection<uint>();
             IntersectTreeRecursive(box, this, ref objectlist);
@@ -498,7 +499,7 @@ namespace SharpMap.Utilities.SpatialIndexing
         /// <param name="box">Boundingbox to intersect with</param>
         /// <param name="node">Node to search from</param>
         /// <param name="list">List of found intersections</param>
-        private static void IntersectTreeRecursive(BoundingBox box, QuadTree node, ref Collection<uint> list)
+        private static void IntersectTreeRecursive(Envelope box, QuadTree node, ref Collection<uint> list)
         {
             if (node.IsLeaf) //Leaf has been reached
             {
@@ -537,7 +538,7 @@ namespace SharpMap.Utilities.SpatialIndexing
             /// <summary>
             /// Boundingbox
             /// </summary>
-            public BoundingBox Box;
+            public Envelope Box;
 
             /// <summary>
             /// Feature ID

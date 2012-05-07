@@ -1,14 +1,8 @@
 using System;
-using System.Collections.ObjectModel;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Globalization;
 using System.IO;
 using System.Net;
 using System.Text;
 using System.Xml;
-using System.Xml.Schema;
-using SharpMap.Geometries;
 
 namespace SharpMap.Web.Wfs
 {

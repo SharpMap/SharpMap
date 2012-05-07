@@ -109,7 +109,7 @@ namespace WinFormSamples
             UpdatePropertyGrid();
         }
 
-        private void mapImage_MapCenterChanged(SharpMap.Geometries.Point center)
+        private void mapImage_MapCenterChanged(GeoAPI.Geometries.Coordinate center)
         {
             UpdatePropertyGrid();
         }

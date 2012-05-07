@@ -4,7 +4,7 @@
     using System.Collections.Generic;
     using System.Data;
     using Data;
-    using Geometries;
+    using GeoAPI.Geometries;
 
     public static class GeoJSONHelper
     {
@@ -26,7 +26,7 @@
                     for (int i = 0; i < rows.Count; i++)
                     {
                         FeatureDataRow row = (FeatureDataRow)rows[i];
-                        Geometry geometry = row.Geometry;
+                        IGeometry geometry = row.Geometry;
                         Dictionary<string, object> values = new Dictionary<string, object>();
                         for (int j = 0; j < keys.Length; j++)
                             values.Add(keys[j], row[j]);

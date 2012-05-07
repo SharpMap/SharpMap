@@ -11,7 +11,8 @@ namespace SharpMap.Demo.Wms.Handlers
 
     using SharpMap.Converters.GeoJSON;
     using SharpMap.Data;
-    using SharpMap.Geometries;
+    using Geometry = GeoAPI.Geometries.IGeometry;
+    using BoundingBox = GeoAPI.Geometries.Envelope;
     using SharpMap.Layers;
     using SharpMap.Web.Wms;
 
@@ -80,9 +81,10 @@ namespace SharpMap.Demo.Wms.Handlers
                 }
                 if (transform != null)
                 {
+                    var gf = new NetTopologySuite.Geometries.GeometryFactory();
                     data = data.Select(d =>
                     {
-                        Geometry converted = GeometryTransform.TransformGeometry(d.Geometry, transform);
+                        var converted = GeometryTransform.TransformGeometry(d.Geometry, transform, gf);
                         d.SetGeometry(converted);
                         return d;
                     });

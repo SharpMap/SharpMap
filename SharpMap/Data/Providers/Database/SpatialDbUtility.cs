@@ -1,0 +1,255 @@
+﻿using System;
+using System.Data.Common;
+using System.Text;
+using GeoAPI.IO;
+using NetTopologySuite.IO;
+
+namespace SharpMap.Data.Providers
+{
+    /// <summary>
+    /// Database entity decorator object
+    /// </summary>
+    [Serializable]
+    public class SpatialDbUtility
+    {
+        /// <summary>
+        /// Creates an instance of this class using the default decorator strings
+        /// </summary>
+        public SpatialDbUtility()
+            :this("\"{0}\"", "'{0}'", "@P{0}")
+        {
+            
+        }
+
+        /// <summary>
+        /// Creates an instance of this class using the provided decorator strings
+        /// </summary>
+        /// <param name="entityDecoratorFormat">The format string to decorate database entities</param>
+        /// <param name="literalDecoratorFormat">The format string to decorate literals (strings)</param>
+        /// <param name="parameterDecoratorFormat">The format string to decorate parameters</param>
+        public SpatialDbUtility(string entityDecoratorFormat, string literalDecoratorFormat, string parameterDecoratorFormat)
+            :this(entityDecoratorFormat, literalDecoratorFormat, parameterDecoratorFormat,
+            new WKBReader(), new WKBWriter())
+        {
+        }
+
+        /// <summary>
+        /// Creates an instance of this class using the provided decorator strings
+        /// </summary>
+        /// <param name="entityDecoratorFormat">The format string to decorate database entities</param>
+        /// <param name="literalDecoratorFormat">The format string to decorate literals (strings)</param>
+        /// <param name="parameterDecoratorFormat">The format string to decorate parameters</param>
+        /// <param name="reader"> </param>
+        /// <param name="writer"> </param>
+        public SpatialDbUtility(string entityDecoratorFormat, string literalDecoratorFormat, string parameterDecoratorFormat,
+            IBinaryGeometryReader reader, IBinaryGeometryWriter writer)
+
+
+        {
+            EntityDecoratorFormat = entityDecoratorFormat;
+            LiteralDecoratorFormat = literalDecoratorFormat;
+            ParameterDecoratorFormat = parameterDecoratorFormat;
+
+            //This won't do anything to the geometry
+            ToEnvelopeDecoratorFormat = "{0}";
+            ToGeometryDecoratorFormat = "{0}";
+            SetSridDecoratorFormat = "{0}";
+            TransformDecoratorFormat = "{0}";
+
+            Reader = reader;
+            Writer = writer;
+        }        
+        /// <summary>
+        /// Gets the database entity decorator format.
+        /// <para/>
+        /// For e.g. PostgreSQL that would be "\"{0}\"", so that a table named smTable would be decorated to "smTable"
+        /// </summary>
+        public string EntityDecoratorFormat { get; private set; }
+
+        /// <summary>
+        /// Gets the database literal (string) decorator
+        /// </summary>
+        public string LiteralDecoratorFormat { get; private set; }
+        
+        /// <summary>
+        /// Gets the database parameter decorator
+        /// </summary>
+        public string ParameterDecoratorFormat { get; private set; }
+
+        /// <summary>
+        /// Function to decorate a database entity
+        /// </summary>
+        /// <param name="entity">The name of the entity</param>
+        /// <returns>The decorated database entity</returns>
+        public string DecorateEntity(string entity)
+        {
+            return string.Format(EntityDecoratorFormat, entity);
+        }
+
+        /// <summary>
+        /// Decorates a constraint with parameters
+        /// </summary>
+        /// <param name="command">The command object to add the parameters to.</param>
+        /// <param name="entity">The entity</param>
+        /// <param name="constraint"></param>
+        /// <param name="parameters"></param>
+        /// <returns></returns>
+        public string DecorateEntityConstraintWithParameter(DbCommand command, string entity, string constraint, params object[] parameters)
+        {
+            var sb = new StringBuilder();
+            var pc = command.Parameters;
+            var pNr = pc.Count;
+            
+            foreach (var o in parameters)
+            {
+                var p = command.CreateParameter();
+                p.ParameterName = string.Format(ParameterDecoratorFormat, pNr++);
+                p.Value = o;
+                pc.Add(p);
+                if (sb.Length > 0)
+                    sb.Append(", ");
+                sb.AppendFormat(p.ParameterName);
+            }
+
+            var formattedConstraint = string.Format(constraint, sb);
+
+            return string.Format("{0} {1}", DecorateEntity(entity), formattedConstraint);
+        }
+
+        /// <summary>
+        /// Decorates the table name
+        /// </summary>
+        /// <returns>The decorated table name</returns>
+        public string DecorateTable(string schema, string table, string asSuffix = null)
+        {
+            var sb = new StringBuilder();
+
+            if (!string.IsNullOrEmpty(schema))
+                sb.Append(DecorateEntity(schema));
+
+            if (sb.Length > 0)
+                sb.Append(".");
+
+            sb.Append(DecorateEntity(table));
+
+            if (string.IsNullOrEmpty(asSuffix))
+                sb.AppendFormat("AS {0}", DecorateEntity(asSuffix));
+
+            return sb.ToString();
+        }
+
+        /// <summary>
+        /// Decorates a colum name, optionally with a prefix
+        /// </summary>
+        /// <param name="columnName">The column name</param>
+        /// <param name="prefix">The (optional) prefix</param>
+        /// <returns>The decorated column name</returns>
+        public string DecorateColumn(string columnName, string prefix = null)
+        {
+            var sb = new StringBuilder();
+            if (!string.IsNullOrEmpty(prefix))
+                sb.AppendFormat("{0}.", DecorateEntity(prefix));
+            sb.Append(DecorateEntity(columnName));
+            return sb.ToString();
+        }
+
+        /// <summary>
+        /// Renames an already decorated entity using the SQL AS statement
+        /// </summary>
+        /// <param name="decoratedEntity">The decorated entity</param>
+        /// <param name="asSuffix">The suffix</param>
+        /// <returns>The decorated entity</returns>
+        public string DecorateAs(string decoratedEntity, string asSuffix = null)
+        {
+            var sb = new StringBuilder();
+            sb.Append(decoratedEntity);
+            if (!string.IsNullOrEmpty(asSuffix))
+                sb.AppendFormat(" AS {0}", DecorateEntity(asSuffix));
+            return sb.ToString();
+        }
+
+        #region SpatialFunctions
+
+        /// <summary>
+        /// Decorator for the function to assign a specific SRID value to a geometry
+        /// </summary>
+        /// <remarks>
+        /// The format must have
+        /// <list type="bullet">
+        /// <item>a placeholder for the gemoetry ({0})</item>
+        /// <item>a placeholder for the srid ({1})</item>
+        /// </list>
+        /// <example language="C#">
+        /// //e.g. Postgis
+        /// this.SetSridFromat = "ST_SetSrid({0}, {1})";
+        /// </example>
+        /// </remarks>
+        public string SetSridDecoratorFormat { get; set; }
+
+        /// <summary>
+        /// Decorator for the format to transform a geometry to a specified 
+        /// </summary>
+        /// <remarks>
+        /// The format must have
+        /// <list type="bullet">
+        /// <item>a placeholder for the gemoetry ({0})</item>
+        /// <item>a placeholder for the target srid ({1})</item>
+        /// </list>
+        /// <example language="C#">
+        /// //e.g. Postgis
+        /// this.SetSridFromat = "ST_Transform({0}, {1})";
+        /// </example>
+        /// </remarks>
+        public string TransformDecoratorFormat { get; set; }
+
+        /// <summary>
+        /// Decorator for the transformation of the geometry data, in case the
+        /// <see cref="Writer"/> produces a specific format (e.g. WKB) that does
+        /// not match the backend's format.
+        /// </summary>
+        /// <remarks>
+        /// The format must have
+        /// <list type="bullet">
+        /// <item>a placeholder for the gemoetry ({0})</item>
+        /// </list>
+        /// </remarks>
+        public string ToGeometryDecoratorFormat { get; set; }
+
+        /// <summary>
+        /// Decorator for the transformation of the envelope data, in case the
+        /// <see cref="Reader"/> expects a specific format (e.g. WKB).
+        /// </summary>
+        /// <remarks>
+        /// The format must have
+        /// <list type="bullet">
+        /// <item>a placeholder for the envelope ({0})</item>
+        /// </list>
+        /// </remarks>
+        public string ToEnvelopeDecoratorFormat { get; set; }
+
+        /// <summary>
+        /// Decorator for the transformation of the geometry data, in case the
+        /// <see cref="Reader"/> can only read a format (e.g. WKB) that does
+        /// not match the backend's format.
+        /// </summary>
+        /// <remarks>
+        /// The format must have
+        /// <list type="bullet">
+        /// <item>a placeholder for the gemoetry ({0})</item>
+        /// </list>
+        /// </remarks>
+        public string FromGeometryDecoratorFormat { get; set; }
+
+        /// <summary>
+        /// Reader for geometry data
+        /// </summary>
+        public IBinaryGeometryReader Reader { get; private set; }
+
+        /// <summary>
+        /// Writer for geometry
+        /// </summary>
+        public IBinaryGeometryWriter Writer { get; private set; }
+
+        #endregion
+    }
+}

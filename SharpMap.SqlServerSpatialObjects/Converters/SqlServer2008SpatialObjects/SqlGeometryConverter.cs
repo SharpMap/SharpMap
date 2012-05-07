@@ -18,20 +18,22 @@
 
 #endregion
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
+using GeoAPI.Geometries;
 using Microsoft.SqlServer.Types;
-using SMGeometry = SharpMap.Geometries.Geometry;
-using SMGeometryType = SharpMap.Geometries.GeometryType2;
-using SMPoint = SharpMap.Geometries.Point;
-using SMLineString = SharpMap.Geometries.LineString;
-using SMLinearRing = SharpMap.Geometries.LinearRing;
-using SMPolygon = SharpMap.Geometries.Polygon;
-using SMMultiPoint = SharpMap.Geometries.MultiPoint;
-using SMMultiLineString = SharpMap.Geometries.MultiLineString;
-using SMMultiPolygon = SharpMap.Geometries.MultiPolygon;
-using SMGeometryCollection = SharpMap.Geometries.GeometryCollection;
-
+using SMGeometry = GeoAPI.Geometries.IGeometry;
+using SMGeometryType = GeoAPI.Geometries.OgcGeometryType;
+using SMPoint = GeoAPI.Geometries.IPoint;
+using SMLineString = GeoAPI.Geometries.ILineString;
+using SMLinearRing = GeoAPI.Geometries.ILinearRing;
+using SMPolygon = GeoAPI.Geometries.IPolygon;
+using SMMultiPoint = GeoAPI.Geometries.IMultiPoint;
+using SMMultiLineString = GeoAPI.Geometries.IMultiLineString;
+using SMMultiPolygon = GeoAPI.Geometries.IMultiPolygon;
+using SMGeometryCollection = GeoAPI.Geometries.IGeometryCollection;
+using Factory = GeoAPI.Geometries.IGeometryFactory;
 
 namespace SharpMap.Converters.SqlServer2008SpatialObjects
 {
@@ -79,20 +81,22 @@ namespace SharpMap.Converters.SqlServer2008SpatialObjects
 
     public static class SqlGeometryConverter
     {
+        private static readonly GeoAPI.IGeometryServices Services = GeoAPI.GeometryServiceProvider.Instance;
+
         public static double ReduceTolerance = 1d;
 
         public static SqlGeometry ToSqlGeometry(SMGeometry smGeometry)
         {
             SqlGeometryBuilder builder = new SqlGeometryBuilder();
-#if !DotSpatialProjections
-            if (smGeometry.SpatialReference != null)
-                builder.SetSrid((int) smGeometry.SpatialReference.AuthorityCode);
-#else
-            if (smGeometry.SpatialReference != null)
-                builder.SetSrid((int) smGeometry.SpatialReference.EpsgCode);
-#endif
-            else
-                builder.SetSrid(0);
+//#if !DotSpatialProjections
+//            if (smGeometry.SpatialReference != null)
+//                builder.SetSrid((int) smGeometry.SpatialReference.AuthorityCode);
+//#else
+//            if (smGeometry.SpatialReference != null)
+//                builder.SetSrid((int) smGeometry.SpatialReference.EpsgCode);
+//#endif
+//            else
+                builder.SetSrid(smGeometry.SRID);
 
             SharpMapGeometryToSqlGeometry(builder, smGeometry);
 
@@ -125,7 +129,7 @@ namespace SharpMap.Converters.SqlServer2008SpatialObjects
         private static void SharpMapGeometryToSqlGeometry(SqlGeometryBuilder geomBuilder, SMGeometry smGeometry)
         {
             
-            switch (smGeometry.GeometryType)
+            switch (smGeometry.OgcGeometryType)
             {
                 case SMGeometryType.Point:
                     SharpMapPointToSqlGeometry(geomBuilder, smGeometry as SMPoint);
@@ -158,7 +162,7 @@ namespace SharpMap.Converters.SqlServer2008SpatialObjects
         {
             geomBuilder.BeginGeometry(OpenGisGeometryType.GeometryCollection);
             for (int i = 0; i < geometryCollection.NumGeometries; i++ )
-                SharpMapGeometryToSqlGeometry(geomBuilder, geometryCollection.Geometry(i));
+                SharpMapGeometryToSqlGeometry(geomBuilder, geometryCollection[i]);
             geomBuilder.EndGeometry();
         }
 
@@ -166,7 +170,7 @@ namespace SharpMap.Converters.SqlServer2008SpatialObjects
         {
             geomBuilder.BeginGeometry(OpenGisGeometryType.MultiPolygon);
             for (int i = 0; i < multiPolygon.NumGeometries; i++)
-                SharpMapPolygonToSqlGeometry(geomBuilder, multiPolygon.Geometry(i) as SMPolygon);
+                SharpMapPolygonToSqlGeometry(geomBuilder, multiPolygon[i] as SMPolygon);
             geomBuilder.EndGeometry();
         }
 
@@ -174,15 +178,15 @@ namespace SharpMap.Converters.SqlServer2008SpatialObjects
         {
             geomBuilder.BeginGeometry(OpenGisGeometryType.MultiLineString);
             for (int i = 0; i < multiLineString.NumGeometries; i++)
-                SharpMapLineStringToSqlGeometry(geomBuilder, multiLineString.Geometry(i) as SMLineString);
+                SharpMapLineStringToSqlGeometry(geomBuilder, multiLineString[i] as SMLineString);
             geomBuilder.EndGeometry();
         }
 
         private static void SharpMapMultiPointToSqlGeometry(SqlGeometryBuilder geomBuilder, SMMultiPoint multiPoint)
         {
             geomBuilder.BeginGeometry(OpenGisGeometryType.MultiPoint);
-            for(int i = 0; i < multiPoint.NumGeometries; i++)
-                SharpMapPointToSqlGeometry(geomBuilder, multiPoint.Geometry(i));
+            for(int i = 0; i < multiPoint.NumPoints; i++)
+                SharpMapPointToSqlGeometry(geomBuilder, multiPoint[i] as SMPoint);
             geomBuilder.EndGeometry();
         }
 
@@ -197,11 +201,11 @@ namespace SharpMap.Converters.SqlServer2008SpatialObjects
         private static void SharpMapLineStringToSqlGeometry(SqlGeometryBuilder geomBuilder, SMLineString lineString)
         {
             geomBuilder.BeginGeometry(OpenGisGeometryType.LineString);
-            SMPoint point = lineString.StartPoint;
-            geomBuilder.BeginFigure(point.X, point.Y);
+            var coords = lineString.Coordinates;
+            geomBuilder.BeginFigure(coords[0].X, coords[0].Y);
             for (int i = 1; i < lineString.NumPoints; i++)
             {
-                point = lineString.Point(i);
+                var point = coords[i];
                 geomBuilder.AddLine(point.X, point.Y);
             }
             geomBuilder.EndFigure();
@@ -211,9 +215,9 @@ namespace SharpMap.Converters.SqlServer2008SpatialObjects
         private static void SharpMapPolygonToSqlGeometry(SqlGeometryBuilder geomBuilder, SMPolygon polygon)
         {
             geomBuilder.BeginGeometry(OpenGisGeometryType.Polygon);
-            AddRing(geomBuilder, polygon.ExteriorRing);
-            for (int i = 0; i < polygon.NumInteriorRing; i++)
-                AddRing(geomBuilder, polygon.InteriorRing(i));
+            AddRing(geomBuilder, (SMLinearRing )polygon.ExteriorRing);
+            for (int i = 0; i < polygon.NumInteriorRings; i++)
+                AddRing(geomBuilder, (SMLinearRing )polygon.GetInteriorRingN(i));
             geomBuilder.EndGeometry();
         }
 
@@ -222,26 +226,26 @@ namespace SharpMap.Converters.SqlServer2008SpatialObjects
             if (linearRing.NumPoints < 3)
                 return;
 
-            if (linearRing.Area == 0)
-                return;
+            //if (linearRing.Area == 0)
+            //    return;
 
-            SMPoint pt = linearRing.StartPoint;
-
-            builder.BeginFigure(pt.X, pt.Y);
-            for (int i = 1; i < linearRing.NumPoints; i++)
+            var coords = linearRing.Coordinates;
+            builder.BeginFigure(coords[0].X, coords[0].Y);
+            for (var i = 1; i < linearRing.NumPoints; i++)
             {
-                pt = linearRing.Point(i);
+                var pt = coords[i];
                 builder.AddLine(pt.X, pt.Y);
             }
             builder.EndFigure();
         }
 
-        public static SMGeometry ToSharpMapGeometry(SqlGeometry geometry)
+        public static SMGeometry ToSharpMapGeometry(SqlGeometry geometry, Factory factory = null)
         {
             if (geometry == null) return null;
-
+            var fact = factory ?? Services.CreateGeometryFactory((int) geometry.STSrid);
+            
             if (geometry.STIsEmpty())
-                return new SMGeometryCollection();
+                return fact.CreateGeometryCollection(null);
             
             if (!geometry.STIsValid()) 
                 geometry.MakeValid();
@@ -250,27 +254,29 @@ namespace SharpMap.Converters.SqlServer2008SpatialObjects
             switch (geometryType)
             {
                 case OpenGisGeometryType.Point:
-                    return SqlGeometryToSharpMapPoint(geometry);
+                    return SqlGeometryToSharpMapPoint(geometry, fact);
                 case OpenGisGeometryType.LineString:
-                    return SqlGeometryToSharpMapLineString(geometry);
+                    return SqlGeometryToSharpMapLineString(geometry, fact);
                 case OpenGisGeometryType.Polygon:
-                    return SqlGeometryToSharpMapPolygon(geometry);
+                    return SqlGeometryToSharpMapPolygon(geometry, fact);
                 case OpenGisGeometryType.MultiPoint:
-                    return SqlGeometryToSharpMapMultiPoint(geometry);
+                    return SqlGeometryToSharpMapMultiPoint(geometry, fact);
                 case OpenGisGeometryType.MultiLineString:
-                    return SqlGeometryToSharpMapMultiLineString(geometry);
+                    return SqlGeometryToSharpMapMultiLineString(geometry, fact);
                 case OpenGisGeometryType.MultiPolygon:
-                    return SqlGeometryToSharpMapMultiPolygon(geometry);
+                    return SqlGeometryToSharpMapMultiPolygon(geometry, fact);
                 case OpenGisGeometryType.GeometryCollection:
-                    return SqlGeometryToSharpMapGeometryCollection(geometry);
+                    return SqlGeometryToSharpMapGeometryCollection(geometry, fact);
             }
             throw new ArgumentException(string.Format("Cannot convert SqlServer '{0}' to Sharpmap.Geometry", geometry.STGeometryType()), "geometry");
         }
 
-        public static IEnumerable<SMGeometry> ToSharpMapGeometries(IEnumerable<SqlGeometry> sqlGeometries)
+        public static IEnumerable<SMGeometry> ToSharpMapGeometries(IEnumerable<SqlGeometry> sqlGeometries, Factory factory = null)
         {
-            foreach (SqlGeometry sqlGeometry in sqlGeometries)
-                yield return ToSharpMapGeometry(sqlGeometry);
+            var fact = factory ?? Services.CreateGeometryFactory((int)sqlGeometries.First().STSrid);
+            
+            foreach (var sqlGeometry in sqlGeometries)
+                yield return ToSharpMapGeometry(sqlGeometry, fact);
         }
 
         /*
@@ -297,71 +303,78 @@ namespace SharpMap.Converters.SqlServer2008SpatialObjects
         }
         */
 
-        private static SMGeometryCollection SqlGeometryToSharpMapGeometryCollection(SqlGeometry geometry)
+        private static SMGeometryCollection SqlGeometryToSharpMapGeometryCollection(SqlGeometry geometry, Factory factory)
         {
-            SMGeometryCollection geometryCollection = new SMGeometryCollection();
-            for(int i = 1; i <= geometry.STNumGeometries(); i++)
-                geometryCollection.Collection.Add(ToSharpMapGeometry(geometry.STGeometryN(i)));
-            return geometryCollection;
+            var fact = factory ?? Services.CreateGeometryFactory((int)geometry.STSrid);
+            var geoms = new SMGeometry[(int)geometry.STNumGeometries()];
+            for (var i = 1; i <= geometry.STNumGeometries(); i++)
+                geoms[i-1] = ToSharpMapGeometry(geometry.STGeometryN(i), fact);
+            return fact.CreateGeometryCollection(geoms);
         }
 
-        private static SMMultiPolygon SqlGeometryToSharpMapMultiPolygon(SqlGeometry geometry)
+        private static SMMultiPolygon SqlGeometryToSharpMapMultiPolygon(SqlGeometry geometry, Factory factory)
         {
-            SMMultiPolygon multiPolygon = new SMMultiPolygon();
-            for(int i = 1; i <= geometry.STNumGeometries(); i++)
-                multiPolygon.Polygons.Add((SMPolygon)SqlGeometryToSharpMapPolygon(geometry.STGeometryN(i)));
-            return multiPolygon;
+            var fact = factory ?? Services.CreateGeometryFactory((int)geometry.STSrid);
+            var polygons = new SMPolygon[(int)geometry.STNumGeometries()];
+            for (var i = 1; i <= geometry.STNumGeometries(); i++)
+                polygons[i-1] = (SMPolygon)SqlGeometryToSharpMapPolygon(geometry.STGeometryN(i), fact);
+            return fact.CreateMultiPolygon(polygons);
         }
 
-        private static SMMultiLineString SqlGeometryToSharpMapMultiLineString(SqlGeometry geometry)
+        private static SMMultiLineString SqlGeometryToSharpMapMultiLineString(SqlGeometry geometry, Factory factory)
         {
-            SMMultiLineString multiLineString = new SMMultiLineString();
-            for (int i = 1; i <= geometry.STNumGeometries(); i++)
-                multiLineString.LineStrings.Add((SMLineString)SqlGeometryToSharpMapLineString(geometry.STGeometryN(i)));
-            return multiLineString;
+            var fact = factory ?? Services.CreateGeometryFactory((int)geometry.STSrid);
+            var lineStrings = new SMLineString[(int)geometry.STNumGeometries()];
+            for (var i = 1; i <= geometry.STNumGeometries(); i++)
+                lineStrings[i-1] = (SMLineString)SqlGeometryToSharpMapLineString(geometry.STGeometryN(i), fact);
+            return fact.CreateMultiLineString(lineStrings);
         }
 
-        private static SMGeometry SqlGeometryToSharpMapMultiPoint(SqlGeometry geometry)
+        private static SMGeometry SqlGeometryToSharpMapMultiPoint(SqlGeometry geometry, Factory factory)
         {
-            SMMultiPoint multiPoint = new SMMultiPoint();
-            for (int i = 1; i <= geometry.STNumGeometries(); i++)
-                multiPoint.Points.Add((SMPoint)SqlGeometryToSharpMapPoint(geometry.STGeometryN(i)));
-            return multiPoint;
+            var fact = factory ?? Services.CreateGeometryFactory((int)geometry.STSrid);
+            var points = new SMPoint[(int)geometry.STNumGeometries()];
+            for (var i = 1; i <= geometry.STNumGeometries(); i++)
+                points[i-1] = (SMPoint) SqlGeometryToSharpMapPoint(geometry.STGeometryN(i), fact);
+            return fact.CreateMultiPoint(points);
         }
 
-        private static SMGeometry SqlGeometryToSharpMapPoint(SqlGeometry geometry)
+        private static SMGeometry SqlGeometryToSharpMapPoint(SqlGeometry geometry, Factory factory)
         {
-            return new SMPoint((double)geometry.STX, (double)geometry.STY);
+            var fact = factory ?? Services.CreateGeometryFactory((int)geometry.STSrid);
+            return fact.CreatePoint(new Coordinate( (double)geometry.STX, (double)geometry.STY));
         }
 
-        private static IList<SMPoint> GetPoints(SqlGeometry geometry)
+        private static Coordinate[] GetPoints(SqlGeometry geometry)
         {
-            SMPoint[] pts = new SMPoint[(int)geometry.STNumPoints()];
+            var pts = new Coordinate[(int)geometry.STNumPoints()];
             for (int i = 1; i <= (int)geometry.STNumPoints(); i++)
             {
-                SqlGeometry ptGeometry = geometry.STPointN(i);
-                pts[i-1] = new SMPoint((double)ptGeometry.STX, (double)ptGeometry.STY);
+                var ptGeometry = geometry.STPointN(i);
+                pts[i-1] = new Coordinate((double)ptGeometry.STX, (double)ptGeometry.STY);
             }
             return pts;
         }
 
-        private static SMGeometry SqlGeometryToSharpMapLineString(SqlGeometry geometry)
+        private static SMGeometry SqlGeometryToSharpMapLineString(SqlGeometry geometry, Factory factory)
         {
-            return new SMLineString(GetPoints(geometry));
+            var fact = factory ?? Services.CreateGeometryFactory((int)geometry.STSrid);
+            return fact.CreateLineString(GetPoints(geometry));
         }
 
-        private static SMGeometry SqlGeometryToSharpMapPolygon(SqlGeometry geometry)
+        private static SMGeometry SqlGeometryToSharpMapPolygon(SqlGeometry geometry, Factory factory)
         {
+            var fact = factory ?? Services.CreateGeometryFactory((int)geometry.STSrid);
             //exterior ring
-            SMLinearRing exterior = new SMLinearRing(GetPoints(geometry.STExteriorRing()));
+            var exterior = fact.CreateLinearRing(GetPoints(geometry.STExteriorRing()));
             SMLinearRing[] interior = null;
             if (geometry.STNumInteriorRing()>0)
             {
                 interior = new SMLinearRing[(int)geometry.STNumInteriorRing()];
-                for (int i = 1; i <= geometry.STNumInteriorRing(); i++)
-                    interior[i-1] = new SMLinearRing(GetPoints(geometry.STInteriorRingN(i)));
+                for (var i = 1; i <= geometry.STNumInteriorRing(); i++)
+                    interior[i - 1] = fact.CreateLinearRing(GetPoints(geometry.STInteriorRingN(i)));
             }
-            return new SMPolygon(exterior, interior);
+            return Services.CreateGeometryFactory((int)geometry.STSrid).CreatePolygon(exterior, interior);
         }
     }
 }

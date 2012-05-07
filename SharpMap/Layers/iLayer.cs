@@ -16,7 +16,7 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
 
 using System.Drawing;
-using SharpMap.Geometries;
+using GeoAPI.Geometries;
 
 namespace SharpMap.Layers
 {
@@ -48,7 +48,7 @@ namespace SharpMap.Layers
         /// <summary>
         /// Gets the boundingbox of the entire layer
         /// </summary>
-        BoundingBox Envelope { get; }
+        Envelope Envelope { get; }
 
         //System.Collections.Generic.List<T> Features { get; }
 

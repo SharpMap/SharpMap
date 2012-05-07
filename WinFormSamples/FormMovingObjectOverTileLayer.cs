@@ -5,6 +5,8 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
+using GeoAPI.Geometries;
+using NetTopologySuite.Geometries;
 using SharpMap.Layers;
 using SharpMap.Data;
 using SharpMap.Styles;
@@ -23,11 +25,11 @@ namespace WinFormSamples
     public partial class FormMovingObjectOverTileLayer : Form
     {
 
-        private List<SharpMap.Geometries.Geometry> geos = new List<SharpMap.Geometries.Geometry>();
+        private List<IGeometry> geos = new List<IGeometry>();
 
         private bool movingUp = true;
         private bool movingLeft = true;
-        SharpMap.Geometries.Point position;
+        GeoAPI.Geometries.Coordinate position;
 
         public FormMovingObjectOverTileLayer()
         {
@@ -48,8 +50,8 @@ namespace WinFormSamples
                 mathTransform.Source, mathTransform.Target);
 #else
             var mathTransform = LayerTools.Wgs84toGoogleMercator.MathTransform;
-            SharpMap.Geometries.BoundingBox geom = GeometryTransform.TransformBox(
-                new SharpMap.Geometries.BoundingBox(-9.205626, 38.690993, -9.123736, 38.740837),
+            GeoAPI.Geometries.Envelope geom = GeometryTransform.TransformBox(
+                new Envelope(-9.205626, -9.123736, 38.690993, 38.740837),
                 mathTransform);
 #endif
 
@@ -59,24 +61,25 @@ namespace WinFormSamples
 
 
             this.mapBox1.Map.BackgroundLayer.Add(layer2);
+            var gf = new GeometryFactory(new PrecisionModel(), 3857);
 
             //Adds a static layer
-            VectorLayer staticLayer = new VectorLayer("Fixed Marker");
+            var staticLayer = new VectorLayer("Fixed Marker");
             //position = geom.GetCentroid();
-            List<SharpMap.Geometries.Geometry> aux = new List<SharpMap.Geometries.Geometry>();
-            aux.Add(geom.GetCentroid());
+            var aux = new List<IGeometry>();
+            aux.Add(gf.CreatePoint(geom.Centre));
             staticLayer.Style.Symbol = Resources.PumpSmall;
-            SharpMap.Data.Providers.GeometryProvider geoProviderFixed = new SharpMap.Data.Providers.GeometryProvider(aux);
+            var geoProviderFixed = new SharpMap.Data.Providers.GeometryProvider(aux);
             staticLayer.DataSource = geoProviderFixed;
             this.mapBox1.Map.Layers.Add(staticLayer);
 
             
             //Adds a moving variable layer
             VectorLayer pushPinLayer = new VectorLayer("PushPins");
-            position = geom.GetCentroid();
-            geos.Add(position);
+            position = geom.Centre;
+            geos.Add(gf.CreatePoint(position));
             pushPinLayer.Style.Symbol = Resources.OutfallSmall;
-            SharpMap.Data.Providers.GeometryProvider geoProvider = new SharpMap.Data.Providers.GeometryProvider(geos);
+            var geoProvider = new SharpMap.Data.Providers.GeometryProvider(geos);
             pushPinLayer.DataSource = geoProvider;
             this.mapBox1.Map.VariableLayers.Add(pushPinLayer);
 
@@ -101,14 +104,14 @@ namespace WinFormSamples
             position.X = position.X + dx;
             position.Y = position.Y + dy;
 
-            if (position.X < this.mapBox1.Map.Envelope.Left)
+            if (position.X < this.mapBox1.Map.Envelope.MinX)
                 movingLeft = false;
-            else if (position.X > this.mapBox1.Map.Envelope.Right)
+            else if (position.X > this.mapBox1.Map.Envelope.MaxX)
                 movingLeft = true;
 
-            if (position.Y < this.mapBox1.Map.Envelope.Bottom)
+            if (position.Y < this.mapBox1.Map.Envelope.MinY)
                 movingUp = true;
-            else if (position.Y > this.mapBox1.Map.Envelope.Top)
+            else if (position.Y > this.mapBox1.Map.Envelope.MaxY)
                 movingUp = false;
 
             VariableLayerCollection.TouchTimer();

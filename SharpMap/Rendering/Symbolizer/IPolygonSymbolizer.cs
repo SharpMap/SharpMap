@@ -1,4 +1,4 @@
-﻿using SharpMap.Geometries;
+﻿using GeoAPI.Geometries;
 
 namespace SharpMap.Rendering.Symbolizer
 {

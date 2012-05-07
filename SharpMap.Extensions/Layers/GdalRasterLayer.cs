@@ -22,6 +22,7 @@ using System.Collections.ObjectModel;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
+using GeoAPI.Geometries;
 using OSGeo.GDAL;
 #if !DotSpatialProjections
 using ProjNet.CoordinateSystems;
@@ -31,9 +32,14 @@ using DotSpatial.Projections;
 #endif
 using SharpMap.Data;
 using SharpMap.Extensions.Data;
-using SharpMap.Geometries;
+using BoundingBox = GeoAPI.Geometries.Envelope;
+using Geometry = GeoAPI.Geometries.IGeometry;
 using SharpMap.Rendering.Thematics;
+using GeoPoint = GeoAPI.Geometries.Coordinate;
 using Point = System.Drawing.Point;
+
+using Polygon = GeoAPI.Geometries.IPolygon;
+using LinearRing = GeoAPI.Geometries.ILinearRing;
 
 namespace SharpMap.Layers
 {
@@ -56,6 +62,14 @@ namespace SharpMap.Layers
         {
             FwToolsHelper.Configure();
         }
+
+        private IGeometryFactory _factory;
+        protected GeoAPI.Geometries.IGeometryFactory Factory
+        {
+            get { return _factory; }
+            set { _factory = value; }
+        }
+
         private int _bitDepth = 8;
         private bool _colorCorrect = true; // apply color correction values
         private List<int[]> _curveLut;
@@ -405,15 +419,15 @@ namespace SharpMap.Layers
 
                 // no projection info found in the image...check for a prj
                 if (_projectionWkt == "" &&
-                    File.Exists(imageFilename.Substring(0, imageFilename.LastIndexOf(".")) + ".prj"))
+                    File.Exists(imageFilename.Substring(0, imageFilename.LastIndexOf(".", StringComparison.CurrentCultureIgnoreCase)) + ".prj"))
                 {
                     _projectionWkt =
-                        File.ReadAllText(imageFilename.Substring(0, imageFilename.LastIndexOf(".")) + ".prj");
+                        File.ReadAllText(imageFilename.Substring(0, imageFilename.LastIndexOf(".", StringComparison.CurrentCultureIgnoreCase)) + ".prj");
                 }
 
                 _imagesize = new Size(_gdalDataset.RasterXSize, _gdalDataset.RasterYSize);
                 _envelope = GetExtent();
-                _histoBounds = new Rectangle((int)_envelope.Left, (int)_envelope.Bottom, (int)_envelope.Width,
+                _histoBounds = new Rectangle((int)_envelope.MinX, (int)_envelope.MinY, (int)_envelope.Width,
                                              (int)_envelope.Height);
                 _lbands = _gdalDataset.RasterCount;
             }
@@ -424,13 +438,23 @@ namespace SharpMap.Layers
             }
         }
 
+        protected override void ReleaseManagedResources()
+        {
+            _factory = null;
+            _geoTransform = null;
+            _gdalDataset.Dispose();
+            _gdalDataset = null;
+            
+            base.ReleaseManagedResources();
+        }
+
         /// <summary>
         /// Returns the extent of the layer
         /// </summary>
         /// <returns>Bounding box corresponding to the extent of the features in the layer</returns>
         public override BoundingBox Envelope
         {
-            get { return _envelope; }
+            get { return new Envelope(_envelope); }
         }
 
         /// <summary>
@@ -490,19 +514,19 @@ namespace SharpMap.Layers
             BoundingBox bbox = map.Envelope;
             Size size = map.Size;
 
-            // bounds of section of image to be displayed
-            left = Math.Max(bbox.Left, _envelope.Left);
-            top = Math.Min(bbox.Top, _envelope.Top);
-            right = Math.Min(bbox.Right, _envelope.Right);
-            bottom = Math.Max(bbox.Bottom, _envelope.Bottom);
+            //// bounds of section of image to be displayed
+            //left = Math.Max(bbox.MinX, _envelope.MinX);
+            //top = Math.Min(bbox.MaxY, _envelope.MaxY);
+            //right = Math.Min(bbox.MaxX, _envelope.MaxX);
+            //bottom = Math.Max(bbox.MinY, _envelope.MinY);
 
             // height and width of envelope of transformed image in ground space
-            dblImgEnvW = _envelope.Right - _envelope.Left;
-            dblImgEnvH = _envelope.Top - _envelope.Bottom;
+            dblImgEnvW = _envelope.Width;
+            dblImgEnvH = _envelope.Height;
 
             // height and width of display window in ground space
-            dblWindowGndW = bbox.Right - bbox.Left;
-            dblWindowGndH = bbox.Top - bbox.Bottom;
+            dblWindowGndW = bbox.Width;
+            dblWindowGndH = bbox.Height;
 
             // height and width of transformed image in pixel space
             dblImginMapW = size.Width * (dblImgEnvW / dblWindowGndW);
@@ -529,19 +553,19 @@ namespace SharpMap.Layers
             BoundingBox bbox = map.Envelope;
             Size size = map.Size;
 
-            // bounds of section of image to be displayed
-            left = Math.Max(bbox.Left, _envelope.Left);
-            top = Math.Min(bbox.Top, _envelope.Top);
-            right = Math.Min(bbox.Right, _envelope.Right);
-            bottom = Math.Max(bbox.Bottom, _envelope.Bottom);
+            //// bounds of section of image to be displayed
+            //left = Math.Max(bbox.MinX, _envelope.MinX);
+            //top = Math.Min(bbox.MaxY, _envelope.MaxY);
+            //right = Math.Min(bbox.MaxX, _envelope.MaxX);
+            //bottom = Math.Max(bbox.MinY, _envelope.MinY);
 
             // height and width of envelope of transformed image in ground space
-            dblImgEnvW = _envelope.Right - _envelope.Left;
-            dblImgEnvH = _envelope.Top - _envelope.Bottom;
+            dblImgEnvW = _envelope.Width;
+            dblImgEnvH = _envelope.Height;
 
             // height and width of display window in ground space
-            dblWindowGndW = bbox.Right - bbox.Left;
-            dblWindowGndH = bbox.Top - bbox.Bottom;
+            dblWindowGndW = bbox.Width;
+            dblWindowGndH = bbox.Height;
 
             // height and width of transformed image in pixel space
             dblImginMapW = size.Width * (dblImgEnvW / dblWindowGndW);
@@ -587,8 +611,8 @@ namespace SharpMap.Layers
 
         public void ResetHistoRectangle()
         {
-            _histoBounds = new Rectangle((int)_envelope.Left, (int)_envelope.Bottom, (int)_envelope.Width,
-                                         (int)_envelope.Height);
+            _histoBounds = new Rectangle((int)_envelope.MinX, (int)_envelope.MinY, 
+                                         (int)_envelope.Width, (int)_envelope.Height);
         }
 
 #if !DotSpatialProjections
@@ -672,40 +696,39 @@ namespace SharpMap.Layers
                 top = _geoTransform.EnvelopeTop(dblW, dblH);
                 bottom = _geoTransform.EnvelopeBottom(dblW, dblH);
 
-                return new BoundingBox(left, bottom, right, top);
+                return new BoundingBox(left, right, bottom, top);
             }
 
             return null;
         }
 
         // get 4 corners of image
-        public Collection<Geometries.Point> GetFourCorners()
+        public GeoPoint[] GetFourCorners()
         {
-            Collection<Geometries.Point> points = new Collection<Geometries.Point>();
+            var points = new GeoPoint[4];
             double[] dblPoint;
 
             if (_gdalDataset != null)
             {
-                double[] geoTrans = new double[6];
+                var geoTrans = new double[6];
                 _gdalDataset.GetGeoTransform(geoTrans);
 
                 // no rotation...use default transform
                 if (!_useRotation && !_haveSpot || (geoTrans[0] == 0 && geoTrans[3] == 0))
                     geoTrans = new[] { 999.5, 1, 0, 1000.5, 0, -1 };
 
-                points.Add(new Geometries.Point(geoTrans[0], geoTrans[3]));
-                points.Add(new Geometries.Point(geoTrans[0] + (geoTrans[1] * _imagesize.Width),
-                                                geoTrans[3] + (geoTrans[4] * _imagesize.Width)));
-                points.Add(
-                    new Geometries.Point(geoTrans[0] + (geoTrans[1] * _imagesize.Width) + (geoTrans[2] * _imagesize.Height),
-                                         geoTrans[3] + (geoTrans[4] * _imagesize.Width) + (geoTrans[5] * _imagesize.Height)));
-                points.Add(new Geometries.Point(geoTrans[0] + (geoTrans[2] * _imagesize.Height),
-                                                geoTrans[3] + (geoTrans[5] * _imagesize.Height)));
+                points[0] = new GeoPoint(geoTrans[0], geoTrans[3]);
+                points[1] = new GeoPoint(geoTrans[0] + (geoTrans[1] * _imagesize.Width),
+                                         geoTrans[3] + (geoTrans[4] * _imagesize.Width));
+                points[2] = new GeoPoint(geoTrans[0] + (geoTrans[1] * _imagesize.Width) + (geoTrans[2] * _imagesize.Height),
+                                         geoTrans[3] + (geoTrans[4] * _imagesize.Width) + (geoTrans[5] * _imagesize.Height));
+                points[3] = new GeoPoint(geoTrans[0] + (geoTrans[2] * _imagesize.Height),
+                                         geoTrans[3] + (geoTrans[5] * _imagesize.Height));
 
                 // transform to map's projection
                 if (_transform != null)
                 {
-                    for (int i = 0; i < 4; i++)
+                    for (var i = 0; i < 4; i++)
                     {
 #if !DotSpatialProjections
                         dblPoint = _transform.MathTransform.Transform(new[] { points[i].X, points[i].Y });
@@ -713,7 +736,7 @@ namespace SharpMap.Layers
                         dblPoint = points[i].ToDoubleArray();
                         Reproject.ReprojectPoints(dblPoint, null, _transform.Source, _transform.Target, 0, 1);
 #endif
-                        points[i] = new Geometries.Point(dblPoint[0], dblPoint[1]);
+                        points[i] = new GeoPoint(dblPoint[0], dblPoint[1]);
                     }
                 }
             }
@@ -723,8 +746,8 @@ namespace SharpMap.Layers
 
         public Polygon GetFootprint()
         {
-            LinearRing myRing = new LinearRing(GetFourCorners());
-            return new Polygon(myRing);
+            var myRing = Factory.CreateLinearRing(GetFourCorners());
+            return Factory.CreatePolygon(myRing, null);
         }
 
         // applies map projection transfrom to get reprojected envelope
@@ -814,7 +837,7 @@ namespace SharpMap.Layers
             double bitScalar = 1.0;
             Bitmap bitmap = null;
             Point bitmapTL = new Point(), bitmapBR = new Point();
-            Geometries.Point imageTL = new Geometries.Point(), imageBR = new Geometries.Point();
+            GeoPoint imageTL = new GeoPoint(), imageBR = new GeoPoint();
             BoundingBox shownImageBbox, trueImageBbox;
             int bitmapLength, bitmapHeight;
             int displayImageLength, displayImageHeight;
@@ -824,8 +847,8 @@ namespace SharpMap.Layers
             if (dataset != null)
             {
                 //check if image is in bounding box
-                if ((displayBbox.Left > _envelope.Right) || (displayBbox.Right < _envelope.Left)
-                    || (displayBbox.Top < _envelope.Bottom) || (displayBbox.Bottom > _envelope.Top))
+                if ((displayBbox.MinX > _envelope.MaxX) || (displayBbox.MaxX < _envelope.MinX)
+                    || (displayBbox.MaxY < _envelope.MinY) || (displayBbox.MinY > _envelope.MaxY))
                     return;
 
                 // init histo
@@ -834,12 +857,12 @@ namespace SharpMap.Layers
                     _histogram.Add(new int[256]);
 
                 // bounds of section of image to be displayed
-                left = Math.Max(displayBbox.Left, _envelope.Left);
-                top = Math.Min(displayBbox.Top, _envelope.Top);
-                right = Math.Min(displayBbox.Right, _envelope.Right);
-                bottom = Math.Max(displayBbox.Bottom, _envelope.Bottom);
+                left = Math.Max(displayBbox.MinX, _envelope.MinX);
+                top = Math.Min(displayBbox.MaxY, _envelope.MaxY);
+                right = Math.Min(displayBbox.MaxX, _envelope.MaxX);
+                bottom = Math.Max(displayBbox.MinY, _envelope.MinY);
 
-                trueImageBbox = new BoundingBox(left, bottom, right, top);
+                trueImageBbox = new BoundingBox(left, right, bottom, top);
 
                 // put display bounds into current projection
                 if (_transform != null)
@@ -858,28 +881,28 @@ namespace SharpMap.Layers
                 // find min/max x and y pixels needed from image
                 imageBR.X =
                     (int)
-                    (Math.Max(_geoTransform.GroundToImage(shownImageBbox.TopLeft).X,
-                              Math.Max(_geoTransform.GroundToImage(shownImageBbox.TopRight).X,
-                                       Math.Max(_geoTransform.GroundToImage(shownImageBbox.BottomLeft).X,
-                                                _geoTransform.GroundToImage(shownImageBbox.BottomRight).X))) + 1);
+                    (Math.Max(_geoTransform.GroundToImage(shownImageBbox.TopLeft()).X,
+                              Math.Max(_geoTransform.GroundToImage(shownImageBbox.TopRight()).X,
+                                       Math.Max(_geoTransform.GroundToImage(shownImageBbox.BottomLeft()).X,
+                                                _geoTransform.GroundToImage(shownImageBbox.BottomRight()).X))) + 1);
                 imageBR.Y =
                     (int)
-                    (Math.Max(_geoTransform.GroundToImage(shownImageBbox.TopLeft).Y,
-                              Math.Max(_geoTransform.GroundToImage(shownImageBbox.TopRight).Y,
-                                       Math.Max(_geoTransform.GroundToImage(shownImageBbox.BottomLeft).Y,
-                                                _geoTransform.GroundToImage(shownImageBbox.BottomRight).Y))) + 1);
+                    (Math.Max(_geoTransform.GroundToImage(shownImageBbox.TopLeft()).Y,
+                              Math.Max(_geoTransform.GroundToImage(shownImageBbox.TopRight()).Y,
+                                       Math.Max(_geoTransform.GroundToImage(shownImageBbox.BottomLeft()).Y,
+                                                _geoTransform.GroundToImage(shownImageBbox.BottomRight()).Y))) + 1);
                 imageTL.X =
                     (int)
-                    Math.Min(_geoTransform.GroundToImage(shownImageBbox.TopLeft).X,
-                             Math.Min(_geoTransform.GroundToImage(shownImageBbox.TopRight).X,
-                                      Math.Min(_geoTransform.GroundToImage(shownImageBbox.BottomLeft).X,
-                                               _geoTransform.GroundToImage(shownImageBbox.BottomRight).X)));
+                    Math.Min(_geoTransform.GroundToImage(shownImageBbox.TopLeft()).X,
+                             Math.Min(_geoTransform.GroundToImage(shownImageBbox.TopRight()).X,
+                                      Math.Min(_geoTransform.GroundToImage(shownImageBbox.BottomLeft()).X,
+                                               _geoTransform.GroundToImage(shownImageBbox.BottomRight()).X)));
                 imageTL.Y =
                     (int)
-                    Math.Min(_geoTransform.GroundToImage(shownImageBbox.TopLeft).Y,
-                             Math.Min(_geoTransform.GroundToImage(shownImageBbox.TopRight).Y,
-                                      Math.Min(_geoTransform.GroundToImage(shownImageBbox.BottomLeft).Y,
-                                               _geoTransform.GroundToImage(shownImageBbox.BottomRight).Y)));
+                    Math.Min(_geoTransform.GroundToImage(shownImageBbox.TopLeft()).Y,
+                             Math.Min(_geoTransform.GroundToImage(shownImageBbox.TopRight()).Y,
+                                      Math.Min(_geoTransform.GroundToImage(shownImageBbox.BottomLeft()).Y,
+                                               _geoTransform.GroundToImage(shownImageBbox.BottomRight()).Y)));
 
                 // stay within image
                 if (imageBR.X > _imagesize.Width)
@@ -895,14 +918,14 @@ namespace SharpMap.Layers
                 displayImageHeight = (int)(imageBR.Y - imageTL.Y);
 
                 // find ground coordinates of image pixels
-                Geometries.Point groundBR = _geoTransform.ImageToGround(imageBR);
-                Geometries.Point groundTL = _geoTransform.ImageToGround(imageTL);
+                var groundBR = _geoTransform.ImageToGround(imageBR);
+                var groundTL = _geoTransform.ImageToGround(imageTL);
 
                 // convert ground coordinates to map coordinates to figure out where to place the bitmap
-                bitmapBR = new Point((int)map.WorldToImage(trueImageBbox.BottomRight).X + 1,
-                                     (int)map.WorldToImage(trueImageBbox.BottomRight).Y + 1);
-                bitmapTL = new Point((int)map.WorldToImage(trueImageBbox.TopLeft).X,
-                                     (int)map.WorldToImage(trueImageBbox.TopLeft).Y);
+                bitmapBR = new Point((int)map.WorldToImage(trueImageBbox.BottomRight()).X + 1,
+                                     (int)map.WorldToImage(trueImageBbox.BottomRight()).Y + 1);
+                bitmapTL = new Point((int)map.WorldToImage(trueImageBbox.TopLeft()).X,
+                                     (int)map.WorldToImage(trueImageBbox.TopLeft()).Y);
 
                 bitmapLength = bitmapBR.X - bitmapTL.X;
                 bitmapHeight = bitmapBR.Y - bitmapTL.Y;
@@ -1053,8 +1076,8 @@ namespace SharpMap.Layers
                         double imageLeft = imageTL.X;
                         double dblMapPixelWidth = map.PixelWidth;
                         double dblMapPixelHeight = map.PixelHeight;
-                        double dblMapMinX = map.Envelope.Min.X;
-                        double dblMapMaxY = map.Envelope.Max.Y;
+                        double dblMapMinX = map.Envelope.MinX;
+                        double dblMapMaxY = map.Envelope.MaxY;
                         double geoTop, geoLeft, geoHorzPixRes, geoVertPixRes, geoXRot, geoYRot;
 
                         // get inverse values
@@ -1226,8 +1249,8 @@ namespace SharpMap.Layers
             if (dataset != null)
             {
                 //check if image is in bounding box
-                if ((bbox.Left > _envelope.Right) || (bbox.Right < _envelope.Left)
-                    || (bbox.Top < _envelope.Bottom) || (bbox.Bottom > _envelope.Top))
+                if ((bbox.MinX > _envelope.MaxX) || (bbox.MaxX < _envelope.MinX)
+                    || (bbox.MaxY < _envelope.MinY) || (bbox.MinY > _envelope.MaxY))
                     return;
 
                 DsWidth = _imagesize.Width;
@@ -1237,10 +1260,10 @@ namespace SharpMap.Layers
                 for (int i = 0; i < _lbands + 1; i++)
                     _histogram.Add(new int[256]);
 
-                double left = Math.Max(bbox.Left, _envelope.Left);
-                double top = Math.Min(bbox.Top, _envelope.Top);
-                double right = Math.Min(bbox.Right, _envelope.Right);
-                double bottom = Math.Max(bbox.Bottom, _envelope.Bottom);
+                double left = Math.Max((sbyte)bbox.MinX, (sbyte)_envelope.MinX);
+                double top = Math.Min((sbyte)bbox.MaxY, (sbyte)_envelope.MaxY);
+                double right = Math.Min((sbyte)bbox.MaxX, (sbyte)_envelope.MaxX);
+                double bottom = Math.Max((sbyte)bbox.MinY, (sbyte)_envelope.MinY);
 
                 double x1 = Math.Abs(_geoTransform.PixelX(left));
                 double y1 = Math.Abs(_geoTransform.PixelY(top));
@@ -1248,12 +1271,12 @@ namespace SharpMap.Layers
                 double imgPixHeight = _geoTransform.PixelYwidth(bottom - top);
 
                 //get screen pixels image should fill 
-                double dblBBoxW = bbox.Right - bbox.Left;
+                double dblBBoxW = bbox.Width;
                 double dblBBoxtoImgPixX = imgPixWidth / dblBBoxW;
                 dblImginMapW = size.Width * dblBBoxtoImgPixX * _geoTransform.HorizontalPixelResolution;
 
 
-                double dblBBoxH = bbox.Top - bbox.Bottom;
+                double dblBBoxH = bbox.Height;
                 double dblBBoxtoImgPixY = imgPixHeight / dblBBoxH;
                 dblImginMapH = size.Height * dblBBoxtoImgPixY * -_geoTransform.VerticalPixelResolution;
 
@@ -1265,17 +1288,17 @@ namespace SharpMap.Layers
                 double dblBBoxtoImgY = size.Height / dblBBoxH;
 
                 // set where to display bitmap in Map
-                if (bbox.Left != left)
+                if (bbox.MinX != left)
                 {
-                    if (bbox.Right != right)
-                        dblLocX = (_envelope.Left - bbox.Left) * dblBBoxtoImgX;
+                    if (bbox.MaxX != right)
+                        dblLocX = (_envelope.MinX - bbox.MinX) * dblBBoxtoImgX;
                     else
                         dblLocX = size.Width - dblImginMapW;
                 }
-                if (bbox.Top != top)
+                if (bbox.MaxY != top)
                 {
-                    if (bbox.Bottom != bottom)
-                        dblLocY = (bbox.Top - _envelope.Top) * dblBBoxtoImgY;
+                    if (bbox.MinY != bottom)
+                        dblLocY = (bbox.MaxY - _envelope.MaxY) * dblBBoxtoImgY;
                     else
                         dblLocY = size.Height - dblImginMapH;
                 }
@@ -1925,13 +1948,12 @@ namespace SharpMap.Layers
         /// <param name="ds">FeatureDataSet to fill data into</param>
         public void ExecuteIntersectionQuery(BoundingBox box, FeatureDataSet ds)
         {
-            Geometries.Point pt = new Geometries.Point(
-                box.Left + 0.5 * box.Width,
-                box.Top - 0.5 * box.Height);
+            var pt = new GeoPoint(box.MinX + 0.5 * box.Width,
+                                  box.MaxY - 0.5 * box.Height);
             ExecuteIntersectionQuery(pt, ds);
         }
 
-        private void ExecuteIntersectionQuery(Geometries.Point pt, FeatureDataSet ds)
+        private void ExecuteIntersectionQuery(GeoPoint pt, FeatureDataSet ds)
         {
 
             if (CoordinateTransformation != null)
@@ -1939,12 +1961,12 @@ namespace SharpMap.Layers
 #if !DotSpatialProjections
                 if (ReverseCoordinateTransformation != null)
                 {
-                    pt = GeometryTransform.TransformPoint(pt, ReverseCoordinateTransformation.MathTransform);
+                    pt = GeometryTransform.TransformCoordinate(pt, ReverseCoordinateTransformation.MathTransform);
                 }
                 else
                 {
                     CoordinateTransformation.MathTransform.Invert();
-                    pt = GeometryTransform.TransformPoint(pt, CoordinateTransformation.MathTransform);
+                    pt = GeometryTransform.TransformCoordinate(pt, CoordinateTransformation.MathTransform);
                     CoordinateTransformation.MathTransform.Invert();
                 }
 #else
@@ -1953,7 +1975,7 @@ namespace SharpMap.Layers
             }
             
             //Setup resulting Table
-            FeatureDataTable dt = new FeatureDataTable();
+            var dt = new FeatureDataTable();
             dt.Columns.Add("Ordinate X", typeof(Double));
             dt.Columns.Add("Ordinate Y", typeof(Double));
             for (int i = 1; i <= Bands; i++)
@@ -1963,7 +1985,7 @@ namespace SharpMap.Layers
             Double[] buffer = new double[1];
             Int32[] bandMap = new int[Bands];
             for (int i = 1; i <= Bands; i++) bandMap[i - 1] = i;
-            Geometries.Point imgPt = _geoTransform.GroundToImage(pt);
+            var imgPt = _geoTransform.GroundToImage(pt);
             Int32 x = Convert.ToInt32(imgPt.X);
             Int32 y = Convert.ToInt32(imgPt.Y);
 
@@ -1975,7 +1997,7 @@ namespace SharpMap.Layers
 
             //Create new row, add ordinates and location geometry
             FeatureDataRow dr = dt.NewRow();
-            dr.Geometry = pt;
+            dr.Geometry = Factory.CreatePoint(pt);
             dr[0] = pt.X;
             dr[1] = pt.Y;
 
@@ -2008,7 +2030,7 @@ namespace SharpMap.Layers
         /// <param name="ds">FeatureDataSet to fill data into</param>
         public void ExecuteIntersectionQuery(Geometry geometry, FeatureDataSet ds)
         {
-            ExecuteIntersectionQuery(geometry.GetBoundingBox(), ds);
+            ExecuteIntersectionQuery(geometry.EnvelopeInternal, ds);
         }
 
         private bool _isQueryEnabled = true;

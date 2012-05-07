@@ -8,7 +8,7 @@ using SharpMap.Layers;
 using SharpMap.Rendering.Thematics;
 using SharpMap.Styles;
 using SharpMap.Web;
-using Point=SharpMap.Geometries.Point;
+using Point=GeoAPI.Geometries.Coordinate;
 
 public partial class Bins : Page
 {
@@ -76,7 +76,7 @@ public partial class Bins : Page
     private static Bitmap GetPieChart(FeatureDataRow row)
     {
         // Replace polygon with a center point (this is where we place the symbol
-        row.Geometry = row.Geometry.GetBoundingBox().GetCentroid();
+        row.Geometry = row.Geometry.Centroid;
 
         // Just for the example I use random values 
         int size = rand.Next(20, 35);

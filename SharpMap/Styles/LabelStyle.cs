@@ -15,6 +15,7 @@
 // along with SharpMap; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
 
+using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using SharpMap.Rendering.Thematics;
@@ -24,7 +25,8 @@ namespace SharpMap.Styles
     /// <summary>
     /// Defines a style used for rendering labels
     /// </summary>
-    public class LabelStyle : Style
+    [Serializable]
+    public class LabelStyle : Style, ICloneable
     {
         #region HorizontalAlignmentEnum enum
 
@@ -106,6 +108,42 @@ namespace SharpMap.Styles
             _ForeColor = Color.Black;
             _HorisontalAlignment = HorizontalAlignmentEnum.Center;
             _VerticalAlignment = VerticalAlignmentEnum.Middle;
+        }
+
+        protected override void ReleaseManagedResources()
+        {
+            if (IsDisposed)
+                return;
+
+            if (_Font != null) _Font.Dispose();
+            if (_Halo != null) _Halo.Dispose();
+            if (_BackColor != null) _BackColor.Dispose();
+
+            base.ReleaseManagedResources();
+        }
+
+        public LabelStyle Clone()
+        {
+            var res = (LabelStyle) MemberwiseClone();
+
+            lock (this)
+            {
+                if (_Font != null)
+                    res.Font = (Font)_Font.Clone();
+
+                if (_Halo != null)
+                    res._Halo = (Pen)_Halo.Clone();
+
+                if (_BackColor != null)
+                    res._BackColor = (Brush) _BackColor.Clone();
+            }
+
+            return res;
+        }
+
+        object ICloneable.Clone()
+        {
+            return Clone();
         }
 
         /// <summary>

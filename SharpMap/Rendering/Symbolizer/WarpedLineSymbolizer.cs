@@ -1,7 +1,7 @@
 using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
-using SharpMap.Geometries;
+using GeoAPI.Geometries;
 
 namespace SharpMap.Rendering.Symbolizer
 {
@@ -142,12 +142,39 @@ namespace SharpMap.Rendering.Symbolizer
             return gp;
         }
 
+        protected override void ReleaseManagedResources()
+        {
+            if (Fill != null)
+            {
+                Fill.Dispose();
+                Fill = null;
+            }
+
+            if (Pattern != null)
+            {
+                Pattern.Dispose();
+                Pattern = null;
+            }
+
+            base.ReleaseManagedResources();
+        }
+
+        public override object Clone()
+        {
+            var res = (WarpedLineSymbolizer)MemberwiseClone();
+            res.Fill = (Brush) Fill.Clone();
+            res.Line = (Pen) Line.Clone();
+            res.Pattern = (GraphicsPath) Pattern.Clone();
+            
+            return res;
+        }
+
         /// <summary>
         /// Gets or sets the brush used to fill closed objects
         /// </summary>
         public Brush Fill { get; set; }
 
-        protected override void OnRenderInternal(Map map, LineString linestring, Graphics g)
+        protected override void OnRenderInternal(Map map, ILineString linestring, Graphics g)
         {
             var clonedPattern = (GraphicsPath) Pattern.Clone();
             var graphicsPath = WarpPathToPath.Warp(LineStringToPath(linestring, map), clonedPattern, true, Interval);

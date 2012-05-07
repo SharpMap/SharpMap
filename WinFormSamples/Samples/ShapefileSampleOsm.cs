@@ -20,7 +20,7 @@ namespace WinFormSamples.Samples
         public const string PathOsm = "GeoData/OSM";
 
 
-        private static SharpMap.Geometries.BoundingBox _roadsExtents;
+        private static GeoAPI.Geometries.Envelope _roadsExtents;
 
         //Could have used SharpMap.Rendering.Thematics.CustomTheme,
         //but that one does not perserve styles for fast retrieval.
@@ -93,7 +93,7 @@ namespace WinFormSamples.Samples
             //Set up the countries layer
             VectorLayer layNatural = new VectorLayer("Natural");
             //Set the datasource to a shapefile in the App_data folder
-            layNatural.DataSource = new ShapeFileEx(string.Format("{0}/natural.shp", PathOsm), true) { Encoding = encoding };
+            layNatural.DataSource = new ShapeFile(string.Format("{0}/natural.shp", PathOsm), true) { Encoding = encoding };
             //Set default style to draw nothing
             layNatural.Style = transparentStyle;
             //Set theme
@@ -136,7 +136,7 @@ namespace WinFormSamples.Samples
             layNatural.SRID = 31466;
 
             VectorLayer layRoads = new VectorLayer("Roads");
-            layRoads.DataSource = new ShapeFileEx(string.Format("{0}/roads.shp", PathOsm)) { Encoding = encoding };
+            layRoads.DataSource = new ShapeFile(string.Format("{0}/roads.shp", PathOsm)) { Encoding = encoding };
             layRoads.DataSource.Open();
             _roadsExtents = layRoads.DataSource.GetExtents();
             //layRoads.DataSource.Close();
@@ -221,7 +221,7 @@ namespace WinFormSamples.Samples
             layRoads.SRID = 31466;
 
             VectorLayer layRail = new VectorLayer("Railways");
-            layRail.DataSource = new ShapeFileEx(string.Format("{0}/railways.shp", PathOsm)) { Encoding = encoding };
+            layRail.DataSource = new ShapeFile(string.Format("{0}/railways.shp", PathOsm)) { Encoding = encoding };
             layRail.Style.Line.Brush = Brushes.White;
             layRail.Style.Line.DashPattern = new float[] {4f, 4f};//;System.Drawing.Drawing2D.DashStyle.Dash;
             layRail.Style.Line.Width = 4;
@@ -231,7 +231,7 @@ namespace WinFormSamples.Samples
 
             VectorLayer layWaterways = new VectorLayer("Waterways");
             layWaterways.Style = transparentStyle;
-            layWaterways.DataSource = new ShapeFileEx(string.Format("{0}/waterways.shp", PathOsm)) { Encoding = encoding };
+            layWaterways.DataSource = new ShapeFile(string.Format("{0}/waterways.shp", PathOsm)) { Encoding = encoding };
             layRoads.Style = transparentStyle;
             ThemeViaDelegate themeWater = new ThemeViaDelegate(transparentStyle, "type");
             themeWater.GetStyleFunction = delegate(FeatureDataRow row)
@@ -265,7 +265,7 @@ namespace WinFormSamples.Samples
             layWaterways.SRID = 31466;
 
             VectorLayer layPoints = new VectorLayer("Points");
-            layPoints.DataSource = new ShapeFileEx(string.Format("{0}/points.shp", PathOsm)) { Encoding = encoding };
+            layPoints.DataSource = new ShapeFile(string.Format("{0}/points.shp", PathOsm)) { Encoding = encoding };
             layPoints.Style = transparentStyle2;
             ThemeViaDelegate themePoints = new ThemeViaDelegate(transparentStyle2, "type");
             themePoints.GetStyleFunction = delegate(FeatureDataRow row)
@@ -323,7 +323,7 @@ namespace WinFormSamples.Samples
             //Restrict zoom
             map.MaximumZoom = layRoads.Envelope.Width * 0.75d;
             map.Zoom = layRoads.Envelope.Width * 0.2d; ;
-            map.Center = layRoads.Envelope.GetCentroid();
+            map.Center = layRoads.Envelope.Centre;
 
             map.Disclaimer = "Geodata from OpenStreetMap (CC-by-SA)\nTransformed to Shapefile by geofabrik.de";
             map.DisclaimerFont = new Font("Arial", 7f, FontStyle.Italic);

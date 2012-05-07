@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using SharpMap.Geometries;
+using GeoAPI.Geometries;
 
 #if DotSpatialProjections
 #pragma warning disable 1587

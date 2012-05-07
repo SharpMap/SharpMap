@@ -11,7 +11,7 @@ using SharpMap.Rendering;
 using SharpMap.Rendering.Thematics;
 using SharpMap.Styles;
 using ColorBlend=SharpMap.Rendering.Thematics.ColorBlend;
-using Point=SharpMap.Geometries.Point;
+using Point=GeoAPI.Geometries.Coordinate;
 
 /// <summary>
 /// Summary description for CreateMap
@@ -516,7 +516,7 @@ public class MapHelper
         map.BackColor = Color.LightBlue;
 
         map.Zoom = 360;
-        map.Center = new SharpMap.Geometries.Point(0, 0);
+        map.Center = new Point(0, 0);
 
         HttpContext.Current.Trace.Write("Map initialized");
         return map;

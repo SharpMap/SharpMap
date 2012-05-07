@@ -4,7 +4,7 @@ using System.Web;
 using System.Web.UI;
 using SharpMap;
 using SharpMap.Web;
-using Point = SharpMap.Geometries.Point;
+using Point = GeoAPI.Geometries.Coordinate;
 
 public partial class Gdal : Page
 {

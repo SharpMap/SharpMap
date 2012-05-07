@@ -1,5 +1,4 @@
 ﻿using SharpMap;
-using SharpMap.Geometries;
 using SharpMap.Layers;
 using BruTile.Web;
 using BruTile;

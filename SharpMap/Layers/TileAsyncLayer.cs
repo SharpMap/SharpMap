@@ -8,7 +8,7 @@ using BruTile;
 using BruTile.Cache;
 using System.IO;
 using System.Net;
-using SharpMap.Geometries;
+using GeoAPI.Geometries;
 using System.ComponentModel;
 
 namespace SharpMap.Layers
@@ -42,7 +42,8 @@ namespace SharpMap.Layers
         public override void Render(Graphics graphics, Map map)
         {
 
-            Extent extent = new Extent(map.Envelope.Min.X, map.Envelope.Min.Y, map.Envelope.Max.X, map.Envelope.Max.Y);
+            var bbox = map.Envelope;
+            var extent = new Extent(bbox.MinX, bbox.MinY, bbox.MaxX, bbox.MaxY);
             int level = BruTile.Utilities.GetNearestLevel(_source.Schema.Resolutions, map.PixelSize);
             IList<TileInfo> tiles = _source.Schema.GetTilesInView(extent, level);
 
@@ -65,7 +66,7 @@ namespace SharpMap.Layers
                 {
                     //ThreadPool.QueueUserWorkItem(OnMapNewtileAvailableHelper, new object[] { info, _bitmaps.Find(info.Index) });
                     //draws directly the bitmap
-                    BoundingBox bb = new BoundingBox(info.Extent.MinX, info.Extent.MinY, info.Extent.MaxX, info.Extent.MaxY);
+                    var bb = new Envelope(new Coordinate(info.Extent.MinX, info.Extent.MinY), new Coordinate(info.Extent.MaxX, info.Extent.MaxY));
                     HandleMapNewTileAvaliable(map,graphics, bb, _bitmaps.Find(info.Index), _source.Schema.Width, _source.Schema.Height, _imageAttributes);
                 }
                 else if (_fileCache != null && _fileCache.Exists(info.Index))
@@ -76,7 +77,8 @@ namespace SharpMap.Layers
                     
                     //ThreadPool.QueueUserWorkItem(OnMapNewtileAvailableHelper, new object[] { info, img });
                     //draws directly the bitmap
-                    BoundingBox bb = new BoundingBox(info.Extent.MinX, info.Extent.MinY, info.Extent.MaxX, info.Extent.MaxY);
+                    var btExtent = info.Extent;
+                    var bb = new Envelope(new Coordinate(btExtent.MinX, btExtent.MinY), new Coordinate(btExtent.MaxX, btExtent.MaxY));
                     HandleMapNewTileAvaliable(map, graphics, bb, _bitmaps.Find(info.Index), _source.Schema.Width, _source.Schema.Height, _imageAttributes);
                 }
                 else
@@ -105,13 +107,13 @@ namespace SharpMap.Layers
         }
 
 
-        void HandleMapNewTileAvaliable(Map _map, Graphics g, BoundingBox box, Bitmap bm, int sourceWidth, int sourceHeight, ImageAttributes imageAttributes)
+        static void HandleMapNewTileAvaliable(Map _map, Graphics g, Envelope box, Bitmap bm, int sourceWidth, int sourceHeight, ImageAttributes imageAttributes)
         {
 
             try
             {
-                PointF min = _map.WorldToImage(new SharpMap.Geometries.Point(box.Min.X, box.Min.Y));
-                PointF max = _map.WorldToImage(new SharpMap.Geometries.Point(box.Max.X, box.Max.Y));
+                var min = _map.WorldToImage(box.Min());
+                var max = _map.WorldToImage(box.Max());
 
                 min = new PointF((float)Math.Round(min.X), (float)Math.Round(min.Y));
                 max = new PointF((float)Math.Round(max.X), (float)Math.Round(max.Y));
@@ -133,6 +135,8 @@ namespace SharpMap.Layers
             }
 
         }
+
+        /*
         private void OnMapNewtileAvailableHelper(object parameter)
         {
             //this is to wait for the main UI thread to finalize rendering ... (buggy code here)...
@@ -143,7 +147,7 @@ namespace SharpMap.Layers
             Bitmap bm = (Bitmap)paramters[1];
             OnMapNewTileAvaliable(tileInfo, bm);
         }
-
+        */
 
         private void GetTileOnThread(BackgroundWorker worker, object parameter)
         {
@@ -209,17 +213,17 @@ namespace SharpMap.Layers
             }
             catch (Exception ex)
             {
-                Console.WriteLine("TileAsyncLayer - GetTileOnThread Exception: " + ex.ToString());
+                Console.WriteLine("TileAsyncLayer - GetTileOnThread Exception: " + ex);
                 //todo: log and use other ways to report to user.
             }
         }
 
         private void OnMapNewTileAvaliable(TileInfo tileInfo, Bitmap bitmap)
         {
-            if (this.MapNewTileAvaliable != null)
+            if (MapNewTileAvaliable != null)
             {
-                BoundingBox bb = new BoundingBox(tileInfo.Extent.MinX, tileInfo.Extent.MinY, tileInfo.Extent.MaxX, tileInfo.Extent.MaxY);
-                this.MapNewTileAvaliable(this, bb, bitmap, _source.Schema.Width, _source.Schema.Height, _imageAttributes);
+                var bb = new Envelope(new Coordinate(tileInfo.Extent.MinX, tileInfo.Extent.MinY), new Coordinate(tileInfo.Extent.MaxX, tileInfo.Extent.MaxY));
+                MapNewTileAvaliable(this, bb, bitmap, _source.Schema.Width, _source.Schema.Height, _imageAttributes);
             }
         }
 

@@ -1,10 +1,13 @@
+
+using GeoAPI.Geometries;
+
 namespace ExampleCodeSnippets
 {
     using cd = CreatingData;
         [NUnit.Framework.TestFixture]
     public class EnsureVisibleSample
     {
-public static void EnsureVisible(SharpMap.Map map, SharpMap.Geometries.Point pt)
+public static void EnsureVisible(SharpMap.Map map, GeoAPI.Geometries.Coordinate pt)
 {
     const double ensureVisibleRatio = 0.1d;
             
@@ -23,24 +26,22 @@ public static void EnsureVisible(SharpMap.Map map, SharpMap.Geometries.Point pt)
     System.Console.WriteLine(string.Format("Valid envelope does not contain {0}", pt));
 
     //LineString from Map.Center -> to Point
-    var ls = new SharpMap.Geometries.LineString(new[] {evbb.GetCentroid(), pt});
+    var ls = map.Factory.CreateLineString(new[] {evbb.Centre, pt});
     System.Console.WriteLine(string.Format("LineString Map.Center -> Point: {0}", ls));
 
     //Setup Linestring from BoundingBox
-    var gf = new NetTopologySuite.Geometries.GeometryFactory();
-    var evbbpts = new System.Collections.Generic.List<SharpMap.Geometries.Point>(
-        new[] {evbb.TopLeft, evbb.TopRight, evbb.BottomRight, evbb.BottomLeft, evbb.TopLeft });
-    var evbblinearring = new SharpMap.Geometries.LineString(evbbpts);
+    var evbbpts = new [] {evbb.TopLeft(), evbb.TopRight(), evbb.BottomRight(), evbb.BottomLeft(), evbb.TopLeft() };
+    var evbblinearring = map.Factory.CreateLineString(evbbpts);
     System.Console.WriteLine(string.Format("Linestring of valid envelope: {0}", evbblinearring));
 
-    // convert geometries to NTS
-    var ntsevbb = (NetTopologySuite.Geometries.LineString)
-        SharpMap.Converters.NTS.GeometryConverter.ToNTSGeometry(evbblinearring, gf);
-    var ntsls = (NetTopologySuite.Geometries.LineString)
-        SharpMap.Converters.NTS.GeometryConverter.ToNTSGeometry(ls, gf);
+    //// convert geometries to NTS
+    //var ntsevbb = (NetTopologySuite.Geometries.LineString)
+    //    SharpMap.Converters.NTS.GeometryConverter.ToNTSGeometry(evbblinearring, gf);
+    //var ntsls = (NetTopologySuite.Geometries.LineString)
+    //    SharpMap.Converters.NTS.GeometryConverter.ToNTSGeometry(ls, gf);
 
     // Get intersection point
-    var intGeo = ntsevbb.Intersection(ntsls);
+    var intGeo = evbblinearring.Intersection(ls);
     var intPt = (NetTopologySuite.Geometries.Point)intGeo;
     System.Console.WriteLine(string.Format("Intersection point is: {0}", intPt));
 
@@ -50,7 +51,7 @@ public static void EnsureVisible(SharpMap.Map map, SharpMap.Geometries.Point pt)
     System.Console.WriteLine(string.Format("Map.Center needs to be shifted by: [{0}, {1}]", dx, dy));
 
     //Set new center Center
-    map.Center = new SharpMap.Geometries.Point(map.Center.X + dx, map.Center.Y + dy);
+    map.Center = new GeoAPI.Geometries.Coordinate(map.Center.X + dx, map.Center.Y + dy);
 
 }
 
@@ -74,23 +75,23 @@ public static void EnsureVisible(SharpMap.Map map, SharpMap.Geometries.Point pt)
             defaultStyle.SymbolScale = 0.5f;
 
             //Create theming class and apply to layer
-            SymbolRotationTheming srt = new SymbolRotationTheming("Rotation", defaultStyle);
+            var srt = new SymbolRotationTheming("Rotation", defaultStyle);
             vl.Theme = new SharpMap.Rendering.Thematics.CustomTheme(srt.GetRotatedSymol);
 
 
             map.Layers.Add(vl);
             map.ZoomToExtents();
             map.Zoom = 60; //2*30
-            map.Center = new SharpMap.Geometries.Point(0,0);
+            map.Center = new GeoAPI.Geometries.Coordinate(0,0);
 
             System.Console.WriteLine(map.Center);
-            EnsureVisible(map, new SharpMap.Geometries.Point(-30, 0));
+            EnsureVisible(map, new GeoAPI.Geometries.Coordinate(-30, 0));
             System.Console.WriteLine(map.Center);
             System.Console.WriteLine();
-            EnsureVisible(map, new SharpMap.Geometries.Point(15, 20));
+            EnsureVisible(map, new GeoAPI.Geometries.Coordinate(15, 20));
             System.Console.WriteLine(map.Center);
             System.Console.WriteLine();
-            EnsureVisible(map, new SharpMap.Geometries.Point(15, -20));
+            EnsureVisible(map, new GeoAPI.Geometries.Coordinate(15, -20));
             System.Console.WriteLine(map.Center);
         }
     }

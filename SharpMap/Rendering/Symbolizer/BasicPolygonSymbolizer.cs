@@ -1,6 +1,7 @@
 using System;
 using System.Drawing;
-using SharpMap.Geometries;
+using GeoAPI.Geometries;
+using GeoAPI.Geometries;
 
 namespace SharpMap.Rendering.Symbolizer
 {
@@ -18,12 +19,41 @@ namespace SharpMap.Rendering.Symbolizer
             Outline = new Pen(Utility.RandomKnownColor(), 1);
         }
 
+        protected override void ReleaseManagedResources()
+        {
+            if (Outline != null)
+            {
+                Outline.Dispose();
+                Outline = null;
+            }
+
+            base.ReleaseManagedResources();
+        }
+
         /// <summary>
         /// Gets or sets the pen to render the outline of the polygon
         /// </summary>
         public Pen Outline { get; set; }
 
-        protected override void OnRenderInternal(Map map, Polygon polygon, Graphics g)
+        /// <summary>
+        /// Erstellt ein neues Objekt, das eine Kopie der aktuellen Instanz darstellt.
+        /// </summary>
+        /// <returns>
+        /// Ein neues Objekt, das eine Kopie dieser Instanz darstellt.
+        /// </returns>
+        /// <filterpriority>2</filterpriority>
+        public override object Clone()
+        {
+            return new BasicPolygonSymbolizer
+                       {
+                           Fill = (Brush) Fill.Clone(),
+                           Outline = (Pen) Outline.Clone(),
+                           RenderOrigin = RenderOrigin,
+                           UseClipping = UseClipping,
+                       };
+        }
+
+        protected override void OnRenderInternal(Map map, IPolygon polygon, Graphics g)
         {
             // convert points
             var pts = /*LimitValues(*/polygon.TransformToImage(map)/*)*/;
@@ -55,12 +85,41 @@ namespace SharpMap.Rendering.Symbolizer
         {
             Outline = new BasicLineSymbolizer();
         }
+
+        protected override void ReleaseManagedResources()
+        {
+            if (Outline != null)
+            {
+                Outline.Dispose();
+                Outline = null;
+            }
+
+            base.ReleaseManagedResources();
+        }
         /// <summary>
         /// Gets or sets the <see cref="LineSymbolizer"/> to draw the outline of the polygon
         /// </summary>
         public LineSymbolizer Outline { get; set; }
 
-        protected override void OnRenderInternal(Map map, Polygon polygon, Graphics g)
+        /// <summary>
+        /// Erstellt ein neues Objekt, das eine Kopie der aktuellen Instanz darstellt.
+        /// </summary>
+        /// <returns>
+        /// Ein neues Objekt, das eine Kopie dieser Instanz darstellt.
+        /// </returns>
+        /// <filterpriority>2</filterpriority>
+        public override object Clone()
+        {
+            return new PolygonSymbolizerUsingLineSymbolizer
+                       {
+                           Fill = (Brush) Fill.Clone(),
+                           Outline = (LineSymbolizer) Outline.Clone(),
+                           RenderOrigin = RenderOrigin,
+                           UseClipping = UseClipping
+                       };
+        }
+
+        protected override void OnRenderInternal(Map map, IPolygon polygon, Graphics g)
         {
             // convert points
             var pts = /*LimitValues(*/polygon.TransformToImage(map)/*)*/;

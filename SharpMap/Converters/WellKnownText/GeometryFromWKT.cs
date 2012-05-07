@@ -36,14 +36,16 @@
  */
 
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
-using SharpMap.Geometries;
+using GeoAPI.Geometries;
+using NetTopologySuite.Geometries;
 
 namespace SharpMap.Converters.WellKnownText
 {
     /// <summary>
-    ///  Converts a Well-known Text representation to a <see cref="SharpMap.Geometries.Geometry"/> instance.
+    ///  Converts a Well-known Text representation to a <see cref="GeoAPI.Geometries.IGeometry"/> instance.
     /// </summary>
     /// <remarks>
     /// <para>The Well-Known Text (WKT) representation of Geometry is designed to exchange geometry data in ASCII form.</para>
@@ -69,27 +71,27 @@ namespace SharpMap.Converters.WellKnownText
     public class GeometryFromWKT
     {
         /// <summary>
-        /// Converts a Well-known text representation to a <see cref="SharpMap.Geometries.Geometry"/>.
+        /// Converts a Well-known text representation to a <see cref="GeoAPI.Geometries.IGeometry"/>.
         /// </summary>
-        /// <param name="wellKnownText">A <see cref="SharpMap.Geometries.Geometry"/> tagged text string ( see the OpenGIS Simple Features Specification.</param>
-        /// <returns>Returns a <see cref="SharpMap.Geometries.Geometry"/> specified by wellKnownText.  Throws an exception if there is a parsing problem.</returns>
-        public static Geometry Parse(string wellKnownText)
+        /// <param name="wellKnownText">A <see cref="GeoAPI.Geometries.IGeometry"/> tagged text string ( see the OpenGIS Simple Features Specification.</param>
+        /// <returns>Returns a <see cref="GeoAPI.Geometries.IGeometry"/> specified by wellKnownText.  Throws an exception if there is a parsing problem.</returns>
+        public static IGeometry Parse(string wellKnownText)
         {
             // throws a parsing exception is there is a problem.
-            StringReader reader = new StringReader(wellKnownText);
-            return Parse(reader);
+            using (var reader = new StringReader(wellKnownText))
+                return Parse(reader);
         }
 
         /// <summary>
-        /// Converts a Well-known Text representation to a <see cref="SharpMap.Geometries.Geometry"/>.
+        /// Converts a Well-known Text representation to a <see cref="GeoAPI.Geometries.IGeometry"/>.
         /// </summary>
         /// <param name="reader">A Reader which will return a Geometry Tagged Text
         /// string (see the OpenGIS Simple Features Specification)</param>
-        /// <returns>Returns a <see cref="SharpMap.Geometries.Geometry"/> read from StreamReader. 
+        /// <returns>Returns a <see cref="GeoAPI.Geometries.IGeometry"/> read from StreamReader. 
         /// An exception will be thrown if there is a parsing problem.</returns>
-        public static Geometry Parse(TextReader reader)
+        public static IGeometry Parse(TextReader reader)
         {
-            WktStreamTokenizer tokenizer = new WktStreamTokenizer(reader);
+            var tokenizer = new WktStreamTokenizer(reader);
 
             return ReadGeometryTaggedText(tokenizer);
         }
@@ -102,28 +104,25 @@ namespace SharpMap.Converters.WellKnownText
         /// "EMPTY".</param>
         /// <returns>The next array of Coordinates in the stream, or an empty array of "EMPTY" is the
         /// next element returned by the stream.</returns>
-        private static Collection<Point> GetCoordinates(WktStreamTokenizer tokenizer)
+        private static Coordinate[] GetCoordinates(WktStreamTokenizer tokenizer)
         {
-            Collection<Point> coordinates = new Collection<Point>();
+            var coordinates = new List<Coordinate>();
             string nextToken = GetNextEmptyOrOpener(tokenizer);
             if (nextToken == "EMPTY")
-                return coordinates;
+                return coordinates.ToArray();
 
-            Point externalCoordinate = new Point();
-            Point internalCoordinate = new Point();
+            var externalCoordinate = new Coordinate();
             externalCoordinate.X = GetNextNumber(tokenizer);
             externalCoordinate.Y = GetNextNumber(tokenizer);
             coordinates.Add(externalCoordinate);
             nextToken = GetNextCloserOrComma(tokenizer);
             while (nextToken == ",")
             {
-                internalCoordinate = new Point();
-                internalCoordinate.X = GetNextNumber(tokenizer);
-                internalCoordinate.Y = GetNextNumber(tokenizer);
+                var internalCoordinate = new Coordinate(GetNextNumber(tokenizer), GetNextNumber(tokenizer));
                 coordinates.Add(internalCoordinate);
                 nextToken = GetNextCloserOrComma(tokenizer);
             }
-            return coordinates;
+            return coordinates.ToArray();
         }
 
 
@@ -215,13 +214,13 @@ namespace SharpMap.Converters.WellKnownText
             string token = tokenizer.GetStringValue();
             if (type == TokenType.Number)
                 throw new Exception("Expected a number but got " + token);
-            else if (type == TokenType.Word)
+            if (type == TokenType.Word)
                 return token.ToUpper();
-            else if (token == "(")
+            if (token == "(")
                 return "(";
-            else if (token == ")")
+            if (token == ")")
                 return ")";
-            else if (token == ",")
+            if (token == ",")
                 return ",";
 
             throw new Exception("Not a valid symbol in WKT format.");
@@ -238,33 +237,35 @@ namespace SharpMap.Converters.WellKnownText
         /// shell and holes do not form closed linestrings, or if an unexpected
         /// token is encountered.
         /// </remarks>
-        private static Geometry ReadGeometryTaggedText(WktStreamTokenizer tokenizer)
+        private static IGeometry ReadGeometryTaggedText(WktStreamTokenizer tokenizer)
         {
             tokenizer.NextToken();
-            string type = tokenizer.GetStringValue().ToUpper();
-            Geometry geometry = null;
+            var type = tokenizer.GetStringValue().ToUpper();
+            IGeometry geometry;
+            IGeometryFactory factory = new GeometryFactory();
+
             switch (type)
             {
                 case "POINT":
-                    geometry = ReadPointText(tokenizer);
+                    geometry = ReadPointText(tokenizer, factory);
                     break;
                 case "LINESTRING":
-                    geometry = ReadLineStringText(tokenizer);
+                    geometry = ReadLineStringText(tokenizer, factory);
                     break;
                 case "MULTIPOINT":
-                    geometry = ReadMultiPointText(tokenizer);
+                    geometry = ReadMultiPointText(tokenizer, factory);
                     break;
                 case "MULTILINESTRING":
-                    geometry = ReadMultiLineStringText(tokenizer);
+                    geometry = ReadMultiLineStringText(tokenizer, factory);
                     break;
                 case "POLYGON":
-                    geometry = ReadPolygonText(tokenizer);
+                    geometry = ReadPolygonText(tokenizer, factory);
                     break;
                 case "MULTIPOLYGON":
-                    geometry = ReadMultiPolygonText(tokenizer);
+                    geometry = ReadMultiPolygonText(tokenizer, factory);
                     break;
                 case "GEOMETRYCOLLECTION":
-                    geometry = ReadGeometryCollectionText(tokenizer);
+                    geometry = ReadGeometryCollectionText(tokenizer, factory);
                     break;
                 default:
                     throw new Exception(String.Format(Map.NumberFormatEnUs, "Geometrytype '{0}' is not supported.",
@@ -274,30 +275,30 @@ namespace SharpMap.Converters.WellKnownText
         }
 
         /// <summary>
-        /// Creates a <see cref="MultiPolygon"/> using the next token in the stream.
+        /// Creates a <see cref="IMultiPolygon"/> using the next token in the stream.
         /// </summary>
         /// <param name="tokenizer">tokenizer over a stream of text in Well-known Text
         /// format. The next tokens must form a MultiPolygon.</param>
         /// <returns>a <code>MultiPolygon</code> specified by the next token in the 
-        /// stream, or if if the coordinates used to create the <see cref="Polygon"/>
+        /// stream, or if if the coordinates used to create the <see cref="IPolygon"/>
         /// shells and holes do not form closed linestrings.</returns>
-        private static MultiPolygon ReadMultiPolygonText(WktStreamTokenizer tokenizer)
+        private static IMultiPolygon ReadMultiPolygonText(WktStreamTokenizer tokenizer, IGeometryFactory factory)
         {
-            MultiPolygon polygons = new MultiPolygon();
+            var polygons = new List<IPolygon>();
             string nextToken = GetNextEmptyOrOpener(tokenizer);
             if (nextToken == "EMPTY")
-                return polygons;
+                return factory.CreateMultiPolygon(polygons.ToArray());
 
-            Polygon polygon = ReadPolygonText(tokenizer);
-            polygons.Polygons.Add(polygon);
+            var polygon = ReadPolygonText(tokenizer, factory);
+            polygons.Add(polygon);
             nextToken = GetNextCloserOrComma(tokenizer);
             while (nextToken == ",")
             {
-                polygon = ReadPolygonText(tokenizer);
-                polygons.Polygons.Add(polygon);
+                polygon = ReadPolygonText(tokenizer, factory);
+                polygons.Add(polygon);
                 nextToken = GetNextCloserOrComma(tokenizer);
             }
-            return polygons;
+            return factory.CreateMultiPolygon(polygons.ToArray());
         }
 
         /// <summary>
@@ -312,22 +313,22 @@ namespace SharpMap.Converters.WellKnownText
         ///  shell and holes do not form closed linestrings, or if an unexpected
         ///  token is encountered.
         ///  </remarks>
-        private static Polygon ReadPolygonText(WktStreamTokenizer tokenizer)
+        private static IPolygon ReadPolygonText(WktStreamTokenizer tokenizer, IGeometryFactory factory)
         {
-            Polygon pol = new Polygon();
             string nextToken = GetNextEmptyOrOpener(tokenizer);
             if (nextToken == "EMPTY")
-                return pol;
+                return factory.CreatePolygon(null, null);
 
-            pol.ExteriorRing = new LinearRing(GetCoordinates(tokenizer));
+            var exteriorRing = factory.CreateLinearRing(GetCoordinates(tokenizer));
             nextToken = GetNextCloserOrComma(tokenizer);
+            var interiorRings = new List<ILinearRing>();
             while (nextToken == ",")
             {
                 //Add holes
-                pol.InteriorRings.Add(new LinearRing(GetCoordinates(tokenizer)));
+                interiorRings.Add(factory.CreateLinearRing(GetCoordinates(tokenizer)));
                 nextToken = GetNextCloserOrComma(tokenizer);
             }
-            return pol;
+            return factory.CreatePolygon(exteriorRing, interiorRings.ToArray());
         }
 
 
@@ -341,16 +342,16 @@ namespace SharpMap.Converters.WellKnownText
         /// <remarks>
         /// ParseException is thrown if an unexpected token is encountered.
         /// </remarks>
-        private static Point ReadPointText(WktStreamTokenizer tokenizer)
+        private static IPoint ReadPointText(WktStreamTokenizer tokenizer, IGeometryFactory factory)
         {
-            Point p = new Point();
-            string nextToken = GetNextEmptyOrOpener(tokenizer);
+            var nextToken = GetNextEmptyOrOpener(tokenizer);
             if (nextToken == "EMPTY")
-                return p;
-            p.X = GetNextNumber(tokenizer);
-            p.Y = GetNextNumber(tokenizer);
+                return factory.CreatePoint((Coordinate)null);
+
+            var c = new Coordinate(GetNextNumber(tokenizer), GetNextNumber(tokenizer));
             GetNextCloser(tokenizer);
-            return p;
+            
+            return factory.CreatePoint(c);
         }
 
         /// <summary>
@@ -363,56 +364,58 @@ namespace SharpMap.Converters.WellKnownText
         /// <remarks>
         /// ParseException is thrown if an unexpected token is encountered.
         /// </remarks>
-        private static MultiPoint ReadMultiPointText(WktStreamTokenizer tokenizer)
+        private static IMultiPoint ReadMultiPointText(WktStreamTokenizer tokenizer, IGeometryFactory factory)
         {
-            MultiPoint mp = new MultiPoint();
             string nextToken = GetNextEmptyOrOpener(tokenizer);
             if (nextToken == "EMPTY")
-                return mp;
-            mp.Points.Add(new Point(GetNextNumber(tokenizer), GetNextNumber(tokenizer)));
+                return factory.CreateMultiPoint((Coordinate[])null);
+
+            var points = new List<Coordinate>();
+            points.Add(new Coordinate(GetNextNumber(tokenizer), GetNextNumber(tokenizer)));
             nextToken = GetNextCloserOrComma(tokenizer);
             while (nextToken == ",")
             {
-                mp.Points.Add(new Point(GetNextNumber(tokenizer), GetNextNumber(tokenizer)));
+                points.Add(new Coordinate(GetNextNumber(tokenizer), GetNextNumber(tokenizer)));
                 nextToken = GetNextCloserOrComma(tokenizer);
             }
-            return mp;
+            return factory.CreateMultiPoint(points.ToArray());
         }
 
         /// <summary>
-        /// Creates a <see cref="MultiLineString"/> using the next token in the stream. 
+        /// Creates a <see cref="IMultiLineString"/> using the next token in the stream. 
         /// </summary>
         /// <param name="tokenizer">tokenizer over a stream of text in Well-known Text format. The next tokens must form a MultiLineString Text</param>
         /// <returns>a <see cref="MultiLineString"/> specified by the next token in the stream</returns>
-        private static MultiLineString ReadMultiLineStringText(WktStreamTokenizer tokenizer)
+        private static IMultiLineString ReadMultiLineStringText(WktStreamTokenizer tokenizer, IGeometryFactory factory)
         {
-            MultiLineString lines = new MultiLineString();
             string nextToken = GetNextEmptyOrOpener(tokenizer);
             if (nextToken == "EMPTY")
-                return lines;
+                return factory.CreateMultiLineString(null);
 
-            lines.LineStrings.Add(ReadLineStringText(tokenizer));
+            var lineStrings = new List<ILineString>();
+            lineStrings.Add(ReadLineStringText(tokenizer, factory));
             nextToken = GetNextCloserOrComma(tokenizer);
             while (nextToken == ",")
             {
-                lines.LineStrings.Add(ReadLineStringText(tokenizer));
+                lineStrings.Add(ReadLineStringText(tokenizer, factory));
                 nextToken = GetNextCloserOrComma(tokenizer);
             }
-            return lines;
+            return factory.CreateMultiLineString(lineStrings.ToArray());
         }
 
         /// <summary>
         /// Creates a LineString using the next token in the stream.
         /// </summary>
         /// <param name="tokenizer">Tokenizer over a stream of text in Well-known Text format.  The next
-        /// tokens must form a LineString Text.</param>
+        ///   tokens must form a LineString Text.</param>
+        /// <param name="factory"> </param>
         /// <returns>Returns a LineString specified by the next token in the stream.</returns>
         /// <remarks>
         /// ParseException is thrown if an unexpected token is encountered.
         /// </remarks>
-        private static LineString ReadLineStringText(WktStreamTokenizer tokenizer)
+        private static ILineString ReadLineStringText(WktStreamTokenizer tokenizer, IGeometryFactory factory)
         {
-            return new LineString(GetCoordinates(tokenizer));
+            return factory.CreateLineString(GetCoordinates(tokenizer));
         }
 
         /// <summary>
@@ -422,20 +425,20 @@ namespace SharpMap.Converters.WellKnownText
         /// format. The next tokens must form a GeometryCollection Text.</param>
         /// <returns>
         /// A <see cref="GeometryCollection"/> specified by the next token in the stream.</returns>
-        private static GeometryCollection ReadGeometryCollectionText(WktStreamTokenizer tokenizer)
+        private static IGeometryCollection ReadGeometryCollectionText(WktStreamTokenizer tokenizer, IGeometryFactory factory)
         {
-            GeometryCollection geometries = new GeometryCollection();
-            string nextToken = GetNextEmptyOrOpener(tokenizer);
+            var nextToken = GetNextEmptyOrOpener(tokenizer);
             if (nextToken.Equals("EMPTY"))
-                return geometries;
-            geometries.Collection.Add(ReadGeometryTaggedText(tokenizer));
+                return factory.CreateGeometryCollection(null);
+            var geometries = new List<IGeometry>();
+            geometries.Add(ReadGeometryTaggedText(tokenizer));
             nextToken = GetNextCloserOrComma(tokenizer);
             while (nextToken.Equals(","))
             {
-                geometries.Collection.Add(ReadGeometryTaggedText(tokenizer));
+                geometries.Add(ReadGeometryTaggedText(tokenizer));
                 nextToken = GetNextCloserOrComma(tokenizer);
             }
-            return geometries;
+            return factory.CreateGeometryCollection(geometries.ToArray());
         }
     }
 }

@@ -1,5 +1,5 @@
-﻿using SharpMap.Data.Providers;
-using SharpMap.Geometries;
+﻿using GeoAPI.Geometries;
+using SharpMap.Data.Providers;
 using SharpMap.Rendering.Symbolizer;
 
 namespace SharpMap.Layers.Symbolizer

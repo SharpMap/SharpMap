@@ -1,7 +1,7 @@
 ﻿// WFS provider by Peter Robineau (peter.robineau@gmx.at)
 // This file can be redistributed and/or modified under the terms of the GNU Lesser General Public License.
 
-using SharpMap.Geometries;
+using GeoAPI.Geometries;
 
 namespace SharpMap.Utilities.Wfs
 {
@@ -41,9 +41,9 @@ namespace SharpMap.Utilities.Wfs
         string XPATH_TYPEATTRIBUTEQUERY { get; }
         string DescribeFeatureTypeRequest(string featureTypeName);
         string GetCapabilitiesRequest();
-        string GetFeatureGETRequest(WfsFeatureTypeInfo featureTypeInfo, BoundingBox boundingBox, IFilter filter);
+        string GetFeatureGETRequest(WfsFeatureTypeInfo featureTypeInfo, Envelope boundingBox, IFilter filter);
 
-        byte[] GetFeaturePOSTRequest(WfsFeatureTypeInfo featureTypeInfo, string labelProperty, BoundingBox boundingBox,
+        byte[] GetFeaturePOSTRequest(WfsFeatureTypeInfo featureTypeInfo, string labelProperty, Envelope boundingBox,
                                      IFilter filter);
     }
 }

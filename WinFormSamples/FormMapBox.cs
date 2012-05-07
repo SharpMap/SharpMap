@@ -50,7 +50,10 @@ namespace WinFormSamples
 
         private void UpdatePropertyGrid()
         {
-            pgMap.Update();
+            if (pgMap.InvokeRequired)
+                pgMap.Invoke(new MethodInvoker(() => pgMap.Update()));
+            else
+                pgMap.Update();
         }
 
         private static void AdjustRotation(LayerCollection lc, float angle)

@@ -1,6 +1,10 @@
 ﻿// WFS provider by Peter Robineau (peter.robineau@gmx.at)
 // This file can be redistributed and/or modified under the terms of the GNU Lesser General Public License.
 
+using System;
+using GeoAPI;
+using GeoAPI.Geometries;
+
 namespace SharpMap.Utilities.Wfs
 {
     public enum GeometryTypeEnum
@@ -22,6 +26,8 @@ namespace SharpMap.Utilities.Wfs
     {
         #region Fields with Properties
 
+        internal IGeometryFactory Factory { get; private set; }
+
         private BoundingBox _BoundingBox = new BoundingBox();
         private string _Cs = ",";
         private string _DecimalDel = ".";
@@ -31,7 +37,7 @@ namespace SharpMap.Utilities.Wfs
 
         private string _Prefix = string.Empty;
         private string _ServiceURI = string.Empty;
-        private string _SRID = "4326";
+        private string _SRID;
         private string _Ts = " ";
 
         /// <summary>
@@ -110,7 +116,16 @@ namespace SharpMap.Utilities.Wfs
         public string SRID
         {
             get { return _SRID; }
-            set { _SRID = value; }
+            set
+            {
+                if (string.IsNullOrEmpty(value))
+                    value = "4326";
+                if (string.Compare(_SRID, value, StringComparison.InvariantCultureIgnoreCase) != 0)
+                {
+                    Factory = GeometryServiceProvider.Instance.CreateGeometryFactory(int.Parse(value));
+                    _SRID = value;
+                }
+            }
         }
 
         //Coordinates can be included in a single string, but there is no 
@@ -169,6 +184,7 @@ namespace SharpMap.Utilities.Wfs
         /// </param>
         public WfsFeatureTypeInfo(string serviceURI, string nsPrefix, string featureTypeNamespace, string featureType,
                                   string geometryName, GeometryTypeEnum geometryType)
+            :this()
         {
             _ServiceURI = serviceURI;
             _Prefix = nsPrefix;
@@ -203,6 +219,7 @@ namespace SharpMap.Utilities.Wfs
         /// </summary>
         public WfsFeatureTypeInfo()
         {
+            SRID = "4326";
         }
 
         #endregion

@@ -22,7 +22,7 @@ public partial class SimplePostGis : System.Web.UI.Page
         if (Page.IsPostBack)
         {
             //Page is post back. Restore center and zoom-values from viewstate
-            myMap.Center = (SharpMap.Geometries.Point)ViewState["mapCenter"];
+            myMap.Center = (GeoAPI.Geometries.Coordinate)ViewState["mapCenter"];
             myMap.Zoom = (double)ViewState["mapZoom"];
         }
         else

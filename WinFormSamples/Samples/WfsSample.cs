@@ -7,7 +7,7 @@ using SharpMap.Data.Providers;
 using SharpMap.Layers;
 using SharpMap.Styles;
 using SharpMap.Utilities.Wfs;
-using Point=SharpMap.Geometries.Point;
+using Point = GeoAPI.Geometries.Coordinate;
 
 namespace WinFormSamples.Samples
 {

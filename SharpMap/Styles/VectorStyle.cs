@@ -15,9 +15,10 @@
 // along with SharpMap; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
 
+using System;
 using System.Drawing;
 using System.Reflection;
-using SharpMap.Geometries;
+using GeoAPI.Geometries;
 using SharpMap.Rendering.Symbolizer;
 
 namespace SharpMap.Styles
@@ -25,7 +26,8 @@ namespace SharpMap.Styles
     /// <summary>
     /// Defines a style used for rendering vector data
     /// </summary>
-    public class VectorStyle : Style, System.IDisposable
+    [Serializable]
+    public class VectorStyle : Style, ICloneable
     {
         /// <summary>
         /// Default Symbol
@@ -37,41 +39,43 @@ namespace SharpMap.Styles
         /// </summary>
         static VectorStyle()
         {
-            System.IO.Stream rs = Assembly.GetExecutingAssembly().GetManifestResourceStream("SharpMap.Styles.DefaultSymbol.png");
+            var rs = Assembly.GetExecutingAssembly().GetManifestResourceStream("SharpMap.Styles.DefaultSymbol.png");
             if (rs != null)
                 DefaultSymbol = Image.FromStream(rs);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public VectorStyle Clone()
         {
-            VectorStyle vs = null;
+            VectorStyle vs;
             lock (this)
             {
-                vs = new VectorStyle();
+                vs = (VectorStyle) MemberwiseClone();// new VectorStyle();
 
                 if (_fillStyle != null)
-                {
                     vs._fillStyle = _fillStyle.Clone() as Brush;
-                }
-                else
-                {
-                    vs._fillStyle = null;
-                }
-                vs._lineOffset = _lineOffset;
+                //else
+                //{
+                //    vs._fillStyle = null;
+                //}
+                //vs._lineOffset = _lineOffset;
                 if (_lineStyle != null)
                     vs._lineStyle = _lineStyle.Clone() as Pen;
                 
-                vs._outline = _outline;
+                //vs._outline = _outline;
                 
                 if (_outlineStyle != null)
-                vs._outlineStyle = _outlineStyle.Clone() as Pen;
+                    vs._outlineStyle = _outlineStyle.Clone() as Pen;
                 
-                if (_PointBrush != null)
-                    vs._PointBrush = _PointBrush.Clone() as Brush;
+                if (_pointBrush != null)
+                    vs._pointBrush = _pointBrush.Clone() as Brush;
 
-                vs._PointSize = _PointSize;
+                //vs._pointSize = _pointSize;
                 vs._symbol = (_symbol != null ? _symbol.Clone() as Image : null);
-                vs._symbolOffset = new PointF(_symbolOffset.X, _symbolOffset.Y);
+                //vs._symbolOffset = new PointF(_symbolOffset.X, _symbolOffset.Y);
                 vs._symbolRotation = _symbolRotation;
                 vs._symbolScale = _symbolScale;
                 vs.PointSymbolizer = PointSymbolizer;
@@ -81,6 +85,11 @@ namespace SharpMap.Styles
             return vs;
         }
         
+        object ICloneable.Clone()
+        {
+            return Clone();
+        }
+
         #region Privates
 
         private Brush _fillStyle;
@@ -119,9 +128,9 @@ namespace SharpMap.Styles
         private PointF _symbolOffset;
         private float _symbolRotation;
         private float _symbolScale;
-        private float _PointSize;
 
-        private Brush _PointBrush = null;
+        private float _pointSize;
+        private Brush _pointBrush;
 
         /// <summary>
         /// Linestyle for line geometries
@@ -164,8 +173,8 @@ namespace SharpMap.Styles
         /// </summary>
         public Brush PointColor
         {
-            get { return _PointBrush; }
-            set { _PointBrush = value; }
+            get { return _pointBrush; }
+            set { _pointBrush = value; }
         }
 
         /// <summary>
@@ -173,8 +182,8 @@ namespace SharpMap.Styles
         /// </summary>
         public float PointSize
         {
-            get { return _PointSize; }
-            set { _PointSize= value; }
+            get { return _pointSize; }
+            set { _pointSize= value; }
         }
 
         /// <summary>
@@ -252,10 +261,9 @@ namespace SharpMap.Styles
 
         #endregion
 
-        bool isDisposed = false;
-        public void Dispose()
+        protected override void ReleaseManagedResources()
         {
-            if (isDisposed)
+            if (IsDisposed)
                 return;
 
             if (_fillStyle != null)
@@ -277,10 +285,10 @@ namespace SharpMap.Styles
                 _outlineStyle = null;
             }
 
-            if (_PointBrush != null)
+            if (_pointBrush != null)
             {
-                _PointBrush.Dispose();
-                _PointBrush = null;
+                _pointBrush.Dispose();
+                _pointBrush = null;
             }
 
 
@@ -289,8 +297,7 @@ namespace SharpMap.Styles
                 _symbol.Dispose();
                 _symbol = null;
             }
-
-            isDisposed = true;
+            base.ReleaseManagedResources();
         }
     }
 }

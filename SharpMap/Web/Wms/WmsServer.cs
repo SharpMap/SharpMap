@@ -23,7 +23,7 @@ using System.IO;
 using System.Linq;
 using System.Web;
 using System.Xml;
-using SharpMap.Geometries;
+using GeoAPI.Geometries;
 using SharpMap.Layers;
 using System.Collections.Generic;
 #if !DotSpatialProjections
@@ -40,7 +40,7 @@ namespace SharpMap.Web.Wms
         
 		#region Delegates
 
-        public delegate SharpMap.Data.FeatureDataTable InterSectDelegate(SharpMap.Data.FeatureDataTable featureDataTable, SharpMap.Geometries.BoundingBox box);
+        public delegate SharpMap.Data.FeatureDataTable InterSectDelegate(SharpMap.Data.FeatureDataTable featureDataTable, GeoAPI.Geometries.Envelope box);
 
         #endregion
 
@@ -298,7 +298,7 @@ namespace SharpMap.Web.Wms
                     return;
                 }
                 //sets the boundingbox to the boundingbox of the client in order to calculate the coordinates of the projection of the client
-                BoundingBox bbox = ParseBBOX(context.Request.Params["bbox"]);
+                var bbox = ParseBBOX(context.Request.Params["bbox"]);
                 if (bbox == null)
                 {
                     WmsException.ThrowWmsException("Invalid parameter BBOX");
@@ -306,7 +306,7 @@ namespace SharpMap.Web.Wms
                 }
                 map.ZoomToBox(bbox);
                 //sets the point clicked by the client
-                SharpMap.Geometries.Point p = new SharpMap.Geometries.Point();
+                var p = new Coordinate();
                 Single x = 0;
                 Single y = 0;
                 //tries to set the x to the Param I, if the client send an X, it will try the X, if both fail, exception is thrown
@@ -488,14 +488,14 @@ namespace SharpMap.Web.Wms
                 }
                 map.Size = new Size(width, height);
 
-                BoundingBox bbox = ParseBBOX(context.Request.Params["bbox"]);
+                var bbox = ParseBBOX(context.Request.Params["bbox"]);
                 if (bbox == null)
                 {
                     WmsException.ThrowWmsException("Invalid parameter BBOX");
                     return;
                 }
                 map.PixelAspectRatio = (width / (double)height) / (bbox.Width / bbox.Height);
-                map.Center = bbox.GetCentroid();
+                map.Center = bbox.Centre;
                 map.Zoom = bbox.Width;
 				//set Styles for layers
                 //first, if the request ==  STYLES=, set all the vectorlayers with Themes not null the Theme to the first theme from Themes
@@ -663,7 +663,7 @@ namespace SharpMap.Web.Wms
         /// </summary>
         /// <param name="strBBOX">string representation of a boundingbox</param>
         /// <returns>Boundingbox or null if invalid parameter</returns>
-        public static BoundingBox ParseBBOX(string strBBOX)
+        public static Envelope ParseBBOX(string strBBOX)
         {
             string[] strVals = strBBOX.Split(new[] { ',' });
             if (strVals.Length != 4)
@@ -686,7 +686,7 @@ namespace SharpMap.Web.Wms
             if (maxy < miny)
                 return null;
 
-            return new BoundingBox(minx, miny, maxx, maxy);
+            return new Envelope(minx, maxx, miny, maxy);
         }
         /// <summary>
         /// Gets FeatureInfo as text/plain
@@ -714,10 +714,10 @@ namespace SharpMap.Web.Wms
                             Single queryBoxMinY = y - (_pixelSensitivity);
                             Single queryBoxMaxX = x + (_pixelSensitivity);
                             Single queryBoxMaxY = y + (_pixelSensitivity);
-                            SharpMap.Geometries.Point minXY = map.ImageToWorld(new System.Drawing.PointF(queryBoxMinX, queryBoxMinY));
-                            SharpMap.Geometries.Point maxXY = map.ImageToWorld(new System.Drawing.PointF(queryBoxMaxX, queryBoxMaxY));
-                            BoundingBox queryBox = new BoundingBox(minXY, maxXY);
-                            SharpMap.Data.FeatureDataSet fds = new SharpMap.Data.FeatureDataSet();
+                            var minXY = map.ImageToWorld(new System.Drawing.PointF(queryBoxMinX, queryBoxMinY));
+                            var maxXY = map.ImageToWorld(new System.Drawing.PointF(queryBoxMaxX, queryBoxMaxY));
+                            var queryBox = new Envelope(minXY, maxXY);
+                            var fds = new SharpMap.Data.FeatureDataSet();
                             queryLayer.ExecuteIntersectionQuery(queryBox, fds);
                             
                             if (_intersectDelegate != null)
@@ -753,8 +753,8 @@ namespace SharpMap.Web.Wms
                                     double[] area = new double[fds.Tables[0].Rows.Count];
                                     for (int l = 0; l < fds.Tables[0].Rows.Count; l++)
                                     {
-                                        SharpMap.Data.FeatureDataRow fdr = fds.Tables[0].Rows[l] as SharpMap.Data.FeatureDataRow;
-                                        area[l] = fdr.Geometry.GetBoundingBox().GetArea();
+                                        var fdr = (Data.FeatureDataRow)fds.Tables[0].Rows[l];
+                                        area[l] = fdr.Geometry.EnvelopeInternal.Area;
                                         keys[l] = l;
                                     }
                                     Array.Sort(area, keys);
@@ -766,7 +766,7 @@ namespace SharpMap.Web.Wms
                                     {
                                         for (int j = 0; j < fds.Tables[0].Rows[keys[k]].ItemArray.Length; j++)
                                         {
-                                            vstr = vstr + " '" + fds.Tables[0].Rows[keys[k]].ItemArray[j].ToString() + "'";
+                                            vstr = vstr + " '" + fds.Tables[0].Rows[keys[k]].ItemArray[j] + "'";
                                         }
                                         if ((k + 1) < featureCount)
                                             vstr = vstr + ",\n";
@@ -810,10 +810,10 @@ namespace SharpMap.Web.Wms
                             Single queryBoxMinY = y - (_pixelSensitivity);
                             Single queryBoxMaxX = x + (_pixelSensitivity);
                             Single queryBoxMaxY = y + (_pixelSensitivity);
-                            SharpMap.Geometries.Point minXY = map.ImageToWorld(new System.Drawing.PointF(queryBoxMinX, queryBoxMinY));
-                            SharpMap.Geometries.Point maxXY = map.ImageToWorld(new System.Drawing.PointF(queryBoxMaxX, queryBoxMaxY));
-                            BoundingBox queryBox = new BoundingBox(minXY, maxXY);
-                            SharpMap.Data.FeatureDataSet fds = new SharpMap.Data.FeatureDataSet();
+                            var minXY = map.ImageToWorld(new System.Drawing.PointF(queryBoxMinX, queryBoxMinY));
+                            var maxXY = map.ImageToWorld(new System.Drawing.PointF(queryBoxMaxX, queryBoxMaxY));
+                            var queryBox = new Envelope(minXY, maxXY);
+                            var fds = new Data.FeatureDataSet();
                             queryLayer.ExecuteIntersectionQuery(queryBox, fds);
                             //
                             if (_intersectDelegate != null)
@@ -848,7 +848,7 @@ namespace SharpMap.Web.Wms
                             {
                                 data = data.Select(d =>
                                 {
-                                    Geometry converted = GeometryTransform.TransformGeometry(d.Geometry, transform);
+                                    var converted = GeometryTransform.TransformGeometry(d.Geometry, transform, map.Factory);
                                     d.SetGeometry(converted);
                                     return d;
                                 });
@@ -864,8 +864,8 @@ namespace SharpMap.Web.Wms
                                                    "Unknown layer '" + requestLayer + "'");
                 }
             }
-            StringWriter writer = new StringWriter();
-            SharpMap.Converters.GeoJSON.GeoJSONWriter.Write(items, writer);
+            var writer = new StringWriter();
+            Converters.GeoJSON.GeoJSONWriter.Write(items, writer);
             return writer.ToString();            
         }
         /// <summary>

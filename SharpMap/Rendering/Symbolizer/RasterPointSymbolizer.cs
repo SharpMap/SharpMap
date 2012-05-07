@@ -35,6 +35,32 @@ namespace SharpMap.Rendering.Symbolizer
 
         private ImageAttributes _imageAttributes;
 
+        protected override void ReleaseManagedResources()
+        {
+            if (ImageAttributes != null)
+            {
+                ImageAttributes.Dispose();
+                ImageAttributes = null;
+            }
+
+            if (Symbol != null)
+            {
+                Symbol.Dispose();
+                Symbol = null;
+            }
+
+            base.ReleaseManagedResources();
+        }
+
+        public override object Clone()
+        {
+            var res = (RasterPointSymbolizer)MemberwiseClone();
+            res.ImageAttributes = (ImageAttributes)ImageAttributes.Clone();
+            res.Symbol= (Image)Symbol.Clone();
+
+            return res;
+        }
+
         /// <summary>
         /// Gets or sets the symbol
         /// </summary>

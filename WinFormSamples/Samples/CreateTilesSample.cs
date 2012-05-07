@@ -124,10 +124,10 @@ namespace WinFormSamples.Samples
                 _map.Zoom = _map.Zoom / lineNumberImage;
                 
                 // 1/2 length image in world
-                var delta = _map.Center.X - _map.Envelope.Min.X;
+                var delta = _map.Center.X - _map.Envelope.MinX;
                 
                 // image size per tile ( in world )
-                var imageWidth = _map.Envelope.Max.X - _map.Envelope.Min.X;
+                var imageWidth = _map.Envelope.MaxX - _map.Envelope.MinX;
                 var imageHeight = imageWidth;
 
                 // move center to left-up img ( left-bottom in pixel )          
@@ -149,7 +149,7 @@ namespace WinFormSamples.Samples
                     var centerY = centerY0;
                     for (var j = 0; j < lineNumberImage; j++, centerY = centerY - imageHeight)
                     {
-                        _map.Center = new SharpMap.Geometries.Point(centerX, centerY);
+                        _map.Center = new GeoAPI.Geometries.Coordinate(centerX, centerY);
                         using (var img = _map.GetMap())
                         {
                             using (var transImg = new System.Drawing.Bitmap(img.Width, img.Height, System.Drawing.Imaging.PixelFormat.Format32bppArgb))

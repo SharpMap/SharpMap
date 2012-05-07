@@ -38,18 +38,18 @@
 
 using System;
 using System.IO;
-using SharpMap.Geometries;
+using GeoAPI.Geometries;
 
 namespace SharpMap.Converters.WellKnownBinary
 {
     /// <summary>
-    /// Converts a <see cref="SharpMap.Geometries.Geometry"/> instance to a Well-known Binary string representation.
+    /// Converts a <see cref="GeoAPI.Geometries.IGeometry"/> instance to a Well-known Binary string representation.
     /// </summary>
     /// <remarks>
-    /// <para>The Well-known Binary Representation for <see cref="SharpMap.Geometries.Geometry"/> (WKBGeometry) provides a portable 
-    /// representation of a <see cref="SharpMap.Geometries.Geometry"/> value as a contiguous stream of bytes. It permits <see cref="SharpMap.Geometries.Geometry"/> 
+    /// <para>The Well-known Binary Representation for <see cref="GeoAPI.Geometries.IGeometry"/> (WKBGeometry) provides a portable 
+    /// representation of a <see cref="GeoAPI.Geometries.IGeometry"/> value as a contiguous stream of bytes. It permits <see cref="GeoAPI.Geometries.IGeometry"/> 
     /// values to be exchanged between an ODBC client and an SQL database in binary form.</para>
-    /// <para>The Well-known Binary Representation for <see cref="SharpMap.Geometries.Geometry"/> is obtained by serializing a <see cref="SharpMap.Geometries.Geometry"/>
+    /// <para>The Well-known Binary Representation for <see cref="GeoAPI.Geometries.IGeometry"/> is obtained by serializing a <see cref="GeoAPI.Geometries.IGeometry"/>
     /// instance as a sequence of numeric types drawn from the set {Unsigned Integer, Double} and
     /// then serializing each numeric type as a sequence of bytes using one of two well defined,
     /// standard, binary representations for numeric types (NDR, XDR). The specific binary encoding
@@ -66,7 +66,7 @@ namespace SharpMap.Converters.WellKnownBinary
         /// </summary>
         /// <param name="g">The geometry to write</param>
         /// <returns>WKB representation of the geometry</returns>
-        public static byte[] Write(Geometry g)
+        public static byte[] Write(IGeometry g)
         {
             return Write(g, WkbByteOrder.Ndr);
         }
@@ -77,7 +77,7 @@ namespace SharpMap.Converters.WellKnownBinary
         /// <param name="g">The geometry to write</param>
         /// <param name="wkbByteOrder">Byte order</param>
         /// <returns>WKB representation of the geometry</returns>
-        public static byte[] Write(Geometry g, WkbByteOrder wkbByteOrder)
+        public static byte[] Write(IGeometry g, WkbByteOrder wkbByteOrder)
         {
             MemoryStream ms = new MemoryStream();
             BinaryWriter bw = new BinaryWriter(ms);
@@ -138,37 +138,37 @@ namespace SharpMap.Converters.WellKnownBinary
         /// <param name="geometry">The geometry to determine the type of.</param>
         /// <param name="bWriter">Binary Writer</param>
         /// <param name="byteorder">Byte order</param>
-        private static void WriteType(Geometry geometry, BinaryWriter bWriter, WkbByteOrder byteorder)
+        private static void WriteType(IGeometry geometry, BinaryWriter bWriter, WkbByteOrder byteorder)
         {
             //Determine the type of the geometry.
-            switch (geometry.GetType().FullName)
+            switch (geometry.OgcGeometryType)
             {
                     //Points are type 1.
-                case "SharpMap.Geometries.Point":
+                case OgcGeometryType.Point:
                     WriteUInt32((uint) WKBGeometryType.wkbPoint, bWriter, byteorder);
                     break;
                     //Linestrings are type 2.
-                case "SharpMap.Geometries.LineString":
+                case OgcGeometryType.LineString:
                     WriteUInt32((uint) WKBGeometryType.wkbLineString, bWriter, byteorder);
                     break;
                     //Polygons are type 3.
-                case "SharpMap.Geometries.Polygon":
+                case OgcGeometryType.Polygon:
                     WriteUInt32((uint) WKBGeometryType.wkbPolygon, bWriter, byteorder);
                     break;
                     //Mulitpoints are type 4.
-                case "SharpMap.Geometries.MultiPoint":
+                case OgcGeometryType.MultiPoint:
                     WriteUInt32((uint) WKBGeometryType.wkbMultiPoint, bWriter, byteorder);
                     break;
                     //Multilinestrings are type 5.
-                case "SharpMap.Geometries.MultiLineString":
+                case OgcGeometryType.MultiLineString:
                     WriteUInt32((uint) WKBGeometryType.wkbMultiLineString, bWriter, byteorder);
                     break;
                     //Multipolygons are type 6.
-                case "SharpMap.Geometries.MultiPolygon":
+                case OgcGeometryType.MultiPolygon:
                     WriteUInt32((uint) WKBGeometryType.wkbMultiPolygon, bWriter, byteorder);
                     break;
                     //Geometrycollections are type 7.
-                case "SharpMap.Geometries.GeometryCollection":
+                case OgcGeometryType.GeometryCollection:
                     WriteUInt32((uint) WKBGeometryType.wkbGeometryCollection, bWriter, byteorder);
                     break;
                     //If the type is not of the above 7 throw an exception.
@@ -183,36 +183,36 @@ namespace SharpMap.Converters.WellKnownBinary
         /// <param name="geometry">The geometry to be written.</param>
         /// <param name="bWriter"></param>
         /// <param name="byteorder">Byte order</param>
-        private static void WriteGeometry(Geometry geometry, BinaryWriter bWriter, WkbByteOrder byteorder)
+        private static void WriteGeometry(IGeometry geometry, BinaryWriter bWriter, WkbByteOrder byteorder)
         {
-            switch (geometry.GetType().FullName)
+            switch (geometry.OgcGeometryType)
             {
                     //Write the point.
-                case "SharpMap.Geometries.Point":
-                    WritePoint((Point) geometry, bWriter, byteorder);
+                case OgcGeometryType.Point:
+                    WritePoint((IPoint) geometry, bWriter, byteorder);
                     break;
-                case "SharpMap.Geometries.LineString":
-                    LineString ls = (LineString) geometry;
+                case OgcGeometryType.LineString:
+                    var ls = (ILineString) geometry;
                     WriteLineString(ls, bWriter, byteorder);
                     break;
-                case "SharpMap.Geometries.Polygon":
-                    WritePolygon((Polygon) geometry, bWriter, byteorder);
+                case OgcGeometryType.Polygon:
+                    WritePolygon((IPolygon) geometry, bWriter, byteorder);
                     break;
                     //Write the Multipoint.
-                case "SharpMap.Geometries.MultiPoint":
-                    WriteMultiPoint((MultiPoint) geometry, bWriter, byteorder);
+                case OgcGeometryType.MultiPoint:
+                    WriteMultiPoint((IMultiPoint) geometry, bWriter, byteorder);
                     break;
                     //Write the Multilinestring.
-                case "SharpMap.Geometries.MultiLineString":
-                    WriteMultiLineString((MultiLineString) geometry, bWriter, byteorder);
+                case OgcGeometryType.MultiLineString:
+                    WriteMultiLineString((IMultiLineString) geometry, bWriter, byteorder);
                     break;
                     //Write the Multipolygon.
-                case "SharpMap.Geometries.MultiPolygon":
-                    WriteMultiPolygon((MultiPolygon) geometry, bWriter, byteorder);
+                case OgcGeometryType.MultiPolygon:
+                    WriteMultiPolygon((IMultiPolygon) geometry, bWriter, byteorder);
                     break;
                     //Write the Geometrycollection.
-                case "SharpMap.Geometries.GeometryCollection":
-                    WriteGeometryCollection((GeometryCollection) geometry, bWriter, byteorder);
+                case OgcGeometryType.GeometryCollection:
+                    WriteGeometryCollection((IGeometryCollection) geometry, bWriter, byteorder);
                     break;
                     //If the type is not of the above 7 throw an exception.
                 default:
@@ -226,12 +226,24 @@ namespace SharpMap.Converters.WellKnownBinary
         /// <param name="point">The point to be written.</param>
         /// <param name="bWriter">Stream to write to.</param>
         /// <param name="byteorder">Byte order</param>
-        private static void WritePoint(Point point, BinaryWriter bWriter, WkbByteOrder byteorder)
+        private static void WritePoint(Coordinate point, BinaryWriter bWriter, WkbByteOrder byteorder)
         {
             //Write the x coordinate.
             WriteDouble(point.X, bWriter, byteorder);
             //Write the y coordinate.
             WriteDouble(point.Y, bWriter, byteorder);
+        }
+
+        /// <summary>
+        /// Writes a point.
+        /// </summary>
+        /// <param name="point">The point to be written.</param>
+        /// <param name="bWriter">Stream to write to.</param>
+        /// <param name="byteorder">Byte order</param>
+        private static void WritePoint(IPoint point, BinaryWriter bWriter, WkbByteOrder byteorder)
+        {
+            //Write the coordinate.
+            WritePoint(point.Coordinate, bWriter, byteorder);
         }
 
 
@@ -241,13 +253,15 @@ namespace SharpMap.Converters.WellKnownBinary
         /// <param name="ls">The linestring to be written.</param>
         /// <param name="bWriter">Stream to write to.</param>
         /// <param name="byteorder">Byte order</param>
-        private static void WriteLineString(LineString ls, BinaryWriter bWriter, WkbByteOrder byteorder)
+        private static void WriteLineString(ILineString ls, BinaryWriter bWriter, WkbByteOrder byteorder)
         {
+            var vertices = ls.Coordinates;
+
             //Write the number of points in this linestring.
-            WriteUInt32((uint) ls.Vertices.Count, bWriter, byteorder);
+            WriteUInt32((uint) vertices.Length, bWriter, byteorder);
 
             //Loop on each vertices.
-            foreach (Point p in ls.Vertices)
+            foreach (var p in vertices)
                 WritePoint(p, bWriter, byteorder);
         }
 
@@ -258,10 +272,10 @@ namespace SharpMap.Converters.WellKnownBinary
         /// <param name="poly">The polygon to be written.</param>
         /// <param name="bWriter">Stream to write to.</param>
         /// <param name="byteorder">Byte order</param>
-        private static void WritePolygon(Polygon poly, BinaryWriter bWriter, WkbByteOrder byteorder)
+        private static void WritePolygon(IPolygon poly, BinaryWriter bWriter, WkbByteOrder byteorder)
         {
             //Get the number of rings in this polygon.
-            int numRings = poly.InteriorRings.Count + 1;
+            var numRings = poly.NumInteriorRings + 1;
 
             //Write the number of rings to the stream (add one for the shell)
             WriteUInt32((uint) numRings, bWriter, byteorder);
@@ -270,7 +284,7 @@ namespace SharpMap.Converters.WellKnownBinary
             WriteLineString(poly.ExteriorRing, bWriter, byteorder);
 
             //Loop on the number of rings - 1 because we already wrote the shell.
-            foreach (LinearRing lr in poly.InteriorRings)
+            foreach (ILinearRing lr in poly.InteriorRings)
                 //Write the (lineString)LinearRing.
                 WriteLineString(lr, bWriter, byteorder);
         }
@@ -281,13 +295,15 @@ namespace SharpMap.Converters.WellKnownBinary
         /// <param name="mp">The multipoint to be written.</param>
         /// <param name="bWriter">Stream to write to.</param>
         /// <param name="byteorder">Byte order</param>
-        private static void WriteMultiPoint(MultiPoint mp, BinaryWriter bWriter, WkbByteOrder byteorder)
+        private static void WriteMultiPoint(IMultiPoint mp, BinaryWriter bWriter, WkbByteOrder byteorder)
         {
+            var vertices = mp.Coordinates;
+
             //Write the number of points.
-            WriteUInt32((uint) mp.Points.Count, bWriter, byteorder);
+            WriteUInt32((uint) vertices.Length, bWriter, byteorder);
 
             //Loop on the number of points.
-            foreach (Point p in mp.Points)
+            foreach (var p in vertices)
             {
                 //Write Points Header
                 bWriter.Write((byte) byteorder);
@@ -303,13 +319,13 @@ namespace SharpMap.Converters.WellKnownBinary
         /// <param name="mls">The multilinestring to be written.</param>
         /// <param name="bWriter">Stream to write to.</param>
         /// <param name="byteorder">Byte order</param>
-        private static void WriteMultiLineString(MultiLineString mls, BinaryWriter bWriter, WkbByteOrder byteorder)
+        private static void WriteMultiLineString(IMultiLineString mls, BinaryWriter bWriter, WkbByteOrder byteorder)
         {
             //Write the number of linestrings.
-            WriteUInt32((uint) mls.LineStrings.Count, bWriter, byteorder);
+            WriteUInt32((uint) mls.NumGeometries, bWriter, byteorder);
 
             //Loop on the number of linestrings.
-            foreach (LineString ls in mls.LineStrings)
+            foreach (ILineString ls in mls)
             {
                 //Write LineString Header
                 bWriter.Write((byte) byteorder);
@@ -325,13 +341,13 @@ namespace SharpMap.Converters.WellKnownBinary
         /// <param name="mp">The mulitpolygon to be written.</param>
         /// <param name="bWriter">Stream to write to.</param>
         /// <param name="byteorder">Byte order</param>
-        private static void WriteMultiPolygon(MultiPolygon mp, BinaryWriter bWriter, WkbByteOrder byteorder)
+        private static void WriteMultiPolygon(IMultiPolygon mp, BinaryWriter bWriter, WkbByteOrder byteorder)
         {
             //Write the number of polygons.
-            WriteUInt32((uint) mp.Polygons.Count, bWriter, byteorder);
+            WriteUInt32((uint) mp.NumGeometries, bWriter, byteorder);
 
             //Loop on the number of polygons.
-            foreach (Polygon poly in mp.Polygons)
+            foreach (IPolygon poly in mp)
             {
                 //Write polygon header
                 bWriter.Write((byte) byteorder);
@@ -348,16 +364,16 @@ namespace SharpMap.Converters.WellKnownBinary
         /// <param name="gc">The geometrycollection to be written.</param>
         /// <param name="bWriter">Stream to write to.</param>
         /// <param name="byteorder">Byte order</param>
-        private static void WriteGeometryCollection(GeometryCollection gc, BinaryWriter bWriter, WkbByteOrder byteorder)
+        private static void WriteGeometryCollection(IGeometryCollection gc, BinaryWriter bWriter, WkbByteOrder byteorder)
         {
             //Get the number of geometries in this geometrycollection.
-            int numGeometries = gc.NumGeometries;
+            var numGeometries = gc.NumGeometries;
 
             //Write the number of geometries.
             WriteUInt32((uint) numGeometries, bWriter, byteorder);
 
             //Loop on the number of geometries.
-            for (int i = 0; i < numGeometries; i++)
+            for (var i = 0; i < numGeometries; i++)
             {
                 //Write the byte-order format of the following geometry.
                 bWriter.Write((byte) byteorder);

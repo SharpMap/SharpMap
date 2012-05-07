@@ -1,5 +1,4 @@
 //#define alglib
-using SharpMap.Geometries;
 
 namespace ExampleCodeSnippets
 {
