@@ -58,6 +58,14 @@ namespace SharpMap.Layers
         int SRID { get; set; }
 
         /// <summary>
+        /// The spatial reference ID (CRS) that can be exposed externally.
+        /// </summary>
+        /// <remarks>
+        /// TODO: explain better why I need this property
+        /// </remarks>
+        int TargetSRID { get; }
+
+        /// <summary>
         /// Proj4 String Projection
         /// </summary>
         string Proj4Projection { get; set; }

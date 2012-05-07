@@ -71,7 +71,7 @@ Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "DemoWebSite", "DemoWebSite\
 		Release.AspNetCompiler.ForceOverwrite = "true"
 		Release.AspNetCompiler.FixedNames = "false"
 		Release.AspNetCompiler.Debug = "False"
-		VWDPort = "54701"
+		VWDPort = "62294"
 		StartServerOnDebug = "true"
 	EndProjectSection
 EndProject

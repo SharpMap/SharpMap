@@ -2,9 +2,7 @@
     var po = org.polymaps, mercator, container, map, load, queue, layer;
 
     $('#cleardb').click(function () {
-        webdb.open();
-        webdb.dropTable();
-        webdb.createTable();
+        webdb.clear();
     });
 
     mercator = new GlobalMercator();

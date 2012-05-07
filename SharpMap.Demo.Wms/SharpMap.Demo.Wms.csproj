@@ -81,9 +81,12 @@
     <Compile Include="Handlers\AbstractStdMapHandler.cs" />
     <Compile Include="Handlers\StdJsonMapHandler.cs" />
     <Compile Include="Handlers\StdWmsMapHandler.cs" />
+    <Compile Include="Helpers\DatabaseHelper.cs" />
     <Compile Include="Helpers\ExtensionMethods.cs" />
-    <Compile Include="Helpers\MapHelper.cs" />
+    <Compile Include="Helpers\ShapefileHelper.cs" />
+    <Compile Include="Helpers\ProjHelper.cs" />
     <Compile Include="Models\DemoItem.cs" />
+    <Compile Include="Models\LayerData.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -626,7 +629,7 @@
         <WebProjectProperties>
           <UseIIS>False</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
-          <DevelopmentServerPort>53449</DevelopmentServerPort>
+          <DevelopmentServerPort>62423</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
           <IISUrl>http://localhost/SharpMap.Demo.Wms</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>

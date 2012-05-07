@@ -198,7 +198,7 @@ namespace SharpMap.Layers
                 return DataSource.SRID;
             }
             set { DataSource.SRID = value; }
-        }
+        }       
 
         #region IDisposable Members
 

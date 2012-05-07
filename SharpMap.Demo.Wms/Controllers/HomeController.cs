@@ -61,6 +61,7 @@
             return this.View();
         }
 
+        [Obsolete]
         public ActionResult Editor()
         {
             return this.View();
@@ -74,6 +75,6 @@
         public ActionResult TileCanvas()
         {
             return this.View();
-        }
+        }        
     }
 }

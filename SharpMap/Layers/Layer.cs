@@ -58,6 +58,7 @@ namespace SharpMap.Layers
         private string _layerName;
         private Style _style;
         private int _srid = -1;
+        private int? _targetSrid;
 
 // ReSharper disable PublicConstructorInAbstractClass
         ///<summary>
@@ -123,6 +124,12 @@ namespace SharpMap.Layers
         {
             get { return _srid; }
             set { _srid = value; }
+        }
+
+        public int TargetSRID
+        {
+            get { return _targetSrid.HasValue ? _targetSrid.Value : SRID; }
+            set { _targetSrid = value; }
         }
 
         //public abstract SharpMap.CoordinateSystems.CoordinateSystem CoordinateSystem { get; set; }

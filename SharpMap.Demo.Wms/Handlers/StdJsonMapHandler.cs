@@ -36,7 +36,7 @@ namespace SharpMap.Demo.Wms.Handlers
                 }
 
                 Map map = this.GetMap(context.Request);
-                IEnumerable<GeoJSON> items = GeoData(map, bbox);
+                IEnumerable<GeoJSON> items = this.GetData(map, bbox);
                 
                 StringWriter writer = new StringWriter();
                 GeoJSONWriter.Write(items, writer);
@@ -55,7 +55,7 @@ namespace SharpMap.Demo.Wms.Handlers
             }
         }
 
-        private IEnumerable<GeoJSON> GeoData(Map map, BoundingBox bbox)
+        private IEnumerable<GeoJSON> GetData(Map map, BoundingBox bbox)
         {
             List<GeoJSON> items = new List<GeoJSON>();
 

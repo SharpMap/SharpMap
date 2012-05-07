@@ -309,7 +309,7 @@ namespace SharpMap.Data.Providers
                //Get bounding box string   
                string strBbox = GetBoxFilterStr(bbox);   
  
-               string strSQL = "SELECT g." + GeometryColumn +".STAsBinary() ";   
+               string strSQL = "SELECT g." + GeometryColumn + ".STAsBinary() ";   
                strSQL += " FROM " + Table + " g WHERE ";   
  
                if (!String.IsNullOrEmpty(_definitionQuery))   
@@ -421,11 +421,9 @@ namespace SharpMap.Data.Providers
            lr.Vertices.Add(new Point(bbox.Left, bbox.Top));   
            lr.Vertices.Add(new Point(bbox.Left, bbox.Bottom));   
            Polygon p = new Polygon(lr);   
-           string bboxText = Converters.WellKnownText.GeometryToWKT.Write(p); // "";   
-           //string whereClause = GeometryColumn + ".STIntersects(geometry::STGeomFromText('" + bboxText + "', " + SRID + ")" + MakeValidString + ") = 1";   
-           string whereClause = String.Format("{0}{1}.STIntersects({4}::STGeomFromText('{2}', {3})) = 1", 
-               GeometryColumn, MakeValidString, bboxText, SRID, _spatialObject);
-           return whereClause; // strBbox;   
+           string bboxText = Converters.WellKnownText.GeometryToWKT.Write(p);
+           string whereClause = String.Format("{0}{1}.STIntersects({4}::STGeomFromText('{2}', {3})) = 1", GeometryColumn, MakeValidString, bboxText, SRID, _spatialObject);
+           return whereClause;
        }   
  
        /// <summary>   

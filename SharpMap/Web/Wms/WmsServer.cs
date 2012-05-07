@@ -238,7 +238,7 @@ namespace SharpMap.Web.Wms
                     WmsException.ThrowWmsException("Required parameter CRS not specified");
                     return;
                 }
-                else if (context.Request.Params["CRS"] != "EPSG:" + map.Layers[0].SRID)
+                else if (context.Request.Params["CRS"] != "EPSG:" + map.Layers[0].TargetSRID)
                 {
                     WmsException.ThrowWmsException(WmsException.WmsExceptionCode.InvalidCRS, "CRS not supported");
                     return;
@@ -403,7 +403,7 @@ namespace SharpMap.Web.Wms
                     WmsException.ThrowWmsException("Required parameter CRS not specified");
                     return;
                 }
-                else if (context.Request.Params["CRS"] != "EPSG:" + map.Layers[0].SRID)
+                else if (context.Request.Params["CRS"] != "EPSG:" + map.Layers[0].TargetSRID)
                 {
                     WmsException.ThrowWmsException(WmsException.WmsExceptionCode.InvalidCRS, "CRS not supported");
                     return;

@@ -4,8 +4,7 @@ sharpmap.queue = (function () {
     var queued = [], active = 0, size = 6;
 
     function init() {
-        webdb.open();
-        webdb.createTable();
+        webdb.check();
     }
 
     function process() {
@@ -63,26 +62,23 @@ sharpmap.queue = (function () {
     }
 
     function json(url, callback) {
-        webdb.get(url, function (tx, r) {
-            var item, parse;
-            if (r.rows.length !== 0) {
-                item = r.rows.item(0);
-                parse = JSON.parse(item.json);
-                console.log('retrieved from webdb ' + url);
-                return callback(parse);
-            }
+        var data = webdb.get(url), parse;
+        if (data) {
+            parse = JSON.parse(data);
+            console.log('retrieved from webdb ' + url);
+            return callback(parse);
+        }
 
-            return request(url, function (req) {
-                var text, data;
-                if (req.responseText) {
-                    text = req.responseText;
-                    webdb.add(url, text);
-                    data = JSON.parse(text);
-                    console.log('added to webdb ' + url);
-                    callback(data);
-                }
-            }, "application/json");
-        });
+        return request(url, function (req) {
+            var text;
+            if (req.responseText) {
+                text = req.responseText;
+                webdb.add(url, text);
+                data = JSON.parse(text);
+                console.log('added to webdb ' + url);
+                callback(data);
+            }
+        }, "application/json");
     }
 
     return { init: init, json: json };
