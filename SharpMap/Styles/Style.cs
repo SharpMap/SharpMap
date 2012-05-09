@@ -70,5 +70,36 @@ namespace SharpMap.Styles
         }
 
         #endregion
+
+        //#region Equals
+        //public override bool Equals(object obj)
+        //{
+        //    if (ReferenceEquals(this, obj))
+        //        return true;
+
+        //    var styleObj = obj as Style;
+        //    if (styleObj == null)
+        //        return false;
+
+        //    if (_visible != styleObj._visible)
+        //        return false;
+
+        //    if (Math.Abs(_minVisible - styleObj._minVisible) < 1e9)
+        //        return false;
+        //    if (Math.Abs(_maxVisible - styleObj._maxVisible) < 1e9)
+        //        return false;
+
+        //    return true;
+        //}
+
+        //public override int GetHashCode()
+        //{
+        //    unchecked
+        //    {
+        //        var result = _visible.GetHashCode();
+        //        return (result * 397) ^ (_maxVisible - _minVisible).GetHashCode();
+        //    }
+        //}
+        //#endregion
     }
 }

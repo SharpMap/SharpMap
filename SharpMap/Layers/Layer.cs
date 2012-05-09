@@ -87,12 +87,11 @@ namespace SharpMap.Layers
 
         #endregion
 
-
         private ICoordinateTransformation _coordinateTransform;
         private ICoordinateTransformation _reverseCoordinateTransform;
 
         private string _layerName;
-        private Style _style;
+        private IStyle _style;
         private int _srid = -1;
         private int? _targetSrid;
 
@@ -264,9 +263,9 @@ namespace SharpMap.Layers
         }
 
         /// <summary>
-        /// Gets/sets the Style for this Layer
+        /// Gets or sets the Style for this Layer
         /// </summary>
-        public virtual Style Style
+        public virtual IStyle Style
         {
             get { return _style; }
             set

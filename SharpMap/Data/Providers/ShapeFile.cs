@@ -191,6 +191,8 @@ namespace SharpMap.Data.Providers
 	    protected DbaseReader DbaseFile;
 		private Stream _fsShapeFile;
 
+        private static readonly object GspLock = new object();
+
 #if USE_MEMORYMAPPED_FILE
         private static Dictionary<string,System.IO.MemoryMappedFiles.MemoryMappedFile> _memMappedFiles;
         private static Dictionary<string, int> _memMappedFilesRefConter;
@@ -788,7 +790,8 @@ namespace SharpMap.Data.Providers
 			set
 			{
 			    _srid = value;
-			    Factory = GeometryServiceProvider.Instance.CreateGeometryFactory(value);
+			    lock (GspLock)
+			        Factory = GeometryServiceProvider.Instance.CreateGeometryFactory(value);
 			}
 		}
 

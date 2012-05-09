@@ -15,12 +15,14 @@
 // along with SharpMap; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
 
+using System;
+
 namespace SharpMap.Styles
 {
     /// <summary>
     /// Defines an interface for defining layer styles
     /// </summary>
-    public interface IStyle
+    public interface IStyle : IDisposable
     {
         /// <summary>
         /// Gets or sets the minimum zoom value where the style is applied
