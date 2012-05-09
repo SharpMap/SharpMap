@@ -271,7 +271,7 @@ namespace SharpMap.Layers
             get { return _style; }
             set
             {
-                if (value != _style && _style.Equals(value))
+                if (value != _style && !_style.Equals(value))
                 {
                     _style = value;
                     OnStyleChanged(EventArgs.Empty);
