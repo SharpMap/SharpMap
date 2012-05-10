@@ -49,6 +49,7 @@ OpenLayers.Editor.Control.FilterFeature = OpenLayers.Class(OpenLayers.Control, {
      */
     initialize: function (options) {
         OpenLayers.Control.prototype.initialize.apply(this, arguments);
+        this.title = OpenLayers.i18n('oleFilterFeature');
     },
 
     /**

@@ -34,6 +34,7 @@ OpenLayers.Editor.Control.DrawPath = OpenLayers.Class(OpenLayers.Control.DrawFea
         OpenLayers.Control.DrawFeature.prototype.initialize.apply(this,
             [layer, OpenLayers.Handler.Path, options]);
         
+        this.title = OpenLayers.i18n('oleDrawPath');
     },
 
     /**

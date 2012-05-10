@@ -44,6 +44,7 @@ OpenLayers.Editor.Control.SaveFeature = OpenLayers.Class(OpenLayers.Control.Butt
 
         this.trigger = this.openSaveDialog;
 
+        this.title = OpenLayers.i18n('oleSaveFeature');
     },
 
     openSaveDialog: function() {

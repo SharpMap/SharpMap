@@ -4,7 +4,7 @@
     OpenLayers.DOTS_PER_INCH = 25.4 / 0.28;
     OpenLayers.IMAGE_RELOAD_ATTEMPTS = 5;
     OpenLayers.Util.onImageLoadErrorColor = 'transparent';
-    OpenLayers.Util.onImageLoadError = function() {
+    OpenLayers.Util.onImageLoadError = function () {
         this.src = '/Content/Images/sorry.jpg';
         this.style.backgroundColor = OpenLayers.Util.onImageLoadErrorColor;
     };
@@ -52,7 +52,7 @@
         }
     };
 
-    init = function() {
+    init = function () {
         var lon = -73.9529;
         var lat = 40.7723;
         var zoom = 10;
@@ -90,9 +90,31 @@
         map.setCenter(center, zoom);
 
         editor = new OpenLayers.Editor(map, {
-            activeControls: ['Navigation', 'SnappingSettings', 'Separator', 'DeleteFeature', 'SelectFeature', 'Separator', 'DrawHole'],
-            featureTypes: ['polygon', 'path', 'point']
+            activeControls: [
+                'Navigation',
+                'SnappingSettings',
+                'Separator',
+                'SplitFeature',
+                'MergeFeature',
+                'CleanFeature',
+                'DeleteFeature',
+                'SelectFeature',
+                'Separator',
+                'DragFeature',
+                'DrawHole',
+                'ModifyFeature',
+                'Separator'
+            ],
+            featureTypes: [
+                'polygon',
+                'path',
+                'point'
+            ],
+            showStatus: function (type, message) {
+                alert(message);
+            }
         });
+        editor.oleUrl = window.location.origin + '/';
         editor.startEditMode();
     };
     init();

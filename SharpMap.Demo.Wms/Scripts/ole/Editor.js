@@ -113,6 +113,13 @@ OpenLayers.Editor = OpenLayers.Class({
     controls: {},
 
     /**
+     * Property: undoRedoActive
+     * {Boolean} Indicates if the UndoRedo control is active. Only read on
+     *     initialization right now. Default is true.
+     */
+    undoRedoActive: true,
+
+    /**
      * @param {OpenLayers.Map} map A map that shall be equipped with an editor; can be left undefined in which case a map is created.
      * @param {Object} options
      */
@@ -136,7 +143,6 @@ OpenLayers.Editor = OpenLayers.Class({
         }
 
         this.id = OpenLayers.Util.createUniqueID('OpenLayers.Editor_');
-        this.undoRedo = new OpenLayers.Editor.Control.UndoRedo();
 
         this.editLayer = new OpenLayers.Layer.Vector('Editor', {
             displayInLayerSwitcher: false,
@@ -163,10 +169,7 @@ OpenLayers.Editor = OpenLayers.Class({
                     pointRadius: 5
                 })
             })
-        })
-        this.editLayer.events.register('featureadded', this.undoRedo, this.undoRedo.register);
-        this.editLayer.events.register('afterfeaturemodified', this.undoRedo, this.undoRedo.register);
-
+        });
 
         var selectionContext = {
             editor: this,
@@ -226,11 +229,13 @@ OpenLayers.Editor = OpenLayers.Class({
             this.map.addLayer(this.sourceLayers[i]);
         }
 
-
         this.map.editor = this;
         this.map.addLayer(this.editLayer);
         this.map.addControl(new OpenLayers.Editor.Control.LayerSettings(this));
-        this.map.addControl(this.undoRedo);
+
+        if (this.undoRedoActive) {
+            this.map.addControl(new OpenLayers.Editor.Control.UndoRedo(this.editLayer));
+        }
         
         this.addEditorControls();
 

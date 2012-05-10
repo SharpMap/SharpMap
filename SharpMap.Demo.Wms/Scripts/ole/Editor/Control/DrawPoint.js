@@ -28,6 +28,7 @@ OpenLayers.Editor.Control.DrawPoint = OpenLayers.Class(OpenLayers.Control.DrawFe
         OpenLayers.Control.DrawFeature.prototype.initialize.apply(this,
             [layer, OpenLayers.Handler.Point, options]);
         
+        this.title = OpenLayers.i18n('oleDrawPoint');
     },
 
     /**
