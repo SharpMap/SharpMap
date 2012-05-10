@@ -10,8 +10,6 @@
     };
 
     options = {
-        wms: 'WMS',
-        wmslayers: ['poly_landmarks', 'tiger_roads', 'poi'].join(),
         controls: [],
         maxExtent: new OpenLayers.Bounds(-2.003750834E7, -2.003750834E7, 2.003750834E7, 2.003750834E7),
         resolutions: [
@@ -46,17 +44,14 @@
         projection: new OpenLayers.Projection('EPSG:900913'),
         displayProjection: new OpenLayers.Projection('EPSG:4326'),
         units: 'meters',
-        format: 'image/png',
-        wmsparams: {
-            'MAP_TYPE': 'OL'
-        }
+        format: 'image/png'
     };
 
     init = function () {
         var lon = -73.9529;
         var lat = 40.7723;
         var zoom = 10;
-        var map, sharpmap, center, editor;
+        var map, center, editor;
 
         map = new OpenLayers.Map('map', options);
         map.addControl(new OpenLayers.Control.PanZoom({
@@ -65,31 +60,14 @@
         map.addControl(new OpenLayers.Control.MousePosition());
         map.addControl(new OpenLayers.Control.LoadingPanel());
 
-        sharpmap = new OpenLayers.Layer.WMS(
-            'SharpMap WMS',
-            '/wms.ashx', {
-                layers: options.wmslayers,
-                service: options.wms,
-                version: '1.3.0',
-                format: options.format,
-                transparent: true
-            }, {
-                isBaseLayer: false,
-                transparent: true,
-                visibility: true,
-                buffer: 0,
-                singleTile: false,
-                ratio: 1.5,
-                yx: []
-            });
-        sharpmap.mergeNewParams(options.wmsparams);
-        map.addLayers([new OpenLayers.Layer.OSM(), sharpmap]);
+        map.addLayers([new OpenLayers.Layer.OSM()]);
 
         center = new OpenLayers.LonLat(lon, lat);
         center.transform(options.displayProjection, options.projection);
         map.setCenter(center, zoom);
 
         editor = new OpenLayers.Editor(map, {
+            oleUrl: window.location.origin + '/',
             activeControls: [
                 'Navigation',
                 'SnappingSettings',
@@ -114,7 +92,6 @@
                 alert(message);
             }
         });
-        editor.oleUrl = window.location.origin + '/';
         editor.startEditMode();
     };
     init();
