@@ -68,8 +68,6 @@ namespace SharpMap.Converters.WellKnownText
     /// </remarks>
     public class GeometryToWKT
     {
-        #region Methods
-
         /// <summary>
         /// Converts a Geometry to its Well-known Text representation.
         /// </summary>
@@ -398,7 +396,5 @@ namespace SharpMap.Converters.WellKnownText
                 writer.Write(")");
             }
         }
-
-        #endregion
     }
 }

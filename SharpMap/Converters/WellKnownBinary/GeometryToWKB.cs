@@ -322,14 +322,18 @@ namespace SharpMap.Converters.WellKnownBinary
         private static void WriteMultiLineString(IMultiLineString mls, BinaryWriter bWriter, WkbByteOrder byteorder)
         {
             //Write the number of linestrings.
-            WriteUInt32((uint) mls.NumGeometries, bWriter, byteorder);
+            int num = mls.NumGeometries;
+            WriteUInt32((uint) num, bWriter, byteorder);
 
-            //Loop on the number of linestrings.
-            foreach (ILineString ls in mls)
+            //Loop on the number of linestrings. 
+            //NOTE: by contract, the first item returned 
+            //      from GetEnumerator (i.e. using foreach) is the IMultiLineString itself!
+            for (int i = 0; i < num; i++)
             {
+                ILineString ls = (ILineString) mls.GetGeometryN(i);
                 //Write LineString Header
-                bWriter.Write((byte) byteorder);
-                WriteUInt32((uint) WKBGeometryType.wkbLineString, bWriter, byteorder);
+                bWriter.Write((byte)byteorder);
+                WriteUInt32((uint)WKBGeometryType.wkbLineString, bWriter, byteorder);
                 //Write each linestring.
                 WriteLineString(ls, bWriter, byteorder);
             }
@@ -344,11 +348,15 @@ namespace SharpMap.Converters.WellKnownBinary
         private static void WriteMultiPolygon(IMultiPolygon mp, BinaryWriter bWriter, WkbByteOrder byteorder)
         {
             //Write the number of polygons.
-            WriteUInt32((uint) mp.NumGeometries, bWriter, byteorder);
+            int num = mp.NumGeometries;
+            WriteUInt32((uint) num, bWriter, byteorder);
 
             //Loop on the number of polygons.
-            foreach (IPolygon poly in mp)
+            //NOTE: by contract, the first item returned 
+            //      from GetEnumerator (i.e. using foreach) is the IMultiPolygon itself!
+            for (int i = 0; i < num; i++)
             {
+                IPolygon poly = (IPolygon) mp.GetGeometryN(i);
                 //Write polygon header
                 bWriter.Write((byte) byteorder);
                 WriteUInt32((uint) WKBGeometryType.wkbPolygon, bWriter, byteorder);
@@ -367,20 +375,23 @@ namespace SharpMap.Converters.WellKnownBinary
         private static void WriteGeometryCollection(IGeometryCollection gc, BinaryWriter bWriter, WkbByteOrder byteorder)
         {
             //Get the number of geometries in this geometrycollection.
-            var numGeometries = gc.NumGeometries;
+            var num = gc.NumGeometries;
 
             //Write the number of geometries.
-            WriteUInt32((uint) numGeometries, bWriter, byteorder);
+            WriteUInt32((uint) num, bWriter, byteorder);
 
             //Loop on the number of geometries.
-            for (var i = 0; i < numGeometries; i++)
+            //NOTE: by contract, the first item returned 
+            //      from GetEnumerator (i.e. using foreach) is the IGeometryCollection itself!
+            for (var i = 0; i < num; i++)
             {
+                IGeometry geom = gc.GetGeometryN(i);
                 //Write the byte-order format of the following geometry.
                 bWriter.Write((byte) byteorder);
-                //Write the type of each geometry.
-                WriteType(gc[i], bWriter, byteorder);
+                //Write the type of each geometry.                
+                WriteType(geom, bWriter, byteorder);
                 //Write each geometry.
-                WriteGeometry(gc[i], bWriter, byteorder);
+                WriteGeometry(geom, bWriter, byteorder);
             }
         }
 
