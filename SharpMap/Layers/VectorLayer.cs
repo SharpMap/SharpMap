@@ -475,10 +475,13 @@ namespace SharpMap.Layers
                         VectorRenderer.DrawMultiPoint(g, (IMultiPoint)feature, style.PointColor, style.PointSize, style.SymbolOffset, map);
                     }
                     break;
-                case OgcGeometryType.GeometryCollection:
-                //case "SharpMap.Geometries.GeometryCollection":
-                    foreach (var geom in (IGeometryCollection) feature)
+                case OgcGeometryType.GeometryCollection:                    
+                    IGeometryCollection coll = (IGeometryCollection)feature;
+                    for (var i = 0; i < coll.NumGeometries; i++)
+                    {
+                        IGeometry geom = coll[i];
                         RenderGeometry(g, map, geom, style);
+                    }
                     break;
                 default:
                     break;
