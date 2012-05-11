@@ -32,6 +32,7 @@ namespace SharpMap.Data.Providers
         {
             ConnectionID = string.Empty;
             SRID = srid;
+            Factory = GeometryServiceProvider.Instance.CreateGeometryFactory(SRID);
         }
 
         protected override void ReleaseManagedResources()

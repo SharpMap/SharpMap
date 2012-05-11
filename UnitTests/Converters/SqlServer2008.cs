@@ -1,6 +1,6 @@
 using System;
-using System.IO;
 using NUnit.Framework;
+using NUnit.Framework.SyntaxHelpers;
 using Microsoft.SqlServer.Types;
 using SharpMap.Converters.SqlServer2008SpatialObjects;
 using SharpMap.Converters.WellKnownText;
@@ -12,7 +12,6 @@ namespace UnitTests.Converters
     [TestFixture]
     public class SqlServer2008
     {
-
         private const string Point = "POINT (20.564 46.3493254)";
         private const string Multipoint = "MULTIPOINT (20.564 46.3493254, 45 32, 23 54)";
         private const string Linestring = "LINESTRING (20 20, 20 30, 30 30, 30 20, 40 20)";
@@ -25,6 +24,9 @@ namespace UnitTests.Converters
 
         private Geometry ToSqlServerAndBack(Geometry gIn)
         {
+            Assert.That(gIn, Is.Not.Null);
+            Assert.That(gIn.SRID, Is.EqualTo(-1));
+            gIn.SRID = 0;
             SqlGeometry sqlGeometry = SqlGeometryConverter.ToSqlGeometry(gIn);
             Geometry gOut = SqlGeometryConverter.ToSharpMapGeometry(sqlGeometry);
             return gOut;
@@ -54,10 +56,15 @@ namespace UnitTests.Converters
         {
             //Prepare data
             Geometry gPn = GeometryFromWKT.Parse(Point);
+            gPn.SRID = 0;
             Geometry gMp = GeometryFromWKT.Parse(Multipoint);
+            gMp.SRID = 0;
             Geometry gLi = GeometryFromWKT.Parse(Linestring);
+            gLi.SRID = 0;
             Geometry gML = GeometryFromWKT.Parse(MultiLinestring);
+            gML.SRID = 0;
             Geometry gPl = GeometryFromWKT.Parse(Polygon);
+            gPl.SRID = 0;
 
             Geometry gPnBuffer30 = SpatialOperationsEx.Buffer(gPn, 30);
             Console.WriteLine(gPnBuffer30.ToString());

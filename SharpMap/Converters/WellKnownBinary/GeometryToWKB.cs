@@ -35,10 +35,11 @@
  *
  */
 
-
 using System;
 using System.IO;
 using GeoAPI.Geometries;
+using GeoAPI.IO;
+using NetTopologySuite.IO;
 
 namespace SharpMap.Converters.WellKnownBinary
 {
@@ -67,7 +68,7 @@ namespace SharpMap.Converters.WellKnownBinary
         /// <param name="g">The geometry to write</param>
         /// <returns>WKB representation of the geometry</returns>
         public static byte[] Write(IGeometry g)
-        {
+        {            
             return Write(g, WkbByteOrder.Ndr);
         }
 
@@ -79,6 +80,23 @@ namespace SharpMap.Converters.WellKnownBinary
         /// <returns>WKB representation of the geometry</returns>
         public static byte[] Write(IGeometry g, WkbByteOrder wkbByteOrder)
         {
+            ByteOrder order;
+            switch (wkbByteOrder)
+            {
+                case WkbByteOrder.Xdr:
+                    order = ByteOrder.BigEndian;
+                    break;
+                case WkbByteOrder.Ndr:
+                    order = ByteOrder.LittleEndian;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException("wkbByteOrder");
+            }
+
+            WKBWriter wkb = new WKBWriter(order);
+            return wkb.Write(g);
+
+            /*
             MemoryStream ms = new MemoryStream();
             BinaryWriter bw = new BinaryWriter(ms);
 
@@ -92,6 +110,7 @@ namespace SharpMap.Converters.WellKnownBinary
             WriteGeometry(g, bw, wkbByteOrder);
 
             return ms.ToArray();
+            */
         }
 
         /// <summary>

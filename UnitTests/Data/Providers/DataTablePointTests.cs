@@ -20,15 +20,20 @@ using System.Data;
 using NUnit.Framework;
 using SharpMap.Data;
 using SharpMap.Data.Providers;
-using Geometry = GeoAPI.Geometries.IGeometry;
-using BoundingBox = GeoAPI.Geometries.Envelope;
-using Point = GeoAPI.Geometries.Coordinate;
+using GeoAPI.Geometries;
+using NetTopologySuite.Geometries;
 
 namespace UnitTests.Data.Providers
 {
     [TestFixture]
     public class DataTablePointTests
     {
+        [TestFixtureSetUp]
+        public void SetupFixture()
+        {
+            GeoAPI.GeometryServiceProvider.Instance = new NetTopologySuite.NtsGeometryServices();
+        }
+
         private static DataTable CreateDataTableSource()
         {
             var source = new DataTable("PointSource", "http://www.codeplex.com/SharpMap/v1/UnitTests");
@@ -72,7 +77,7 @@ namespace UnitTests.Data.Providers
             DataTable source = CreateDataTableSource();
             DataTablePoint provider = new DataTablePoint(source, "oid", "x", "y");
 
-            var query = new BoundingBox(400, 600, 400, 600);
+            var query = new Envelope(400, 600, 400, 600);
 
             FeatureDataTable expected = new FeatureDataTable();
             expected.TableName = "PointSource";
@@ -84,7 +89,7 @@ namespace UnitTests.Data.Providers
 
             foreach (DataRowView rowView in source.DefaultView)
             {
-                if (query.Contains(new Point((double) rowView["x"], (double) rowView["y"])))
+                if (query.Contains(new Coordinate((double) rowView["x"], (double) rowView["y"])))
                 {
                     expected.ImportRow(rowView.Row);
                 }
@@ -129,8 +134,8 @@ namespace UnitTests.Data.Providers
                 if (maxY < (double) rowView["y"]) maxY = (double) rowView["y"];
             }
 
-            BoundingBox expectedBounds = new BoundingBox(minX, maxX, minY, maxY);
-            BoundingBox actualBounds = provider.GetExtents();
+            Envelope expectedBounds = new Envelope(minX, maxX, minY, maxY);
+            Envelope actualBounds = provider.GetExtents();
 
             Assert.AreEqual(expectedBounds, actualBounds);
         }
@@ -144,7 +149,7 @@ namespace UnitTests.Data.Providers
             DataRow row = source.Select("oid = 43")[0];
             Point expected = new Point((double) row["x"], (double) row["y"]);
 
-            Geometry actual = provider.GetGeometryByID(43);
+            IGeometry actual = provider.GetGeometryByID(43);
 
             Assert.IsNotNull(actual);
             Assert.IsInstanceOfType(typeof (Point), actual);

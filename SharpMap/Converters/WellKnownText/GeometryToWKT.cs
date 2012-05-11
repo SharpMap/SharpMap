@@ -39,6 +39,7 @@ using System;
 using System.Globalization;
 using System.IO;
 using GeoAPI.Geometries;
+using NetTopologySuite.IO;
 
 namespace SharpMap.Converters.WellKnownText
 {
@@ -92,7 +93,9 @@ namespace SharpMap.Converters.WellKnownText
         /// </remarks>
         public static void Write(IGeometry geometry, StringWriter writer)
         {
-            AppendGeometryTaggedText(geometry, writer);
+            WKTWriter wkt = new WKTWriter();
+            wkt.Write(geometry, writer);
+            //AppendGeometryTaggedText(geometry, writer);
         }
 
         /// <summary>

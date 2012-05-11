@@ -37,10 +37,10 @@
 
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.IO;
 using GeoAPI.Geometries;
 using NetTopologySuite.Geometries;
+using NetTopologySuite.IO;
 
 namespace SharpMap.Converters.WellKnownText
 {
@@ -91,9 +91,12 @@ namespace SharpMap.Converters.WellKnownText
         /// An exception will be thrown if there is a parsing problem.</returns>
         public static IGeometry Parse(TextReader reader)
         {
+            WKTReader wkt = new WKTReader();
+            return wkt.Read(reader);
+            /*
             var tokenizer = new WktStreamTokenizer(reader);
-
             return ReadGeometryTaggedText(tokenizer);
+            */
         }
 
         /// <summary>

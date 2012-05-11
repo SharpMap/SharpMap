@@ -40,6 +40,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using GeoAPI.Geometries;
+using NetTopologySuite.IO;
 
 namespace SharpMap.Converters.WellKnownBinary
 {
@@ -66,7 +67,7 @@ namespace SharpMap.Converters.WellKnownBinary
         /// <param name="bytes">byte[] containing the Well-known Binary representation.</param>
         /// <returns>A <see cref="GeoAPI.Geometries.IGeometry"/> bases on the supplied Well-known Binary representation.</returns>
         public static IGeometry Parse(byte[] bytes, IGeometryFactory factory)
-        {
+        {            
             // Create a memory stream using the suppiled byte array.
             using (var ms = new MemoryStream(bytes))
             {
@@ -75,8 +76,8 @@ namespace SharpMap.Converters.WellKnownBinary
                 {
                     // Call the main create function.
                     return Parse(reader, factory);
-                }
-            }
+                }                
+            }            
         }
 
         /// <summary>
@@ -86,6 +87,10 @@ namespace SharpMap.Converters.WellKnownBinary
         /// <returns>A <see cref="GeoAPI.Geometries.IGeometry"/> based on the Well-known binary representation.</returns>
         public static IGeometry Parse(BinaryReader reader, IGeometryFactory factory)
         {
+            WKBReader wkb = new WKBReader();
+            return wkb.Read(reader.BaseStream);
+
+            /*
             // Get the first Byte in the array. This specifies if the WKB is in
             // XDR (big-endian) format of NDR (little-endian) format.
             var byteOrder = reader.ReadByte();
@@ -122,6 +127,7 @@ namespace SharpMap.Converters.WellKnownBinary
                     else
                         throw new NotSupportedException("Geometry type '" + type + "' not supported");
             }
+            */
         }
 
         private static IPoint CreateWKBPoint(BinaryReader reader, WkbByteOrder byteOrder, IGeometryFactory factory)
