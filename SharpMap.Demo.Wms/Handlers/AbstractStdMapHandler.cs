@@ -3,11 +3,25 @@ namespace SharpMap.Demo.Wms.Handlers
     using System;
     using System.Web;
 
+    using GeoAPI;
+
+    using NetTopologySuite;
+
     using SharpMap.Demo.Wms.Helpers;
     using SharpMap.Web.Wms;
 
     public abstract class AbstractStdMapHandler : IHttpHandler
     {
+        private static readonly object SyncLock = new object();
+
+        static AbstractStdMapHandler()
+        {
+            lock (SyncLock)
+            {
+                GeometryServiceProvider.Instance = new NtsGeometryServices();            
+            }
+        }
+
         public abstract void ProcessRequest(HttpContext context);
 
         protected string GetFixedUrl(HttpRequest request)
