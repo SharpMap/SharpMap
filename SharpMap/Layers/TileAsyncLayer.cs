@@ -45,7 +45,7 @@ namespace SharpMap.Layers
             var bbox = map.Envelope;
             var extent = new Extent(bbox.MinX, bbox.MinY, bbox.MaxX, bbox.MaxY);
             int level = BruTile.Utilities.GetNearestLevel(_source.Schema.Resolutions, map.PixelSize);
-            IList<TileInfo> tiles = _source.Schema.GetTilesInView(extent, level);
+            var tiles = _source.Schema.GetTilesInView(extent, level);
 
             //Abort previous running Threads
             lock (threadList)

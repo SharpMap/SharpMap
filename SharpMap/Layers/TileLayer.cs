@@ -143,7 +143,7 @@ namespace SharpMap.Layers
 
                 Extent extent = new Extent(map.Envelope.MinX, map.Envelope.MinY, map.Envelope.MaxX, map.Envelope.MaxY);
                 int level = BruTile.Utilities.GetNearestLevel(_source.Schema.Resolutions, map.PixelSize);
-                IList<TileInfo> tiles = _source.Schema.GetTilesInView(extent, level);
+                var tiles = _source.Schema.GetTilesInView(extent, level);
 
                 IList<WaitHandle> waitHandles = new List<WaitHandle>();
 
