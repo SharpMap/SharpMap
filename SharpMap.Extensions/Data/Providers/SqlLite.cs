@@ -24,11 +24,14 @@ using SharpMap.Converters.WellKnownText;
 using BoundingBox = GeoAPI.Geometries.Envelope;
 using Geometry = GeoAPI.Geometries.IGeometry;
 using GeoAPI.Geometries;
+using Common.Logging;
 
 namespace SharpMap.Data.Providers
 {
     public class SqlLite : PreparedGeometryProvider
     {
+        static ILog logger = LogManager.GetLogger(typeof(SqlLite));
+
         //string conStr = "Data Source=C:\\Workspace\\test.sqlite;Version=3;";
         private string _defintionQuery;
         private string _geometryColumn;
@@ -441,7 +444,9 @@ namespace SharpMap.Data.Providers
                         command.Parameters["@" + col.ColumnName].Value = feature[col];
                     if (feature.Geometry != null)
                     {
-                        Console.WriteLine(feature.Geometry.AsBinary().Length.ToString(NumberFormatInfo.InvariantInfo));
+                        if (logger.IsDebugEnabled)
+                            logger.Debug(feature.Geometry.AsBinary().Length.ToString(NumberFormatInfo.InvariantInfo));
+
                         command.Parameters.AddWithValue("@geom", feature.Geometry.AsText()); //.AsBinary());
                         //command.Parameters["@geom"].Value = "X'" + ToHexString(feature.Geometry.AsBinary()) + "'"; //Add the geometry as Well-Known Binary
                         var box = feature.Geometry.EnvelopeInternal;

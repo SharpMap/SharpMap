@@ -9,6 +9,7 @@ using System.Text;
 using System.Xml;
 using System.Xml.Schema;
 using GeoAPI.Geometries;
+using Common.Logging;
 
 namespace SharpMap.Web.Wms
 {
@@ -18,6 +19,8 @@ namespace SharpMap.Web.Wms
     [Serializable]
     public class Client : IClient
     {
+        static ILog logger = LogManager.GetLogger(typeof(Client));
+
         private XmlNamespaceManager _nsmgr;
 
 
@@ -982,7 +985,8 @@ namespace SharpMap.Web.Wms
                         settings.ValidationType = ValidationType.Schema;
                         break;
                     default:
-                        Console.WriteLine("Invalid selection.");
+                        if (logger.IsInfoEnabled)
+                            logger.Info("Invalid selection: " + _version);
                         break;
                 }
 

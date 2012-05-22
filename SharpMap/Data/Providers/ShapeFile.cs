@@ -32,6 +32,7 @@ using DotSpatial.Projections;
 #endif
 using GeoAPI.Geometries;
 using SharpMap.Utilities.SpatialIndexing;
+using Common.Logging;
 
 namespace SharpMap.Data.Providers
 {
@@ -152,6 +153,9 @@ namespace SharpMap.Data.Providers
 	/// </example>
 	public class ShapeFile : FilterProvider, IProvider
 	{
+
+        ILog logger = LogManager.GetLogger(typeof(ShapeFile));
+
         //#region Delegates
 
         ///// <summary>
@@ -989,7 +993,8 @@ namespace SharpMap.Data.Providers
                     sw.Start();
                     var tree = QuadTree.FromFile(filename + ".sidx");
                     sw.Stop();
-                    Debug.WriteLine(string.Format("Linear creation of QuadTree took {0}ms", sw.ElapsedMilliseconds));
+                    if (logger.IsDebugEnabled)
+                        logger.DebugFormat("Linear creation of QuadTree took {0}ms", sw.ElapsedMilliseconds);
 				    return tree;
 				}
 				catch (QuadTree.ObsoleteFileFormatException)
@@ -999,6 +1004,7 @@ namespace SharpMap.Data.Providers
 				}
 				catch (Exception ex)
 				{
+                    logger.Error(ex);
 					throw ex;
 				}
 			}
@@ -1047,7 +1053,10 @@ namespace SharpMap.Data.Providers
             }
 
             sw.Stop();
-            Debug.WriteLine(string.Format( "Linear creation of QuadTree took {0}ms", sw.ElapsedMilliseconds));
+            if (logger.IsDebugEnabled)
+            {
+                logger.DebugFormat("Linear creation of QuadTree took {0}ms", sw.ElapsedMilliseconds);
+            }
 
             if (_fileBasedIndexWanted && !string.IsNullOrEmpty(filename))
                 root.SaveIndex(filename + ".sidx");
@@ -1084,7 +1093,8 @@ namespace SharpMap.Data.Providers
             var root =  new QuadTree(objList, 0, heur);
 
             sw.Stop();
-            Debug.WriteLine(string.Format("Linear creation of QuadTree took {0}ms", sw.ElapsedMilliseconds));
+            if (logger.IsDebugEnabled)
+                logger.DebugFormat("Linear creation of QuadTree took {0}ms", sw.ElapsedMilliseconds);
 
             if (_fileBasedIndexWanted && !String.IsNullOrEmpty(filename))
                 root.SaveIndex(filename + ".sidx");

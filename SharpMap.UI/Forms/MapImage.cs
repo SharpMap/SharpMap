@@ -25,6 +25,7 @@ using GeoAPI.Geometries;
 using SharpMap.Data;
 using SharpMap.Layers;
 using Point = GeoAPI.Geometries.Coordinate;
+using Common.Logging;
 
 namespace SharpMap.Forms
 {
@@ -37,6 +38,7 @@ namespace SharpMap.Forms
     [DesignTimeVisible(true)]
     public class MapImage : PictureBox
     {
+        static ILog logger = LogManager.GetLogger(typeof(MapImage));
         #region Tools enum
 
         /// <summary>
@@ -306,7 +308,8 @@ namespace SharpMap.Forms
         protected override void OnKeyDown(KeyEventArgs e)
         {
             _isCtrlPressed = e.Control;
-            Debug.WriteLine(String.Format("Ctrl: {0}", _isCtrlPressed));
+            if (logger.IsDebugEnabled)
+                logger.DebugFormat("Ctrl: {0}", _isCtrlPressed);
 
             base.OnKeyDown(e);
         }
@@ -314,7 +317,8 @@ namespace SharpMap.Forms
         protected override void OnKeyUp(KeyEventArgs e)
         {
             _isCtrlPressed = e.Control;
-            Debug.WriteLine(String.Format("Ctrl: {0}", _isCtrlPressed));
+            if (logger.IsDebugEnabled)
+                logger.DebugFormat("Ctrl: {0}", _isCtrlPressed);
 
             base.OnKeyUp(e);
         }
@@ -324,7 +328,8 @@ namespace SharpMap.Forms
             if (!Focused)
             {
                 bool isFocused = Focus();
-                Debug.WriteLine(isFocused);
+                if (logger.IsDebugEnabled)
+                    logger.Debug(isFocused);
             }
 
             base.OnMouseHover(e);

@@ -29,6 +29,7 @@ using SharpMap.Rendering.Decoration;
 using SharpMap.Utilities;
 using Point = GeoAPI.Geometries.Coordinate;
 using System.Drawing.Imaging;
+using Common.Logging;
 
 namespace SharpMap
 {
@@ -69,6 +70,8 @@ namespace SharpMap
     /// </example>
     public class Map : IDisposable
     {
+        ILog logger = LogManager.GetLogger(typeof(Map));
+
         /// <summary>
         /// Used for converting numbers to/from strings
         /// </summary>
@@ -110,6 +113,9 @@ namespace SharpMap
             _Center = new Point(0, 0);
             _Zoom = 1;
             _PixelAspectRatio = 1.0;
+
+            if (logger.IsDebugEnabled)
+                logger.DebugFormat("Map initialized with size {0},{1}", size.Width, size.Height);
         }
 
         /// <summary>

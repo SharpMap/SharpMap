@@ -13,6 +13,7 @@ using SharpMap.Data;
 using SharpMap.Data.Providers;
 using SharpMap.Rendering.Symbolizer;
 using IGeometry = GeoAPI.Geometries.IGeometry;
+using Common.Logging;
 
 namespace SharpMap.Layers.Symbolizer
 {
@@ -29,6 +30,7 @@ namespace SharpMap.Layers.Symbolizer
 
         #endregion
 
+        static ILog logger = LogManager.GetLogger(typeof(BaseVectorLayer<TGeometry>));
         protected BaseVectorLayer(string layerName, IProvider dataSource, ISymbolizer<TGeometry> symbolizer)
         {
             LayerName = layerName;
@@ -158,7 +160,10 @@ namespace SharpMap.Layers.Symbolizer
                 if (!_dataSource.IsOpen) _dataSource.Open();
 
                 _geometries = DataSource.GetGeometriesInView(envelope);
-                Console.Out.WriteLine(string.Format("Layer {0}, NumGeometries {1}", LayerName, _geometries.Count));
+
+                if (logger.IsDebugEnabled)
+                    logger.DebugFormat("Layer {0}, NumGeometries {1}", LayerName, _geometries.Count);
+
                 if (!wasOpen)
                     _dataSource.Close();
             }

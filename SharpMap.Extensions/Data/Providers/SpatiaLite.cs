@@ -28,6 +28,7 @@ using SharpMap.Converters.WellKnownBinary;
 using SharpMap.Converters.WellKnownText;
 using BoundingBox = GeoAPI.Geometries.Envelope;
 using Geometry = GeoAPI.Geometries.IGeometry;
+using Common.Logging;
 
 namespace SharpMap.Data.Providers
 {
@@ -66,6 +67,8 @@ namespace SharpMap.Data.Providers
     /// </summary>
     public class SpatiaLite : BaseProvider
     {
+        static ILog logger = LogManager.GetLogger(typeof(SpatiaLite));
+
         private string _defintionQuery;
         private string _geometryColumn;
         private string _objectIdColumn;
@@ -778,9 +781,9 @@ namespace SharpMap.Data.Providers
                     }
                      */
                 }
-                catch (Exception)
+                catch (Exception ee)
                 {
-                    Console.WriteLine();
+                    logger.Error(ee.Message, ee);
                 }
                 return res;
             }

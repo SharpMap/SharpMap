@@ -18,6 +18,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using Common.Logging;
 
 namespace SharpMap.Utilities.Indexing
 {
@@ -73,6 +74,8 @@ namespace SharpMap.Utilities.Indexing
     [Serializable]
     public class BinaryTree<T, U> where T : IComparable<T>
     {
+        static ILog logger = LogManager.GetLogger(typeof(BinaryTree<T,U>));
+
         private readonly Node<T, U> root;
 
         /// <summary>
@@ -163,7 +166,8 @@ namespace SharpMap.Utilities.Indexing
             if (root.LeftNode != null)
                 TraceInOrder(root.LeftNode);
 
-            Trace.WriteLine(root.Item.ToString());
+            if (logger.IsInfoEnabled)
+                logger.Info(root.Item.ToString());
 
             if (root.RightNode != null)
                 TraceInOrder(root.RightNode);

@@ -10,11 +10,14 @@ using System.IO;
 using System.Net;
 using GeoAPI.Geometries;
 using System.ComponentModel;
+using Common.Logging;
 
 namespace SharpMap.Layers
 {
     public class TileAsyncLayer : TileLayer, ITileAsyncLayer
     {
+        static ILog logger = LogManager.GetLogger(typeof(TileAsyncLayer));
+
         private List<BackgroundWorker> threadList = new List<BackgroundWorker>();
         private Random r = new Random(DateTime.Now.Second);
         public TileAsyncLayer(ITileSource tileSource, string layerName)
@@ -130,7 +133,7 @@ namespace SharpMap.Layers
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.ToString());
+                logger.Warn(ex.Message, ex);
                 //this can be a GDI+ Hell Exception...
             }
 
@@ -209,12 +212,12 @@ namespace SharpMap.Layers
             }
             catch (ThreadAbortException tex)
             {
-                Console.WriteLine("TileAsyncLayer - Thread aborting: " + System.Threading.Thread.CurrentThread.Name);
+                if (logger.IsInfoEnabled)
+                    logger.InfoFormat("TileAsyncLayer - Thread aborting: {0}", System.Threading.Thread.CurrentThread.Name);
             }
             catch (Exception ex)
             {
-                Console.WriteLine("TileAsyncLayer - GetTileOnThread Exception: " + ex);
-                //todo: log and use other ways to report to user.
+                logger.Warn("TileAsyncLayer - GetTileOnThread Exception", ex);
             }
         }
 

@@ -33,6 +33,7 @@ using SharpMap.Rendering.Exceptions;
 using SharpMap.Utilities;
 using SharpMap.Web.Wms;
 using SharpMap.Web.Wms.Tiling;
+using Common.Logging;
 
 namespace SharpMap.Layers
 {
@@ -58,6 +59,8 @@ namespace SharpMap.Layers
     [Obsolete("use TileLayer instead") ]
     public class TiledWmsLayer : Layer, ILayer
     {
+        ILog logger = LogManager.GetLogger(typeof(TiledWmsLayer));
+
         #region Fields
 
         private Boolean _ContinueOnError;
@@ -222,7 +225,8 @@ namespace SharpMap.Layers
 
                     List<Envelope> tileExtents = TileExtents.GetTileExtents(tileSet, map.Envelope, map.PixelSize);
 
-                    Console.WriteLine("TileCount: " + tileExtents.Count);
+                    if (logger.IsDebugEnabled)
+                        logger.DebugFormat("TileCount: {0}", tileExtents.Count);
 
                     //TODO: Retrieve several tiles at the same time asynchronously to improve performance. PDD.
                     foreach (Envelope tileExtent in tileExtents)

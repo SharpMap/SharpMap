@@ -32,6 +32,7 @@ using SharpMap.Rendering;
 using SharpMap.Rendering.Thematics;
 using SharpMap.Styles;
 using System.Collections.Generic;
+using Common.Logging;
 
 namespace SharpMap.Layers
 {
@@ -59,6 +60,8 @@ namespace SharpMap.Layers
     /// </example>
     public class VectorLayer : Layer, ICanQueryLayer, IDisposable
     {
+        static ILog logger = LogManager.GetLogger(typeof(VectorLayer));
+
         private bool _clippingEnabled;
         private bool _isQueryEnabled = true;
         private IProvider _dataSource;
@@ -355,9 +358,12 @@ namespace SharpMap.Layers
 
                     // Read data
                     geoms = DataSource.GetGeometriesInView(envelope);
-#if DEBUG
-                    Console.Out.WriteLine(string.Format("Layer {0}, NumGeometries {1}", LayerName, geoms.Count));
-#endif
+                    
+                    if (logger.IsDebugEnabled)
+                    {
+                        logger.DebugFormat("Layer {0}, NumGeometries {1}", LayerName, geoms.Count);
+                    }
+
                     // If was not open, close it
                     if (!alreadyOpen) { DataSource.Close(); }
                 }

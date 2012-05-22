@@ -34,6 +34,7 @@ using GeoPoint = GeoAPI.Geometries.Coordinate;
 using Geometry = GeoAPI.Geometries.IGeometry;
 using BoundingBox = GeoAPI.Geometries.Envelope;
 using System.Threading;
+using Common.Logging;
 
 namespace SharpMap.Forms
 {
@@ -50,6 +51,9 @@ namespace SharpMap.Forms
     public class MapBox : Control
 #endif
     {
+
+        static ILog logger = LogManager.GetLogger(typeof(MapBox));
+
         #region PreviewModes enumerator
         // ReSharper disable UnusedMember.Local
         /// <summary>
@@ -699,7 +703,7 @@ namespace SharpMap.Forms
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine(ex.ToString());
+                    logger.Warn(ex.Message, ex);
                     //this can be a GDI+ Hell Exception...
                 }
             }
@@ -777,9 +781,10 @@ namespace SharpMap.Forms
             if (res == null || res.generation < _imageGeneration || isDisposed)
                 return;
 
-#if DEBUG
-            Debug.WriteLine(string.Format("{2}: {0} - {1}", res.generation, res.bbox, DateTime.Now));
-#endif
+
+            if (logger.IsDebugEnabled)
+                logger.DebugFormat("{2}: {0} - {1}", res.generation, res.bbox, DateTime.Now);
+
 
             if ((_setActiveToolNoneDuringRedraw || ShowProgressUpdate) && InvokeRequired)
             {
@@ -793,7 +798,7 @@ namespace SharpMap.Forms
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine(ex.ToString());
+                    logger.Warn(ex.Message, ex);
                 }
             }
             else
@@ -820,7 +825,7 @@ namespace SharpMap.Forms
                                     }
                                     catch (Exception ex)
                                     {
-                                        Console.WriteLine(ex.ToString());
+                                        logger.Warn(ex.Message, ex);
                                     }
                                 }
                             }
@@ -837,7 +842,7 @@ namespace SharpMap.Forms
                                 }
                                 catch (Exception ex)
                                 {
-                                    Console.WriteLine(ex.ToString());
+                                    logger.Warn(ex.Message, ex);
                                 }
 
                             }
@@ -851,7 +856,7 @@ namespace SharpMap.Forms
                                 }
                                 catch (Exception ex)
                                 {
-                                    Console.WriteLine(ex.ToString());
+                                    logger.Warn(ex.Message, ex);
                                 }
                             }
 
@@ -894,7 +899,7 @@ namespace SharpMap.Forms
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine(ex.ToString());
+                    logger.Warn(ex.Message, ex);
                 }
 
 #if DEBUG
@@ -912,7 +917,7 @@ namespace SharpMap.Forms
                 catch (Exception ee)
                 {
                     //Trap errors that occured when calling the eventhandlers
-                    Console.WriteLine(ee.ToString());
+                    logger.Warn("Exception while calling eventhandler", ee);
                 }
             }
         }
@@ -1024,7 +1029,7 @@ namespace SharpMap.Forms
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.ToString());
+                logger.Warn(ex.Message, ex);
             }
         }
 
@@ -1044,7 +1049,7 @@ namespace SharpMap.Forms
             if (!Focused)
             {
                 bool isFocused = Focus();
-                Debug.WriteLine("Focused: " + isFocused);
+                logger.Debug("Focused: " + isFocused);
             }
         }
 
@@ -1094,7 +1099,7 @@ namespace SharpMap.Forms
 
         void timerUpdate(object state, System.Timers.ElapsedEventArgs args)
         {
-            Debug.WriteLine("TimerRefresh");
+            logger.Debug("TimerRefresh");
             if (MapZoomChanged != null)
                 MapZoomChanged(_map.Zoom);
             Refresh();
@@ -1484,7 +1489,7 @@ namespace SharpMap.Forms
             }
             catch (Exception ee)
             {
-                Debug.WriteLine(ee.Message);
+                logger.Error(ee);
             }
         }
 
@@ -1704,10 +1709,10 @@ namespace SharpMap.Forms
             lowerLeft = new GeoPoint(Math.Min(p1.X, p2.X), Math.Min(p1.Y, p2.Y));
             upperRight = new GeoPoint(Math.Max(p1.X, p2.X), Math.Max(p1.Y, p2.Y));
 
-            Debug.WriteLine("p1: " + p1);
-            Debug.WriteLine("p2: " + p2);
-            Debug.WriteLine("lowerLeft: " + lowerLeft);
-            Debug.WriteLine("upperRight: " + upperRight);
+            logger.Debug("p1: " + p1);
+            logger.Debug("p2: " + p2);
+            logger.Debug("lowerLeft: " + lowerLeft);
+            logger.Debug("upperRight: " + upperRight);
         }
 
          /// <summary>

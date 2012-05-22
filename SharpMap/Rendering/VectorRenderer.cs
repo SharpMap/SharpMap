@@ -529,8 +529,6 @@ namespace SharpMap.Rendering
 
             g.FillEllipse(b, (int)pp.X - width / 2 + offset.X ,
                         (int)pp.Y - height / 2 + offset.Y , width, height);
-            
-            //System.Diagnostics.Debug.WriteLine(string.Format("DP {0}", new PointF(pp.X-width * 0.5f, pp.Y-height * 0.5f)));
         }
 
         /// <summary>
