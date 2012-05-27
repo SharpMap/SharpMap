@@ -471,7 +471,7 @@ namespace SharpMap.Data.Providers
         private static string GetBoxClause(Envelope bbox)
         {
             return String.Format(Map.NumberFormatEnUs,
-                                 "(Envelope_MinX < {0} AND Envelope_MaxX > {1} AND Envelope_MinY < {2} AND Envelope_MaxY > {3})",
+                                 "(Envelope_MinX <= {0} AND Envelope_MaxX >= {1} AND Envelope_MinY <= {2} AND Envelope_MaxY >= {3})",
                                  bbox.MaxX, bbox.MinX, bbox.MaxY, bbox.MinY);
         }
 
