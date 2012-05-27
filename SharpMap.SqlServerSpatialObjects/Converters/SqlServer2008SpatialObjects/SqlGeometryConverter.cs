@@ -239,7 +239,11 @@ namespace SharpMap.Converters.SqlServer2008SpatialObjects
             builder.EndFigure();
         }
 
-        public static SMGeometry ToSharpMapGeometry(SqlGeometry geometry, Factory factory = null)
+        public static SMGeometry ToSharpMapGeometry(SqlGeometry geometry)
+        {
+            return ToSharpMapGeometry(geometry, null);
+        }
+        public static SMGeometry ToSharpMapGeometry(SqlGeometry geometry, Factory factory)
         {
             if (geometry == null) return null;
             var fact = factory ?? Services.CreateGeometryFactory((int) geometry.STSrid);
@@ -271,7 +275,12 @@ namespace SharpMap.Converters.SqlServer2008SpatialObjects
             throw new ArgumentException(string.Format("Cannot convert SqlServer '{0}' to Sharpmap.Geometry", geometry.STGeometryType()), "geometry");
         }
 
-        public static IEnumerable<SMGeometry> ToSharpMapGeometries(IEnumerable<SqlGeometry> sqlGeometries, Factory factory = null)
+        public static IEnumerable<SMGeometry> ToSharpMapGeometries(IEnumerable<SqlGeometry> sqlGeometries)
+        {
+            return ToSharpMapGeometries(sqlGeometries,null);
+        }
+
+        public static IEnumerable<SMGeometry> ToSharpMapGeometries(IEnumerable<SqlGeometry> sqlGeometries, Factory factory)
         {
             var fact = factory ?? Services.CreateGeometryFactory((int)sqlGeometries.First().STSrid);
             

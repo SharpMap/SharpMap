@@ -28,7 +28,7 @@ namespace UnitTests.Converters
             Assert.That(gIn.SRID, Is.EqualTo(-1));
             gIn.SRID = 0;
             SqlGeometry sqlGeometry = SqlGeometryConverter.ToSqlGeometry(gIn);
-            Geometry gOut = SqlGeometryConverter.ToSharpMapGeometry(sqlGeometry);
+            Geometry gOut = SqlGeometryConverter.ToSharpMapGeometry(sqlGeometry, new NetTopologySuite.Geometries.GeometryFactory());
             return gOut;
         }
 
