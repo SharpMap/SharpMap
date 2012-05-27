@@ -276,6 +276,8 @@ namespace SharpMap.Layers
                 DataSource.Close();
             }
 
+
+
             foreach (FeatureDataTable features in ds.Tables)
             {
 
@@ -283,10 +285,10 @@ namespace SharpMap.Layers
                 if (CoordinateTransformation != null)
                     for (int i = 0; i < features.Count; i++)
 #if !DotSpatialProjections
-                    features[i].Geometry = GeometryTransform.TransformGeometry(features[i].Geometry,
-                                                                                CoordinateTransformation.
-                                                                                    MathTransform,
-                            GeometryServiceProvider.Instance.CreateGeometryFactory((int)CoordinateTransformation.TargetCS.AuthorityCode));
+                        features[i].Geometry = GeometryTransform.TransformGeometry(features[i].Geometry,
+                                                                                    CoordinateTransformation.
+                                                                                        MathTransform,
+                                GeometryServiceProvider.Instance.CreateGeometryFactory((int)CoordinateTransformation.TargetCS.AuthorityCode));
 #else
                     features[i].Geometry = GeometryTransform.TransformGeometry(features[i].Geometry,
                                                                                 CoordinateTransformation.Source,
@@ -324,17 +326,30 @@ namespace SharpMap.Layers
                     }
                 }
 
+
                 for (int i = 0; i < features.Count; i++)
                 {
                     var feature = features[i];
-                    var style = Theme.GetStyle(feature) as VectorStyle;
+                    var style = Theme.GetStyle(feature);
                     if (style == null) continue;
                     if (!style.Enabled) continue;
                     if (!(style.MinVisible <= map.Zoom && map.Zoom <= style.MaxVisible)) continue;
-                    
-                    using (var clone = style.Clone())
+
+
+                    IStyle[] stylesToRender = GetStylesToRender(style);
+
+                    if (stylesToRender == null)
+                        return;
+
+                    foreach (var vstyle in stylesToRender)
                     {
-                        RenderGeometry(g, map, feature.Geometry, clone);
+                        if (!(vstyle is VectorStyle) || !vstyle.Enabled)
+                            continue;
+
+                        using (var clone = (vstyle as VectorStyle).Clone())
+                        {
+                            RenderGeometry(g, map, feature.Geometry, clone);
+                        }
                     }
                 }
             }
@@ -345,72 +360,108 @@ namespace SharpMap.Layers
             //if style is not enabled, we don't need to render anything
             if (!Style.Enabled) return;
 
-            using (var vStyle = Style.Clone())
+            IStyle[] stylesToRender = GetStylesToRender(Style);
+            
+            if (stylesToRender== null)
+                return;
+
+            foreach (var style in stylesToRender)
             {
-                Collection<IGeometry> geoms;
-                // Is datasource already open?
-                lock (_dataSource)
+                if (!(style is VectorStyle) || !style.Enabled)
+                    continue;
+                using (var vStyle = (style as VectorStyle).Clone())
                 {
-                    bool alreadyOpen = DataSource.IsOpen;
-
-                    // If not open yet, open it
-                    if (!alreadyOpen) { DataSource.Open(); }
-
-                    // Read data
-                    geoms = DataSource.GetGeometriesInView(envelope);
-                    
-                    if (logger.IsDebugEnabled)
+                    Collection<IGeometry> geoms;
+                    // Is datasource already open?
+                    lock (_dataSource)
                     {
-                        logger.DebugFormat("Layer {0}, NumGeometries {1}", LayerName, geoms.Count);
-                    }
+                        bool alreadyOpen = DataSource.IsOpen;
 
-                    // If was not open, close it
-                    if (!alreadyOpen) { DataSource.Close(); }
-                }
-                if (CoordinateTransformation != null)
-                    for (int i = 0; i < geoms.Count; i++)
+                        // If not open yet, open it
+                        if (!alreadyOpen) { DataSource.Open(); }
+
+                        // Read data
+                        geoms = DataSource.GetGeometriesInView(envelope);
+
+                        if (logger.IsDebugEnabled)
+                        {
+                            logger.DebugFormat("Layer {0}, NumGeometries {1}", LayerName, geoms.Count);
+                        }
+
+                        // If was not open, close it
+                        if (!alreadyOpen) { DataSource.Close(); }
+                    }
+                    if (CoordinateTransformation != null)
+                        for (int i = 0; i < geoms.Count; i++)
 #if !DotSpatialProjections
-                        geoms[i] = GeometryTransform.TransformGeometry(geoms[i], CoordinateTransformation.MathTransform,
-                            GeometryServiceProvider.Instance.CreateGeometryFactory((int)CoordinateTransformation.TargetCS.AuthorityCode));
+                            geoms[i] = GeometryTransform.TransformGeometry(geoms[i], CoordinateTransformation.MathTransform,
+                                GeometryServiceProvider.Instance.CreateGeometryFactory((int)CoordinateTransformation.TargetCS.AuthorityCode));
 #else
                     geoms[i] = GeometryTransform.TransformGeometry(geoms[i], CoordinateTransformation.Source, CoordinateTransformation.Target);
 #endif
-                if (vStyle.LineSymbolizer != null)
-                {
-                    vStyle.LineSymbolizer.Begin(g, map, geoms.Count);
-                }
-                else
-                {
-                    //Linestring outlines is drawn by drawing the layer once with a thicker line
-                    //before drawing the "inline" on top.
-                    if (vStyle.EnableOutline)
+                    if (vStyle.LineSymbolizer != null)
                     {
-                        foreach (var geom in geoms)
+                        vStyle.LineSymbolizer.Begin(g, map, geoms.Count);
+                    }
+                    else
+                    {
+                        //Linestring outlines is drawn by drawing the layer once with a thicker line
+                        //before drawing the "inline" on top.
+                        if (vStyle.EnableOutline)
                         {
-                            if (geom != null)
+                            foreach (var geom in geoms)
                             {
-                                //Draw background of all line-outlines first
-                                if (geom is ILineString)
-                                    VectorRenderer.DrawLineString(g, geom as ILineString, vStyle.Outline, map, vStyle.LineOffset);
-                                else if (geom is IMultiLineString)
-                                    VectorRenderer.DrawMultiLineString(g, geom as IMultiLineString, vStyle.Outline, map, vStyle.LineOffset);
+                                if (geom != null)
+                                {
+                                    //Draw background of all line-outlines first
+                                    if (geom is ILineString)
+                                        VectorRenderer.DrawLineString(g, geom as ILineString, vStyle.Outline, map, vStyle.LineOffset);
+                                    else if (geom is IMultiLineString)
+                                        VectorRenderer.DrawMultiLineString(g, geom as IMultiLineString, vStyle.Outline, map, vStyle.LineOffset);
+                                }
                             }
                         }
                     }
-                }
 
-                for (int i = 0; i < geoms.Count; i++)
-                {
-                    if (geoms[i] != null)
-                        RenderGeometry(g, map, geoms[i], vStyle);
-                }
+                    for (int i = 0; i < geoms.Count; i++)
+                    {
+                        if (geoms[i] != null)
+                            RenderGeometry(g, map, geoms[i], vStyle);
+                    }
 
-                if (vStyle.LineSymbolizer != null)
-                {
-                    vStyle.LineSymbolizer.Symbolize(g, map);
-                    vStyle.LineSymbolizer.End(g, map);
+                    if (vStyle.LineSymbolizer != null)
+                    {
+                        vStyle.LineSymbolizer.Symbolize(g, map);
+                        vStyle.LineSymbolizer.End(g, map);
+                    }
                 }
             }
+        }
+
+        /// <summary>
+        /// Unpacks styles to render (can be nested group-styles)
+        /// </summary>
+        /// <param name="style"></param>
+        /// <returns></returns>
+        private IStyle[] GetStylesToRender(IStyle style)
+        {
+            IStyle[] stylesToRender = null;
+            if (style is GroupStyle)
+            {
+                var gs = style as GroupStyle;
+                List<IStyle> styles = new List<IStyle>();
+                for (int i = 0; i < gs.Count; i++)
+                {
+                    styles.AddRange(GetStylesToRender(gs[i]));
+                }
+                stylesToRender = styles.ToArray();
+            }
+            else if (style is VectorStyle)
+            {
+                stylesToRender = new IStyle[] { style };
+            }
+
+            return stylesToRender;
         }
 
         protected void RenderGeometry(Graphics g, Map map, IGeometry feature, VectorStyle style)

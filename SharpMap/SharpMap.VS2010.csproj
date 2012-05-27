@@ -192,6 +192,7 @@
     <Compile Include="Rendering\Thematics\GradientTheme.cs" />
     <Compile Include="Rendering\Thematics\ITheme.cs" />
     <Compile Include="Rendering\VectorRenderer.cs" />
+    <Compile Include="Styles\GroupStyle.cs" />
     <Compile Include="Styles\IStyle.cs" />
     <Compile Include="Styles\LabelStyle.cs" />
     <Compile Include="Styles\Style.cs" />

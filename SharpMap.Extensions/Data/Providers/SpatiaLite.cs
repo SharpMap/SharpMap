@@ -414,7 +414,12 @@ namespace SharpMap.Data.Providers
         {
             using (var conn = SpatiaLiteConnection(ConnectionString))
             {
-                string strSql = "SELECT *, AsBinary(" + GeometryColumn + ") AS sharpmap_tempgeometry ";
+                string cols = "*";
+                //If using rowid as oid, we need to explicitly request it!
+                if (string.Compare(ObjectIdColumn, "rowid", true) == 0)
+                    cols = "rowid,*";
+
+                string strSql = "SELECT " + cols + ", AsBinary(" + GeometryColumn + ") AS sharpmap_tempgeometry ";
                 strSql += "FROM " + Table + " WHERE ";
                 strSql += GetOverlapsClause(geom);
 
@@ -454,7 +459,12 @@ namespace SharpMap.Data.Providers
         {
             using (var conn = SpatiaLiteConnection(ConnectionString))
             {
-                var strSql = "SELECT *, AsBinary(" + GeometryColumn + ") AS sharpmap_tempgeometry ";
+                string cols = "*";
+                //If using rowid as oid, we need to explicitly request it!
+                if (string.Compare(ObjectIdColumn, "rowid", true) == 0)
+                    cols = "rowid,*";
+
+                var strSql = "SELECT " + cols + ", AsBinary(" + GeometryColumn + ") AS sharpmap_tempgeometry ";
                 strSql += "FROM " + Table + " WHERE ";
                 strSql += GetBoxClause(box);
 
@@ -520,7 +530,12 @@ namespace SharpMap.Data.Providers
         {
             using (SQLiteConnection conn = SpatiaLiteConnection(ConnectionString))
             {
-                string strSQL = "SELECT *, AsBinary(" + GeometryColumn + ") AS sharpmap_tempgeometry FROM " + Table +
+                string cols = "*";
+                //If using rowid as oid, we need to explicitly request it!
+                if (string.Compare(ObjectIdColumn, "rowid", true) == 0)
+                    cols = "rowid,*";
+
+                string strSQL = "SELECT " +cols + ", AsBinary(" + GeometryColumn + ") AS sharpmap_tempgeometry FROM " + Table +
                                 " WHERE " + ObjectIdColumn + "='" + rowId + "'";
                 using (SQLiteDataAdapter adapter = new SQLiteDataAdapter(strSQL, conn))
                 {

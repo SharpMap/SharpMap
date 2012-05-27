@@ -306,7 +306,7 @@ namespace SharpMap.Forms
             layer.Style.Fill = new SolidBrush(Color.FromArgb(80, DefaultColors[_defaultColorIndex % DefaultColors.Length]));
             layer.Style.Outline = new Pen(Color.FromArgb(100, DefaultColors[(_defaultColorIndex + ((int)(DefaultColors.Length * 0.5))) % DefaultColors.Length]), 1f);
             _defaultColorIndex++;
-        }
+        }        
 
         [Description("Define if the progress Bar is shown")]
         [Category("Appearance")]

@@ -86,6 +86,12 @@ namespace SharpMap
         public bool DisposeLayersOnDispose = true;
 
         /// <summary>
+        /// Set the SRID of the Map
+        /// </summary>
+        public int SRID = -1;
+
+
+        /// <summary>
         /// Initializes a new map
         /// </summary>
         public Map() : this(new Size(640, 480))
@@ -567,7 +573,8 @@ namespace SharpMap
                     MinimumZoom = MinimumZoom,
                     PixelAspectRatio = PixelAspectRatio,
                     Zoom = Zoom,
-                    DisposeLayersOnDispose = false
+                    DisposeLayersOnDispose = false,
+                    SRID = SRID
                 };
 
                 if (DisclaimerFont != null)
