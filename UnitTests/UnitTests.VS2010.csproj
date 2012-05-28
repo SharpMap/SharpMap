@@ -117,6 +117,7 @@
     <Compile Include="Rendering\Symbolizer\CohenSutherlandLineClippingTest.cs" />
     <Compile Include="Rendering\Thematics\ColorBlendTest.cs" />
     <Compile Include="TestWmsCapabilityParser.cs" />
+    <Compile Include="WMS\Encoding.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SharpMap.Extensions\SharpMap.Extensions.VS2010.csproj">

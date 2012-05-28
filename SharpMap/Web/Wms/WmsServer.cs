@@ -28,6 +28,7 @@ using SharpMap.Layers;
 using System.Collections.Generic;
 #if !DotSpatialProjections
 using ProjNet.CoordinateSystems.Transformations;
+using System.Text;
 #endif
 
 namespace SharpMap.Web.Wms
@@ -46,6 +47,21 @@ namespace SharpMap.Web.Wms
 
         private static InterSectDelegate _intersectDelegate;
         private static int _pixelSensitivity = -1;
+
+        private static Encoding _featureInfoResponseEncoding = Encoding.UTF8;
+
+        /// <summary>
+        /// Set the characterset used in FeatureInfo responses
+        /// 
+        /// To use Windows-1252 set the FeatureInfoResponseEncoding = System.Text.Encoding.GetEncoding(1252);
+        /// Set to Null to not set any specific encoding in response
+        /// </summary>
+        public static Encoding FeatureInfoResponseEncoding
+        {
+            get { return _featureInfoResponseEncoding; }
+            set { _featureInfoResponseEncoding = value; }
+        }
+
         /// <summary>
         /// Generates a WMS 1.3.0 compliant response based on a <see cref="SharpMap.Map"/> and the current HttpRequest.
         /// </summary>
@@ -379,8 +395,11 @@ namespace SharpMap.Web.Wms
                     vstr = CreateFeatureInfoPlain(map, requestLayers, x, y, fc, cqlFilter);
                     context.Response.ContentType = "text/plain";
                 }
-                context.Response.Clear();                
-                context.Response.Charset = "windows-1252";
+                context.Response.Clear();
+                if (_featureInfoResponseEncoding != null)
+                {
+                    context.Response.Charset = _featureInfoResponseEncoding.WebName; //"windows-1252";
+                }
                 context.Response.Write(vstr);
                 context.Response.Flush();
                 context.Response.End();
