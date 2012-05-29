@@ -31,10 +31,8 @@ namespace ExampleCodeSnippets
         [NUnit.Framework.Test]
         public void TestConversionDSProjection()
         {
-            var pi1 = new DotSpatial.Projections.ProjectionInfo();
-            pi1.ReadEsriString(Osgb36);
-            var pi2 = new DotSpatial.Projections.ProjectionInfo();
-            pi2.ReadEsriString(WGS84);
+            var pi1 = DotSpatial.Projections.ProjectionInfo.FromEsriString(Osgb36);
+            var pi2 = DotSpatial.Projections.ProjectionInfo.FromEsriString(WGS84);
 
             var ct = new DotSpatial.Projections.CoordinateTransformation();
             ct.Source = pi1;

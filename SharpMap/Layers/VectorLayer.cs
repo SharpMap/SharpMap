@@ -292,7 +292,8 @@ namespace SharpMap.Layers
 #else
                     features[i].Geometry = GeometryTransform.TransformGeometry(features[i].Geometry,
                                                                                 CoordinateTransformation.Source,
-                                                                                CoordinateTransformation.Target);
+                                                                                CoordinateTransformation.Target,
+                                                                                CoordinateTransformation.TargetFactory);
 
 #endif
 
@@ -397,7 +398,10 @@ namespace SharpMap.Layers
                             geoms[i] = GeometryTransform.TransformGeometry(geoms[i], CoordinateTransformation.MathTransform,
                                 GeometryServiceProvider.Instance.CreateGeometryFactory((int)CoordinateTransformation.TargetCS.AuthorityCode));
 #else
-                    geoms[i] = GeometryTransform.TransformGeometry(geoms[i], CoordinateTransformation.Source, CoordinateTransformation.Target);
+                    geoms[i] = GeometryTransform.TransformGeometry(geoms[i], 
+                        CoordinateTransformation.Source, 
+                        CoordinateTransformation.Target, 
+                        CoordinateTransformation.TargetFactory);
 #endif
                     if (vStyle.LineSymbolizer != null)
                     {
@@ -603,7 +607,10 @@ namespace SharpMap.Layers
                     CoordinateTransformation.MathTransform.Invert();
                 }
 #else
-                geometry = GeometryTransform.TransformGeometry(geometry, CoordinateTransformation.Target, CoordinateTransformation.Source);
+                geometry = GeometryTransform.TransformGeometry(geometry, 
+                    CoordinateTransformation.Target,
+                    CoordinateTransformation.Source,
+                    CoordinateTransformation.SourceFactory);
 #endif
             }
 

@@ -60,8 +60,8 @@ namespace WinFormSamples
 
 #if DotSpatialProjections
             var mathTransform = LayerTools.Wgs84toGoogleMercator;
-            SharpMap.Geometries.BoundingBox geom = GeometryTransform.TransformBox(
-                new SharpMap.Geometries.BoundingBox(-9.205626, 38.690993, -9.123736, 38.740837),
+            var geom = GeometryTransform.TransformBox(
+                new Envelope(-9.205626, -9.123736, 38.690993, 38.740837),
                 mathTransform.Source, mathTransform.Target);
 #else
             var mathTransform = LayerTools.Wgs84toGoogleMercator.MathTransform;

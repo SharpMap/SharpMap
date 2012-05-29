@@ -84,8 +84,7 @@ namespace WinFormSamples
                 if (wgs84toGoogle == null)
                 {
 #if DotSpatialProjections
-                    var piSource = new ProjectionInfo();
-                    piSource.ReadEpsgCode(31466);
+                    var piSource = ProjectionInfo.FromEpsgCode(31466);
 
                     wgs84toGoogle = new CoordinateTransformation()
                     {

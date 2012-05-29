@@ -24,12 +24,12 @@ using System.Text;
 using System.Web;
 using System.Web.Caching;
 #if !DotSpatialProjections
-using GeoAPI;
 using ProjNet.Converters.WellKnownText;
 using ProjNet.CoordinateSystems;
 #else
 using DotSpatial.Projections;
 #endif
+using GeoAPI;
 using GeoAPI.Geometries;
 using SharpMap.Utilities.SpatialIndexing;
 using Common.Logging;
@@ -906,8 +906,7 @@ namespace SharpMap.Data.Providers
 					_coordinateSystem = (ICoordinateSystem) CoordinateSystemWktReader.Parse(wkt);
 				    SRID = (int) _coordinateSystem.AuthorityCode;
 #else
-					_coordinateSystem = new ProjectionInfo();
-					_coordinateSystem.ReadEsriString(wkt);
+					_coordinateSystem = ProjectionInfo.FromEsriString(wkt);
 #endif
 					_coordsysReadFromFile = true;
 				}
@@ -919,7 +918,13 @@ namespace SharpMap.Data.Providers
 				}
 			}
             else
+			{
+#if !DotSpatialProjections
                 SRID = (int)_coordinateSystem.AuthorityCode;
+#else
+			    SRID = _coordinateSystem.EpsgCode;
+#endif
+			}
         }
 
 		/// <summary>
@@ -1251,9 +1256,23 @@ namespace SharpMap.Data.Providers
 			//return boxes;
 		}
 
-        protected IGeometryFactory Factory { get; set; }
+	    private IGeometryFactory _factory;
+	    protected IGeometryFactory Factory
+	    {
+	        get
+	        {
+                if (_srid == -1)
+                    SRID = 0;
+                return _factory;
+	        }
+	        set
+	        {
+	            _factory = value;
+	            _srid = _factory.SRID;
+	        }
+	    }
 
-		/// <summary>
+	    /// <summary>
 		/// Reads and parses the geometry with ID 'oid' from the ShapeFile
 		/// </summary>
 		/// <!--<remarks><see cref="FilterDelegate">Filtering</see> is not applied to this method</remarks>-->

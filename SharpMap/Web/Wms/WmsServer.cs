@@ -26,9 +26,9 @@ using System.Xml;
 using GeoAPI.Geometries;
 using SharpMap.Layers;
 using System.Collections.Generic;
+using System.Text;
 #if !DotSpatialProjections
 using ProjNet.CoordinateSystems.Transformations;
-using System.Text;
 #endif
 
 namespace SharpMap.Web.Wms

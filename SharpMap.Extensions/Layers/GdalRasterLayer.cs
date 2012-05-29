@@ -494,8 +494,7 @@ namespace SharpMap.Layers
         {
             if (!String.IsNullOrEmpty(_projectionWkt))
             {
-                ProjectionInfo p = new ProjectionInfo();
-                p.ReadEsriString(_projectionWkt);
+                var p = ProjectionInfo.FromEsriString(_projectionWkt);
                 return p;
             }
             return null;
@@ -652,8 +651,7 @@ namespace SharpMap.Layers
             }
 
             // get our two projections
-            ProjectionInfo srcCoord = new ProjectionInfo();
-            srcCoord.ReadEsriString(_projectionWkt);
+            var srcCoord = ProjectionInfo.FromEsriString(_projectionWkt);
             ProjectionInfo tgtCoord = mapProjection;
 
             // raster and map are in same projection, no need to transform
@@ -1970,7 +1968,9 @@ namespace SharpMap.Layers
                     CoordinateTransformation.MathTransform.Invert();
                 }
 #else
-                pt = GeometryTransform.TransformPoint(pt, CoordinateTransformation.Target, CoordinateTransformation.Source);
+                pt = GeometryTransform.TransformCoordinate(pt, 
+                    CoordinateTransformation.Target, 
+                    CoordinateTransformation.Source);
 #endif
             }
             

@@ -104,7 +104,7 @@ namespace SharpMap.Rendering.Decoration
             var ul = m_MathTransform != null ?
                 m_MathTransform.Transform(new[] { map.Envelope.MinX, map.Envelope.MaxY }) : new[] { map.Envelope.MinX, map.Envelope.MaxY };
 #else
-                var ul = new[] { map.Envelope.Left, map.Envelope.Top };
+                var ul = new[] { map.Envelope.Left(), map.Envelope.Top() };
                 if (m_MathTransform != null)
                     Reproject.ReprojectPoints(ul, null, m_MathTransform, _to, 0, 1);
 #endif
@@ -113,7 +113,7 @@ namespace SharpMap.Rendering.Decoration
             double[] lr = m_MathTransform != null ?
                 m_MathTransform.Transform(new[] { map.Envelope.MaxX, map.Envelope.MinY }) : new[] { map.Envelope.MaxX, map.Envelope.MinY };
 #else
-                var lr = new[] {map.Envelope.Right, map.Envelope.Bottom};
+                var lr = new[] {map.Envelope.Right(), map.Envelope.Bottom()};
                 if (m_MathTransform != null)
                     Reproject.ReprojectPoints(lr, null, m_MathTransform, _to, 0, 1);
 #endif
@@ -142,7 +142,7 @@ namespace SharpMap.Rendering.Decoration
                 var ul = m_MathTransform != null ?
                     m_MathTransform.Transform(new[] { map.Envelope.MinX, map.Envelope.MaxY }) : new[] { map.Envelope.MinX, map.Envelope.MinY };
 #else
-                var ul = new[] { map.Envelope.Left, map.Envelope.Top };
+                var ul = new[] { map.Envelope.Left(), map.Envelope.Top() };
                 if (m_MathTransform != null)
                     Reproject.ReprojectPoints(ul, null, m_MathTransform, _to, 0, 1);
 #endif
@@ -151,7 +151,7 @@ namespace SharpMap.Rendering.Decoration
                 var lr = m_MathTransform != null ?
                     m_MathTransform.Transform(new[] { map.Envelope.MaxX, map.Envelope.MinY }) : new[] { map.Envelope.MaxX, map.Envelope.MinY };
 #else
-                var lr = new[] {map.Envelope.Right, map.Envelope.Bottom};
+                var lr = new[] {map.Envelope.Right(), map.Envelope.Bottom()};
                 if (m_MathTransform != null)
                     Reproject.ReprojectPoints(lr, null, m_MathTransform, _to, 0, 1);
 #endif

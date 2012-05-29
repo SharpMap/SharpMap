@@ -447,7 +447,8 @@ namespace SharpMap.Layers
 #else
                         features[i].Geometry = GeometryTransform.TransformGeometry(features[i].Geometry,
                                                                                CoordinateTransformation.Source,
-                                                                               CoordinateTransformation.Target);
+                                                                               CoordinateTransformation.Target,
+                                                                               CoordinateTransformation.TargetFactory);
 #endif
                     LabelStyle style;
                     if (Theme != null) //If thematics is enabled, lets override the style
@@ -625,7 +626,7 @@ namespace SharpMap.Layers
 
             if (feature is ILineal)
             {
-                var line = feature as LineString;
+                var line = feature as ILineString;
                 if (line != null)
                 {
                     if (style.IsTextOnPath == false)

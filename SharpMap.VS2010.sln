@@ -174,7 +174,7 @@ Global
 		{32ECD993-CB5A-4AD9-8C8F-45C73A088C13}.DebugDSProjection|.NET.ActiveCfg = Debug|.NET
 		{32ECD993-CB5A-4AD9-8C8F-45C73A088C13}.DebugDSProjection|.NET.Build.0 = Debug|.NET
 		{32ECD993-CB5A-4AD9-8C8F-45C73A088C13}.DebugDSProjection|Any CPU.ActiveCfg = Debug|.NET
-		{32ECD993-CB5A-4AD9-8C8F-45C73A088C13}.DebugDSProjection|Mixed Platforms.ActiveCfg = Debug|.NET
+		{32ECD993-CB5A-4AD9-8C8F-45C73A088C13}.DebugDSProjection|Mixed Platforms.ActiveCfg = Debug|Any CPU
 		{32ECD993-CB5A-4AD9-8C8F-45C73A088C13}.Release|.NET.ActiveCfg = Debug|.NET
 		{32ECD993-CB5A-4AD9-8C8F-45C73A088C13}.Release|.NET.Build.0 = Debug|.NET
 		{32ECD993-CB5A-4AD9-8C8F-45C73A088C13}.Release|Any CPU.ActiveCfg = Debug|.NET
@@ -296,7 +296,6 @@ Global
 		{7EF67DF8-D868-4177-8817-4CC2E94ABD66}.DebugDSProjection|Any CPU.ActiveCfg = Debug|Any CPU
 		{7EF67DF8-D868-4177-8817-4CC2E94ABD66}.DebugDSProjection|Any CPU.Build.0 = Debug|Any CPU
 		{7EF67DF8-D868-4177-8817-4CC2E94ABD66}.DebugDSProjection|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{7EF67DF8-D868-4177-8817-4CC2E94ABD66}.DebugDSProjection|Mixed Platforms.Build.0 = Debug|Any CPU
 		{7EF67DF8-D868-4177-8817-4CC2E94ABD66}.Release|.NET.ActiveCfg = Release|Any CPU
 		{7EF67DF8-D868-4177-8817-4CC2E94ABD66}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7EF67DF8-D868-4177-8817-4CC2E94ABD66}.Release|Any CPU.Build.0 = Release|Any CPU

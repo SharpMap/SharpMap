@@ -281,7 +281,10 @@ namespace SharpMap.Layers.Symbolizer
                     CoordinateTransformation.MathTransform.Invert();
                 }
 #else
-                geometry = GeometryTransform.TransformGeometry(geometry, CoordinateTransformation.Target, CoordinateTransformation.Source);
+                geometry = GeometryTransform.TransformGeometry(geometry, 
+                    CoordinateTransformation.Target, 
+                    CoordinateTransformation.Source, 
+                    CoordinateTransformation.SourceFactory);
 #endif
             }
 
