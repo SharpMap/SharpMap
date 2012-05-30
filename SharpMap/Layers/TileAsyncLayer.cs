@@ -16,10 +16,11 @@ namespace SharpMap.Layers
 {
     public class TileAsyncLayer : TileLayer, ITileAsyncLayer
     {
-        static ILog logger = LogManager.GetLogger(typeof(TileAsyncLayer));
+        static readonly ILog Logger = LogManager.GetLogger(typeof(TileAsyncLayer));
 
-        private List<BackgroundWorker> threadList = new List<BackgroundWorker>();
-        private Random r = new Random(DateTime.Now.Second);
+        private readonly List<BackgroundWorker> _threadList = new List<BackgroundWorker>();
+        private readonly Random _r = new Random(DateTime.Now.Second);
+        
         public TileAsyncLayer(ITileSource tileSource, string layerName)
             : base(tileSource, layerName, new Color(), true, null)
         {
@@ -51,16 +52,16 @@ namespace SharpMap.Layers
             var tiles = _source.Schema.GetTilesInView(extent, level);
 
             //Abort previous running Threads
-            lock (threadList)
+            lock (_threadList)
             {
-                foreach (BackgroundWorker t in threadList)
+                foreach (BackgroundWorker t in _threadList)
                 {
                     if (t.IsBusy)
                     {
                         t.CancelAsync();
                     }
                 }
-                threadList.Clear();
+                _threadList.Clear();
             }
 
             foreach (TileInfo info in tiles)
@@ -94,9 +95,9 @@ namespace SharpMap.Layers
                     //t.Name = info.ToString();
                     //t.IsBackground = true;
                     //t.Start();
-                    lock (threadList)
+                    lock (_threadList)
                     {
-                        threadList.Add(b);
+                        _threadList.Add(b);
                     }
                 }
             }
@@ -133,7 +134,7 @@ namespace SharpMap.Layers
             }
             catch (Exception ex)
             {
-                logger.Warn(ex.Message, ex);
+                Logger.Warn(ex.Message, ex);
                 //this can be a GDI+ Hell Exception...
             }
 
@@ -154,7 +155,7 @@ namespace SharpMap.Layers
 
         private void GetTileOnThread(BackgroundWorker worker, object parameter)
         {
-            System.Threading.Thread.Sleep(50 + (r.Next(5)*10));
+            System.Threading.Thread.Sleep(50 + (_r.Next(5)*10));
             object[] parameters = (object[])parameter;
             if (parameters.Length != 4) throw new ArgumentException("Four parameters expected");
             ITileProvider tileProvider = (ITileProvider)parameters[0];
@@ -198,10 +199,12 @@ namespace SharpMap.Layers
                     {
                         //an issue with this method is that one an error tile is in the memory cache it will stay even
                         //if the error is resolved. PDD.
-                        Bitmap bitmap = new Bitmap(_source.Schema.Width, _source.Schema.Height);
-                        Graphics graphics = Graphics.FromImage(bitmap);
-                        graphics.DrawString(ex.Message, new Font(FontFamily.GenericSansSerif, 12), new SolidBrush(Color.Black),
-                            new RectangleF(0, 0, _source.Schema.Width, _source.Schema.Height));
+                        var bitmap = new Bitmap(_source.Schema.Width, _source.Schema.Height);
+                        using (var graphics = Graphics.FromImage(bitmap))
+                        {
+                            graphics.DrawString(ex.Message, new Font(FontFamily.GenericSansSerif, 12), new SolidBrush(Color.Black),
+                                new RectangleF(0, 0, _source.Schema.Width, _source.Schema.Height));
+                        }
                         //Draw the Timeout Tile
                         OnMapNewTileAvaliable(tileInfo, bitmap);
 
@@ -212,12 +215,12 @@ namespace SharpMap.Layers
             }
             catch (ThreadAbortException tex)
             {
-                if (logger.IsInfoEnabled)
-                    logger.InfoFormat("TileAsyncLayer - Thread aborting: {0}", System.Threading.Thread.CurrentThread.Name);
+                if (Logger.IsInfoEnabled)
+                    Logger.InfoFormat("TileAsyncLayer - Thread aborting: {0}", System.Threading.Thread.CurrentThread.Name);
             }
             catch (Exception ex)
             {
-                logger.Warn("TileAsyncLayer - GetTileOnThread Exception", ex);
+                Logger.Warn("TileAsyncLayer - GetTileOnThread Exception", ex);
             }
         }
 
