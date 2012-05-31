@@ -571,7 +571,20 @@ namespace SharpMap.Forms
 
             _mousePreviewFilter = new MouseWheelGrabber(this);
             Application.AddMessageFilter(_mousePreviewFilter);
+            this.SizeChanged += new EventHandler(MapBox_SizeChanged);
 
+        }
+
+        void MapBox_SizeChanged(object sender, EventArgs e)
+        {
+            if (Map != null)
+            {
+                if (this.Size != Map.Size)
+                {
+                    Map.Size = this.Size;
+                    Refresh();
+                }
+            }
         }
 
         volatile bool isDisposed = false;
