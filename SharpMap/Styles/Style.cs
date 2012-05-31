@@ -17,6 +17,7 @@
 
 using System;
 using SharpMap.Base;
+using Common.Logging;
 
 namespace SharpMap.Styles
 {

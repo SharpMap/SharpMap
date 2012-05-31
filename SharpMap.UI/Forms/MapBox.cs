@@ -715,27 +715,38 @@ namespace SharpMap.Forms
 
         private Image GetMap(Map map, LayerCollection layers, LayerCollectionType layerCollectionType, BoundingBox extent)
         {
-            int width = Width;
-            int height = Height;
-
-            if ((layers == null || layers.Count == 0 || width <= 0 || height <= 0))
+            try
             {
+                int width = Width;
+                int height = Height;
+
+                if ((layers == null || layers.Count == 0 || width <= 0 || height <= 0))
+                {
+                    if (layerCollectionType == LayerCollectionType.Background)
+                        return new Bitmap(1, 1);
+                    return null;
+                }
+
+                var retval = new Bitmap(width, height);
+
+                using (var g = Graphics.FromImage(retval))
+                {
+                    map.RenderMap(g, layerCollectionType, false);
+                }
+
+                if (layerCollectionType == LayerCollectionType.Variable)
+                    retval.MakeTransparent(_map.BackColor);
+
+                return retval;
+            }
+            catch (Exception ee)
+            {
+                logger.Error("Error while rendering map", ee);
+
                 if (layerCollectionType == LayerCollectionType.Background)
                     return new Bitmap(1, 1);
                 return null;
             }
-
-            var retval = new Bitmap(width, height);
-
-            using(var g = Graphics.FromImage(retval))
-            {
-                map.RenderMap(g, layerCollectionType, false);
-            }
-
-            if (layerCollectionType == LayerCollectionType.Variable)
-                retval.MakeTransparent(_map.BackColor);
-
-            return retval;
         }
 
 

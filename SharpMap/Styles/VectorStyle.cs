@@ -20,6 +20,7 @@ using System.Drawing;
 using System.Reflection;
 using GeoAPI.Geometries;
 using SharpMap.Rendering.Symbolizer;
+using Common.Logging;
 
 namespace SharpMap.Styles
 {
@@ -29,6 +30,7 @@ namespace SharpMap.Styles
     [Serializable]
     public class VectorStyle : Style, ICloneable
     {
+        static ILog logger = LogManager.GetLogger(typeof(VectorStyle));
         /// <summary>
         /// Default Symbol
         /// </summary>
@@ -50,37 +52,38 @@ namespace SharpMap.Styles
         /// <returns></returns>
         public VectorStyle Clone()
         {
-            VectorStyle vs;
+            VectorStyle vs = null;
             lock (this)
             {
-                vs = (VectorStyle) MemberwiseClone();// new VectorStyle();
+                try
+                {
+                    vs = (VectorStyle)MemberwiseClone();// new VectorStyle();
 
-                if (_fillStyle != null)
-                    vs._fillStyle = _fillStyle.Clone() as Brush;
-                //else
-                //{
-                //    vs._fillStyle = null;
-                //}
-                //vs._lineOffset = _lineOffset;
-                if (_lineStyle != null)
-                    vs._lineStyle = _lineStyle.Clone() as Pen;
-                
-                //vs._outline = _outline;
-                
-                if (_outlineStyle != null)
-                    vs._outlineStyle = _outlineStyle.Clone() as Pen;
-                
-                if (_pointBrush != null)
-                    vs._pointBrush = _pointBrush.Clone() as Brush;
+                    if (_fillStyle != null)
+                        vs._fillStyle = _fillStyle.Clone() as Brush;
 
-                //vs._pointSize = _pointSize;
-                vs._symbol = (_symbol != null ? _symbol.Clone() as Image : null);
-                //vs._symbolOffset = new PointF(_symbolOffset.X, _symbolOffset.Y);
-                vs._symbolRotation = _symbolRotation;
-                vs._symbolScale = _symbolScale;
-                vs.PointSymbolizer = PointSymbolizer;
-                vs.LineSymbolizer = LineSymbolizer;
-                vs.PolygonSymbolizer = PolygonSymbolizer;
+                    if (_lineStyle != null)
+                        vs._lineStyle = _lineStyle.Clone() as Pen;
+
+                    if (_outlineStyle != null)
+                        vs._outlineStyle = _outlineStyle.Clone() as Pen;
+
+                    if (_pointBrush != null)
+                        vs._pointBrush = _pointBrush.Clone() as Brush;
+
+                    vs._symbol = (_symbol != null ? _symbol.Clone() as Image : null);
+                    vs._symbolRotation = _symbolRotation;
+                    vs._symbolScale = _symbolScale;
+                    vs.PointSymbolizer = PointSymbolizer;
+                    vs.LineSymbolizer = LineSymbolizer;
+                    vs.PolygonSymbolizer = PolygonSymbolizer;
+                }
+                catch (Exception ee)
+                {
+                    logger.Error("Exception while creating cloned style", ee);
+                    /* if we got an exception, set the style to null and return since we don't know what we got...*/
+                    vs = null;
+                }
             }
             return vs;
         }
@@ -118,7 +121,7 @@ namespace SharpMap.Styles
             Fill = new SolidBrush (Color.FromArgb(192, Color.Black));
             EnableOutline = false;
             SymbolScale = 1f;
-            PointColor = Brushes.Red;
+            PointColor = new SolidBrush(Color.Red);
             PointSize = 10f;
             LineOffset = 0;
         }
