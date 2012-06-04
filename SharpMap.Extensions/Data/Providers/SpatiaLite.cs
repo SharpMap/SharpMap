@@ -89,29 +89,34 @@ namespace SharpMap.Data.Providers
         /// </summary>
         static SpatiaLite()
         {
-            var asr = new AppSettingsReader();
             try
             {
-                var slBin = (String)asr.GetValue("SpatiaLiteNativeDll", typeof(String));
+                var slBin = ConfigurationManager.AppSettings["SpatiaLiteNativeDll"];
                 if (!String.IsNullOrEmpty(slBin))
+                {
                     SpatiaLiteNativeDll = slBin;
-            }
-            catch
-            {
-                System.Diagnostics.Trace.WriteLine("Path to native SpatiaLite binaries not configured, assuming they are in applications directory");
-            }
+                }
+                else
+                {
+                    logger.Warn("Path to native SpatiaLite binaries not configured, assuming they are in applications directory");
+                }
 
-            try
-            {
-                var slPath = (String)asr.GetValue("SpatiaLitePath", typeof (String));
+
+                var slPath = ConfigurationManager.AppSettings["SpatiaLitePath"];
+                if (slPath == null)
+                    slPath = "";
                 SpatiaLitePath = slPath;
-                var path = Environment.GetEnvironmentVariable("path") ?? "";
-                if (!path.ToLowerInvariant().Contains(slPath.ToLowerInvariant()))
-                    Environment.SetEnvironmentVariable("path", slPath + ";" + path);
+                if (!string.IsNullOrEmpty(slPath))
+                {
+                    var path = Environment.GetEnvironmentVariable("path") ?? "";
+                    if (!path.ToLowerInvariant().Contains(slPath.ToLowerInvariant()))
+                        Environment.SetEnvironmentVariable("path", slPath + ";" + path);
+                }
             }
-            catch
+            catch (Exception ee)
             {
                 SpatiaLitePath = "";
+                logger.Error("Error ininitializing SpatialLite", ee);
             }
 
             if (!System.IO.File.Exists(System.IO.Path.Combine(SpatiaLitePath, SpatiaLiteNativeDll)))
