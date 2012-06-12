@@ -472,6 +472,7 @@ namespace SharpMap.Data.Providers
         private void CreateBaseTable()
         {
             baseTable = new FeatureDataTable();
+            baseTable.Columns.Add("Id", typeof(UInt32));
             foreach (DbaseField dbf in DbaseColumns)
                 baseTable.Columns.Add(dbf.ColumnName, dbf.DataType);
         }
@@ -535,6 +536,7 @@ namespace SharpMap.Data.Providers
              */
 
             var dr = table.NewRow();
+            dr["Id"] = oid;
             for (int i = 0; i < DbaseColumns.Length; i++)
             {
                 DbaseField dbf = DbaseColumns[i];
