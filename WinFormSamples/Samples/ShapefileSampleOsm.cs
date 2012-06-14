@@ -88,7 +88,7 @@ namespace WinFormSamples.Samples
             Map map = new Map();
             map.BackColor = Color.Cornsilk;
 
-            var encoding = System.Text.Encoding.GetEncoding(1252);
+            var encoding = System.Text.Encoding.UTF8;
 
             //Set up the countries layer
             VectorLayer layNatural = new VectorLayer("Natural");
