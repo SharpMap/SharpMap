@@ -1,8 +1,6 @@
-using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using GeoAPI.Geometries;
-using SharpMap.Base;
 using Point = System.Drawing.Point;
 
 namespace SharpMap.Rendering.Symbolizer
@@ -10,7 +8,7 @@ namespace SharpMap.Rendering.Symbolizer
     /// <summary>
     /// Base class for all geometry symbolizers
     /// </summary>
-    public abstract class PolygonSymbolizer : DisposableObject, IPolygonSymbolizer
+    public abstract class PolygonSymbolizer : BaseSymbolizer, IPolygonSymbolizer
     {
         protected PolygonSymbolizer()
         {
@@ -27,8 +25,6 @@ namespace SharpMap.Rendering.Symbolizer
 
             base.ReleaseManagedResources();
         }
-
-        public abstract object Clone();
 
         /// <summary>
         /// Gets or sets the brush to fill the polygon
@@ -63,19 +59,17 @@ namespace SharpMap.Rendering.Symbolizer
         protected abstract void OnRenderInternal(Map mpa, IPolygon polygon, Graphics g);
 
         private Point _renderOrigin;
-        public virtual void Begin(Graphics g, Map map, int aproximateNumberOfGeometries)
+        public override void Begin(Graphics g, Map map, int aproximateNumberOfGeometries)
         {
             _renderOrigin = g.RenderingOrigin;
             g.RenderingOrigin = RenderOrigin;
+            base.Begin(g, map, aproximateNumberOfGeometries);
         }
 
-        public virtual void Symbolize(Graphics g, Map map)
-        {
-        }
-
-        public virtual void End(Graphics g, Map map)
+        public override void End(Graphics g, Map map)
         {
             g.RenderingOrigin = _renderOrigin;
+            base.End(g, map);
         }
 
         protected static GraphicsPath PolygonToGraphicsPath(Map map, IPolygon polygon)

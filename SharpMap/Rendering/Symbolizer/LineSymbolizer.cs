@@ -1,14 +1,13 @@
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using GeoAPI.Geometries;
-using SharpMap.Base;
 
 namespace SharpMap.Rendering.Symbolizer
 {
     /// <summary>
     /// Abstract base class for all line symbolizer classes
     /// </summary>
-    public abstract class LineSymbolizer : DisposableObject, ILineSymbolizer
+    public abstract class LineSymbolizer : BaseSymbolizer, ILineSymbolizer
     {
         protected LineSymbolizer()
         {
@@ -24,8 +23,6 @@ namespace SharpMap.Rendering.Symbolizer
             
             base.ReleaseManagedResources();
         }
-
-        public abstract object Clone();
 
         /// <summary>
         /// Method to render a LineString to the <see cref="Graphics"/> object.
@@ -77,18 +74,10 @@ namespace SharpMap.Rendering.Symbolizer
 
         #region ISymbolizer implementation
 
-        public virtual void Begin(Graphics g, Map map, int aproximateNumberOfGeometries)
+        public override void Symbolize(Graphics g, Map map)
         {
         }
 
-        public virtual void Symbolize(Graphics g, Map map)
-        {
-        }
-
-        public virtual void End(Graphics g, Map map)
-        {
-        }
-        
         #endregion
     }
 }

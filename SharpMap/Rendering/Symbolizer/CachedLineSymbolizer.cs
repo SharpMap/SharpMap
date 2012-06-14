@@ -204,6 +204,7 @@ namespace SharpMap.Rendering.Symbolizer
         public override void Begin(Graphics g, Map map, int aproximateNumberOfGeometries)
         {
             _graphicsPaths = new List<GraphicsPath>(aproximateNumberOfGeometries);
+            base.Begin(g, map, aproximateNumberOfGeometries);
         }
 
 
@@ -233,6 +234,7 @@ namespace SharpMap.Rendering.Symbolizer
         {
             if (_graphicsPaths.Count > 0)
                 _graphicsPaths.Clear();
+            base.End(g, map);
         }
     }
 }

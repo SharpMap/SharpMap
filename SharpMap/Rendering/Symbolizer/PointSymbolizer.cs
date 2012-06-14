@@ -20,9 +20,7 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using GeoAPI.Geometries;
-using SharpMap.Base;
 using SharpMap.Utilities;
-using Point = GeoAPI.Geometries.IPoint;
 
 namespace SharpMap.Rendering.Symbolizer
 {
@@ -30,7 +28,7 @@ namespace SharpMap.Rendering.Symbolizer
     /// Base class for all possible Point symbolizers
     /// </summary>
     [Serializable]
-    public abstract class PointSymbolizer : DisposableObject, IPointSymbolizer
+    public abstract class PointSymbolizer : BaseSymbolizer, IPointSymbolizer
     {
         private float _scale = 1f;
 
@@ -159,27 +157,5 @@ namespace SharpMap.Rendering.Symbolizer
             RenderPoint(map, ((IPoint)geometry).Coordinate, graphics);
 
         }
-
-        public void Begin(Graphics g, Map map, int aproximateNumberOfGeometries)
-        {
-            //Nothing to do
-        }
-
-        public void Symbolize(Graphics g, Map map)
-        {
-            //Nothing to do, all points have been rendered
-            //in the Render function call
-        }
-
-        public void End(Graphics g, Map map)
-        {
-            //Nothing to do
-        }
-
-        #region Implementation of ICloneable
-
-        public abstract object Clone();
-
-        #endregion
     }
 }
