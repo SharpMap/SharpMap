@@ -531,8 +531,19 @@ namespace SharpMap.Layers
             WebRequest myWebRequest = WebRequest.Create(myUri);
             myWebRequest.Method = resource.Type;
             myWebRequest.Timeout = _TimeOut;
+
+            if (myWebRequest is HttpWebRequest)
+            {
+                (myWebRequest as HttpWebRequest).Accept = _MimeType;
+                (myWebRequest as HttpWebRequest).KeepAlive = false;
+                (myWebRequest as HttpWebRequest).UserAgent = "SharpMap-WMSLayer";
+            }
+
             if (_Credentials != null)
+            {
                 myWebRequest.Credentials = _Credentials;
+                myWebRequest.PreAuthenticate = true;
+            }
             else
                 myWebRequest.Credentials = CredentialCache.DefaultCredentials;
 
@@ -558,7 +569,82 @@ namespace SharpMap.Layers
                         if (logger.IsDebugEnabled)
                             logger.Debug("Reading image from stream");
 
-                        Image img = Image.FromStream(dataStream);
+                        Image img = null;
+                        int cLength = (int)myWebResponse.ContentLength;
+
+                        if (logger.IsDebugEnabled)
+                            logger.Debug("Content-Length: " + cLength);
+
+                        using (MemoryStream ms = new MemoryStream())
+                        {
+                            byte[] buf = new byte[50000];
+                            int numRead = 0;
+                            DateTime lastTimeGotData = DateTime.Now;
+                            bool moreToRead = true;
+                            do
+                            {
+                                try
+                                {
+                                    int nr = dataStream.Read(buf, 0, buf.Length);
+                                    ms.Write(buf, 0, nr);
+                                    numRead += nr;
+
+                                    if (nr == 0)
+                                    {
+                                        int testByte = dataStream.ReadByte();
+                                        if (testByte == -1)
+                                        {
+                                            moreToRead = false;
+                                            break;
+                                        }
+                                        else
+                                        {
+                                            if (((TimeSpan)(DateTime.Now - lastTimeGotData)).TotalSeconds > _TimeOut)
+                                            {
+                                                if (logger.IsInfoEnabled)
+                                                    logger.Info("Did not get any data for " + _TimeOut + " seconds, aborting");
+                                                return;
+
+                                            }
+
+                                            if (logger.IsDebugEnabled)
+                                                logger.Debug("No data to read. Have received: " + numRead + " of " + cLength);
+
+
+                                            //Did not get data... sleep for a while to not spin
+                                            System.Threading.Thread.Sleep(10);
+                                        }
+                                    }
+                                    else
+                                    {
+                                        lastTimeGotData = DateTime.Now;
+                                    }
+
+                                }
+                                catch (IOException ee)
+                                {
+                                    //This can be valid since in some cases .NET failed to parse 0-sized chunks in responses..
+                                    //For now, just safely ignore the exception and assume we read all data...
+                                    //Either way we will get an error later if we did not..
+                                    moreToRead = false;
+                                }
+                                catch (Exception ee)
+                                {
+                                    logger.Error("Error reading from WMS-server..", ee);
+                                    throw;
+                                }
+                                
+                            }
+                            while (moreToRead);
+
+                            if (logger.IsDebugEnabled)
+                                logger.Debug("Have received: " + numRead);
+
+
+                            ms.Seek(0, SeekOrigin.Begin);
+                            img = Image.FromStream(ms);
+                        }
+                      
 
                         if (logger.IsDebugEnabled)
                             logger.Debug("Image read.. Drawing");
@@ -568,6 +654,9 @@ namespace SharpMap.Layers
                                         img.Width, img.Height, GraphicsUnit.Pixel, ImageAttributes);
                         else
                             g.DrawImageUnscaled(img, 0, 0, map.Size.Width, map.Size.Height);
+                        
+                        if (img != null)
+                            img.Dispose();
 
                         if (logger.IsDebugEnabled)
                             logger.Debug("Draw complete");
