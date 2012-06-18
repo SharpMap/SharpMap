@@ -29,6 +29,7 @@ using System.Web.Caching;
 using GeoAPI.Geometries;
 using SharpMap.Rendering.Exceptions;
 using SharpMap.Web.Wms;
+using Common.Logging;
 
 namespace SharpMap.Layers
 {
@@ -62,6 +63,9 @@ namespace SharpMap.Layers
     /// </example>
     public class WmsLayer : Layer
     {
+
+        private static readonly ILog logger = LogManager.GetLogger(typeof(WmsLayer));
+
         private Boolean _ContinueOnError;
         private ICredentials _Credentials;
         private ImageAttributes _ImageAttributes;
@@ -137,10 +141,15 @@ namespace SharpMap.Layers
             _Credentials = credentials;
             if (HttpContext.Current != null && HttpContext.Current.Cache["SharpMap_WmsClient_" + url] != null)
             {
+                if (logger.IsDebugEnabled)
+                    logger.Debug("Creating client from Cache for url " + url);
+
                 wmsClient = (Client)HttpContext.Current.Cache["SharpMap_WmsClient_" + url];
             }
             else
             {
+                if (logger.IsDebugEnabled)
+                    logger.Debug("Creating new client for url " + url);
                 wmsClient = new Client(url, _Proxy, _Credentials);
                 if (HttpContext.Current != null)
                     HttpContext.Current.Cache.Insert("SharpMap_WmsClient_" + url, wmsClient, null,
@@ -510,8 +519,15 @@ namespace SharpMap.Layers
         /// <param name="map">Map which is rendered</param>
         public override void Render(Graphics g, Map map)
         {
+            if (logger.IsDebugEnabled)
+                logger.Debug("Rendering wmslayer: " + this.LayerName);
+
             Client.WmsOnlineResource resource = GetPreferredMethod();
             Uri myUri = new Uri(GetRequestUrl(map.Envelope, map.Size));
+
+            if (logger.IsDebugEnabled)
+                logger.Debug("Url: " + myUri.ToString());
+
             WebRequest myWebRequest = WebRequest.Create(myUri);
             myWebRequest.Method = resource.Type;
             myWebRequest.Timeout = _TimeOut;
@@ -525,19 +541,36 @@ namespace SharpMap.Layers
 
             try
             {
+                if (logger.IsDebugEnabled)
+                    logger.Debug("Beginning request");
+
                 HttpWebResponse myWebResponse = (HttpWebResponse)myWebRequest.GetResponse();
+
+                if (logger.IsDebugEnabled)
+                    logger.Debug("Got response");
+
                 if (myWebResponse != null)
                 {
                     Stream dataStream = myWebResponse.GetResponseStream();
 
                     if (dataStream != null && myWebResponse.ContentType.StartsWith("image"))
                     {
+                        if (logger.IsDebugEnabled)
+                            logger.Debug("Reading image from stream");
+
                         Image img = Image.FromStream(dataStream);
+
+                        if (logger.IsDebugEnabled)
+                            logger.Debug("Image read.. Drawing");
+
                         if (_ImageAttributes != null)
                             g.DrawImage(img, new Rectangle(0, 0, img.Width, img.Height), 0, 0,
                                         img.Width, img.Height, GraphicsUnit.Pixel, ImageAttributes);
                         else
                             g.DrawImageUnscaled(img, 0, 0, map.Size.Width, map.Size.Height);
+
+                        if (logger.IsDebugEnabled)
+                            logger.Debug("Draw complete");
 
                         dataStream.Close();
                     }
@@ -550,15 +583,15 @@ namespace SharpMap.Layers
                     throw (new RenderException(
                         "There was a problem connecting to the WMS server when rendering layer '" + LayerName + "'",
                         webEx));
-                Trace.Write("There was a problem connecting to the WMS server when rendering layer '" + LayerName +
-                            "': " + webEx.Message);
+                logger.Error("There was a problem connecting to the WMS server when rendering layer '" + LayerName +
+                            "'", webEx);
             }
             catch (Exception ex)
             {
                 if (!_ContinueOnError)
                     throw (new RenderException("There was a problem rendering layer '" + LayerName + "'", ex));
-                Trace.Write("There was a problem connecting to the WMS server when rendering layer '" + LayerName +
-                            "': " + ex.Message);
+                logger.Error("There was a problem connecting to the WMS server when rendering layer '" + LayerName +
+                            "'", ex);
             }
             base.Render(g, map);
         }
