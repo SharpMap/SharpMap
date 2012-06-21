@@ -690,7 +690,7 @@ namespace SharpMap.Forms
 
         void HandleMapNewTileAvaliable(TileLayer sender, BoundingBox box, Bitmap bm, int sourceWidth, int sourceHeight, ImageAttributes imageAttributes)
         {
-            lock (_imageBackground)
+            lock (lockerBackgroundImages)
             {
                 try
                 {
@@ -702,6 +702,7 @@ namespace SharpMap.Forms
 
                         using (var g = Graphics.FromImage(_imageBackground))
                         {
+                            
                             g.DrawImage(bm,
                                         new Rectangle(min.X, max.Y, (max.X - min.X), (min.Y - max.Y)), 
                                         0, 0,
@@ -719,8 +720,8 @@ namespace SharpMap.Forms
                     logger.Warn(ex.Message, ex);
                     //this can be a GDI+ Hell Exception...
                 }
-            }
 
+            }
 
         }
 
