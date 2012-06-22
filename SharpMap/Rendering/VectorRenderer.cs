@@ -581,19 +581,22 @@ namespace SharpMap.Rendering
                     transform.RotateAt(rotation, rotationCenter);
                     g.Transform = transform;
 
-                    if (symbolscale == 1f)
-                    {
-                        g.DrawImageUnscaled(symbol, (int) (pp.X - symbol.Width/2f + offset.X),
-                                                    (int) (pp.Y - symbol.Height/2f + offset.Y));
-                    }
-                    else
-                    {
-                        var width = symbol.Width*symbolscale;
-                        var height = symbol.Height*symbolscale;
-                        g.DrawImage(symbol, (int) pp.X - width/2 + offset.X*symbolscale,
-                                            (int) pp.Y - height/2 + offset.Y*symbolscale, width, height);
-                    }
-
+                    //if (symbolscale == 1f)
+                    //{
+                    //    g.DrawImage(symbol,  (pp.X - symbol.Width/2f + offset.X),
+                    //                                (pp.Y - symbol.Height/2f + offset.Y));
+                    //}
+                    //else
+                    //{
+                    //    var width = symbol.Width*symbolscale;
+                    //    var height = symbol.Height*symbolscale;
+                    //    g.DrawImage(symbol, (int) pp.X - width/2 + offset.X*symbolscale,
+                    //                        (int) pp.Y - height/2 + offset.Y*symbolscale, width, height);
+                    //}
+                    var width = symbol.Width * symbolscale;
+                    var height = symbol.Height * symbolscale;
+                    g.DrawImage(symbol, pp.X - width / 2 + offset.X * symbolscale,
+                                        pp.Y - height / 2 + offset.Y * symbolscale, width, height);
                     g.Transform = startingTransform;
                 }
                 else
