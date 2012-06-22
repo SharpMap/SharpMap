@@ -286,9 +286,13 @@ namespace SharpMap.Data.Providers
 			_fileBasedIndex = (fileBasedIndex) && File.Exists(Path.ChangeExtension(filename, ".shx"));
 
 			//Initialize DBF
-			string dbffile = Path.ChangeExtension(filename, ".dbf");
+			var dbffile = Path.ChangeExtension(filename, ".dbf");
 			if (File.Exists(dbffile))
-				DbaseFile = new DbaseReader(dbffile);
+			{
+			    DbaseFile = new DbaseReader(dbffile);
+                DbaseFile.EncodingChanged += ClearingOfCachedDataRequired;
+                DbaseFile.IncludeOidChanged += ClearingOfCachedDataRequired;
+            }
 
 			//By Default enable _MemoryCache
 			_useMemoryCache = true;
@@ -297,6 +301,13 @@ namespace SharpMap.Data.Providers
 			//Read projection file
 			ParseProjection();
 		}
+
+	    private void ClearingOfCachedDataRequired(object sender, EventArgs e)
+	    {
+	        Debug.Assert(sender == DbaseFile);
+            if (_useMemoryCache)
+                _cacheDataTable.Clear();
+	    }
 
 	    /// <summary>
 	    /// Initializes a ShapeFile DataProvider.
@@ -386,7 +397,7 @@ namespace SharpMap.Data.Providers
 		/// Gets or sets the encoding used for parsing strings from the DBase DBF file.
 		/// </summary>
 		/// <remarks>
-		/// The DBase default encoding is <see cref="System.Text.Encoding.UTF7"/>.
+		/// The DBase default encoding is <see cref="System.Text.Encoding.UTF8"/>.
 		/// </remarks>
 		public Encoding Encoding
 		{
@@ -630,7 +641,14 @@ namespace SharpMap.Data.Providers
 		/// <returns></returns>
 		public void ExecuteIntersectionQuery(Envelope bbox, FeatureDataSet ds)
 		{
-			//Use the spatial index to get a list of features whose boundingbox intersects bbox
+			// Do true intersection query
+            if (DoTrueIntersectionQuery)
+			{
+			    ExecuteIntersectionQuery(Factory.ToGeometry(bbox), ds);
+                return;
+			}
+            
+            //Use the spatial index to get a list of features whose boundingbox intersects bbox
 			var objectlist = GetObjectIDsInView(bbox);
 			
             var dt = DbaseFile.NewTable;
@@ -638,10 +656,13 @@ namespace SharpMap.Data.Providers
 
 			for (var i = 0; i < objectlist.Count; i++)
 			{
-				var fdr = GetFeature(objectlist[i], dt);
-				if ( fdr != null ) dt.AddRow(fdr);
+                //var fdr = GetFeature(objectlist[i], dt);
+                //if ( fdr != null ) dt.AddRow(fdr);
 
-				/*
+			    var fdr = (FeatureDataRow) dt.LoadDataRow(DbaseFile.GetValues(objectlist[i]), true);
+			    fdr.Geometry = ReadGeometry(objectlist[i]);
+
+			    /*
 				//This is triple effort since 
 				//- Bounding Boxes are checked by GetObjectIdsInView,
 				//- FilterDelegate is evaluated in GetFeature
@@ -677,11 +698,15 @@ namespace SharpMap.Data.Providers
 		/// <summary>
 		/// Returns the geometry corresponding to the Object ID
 		/// </summary>
+		/// <remarks>FilterDelegate is no longer applied to this ge</remarks>
 		/// <param name="oid">Object ID</param>
-		/// <returns>geometry</returns>
+		/// <returns>The geometry at the Id</returns>
 		public IGeometry GetGeometryByID(uint oid)
 		{
-			if (FilterDelegate != null) //Apply filtering
+            // *
+            // * ToDo: Evaluate if this belongs here
+            // *
+            if (FilterDelegate != null) //Apply filtering
 			{
 				var fdr = GetFeature(oid);
 				if (fdr != null)
@@ -696,7 +721,6 @@ namespace SharpMap.Data.Providers
 				if (fdr == null)
 				{
                     fdr = GetFeature(oid);
-                   
                 }
 
 			    return fdr.Geometry;
@@ -705,41 +729,78 @@ namespace SharpMap.Data.Providers
 		    return ReadGeometry(oid);
 		}
 
+        /// <summary>
+        /// Gets or sets a value indicating that for <see cref="ExecuteIntersectionQuery(GeoAPI.Geometries.Envelope,SharpMap.Data.FeatureDataSet)"/> the intersection of the geometries and the envelope should be tested.
+        /// </summary>
+        public bool DoTrueIntersectionQuery { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating that the provider should check if geometry belongs to a deleted record.
+        /// </summary>
+        public bool CheckIfRecordIsDeleted { get; set; }
+
 		/// <summary>
-		/// Returns the data associated with all the geometries that are intersected by 'geom'.
-		/// Please note that the ShapeFile provider currently doesn't fully support geometryintersection
-		/// and thus only BoundingBox/BoundingBox querying are performed. The results are NOT
-		/// guaranteed to lie withing 'geom'.
+		/// Returns the data associated with all the geometries that are intersected by <paramref name="geom"/>.
 		/// </summary>
-		/// <param name="geom"></param>
+		/// <param name="geom">The geometry to test intersection for</param>
 		/// <param name="ds">FeatureDataSet to fill data into</param>
 		public virtual void ExecuteIntersectionQuery(IGeometry geom, FeatureDataSet ds)
 		{
 			var bbox = new Envelope(geom.EnvelopeInternal);
 
-			//currently we are only checking against the bounding box,
-			//so we can safely call ExecuteIntersectionQuery(BoundingBox, FeatureDataSet)
-			ExecuteIntersectionQuery(bbox, ds);
-			/*
-			//Get candidates by intersecting the spatial index tree
-			Collection<uint> objectlist = tree.Search(bbox);
+            //Get a list of objects that possibly intersect with geom.
+            var objectlist = GetObjectIDsInView(bbox);
 
-			if (objectlist.Count == 0)
-				return;
+            //Get a prepared geometry object
+		    var prepGeom = NetTopologySuite.Geometries.Prepared.PreparedGeometryFactory.Prepare(geom);
+            
+            //Get an empty table
+            var dt = DbaseFile.NewTable;
+            dt.BeginLoadData();
 
-			for (int j = 0; j < objectlist.Count; j++)
-			{
-				FeatureDataRow fdr = GetFeature(objectlist[j], dt);
-				//if (fdr == null) continue;
+            //Cycle through all object ids
+		    foreach (var oid in objectlist)
+		    {
+		        //Get the geometry
+                var testGeom = ReadGeometry(oid);
+                
+                //We do not have a geometry => we do not have a feature
+                if (testGeom == null) 
+                    continue;
 
-				if (fdr.Geometry != null)
-					if (fdr.Geometry.GetBoundingBox().Intersects(bbox))
-						//replace above line with this:  if(fdr.Geometry.Intersects(bbox))  when relation model is complete
-						if (FilterDelegate == null || FilterDelegate(fdr))
-							dt.AddRow(fdr);
-			}
-			ds.Tables.Add(dt);
-			 */
+                //Does the geometry really intersect with geom?
+                if (!prepGeom.Intersects(testGeom))
+                    continue;
+
+                //Get the feature data row and assign the geometry
+		        var fdr = (FeatureDataRow) dt.LoadDataRow(DbaseFile.GetValues(oid), true);
+		        fdr.Geometry = testGeom;
+		    }
+
+            dt.EndLoadData();
+            ds.Tables.Add(dt);
+
+            ////currently we are only checking against the bounding box,
+            ////so we can safely call ExecuteIntersectionQuery(BoundingBox, FeatureDataSet)
+            //ExecuteIntersectionQuery(bbox, ds);
+            ///*
+
+            //if (objectlist.Count == 0)
+            //    return;
+
+            //for (int j = 0; j < objectlist.Count; j++)
+            //{
+            //    FeatureDataRow fdr = GetFeature(objectlist[j], dt);
+            //    //if (fdr == null) continue;
+
+            //    if (fdr.Geometry != null)
+            //        if (fdr.Geometry.GetBoundingBox().Intersects(bbox))
+            //            //replace above line with this:  if(fdr.Geometry.Intersects(bbox))  when relation model is complete
+            //            if (FilterDelegate == null || FilterDelegate(fdr))
+            //                dt.AddRow(fdr);
+            //}
+            //ds.Tables.Add(dt);
+            // */
 		}
 
 
@@ -1275,11 +1336,17 @@ namespace SharpMap.Data.Providers
 	    /// <summary>
 		/// Reads and parses the geometry with ID 'oid' from the ShapeFile
 		/// </summary>
-		/// <!--<remarks><see cref="FilterDelegate">Filtering</see> is not applied to this method</remarks>-->
 		/// <param name="oid">Object ID</param>
 		/// <returns>geometry</returns>
 		private IGeometry ReadGeometry(uint oid)
 		{
+            // Do we want to receive geometries of deleted records as well?
+            if (CheckIfRecordIsDeleted)
+            {
+                //Test if record is deleted
+                if (DbaseFile.RecordDeleted(oid)) return null;
+            }
+
             _brShapeFile.BaseStream.Seek(_offsetOfRecord[oid] + 8, 0); //Skip record number and content length
 			var type = (ShapeType) _brShapeFile.ReadInt32(); //Shape type
 			if (type == ShapeType.Null)
@@ -1428,10 +1495,19 @@ namespace SharpMap.Data.Providers
 					return drNew;
 				}
 
-			    //FeatureDataRow dr = (FeatureDataRow)dbaseFile.GetFeature(RowID, (dt == null) ? dbaseFile.NewTable : dt);
 			    var dr = DbaseFile.GetFeature(rowId, dt);
-			    dr.Geometry = ReadGeometry(rowId);
-			    if (FilterDelegate == null || FilterDelegate(dr))
+                
+                // GetFeature returns null if the record has deleted flag
+                if (dr == null) 
+                    return null;
+
+                //Read the geometry
+                dr.Geometry = ReadGeometry(rowId);
+			    
+                // *
+                // * ToDo: Evaluate if this shouldn't be moved to ExecuteIntersectionQuery
+                // *
+                if (FilterDelegate == null || FilterDelegate(dr))
 			        return dr;
 			    
                 return null;

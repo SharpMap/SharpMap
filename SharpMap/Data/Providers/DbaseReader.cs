@@ -24,115 +24,157 @@ using System.Globalization;
 using System.IO;
 using System.Text;
 using SharpMap.Utilities.Indexing;
-using System.Collections.Generic;
 
 namespace SharpMap.Data.Providers
 {
+    /// <summary>
+    /// Straight forward Dbase file reader
+    /// </summary>
     public class DbaseReader : IDisposable
     {
+        /// <summary>
+        /// Event raised when the <see cref="IncludeOid"/> property has changed
+        /// </summary>
+        public event EventHandler IncludeOidChanged;
+
+        /// <summary>
+        /// Event raised when the <see cref="Encoding"/> property has changed
+        /// </summary>
+        public event EventHandler EncodingChanged;
+        
         private struct DbaseField
         {
             public int Address;
             public string ColumnName;
-            public Type DataType;
+            //public Type DataType;
+            public TypeCode DataTypeCode;
             public int Decimals;
             public int Length;
         }
 
         private DateTime _lastUpdate;
-        private int _NumberOfRecords;
-        private Int16 _HeaderLength;
-        private Int16 _RecordLength;
-        private string _filename;
-        private DbaseField[] DbaseColumns;
-        private Stream fs;
-        private BinaryReader br;
-        private bool HeaderIsParsed;
+        private int _numberOfRecords;
+        private Int16 _headerLength;
+        private Int16 _recordLength;
+        private readonly string _filename;
+        private DbaseField[] _dbaseColumns;
+        
+        private Stream _dbfStream;
+        //private BinaryReader br;
+        private bool _headerIsParsed;
 
 #if USE_MEMORYMAPPED_FILE
-        private static Dictionary<string,System.IO.MemoryMappedFiles.MemoryMappedFile> _memMappedFiles;
-        private static Dictionary<string, int> _memMappedFilesRefConter;
-        private bool _haveRegistredForUsage = false;
+        private static readonly Dictionary<string,System.IO.MemoryMappedFiles.MemoryMappedFile> MemMappedFiles;
+        private static readonly Dictionary<string, int> MemMappedFilesRefConter;
+        
+        private bool _haveRegistredForUsage;
+        
         static DbaseReader()
         {
-            _memMappedFiles = new Dictionary<string, System.IO.MemoryMappedFiles.MemoryMappedFile>();
-            _memMappedFilesRefConter = new Dictionary<string, int>();
+            MemMappedFiles = new Dictionary<string, System.IO.MemoryMappedFiles.MemoryMappedFile>();
+            MemMappedFilesRefConter = new Dictionary<string, int>();
         }
 #endif
 
 
+        /// <summary>
+        /// Creates an instance of this class
+        /// </summary>
+        /// <param name="filename">The shapefile to open</param>
+        /// <exception cref="FileNotFoundException">Thrown if the file is not present.</exception>
         public DbaseReader(string filename)
         {
             if (!File.Exists(filename))
                 throw new FileNotFoundException(String.Format("Could not find file \"{0}\"", filename));
             _filename = filename;
-            HeaderIsParsed = false;
+            _headerIsParsed = false;
         }
 
-        private bool _isOpen;
+        /// <summary>
+        /// Gets a value indicating whether the Stream to the Dbase file is open or not.
+        /// </summary>
+        public bool IsOpen { get; private set; }
 
-        public bool IsOpen
-        {
-            get { return _isOpen; }
-            set { _isOpen = value; }
-        }
-
+        /// <summary>
+        /// Opens the dbase stream
+        /// </summary>
         public void Open()
         {
 #if USE_MEMORYMAPPED_FILE
-            if (!_memMappedFiles.ContainsKey(_filename))
+            if (!MemMappedFiles.ContainsKey(_filename))
             {
                 System.IO.MemoryMappedFiles.MemoryMappedFile memMappedFile = System.IO.MemoryMappedFiles.MemoryMappedFile.CreateFromFile(_filename, FileMode.Open);
-                _memMappedFiles.Add(_filename, memMappedFile);
+                MemMappedFiles.Add(_filename, memMappedFile);
             }
+
             if (!_haveRegistredForUsage)
             {
-                if (_memMappedFilesRefConter.ContainsKey(_filename))
-                    _memMappedFilesRefConter[_filename]++;
+                if (MemMappedFilesRefConter.ContainsKey(_filename))
+                    MemMappedFilesRefConter[_filename]++;
                 else
-                    _memMappedFilesRefConter.Add(_filename, 1);
+                    MemMappedFilesRefConter.Add(_filename, 1);
 
                 _haveRegistredForUsage = true;
             }
 
-            fs = _memMappedFiles[_filename].CreateViewStream();
+            _dbfStream = MemMappedFiles[_filename].CreateViewStream();
 #else
-            fs = new FileStream(_filename, FileMode.Open, FileAccess.Read);
+            _dbfStream = new FileStream(_filename, FileMode.Open, FileAccess.Read);
 #endif
-            br = new BinaryReader(fs);
-            _isOpen = true;
-            if (!HeaderIsParsed) //Don't read the header if it's already parsed
+            //br = new BinaryReader(_dbfStream);
+            IsOpen = true;
+            if (!_headerIsParsed) //Don't read the header if it's already parsed
                 ParseDbfHeader(_filename);
         }
 
+//        private Stream GetStream()
+//        {
+//#if USE_MEMORYMAPPED_FILE
+//            return MemMappedFiles[_filename].CreateViewStream();
+//#else
+//            return new FileStream(_filename, FileMode.Open, FileAccess.Read);
+//#endif
+//        }
+
+        /// <summary>
+        /// Closes the dbase file stream
+        /// </summary>
         public void Close()
         {
 
-            br.Close();
-            fs.Close();
-            _isOpen = false;
+            //br.Close();
+            _dbfStream.Close();
+            IsOpen = false;
         }
 
         public void Dispose()
         {
-            if (_isOpen)
+            if (IsOpen)
                 Close();
-            br = null;
-            fs = null;
+            //br = null;
+            _dbfStream = null;
 #if USE_MEMORYMAPPED_FILE
-            if (_memMappedFilesRefConter.ContainsKey(_filename))
+            if (MemMappedFilesRefConter.ContainsKey(_filename))
             {
-                _memMappedFilesRefConter[_filename]--;
-                if (_memMappedFilesRefConter[_filename] <= 0)
+                MemMappedFilesRefConter[_filename]--;
+                if (MemMappedFilesRefConter[_filename] <= 0)
                 {
-                    _memMappedFiles[_filename].Dispose();
-                    _memMappedFiles.Remove(_filename);
-                    _memMappedFilesRefConter.Remove(_filename);
+                    MemMappedFiles[_filename].Dispose();
+                    MemMappedFiles.Remove(_filename);
+                    MemMappedFilesRefConter.Remove(_filename);
                 }
             }
 #endif
         }
 
+        // **** 
+        // **** 
+        // **** 
+        // **** ToDo Evaluate if anyone is using this?
+        // **** 
+        // **** 
+        // **** 
+        // ****
         // Binary Tree not working yet on Mono 
         // see bug: http://bugzilla.ximian.com/show_bug.cgi?id=78502
 #if !MONO
@@ -140,13 +182,13 @@ namespace SharpMap.Data.Providers
         /// Indexes a DBF column in a binary tree [NOT COMPLETE]
         /// </summary>
         /// <typeparam name="T">datatype to be indexed</typeparam>
-        /// <param name="ColumnId">Column to index</param>
+        /// <param name="columnId">Column to index</param>
         /// <returns></returns>
-        public BinaryTree<T, UInt32> CreateDbfIndex<T>(int ColumnId) where T : IComparable<T>
+        public BinaryTree<T, UInt32> CreateDbfIndex<T>(int columnId) where T : IComparable<T>
         {
-            BinaryTree<T, UInt32> tree = new BinaryTree<T, uint>();
-            for (uint i = 0; i < ((_NumberOfRecords > 10000) ? 10000 : _NumberOfRecords); i++)
-                tree.Add(new BinaryTree<T, uint>.ItemValue((T) GetValue(i, ColumnId), i));
+            var tree = new BinaryTree<T, uint>();
+            for (uint i = 0; i < ((_numberOfRecords > 10000) ? 10000 : _numberOfRecords); i++)
+                tree.Add(new BinaryTree<T, uint>.ItemValue((T) GetValue(i, columnId), i));
             return tree;
         }
 #endif
@@ -195,83 +237,248 @@ namespace SharpMap.Data.Providers
             get { return _lastUpdate; }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="oid"></param>
+        /// <returns></returns>
+        /// <exception cref="ApplicationException"></exception>
+        /// <exception cref="ArgumentException"></exception>
         public Boolean RecordDeleted(uint oid)
         {
+            CurrentRecordOid = oid;
+            return _currentRecordBuffer[0] == '*';
+            /*
             if (!_isOpen)
                 throw (new ApplicationException("An attempt was made to read from a closed DBF file"));
-            if (oid >= _NumberOfRecords)
+            if (oid >= _numberOfRecords)
                 throw (new ArgumentException("Invalid record requested at index " + oid));
-            fs.Seek(_HeaderLength + oid * _RecordLength, 0);
+            
+            using (var s = GetStream())
+            using (var br = new BinaryReader(s))
+            {
+                s.Seek(_headerLength + oid*_recordLength, 0);
+                return br.ReadChar() == '*';
+                //return BitConverter.ToChar(new[] {(byte) s.ReadByte()}, 0) == '*';
+            }
+             */
+        }
 
-            return br.ReadChar() == '*';
+        /// <summary>
+        /// Gets or sets the current object id
+        /// </summary>
+        public uint CurrentRecordOid
+        {
+            get { return _currentRecordOid; }
+            set
+            {
+                if (!IsOpen)
+                    throw (new ApplicationException("An attempt was made to read from a closed DBF file"));
+                
+                if (_currentRecordOid == value)
+                    return;
+
+                if (value >= _numberOfRecords)
+                    throw (new ArgumentException("Invalid record requested at index " + value));
+
+                _dbfStream.Seek(_headerLength + value * _recordLength, 0);
+                _dbfStream.Read(_currentRecordBuffer, 0, _recordLength);
+
+                _currentRecordOid = value;
+            }
         }
 
         private void ParseDbfHeader(string filename)
         {
-            if (br.ReadByte() != 0x03)
+            var buffer32 = new byte[32];
+            _dbfStream.Seek(0, SeekOrigin.Begin);
+            _dbfStream.Read(buffer32, 0, 32);
+
+            if (buffer32[0] != 0x03)
                 throw new NotSupportedException("Unsupported DBF Type");
+            
+            //Get last modified date
+            _lastUpdate = new DateTime(buffer32[1] + 1900, buffer32[2], buffer32[3]);
 
-            _lastUpdate = new DateTime((int) br.ReadByte() + 1900, (int) br.ReadByte(), (int) br.ReadByte());
-                //Read the last update date
-            _NumberOfRecords = br.ReadInt32(); // read number of records.
-            _HeaderLength = br.ReadInt16(); // read length of header structure.
-            _RecordLength = br.ReadInt16(); // read length of a record
-            fs.Seek(29, SeekOrigin.Begin); //Seek to encoding flag
-            _FileEncoding = GetDbaseLanguageDriver(br.ReadByte()); //Read and parse Language driver
-            fs.Seek(32, SeekOrigin.Begin); //Move past the reserved bytes
+            //Get number of records
+            _numberOfRecords = BitConverter.ToInt32(buffer32, 4);
 
-            int NumberOfColumns = (_HeaderLength - 31)/32; // calculate the number of DataColumns in the header
-            DbaseColumns = new DbaseField[NumberOfColumns];
-            for (int i = 0; i < DbaseColumns.Length; i++)
+            //Get the header length
+            _headerLength = BitConverter.ToInt16(buffer32, 8);
+
+            //Get the record length
+            _recordLength = BitConverter.ToInt16(buffer32, 10);
+
+            //Get and parse the language driver code
+            _fileEncoding = GetDbaseLanguageDriver(buffer32[29], filename);
+
+            var numberOfColumns = (_headerLength - 31) / 32; // calculate the number of DataColumns in the header
+            _dbaseColumns = new DbaseField[numberOfColumns];
+            for (var i = 0; i < numberOfColumns; i++)
             {
-                DbaseColumns[i] = new DbaseField();
-                DbaseColumns[i].ColumnName = Encoding.UTF7.GetString((br.ReadBytes(11))).Replace("\0", "").Trim();
-                char fieldtype = br.ReadChar();
-                switch (fieldtype)
+                _dbfStream.Read(buffer32, 0, 32);
+                using (var br = new BinaryReader(new MemoryStream(buffer32)))
                 {
-                    case 'L':
-                        DbaseColumns[i].DataType = typeof (bool);
-                        break;
-                    case 'C':
-                        DbaseColumns[i].DataType = typeof (string);
-                        break;
-                    case 'D':
-                        DbaseColumns[i].DataType = typeof (DateTime);
-                        break;
-                    case 'N':
-                        DbaseColumns[i].DataType = typeof (double);
-                        break;
-                    case 'F':
-                        DbaseColumns[i].DataType = typeof (float);
-                        break;
-                    case 'B':
-                        DbaseColumns[i].DataType = typeof (byte[]);
-                        break;
-                    default:
-                        throw (new NotSupportedException("Invalid or unknown DBase field type '" + fieldtype +
-                                                         "' in column '" + DbaseColumns[i].ColumnName + "'"));
-                }
-                DbaseColumns[i].Address = br.ReadInt32();
+                    _dbaseColumns[i] = new DbaseField();
+                    _dbaseColumns[i].ColumnName = Encoding.UTF7.GetString((br.ReadBytes(11))).Replace("\0", "").Trim();
+                    var fieldtype = br.ReadChar();
+                    switch (fieldtype)
+                    {
+                        case 'L':
+                            //_dbaseColumns[i].DataType = typeof (bool);
+                            _dbaseColumns[i].DataTypeCode = TypeCode.Boolean;
+                            break;
+                        case 'C':
+                            //_dbaseColumns[i].DataType = typeof (string);
+                            _dbaseColumns[i].DataTypeCode = TypeCode.String;
+                            break;
+                        case 'D':
+                            //_dbaseColumns[i].DataType = typeof (DateTime);
+                            _dbaseColumns[i].DataTypeCode = TypeCode.DateTime;
+                            break;
+                        case 'N':
+                            //_dbaseColumns[i].DataType = typeof (double);
+                            _dbaseColumns[i].DataTypeCode = TypeCode.Double;
+                            break;
+                        case 'F':
+                            //_dbaseColumns[i].DataType = typeof (float);
+                            _dbaseColumns[i].DataTypeCode = TypeCode.Single;
+                            break;
+                        case 'B':
+                            //_dbaseColumns[i].DataType = typeof (byte[]);
+                            _dbaseColumns[i].DataTypeCode = TypeCode.Object; //Hack for
+                            break;
+                        default:
+                            throw (new NotSupportedException("Invalid or unknown DBase field type '" + fieldtype +
+                                                             "' in column '" + _dbaseColumns[i].ColumnName + "'"));
+                    }
+                    _dbaseColumns[i].Address = br.ReadInt32();
+                    if (i > 0) _dbaseColumns[i].Address = _dbaseColumns[i - 1].Address + _dbaseColumns[i - 1].Length;
 
-                int Length = (int) br.ReadByte();
-                if (Length < 0) Length = Length + 256;
-                DbaseColumns[i].Length = Length;
-                DbaseColumns[i].Decimals = (int) br.ReadByte();
-                //If the double-type doesn't have any decimals, make the type an integer
-                if (DbaseColumns[i].Decimals == 0 && DbaseColumns[i].DataType == typeof (double))
-                    if (DbaseColumns[i].Length <= 2)
-                        DbaseColumns[i].DataType = typeof (Int16);
-                    else if (DbaseColumns[i].Length <= 4)
-                        DbaseColumns[i].DataType = typeof (Int32);
-                    else
-                        DbaseColumns[i].DataType = typeof (Int64);
-                fs.Seek(fs.Position + 14, 0);
+                    var length = (int)br.ReadByte();
+                    if (length < 0) length = length + 256;
+                    _dbaseColumns[i].Length = length;
+                    _dbaseColumns[i].Decimals = br.ReadByte();
+
+
+                    //If the double-type doesn't have any decimals, make the type an integer
+                    //if (_dbaseColumns[i].Decimals == 0 && _dbaseColumns[i].DataType == typeof (double))
+                    //    if (_dbaseColumns[i].Length <= 2)
+                    //        _dbaseColumns[i].DataType = typeof (Int16);
+                    //    else if (_dbaseColumns[i].Length <= 4)
+                    //        _dbaseColumns[i].DataType = typeof (Int32);
+                    //    else
+                    //        _dbaseColumns[i].DataType = typeof (Int64);
+                    if (_dbaseColumns[i].Decimals == 0 && _dbaseColumns[i].DataTypeCode == TypeCode.Double)
+                    {
+                        if (_dbaseColumns[i].Length < 3) //Range [-9, 99]
+                            _dbaseColumns[i].DataTypeCode = TypeCode.Byte;
+                        else if (_dbaseColumns[i].Length < 5) //Range [-999, 9999]
+                            _dbaseColumns[i].DataTypeCode = TypeCode.Int16;
+                        else if (_dbaseColumns[i].Length < 10)
+                            _dbaseColumns[i].DataTypeCode = TypeCode.Int32;
+                        else if (_dbaseColumns[i].Length < 19)
+                            _dbaseColumns[i].DataTypeCode = TypeCode.Int64;
+                        else
+                            _dbaseColumns[i].DataTypeCode = TypeCode.Double;
+                    }
+                }
             }
-            HeaderIsParsed = true;
+
+            //using (var s = GetStream())
+            //using(var br = new BinaryReader(s))
+            //{
+            //    if (br.ReadByte() != 0x03)
+            //        throw new NotSupportedException("Unsupported DBF Type");
+
+            //    _lastUpdate = new DateTime(br.ReadByte() + 1900, br.ReadByte(), br.ReadByte());
+            //    //Read the last update date
+            //    _numberOfRecords = br.ReadInt32(); // read number of records.
+            //    _headerLength = br.ReadInt16(); // read length of header structure.
+            //    _recordLength = br.ReadInt16(); // read length of a record
+            //    s.Seek(29, SeekOrigin.Begin); //Seek to encoding flag
+            //    _fileEncoding = GetDbaseLanguageDriver(br.ReadByte(), filename); //Read and parse Language driver
+            //    s.Seek(32, SeekOrigin.Begin); //Move past the reserved bytes
+
+            //    var numberOfColumns = (_headerLength - 31)/32; // calculate the number of DataColumns in the header
+            //    _dbaseColumns = new DbaseField[numberOfColumns];
+            //    for (var i = 0; i < _dbaseColumns.Length; i++)
+            //    {
+            //        _dbaseColumns[i] = new DbaseField();
+            //        _dbaseColumns[i].ColumnName = Encoding.UTF7.GetString((br.ReadBytes(11))).Replace("\0", "").Trim();
+            //        var fieldtype = br.ReadChar();
+            //        switch (fieldtype)
+            //        {
+            //            case 'L':
+            //                //_dbaseColumns[i].DataType = typeof (bool);
+            //                _dbaseColumns[i].DataTypeCode = TypeCode.Boolean;
+            //                break;
+            //            case 'C':
+            //                //_dbaseColumns[i].DataType = typeof (string);
+            //                _dbaseColumns[i].DataTypeCode = TypeCode.String;
+            //                break;
+            //            case 'D':
+            //                //_dbaseColumns[i].DataType = typeof (DateTime);
+            //                _dbaseColumns[i].DataTypeCode = TypeCode.DateTime;
+            //                break;
+            //            case 'N':
+            //                //_dbaseColumns[i].DataType = typeof (double);
+            //                _dbaseColumns[i].DataTypeCode = TypeCode.Double;
+            //                break;
+            //            case 'F':
+            //                //_dbaseColumns[i].DataType = typeof (float);
+            //                _dbaseColumns[i].DataTypeCode = TypeCode.Single;
+            //                break;
+            //            case 'B':
+            //                //_dbaseColumns[i].DataType = typeof (byte[]);
+            //                _dbaseColumns[i].DataTypeCode = TypeCode.Object; //Hack for
+            //                break;
+            //            default:
+            //                throw (new NotSupportedException("Invalid or unknown DBase field type '" + fieldtype +
+            //                                                 "' in column '" + _dbaseColumns[i].ColumnName + "'"));
+            //        }
+            //        _dbaseColumns[i].Address = br.ReadInt32();
+            //        if (i > 0) _dbaseColumns[i].Address = _dbaseColumns[i - 1].Address + _dbaseColumns[i - 1].Length;
+
+            //        var length = (int) br.ReadByte();
+            //        if (length < 0) length = length + 256;
+            //        _dbaseColumns[i].Length = length;
+            //        _dbaseColumns[i].Decimals = br.ReadByte();
+
+
+            //        //If the double-type doesn't have any decimals, make the type an integer
+            //        //if (_dbaseColumns[i].Decimals == 0 && _dbaseColumns[i].DataType == typeof (double))
+            //        //    if (_dbaseColumns[i].Length <= 2)
+            //        //        _dbaseColumns[i].DataType = typeof (Int16);
+            //        //    else if (_dbaseColumns[i].Length <= 4)
+            //        //        _dbaseColumns[i].DataType = typeof (Int32);
+            //        //    else
+            //        //        _dbaseColumns[i].DataType = typeof (Int64);
+            //        if (_dbaseColumns[i].Decimals == 0 && _dbaseColumns[i].DataTypeCode == TypeCode.Double)
+            //        {
+            //            if (_dbaseColumns[i].Length < 3) //Range [-9, 99]
+            //                _dbaseColumns[i].DataTypeCode = TypeCode.Byte;
+            //            else if (_dbaseColumns[i].Length < 5) //Range [-999, 9999]
+            //                _dbaseColumns[i].DataTypeCode = TypeCode.Int16;
+            //            else if (_dbaseColumns[i].Length < 10) 
+            //                _dbaseColumns[i].DataTypeCode = TypeCode.Int32;
+            //            else if (_dbaseColumns[i].Length < 19)
+            //                _dbaseColumns[i].DataTypeCode = TypeCode.Int64;
+            //            else
+            //                _dbaseColumns[i].DataTypeCode = TypeCode.double;
+            //        }
+
+            //        br.BaseStream.Seek(s.Position + 14, 0);
+            //    }
+            //}
+
+            _currentRecordBuffer = new byte[_recordLength];
+            _headerIsParsed = true;
+            
             CreateBaseTable();
         }
 
-        private Encoding GetDbaseLanguageDriver(byte dbasecode)
+        private static Encoding GetDbaseLanguageDriver(byte dbasecode, string fileName = null)
         {
             switch (dbasecode)
             {
@@ -410,7 +617,18 @@ namespace SharpMap.Data.Providers
                 case 0xCC:
                     return Encoding.GetEncoding(1257); // Baltic Windows
                 default:
-                    return Encoding.UTF7;
+                    if (!string.IsNullOrEmpty(fileName))
+                    {
+                        fileName = Path.ChangeExtension(fileName, "cpg");
+                        if (!File.Exists(fileName)) 
+                            fileName = Path.ChangeExtension(fileName, "cst");
+                        if (File.Exists(fileName))
+                        {
+                            var encoding = File.ReadAllText(fileName);
+                            return Encoding.GetEncoding(encoding);
+                        }
+                    }
+                    return Encoding.UTF8;
             }
         }
 
@@ -420,7 +638,7 @@ namespace SharpMap.Data.Providers
         /// <returns>A DataTable that describes the column metadata.</returns>
         public DataTable GetSchemaTable()
         {
-            DataTable tab = new DataTable();
+            var tab = new DataTable();
             // all of common, non "base-table" fields implemented
             tab.Columns.Add("ColumnName", typeof (String));
             tab.Columns.Add("ColumnSize", typeof (Int32));
@@ -435,19 +653,42 @@ namespace SharpMap.Data.Providers
             tab.Columns.Add("IsKey", typeof (bool));
             tab.Columns.Add("IsAutoIncrement", typeof (bool));
             tab.Columns.Add("IsLong", typeof (bool));
+            
+            //Why do we need to add the dbase columns?
+            //foreach (DbaseField dbf in _dbaseColumns)
+            //    tab.Columns.Add(dbf.ColumnName, Type. dbf.DataType);
 
-            foreach (DbaseField dbf in DbaseColumns)
-                tab.Columns.Add(dbf.ColumnName, dbf.DataType);
-
-            for (int i = 0; i < DbaseColumns.Length; i++)
+            var offset = 0;
+            if (IncludeOid)
             {
-                DataRow r = tab.NewRow();
-                r["ColumnName"] = DbaseColumns[i].ColumnName;
-                r["ColumnSize"] = DbaseColumns[i].Length;
-                r["ColumnOrdinal"] = i;
-                r["NumericPrecision"] = DbaseColumns[i].Decimals;
+                var r = tab.NewRow();
+                r["ColumnName"] = "Oid";
+                r["ColumnSize"] = 4;
+                r["ColumnOrdinal"] = 0;
+                r["NumericPrecision"] = DBNull.Value;
+                r["NumericScale"] = DBNull.Value;
+                r["DataType"] = typeof(uint);
+                r["AllowDBNull"] = false;
+                r["IsReadOnly"] = true;
+                r["IsUnique"] = true;
+                r["IsRowVersion"] = false;
+                r["IsKey"] = true;
+                r["IsAutoIncrement"] = false;
+                r["IsLong"] = false;
+
+                tab.Rows.Add(r);
+                offset = 1;
+            }
+
+            for (var i = 0; i < _dbaseColumns.Length; i++)
+            {
+                var r = tab.NewRow();
+                r["ColumnName"] = _dbaseColumns[i].ColumnName;
+                r["ColumnSize"] = _dbaseColumns[i].Length;
+                r["ColumnOrdinal"] = offset++;
+                r["NumericPrecision"] = _dbaseColumns[i].Decimals;
                 r["NumericScale"] = 0;
-                r["DataType"] = DbaseColumns[i].DataType;
+                r["DataType"] = TypeByTypeCode(_dbaseColumns[i].DataTypeCode);
                 r["AllowDBNull"] = true;
                 r["IsReadOnly"] = true;
                 r["IsUnique"] = false;
@@ -456,50 +697,127 @@ namespace SharpMap.Data.Providers
                 r["IsAutoIncrement"] = false;
                 r["IsLong"] = false;
 
-                // specializations, if ID is unique
-                //if (_ColumnNames[i] == "ID")
-                //	r["IsUnique"] = true;
-
                 tab.Rows.Add(r);
             }
 
             return tab;
         }
 
+        private static Type TypeByTypeCode(TypeCode dataTypeCode)
+        {
+            switch (dataTypeCode)
+            {
+                case TypeCode.Byte:
+                    return typeof (byte);
+                case TypeCode.Boolean:
+                    return typeof (bool);
+                case TypeCode.Int16:
+                    return typeof (short);
+                case TypeCode.Int32:
+                    return typeof (int);
+                case TypeCode.Int64:
+                    return typeof (int);
+                case TypeCode.Single:
+                    return typeof (float);
+                case TypeCode.Double:
+                    return typeof (double);
+                case TypeCode.String:
+                    return typeof (string);
+                case TypeCode.DateTime:
+                    return typeof (DateTime);
+                case TypeCode.Object: // HACK
+                    return typeof(byte[]);
+                default:
+                    throw new InvalidOperationException("TypeCode '" + dataTypeCode + "' has no matched by Dbase.");
+            }
+        }
 
-        private FeatureDataTable baseTable;
+
+        private FeatureDataTable _baseTable;
+        private bool _includeOid;
 
         private void CreateBaseTable()
         {
-            baseTable = new FeatureDataTable();
-            baseTable.Columns.Add("Id", typeof(UInt32));
-            foreach (DbaseField dbf in DbaseColumns)
-                baseTable.Columns.Add(dbf.ColumnName, dbf.DataType);
+            _baseTable = new FeatureDataTable();
+            if (IncludeOid)
+                _baseTable.Columns.Add("Oid", typeof(UInt32));
+
+            foreach (var dbf in _dbaseColumns)
+                //_baseTable.Columns.Add(dbf.ColumnName, dbf.DataType);
+                _baseTable.Columns.Add(dbf.ColumnName, TypeByTypeCode(dbf.DataTypeCode));
         }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether the object's id should be included in attribute data or not. <para>The default value is <c>false</c></para>
+        /// </summary>
+        public bool IncludeOid
+        {
+            get { return _includeOid; }
+            set
+            {
+                if (value != _includeOid)
+                {
+                    _includeOid = value;
+                    OnIncludeOidChanged(EventArgs.Empty);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Event invoker for <see cref="IncludeOidChanged"/> event.
+        /// </summary>
+        /// <remarks>When overridden, make sure to call <c>base.OnIncludeOidChanged</c> in order to make sure that subscribers are notified.</remarks>
+        /// <param name="e">The event's arguments</param>
+        protected virtual void OnIncludeOidChanged(EventArgs e)
+        {
+            CreateBaseTable();
+
+            if (IncludeOidChanged != null)
+                IncludeOidChanged(this, e);
+        }
+
+        /// <summary>
+        /// Gets an empty table that matches the dbase structure
+        /// </summary>
         public FeatureDataTable NewTable
         {
-            get { return baseTable.Clone(); }
+            get { return _baseTable.Clone(); }
         }
+
+
+        private byte[] _currentRecordBuffer;
+        private uint _currentRecordOid = 0xffffffff;
 
         internal object GetValue(uint oid, int colid)
         {
-            if (!_isOpen)
-                throw (new ApplicationException("An attempt was made to read from a closed DBF file"));
-            if (oid >= _NumberOfRecords)
-                throw (new ArgumentException("Invalid DataRow requested at index " + oid.ToString()));
-            if (colid >= DbaseColumns.Length || colid < 0)
-                throw ((new ArgumentException("Column index out of range")));
+            ////if (!_isOpen)
+            ////    throw (new ApplicationException("An attempt was made to read from a closed DBF file"));
+            //if (oid >= _numberOfRecords)
+            //    throw (new ArgumentException("Invalid DataRow requested at index " + oid.ToString(CultureInfo.InvariantCulture)));
+            //if (colid >= _dbaseColumns.Length || colid < 0)
+            //    throw ((new ArgumentException("Column index out of range")));
 
-            fs.Seek(_HeaderLength + oid*_RecordLength, 0);
-            for (int i = 0; i < colid; i++)
-                br.BaseStream.Seek(DbaseColumns[i].Length, SeekOrigin.Current);
+            //if (oid != _currentRecordOid)
+            //{
+            //    using (var s = GetStream())
+            //    {
+            //        s.Seek(_headerLength + oid*_recordLength, 0);
+            //        s.Read((_currentRecordBuffer ?? (_currentRecordBuffer = new byte[_recordLength])), 0,
+            //                        _recordLength);
+            //    }
+            //    /*
+            //    for (var i = 0; i < colid; i++)
+            //        _dbfStream.Seek(_dbaseColumns[i].Length, SeekOrigin.Current);
+            //     */   
 
-            return ReadDbfValue(DbaseColumns[colid]);
+            //    _currentRecordOid = oid;
+            //}
+            CurrentRecordOid = oid;
+            return ReadDbfValue(_dbaseColumns[colid]);
         }
 
-        private Encoding _Encoding;
-        private Encoding _FileEncoding;
+        private Encoding _encoding;
+        private Encoding _fileEncoding;
 
         /// <summary>
         /// Gets or sets the <see cref="System.Text.Encoding"/> used for parsing strings from the DBase DBF file.
@@ -509,8 +827,34 @@ namespace SharpMap.Data.Providers
         /// </remarks>
         public Encoding Encoding
         {
-            get { return _Encoding; }
-            set { _Encoding = value; }
+            get { return _encoding; }
+            set
+            {
+                //Test if encoding is the same as the one gathered by GetLanguageDriverId
+                if (value == _fileEncoding)
+                    value = null;
+
+                //Since objects are not the same instances, try comparison
+                if (value != null && value.Equals(_fileEncoding))
+                    value = null;
+
+                if (value != _encoding)
+                {
+                    _encoding = value;
+                    OnEncodingChanged(EventArgs.Empty);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Event invoker for <see cref="EncodingChanged"/> event.
+        /// </summary>
+        /// <remarks>When overridden, make sure to call <c>base.OnEncodingChanged</c> in order to make sure that subscribers are notified.</remarks>
+        /// <param name="e">The event's arguments</param>
+        protected virtual void OnEncodingChanged(EventArgs e)
+        {
+            if (EncodingChanged != null)
+                EncodingChanged(this, e);
         }
 
 
@@ -536,70 +880,96 @@ namespace SharpMap.Data.Providers
              */
 
             var dr = table.NewRow();
-            dr["Id"] = oid;
-            for (int i = 0; i < DbaseColumns.Length; i++)
+            
+            if (IncludeOid) dr["Oid"] = oid;
+
+            for (var i = 0; i < _dbaseColumns.Length; i++ )
             {
-                DbaseField dbf = DbaseColumns[i];
-                dr[dbf.ColumnName] = ReadDbfValue(dbf);
+                var dbf = _dbaseColumns[i];
+                dr[dbf.ColumnName] = GetValue(oid, i);
             }
             return dr;
 
         }
 
+        private static readonly NumberFormatInfo Nfi = NumberFormatInfo.InvariantInfo;
+        
         private object ReadDbfValue(DbaseField dbf)
         {
-            switch (dbf.DataType.ToString())
+            var tmpBuffer = new byte[dbf.Length];
+            Buffer.BlockCopy(_currentRecordBuffer, dbf.Address+1, tmpBuffer, 0, dbf.Length);
+
+            string temp;
+
+            switch (dbf.DataTypeCode)
             {
-                case "System.String":
-                    if (_Encoding == null)
-                        return _FileEncoding.GetString(br.ReadBytes(dbf.Length)).Replace("\0", "").Trim();
-                    return _Encoding.GetString(br.ReadBytes(dbf.Length)).Replace("\0", "").Trim();
-                case "System.Double":
-                    string temp = Encoding.UTF7.GetString(br.ReadBytes(dbf.Length)).Replace("\0", "").Trim();
-                    double dbl = 0;
-                    if (double.TryParse(temp, NumberStyles.Float, Map.NumberFormatEnUs, out dbl))
+                case TypeCode.String:
+                    return _encoding == null
+                        ? _fileEncoding.GetString(tmpBuffer).Replace("\0", "").Trim()
+                        : _encoding.GetString(tmpBuffer).Replace("\0", "").Trim();
+                
+                case TypeCode.Double:
+                    temp = Encoding.UTF7.GetString(tmpBuffer).Replace("\0", "").Trim();
+                    double dbl;
+                    if (double.TryParse(temp, NumberStyles.Float, Nfi, out dbl))
                         return dbl;
                     return DBNull.Value;
-                case "System.Int16":
-                    string temp16 = Encoding.UTF7.GetString((br.ReadBytes(dbf.Length))).Replace("\0", "").Trim();
-                    Int16 i16 = 0;
-                    if (Int16.TryParse(temp16, NumberStyles.Float, Map.NumberFormatEnUs, out i16))
+
+                case TypeCode.Byte:
+                    temp = Encoding.UTF7.GetString(tmpBuffer).Replace("\0", "").Trim();
+                    Byte i8;
+                    if (Byte.TryParse(temp, NumberStyles.Integer, Nfi, out i8))
+                        return i8;
+                    return DBNull.Value;
+
+                case TypeCode.Int16:
+                    temp = Encoding.UTF7.GetString(tmpBuffer).Replace("\0", "").Trim();
+                    Int16 i16;
+                    if (Int16.TryParse(temp, NumberStyles.Integer, Nfi, out i16))
                         return i16;
                     return DBNull.Value;
-                case "System.Int32":
-                    string temp32 = Encoding.UTF7.GetString((br.ReadBytes(dbf.Length))).Replace("\0", "").Trim();
-                    Int32 i32 = 0;
-                    if (Int32.TryParse(temp32, NumberStyles.Float, Map.NumberFormatEnUs, out i32))
+                
+                case TypeCode.Int32:
+                    temp = Encoding.UTF7.GetString(tmpBuffer).Replace("\0", "").Trim();
+                    Int32 i32;
+                    if (Int32.TryParse(temp, NumberStyles.Integer, Nfi, out i32))
                         return i32;
                     return DBNull.Value;
-                case "System.Int64":
-                    string temp64 = Encoding.UTF7.GetString((br.ReadBytes(dbf.Length))).Replace("\0", "").Trim();
-                    Int64 i64 = 0;
-                    if (Int64.TryParse(temp64, NumberStyles.Float, Map.NumberFormatEnUs, out i64))
+                
+                case TypeCode.Int64:
+                    temp = Encoding.UTF7.GetString(tmpBuffer).Replace("\0", "").Trim();
+                    Int64 i64;
+                    if (Int64.TryParse(temp, NumberStyles.Integer, Nfi, out i64))
                         return i64;
                     return DBNull.Value;
-                case "System.Single":
-                    string temp4 = Encoding.UTF8.GetString((br.ReadBytes(dbf.Length)));
-                    float f = 0;
-                    if (float.TryParse(temp4, NumberStyles.Float, Map.NumberFormatEnUs, out f))
+                
+                //case "System.Single":
+                case TypeCode.Single:
+                    temp = Encoding.UTF8.GetString(tmpBuffer);
+                    float f;
+                    if (float.TryParse(temp, NumberStyles.Float, Nfi, out f))
                         return f;
                     return DBNull.Value;
-                case "System.Boolean":
-                    char tempChar = br.ReadChar();
+                
+                //case "System.Boolean":
+                case TypeCode.Boolean:
+                    var tempChar = BitConverter.ToChar(tmpBuffer, 0);
                     return ((tempChar == 'T') || (tempChar == 't') || (tempChar == 'Y') || (tempChar == 'y'));
-                case "System.DateTime":
+                
+                //case "System.DateTime":
+                case TypeCode.DateTime:
                     DateTime date;
                     // Mono has not yet implemented DateTime.TryParseExact
 #if !MONO
-                    if (DateTime.TryParseExact(Encoding.UTF7.GetString((br.ReadBytes(8))),
-                                               "yyyyMMdd", Map.NumberFormatEnUs, DateTimeStyles.None, out date))
+                    if (DateTime.TryParseExact(Encoding.UTF7.GetString(tmpBuffer),
+                                               "yyyyMMdd", Nfi, DateTimeStyles.None, out date))
                         return date;
                     return DBNull.Value;
 #else
 					try 
 					{
-						return date = DateTime.ParseExact ( System.Text.Encoding.UTF7.GetString((br.ReadBytes(8))), 	
-						"yyyyMMdd", SharpMap.Map.numberFormat_EnUS, System.Globalization.DateTimeStyles.None );
+						return date = DateTime.ParseExact ( System.Text.Encoding.UTF7.GetString(tmpBuffer), 	
+						"yyyyMMdd", Nfi, System.Globalization.DateTimeStyles.None );
 					}
 					catch ( Exception e )
 					{
@@ -608,8 +978,107 @@ namespace SharpMap.Data.Providers
 #endif
                 default:
                     throw (new NotSupportedException("Cannot parse DBase field '" + dbf.ColumnName + "' of type '" +
-                                                     dbf.DataType.ToString() + "'"));
+//                                                     dbf.DataType + "'"));
+                                                     TypeByTypeCode(dbf.DataTypeCode) + "'"));
             }
+
+//            switch (dbf.DataTypeCode)
+//            {
+//                case TypeCode.String:
+//                    return _encoding == null
+//                        ? _fileEncoding.GetString(br.ReadBytes(dbf.Length)).Replace("\0", "").Trim()
+//                        : _encoding.GetString(br.ReadBytes(dbf.Length)).Replace("\0", "").Trim();
+//                case TypeCode.Double:
+//                    temp = Encoding.UTF7.GetString(br.ReadBytes(dbf.Length)).Replace("\0", "").Trim();
+//                    double dbl;
+//                    if (double.TryParse(temp, NumberStyles.Float, Nfi, out dbl))
+//                        return dbl;
+//                    return DBNull.Value;
+//                case TypeCode.Int16:
+//                    temp = Encoding.UTF7.GetString((br.ReadBytes(dbf.Length))).Replace("\0", "").Trim();
+//                    Int16 i16;
+//                    if (Int16.TryParse(temp, NumberStyles.Integer, Nfi, out i16))
+//                        return i16;
+//                    return DBNull.Value;
+//                case TypeCode.Int32:
+//                    temp = Encoding.UTF7.GetString((br.ReadBytes(dbf.Length))).Replace("\0", "").Trim();
+//                    Int32 i32;
+//                    if (Int32.TryParse(temp, NumberStyles.Integer, Nfi, out i32))
+//                        return i32;
+//                    return DBNull.Value;
+//                case TypeCode.Int64:
+//                    temp = Encoding.UTF7.GetString((br.ReadBytes(dbf.Length))).Replace("\0", "").Trim();
+//                    Int64 i64;
+//                    if (Int64.TryParse(temp, NumberStyles.Integer, Nfi, out i64))
+//                        return i64;
+//                    return DBNull.Value;
+//                //case "System.Single":
+//                case TypeCode.Single:
+//                    temp = Encoding.UTF8.GetString((br.ReadBytes(dbf.Length)));
+//                    float f;
+//                    if (float.TryParse(temp, NumberStyles.Float, Nfi, out f))
+//                        return f;
+//                    return DBNull.Value;
+//                //case "System.Boolean":
+//                case TypeCode.Boolean:
+//                    var tempChar = br.ReadChar();
+//                    return ((tempChar == 'T') || (tempChar == 't') || (tempChar == 'Y') || (tempChar == 'y'));
+//                //case "System.DateTime":
+//                case TypeCode.DateTime:
+//                    DateTime date;
+//                    // Mono has not yet implemented DateTime.TryParseExact
+//#if !MONO
+//                    if (DateTime.TryParseExact(Encoding.UTF7.GetString((br.ReadBytes(8))),
+//                                               "yyyyMMdd", Nfi, DateTimeStyles.None, out date))
+//                        return date;
+//                    return DBNull.Value;
+//#else
+//                    try 
+//                    {
+//                        return date = DateTime.ParseExact ( System.Text.Encoding.UTF7.GetString((br.ReadBytes(8))), 	
+//                        "yyyyMMdd", SharpMap.Map.numberFormat_EnUS, System.Globalization.DateTimeStyles.None );
+//                    }
+//                    catch ( Exception e )
+//                    {
+//                        return DBNull.Value;
+//                    }
+//#endif
+//                default:
+//                    throw (new NotSupportedException("Cannot parse DBase field '" + dbf.ColumnName + "' of type '" +
+//                        //                                                     dbf.DataType + "'"));
+//                                                     TypeByTypeCode(dbf.DataTypeCode) + "'"));
+//            }
+
+        }
+
+        /// <summary>
+        /// Gets all attribute values for data record <paramref name="rowid"/>
+        /// </summary>
+        /// <returns></returns>
+        public object[] GetValues(uint rowid)
+        {
+            object[] result;
+            var offset = 0;
+            
+            //Preprare result buffer
+            if (IncludeOid)
+            {
+                offset = 1;
+                result = new object[1+_dbaseColumns.Length];
+                result[0] = rowid;
+            }
+            else
+            {
+                result = new object[_dbaseColumns.Length];
+            }
+
+            //Fill result buffer
+            if (!RecordDeleted(rowid))
+            {
+                for (var i = 0; i < _dbaseColumns.Length; i++)
+                    result[i + offset] = GetValue(rowid, i);
+            }
+            return result;
         }
     }
 }

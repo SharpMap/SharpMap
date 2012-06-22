@@ -169,12 +169,12 @@ namespace SharpMap.Utilities.SpatialIndexing
             /* -------------------------------------------------------------------- */
             /*      Split in X direction.                                           */
             /* -------------------------------------------------------------------- */
-            if ((input.Width) > (input.Height))
+            if (input.Width > input.Height)
             {
                 range = input.Width*SplitRatio;
 
-                out1 = new Envelope(input.BottomLeft(), new Coordinate(input.Left() + range, input.Top()));
-                out2 = new Envelope(new Coordinate(input.Right() - range, input.Bottom()), input.TopRight());
+                out1 = new Envelope(input.BottomLeft(), new Coordinate(input.MinX + range, input.MaxY));
+                out2 = new Envelope(new Coordinate(input.MaxX - range, input.MinY), input.TopRight());
             }
 
                 /* -------------------------------------------------------------------- */
@@ -184,8 +184,8 @@ namespace SharpMap.Utilities.SpatialIndexing
             {
                 range = input.Height*SplitRatio;
 
-                out1 = new Envelope(input.BottomLeft(), new Coordinate(input.Right(), input.Bottom() + range));
-                out2 = new Envelope(new Coordinate(input.Left(), input.Top() - range), input.TopRight());
+                out1 = new Envelope(input.BottomLeft(), new Coordinate(input.MaxX, input.MinY + range));
+                out2 = new Envelope(new Coordinate(input.MinX, input.MaxY - range), input.TopRight());
             }
             //Debug.Assert(out1.Intersects(out2));
         }
@@ -351,10 +351,11 @@ namespace SharpMap.Utilities.SpatialIndexing
         private static void SaveNode(QuadTree node, BinaryWriter sw)
         {
             //Write node boundingbox
-            sw.Write(node.Box.MinX);
-            sw.Write(node.Box.MinY);
-            sw.Write(node.Box.MaxX);
-            sw.Write(node.Box.MaxY);
+            var box = node.Box;
+            sw.Write(box.MinX);
+            sw.Write(box.MinY);
+            sw.Write(box.MaxX);
+            sw.Write(box.MaxY);
             sw.Write(node.IsLeaf);
             if (node.IsLeaf || node.Child0 == null)
             {
@@ -367,11 +368,13 @@ namespace SharpMap.Utilities.SpatialIndexing
                 sw.Write(node._objList.Count); //Write number of features at node
                 for (int i = 0; i < node._objList.Count; i++) //Write each featurebox
                 {
-                    sw.Write(node._objList[i].Box.MinX);
-                    sw.Write(node._objList[i].Box.MinY);
-                    sw.Write(node._objList[i].Box.MaxX);
-                    sw.Write(node._objList[i].Box.MaxY);
-                    sw.Write(node._objList[i].ID);
+                    var bo = node._objList[i];
+                    box = bo.Box;
+                    sw.Write(box.MinX);
+                    sw.Write(box.MinY);
+                    sw.Write(box.MaxX);
+                    sw.Write(box.MaxY);
+                    sw.Write(bo.ID);
                 }
             }
             else if (!node.IsLeaf) //Save next node
@@ -488,8 +491,8 @@ namespace SharpMap.Utilities.SpatialIndexing
         /// <param name="box">Boundingbox to intersect with</param>
         public Collection<uint> Search(Envelope box)
         {
-            Collection<uint> objectlist = new Collection<uint>();
-            IntersectTreeRecursive(box, this, ref objectlist);
+            var objectlist = new Collection<uint>();
+            IntersectTreeRecursive(box, this, /*ref*/ objectlist);
             return objectlist;
         }
 
@@ -499,7 +502,7 @@ namespace SharpMap.Utilities.SpatialIndexing
         /// <param name="box">Boundingbox to intersect with</param>
         /// <param name="node">Node to search from</param>
         /// <param name="list">List of found intersections</param>
-        private static void IntersectTreeRecursive(Envelope box, QuadTree node, ref Collection<uint> list)
+        private static void IntersectTreeRecursive(Envelope box, QuadTree node, /*ref*/ ICollection<uint> list)
         {
             if (node.IsLeaf) //Leaf has been reached
             {
@@ -521,9 +524,9 @@ namespace SharpMap.Utilities.SpatialIndexing
                 if (node.Box.Intersects(box))
                 {
                     if (node.Child0 != null)
-                        IntersectTreeRecursive(box, node.Child0, ref list);
+                        IntersectTreeRecursive(box, node.Child0, /*ref*/ list);
                     if (node.Child1 != null)
-                        IntersectTreeRecursive(box, node.Child1, ref list);
+                        IntersectTreeRecursive(box, node.Child1, /*ref*/ list);
                 }
             }
         }

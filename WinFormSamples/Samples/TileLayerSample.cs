@@ -1,59 +1,34 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Drawing;
-using System.Globalization;
-using System.IO;
-using System.Net;
-using System.Text;
-using System.Timers;
-using System.Xml;
-#if !DotSpatialProjections
-using ProjNet.CoordinateSystems.Transformations;
-#else
-using DotSpatial.Projections;
-#endif
-using SharpMap.Data;
-using SharpMap.Data.Providers;
-using SharpMap.Layers;
-using BruTile;
-using BruTile.Web;
-using SharpMap;
-using SharpMap.Rendering.Thematics;
-using SharpMap.Styles;
-using GeoAPI.Geometries;
-using NetTopologySuite.Geometries;
-using Point = GeoAPI.Geometries.Coordinate;
 
 namespace WinFormSamples.Samples
 {
     class TileLayerSample
     {
-        private static Int32 _num = 0;
+        private static Int32 _num;
         
-        public static Map InitializeMap(float angle)
+        public static SharpMap.Map InitializeMap(float angle)
         {
             switch (_num++ % 11)
             {
                 case 2:
                     return InitializeMapOsm();
                 case 3:
-                    return InitializeMapBing(BingMapType.Roads);
+                    return InitializeMapBing(BruTile.Web.BingMapType.Roads);
                 case 4:
-                    return InitializeMapBing(BingMapType.Aerial);
+                    return InitializeMapBing(BruTile.Web.BingMapType.Aerial);
                 case 5:
-                    return InitializeMapBing(BingMapType.Hybrid);
+                    return InitializeMapBing(BruTile.Web.BingMapType.Hybrid);
                 case 6:
-                    return InitializeMapGoogle(GoogleMapType.GoogleMap);
+                    return InitializeMapGoogle(BruTile.Web.GoogleMapType.GoogleMap);
                 case 7:
-                    return InitializeMapGoogle(GoogleMapType.GoogleSatellite);
+                    return InitializeMapGoogle(BruTile.Web.GoogleMapType.GoogleSatellite);
                 case 8:
-                    return InitializeMapGoogle(GoogleMapType.GoogleSatellite | GoogleMapType.GoogleLabels);
+                    return InitializeMapGoogle(BruTile.Web.GoogleMapType.GoogleSatellite | BruTile.Web.GoogleMapType.GoogleLabels);
                 case 9:
-                    return InitializeMapGoogle(GoogleMapType.GoogleTerrain);
+                    return InitializeMapGoogle(BruTile.Web.GoogleMapType.GoogleTerrain);
                 case 10:
                     _num = 0;
-                    return InitializeMapGoogle(GoogleMapType.GoogleLabels);
+                    return InitializeMapGoogle(BruTile.Web.GoogleMapType.GoogleLabels);
                 case 0:
                     _num++;
                     return InitializeMapOsmWithXls(angle);
@@ -67,24 +42,25 @@ namespace WinFormSamples.Samples
             return InitializeMapOsm();
         }
 
-        private static Map InitializeMapOsm()
+        private static SharpMap.Map InitializeMapOsm()
         {
-            Map map = new Map();
+            var map = new SharpMap.Map();
 
-            TileLayer tileLayer = new TileLayer(new OsmTileSource(), "TileLayer - OSM");
-            map.Layers.Add(tileLayer);
+            var tileLayer = new SharpMap.Layers.TileAsyncLayer(new BruTile.Web.OsmTileSource(), "TileLayer - OSM");
+            map.BackgroundLayer.Add(tileLayer);
             map.ZoomToBox(tileLayer.Envelope);
+            
             return map;
         }
 
         private const string XlsConnectionString = @"Provider=Microsoft.Jet.OLEDB.4.0;Data Source={0}\{1};Extended Properties=""Excel 8.0;HDR=Yes;IMEX=1""";
 
-        private static Map InitializeMapOsmWithXls(float angle)
+        private static SharpMap.Map InitializeMapOsmWithXls(float angle)
         {
-            Map map = new Map();
+            var map = new SharpMap.Map();
 
-            TileLayer tileLayer = new TileLayer(new OsmTileSource(), "TileLayer - OSM with XLS");
-            map.Layers.Add(tileLayer);
+            var tileLayer = new SharpMap.Layers.TileAsyncLayer(new BruTile.Web.OsmTileSource(), "TileLayer - OSM with XLS");
+            map.BackgroundLayer.Add(tileLayer);
 
             //Get data from excel
             var xlsPath = string.Format(XlsConnectionString, System.IO.Directory.GetCurrentDirectory(), "GeoData\\Cities.xls");
@@ -107,7 +83,7 @@ namespace WinFormSamples.Samples
             foreach (System.Data.DataRow row in ds.Tables[0].Rows)
             {
                 if (row["X"] == DBNull.Value || row["Y"] == DBNull.Value) continue;
-                double[] coords = new double[] { Convert.ToDouble(row["X"]), Convert.ToDouble(row["Y"])};
+                var coords = new[] { Convert.ToDouble(row["X"]), Convert.ToDouble(row["Y"])};
                 coords = ct.MathTransform.Transform(coords);
                 row["X"] = coords[0];
                 row["Y"] = coords[1];
@@ -119,7 +95,7 @@ namespace WinFormSamples.Samples
             foreach (System.Data.DataRow row in ds.Tables[0].Rows)
             {
                 if (row["X"] == DBNull.Value || row["Y"] == DBNull.Value) continue;
-                double[] coords = new double[] { Convert.ToDouble(row["X"]), Convert.ToDouble(row["Y"])};
+                var coords = new[] { Convert.ToDouble(row["X"]), Convert.ToDouble(row["Y"])};
                 DotSpatial.Projections.Reproject.ReprojectPoints(coords, null, epsg4326, epsg3857, 0, 1);
                 row["X"] = coords[0];
                 row["Y"] = coords[1];
@@ -133,18 +109,24 @@ namespace WinFormSamples.Samples
 
             //Set up provider
             var xlsProvider = new SharpMap.Data.Providers.DataTablePoint(ds.Tables[0], "OID", "X", "Y");
-            var xlsLayer = new SharpMap.Layers.VectorLayer("XLS", xlsProvider);
-            xlsLayer.Style.Symbol = SharpMap.Styles.VectorStyle.DefaultSymbol;
-            
+            var xlsLayer = new SharpMap.Layers.VectorLayer("XLS", xlsProvider)
+                               {Style = {Symbol = SharpMap.Styles.VectorStyle.DefaultSymbol}};
+
             //Add layer to map
             map.Layers.Add(xlsLayer);
-            var xlsLabelLayer = new SharpMap.Layers.LabelLayer("XLSLabel");
-            xlsLabelLayer.DataSource = xlsProvider;
-            xlsLabelLayer.LabelColumn = "Name";
-            xlsLabelLayer.PriorityColumn = "Population";
-            xlsLabelLayer.Style.CollisionBuffer = new System.Drawing.SizeF(2f, 2f);
-            xlsLabelLayer.Style.CollisionDetection = true;
-            xlsLabelLayer.LabelFilter = SharpMap.Rendering.LabelCollisionDetection.ThoroughCollisionDetection;
+            var xlsLabelLayer = new SharpMap.Layers.LabelLayer("XLSLabel")
+                                    {
+                                        DataSource = xlsProvider,
+                                        LabelColumn = "Name",
+                                        PriorityColumn = "Population",
+                                        Style =
+                                            {
+                                                CollisionBuffer = new System.Drawing.SizeF(2f, 2f),
+                                                CollisionDetection = true
+                                            },
+                                        LabelFilter =
+                                            SharpMap.Rendering.LabelCollisionDetection.ThoroughCollisionDetection
+                                    };
             map.Layers.Add(xlsLabelLayer);
 
             map.ZoomToBox(tileLayer.Envelope);
@@ -152,37 +134,36 @@ namespace WinFormSamples.Samples
             return map;
         }
 
-
-
-        private static Map InitializeMapOsmWithVariableLayerCollection(float angle)
+        [Obsolete("Web service no longer available")]
+        private static SharpMap.Map InitializeMapOsmWithVariableLayerCollection(float angle)
         {
-            Map map = new Map();
+            var map = new SharpMap.Map();
 
-            TileLayer tileLayer = new TileLayer(new OsmTileSource(), "TileLayer - OSM with VLC");
-            map.Layers.Add(tileLayer);
+            var tileLayer = new SharpMap.Layers.TileAsyncLayer(new BruTile.Web.OsmTileSource(), "TileLayer - OSM with VLC");
+            map.BackgroundLayer.Add(tileLayer);
 
-            VectorLayer vl = null;
-            vl = new VectorLayer("Vilnius Transport Data - Bus", 
+            var vl = new SharpMap.Layers.VectorLayer("Vilnius Transport Data - Bus", 
                 new VilniusTransportData(VilniusTransportData.TransportType.Bus));
-            PublicTransportTheme pttBus = new PublicTransportTheme(Brushes.DarkGreen);
-            vl.Theme = new CustomTheme(pttBus.GetStyle);
+            var pttBus = new PublicTransportTheme(System.Drawing.Brushes.DarkGreen);
+            vl.Theme = new SharpMap.Rendering.Thematics.CustomTheme(pttBus.GetStyle);
             vl.CoordinateTransformation = GetCoordinateTransformation();
             map.VariableLayers.Add(vl);
-            vl = new VectorLayer("Vilnius Transport Data - Trolley", 
+            vl = new SharpMap.Layers.VectorLayer("Vilnius Transport Data - Trolley", 
                 new VilniusTransportData(VilniusTransportData.TransportType.TrolleyBus));
-            PublicTransportTheme pttTrolley = new PublicTransportTheme(Brushes.Red);
-            vl.Theme = new CustomTheme(pttTrolley.GetStyle);
+            var pttTrolley = new PublicTransportTheme(System.Drawing.Brushes.Red);
+            vl.Theme = new SharpMap.Rendering.Thematics.CustomTheme(pttTrolley.GetStyle);
             vl.CoordinateTransformation = GetCoordinateTransformation();
             map.VariableLayers.Add(vl);
-            VariableLayerCollection.Interval = 5000;
+            SharpMap.Layers.VariableLayerCollection.Interval = 5000;
 
             map.ZoomToBox(vl.Envelope);
 
             return map;
         }
+
 #if !DotSpatialProjections
 
-        private static ICoordinateTransformation GetCoordinateTransformation()
+        private static ProjNet.CoordinateSystems.Transformations.ICoordinateTransformation GetCoordinateTransformation()
         {
 
             //The SRS for this datasource is EPSG:4326, therefore we need to transfrom it to OSM projection
@@ -196,47 +177,47 @@ namespace WinFormSamples.Samples
         {
             var epsg4326 = DotSpatial.Projections.KnownCoordinateSystems.Geographic.World.WGS1984;
             var epsg3857 = DotSpatial.Projections.ProjectionInfo.FromEsriString("PROJCS[\"Popular Visualisation CRS / Mercator\", GEOGCS[\"Popular Visualisation CRS\", DATUM[\"Popular Visualisation Datum\", SPHEROID[\"Popular Visualisation Sphere\", 6378137, 0, AUTHORITY[\"EPSG\",\"7059\"]], TOWGS84[0, 0, 0, 0, 0, 0, 0], AUTHORITY[\"EPSG\",\"6055\"]],PRIMEM[\"Greenwich\", 0, AUTHORITY[\"EPSG\", \"8901\"]], UNIT[\"degree\", 0.0174532925199433, AUTHORITY[\"EPSG\", \"9102\"]], AXIS[\"E\", EAST], AXIS[\"N\", NORTH], AUTHORITY[\"EPSG\",\"4055\"]], PROJECTION[\"Mercator\"], PARAMETER[\"False_Easting\", 0], PARAMETER[\"False_Northing\", 0], PARAMETER[\"Central_Meridian\", 0], PARAMETER[\"Latitude_of_origin\", 0], UNIT[\"metre\", 1, AUTHORITY[\"EPSG\", \"9001\"]], AXIS[\"East\", EAST], AXIS[\"North\", NORTH], AUTHORITY[\"EPSG\",\"3857\"]]");
-            return new DotSpatial.Projections.CoordinateTransformation() { Source = epsg4326, Target = epsg3857 };
+            return new DotSpatial.Projections.CoordinateTransformation { Source = epsg4326, Target = epsg3857 };
 #endif
         }
 
-        private static Map InitializeMapBing(BingMapType mt)
+        private static SharpMap.Map InitializeMapBing(BruTile.Web.BingMapType mt)
         {
-            Map map = new Map();
+            var map = new SharpMap.Map();
 
-            TileLayer tileLayer = new TileLayer(new BingTileSource(BingRequest.UrlBingStaging, "", mt) , "TileLayer - Bing " + mt);
-            map.Layers.Add(tileLayer);
+            var tileLayer = new SharpMap.Layers.TileLayer(new BruTile.Web.BingTileSource(BruTile.Web.BingRequest.UrlBingStaging, "", mt), "TileLayer - Bing " + mt);
+            map.BackgroundLayer.Add(tileLayer);
             map.ZoomToBox(tileLayer.Envelope);
             return map;
         }
 
 
 
-        private static Map InitializeMapGoogle(GoogleMapType mt)
+        private static SharpMap.Map InitializeMapGoogle(BruTile.Web.GoogleMapType mt)
         {
-            Map map = new Map();
+            var map = new SharpMap.Map();
 
-            GoogleRequest req;
-            ITileSource tileSource;
-            TileLayer tileLayer;
-           
-            if (mt == (GoogleMapType.GoogleSatellite | GoogleMapType.GoogleLabels))
+            BruTile.Web.GoogleRequest req;
+            BruTile.ITileSource tileSource;
+            SharpMap.Layers.TileLayer tileLayer;
+
+            if (mt == (BruTile.Web.GoogleMapType.GoogleSatellite | BruTile.Web.GoogleMapType.GoogleLabels))
             {
-                req = new GoogleRequest(GoogleMapType.GoogleSatellite);
-                tileSource = new GoogleTileSource(req);
-                tileLayer = new TileLayer(tileSource, "TileLayer - " + GoogleMapType.GoogleSatellite);
+                req = new BruTile.Web.GoogleRequest(BruTile.Web.GoogleMapType.GoogleSatellite);
+                tileSource = new BruTile.Web.GoogleTileSource(req);
+                tileLayer = new SharpMap.Layers.TileLayer(tileSource, "TileLayer - " + BruTile.Web.GoogleMapType.GoogleSatellite);
                 map.Layers.Add(tileLayer);
-                req = new GoogleRequest(GoogleMapType.GoogleLabels);
-                tileSource = new GoogleTileSource(req);
-                mt = GoogleMapType.GoogleLabels;
+                req = new BruTile.Web.GoogleRequest(BruTile.Web.GoogleMapType.GoogleLabels);
+                tileSource = new BruTile.Web.GoogleTileSource(req);
+                mt = BruTile.Web.GoogleMapType.GoogleLabels;
             }
             else
             {
-                req = new GoogleRequest(mt);
-                tileSource = new GoogleTileSource(req);
+                req = new BruTile.Web.GoogleRequest(mt);
+                tileSource = new BruTile.Web.GoogleTileSource(req);
             }
 
-            tileLayer = new TileLayer(tileSource, "TileLayer - " + mt);
+            tileLayer = new SharpMap.Layers.TileLayer(tileSource, "TileLayer - " + mt);
             map.Layers.Add(tileLayer);
             map.ZoomToBox(tileLayer.Envelope);
             return map;
@@ -245,49 +226,61 @@ namespace WinFormSamples.Samples
         private class PublicTransportTheme
         {
 
-            private static readonly PointF[] ArrowPoints = new PointF[] { new PointF(0, 35), new PointF(6, 0), new PointF(12, 35), new PointF(0, 35) };
-            private static System.Drawing.Image ColoredArrow(Brush c)
+            private static readonly System.Drawing.PointF[] ArrowPoints =
+                new[]
+                    {
+                        new System.Drawing.PointF(0, 35), new System.Drawing.PointF(6, 0),
+                        new System.Drawing.PointF(12, 35), new System.Drawing.PointF(0, 35)
+                    };
+            private static System.Drawing.Image ColoredArrow(System.Drawing.Brush c)
             {
-                Bitmap bmp = new Bitmap(13, 36);
+                var bmp = new System.Drawing.Bitmap(13, 36);
 
-                Graphics g = Graphics.FromImage(bmp);
-                g.Clear(Color.Wheat);
-                g.FillPolygon(c, ArrowPoints);
-                g.DrawPolygon(Pens.Black, ArrowPoints);
-                g.Dispose();
+                using (var g = System.Drawing.Graphics.FromImage(bmp))
+                {
+                    g.Clear(System.Drawing.Color.Wheat);
+                    g.FillPolygon(c, ArrowPoints);
+                    g.DrawPolygon(System.Drawing.Pens.Black, ArrowPoints);
+                }
 
-                bmp.MakeTransparent(Color.Wheat);
+                bmp.MakeTransparent(System.Drawing.Color.Wheat);
                 return bmp;
             }
 
-            VectorStyle _default = new VectorStyle();
+            readonly System.Drawing.Brush _brush;
 
-            Brush _brush;
-
-            public PublicTransportTheme(Brush brush)
+            public PublicTransportTheme(System.Drawing.Brush brush)
             {
                 _brush = brush;
             }
-            public IStyle GetStyle(FeatureDataRow fdr)
+            public SharpMap.Styles.IStyle GetStyle(SharpMap.Data.FeatureDataRow fdr)
             {
-                VectorStyle retval = new VectorStyle();
+                var retval = new SharpMap.Styles.VectorStyle();
 
                 if (fdr["Bearing"] == DBNull.Value)
                 {
-                    Bitmap bmp = new Bitmap(36, 36);
-                    Graphics g = Graphics.FromImage(bmp);
-                    g.Clear(Color.Wheat);
-                    g.FillEllipse(Brushes.Green, 0, 0, 36, 36);
-                    g.DrawEllipse(new Pen(Brushes.Yellow, 3), 4, 4, 28, 28);
-                    g.DrawString("H", new Font("Arial", 18, FontStyle.Bold), Brushes.Yellow, new RectangleF(2, 2, 34, 34), new StringFormat{ Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center});
-                    g.Dispose();
-                    bmp.MakeTransparent(Color.Wheat);
+                    var bmp = new System.Drawing.Bitmap(36, 36);
+                    using (var g = System.Drawing.Graphics.FromImage(bmp))
+                    {
+                        g.Clear(System.Drawing.Color.Wheat);
+                        g.FillEllipse(System.Drawing.Brushes.Green, 0, 0, 36, 36);
+                        g.DrawEllipse(new System.Drawing.Pen(System.Drawing.Brushes.Yellow, 3), 4, 4, 28, 28);
+                        g.DrawString("H", new System.Drawing.Font("Arial", 18, System.Drawing.FontStyle.Bold),
+                                     System.Drawing.Brushes.Yellow,
+                                     new System.Drawing.RectangleF(2, 2, 34, 34),
+                                     new System.Drawing.StringFormat
+                                         {
+                                             Alignment = System.Drawing.StringAlignment.Center,
+                                             LineAlignment = System.Drawing.StringAlignment.Center
+                                         });
+                    }
+                    bmp.MakeTransparent(System.Drawing.Color.Wheat);
                     retval.Symbol = bmp;
                 }
                 else
                 {
                     retval.Symbol = ColoredArrow(_brush);
-                    Single rot =  (Single)(Double)fdr["Bearing"];
+                    var rot =  (Single)(Double)fdr["Bearing"];
                     retval.SymbolRotation = rot % 360f;
                 }
                 return retval;
@@ -299,33 +292,33 @@ namespace WinFormSamples.Samples
         /// This class is directly derived from GreatMaps
         /// http://gmaps.codeplex.com
         /// </summary>
-            private class VilniusTransportData : GeometryFeatureProvider
+        private class VilniusTransportData : SharpMap.Data.Providers.GeometryFeatureProvider
         {
 
             private bool _isActive;
-            private readonly Timer _reQuery = new Timer(5000);
+            private readonly System.Timers.Timer _reQuery = new System.Timers.Timer(5000);
 
             public enum TransportType
             {
                 Bus, TrolleyBus,
             }
 
-            private static FeatureDataTable VehicleDataTable()
+            private static SharpMap.Data.FeatureDataTable VehicleDataTable()
             {
-                FeatureDataTable dt = new FeatureDataTable() { TableName = "VilniusTransportData" };
-                DataColumnCollection dcc = dt.Columns;
-                dcc.AddRange( new DataColumn[]
+                var dt = new SharpMap.Data.FeatureDataTable { TableName = "VilniusTransportData" };
+                System.Data.DataColumnCollection dcc = dt.Columns;
+                dcc.AddRange(new[]
                                   {
-                                      new DataColumn("Id", typeof(int)), 
-                                      //new DataColumn("Lat", typeof(double)), 
-                                      //new DataColumn("Lng", typeof(double)), 
-                                      new DataColumn("Line", typeof(string)), 
-                                      new DataColumn("LastStop", typeof(string)), 
-                                      new DataColumn("TrackType", typeof(string)), 
-                                      new DataColumn("AreaName", typeof(string)), 
-                                      new DataColumn("StreetName", typeof(string)), 
-                                      new DataColumn("Time", typeof(string)), 
-                                      new DataColumn("Bearing", typeof(double)), 
+                                      new System.Data.DataColumn("Id", typeof(int)), 
+                                      //new System.Data.DataColumn("Lat", typeof(double)), 
+                                      //new System.Data.DataColumn("Lng", typeof(double)), 
+                                      new System.Data.DataColumn("Line", typeof(string)), 
+                                      new System.Data.DataColumn("LastStop", typeof(string)), 
+                                      new System.Data.DataColumn("TrackType", typeof(string)), 
+                                      new System.Data.DataColumn("AreaName", typeof(string)), 
+                                      new System.Data.DataColumn("StreetName", typeof(string)), 
+                                      new System.Data.DataColumn("Time", typeof(string)), 
+                                      new System.Data.DataColumn("Bearing", typeof(double)) 
                                   });
                 return dt;
             }
@@ -341,7 +334,7 @@ namespace WinFormSamples.Samples
                 GetVilniusTransportData(String.Empty);
             }
 
-            private void HandleTimerElapsed(object sender, ElapsedEventArgs e)
+            private void HandleTimerElapsed(object sender, System.Timers.ElapsedEventArgs e)
             {
                 GetVilniusTransportData(string.Empty);
             }
@@ -349,8 +342,11 @@ namespace WinFormSamples.Samples
             /// <summary>
             /// timeout for map connections
             /// </summary>
-            private int Timeout = 30 * 1000;
-            private GeoAPI.Geometries.IGeometryFactory _factory = new GeometryFactory(new PrecisionModel(PrecisionModels.Floating), 4326);
+            private const int Timeout = 30*1000;
+
+            private readonly GeoAPI.Geometries.IGeometryFactory _factory =
+                GeoAPI.GeometryServiceProvider.Instance.CreateGeometryFactory(4326);
+
             /// <summary>
             /// gets realtime data from public transport in city vilnius of lithuania
             /// </summary>
@@ -360,7 +356,7 @@ namespace WinFormSamples.Samples
                 _isActive = true;
 
                 //List<FeatureDataRow> newFeatures = new List<FeatureDataRow>();
-                FeatureDataTable fdt = VehicleDataTable();
+                var fdt = VehicleDataTable();
 
                 string url = "http://www.troleibusai.lt/puslapiai/services/vehiclestate.php?type=";
 
@@ -386,58 +382,60 @@ namespace WinFormSamples.Samples
 
                 url += "&app=SharpMap.WinFormSamples";
 
-                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
-                {
-                    request.Proxy = WebRequest.DefaultWebProxy;
-                }
+                var request = (System.Net.HttpWebRequest)System.Net.WebRequest.Create(url);
 
                 request.Timeout = Timeout;
                 request.ReadWriteTimeout = request.Timeout;
                 request.Accept = "*/*";
                 request.KeepAlive = false;
 
-                string xml = string.Empty;
+                string xml;
 
-                using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
+                using (var response = request.GetResponse() as System.Net.HttpWebResponse)
                 {
-                    using (Stream responseStream = response.GetResponseStream())
+                    if (response == null)
+                        return;
+
+                    using (var responseStream = response.GetResponseStream())
                     {
-                        using (StreamReader read = new StreamReader(responseStream))
+                        if (responseStream == null)
+                            return;
+                        using (var read = new System.IO.StreamReader(responseStream))
                         {
                             xml = read.ReadToEnd();
                         }
                     }
                 }
 
-                XmlDocument doc = new XmlDocument();
+                var doc = new System.Xml.XmlDocument();
                 {
                     doc.LoadXml(xml);
 
-                    XmlNodeList devices = doc.GetElementsByTagName("Device");
-                    foreach (XmlNode dev in devices)
+                    var devices = doc.GetElementsByTagName("Device");
+                    foreach (System.Xml.XmlNode dev in devices)
                     {
                         if (dev.Attributes == null) continue;
 
                         double? lat = null, lng = null;
-                        FeatureDataRow dr = fdt.NewRow();
+                        SharpMap.Data.FeatureDataRow dr = fdt.NewRow();
                         dr["Id"] = int.Parse(dev.Attributes["ID"].InnerText);
-                        foreach (XmlElement elem in dev.ChildNodes)
+                        foreach (System.Xml.XmlElement elem in dev.ChildNodes)
                         {
                             // Debug.WriteLine(d.Id + "->" + elem.Name + ": " + elem.InnerText);
 
                             switch (elem.Name)
                             {
                                 case "Lat":
-                                    lat = double.Parse(elem.InnerText, CultureInfo.InvariantCulture);
+                                    lat = double.Parse(elem.InnerText, System.Globalization.CultureInfo.InvariantCulture);
                                     break;
 
                                 case "Lng":
-                                    lng = double.Parse(elem.InnerText, CultureInfo.InvariantCulture);
+                                    lng = double.Parse(elem.InnerText, System.Globalization.CultureInfo.InvariantCulture);
                                     break;
 
                                 case "Bearing":
                                     if (!string.IsNullOrEmpty(elem.InnerText))
-                                        dr["Bearing"] = double.Parse(elem.InnerText, CultureInfo.InvariantCulture);
+                                        dr["Bearing"] = double.Parse(elem.InnerText, System.Globalization.CultureInfo.InvariantCulture);
                                     break;
 
                                 case "LineNum":
@@ -468,7 +466,7 @@ namespace WinFormSamples.Samples
 
                         if (lat.HasValue && lng.HasValue)
                         {
-                            dr.Geometry = _factory.CreatePoint(new Point(lng.Value, lat.Value));
+                            dr.Geometry = _factory.CreatePoint(new GeoAPI.Geometries.Coordinate(lng.Value, lat.Value));
                             fdt.Rows.Add(dr);
                         }
                     }
@@ -476,7 +474,7 @@ namespace WinFormSamples.Samples
 
                 Features.Clear();
 
-                foreach (FeatureDataRow featureDataRow in fdt.Rows)
+                foreach (SharpMap.Data.FeatureDataRow featureDataRow in fdt.Rows)
                 {
                     var fdr = Features.NewRow();
                     fdr.ItemArray = featureDataRow.ItemArray;

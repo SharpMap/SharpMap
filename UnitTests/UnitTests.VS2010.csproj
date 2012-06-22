@@ -111,8 +111,15 @@
     <Compile Include="Converters\WKB\WKBTests.cs" />
     <Compile Include="Converters\WKT\WktGeometryTests.cs" />
     <Compile Include="Data\Providers\DataTablePointTests.cs" />
+    <Compile Include="Data\Providers\MsSqlServerSpatialTests.cs" />
+    <Compile Include="Data\Providers\ShapeFileProviderTests.cs" />
     <Compile Include="MapDecorationTest.cs" />
     <Compile Include="MapTest.cs" />
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
     <Compile Include="Rendering\GroupStyle\GroupStyleTests.cs" />
     <Compile Include="Rendering\Symbolizer\CohenSutherlandLineClippingTest.cs" />
     <Compile Include="Rendering\Thematics\ColorBlendTest.cs" />
@@ -134,7 +141,12 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
     <None Include="packages.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
   </ItemGroup>
   <PropertyGroup>
     <PreBuildEvent>"$(SolutionDir)BuildTools\nuget.exe" install "$(ProjectDir)packages.config" -o "$(SolutionDir)Packages"</PreBuildEvent>

@@ -84,18 +84,18 @@ public partial class Bins : Page
         int angle2 = rand.Next(angle1 + 60, 300);
         Rectangle rect = new Rectangle(0, 0, size, size);
         Bitmap b = new Bitmap(size, size);
-        Graphics g = Graphics.FromImage(b);
+        using (var g = Graphics.FromImage(b))
+        {
+            // Draw Pie 
+            g.FillPie(Brushes.LightGreen, rect, 0, angle1);
+            g.FillPie(Brushes.Pink, rect, angle1, angle2 - angle1);
+            g.FillPie(Brushes.PeachPuff, rect, angle2, 360 - angle2);
 
-        // Draw Pie 
-        g.FillPie(Brushes.LightGreen, rect, 0, angle1);
-        g.FillPie(Brushes.Pink, rect, angle1, angle2 - angle1);
-        g.FillPie(Brushes.PeachPuff, rect, angle2, 360 - angle2);
-
-        // Draw Borders 
-        g.DrawPie(Pens.Green, rect, 0, angle1);
-        g.DrawPie(Pens.Red, rect, angle1, angle2 - angle1);
-        g.DrawPie(Pens.Orange, rect, angle2, 360 - angle2);
-        g.Dispose();
+            // Draw Borders 
+            g.DrawPie(Pens.Green, rect, 0, angle1);
+            g.DrawPie(Pens.Red, rect, angle1, angle2 - angle1);
+            g.DrawPie(Pens.Orange, rect, angle2, 360 - angle2);
+        }
         return b;
     }
 

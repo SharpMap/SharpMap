@@ -95,14 +95,14 @@ namespace SharpMap.Data.Providers
         /// <summary>
         /// Returns a <see cref="SharpMap.Data.FeatureDataRow"/> based on a RowID
         /// </summary>
-        /// <param name="rowId"></param>
+        /// <param name="rowId">The id of the row.</param>
         /// <returns>datarow</returns>
         FeatureDataRow GetFeature(uint rowId);
 
         /// <summary>
         /// <see cref="Envelope"/> of dataset
         /// </summary>
-        /// <returns>boundingbox</returns>
+        /// <returns>The 2d extent of the layer</returns>
         Envelope GetExtents();
 
         /// <summary>

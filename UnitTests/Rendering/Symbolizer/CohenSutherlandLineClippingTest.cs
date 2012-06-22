@@ -3,7 +3,7 @@ using NUnit.Framework;
 using GeoAPI.Geometries;
 using NetTopologySuite.Geometries;
 
-namespace UnitTests.Rendering
+namespace UnitTests.Rendering.Symbolizer
 {
     [TestFixture]
     public class CohenSutherlandLineClippingTest
