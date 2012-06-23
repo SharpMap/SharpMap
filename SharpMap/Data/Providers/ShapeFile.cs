@@ -614,18 +614,40 @@ namespace SharpMap.Data.Providers
 			if (objectlist.Count == 0) //no features found. Return an empty set
 				return new Collection<IGeometry>();
 
-			var geometries = new Collection<IGeometry>();
+            if (FilterDelegate != null)
+                return GetGeometriesInViewWithFilter(objectlist);
 
-			for (int i = 0; i < objectlist.Count; i++)
-			{
-				var g = GetGeometryByID(objectlist[i]);
-				if (g != null)
-					geometries.Add(g);
-			}
-
-			CleanInternalCache(objectlist);
-			return geometries;
+		    return GetGeometriesInViewWithoutFilter(objectlist);
 		}
+
+        private Collection<IGeometry> GetGeometriesInViewWithFilter(Collection<uint> oids)
+        {
+            var result = new Collection<IGeometry>();
+            var table = DbaseFile.NewTable;
+            var tmpOids = new Collection<uint>();
+            foreach(var oid in oids)
+            {
+                var fdr = GetFeature(oid, table);
+                if (!FilterDelegate(fdr)) continue;
+                result.Add(fdr.Geometry);
+                tmpOids.Add(oid);
+            }
+
+            CleanInternalCache(tmpOids);
+            return result;
+        }
+
+        private Collection<IGeometry> GetGeometriesInViewWithoutFilter(Collection<uint> oids)
+        {
+            var result = new Collection<IGeometry>();
+            foreach(var oid in oids)
+            {
+                result.Add(ReadGeometry(oid));
+            }
+
+            CleanInternalCache(oids);
+            return result;
+        }
 
 		/// <summary>
 		/// Returns all objects whose boundingbox intersects bbox.
@@ -662,20 +684,14 @@ namespace SharpMap.Data.Providers
 			    var fdr = (FeatureDataRow) dt.LoadDataRow(DbaseFile.GetValues(objectlist[i]), true);
 			    fdr.Geometry = ReadGeometry(objectlist[i]);
 
-			    /*
-				//This is triple effort since 
-				//- Bounding Boxes are checked by GetObjectIdsInView,
-				//- FilterDelegate is evaluated in GetFeature
-				FeatureDataRow fdr = dbaseFile.GetFeature(objectlist[i], dt);
-				fdr.Geometry = ReadGeometry(objectlist[i]);
-				if (fdr.Geometry != null)
-					if (fdr.Geometry.GetBoundingBox().Intersects(bbox))
-						if (FilterDelegate == null || FilterDelegate(fdr))
-							dt.AddRow(fdr);
-				 */
+                //Test if the feature data row corresponds to the FilterDelegate
+                if (FilterDelegate != null && !FilterDelegate(fdr))
+                    fdr.Delete();
+
 			}
             dt.EndLoadData();
-            
+            dt.AcceptChanges();
+
             ds.Tables.Add(dt);
 
 			CleanInternalCache(objectlist);
@@ -703,17 +719,6 @@ namespace SharpMap.Data.Providers
 		/// <returns>The geometry at the Id</returns>
 		public IGeometry GetGeometryByID(uint oid)
 		{
-            // *
-            // * ToDo: Evaluate if this belongs here
-            // *
-            if (FilterDelegate != null) //Apply filtering
-			{
-				var fdr = GetFeature(oid);
-				if (fdr != null)
-					return fdr.Geometry;
-				return null;
-			}
-
 			if (_useMemoryCache)
 			{
 				FeatureDataRow fdr;
@@ -737,6 +742,7 @@ namespace SharpMap.Data.Providers
         /// <summary>
         /// Gets or sets a value indicating that the provider should check if geometry belongs to a deleted record.
         /// </summary>
+        /// <remarks>This really slows rendering performance down</remarks>
         public bool CheckIfRecordIsDeleted { get; set; }
 
 		/// <summary>
@@ -758,6 +764,7 @@ namespace SharpMap.Data.Providers
             var dt = DbaseFile.NewTable;
             dt.BeginLoadData();
 
+		    var tmpOids = new Collection<uint>();
             //Cycle through all object ids
 		    foreach (var oid in objectlist)
 		    {
@@ -775,32 +782,20 @@ namespace SharpMap.Data.Providers
                 //Get the feature data row and assign the geometry
 		        var fdr = (FeatureDataRow) dt.LoadDataRow(DbaseFile.GetValues(oid), true);
 		        fdr.Geometry = testGeom;
+
+                //Test if the feature data row corresponds to the FilterDelegate
+                if (FilterDelegate != null && !FilterDelegate(fdr))
+                    fdr.Delete();
+                else
+                    tmpOids.Add(oid);
 		    }
 
             dt.EndLoadData();
+            dt.AcceptChanges();
+
             ds.Tables.Add(dt);
 
-            ////currently we are only checking against the bounding box,
-            ////so we can safely call ExecuteIntersectionQuery(BoundingBox, FeatureDataSet)
-            //ExecuteIntersectionQuery(bbox, ds);
-            ///*
-
-            //if (objectlist.Count == 0)
-            //    return;
-
-            //for (int j = 0; j < objectlist.Count; j++)
-            //{
-            //    FeatureDataRow fdr = GetFeature(objectlist[j], dt);
-            //    //if (fdr == null) continue;
-
-            //    if (fdr.Geometry != null)
-            //        if (fdr.Geometry.GetBoundingBox().Intersects(bbox))
-            //            //replace above line with this:  if(fdr.Geometry.Intersects(bbox))  when relation model is complete
-            //            if (FilterDelegate == null || FilterDelegate(fdr))
-            //                dt.AddRow(fdr);
-            //}
-            //ds.Tables.Add(dt);
-            // */
+            CleanInternalCache(tmpOids);
 		}
 
 
@@ -814,10 +809,15 @@ namespace SharpMap.Data.Providers
 		}
 
 		/// <summary>
-		/// Gets a datarow from the datasource at the specified index
+		/// Gets a <see cref="FeatureDataRow"/> from the datasource at the specified index
+		/// <para/>
+		/// Please note well: It is not checked whether 
+		/// <list type="Bullet">
+		/// <item>the data record matches the <see cref="FilterProvider.FilterDelegate"/> assigned.</item>
+		/// </list>
 		/// </summary>
-		/// <param name="rowId"></param>
-		/// <returns></returns>
+		/// <param name="rowId">The object identifier for the record</param>
+		/// <returns>The feature data row</returns>
 		public FeatureDataRow GetFeature(uint rowId)
 		{
 			return GetFeature(rowId, DbaseFile.NewTable);
@@ -958,35 +958,40 @@ namespace SharpMap.Data.Providers
 		{
 			string projfile = Path.GetDirectoryName(Filename) + "\\" + Path.GetFileNameWithoutExtension(Filename) +
 							  ".prj";
-			if (File.Exists(projfile))
-			{
-				try
-				{
-					string wkt = File.ReadAllText(projfile);
+            if (File.Exists(projfile))
+            {
+                try
+                {
+                    string wkt = File.ReadAllText(projfile);
 #if !DotSpatialProjections
-					_coordinateSystem = (ICoordinateSystem) CoordinateSystemWktReader.Parse(wkt);
-				    SRID = (int) _coordinateSystem.AuthorityCode;
+                    _coordinateSystem = (ICoordinateSystem)CoordinateSystemWktReader.Parse(wkt);
+                    SRID = (int)_coordinateSystem.AuthorityCode;
 #else
 					_coordinateSystem = ProjectionInfo.FromEsriString(wkt);
 #endif
-					_coordsysReadFromFile = true;
-				}
-				catch (Exception ex)
-				{
-					Trace.TraceWarning("Coordinate system file '" + projfile +
-									   "' found, but could not be parsed. WKT parser returned:" + ex.Message);
-					throw;
-				}
-			}
+                    _coordsysReadFromFile = true;
+                }
+                catch (Exception ex)
+                {
+                    Trace.TraceWarning("Coordinate system file '" + projfile +
+                                       "' found, but could not be parsed. WKT parser returned:" + ex.Message);
+                    throw;
+                }
+            }
             else
-			{
+            {
+                if (_coordinateSystem == null)
+                    SRID = 0;
+                else
+                {
 #if !DotSpatialProjections
-                SRID = (int)_coordinateSystem.AuthorityCode;
+                    SRID = (int) _coordinateSystem.AuthorityCode;
 #else
-			    SRID = _coordinateSystem.EpsgCode;
+			        SRID = _coordinateSystem.EpsgCode;
 #endif
-			}
-        }
+                }
+            }
+		}
 
 		/// <summary>
 		/// If an index file is present (.shx) it reads the record offsets from the .shx index file and returns the information in an array.
@@ -1464,51 +1469,52 @@ namespace SharpMap.Data.Providers
 
 		/// <summary>
 		/// Gets a datarow from the datasource at the specified index belonging to the specified datatable
-		/// </summary>
-		/// <param name="rowId"></param>
-		/// <param name="dt">Datatable to feature should belong to.</param>
-		/// <returns></returns>
-		public FeatureDataRow GetFeature(uint rowId, FeatureDataTable dt)
+        /// <para/>
+        /// Please note well: It is not checked whether 
+        /// <list type="Bullet">
+        /// <item>the data record matches the <see cref="FilterProvider.FilterDelegate"/> assigned.</item>
+        /// </list>
+        /// </summary>
+        /// <param name="rowId">The object identifier for the record</param>
+        /// <param name="dt">The datatable the feature should belong to.</param>
+        /// <returns>The feature data row</returns>
+        public FeatureDataRow GetFeature(uint rowId, FeatureDataTable dt)
 		{
 			Debug.Assert(dt != null);
 			if (DbaseFile != null)
 			{
-				//MemoryCache
+			    FeatureDataRow fdr = null;
+                
+                //MemoryCache
 				if (_useMemoryCache)
 				{
-					FeatureDataRow dr2;
-					_cacheDataTable.TryGetValue(rowId, out dr2);
-					if (dr2 == null)
+					_cacheDataTable.TryGetValue(rowId, out fdr);
+					if (fdr == null)
 					{
-						dr2 = DbaseFile.GetFeature(rowId, dt);
-						dr2.Geometry = ReadGeometry(rowId);
-						_cacheDataTable.Add(rowId, dr2);
+						fdr = DbaseFile.GetFeature(rowId, dt);
+						fdr.Geometry = ReadGeometry(rowId);
+						_cacheDataTable.Add(rowId, fdr);
 					}
 
 					//Make a copy to return
-					var drNew = dt.NewRow();
-					for (int i = 0; i < dr2.Table.Columns.Count; i++)
-					{
-						drNew[i] = dr2[i];
-					}
-					drNew.Geometry = dr2.Geometry;
-					return drNew;
+					var fdrNew = dt.NewRow();
+                    Array.Copy(fdr.ItemArray, 0, fdrNew.ItemArray, 0, fdr.ItemArray.Length);
+                    //for (var i = 0; i < fdr.Table.Columns.Count; i++)
+                    //{
+                    //    fdrNew[i] = fdr[i];
+                    //}
+					fdrNew.Geometry = fdr.Geometry;
+					return fdr;
 				}
 
-			    var dr = DbaseFile.GetFeature(rowId, dt);
+			    fdr = DbaseFile.GetFeature(rowId, dt);
                 
                 // GetFeature returns null if the record has deleted flag
-                if (dr == null) 
+                if (fdr == null) 
                     return null;
 
-                //Read the geometry
-                dr.Geometry = ReadGeometry(rowId);
-			    
-                // *
-                // * ToDo: Evaluate if this shouldn't be moved to ExecuteIntersectionQuery
-                // *
-                if (FilterDelegate == null || FilterDelegate(dr))
-			        return dr;
+                // Read the geometry
+                fdr.Geometry = ReadGeometry(rowId);
 			    
                 return null;
 			}

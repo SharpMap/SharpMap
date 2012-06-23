@@ -88,6 +88,7 @@ namespace SharpMap.Data.Providers
                 throw new FileNotFoundException(String.Format("Could not find file \"{0}\"", filename));
             _filename = filename;
             _headerIsParsed = false;
+            _includeOid = true;
         }
 
         /// <summary>
