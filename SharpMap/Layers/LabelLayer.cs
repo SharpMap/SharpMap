@@ -852,10 +852,10 @@ namespace SharpMap.Layers
             // only get point in enverlop of map
             var colPoint = new Collection<PointF>();
             var bCheckStarted = false;
-            var testEnvelope = map.Envelope.Grow(map.PixelSize*10);
+            //var testEnvelope = map.Envelope.Grow(map.PixelSize*10);
             for (var j = 0; j < sPoints.Length; j++)
             {
-                if (testEnvelope.Contains(sPoints[j]))
+                if (map.Envelope.Contains(sPoints[j]))
                 {
                     //points[j] = map.WorldToImage(sPoints[j]);
                     colPoint.Add(map.WorldToImage(sPoints[j]));
