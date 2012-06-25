@@ -126,6 +126,7 @@
   <ItemGroup>
     <Compile Include="Data\Providers\DataTablePoint.cs" />
     <Compile Include="Data\FwToolsHelper.cs" />
+    <Compile Include="Data\Providers\ManagedSpatiaLite.cs" />
     <Compile Include="Data\Providers\NtsProvider.cs" />
     <Compile Include="Data\Providers\OgrProvider.cs" />
     <Compile Include="Data\Providers\Oracle.cs" />
