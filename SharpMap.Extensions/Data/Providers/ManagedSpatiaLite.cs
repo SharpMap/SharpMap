@@ -1,4 +1,4 @@
-﻿// Copyright 2009 - William Dollins
+﻿// Copyright 2012 - Peter Löfås
 //
 // This file is part of SharpMap.
 // SharpMap is free software; you can redistribute it and/or modify
