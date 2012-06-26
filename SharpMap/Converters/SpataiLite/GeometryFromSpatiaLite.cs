@@ -20,6 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
+using GeoAPI.Geometries;
 
 namespace SharpMap.Converters.SpatiaLite
 {
@@ -36,7 +37,7 @@ namespace SharpMap.Converters.SpatiaLite
         /// </summary>
         /// <param name="spatialliteGeom"></param>
         /// <returns></returns>
-        public static GeoAPI.Geometries.IGeometry Parse(byte[] spatialliteGeom)
+        public static GeoAPI.Geometries.IGeometry Parse(byte[] spatialliteGeom, IGeometryFactory factory)
         {
             int nBytes = spatialliteGeom.Length;
             if (spatialliteGeom.Length < 44
@@ -62,21 +63,21 @@ namespace SharpMap.Converters.SpatiaLite
             /* -------------------------------------------------------------------- */
             if (nGType == 1)
             {
-               return new NetTopologySuite.Geometries.Point(ReadPoint(spatialliteGeom,ref idx,isLittleEndian));
+                return factory.CreatePoint(ReadPoint(spatialliteGeom, ref idx, isLittleEndian));
             }
             /* -------------------------------------------------------------------- */
             /*      LineString                                                      */
             /* -------------------------------------------------------------------- */
             else if (nGType == 2)
             {
-                return ReadLineString(spatialliteGeom, ref idx, isLittleEndian);
+                return ReadLineString(spatialliteGeom, ref idx, isLittleEndian, factory);
             }
             /* -------------------------------------------------------------------- */
             /*      Polygon                                                      */
             /* -------------------------------------------------------------------- */
             else if (nGType == 3)
             {
-                return ReadPolygon(spatialliteGeom, ref idx, isLittleEndian);
+                return ReadPolygon(spatialliteGeom, ref idx, isLittleEndian, factory);
             }
             /* -------------------------------------------------------------------- */
             /*      MultiPoint                          */
@@ -94,9 +95,9 @@ namespace SharpMap.Converters.SpatiaLite
                     if (gt != 1)
                         throw new ApplicationException("MultiPoint must Contain Point entities");
 
-                    pts.Add(new NetTopologySuite.Geometries.Point(ReadPoint(spatialliteGeom, ref idx, isLittleEndian)));
+                    pts.Add(factory.CreatePoint(ReadPoint(spatialliteGeom, ref idx, isLittleEndian)));
                 }
-                return new NetTopologySuite.Geometries.MultiPoint(pts.ToArray());
+                return factory.CreateMultiPoint(pts.ToArray());
             }
             /* -------------------------------------------------------------------- */
             /*      MultiLineString                          */
@@ -113,9 +114,9 @@ namespace SharpMap.Converters.SpatiaLite
                     int gt = ReadUInt32(spatialliteGeom, ref idx, isLittleEndian);
                     if (gt != 2)
                         throw new ApplicationException("MultiLineString must contain LineString Entities");
-                    lss.Add(ReadLineString(spatialliteGeom, ref idx, isLittleEndian));
+                    lss.Add(ReadLineString(spatialliteGeom, ref idx, isLittleEndian, factory));
                 }
-                return new NetTopologySuite.Geometries.MultiLineString(lss.ToArray());
+                return factory.CreateMultiLineString(lss.ToArray());
             }
             /* -------------------------------------------------------------------- */
             /*      MultiPolygon                                                      */
@@ -133,15 +134,15 @@ namespace SharpMap.Converters.SpatiaLite
                     if (gt != 3)
                         throw new ApplicationException("Multipolygon must contain Polygon Entities");
 
-                    polys.Add(ReadPolygon(spatialliteGeom, ref idx, isLittleEndian));
+                    polys.Add(ReadPolygon(spatialliteGeom, ref idx, isLittleEndian, factory));
                 }
-                return new NetTopologySuite.Geometries.MultiPolygon(polys.ToArray());
+                return factory.CreateMultiPolygon(polys.ToArray());
             }
             
             return null;
         }
 
-        private static GeoAPI.Geometries.IPolygon ReadPolygon(byte[] geom, ref int idx, bool isLittleEndian)
+        private static GeoAPI.Geometries.IPolygon ReadPolygon(byte[] geom, ref int idx, bool isLittleEndian, IGeometryFactory factory)
         {
             double[] adfTuple = new double[2];
             int nRings;
@@ -154,10 +155,10 @@ namespace SharpMap.Converters.SpatiaLite
 
             List<GeoAPI.Geometries.ILineString> lineStrings = new List<GeoAPI.Geometries.ILineString>();
             for (int i = 0; i < nRings; i++)
-                lineStrings.Add(ReadLineString(geom,ref idx, isLittleEndian));
+                lineStrings.Add(ReadLineString(geom,ref idx, isLittleEndian, factory));
 
             List<GeoAPI.Geometries.ILinearRing> holes = null;
-            var shell = new NetTopologySuite.Geometries.LinearRing(lineStrings[0].Coordinates);
+            var shell = factory.CreateLinearRing(lineStrings[0].Coordinates);
             if (lineStrings.Count > 1)
             {
                 holes = new List<GeoAPI.Geometries.ILinearRing>();
@@ -166,10 +167,10 @@ namespace SharpMap.Converters.SpatiaLite
                     holes.Add(new NetTopologySuite.Geometries.LinearRing(lineStrings[i].Coordinates));
                 }
             }
-            return new NetTopologySuite.Geometries.Polygon(shell, holes == null ? null : holes.ToArray());
+            return factory.CreatePolygon(shell, holes == null ? null : holes.ToArray());
         }
 
-        private static GeoAPI.Geometries.ILineString ReadLineString(byte[] geom, ref int idx, bool isLittleEndian)
+        private static GeoAPI.Geometries.ILineString ReadLineString(byte[] geom, ref int idx, bool isLittleEndian, IGeometryFactory factory)
         {
             double[] adfTuple = new double[2];
             int nPointCount;
@@ -186,7 +187,7 @@ namespace SharpMap.Converters.SpatiaLite
                 pts.Add(ReadPoint(geom, ref idx, isLittleEndian));
             }
 
-            return new NetTopologySuite.Geometries.LineString(pts.ToArray());
+            return factory.CreateLineString(pts.ToArray());
         }
 
         private static GeoAPI.Geometries.Coordinate ReadPoint(byte[] geom, ref int idx, bool isLittleEndian)

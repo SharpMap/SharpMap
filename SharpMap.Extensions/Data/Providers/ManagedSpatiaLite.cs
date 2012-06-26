@@ -246,7 +246,7 @@ namespace SharpMap.Data.Providers
                         {
                             if (dr[0] != DBNull.Value)
                             {
-                                var geom = SharpMap.Converters.SpatiaLite.GeometryFromSpatiaLite.Parse((byte[])dr[0]);
+                                var geom = SharpMap.Converters.SpatiaLite.GeometryFromSpatiaLite.Parse((byte[])dr[0], Factory);
 
                                 //If we didn't have a spatial index we need to compare geometries manually
                                 if (_spatiaLiteIndex != SpatiaLiteIndex.RTree && !bbox.Intersects(geom.EnvelopeInternal))
@@ -297,7 +297,7 @@ namespace SharpMap.Data.Providers
                             //If we didn't have a spatial index we need to compare geometries manually
                             if (_spatiaLiteIndex != SpatiaLiteIndex.RTree)
                             {
-                                var geom = SharpMap.Converters.SpatiaLite.GeometryFromSpatiaLite.Parse((byte[])dr[1]);
+                                var geom = SharpMap.Converters.SpatiaLite.GeometryFromSpatiaLite.Parse((byte[])dr[1], Factory);
                                 if (!bbox.Intersects(geom.EnvelopeInternal))
                                     continue;
                             }
@@ -329,7 +329,7 @@ namespace SharpMap.Data.Providers
                         {
                             if (dr[0] != DBNull.Value)
                             {
-                                geom = SharpMap.Converters.SpatiaLite.GeometryFromSpatiaLite.Parse((byte[])dr[0]);
+                                geom = SharpMap.Converters.SpatiaLite.GeometryFromSpatiaLite.Parse((byte[])dr[0], Factory);
                             }
                         }
                     }
@@ -372,7 +372,7 @@ namespace SharpMap.Data.Providers
                         {
                             IGeometry g = null;
                             if (dr["sharpmap_tempgeometry"] != DBNull.Value)
-                                g = SharpMap.Converters.SpatiaLite.GeometryFromSpatiaLite.Parse((byte[])dr["sharpmap_tempgeometry"]);
+                                g = SharpMap.Converters.SpatiaLite.GeometryFromSpatiaLite.Parse((byte[])dr["sharpmap_tempgeometry"], Factory);
                             if (g != null && geom.Overlaps(g))
                             {
                                 var fdr = fdt.NewRow();
@@ -381,7 +381,7 @@ namespace SharpMap.Data.Providers
                                         !col.ColumnName.StartsWith("Envelope_"))
                                         fdr[col.ColumnName] = dr[col];
                                 if (dr["sharpmap_tempgeometry"] != DBNull.Value)
-                                    fdr.Geometry = SharpMap.Converters.SpatiaLite.GeometryFromSpatiaLite.Parse((byte[])dr["sharpmap_tempgeometry"]);
+                                    fdr.Geometry = SharpMap.Converters.SpatiaLite.GeometryFromSpatiaLite.Parse((byte[])dr["sharpmap_tempgeometry"], Factory);
                                 fdt.AddRow(fdr);
                             }
                         }
@@ -432,7 +432,7 @@ namespace SharpMap.Data.Providers
                         {
                             IGeometry g = null;
                             if (reader["sharpmap_tempgeometry"] != DBNull.Value)
-                                g = SharpMap.Converters.SpatiaLite.GeometryFromSpatiaLite.Parse((byte[])reader["sharpmap_tempgeometry"]);
+                                g = SharpMap.Converters.SpatiaLite.GeometryFromSpatiaLite.Parse((byte[])reader["sharpmap_tempgeometry"], Factory);
 
                             //If not using RTree index we need to filter in code
                             if (_spatiaLiteIndex != SpatiaLiteIndex.RTree && !box.Intersects(g.EnvelopeInternal))
@@ -508,7 +508,7 @@ namespace SharpMap.Data.Providers
                                     !col.ColumnName.StartsWith("Envelope_"))
                                     fdr[col.ColumnName] = dr[col];
                             if (dr["sharpmap_tempgeometry"] != DBNull.Value)
-                                fdr.Geometry = SharpMap.Converters.SpatiaLite.GeometryFromSpatiaLite.Parse((byte[])dr["sharpmap_tempgeometry"]);
+                                fdr.Geometry = SharpMap.Converters.SpatiaLite.GeometryFromSpatiaLite.Parse((byte[])dr["sharpmap_tempgeometry"], Factory);
                             return fdr;
                         }
                         return null;
@@ -636,7 +636,7 @@ namespace SharpMap.Data.Providers
                             double minx = double.MaxValue, miny = double.MaxValue, maxx = double.MinValue, maxy = double.MinValue;
                             while (dr.Read())
                             {
-                                var geom = SharpMap.Converters.SpatiaLite.GeometryFromSpatiaLite.Parse((byte[])dr[0]);
+                                var geom = SharpMap.Converters.SpatiaLite.GeometryFromSpatiaLite.Parse((byte[])dr[0], Factory);
 
                                 var env = geom.EnvelopeInternal;
                                 if (minx > env.MinX)
