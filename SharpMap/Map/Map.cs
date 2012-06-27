@@ -34,39 +34,10 @@ using Common.Logging;
 namespace SharpMap
 {
     /// <summary>
-    /// Map class
+    /// Map class, the main holder for a MapObject in SharpMap
     /// </summary>
     /// <example>
     /// Creating a new map instance, adding layers and rendering the map:
-    /// <code lang="C#">
-    /// SharpMap.Map myMap = new SharpMap.Map(picMap.Size);
-    /// myMap.MinimumZoom = 100;
-    /// myMap.BackgroundColor = Color.White;
-    /// 
-    /// SharpMap.Layers.VectorLayer myLayer = new SharpMap.Layers.VectorLayer("My layer");
-    ///	string ConnStr = "Server=127.0.0.1;Port=5432;User Id=postgres;Password=password;Database=myGisDb;";
-    /// myLayer.DataSource = new SharpMap.Data.Providers.PostGIS(ConnStr, "myTable", "the_geom", 32632);
-    /// myLayer.FillStyle = new SolidBrush(Color.FromArgb(240,240,240)); //Applies to polygon types only
-    ///	myLayer.OutlineStyle = new Pen(Color.Blue, 1); //Applies to polygon and linetypes only
-    /// //Setup linestyle (applies to line types only)
-    ///	myLayer.Style.Line.Width = 2;
-    ///	myLayer.Style.Line.Color = Color.Black;
-    ///	myLayer.Style.Line.EndCap = System.Drawing.Drawing2D.LineCap.Round; //Round end
-    ///	myLayer.Style.Line.StartCap = layRailroad.LineStyle.EndCap; //Round start
-    ///	myLayer.Style.Line.DashPattern = new float[] { 4.0f, 2.0f }; //Dashed linestyle
-    ///	myLayer.Style.EnableOutline = true;
-    ///	myLayer.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias; //Render smooth lines
-    ///	myLayer.MaxVisible = 40000;
-    /// 
-    /// myMap.Layers.Add(myLayer);
-    /// // [add more layers...]
-    /// 
-    /// myMap.Center = new SharpMap.Geometries.Point(725000, 6180000); //Set center of map
-    ///	myMap.Zoom = 1200; //Set zoom level
-    /// myMap.Size = new System.Drawing.Size(300,200); //Set output size
-    /// 
-    /// System.Drawing.Image imgMap = myMap.GetMap(); //Renders the map
-    /// </code>
     /// </example>
     public class Map : IDisposable
     {
@@ -109,7 +80,6 @@ namespace SharpMap
             _Layers = new LayerCollection();
             _backgroundLayers = new LayerCollection();
             _backgroundLayers.ListChanged += _Layers_ListChanged;
-            //_Layers.ListChanged += new System.ComponentModel.ListChangedEventHandler(_Layers_ListChanged);
             _variableLayers = new VariableLayerCollection(_Layers);
             BackColor = Color.Transparent;
             _MaximumZoom = double.MaxValue;
@@ -443,11 +413,20 @@ namespace SharpMap
             OnMapRendered(g);
         }
 
+        /// <summary>
+        /// Fired when map is rendering
+        /// </summary>
+        /// <param name="g"></param>
         protected virtual void OnMapRendering(Graphics g)
         {
             var e = MapRendering;
             if (e != null) e(g);
         }
+
+        /// <summary>
+        /// Fired when Map is rendered
+        /// </summary>
+        /// <param name="g"></param>
         protected virtual void OnMapRendered(Graphics g)
         {
             var e = MapRendered;
@@ -525,11 +504,9 @@ namespace SharpMap
             g.PageUnit = GraphicsUnit.Pixel;
 
 
-            //int srid = (Layers.Count > 0 ? Layers[0].SRID : -1); //Get the SRID of the first layer
             ILayer[] layerList = new ILayer[lc.Count];
             lc.CopyTo(layerList, 0);
 
-            //int srid = (Layers.Count > 0 ? Layers[0].SRID : -1); //Get the SRID of the first layer
             foreach (ILayer layer in layerList)
             {
                 if (layer.Enabled && layer.MaxVisible >= Zoom && layer.MinVisible < Zoom)
@@ -822,11 +799,7 @@ namespace SharpMap
                     ur.X = ur.X + ptfll.X * PixelWidth;
                     ur.Y = ur.Y + ptfll.Y * PixelHeight;
                 }
-                return new Envelope(ll, ur);
-                
-                //Point lb = new Point(Center.X - Zoom*.5, Center.Y - MapHeight*.5);
-                //Point rt = new Point(Center.X + Zoom*.5, Center.Y + MapHeight*.5);
-                //return new BoundingBox(lb, rt);
+                return new Envelope(ll, ur);    
             }
         }
 
@@ -864,21 +837,6 @@ namespace SharpMap
         public LayerCollection Layers
         {
             get { return _Layers; }
-            //set
-            //{
-            //    int iBefore = 0;
-            //    if (_Layers != null)
-            //        iBefore = _Layers.Count;
-            //    _Layers = value;
-            //    if (value != null)
-            //    {
-            //        _Layers.AddingNew += new System.ComponentModel.AddingNewEventHandler(Layers_AddingNew);
-            //        if (LayersChanged != null) //Layers changed. Fire event
-            //            LayersChanged();
-            //        if (MapViewOnChange != null)
-            //            MapViewOnChange();
-            //    }
-            //}
         }
 
         /// <summary>
@@ -1088,6 +1046,7 @@ namespace SharpMap
         /// <summary>
         /// Copyright notice to be placed on the map
         /// </summary>
+        [Obsolete("Use Disclaimer as MapDecoration instead!")]
         public String Disclaimer
         {
             get { return _disclaimer; }
@@ -1107,6 +1066,7 @@ namespace SharpMap
         /// <summary>
         /// Font to use for the Disclaimer
         /// </summary>
+        [Obsolete("Use Disclaimer as MapDecoration instead!")]
         public Font DisclaimerFont
         {
             get { return _disclaimerFont; }
@@ -1124,6 +1084,7 @@ namespace SharpMap
         /// -+-
         /// 3|0
         /// </summary>
+        [Obsolete("Use Disclaimer as MapDecoration instead!")]
         public Int32 DisclaimerLocation
         {
             get { return _disclaimerLocation; }
@@ -1133,45 +1094,6 @@ namespace SharpMap
         public IGeometryFactory Factory { get; private set; }
 
         #endregion
-
-        //#region ISerializable Members
-
-        ///// <summary>
-        ///// Populates a SerializationInfo with the data needed to serialize the target object.
-        ///// </summary>
-        ///// <param name="info"></param>
-        ///// <param name="context"></param>
-        //public void GetObjectData(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context)
-        //{
-        //    System.Runtime.Serialization.SurrogateSelector ss = SharpMap.Utilities.Surrogates.GetSurrogateSelectors();
-        //    info.AddValue("BackgroundColor", this._BackgroundColor);
-        //    info.AddValue("Center", this._Center);
-        //    info.AddValue("Layers", this._Layers);
-        //    info.AddValue("MapTransform", this._MapTransform);
-        //    info.AddValue("MaximumZoom", this._MaximumZoom);
-        //    info.AddValue("MinimumZoom", this._MinimumZoom);
-        //    info.AddValue("Size", this._Size);
-        //    info.AddValue("Zoom", this._Zoom);
-
-        //}
-        ///// <summary>
-        ///// Deserialization constructor.
-        ///// </summary>
-        ///// <param name="info"></param>
-        ///// <param name="ctxt"></param>
-        //internal Map(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext ctxt)
-        //{
-        //    this._BackgroundColor = (System.Drawing.Color)info.GetValue("BackgroundColor", typeof(System.Drawing.Color));
-        //    this._Center = (SharpMap.Geometries.Point)info.GetValue("Center", typeof(SharpMap.Geometries.Point));
-        //    this._Layers = (List<SharpMap.Layers.ILayer>)info.GetValue("Layers", typeof(List<SharpMap.Layers.ILayer>));
-        //    this._MapTransform = (System.Drawing.Drawing2D.Matrix)info.GetValue("MapTransform", typeof(System.Drawing.Drawing2D.Matrix));
-        //    this._MaximumZoom = info.GetDouble("MaximumZoom");
-        //    this._MinimumZoom = info.GetDouble("MinimumZoom");
-        //    this._Size = (System.Drawing.Size)info.GetValue("Size", typeof(System.Drawing.Size));
-        //    this._Zoom = info.GetDouble("Zoom");
-        //}
-
-        //#endregion
     }
 
     /// <summary>
