@@ -39,25 +39,6 @@ namespace SharpMap.Layers
     /// <summary>
     /// Class for vector layer properties
     /// </summary>
-    /// <example>
-    /// Adding a VectorLayer to a map:
-    /// <code lang="C#">
-    /// //Initialize a new map
-    /// SharpMap.Map myMap = new SharpMap.Map(new System.Drawing.Size(300,600));
-    /// //Create a layer
-    /// SharpMap.Layers.VectorLayer myLayer = new SharpMap.Layers.VectorLayer("My layer");
-    /// //Add datasource
-    /// myLayer.DataSource = new SharpMap.Data.Providers.ShapeFile(@"C:\data\MyShapeData.shp");
-    /// //Set up styles
-    /// myLayer.Style.Outline = new Pen(Color.Magenta, 3f);
-    /// myLayer.Style.EnableOutline = true;
-    /// myMap.Layers.Add(myLayer);
-    /// //Zoom to fit the data in the view
-    /// myMap.ZoomToExtents();
-    /// //Render the map:
-    /// System.Drawing.Image mapImage = myMap.GetMap();
-    /// </code>
-    /// </example>
     public class VectorLayer : Layer, ICanQueryLayer, IDisposable
     {
         static ILog logger = LogManager.GetLogger(typeof(VectorLayer));
@@ -66,7 +47,6 @@ namespace SharpMap.Layers
         private bool _isQueryEnabled = true;
         private IProvider _dataSource;
         private SmoothingMode _smoothingMode;
-        //private VectorStyle _Style;
         private ITheme _theme;
 
         /// <summary>
@@ -76,7 +56,6 @@ namespace SharpMap.Layers
         public VectorLayer(string layername)
             :base(new VectorStyle())
         {
-            //Style = new VectorStyle();
             LayerName = layername;
             SmoothingMode = SmoothingMode.AntiAlias;
         }
@@ -177,10 +156,8 @@ namespace SharpMap.Layers
 #if !DotSpatialProjections
                 {
                     var boxTrans = GeometryTransform.TransformBox(box, CoordinateTransformation.MathTransform);
-                    return boxTrans;//.Intersection(CoordinateTransformation.TargetCS.DefaultEnvelope);
-                }
-                //return GeometryTransform.TransformBox(box, CoordinateTransformation.MathTransform);
-            
+                    return boxTrans;
+                }            
 #else
                     return GeometryTransform.TransformBox(box, CoordinateTransformation.Source, CoordinateTransformation.Target);
 #endif
@@ -247,8 +224,6 @@ namespace SharpMap.Layers
 #endif
             }
 
-            //List<SharpMap.Geometries.Geometry> features = this.DataSource.GetGeometriesInView(map.Envelope);
-
             if (DataSource == null)
                 throw (new ApplicationException("DataSource property not set on layer '" + LayerName + "'"));
 
@@ -301,7 +276,6 @@ namespace SharpMap.Layers
                 //before drawing the "inline" on top.
                 if (Style.EnableOutline)
                 {
-                    //foreach (SharpMap.Geometries.Geometry feature in features)
                     for (int i = 0; i < features.Count; i++)
                     {
                         FeatureDataRow feature = features[i];
@@ -530,7 +504,6 @@ namespace SharpMap.Layers
 
                     break;
                 case OgcGeometryType.MultiPoint:
-                //case "SharpMap.Geometries.MultiPoint":
                     if (style.PointSymbolizer != null)
                     {
                         VectorRenderer.DrawMultiPoint(style.PointSymbolizer, g, (IMultiPoint)feature, map);
