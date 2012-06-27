@@ -77,6 +77,7 @@ namespace SharpMap.Layers
         private Client wmsClient;
         private bool _Transparancy = true;
         private Color _BgColor = Color.White;
+        private string _capabilitiesUrl;
 
         /// <summary>
         /// Initializes a new layer, and downloads and parses the service description
@@ -134,6 +135,7 @@ namespace SharpMap.Layers
         /// <param name="credentials"></param>
         public WmsLayer(string layername, string url, TimeSpan cachetime, IWebProxy proxy, ICredentials credentials)
         {
+            _capabilitiesUrl = url;
             _Proxy = proxy;
             _TimeOut = 10000;
             LayerName = layername;
@@ -275,6 +277,12 @@ namespace SharpMap.Layers
             get { return wmsClient.Version; }
             set { wmsClient.Version = value; }
         }
+
+        public string CapabilitiesUrl
+        {
+            get { return _capabilitiesUrl; }
+        }
+
 
         /// <summary>
         /// When specified, applies image attributes at image (fx. make WMS layer semi-transparent)
