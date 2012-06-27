@@ -219,8 +219,8 @@ namespace SharpMap.Styles
             set
             {
                 _Halo = value;
-                if (_Halo != null)
-                    _Halo.LineJoin = LineJoin.Round;
+                //if (_Halo != null)
+                //    _Halo.LineJoin = LineJoin.Round;
             }
         }
 

@@ -533,6 +533,7 @@ namespace SharpMap.Forms
             set
             {
                 var check = (value != _activeTool);
+
                 _activeTool = value;
 
                 SetCursor();
@@ -1703,7 +1704,9 @@ namespace SharpMap.Forms
             {
                 if (GeometryDefined != null)
                 {
-                    GeometryDefined(Map.Factory.CreatePolygon(Map.Factory.CreateLinearRing(_pointArray), null));
+                    var cl = new NetTopologySuite.Geometries.CoordinateList(_pointArray);
+                    cl.CloseRing();
+                    GeometryDefined(Map.Factory.CreatePolygon(Map.Factory.CreateLinearRing(cl.ToCoordinateArray()), null));
                 }
                 ActiveTool = Tools.None;
             }

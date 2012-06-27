@@ -61,6 +61,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CreatingData.cs" />
+    <Compile Include="LengthIndexedLineSample.cs" />
+    <Compile Include="LineSymbolizerTest.cs" />
+    <Compile Include="PointSymbolizerTest.cs" />
+    <Compile Include="PolygonSymbolizerTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Theming.cs" />
   </ItemGroup>

@@ -6,7 +6,7 @@
     {
         private long _msLineal;
         private long _msVector;
-        private const int NumberOfRenderCycles = 5;
+        private const int NumberOfRenderCycles = 1;
 
         [NUnit.Framework.TestFixtureSetUp]
         public void TestFixtureSetUp()
@@ -25,7 +25,7 @@
 
         private const string ReallyBigShapeFile =
             //@"C:\Users\obe.IVV-AACHEN\Documents\vaglag\vaglag.shp";
-            "D:\\Daten\\Geofabrik\\roads.shp";
+            @"C:\temp\Data\niedersachsen.shp\roads.shp";
 
         [NUnit.Framework.Test]
         public void TestPerformanceVectorLayer()
@@ -133,7 +133,8 @@
             fds.Tables.RemoveAt(0);
             
             shp.DoTrueIntersectionQuery = true;
-            sw.Restart();
+            sw.Reset();
+            sw.Start();
             shp.ExecuteIntersectionQuery(bbox, fds);
             sw.Stop();
             System.Console.WriteLine("Queried using prepared geometries:\n" + fds.Tables[0].Rows.Count + " in " +
@@ -171,7 +172,8 @@
             fds.Tables.RemoveAt(0);
             
             shp.DoTrueIntersectionQuery = true;
-            sw.Restart();
+            sw.Reset();
+            sw.Start();
             shp.ExecuteIntersectionQuery(bbox, fds);
             sw.Stop();
             System.Console.WriteLine("Queried using prepared geometries:\n" + fds.Tables[0].Rows.Count + " in " +

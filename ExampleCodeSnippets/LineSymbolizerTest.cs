@@ -21,7 +21,8 @@
 
             sw.Stop();
             System.Console.WriteLine(string.Format("Rendering old method: {0}ms", sw.ElapsedMilliseconds));
-            sw.Restart();
+            sw.Reset();
+            sw.Start();
             var bmp = m.GetMap();
             sw.Stop();
             System.Console.WriteLine(string.Format("Rendering old method: {0}ms", sw.ElapsedMilliseconds));
@@ -33,7 +34,7 @@
             cls.LineSymbolizeHandlers.Add(new SharpMap.Rendering.Symbolizer.PlainLineSymbolizeHandler { Line = new System.Drawing.Pen(System.Drawing.Color.Gold, 1) });
 
             l.Style.LineSymbolizer = cls;
-            sw.Restart();
+            sw.Reset(); sw.Start();
             bmp = m.GetMap();
             sw.Stop();
             System.Console.WriteLine(string.Format("Rendering new method: {0}ms", sw.ElapsedMilliseconds));
@@ -47,6 +48,7 @@
             var p = new SharpMap.Data.Providers.ShapeFile(@"d:\\daten\GeoFabrik\\Aurich\\roads.shp", false);
 
             var l = new SharpMap.Layers.VectorLayer("roads", p);
+            
             var cls = new SharpMap.Rendering.Symbolizer.CachedLineSymbolizer();
             cls.LineSymbolizeHandlers.Add(new SharpMap.Rendering.Symbolizer.PlainLineSymbolizeHandler
                                               {Line = new System.Drawing.Pen(System.Drawing.Color.Gold, 2)});
@@ -84,7 +86,7 @@
                                                    Fill = new System.Drawing.SolidBrush(System.Drawing.Color.Firebrick)
                                                    ,Interval = 10
                                                };
-            sw.Restart();
+            sw.Reset(); sw.Start();
             bmp = m.GetMap();
             sw.Stop();
             System.Console.WriteLine(string.Format("Rendering new method: {0}ms", sw.ElapsedMilliseconds));
@@ -100,7 +102,7 @@
                 ,
                 Interval = 10
             };
-            sw.Restart();
+            sw.Reset(); sw.Start();
             bmp = m.GetMap();
             sw.Stop();
             System.Console.WriteLine(string.Format("Rendering new method: {0}ms", sw.ElapsedMilliseconds));
@@ -115,7 +117,7 @@
                 ,
                 Interval = 10
             };
-            sw.Restart();
+            sw.Reset(); sw.Start();
             bmp = m.GetMap();
             sw.Stop();
             System.Console.WriteLine(string.Format("Rendering new method: {0}ms", sw.ElapsedMilliseconds));
@@ -131,7 +133,7 @@
                 ,
                 Interval = 10
             };
-            sw.Restart();
+            sw.Reset(); sw.Start();
             bmp = m.GetMap();
             sw.Stop();
             System.Console.WriteLine(string.Format("Rendering new method: {0}ms", sw.ElapsedMilliseconds));
@@ -146,7 +148,7 @@
                                                    Line = new System.Drawing.Pen(System.Drawing.Color.Firebrick, 1),
                                                    //Fill = new System.Drawing.SolidBrush(System.Drawing.Color.Firebrick)
                                                };
-            sw.Restart();
+            sw.Reset(); sw.Start();
             bmp = m.GetMap();
             sw.Stop();
             System.Console.WriteLine(string.Format("Rendering new method: {0}ms", sw.ElapsedMilliseconds));

@@ -56,12 +56,16 @@ namespace WinFormSamples
             this.pgMapDecoration = new System.Windows.Forms.PropertyGrid();
             this.pgMap = new System.Windows.Forms.PropertyGrid();
             this.mapBox1 = new SharpMap.Forms.MapBox();
+#if !VS2008 
             ((System.ComponentModel.ISupportInitialize)(this.scMain)).BeginInit();
+#endif
             this.scMain.Panel2.SuspendLayout();
             this.scMain.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.tbAngle)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.scMapProp)).BeginInit();
+#if !VS2008 
+                ((System.ComponentModel.ISupportInitialize)(this.scMapProp)).BeginInit();
+#endif
             this.scMapProp.Panel1.SuspendLayout();
             this.scMapProp.Panel2.SuspendLayout();
             this.scMapProp.SuspendLayout();
@@ -363,14 +367,17 @@ namespace WinFormSamples
             this.Name = "FormMapBox";
             this.Text = "SharpMap Samples - MapBox";
             this.scMain.Panel2.ResumeLayout(false);
+#if !VS2008
             ((System.ComponentModel.ISupportInitialize)(this.scMain)).EndInit();
-            this.scMain.ResumeLayout(false);
+#endif
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.tbAngle)).EndInit();
             this.scMapProp.Panel1.ResumeLayout(false);
             this.scMapProp.Panel1.PerformLayout();
             this.scMapProp.Panel2.ResumeLayout(false);
+#if !VS2008 
             ((System.ComponentModel.ISupportInitialize)(this.scMapProp)).EndInit();
+#endif
             this.scMapProp.ResumeLayout(false);
             this.flowLayoutPanel1.ResumeLayout(false);
             this.flowLayoutPanel1.PerformLayout();

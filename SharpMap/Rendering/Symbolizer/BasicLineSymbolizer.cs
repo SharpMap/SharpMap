@@ -2,7 +2,6 @@ using System;
 using System.Drawing;
 using GeoAPI.Geometries;
 using SharpMap.Data;
-using GeoAPI.Geometries;
 using SharpMap.Rendering.Thematics;
 
 namespace SharpMap.Rendering.Symbolizer

@@ -479,7 +479,11 @@ namespace SharpMap.Data.Providers
             CreateBaseTable();
         }
 
-        private static Encoding GetDbaseLanguageDriver(byte dbasecode, string fileName = null)
+        private static Encoding GetDbaseLanguageDriver(byte dbasecode)
+        {
+            return GetDbaseLanguageDriver(dbasecode, null);
+        }
+        private static Encoding GetDbaseLanguageDriver(byte dbasecode, string fileName)
         {
             switch (dbasecode)
             {
@@ -626,7 +630,13 @@ namespace SharpMap.Data.Providers
                         if (File.Exists(fileName))
                         {
                             var encoding = File.ReadAllText(fileName);
-                            return Encoding.GetEncoding(encoding);
+                            try
+                            {
+                                return Encoding.GetEncoding(encoding);
+                            }
+                            catch (Exception)
+                            {
+                            }
                         }
                     }
                     return Encoding.UTF8;

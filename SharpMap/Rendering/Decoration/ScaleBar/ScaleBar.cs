@@ -889,7 +889,6 @@ namespace SharpMap.Rendering.Decoration.ScaleBar
 
         private void OnViewChanged()
         {
-
         }
 
         /// <summary>

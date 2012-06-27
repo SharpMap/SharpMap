@@ -65,7 +65,7 @@ namespace ExampleCodeSnippets
                 //Outline = System.Drawing.Pens.AliceBlue
             };
 
-            sw.Restart();
+            sw.Reset(); sw.Start();
             img = m.GetMap();
             img.Save("PolygonSymbolizer-2.bmp", System.Drawing.Imaging.ImageFormat.Bmp);
             sw.Stop();

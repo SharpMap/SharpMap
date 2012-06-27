@@ -117,7 +117,10 @@ namespace SharpMap.Data.Providers
         /// <param name="geometry">Geometry to be in this datasource</param>
         public GeometryProvider(IGeometry geometry)
         {
-            Geometries = new List<IGeometry> {geometry};
+            if (geometry != null)
+                Geometries = new List<IGeometry> { geometry };
+            else
+                Geometries = new List<IGeometry>();
         }
 
         /// <summary>
