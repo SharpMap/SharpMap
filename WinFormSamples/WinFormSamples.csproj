@@ -522,15 +522,15 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SharpMap.Extensions\SharpMap.Extensions.VS2010.csproj">
+    <ProjectReference Include="..\SharpMap.Extensions\SharpMap.Extensions.csproj">
       <Project>{A4140C12-53F5-438C-8D24-9E48C504FECF}</Project>
       <Name>SharpMap.Extensions.VS2010</Name>
     </ProjectReference>
-    <ProjectReference Include="..\SharpMap.UI\SharpMap.UI.VS2010.csproj">
+    <ProjectReference Include="..\SharpMap.UI\SharpMap.UI.csproj">
       <Project>{DD1CC1DB-4BF9-4C88-A100-733D84795F3A}</Project>
       <Name>SharpMap.UI.VS2010</Name>
     </ProjectReference>
-    <ProjectReference Include="..\SharpMap\SharpMap.VS2010.csproj">
+    <ProjectReference Include="..\SharpMap\SharpMap.csproj">
       <Project>{C83777FC-AABB-47D9-911F-D76255D4D541}</Project>
       <Name>SharpMap.VS2010</Name>
     </ProjectReference>
@@ -554,7 +554,7 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PreBuildEvent>if not exist "$(ProjectDir)app.config" copy /y "$(ProjectDir)app.vs2010" "$(ProjectDir)app.config"
+    <PreBuildEvent>
 echo "$(SolutionDir)BuildTools\nuget.exe" install "$(ProjectDir)packages.config -o "$(SolutionDir)Packages"
 "$(SolutionDir)BuildTools\nuget.exe" install "$(ProjectDir)packages.config" -o "$(SolutionDir)Packages"</PreBuildEvent>
   </PropertyGroup>

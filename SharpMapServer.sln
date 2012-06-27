@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpMap.VS2010", "SharpMap\SharpMap.VS2010.csproj", "{C83777FC-AABB-47D9-911F-D76255D4D541}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpMap", "SharpMap\SharpMap.csproj", "{C83777FC-AABB-47D9-911F-D76255D4D541}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpMapServer", "SharpMapServer\SharpMapServer.csproj", "{FCA0E48D-9803-4F63-BA14-AB8F8810709B}"
 EndProject

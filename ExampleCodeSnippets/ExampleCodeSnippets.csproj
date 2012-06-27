@@ -108,11 +108,11 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SharpMap.Extensions\SharpMap.Extensions.VS2010.csproj">
+    <ProjectReference Include="..\SharpMap.Extensions\SharpMap.Extensions.csproj">
       <Project>{A4140C12-53F5-438C-8D24-9E48C504FECF}</Project>
       <Name>SharpMap.Extensions.VS2010</Name>
     </ProjectReference>
-    <ProjectReference Include="..\SharpMap\SharpMap.VS2010.csproj">
+    <ProjectReference Include="..\SharpMap\SharpMap.csproj">
       <Project>{C83777FC-AABB-47D9-911F-D76255D4D541}</Project>
       <Name>SharpMap.VS2010</Name>
     </ProjectReference>
