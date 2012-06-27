@@ -1,3 +1,20 @@
+// Copyright 2008-, SharpMapTeam
+//
+// This file is part of SharpMap.
+// SharpMap is free software; you can redistribute it and/or modify
+// it under the terms of the GNU Lesser General Public License as published by
+// the Free Software Foundation; either version 2 of the License, or
+// (at your option) any later version.
+// 
+// SharpMap is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Lesser General Public License for more details.
+
+// You should have received a copy of the GNU Lesser General Public License
+// along with SharpMap; if not, write to the Free Software
+// Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
+
 #define EnableMetafileClipboardSupport
 /*
  * Note:
@@ -266,7 +283,7 @@ namespace SharpMap.Forms
 #endif
 
         //private bool m_IsCtrlPressed;
-        private double _wheelZoomMagnitude = 2;
+        private double _wheelZoomMagnitude = -2;
         private Tools _activeTool;
         private double _fineZoomFactor = 10;
         private Map _map;
@@ -291,9 +308,9 @@ namespace SharpMap.Forms
         private bool _isRefreshing;
         private GeoPoint[] _pointArray;
         private bool _showProgress;
-        private bool _zoomToPointer = false;
-        private bool _setActiveToolNoneDuringRedraw = true;
-        private bool _shiftButtonDragRectangleZoom = false;
+        private bool _zoomToPointer = true;
+        private bool _setActiveToolNoneDuringRedraw = false;
+        private bool _shiftButtonDragRectangleZoom = true;
         private bool _focusOnHover = false;
         private bool _panOnClick = true;
         private float _queryGrowFactor = 5f;
@@ -363,7 +380,7 @@ namespace SharpMap.Forms
         /// Sets whether the mouse wheel should zoom to the pointer location
         /// </summary>
         [Description("Sets whether the mouse wheel should zoom to the pointer location")]
-        [DefaultValue(false)]
+        [DefaultValue(true)]
         [Category("Behavior")]
         public bool ZoomToPointer
         {
@@ -375,7 +392,7 @@ namespace SharpMap.Forms
         /// Sets ActiveTool to None (and changing cursor) while redrawing the map
         /// </summary>
         [Description("Sets ActiveTool to None (and changing cursor) while redrawing the map")]
-        [DefaultValue(true)]
+        [DefaultValue(false)]
         [Category("Behavior")]
         public bool SetToolsNoneWhileRedrawing
         {
@@ -436,8 +453,8 @@ namespace SharpMap.Forms
             }
         }
 
-        [Description("The amount which a single movement of the mouse wheel zooms by.")]
-        [DefaultValue(2)]
+        [Description("The amount which a single movement of the mouse wheel zooms by. (Negative values are similar as OpenLayers/Google, positive are like ArcMap")]
+        [DefaultValue(-2)]
         [Category("Behavior")]
         public double WheelZoomMagnitude
         {
@@ -470,7 +487,7 @@ namespace SharpMap.Forms
         }
 
         [Description("Enables shortcut to rectangle-zoom by holding down shift-button and drag rectangle")]
-        [DefaultValue(false)]
+        [DefaultValue(true)]
         [Category("Behavior")]
         public bool EnableShiftButtonDragRectangleZoom
         {
@@ -1240,13 +1257,6 @@ namespace SharpMap.Forms
         }
 
 
-         
-        // _map.GetMapAsMetaFile does not work as expected,
-        // therefore it is commented out.
-        // 
-
-
-
 #if EnableMetafileClipboardSupport
 
         protected override void OnKeyDown(KeyEventArgs e)
@@ -1412,15 +1422,7 @@ namespace SharpMap.Forms
                             {
                                 //update the image we're dragging
                                 int generation = ++_imageGeneration;
-                                BoundingBox bbox = _map.Envelope;
-                                //new Thread(new ThreadStart(
-                                //    delegate
-                                //    {
-                                //        _isRefreshing = true;
-                                //        GetImagesAsync(bbox);
-                                //        GetImagesAsyncEnd(new GetImageEndResult { Tool = null, bbox = bbox, generation = generation });
-                                //        _isRefreshing = false;
-                                //    })).Start();
+                                BoundingBox bbox = _map.Envelope;   
                             }
                         }
                     }
@@ -1445,17 +1447,6 @@ namespace SharpMap.Forms
                 }
                 else if (_image != null && _image.PixelFormat != PixelFormat.Undefined)
                 {
-                    //if (/*_dragEndPoint != null &&*/ _dragEndPoint.X != 0 && _dragEndPoint.Y != 0 && _dragEndPoint != _dragStartPoint)
-                    //{
-                    //    pe.Graphics.DrawImageUnscaled(_dragImage,
-                    //                                  _previewMode == PreviewModes.Best
-                    //                                      ? new Point(
-                    //                                            -_map.Size.Width + _dragEndPoint.X - _dragStartPoint.X,
-                    //                                            -_map.Size.Height + _dragEndPoint.Y - _dragStartPoint.Y)
-                    //                                      : new Point(_dragEndPoint.X - _dragStartPoint.X,
-                    //                                                  _dragEndPoint.Y - _dragStartPoint.Y));
-                    //}
-                    //else
                     {
                         lock (lockerPaintImage)
                         {
@@ -1814,11 +1805,6 @@ namespace SharpMap.Forms
         [DllImport("gdi32.dll")]
         static extern bool DeleteEnhMetaFile(IntPtr hemf);
 
-        /*
-        [DllImport("gdi32")]
-        static extern int GetEnhMetaFileBits(int hemf, int cbBuffer, byte[] lpbBuffer);
-        */
-        // 
         /// <summary>
         /// Puts the metafile to the clipboard
         /// </summary>
