@@ -19,5 +19,10 @@
     <MSBuild Projects="$(SolutionFile)" Targets="SharpMap;SharpMap_UI" Properties="Configuration=Release" />
   </Target>
 
+  <!-- build only for now, test on build server -->
+  <Target Name="UnitTests">
+    <MSBuild Projects="$(SolutionFile)" Targets="UnitTests" Properties="Configuration=Release" />
+  </Target>
+
   <!-- TODO: add targets here to build zip, NuGet, ... -->
 </Project>
