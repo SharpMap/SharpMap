@@ -16,7 +16,7 @@
   </Target>
 
   <Target Name="BuildRelease">
-    <MSBuild Projects="$(SolutionFile)" Targets="Build" Properties="Configuration=Release" />
+    <MSBuild Projects="$(SolutionFile)" Targets="SharpMap;SharpMap_UI" Properties="Configuration=Release" />
   </Target>
 
   <!-- TODO: add targets here to build zip, NuGet, ... -->
