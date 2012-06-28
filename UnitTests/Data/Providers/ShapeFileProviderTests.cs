@@ -1,4 +1,5 @@
-﻿namespace UnitTests.Data.Providers
+﻿using System.IO;
+namespace UnitTests.Data.Providers
 {
 
     [NUnit.Framework.TestFixture]
@@ -23,19 +24,21 @@
                                                    ((double)_msLineal / _msVector * 100)));
         }
 
-        private const string ReallyBigShapeFile =
-            //@"C:\Users\obe.IVV-AACHEN\Documents\vaglag\vaglag.shp";
-            @"C:\temp\Data\niedersachsen.shp\roads.shp";
+
+        private string GetTestFile()
+        {
+            return Path.Combine(Path.GetDirectoryName(this.GetType().Assembly.CodeBase.Replace("file:///", "")), @"TestData\roads_ugl.shp");
+        }
 
         [NUnit.Framework.Test]
         public void TestPerformanceVectorLayer()
         {
-            NUnit.Framework.Assert.IsTrue(System.IO.File.Exists(ReallyBigShapeFile),
+            NUnit.Framework.Assert.IsTrue(System.IO.File.Exists(GetTestFile()),
                                           "Specified shapefile is not present!");
 
             var map = new SharpMap.Map(new System.Drawing.Size(1024, 768));
 
-            var shp = new SharpMap.Data.Providers.ShapeFile(ReallyBigShapeFile, false, false);
+            var shp = new SharpMap.Data.Providers.ShapeFile(GetTestFile(), false, false);
             var lyr = new SharpMap.Layers.VectorLayer("Roads", shp);
 
             map.Layers.Add(lyr);
@@ -44,7 +47,7 @@
             RepeatedRendering(map, shp.GetFeatureCount(), NumberOfRenderCycles, out _msVector);
 
             var res = map.GetMap();
-            var path = System.IO.Path.ChangeExtension(ReallyBigShapeFile, ".vector.png");
+            var path = System.IO.Path.ChangeExtension(GetTestFile(), ".vector.png");
             res.Save(path, System.Drawing.Imaging.ImageFormat.Png);
             System.Console.WriteLine("\nResult saved at file://" + path.Replace('\\', '/'));
         }
@@ -52,12 +55,12 @@
         [NUnit.Framework.Test]
         public void TestPerformanceLinealLayer()
         {
-            NUnit.Framework.Assert.IsTrue(System.IO.File.Exists(ReallyBigShapeFile),
+            NUnit.Framework.Assert.IsTrue(System.IO.File.Exists(GetTestFile()),
                                           "Specified shapefile is not present!");
 
             var map = new SharpMap.Map(new System.Drawing.Size(1024, 768));
 
-            var shp = new SharpMap.Data.Providers.ShapeFile(ReallyBigShapeFile, false, false);
+            var shp = new SharpMap.Data.Providers.ShapeFile(GetTestFile(), false, false);
             var lyr = new SharpMap.Layers.Symbolizer.LinealVectorLayer("Roads", shp)
                           {
                               Symbolizer =
@@ -75,7 +78,7 @@
             RepeatedRendering(map, shp.GetFeatureCount(), 1, out tmp);
 
             var res = map.GetMap();
-            var path = System.IO.Path.ChangeExtension(ReallyBigShapeFile, "lineal.png");
+            var path = System.IO.Path.ChangeExtension(GetTestFile(), "lineal.png");
             res.Save(path, System.Drawing.Imaging.ImageFormat.Png);
             System.Console.WriteLine("\nResult saved at file://" + path.Replace('\\', '/'));
         }
@@ -107,10 +110,10 @@
         [NUnit.Framework.Test]
         public void TestExecuteIntersectionQuery()
         {
-            NUnit.Framework.Assert.IsTrue(System.IO.File.Exists(ReallyBigShapeFile),
+            NUnit.Framework.Assert.IsTrue(System.IO.File.Exists(GetTestFile()),
                                           "Specified shapefile is not present!");
 
-            var shp = new SharpMap.Data.Providers.ShapeFile(ReallyBigShapeFile, false, false);
+            var shp = new SharpMap.Data.Providers.ShapeFile(GetTestFile(), false, false);
             shp.Open();
 
             var fds = new SharpMap.Data.FeatureDataSet();
@@ -144,10 +147,10 @@
         [NUnit.Framework.Test]
         public void TestExecuteIntersectionQueryWithFilterDelegate()
         {
-            NUnit.Framework.Assert.IsTrue(System.IO.File.Exists(ReallyBigShapeFile),
+            NUnit.Framework.Assert.IsTrue(System.IO.File.Exists(GetTestFile()),
                                           "Specified shapefile is not present!");
 
-            var shp = new SharpMap.Data.Providers.ShapeFile(ReallyBigShapeFile, false, false);
+            var shp = new SharpMap.Data.Providers.ShapeFile(GetTestFile(), false, false);
             shp.Open();
 
             var fds = new SharpMap.Data.FeatureDataSet();

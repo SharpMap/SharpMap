@@ -45,10 +45,17 @@ namespace SharpMap.Serialization
                         cred = new NetworkCredential((l as WmsLayer).WmsUser, (l as WmsLayer).WmsPassword);
 
                     SharpMap.Layers.WmsLayer wmsl = new Layers.WmsLayer(l.Name, (l as WmsLayer).OnlineURL, TimeSpan.MaxValue, WebRequest.DefaultWebProxy, cred);
-                    string[] layers = (l as WmsLayer).WmsLayers.Split(',');
-                    foreach (var wl in layers)
+                    if ((l as WmsLayer).WmsLayers != null)
                     {
-                        wmsl.AddLayer(wl);
+                        string[] layers = (l as WmsLayer).WmsLayers.Split(',');
+                        foreach (var wl in layers)
+                        {
+                            wmsl.AddLayer(wl);
+                        }
+                    }
+                    else
+                    {
+                        wmsl.AddChildLayers(wmsl.RootLayer,true);
                     }
                     lay = wmsl;
                 }

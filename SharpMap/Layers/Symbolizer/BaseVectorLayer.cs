@@ -191,7 +191,8 @@ namespace SharpMap.Layers.Symbolizer
             //}
             foreach (var geometry in _geometries)
             {
-                Symbolizer.Render(map, geometry as TGeometry, graphics);
+                if (geometry != null)
+                    Symbolizer.Render(map, geometry as TGeometry, graphics);
             }
             Symbolizer.Symbolize(graphics, map);
         }

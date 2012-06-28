@@ -7,7 +7,6 @@ using Common.Logging;
 using System.Drawing;
 using SharpMap.Layers;
 using System.Globalization;
-using System.Linq;
 using SharpMap.Styles;
 using GeoAPI.Geometries;
 namespace SharpMap.Serialization

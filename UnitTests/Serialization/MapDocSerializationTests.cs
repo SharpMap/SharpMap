@@ -114,19 +114,21 @@ namespace UnitTests.Serialization
             SharpMap.Map m = new SharpMap.Map();
             SharpMap.Layers.WmsLayer l = new SharpMap.Layers.WmsLayer("testwms", "http://mapus.jpl.nasa.gov/wms.cgi?", TimeSpan.MaxValue, 
                 System.Net.WebRequest.DefaultWebProxy, new NetworkCredential("test", "pw"));
+            l.AddChildLayers(l.RootLayer, false);
             m.Layers.Add(l);
             MemoryStream ms = new MemoryStream();
             SharpMap.Serialization.MapSerialization.SaveMapToStream(m, ms);
             string txt = System.Text.ASCIIEncoding.ASCII.GetString(ms.ToArray());
+            Console.WriteLine(txt);
             Assert.IsTrue(txt.Contains(@"<Layers>
     <MapLayer xsi:type=""WmsLayer"">
       <Name>testwms</Name>
       <MinVisible>0</MinVisible>
       <MaxVisible>1.7976931348623157E+308</MaxVisible>
       <OnlineURL>http://mapus.jpl.nasa.gov/wms.cgi?</OnlineURL>
-      <WmsLayers>global_mosaic,global_mosaic_base,us_landsat_wgs84,srtm_mag,daily_planet,daily_afternoon,BMNG,modis,huemapped_srtm,srtmplus,worldwind_dem,us_ned,us_elevation,us_colordem,gdem</WmsLayers>
       <WmsUser>test</WmsUser>
       <WmsPassword>pw</WmsPassword>
+      <WmsLayers>global_mosaic,global_mosaic_base,us_landsat_wgs84,srtm_mag,daily_planet,daily_afternoon,BMNG,modis,huemapped_srtm,srtmplus,worldwind_dem,us_ned,us_elevation,us_colordem,gdem</WmsLayers>
     </MapLayer>
   </Layers>"));
             ms.Close();
