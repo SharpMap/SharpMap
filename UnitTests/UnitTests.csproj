@@ -111,6 +111,7 @@
     <Compile Include="Converters\WKB\WKBTests.cs" />
     <Compile Include="Converters\WKT\WktGeometryTests.cs" />
     <Compile Include="Data\Providers\DataTablePointTests.cs" />
+    <Compile Include="Data\Providers\ManagedSQLiteTests.cs" />
     <Compile Include="Data\Providers\MsSqlServerSpatialTests.cs" />
     <Compile Include="Data\Providers\ShapeFileProviderTests.cs" />
     <Compile Include="MapDecorationTest.cs" />
@@ -146,6 +147,9 @@
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="TestData\test-2.3.sqlite">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
   <PropertyGroup>
