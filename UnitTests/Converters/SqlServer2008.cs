@@ -10,6 +10,7 @@ using Geometry = GeoAPI.Geometries.IGeometry;
 namespace UnitTests.Converters
 {
     [TestFixture]
+    [Ignore("Requires SqlServerSpatial")]
     public class SqlServer2008
     {
         private const string Point = "POINT (20.564 46.3493254)";

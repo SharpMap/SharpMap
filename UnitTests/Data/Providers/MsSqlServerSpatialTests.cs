@@ -1,11 +1,13 @@
 ﻿using System.Data;
 using System.Data.SqlClient;
 using SharpMap.Data.Providers;
+using NUnit.Framework;
 
 namespace UnitTests.Data.Providers
 {
     
     [NUnit.Framework.TestFixture]
+    [Ignore("Requires SqlServerSpatial")]
     public abstract class DbTests<TProvider> where TProvider: SpatialDbProvider
     {
         protected abstract System.Data.Common.DbConnection GetOpenConnection();
