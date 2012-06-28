@@ -235,7 +235,7 @@ namespace SharpMap.Serialization
                     styleMap.Add(c.Expression, CreateStyle(c.Styles.ToArray(), type));
                 }
 
-                (lay as VectorLayer).Theme = new SharpMap.Rendering.Thematics.CategoriesTheme<string>(classItem, styleMap, new VectorStyle());
+                (lay as VectorLayer).Theme = new SharpMap.Rendering.Thematics.UniqueValuesTheme<string>(classItem, styleMap, new VectorStyle());
             }
         }
 

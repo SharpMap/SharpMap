@@ -124,6 +124,7 @@
     <Compile Include="Rendering\GroupStyle\GroupStyleTests.cs" />
     <Compile Include="Rendering\Symbolizer\CohenSutherlandLineClippingTest.cs" />
     <Compile Include="Rendering\Thematics\ColorBlendTest.cs" />
+    <Compile Include="Serialization\MapDocSerializationTests.cs" />
     <Compile Include="TestWmsCapabilityParser.cs" />
     <Compile Include="WMS\Encoding.cs" />
   </ItemGroup>
@@ -131,6 +132,10 @@
     <ProjectReference Include="..\SharpMap.Extensions\SharpMap.Extensions.csproj">
       <Project>{A4140C12-53F5-438C-8D24-9E48C504FECF}</Project>
       <Name>SharpMap.Extensions.VS2010</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SharpMap.Serialization\SharpMap.Serialization.csproj">
+      <Project>{75E9B9FF-D04E-4F4F-8D06-8CD310F5F2DB}</Project>
+      <Name>SharpMap.Serialization</Name>
     </ProjectReference>
     <ProjectReference Include="..\SharpMap.SqlServerSpatialObjects\SharpMap.SqlServerSpatialObjects.csproj">
       <Project>{6D681045-8EF1-44EA-A19D-C7A63A6D0F76}</Project>

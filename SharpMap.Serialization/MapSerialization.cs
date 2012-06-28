@@ -52,6 +52,7 @@ namespace SharpMap.Serialization
                     }
                     lay = wmsl;
                 }
+                //And some simple tiled layers
                 else if (l is OsmLayer)
                 {
                     lay = new Layers.TileLayer(new BruTile.Web.OsmTileSource(), l.Name);

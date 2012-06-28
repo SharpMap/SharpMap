@@ -21,10 +21,10 @@ using SharpMap.Styles;
 namespace SharpMap.Rendering.Thematics
 {
     /// <summary>
-    /// CategoriesTheme is a theme each rendered feature is matched against at category that have a different style
+    /// UniqueValuesTheme is a theme each rendered feature is matched against at category that have a different style
     /// </summary>
     /// <typeparam name="T">Type of the featureattribute to match</typeparam>
-    public class CategoriesTheme<T>  : ITheme
+    public class UniqueValuesTheme<T>  : ITheme
     {
         IStyle _default = null;
 
@@ -38,7 +38,7 @@ namespace SharpMap.Rendering.Thematics
         /// <param name="attributeName">the featureattribute to categorize by</param>
         /// <param name="styleMap">the map of attributevalue to style</param>
         /// <param name="defaultStyle">the default style to map features that does not exist in the stylemap with</param>
-        public CategoriesTheme(string attributeName, Dictionary<T,IStyle> styleMap, IStyle defaultStyle)
+        public UniqueValuesTheme(string attributeName, Dictionary<T, IStyle> styleMap, IStyle defaultStyle)
         {
             _attributeName = attributeName;
             _styleMap = new Dictionary<string, IStyle>();
