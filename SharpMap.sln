@@ -1,8 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2010
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{1EDFEF14-016A-4660-9C65-2F933B6D61F9}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ExternalReferences", "ExternalReferences", "{3BB63704-345C-400C-9146-0AD46859D76D}"
 	ProjectSection(SolutionItems) = preProject
 		ExternalReferences\DotSpatial.Projections.dll = ExternalReferences\DotSpatial.Projections.dll
@@ -30,25 +28,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "References4SharpMap.Extensi
 		ExternalReferences\References4SharpMap.Extensions\System.Data.SQLite.XML = ExternalReferences\References4SharpMap.Extensions\System.Data.SQLite.XML
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MsSqlSpatialDemoDb", "MsSqlSpatialDemoDb", "{3BDECA7F-3A75-41BF-9753-D4AAC02DFE36}"
-	ProjectSection(SolutionItems) = preProject
-		MsSqlSpatialDemoDb\ReadMe.txt = MsSqlSpatialDemoDb\ReadMe.txt
-		MsSqlSpatialDemoDb\SharpMapMsSqlSpatialDemoDb.bak = MsSqlSpatialDemoDb\SharpMapMsSqlSpatialDemoDb.bak
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PostGisDb", "PostGisDb", "{826696BD-A157-45A5-A196-6652FE469D94}"
-	ProjectSection(SolutionItems) = preProject
-		PostgisDemoDb\postgisdemodb.backup = PostgisDemoDb\postgisdemodb.backup
-		PostgisDemoDb\ReadMe.txt = PostgisDemoDb\ReadMe.txt
-	EndProjectSection
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpMap", "SharpMap\SharpMap.csproj", "{C83777FC-AABB-47D9-911F-D76255D4D541}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpMap.UI", "SharpMap.UI\SharpMap.UI.csproj", "{DD1CC1DB-4BF9-4C88-A100-733D84795F3A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "UnitTests\UnitTests.csproj", "{0C76DD99-AC5D-47C0-B76F-CE70092A9AC7}"
 EndProject
-Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "DemoWebSite", "DemoWebSite\", "{32ECD993-CB5A-4AD9-8C8F-45C73A088C13}"
+Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "DemoWebSite", "Examples\DemoWebSite\", "{32ECD993-CB5A-4AD9-8C8F-45C73A088C13}"
 	ProjectSection(WebsiteProperties) = preProject
 		SccProjectName = ""
 		SccAuxPath = ""
@@ -57,15 +43,15 @@ Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "DemoWebSite", "DemoWebSite\
 		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.0"
 		ProjectReferences = "{C83777FC-AABB-47D9-911F-D76255D4D541}|SharpMap.dll;{DD1CC1DB-4BF9-4C88-A100-733D84795F3A}|SharpMap.UI.dll;{A4140C12-53F5-438C-8D24-9E48C504FECF}|SharpMap.Extensions.dll;"
 		Debug.AspNetCompiler.VirtualPath = "/DemoWebSite"
-		Debug.AspNetCompiler.PhysicalPath = "DemoWebSite\"
-		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\DemoWebSite\"
+		Debug.AspNetCompiler.PhysicalPath = "Examples\DemoWebSite\"
+		Debug.AspNetCompiler.TargetPath = "Examples\PrecompiledWeb\DemoWebSite\"
 		Debug.AspNetCompiler.Updateable = "true"
 		Debug.AspNetCompiler.ForceOverwrite = "true"
 		Debug.AspNetCompiler.FixedNames = "false"
 		Debug.AspNetCompiler.Debug = "True"
 		Release.AspNetCompiler.VirtualPath = "/DemoWebSite"
-		Release.AspNetCompiler.PhysicalPath = "DemoWebSite\"
-		Release.AspNetCompiler.TargetPath = "PrecompiledWeb\DemoWebSite\"
+		Release.AspNetCompiler.PhysicalPath = "Examples\DemoWebSite\"
+		Release.AspNetCompiler.TargetPath = "Examples\PrecompiledWeb\DemoWebSite\"
 		Release.AspNetCompiler.Updateable = "true"
 		Release.AspNetCompiler.ForceOverwrite = "true"
 		Release.AspNetCompiler.FixedNames = "false"
@@ -76,19 +62,36 @@ Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "DemoWebSite", "DemoWebSite\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpMap.Extensions", "SharpMap.Extensions\SharpMap.Extensions.csproj", "{A4140C12-53F5-438C-8D24-9E48C504FECF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DemoWinForm", "DemoWinForm\DemoWinForm.csproj", "{73A45373-6307-4D39-9FE9-E8803F95FAB6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DemoWinForm", "Examples\DemoWinForm\DemoWinForm.csproj", "{73A45373-6307-4D39-9FE9-E8803F95FAB6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WinFormSamples", "WinFormSamples\WinFormSamples.csproj", "{F81C1843-3B2A-4D72-81AA-A658DB11FA85}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WinFormSamples", "Examples\WinFormSamples\WinFormSamples.csproj", "{F81C1843-3B2A-4D72-81AA-A658DB11FA85}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExampleCodeSnippets", "ExampleCodeSnippets\ExampleCodeSnippets.csproj", "{A4184D38-C5A6-4E01-9D1C-8C63791AF825}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExampleCodeSnippets", "Examples\ExampleCodeSnippets\ExampleCodeSnippets.csproj", "{A4184D38-C5A6-4E01-9D1C-8C63791AF825}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpMap.SqlServerSpatialObjects", "SharpMap.SqlServerSpatialObjects\SharpMap.SqlServerSpatialObjects.csproj", "{6D681045-8EF1-44EA-A19D-C7A63A6D0F76}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BuildTools", "BuildTools", "{8E57A35D-CD7B-4EEE-98BF-0E414F1A4E44}"
+	ProjectSection(SolutionItems) = preProject
+		BuildTools\NuGet.exe = BuildTools\NuGet.exe
+	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpMap.Demo.Wms", "SharpMap.Demo.Wms\SharpMap.Demo.Wms.csproj", "{7EF67DF8-D868-4177-8817-4CC2E94ABD66}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpMap.Demo.Wms", "Examples\SharpMap.Demo.Wms\SharpMap.Demo.Wms.csproj", "{7EF67DF8-D868-4177-8817-4CC2E94ABD66}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Examples", "Examples", "{480154D8-0960-416E-AE45-AF6B06794F77}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpMap.Serialization", "SharpMap.Serialization\SharpMap.Serialization.csproj", "{75E9B9FF-D04E-4F4F-8D06-8CD310F5F2DB}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PostgisDemoDb", "PostgisDemoDb", "{BCA2C45D-4D40-444B-AE3E-687EB1EC497D}"
+	ProjectSection(SolutionItems) = preProject
+		Examples\PostgisDemoDb\postgisdemodb.backup = Examples\PostgisDemoDb\postgisdemodb.backup
+		Examples\PostgisDemoDb\ReadMe.txt = Examples\PostgisDemoDb\ReadMe.txt
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MsSqlSpatialDemoDb", "MsSqlSpatialDemoDb", "{6BCAB37B-F03A-4998-A6CB-EC8EDB4D203E}"
+	ProjectSection(SolutionItems) = preProject
+		Examples\MsSqlSpatialDemoDb\ReadMe.txt = Examples\MsSqlSpatialDemoDb\ReadMe.txt
+		Examples\MsSqlSpatialDemoDb\SharpMapMsSqlSpatialDemoDb.bak = Examples\MsSqlSpatialDemoDb\SharpMapMsSqlSpatialDemoDb.bak
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -335,9 +338,13 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{3BB63704-345C-400C-9146-0AD46859D76D} = {1EDFEF14-016A-4660-9C65-2F933B6D61F9}
-		{3BDECA7F-3A75-41BF-9753-D4AAC02DFE36} = {1EDFEF14-016A-4660-9C65-2F933B6D61F9}
-		{826696BD-A157-45A5-A196-6652FE469D94} = {1EDFEF14-016A-4660-9C65-2F933B6D61F9}
 		{AFA0024B-50B7-4CA3-84DC-EC0CA7109492} = {3BB63704-345C-400C-9146-0AD46859D76D}
+		{73A45373-6307-4D39-9FE9-E8803F95FAB6} = {480154D8-0960-416E-AE45-AF6B06794F77}
+		{F81C1843-3B2A-4D72-81AA-A658DB11FA85} = {480154D8-0960-416E-AE45-AF6B06794F77}
+		{A4184D38-C5A6-4E01-9D1C-8C63791AF825} = {480154D8-0960-416E-AE45-AF6B06794F77}
+		{7EF67DF8-D868-4177-8817-4CC2E94ABD66} = {480154D8-0960-416E-AE45-AF6B06794F77}
+		{32ECD993-CB5A-4AD9-8C8F-45C73A088C13} = {480154D8-0960-416E-AE45-AF6B06794F77}
+		{BCA2C45D-4D40-444B-AE3E-687EB1EC497D} = {480154D8-0960-416E-AE45-AF6B06794F77}
+		{6BCAB37B-F03A-4998-A6CB-EC8EDB4D203E} = {480154D8-0960-416E-AE45-AF6B06794F77}
 	EndGlobalSection
 EndGlobal
