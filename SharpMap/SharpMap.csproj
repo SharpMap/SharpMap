@@ -270,6 +270,7 @@
       <SubType>
       </SubType>
     </EmbeddedResource>
+    <None Include="Uml\SharpMap.cd" />
     <None Include="Web\Wfs\Schemas\1.0.0\OGC-exception.xsd" />
     <None Include="Web\Wfs\Schemas\1.0.0\WFS-basic.xsd" />
     <None Include="Web\Wfs\Schemas\1.0.0\WFS-capabilities.xsd" />

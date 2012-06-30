@@ -1,0 +1,634 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="NameAndType">
+  <Class Name="SharpMap.Map">
+    <Position X="16.5" Y="2" Width="4.5" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
+    <NestedTypes>
+      <Delegate Name="SharpMap.Map.LayersChangedEventHandler" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Map\Map.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Delegate Name="SharpMap.Map.MapRenderedEventHandler">
+        <TypeIdentifier>
+          <NewMemberFileName>Map\Map.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Delegate Name="SharpMap.Map.MapRenderingEventHandler">
+        <TypeIdentifier>
+          <NewMemberFileName>Map\Map.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Delegate Name="SharpMap.Map.MapViewChangedHandler" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Map\Map.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>IDBAiByMBDAQgMCKMEgCZguCERiIAoEMAEAAYCQLHBI=</HashCode>
+      <FileName>Map\Map.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="Layers" />
+      <Property Name="Decorations" />
+      <Property Name="VariableLayers" />
+    </ShowAsCollectionAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="SharpMap.Rendering.Decoration.MapDecoration">
+    <Position X="5.25" Y="9.75" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>AAAEEAECEAAAgLAAAAIQgAICCIBAAAAAABIAsAAAAAA=</HashCode>
+      <FileName>Rendering\Decoration\MapDecoration.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="SharpMap.Rendering.Decoration.Disclaimer">
+    <Position X="1.75" Y="19.5" Width="2" />
+    <InheritanceLine Type="SharpMap.Rendering.Decoration.MapDecoration" ManuallyRouted="true" FixedFromPoint="true">
+      <Path>
+        <Point X="6.312" Y="16.422" />
+        <Point X="6.312" Y="16.921" />
+        <Point X="2.75" Y="16.921" />
+        <Point X="2.75" Y="19.5" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAACAQAAUAAAAAAAAAAAAAAAAAgAAAAAAAAAKAECQAA=</HashCode>
+      <FileName>Rendering\Decoration\Disclaimer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SharpMap.Rendering.Decoration.GoogleMapsDisclaimer">
+    <Position X="10.5" Y="19.5" Width="3" />
+    <NestedTypes>
+      <Enum Name="SharpMap.Rendering.Decoration.GoogleMapsDisclaimer.MapType" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Rendering\Decoration\GoogleMapsDisclamer.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+    </NestedTypes>
+    <InheritanceLine Type="SharpMap.Rendering.Decoration.MapDecoration" ManuallyRouted="true" FixedFromPoint="true">
+      <Path>
+        <Point X="7.438" Y="16.422" />
+        <Point X="7.438" Y="16.672" />
+        <Point X="12" Y="16.672" />
+        <Point X="12" Y="19.5" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAiAAAANEgFgAAIAAAAAQAAAEAAQAgAAAAAIAAIAAA=</HashCode>
+      <FileName>Rendering\Decoration\GoogleMapsDisclamer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SharpMap.Rendering.Decoration.NorthArrow">
+    <Position X="4" Y="19.5" Width="2.75" />
+    <InheritanceLine Type="SharpMap.Rendering.Decoration.MapDecoration" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="6.625" Y="16.422" />
+        <Point X="6.625" Y="17.22" />
+        <Point X="5.375" Y="17.22" />
+        <Point X="5.375" Y="19.5" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAEQAAEAAAgAAAAAAAAACAAAAAAAAAQAAAIAAAAAA=</HashCode>
+      <FileName>Rendering\Decoration\NorthArrow.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SharpMap.Rendering.Decoration.ScaleBar.ScaleBar">
+    <Position X="7" Y="19.5" Width="3.25" />
+    <NestedTypes>
+      <Class Name="SharpMap.Rendering.Decoration.ScaleBar.ScaleBar.UnitInfo" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Rendering\Decoration\ScaleBar\ScaleBar.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+    </NestedTypes>
+    <InheritanceLine Type="SharpMap.Rendering.Decoration.MapDecoration" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="7.062" Y="16.422" />
+        <Point X="7.062" Y="17.166" />
+        <Point X="8.688" Y="17.166" />
+        <Point X="8.688" Y="19.5" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>SiAhgSCIUsylII9AYgYAGUAaAIbAA0HMUKEKYooyAeA=</HashCode>
+      <FileName>Rendering\Decoration\ScaleBar\ScaleBar.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SharpMap.Layers.Layer">
+    <Position X="32.5" Y="3" Width="4.5" />
+    <NestedTypes>
+      <Delegate Name="SharpMap.Layers.Layer.LayerRenderedEventHandler" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Layers\Layer.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>IAAAgAAQAAABAICECAABBAkJAAgAABAEBHAAECACAAQ=</HashCode>
+      <FileName>Layers\Layer.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="SharpMap.Layers.LabelLayer">
+    <Position X="27" Y="18.75" Width="4.75" />
+    <NestedTypes>
+      <Delegate Name="SharpMap.Layers.LabelLayer.GetLabelMethod" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Layers\LabelLayer.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Delegate Name="SharpMap.Layers.LabelLayer.GetPriorityMethod" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Layers\LabelLayer.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Delegate Name="SharpMap.Layers.LabelLayer.GetLocationMethod" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Layers\LabelLayer.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Enum Name="SharpMap.Layers.LabelLayer.MultipartGeometryBehaviourEnum" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Layers\LabelLayer.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+    </NestedTypes>
+    <InheritanceLine Type="SharpMap.Layers.Layer" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="33.812" Y="10.989" />
+        <Point X="33.812" Y="11.56" />
+        <Point X="28.812" Y="11.56" />
+        <Point X="28.812" Y="18.75" />
+      </Path>
+    </InheritanceLine>
+    <AssociationLine Name="DataSource" Type="SharpMap.Data.Providers.IProvider" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="28.438" Y="18.75" />
+        <Point X="28.438" Y="2.469" />
+        <Point X="57.5" Y="2.469" />
+      </Path>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AQCgBAABACAAEiCUAEAACAQHAIhBAABABBAAABIwBQE=</HashCode>
+      <FileName>Layers\LabelLayer.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Theme" />
+      <Property Name="DataSource" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="SharpMap.Layers.LayerGroup">
+    <Position X="29.5" Y="14.25" Width="3.5" />
+    <InheritanceLine Type="SharpMap.Layers.Layer" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="34.125" Y="10.989" />
+        <Point X="34.125" Y="11.992" />
+        <Point X="31.625" Y="11.992" />
+        <Point X="31.625" Y="14.25" />
+      </Path>
+    </InheritanceLine>
+    <AssociationLine Name="Layers" Type="SharpMap.Layers.Layer" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="32.312" Y="14.25" />
+        <Point X="32.312" Y="12.66" />
+        <Point X="34.812" Y="12.66" />
+        <Point X="34.812" Y="10.989" />
+      </Path>
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="0.126" Y="1.397" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACAAEACAAAACAAACMAAAAAAEABAAAAAAAAA=</HashCode>
+      <FileName>Layers\LayerGroup.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="Layers" />
+    </ShowAsCollectionAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="SharpMap.Layers.Symbolizer.BaseVectorLayer&lt;TGeometry&gt;">
+    <Position X="33.75" Y="14.5" Width="3.5" />
+    <InheritanceLine Type="SharpMap.Layers.Layer" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="35.688" Y="10.989" />
+        <Point X="35.688" Y="12.256" />
+        <Point X="35.938" Y="12.256" />
+        <Point X="35.938" Y="14.5" />
+      </Path>
+    </InheritanceLine>
+    <AssociationLine Name="DataSource" Type="SharpMap.Data.Providers.IProvider" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="36.688" Y="14.5" />
+        <Point X="36.688" Y="13.253" />
+        <Point X="38.4" Y="13.253" />
+        <Point X="38.4" Y="3.312" />
+        <Point X="57.5" Y="3.312" />
+      </Path>
+    </AssociationLine>
+    <AssociationLine Name="LabelLayer" Type="SharpMap.Layers.LabelLayer" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="33.75" Y="18.688" />
+        <Point X="33.375" Y="18.688" />
+        <Point X="33.375" Y="19.544" />
+        <Point X="31.75" Y="19.544" />
+      </Path>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AACAAAAAACAAMgCCEEQAAAIAIAAAEAAAABAAIAAAAAA=</HashCode>
+      <FileName>Layers\Symbolizer\BaseVectorLayer.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="DataSource" />
+      <Property Name="LabelLayer" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="SharpMap.Layers.TiledWmsLayer">
+    <Position X="49.75" Y="14.5" Width="3.5" />
+    <InheritanceLine Type="SharpMap.Layers.Layer" ManuallyRouted="true" FixedFromPoint="true">
+      <Path>
+        <Point X="36.875" Y="10.989" />
+        <Point X="36.875" Y="11.554" />
+        <Point X="38.317" Y="11.554" Type="JumpStart" />
+        <Point X="38.483" Y="11.554" Type="JumpEnd" />
+        <Point X="40.167" Y="11.554" Type="JumpStart" />
+        <Point X="40.333" Y="11.554" Type="JumpEnd" />
+        <Point X="51.5" Y="11.554" />
+        <Point X="51.5" Y="14.5" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>ACAAIQAACEAQAYKWAEAAAgIAAgAEADAYQBBBAAAAAAg=</HashCode>
+      <FileName>Layers\TiledWmsLayer.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="SharpMap.Layers.TileLayer">
+    <Position X="41.75" Y="14.5" Width="3.25" />
+    <InheritanceLine Type="SharpMap.Layers.Layer" ManuallyRouted="true" FixedFromPoint="true">
+      <Path>
+        <Point X="36.125" Y="10.989" />
+        <Point X="36.125" Y="11.939" />
+        <Point X="38.317" Y="11.939" Type="JumpStart" />
+        <Point X="38.483" Y="11.939" Type="JumpEnd" />
+        <Point X="40.167" Y="11.939" Type="JumpStart" />
+        <Point X="40.333" Y="11.939" Type="JumpEnd" />
+        <Point X="43.375" Y="11.939" />
+        <Point X="43.375" Y="14.5" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAoAAAAAAEIAAACQAAAAAQAAAAAAAIAAIBIABAAACCA=</HashCode>
+      <FileName>Layers\TileLayer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SharpMap.Layers.VectorLayer">
+    <Position X="37.75" Y="14.5" Width="3.5" />
+    <Members>
+      <Field Name="_dataSource" Hidden="true" />
+    </Members>
+    <InheritanceLine Type="SharpMap.Layers.Layer" ManuallyRouted="true" FixedFromPoint="true">
+      <Path>
+        <Point X="35.875" Y="10.989" />
+        <Point X="35.875" Y="12.133" />
+        <Point X="38.317" Y="12.133" Type="JumpStart" />
+        <Point X="38.483" Y="12.133" Type="JumpEnd" />
+        <Point X="39.5" Y="12.133" />
+        <Point X="39.5" Y="14.5" />
+      </Path>
+    </InheritanceLine>
+    <AssociationLine Name="DataSource" Type="SharpMap.Data.Providers.IProvider" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="40.25" Y="14.5" />
+        <Point X="40.25" Y="3.938" />
+        <Point X="57.5" Y="3.938" />
+      </Path>
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="0.177" Y="-0.472" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <AssociationLine Name="Theme" Type="SharpMap.Rendering.Thematics.ITheme" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="40.875" Y="19.868" />
+        <Point X="40.875" Y="31.812" />
+        <Point X="37.25" Y="31.812" />
+      </Path>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>ACCgAgAAgCAAEgCSEEQCAAAAIAgAAAAABBAACAAAAAA=</HashCode>
+      <FileName>Layers\VectorLayer.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="_dataSource" />
+      <Property Name="DataSource" />
+      <Property Name="Theme" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Property Name="Themes" />
+    </ShowAsCollectionAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="SharpMap.Layers.WmsLayer">
+    <Position X="45.25" Y="14.5" Width="4.25" />
+    <InheritanceLine Type="SharpMap.Layers.Layer" ManuallyRouted="true" FixedFromPoint="true">
+      <Path>
+        <Point X="36.375" Y="10.989" />
+        <Point X="36.375" Y="11.8" />
+        <Point X="38.317" Y="11.8" Type="JumpStart" />
+        <Point X="38.483" Y="11.8" Type="JumpEnd" />
+        <Point X="40.167" Y="11.8" Type="JumpStart" />
+        <Point X="40.333" Y="11.8" Type="JumpEnd" />
+        <Point X="47.375" Y="11.8" />
+        <Point X="47.375" Y="14.5" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>IggAEQAAGGB4IIKDAUBIAggCAACFAAhY0RBAAACAAEE=</HashCode>
+      <FileName>Layers\WmsLayer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SharpMap.Layers.Symbolizer.AnyGeometryVectorLayer">
+    <Position X="36.25" Y="20.75" Width="3.25" />
+    <InheritanceLine Type="SharpMap.Layers.Symbolizer.BaseVectorLayer&lt;TGeometry&gt;" FixedFromPoint="true">
+      <Path>
+        <Point X="36.5" Y="19.249" />
+        <Point X="36.5" Y="20.375" />
+        <Point X="37.875" Y="20.375" />
+        <Point X="37.875" Y="20.75" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Layers\Symbolizer\AnyGeometryVectorLayer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SharpMap.Layers.Symbolizer.LinealVectorLayer">
+    <Position X="36.75" Y="22.5" Width="2.75" />
+    <InheritanceLine Type="SharpMap.Layers.Symbolizer.BaseVectorLayer&lt;TGeometry&gt;" FixedFromPoint="true">
+      <Path>
+        <Point X="36" Y="19.249" />
+        <Point X="36" Y="22.26" />
+        <Point X="38.125" Y="22.26" />
+        <Point X="38.125" Y="22.5" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Layers\Symbolizer\LinealVectorLayer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SharpMap.Layers.Symbolizer.PolygonalVectorLayer">
+    <Position X="32.25" Y="20.75" Width="3" />
+    <InheritanceLine Type="SharpMap.Layers.Symbolizer.BaseVectorLayer&lt;TGeometry&gt;" FixedFromPoint="true">
+      <Path>
+        <Point X="34.562" Y="19.249" />
+        <Point X="34.562" Y="20.375" />
+        <Point X="33.75" Y="20.375" />
+        <Point X="33.75" Y="20.75" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Layers\Symbolizer\PolygonalVectorLayer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SharpMap.Layers.Symbolizer.PuntalVectorLayer">
+    <Position X="32.5" Y="22.75" Width="2.75" />
+    <InheritanceLine Type="SharpMap.Layers.Symbolizer.BaseVectorLayer&lt;TGeometry&gt;" FixedFromPoint="true">
+      <Path>
+        <Point X="35.625" Y="19.249" />
+        <Point X="35.625" Y="22.375" />
+        <Point X="33.875" Y="22.375" />
+        <Point X="33.875" Y="22.75" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Layers\Symbolizer\PuntalVectorLayer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SharpMap.Data.Providers.WFS" BaseTypeListCollapsed="true">
+    <Position X="65.75" Y="11.25" Width="4" />
+    <NestedTypes>
+      <Enum Name="SharpMap.Data.Providers.WFS.WFSVersionEnum" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Data\Providers\WFSClient.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+      <Class Name="SharpMap.Data.Providers.WFS.WFSClientHTTPConfigurator" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Data\Providers\WFSClient.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>IFAECCQAUCAQIIBoAEIAB4KAIAgEDQAAAECAhECgAhA=</HashCode>
+      <FileName>Data\Providers\WFSClient.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="SharpMap.Data.Providers.SqlServer2008">
+    <Position X="70.25" Y="11.25" Width="3.5" />
+    <InheritanceLine Type="SharpMap.Data.Providers.BaseProvider" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="72.125" Y="9.178" />
+        <Point X="72.125" Y="10.674" />
+        <Point X="71.438" Y="10.674" />
+        <Point X="71.438" Y="11.25" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAkKAAQAgAACgAABSEAQIKBIAYACIBAACAEAghoIAg=</HashCode>
+      <FileName>Data\Providers\SqlServer2008.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SharpMap.Data.Providers.ShapeFile">
+    <Position X="61" Y="11.25" Width="4.5" />
+    <NestedTypes>
+      <Enum Name="SharpMap.Data.Providers.ShapeFile.SpatialIndexCreation" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Data\Providers\ShapeFile.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+    </NestedTypes>
+    <InheritanceLine Type="SharpMap.Data.Providers.FilterProvider" ManuallyRouted="true" FixedFromPoint="true">
+      <Path>
+        <Point X="68.125" Y="7.512" />
+        <Point X="68.125" Y="8.705" />
+        <Point X="63.25" Y="8.705" />
+        <Point X="63.25" Y="11.25" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>oAOCiABAgCAEYKQmYwgRCIaAoAgl2BDAgCQCCwCgFAA=</HashCode>
+      <FileName>Data\Providers\ShapeFile.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="SharpMap.Data.Providers.PreparedGeometryProvider">
+    <Position X="78.25" Y="11.25" Width="3.25" />
+    <InheritanceLine Type="SharpMap.Data.Providers.BaseProvider" ManuallyRouted="true" FixedFromPoint="true">
+      <Path>
+        <Point X="72.688" Y="9.178" />
+        <Point X="72.688" Y="10.612" />
+        <Point X="79.875" Y="10.612" />
+        <Point X="79.875" Y="11.25" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AgAAAAAAAABAAAAAAAABAAAAEAAAAABAAAAAAAAAAAA=</HashCode>
+      <FileName>Data\Providers\PreparedGeometryProvider.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SharpMap.Data.Providers.MsSql" BaseTypeListCollapsed="true">
+    <Position X="74.25" Y="11.25" Width="3.5" />
+    <TypeIdentifier>
+      <HashCode>IAIkDAAAACBAaAAgIAAAQIKAIAgkCggAACBAAAigAAA=</HashCode>
+      <FileName>Data\Providers\MsSql.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="SharpMap.Data.Providers.GeometryProvider">
+    <Position X="78.25" Y="14.75" Width="3.5" />
+    <InheritanceLine Type="SharpMap.Data.Providers.PreparedGeometryProvider" FixedToPoint="true">
+      <Path>
+        <Point X="79.875" Y="13.863" />
+        <Point X="79.875" Y="14.75" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAACAAAAAAAAAAAAAQBAIKAIAAACABAAAAAAAAkAAA=</HashCode>
+      <FileName>Data\Providers\GeometryProvider.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SharpMap.Data.Providers.GeometryFeatureProvider">
+    <Position X="57.25" Y="11.25" Width="3.5" />
+    <InheritanceLine Type="SharpMap.Data.Providers.FilterProvider" ManuallyRouted="true" FixedFromPoint="true">
+      <Path>
+        <Point X="67.812" Y="7.512" />
+        <Point X="67.812" Y="8.41" />
+        <Point X="59" Y="8.41" />
+        <Point X="59" Y="11.25" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>IAAICAAAACAAIAAgAAABAIKAIAgACAAAAAAAIACiAAA=</HashCode>
+      <FileName>Data\Providers\GeometryFeatureProvider.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="SharpMap.Data.Providers.FilterProvider">
+    <Position X="67.25" Y="5" Width="2.5" />
+    <Compartments>
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
+    <NestedTypes>
+      <Delegate Name="SharpMap.Data.Providers.FilterProvider.FilterMethod">
+        <TypeIdentifier>
+          <NewMemberFileName>Data\Providers\FilterProvider.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAA=</HashCode>
+      <FileName>Data\Providers\FilterProvider.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SharpMap.Data.Providers.BaseProvider">
+    <Position X="70.5" Y="2.5" Width="3.5" />
+    <TypeIdentifier>
+      <HashCode>IgAACAAQAAAAIAAgIAABAIKAMAgACABAAWAAAgCgAAA=</HashCode>
+      <FileName>Data\Providers\BaseProvider.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="SharpMap.Rendering.Thematics.CustomTheme" BaseTypeListCollapsed="true">
+    <Position X="35.5" Y="33.25" Width="2.75" />
+    <NestedTypes>
+      <Delegate Name="SharpMap.Rendering.Thematics.CustomTheme.GetStyleMethod" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Rendering\Thematics\CustomTheme.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AEAAAAAAAAAQAABAAAAAAAAAAAAAAAAAQAAAAAAAAIA=</HashCode>
+      <FileName>Rendering\Thematics\CustomTheme.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="SharpMap.Rendering.Thematics.GradientThemeBase">
+    <Position X="32.25" Y="33.25" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AUIAAAAACBEBgAAAEJACAABAAAAAAQEIMgBAAwAgAAM=</HashCode>
+      <FileName>Rendering\Thematics\GradientTheme.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="SharpMap.Rendering.Thematics.GradientTheme">
+    <Position X="32.5" Y="41" Width="2.5" />
+    <InheritanceLine Type="SharpMap.Rendering.Thematics.GradientThemeBase" FixedToPoint="true">
+      <Path>
+        <Point X="33.625" Y="40.128" />
+        <Point X="33.625" Y="41" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAIAAAAABAAAAAAAAAAAAAAAAAAAAAAAE=</HashCode>
+      <FileName>Rendering\Thematics\GradientTheme.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SharpMap.Rendering.Thematics.UniqueValuesTheme&lt;T&gt;" BaseTypeListCollapsed="true">
+    <Position X="38.75" Y="33.25" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AFAAAAAIAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Rendering\Thematics\UniqueValuesTheme.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Interface Name="SharpMap.Layers.ILayer">
+    <Position X="24.75" Y="2.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAgAAAAAABAICACAAAAAAIAAgAABAAABAAAAAAAAA=</HashCode>
+      <FileName>Layers\iLayer.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="SharpMap.Rendering.Decoration.IMapDecoration">
+    <Position X="10.25" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAA=</HashCode>
+      <FileName>Rendering\Decoration\IMapDecoration.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="SharpMap.Layers.ICanQueryLayer">
+    <Position X="24" Y="6.5" Width="3.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAEAAAAAAAAAAAIAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Layers\ICanQueryLayer.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="SharpMap.Data.Providers.IProvider">
+    <Position X="57.5" Y="2" Width="3.5" />
+    <TypeIdentifier>
+      <HashCode>IAAACAAAAAAAIAAgAAAAAIKAIAgACAAAAAAAAACgAAA=</HashCode>
+      <FileName>Data\Providers\iProvider.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="SharpMap.Rendering.Thematics.ITheme">
+    <Position X="35.5" Y="31" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Rendering\Thematics\ITheme.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Font Name="Segoe UI" Size="9.75" />
+</ClassDiagram>
