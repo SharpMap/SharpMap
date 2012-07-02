@@ -5,10 +5,9 @@ using System.Drawing.Imaging;
 using System.Text;
 using SharpMap.Layers;
 using System.Drawing;
+using SharpMap.Styles;
 #if DotSpatialProjections
 using DotSpatial.Projections;
-using SharpMap.Styles;
-
 #else
 using ProjNet.CoordinateSystems.Transformations;
 using ProjNet.CoordinateSystems;

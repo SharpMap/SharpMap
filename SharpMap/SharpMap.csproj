@@ -113,7 +113,7 @@
     <Compile Include="Converters\GeoJSON\GeoJSON.cs" />
     <Compile Include="Converters\GeoJSON\GeoJSONHelper.cs" />
     <Compile Include="Converters\GeoJSON\GeoJSONWriter.cs" />
-    <Compile Include="Converters\SpataiLite\GeometryFromSpatiaLite.cs" />
+    <Compile Include="Converters\SpatiaLite\GeometryFromSpatiaLite.cs" />
     <Compile Include="Converters\WellKnownBinary\GeometryFromWKB.cs" />
     <Compile Include="Converters\WellKnownBinary\GeometryToWKB.cs" />
     <Compile Include="Converters\WellKnownBinary\WKBByteOrder.cs" />
