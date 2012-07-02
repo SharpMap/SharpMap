@@ -17,12 +17,6 @@ namespace SharpMap.Forms
         {
             InitializeComponent();
 
-            foreach(var kvp in _wktTokens)
-                cboWktKeywords.Items.Add(kvp);
-            
-            cboWktKeywords.DisplayMember = "Key";
-            cboWktKeywords.ValueMember = "Value";
-
             _wktTokens.Add("POINT", "POINT(10 10)");
             _wktTokens.Add("LINESTRING", "LINESTRING(5 5, 7 16, 3 8)");
             _wktTokens.Add("POLYGON", "POLYGON((10 10, 10 20, 20 20, 20 10, 10 10), (12 12, 18 12, 18 18, 12 18, 12 12))");
@@ -32,6 +26,12 @@ namespace SharpMap.Forms
             _wktTokens.Add("GEOMETRYCOLLECTION", "GEOMETRYCOLLECTION(MULTIPOINT((10 10), (15 15), (13, 9)), LINESTRING(5 5, 7 16, 3 8))");
 
             ShowInTaskbar = false;
+
+            foreach (var kvp in _wktTokens)
+                cboWktKeywords.Items.Add(kvp);
+
+            cboWktKeywords.DisplayMember = "Key";
+            cboWktKeywords.ValueMember = "Value";
             
         }
 
@@ -87,12 +87,19 @@ namespace SharpMap.Forms
                 if (geometry != _geometry)
                     Geometry = geometry;
                 txtWkt.ForeColor = SystemColors.WindowText;
+                lblError.Text = "No Errors";
+
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 txtWkt.ForeColor = Color.Red;
-                throw;
+                lblError.Text = ex.Message;
             }
+        }
+
+        private void WktGeometryCreator_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }

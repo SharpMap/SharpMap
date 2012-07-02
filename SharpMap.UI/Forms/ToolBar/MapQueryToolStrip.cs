@@ -50,6 +50,7 @@ namespace SharpMap.Forms.ToolBar
             this._queryWindow.CheckOnClick = true;
             this._queryWindow.Image = global::SharpMap.Properties.Resources.rectangle_edit;
             this._queryWindow.Name = "_queryWindow";
+            this._queryWindow.CheckedChanged += OnCheckedChanged;
             this._queryWindow.Size = new System.Drawing.Size(23, 22);
             // 
             // _queryGeometry
@@ -58,6 +59,7 @@ namespace SharpMap.Forms.ToolBar
             this._queryGeometry.Image = global::SharpMap.Properties.Resources.query_spatial_vector;
             this._queryGeometry.Name = "_queryGeometry";
             this._queryGeometry.Size = new System.Drawing.Size(23, 20);
+            this._queryGeometry.CheckedChanged += OnCheckedChanged;
             // 
             // _sep2
             // 
@@ -204,14 +206,21 @@ namespace SharpMap.Forms.ToolBar
                 System.Windows.Forms.MessageBox.Show("No layer to query selected");
                 return;
             }
+
+            var checkedButton = (System.Windows.Forms.ToolStripButton)sender;
+
+            MapBox.Tools newTool;
             if (sender == _queryWindow)
-            {
-                MapControl.ActiveTool = MapBox.Tools.QueryBox;
-            }
+                newTool = MapBox.Tools.QueryBox;
             else if (sender == _queryGeometry)
+                newTool = MapBox.Tools.QueryGeometry;
+            else
             {
-                MapControl.ActiveTool = MapBox.Tools.QueryGeometry;
+                if (Logger.IsWarnEnabled)
+                    Logger.Warn("Unknown object invoking OnCheckedChanged()");
+                return;
             }
+            TrySetActiveTool(checkedButton, newTool);
             
         }
     }

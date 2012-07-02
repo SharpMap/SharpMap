@@ -115,18 +115,29 @@ namespace SharpMap.Forms
         protected virtual void TrySetActiveTool(System.Windows.Forms.ToolStripButton btn, MapBox.Tools associtatedTool)
         {
             var isChecked = btn.Checked;
-            if (isChecked && MapControl.ActiveTool == associtatedTool) 
+
+            System.Diagnostics.Debug.WriteLine(
+                string.Format("Trying to {0} active tool '{1}' by {2}.", isChecked ? "set" : "unset", associtatedTool, btn.Name));
+            //if (Logger.IsDebugEnabled)
+            //  Logger.DebugFormat("Trying to {0} active tool '{1}' by ", isChecked ? "set" : "unset", associtatedTool, btn.Name);
+
+            if (isChecked && MapControl.ActiveTool == associtatedTool)
+            {
+                Debug.WriteLine(" ... not needed");
                 return;
+            }
 
             if (!isChecked && MapControl.ActiveTool == associtatedTool)
             {
                 MapControl.ActiveTool = MapBox.Tools.None;
+                Debug.WriteLine(" ... done");
                 return;
             }
 
             if (isChecked && MapControl.ActiveTool != associtatedTool)
             {
                 MapControl.ActiveTool = associtatedTool;
+                Debug.WriteLine(" ... finally done");
             }
 
 

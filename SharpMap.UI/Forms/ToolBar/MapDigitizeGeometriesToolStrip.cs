@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Windows.Forms;
 
 namespace SharpMap.Forms.ToolBar
 {
@@ -41,11 +43,13 @@ namespace SharpMap.Forms.ToolBar
             _addPoint.Image = Properties.Resources.point_create;
             _addPoint.CheckOnClick = true;
             _addPoint.CheckedChanged += OnCheckedChanged;
+            _addPoint.MouseDown += new MouseEventHandler(OnMouseDown);
             _addPoint.ToolTipText += "Adds a point to the geometry layer";
 
             _addLineString = new System.Windows.Forms.ToolStripButton();
             _addLineString.Name = "_addLineString";
             _addLineString.Image = Properties.Resources.line_create;
+            _addLineString.MouseDown += OnMouseDown;
             _addLineString.CheckOnClick = true;
             _addLineString.CheckedChanged += OnCheckedChanged;
             _addLineString.ToolTipText += "Adds a linestring to the geometry layer";
@@ -54,6 +58,7 @@ namespace SharpMap.Forms.ToolBar
             _addPolygon.Name = "_addPolygon";
             _addPolygon.Image = Properties.Resources.polygon_create;
             _addPolygon.CheckOnClick = true;
+            _addPolygon.MouseDown += OnMouseDown;
             _addPolygon.CheckedChanged += OnCheckedChanged;
             _addPolygon.ToolTipText += "Adds a linestring to the geometry layer";
 
@@ -67,6 +72,13 @@ namespace SharpMap.Forms.ToolBar
             this.Visible = true;
 
             this.GeometryDefinedHandler = DefaultGeometryDefinedMethod;
+        }
+
+        protected virtual void OnMouseDown(object sender, MouseEventArgs e)
+        {
+            Debug.WriteLine(string.Format("\nButtonClicked '{0}'", ((ToolStripButton)sender).Name));
+            if (Logger.IsDebugEnabled)
+                Logger.DebugFormat("\nButtonClicked '{0}'",((ToolStripButton)sender).Name);
         }
 
         protected override void OnMapControlChangingInternal(System.ComponentModel.CancelEventArgs e)
@@ -141,7 +153,7 @@ namespace SharpMap.Forms.ToolBar
                     _addPolygon.Checked = false;
                     _addPoint.Checked = true;
                     break;
-                case MapBox.Tools.ZoomWindow:
+                case MapBox.Tools.DrawLine:
                     _addPoint.Checked = false;
                     _addPolygon.Checked = false;
                     _addLineString.Checked = true;
