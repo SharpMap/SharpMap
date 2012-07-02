@@ -71,7 +71,7 @@ namespace SharpMap.Forms
             this._fixedZoomOut.Name = "_fixedZoomOut";
             this._fixedZoomOut.Size = new System.Drawing.Size(23, 22);
             this._fixedZoomOut.ToolTipText = "Zoom into map";
-            this._fixedZoomIn.Click += OnFixedZoom;
+            this._fixedZoomOut.Click += OnFixedZoom;
             // 
             // sep1
             // 

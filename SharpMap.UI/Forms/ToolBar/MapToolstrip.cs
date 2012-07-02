@@ -29,6 +29,7 @@ namespace SharpMap.Forms
         {
             InitializeComponent();
             AllowDrop = false;
+            Enabled = false;
 
         }
 
@@ -38,6 +39,7 @@ namespace SharpMap.Forms
 
             InitializeComponent();
             AllowDrop = false;
+            Enabled = false;
         }
 
         protected virtual void InitializeComponent() { }
@@ -102,6 +104,7 @@ namespace SharpMap.Forms
         {
             Logger.Info("Enter MapControlChanged");
 
+            Enabled = _mapBox != null;
             OnMapControlChangedInternal(e);
 
             if (MapControlChanged != null)

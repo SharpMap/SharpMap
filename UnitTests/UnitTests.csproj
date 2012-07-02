@@ -116,6 +116,11 @@
     <Compile Include="Data\Providers\ShapeFileProviderTests.cs" />
     <Compile Include="MapDecorationTest.cs" />
     <Compile Include="MapTest.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
@@ -123,8 +128,12 @@
     </Compile>
     <Compile Include="Rendering\GroupStyle\GroupStyleTests.cs" />
     <Compile Include="Rendering\Symbolizer\CohenSutherlandLineClippingTest.cs" />
+    <Compile Include="Rendering\Symbolizer\LineSymbolizerTest.cs" />
+    <Compile Include="Rendering\Symbolizer\PointSymbolizerTest.cs" />
+    <Compile Include="Rendering\Symbolizer\PolygonSymbolizerTest.cs" />
     <Compile Include="Rendering\Thematics\ColorBlendTest.cs" />
     <Compile Include="Serialization\MapDocSerializationTests.cs" />
+    <Compile Include="TestData\CreatingData.cs" />
     <Compile Include="TestWmsCapabilityParser.cs" />
     <Compile Include="WMS\Encoding.cs" />
   </ItemGroup>
@@ -165,6 +174,15 @@
     <None Include="TestData\test-2.3.sqlite">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Women.png" />
   </ItemGroup>
   <PropertyGroup>
     <PreBuildEvent>"$(SolutionDir)BuildTools\nuget.exe" install "$(ProjectDir)packages.config" -o "$(SolutionDir)Packages"</PreBuildEvent>

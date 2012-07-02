@@ -393,7 +393,6 @@
     <None Include="app.config">
       <SubType>Designer</SubType>
     </None>
-    <None Include="app.vs2010" />
     <Content Include="GeoData\VRT\contours_sample_polyline_play2_polyline.vrt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

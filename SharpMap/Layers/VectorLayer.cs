@@ -453,6 +453,9 @@ namespace SharpMap.Layers
 
         protected void RenderGeometry(Graphics g, Map map, IGeometry feature, VectorStyle style)
         {
+            if (feature == null)
+                return;
+
             var geometryType = feature.OgcGeometryType;
             switch (geometryType)
             {

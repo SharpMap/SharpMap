@@ -5,6 +5,8 @@ using System.Text;
 
 namespace SharpMap.Forms.ToolBar
 {
+    using System.ComponentModel;
+
     [System.ComponentModel.DesignTimeVisible(true)]
     public class MapQueryToolStrip : MapToolStrip
     {
@@ -104,7 +106,18 @@ namespace SharpMap.Forms.ToolBar
                 Enabled =false;
                 return;
             }
+            this.MapControl.MapChanging += OnMapChanging;
+            this.MapControl.MapChanged += OnMapChanged;
+        }
 
+        private void OnMapChanged(object sender, EventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void OnMapChanging(object sender, CancelEventArgs e)
+        {
+            //throw new NotImplementedException();
         }
 
         private void OnSelectedIndexChanged(object sender, EventArgs e)

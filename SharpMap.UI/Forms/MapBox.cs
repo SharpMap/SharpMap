@@ -199,6 +199,16 @@ namespace SharpMap.Forms
         public event EventHandler MapRefreshed;
 
         /// <summary>
+        /// Fired when the map is about to change
+        /// </summary>
+        public event CancelEventHandler MapChanging;
+
+        /// <summary>
+        /// Fired when the map has been changed
+        /// </summary>
+        public event EventHandler MapChanged;
+
+        /// <summary>
         /// Eventtype fired when the zoom was or are being changed
         /// </summary>
         /// <param name="zoom"></param>
@@ -504,13 +514,15 @@ namespace SharpMap.Forms
             get { return _map; }
             set
             {
-                _map = value;
-
-                if (_map != null)
+                if (value != _map)
                 {
-                    VariableLayerCollection.VariableLayerCollectionRequery += HandleVariableLayersRequery;
-                    _map.MapNewTileAvaliable += HandleMapNewTileAvaliable;
-                    Refresh();
+                    var cea = new CancelEventArgs(false);
+                    OnMapChanging(cea);
+                    if (cea.Cancel) return;
+
+                    _map = value;
+
+                    OnMapChanged(EventArgs.Empty);
                 }
             }
         }
@@ -1273,6 +1285,30 @@ namespace SharpMap.Forms
         }
         
 #endif
+        protected virtual void OnMapChanging(CancelEventArgs e)
+        {
+            if (MapChanging != null) MapChanging(this, e);
+            if (e.Cancel)
+                return;
+            
+            if (_map != null)
+            {
+                VariableLayerCollection.VariableLayerCollectionRequery -= HandleVariableLayersRequery;
+                _map.MapNewTileAvaliable -= HandleMapNewTileAvaliable;
+            }
+        }
+
+        protected virtual void OnMapChanged(EventArgs e)
+        {
+            if (_map != null)
+            {
+                VariableLayerCollection.VariableLayerCollectionRequery += HandleVariableLayersRequery;
+                _map.MapNewTileAvaliable += HandleMapNewTileAvaliable;
+                Refresh();
+            }
+            
+            if (MapChanged != null) MapChanged(this, e);
+        }
 
         private void RegenerateZoomingImage()
         {
