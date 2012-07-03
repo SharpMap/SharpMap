@@ -52,7 +52,7 @@
 
         }
 
-        [NUnit.Framework.Test]
+        [NUnit.Framework.Test, NUnit.Framework.Ignore("DataSet inapropriate (too large)")]
         public void TestWarpedLineSymbolizer()
         {
             var p = new SharpMap.Data.Providers.ShapeFile(GetTestFile(), false);

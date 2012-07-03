@@ -131,7 +131,7 @@
     public class TestShapeFactory
     {
         public static readonly GeoAPI.Geometries.IGeometryFactory Factory =
-            new NetTopologySuite.Geometries.GeometryFactory();
+            new NetTopologySuite.Geometries.GeometryFactory(new NetTopologySuite.Geometries.PrecisionModel(0.01));
         
         [NUnit.Framework.Test]
         public void TestRectangle()
@@ -143,7 +143,7 @@
             var rect2 = ShapeFactory.CreateRectangle(Factory, new GeoAPI.Geometries.Coordinate(1.5, 1.5), new System.Drawing.SizeF(1f, 1f));
             NUnit.Framework.Assert.AreEqual(rect, rect2);
 
-            NUnit.Framework.Assert.AreEqual("LINESTRING (1 2, 2 2, 2 1, 1 1, 1 2)", rect.ToString());
+            NUnit.Framework.Assert.AreEqual("LINEARRING (1 2, 2 2, 2 1, 1 1, 1 2)", rect.ToString());
         }
         [NUnit.Framework.Test]
         public void TestEllipse()
@@ -153,7 +153,7 @@
             NUnit.Framework.Assert.LessOrEqual(System.Math.Abs(4 * System.Math.Sqrt(2) - ell.Length), 0.00001d);
 
 
-            NUnit.Framework.Assert.AreEqual("LINESTRING (2 1, 1 2, 0 1, 1 0, 2 1)", ell.ToString());
+            NUnit.Framework.Assert.AreEqual("LINEARRING (2 1, 1 2, 0 1, 1 0, 2 1)", ell.ToString());
             var ell2 = ShapeFactory.CreateEllipse(Factory, new GeoAPI.Geometries.Coordinate(1, 1), new System.Drawing.SizeF(1, 1));
             System.Console.WriteLine(ell2.ToString());
         }
