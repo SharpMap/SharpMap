@@ -15,7 +15,7 @@ OpenLayers.Util.extend(OpenLayers.Lang.en, {
 
     'oleDialogOkButton': 'Ok',
 
-    'oleDragFeature': 'Drage geometry',
+    'oleDragFeature': 'Drag geometry',
 
     'oleDrawHole': 'Draw hole',
 
