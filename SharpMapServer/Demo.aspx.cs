@@ -21,7 +21,7 @@ namespace SharpMapServer
             parameters = new JavaScriptSerializer().Serialize(new
             {
                 projection = "EPSG:4326",
-                maxExtent = new double[] { ext.Min.X, ext.Min.Y, ext.Max.X, ext.Max.Y }
+                maxExtent = new double[] { ext.MinX, ext.MinY, ext.MaxX, ext.MaxY }
             });
         }
     }
