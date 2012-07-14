@@ -18,7 +18,7 @@ namespace UnitTests.Serialization
         public void TestSerializeWmsLayer()
         {
             SharpMap.Map m = new SharpMap.Map();
-            SharpMap.Layers.WmsLayer l = new SharpMap.Layers.WmsLayer("testwms", "http://mapus.jpl.nasa.gov/wms.cgi?");
+            SharpMap.Layers.WmsLayer l = new SharpMap.Layers.WmsLayer("testwms", "http://sampleserver1.arcgisonline.com/ArcGIS/services/Specialty/ESRI_StatesCitiesRivers_USA/MapServer/WMSServer");
             l.AddChildLayers(l.RootLayer, false);
             m.Layers.Add(l);
             MemoryStream ms = new MemoryStream();
@@ -30,8 +30,8 @@ namespace UnitTests.Serialization
       <Name>testwms</Name>
       <MinVisible>0</MinVisible>
       <MaxVisible>1.7976931348623157E+308</MaxVisible>
-      <OnlineURL>http://mapus.jpl.nasa.gov/wms.cgi?</OnlineURL>
-      <WmsLayers>global_mosaic,global_mosaic_base,us_landsat_wgs84,srtm_mag,daily_planet,daily_afternoon,BMNG,modis,huemapped_srtm,srtmplus,worldwind_dem,us_ned,us_elevation,us_colordem,gdem</WmsLayers>
+      <OnlineURL>http://sampleserver1.arcgisonline.com/ArcGIS/services/Specialty/ESRI_StatesCitiesRivers_USA/MapServer/WMSServer</OnlineURL>
+      <WmsLayers>0,1,2</WmsLayers>
     </MapLayer>
   </Layers>"));
             ms.Close();
@@ -55,7 +55,7 @@ namespace UnitTests.Serialization
       <Name>testwms</Name>
       <MinVisible>0</MinVisible>
       <MaxVisible>1.7976931348623157E+308</MaxVisible>
-      <OnlineURL>http://mapus.jpl.nasa.gov/wms.cgi?</OnlineURL>
+      <OnlineURL>http://sampleserver1.arcgisonline.com/ArcGIS/services/Specialty/ESRI_StatesCitiesRivers_USA/MapServer/WMSServer</OnlineURL>
     </MapLayer>
   </Layers>
   <SRID>4326</SRID>
@@ -65,7 +65,7 @@ namespace UnitTests.Serialization
             Assert.AreEqual(4326, m.SRID);
             Assert.AreEqual(1, m.Layers.Count);
             Assert.IsInstanceOfType(typeof(SharpMap.Layers.WmsLayer), m.Layers[0]);
-            Assert.AreEqual("http://mapus.jpl.nasa.gov/wms.cgi?", (m.Layers[0] as SharpMap.Layers.WmsLayer).CapabilitiesUrl);
+            Assert.AreEqual("http://sampleserver1.arcgisonline.com/ArcGIS/services/Specialty/ESRI_StatesCitiesRivers_USA/MapServer/WMSServer", (m.Layers[0] as SharpMap.Layers.WmsLayer).CapabilitiesUrl);
             ms.Close();
         }
 
@@ -87,7 +87,7 @@ namespace UnitTests.Serialization
       <Name>testwms</Name>
       <MinVisible>0</MinVisible>
       <MaxVisible>1.7976931348623157E+308</MaxVisible>
-      <OnlineURL>http://mapus.jpl.nasa.gov/wms.cgi?</OnlineURL>
+      <OnlineURL>http://sampleserver1.arcgisonline.com/ArcGIS/services/Specialty/ESRI_StatesCitiesRivers_USA/MapServer/WMSServer</OnlineURL>
       <WmsUser>test</WmsUser>
       <WmsPassword>pw</WmsPassword>
     </MapLayer>
@@ -99,7 +99,7 @@ namespace UnitTests.Serialization
             Assert.AreEqual(4326, m.SRID);
             Assert.AreEqual(1, m.Layers.Count);
             Assert.IsInstanceOfType(typeof(SharpMap.Layers.WmsLayer), m.Layers[0]);
-            Assert.AreEqual("http://mapus.jpl.nasa.gov/wms.cgi?", (m.Layers[0] as SharpMap.Layers.WmsLayer).CapabilitiesUrl);
+            Assert.AreEqual("http://sampleserver1.arcgisonline.com/ArcGIS/services/Specialty/ESRI_StatesCitiesRivers_USA/MapServer/WMSServer", (m.Layers[0] as SharpMap.Layers.WmsLayer).CapabilitiesUrl);
             Assert.IsNotNull((m.Layers[0] as SharpMap.Layers.WmsLayer).Credentials);
             Assert.IsInstanceOfType(typeof(NetworkCredential), (m.Layers[0] as SharpMap.Layers.WmsLayer).Credentials);
             Assert.AreEqual("test", ((m.Layers[0] as SharpMap.Layers.WmsLayer).Credentials as NetworkCredential).UserName);
@@ -112,7 +112,7 @@ namespace UnitTests.Serialization
         public void TestSerializeWmsLayerWithCredentials()
         {
             SharpMap.Map m = new SharpMap.Map();
-            SharpMap.Layers.WmsLayer l = new SharpMap.Layers.WmsLayer("testwms", "http://mapus.jpl.nasa.gov/wms.cgi?", TimeSpan.MaxValue, 
+            SharpMap.Layers.WmsLayer l = new SharpMap.Layers.WmsLayer("testwms", "http://sampleserver1.arcgisonline.com/ArcGIS/services/Specialty/ESRI_StatesCitiesRivers_USA/MapServer/WMSServer", TimeSpan.MaxValue, 
                 System.Net.WebRequest.DefaultWebProxy, new NetworkCredential("test", "pw"));
             l.AddChildLayers(l.RootLayer, false);
             m.Layers.Add(l);
@@ -125,10 +125,10 @@ namespace UnitTests.Serialization
       <Name>testwms</Name>
       <MinVisible>0</MinVisible>
       <MaxVisible>1.7976931348623157E+308</MaxVisible>
-      <OnlineURL>http://mapus.jpl.nasa.gov/wms.cgi?</OnlineURL>
+      <OnlineURL>http://sampleserver1.arcgisonline.com/ArcGIS/services/Specialty/ESRI_StatesCitiesRivers_USA/MapServer/WMSServer</OnlineURL>
       <WmsUser>test</WmsUser>
       <WmsPassword>pw</WmsPassword>
-      <WmsLayers>global_mosaic,global_mosaic_base,us_landsat_wgs84,srtm_mag,daily_planet,daily_afternoon,BMNG,modis,huemapped_srtm,srtmplus,worldwind_dem,us_ned,us_elevation,us_colordem,gdem</WmsLayers>
+      <WmsLayers>0,1,2</WmsLayers>
     </MapLayer>
   </Layers>"));
             ms.Close();
