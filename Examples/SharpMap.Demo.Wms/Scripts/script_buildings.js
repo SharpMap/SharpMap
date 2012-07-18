@@ -18,9 +18,9 @@
     
     Buildings.setMap('leaflet', map);
     Buildings.load("/buildings/getdata?w={w}&n={n}&e={e}&s={s}&z={z}&all=true", {
-        strokeRoofs: false,
-        wallColor: "rgb(190,170,150)",
-        roofColor: "rgb(230,220,210)",
+        strokeRoofs: true,
+        wallColor: "rgba(190,170,150,0.8)",
+        roofColor: "rgba(230,220,210,0.8)",
         strokeColor: "rgb(145,140,135)"
     });
 });
