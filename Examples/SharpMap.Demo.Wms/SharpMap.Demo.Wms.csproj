@@ -79,6 +79,7 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controllers\BuildingsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ProcessController.cs" />
     <Compile Include="Global.asax.cs">
@@ -153,6 +154,8 @@
     <Content Include="lib\OpenLayers\Protocol\Script.js" />
     <Content Include="lib\OpenLayers\Renderer\NG.js" />
     <Content Include="lib\OpenLayers\Renderer\SVG2.js" />
+    <Content Include="Scripts\ll\buildings.js" />
+    <Content Include="Scripts\script_buildings.js" />
     <Content Include="Scripts\jquery.mobile-1.1.0-rc.1.min.js" />
     <Content Include="Scripts\ole\loader.js" />
     <Content Include="Scripts\script_tc.js" />
@@ -185,6 +188,7 @@
     <Content Include="Scripts\script_geojs.js" />
     <Content Include="Scripts\pl\webdb.js" />
     <Content Include="Scripts\ll\TileLayer.TileJSON.js" />
+    <Content Include="Views\Home\Buildings.aspx" />
     <Content Include="Views\Home\Index.aspx" />
     <Content Include="Views\Home\TileCanvas.aspx" />
     <Content Include="Views\Home\Offline.aspx" />
@@ -589,6 +593,14 @@
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="App_Data\berlin\osmbuildings.dbf" />
+    <None Include="App_Data\berlin\osmbuildings.prj" />
+    <None Include="App_Data\berlin\osmbuildings.shp" />
+    <None Include="App_Data\berlin\osmbuildings.shx" />
+    <None Include="App_Data\berlin\osmbuildings_complete.dbf" />
+    <None Include="App_Data\berlin\osmbuildings_complete.prj" />
+    <None Include="App_Data\berlin\osmbuildings_complete.shp" />
+    <None Include="App_Data\berlin\osmbuildings_complete.shx" />
     <None Include="App_Data\nyc\poi.dbf" />
     <None Include="App_Data\nyc\poi.prj" />
     <None Include="App_Data\nyc\poi.shp" />

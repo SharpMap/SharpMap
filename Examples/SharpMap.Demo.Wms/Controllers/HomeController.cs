@@ -84,6 +84,11 @@
         public ActionResult TileCanvas()
         {
             return this.View();
-        }        
+        }
+
+        public ActionResult Buildings()
+        {
+            return this.View();
+        } 
     }
 }
