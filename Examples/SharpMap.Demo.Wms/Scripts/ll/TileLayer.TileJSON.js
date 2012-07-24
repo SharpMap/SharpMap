@@ -1,6 +1,7 @@
 L.TileLayer.TileJSON = L.TileLayer.Canvas.extend({
     options: {
-        debug: false
+        debug: false,
+        buffer: 0
     },
 
     tileSize: 256,
@@ -97,7 +98,7 @@ L.TileLayer.TileJSON = L.TileLayer.Canvas.extend({
         if (!style) {
             return;
         }
-        
+
         var p = this._tilePoint(ctx, geom);
         var c = ctx.canvas;
         var g = c.getContext('2d');
@@ -113,7 +114,7 @@ L.TileLayer.TileJSON = L.TileLayer.Canvas.extend({
         if (!style) {
             return;
         }
-        
+
         var coords = geom, proj = [], i;
         coords = this._clip(ctx, coords);
         coords = L.LineUtil.simplify(coords, 1);
@@ -140,7 +141,7 @@ L.TileLayer.TileJSON = L.TileLayer.Canvas.extend({
         if (!style) {
             return;
         }
-        
+
         for (var el = 0; el < geom.length; el++) {
             var coords = geom[el], proj = [], i;
             coords = this._clip(ctx, coords);
@@ -177,6 +178,18 @@ L.TileLayer.TileJSON = L.TileLayer.Canvas.extend({
 
         var nwPoint = ctx.tile.multiplyBy(this.tileSize);
         var sePoint = nwPoint.add(new L.Point(this.tileSize, this.tileSize));
+
+        // optionally, enlarge request area.
+        // with this I can draw points with coords outside this tile area,
+        // but with part of the graphics actually inside this tile.
+        // NOTE: that you should use this option only if you're actually drawing points!
+        var buf = this.options.buffer;
+        if (buf > 0) {
+            var diff = new L.Point(buf, buf);
+            nwPoint = nwPoint.subtract(diff);
+            sePoint = sePoint.add(diff);
+        }
+
         var nwCoord = this._map.unproject(nwPoint, ctx.zoom, true);
         var seCoord = this._map.unproject(sePoint, ctx.zoom, true);
         var bounds = [nwCoord.lng, seCoord.lat, seCoord.lng, nwCoord.lat];

@@ -12,7 +12,9 @@
     map.addLayer(cloudmade);
 
     var tile = new L.TileLayer.TileJSON({
-        debug: false
+        debug: false,
+        // this value should be equal to 'radius' of your points        
+        buffer: 10
     });
     tile.createUrl = function (bounds) {
         var url = ['/json.ashx?MAP_TYPE=PM&BBOX=',
@@ -30,7 +32,7 @@
             case 'MultiPoint':
                 return {
                     color: 'rgba(252,146,114,0.6)',
-                    radius: 5
+                    radius: 10
                 };
                 
             case 'LineString':
