@@ -38,10 +38,9 @@ namespace SharpMap.Demo.Wms.Controllers
         }
 
         [HttpGet]
-        public JsonResult GetData(float w, float n, float e, float s, int z, bool all)
+        public JsonResult GetData(float w, float n, float e, float s, int z)
         {
-            string shp = all ? "osmbuildings_complete.shp" : "osmbuildings.shp";
-            string format = String.Format("~/App_Data/berlin/{0}", shp);
+            string format = String.Format("~/App_Data/berlin/{0}", "osmbuildings.shp");
             string path = this.HttpContext.Server.MapPath(format);
             if (!System.IO.File.Exists(path))
                 throw new FileNotFoundException("file not found", path);
