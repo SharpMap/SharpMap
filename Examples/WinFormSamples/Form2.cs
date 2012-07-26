@@ -1,37 +1,39 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Drawing.Drawing2D;
-using System.Text;
-using System.Windows.Forms;
-using GeoAPI.Geometries;
-using NetTopologySuite.Geometries;
-using SharpMap.Data;
-using SharpMap.Layers;
-using SharpMap.Data;
-using SharpMap.Data.Providers;
-using SharpMap.Styles;
-using SharpMap.Rendering.Thematics;
-using BruTile;
-using BruTile.Cache;
-using BruTile.PreDefined;
-using BruTile.Web;
-
-#if DotSpatialProjections
+﻿#if DotSpatialProjections
 using GeometryTransform = DotSpatial.Projections.GeometryTransform;
 #else
-using GeometryTransform = ProjNet.CoordinateSystems.Transformations.GeometryTransform;
+
 #endif
 
 namespace WinFormSamples
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Drawing;
+    using System.Drawing.Drawing2D;
+    using System.IO;
+    using System.Windows.Forms;
+
+    using BruTile;
+    using BruTile.Cache;
+    using BruTile.PreDefined;
+    using BruTile.Web;
+
+    using GeoAPI.Geometries;
+
+    using NetTopologySuite.Geometries;
+
+    using ProjNet.CoordinateSystems.Transformations;
+
+    using SharpMap.Data.Providers;
+    using SharpMap.Forms;
+    using SharpMap.Layers;
+    using SharpMap.Styles;
+
     public partial class Form2 : Form
     {
         public Form2()
         {
-            InitializeComponent();
+            this.InitializeComponent();
             // this.SetStyle(ControlStyles.DoubleBuffer | ControlStyles.UserPaint | ControlStyles.AllPaintingInWmPaint, true);
             this.UpdateStyles();
         }
@@ -42,7 +44,7 @@ namespace WinFormSamples
             TileAsyncLayer bingLayer = new TileAsyncLayer(new BingTileSource(BingRequest.UrlBing, "", BingMapType.Roads), "TileLayer - Bing");
 
             this.mapBox1.Map.BackgroundLayer.Add(bingLayer);
-            var gf = new GeometryFactory(new PrecisionModel(), 3857);
+            GeometryFactory gf = new GeometryFactory(new PrecisionModel(), 3857);
 
 #if DotSpatialProjections
             var mathTransform = LayerTools.Wgs84toGoogleMercator;
@@ -50,15 +52,15 @@ namespace WinFormSamples
                 new Envelope(-9.205626, -9.123736, 38.690993, 38.740837), 
                 mathTransform.Source, mathTransform.Target);
 #else
-            var mathTransform = LayerTools.Wgs84toGoogleMercator.MathTransform;
-            var geom = GeometryTransform.TransformBox(
+            IMathTransform mathTransform = LayerTools.Wgs84toGoogleMercator.MathTransform;
+            Envelope geom = GeometryTransform.TransformBox(
                 new Envelope(-9.205626, -9.123736, 38.690993, 38.740837),
                 mathTransform);
 #endif
 
             //Adds a pushpin layer
             VectorLayer pushPinLayer = new VectorLayer("PushPins");
-            var geos = new List<IGeometry>();
+            List<IGeometry> geos = new List<IGeometry>();
             geos.Add(gf.CreatePoint(geom.Centre));
             GeometryProvider geoProvider = new GeometryProvider(geos);
             pushPinLayer.DataSource = geoProvider;
@@ -71,17 +73,17 @@ namespace WinFormSamples
 
         private void button4_Click(object sender, EventArgs e)
         {
-            this.mapBox1.ActiveTool = SharpMap.Forms.MapBox.Tools.Pan;
+            this.mapBox1.ActiveTool = MapBox.Tools.Pan;
         }
 
         private void button3_Click(object sender, EventArgs e)
         {
-            this.mapBox1.ActiveTool = SharpMap.Forms.MapBox.Tools.ZoomWindow;
+            this.mapBox1.ActiveTool = MapBox.Tools.ZoomWindow;
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
-            this.mapBox1.ActiveTool = SharpMap.Forms.MapBox.Tools.ZoomOut;
+            this.mapBox1.ActiveTool = MapBox.Tools.ZoomOut;
         }
 
         private void Form2_SizeChanged(object sender, EventArgs e)
@@ -117,7 +119,7 @@ namespace WinFormSamples
         private void button7_Click(object sender, EventArgs e)
         {
             ITileSchema schema = new SphericalMercatorInvertedWorldSchema();
-            ILayer[] layers = CreateLayers();            
+            ILayer[] layers = CreateLayers();
             SharpMapTileSource source = new SharpMapTileSource(schema, layers);
             TileAsyncLayer osmLayer = new TileAsyncLayer(source, "TileLayer - SharpMap");
             this.mapBox1.Map.BackgroundLayer.Clear();
@@ -127,27 +129,28 @@ namespace WinFormSamples
 
         private static ILayer[] CreateLayers()
         {
-            ILayer countries = new VectorLayer("countries", new ShapeFile("GeoData/World/countries.shp", true))
+            ILayer countries = CreateLayer("GeoData/World/countries.shp", new VectorStyle { EnableOutline = true, Fill = new SolidBrush(Color.Green) });
+            ILayer rivers = CreateLayer("GeoData/World/rivers.shp", new VectorStyle { Line = new Pen(Color.Blue) });
+            ILayer cities = CreateLayer("GeoData/World/cities.shp", new VectorStyle());
+            return new[] { countries, rivers, cities };
+        }
+
+        private static ILayer CreateLayer(string path, VectorStyle style)
+        {
+            FileInfo file = new FileInfo(path);
+            if (!file.Exists)
+                throw new FileNotFoundException("file not found", path);
+
+            string full = file.FullName;
+            string name = Path.GetFileNameWithoutExtension(full);
+            ILayer layer = new VectorLayer(name, new ShapeFile(full, true))
             {
                 SRID = 900913,
                 CoordinateTransformation = LayerTools.Wgs84toGoogleMercator,
-                Style = new VectorStyle { EnableOutline = true, Fill = new SolidBrush(Color.Green) },
+                Style = style,
                 SmoothingMode = SmoothingMode.AntiAlias
             };
-            ILayer rivers = new VectorLayer("countries", new ShapeFile("GeoData/World/rivers.shp", true))
-            {
-                SRID = 900913,
-                CoordinateTransformation = LayerTools.Wgs84toGoogleMercator,
-                Style = new VectorStyle { Line = new Pen(Color.Blue) },
-                SmoothingMode = SmoothingMode.AntiAlias
-            };
-            ILayer cities = new VectorLayer("countries", new ShapeFile("GeoData/World/cities.shp", true))
-            {
-                SRID = 900913,
-                CoordinateTransformation = LayerTools.Wgs84toGoogleMercator,                
-                SmoothingMode = SmoothingMode.AntiAlias
-            };
-            return new [] { countries, rivers, cities };
+            return layer;
         }
     }
 }

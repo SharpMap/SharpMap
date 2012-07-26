@@ -4,6 +4,7 @@ namespace WinFormSamples
     using System.Drawing;
     using System.Drawing.Imaging;
     using System.IO;
+    using System.Threading;
 
     using BruTile;
     using BruTile.Cache;
@@ -77,6 +78,9 @@ namespace WinFormSamples
 
         public byte[] GetTile(TileInfo info)
         {
+            if (info == null)
+                throw new ArgumentNullException("info");
+
             if (this.format == null)
                 this.format = GetFormat(this.Schema);
 
@@ -97,9 +101,6 @@ namespace WinFormSamples
 
         private static ImageFormat GetFormat(ITileSchema schema)
         {
-            if (schema == null)
-                throw new ArgumentNullException("schema");
-
             string format = schema.Format;
             if (String.Equals("JPEG", format, StringComparison.InvariantCultureIgnoreCase))
                 return ImageFormat.Jpeg;
@@ -116,20 +117,22 @@ namespace WinFormSamples
             return ImageFormat.Png;
         }
 
-        private Image CreateTile(TileInfo info)
+        private readonly object synclock = new object();
+
+        private Image CreateTile(TileInfo info)        
         {
-            if (info == null)
-                throw new ArgumentNullException("info");
-            
-            Size size = new Size(this.Schema.Width, this.Schema.Height);
-            Map map = new Map(size) { BackColor = Color.Transparent };
-            map.Layers.AddCollection(this.layers);
+            lock (synclock)
+            {
+                Size size = new Size(this.Schema.Width, this.Schema.Height);
+                Map map = new Map(size) { BackColor = Color.Transparent };
+                map.Layers.AddCollection(this.layers);
 
-            Extent ext = info.Extent;
-            Envelope bbox = new Envelope(ext.MinX, ext.MaxX, ext.MinY, ext.MaxY);
-            map.ZoomToBox(bbox);
+                Extent ext = info.Extent;
+                Envelope bbox = new Envelope(ext.MinX, ext.MaxX, ext.MinY, ext.MaxY);
+                map.ZoomToBox(bbox);
 
-            return map.GetMap();
+                return map.GetMap();
+            }
         }
     }    
 }
