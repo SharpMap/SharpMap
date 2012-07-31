@@ -1,6 +1,6 @@
-/* Copyright (c) 2006-2011 by OpenLayers Contributors (see authors.txt for 
- * full list of contributors). Published under the Clear BSD license.  
- * See http://svn.openlayers.org/trunk/openlayers/license.txt for the
+/* Copyright (c) 2006-2012 by OpenLayers Contributors (see authors.txt for 
+ * full list of contributors). Published under the 2-clause BSD license.
+ * See license.txt in the OpenLayers distribution or repository for the
  * full text of the license. */
 
 /**
@@ -203,9 +203,14 @@ OpenLayers.Format.WPSExecute = OpenLayers.Class(OpenLayers.Format.XML, {
                         schema: complexData.schema
                     } 
                 });
-                node.appendChild(
-                    this.getXMLDoc().createCDATASection(complexData.value)
-                );
+                var data = complexData.value;
+                if (typeof data === "string") {
+                    node.appendChild(
+                        this.getXMLDoc().createCDATASection(complexData.value)
+                    );
+                } else {
+                    node.appendChild(data);
+                }
                 return node;
             },
             "Reference": function(reference) {
@@ -242,6 +247,7 @@ OpenLayers.Format.WPSExecute = OpenLayers.Class(OpenLayers.Format.XML, {
         },
         "wcs": OpenLayers.Format.WCSGetCoverage.prototype.writers.wcs,
         "wfs": OpenLayers.Format.WFST.v1_1_0.prototype.writers.wfs,
+        "ogc": OpenLayers.Format.Filter.v1_1_0.prototype.writers.ogc,
         "ows": OpenLayers.Format.OWSCommon.v1_1_0.prototype.writers.ows
     },
     

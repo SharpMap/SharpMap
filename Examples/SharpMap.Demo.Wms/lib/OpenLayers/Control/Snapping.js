@@ -1,6 +1,6 @@
-/* Copyright (c) 2006-2011 by OpenLayers Contributors (see authors.txt for 
- * full list of contributors). Published under the Clear BSD license.  
- * See http://svn.openlayers.org/trunk/openlayers/license.txt for the
+/* Copyright (c) 2006-2012 by OpenLayers Contributors (see authors.txt for 
+ * full list of contributors). Published under the 2-clause BSD license.
+ * See license.txt in the OpenLayers distribution or repository for the
  * full text of the license. */
 
 /**
@@ -17,18 +17,17 @@
  */
 OpenLayers.Control.Snapping = OpenLayers.Class(OpenLayers.Control, {
 
-    /**
-     * Constant: EVENT_TYPES
-     * {Array(String)} Supported application event types.  Register a listener
-     *     for a particular event with the following syntax:
+    /** 
+     * APIProperty: events
+     * {<OpenLayers.Events>} Events instance for listeners and triggering
+     *     control specific events.
+     *
+     * Register a listener for a particular event with the following syntax:
      * (code)
      * control.events.register(type, obj, listener);
      * (end)
      *
-     * Listeners will be called with a reference to an event object.  The
-     *     properties of this event depends on exactly what happened.
-     *
-     * Supported control event types (in addition to those from <OpenLayers.Control>):
+     * Supported event types (in addition to those from <OpenLayers.Control.events>):
      * beforesnap - Triggered before a snap occurs.  Listeners receive an
      *     event object with *point*, *x*, *y*, *distance*, *layer*, and
      *     *snapType* properties.  The point property will be original point
@@ -45,7 +44,6 @@ OpenLayers.Control.Snapping = OpenLayers.Class(OpenLayers.Control, {
      * unsnap - Triggered when a vertex is unsnapped.  Listeners receive an
      *     event with a *point* property.
      */
-    EVENT_TYPES: ["beforesnap", "snap", "unsnap"],
     
     /**
      * CONSTANT: DEFAULTS
@@ -118,7 +116,7 @@ OpenLayers.Control.Snapping = OpenLayers.Class(OpenLayers.Control, {
      *     the control.
      *
      * Valid options:
-     * layer - {OpenLayers.Layer.Vector} The editable layer.  Features from this
+     * layer - {<OpenLayers.Layer.Vector>} The editable layer.  Features from this
      *     layer that are digitized or modified may have vertices snapped to
      *     features from any of the target layers.
      * targets - {Array(Object | OpenLayers.Layer.Vector)} A list of objects for
@@ -144,7 +142,7 @@ OpenLayers.Control.Snapping = OpenLayers.Class(OpenLayers.Control, {
      *     continues after an eligible feature is found in a target layer.
      *
      * Valid target properties:
-     * layer - {OpenLayers.Layer.Vector} A target layer.  Features from this
+     * layer - {<OpenLayers.Layer.Vector>} A target layer.  Features from this
      *     layer will be eligible to act as snapping target for the editable
      *     layer.
      * tolerance - {Float} The distance (in pixels) at which snapping may occur.
@@ -162,7 +160,7 @@ OpenLayers.Control.Snapping = OpenLayers.Class(OpenLayers.Control, {
      * edgeTolerance - {Float} Optional distance at which snapping may occur
      *     for edges specifically.  If none is provided, <tolerance> will be
      *     used.
-     * filter - {OpenLayers.Filter} Optional filter to evaluate to determine if
+     * filter - {<OpenLayers.Filter>} Optional filter to evaluate to determine if
      *     feature is eligible for snapping.  If filter evaluates to true for a
      *     target feature a vertex may be snapped to the feature. 
      * minResolution - {Number} If a minResolution is provided, snapping to this
@@ -175,10 +173,6 @@ OpenLayers.Control.Snapping = OpenLayers.Class(OpenLayers.Control, {
      *     no maximum resolution limit.
      */
     initialize: function(options) {
-        // concatenate events specific to measure with those from the base
-        Array.prototype.push.apply(
-            this.EVENT_TYPES, OpenLayers.Control.prototype.EVENT_TYPES
-        );
         OpenLayers.Control.prototype.initialize.apply(this, [options]);
         this.options = options || {}; // TODO: this could be done by the super
         
@@ -205,7 +199,7 @@ OpenLayers.Control.Snapping = OpenLayers.Class(OpenLayers.Control, {
      *     layer is set.
      *
      * Parameters:
-     * layer - {OpenLayers.Layer.Vector}  The new editable layer.
+     * layer - {<OpenLayers.Layer.Vector>}  The new editable layer.
      */
     setLayer: function(layer) {
         if(this.active) {
@@ -476,7 +470,7 @@ OpenLayers.Control.Snapping = OpenLayers.Class(OpenLayers.Control, {
             feature = features[i];
             if(feature !== this.feature && !feature._sketch &&
                feature.state !== OpenLayers.State.DELETE &&
-               (!target.filter || target.filter.evaluate(feature.attributes))) {
+               (!target.filter || target.filter.evaluate(feature))) {
                 if(feature.atPoint(ll, maxTolerance, maxTolerance)) {
                     for(var j=0, stop=Math.min(result.rank+1, numTypes); j<stop; ++j) {
                         type = this.precedence[j];

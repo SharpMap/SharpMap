@@ -1,6 +1,6 @@
-/* Copyright (c) 2006-2011 by OpenLayers Contributors (see authors.txt for 
- * full list of contributors). Published under the Clear BSD license.  
- * See http://svn.openlayers.org/trunk/openlayers/license.txt for the
+/* Copyright (c) 2006-2012 by OpenLayers Contributors (see authors.txt for 
+ * full list of contributors). Published under the 2-clause BSD license.
+ * See license.txt in the OpenLayers distribution or repository for the
  * full text of the license. */
 
 
@@ -9,6 +9,7 @@
  * @requires OpenLayers/Handler/Click.js
  * @requires OpenLayers/Handler/Hover.js
  * @requires OpenLayers/Request.js
+ * @requires OpenLayers/Format/WMSGetFeatureInfo.js
  */
 
 /**
@@ -154,10 +155,17 @@ OpenLayers.Control.WMSGetFeatureInfo = OpenLayers.Class(OpenLayers.Control, {
      */
     hoverRequest: null,
     
-    /**
-     * Constant: EVENT_TYPES
+    /** 
+     * APIProperty: events
+     * {<OpenLayers.Events>} Events instance for listeners and triggering
+     *     control specific events.
      *
-     * Supported event types (in addition to those from <OpenLayers.Control>):
+     * Register a listener for a particular event with the following syntax:
+     * (code)
+     * control.events.register(type, obj, listener);
+     * (end)
+     *
+     * Supported event types (in addition to those from <OpenLayers.Control.events>):
      * beforegetfeatureinfo - Triggered before the request is sent.
      *      The event object has an *xy* property with the position of the 
      *      mouse click or hover event that triggers the request.
@@ -172,7 +180,6 @@ OpenLayers.Control.WMSGetFeatureInfo = OpenLayers.Class(OpenLayers.Control, {
      *      layers, *text* and *request* will only contain the response body
      *      and request object of the last request.
      */
-    EVENT_TYPES: ["beforegetfeatureinfo", "nogetfeatureinfo", "getfeatureinfo"],
 
     /**
      * Constructor: <OpenLayers.Control.WMSGetFeatureInfo>
@@ -181,12 +188,6 @@ OpenLayers.Control.WMSGetFeatureInfo = OpenLayers.Class(OpenLayers.Control, {
      * options - {Object} 
      */
     initialize: function(options) {
-        // concatenate events specific to vector with those from the base
-        this.EVENT_TYPES =
-            OpenLayers.Control.WMSGetFeatureInfo.prototype.EVENT_TYPES.concat(
-            OpenLayers.Control.prototype.EVENT_TYPES
-        );
-
         options = options || {};
         options.handlerOptions = options.handlerOptions || {};
 
@@ -219,35 +220,6 @@ OpenLayers.Control.WMSGetFeatureInfo = OpenLayers.Class(OpenLayers.Control, {
         }
     },
 
-    /**
-     * Method: activate
-     * Activates the control.
-     * 
-     * Returns:
-     * {Boolean} The control was effectively activated.
-     */
-    activate: function () {
-        if (!this.active) {
-            this.handler.activate();
-        }
-        return OpenLayers.Control.prototype.activate.apply(
-            this, arguments
-        );
-    },
-
-    /**
-     * Method: deactivate
-     * Deactivates the control.
-     * 
-     * Returns:
-     * {Boolean} The control was effectively deactivated.
-     */
-    deactivate: function () {
-        return OpenLayers.Control.prototype.deactivate.apply(
-            this, arguments
-        );
-    },
-    
     /**
      * Method: getInfoForClick 
      * Called on click
@@ -296,7 +268,7 @@ OpenLayers.Control.WMSGetFeatureInfo = OpenLayers.Class(OpenLayers.Control, {
         var candidates = this.layers || this.map.layers;
         var layers = [];
         var layer, url;
-        for(var i=0, len=candidates.length; i<len; ++i) {
+        for(var i = candidates.length - 1; i >= 0; --i) {
             layer = candidates[i];
             if(layer instanceof OpenLayers.Layer.WMS &&
                (!this.queryVisible || layer.getVisibility())) {
@@ -352,9 +324,11 @@ OpenLayers.Control.WMSGetFeatureInfo = OpenLayers.Class(OpenLayers.Control, {
      */
     buildWMSOptions: function(url, layers, clickPosition, format) {
         var layerNames = [], styleNames = [];
-        for (var i = 0, len = layers.length; i < len; i++) { 
-            layerNames = layerNames.concat(layers[i].params.LAYERS);
-            styleNames = styleNames.concat(this.getStyleNames(layers[i]));
+        for (var i = 0, len = layers.length; i < len; i++) {
+            if (layers[i].params.LAYERS != null) {
+                layerNames = layerNames.concat(layers[i].params.LAYERS);
+                styleNames = styleNames.concat(this.getStyleNames(layers[i]));
+            }
         }
         var firstLayer = layers[0];
         // use the firstLayer's projection if it matches the map projection -
@@ -368,9 +342,7 @@ OpenLayers.Control.WMSGetFeatureInfo = OpenLayers.Class(OpenLayers.Control, {
             service: "WMS",
             version: firstLayer.params.VERSION,
             request: "GetFeatureInfo",
-            layers: layerNames,
-            query_layers: layerNames,
-            styles: styleNames,
+            exceptions: firstLayer.params.EXCEPTIONS,
             bbox: this.map.getExtent().toBBOX(null,
                 firstLayer.reverseAxisOrder()),
             feature_count: this.maxFeatures,
@@ -390,6 +362,13 @@ OpenLayers.Control.WMSGetFeatureInfo = OpenLayers.Class(OpenLayers.Control, {
                 y: parseInt(clickPosition.y)
             }
         );
+        if (layerNames.length != 0) {
+            params = OpenLayers.Util.extend({
+                layers: layerNames,
+                query_layers: layerNames,
+                styles: styleNames
+            }, params);
+        }
         OpenLayers.Util.applyDefaults(params, this.vendorParams);
         return {
             url: url,

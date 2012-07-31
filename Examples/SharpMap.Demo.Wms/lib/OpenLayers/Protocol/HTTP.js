@@ -1,21 +1,16 @@
-/* Copyright (c) 2006-2011 by OpenLayers Contributors (see authors.txt for 
- * full list of contributors). Published under the Clear BSD license.  
- * See http://svn.openlayers.org/trunk/openlayers/license.txt for the
+/* Copyright (c) 2006-2012 by OpenLayers Contributors (see authors.txt for 
+ * full list of contributors). Published under the 2-clause BSD license.
+ * See license.txt in the OpenLayers distribution or repository for the
  * full text of the license. */
 
 /**
- * @requires OpenLayers/Console.js
  * @requires OpenLayers/Protocol.js
- * @requires OpenLayers/Feature/Vector.js
- * @requires OpenLayers/Filter/Spatial.js
- * @requires OpenLayers/Filter/Comparison.js
- * @requires OpenLayers/Filter/Logical.js
  * @requires OpenLayers/Request/XMLHttpRequest.js
  */
 
 /**
- * TODO: remove this dependency in 3.0
- * @requires OpenLayers/Format/QueryStringFilter.js
+ * if application uses the query string, for example, for BBOX parameters,
+ * OpenLayers/Format/QueryStringFilter.js should be included in the build config file
  */
 
 /**
@@ -67,11 +62,26 @@ OpenLayers.Protocol.HTTP = OpenLayers.Class(OpenLayers.Protocol, {
     scope: null,
 
     /**
-     * Property: readWithPOST
+     * APIProperty: readWithPOST
      * {Boolean} true if read operations are done with POST requests
      *     instead of GET, defaults to false.
      */
     readWithPOST: false,
+
+    /**
+     * APIProperty: updateWithPOST
+     * {Boolean} true if update operations are done with POST requests
+     *     defaults to false.
+     */
+    updateWithPOST: false,
+    
+    /**
+     * APIProperty: deleteWithPOST
+     * {Boolean} true if delete operations are done with POST requests
+     *     defaults to false.
+     *     if true, POST data is set to output of format.write().
+     */
+    deleteWithPOST: false,
 
     /**
      * Property: wildcarded.
@@ -104,7 +114,7 @@ OpenLayers.Protocol.HTTP = OpenLayers.Class(OpenLayers.Protocol, {
      * Valid options include:
      * url - {String}
      * headers - {Object} 
-     * params - {Object}
+     * params - {Object} URL parameters for GET requests
      * format - {<OpenLayers.Format>}
      * callback - {Function}
      * scope - {Object}
@@ -122,7 +132,7 @@ OpenLayers.Protocol.HTTP = OpenLayers.Class(OpenLayers.Protocol, {
             });
             this.filterToParams = function(filter, params) {
                 return format.write(filter, params);
-            }
+            };
         }
     },
     
@@ -141,7 +151,7 @@ OpenLayers.Protocol.HTTP = OpenLayers.Class(OpenLayers.Protocol, {
      * Optional method to translate an <OpenLayers.Filter> object into an object
      *     that can be serialized as request query string provided.  If a custom
      *     method is not provided, the filter will be serialized using the 
-     *     <OpenLayers.Protocol.simpleFilterSerializer> method.
+     *     <OpenLayers.Format.QueryStringFilter> class.
      *
      * Parameters:
      * filter - {<OpenLayers.Filter>} filter to convert.
@@ -171,7 +181,7 @@ OpenLayers.Protocol.HTTP = OpenLayers.Class(OpenLayers.Protocol, {
      * {<OpenLayers.Protocol.Response>} A response object, whose "priv" property
      *     references the HTTP request, this object is also passed to the
      *     callback function when the request completes, its "features" property
-     *     is then populated with the the features received from the server.
+     *     is then populated with the features received from the server.
      */
     read: function(options) {
         OpenLayers.Protocol.prototype.read.apply(this, arguments);
@@ -188,13 +198,13 @@ OpenLayers.Protocol.HTTP = OpenLayers.Class(OpenLayers.Protocol, {
                            options.readWithPOST : this.readWithPOST;
         var resp = new OpenLayers.Protocol.Response({requestType: "read"});
         if(readWithPOST) {
+            var headers = options.headers || {};
+            headers["Content-Type"] = "application/x-www-form-urlencoded";
             resp.priv = OpenLayers.Request.POST({
                 url: options.url,
                 callback: this.createCallback(this.handleRead, resp, options),
                 data: OpenLayers.Util.getParameterString(options.params),
-                headers: {
-                    "Content-Type": "application/x-www-form-urlencoded"
-                }
+                headers: headers
             });
         } else {
             resp.priv = OpenLayers.Request.GET({
@@ -298,7 +308,8 @@ OpenLayers.Protocol.HTTP = OpenLayers.Class(OpenLayers.Protocol, {
             requestType: "update"
         });
 
-        resp.priv = OpenLayers.Request.PUT({
+        var method = this.updateWithPOST ? "POST" : "PUT";
+        resp.priv = OpenLayers.Request[method]({
             url: url,
             callback: this.createCallback(this.handleUpdate, resp, options),
             headers: options.headers,
@@ -349,11 +360,16 @@ OpenLayers.Protocol.HTTP = OpenLayers.Class(OpenLayers.Protocol, {
             requestType: "delete"
         });
 
-        resp.priv = OpenLayers.Request.DELETE({
+        var method = this.deleteWithPOST ? "POST" : "DELETE";
+        var requestOptions = {
             url: url,
             callback: this.createCallback(this.handleDelete, resp, options),
             headers: options.headers
-        });
+        };
+        if (this.deleteWithPOST) {
+            requestOptions.data = this.format.write(feature);
+        }
+        resp.priv = OpenLayers.Request[method](requestOptions);
 
         return resp;
     },

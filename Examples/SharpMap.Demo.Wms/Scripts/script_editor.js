@@ -71,6 +71,7 @@
             activeControls: [
                 'Navigation',
                 'SnappingSettings',
+                'CADTools',
                 'Separator',
                 'SplitFeature',
                 'MergeFeature',

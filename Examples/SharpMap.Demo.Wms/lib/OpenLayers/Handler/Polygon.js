@@ -1,6 +1,6 @@
-/* Copyright (c) 2006-2011 by OpenLayers Contributors (see authors.txt for 
- * full list of contributors). Published under the Clear BSD license.  
- * See http://svn.openlayers.org/trunk/openlayers/license.txt for the
+/* Copyright (c) 2006-2012 by OpenLayers Contributors (see authors.txt for 
+ * full list of contributors). Published under the 2-clause BSD license.
+ * See license.txt in the OpenLayers distribution or repository for the
  * full text of the license. */
 
 
@@ -35,7 +35,7 @@ OpenLayers.Handler.Polygon = OpenLayers.Class(OpenLayers.Handler.Path, {
     drawingHole: false,
     
     /**
-     * Parameter: polygon
+     * Property: polygon
      * {<OpenLayers.Feature.Vector>}
      */
     polygon: null,
@@ -62,9 +62,6 @@ OpenLayers.Handler.Polygon = OpenLayers.Class(OpenLayers.Handler.Path, {
      * cancel - Called when the handler is deactivated while drawing.  The
      *     cancel callback will receive a geometry.
      */
-    initialize: function(control, callbacks, options) {
-        OpenLayers.Handler.Path.prototype.initialize.apply(this, arguments);
-    },
     
     /**
      * Method: createFeature
@@ -75,7 +72,7 @@ OpenLayers.Handler.Polygon = OpenLayers.Class(OpenLayers.Handler.Path, {
      *     feature.
      */
     createFeature: function(pixel) {
-        var lonlat = this.map.getLonLatFromPixel(pixel);
+        var lonlat = this.layer.getLonLatFromViewPortPx(pixel);
         var geometry = new OpenLayers.Geometry.Point(
             lonlat.lon, lonlat.lat
         );

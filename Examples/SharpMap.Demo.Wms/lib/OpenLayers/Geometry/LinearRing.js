@@ -1,6 +1,6 @@
-/* Copyright (c) 2006-2011 by OpenLayers Contributors (see authors.txt for 
- * full list of contributors). Published under the Clear BSD license.  
- * See http://svn.openlayers.org/trunk/openlayers/license.txt for the
+/* Copyright (c) 2006-2012 by OpenLayers Contributors (see authors.txt for 
+ * full list of contributors). Published under the 2-clause BSD license.
+ * See license.txt in the OpenLayers distribution or repository for the
  * full text of the license. */
 
 /**
@@ -42,10 +42,6 @@ OpenLayers.Geometry.LinearRing = OpenLayers.Class(
      * Parameters:
      * points - {Array(<OpenLayers.Geometry.Point>)} points
      */
-    initialize: function(points) {
-        OpenLayers.Geometry.LineString.prototype.initialize.apply(this, 
-                                                                  arguments);
-    },
 
     /**
      * APIMethod: addComponent
@@ -57,7 +53,7 @@ OpenLayers.Geometry.LinearRing = OpenLayers.Class(
      *     be overridden by calling the method with a non-null index as the 
      *     second argument.
      *
-     * Parameter:
+     * Parameters:
      * point - {<OpenLayers.Geometry.Point>}
      * index - {Integer} Index into the array to insert the component
      * 
@@ -157,7 +153,7 @@ OpenLayers.Geometry.LinearRing = OpenLayers.Class(
      * ratio - {Float} Optional x:y ratio for resizing.  Default ratio is 1.
      * 
      * Returns:
-     * {OpenLayers.Geometry} - The current geometry. 
+     * {<OpenLayers.Geometry>} - The current geometry. 
      */
     resize: function(scale, origin, ratio) {
         for(var i=0, len=this.components.length; i<len - 1; ++i) {
@@ -298,7 +294,7 @@ OpenLayers.Geometry.LinearRing = OpenLayers.Class(
         var px = approx(point.x, digs);
         var py = approx(point.y, digs);
         function getX(y, x1, y1, x2, y2) {
-            return (((x1 - x2) * y) + ((x2 * y1) - (x1 * y2))) / (y1 - y2);
+            return (y - y2) * ((x2 - x1) / (y2 - y1)) + x2;
         }
         var numSeg = this.components.length - 1;
         var start, end, x1, y1, x2, y2, cx, cy;

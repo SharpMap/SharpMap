@@ -1,6 +1,6 @@
-/* Copyright (c) 2006-2011 by OpenLayers Contributors (see authors.txt for 
- * full list of contributors). Published under the Clear BSD license.  
- * See http://svn.openlayers.org/trunk/openlayers/license.txt for the
+/* Copyright (c) 2006-2012 by OpenLayers Contributors (see authors.txt for 
+ * full list of contributors). Published under the 2-clause BSD license.
+ * See license.txt in the OpenLayers distribution or repository for the
  * full text of the license. */
 
 
@@ -20,6 +20,12 @@ OpenLayers.Event = {
      * element._eventCacheID 
      */
     observers: false,
+
+    /**
+     * Constant: KEY_SPACE
+     * {int}
+     */
+    KEY_SPACE: 32,
     
     /** 
      * Constant: KEY_BACKSPACE 
@@ -155,10 +161,8 @@ OpenLayers.Event = {
      * Parameters: 
      * event - {Event} 
      * allowDefault - {Boolean} If true, we stop the event chain but 
-     *                               still allow the default browser 
-     *                               behaviour (text selection, radio-button 
-     *                               clicking, etc)
-     *                               Default false
+     *     still allow the default browser behaviour (text selection,
+     *     radio-button clicking, etc).  Default is false.
      */
     stop: function(event, allowDefault) {
         
@@ -376,14 +380,6 @@ OpenLayers.Event = {
 /* prevent memory leaks in IE */
 OpenLayers.Event.observe(window, 'unload', OpenLayers.Event.unloadCache, false);
 
-// FIXME: Remove this in 3.0. In 3.0, Event.stop will no longer be provided
-// by OpenLayers.
-if (window.Event) {
-    OpenLayers.Util.applyDefaults(window.Event, OpenLayers.Event);
-} else {
-    var Event = OpenLayers.Event;
-}
-
 /**
  * Class: OpenLayers.Events
  */
@@ -398,7 +394,8 @@ OpenLayers.Events = OpenLayers.Class({
         "mousedown", "mouseup", "mousemove", 
         "click", "dblclick", "rightclick", "dblrightclick",
         "resize", "focus", "blur",
-        "touchstart", "touchmove", "touchend"
+        "touchstart", "touchmove", "touchend",
+        "keydown"
     ],
 
     /** 
@@ -418,12 +415,6 @@ OpenLayers.Events = OpenLayers.Class({
      * {DOMElement}  the DOM element receiving browser events 
      */
     element: null,
-
-    /** 
-     * Property: eventTypes 
-     * {Array(String)}  list of support application events 
-     */
-    eventTypes: null,
 
     /** 
      * Property: eventHandler 
@@ -464,6 +455,77 @@ OpenLayers.Events = OpenLayers.Class({
      *        the location of the element in the page changes
     */
     includeXY: false,      
+    
+    /**
+     * APIProperty: extensions
+     * {Object} Event extensions registered with this instance. Keys are
+     *     event types, values are {OpenLayers.Events.*} extension instances or
+     *     {Boolean} for events that an instantiated extension provides in
+     *     addition to the one it was created for.
+     *
+     * Extensions create an event in addition to browser events, which usually
+     * fires when a sequence of browser events is completed. Extensions are
+     * automatically instantiated when a listener is registered for an event
+     * provided by an extension.
+     *
+     * Extensions are created in the <OpenLayers.Events> namespace using
+     * <OpenLayers.Class>, and named after the event they provide.
+     * The constructor receives the target <OpenLayers.Events> instance as
+     * argument. Extensions that need to capture browser events before they
+     * propagate can register their listeners events using <register>, with
+     * {extension: true} as 4th argument.
+     *
+     * If an extension creates more than one event, an alias for each event
+     * type should be created and reference the same class. The constructor
+     * should set a reference in the target's extensions registry to itself.
+     *
+     * Below is a minimal extension that provides the "foostart" and "fooend"
+     * event types, which replace the native "click" event type if clicked on
+     * an element with the css class "foo":
+     *
+     * (code)
+     *   OpenLayers.Events.foostart = OpenLayers.Class({
+     *       initialize: function(target) {
+     *           this.target = target;
+     *           this.target.register("click", this, this.doStuff, {extension: true});
+     *           // only required if extension provides more than one event type
+     *           this.target.extensions["foostart"] = true;
+     *           this.target.extensions["fooend"] = true;
+     *       },
+     *       destroy: function() {
+     *           var target = this.target;
+     *           target.unregister("click", this, this.doStuff);
+     *           delete this.target;
+     *           // only required if extension provides more than one event type
+     *           delete target.extensions["foostart"];
+     *           delete target.extensions["fooend"];
+     *       },
+     *       doStuff: function(evt) {
+     *           var propagate = true;
+     *           if (OpenLayers.Event.element(evt).className === "foo") {
+     *               propagate = false;
+     *               var target = this.target;
+     *               target.triggerEvent("foostart");
+     *               window.setTimeout(function() {
+     *                   target.triggerEvent("fooend");
+     *               }, 1000);
+     *           }
+     *           return propagate;
+     *       }
+     *   });
+     *   // only required if extension provides more than one event type
+     *   OpenLayers.Events.fooend = OpenLayers.Events.foostart;
+     * (end)
+     * 
+     */
+    extensions: null,
+    
+    /**
+     * Property: extensionCount
+     * {Object} Keys are event types (like in <listeners>), values are the
+     *     number of extension listeners for each event type.
+     */
+    extensionCount: null,
 
     /**
      * Method: clearMouseListener
@@ -480,7 +542,9 @@ OpenLayers.Events = OpenLayers.Class({
      * Parameters:
      * object - {Object} The js object to which this Events object  is being added
      * element - {DOMElement} A dom element to respond to browser events
-     * eventTypes - {Array(String)} Array of custom application events 
+     * eventTypes - {Array(String)} Deprecated.  Array of custom application
+     *     events.  A listener may be registered for any named event, regardless
+     *     of the values provided here.
      * fallThrough - {Boolean} Allow events to fall through after these have
      *                         been handled?
      * options - {Object} Options for the events object.
@@ -490,26 +554,8 @@ OpenLayers.Events = OpenLayers.Class({
         this.object     = object;
         this.fallThrough = fallThrough;
         this.listeners  = {};
-
-        // keep a bound copy of handleBrowserEvent() so that we can
-        // pass the same function to both Event.observe() and .stopObserving()
-        this.eventHandler = OpenLayers.Function.bindAsEventListener(
-            this.handleBrowserEvent, this
-        );
-        
-        // to be used with observe and stopObserving
-        this.clearMouseListener = OpenLayers.Function.bind(
-            this.clearMouseCache, this
-        );
-
-        // if eventTypes is specified, create a listeners list for each 
-        // custom application event.
-        this.eventTypes = [];
-        if (eventTypes != null) {
-            for (var i=0, len=eventTypes.length; i<len; i++) {
-                this.addEventType(eventTypes[i]);
-            }
-        }
+        this.extensions = {};
+        this.extensionCount = {};
         
         // if a dom element is specified, add a listeners list 
         // for browser events on the element and register them
@@ -522,6 +568,12 @@ OpenLayers.Events = OpenLayers.Class({
      * APIMethod: destroy
      */
     destroy: function () {
+        for (var e in this.extensions) {
+            if (typeof this.extensions[e] !== "boolean") {
+                this.extensions[e].destroy();
+            }
+        }
+        this.extensions = null;
         if (this.element) {
             OpenLayers.Event.stopObservingElement(this.element);
             if(this.element.hasScrollEvent) {
@@ -534,24 +586,18 @@ OpenLayers.Events = OpenLayers.Class({
 
         this.listeners = null;
         this.object = null;
-        this.eventTypes = null;
         this.fallThrough = null;
         this.eventHandler = null;
     },
 
     /**
      * APIMethod: addEventType
-     * Add a new event type to this events object.
-     * If the event type has already been added, do nothing.
+     * Deprecated.  Any event can be triggered without adding it first.
      * 
      * Parameters:
      * eventName - {String}
      */
     addEventType: function(eventName) {
-        if (!this.listeners[eventName]) {
-            this.eventTypes.push(eventName);
-            this.listeners[eventName] = [];
-        }
     },
 
     /**
@@ -561,19 +607,26 @@ OpenLayers.Events = OpenLayers.Class({
      * element - {HTMLDOMElement} a DOM element to attach browser events to
      */
     attachToElement: function (element) {
-        if(this.element) {
+        if (this.element) {
             OpenLayers.Event.stopObservingElement(this.element);
+        } else {
+            // keep a bound copy of handleBrowserEvent() so that we can
+            // pass the same function to both Event.observe() and .stopObserving()
+            this.eventHandler = OpenLayers.Function.bindAsEventListener(
+                this.handleBrowserEvent, this
+            );
+            
+            // to be used with observe and stopObserving
+            this.clearMouseListener = OpenLayers.Function.bind(
+                this.clearMouseCache, this
+            );
         }
         this.element = element;
-        for (var i=0, len=this.BROWSER_EVENTS.length; i<len; i++) {
-            var eventType = this.BROWSER_EVENTS[i];
-
-            // every browser event has a corresponding application event 
-            // (whether it's listened for or not).
-            this.addEventType(eventType);
-            
-            // use Prototype to register the event cross-browser
-            OpenLayers.Event.observe(element, eventType, this.eventHandler);
+        for (var i = 0, len = this.BROWSER_EVENTS.length; i < len; i++) {
+            // register the event cross-browser
+            OpenLayers.Event.observe(
+                element, this.BROWSER_EVENTS[i], this.eventHandler
+            );
         }
         // disable dragstart in IE so that mousedown/move/up works normally
         OpenLayers.Event.observe(element, "dragstart", OpenLayers.Event.stop);
@@ -610,7 +663,7 @@ OpenLayers.Events = OpenLayers.Class({
      */
     on: function(object) {
         for(var type in object) {
-            if(type != "scope") {
+            if(type != "scope" && object.hasOwnProperty(type)) {
                 this.register(type, object.scope, object[type]);
             }
         }
@@ -636,23 +689,40 @@ OpenLayers.Events = OpenLayers.Class({
      * Parameters:
      * type - {String} Name of the event to register
      * obj - {Object} The object to bind the context to for the callback#.
-     *                     If no object is specified, default is the Events's 
-     *                     'object' property.
+     *     If no object is specified, default is the Events's 'object' property.
      * func - {Function} The callback function. If no callback is 
-     *                        specified, this function does nothing.
-     * 
-     * 
+     *     specified, this function does nothing.
+     * priority - {Boolean|Object} If true, adds the new listener to the
+     *     *front* of the events queue instead of to the end.
+     *
+     * Valid options for priority:
+     * extension - {Boolean} If true, then the event will be registered as
+     *     extension event. Extension events are handled before all other
+     *     events.
      */
-    register: function (type, obj, func) {
-
-        if ( (func != null) && 
-             (OpenLayers.Util.indexOf(this.eventTypes, type) != -1) ) {
-
+    register: function (type, obj, func, priority) {
+        if (type in OpenLayers.Events && !this.extensions[type]) {
+            this.extensions[type] = new OpenLayers.Events[type](this);
+        }
+        if (func != null) {
             if (obj == null)  {
                 obj = this.object;
             }
             var listeners = this.listeners[type];
-            listeners.push( {obj: obj, func: func} );
+            if (!listeners) {
+                listeners = [];
+                this.listeners[type] = listeners;
+                this.extensionCount[type] = 0;
+            }
+            var listener = {obj: obj, func: func};
+            if (priority) {
+                listeners.splice(this.extensionCount[type], 0, listener);
+                if (typeof priority === "object" && priority.extension) {
+                    this.extensionCount[type]++;
+                }
+            } else {
+                listeners.push(listener);
+            }
         }
     },
 
@@ -674,16 +744,7 @@ OpenLayers.Events = OpenLayers.Class({
      *                   specified, this function does nothing.
      */
     registerPriority: function (type, obj, func) {
-
-        if (func != null) {
-            if (obj == null)  {
-                obj = this.object;
-            }
-            var listeners = this.listeners[type];
-            if (listeners != null) {
-                listeners.unshift( {obj: obj, func: func} );
-            }
-        }
+        this.register(type, obj, func, true);
     },
     
     /**
@@ -714,7 +775,7 @@ OpenLayers.Events = OpenLayers.Class({
      */
     un: function(object) {
         for(var type in object) {
-            if(type != "scope") {
+            if(type != "scope" && object.hasOwnProperty(type)) {
                 this.unregister(type, object.scope, object[type]);
             }
         }

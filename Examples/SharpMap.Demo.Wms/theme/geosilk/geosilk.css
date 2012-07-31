@@ -1,0 +1,280 @@
+
+/**
+ * Edit Panel
+ */
+.olEditorControlEditorPanel  {
+    -moz-border-radius:3px 3px 3px 3px !important;
+    background:none repeat scroll 0 0 #ccc;
+    border:1px solid #aaa;
+    height:20px;
+    position:absolute;
+    right:8px;
+    top:8px;
+    cursor: default;
+}
+.olEditorControlEditorPanel > div {
+    background-repeat: no-repeat;
+    background-position: center;
+    height:20px;
+    margin:0 4px;
+    width:22px;
+    float:right;
+}
+
+.olEditorControlEditorPanel .olControlSeparatorItemInactive {
+    width: 4px!important;
+    background-color: #aaa;
+    /*border: #888 2px dotted;*/
+}
+.olEditor .olControlLayerSwitcher {
+    top: 50px!important;
+}
+.olEditor .olControlLayerSwitcher .layersDiv {
+    color: #333;
+    background-color:  transparent!important;
+    background-image: url(../img/bg-control.png);
+}
+
+.oleFadeMap {
+    width: 100%;
+    height: 100%;
+    background-image: url(img/bg-map.png);
+    z-index: 10000!important;
+    top:0;
+    left:0;
+    position: absolute;
+}
+.oleDialog {
+    background-color: white;
+    margin: auto;
+    position: relative;
+    width: 400px;
+    z-index: 11000;
+    padding: 10px 20px;
+    top: 50px;
+    max-height: 300px;
+    overflow: auto;
+    border:2px solid #ddd;
+}
+.oleDialog p:first-child {
+    margin-top:0;
+}
+.oleDialog p:last-child {
+    margin-bottom:0;
+}
+
+/**
+ * Active control
+ */
+.olEditorControlEditorPanel .olControlNavigationItemActive,
+.olEditorControlEditorPanel .olControlModifyFeatureItemActive,
+.olEditorControlEditorPanel .olEditorControlSplitFeatureItemActive,
+.olEditorControlEditorPanel .olEditorControlDrawPolygonItemActive,
+.olEditorControlEditorPanel .olEditorControlDrawPathItemActive,
+.olEditorControlEditorPanel .olEditorControlDrawPointItemActive,
+.olEditorControlEditorPanel .olEditorControlSaveFeatureItemActive,
+.olEditorControlEditorPanel .olEditorControlDeleteFeatureItemActive,
+.olEditorControlEditorPanel .olControlSelectFeatureItemActive,
+.olEditorControlEditorPanel .olEditorControlSnappingSettingsItemActive,
+.olEditorControlEditorPanel .olEditorControlImportFeatureItemActive,
+.olEditorControlEditorPanel .olEditorControlDrawHoleItemActive,
+.olEditorControlEditorPanel .olEditorControlMergeFeatureItemActive,
+.olEditorControlEditorPanel .olEditorControlDragFeatureItemActive,
+.olEditorControlEditorPanel .olEditorControlTransformFeatureItemActive,
+.olEditorControlEditorPanel .olEditorControlCADToolsItemActive,
+.olEditorControlEditorPanel .olEditorParallelDrawingActive,
+.olEditorControlEditorPanel .olEditorGuidedDrawingActive,
+.olEditorControlEditorPanel .olEditorControlCleanFeatureItemActive {
+     background-color: #fff;
+}
+
+/**
+ * Disabled control
+ */
+.oleControlDisabled {
+    opacity: 0.5;
+}
+
+.olEditorControlEditorPanel > div:not(.olControlSeparatorItemInactive):not(.oleControlDisabled) {
+    cursor: pointer;
+}
+
+/**
+ * Navigation
+ */
+.olEditorControlEditorPanel .olControlNavigationItemActive,
+.olEditorControlEditorPanel .olControlNavigationItemInactive {
+    background-image: url("img/navigation.png");
+}
+
+/**
+ * Modify Feature
+ */
+.olEditorControlEditorPanel .olControlModifyFeatureItemActive,
+.olEditorControlEditorPanel .olControlModifyFeatureItemInactive {
+    background-image: url("img/modifyFeature.png");
+}
+
+/**
+ * Split Features
+ */
+.olEditorControlEditorPanel .olEditorControlSplitFeatureItemActive,
+.olEditorControlEditorPanel .olEditorControlSplitFeatureItemInactive {
+    background-image: url("img/splitFeature.png");
+}
+
+/**
+ * Draw Polygon
+ */
+.olEditorControlEditorPanel .olEditorControlDrawPolygonItemActive,
+.olEditorControlEditorPanel .olEditorControlDrawPolygonItemInactive {
+    background-image: url("img/drawPolygon.png");
+}
+
+.olEditorControlDrawPointActive,
+.olEditorControlDrawPathActive,
+.olEditorControlDrawPolygonActive {
+    cursor: crosshair;
+}
+
+/**
+ * Draw Path
+ */
+.olEditorControlEditorPanel .olEditorControlDrawPathItemActive,
+.olEditorControlEditorPanel .olEditorControlDrawPathItemInactive {
+    background-image: url("img/drawPath.png");
+}
+
+/**
+ * Draw Point
+ */
+.olEditorControlEditorPanel .olEditorControlDrawPointItemActive,
+.olEditorControlEditorPanel .olEditorControlDrawPointItemInactive {
+    background-image: url("img/drawPoint.png");
+}
+
+/**
+ * Save Features
+ */
+.olEditorControlEditorPanel .olEditorControlSaveFeatureItemActive,
+.olEditorControlEditorPanel .olEditorControlSaveFeatureItemInactive {
+    background-image: url("img/saveFeature.png");
+}
+
+/**
+ * Drag Feature
+ */
+.olEditorControlEditorPanel .olEditorControlDragFeatureItemActive,
+.olEditorControlEditorPanel .olEditorControlDragFeatureItemInactive {
+    background-image: url("img/dragFeature.png");
+}
+
+.olEditorControlDragFeatureActive {
+    cursor: move;
+}
+
+/**
+ * Transform Feature
+ */
+.olEditorControlEditorPanel .olEditorControlTransformFeatureItemActive,
+.olEditorControlEditorPanel .olEditorControlTransformFeatureItemInactive {
+    background-image: url("img/transformFeature.png");
+}
+
+/**
+ * Delete Feature
+ */
+.olEditorControlEditorPanel .olEditorControlDeleteFeatureItemActive,
+.olEditorControlEditorPanel .olEditorControlDeleteFeatureItemInactive {
+    background-image: url("img/deleteFeature.png");
+}
+
+/**
+ * Select Feature
+ */
+.olEditorControlEditorPanel .olControlSelectFeatureItemActive,
+.olEditorControlEditorPanel .olControlSelectFeatureItemInactive {
+    background-image: url("img/selectFeature.png");
+}
+
+
+/**
+ *  Snapping Settings
+ */
+.olEditorControlEditorPanel .olEditorControlSnappingSettingsItemActive {
+    background-image: url("img/snappingActive.png");
+}
+.olEditorControlEditorPanel .olEditorControlSnappingSettingsItemInactive {
+    background-image: url("img/snappingInactive.png");
+}
+
+/**
+ *  Import Feature
+ */
+.olEditorControlEditorPanel .olEditorControlImportFeatureItemActive,
+.olEditorControlEditorPanel .olEditorControlImportFeatureItemInactive {
+    background-image: url("img/importFeature.png");
+}
+
+/**
+ *  Draw Hole
+ */
+.olEditorControlEditorPanel .olEditorControlDrawHoleItemActive,
+.olEditorControlEditorPanel .olEditorControlDrawHoleItemInactive {
+    background-image: url("img/drawHole.png");
+}
+
+/**
+ *  Merge Feature
+ */
+.olEditorControlEditorPanel .olEditorControlMergeFeatureItemActive,
+.olEditorControlEditorPanel .olEditorControlMergeFeatureItemInactive {
+    background-image: url("img/mergeFeature.png");
+}
+
+/**
+ *  Clean Feature
+ */
+.olEditorControlEditorPanel .olEditorControlCleanFeatureItemActive,
+.olEditorControlEditorPanel .olEditorControlCleanFeatureItemInactive {
+    background-image: url("img/cleanFeature.png");
+}
+
+/**
+ *  CAD Tools
+ */
+.olEditorControlEditorPanel.olEditorCADToolsToolbar {
+    top: 10px;
+    right: 10px;
+    /** Use a fixed width to support IE7, IE9. Other browsers are correctly calculating the width anyway. */
+    width: 60px;
+}
+.olEditorControlEditorPanel .olEditorControlCADToolsItemActive,
+.olEditorControlEditorPanel .olEditorControlCADToolsItemInactive {
+    background-image: url("img/cadTools.png");
+}
+.oleDialog.oleDialogToolbar {
+    top:38px;
+    right:8px;
+    position:absolute;
+}
+
+/**
+ *  Parallel Drawing
+ */
+.olEditorControlEditorPanel .olEditorParallelDrawingActive,
+.olEditorControlEditorPanel .olEditorParallelDrawingInactive {
+    background-image: url("img/parallelDrawing.png");
+}
+
+/**
+ *  Guided Drawing
+ */
+.olEditorControlEditorPanel .olEditorGuidedDrawingActive,
+.olEditorControlEditorPanel .olEditorGuidedDrawingInactive {
+    background-image: url("img/guidedDrawing.png");
+}
+
+.olEditorWaiting {
+    cursor: wait !important;
+}

@@ -1,6 +1,6 @@
-/* Copyright (c) 2006-2011 by OpenLayers Contributors (see authors.txt for 
- * full list of contributors). Published under the Clear BSD license.  
- * See http://svn.openlayers.org/trunk/openlayers/license.txt for the
+/* Copyright (c) 2006-2012 by OpenLayers Contributors (see authors.txt for 
+ * full list of contributors). Published under the 2-clause BSD license.
+ * See license.txt in the OpenLayers distribution or repository for the
  * full text of the license. */
 
 
@@ -84,6 +84,13 @@ OpenLayers.Handler.RegularPolygon = OpenLayers.Class(OpenLayers.Handler.Drag, {
     irregular: false,
 
     /**
+     * APIProperty: citeCompliant
+     * {Boolean} If set to true, coordinates of features drawn in a map extent
+     * crossing the date line won't exceed the world bounds. Default is false.
+     */
+    citeCompliant: false,
+
+    /**
      * Property: angle
      * {Float} The angle from the origin (mouse down) to the current mouse
      *     position, in radians.  This is measured counterclockwise from the
@@ -161,7 +168,7 @@ OpenLayers.Handler.RegularPolygon = OpenLayers.Class(OpenLayers.Handler.Drag, {
      * APIMethod: activate
      * Turn on the handler.
      *
-     * Return:
+     * Returns:
      * {Boolean} The handler was successfully activated
      */
     activate: function() {
@@ -174,7 +181,8 @@ OpenLayers.Handler.RegularPolygon = OpenLayers.Class(OpenLayers.Handler.Drag, {
                 // without this, resolution properties must be specified at the
                 // map-level for this temporary layer to init its resolutions
                 // correctly
-                calculateInRange: OpenLayers.Function.True
+                calculateInRange: OpenLayers.Function.True,
+                wrapDateLine: this.citeCompliant
             }, this.layerOptions);
             this.layer = new OpenLayers.Layer.Vector(this.CLASS_NAME, options);
             this.map.addLayer(this.layer);
@@ -187,7 +195,7 @@ OpenLayers.Handler.RegularPolygon = OpenLayers.Class(OpenLayers.Handler.Drag, {
      * APIMethod: deactivate
      * Turn off the handler.
      *
-     * Return:
+     * Returns:
      * {Boolean} The handler was successfully deactivated
      */
     deactivate: function() {
@@ -224,7 +232,7 @@ OpenLayers.Handler.RegularPolygon = OpenLayers.Class(OpenLayers.Handler.Drag, {
      */
     down: function(evt) {
         this.fixedRadius = !!(this.radius);
-        var maploc = this.map.getLonLatFromPixel(evt.xy);
+        var maploc = this.layer.getLonLatFromViewPortPx(evt.xy); 
         this.origin = new OpenLayers.Geometry.Point(maploc.lon, maploc.lat);
         // create the new polygon
         if(!this.fixedRadius || this.irregular) {
@@ -250,7 +258,7 @@ OpenLayers.Handler.RegularPolygon = OpenLayers.Class(OpenLayers.Handler.Drag, {
      * evt - {Evt} The move event
      */
     move: function(evt) {
-        var maploc = this.map.getLonLatFromPixel(evt.xy);
+        var maploc = this.layer.getLonLatFromViewPortPx(evt.xy); 
         var point = new OpenLayers.Geometry.Point(maploc.lon, maploc.lat);
         if(this.irregular) {
             var ry = Math.sqrt(2) * Math.abs(point.y - this.origin.y) / 2;

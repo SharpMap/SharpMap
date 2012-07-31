@@ -1,6 +1,6 @@
-/* Copyright (c) 2006-2011 by OpenLayers Contributors (see authors.txt for 
- * full list of contributors). Published under the Clear BSD license.  
- * See http://svn.openlayers.org/trunk/openlayers/license.txt for the
+/* Copyright (c) 2006-2012 by OpenLayers Contributors (see authors.txt for 
+ * full list of contributors). Published under the 2-clause BSD license.
+ * See license.txt in the OpenLayers distribution or repository for the
  * full text of the license. */
 
 
@@ -30,8 +30,7 @@ OpenLayers.Handler.Path = OpenLayers.Class(OpenLayers.Handler.Point, {
      * APIProperty: maxVertices
      * {Number} The maximum number of vertices which can be drawn by this
      * handler. When the number of vertices reaches maxVertices, the
-     * geometry is automatically finalized. This property doesn't
-     * apply if freehand is set. Default is null.
+     * geometry is automatically finalized. Default is null.
      */
     maxVertices: null,
 
@@ -95,10 +94,7 @@ OpenLayers.Handler.Path = OpenLayers.Class(OpenLayers.Handler.Point, {
      * cancel - Called when the handler is deactivated while drawing.  The
      *     cancel callback will receive a geometry.
      */
-    initialize: function(control, callbacks, options) {
-        OpenLayers.Handler.Point.prototype.initialize.apply(this, arguments);
-    },
-        
+
     /**
      * Method: createFeature
      * Add temporary geometries
@@ -108,7 +104,7 @@ OpenLayers.Handler.Path = OpenLayers.Class(OpenLayers.Handler.Point, {
      *     feature.
      */
     createFeature: function(pixel) {
-        var lonlat = this.map.getLonLatFromPixel(pixel);
+        var lonlat = this.layer.getLonLatFromViewPortPx(pixel); 
         var geometry = new OpenLayers.Geometry.Point(
             lonlat.lon, lonlat.lat
         );
@@ -165,7 +161,7 @@ OpenLayers.Handler.Path = OpenLayers.Class(OpenLayers.Handler.Point, {
      */
     addPoint: function(pixel) {
         this.layer.removeFeatures([this.point]);
-        var lonlat = this.control.map.getLonLatFromPixel(pixel);
+        var lonlat = this.layer.getLonLatFromViewPortPx(pixel); 
         this.point = new OpenLayers.Feature.Vector(
             new OpenLayers.Geometry.Point(lonlat.lon, lonlat.lat)
         );
@@ -326,7 +322,7 @@ OpenLayers.Handler.Path = OpenLayers.Class(OpenLayers.Handler.Point, {
         if(!this.line) {
             this.createFeature(pixel);
         }
-        var lonlat = this.control.map.getLonLatFromPixel(pixel);
+        var lonlat = this.layer.getLonLatFromViewPortPx(pixel); 
         this.point.geometry.x = lonlat.lon;
         this.point.geometry.y = lonlat.lat;
         this.callback("modify", [this.point.geometry, this.getSketch(), drawing]);
@@ -417,6 +413,10 @@ OpenLayers.Handler.Path = OpenLayers.Class(OpenLayers.Handler.Point, {
         var stopDown = this.stopDown;
         if(this.freehandMode(evt)) {
             stopDown = true;
+            if (this.touch) {
+                this.modifyFeature(evt.xy, !!this.lastUp);
+                OpenLayers.Event.stop(evt);
+            }
         }
         if (!this.touch && (!this.lastDown ||
                             !this.passesTolerance(this.lastDown, evt.xy,
@@ -445,7 +445,13 @@ OpenLayers.Handler.Path = OpenLayers.Class(OpenLayers.Handler.Point, {
             if(this.persist) {
                 this.destroyPersistedFeature();
             }
-            this.addPoint(evt.xy);
+            if(this.maxVertices && this.line &&
+                    this.line.geometry.components.length === this.maxVertices) {
+                this.removePoint();
+                this.finalize();
+            } else {
+                this.addPoint(evt.xy);
+            }
             return false;
         }
         if (!this.touch && (!this.mouseDown || this.stoppedDown)) {

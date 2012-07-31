@@ -1,6 +1,6 @@
-/* Copyright (c) 2006-2011 by OpenLayers Contributors (see authors.txt for
- * full list of contributors). Published under the Clear BSD license.
- * See http://svn.openlayers.org/trunk/openlayers/license.txt for the
+/* Copyright (c) 2006-2012 by OpenLayers Contributors (see authors.txt for
+ * full list of contributors). Published under the 2-clause BSD license.
+ * See license.txt in the OpenLayers distribution or repository for the
  * full text of the license. */
 
 /**
@@ -22,15 +22,25 @@
  */
 OpenLayers.Control.Geolocate = OpenLayers.Class(OpenLayers.Control, {
 
-    /**
-     * Constant: EVENT_TYPES
-     * Supported event types:
-     *  - *locationupdated* Triggered when browser return a new position
-     *  - *locationfailed* Triggered when geolocation has failed
-     *  - *locationuncapable* Triggered when control is activated on a browser
-     *  which doesn't support geolocation
+    /** 
+     * APIProperty: events
+     * {<OpenLayers.Events>} Events instance for listeners and triggering
+     *     control specific events.
+     *
+     * Register a listener for a particular event with the following syntax:
+     * (code)
+     * control.events.register(type, obj, listener);
+     * (end)
+     *
+     * Supported event types (in addition to those from <OpenLayers.Control.events>):
+     * locationupdated - Triggered when browser return a new position. Listeners will 
+     *     receive an object with a 'position' property which is the browser.geolocation.position
+     *     native object, as well as a 'point' property which is the location transformed in the 
+     *     current map projection.
+     * locationfailed - Triggered when geolocation has failed
+     * locationuncapable - Triggered when control is activated on a browser
+     *     which doesn't support geolocation
      */
-    EVENT_TYPES: ["locationupdated", "locationfailed", "locationuncapable"],
 
     /**
      * Property: geolocation
@@ -63,15 +73,6 @@ OpenLayers.Control.Geolocate = OpenLayers.Class(OpenLayers.Control, {
      * Create a new control to deal with browser geolocation API
      *
      */
-    initialize: function(options) {
-        // concatenate events specific to this control with those from the base
-        this.EVENT_TYPES =
-            OpenLayers.Control.Geolocate.prototype.EVENT_TYPES.concat(
-            OpenLayers.Control.prototype.EVENT_TYPES
-        );
-        this.geolocationOptions = {};
-        OpenLayers.Control.prototype.initialize.apply(this, [options]);
-    },
 
     /**
      * Method: destroy

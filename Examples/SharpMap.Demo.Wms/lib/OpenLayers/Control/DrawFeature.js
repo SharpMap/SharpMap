@@ -1,6 +1,6 @@
-/* Copyright (c) 2006-2011 by OpenLayers Contributors (see authors.txt for 
- * full list of contributors). Published under the Clear BSD license.  
- * See http://svn.openlayers.org/trunk/openlayers/license.txt for the
+/* Copyright (c) 2006-2012 by OpenLayers Contributors (see authors.txt for 
+ * full list of contributors). Published under the 2-clause BSD license.
+ * See license.txt in the OpenLayers distribution or repository for the
  * full text of the license. */
 
 
@@ -31,13 +31,19 @@ OpenLayers.Control.DrawFeature = OpenLayers.Class(OpenLayers.Control, {
      */
     callbacks: null,
     
-    /**
-     * Constant: EVENT_TYPES
+    /** 
+     * APIProperty: events
+     * {<OpenLayers.Events>} Events instance for listeners and triggering
+     *     control specific events.
      *
-     * Supported event types:
+     * Register a listener for a particular event with the following syntax:
+     * (code)
+     * control.events.register(type, obj, listener);
+     * (end)
+     *
+     * Supported event types (in addition to those from <OpenLayers.Control.events>):
      * featureadded - Triggered when a feature is added
      */
-    EVENT_TYPES: ["featureadded"],
     
     /**
      * APIProperty: multi
@@ -67,13 +73,6 @@ OpenLayers.Control.DrawFeature = OpenLayers.Class(OpenLayers.Control, {
      * options - {Object} 
      */
     initialize: function(layer, handler, options) {
-        
-        // concatenate events specific to vector with those from the base
-        this.EVENT_TYPES =
-            OpenLayers.Control.DrawFeature.prototype.EVENT_TYPES.concat(
-            OpenLayers.Control.prototype.EVENT_TYPES
-        );
-        
         OpenLayers.Control.prototype.initialize.apply(this, [options]);
         this.callbacks = OpenLayers.Util.extend(
             {
@@ -93,6 +92,11 @@ OpenLayers.Control.DrawFeature = OpenLayers.Class(OpenLayers.Control, {
         );
         this.layer = layer;
         this.handlerOptions = this.handlerOptions || {};
+        this.handlerOptions.layerOptions = OpenLayers.Util.applyDefaults(
+            this.handlerOptions.layerOptions, {
+                renderers: layer.renderers, rendererOptions: layer.rendererOptions
+            }
+        );
         if (!("multi" in this.handlerOptions)) {
             this.handlerOptions.multi = this.multi;
         }

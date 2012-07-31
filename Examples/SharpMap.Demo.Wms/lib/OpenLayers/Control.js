@@ -1,11 +1,10 @@
-/* Copyright (c) 2006-2011 by OpenLayers Contributors (see authors.txt for 
- * full list of contributors). Published under the Clear BSD license.  
- * See http://svn.openlayers.org/trunk/openlayers/license.txt for the
+/* Copyright (c) 2006-2012 by OpenLayers Contributors (see authors.txt for 
+ * full list of contributors). Published under the 2-clause BSD license.
+ * See license.txt in the OpenLayers distribution or repository for the
  * full text of the license. */
 
 /**
  * @requires OpenLayers/BaseTypes/Class.js
- * @requires OpenLayers/Console.js
  */
 
 /**
@@ -23,7 +22,6 @@
  * > var map = new OpenLayers.Map('map', { controls: [] });
  * >
  * > map.addControl(new OpenLayers.Control.PanZoomBar());
- * > map.addControl(new OpenLayers.Control.MouseToolbar());
  * > map.addControl(new OpenLayers.Control.LayerSwitcher({'ascending':false}));
  * > map.addControl(new OpenLayers.Control.Permalink());
  * > map.addControl(new OpenLayers.Control.Permalink('permalink'));
@@ -87,7 +85,7 @@ OpenLayers.Control = OpenLayers.Class({
 
     /** 
      * Property: allowSelection
-     * {Boolean} By deafault, controls do not allow selection, because
+     * {Boolean} By default, controls do not allow selection, because
      * it may interfere with map dragging. If this is true, OpenLayers
      * will not prevent selection of the control.
      * Default is false.
@@ -141,13 +139,8 @@ OpenLayers.Control = OpenLayers.Class({
      * APIProperty: events
      * {<OpenLayers.Events>} Events instance for listeners and triggering
      *     control specific events.
-     */
-    events: null,
-
-    /**
-     * Constant: EVENT_TYPES
-     * {Array(String)} Supported application event types.  Register a listener
-     *     for a particular event with the following syntax:
+     *
+     * Register a listener for a particular event with the following syntax:
      * (code)
      * control.events.register(type, obj, listener);
      * (end)
@@ -165,7 +158,7 @@ OpenLayers.Control = OpenLayers.Class({
      * activate - Triggered when activated.
      * deactivate - Triggered when deactivated.
      */
-    EVENT_TYPES: ["activate", "deactivate"],
+    events: null,
 
     /**
      * Constructor: OpenLayers.Control
@@ -187,7 +180,7 @@ OpenLayers.Control = OpenLayers.Class({
         
         OpenLayers.Util.extend(this, options);
         
-        this.events = new OpenLayers.Events(this, null, this.EVENT_TYPES);
+        this.events = new OpenLayers.Events(this);
         if(this.eventListeners instanceof Object) {
             this.events.on(this.eventListeners);
         }

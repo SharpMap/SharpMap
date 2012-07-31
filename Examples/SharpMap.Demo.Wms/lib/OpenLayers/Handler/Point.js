@@ -1,6 +1,6 @@
-/* Copyright (c) 2006-2011 by OpenLayers Contributors (see authors.txt for 
- * full list of contributors). Published under the Clear BSD license.  
- * See http://svn.openlayers.org/trunk/openlayers/license.txt for the
+/* Copyright (c) 2006-2012 by OpenLayers Contributors (see authors.txt for 
+ * full list of contributors). Published under the 2-clause BSD license.
+ * See license.txt in the OpenLayers distribution or repository for the
  * full text of the license. */
 
 
@@ -41,6 +41,13 @@ OpenLayers.Handler.Point = OpenLayers.Class(OpenLayers.Handler, {
      *     layer.  Default is false.
      */
     multi: false,
+    
+    /**
+     * APIProperty: citeCompliant
+     * {Boolean} If set to true, coordinates of features drawn in a map extent
+     * crossing the date line won't exceed the world bounds. Default is false.
+     */
+    citeCompliant: false,
     
     /**
      * Property: mouseDown
@@ -164,7 +171,8 @@ OpenLayers.Handler.Point = OpenLayers.Class(OpenLayers.Handler, {
             // without this, resolution properties must be specified at the
             // map-level for this temporary layer to init its resolutions
             // correctly
-            calculateInRange: OpenLayers.Function.True
+            calculateInRange: OpenLayers.Function.True,
+            wrapDateLine: this.citeCompliant
         }, this.layerOptions);
         this.layer = new OpenLayers.Layer.Vector(this.CLASS_NAME, options);
         this.map.addLayer(this.layer);
@@ -179,7 +187,7 @@ OpenLayers.Handler.Point = OpenLayers.Class(OpenLayers.Handler, {
      * pixel - {<OpenLayers.Pixel>} A pixel location on the map.
      */
     createFeature: function(pixel) {
-        var lonlat = this.map.getLonLatFromPixel(pixel);
+        var lonlat = this.layer.getLonLatFromViewPortPx(pixel); 
         var geometry = new OpenLayers.Geometry.Point(
             lonlat.lon, lonlat.lat
         );
@@ -306,7 +314,7 @@ OpenLayers.Handler.Point = OpenLayers.Class(OpenLayers.Handler, {
         if(!this.point) {
             this.createFeature(pixel);
         }
-        var lonlat = this.map.getLonLatFromPixel(pixel);
+        var lonlat = this.layer.getLonLatFromViewPortPx(pixel); 
         this.point.geometry.x = lonlat.lon;
         this.point.geometry.y = lonlat.lat;
         this.callback("modify", [this.point.geometry, this.point, false]);
@@ -537,7 +545,7 @@ OpenLayers.Handler.Point = OpenLayers.Class(OpenLayers.Handler, {
      * evt - {Event} The browser event
      */
     mouseout: function(evt) {
-        if(OpenLayers.Util.mouseLeft(evt, this.map.eventsDiv)) {
+        if(OpenLayers.Util.mouseLeft(evt, this.map.viewPortDiv)) {
             this.stoppedDown = this.stopDown;
             this.mouseDown = false;
         }

@@ -1,6 +1,6 @@
-/* Copyright (c) 2006-2011 by OpenLayers Contributors (see authors.txt for 
- * full list of contributors). Published under the Clear BSD license.  
- * See http://svn.openlayers.org/trunk/openlayers/license.txt for the
+/* Copyright (c) 2006-2012 by OpenLayers Contributors (see authors.txt for 
+ * full list of contributors). Published under the 2-clause BSD license.
+ * See license.txt in the OpenLayers distribution or repository for the
  * full text of the license. */
 
 /**
@@ -17,18 +17,17 @@
  */
 OpenLayers.Control.Measure = OpenLayers.Class(OpenLayers.Control, {
 
-    /**
-     * Constant: EVENT_TYPES
-     * {Array(String)} Supported application event types.  Register a listener
-     *     for a particular event with the following syntax:
+    /** 
+     * APIProperty: events
+     * {<OpenLayers.Events>} Events instance for listeners and triggering
+     *     control specific events.
+     *
+     * Register a listener for a particular event with the following syntax:
      * (code)
      * control.events.register(type, obj, listener);
      * (end)
      *
-     * Listeners will be called with a reference to an event object.  The
-     *     properties of this event depends on exactly what happened.
-     *
-     * Supported control event types (in addition to those from <OpenLayers.Control>):
+     * Supported event types (in addition to those from <OpenLayers.Control.events>):
      * measure - Triggered when a measurement sketch is complete.  Listeners
      *      will receive an event with measure, units, order, and geometry
      *      properties.
@@ -37,7 +36,6 @@ OpenLayers.Control.Measure = OpenLayers.Class(OpenLayers.Control, {
      *      measurement sketch is modified.  Listeners receive an event with measure,
      *      units, order, and geometry.
      */
-    EVENT_TYPES: ['measure', 'measurepartial'],
 
     /**
      * APIProperty: handlerOptions
@@ -120,11 +118,6 @@ OpenLayers.Control.Measure = OpenLayers.Class(OpenLayers.Control, {
      * options - {Object} 
      */
     initialize: function(handler, options) {
-        // concatenate events specific to measure with those from the base
-        this.EVENT_TYPES =
-            OpenLayers.Control.Measure.prototype.EVENT_TYPES.concat(
-            OpenLayers.Control.prototype.EVENT_TYPES
-        );
         OpenLayers.Control.prototype.initialize.apply(this, [options]);
         var callbacks = {done: this.measureComplete,
             point: this.measurePartial};
@@ -238,8 +231,8 @@ OpenLayers.Control.Measure = OpenLayers.Class(OpenLayers.Control, {
      * mouseposition. feature - {<OpenLayers.Feature.Vector>} The sketch feature.
      */
     measureImmediate : function(point, feature, drawing) {
-        if (drawing && this.delayedTrigger === null &&
-                                !this.handler.freehandMode(this.handler.evt)) {
+        if (drawing && !this.handler.freehandMode(this.handler.evt)) {
+            this.cancelDelay();
             this.measure(feature.geometry, "measurepartial");
         }
     },
