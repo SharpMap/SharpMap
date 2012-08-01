@@ -939,7 +939,7 @@ namespace SharpMap.Web.Wms
                 if (!comparers.Contains(comparer))
                     break;
 
-                if (comparer == comparers[8])//IN
+                if (comparer == comparers[8])//IN 
                 {
                     //read all the items until the list is closed by ')' and merge them
                     //all items are assumed to be separated by space merge them first
