@@ -595,11 +595,20 @@ namespace SharpMap.Web.Wms
                     {
                         if (layer.GetType() == typeof(VectorLayer))
                         {
+                            //for layers with a filterprovider
                             if (typeof(SharpMap.Data.Providers.FilterProvider).IsAssignableFrom((layer as VectorLayer).DataSource.GetType()))
                             {
                                 SharpMap.Data.Providers.FilterProvider shape = (SharpMap.Data.Providers.FilterProvider)(layer as VectorLayer).DataSource;
                                 shape.FilterDelegate = new Data.Providers.FilterProvider.FilterMethod(delegate(SharpMap.Data.FeatureDataRow row) { return CQLFilter(row, context.Request.Params["CQL_FILTER"]); });
                             }
+                            //for layers with a SQL datasource with a DefinitionQuery property
+                            IEnumerable<System.Reflection.PropertyInfo> defQuery = from c in (layer as VectorLayer).DataSource.GetType().GetProperties() where c.Name =="DefinitionQuery" && c.GetType() == typeof(string) select c;
+                            if (defQuery.Count() > 0)
+                                defQuery.First().SetValue((layer as VectorLayer).DataSource, context.Request.Params["CQL_FILTER"], null);
+
+                                
+
+
                         }
                         else if(layer.GetType() == typeof(LabelLayer))
                         {
@@ -608,6 +617,11 @@ namespace SharpMap.Web.Wms
                                 SharpMap.Data.Providers.FilterProvider shape = (SharpMap.Data.Providers.FilterProvider)(layer as VectorLayer).DataSource;
                                 shape.FilterDelegate = new Data.Providers.FilterProvider.FilterMethod(delegate(SharpMap.Data.FeatureDataRow row) { return CQLFilter(row, context.Request.Params["CQL_FILTER"]); });
                             }
+                            //for layers with a SQL datasource with a DefinitionQuery property
+                            IEnumerable<System.Reflection.PropertyInfo> defQuery = from c in (layer as VectorLayer).DataSource.GetType().GetProperties() where c.Name == "DefinitionQuery" && c.GetType() == typeof(string) select c;
+                            if (defQuery.Count() > 0)
+                                defQuery.First().SetValue((layer as VectorLayer).DataSource, context.Request.Params["CQL_FILTER"], null);
+
                         }
                     }
                 }
@@ -924,20 +938,24 @@ namespace SharpMap.Web.Wms
                 //if the comparer isn't in the comparerslist stop
                 if (!comparers.Contains(comparer))
                     break;
-                
+
                 if (comparer == comparers[8])//IN
                 {
-                    //read all the items until the list is closed by ')'
-                    //all items are assumed to be separated by space
-                    List<string> items = new List<string>();
+                    //read all the items until the list is closed by ')' and merge them
+                    //all items are assumed to be separated by space merge them first
+                    //items are merged because a item might contain a space itself, and in this case it's splitted at the wrong place
+                    int start = i;
+                    string IN = "";
                     while (!cqlStringItems[i].Contains(")"))
                     {
-                        items.Add(cqlStringItems[i].Replace("\',", "").Replace("'","").Replace("(",""));
+                        IN = IN + " " + cqlStringItems[i];
                         i++;
                     }
-                    //add last item
-                    items.Add(cqlStringItems[i].Replace("')", "").Replace("'", ""));
-                    result = items.Contains(Convert.ToString(row[columnIndex]));                    
+                    IN = IN + " " + cqlStringItems[i];
+                    string[] splitters = { "('", "', '", "','", "')" };
+                    List<string> items = IN.Split(splitters, StringSplitOptions.RemoveEmptyEntries).ToList();
+
+                    result = items.Contains(Convert.ToString(row[columnIndex]));
                 }
                 else if (comparer == comparers[7])//LIKE
                 {
