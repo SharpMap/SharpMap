@@ -1,7 +1,9 @@
 ﻿namespace SharpMap.Demo.Wms.Controllers
 {
     using System;
+    using System.Collections;
     using System.Collections.Generic;
+    using System.Collections.ObjectModel;
     using System.IO;
     using System.Linq;
     using System.Web.Mvc;
@@ -9,6 +11,7 @@
     using GeoAPI.Geometries;
 
     using NetTopologySuite.Geometries;
+    using NetTopologySuite.Geometries.Utilities;
     using NetTopologySuite.IO;
     using NetTopologySuite.Operation.Linemerge;
     using NetTopologySuite.Operation.Polygonize;
@@ -63,7 +66,7 @@
             if (coll == null) 
                 throw new ArgumentNullException("coll");
 
-            for (int i = 0; i < coll.NumGeometries; i++) 
+            for (int i = 0; i < coll.NumGeometries; i++)
                 yield return coll.GetGeometryN(i);
         }
 
@@ -115,6 +118,22 @@
             return this.MakeResponse(data);
         }
 
+        public static IGeometry Polygonize(IGeometry geometry)
+        {
+            if (geometry == null)
+                throw new ArgumentNullException("geometry");
+
+            IList<ILineString> lines = LineStringExtracter.GetLines(geometry);
+            IList<IGeometry> geoms = lines.Cast<IGeometry>().ToList();
+
+            Polygonizer polygonizer = new Polygonizer();            
+            polygonizer.Add(geoms);
+            IList<IGeometry> polys = polygonizer.GetPolygons();
+
+            IGeometry[] array = GeometryFactory.ToPolygonArray(polys);
+            return geometry.Factory.CreateGeometryCollection(array);
+        }
+
         private static IEnumerable<IGeometry> DoSplit(IGeometryCollection coll, ILineString cut)
         {
             if (coll == null)
@@ -122,6 +141,28 @@
             if (cut == null)
                 throw new ArgumentNullException("cut");
 
+            // adapted from 'SplitPolygon WPS' GeoServer extension:
+            // https://github.com/mdavisog/wps-splitpoly/tree/master/src
+
+            IList<IGeometry> output = new List<IGeometry>();
+            IEnumerable<IGeometry> items = GetItems(coll);
+            IEnumerable<IGeometry> valid = items.Where(i => i is IPolygon);
+            foreach (IGeometry item in valid)
+            {
+                IGeometry nodedLinework = item.Boundary.Union(cut);
+                IGeometry polygons = Polygonize(nodedLinework);
+
+                // only keep polygons which are inside the input                
+                for (int i = 0; i < polygons.NumGeometries; i++)
+                {
+                    IPolygon candpoly = (IPolygon)polygons.GetGeometryN(i);
+                    if (item.Contains(candpoly.InteriorPoint))
+                        output.Add(candpoly);
+                }                
+            }
+            return output;
+
+            /*
             IEnumerable<IGeometry> items = GetItems(coll);
             LineMerger merger = new LineMerger();            
             merger.Add(items);
@@ -134,6 +175,7 @@
             polygonizer.Add(union);
             ICollection<IGeometry> split = polygonizer.GetPolygons();
             return split;
+             * */
         }
     }
 }
