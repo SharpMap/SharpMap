@@ -4,7 +4,7 @@
     using System.Diagnostics;
     using System.Web;
 
-    using Web.Wms;
+    using SharpMap.Web.Wms;
 
     public class StdWmsMapHandler : AbstractStdMapHandler
     {
@@ -13,8 +13,8 @@
             try
             {
                 HttpRequest request = context.Request;
-                string url = GetFixedUrl(request);
-                Capabilities.WmsServiceDescription description = GetDescription(url);
+                string url = this.GetFixedUrl(request);
+                Capabilities.WmsServiceDescription description = this.GetDescription(url);
                 Map map = this.GetMap(request);
                 WmsServer.ParseQueryString(map, description, 10, null);
             }

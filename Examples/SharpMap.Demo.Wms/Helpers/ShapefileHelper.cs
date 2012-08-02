@@ -75,7 +75,8 @@ namespace SharpMap.Demo.Wms.Helpers
                 ShapeFile source = new ShapeFile(path, true);
                 VectorLayer item = new VectorLayer(name, source)
                 {
-                    SRID = 900913,
+                    SRID = 4326,
+                    TargetSRID = 900913,
                     CoordinateTransformation = transformation,
                     Style = (VectorStyle)data.Style,
                     SmoothingMode = SmoothingMode.AntiAlias
@@ -104,6 +105,7 @@ namespace SharpMap.Demo.Wms.Helpers
                 VectorLayer item = new VectorLayer(name, source)
                 {
                     SRID = 4326,
+                    TargetSRID = 900913,
                     Style = (VectorStyle)data.Style,
                     SmoothingMode = SmoothingMode.AntiAlias
                 };

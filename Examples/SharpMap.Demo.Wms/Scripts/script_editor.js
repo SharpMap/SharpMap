@@ -9,17 +9,16 @@
         this.style.backgroundColor = OpenLayers.Util.onImageLoadErrorColor;
     };
 
-    options = {        
+    options = {
+        controls: [],
         projection: 'EPSG:900913',
         displayProjection: 'EPSG:4326',
         format: 'image/png'
     };
 
     init = function () {
-        var lon = -73.9529;
-        var lat = 40.7723;
-        var zoom = 10;
-        var map, center, editor;
+        var lon = -73.9529, lat = 40.7723, zoom = 10,
+            map, center, editor;
 
         map = new OpenLayers.Map('map', options);
         map.addLayers([new OpenLayers.Layer.OSM()]);

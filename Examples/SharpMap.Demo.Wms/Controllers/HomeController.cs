@@ -89,6 +89,11 @@
         public ActionResult Buildings()
         {
             return this.View();
+        }
+
+        public ActionResult UtfGrid()
+        {
+            return this.View();
         } 
     }
 }

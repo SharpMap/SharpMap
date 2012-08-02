@@ -26,15 +26,15 @@
                 new AxisInfo("east", AxisOrientationEnum.East));
 
             List<ProjectionParameter> parameters = new List<ProjectionParameter>
-                {
-                    new ProjectionParameter("semi_major", 6378137.0),
-                    new ProjectionParameter("semi_minor", 6378137.0),
-                    new ProjectionParameter("latitude_of_origin", 0.0),
-                    new ProjectionParameter("central_meridian", 0.0),
-                    new ProjectionParameter("scale_factor", 1.0),
-                    new ProjectionParameter("false_easting", 0.0),
-                    new ProjectionParameter("false_northing", 0.0)
-                };
+            {
+                new ProjectionParameter("semi_major", 6378137.0),
+                new ProjectionParameter("semi_minor", 6378137.0),
+                new ProjectionParameter("latitude_of_origin", 0.0),
+                new ProjectionParameter("central_meridian", 0.0),
+                new ProjectionParameter("scale_factor", 1.0),
+                new ProjectionParameter("false_easting", 0.0),
+                new ProjectionParameter("false_northing", 0.0)
+            };
             IProjection projection = csFac.CreateProjection("Google Mercator", "mercator_1sp", parameters);
             IProjectedCoordinateSystem targetCs = csFac.CreateProjectedCoordinateSystem(
                 "Google Mercator",
@@ -43,7 +43,8 @@
                 LinearUnit.Metre,
                 new AxisInfo("East", AxisOrientationEnum.East),
                 new AxisInfo("North", AxisOrientationEnum.North));
-            return ctFac.CreateFromCoordinateSystems(sourceCs, targetCs);
+            ICoordinateTransformation transformation = ctFac.CreateFromCoordinateSystems(sourceCs, targetCs);
+            return transformation;
         }
     }
 

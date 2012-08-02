@@ -301,7 +301,10 @@ button {
     border-width: 1px;
 }
 
-
+#info {
+    height: 20px;
+    font-weight: bold;
+}
 
 /* 
  * print styles

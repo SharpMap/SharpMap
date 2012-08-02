@@ -86,6 +86,7 @@
     <Compile Include="Controllers\BuildingsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ProcessController.cs" />
+    <Compile Include="Controllers\UtfGridController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -98,6 +99,10 @@
     <Compile Include="Helpers\ProjHelper.cs" />
     <Compile Include="Models\DemoItem.cs" />
     <Compile Include="Models\LayerData.cs" />
+    <Compile Include="Plugins\GraphicsPathBuilder.cs" />
+    <Compile Include="Plugins\SphericalMercator.cs" />
+    <Compile Include="Plugins\TileSystemHelper.cs" />
+    <Compile Include="Plugins\Utf8Grid.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -444,6 +449,7 @@
     <Content Include="lib\OpenLayers\Tile\UTFGrid.js" />
     <Content Include="lib\OpenLayers\Tween.js" />
     <Content Include="lib\OpenLayers\Util.js" />
+    <Content Include="Scripts\script_utfgrid.js" />
     <Content Include="Scripts\ll\buildings.js" />
     <Content Include="Scripts\script_buildings.js" />
     <Content Include="Scripts\jquery.mobile-1.1.0-rc.1.min.js" />
@@ -484,6 +490,7 @@
     <Content Include="theme\geosilk\img\splitFeature.png" />
     <Content Include="theme\geosilk\img\transformFeature.png" />
     <Content Include="Views\Home\Buildings.aspx" />
+    <Content Include="Views\Home\UtfGrid.aspx" />
     <Content Include="Views\Home\Index.aspx" />
     <Content Include="Views\Home\TileCanvas.aspx" />
     <Content Include="Views\Home\Offline.aspx" />

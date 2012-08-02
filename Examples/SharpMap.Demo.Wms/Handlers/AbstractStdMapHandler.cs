@@ -57,7 +57,7 @@ namespace SharpMap.Demo.Wms.Handlers
                 return DatabaseHelper.SqlServer();
             string format = String.Format("unsupported map type: '{0}'", type);
             throw new NotSupportedException(format);
-        }
+        }        
 
         public bool IsReusable
         {

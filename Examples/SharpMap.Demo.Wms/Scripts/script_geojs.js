@@ -11,16 +11,15 @@ $(document).ready(function () {
 
     options = {
         wms: 'WMS',
+        controls: [],
         projection: 'EPSG:900913',
         displayProjection: 'EPSG:4326',
         format: 'text/json'
     };
 
     init = function () {
-        var lon = -73.9529;
-        var lat = 40.7723;
-        var zoom = 10;
-        var map, url, layers = [], center, highlight;
+        var lon = -73.9529, lat = 40.7723, zoom = 10,
+            map, url, layers = [], center, highlight;
 
         map = new OpenLayers.Map('map', options);        
         map.addLayer(new OpenLayers.Layer.OSM());

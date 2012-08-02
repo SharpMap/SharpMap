@@ -1,10 +1,10 @@
-$(document).ready(function() {
+$(document).ready(function () {
     var options, init;
 
     OpenLayers.DOTS_PER_INCH = 25.4 / 0.28;
     OpenLayers.IMAGE_RELOAD_ATTEMPTS = 5;
     OpenLayers.Util.onImageLoadErrorColor = 'transparent';
-    OpenLayers.Util.onImageLoadError = function() {
+    OpenLayers.Util.onImageLoadError = function () {
         this.src = '/Content/Images/sorry.jpg';
         this.style.backgroundColor = OpenLayers.Util.onImageLoadErrorColor;
     };
@@ -21,9 +21,9 @@ $(document).ready(function() {
         }
     };
 
-    init = function() {
+    init = function () {
         var lon = -73.9529, lat = 40.7723, zoom = 10,
-            map, sharpmap, click, toolbar, center;
+            map, sharpmap, utfgrid, callback, control, center, infoc = $('#info');
 
         map = new OpenLayers.Map('map', options);
         sharpmap = new OpenLayers.Layer.WMS(
@@ -44,32 +44,40 @@ $(document).ready(function() {
                 yx: []
             });
         sharpmap.mergeNewParams(options.wmsparams);
-        map.addLayers([new OpenLayers.Layer.OSM(), sharpmap]);
 
-        click = new OpenLayers.Control.WMSGetFeatureInfo({
-            url: '/wms.ashx',
-            title: 'Identify features by clicking',
-            layers: [sharpmap],
-            vendorParams: options.wmsparams,
-            queryVisible: true
+        utfgrid = new OpenLayers.Layer.UTFGrid({
+            name: 'UTF Grid',
+            url: "/UtfGrid/GetData/?layer=poly_landmarks&z=${z}&x=${x}&y=${y}",
+            utfgridResolution: 2,
+            displayInLayerSwitcher: true
         });
-        click.events.register("getfeatureinfo", this, function(evt) {
-            alert(evt.text);
-        });
+        map.addLayers([new OpenLayers.Layer.OSM(), sharpmap, utfgrid]);
 
-        toolbar = OpenLayers.Class(OpenLayers.Control.NavToolbar, {
-            initialize: function() {
-                OpenLayers.Control.NavToolbar.prototype.initialize.apply(this, [options]);
-                this.addControls([click]);
+        callback = function (lookup) {
+            var info, msg;
+            if (lookup) {
+                for (var idx in lookup) {
+                    info = lookup[idx];
+                    if (info && info.data) {
+                        msg = '[' + info.id + ']: LANAME: ' + info.data.LANAME + ', CFCC: ' + info.data.CFCC;
+                        infoc.text(msg);
+                    } else {
+                        infoc.text('');
+                    }
+                }
             }
+        };
+        control = new OpenLayers.Control.UTFGrid({
+            callback: callback,
+            handlerMode: "move"
         });
-        map.addControl(new OpenLayers.Control.LayerSwitcher());
+        map.addControl(control);
         map.addControl(new OpenLayers.Control.PanZoom({
             position: new OpenLayers.Pixel(2, 10)
         }));
+        map.addControl(new OpenLayers.Control.LayerSwitcher());
         map.addControl(new OpenLayers.Control.MousePosition());
         map.addControl(new OpenLayers.Control.LoadingPanel());
-        map.addControl(new toolbar());
 
         center = new OpenLayers.LonLat(lon, lat);
         center.transform(options.displayProjection, options.projection);
