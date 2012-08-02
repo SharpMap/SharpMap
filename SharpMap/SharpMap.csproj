@@ -151,7 +151,7 @@
     <Compile Include="Geometries\GeoAPIEx.cs" />
     <Compile Include="Layers\DuplicateLayerException.cs" />
     <Compile Include="Layers\IAsyncLayer.cs" />
-    <Compile Include="Layers\iLayer.cs" />
+    <Compile Include="Layers\ILayer.cs" />
     <Compile Include="Layers\ICanQueryLayer.cs" />
     <Compile Include="Layers\LabelLayer.cs" />
     <Compile Include="Layers\Layer.cs" />
