@@ -11,14 +11,10 @@
     <RootNamespace>WinFormSamples</RootNamespace>
     <AssemblyName>WinFormSamples</AssemblyName>
     <FileAlignment>512</FileAlignment>
-    <SccProjectName>
-    </SccProjectName>
-    <SccLocalPath>
-    </SccLocalPath>
-    <SccAuxPath>
-    </SccAuxPath>
-    <SccProvider>
-    </SccProvider>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
     <PublishUrl>http://localhost/WinFormSamples/</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Web</InstallFrom>
