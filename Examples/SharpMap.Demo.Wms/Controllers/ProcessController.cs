@@ -52,10 +52,14 @@
             throw new ArgumentException("invalid argument 'cut': ILineString expected");
         }
 
-        private ActionResult MakeResponse(IEnumerable<IGeometry> cleaned)
+        private ActionResult MakeResponse(IEnumerable<IGeometry> geometries)
         {
+            if (geometries == null)
+                throw new ArgumentNullException("geometries");
+
             // we should return a GeometryCollection object
-            IGeometryCollection result = this.factory.CreateGeometryCollection(cleaned.ToArray());
+            IGeometry[] array = geometries.ToArray();
+            IGeometryCollection result = this.factory.CreateGeometryCollection(array);
             StringWriter writer = new StringWriter();
             GeoJSONWriter.Write(result, writer);
             return this.Json(new { geo = writer.ToString() });
@@ -129,9 +133,7 @@
             Polygonizer polygonizer = new Polygonizer();            
             polygonizer.Add(geoms);
             IList<IGeometry> polys = polygonizer.GetPolygons();
-
-            IGeometry[] array = GeometryFactory.ToPolygonArray(polys);
-            return geometry.Factory.CreateGeometryCollection(array);
+            return geometry.Factory.BuildGeometry(polys);
         }
 
         private static IEnumerable<IGeometry> DoSplit(IGeometryCollection coll, ILineString cut)
