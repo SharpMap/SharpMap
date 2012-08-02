@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
 
-namespace SharpMap.Forms
+namespace SharpMap.Forms.ToolBar
 {
     [DesignTimeVisible(true)]
     public partial class MapZoomToolStrip : MapToolStrip
@@ -81,22 +77,22 @@ namespace SharpMap.Forms
             // _zoomToWindow
             // 
             this._zoomToWindow.CheckOnClick = true;
-            this._zoomToWindow.CheckedChanged += OnCheckedChanged;
             this._zoomToWindow.Enabled = false;
             this._zoomToWindow.Image = global::SharpMap.Properties.Resources.zoom_region;
             this._zoomToWindow.Name = "_zoomToWindow";
             this._zoomToWindow.Size = new System.Drawing.Size(23, 20);
             this._zoomToWindow.ToolTipText = "Specify viewport by mouse selection";
+            this._zoomToWindow.CheckedChanged += OnCheckedChanged;
             // 
             // _pan
             // 
             this._pan.CheckOnClick = true;
-            this._pan.CheckedChanged += OnCheckedChanged;
             this._pan.Enabled = false;
             this._pan.Image = global::SharpMap.Properties.Resources.pan;
             this._pan.Name = "_pan";
             this._pan.Size = new System.Drawing.Size(23, 20);
             this._pan.ToolTipText = "Drag the map\'s content around and scoll by mouse wheel";
+            this._pan.CheckedChanged += OnCheckedChanged;
             // 
             // sep2
             // 
@@ -231,9 +227,78 @@ namespace SharpMap.Forms
             MapControl.Refresh();
         }
 
+        private float _dpiX, _dpiY;
+        
+        protected override void OnCreateControl()
+        {
+            using (var g = CreateGraphics())
+            {
+                _dpiX = g.DpiX;
+                _dpiY = g.DpiY;
+            }
+            base.OnCreateControl();
+        }
+
+
         private double ScaleToZoom(double scale)
         {
             return MapControl.Map.Zoom;
         }
+
+        /*
+        public Double MapScaleToWidth(Double mapScale)
+        {
+            var screenInches = MapControl.Map.MapHeight / _dpiY;
+            var worldInches = mapScale * screenInches;
+
+            return worldInches / InchesPerUnit;
+        }
+
+        private const double InchesPerMeter = 39.3700787;
+        private const double MetersPerNauticalMile = 1852;
+        private const double NauticalMilesPerDegree = 60;
+        private const double InchesPerDegree = NauticalMilesPerDegree * MetersPerNauticalMile * InchesPerMeter;
+
+        private double InchesPerUnit
+        {
+            get
+            {
+#if !DotSpatialProjections
+                var map = MapControl.Map;
+                var spatialReference = map.SpatialReference;
+                var projCs = spatialReference as ProjNet.CoordinateSystems.IProjectedCoordinateSystem;
+                if (projCs != null)
+                {
+                    return projCs.LinearUnit.MetersPerUnit * InchesPerMeter;
+                }
+
+                var latAdj = 1.0;
+                var centerLat = map.Center.Y;
+                if (centerLat != 0.0)
+                {
+                    var cosLat = Math.Cos(Math.PI * centerLat / 180.0);
+                    latAdj = Math.Sqrt(1 + cosLat * cosLat) / Math.Sqrt(2.0);
+                }
+                return InchesPerDegree * latAdj;
+            }
+        }
+#else
+#endif
+
+        /// <summary>
+        /// Function to compute map scale base on map width
+        /// </summary>
+        /// <param name="width">The world width of the map</param>
+        /// <returns>The map scale, e.g. 1:10000</returns>
+        public double WidthToMapScale(Double width)
+        {
+            double worldInches = width * InchesPerUnit;
+            double screenInches = MapControl.Map.MapWidth/_dpiX;
+            double scale = worldInches / screenInches;
+
+            return scale;
+        }
+         */
+
     }
 }
