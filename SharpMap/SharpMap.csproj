@@ -137,7 +137,7 @@
     <Compile Include="Data\Providers\GeometryFeatureProvider.cs" />
     <Compile Include="Data\Providers\GeometryProvider.cs" />
     <Compile Include="Data\Providers\FilterProvider.cs" />
-    <Compile Include="Data\Providers\iProvider.cs" />
+    <Compile Include="Data\Providers\IProvider.cs" />
     <Compile Include="Data\Providers\MsSql.cs" />
     <Compile Include="Data\Providers\MsSqlSpatial.cs" />
     <Compile Include="Data\Providers\OleDbPoint.cs" />
