@@ -34,7 +34,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpMap.UI", "SharpMap.UI\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "UnitTests\UnitTests.csproj", "{0C76DD99-AC5D-47C0-B76F-CE70092A9AC7}"
 EndProject
-Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "DemoWebSite", "Examples\DemoWebSite", "{32ECD993-CB5A-4AD9-8C8F-45C73A088C13}"
+Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "DemoWebSite", "Examples\DemoWebSite\", "{32ECD993-CB5A-4AD9-8C8F-45C73A088C13}"
 	ProjectSection(WebsiteProperties) = preProject
 		SccProjectName = "SAK"
 		SccAuxPath = "SAK"
@@ -99,52 +99,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docs", "Docs", "{7F47E0CC-D
 	EndProjectSection
 EndProject
 Global
-	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 12
-		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
-		SccTeamFoundationServer = https://tfs.codeplex.com/tfs/tfs01
-		SccLocalPath0 = .
-		SccProjectUniqueName1 = SharpMap\\SharpMap.csproj
-		SccProjectName1 = SharpMap
-		SccLocalPath1 = SharpMap
-		SccProjectUniqueName2 = SharpMap.UI\\SharpMap.UI.csproj
-		SccProjectName2 = SharpMap.UI
-		SccLocalPath2 = SharpMap.UI
-		SccProjectUniqueName3 = UnitTests\\UnitTests.csproj
-		SccProjectName3 = UnitTests
-		SccLocalPath3 = UnitTests
-		SccWebProject4 = true
-		SccProjectUniqueName4 = Examples\\DemoWebSite
-		SccProjectTopLevelParentUniqueName4 = SharpMap.sln
-		SccProjectName4 = Examples/DemoWebSite
-		SccLocalPath4 = Examples\\DemoWebSite
-		SccProjectEnlistmentChoice4 = 2
-		SccProjectUniqueName5 = SharpMap.Extensions\\SharpMap.Extensions.csproj
-		SccProjectName5 = SharpMap.Extensions
-		SccLocalPath5 = SharpMap.Extensions
-		SccProjectUniqueName6 = Examples\\DemoWinForm\\DemoWinForm.csproj
-		SccProjectTopLevelParentUniqueName6 = SharpMap.sln
-		SccProjectName6 = Examples/DemoWinForm
-		SccLocalPath6 = Examples\\DemoWinForm
-		SccProjectUniqueName7 = Examples\\WinFormSamples\\WinFormSamples.csproj
-		SccProjectTopLevelParentUniqueName7 = SharpMap.sln
-		SccProjectName7 = Examples/WinFormSamples
-		SccLocalPath7 = Examples\\WinFormSamples
-		SccProjectUniqueName8 = Examples\\ExampleCodeSnippets\\ExampleCodeSnippets.csproj
-		SccProjectTopLevelParentUniqueName8 = SharpMap.sln
-		SccProjectName8 = Examples/ExampleCodeSnippets
-		SccLocalPath8 = Examples\\ExampleCodeSnippets
-		SccProjectUniqueName9 = SharpMap.SqlServerSpatialObjects\\SharpMap.SqlServerSpatialObjects.csproj
-		SccProjectName9 = SharpMap.SqlServerSpatialObjects
-		SccLocalPath9 = SharpMap.SqlServerSpatialObjects
-		SccProjectUniqueName10 = Examples\\SharpMap.Demo.Wms\\SharpMap.Demo.Wms.csproj
-		SccProjectTopLevelParentUniqueName10 = SharpMap.sln
-		SccProjectName10 = Examples/SharpMap.Demo.Wms
-		SccLocalPath10 = Examples\\SharpMap.Demo.Wms
-		SccProjectUniqueName11 = SharpMap.Serialization\\SharpMap.Serialization.csproj
-		SccProjectName11 = SharpMap.Serialization
-		SccLocalPath11 = SharpMap.Serialization
-	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|.NET = Debug|.NET
 		Debug|Any CPU = Debug|Any CPU

@@ -44,7 +44,7 @@ namespace WinFormSamples
             this.toolStripContainer1 = new System.Windows.Forms.ToolStripContainer();
             this.mapBox1 = new SharpMap.Forms.MapBox();
             this.mapQueryToolStrip1 = new SharpMap.Forms.ToolBar.MapQueryToolStrip();
-            this.mapZoomToolStrip1 = new SharpMap.Forms.MapZoomToolStrip(this.components);
+            this.mapZoomToolStrip1 = new SharpMap.Forms.ToolBar.MapZoomToolStrip(this.components);
             this.pgMap = new System.Windows.Forms.PropertyGrid();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.radioButton2 = new System.Windows.Forms.RadioButton();
@@ -709,7 +709,7 @@ namespace WinFormSamples
         private ToolStripContainer toolStripContainer1;
         private MapBox mapBox1;
         private SharpMap.Forms.ToolBar.MapQueryToolStrip mapQueryToolStrip1;
-        private MapZoomToolStrip mapZoomToolStrip1;
+        private SharpMap.Forms.ToolBar.MapZoomToolStrip mapZoomToolStrip1;
         private SharpMap.Forms.ToolBar.MapDigitizeGeometriesToolStrip mapDigitizeGeometriesToolStrip1;
         private SharpMap.Forms.ToolBar.MapVariableLayerToolStrip mapVariableLayerToolStrip1;
   }
