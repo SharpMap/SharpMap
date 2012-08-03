@@ -26,8 +26,8 @@ namespace DotSpatial.Projections
             var corners = new[] { box.MinX, box.MinY, box.MinX, box.MaxY, box.MaxX, box.MaxY, box.MaxX, box.MinY };
             Reproject.ReprojectPoints(corners, null, from, to, 0, 4);
 
-            var res = new BoundingBox(corners[0], corners[1], corners[4], corners[5]);
-            res.ExpandToInclude(new BoundingBox(corners[2], corners[3], corners[6], corners[7]));
+            var res = new BoundingBox(corners[0], corners[4], corners[1], corners[5]);
+            res.ExpandToInclude(new BoundingBox(corners[2], corners[6], corners[3], corners[7]));
             return res;
         }
 
