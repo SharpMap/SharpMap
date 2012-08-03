@@ -74,6 +74,9 @@
   </Target>
   -->
   <ItemGroup>
+    <Reference Include="DotSpatial.Projections">
+      <HintPath>..\packages\DotSpatial.Projections.1.2\lib\net40-Client\DotSpatial.Projections.dll</HintPath>
+    </Reference>
     <Reference Include="GeoAPI">
       <HintPath>..\packages\GeoAPI.1.6.0\lib\net35\GeoAPI.dll</HintPath>
     </Reference>
@@ -106,6 +109,8 @@
     <Compile Include="Converters\SqlServer2008.cs" />
     <Compile Include="Converters\WKB\WKBTests.cs" />
     <Compile Include="Converters\WKT\WktGeometryTests.cs" />
+    <Compile Include="CoordinateSystems\Transformations\GeometryTransformDotSpatialTest.cs" />
+    <Compile Include="CoordinateSystems\Transformations\GeometryTransformTest.cs" />
     <Compile Include="Data\Providers\DataTablePointTests.cs" />
     <Compile Include="Data\Providers\ManagedSQLiteTests.cs" />
     <Compile Include="Data\Providers\MsSqlServerSpatialTests.cs" />
