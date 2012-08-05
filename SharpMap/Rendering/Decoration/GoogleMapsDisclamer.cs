@@ -154,7 +154,6 @@ namespace SharpMap.Rendering.Decoration
             lr = _mathTransform != null
                               ? _mathTransform.Transform(new[] {map.Envelope.MaxX, map.Envelope.MinY})
                               : new[] {map.Envelope.MaxX, map.Envelope.MinY};
-        }
 #else
             ul = new[] { map.Envelope.Left(), map.Envelope.Top() };
             if (_mathTransform != null)
