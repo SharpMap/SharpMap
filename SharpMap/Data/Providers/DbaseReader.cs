@@ -64,15 +64,15 @@ namespace SharpMap.Data.Providers
         private bool _headerIsParsed;
 
 #if USE_MEMORYMAPPED_FILE
-        private static readonly Dictionary<string,System.IO.MemoryMappedFiles.MemoryMappedFile> MemMappedFiles;
-        private static readonly Dictionary<string, int> MemMappedFilesRefConter;
+        private static readonly System.Collections.Generic.Dictionary<string,System.IO.MemoryMappedFiles.MemoryMappedFile> MemMappedFiles;
+        private static readonly System.Collections.Generic.Dictionary<string, int> MemMappedFilesRefConter;
         
         private bool _haveRegistredForUsage;
         
         static DbaseReader()
         {
-            MemMappedFiles = new Dictionary<string, System.IO.MemoryMappedFiles.MemoryMappedFile>();
-            MemMappedFilesRefConter = new Dictionary<string, int>();
+            MemMappedFiles = new System.Collections.Generic.Dictionary<string, System.IO.MemoryMappedFiles.MemoryMappedFile>();
+            MemMappedFilesRefConter = new System.Collections.Generic.Dictionary<string, int>();
         }
 #endif
 
