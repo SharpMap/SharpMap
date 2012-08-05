@@ -20,44 +20,70 @@ namespace SharpMap.Rendering.Decoration
     
     /// <summary>
     /// Displays Disclaimer-information as on maps.google.com
-    /// 
+    /// </summary>
+    /// <remarks>
     /// To be used when using Google Maps as BaseMap via for example BruTile
     /// Calls ViewPortInfo Service at maps.google.com to get information about DisclaimerText
-    /// 
+    /// <para/>
     /// Supports Async-Mode (use special .ctor)
-    /// </summary>
+    /// </remarks>
     public class GoogleMapsDisclaimer : MapDecoration
     {
-        public enum MapType { Map = 0, Images=2, Hybrid = 3 };
+        // Logging
+        private static readonly Common.Logging.ILog Log = Common.Logging.LogManager.GetCurrentClassLogger();
+        
+        /// <summary>
+        /// Google map type enum
+        /// </summary>
+        public enum MapType
+        {
+            /// <summary>
+            /// Map
+            /// </summary>
+            Map = 0,
 
-        readonly MapType m_MapType = MapType.Map;
-        IMathTransform m_MathTransform = null;
+            /// <summary>
+            /// Images
+            /// </summary>
+            Images = 2,
+
+            /// <summary>
+            /// Hybrid
+            /// </summary>
+            Hybrid = 3
+        };
+
+        readonly MapType _mapType = MapType.Map;
+        readonly IMathTransform _mathTransform;
 #if DotSpatialProjections
         private readonly IMathTransform _to = KnownCoordinateSystems.Geographic.World.WGS1984;
 #endif
-        string m_Language = "us-EN";
-        EventHandler m_DownloadComplete = null;
-        readonly bool m_RunAsync = false;
-        ITileSource m_TileSource = null;
+        //string _language = "us-EN";
+        readonly EventHandler _downloadCompleteHandler;
+        readonly bool _runInRunAsyncMode;
+        readonly ITileSource _tileSource;
 
-        string m_MapPrefix = "Mapdata ©";
-        string m_SatPrefix = "Images ©";
+        private Envelope _currentDisclaimerEnvelope;
+
+        private const string MapPrefix = "Mapdata ©";
+        private const string SatellitePrefix = "Images ©";
 
         /// <summary>
         /// Initialize with custom parameters
-        /// 
-        /// IMPORTANT: In Async mode you need to use UpdateBoundingBox when the MapBox/MapImage center or ZoomLevel changes, else the text will be wrong
         /// </summary>
+        /// <remarks>
+        /// IMPORTANT: In Async mode you need to use UpdateBoundingBox when the MapBox/MapImage center or ZoomLevel changes, else the text will be wrong
+        /// </remarks>
         /// <param name="mapToWgs84Transform">Transformation to transform MapCoordinates to WGS84</param>
         /// <param name="mapType">Type of Map Displayed</param>
         /// <param name="disclaimerDownloaded">Optional EventHandler that is called after Disclaimer Async Download (to be used to refresh map)</param>
-        /// <param name="downloadAsync">wether to download disclaimer information async (non blocking operation)</param>
-        public GoogleMapsDisclaimer(IMathTransform mapToWgs84Transform, MapType mapType, EventHandler disclaimerDownloaded, bool downloadAsync) : this()
+        /// <param name="runInAsyncMode">wether to download disclaimer information async (non blocking operation)</param>
+        public GoogleMapsDisclaimer(IMathTransform mapToWgs84Transform, MapType mapType, EventHandler disclaimerDownloaded, bool runInAsyncMode) : this()
         {
-            m_MathTransform = mapToWgs84Transform;
-            m_RunAsync = downloadAsync;
-            m_DownloadComplete = disclaimerDownloaded;
-            m_MapType = mapType;
+            _mathTransform = mapToWgs84Transform;
+            _runInRunAsyncMode = runInAsyncMode;
+            _downloadCompleteHandler = disclaimerDownloaded;
+            _mapType = mapType;
         }
 
         /// <summary>
@@ -65,61 +91,51 @@ namespace SharpMap.Rendering.Decoration
         /// </summary>
         public GoogleMapsDisclaimer()
         {
-            m_MathTransform = null; //Assuming WGS84
-            m_Font = new Font("Arial", (float)Math.Floor((11.0 * 72 / 96)));
-            m_Language = System.Threading.Thread.CurrentThread.CurrentCulture.Name;
-            m_TileSource = new BruTile.Web.GoogleTileSource(BruTile.Web.GoogleMapType.GoogleMap);
+            _mathTransform = null; //Assuming WGS84
+            _font = new Font("Arial", (float)Math.Floor((11.0 * 72 / 96)));
+            //_language = Thread.CurrentThread.CurrentCulture.Name;
+            _tileSource = new BruTile.Web.GoogleTileSource(BruTile.Web.GoogleMapType.GoogleMap);
         }
 
         //Regex rex = new Regex("resp && resp\\( \\[\"(?<text>.*?)\",");
         readonly Regex _rex = new Regex("GAddCopyright\\(\"(?<type>.*?)\",\".*?\",(?<miny>[0-9\\.-]+),(?<minx>[0-9\\.-]+),(?<maxy>[0-9\\.-]+),(?<maxx>[0-9\\.-]+),(?<minlevel>\\d+),\"(?<txt>.*?)\",(?<maxlevel>\\d+),.*?\\);", RegexOptions.Singleline);
-        string m_DisclaymerText = "";
-        readonly Font m_Font = new Font("Arial",12f);
+        string _disclaimerText = "";
+        readonly Font _font = new Font("Arial",12f);
 
         protected override Size InternalSize(Graphics g, Map map)
         {
             RequestDisclaimer(map);
 
-            var s = g.MeasureString(m_DisclaymerText, m_Font);
+            var s = g.MeasureString(_disclaimerText, _font);
             return new Size((int)Math.Ceiling(s.Width), (int)Math.Ceiling(s.Height));
         }
 
 
-        protected override void OnRender(System.Drawing.Graphics g, Map map)
+        protected override void OnRender(Graphics g, Map map)
         {
             RequestDisclaimer(map);
 
             var layoutRectangle = g.ClipBounds;
-            Color textColor = m_MapType == MapType.Map ? Color.Black : Color.White;
+            var textColor = _mapType == MapType.Map 
+                ? Color.Black 
+                : Color.White;
+            
             var b = new SolidBrush(OpacityColor(textColor));
-                g.DrawString(m_DisclaymerText, m_Font, b, layoutRectangle);
-
-            //base.OnRender(g, map);
+                g.DrawString(_disclaimerText, _font, b, layoutRectangle);
         }
-       
+        
+        /// <summary>
+        /// Method to update the map's view when the disclaimer was retrieved in async mode
+        /// </summary>
+        /// <param name="map">The map</param>
         public void UpdateBoundingBox(Map map)
         {
-            int level = BruTile.Utilities.GetNearestLevel(m_TileSource.Schema.Resolutions, map.PixelSize);
-#if !DotSpatialProjections
-            var ul = m_MathTransform != null ?
-                m_MathTransform.Transform(new[] { map.Envelope.MinX, map.Envelope.MaxY }) : new[] { map.Envelope.MinX, map.Envelope.MaxY };
-#else
-                var ul = new[] { map.Envelope.Left(), map.Envelope.Top() };
-                if (m_MathTransform != null)
-                    Reproject.ReprojectPoints(ul, null, m_MathTransform, _to, 0, 1);
-#endif
+            var level = BruTile.Utilities.GetNearestLevel(_tileSource.Schema.Resolutions, map.PixelSize);
 
-#if !DotSpatialProjections
-            double[] lr = m_MathTransform != null ?
-                m_MathTransform.Transform(new[] { map.Envelope.MaxX, map.Envelope.MinY }) : new[] { map.Envelope.MaxX, map.Envelope.MinY };
-#else
-                var lr = new[] {map.Envelope.Right(), map.Envelope.Bottom()};
-                if (m_MathTransform != null)
-                    Reproject.ReprojectPoints(lr, null, m_MathTransform, _to, 0, 1);
-#endif
+            double[] ul, lr;
+            GetCorners(map, out ul, out lr);
 
-
-            if (m_RunAsync)
+            if (_runInRunAsyncMode)
             {
                 DownloadDisclaimerAsync(ul, lr, level);
             }
@@ -129,33 +145,33 @@ namespace SharpMap.Rendering.Decoration
             }
         }
 
-        Envelope m_CurDisclaymerRect;
+        private void GetCorners(Map map, out double[] lr, out double[] ul)
+        {
+#if !DotSpatialProjections
+            ul = _mathTransform != null
+                         ? _mathTransform.Transform(new[] {map.Envelope.MinX, map.Envelope.MaxY})
+                         : new[] {map.Envelope.MinX, map.Envelope.MaxY};
+            lr = _mathTransform != null
+                              ? _mathTransform.Transform(new[] {map.Envelope.MaxX, map.Envelope.MinY})
+                              : new[] {map.Envelope.MaxX, map.Envelope.MinY};
+        }
+#else
+            ul = new[] { map.Envelope.Left(), map.Envelope.Top() };
+            if (_mathTransform != null)
+                Reproject.ReprojectPoints(ul, null, _mathTransform, _to, 0, 1);
+            lr = new[] {map.Envelope.Right(), map.Envelope.Bottom()};
+            if (_mathTransform != null)
+                Reproject.ReprojectPoints(lr, null, _mathTransform, _to, 0, 1);
+#endif
+        }
+
         private void RequestDisclaimer(Map map)
         {
-            if (m_CurDisclaymerRect != null && m_CurDisclaymerRect.Equals(map.Envelope))
+            if (_currentDisclaimerEnvelope == null || !_currentDisclaimerEnvelope.Equals(map.Envelope))
             {
-            }
-            else
-            {
-                int level = BruTile.Utilities.GetNearestLevel(m_TileSource.Schema.Resolutions, map.PixelSize);
-#if !DotSpatialProjections
-                var ul = m_MathTransform != null ?
-                    m_MathTransform.Transform(new[] { map.Envelope.MinX, map.Envelope.MaxY }) : new[] { map.Envelope.MinX, map.Envelope.MinY };
-#else
-                var ul = new[] { map.Envelope.Left(), map.Envelope.Top() };
-                if (m_MathTransform != null)
-                    Reproject.ReprojectPoints(ul, null, m_MathTransform, _to, 0, 1);
-#endif
-
-#if !DotSpatialProjections
-                var lr = m_MathTransform != null ?
-                    m_MathTransform.Transform(new[] { map.Envelope.MaxX, map.Envelope.MinY }) : new[] { map.Envelope.MaxX, map.Envelope.MinY };
-#else
-                var lr = new[] {map.Envelope.Right(), map.Envelope.Bottom()};
-                if (m_MathTransform != null)
-                    Reproject.ReprojectPoints(lr, null, m_MathTransform, _to, 0, 1);
-#endif
-
+                double[] ul, lr;
+                GetCorners(map, out ul, out lr);
+                var level = BruTile.Utilities.GetNearestLevel(_tileSource.Schema.Resolutions, map.PixelSize);
 
                 /*
                  * Download only when run in Sync mode, 
@@ -163,25 +179,25 @@ namespace SharpMap.Rendering.Decoration
                  * (else we will flood google with requests 
                  * during panning
                  */
-                if (!m_RunAsync)
+                if (!_runInRunAsyncMode)
                 {
                     DownloadDisclaimer(ul, lr, level);
                 }
 
-                m_CurDisclaymerRect = map.Envelope;
+                _currentDisclaimerEnvelope = map.Envelope;
             }
         }
 
         private void DownloadDisclaimerAsync(double[] ul, double[] lr, int level)
         {
-            ThreadPool.QueueUserWorkItem(new WaitCallback(delegate
-            {
-                DownloadDisclaimer(ul, lr, level);
-                if (m_DownloadComplete != null)
+            ThreadPool.QueueUserWorkItem(delegate
                 {
-                    m_DownloadComplete(null, new EventArgs());
-                }
-            }));
+                    DownloadDisclaimer(ul, lr, level);
+                    if (_downloadCompleteHandler != null)
+                    {
+                        _downloadCompleteHandler(null, new EventArgs());
+                    }
+                });
         }
 
         private void DownloadDisclaimer(double[] ul, double[] lr, int level)
@@ -190,26 +206,34 @@ namespace SharpMap.Rendering.Decoration
             {
                 //level = m_TileSource.Schema.Resolutions.Count - level;
                 string mapType = "";
-                if (m_MapType == MapType.Images)
+                if (_mapType == MapType.Images)
                     mapType = "k";
-                else if (m_MapType == MapType.Hybrid)
+                else if (_mapType == MapType.Hybrid)
                 {
                     mapType = "h";
                 }
                
                 //string url = string.Format(CultureInfo.InvariantCulture, "http://maps.googleapis.com/maps/api/js/ViewportInfoService.GetViewportInfo?1m6&1m2&1d{0}&2d{1}&2m2&1d{2}&2d{3}&2u{7}&4s{4}&5e{6}&callback=resp&token={5}", lr[1], ul[0], ul[1], lr[0], m_Language, 12345, (int)m_MapType, level);
-                string url = string.Format(CultureInfo.InvariantCulture, "http://maps.google.com/maps/vp?spn={0},{1}&t={5}&z={2}&key=&mapclient=jsapi&vp={3},{4}&ev=mk",
+                var url = string.Format(CultureInfo.InvariantCulture, "http://maps.google.com/maps/vp?spn={0},{1}&t={5}&z={2}&key=&mapclient=jsapi&vp={3},{4}&ev=mk",
                     ul[1] - lr[1], lr[0] - ul[0], level, (lr[1] + ul[1]) / 2.0, (ul[0] + lr[0]) / 2.0, mapType);
-                WebRequest rq = HttpWebRequest.Create(url);
-                (rq as HttpWebRequest).Referer = "http://localhost";
-                (rq as HttpWebRequest).UserAgent = "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.1 (KHTML, like Gecko) Chrome/13.0.782.112 Safari/535.1";
-                string jSon = new StreamReader(rq.GetResponse().GetResponseStream()).ReadToEnd();
 
-                List<string> mstrs = new List<string>();
-                List<string> kstrs = new List<string>();
+                var rq = (HttpWebRequest)WebRequest.Create(url);
+                rq.Referer = "http://localhost";
+                rq.UserAgent = "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.1 (KHTML, like Gecko) Chrome/13.0.782.112 Safari/535.1";
+
+                string json;
+                using (var s = rq.GetResponse().GetResponseStream())
+                {
+                    if (s == null)
+                        throw new WebException("Failed to get web response stream");
+                    json = new StreamReader(s).ReadToEnd();
+                }
+
+                var mstrs = new List<string>();
+                var kstrs = new List<string>();
 
                 var bbox = new Envelope(new Coordinate(ul[0],lr[1]),new Coordinate(lr[0],ul[1]));
-                foreach (Match m in _rex.Matches(jSon))
+                foreach (Match m in _rex.Matches(json))
                 {
                     if (m.Groups["txt"].Success && !string.IsNullOrEmpty(m.Groups["txt"].Value))
                     {
@@ -244,22 +268,22 @@ namespace SharpMap.Rendering.Decoration
                 }
 
                 string txt = "";
-                if (m_MapType == MapType.Map || m_MapType == MapType.Hybrid)
+                if (_mapType == MapType.Map || _mapType == MapType.Hybrid)
                 {
-                    txt = m_MapPrefix + " " + string.Join(",", mstrs.ToArray());
+                    txt = MapPrefix + " " + string.Join(",", mstrs.ToArray());
                 }
-                else if ( m_MapType == MapType.Images)
+                else if ( _mapType == MapType.Images)
                 {
-                    txt = m_SatPrefix + " " + string.Join(",",kstrs.ToArray());
-                }
-
-
-                if (m_MapType == MapType.Hybrid)
-                {
-                    txt += ", " + m_SatPrefix + " " + string.Join(",", kstrs.ToArray());
+                    txt = SatellitePrefix + " " + string.Join(",",kstrs.ToArray());
                 }
 
-                m_DisclaymerText = txt;
+
+                if (_mapType == MapType.Hybrid)
+                {
+                    txt += ", " + SatellitePrefix + " " + string.Join(",", kstrs.ToArray());
+                }
+
+                _disclaimerText = txt;
                 /*if (rex.IsMatch(jSon))
                 {
                     Match m = rex.Match(jSon);
@@ -269,8 +293,10 @@ namespace SharpMap.Rendering.Decoration
                     }
                 }*/
             }
-            catch
+            catch (Exception ex)
             {
+                if (Log.IsDebugEnabled)
+                    Log.Debug(ex);
             }
         }
 
