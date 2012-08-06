@@ -1,5 +1,5 @@
 ﻿$(document).ready(function () {
-    var map = new L.Map('map'), zoom = 16, cloudmade;
+    var map = new L.Map('map'), zoom = 16, cloudmade, buildings;
     cloudmade = new L.TileLayer(['http://{s}tile.cloudmade.com', '/1a235b638b614b458deeb77c7dae4f80', '/998/256/{z}/{x}/{y}.png'].join(''), {
         maxZoom: 18,
         subdomains: ['a.', 'b.', 'c.', '']
@@ -15,12 +15,7 @@
     $('#link3').click(function () {
         map.setView(new L.LatLng(52.50983, 13.37455), zoom);
     });
-    
-    Buildings.setMap('leaflet', map);
-    Buildings.load("/buildings/getdata?w={w}&n={n}&e={e}&s={s}&z={z}", {
-        strokeRoofs: true,
-        wallColor: "rgba(190,170,150,0.8)",
-        roofColor: "rgba(230,220,210,0.8)",
-        strokeColor: "rgb(145,140,135)"
-    });
+
+    buildings = new OSMBuildings(map);
+    buildings.loadData('/buildings/getdata?w={w}&n={n}&e={e}&s={s}&z={z}');    
 });
