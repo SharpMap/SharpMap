@@ -314,13 +314,14 @@ namespace SharpMap.Web.Wms
                     return;
                 }
                 //sets the boundingbox to the boundingbox of the client in order to calculate the coordinates of the projection of the client
-                var bbox = ParseBBOX(context.Request.Params["bbox"]);
+                var bbox = ParseBBOX(context.Request.Params["bbox"], map.Layers[0].TargetSRID == 4326);                
                 if (bbox == null)
                 {
                     WmsException.ThrowWmsException("Invalid parameter BBOX");
                     return;
                 }
                 map.ZoomToBox(bbox);
+
                 //sets the point clicked by the client
                 var p = new Coordinate();
                 Single x = 0;
@@ -507,12 +508,13 @@ namespace SharpMap.Web.Wms
                 }
                 map.Size = new Size(width, height);
 
-                var bbox = ParseBBOX(context.Request.Params["bbox"]);
+                var bbox = ParseBBOX(context.Request.Params["bbox"], map.Layers[0].TargetSRID == 4326);
                 if (bbox == null)
                 {
                     WmsException.ThrowWmsException("Invalid parameter BBOX");
                     return;
                 }
+                
                 map.PixelAspectRatio = (width / (double)height) / (bbox.Width / bbox.Height);
                 map.Center = bbox.Centre;
                 map.Zoom = bbox.Width;
@@ -696,7 +698,7 @@ namespace SharpMap.Web.Wms
         /// </summary>
         /// <param name="strBBOX">string representation of a boundingbox</param>
         /// <returns>Boundingbox or null if invalid parameter</returns>
-        public static Envelope ParseBBOX(string strBBOX)
+        public static Envelope ParseBBOX(string strBBOX, bool flip)
         {
             string[] strVals = strBBOX.Split(new[] { ',' });
             if (strVals.Length != 4)
@@ -719,7 +721,7 @@ namespace SharpMap.Web.Wms
             if (maxy < miny)
                 return null;
 
-            return new Envelope(minx, maxx, miny, maxy);
+            return flip ? new Envelope(miny, maxy, minx, maxx) : new Envelope(minx, maxx, miny, maxy);
         }
         /// <summary>
         /// Gets FeatureInfo as text/plain

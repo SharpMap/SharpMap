@@ -40,8 +40,7 @@ $(document).ready(function() {
                 visibility: true,
                 buffer: 0,
                 singleTile: false,
-                ratio: 1.5,
-                yx: []
+                ratio: 1.5
             });
         sharpmap.mergeNewParams(options.wmsparams);
         map.addLayers([new OpenLayers.Layer.OSM(), sharpmap]);

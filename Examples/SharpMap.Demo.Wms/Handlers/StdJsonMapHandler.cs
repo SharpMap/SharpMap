@@ -32,16 +32,16 @@ namespace SharpMap.Demo.Wms.Handlers
                     return;
                 }
 
-                BoundingBox bbox = WmsServer.ParseBBOX(s);
+                Map map = this.GetMap(context.Request);
+                bool flip = map.Layers[0].TargetSRID == 4326;
+                BoundingBox bbox = WmsServer.ParseBBOX(s, flip);
                 if (bbox == null)
                 {
                     WmsException.ThrowWmsException("Invalid parameter BBOX");
                     return;
                 }
-
-                Map map = this.GetMap(context.Request);
-                IEnumerable<GeoJSON> items = GetData(map, bbox);
                 
+                IEnumerable<GeoJSON> items = GetData(map, bbox);                
                 StringWriter writer = new StringWriter();
                 GeoJSONWriter.Write(items, writer);
                 string buffer = writer.ToString();

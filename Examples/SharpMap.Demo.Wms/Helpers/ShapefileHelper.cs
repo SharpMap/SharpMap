@@ -56,7 +56,7 @@ namespace SharpMap.Demo.Wms.Helpers
             };
         }
 
-        public static Map OpenLayers()
+        public static Map Spherical()
         {
             ICoordinateTransformation transformation = ProjHelper.LatLonToGoogle();
             HttpContext context = HttpContext.Current;
@@ -72,7 +72,7 @@ namespace SharpMap.Demo.Wms.Helpers
 
                 string name = Path.GetFileNameWithoutExtension(layer);
                 LayerData data = dict[layer];
-                ShapeFile source = new ShapeFile(path, true);
+                ShapeFile source = new ShapeFile(path, false, false);
                 VectorLayer item = new VectorLayer(name, source)
                 {
                     SRID = 4326,
@@ -86,7 +86,7 @@ namespace SharpMap.Demo.Wms.Helpers
             return map;
         }
 
-        public static Map PolyMaps()
+        public static Map Default()
         {
             HttpContext context = HttpContext.Current;
             Map map = new Map(new Size(1, 1));
@@ -101,11 +101,10 @@ namespace SharpMap.Demo.Wms.Helpers
 
                 string name = Path.GetFileNameWithoutExtension(layer);
                 LayerData data = dict[layer];
-                ShapeFile source = new ShapeFile(path, true);
+                ShapeFile source = new ShapeFile(path, false, false);
                 VectorLayer item = new VectorLayer(name, source)
                 {
                     SRID = 4326,
-                    TargetSRID = 900913,
                     Style = (VectorStyle)data.Style,
                     SmoothingMode = SmoothingMode.AntiAlias
                 };

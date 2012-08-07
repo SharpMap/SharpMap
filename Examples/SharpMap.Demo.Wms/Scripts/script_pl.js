@@ -43,10 +43,10 @@
         bounds = mercator.TileLatLonBounds(data.column, data.row, data.zoom);
         url = [
             '/json.ashx?MAP_TYPE=PM&BBOX=',
-            bounds[1], ',',
            -bounds[2], ',',
-            bounds[3], ',',
-           -bounds[0]
+            bounds[1], ',',
+           -bounds[0], ',',
+            bounds[3]
         ].join('');
         return url;
     }).on('load', load);

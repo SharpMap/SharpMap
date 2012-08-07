@@ -2,19 +2,9 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Collections.Specialized;
-    using System.IO;
     using System.Reflection;
-    using System.Web;
     using System.Web.Mvc;
 
-    using GeoAPI.Geometries;
-
-    using NetTopologySuite.Geometries;
-    using NetTopologySuite.IO;
-    using NetTopologySuite.Simplify;
-
-    using SharpMap.Converters.GeoJSON;
     using SharpMap.Demo.Wms.Models;
 
     public class HomeController : Controller
@@ -49,7 +39,12 @@
         {
             this.ViewData["DemoItems"] = this.GetDemoItems();
             return this.View();
-        }        
+        }
+
+        public ActionResult Default()
+        {
+            return this.View();
+        }
 
         public ActionResult Openlayers()
         {

@@ -18,10 +18,10 @@
     });
     tile.createUrl = function (bounds) {
         var url = ['/json.ashx?MAP_TYPE=PM&BBOX=',
-            bounds[0], ',',
             bounds[1], ',',
-            bounds[2], ',',
-            bounds[3]
+            bounds[0], ',',
+            bounds[3], ',',
+            bounds[2]
         ].join('');
         return url;
     };

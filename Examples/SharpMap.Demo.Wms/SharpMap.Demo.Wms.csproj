@@ -449,6 +449,7 @@
     <Content Include="lib\OpenLayers\Tile\UTFGrid.js" />
     <Content Include="lib\OpenLayers\Tween.js" />
     <Content Include="lib\OpenLayers\Util.js" />
+    <Content Include="Scripts\script_def.js" />
     <Content Include="Scripts\script_utfgrid.js" />
     <Content Include="Scripts\ll\buildings.js" />
     <Content Include="Scripts\script_buildings.js" />
@@ -490,6 +491,7 @@
     <Content Include="theme\geosilk\img\splitFeature.png" />
     <Content Include="theme\geosilk\img\transformFeature.png" />
     <Content Include="Views\Home\Buildings.aspx" />
+    <Content Include="Views\Home\Default.aspx" />
     <Content Include="Views\Home\UtfGrid.aspx" />
     <Content Include="Views\Home\Index.aspx" />
     <Content Include="Views\Home\TileCanvas.aspx" />

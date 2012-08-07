@@ -51,7 +51,7 @@ namespace SharpMap.Demo.Wms.Controllers
             if (String.IsNullOrEmpty(layer))
                 throw new ArgumentNullException("layer");
 
-            Map map = ShapefileHelper.OpenLayers();
+            Map map = ShapefileHelper.Spherical();
             IQueryable<VectorLayer> coll = map.Layers
                 .AsQueryable()
                 .OfType<VectorLayer>()

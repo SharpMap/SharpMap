@@ -7,10 +7,10 @@
         bounds = e.target.getBounds();
         jsurl = [
             '/json.ashx?MAP_TYPE=PM&BBOX=',
-            bounds._southWest.lng, ',',
             bounds._southWest.lat, ',',
-            bounds._northEast.lng, ',',
-            bounds._northEast.lat
+            bounds._southWest.lng, ',',
+            bounds._northEast.lat, ',',
+            bounds._northEast.lng
         ].join('');
 
         options = {
