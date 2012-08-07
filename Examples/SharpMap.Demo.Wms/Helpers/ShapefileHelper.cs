@@ -72,7 +72,7 @@ namespace SharpMap.Demo.Wms.Helpers
 
                 string name = Path.GetFileNameWithoutExtension(layer);
                 LayerData data = dict[layer];
-                ShapeFile source = new ShapeFile(path, false, false);
+                ShapeFile source = new ShapeFile(path, true);
                 VectorLayer item = new VectorLayer(name, source)
                 {
                     SRID = 4326,
@@ -101,7 +101,7 @@ namespace SharpMap.Demo.Wms.Helpers
 
                 string name = Path.GetFileNameWithoutExtension(layer);
                 LayerData data = dict[layer];
-                ShapeFile source = new ShapeFile(path, false, false);
+                ShapeFile source = new ShapeFile(path, true);
                 VectorLayer item = new VectorLayer(name, source)
                 {
                     SRID = 4326,

@@ -42,7 +42,7 @@
         var bounds, url;
         bounds = mercator.TileLatLonBounds(data.column, data.row, data.zoom);
         url = [
-            '/json.ashx?MAP_TYPE=PM&BBOX=',
+            '/json.ashx?MAP_TYPE=DEF&BBOX=',
            -bounds[2], ',',
             bounds[1], ',',
            -bounds[0], ',',

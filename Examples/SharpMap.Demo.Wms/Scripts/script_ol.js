@@ -17,7 +17,7 @@ $(document).ready(function() {
         displayProjection: 'EPSG:4326',
         format: 'image/png',
         wmsparams: {
-            'MAP_TYPE': 'OL'
+            'MAP_TYPE': 'SPH'
         }
     };
 

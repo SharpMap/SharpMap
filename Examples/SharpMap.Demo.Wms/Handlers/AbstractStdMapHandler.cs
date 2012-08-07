@@ -48,11 +48,11 @@ namespace SharpMap.Demo.Wms.Handlers
 
         protected Map GetMap(HttpRequest request)
         {
-            string type = request.Params["MAP_TYPE"];
-            if (String.Equals(type, "OL", StringComparison.InvariantCultureIgnoreCase))
-                return ShapefileHelper.Spherical();
-            if (String.Equals(type, "PM", StringComparison.InvariantCultureIgnoreCase))
+            string type = request.Params["MAP_TYPE"];            
+            if (String.Equals(type, "DEF", StringComparison.InvariantCultureIgnoreCase))
                 return ShapefileHelper.Default();
+            if (String.Equals(type, "SPH", StringComparison.InvariantCultureIgnoreCase))
+                return ShapefileHelper.Spherical();
             if (String.Equals(type, "SQL", StringComparison.InvariantCultureIgnoreCase))
                 return DatabaseHelper.SqlServer();
             string format = String.Format("unsupported map type: '{0}'", type);

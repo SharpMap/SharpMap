@@ -17,7 +17,7 @@
         buffer: 10
     });
     tile.createUrl = function (bounds) {
-        var url = ['/json.ashx?MAP_TYPE=PM&BBOX=',
+        var url = ['/json.ashx?MAP_TYPE=DEF&BBOX=',
             bounds[1], ',',
             bounds[0], ',',
             bounds[3], ',',

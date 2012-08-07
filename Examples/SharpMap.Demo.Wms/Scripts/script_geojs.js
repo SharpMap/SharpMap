@@ -29,7 +29,7 @@ $(document).ready(function () {
             '?SERVICE=', options.wms,
             '&FORMAT=', options.format,
             '&CRS=', options.projection,
-            '&REQUEST=GETFEATUREINFO&VERSION=1.3.0&STYLES=&WIDTH=20&HEIGHT=20&I=10&J=10&MAP_TYPE=OL&LAYERS=poi,tiger_roads,poly_landmarks',
+            '&REQUEST=GETFEATUREINFO&VERSION=1.3.0&STYLES=&WIDTH=20&HEIGHT=20&I=10&J=10&MAP_TYPE=SPH&LAYERS=poi,tiger_roads,poly_landmarks',
             '&FEATURE_COUNT=0', // NOTE: ignored for json requests
             '&INFO_FORMAT=', options.format
         ].join('');

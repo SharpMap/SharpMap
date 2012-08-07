@@ -6,7 +6,7 @@
         var bounds, jsurl, options, layer;
         bounds = e.target.getBounds();
         jsurl = [
-            '/json.ashx?MAP_TYPE=PM&BBOX=',
+            '/json.ashx?MAP_TYPE=DEF&BBOX=',
             bounds._southWest.lat, ',',
             bounds._southWest.lng, ',',
             bounds._northEast.lat, ',',

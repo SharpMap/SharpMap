@@ -16,7 +16,7 @@ $(document).ready(function () {
         projection: 'EPSG:4326',
         format: 'image/png',
         wmsparams: {
-            'MAP_TYPE': 'PM'
+            'MAP_TYPE': 'DEF'
         }
     };
 
