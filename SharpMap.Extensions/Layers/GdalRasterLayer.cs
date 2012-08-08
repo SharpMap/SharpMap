@@ -22,6 +22,7 @@ using System.Collections.ObjectModel;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
+using GeoAPI;
 using GeoAPI.Geometries;
 using OSGeo.GDAL;
 #if !DotSpatialProjections
@@ -66,7 +67,15 @@ namespace SharpMap.Layers
         private IGeometryFactory _factory;
         protected GeoAPI.Geometries.IGeometryFactory Factory
         {
-            get { return _factory; }
+            get 
+            { 
+                if (_factory == null)
+                {
+                    //If no factory provided, creates default factory. Otherwise crash in Execution Query. FB.
+                    _factory = GeometryServiceProvider.Instance.CreateGeometryFactory();
+                }
+                return _factory; 
+            }
             set { _factory = value; }
         }
 

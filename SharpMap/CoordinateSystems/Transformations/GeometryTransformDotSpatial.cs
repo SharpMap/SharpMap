@@ -353,7 +353,7 @@ namespace DotSpatial.Projections
                 if (value == null)
                     throw new ArgumentNullException();
                 _target = value;
-                _targetFactory = GeometryServiceProvider.Instance.CreateGeometryFactory(_source.EpsgCode);
+                _targetFactory = GeometryServiceProvider.Instance.CreateGeometryFactory(_target.EpsgCode);
             }
         }
 
