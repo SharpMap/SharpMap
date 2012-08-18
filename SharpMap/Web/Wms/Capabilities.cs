@@ -99,7 +99,7 @@ namespace SharpMap.Web.Wms
             if (!String.IsNullOrEmpty(serviceDescription.Abstract)) //Add WMS abstract
                 ServiceNode.AppendChild(CreateElement("Abstract", serviceDescription.Abstract, capabilities, false,
                                                       wmsNamespaceURI));
-            if (serviceDescription.Keywords.Length > 0) //Add keywords
+            if (serviceDescription.Keywords != null && serviceDescription.Keywords.Length > 0) //Add keywords
             {
                 XmlElement KeywordListNode = capabilities.CreateElement("KeywordList", wmsNamespaceURI);
                 foreach (string keyword in serviceDescription.Keywords)
