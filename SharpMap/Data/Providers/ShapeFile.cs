@@ -1516,7 +1516,7 @@ namespace SharpMap.Data.Providers
                 // Read the geometry
                 fdr.Geometry = ReadGeometry(rowId);
 			    
-                return null;
+                return fdr;
 			}
             
 		    throw (new ApplicationException(

@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using NUnit.Framework;
 namespace UnitTests.Data.Providers
 {
 
@@ -106,6 +107,18 @@ namespace UnitTests.Data.Providers
                                          System.Globalization.NumberFormatInfo.CurrentInfo) + "ms.");
         }
 
+        [NUnit.Framework.Test]
+        public void TestGetFeature()
+        {
+            NUnit.Framework.Assert.IsTrue(System.IO.File.Exists(GetTestFile()),
+                                          "Specified shapefile is not present!");
+
+            var shp = new SharpMap.Data.Providers.ShapeFile(GetTestFile(), false, false);
+            shp.Open();
+            var feat = shp.GetFeature(0);
+            Assert.IsNotNull(feat);
+            shp.Close();
+        }
 
         [NUnit.Framework.Test]
         public void TestExecuteIntersectionQuery()
