@@ -106,6 +106,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\d3.style.css" />
     <Content Include="Content\Images\ajax-loader.gif" />
     <Content Include="Content\Images\ajax-loader.png" />
     <Content Include="Content\Images\icons-18-black.png" />
@@ -113,6 +114,7 @@
     <Content Include="Content\Images\icons-36-black.png" />
     <Content Include="Content\Images\icons-36-white.png" />
     <Content Include="Content\Images\layers.png" />
+    <Content Include="Content\Images\texture-noise.png" />
     <Content Include="Content\jquery.mobile-1.1.0-rc.1.min.css" />
     <Content Include="Content\leaflet.css" />
     <Content Include="Content\leaflet.ie.css" />
@@ -449,6 +451,8 @@
     <Content Include="lib\OpenLayers\Tile\UTFGrid.js" />
     <Content Include="lib\OpenLayers\Tween.js" />
     <Content Include="lib\OpenLayers\Util.js" />
+    <Content Include="Scripts\script_d3.js" />
+    <Content Include="Scripts\d3.v2.js" />
     <Content Include="Scripts\script_def.js" />
     <Content Include="Scripts\script_utfgrid.js" />
     <Content Include="Scripts\ll\buildings.js" />
@@ -491,6 +495,7 @@
     <Content Include="theme\geosilk\img\splitFeature.png" />
     <Content Include="theme\geosilk\img\transformFeature.png" />
     <Content Include="Views\Home\Buildings.aspx" />
+    <Content Include="Views\Home\D3.aspx" />
     <Content Include="Views\Home\Default.aspx" />
     <Content Include="Views\Home\UtfGrid.aspx" />
     <Content Include="Views\Home\Index.aspx" />

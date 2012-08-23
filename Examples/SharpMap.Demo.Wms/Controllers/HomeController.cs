@@ -89,6 +89,11 @@
         public ActionResult UtfGrid()
         {
             return this.View();
+        }
+
+        public ActionResult D3()
+        {
+            return this.View();
         } 
     }
 }

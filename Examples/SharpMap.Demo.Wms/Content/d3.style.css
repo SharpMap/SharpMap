@@ -1,0 +1,22 @@
+body {
+    background: url(Images/texture-noise.png);
+    overflow: hidden;
+    margin: 0;
+    font-size: 14px;
+    font-family: "Helvetica Neue", Helvetica;
+}
+
+svg {
+    width: 1280px;
+    height: 800px;
+    pointer-events: all;
+}
+
+circle {
+     fill: #dbe4f0;
+}
+
+path {
+    fill: #aaa;
+    stroke: #fff;
+}

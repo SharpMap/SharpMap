@@ -40,7 +40,16 @@ namespace SharpMap.Demo.Wms.Handlers
                     WmsException.ThrowWmsException("Invalid parameter BBOX");
                     return;
                 }
-                
+
+                string ls = context.Request.Params["LAYERS"];
+                if (!String.IsNullOrEmpty(ls))
+                {
+                    string[] layers = ls.Split(',');
+                    foreach (ILayer layer in map.Layers)
+                        if (!layers.Contains(layer.LayerName))
+                             layer.Enabled = false;
+                }
+
                 IEnumerable<GeoJSON> items = GetData(map, bbox);                
                 StringWriter writer = new StringWriter();
                 GeoJSONWriter.Write(items, writer);
@@ -65,13 +74,14 @@ namespace SharpMap.Demo.Wms.Handlers
                 throw new ArgumentNullException("map");
             
             // Only queryable data!
-            IQueryable<ICanQueryLayer> collection = map.Layers
+            IQueryable<ICanQueryLayer> coll = map.Layers
                 .AsQueryable()
+                .Where(l => l.Enabled) 
                 .OfType<ICanQueryLayer>()
-                .Where(l => l.Enabled && l.IsQueryEnabled);
+                .Where(l => l.IsQueryEnabled);
 
             List<GeoJSON> items = new List<GeoJSON>();
-            foreach (ICanQueryLayer layer in collection)
+            foreach (ICanQueryLayer layer in coll)
             {
                 IEnumerable<GeoJSON> data = QueryData(bbox, layer);
                 items.AddRange(data);
