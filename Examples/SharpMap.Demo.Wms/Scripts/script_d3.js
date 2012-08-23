@@ -1,12 +1,13 @@
 // code adapted from amazing d3 sample: http://mbostock.github.com/d3/talk/20111018/azimuthal.html
 $(document).ready(function () {
     var m0, o0, features,
+        // see: https://github.com/mbostock/d3/wiki/Geo-Projections
         projection = d3.geo.azimuthal()
             .scale(200000)
             .origin([-74.00, 40.70])
             .mode('orthographic')
             .translate([250, 650]),
-        circle = d3.geo.greatCircle()
+        circle = d3.geo.circle()
             .origin(projection.origin()),
         path = d3.geo.path()
             .projection(projection),
