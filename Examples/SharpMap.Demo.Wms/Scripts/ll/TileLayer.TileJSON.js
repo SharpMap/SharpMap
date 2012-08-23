@@ -9,11 +9,10 @@ L.TileLayer.TileJSON = L.TileLayer.Canvas.extend({
     initialize: function (options) {
         L.Util.setOptions(this, options);
 
-        this.drawTile = function (canvas, tilePoint, zoom) {
+        this.drawTile = function (canvas, tilePoint) {
             var ctx = {
                 canvas: canvas,
-                tile: tilePoint,
-                zoom: zoom
+                tile: tilePoint
             };
 
             if (this.options.debug) {
@@ -35,7 +34,7 @@ L.TileLayer.TileJSON = L.TileLayer.Canvas.extend({
         g.fillRect(max - 5, 0, 5, 5);
         g.fillRect(max - 5, max - 5, 5, 5);
         g.fillRect(max / 2 - 5, max / 2 - 5, 10, 10);
-        g.strokeText(ctx.tile.x + ' ' + ctx.tile.y + ' ' + ctx.zoom, max / 2 - 30, max / 2 - 10);
+        g.strokeText(ctx.tile.x + ' ' + ctx.tile.y, max / 2 - 30, max / 2 - 10);
     },
 
     _tilePoint: function (ctx, coords) {
@@ -190,8 +189,8 @@ L.TileLayer.TileJSON = L.TileLayer.Canvas.extend({
             sePoint = sePoint.add(diff);
         }
 
-        var nwCoord = this._map.unproject(nwPoint, ctx.zoom, true);
-        var seCoord = this._map.unproject(sePoint, ctx.zoom, true);
+        var nwCoord = this._map.unproject(nwPoint);
+        var seCoord = this._map.unproject(sePoint);
         var bounds = [nwCoord.lng, seCoord.lat, seCoord.lng, nwCoord.lat];
 
         var url = this.createUrl(bounds);

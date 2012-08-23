@@ -4,8 +4,8 @@
     var zoom = 10;
 
     var map = new L.Map('map');
-    var url = ['http://{s}tile.cloudmade.com', '/1a235b638b614b458deeb77c7dae4f80', '/997/256/{z}/{x}/{y}.png'].join('');
-    var cloudmade = new L.TileLayer(url, {
+    var cmurl = ['http://{s}tile.cloudmade.com', '/1a235b638b614b458deeb77c7dae4f80', '/997/256/{z}/{x}/{y}.png'].join('');
+    var cloudmade = new L.TileLayer(cmurl, {
          maxZoom: 18,
          subdomains: ['a.', 'b.', 'c.', '']
     });
