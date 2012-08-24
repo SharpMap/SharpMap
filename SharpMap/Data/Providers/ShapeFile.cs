@@ -1293,7 +1293,7 @@ namespace SharpMap.Data.Providers
 		                                       ? (RecordDeletedFunction) dbaseFile.RecordDeleted
 		                                       : NoRecordDeleted;
              */
-			if (_shapeType == ShapeType.Point)
+			if (_shapeType == ShapeType.Point || _shapeType == Providers.ShapeType.PointZ || _shapeType == Providers.ShapeType.PointM)
 			{
 				for (int a = 0; a < _featureCount; ++a)
 				{
