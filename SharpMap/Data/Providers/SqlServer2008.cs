@@ -117,7 +117,16 @@ namespace SharpMap.Data.Providers
         public SqlServer2008(string connectionStr, string tablename, string geometryColumnName, string oidColumnName, SqlServerSpatialObjectType spatialObjectType, bool useSpatialIndexExtentAsExtent)   
         {   
             ConnectionString = connectionStr;   
-            Table = tablename;   
+            Table = tablename;
+
+            if (Table.IndexOf(".") > 0)
+            {
+                string[] parts = Table.Split('.');
+                Table = parts[1];
+                TableSchema = parts[0];
+
+            }
+
             GeometryColumn = geometryColumnName;   
             ObjectIdColumn = oidColumnName;
             _spatialObjectType = spatialObjectType;
@@ -191,6 +200,16 @@ namespace SharpMap.Data.Providers
        {   
            get { return _table; }   
            set { _table = value; }   
+       }
+
+       private string _schema;   
+       /// <summary>   
+       /// Data table name   
+       /// </summary>   
+       public string TableSchema
+       {
+           get { return _schema; }
+           set { _schema = value; }
        }   
  
        private string _geometryColumn;   
