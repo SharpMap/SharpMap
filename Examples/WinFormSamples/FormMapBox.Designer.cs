@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Windows.Forms;
+using SharpMap.Data;
 using SharpMap.Rendering.Decoration;
 using SharpMap.Forms;
 using WinFormSamples.Samples;
@@ -175,6 +176,7 @@ namespace WinFormSamples
             this.mapBox1.TabIndex = 7;
             this.mapBox1.Text = "mapBox1";
             this.mapBox1.WheelZoomMagnitude = 2D;
+            this.mapBox1.MapQueried += mapBox1_OnMapQueried;
             // 
             // mapQueryToolStrip1
             // 
@@ -203,6 +205,7 @@ namespace WinFormSamples
             this.pgMap.Name = "pgMap";
             this.pgMap.Size = new System.Drawing.Size(218, 449);
             this.pgMap.TabIndex = 3;
+            this.pgMap.SelectedObject = mapBox1;
             // 
             // flowLayoutPanel1
             // 
@@ -433,7 +436,12 @@ namespace WinFormSamples
 
     }
 
-    #endregion
+        private void mapBox1_OnMapQueried(FeatureDataTable data)
+        {
+            dataGridView1.DataSource = data;
+        }
+
+        #endregion
 
     private System.Windows.Forms.SplitContainer scMain;
     private System.Windows.Forms.DataGridView dataGridView1;

@@ -1641,9 +1641,8 @@ namespace SharpMap.Forms
                                 }
                                 else
                                 {
-                                    bounding = new Envelope(
-                                        _map.ImageToWorld(new Point(e.X, e.Y))).Grow(_map.PixelSize*
-                                                                                                     _queryGrowFactor);
+                                    bounding = new Envelope(_map.ImageToWorld(new Point(e.X, e.Y)));
+                                    bounding = bounding.Grow(_map.PixelSize * _queryGrowFactor);
                                     isPoint = true;
                                 }
 

@@ -210,8 +210,8 @@ namespace GeoAPI.Geometries
         /// <param name="amount">Amount to grow in all directions</param>
         public static Envelope Grow(this Envelope self, double amount)
         {
-            return new Envelope(self.MinX - amount, self.MinY - amount, 
-                                self.MaxX + amount, self.MaxY + amount);
+            return new Envelope(self.MinX - amount, self.MaxX + amount,
+                                self.MinY - amount, self.MaxY + amount);
         }
 
         /// <summary>
@@ -222,8 +222,8 @@ namespace GeoAPI.Geometries
         /// <param name="amountInY">Amount to grow in vertical direction</param>
         public static Envelope Grow(this Envelope self, double amountInX, double amountInY)
         {
-            return new Envelope(self.MinX - amountInX, self.MinY - amountInY, 
-                                self.MaxX + amountInX, self.MaxY + amountInY);
+            return new Envelope(self.MinX - amountInX, self.MaxX + amountInX,
+                                self.MinY - amountInY, self.MaxY + amountInY);
         }
 
         /// <summary>

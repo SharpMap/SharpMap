@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Windows.Forms;
 
 namespace SharpMap.Forms.ToolBar
 {
@@ -72,6 +73,9 @@ namespace SharpMap.Forms.ToolBar
             // 
             this._queryLayerPicker.Name = "_queryLayerPicker";
             this._queryLayerPicker.Size = new System.Drawing.Size(121, 21);
+            this._queryLayerPicker.DropDownStyle = ComboBoxStyle.DropDownList;
+            this._queryLayerPicker.SelectedIndexChanged += OnSelectedIndexChanged;
+
             // 
             // MapQueryToolStrip
             // 
@@ -92,8 +96,10 @@ namespace SharpMap.Forms.ToolBar
             if (MapControl == null) return;
 
             OnClear(this, EventArgs.Empty);
-            MapControl.ActiveToolChanged -= OnMapControlActiveToolChanged;
-            MapControl.MapQueried -= OnMapQueried;
+            this.MapControl.ActiveToolChanged -= OnMapControlActiveToolChanged;
+            this.MapControl.MapQueried -= OnMapQueried;
+            this.MapControl.MapChanging -= OnMapChanging;
+            this.MapControl.MapChanged -= OnMapChanged;
             MapControl.Map.Layers.ListChanged -= OnListChanged;
         }
 
@@ -106,6 +112,8 @@ namespace SharpMap.Forms.ToolBar
                 Enabled =false;
                 return;
             }
+            this.MapControl.ActiveToolChanged += OnMapControlActiveToolChanged;
+            this.MapControl.MapQueried += OnMapQueried;
             this.MapControl.MapChanging += OnMapChanging;
             this.MapControl.MapChanged += OnMapChanged;
             MapControl.Map.Layers.ListChanged += OnListChanged;
@@ -149,7 +157,7 @@ namespace SharpMap.Forms.ToolBar
                     _queryGeometry.Checked = true;
                     _queryWindow.Checked = false;
                     break;
-                case MapBox.Tools.ZoomWindow:
+                case MapBox.Tools.QueryBox:
                     _queryGeometry.Checked = false;
                     _queryWindow.Checked = true;
                     break;
@@ -169,18 +177,27 @@ namespace SharpMap.Forms.ToolBar
             }
 
             _dictLayerNameToIndex.Clear();
+            var queryLayerIndex = MapControl.QueryLayerIndex;
             var i = 0;
+            var j = 0;
+            var k = -1;
             foreach(var lyr in MapControl.Map.Layers)
             {
                 if (lyr.LayerName == "QueriedFeatures") continue;
 
                 if (lyr is SharpMap.Layers.ICanQueryLayer)
                 {
+                    if (i == queryLayerIndex) k = j;
+
+                    j = j + 1;
                     _dictLayerNameToIndex.Add(lyr.LayerName, i);
                     _queryLayerPicker.Items.Add(lyr.LayerName);
                 }
                 i++;
+
             }
+            if (k > -1)
+            _queryLayerPicker.SelectedIndex = k;
         }
 
 
@@ -209,6 +226,8 @@ namespace SharpMap.Forms.ToolBar
             
             var map = MapControl.Map;
             map.Layers.Add(_layer);
+
+            MapControl.Refresh();
 
         }
 
