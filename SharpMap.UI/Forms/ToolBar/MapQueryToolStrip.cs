@@ -223,6 +223,7 @@ namespace SharpMap.Forms.ToolBar
 
             _geometryProvider = new SharpMap.Data.Providers.GeometryFeatureProvider(features);
             _layer = new SharpMap.Layers.VectorLayer("QueriedFeatures", _geometryProvider);
+            _layer.IsQueryEnabled = false;
             
             var map = MapControl.Map;
             map.Layers.Add(_layer);

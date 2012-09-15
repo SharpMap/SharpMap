@@ -177,6 +177,7 @@ namespace WinFormSamples
             this.mapBox1.Text = "mapBox1";
             this.mapBox1.WheelZoomMagnitude = 2D;
             this.mapBox1.MapQueried += mapBox1_OnMapQueried;
+            this.mapBox1.MapQueryStarted += new EventHandler(mapBox1_MapQueryStarted);
             // 
             // mapQueryToolStrip1
             // 
@@ -434,6 +435,11 @@ namespace WinFormSamples
             this.flowLayoutPanel1.PerformLayout();
             this.ResumeLayout(false);
 
+    }
+
+    void mapBox1_MapQueryStarted(object sender, EventArgs e)
+    {
+        dataGridView1.DataSource = null;
     }
 
         private void mapBox1_OnMapQueried(FeatureDataTable data)

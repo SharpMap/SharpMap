@@ -52,6 +52,7 @@ using Geometry = GeoAPI.Geometries.IGeometry;
 using BoundingBox = GeoAPI.Geometries.Envelope;
 using System.Threading;
 using Common.Logging;
+using System.Collections.Generic;
 
 namespace SharpMap.Forms
 {
@@ -167,6 +168,31 @@ namespace SharpMap.Forms
             /// </summary>
             None
         }
+
+        public enum MapQueryType
+        {
+            /// <summary>
+            /// Layer set in QueryLayerIndex is the only layers Queried  (Default)
+            /// </summary>
+            LayerByIndex,
+
+            /// <summary>
+            /// All layers are queried
+            /// </summary>
+            AllLayers,
+
+            /// <summary>
+            /// All visible layers are queried
+            /// </summary>
+            VisibleLayers,
+
+            /// <summary>
+            /// Visible layers are queried from Top and down until a layer with an intersecting feature is found 
+            /// </summary>
+            TopMostLayer
+        };
+
+
         #endregion
 
         #region Events
@@ -227,10 +253,23 @@ namespace SharpMap.Forms
         /// </summary>
         /// <param name="data"></param>
         public delegate void MapQueryHandler(Data.FeatureDataTable data);
+        
         /// <summary>
         /// Fired when the map is queried
+        /// 
+        /// Will be fired one time for each layer selected for query depending on QueryLayerIndex and QuerySettings
         /// </summary>
         public event MapQueryHandler MapQueried;
+
+        /// <summary>
+        /// Fired when Map is Queried before the first MapQueried event is fired for that query
+        /// </summary>
+        public event EventHandler MapQueryStarted;
+
+        /// <summary>
+        /// Fired when Map is Queried after the last MapQueried event is fired for that query
+        /// </summary>
+        public event EventHandler MapQueryDone;
 
 
         /// <summary>
@@ -324,6 +363,7 @@ namespace SharpMap.Forms
         private bool _focusOnHover = false;
         private bool _panOnClick = true;
         private float _queryGrowFactor = 5f;
+        private MapQueryType _mapQueryMode = MapQueryType.LayerByIndex;
 
         readonly IMessageFilter _mousePreviewFilter = null;
 
@@ -534,6 +574,15 @@ namespace SharpMap.Forms
         {
             get { return _queryLayerIndex; }
             set { _queryLayerIndex = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets the mapquerying mode
+        /// </summary>
+        public MapQueryType MapQueryMode
+        {
+            get { return _mapQueryMode; }
+            set { _mapQueryMode = value; }
         }
 
         /// <summary>
@@ -1624,49 +1673,80 @@ namespace SharpMap.Forms
                     }
                     else if (_activeTool == Tools.Query || _activeTool == Tools.QueryGeometry)
                     {
-                        if (_map.Layers.Count > _queryLayerIndex && _queryLayerIndex > -1)
+                        var mqs = MapQueryStarted;
+                        if (mqs != null)
+                            mqs(this, new EventArgs());
+
+
+                        IList<ILayer> layersToQuery = GetLayersToQuery();
+
+                        if (layersToQuery.Count > 0)
                         {
-                            var layer = _map.Layers[_queryLayerIndex] as ICanQueryLayer;
-                            if (layer != null)
+                            foreach (var layer in layersToQuery)
                             {
-                                BoundingBox bounding;
-                                bool isPoint = false;
-                                if (_dragging)
+                                //var layer = layers as ICanQueryLayer;
+                                if (layer != null && layer is ICanQueryLayer)
                                 {
-                                    GeoPoint lowerLeft;
-                                    GeoPoint upperRight;
-                                    GetBounds(_map.ImageToWorld(_dragStartPoint), _map.ImageToWorld(_dragEndPoint), out lowerLeft, out upperRight);
+                                    BoundingBox bounding;
+                                    bool isPoint = false;
+                                    if (_dragging)
+                                    {
+                                        GeoPoint lowerLeft;
+                                        GeoPoint upperRight;
+                                        GetBounds(_map.ImageToWorld(_dragStartPoint), _map.ImageToWorld(_dragEndPoint), out lowerLeft, out upperRight);
 
-                                    bounding = new BoundingBox(lowerLeft, upperRight);
-                                }
-                                else
-                                {
-                                    bounding = new Envelope(_map.ImageToWorld(new Point(e.X, e.Y)));
-                                    bounding = bounding.Grow(_map.PixelSize * _queryGrowFactor);
-                                    isPoint = true;
-                                }
+                                        bounding = new BoundingBox(lowerLeft, upperRight);
+                                    }
+                                    else
+                                    {
+                                        bounding = new Envelope(_map.ImageToWorld(new Point(e.X, e.Y)));
+                                        bounding = bounding.Grow(_map.PixelSize * _queryGrowFactor);
+                                        isPoint = true;
+                                    }
 
-                                Data.FeatureDataSet ds = new Data.FeatureDataSet();
-                                if (_activeTool == Tools.Query)
-                                    layer.ExecuteIntersectionQuery(bounding, ds);
-                                else
-                                {
-                                    IGeometry geom;
-                                    if (isPoint && QueryGrowFactor == 0)
-                                        geom = _map.Factory.CreatePoint(_map.ImageToWorld(new Point(e.X, e.Y)));
-                                    else    
-                                        geom = _map.Factory.ToGeometry(bounding);
-                                    layer.ExecuteIntersectionQuery(geom, ds);
-                                }
+                                    Data.FeatureDataSet ds = new Data.FeatureDataSet();
+                                    if (_activeTool == Tools.Query)
+                                        (layer as ICanQueryLayer).ExecuteIntersectionQuery(bounding, ds);
+                                    else
+                                    {
+                                        IGeometry geom;
+                                        if (isPoint && QueryGrowFactor == 0)
+                                            geom = _map.Factory.CreatePoint(_map.ImageToWorld(new Point(e.X, e.Y)));
+                                        else
+                                            geom = _map.Factory.ToGeometry(bounding);
+                                        (layer as ICanQueryLayer).ExecuteIntersectionQuery(geom, ds);
+                                    }
 
-                                if (ds.Tables.Count > 0)
-                                    if (MapQueried != null) MapQueried(ds.Tables[0]);
-                                    else if (MapQueried != null) MapQueried(new Data.FeatureDataTable());
+                                    if (ds.Tables.Count > 0)
+                                    {
+                                        if (MapQueried != null)
+                                        {
+                                            //Fire the event for all the resulting tables
+                                            bool foundData = false;
+                                            foreach (var dt in ds.Tables)
+                                            {
+                                                MapQueried(dt);
+                                                if (dt.Rows.Count > 0)
+                                                    foundData = true;
+                                            }
+
+                                            //If we found data and querymode is TopMostLayer we should abort now..
+                                            if (foundData && _mapQueryMode == MapQueryType.TopMostLayer)
+                                            {
+                                                break;
+                                            }
+                                        }
+                                    }
+                                    else if (MapQueried != null)
+                                    {
+                                        MapQueried(new Data.FeatureDataTable(new System.Data.DataTable(layer.LayerName)));
+                                    }
+                                }
                             }
-
                         }
-                        else
-                            MessageBox.Show("No active layer to query");
+                        var mqd = MapQueryDone;
+                        if (mqd != null)
+                            mqd(this, new EventArgs());
                     }
                     else if (_activeTool == Tools.ZoomWindow || (_shiftButtonDragRectangleZoom && (Control.ModifierKeys & Keys.Shift) != Keys.None))
                     {
@@ -1679,7 +1759,7 @@ namespace SharpMap.Forms
                             _dragEndPoint.Y = 0;
 
                             _map.ZoomToBox(new BoundingBox(lowerLeft, upperRight));
-                            
+
                             if (MapZoomChanged != null)
                                 MapZoomChanged(_map.Zoom);
 
@@ -1729,6 +1809,44 @@ namespace SharpMap.Forms
                     Refresh();
                 }
             }
+        }
+
+        private IList<ILayer> GetLayersToQuery()
+        {
+            var layersToQuery = new List<ILayer>();
+            if (_mapQueryMode == MapQueryType.LayerByIndex)
+            {
+                if (_map.Layers.Count > _queryLayerIndex && _queryLayerIndex > -1)
+                {
+                    var layer = _map.Layers[_queryLayerIndex] as ICanQueryLayer;
+                    if (layer != null)
+                    {
+                        layersToQuery.Add(layer);
+                    }
+                }
+            }
+            else if (_mapQueryMode == MapQueryType.VisibleLayers || _mapQueryMode == MapQueryType.TopMostLayer)
+            {
+                foreach (var layer in _map.Layers)
+                {
+                    if (layer is ICanQueryLayer && layer.Enabled && layer.MinVisible < _map.Zoom && layer.MaxVisible >= _map.Zoom && (layer as ICanQueryLayer).IsQueryEnabled)
+                        layersToQuery.Add(layer);
+                }
+
+                //Reverse so we start with topmost layer first
+                if (_mapQueryMode == MapQueryType.TopMostLayer)
+                    layersToQuery.Reverse();
+            }
+            else
+            {
+                foreach (var layer in _map.Layers)
+                {
+                    if (layer is ICanQueryLayer && (layer as ICanQueryLayer).IsQueryEnabled)
+                        layersToQuery.Add(layer);
+                }
+            }
+
+            return layersToQuery;
         }
 
         protected override void OnMouseDoubleClick(MouseEventArgs e)
