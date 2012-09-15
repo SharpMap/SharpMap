@@ -585,8 +585,6 @@ namespace SharpMap.Data.Providers
                         
                         using (var command = new SqlCommand(sql, conn))
                         {
-                            conn.Open();
-                            //Geometry geom = null;   
                             var bx = new Envelope();
                             using (var dr = command.ExecuteReader())
                             {
