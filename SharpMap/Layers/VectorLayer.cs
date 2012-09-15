@@ -564,7 +564,13 @@ namespace SharpMap.Layers
             lock (_dataSource)
             {
                 _dataSource.Open();
+                int tableCount = ds.Tables.Count;
                 _dataSource.ExecuteIntersectionQuery(box, ds);
+                if (ds.Tables.Count > tableCount)
+                {
+                    //We added a table, name it according to layer
+                    ds.Tables[ds.Tables.Count - 1].TableName = LayerName;
+                }
                 _dataSource.Close();
             }
         }
@@ -602,7 +608,13 @@ namespace SharpMap.Layers
             lock (_dataSource)
             {
                 _dataSource.Open();
+                int tableCount = ds.Tables.Count;
                 _dataSource.ExecuteIntersectionQuery(geometry, ds);
+                if (ds.Tables.Count > tableCount)
+                {
+                    //We added a table, name it according to layer
+                    ds.Tables[ds.Tables.Count - 1].TableName = LayerName;
+                }
                 _dataSource.Close();
             }
         }

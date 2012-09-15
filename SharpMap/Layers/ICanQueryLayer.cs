@@ -10,6 +10,8 @@ namespace SharpMap.Layers
     {
         /// <summary>
         /// Returns the data associated with all the geometries that are intersected by 'geom'
+        /// 
+        /// Note! The table added should be named according to the LayerName!
         /// </summary>
         /// <param name="box">Bounding box to intersect with</param>
         /// <param name="ds">FeatureDataSet to fill data into</param>
@@ -17,6 +19,8 @@ namespace SharpMap.Layers
 
         /// <summary>
         /// Returns the data associated with all the geometries that are intersected by 'geom'
+        /// 
+        /// Note! The table added should be named according to the LayerName!
         /// </summary>
         /// <param name="geometry">Geometry to intersect with</param>
         /// <param name="ds">FeatureDataSet to fill data into</param>
