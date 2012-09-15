@@ -36,6 +36,7 @@ namespace SharpMap.Forms
     /// The MapImage control adds basic functionality to a Windows Form, such as dynamic pan, zoom and data query.
     /// </remarks>
     [DesignTimeVisible(true)]
+    [Obsolete("Use MapBox instead, MapImage will be removed after 1.0 release")]
     public class MapImage : PictureBox
     {
         static ILog logger = LogManager.GetLogger(typeof(MapImage));
