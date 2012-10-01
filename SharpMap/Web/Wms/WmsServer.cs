@@ -50,6 +50,7 @@ namespace SharpMap.Web.Wms
 
         private static Encoding _featureInfoResponseEncoding = Encoding.UTF8;
 
+
         /// <summary>
         /// Set the characterset used in FeatureInfo responses
         /// 

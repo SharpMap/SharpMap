@@ -79,7 +79,7 @@ namespace SharpMap.Web.Wms
             RootNode.AppendChild(GenerateServiceNode(ref serviceDescription, capabilities));
 
             //Build Capability node
-            RootNode.AppendChild(GenerateCapabilityNode(map, capabilities));
+            RootNode.AppendChild(GenerateCapabilityNode(map, capabilities, serviceDescription.PublicAccessURL));
 
             capabilities.AppendChild(RootNode);
 
@@ -134,15 +134,24 @@ namespace SharpMap.Web.Wms
             return ServiceNode;
         }
 
-        private static XmlNode GenerateCapabilityNode(Map map, XmlDocument capabilities)
+        private static XmlNode GenerateCapabilityNode(Map map, XmlDocument capabilities, string publicWMSUrl)
         {
             string OnlineResource = "";
-            string port = HttpContext.Current.Request.Url.IsDefaultPort
-                              ? ""
-                              : ":" + HttpContext.Current.Request.Url.Port;
-            OnlineResource =
-                HttpContext.Current.Server.HtmlEncode("http://" + HttpContext.Current.Request.Url.Host + port +
-                                                      HttpContext.Current.Request.Url.AbsolutePath);
+
+            if (String.IsNullOrEmpty(publicWMSUrl))
+            {
+                string port = HttpContext.Current.Request.Url.IsDefaultPort
+                                  ? ""
+                                  : ":" + HttpContext.Current.Request.Url.Port;
+                OnlineResource =
+                    HttpContext.Current.Server.HtmlEncode("http://" + HttpContext.Current.Request.Url.Host + port +
+                                                          HttpContext.Current.Request.Url.AbsolutePath);
+            }
+            else
+            {
+                OnlineResource = publicWMSUrl;
+            }
+
             XmlNode CapabilityNode = capabilities.CreateNode(XmlNodeType.Element, "Capability", wmsNamespaceURI);
             XmlNode RequestNode = capabilities.CreateNode(XmlNodeType.Element, "Request", wmsNamespaceURI);
             XmlNode GetCapabilitiesNode = capabilities.CreateNode(XmlNodeType.Element, "GetCapabilities",
@@ -540,15 +549,31 @@ namespace SharpMap.Web.Wms
             public string Title;
 
             /// <summary>
+            /// Public url to access the servie in case service is hosted behind firewall
+            /// </summary>
+            public string PublicAccessURL;
+
+            /// <summary>
             /// Initializes a WmsServiceDescription object
             /// </summary>
             /// <param name="title">Mandatory Human-readable title for pick lists</param>
             /// <param name="onlineResource">Top-level web address of service or service provider.</param>
             public WmsServiceDescription(string title, string onlineResource)
+                : this(title,onlineResource,null)
+            {
+            }
+
+            /// <summary>
+            /// Initializes a WmsServiceDescription object
+            /// </summary>
+            /// <param name="title">Mandatory Human-readable title for pick lists</param>
+            /// <param name="onlineResource">Top-level web address of service or service provider.</param>
+            /// <param name="publicWMSAccessUrl">Public URL to use when accessing the service in case it is hosted behind a firewall</param>
+            public WmsServiceDescription(string title, string onlineResource, string publicWMSAccessUrl)
             {
                 Title = title;
                 OnlineResource = onlineResource;
-                Keywords = null;
+                Keywords = new string[0];
                 Abstract = "";
                 ContactInformation = new WmsContactInformation();
                 Fees = "";
@@ -556,6 +581,7 @@ namespace SharpMap.Web.Wms
                 LayerLimit = 0;
                 MaxWidth = 0;
                 MaxHeight = 0;
+                PublicAccessURL = publicWMSAccessUrl;
             }
         }
 
