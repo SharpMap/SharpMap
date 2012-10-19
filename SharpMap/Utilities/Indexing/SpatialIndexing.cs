@@ -103,7 +103,7 @@ namespace SharpMap.Utilities.SpatialIndexing
         {
             _depth = depth;
 
-            _box = objList[0].Box;
+            _box = new Envelope(objList[0].Box);
             for (var i = 1; i < objList.Count; i++)
                 _box.ExpandToInclude(objList[i].Box);
 
