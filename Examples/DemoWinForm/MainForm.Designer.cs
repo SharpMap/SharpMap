@@ -69,7 +69,7 @@ namespace DemoWinForm
             this.AddLayerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.RemoveLayerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
-            this.MainMapImage = new SharpMap.Forms.MapImage();
+            this.MainMapImage = new SharpMap.Forms.MapBox();
             this.FeaturesDataGridView = new System.Windows.Forms.DataGridView();
             this.MainToolStrip = new System.Windows.Forms.ToolStrip();
             this.NewToolStripButton = new System.Windows.Forms.ToolStripButton();
@@ -321,7 +321,7 @@ namespace DemoWinForm
             // 
             // MainMapImage
             // 
-            this.MainMapImage.ActiveTool = SharpMap.Forms.MapImage.Tools.None;
+            this.MainMapImage.ActiveTool = SharpMap.Forms.MapBox.Tools.None;
             this.MainMapImage.Cursor = System.Windows.Forms.Cursors.Cross;
             this.MainMapImage.Dock = System.Windows.Forms.DockStyle.Fill;
             this.MainMapImage.FineZoomFactor = 10D;
@@ -333,9 +333,9 @@ namespace DemoWinForm
             this.MainMapImage.TabIndex = 0;
             this.MainMapImage.TabStop = false;
             this.MainMapImage.WheelZoomMagnitude = 2D;
-            this.MainMapImage.ZoomOnDblClick = false;
+            //this.MainMapImage.ZoomOnDblClick = false;
             this.MainMapImage.ZoomToPointer = true;
-            this.MainMapImage.MouseMove += new SharpMap.Forms.MapImage.MouseEventHandler(this.MainMapImage_MouseMove);
+            this.MainMapImage.MouseMove += new SharpMap.Forms.MapBox.MouseEventHandler(this.MainMapImage_MouseMove);
             // 
             // FeaturesDataGridView
             // 
@@ -630,7 +630,7 @@ namespace DemoWinForm
 		private System.Windows.Forms.SplitContainer splitContainer1;
 		private System.Windows.Forms.SplitContainer splitContainer2;
 		private System.Windows.Forms.SplitContainer splitContainer4;
-		private SharpMap.Forms.MapImage MainMapImage;
+		private SharpMap.Forms.MapBox MainMapImage;
 		private System.Windows.Forms.ToolStrip MainToolStrip;
 		private System.Windows.Forms.ToolStripButton NewToolStripButton;
 		private System.Windows.Forms.ToolStripButton OpenToolStripButton;

@@ -1,10 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 
 namespace SharpMap.Forms
@@ -70,7 +66,7 @@ namespace SharpMap.Forms
             txtWkt.Text = _wktWriter.Write(_geometry);
         }
 
-        private NetTopologySuite.IO.WKTReader _wktReader = new NetTopologySuite.IO.WKTReader(
+        private readonly NetTopologySuite.IO.WKTReader _wktReader = new NetTopologySuite.IO.WKTReader(
             GeoAPI.GeometryServiceProvider.Instance.CreateGeometryFactory());
         
         

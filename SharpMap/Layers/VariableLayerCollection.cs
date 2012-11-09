@@ -1,8 +1,12 @@
 using System;
+using System.Collections.Generic;
 using System.Timers;
 
 namespace SharpMap.Layers
 {
+    /// <summary>
+    /// Types of layer collections
+    /// </summary>
     public enum LayerCollectionType
     {
         /// <summary>
@@ -79,6 +83,17 @@ namespace SharpMap.Layers
                 touchTest = true;
             }
         }
+
+        protected override void InsertItem(int index, ILayer layer)
+        {
+            if (layer == null) 
+                throw new ArgumentNullException("layer", "The passed argument is null or not an ILayer");
+
+            TestLayerPresent(_staticLayers, layer);
+            base.InsertItem(index, layer);
+        }
+
+        /*
         protected override void OnAddingNew(System.ComponentModel.AddingNewEventArgs e)
         {
             ILayer newLayer = (e.NewObject as ILayer);
@@ -88,13 +103,14 @@ namespace SharpMap.Layers
 
             base.OnAddingNew(e);
         }
+         */
 
 
-        private static void TestLayerPresent(LayerCollection layers, ILayer newLayer)
+        private static void TestLayerPresent(IEnumerable<ILayer> layers, ILayer newLayer)
         {
-            foreach (ILayer layer in layers)
+            foreach (var layer in layers)
             {
-                int comparison = String.Compare(layer.LayerName,
+                var comparison = String.Compare(layer.LayerName,
                                                 newLayer.LayerName, StringComparison.CurrentCultureIgnoreCase);
 
                 if (comparison == 0) throw new DuplicateLayerException(newLayer.LayerName);

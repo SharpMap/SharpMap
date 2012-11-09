@@ -33,7 +33,7 @@ namespace SharpMap.Web.Wcs
         private XmlNode _vendorSpecificCapabilities;
 
         /// <summary>
-        /// Exposes the capabilitie's VendorSpecificCapabilities as XmlNode object. External modules 
+        /// Exposes the capabilities' VendorSpecificCapabilities as XmlNode object. External modules 
         /// could use this to parse the vendor specific capabilities for their specific purpose.
         /// </summary>
         public XmlNode VendorSpecificCapabilities

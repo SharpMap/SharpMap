@@ -17,18 +17,17 @@
 
 using System.Reflection;
 using System.Runtime.InteropServices;
-using System.Web.UI;
 
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 
-[assembly: AssemblyTitle("SharpMap User Interface controls")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("SharpMap.UI Engine")]
+[assembly: AssemblyDescription("SharpMap User Interface controls")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("iter.dk")]
+[assembly: AssemblyCompany("SharpMap - Team")]
 [assembly: AssemblyProduct("SharpMap.UI Engine")]
-[assembly: AssemblyCopyright("Copyright © iter.dk 2006")]
+[assembly: AssemblyCopyright("Copyright © 2006 iter.dk\nCopyright © 2008-2012 SharpMap - Team")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -52,6 +51,5 @@ using System.Web.UI;
 // You can specify all the values or you can default the Revision and Build Numbers 
 // by using the '*' as shown below:
 
-[assembly: AssemblyVersion("0.9.*")]
-[assembly: AssemblyFileVersion("0.9.0.0")]
-[assembly: WebResource("SharpMap.Web.UI.Ajax.AjaxMap.js", "text/javascript")]
+[assembly: AssemblyVersion("1.0.*")]
+[assembly: AssemblyFileVersion("1.0.0.0")]

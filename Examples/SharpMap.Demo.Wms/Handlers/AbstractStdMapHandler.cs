@@ -8,7 +8,6 @@ namespace SharpMap.Demo.Wms.Handlers
     using NetTopologySuite;
 
     using SharpMap.Demo.Wms.Helpers;
-    using SharpMap.Web.Wms;
 
     public abstract class AbstractStdMapHandler : IHttpHandler
     {
@@ -31,9 +30,9 @@ namespace SharpMap.Demo.Wms.Handlers
             return uri.Query.Length <= 0 ? absoluteUri : absoluteUri.Replace(uri.Query, String.Empty);
         }
 
-        protected Capabilities.WmsServiceDescription GetDescription(string url) 
+        protected Web.Wms.Capabilities.WmsServiceDescription GetDescription(string url) 
         {
-            Capabilities.WmsServiceDescription description = new Capabilities.WmsServiceDescription("Acme Corp. Map Server", url);
+            var description = new Web.Wms.Capabilities.WmsServiceDescription("Acme Corp. Map Server", url);
             description.MaxWidth = 500;
             description.MaxHeight = 500;
             description.Abstract = "Map Server maintained by Acme Corporation. Contact: webmaster@wmt.acme.com. High-quality maps showing roadrunner nests and possible ambush locations.";

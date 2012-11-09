@@ -15,8 +15,8 @@ public class wms : IHttpHandler
         string url = (context.Request.Url.Query.Length > 0
                           ? context.Request.Url.AbsoluteUri.Replace(context.Request.Url.Query, "")
                           : context.Request.Url.AbsoluteUri);
-        Capabilities.WmsServiceDescription description =
-            new Capabilities.WmsServiceDescription("Acme Corp. Map Server", url);
+        WmsServiceDescription description =
+            new WmsServiceDescription("Acme Corp. Map Server", url);
 
         // The following service descriptions below are not strictly required by the WMS specification.
 

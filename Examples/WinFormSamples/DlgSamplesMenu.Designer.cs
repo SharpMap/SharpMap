@@ -36,8 +36,6 @@
             this.textBox3 = new System.Windows.Forms.TextBox();
             this.textBox4 = new System.Windows.Forms.TextBox();
             this.textBox5 = new System.Windows.Forms.TextBox();
-            this.textBox6 = new System.Windows.Forms.TextBox();
-            this.button3 = new System.Windows.Forms.Button();
             this.button4 = new System.Windows.Forms.Button();
             this.button5 = new System.Windows.Forms.Button();
             this.button6 = new System.Windows.Forms.Button();
@@ -56,22 +54,19 @@
             this.tableLayoutPanel1.Controls.Add(this.textBox3, 0, 1);
             this.tableLayoutPanel1.Controls.Add(this.textBox4, 0, 2);
             this.tableLayoutPanel1.Controls.Add(this.textBox5, 0, 3);
-            this.tableLayoutPanel1.Controls.Add(this.textBox6, 0, 5);
-            this.tableLayoutPanel1.Controls.Add(this.button3, 1, 5);
             this.tableLayoutPanel1.Controls.Add(this.button4, 1, 1);
             this.tableLayoutPanel1.Controls.Add(this.button5, 1, 2);
             this.tableLayoutPanel1.Controls.Add(this.button6, 1, 3);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Top;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(10, 10);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.RowCount = 6;
+            this.tableLayoutPanel1.RowCount = 5;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 50F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 50F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 50F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 50F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 50F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 50F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(264, 317);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(264, 251);
             this.tableLayoutPanel1.TabIndex = 0;
             // 
             // button2
@@ -139,25 +134,6 @@
             this.textBox5.TabIndex = 2;
             this.textBox5.Text = "Shows Shows how to save a set of images [MapBox]";
             // 
-            // textBox6
-            // 
-            this.textBox6.Location = new System.Drawing.Point(3, 253);
-            this.textBox6.Multiline = true;
-            this.textBox6.Name = "textBox6";
-            this.textBox6.Size = new System.Drawing.Size(178, 38);
-            this.textBox6.TabIndex = 1;
-            this.textBox6.Text = "Different kind of layers [MapImage - deprecated]";
-            // 
-            // button3
-            // 
-            this.button3.Location = new System.Drawing.Point(187, 253);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(74, 23);
-            this.button3.TabIndex = 0;
-            this.button3.Text = "Start...";
-            this.button3.UseVisualStyleBackColor = true;
-            this.button3.Click += new System.EventHandler(this.button3_Click);
-            // 
             // button4
             // 
             this.button4.Location = new System.Drawing.Point(187, 53);
@@ -192,7 +168,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(284, 337);
+            this.ClientSize = new System.Drawing.Size(284, 273);
             this.Controls.Add(this.tableLayoutPanel1);
             this.Name = "DlgSamplesMenu";
             this.Padding = new System.Windows.Forms.Padding(10);
@@ -214,8 +190,6 @@
         private System.Windows.Forms.TextBox textBox3;
         private System.Windows.Forms.TextBox textBox4;
         private System.Windows.Forms.TextBox textBox5;
-        private System.Windows.Forms.TextBox textBox6;
-        private System.Windows.Forms.Button button3;
         private System.Windows.Forms.Button button4;
         private System.Windows.Forms.Button button5;
         private System.Windows.Forms.Button button6;

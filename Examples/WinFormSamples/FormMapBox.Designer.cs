@@ -177,7 +177,7 @@ namespace WinFormSamples
             this.mapBox1.Text = "mapBox1";
             this.mapBox1.WheelZoomMagnitude = 2D;
             this.mapBox1.MapQueried += mapBox1_OnMapQueried;
-            this.mapBox1.MapQueryStarted += new EventHandler(mapBox1_MapQueryStarted);
+            this.mapBox1.MapQueryDone += new EventHandler(mapBox1_MapQueryStarted);
             // 
             // mapQueryToolStrip1
             // 
@@ -435,16 +435,19 @@ namespace WinFormSamples
             this.flowLayoutPanel1.PerformLayout();
             this.ResumeLayout(false);
 
-    }
+        }
 
-    void mapBox1_MapQueryStarted(object sender, EventArgs e)
-    {
-        dataGridView1.DataSource = null;
-    }
+        void mapBox1_MapQueryStarted(object sender, EventArgs e)
+        {
+            dataGridView1.DataSource = _queriedData;
+        }
 
+        private FeatureDataSet _queriedData;
         private void mapBox1_OnMapQueried(FeatureDataTable data)
         {
-            dataGridView1.DataSource = data;
+            if (_queriedData == null)
+                _queriedData = new FeatureDataSet();
+            _queriedData.Tables.Add(data);
         }
 
         #endregion
@@ -553,7 +556,7 @@ namespace WinFormSamples
             dataGridView1.DataSource = data as System.Data.DataSet;
         }
 
-        private void mapImage_ActiveToolChanged(MapImage.Tools tool)
+        private void mapImage_ActiveToolChanged(MapBox.Tools tool)
         {
             UpdatePropertyGrid();
         }

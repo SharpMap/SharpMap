@@ -40,9 +40,5 @@ namespace WinFormSamples
             new FormMovingObjectOverTileLayer().ShowDialog();
         }
 
-        private void button3_Click(object sender, EventArgs e)
-        {
-            new MainForm().ShowDialog();
-        }
     }
 }

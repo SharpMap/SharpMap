@@ -57,7 +57,7 @@ namespace SharpMap.Data.Providers
         private string _table;
         private readonly double _postGisVersion;
         private readonly bool _supportSTIntersects;
-        private string _prefixFunction = "";
+        private readonly string _prefixFunction = "";
 
         /// <summary>
         /// Initializes a new connection to PostGIS

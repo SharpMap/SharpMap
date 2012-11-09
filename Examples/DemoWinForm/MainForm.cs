@@ -261,14 +261,14 @@ namespace DemoWinForm
             MainMapImage.Refresh();
         }
 
-        private void changeMode(MapImage.Tools tool)
+        private void changeMode(MapBox.Tools tool)
         {
             MainMapImage.ActiveTool = tool;
 
-            ZoomInModeToolStripButton.Checked = (tool == MapImage.Tools.ZoomIn);
-            ZoomOutModeToolStripButton.Checked = (tool == MapImage.Tools.ZoomOut);
-            PanToolStripButton.Checked = (tool == MapImage.Tools.Pan);
-            QueryModeToolStripButton.Checked = (tool == MapImage.Tools.Query);
+            ZoomInModeToolStripButton.Checked = (tool == MapBox.Tools.ZoomIn);
+            ZoomOutModeToolStripButton.Checked = (tool == MapBox.Tools.ZoomOut);
+            PanToolStripButton.Checked = (tool == MapBox.Tools.Pan);
+            QueryModeToolStripButton.Checked = (tool == MapBox.Tools.Query);
         }
 
         private object getLayerTypeIcon(Type type)
@@ -360,22 +360,22 @@ namespace DemoWinForm
 
         private void PanToolStripButton_Click(object sender, EventArgs e)
         {
-            BeginInvoke((MethodInvoker) delegate { changeMode(MapImage.Tools.Pan); });
+            BeginInvoke((MethodInvoker) delegate { changeMode(MapBox.Tools.Pan); });
         }
 
         private void QueryModeToolStripButton_Click(object sender, EventArgs e)
         {
-            BeginInvoke((MethodInvoker) delegate { changeMode(MapImage.Tools.Query); });
+            BeginInvoke((MethodInvoker)delegate { changeMode(MapBox.Tools.Query); });
         }
 
         private void ZoomInModeToolStripButton_Click(object sender, EventArgs e)
         {
-            BeginInvoke((MethodInvoker) delegate { changeMode(MapImage.Tools.ZoomIn); });
+            BeginInvoke((MethodInvoker)delegate { changeMode(MapBox.Tools.ZoomIn); });
         }
 
         private void ZoomOutModeToolStripButton_Click(object sender, EventArgs e)
         {
-            BeginInvoke((MethodInvoker) delegate { changeMode(MapImage.Tools.ZoomOut); });
+            BeginInvoke((MethodInvoker)delegate { changeMode(MapBox.Tools.ZoomOut); });
         }
 
         private void MoveUpToolStripMenuItem_Click(object sender, EventArgs e)

@@ -10,16 +10,20 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>SharpMap</RootNamespace>
     <AssemblyName>SharpMap</AssemblyName>
-    <SccProjectName>SAK</SccProjectName>
-    <SccLocalPath>SAK</SccLocalPath>
-    <SccAuxPath>SAK</SccAuxPath>
-    <SccProvider>SAK</SccProvider>
+    <SccProjectName>
+    </SccProjectName>
+    <SccLocalPath>
+    </SccLocalPath>
+    <SccAuxPath>
+    </SccAuxPath>
+    <SccProvider>
+    </SccProvider>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
     <OldToolsVersion>3.5</OldToolsVersion>
     <UpgradeBackupLocation>
     </UpgradeBackupLocation>
-    <TargetFrameworkProfile />
+    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -27,7 +31,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;UseMapBox</DefineConstants>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <UseVSHostingProcess>true</UseVSHostingProcess>
@@ -86,9 +90,9 @@
     <Reference Include="NetTopologySuite">
       <HintPath>..\packages\NetTopologySuite.1.12.0\lib\net35\NetTopologySuite.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=3.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+    <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\ExternalReferences\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\packages\Newtonsoft.Json.4.5.9\lib\net40\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="PowerCollections">
       <HintPath>..\packages\NetTopologySuite.1.12.0\lib\net35\PowerCollections.dll</HintPath>
@@ -100,7 +104,6 @@
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
-    <Reference Include="System.Web" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
@@ -236,23 +239,19 @@
     <Compile Include="Utilities\Wfs\XPathQueryManager.cs" />
     <Compile Include="Utilities\Wfs\XPathQueryManager_CompiledExpressionsDecorator.cs" />
     <Compile Include="Utilities\Wfs\XPathQueryManager_DecoratorBase.cs" />
-    <Compile Include="Web\Cache.cs" />
-    <Compile Include="Web\HttpHandler.cs" />
     <Compile Include="Web\IClient.cs" />
     <Compile Include="Web\Wcs\Capabilities.cs" />
     <Compile Include="Web\Wcs\Client.cs" />
     <Compile Include="Web\WebUtilities.cs" />
     <Compile Include="Web\Wfs\Capabilities.cs" />
     <Compile Include="Web\Wfs\Client.cs" />
-    <Compile Include="Web\Wms\Capabilities.cs" />
     <Compile Include="Web\Wms\Client.cs" />
     <Compile Include="Web\Wms\SpatialReferencedBoundingBox.cs" />
     <Compile Include="Web\Wms\Tiling\ITileCache.cs" />
     <Compile Include="Web\Wms\Tiling\TileCacheFileStorage.cs" />
     <Compile Include="Web\Wms\Tiling\TileExtents.cs" />
     <Compile Include="Web\Wms\Tiling\TileSet.cs" />
-    <Compile Include="Web\Wms\WmsException.cs" />
-    <Compile Include="Web\Wms\WmsServer.cs" />
+    <Compile Include="Web\Wms\Capabilities.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="COPYING.txt" />

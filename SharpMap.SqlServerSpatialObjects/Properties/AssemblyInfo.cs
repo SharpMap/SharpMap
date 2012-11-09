@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("SharpMap.SqlServerSpatialObjects")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("SharpMap SqlServerSpatialObjects")]
+[assembly: AssemblyDescription("SharpMap components for interaction with SqlServer 2008 spatial objects")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("SharpMap.SqlServerSpatialObjects")]
-[assembly: AssemblyCopyright("Copyright ©  2010")]
+[assembly: AssemblyCompany("SharpMap - Team")]
+[assembly: AssemblyProduct("SharpMap SqlServerSpatialObjects")]
+[assembly: AssemblyCopyright("Copyright © 2010 SharpMap - Team")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

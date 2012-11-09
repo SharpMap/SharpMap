@@ -38,8 +38,8 @@ namespace UnitTests.Data.Providers
         [NUnit.Framework.Test]
         public void TestReadPointZShapeFile()
         {
-            string file = Path.Combine(GetPathToTestDataDir(), "SPATIAL_F_SKARVMUFF.shp");
-            SharpMap.Data.Providers.ShapeFile sh = new SharpMap.Data.Providers.ShapeFile(file, true);
+            var file = Path.Combine(GetPathToTestDataDir(), "SPATIAL_F_SKARVMUFF.shp");
+            var sh = new SharpMap.Data.Providers.ShapeFile(file, true);
             var fc = sh.GetFeatureCount();
             Assert.AreEqual(4342, fc);
 

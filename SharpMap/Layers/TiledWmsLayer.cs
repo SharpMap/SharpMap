@@ -26,8 +26,6 @@ using System.Drawing.Imaging;
 using System.IO;
 using System.Net;
 using System.Text;
-using System.Web;
-using System.Web.Caching;
 using GeoAPI.Geometries;
 using SharpMap.Rendering.Exceptions;
 using SharpMap.Utilities;
@@ -126,16 +124,17 @@ namespace SharpMap.Layers
             LayerName = layername;
             _ContinueOnError = true;
 
-            if (HttpContext.Current != null && HttpContext.Current.Cache["SharpMap_WmsClient_" + url] != null)
+            if (!Web.HttpCacheUtility.TryGetValue("SharpMap_WmsClient_" + url, out _WmsClient))
             {
-                _WmsClient = (Client) HttpContext.Current.Cache["SharpMap_WmsClient_" + url];
-            }
-            else
-            {
-                _WmsClient = new Client(url, _Proxy);
-                if (HttpContext.Current != null)
-                    HttpContext.Current.Cache.Insert("SharpMap_WmsClient_" + url, _WmsClient, null,
-                                                     Cache.NoAbsoluteExpiration, cachetime);
+                if (logger.IsDebugEnabled)
+                    logger.Debug("Creating new client for url " + url);
+                _WmsClient = new Client(url, _Proxy, _Credentials);
+
+                if (!Web.HttpCacheUtility.TryAddValue("SharpMap_WmsClient_" + url, _WmsClient))
+                {
+                    if (logger.IsDebugEnabled)
+                        logger.Debug("Adding client to Cache for url " + url + " failed");
+                }
             }
             _TileSets = TileSet.ParseVendorSpecificCapabilitiesNode(_WmsClient.VendorSpecificCapabilities);
         }

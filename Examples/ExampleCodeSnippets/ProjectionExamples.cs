@@ -28,7 +28,7 @@ namespace ExampleCodeSnippets
             System.Diagnostics.Debug.Assert(ct != null);
         }
 #else
-        [NUnit.Framework.Test]
+        [NUnit.Framework.Test, NUnit.Framework.ExpectedException("DotSpatial.Projections.ProjectionException")]
         public void TestConversionDSProjection()
         {
             var pi1 = DotSpatial.Projections.ProjectionInfo.FromEsriString(Osgb36);

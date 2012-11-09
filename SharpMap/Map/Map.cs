@@ -17,6 +17,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Globalization;
@@ -41,7 +42,7 @@ namespace SharpMap
     /// </example>
     public class Map : IDisposable
     {
-        ILog logger = LogManager.GetLogger(typeof(Map));
+        readonly ILog _logger = LogManager.GetLogger(typeof(Map));
 
         /// <summary>
         /// Used for converting numbers to/from strings
@@ -51,7 +52,7 @@ namespace SharpMap
         /// <summary>
         /// Specifies wether to trigger a dispose on all layers (and their datasources) contained in this map when the map-object is disposed.
         /// The default behaviour is true unless the map is a result of a Map.Clone() operation in which case the value is false
-        /// 
+        /// <para/>
         /// If you reuse your datasources or layers between many map-objects you should set this property to false in order for them to keep existing after a map.dispose()
         /// </summary>
         public bool DisposeLayersOnDispose = true;
@@ -77,10 +78,10 @@ namespace SharpMap
         {
             Factory = new GeometryFactory();
             Size = size;
-            _Layers = new LayerCollection();
+            _layers = new LayerCollection();
             _backgroundLayers = new LayerCollection();
-            _backgroundLayers.ListChanged += _Layers_ListChanged;
-            _variableLayers = new VariableLayerCollection(_Layers);
+            _backgroundLayers.ListChanged += HandleLayersCollectionChanged;
+            _variableLayers = new VariableLayerCollection(_layers);
             BackColor = Color.Transparent;
             _MaximumZoom = double.MaxValue;
             _MinimumZoom = 0;
@@ -90,8 +91,8 @@ namespace SharpMap
             _Zoom = 1;
             _PixelAspectRatio = 1.0;
 
-            if (logger.IsDebugEnabled)
-                logger.DebugFormat("Map initialized with size {0},{1}", size.Width, size.Height);
+            if (_logger.IsDebugEnabled)
+                _logger.DebugFormat("Map initialized with size {0},{1}", size.Width, size.Height);
         }
 
         /// <summary>
@@ -99,15 +100,17 @@ namespace SharpMap
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void _Layers_ListChanged(object sender, System.ComponentModel.ListChangedEventArgs e)
+        private void HandleLayersCollectionChanged(object sender, System.ComponentModel.ListChangedEventArgs e)
         {
+            if (sender == _backgroundLayers)
             if (e.ListChangedType == System.ComponentModel.ListChangedType.ItemAdded)
             {
 
-                ILayer l = _backgroundLayers[e.NewIndex];
-                if (l is ITileAsyncLayer)
+                var l = _backgroundLayers[e.NewIndex];
+                var tileAsyncLayer   = l as ITileAsyncLayer;
+                if (tileAsyncLayer != null)
                 {
-                    ((ITileAsyncLayer)l).MapNewTileAvaliable += MapNewTileAvaliableHandler;
+                    tileAsyncLayer.MapNewTileAvaliable += MapNewTileAvaliableHandler;
                 }
             }
         }
@@ -374,10 +377,10 @@ namespace SharpMap
                 }
             }
 
-            if (_Layers != null && _Layers.Count > 0)
+            if (_layers != null && _layers.Count > 0)
             {
-                layerList = new ILayer[_Layers.Count];
-                _Layers.CopyTo(layerList, 0);
+                layerList = new ILayer[_layers.Count];
+                _layers.CopyTo(layerList, 0);
 
                 //int srid = (Layers.Count > 0 ? Layers[0].SRID : -1); //Get the SRID of the first layer
                 foreach (ILayer layer in layerList)
@@ -759,7 +762,7 @@ namespace SharpMap
 
         private Color _BackgroundColor;
         private Point _Center;
-        private readonly LayerCollection _Layers;
+        private readonly LayerCollection _layers;
         private readonly LayerCollection _backgroundLayers;
         private readonly VariableLayerCollection _variableLayers;
         private Matrix _MapTransform;
@@ -836,7 +839,7 @@ namespace SharpMap
         /// </summary>
         public LayerCollection Layers
         {
-            get { return _Layers; }
+            get { return _layers; }
         }
 
         /// <summary>

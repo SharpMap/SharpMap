@@ -21,8 +21,6 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Text;
-using System.Web;
-using System.Web.Caching;
 #if !DotSpatialProjections
 using ProjNet.Converters.WellKnownText;
 using ProjNet.CoordinateSystems;
@@ -1165,7 +1163,7 @@ namespace SharpMap.Data.Providers
 
             sw.Stop();
             if (logger.IsDebugEnabled)
-                logger.DebugFormat("Linear creation of QuadTree took {0}ms", sw.ElapsedMilliseconds);
+                logger.DebugFormat("Recursive creation of QuadTree took {0}ms", sw.ElapsedMilliseconds);
 
             if (_fileBasedIndexWanted && !String.IsNullOrEmpty(filename))
                 root.SaveIndex(filename + ".sidx");
@@ -1219,7 +1217,21 @@ namespace SharpMap.Data.Providers
                 
                 // Is this a web application? If so lets store the index in the cache so we don't
 				// need to rebuild it for each request
-				if (HttpContext.Current != null)
+                if (Web.HttpCacheUtility.IsWebContext)
+                {
+                    if (!Web.HttpCacheUtility.TryGetValue(_filename, out _tree))
+                    {
+                        if (!loadFromFile)
+                            _tree = createSpatialIndex(_filename);
+                        else
+                            _tree = CreateSpatialIndexFromFile(_filename);
+                        //Store the tree in the web cache
+                        //TODO: Remove this when connection pooling is implemented
+                        Web.HttpCacheUtility.TryAddValue(_filename, _tree, TimeSpan.FromDays(1));
+                    }
+                }
+				/*
+                if (HttpContext.Current != null)
 				{
 					//Check if the tree exists in the cache
 					if (HttpContext.Current.Cache[_filename] != null)
@@ -1236,6 +1248,7 @@ namespace SharpMap.Data.Providers
 														 TimeSpan.FromDays(1));
 					}
 				}
+                 */
 				else if (!loadFromFile)
 					_tree = createSpatialIndex(_filename);
 				else
@@ -1267,9 +1280,16 @@ namespace SharpMap.Data.Providers
                         break;
 			    }
 			}
+
+            /*
 			if (HttpContext.Current != null)
 				//TODO: Remove this when connection pooling is implemented:
 				HttpContext.Current.Cache.Insert(_filename, _tree, null, Cache.NoAbsoluteExpiration, TimeSpan.FromDays(1));
+             */
+            if (Web.HttpCacheUtility.IsWebContext)
+            {
+                Web.HttpCacheUtility.TryAddValue(_filename, _tree, TimeSpan.FromDays(1));
+            }
 		}
 
         /*

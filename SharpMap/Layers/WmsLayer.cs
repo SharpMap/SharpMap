@@ -24,8 +24,6 @@ using System.Drawing.Imaging;
 using System.IO;
 using System.Net;
 using System.Text;
-using System.Web;
-using System.Web.Caching;
 using GeoAPI.Geometries;
 using SharpMap.Rendering.Exceptions;
 using SharpMap.Web.Wms;
@@ -65,6 +63,7 @@ namespace SharpMap.Layers
     {
 
         private static readonly ILog logger = LogManager.GetLogger(typeof(WmsLayer));
+
 
         private Boolean _ContinueOnError;
         private ICredentials _Credentials;
@@ -141,6 +140,25 @@ namespace SharpMap.Layers
             LayerName = layername;
             _ContinueOnError = true;
             _Credentials = credentials;
+
+            if (!Web.HttpCacheUtility.TryGetValue("SharpMap_WmsClient_" + url, out wmsClient))
+            {
+                if (logger.IsDebugEnabled)
+                    logger.Debug("Creating new client for url " + url);
+                wmsClient = new Client(url, _Proxy, _Credentials);
+
+                if (!Web.HttpCacheUtility.TryAddValue("SharpMap_WmsClient_" + url, wmsClient))
+                {
+                    if (logger.IsDebugEnabled)
+                        logger.Debug("Adding client to Cache for url " + url + " failed");
+                }
+            }
+            else
+            {
+                if (logger.IsDebugEnabled)
+                    logger.Debug("Created client from Cache for url " + url);
+            }
+            /*
             if (HttpContext.Current != null && HttpContext.Current.Cache["SharpMap_WmsClient_" + url] != null)
             {
                 if (logger.IsDebugEnabled)
@@ -157,6 +175,7 @@ namespace SharpMap.Layers
                     HttpContext.Current.Cache.Insert("SharpMap_WmsClient_" + url, wmsClient, null,
                                                      Cache.NoAbsoluteExpiration, cachetime);
             }
+             */
             //Set default mimetype - We prefer compressed formats
             if (OutputFormats.Contains("image/jpeg")) _MimeType = "image/jpeg";
             else if (OutputFormats.Contains("image/png")) _MimeType = "image/png";

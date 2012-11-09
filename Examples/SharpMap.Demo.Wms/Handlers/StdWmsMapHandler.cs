@@ -12,10 +12,10 @@
         {
             try
             {
-                HttpRequest request = context.Request;
-                string url = this.GetFixedUrl(request);
-                Capabilities.WmsServiceDescription description = this.GetDescription(url);
-                Map map = this.GetMap(request);
+                var request = context.Request;
+                var url = this.GetFixedUrl(request);
+                var description = this.GetDescription(url);
+                var map = this.GetMap(request);
                 WmsServer.ParseQueryString(map, description, 10, null);
             }
             catch (Exception ex)
