@@ -28,7 +28,6 @@ using BoundingBox = GeoAPI.Geometries.Envelope;
 using Geometry = GeoAPI.Geometries.IGeometry;
 using Common.Logging;
 using System.Data.SQLite;
-using System.Threading.Tasks;
 
 namespace SharpMap.Data.Providers
 {
