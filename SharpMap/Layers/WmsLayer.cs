@@ -660,7 +660,7 @@ namespace SharpMap.Layers
                                     logger.Error("Error reading from WMS-server..", ee);
                                     throw;
                                 }
-                                
+
                             }
                             while (moreToRead);
 
@@ -671,7 +671,7 @@ namespace SharpMap.Layers
                             ms.Seek(0, SeekOrigin.Begin);
                             img = Image.FromStream(ms);
                         }
-                      
+
 
                         if (logger.IsDebugEnabled)
                             logger.Debug("Image read.. Drawing");
@@ -681,7 +681,7 @@ namespace SharpMap.Layers
                                         img.Width, img.Height, GraphicsUnit.Pixel, ImageAttributes);
                         else
                             g.DrawImageUnscaled(img, 0, 0, map.Size.Width, map.Size.Height);
-                        
+
                         if (img != null)
                             img.Dispose();
 
@@ -758,7 +758,12 @@ namespace SharpMap.Layers
             return strReq.ToString();
         }
 
-        private Client.WmsOnlineResource GetPreferredMethod()
+        /// <summary>
+        /// Returns the preferred URL to use when communicating with the wms-server
+        /// Favors GET-requests over POST-requests
+        /// </summary>
+        /// <returns>Instance of Client.WmsOnlineResource</returns>
+        protected Client.WmsOnlineResource GetPreferredMethod()
         {
             //We prefer get. Seek for supported 'get' method
             for (int i = 0; i < wmsClient.GetMapRequests.Length; i++)
