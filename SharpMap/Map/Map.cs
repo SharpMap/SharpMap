@@ -1036,7 +1036,11 @@ namespace SharpMap
                 if (bbox == null)
                     bbox = bb;
                 else
-                    bbox.ExpandToInclude(bb);
+                {
+                    //FB: bb can be null on empty layers (e.g. temporary working layers with no data objects)
+                    if (bb != null)
+                        bbox.ExpandToInclude(bb);
+                }
 
             }
         }

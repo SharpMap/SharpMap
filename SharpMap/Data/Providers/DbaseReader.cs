@@ -727,7 +727,7 @@ namespace SharpMap.Data.Providers
                 case TypeCode.Int32:
                     return typeof (int);
                 case TypeCode.Int64:
-                    return typeof (int);
+                    return typeof (long);
                 case TypeCode.Single:
                     return typeof (float);
                 case TypeCode.Double:

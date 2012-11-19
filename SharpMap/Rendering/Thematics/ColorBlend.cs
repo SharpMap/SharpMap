@@ -226,16 +226,9 @@ namespace SharpMap.Rendering.Thematics
         {
             get
             {
-                ColorBlend cb = new ColorBlend();
-                cb._Positions = new float[7];
-                for (int i = 1; i < 7; i++)
-                    cb.Positions[i] = i/6f;
-                cb.Colors = new[]
-                                {
-                                    Color.Red, Color.Orange, Color.Yellow, Color.Green, Color.Blue, Color.Indigo,
-                                    Color.Violet
-                                };
-                return cb;
+                return new ColorBlend(
+                    new[] { Color.Red, Color.Orange, Color.Yellow, Color.Green, Color.Blue, Color.Indigo, Color.Violet },
+                    new[] { 0f, 0.1667f, 0.3333f, 0.5f, 0.6667f, 0.8333f, 1 });
             }
         }
 
