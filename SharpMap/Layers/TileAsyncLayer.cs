@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Threading;
@@ -14,6 +13,9 @@ using Common.Logging;
 
 namespace SharpMap.Layers
 {
+    /// <summary>
+    /// Tile layer class that gets and serves tiles asynchonously
+    /// </summary>
     public class TileAsyncLayer : TileLayer, ITileAsyncLayer
     {
         static readonly ILog Logger = LogManager.GetLogger(typeof(TileAsyncLayer));
@@ -21,16 +23,36 @@ namespace SharpMap.Layers
         private readonly List<BackgroundWorker> _threadList = new List<BackgroundWorker>();
         private readonly Random _r = new Random(DateTime.Now.Second);
         
+        /// <summary>
+        /// Creates an instance of this class
+        /// </summary>
+        /// <param name="tileSource">The tile source</param>
+        /// <param name="layerName">The layers name</param>
         public TileAsyncLayer(ITileSource tileSource, string layerName)
             : base(tileSource, layerName, new Color(), true, null)
         {
         }
 
+        /// <summary>
+        /// Creates an instance of this class
+        /// </summary>
+        /// <param name="tileSource">The tile source</param>
+        /// <param name="layerName">The layers name</param>
+        /// <param name="transparentColor">The color that should be treated as <see cref="Color.Transparent"/></param>
+        /// <param name="showErrorInTile">Value indicating that an error tile should be generated for non-existant tiles</param>
         public TileAsyncLayer(ITileSource tileSource, string layerName, Color transparentColor, bool showErrorInTile)
             : base(tileSource, layerName, transparentColor, showErrorInTile, null)
         {
         }
 
+        /// <summary>
+        /// Creates an instance of this class
+        /// </summary>
+        /// <param name="tileSource">The tile source</param>
+        /// <param name="layerName">The layers name</param>
+        /// <param name="transparentColor">The color that should be treated as <see cref="Color.Transparent"/></param>
+        /// <param name="showErrorInTile">Value indicating that an error tile should be generated for non-existant tiles</param>
+        /// <param name="fileCacheDir">The directories where tiles should be stored</param>
         public TileAsyncLayer(ITileSource tileSource, string layerName, Color transparentColor, bool showErrorInTile, string fileCacheDir)
             : base(tileSource, layerName, transparentColor, showErrorInTile, fileCacheDir)
         {
@@ -39,10 +61,13 @@ namespace SharpMap.Layers
         /// <summary>
         /// EventHandler for event fired when a new Tile is available for rendering
         /// </summary>
-        /// <param name="ts"></param>
-        /// <param name="bm"></param>
         public event MapNewTileAvaliabledHandler MapNewTileAvaliable;
 
+        /// <summary>
+        /// Renders the layer
+        /// </summary>
+        /// <param name="graphics">Graphics object reference</param>
+        /// <param name="map">Map which is rendered</param>
         public override void Render(Graphics graphics, Map map)
         {
 
@@ -87,9 +112,9 @@ namespace SharpMap.Layers
                 }
                 else
                 {
-                    BackgroundWorker b = new BackgroundWorker();
+                    var b = new BackgroundWorker();
                     b.WorkerSupportsCancellation = true;
-                    b.DoWork += new DoWorkEventHandler(b_DoWork);
+                    b.DoWork += DoWorkBackground;
                     b.RunWorkerAsync(new object[] { _source.Provider, info, _bitmaps, true });
                     //Thread t = new Thread(new ParameterizedThreadStart(GetTileOnThread));
                     //t.Name = info.ToString();
@@ -104,20 +129,18 @@ namespace SharpMap.Layers
 
         }
 
-        void b_DoWork(object sender, DoWorkEventArgs e)
+        private void DoWorkBackground(object sender, DoWorkEventArgs e)
         {
-            this.GetTileOnThread((BackgroundWorker) sender, e.Argument);
-            
+            GetTileOnThread((BackgroundWorker) sender, e.Argument);
         }
 
-
-        static void HandleMapNewTileAvaliable(Map _map, Graphics g, Envelope box, Bitmap bm, int sourceWidth, int sourceHeight, ImageAttributes imageAttributes)
+        static void HandleMapNewTileAvaliable(Map map, Graphics g, Envelope box, Bitmap bm, int sourceWidth, int sourceHeight, ImageAttributes imageAttributes)
         {
 
             try
             {
-                var min = _map.WorldToImage(box.Min());
-                var max = _map.WorldToImage(box.Max());
+                var min = map.WorldToImage(box.Min());
+                var max = map.WorldToImage(box.Max());
 
                 min = new PointF((float)Math.Round(min.X), (float)Math.Round(min.Y));
                 max = new PointF((float)Math.Round(max.X), (float)Math.Round(max.Y));
@@ -155,7 +178,7 @@ namespace SharpMap.Layers
 
         private void GetTileOnThread(BackgroundWorker worker, object parameter)
         {
-            System.Threading.Thread.Sleep(50 + (_r.Next(5)*10));
+            Thread.Sleep(50 + (_r.Next(5)*10));
             object[] parameters = (object[])parameter;
             if (parameters.Length != 4) throw new ArgumentException("Four parameters expected");
             ITileProvider tileProvider = (ITileProvider)parameters[0];
@@ -168,10 +191,10 @@ namespace SharpMap.Layers
             try
             {
                 
-                if (worker.CancellationPending == true)
+                if (worker.CancellationPending)
                     return;
                 bytes = tileProvider.GetTile(tileInfo);
-                if (worker.CancellationPending == true)
+                if (worker.CancellationPending)
                     return;
                 Bitmap bitmap = new Bitmap(new MemoryStream(bytes));
                 bitmaps.Add(tileInfo.Index, bitmap);
@@ -180,15 +203,15 @@ namespace SharpMap.Layers
                     AddImageToFileCache(tileInfo, bitmap);
                 }
 
-                if (worker.CancellationPending == true)
+                if (worker.CancellationPending)
                     return;
                 OnMapNewTileAvaliable(tileInfo, bitmap);
-                if (worker.CancellationPending == true)
-                    return;
+                //if (worker.CancellationPending)
+                //    return;
             }
             catch (WebException ex)
             {
-                if (retry == true)
+                if (retry)
                 {
                     parameters[3] = false;
                     GetTileOnThread( worker, parameters);
@@ -216,7 +239,10 @@ namespace SharpMap.Layers
             catch (ThreadAbortException tex)
             {
                 if (Logger.IsInfoEnabled)
-                    Logger.InfoFormat("TileAsyncLayer - Thread aborting: {0}", System.Threading.Thread.CurrentThread.Name);
+                {
+                    Logger.InfoFormat("TileAsyncLayer - Thread aborting: {0}", Thread.CurrentThread.Name);
+                    Logger.InfoFormat(tex.Message);
+                }
             }
             catch (Exception ex)
             {

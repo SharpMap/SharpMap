@@ -18,8 +18,6 @@
 #if !DotSpatialProjections
 
 using System;
-using System.Collections.Generic;
-using GeoAPI;
 using GeoAPI.Geometries;
 
 namespace ProjNet.CoordinateSystems.Transformations
@@ -83,12 +81,24 @@ namespace ProjNet.CoordinateSystems.Transformations
             throw new ArgumentException("Could not transform geometry type '" + g.GetType() + "'");
         }
 
+        /// <summary>
+        /// Function to transform a <paramref name="c"/> using <paramref name="transform"/>
+        /// </summary>
+        /// <param name="c">The coordinate</param>
+        /// <param name="transform">The transformation</param>
+        /// <returns>A transformed coordinate</returns>
         public static Coordinate TransformCoordinate(Coordinate c, IMathTransform transform)
         {
             var ordinates = transform.Transform(c.ToDoubleArray());
             return new Coordinate(ordinates[0], ordinates[1]);
         }
 
+        /// <summary>
+        /// Function to transform <paramref name="c"/> using <paramref name="transform"/>
+        /// </summary>
+        /// <param name="c">The array of coordinates</param>
+        /// <param name="transform">The transformation</param>
+        /// <returns>An array of transformed coordinates</returns>
         private static Coordinate[] TransformCoordinates(Coordinate[] c, IMathTransform transform)
         {
             var res = new Coordinate[c.Length];

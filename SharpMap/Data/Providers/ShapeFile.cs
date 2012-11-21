@@ -190,7 +190,11 @@ namespace SharpMap.Data.Providers
 		private int _srid = -1;
 		private BinaryReader _brShapeFile;
 		private BinaryReader _brShapeIndex;
-	    protected DbaseReader DbaseFile;
+	    
+        /// <summary>
+	    /// The Dbase-III File for attribute data
+	    /// </summary>
+        protected DbaseReader DbaseFile;
 		private Stream _fsShapeFile;
 
         private static readonly object GspLock = new object();
@@ -1343,7 +1347,11 @@ namespace SharpMap.Data.Providers
 		}
 
 	    private IGeometryFactory _factory;
-	    protected IGeometryFactory Factory
+	    
+        /// <summary>
+        /// Gets or sets the geometry factory
+        /// </summary>
+        protected IGeometryFactory Factory
 	    {
 	        get
 	        {

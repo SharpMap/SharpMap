@@ -54,11 +54,9 @@ namespace SharpMap.Data.Providers
     public class Oracle : BaseProvider
     {
         private string _defintionQuery;
-        private string _GeometryColumn;
-        private bool _IsOpen;
-        private string _ObjectIdColumn;
-        private int _srid = -2;
-        private string _Table;
+        private string _geometryColumn;
+        private string _objectIdColumn;
+        private string _table;
 
         /// <summary>
         /// Initializes a new connection to Oracle
@@ -68,6 +66,7 @@ namespace SharpMap.Data.Providers
         /// <param name="geometryColumnName">Name of geometry column</param>
         /// /// <param name="OID_ColumnName">Name of column with unique identifier</param>
         public Oracle(string ConnectionStr, string tablename, string geometryColumnName, string OID_ColumnName)
+            :base(-2)
         {
             ConnectionString = ConnectionStr;
             Table = tablename;
@@ -119,8 +118,8 @@ namespace SharpMap.Data.Providers
         /// </summary>
         public string Table
         {
-            get { return _Table; }
-            set { _Table = value; }
+            get { return _table; }
+            set { _table = value; }
         }
 
         /// <summary>
@@ -128,8 +127,8 @@ namespace SharpMap.Data.Providers
         /// </summary>
         public string GeometryColumn
         {
-            get { return _GeometryColumn; }
-            set { _GeometryColumn = value; }
+            get { return _geometryColumn; }
+            set { _geometryColumn = value; }
         }
 
         /// <summary>
@@ -137,8 +136,8 @@ namespace SharpMap.Data.Providers
         /// </summary>
         public string ObjectIdColumn
         {
-            get { return _ObjectIdColumn; }
-            set { _ObjectIdColumn = value; }
+            get { return _objectIdColumn; }
+            set { _objectIdColumn = value; }
         }
 
         /// <summary>
@@ -597,8 +596,8 @@ namespace SharpMap.Data.Providers
         private string GetGeometryColumn()
         {
             string strSQL = "select COLUMN_NAME from USER_SDO_GEOM_METADATA WHERE TABLE_NAME='" + Table + "'";
-            using (OracleConnection conn = new OracleConnection(ConnectionString))
-            using (OracleCommand command = new OracleCommand(strSQL, conn))
+            using (var conn = new OracleConnection(ConnectionString))
+            using (var command = new OracleCommand(strSQL, conn))
             {
                 conn.Open();
                 object columnname = command.ExecuteScalar();

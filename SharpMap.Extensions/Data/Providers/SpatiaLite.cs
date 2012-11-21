@@ -48,6 +48,7 @@ namespace SharpMap.Data.Providers
         /// <summary>
         /// Cache of minimum bounding rectangles (MBR)
         /// </summary>
+        [Obsolete("Do not use on purpose!")]
         MbrCache = 2
     }
 

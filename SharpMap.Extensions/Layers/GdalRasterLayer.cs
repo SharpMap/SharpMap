@@ -91,9 +91,9 @@ namespace SharpMap.Layers
         internal GeoTransform _geoTransform;
         private bool _haveSpot; // spot correction
         private Rectangle _histoBounds;
-        private double _histoBrightness, _histoContrast;
+        //private double _histoBrightness, _histoContrast;
         private List<int[]> _histogram; // histogram of image
-        private double[] _histoMean;
+        //private double[] _histoMean;
         protected Size _imagesize;
 
         private double _innerSpotRadius;
@@ -316,7 +316,10 @@ namespace SharpMap.Layers
         /// </summary>
         public double[] HistoMean
         {
-            get { return _histoMean; }
+            get
+            {
+                return null;// _histoMean;
+            }
         }
 
         /// <summary>
@@ -324,7 +327,11 @@ namespace SharpMap.Layers
         /// </summary>
         public double HistoBrightness
         {
-            get { return _histoBrightness; }
+            get
+            {
+                return double.NaN;
+                //_histoBrightness;
+            }
         }
 
         /// <summary>
@@ -332,7 +339,11 @@ namespace SharpMap.Layers
         /// </summary>
         public double HistoContrast
         {
-            get { return _histoContrast; }
+            get
+            {
+                return double.NaN;
+                //_histoContrast; 
+            }
         }
 
         /// <summary>
@@ -415,7 +426,6 @@ namespace SharpMap.Layers
         {
             LayerName = strLayerName;
             Filename = imageFilename;
-            disposed = false;
 
             Gdal.AllRegister();
 
@@ -473,9 +483,7 @@ namespace SharpMap.Layers
         /// <param name="map">Map which is rendered</param>
         public override void Render(Graphics g, Map map)
         {
-            if (disposed)
-                throw (new ApplicationException("Error: An attempt was made to render a disposed layer"));
-
+            CheckDisposed();
             GetPreview(_gdalDataset, map.Size, g, map.Envelope, null, map);
             base.Render(g, map);
         }
@@ -516,7 +524,7 @@ namespace SharpMap.Layers
         {
             double DsWidth = _imagesize.Width;
             double DsHeight = _imagesize.Height;
-            double left, top, right, bottom;
+            //double left, top, right, bottom;
             double dblImgEnvW, dblImgEnvH, dblWindowGndW, dblWindowGndH, dblImginMapW, dblImginMapH;
 
             BoundingBox bbox = map.Envelope;
@@ -554,7 +562,7 @@ namespace SharpMap.Layers
         {
             double DsWidth = _imagesize.Width;
             double DsHeight = _imagesize.Height;
-            double left, top, right, bottom;
+            //double left, top, right, bottom;
             double dblImgEnvW, dblImgEnvH, dblWindowGndW, dblWindowGndH, dblImginMapW, dblImginMapH;
             double dblTempWidth = 0;
 
@@ -1905,43 +1913,12 @@ namespace SharpMap.Layers
 
         #region Disposers and finalizers
 
-        private bool disposed;
-
-        /// <summary>
-        /// Disposes the GdalRasterLayer and release the raster file
-        /// </summary>
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        private void Dispose(bool disposing)
-        {
-            if (!disposed)
-            {
-                if (disposing)
-                    if (_gdalDataset != null)
-                    {
-                        try
-                        {
-                            _gdalDataset.Dispose();
-                        }
-                        finally
-                        {
-                            _gdalDataset = null;
-                        }
-                    }
-                disposed = true;
-            }
-        }
-
         /// <summary>
         /// Finalizer
         /// </summary>
         ~GdalRasterLayer()
         {
-            Dispose(true);
+            ReleaseUnmanagedResources();
         }
 
         #endregion

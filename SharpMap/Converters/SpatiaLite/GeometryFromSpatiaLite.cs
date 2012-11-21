@@ -35,11 +35,12 @@ namespace SharpMap.Converters.SpatiaLite
         /// Derived from WKB, but unfortunately it is not practical to reuse existing
         /// WKB encoding/decoding code
         /// </summary>
-        /// <param name="spatialliteGeom"></param>
-        /// <returns></returns>
-        public static GeoAPI.Geometries.IGeometry Parse(byte[] spatialliteGeom, IGeometryFactory factory)
+        /// <param name="spatialliteGeom">The geometry blob</param>
+        /// <param name="factory">The factory to create the result geometry</param>
+        /// <returns>A geometry</returns>
+        public static IGeometry Parse(byte[] spatialliteGeom, IGeometryFactory factory)
         {
-            int nBytes = spatialliteGeom.Length;
+            var nBytes = spatialliteGeom.Length;
             if (spatialliteGeom.Length < 44
         || spatialliteGeom[0] != 0
         || spatialliteGeom[38] != 0x7C

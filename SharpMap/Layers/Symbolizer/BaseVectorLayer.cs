@@ -21,16 +21,25 @@ namespace SharpMap.Layers.Symbolizer
     /// Base class for all vector layers using <see cref="ISymbolizer{TGeometry}"/> approach.
     /// </summary>
     /// <typeparam name="TGeometry">The geometry type</typeparam>
-    public abstract class BaseVectorLayer<TGeometry> : Layer, ICanQueryLayer, IDisposable
+    public abstract class BaseVectorLayer<TGeometry> : Layer, ICanQueryLayer
         where TGeometry : class//, IGeometry
     {
         #region Private fields
 
+        private readonly object _dataSourceLock = new object();
         private IProvider _dataSource;
+        private Collection<IGeometry> _geometries;
 
         #endregion
 
-        static ILog logger = LogManager.GetLogger(typeof(BaseVectorLayer<TGeometry>));
+        static readonly ILog logger = LogManager.GetLogger(typeof(BaseVectorLayer<TGeometry>));
+        
+        /// <summary>
+        /// Creates an instance of this class
+        /// </summary>
+        /// <param name="layerName">The name of the layer</param>
+        /// <param name="dataSource">The data source</param>
+        /// <param name="symbolizer">The symbolizer</param>
         protected BaseVectorLayer(string layerName, IProvider dataSource, ISymbolizer<TGeometry> symbolizer)
         {
             LayerName = layerName;
@@ -41,7 +50,12 @@ namespace SharpMap.Layers.Symbolizer
         /// <summary>
         /// Gets or sets whether smoothing (antialiasing) is applied to lines and curves and the edges of filled areas
         /// </summary>
-        public SmoothingMode SmoothingMode { get; set; }
+        [Obsolete("Use Symbolizer.SmoothingMode")]
+        public SmoothingMode SmoothingMode
+        {
+            get { return Symbolizer.SmoothingMode; }
+            set { Symbolizer.SmoothingMode = value; }
+        }
 
         /// <summary>
         /// Gets or sets the datasource
@@ -49,7 +63,13 @@ namespace SharpMap.Layers.Symbolizer
         public IProvider DataSource
         {
             get { return _dataSource; }
-            set { _dataSource = value; }
+            set
+            {
+                lock (_dataSourceLock)
+                {
+                    _dataSource = value;
+                }
+            }
         }
 
         /// <summary>
@@ -57,6 +77,11 @@ namespace SharpMap.Layers.Symbolizer
         /// </summary>
         public ISymbolizer<TGeometry> Symbolizer { get; set; }
 
+        /// <summary>
+        /// Method to render the layer upon the graphics object <paramref name="g"/> using the map <paramref name="map"/>
+        /// </summary>
+        /// <param name="g">The graphics object</param>
+        /// <param name="map">The map</param>
         public override void Render(Graphics g, Map map)
         {
             // Map setup correctly
@@ -71,22 +96,12 @@ namespace SharpMap.Layers.Symbolizer
             if (Symbolizer == null)
                 throw new ApplicationException("Symbolizer property not set on layer '" + LayerName + "'");
 
-                // Initialize Rendering
-                OnRender(g, map);
+            // Initialize Rendering
+            OnRender(g, map);
             
             // Render
             OnRendering(g, map);
 
-            /*
-            //If thematics is enabled, we use a slighty different rendering approach
-            if (Theme != null)
-                RenderInternal(g, map, envelope, Theme);
-            else
-                RenderInternal(g, map, envelope);
-
-
-            base.Render(g, map);
-            */
             // Terminate Rendering
             OnRendered(g, map);
         }
@@ -103,14 +118,14 @@ namespace SharpMap.Layers.Symbolizer
                     throw (new ApplicationException("DataSource property not set on layer '" + LayerName + "'"));
 
                 Envelope box;
-                lock (_dataSource)
+                lock (_dataSourceLock)
                 {
-                    bool wasOpen = DataSource.IsOpen;
+                    var wasOpen = _dataSource.IsOpen;
                     if (!wasOpen)
                         DataSource.Open();
-                    box = DataSource.GetExtents();
+                    box = _dataSource.GetExtents();
                     if (!wasOpen) //Restore state
-                        DataSource.Close();
+                        _dataSource.Close();
                 }
                 if (CoordinateTransformation != null)
 #if !DotSpatialProjections
@@ -122,14 +137,11 @@ namespace SharpMap.Layers.Symbolizer
             }
         }
 
-        private SmoothingMode _oldSmoothingMode;
-        private Collection<IGeometry> _geometries;
-
         /// <summary>
         /// Method called to initialize the rendering process
         /// </summary>
-        /// <param name="graphics"></param>
-        /// <param name="map"></param>
+        /// <param name="graphics">The graphics object to render upon</param>
+        /// <param name="map">The map</param>
         protected virtual void OnRender(Graphics graphics, Map map)
         {
             // Get query envelope
@@ -156,7 +168,7 @@ namespace SharpMap.Layers.Symbolizer
 
             lock (_dataSource)
             {
-                bool wasOpen = _dataSource.IsOpen;
+                var wasOpen = _dataSource.IsOpen;
                 if (!_dataSource.IsOpen) _dataSource.Open();
 
                 _geometries = DataSource.GetGeometriesInView(envelope);
@@ -168,27 +180,17 @@ namespace SharpMap.Layers.Symbolizer
                     _dataSource.Close();
             }
 
-            _oldSmoothingMode = graphics.SmoothingMode;
-            graphics.SmoothingMode = SmoothingMode;
-            
             //Setting up the Symbolizer
             Symbolizer.Begin(graphics, map, 0);
         }
 
+        /// <summary>
+        /// Method called to render the layer
+        /// </summary>
+        /// <param name="graphics">The graphics object to render upon</param>
+        /// <param name="map">The map</param>
         protected virtual void OnRendering(Graphics graphics, Map map)
         {
-            
-            //lock (Symbolizer)
-            //{
-            //    Action<Map, TGeometry, Graphics> a = Symbolizer.Render;
-            //    Parallel.ForEach(_geometrys, a)
-            //}
-            //Parallel.ForEach()
-            //while (true)
-            //{
-            //    AttributedGeometry<TGeometry> ag = _geometrys.Dequeue();
-            //    Symbolizer.Render(map, ag.Geometry, graphics);
-            //}
             foreach (var geometry in _geometries)
             {
                 if (geometry != null)
@@ -197,10 +199,14 @@ namespace SharpMap.Layers.Symbolizer
             Symbolizer.Symbolize(graphics, map);
         }
 
+        /// <summary>
+        /// Method called to signal that the layer has been rendered
+        /// </summary>
+        /// <param name="graphics">The graphics object to render upon</param>
+        /// <param name="map">The map</param>
         protected virtual void OnRendered(Graphics graphics, Map map)
         {
             Symbolizer.End(graphics, map);
-            graphics.SmoothingMode = _oldSmoothingMode;
         }
 
         /// <summary>
@@ -208,20 +214,16 @@ namespace SharpMap.Layers.Symbolizer
         /// </summary>
         public LabelLayer LabelLayer { get; set; }
 
-        #region IDisposable Members
-
         /// <summary>
-        /// Disposes the object
+        /// Release all managed resources
         /// </summary>
-        public void Dispose()
+        protected override void ReleaseManagedResources()
         {
-            /*
-            if (_dataSource != null)
-                DataSource.Dispose();
-             */
+            Symbolizer = null;
+            _dataSource = null;
+            _geometries = null;
+            base.ReleaseManagedResources();
         }
-
-        #endregion
 
 
         #region Implementation of ICanQueryLayer

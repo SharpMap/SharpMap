@@ -297,6 +297,9 @@ namespace SharpMap.Layers
             set { wmsClient.Version = value; }
         }
 
+        /// <summary>
+        /// Gets a value indicating the URL for the 'GetCapablities' request
+        /// </summary>
         public string CapabilitiesUrl
         {
             get { return _capabilitiesUrl; }
@@ -648,7 +651,7 @@ namespace SharpMap.Layers
                                     }
 
                                 }
-                                catch (IOException ee)
+                                catch (IOException /*ee*/)
                                 {
                                     //This can be valid since in some cases .NET failed to parse 0-sized chunks in responses..
                                     //For now, just safely ignore the exception and assume we read all data...
@@ -740,11 +743,11 @@ namespace SharpMap.Layers
             strReq.AppendFormat("&FORMAT={0}", _MimeType);
             if (SRID < 0)
                 throw new ApplicationException("Spatial reference system not set");
-            if (wmsClient.WmsVersion == "1.3.0")
+            if (wmsClient.Version == "1.3.0")
                 strReq.AppendFormat("&CRS=EPSG:{0}", SRID);
             else
                 strReq.AppendFormat("&SRS=EPSG:{0}", SRID);
-            strReq.AppendFormat("&VERSION={0}", wmsClient.WmsVersion);
+            strReq.AppendFormat("&VERSION={0}", wmsClient.Version);
             strReq.Append("&Styles=");
             if (_StylesList != null && _StylesList.Count > 0)
             {

@@ -7,6 +7,9 @@ namespace SharpMap.Converters.GeoJSON
     using GeoAPI.Geometries;
     using Newtonsoft.Json;
 
+    /// <summary>
+    /// GeoJSON writer class
+    /// </summary>
     public class GeoJSONWriter
     {
         private static JsonTextWriter CreateWriter(TextWriter writer)
@@ -54,6 +57,11 @@ namespace SharpMap.Converters.GeoJSON
             return String.Format("{0}_{1}", master, id);
         }
 
+        /// <summary>
+        /// Method to write a coordinate to the <paramref name="writer"/>
+        /// </summary>
+        /// <param name="coordinate">The coordinate</param>
+        /// <param name="writer">The JSON writer</param>
         public static void WriteCoord(Coordinate coordinate, JsonTextWriter writer)
         {
             if (coordinate == null)
@@ -67,6 +75,11 @@ namespace SharpMap.Converters.GeoJSON
             writer.WriteEndArray();
         }
 
+        /// <summary>
+        /// Method to write a coordinate to the <paramref name="writer"/>
+        /// </summary>
+        /// <param name="coordinate">The coordinate</param>
+        /// <param name="writer">The JSON writer</param>
         public static void WriteCoord(Coordinate coordinate, TextWriter writer)
         {
             if (coordinate == null)
@@ -74,10 +87,15 @@ namespace SharpMap.Converters.GeoJSON
             if (writer == null)
                 throw new ArgumentNullException("writer", "A valid text writer object is required");
 
-            JsonTextWriter jwriter = CreateWriter(writer);
+            var jwriter = CreateWriter(writer);
             WriteCoord(coordinate, jwriter);
         }
 
+        /// <summary>
+        /// Method to write a series of coordinates to the <paramref name="writer"/>
+        /// </summary>
+        /// <param name="coordinates">The coordinates</param>
+        /// <param name="writer">The JSON writer</param>
         public static void WriteCoord(IEnumerable<Coordinate> coordinates, JsonTextWriter writer)
         {
             if (coordinates == null)
@@ -91,6 +109,11 @@ namespace SharpMap.Converters.GeoJSON
             writer.WriteEndArray();
         }
 
+        /// <summary>
+        /// Method to write a series of coordinates to the <paramref name="writer"/>
+        /// </summary>
+        /// <param name="coordinates">The coordinates</param>
+        /// <param name="writer">The JSON writer</param>
         public static void WriteCoord(IEnumerable<Coordinate> coordinates, TextWriter writer)
         {
             if (coordinates == null)
@@ -98,10 +121,15 @@ namespace SharpMap.Converters.GeoJSON
             if (writer == null)
                 throw new ArgumentNullException("writer", "A valid text writer object is required");
 
-            JsonTextWriter jwriter = CreateWriter(writer);
+            var jwriter = CreateWriter(writer);
             WriteCoord(coordinates, jwriter);
         }
 
+        /// <summary>
+        /// Method to write a geometry to the <paramref name="writer"/>
+        /// </summary>
+        /// <param name="geometry">The geometry</param>
+        /// <param name="writer">The JSON writer</param>
         public static void Write(IGeometry geometry, JsonTextWriter writer)
         {
             if (geometry == null)
@@ -125,6 +153,11 @@ namespace SharpMap.Converters.GeoJSON
                 Write(geometry as IGeometryCollection, writer);
         }
 
+        /// <summary>
+        /// Method to write a geometry to the <paramref name="writer"/>
+        /// </summary>
+        /// <param name="geometry">The geometry</param>
+        /// <param name="writer">The JSON writer</param>
         public static void Write(IGeometry geometry, TextWriter writer)
         {
             if (geometry == null)
@@ -135,6 +168,11 @@ namespace SharpMap.Converters.GeoJSON
             Write(geometry, CreateWriter(writer));
         }
 
+        /// <summary>
+        /// Method to write a point geometry to the <paramref name="writer"/>
+        /// </summary>
+        /// <param name="point">The point geometry</param>
+        /// <param name="writer">The JSON writer</param>
         public static void Write(IPoint point, JsonTextWriter writer)
         {
             if (point == null)
@@ -156,6 +194,11 @@ namespace SharpMap.Converters.GeoJSON
             writer.WriteEndObject();
         }
 
+        /// <summary>
+        /// Method to write a point geometry to the <paramref name="writer"/>
+        /// </summary>
+        /// <param name="point">The point geometry</param>
+        /// <param name="writer">The JSON writer</param>
         public static void Write(IPoint point, TextWriter writer)
         {
             if (point == null)
@@ -167,6 +210,11 @@ namespace SharpMap.Converters.GeoJSON
             Write(point, jwriter);
         }
 
+        /// <summary>
+        /// Method to write a multipoint geometry to the <paramref name="writer"/>
+        /// </summary>
+        /// <param name="points">The multipoint geometry</param>
+        /// <param name="writer">The JSON writer</param>
         public static void Write(IMultiPoint points, JsonTextWriter writer)
         {
             if (points == null)
@@ -188,6 +236,11 @@ namespace SharpMap.Converters.GeoJSON
             writer.WriteEndObject();
         }
 
+        /// <summary>
+        /// Method to write a multipoint geometry to the <paramref name="writer"/>
+        /// </summary>
+        /// <param name="points">The multipoint geometry</param>
+        /// <param name="writer">The JSON writer</param>
         public static void Write(IMultiPoint points, TextWriter writer)
         {
             if (points == null)
@@ -199,6 +252,11 @@ namespace SharpMap.Converters.GeoJSON
             Write(points, jwriter);
         }
 
+        /// <summary>
+        /// Method to write a linestring geometry to the <paramref name="writer"/>
+        /// </summary>
+        /// <param name="line">The linestring geometry</param>
+        /// <param name="writer">The JSON writer</param>
         public static void Write(ILineString line, JsonTextWriter writer)
         {
             if (line == null)
@@ -219,6 +277,11 @@ namespace SharpMap.Converters.GeoJSON
             writer.WriteEndObject();
         }
 
+        /// <summary>
+        /// Method to write a linestring geometry to the <paramref name="writer"/>
+        /// </summary>
+        /// <param name="line">The linestring geometry</param>
+        /// <param name="writer">The JSON writer</param>
         public static void Write(ILineString line, TextWriter writer)
         {
             if (line == null)
@@ -229,6 +292,11 @@ namespace SharpMap.Converters.GeoJSON
             Write(line, CreateWriter(writer));
         }
 
+        /// <summary>
+        /// Method to write a multi linestring geometry to the <paramref name="writer"/>
+        /// </summary>
+        /// <param name="lines">The multi linestring geometry</param>
+        /// <param name="writer">The JSON writer</param>
         public static void Write(IMultiLineString lines, JsonTextWriter writer)
         {
             if (lines == null)
@@ -250,6 +318,11 @@ namespace SharpMap.Converters.GeoJSON
             writer.WriteEndObject();
         }
 
+        /// <summary>
+        /// Method to write a multi linestring geometry to the <paramref name="writer"/>
+        /// </summary>
+        /// <param name="lines">The multi linestring geometry</param>
+        /// <param name="writer">The JSON writer</param>
         public static void Write(IMultiLineString lines, TextWriter writer)
         {
             if (lines == null)
@@ -260,6 +333,11 @@ namespace SharpMap.Converters.GeoJSON
             Write(lines, CreateWriter(writer));
         }
 
+        /// <summary>
+        /// Method to write a polygon geometry to the <paramref name="writer"/>
+        /// </summary>
+        /// <param name="area">The polygon geometry</param>
+        /// <param name="writer">The JSON writer</param>
         public static void Write(IPolygon area, JsonTextWriter writer)
         {
             if (area == null)
@@ -279,6 +357,11 @@ namespace SharpMap.Converters.GeoJSON
             writer.WriteEndObject();
         }
 
+        /// <summary>
+        /// Method to write a polygon geometry to the <paramref name="writer"/>
+        /// </summary>
+        /// <param name="area">The polygon geometry</param>
+        /// <param name="writer">The JSON writer</param>
         public static void Write(IPolygon area, TextWriter writer)
         {
             if (area == null)
@@ -289,6 +372,11 @@ namespace SharpMap.Converters.GeoJSON
             Write(area, CreateWriter(writer));
         }
 
+        /// <summary>
+        /// Method to write a multi polygon geometry to the <paramref name="writer"/>
+        /// </summary>
+        /// <param name="areas">The multi polygon geometry</param>
+        /// <param name="writer">The JSON writer</param>
         public static void Write(IMultiPolygon areas, JsonTextWriter writer)
         {
             if (areas == null)
@@ -315,6 +403,11 @@ namespace SharpMap.Converters.GeoJSON
             writer.WriteEndObject();
         }
 
+        /// <summary>
+        /// Method to write a multi polygon geometry to the <paramref name="writer"/>
+        /// </summary>
+        /// <param name="areas">The multi polygon geometry</param>
+        /// <param name="writer">The JSON writer</param>
         public static void Write(IMultiPolygon areas, TextWriter writer)
         {
             if (areas == null)
@@ -325,6 +418,11 @@ namespace SharpMap.Converters.GeoJSON
             Write(areas, CreateWriter(writer));
         }
 
+        /// <summary>
+        /// Method to write a collection of geometries to the <paramref name="writer"/>
+        /// </summary>
+        /// <param name="geometries">The collection of geometries</param>
+        /// <param name="writer">The JSON writer</param>
         public static void Write(IGeometryCollection geometries, JsonTextWriter writer)
         {
             if (geometries == null)
@@ -346,6 +444,11 @@ namespace SharpMap.Converters.GeoJSON
             writer.WriteEndObject();
         }
 
+        /// <summary>
+        /// Method to write a collection of geometries to the <paramref name="writer"/>
+        /// </summary>
+        /// <param name="geometries">The collection of geometries</param>
+        /// <param name="writer">The JSON writer</param>
         public static void Write(IGeometryCollection geometries, TextWriter writer)
         {
             if (geometries == null)
@@ -356,6 +459,11 @@ namespace SharpMap.Converters.GeoJSON
             Write(geometries, CreateWriter(writer));
         }
 
+        /// <summary>
+        /// Method to write a GeoJSON feature to the <paramref name="writer"/>
+        /// </summary>
+        /// <param name="feature">The GeoJSON feature</param>
+        /// <param name="writer">The JSON writer</param>
         public static void Write(GeoJSON feature, JsonTextWriter writer)
         {
             if (feature == null)
@@ -378,6 +486,11 @@ namespace SharpMap.Converters.GeoJSON
             writer.WriteEndObject();
         }
 
+        /// <summary>
+        /// Method to write a GeoJSON feature to the <paramref name="writer"/>
+        /// </summary>
+        /// <param name="feature">The GeoJSON feature</param>
+        /// <param name="writer">The JSON writer</param>
         public static void Write(GeoJSON feature, TextWriter writer)
         {
             if (feature == null)
@@ -388,6 +501,11 @@ namespace SharpMap.Converters.GeoJSON
             Write(feature, CreateWriter(writer));
         }
 
+        /// <summary>
+        /// Method to write a series of GeoJSON features to the <paramref name="writer"/>
+        /// </summary>
+        /// <param name="features">The GeoJSON features</param>
+        /// <param name="writer">The JSON writer</param>
         public static void Write(IEnumerable<GeoJSON> features, JsonTextWriter writer)
         {
             if (features == null)
@@ -406,6 +524,11 @@ namespace SharpMap.Converters.GeoJSON
             writer.WriteEndObject();
         }
 
+        /// <summary>
+        /// Method to write a series of GeoJSON features to the <paramref name="writer"/>
+        /// </summary>
+        /// <param name="features">The GeoJSON features</param>
+        /// <param name="writer">The JSON writer</param>
         public static void Write(IEnumerable<GeoJSON> features, TextWriter writer)
         {
             if (features == null)
@@ -416,6 +539,11 @@ namespace SharpMap.Converters.GeoJSON
             Write(features, CreateWriter(writer));
         }
 
+        /// <summary>
+        /// Method to write the attributes of a feature to the <paramref name="writer"/>
+        /// </summary>
+        /// <param name="attributes">The attributes of a GeoJSON feature</param>
+        /// <param name="writer">The JSON writer</param>
         public static void Write(IDictionary<string, object> attributes, JsonTextWriter writer)
         {
             if (attributes == null)
@@ -433,6 +561,11 @@ namespace SharpMap.Converters.GeoJSON
             writer.WriteEndObject();
         }
 
+        /// <summary>
+        /// Method to write the attributes of a feature to the <paramref name="writer"/>
+        /// </summary>
+        /// <param name="attributes">The attributes of a GeoJSON feature</param>
+        /// <param name="writer">The JSON writer</param>
         public static void Write(IDictionary<string, object> attributes, TextWriter writer)
         {
             if (attributes == null)

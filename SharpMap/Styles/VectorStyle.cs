@@ -52,7 +52,7 @@ namespace SharpMap.Styles
         /// <returns></returns>
         public VectorStyle Clone()
         {
-            VectorStyle vs = null;
+            VectorStyle vs;
             lock (this)
             {
                 try
@@ -264,6 +264,9 @@ namespace SharpMap.Styles
 
         #endregion
 
+        /// <summary>
+        /// Releases managed resources
+        /// </summary>
         protected override void ReleaseManagedResources()
         {
             if (IsDisposed)

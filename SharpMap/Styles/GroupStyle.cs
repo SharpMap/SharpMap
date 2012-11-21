@@ -18,41 +18,48 @@
 
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace SharpMap.Styles
 {
     /// <summary>
     /// GroupStyle is a holder where serveral style can be applied in order
     /// </summary>
+    [Serializable]
     public class GroupStyle : VectorStyle
     {
-        public GroupStyle()
-        {
-        }
+        readonly List<VectorStyle> _styles = new List<VectorStyle>();
 
-        List<VectorStyle> m_Styles = new List<VectorStyle>();
-
+        /// <summary>
+        /// Indexer to the <see cref="VectorStyle"/>s
+        /// </summary>
+        /// <param name="idx">The index of the <see cref="VectorStyle"/></param>
+        /// <returns>A <see cref="VectorStyle"/></returns>
         public VectorStyle this[int idx]
         {
             get
             {
-                return m_Styles[idx];
+                return _styles[idx];
             }
         }
 
-
+        /// <summary>
+        /// Gets a value indicating the number of <see cref="VectorStyle"/>s contained in this instance.
+        /// </summary>
         public int Count
         {
             get
             {
-                return m_Styles.Count;
+                return _styles.Count;
             }
         }
 
+        /// <summary>
+        /// Method to add a <see cref="VectorStyle"/>
+        /// </summary>
+        /// <param name="style"></param>
         public void AddStyle(VectorStyle style)
         {
-            m_Styles.Add(style);
+            _styles.Add(style);
         }
     
     }

@@ -102,6 +102,13 @@ namespace SharpMap.Rendering.Decoration
         string _disclaimerText = "";
         readonly Font _font = new Font("Arial",12f);
 
+        /// <summary>
+        /// Function to compute the required size for rendering the map decoration object
+        /// <para>This is just the size of the decoration object, border settings are excluded</para>
+        /// </summary>
+        /// <param name="g"></param>
+        /// <param name="map"></param>
+        /// <returns>The</returns>
         protected override Size InternalSize(Graphics g, Map map)
         {
             RequestDisclaimer(map);
@@ -111,6 +118,11 @@ namespace SharpMap.Rendering.Decoration
         }
 
 
+        /// <summary>
+        /// Function to render the actual map decoration
+        /// </summary>
+        /// <param name="g"></param>
+        /// <param name="map"></param>
         protected override void OnRender(Graphics g, Map map)
         {
             RequestDisclaimer(map);

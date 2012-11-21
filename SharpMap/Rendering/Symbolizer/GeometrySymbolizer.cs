@@ -26,6 +26,7 @@ namespace SharpMap.Rendering.Symbolizer
             _polygonSymbolizer = new BasicPolygonSymbolizer();
         }
 
+        /// <inheritdoc/>
         public object Clone()
         {
             return new GeometrySymbolizer
@@ -104,6 +105,12 @@ namespace SharpMap.Rendering.Symbolizer
             throw new Exception("Unknown geometry type");
         }
 
+        /// <summary>
+        /// Method to indicate that the symbolizer has to be prepared.
+        /// </summary>
+        /// <param name="g">The graphics object</param>
+        /// <param name="map">The map</param>
+        /// <param name="aproximateNumberOfGeometries">The approximate number of geometries</param>
         public void Begin(Graphics g, Map map, int aproximateNumberOfGeometries)
         {
             _lineSymbolizer.Begin(g, map, aproximateNumberOfGeometries);
@@ -111,6 +118,11 @@ namespace SharpMap.Rendering.Symbolizer
             _polygonSymbolizer.Begin(g, map, aproximateNumberOfGeometries);
         }
 
+        /// <summary>
+        /// Method to indicate that the symbolizer should do its symbolizer work.
+        /// </summary>
+        /// <param name="g">The graphics object</param>
+        /// <param name="map">The map</param>
         public void Symbolize(Graphics g, Map map)
         {
             _polygonSymbolizer.Symbolize(g, map);
@@ -118,11 +130,44 @@ namespace SharpMap.Rendering.Symbolizer
             _pointSymbolizer.Symbolize(g, map);
         }
 
+        /// <summary>
+        /// Method to indicate that the symbolizers work is done and it can clean up.
+        /// </summary>
+        /// <param name="g">The graphics object</param>
+        /// <param name="map">The map</param>
         public void End(Graphics g, Map map)
         {
             _polygonSymbolizer.End(g, map);
             _lineSymbolizer.End(g, map);
             _pointSymbolizer.End(g, map);
+        }
+
+        /// <summary>
+        /// Gets or sets a value indicating which <see cref="ISymbolizer.SmoothingMode"/> is to be used for rendering
+        /// </summary>
+        public System.Drawing.Drawing2D.SmoothingMode SmoothingMode
+        {
+            get { return _pointSymbolizer.SmoothingMode; }
+            set
+            {
+                _pointSymbolizer.SmoothingMode =
+                    _lineSymbolizer.SmoothingMode =
+                        _polygonSymbolizer.SmoothingMode = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets a value indicating which <see cref="ISymbolizer.PixelOffsetMode"/> is to be used for rendering
+        /// </summary>
+        public System.Drawing.Drawing2D.PixelOffsetMode PixelOffsetMode
+        {
+            get { return _pointSymbolizer.PixelOffsetMode; }
+            set
+            {
+                _pointSymbolizer.PixelOffsetMode =
+                    _lineSymbolizer.PixelOffsetMode =
+                        _polygonSymbolizer.PixelOffsetMode = value;
+            }
         }
     }
 }

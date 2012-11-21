@@ -18,8 +18,13 @@ namespace SharpMap.Rendering.Symbolizer
             Outline = new Pen(Utility.RandomKnownColor(), 1);
         }
 
+        /// <summary>
+        /// Method to release all managed resources
+        /// </summary>
         protected override void ReleaseManagedResources()
         {
+            CheckDisposed();
+
             if (Outline != null)
             {
                 Outline.Dispose();
@@ -52,6 +57,12 @@ namespace SharpMap.Rendering.Symbolizer
                        };
         }
 
+        /// <summary>
+        /// Method that does the actual rendering of geometries
+        /// </summary>
+        /// <param name="map">The map</param>
+        /// <param name="polygon">The feature</param>
+        /// <param name="g">The graphics object</param>
         protected override void OnRenderInternal(Map map, IPolygon polygon, Graphics g)
         {
             // convert points
@@ -85,8 +96,13 @@ namespace SharpMap.Rendering.Symbolizer
             Outline = new BasicLineSymbolizer();
         }
 
+        /// <summary>
+        /// Method that releases all managed resources
+        /// </summary>
         protected override void ReleaseManagedResources()
         {
+            CheckDisposed();
+
             if (Outline != null)
             {
                 Outline.Dispose();
@@ -118,6 +134,12 @@ namespace SharpMap.Rendering.Symbolizer
                        };
         }
 
+        /// <summary>
+        /// Method to perform actual rendering 
+        /// </summary>
+        /// <param name="map">The map</param>
+        /// <param name="polygon">The polygon to render</param>
+        /// <param name="g">The graphics object to use</param>
         protected override void OnRenderInternal(Map map, IPolygon polygon, Graphics g)
         {
             // convert points
@@ -140,18 +162,34 @@ namespace SharpMap.Rendering.Symbolizer
             }
         }
 
+        /// <summary>
+        /// Method to perform preparatory work for symbilizing.
+        /// </summary>
+        /// <param name="g">The graphics object to symbolize upon</param>
+        /// <param name="map">The map</param>
+        /// <param name="aproximateNumberOfGeometries">An approximate number of geometries to symbolize</param>
         public override void Begin(Graphics g, Map map, int aproximateNumberOfGeometries)
         {
             Outline.Begin(g, map, aproximateNumberOfGeometries);
             base.Begin(g, map, aproximateNumberOfGeometries);
         }
 
+        /// <summary>
+        /// Method to perform symbolization
+        /// </summary>
+        /// <param name="g">The grapics object to symbolize upon</param>
+        /// <param name="map">The map</param>
         public override void Symbolize(Graphics g, Map map)
         {
             Outline.Symbolize(g, map);
             base.Symbolize(g, map);
         }
 
+        /// <summary>
+        /// Method to restore the state of the graphics object and do cleanup work.
+        /// </summary>
+        /// <param name="g">The graphics object to symbolize upon</param>
+        /// <param name="map">The map</param>
         public override void End(Graphics g, Map map)
         {
             Outline.End(g, map);

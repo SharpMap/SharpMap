@@ -26,11 +26,11 @@ namespace SharpMap.Web.Wfs
         private string _capabilitiesUrl;
         private IWebProxy _proxy;
         private int _timeOut;
-        private ICredentials _credentials = null;
+        private ICredentials _credentials;
         private XmlNode _vendorSpecificCapabilities;
 
         /// <summary>
-        /// Exposes the capabilitie's VendorSpecificCapabilities as XmlNode object. External modules 
+        /// Exposes the capabilities VendorSpecificCapabilities as XmlNode object. External modules 
         /// could use this to parse the vendor specific capabilities for their specific purpose.
         /// </summary>
         public XmlNode VendorSpecificCapabilities
@@ -117,16 +117,19 @@ namespace SharpMap.Web.Wfs
             }
         }
 
+        private Capabilities.WfsServiceIdentification _serviceIdentification;
         /// <summary>
         /// Gets the service description
         /// </summary>
-        private Capabilities.WfsServiceIdentification _serviceIdentification;
         public Capabilities.WfsServiceIdentification ServiceIdentification
         {
             get { return _serviceIdentification; }
         }
 
         private Capabilities.WfsServiceProvider _serviceProvider;
+        /// <summary>
+        /// Gets the service provider
+        /// </summary>
         public Capabilities.WfsServiceProvider ServiceProvider
         {
             get { return _serviceProvider; }
@@ -141,15 +144,21 @@ namespace SharpMap.Web.Wfs
             set { _version = value; }
         }
 
+        private string[] _exceptionFormats;
         /// <summary>
         /// Gets a list of available exception mime type formats
         /// </summary>
-        private string[] _exceptionFormats;
         public string[] ExceptionFormats
         {
-            get { return _exceptionFormats; }
+            get
+            {
+                return _exceptionFormats;
+            }
         }
 
+        /// <summary>
+        /// Gets the capabilities information as <see cref="XmlDocument"/>
+        /// </summary>
         public XmlDocument XmlDoc
         {
             get { return _xmlDoc; }
@@ -301,22 +310,20 @@ namespace SharpMap.Web.Wfs
         /// <returns>XmlDocument from Url. Null if Url is empty or inproper XmlDocument</returns>
         public XmlDocument GetRemoteXml()
         {
-            Stream stream = null;
+            Stream stream;
 
             try
             {
-                WebRequest myRequest = WebRequest.Create(_capabilitiesUrl);
+                var myRequest = WebRequest.Create(_capabilitiesUrl);
                 myRequest.Timeout = _timeOut;
                 if (_proxy != null) myRequest.Proxy = _proxy;
-                WebResponse myResponse = myRequest.GetResponse();
-
-                if (myResponse == null)
-                    throw new ApplicationException("No web response");
-
-                stream = myResponse.GetResponseStream();
+                using (var myResponse = myRequest.GetResponse())
+                {
+                    stream = myResponse.GetResponseStream();
+                }
 
                 if (stream == null)
-                    throw new ApplicationException("No response stream");
+                        throw new ApplicationException("No response stream");
             }
             catch (Exception ex)
             {
@@ -325,7 +332,7 @@ namespace SharpMap.Web.Wfs
 
             try
             {
-                XmlTextReader xmlTextReader = new XmlTextReader(_capabilitiesUrl, stream);
+                var xmlTextReader = new XmlTextReader(_capabilitiesUrl, stream);
                 xmlTextReader.XmlResolver = null;
 
                 _xmlDoc = new XmlDocument();
@@ -334,7 +341,7 @@ namespace SharpMap.Web.Wfs
                 _nsmgr = new XmlNamespaceManager(_xmlDoc.NameTable);
                 return _xmlDoc;
             }
-            catch (Exception ex)
+            catch (Exception /*ex*/)
             {
                 throw new ApplicationException("Could not convert the capabilities file into an XML document. Do you have illegal characters in the document.");
             }
@@ -345,11 +352,18 @@ namespace SharpMap.Web.Wfs
 
         }
 
+        /// <summary>
+        /// Method to parse the web-server's version
+        /// </summary>
         public void ParseVersion()
         {
-            if (XmlDoc.DocumentElement.Attributes["version"] != null)
+            var doc = XmlDoc.DocumentElement;
+            if (doc == null)
+                throw new InvalidOperationException("Could not get DocumentElement");
+            
+            if (doc.Attributes["version"] != null)
             {
-                _version = XmlDoc.DocumentElement.Attributes["version"].Value;
+                _version = doc.Attributes["version"].Value;
                 if (_version != "1.0.0" && _version != "1.1.0" && _version != "2.0.0")
                     throw new ApplicationException("WFS Version " + _version + " is not currently supported");
             }
@@ -361,20 +375,21 @@ namespace SharpMap.Web.Wfs
         /// <summary>
         /// Parses a servicedescription and stores the data in the ServiceIdentification property
         /// </summary>
-        /// <param name="doc">XmlDocument containing a valid Service Description</param>
         public void ParseCapabilities()
         {
             if(_xmlDoc == null)
             {
                 throw (new ApplicationException("A valid WFS capabilities XML file was not loaded!"));   
             }
-            else
-            {
-                if (_version == "1.0.0")
-                {
-                    #region Version 1.0.0
 
-                    if (_xmlDoc.DocumentElement.Attributes["version"] != null)
+            var documentElement = _xmlDoc.DocumentElement;
+            if (documentElement == null)
+                throw (new ApplicationException("A valid WFS capabilities XML file was not loaded!"));
+
+            switch (_version)
+            {
+                case "1.0.0":
+                    if (documentElement.Attributes["version"] != null)
                     {
                         _nsmgr.AddNamespace(String.Empty, "http://www.opengis.net/wfs");
                         _nsmgr.AddNamespace("sm", "");
@@ -384,28 +399,20 @@ namespace SharpMap.Web.Wfs
                     else
                         throw (new ApplicationException("No service version number found!"));
 
-                    XmlNode xnService = _xmlDoc.DocumentElement.SelectSingleNode("sm:Service", _nsmgr);
-                    //XmlNode xnCapability = doc.DocumentElement.SelectSingleNode("sm:Capability", _nsmgr);
+                    var xnService = documentElement.SelectSingleNode("sm:Service", _nsmgr);
                     if (xnService != null)
                         ParseService(xnService);
                     else
                         throw (new ApplicationException("No service tag found!"));
 
+                    //XmlNode xnCapability = doc.DocumentElement.SelectSingleNode("sm:Capability", _nsmgr);
+                    break;
 
-                    //if (xnCapability != null)
-                    //    ParseCapability(xnCapability);
-                    //else
-                    //    throw (new ApplicationException("No capability tag found!"));
-
-                    #endregion
-                }
-                else
-                {
-                    #region Versions 1.1.0 and 2.0.0
-
-                    if (_xmlDoc.DocumentElement.Attributes["version"] != null)
+                case "1.1.0":
+                case "2.0.0":
+                    if (documentElement.Attributes["version"] != null)
                     {
-                        _version = _xmlDoc.DocumentElement.Attributes["version"].Value;
+                        _version = documentElement.Attributes["version"].Value;
                         if (_version != "1.1.0" && _version != "2.0.0")
                             throw new ApplicationException("WFS Version " + _version + " is not currently supported");
 
@@ -418,33 +425,104 @@ namespace SharpMap.Web.Wfs
                         _nsmgr.AddNamespace("xsi", "http://www.w3.org/2001/XMLSchema-instance");
                     }
                     else
-                        throw (new ApplicationException("No service version number was found in the WFS capabilities XML file!"));
+                        throw (new ApplicationException(
+                            "No service version number was found in the WFS capabilities XML file!"));
 
-                    XmlNode xnServiceIdentification = _xmlDoc.DocumentElement.SelectSingleNode("ows:ServiceIdentification", _nsmgr);
+                    var xnServiceIdentification = documentElement.SelectSingleNode("ows:ServiceIdentification", _nsmgr);
 
                     if (xnServiceIdentification != null)
                         ParseServiceIdentification(xnServiceIdentification);
                     else
-                        throw (new ApplicationException("No ServiceIdentification tag found in the capabilities XML file!"));
+                        throw (new ApplicationException(
+                            "No ServiceIdentification tag found in the capabilities XML file!"));
 
-                    XmlNode xnServiceProvider = XmlDoc.DocumentElement.SelectSingleNode("ows:ServiceProvider", _nsmgr);
+                    var xnServiceProvider = documentElement.SelectSingleNode("ows:ServiceProvider", _nsmgr);
 
                     if (xnServiceProvider != null)
                         ParseServiceProvider(xnServiceProvider);
                     else
                         throw (new ApplicationException("No service tag found in the capabilities XML file!"));
+                    break;
+                default:
+                    throw new ApplicationException("Invalid Version");
 
-                    //XmlNode xnCapability = XmlDoc.DocumentElement.SelectSingleNode("sm:Capability", _nsmgr);
-                    //if (xnCapability != null)
-                    //    ParseCapability(xnCapability);
-                    //else
-                    //    throw (new ApplicationException("No capability tag found in the capabilities XML file!"));   
-
-                    #endregion
-                }
             }
-            
- 
+
+            /*
+            if (_version == "1.0.0")
+            {
+                #region Version 1.0.0
+
+                if (_xmlDoc.DocumentElement.Attributes["version"] != null)
+                {
+                    _nsmgr.AddNamespace(String.Empty, "http://www.opengis.net/wfs");
+                    _nsmgr.AddNamespace("sm", "");
+                    _nsmgr.AddNamespace("xlink", "http://www.w3.org/1999/xlink");
+                    _nsmgr.AddNamespace("xsi", "http://www.w3.org/2001/XMLSchema-instance");
+                }
+                else
+                    throw (new ApplicationException("No service version number found!"));
+
+                XmlNode xnService = _xmlDoc.DocumentElement.SelectSingleNode("sm:Service", _nsmgr);
+                //XmlNode xnCapability = doc.DocumentElement.SelectSingleNode("sm:Capability", _nsmgr);
+                if (xnService != null)
+                    ParseService(xnService);
+                else
+                    throw (new ApplicationException("No service tag found!"));
+
+
+                //if (xnCapability != null)
+                //    ParseCapability(xnCapability);
+                //else
+                //    throw (new ApplicationException("No capability tag found!"));
+
+                #endregion
+            }
+            else
+            {
+                #region Versions 1.1.0 and 2.0.0
+
+                if (_xmlDoc.DocumentElement.Attributes["version"] != null)
+                {
+                    _version = _xmlDoc.DocumentElement.Attributes["version"].Value;
+                    if (_version != "1.1.0" && _version != "2.0.0")
+                        throw new ApplicationException("WFS Version " + _version + " is not currently supported");
+
+                    _nsmgr.AddNamespace(String.Empty, "http://www.opengis.net/wfs");
+                    _nsmgr.AddNamespace("ows", "http://www.opengis.net/ows");
+                    _nsmgr.AddNamespace("ogc", "http://www.opengis.net/ogc");
+                    _nsmgr.AddNamespace("wfs", "http://www.opengis.net/wfs");
+                    _nsmgr.AddNamespace("gml", "http://www.opengis.net/gml");
+                    _nsmgr.AddNamespace("xlink", "http://www.w3.org/1999/xlink");
+                    _nsmgr.AddNamespace("xsi", "http://www.w3.org/2001/XMLSchema-instance");
+                }
+                else
+                    throw (new ApplicationException("No service version number was found in the WFS capabilities XML file!"));
+
+                XmlNode xnServiceIdentification = _xmlDoc.DocumentElement.SelectSingleNode("ows:ServiceIdentification", _nsmgr);
+
+                if (xnServiceIdentification != null)
+                    ParseServiceIdentification(xnServiceIdentification);
+                else
+                    throw (new ApplicationException("No ServiceIdentification tag found in the capabilities XML file!"));
+
+                XmlNode xnServiceProvider = XmlDoc.DocumentElement.SelectSingleNode("ows:ServiceProvider", _nsmgr);
+
+                if (xnServiceProvider != null)
+                    ParseServiceProvider(xnServiceProvider);
+                else
+                    throw (new ApplicationException("No service tag found in the capabilities XML file!"));
+
+                //XmlNode xnCapability = XmlDoc.DocumentElement.SelectSingleNode("sm:Capability", _nsmgr);
+                //if (xnCapability != null)
+                //    ParseCapability(xnCapability);
+                //else
+                //    throw (new ApplicationException("No capability tag found in the capabilities XML file!"));   
+
+                #endregion
+            }
+             */
+            _vendorSpecificCapabilities = documentElement.SelectSingleNode("sm:VendorSpecificCapabilities");
         }
 
         /// <summary>
@@ -558,6 +636,9 @@ namespace SharpMap.Web.Wfs
             }
         }
 
+        /// <summary>
+        /// Method to validate the web server's response
+        /// </summary>
         public void ValidateXml()
         {
             throw new NotImplementedException();

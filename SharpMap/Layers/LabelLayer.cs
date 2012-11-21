@@ -372,11 +372,13 @@ namespace SharpMap.Layers
         #region IDisposable Members
 
         /// <summary>
-        /// Disposes the object
+        /// Releases managed resources
         /// </summary>
-        public void Dispose()
+        protected override void ReleaseManagedResources()
         {
-            if (DataSource != null) DataSource.Dispose();
+            if (DataSource != null)
+                DataSource.Dispose();
+            base.ReleaseManagedResources();
         }
 
         #endregion
@@ -841,10 +843,11 @@ namespace SharpMap.Layers
                 angle *= (180d/Math.PI); // convert radians to degrees
                 label.Rotation = (float) angle - 90; // -90 text orientation
             }
-            double tmpx = vertices[midPoint].X + (dx*0.5);
-            double tmpy = vertices[midPoint].Y + (dy*0.5);
-            label.LabelPoint = map.WorldToImage(new Coordinate(tmpx, tmpy));
+            var tmpx = vertices[midPoint].X + (dx*0.5);
+            var tmpy = vertices[midPoint].Y + (dy*0.5);
+            label.Location = map.WorldToImage(new Coordinate(tmpx, tmpy));
         }
+
         private static void CalculateLabelAroundOnLineString(ILineString line, ref BaseLabel label, Map map, System.Drawing.Graphics g, System.Drawing.SizeF textSize)
         {
             var sPoints = line.Coordinates;

@@ -60,6 +60,11 @@ namespace SharpMap.Rendering.Decoration
 
         #region MapDecoration overrides
 
+        /// <summary>
+        /// Function to render the actual map decoration
+        /// </summary>
+        /// <param name="g"></param>
+        /// <param name="map"></param>
         protected override void OnRender(Graphics g, Map map)
         {
             // Render the rosetta

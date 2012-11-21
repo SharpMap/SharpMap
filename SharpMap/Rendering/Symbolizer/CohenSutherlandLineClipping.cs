@@ -4,6 +4,10 @@ using GeoAPI.Geometries;
 
 namespace SharpMap.Rendering.Symbolizer
 {
+    /// <summary>
+    /// SharpMap's Cohen-Sutherland line clipping algorithm
+    /// </summary>
+    /// <remarks>Inspired by <see href="http://en.wikipedia.org/wiki/Line_clipping"/></remarks>
     public class CohenSutherlandLineClipping
     {
         [Flags]
@@ -19,12 +23,12 @@ namespace SharpMap.Rendering.Symbolizer
         private readonly double _xmin, _xmax, _ymin, _ymax ;
 
         /// <summary>
-        /// 
+        /// Creates an instance of this class
         /// </summary>
-        /// <param name="xmin"></param>
-        /// <param name="ymin"></param>
-        /// <param name="xmax"></param>
-        /// <param name="ymax"></param>
+        /// <param name="xmin">The minimum x-ordinate value</param>
+        /// <param name="ymin">The minimum y-ordinate value</param>
+        /// <param name="xmax">The maximum x-ordinate value</param>
+        /// <param name="ymax">The maximum y-ordinate value</param>
         public CohenSutherlandLineClipping(double xmin, double ymin, double xmax, double ymax)
         {
             _xmin = xmin;
@@ -51,10 +55,10 @@ namespace SharpMap.Rendering.Symbolizer
         }
 
         /// <summary>
-        /// 
+        /// Clips a <see cref="ILineString"/> to the bounding box defined by <see cref="CohenSutherlandLineClipping(double,double,double,double)"/>.
         /// </summary>
-        /// <param name="lineString"></param>
-        /// <returns></returns>
+        /// <param name="lineString">The line string to clip</param>
+        /// <returns>A (possibly multi) line string</returns>
         public IMultiLineString ClipLineString(ILineString lineString)
         {
             //Factory
@@ -79,7 +83,7 @@ namespace SharpMap.Rendering.Symbolizer
             if (oc0 == OutsideClipCodes.Inside)
                 clippedVertices.Add( vertices[0] );
 
-            double x1old = double.NaN, y1old = double.NaN;
+            double x1Old = double.NaN, y1Old = double.NaN;
 
             for (var i = 1; i < count; i++)
             {
@@ -160,7 +164,7 @@ namespace SharpMap.Rendering.Symbolizer
                     if (oc0Initial != oc0)
                         clippedVertices.Add(new Coordinate(x0, y0));
                     
-                    if (x1old != x1 || y1old != y1)
+                    if (x1Old != x1 || y1Old != y1)
                         clippedVertices.Add(new Coordinate(x1, y1));
 
                     if (oc1Initial != OutsideClipCodes.Inside)
@@ -172,8 +176,8 @@ namespace SharpMap.Rendering.Symbolizer
                         }
                     }
                 }
-                x0 = x1old = x1Orig;
-                y0 = y1old = y1Orig;
+                x0 = x1Old = x1Orig;
+                y0 = y1Old = y1Orig;
                 oc0 = oc0Initial = oc1Initial;
             }
 
@@ -185,10 +189,10 @@ namespace SharpMap.Rendering.Symbolizer
 
 
         /// <summary>
-        /// 
+        /// Clips a <see cref="IMultiLineString"/> to the bounding box defined by <see cref="CohenSutherlandLineClipping(double,double,double,double)"/>.
         /// </summary>
-        /// <param name="lineStrings"></param>
-        /// <returns></returns>
+        /// <param name="lineStrings">The multi-line string to clip</param>
+        /// <returns>A (possibly multi) line string</returns>
         public IMultiLineString ClipLineString(IMultiLineString lineStrings)
         {
             var clippedLineStringList = new List<ILineString>();

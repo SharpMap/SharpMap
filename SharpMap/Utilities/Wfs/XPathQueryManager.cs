@@ -86,6 +86,7 @@ namespace SharpMap.Utilities.Wfs
         /// Initializes a new instance of the <see cref="XPathQueryManager"/> class.
         /// </summary>
         /// <param name="xPathDoc">An XmlDocument instance</param>
+        /// <param name="xNav">An <see cref="XPathNavigator"/> instance</param>
         /// <param name="paramContext">A <see cref="XPathQueryManager.CustomQueryContext"/> instance for parameterized XPath expressions</param>
         private XPathQueryManager(XPathDocument xPathDoc, XPathNavigator xNav, CustomQueryContext paramContext)
         {
@@ -743,7 +744,7 @@ namespace SharpMap.Utilities.Wfs
             /// <summary>
             /// The name to use when embedding the function in an XPath expression.
             /// </summary>
-            public static readonly string FunctionName = "_PARAMCOMPWITHTARGETNS_";
+            public static new readonly string FunctionName = "_PARAMCOMPWITHTARGETNS_";
 
             #endregion
 
@@ -774,7 +775,7 @@ namespace SharpMap.Utilities.Wfs
             public override object Invoke(XsltContext xsltContext, object[] args, XPathNavigator docContext)
             {
                 return ((string) ((string) args[1] + ResolveArgument(args[2]))).Equals(
-                    resolveNsPrefix(ResolveArgument(args[0]), (string) args[1], docContext), StringComparison.Ordinal);
+                    ResolveNsPrefix(ResolveArgument(args[0]), (string) args[1], docContext), StringComparison.Ordinal);
             }
 
             #endregion
@@ -787,16 +788,16 @@ namespace SharpMap.Utilities.Wfs
             /// and substituted. Otherwise the target namespace is placed first.
             /// </summary>
             /// <param name="args">An argument of the function to be resolved</param>
-            /// <param name="xsltContext">The Xslt context for namespace resolving</param>
-            private string resolveNsPrefix(string args, string targetNs, XPathNavigator docContext)
+            /// <param name="targetNs">The target namespace</param>
+            /// <param name="docContext">The document context</param>
+            private static string ResolveNsPrefix(string args, string targetNs, XPathNavigator docContext)
             {
-                string prefix;
-                string ns;
                 if (args.Contains(":"))
                 {
-                    prefix = args.Substring(0, args.IndexOf(":"));
+                    var prefix = args.Substring(0, args.IndexOf(":", StringComparison.Ordinal));
+                    string ns;
                     if (!string.IsNullOrEmpty((ns = docContext.LookupNamespace(prefix))))
-                        return args = args.Replace(prefix + ":", ns);
+                        return args.Replace(prefix + ":", ns);
                     return targetNs + args;
                 }
                 return targetNs + args;

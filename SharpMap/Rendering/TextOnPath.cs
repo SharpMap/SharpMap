@@ -1,224 +1,430 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Drawing;
 using System.Drawing.Drawing2D;
-using System.Drawing.Text;
+using System.Globalization;
+
 namespace SharpMap.Rendering
 {
+    /// <summary>
+    /// Horizontal alignment options for texts on path
+    /// </summary>
     public enum TextPathAlign
     {
+        /// <summary>
+        /// Aligned on the left
+        /// </summary>
         Left = 0,
+        /// <summary>
+        /// Aligned in the middle
+        /// </summary>
         Center = 1,
+        /// <summary>
+        /// Aligned on the right
+        /// </summary>
         Right = 2
     }
+
+    /// <summary>
+    /// Vertical alignment option for texts on path
+    /// </summary>
     public enum TextPathPosition
     {
+        /// <summary>
+        /// Above the path
+        /// </summary>
         OverPath = 0,
+        /// <summary>
+        /// Center
+        /// </summary>
         CenterPath = 1,
+        /// <summary>
+        /// Below the path
+        /// </summary>
         UnderPath = 2
     }
+
+    /// <summary>
+    /// Extensions methods for text on path label rendering 
+    /// </summary>
     public static class GraphicsExtension
     {
-        private static readonly TextOnPath TEXT_ON_PATH = new TextOnPath();
-
+        /// <summary>
+        /// Method to measure the length of a string
+        /// </summary>
+        /// <param name="graphics">The <see cref="Graphics"/> object to use</param>
+        /// <param name="s">The string to measure</param>
+        /// <param name="font">The <see cref="Font"/> to use</param>
+        /// <param name="brush">The <see cref="Brush"/> to use</param>
+        /// <param name="graphicsPath">The <see cref="GraphicsPath"/> describing the </param>
+        /// <returns>An array of <see cref="RectangleF"/>s</returns>
         public static RectangleF[] MeasureString(Graphics graphics, string s, Font font, Brush brush, GraphicsPath graphicsPath)
         {
             return MeasureString(graphics, s, font, brush, TextPathAlign.Left, TextPathPosition.CenterPath, 100, graphicsPath);
         }
 
-        public static RectangleF[] MeasureString( Graphics graphics, string s, Font font, Brush brush, TextPathAlign textPathAlign, TextPathPosition textPathPosition, GraphicsPath graphicsPath)
+        /// <summary>
+        /// Method to measure the length of a string
+        /// </summary>
+        /// <param name="graphics">The <see cref="Graphics"/> object to use</param>
+        /// <param name="s">The string to measure</param>
+        /// <param name="font">The <see cref="Font"/> to use</param>
+        /// <param name="brush">The <see cref="Brush"/> to use</param>
+        /// <param name="textPathAlign">The horizontal position on the <paramref name="graphicsPath"/>"/></param>
+        /// <param name="textPathPosition">The vertical position on the <paramref name="graphicsPath"/></param>
+        /// <param name="graphicsPath">The <see cref="GraphicsPath"/> describing the </param>
+        /// <returns>An array of <see cref="RectangleF"/>s</returns>
+        public static RectangleF[] MeasureString(Graphics graphics, string s, Font font, Brush brush, TextPathAlign textPathAlign, TextPathPosition textPathPosition, GraphicsPath graphicsPath)
         {
             return MeasureString(graphics, s, font, brush, textPathAlign, textPathPosition, 100, graphicsPath);
         }
 
-        public static void DrawString( Graphics graphics, string s, Font font, Brush brush, GraphicsPath graphicsPath)
+        /// <summary>
+        /// Method to draw <paramref name="s"/> on the provided <paramref name="graphicsPath"/>
+        /// </summary>
+        /// <param name="graphics">The <see cref="Graphics"/> object to use</param>
+        /// <param name="s">The string to measure</param>
+        /// <param name="font">The <see cref="Font"/> to use</param>
+        /// <param name="brush">The <see cref="Brush"/> to use</param>
+        /// <param name="graphicsPath">The <see cref="GraphicsPath"/> describing the </param>
+        public static void DrawString(Graphics graphics, string s, Font font, Brush brush, GraphicsPath graphicsPath)
         {
             DrawString(graphics, s, font, brush, TextPathAlign.Left, TextPathPosition.CenterPath, 100, graphicsPath);
         }
 
-        public static void DrawString( Graphics graphics, string s, Font font, Brush brush, TextPathAlign textPathAlign, TextPathPosition textPathPosition, GraphicsPath graphicsPath)
+        /// <summary>
+        /// Method to draw <paramref name="s"/> on the provided <paramref name="graphicsPath"/>
+        /// </summary>
+        /// <param name="graphics">The <see cref="Graphics"/> object to use</param>
+        /// <param name="s">The string to measure</param>
+        /// <param name="font">The <see cref="Font"/> to use</param>
+        /// <param name="brush">The <see cref="Brush"/> to use</param>
+        /// <param name="textPathAlign">The horizontal position on the <paramref name="graphicsPath"/>"/></param>
+        /// <param name="textPathPosition">The vertical position on the <paramref name="graphicsPath"/></param>
+        /// <param name="graphicsPath">The <see cref="GraphicsPath"/> describing the </param>
+        public static void DrawString(Graphics graphics, string s, Font font, Brush brush, TextPathAlign textPathAlign, TextPathPosition textPathPosition, GraphicsPath graphicsPath)
         {
             DrawString(graphics, s, font, brush, textPathAlign, textPathPosition, 100, graphicsPath);
         }
 
-        public static RectangleF[] MeasureString( Graphics graphics, string s, Font font, Brush brush, TextPathAlign textPathAlign, TextPathPosition textPathPosition, int letterSpace, GraphicsPath graphicsPath)
+        /// <summary>
+        /// Method to measure the length of a string along a <see cref="GraphicsPath"/>
+        /// </summary>
+        /// <param name="graphics">The <see cref="Graphics"/> object to use</param>
+        /// <param name="s">The string to measure</param>
+        /// <param name="font">The <see cref="Font"/> to use</param>
+        /// <param name="brush">The <see cref="Brush"/> to use</param>
+        /// <param name="textPathAlign">The horizontal position on the <paramref name="graphicsPath"/>"/></param>
+        /// <param name="textPathPosition">The vertical position on the <paramref name="graphicsPath"/></param>
+        /// <param name="letterSpace">A value controling the spacing between letters</param>
+        /// <param name="graphicsPath">The <see cref="GraphicsPath"/> describing the </param>
+        /// <returns>An array of <see cref="RectangleF"/>s</returns>
+        public static RectangleF[] MeasureString(Graphics graphics, string s, Font font, Brush brush, TextPathAlign textPathAlign, TextPathPosition textPathPosition, int letterSpace, GraphicsPath graphicsPath)
         {
-            List<float> angles = new List<float>();
-            List<PointF> pointsText = new List<PointF>();
-            List<Point> pointsTextUp = new List<Point>();
-            return MeasureString(graphics, s, font, brush, textPathAlign, textPathPosition, 100, 0, graphicsPath,ref angles, ref pointsText, ref pointsTextUp);
+            var angles = new List<float>();
+            var pointsText = new List<PointF>();
+            var pointsTextUp = new List<Point>();
+            return MeasureString(graphics, s, font, brush, textPathAlign, textPathPosition, 100, 0, graphicsPath, ref angles, ref pointsText, ref pointsTextUp);
         }
 
-        public static void DrawString( Graphics graphics, string s, Font font, Brush brush, TextPathAlign textPathAlign, TextPathPosition textPathPosition, int letterSpace, GraphicsPath graphicsPath)
+        /// <summary>
+        /// Method to measure the length of a string along a <see cref="GraphicsPath"/>
+        /// </summary>
+        /// <param name="graphics">The <see cref="Graphics"/> object to use</param>
+        /// <param name="s">The string to measure</param>
+        /// <param name="font">The <see cref="Font"/> to use</param>
+        /// <param name="brush">The <see cref="Brush"/> to use</param>
+        /// <param name="textPathAlign">The horizontal position on the <paramref name="graphicsPath"/>"/></param>
+        /// <param name="textPathPosition">The vertical position on the <paramref name="graphicsPath"/></param>
+        /// <param name="letterSpace">A value controling the spacing between letters</param>
+        /// <param name="graphicsPath">The <see cref="GraphicsPath"/> describing the </param>
+        /// <returns>An array of <see cref="RectangleF"/>s</returns>
+        public static void DrawString(Graphics graphics, string s, Font font, Brush brush, TextPathAlign textPathAlign, TextPathPosition textPathPosition, int letterSpace, GraphicsPath graphicsPath)
         {
             DrawString(graphics, s, font, brush, textPathAlign, textPathPosition, 100, 0, graphicsPath,false);
         }
-        public static RectangleF[] MeasureString( Graphics graphics, string s, Font font, Brush brush, TextPathAlign textPathAlign, TextPathPosition textPathPosition, int letterSpace, float rotateDegree, GraphicsPath graphicsPath,ref List<float> angles, ref List<PointF> pointsText, ref List<Point> pointsUp)
+
+        /// <summary>
+        /// Method to draw a string on a <see cref="GraphicsPath"/> of a string
+        /// </summary>
+        /// <param name="graphics">The <see cref="Graphics"/> object to use</param>
+        /// <param name="s">The string to measure</param>
+        /// <param name="font">The <see cref="Font"/> to use</param>
+        /// <param name="brush">The <see cref="Brush"/> to use</param>
+        /// <param name="textPathAlign">The horizontal position on the <paramref name="graphicsPath"/>"/></param>
+        /// <param name="textPathPosition">The vertical position on the <paramref name="graphicsPath"/></param>
+        /// <param name="letterSpace">A value controling the spacing between letters</param>
+        /// <param name="rotateDegree">A value controling the rotation of <paramref name="s"/></param>
+        /// <param name="graphicsPath">The <see cref="GraphicsPath"/> along which to render.</param>
+        /// <param name="angles">A list of angle values (in degrees), one for each letter</param>
+        /// <param name="pointsText">A list of positions, one for each letter</param>
+        /// <param name="pointsUp">A list of points (don't know what for)</param>
+        public static RectangleF[] MeasureString(Graphics graphics, string s, Font font, Brush brush,
+                                                 TextPathAlign textPathAlign, TextPathPosition textPathPosition,
+                                                 int letterSpace, float rotateDegree, GraphicsPath graphicsPath,
+                                                 ref List<float> angles, ref List<PointF> pointsText,
+                                                 ref List<Point> pointsUp)
         {
-            TEXT_ON_PATH.Text = s;
-            TEXT_ON_PATH.Font = font;
-            TEXT_ON_PATH.FillColorTop = brush;
-            TEXT_ON_PATH.TextPathPathPosition = textPathPosition;
-            TEXT_ON_PATH.TextPathAlignTop = textPathAlign;
-            TEXT_ON_PATH.PathDataTop = graphicsPath.PathData;
-            TEXT_ON_PATH.LetterSpacePercentage = letterSpace;
-            TEXT_ON_PATH._graphics = graphics;
-            TEXT_ON_PATH._graphicsPath = graphicsPath;
-            TEXT_ON_PATH._measureString = true;
-            TEXT_ON_PATH._rotateDegree = rotateDegree;
-            TEXT_ON_PATH.DrawTextOnPath();
-            angles = TEXT_ON_PATH._angles;
-            pointsText = TEXT_ON_PATH._pointText;
-            pointsUp = TEXT_ON_PATH._pointTextUp;
-            return TEXT_ON_PATH._regionList.ToArray();
+            var top = TextOnPath.TextOnPathInstance;
+            top.Text = s;
+            top.Font = font;
+            top.FillColorTop = brush;
+            top.TextPathPathPosition = textPathPosition;
+            top.TextPathAlignTop = textPathAlign;
+            top.PathDataTop = graphicsPath.PathData;
+            top.LetterSpacePercentage = letterSpace;
+            top.Graphics = graphics;
+            top.GraphicsPath = graphicsPath;
+            top.MeasureString = true;
+            top.RotateDegree = rotateDegree;
+            top.DrawTextOnPath();
+            angles = top.Angles;
+            pointsText = top.PointsText;
+            pointsUp = top.PointsTextUp;
+            return top.RegionList.ToArray();
         }
 
-        public static void DrawString( Graphics graphics, string s, Font font, Brush brush, TextPathAlign textPathAlign, TextPathPosition textPathPosition, int letterSpace, float rotateDegree, GraphicsPath graphicsPath, bool showPath)
+        /// <summary>
+        /// Method to draw a string on a <see cref="GraphicsPath"/> of a string
+        /// </summary>
+        /// <param name="graphics">The <see cref="Graphics"/> object to use</param>
+        /// <param name="s">The string to measure</param>
+        /// <param name="font">The <see cref="Font"/> to use</param>
+        /// <param name="brush">The <see cref="Brush"/> to use</param>
+        /// <param name="textPathAlign">The horizontal position on the <paramref name="graphicsPath"/>"/></param>
+        /// <param name="textPathPosition">The vertical position on the <paramref name="graphicsPath"/></param>
+        /// <param name="letterSpace">A value controling the spacing between letters</param>
+        /// <param name="rotateDegree">A value controling the rotation of <paramref name="s"/></param>
+        /// <param name="graphicsPath">The <see cref="GraphicsPath"/> describing the </param>
+        /// <param name="showPath">A value indicating if the <paramref name="graphicsPath"/> should be drawn, too.</param>
+        public static void DrawString(Graphics graphics, string s, Font font, Brush brush, TextPathAlign textPathAlign, TextPathPosition textPathPosition, int letterSpace, float rotateDegree, GraphicsPath graphicsPath, bool showPath)
         {
-            TEXT_ON_PATH.Text = s;
-            TEXT_ON_PATH.Font = font;
-            TEXT_ON_PATH.FillColorTop = brush;
-            TEXT_ON_PATH.TextPathPathPosition = textPathPosition;
-            TEXT_ON_PATH.TextPathAlignTop = textPathAlign;
-            TEXT_ON_PATH.PathDataTop = graphicsPath.PathData;
-            TEXT_ON_PATH.LetterSpacePercentage = letterSpace;
-            TEXT_ON_PATH._graphics = graphics;
-            TEXT_ON_PATH._graphicsPath = graphicsPath;
-            TEXT_ON_PATH._measureString = false;
-            TEXT_ON_PATH._rotateDegree = rotateDegree;
-            TEXT_ON_PATH.ShowPath = showPath;
-            TEXT_ON_PATH.DrawTextOnPath();
+            var top = TextOnPath.TextOnPathInstance;
+            
+            top.Text = s;
+            top.Font = font;
+            top.FillColorTop = brush;
+            top.TextPathPathPosition = textPathPosition;
+            top.TextPathAlignTop = textPathAlign;
+            top.PathDataTop = graphicsPath.PathData;
+            top.LetterSpacePercentage = letterSpace;
+            top.Graphics = graphics;
+            top.GraphicsPath = graphicsPath;
+            top.MeasureString = false;
+            top.RotateDegree = rotateDegree;
+            top.ShowPath = showPath;
+            top.DrawTextOnPath();
 
         }
     }
+
+    /// <summary>
+    /// Text on path generator class
+    /// </summary>
     public class TextOnPath
     {
+        internal readonly static TextOnPath TextOnPathInstance = new TextOnPath();
+
         private PathData _pathdata;
-        private string _text;
+
+        private bool _measureString;
         private Font _font;
         private Pen _colorHalo = new Pen(Color.Black,1);
         private Brush _fillBrush = new SolidBrush(Color.Black);
         private TextPathAlign _pathalign = TextPathAlign.Center;
-        private Color _pathColorTop = Color.LightBlue;
-        private int _letterspacepercentage = 100;
+        private double _letterspacepercentage = 1;
         private TextPathPosition _textPathPathPosition = TextPathPosition.CenterPath;
+
+        //ToDo, this is a result, intermediate?
+        private List<RectangleF> _regionList = new List<RectangleF>();
+        private List<PointF> _pointText = new List<PointF>();
+        private List<Point> _pointTextUp = new List<Point>();
+        private readonly List<float> _angles = new List<float>();
+        
+        /// <summary>
+        /// The last catched exception is stored here
+        /// </summary>
         public Exception LastError;
-        internal Graphics _graphics;
-        internal GraphicsPath _graphicsPath;
-        public Graphics Graphics
-        {
-            get { return _graphics; }
-            set { _graphics = value; }
-        }
-        internal bool _measureString=false;
+        
+
+        /// <summary>
+        /// Gets or sets the <see cref="Graphics"/> object
+        /// </summary>
+        public Graphics Graphics { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating the <see cref="GraphicsPath"/> used to render text along
+        /// </summary>
+        public GraphicsPath GraphicsPath { get; set; }
+        
+        /// <summary>
+        /// Gets or sets a value indicating whether the string should be measured
+        /// </summary>
         public bool MeasureString
         {
             get { return _measureString; }
             set { _measureString = value; }
         }
-        internal List<RectangleF> _regionList = new List<RectangleF>();
+        
+
+        /// <summary>
+        /// Gets or sets a list of regions
+        /// </summary>
         public List<RectangleF> RegionList
         {
             get { return _regionList; }
             set { _regionList = value; }
         }
-        internal List<PointF> _pointText = new List<PointF>();
+
+        /// <summary>
+        /// Gets or sets a list of <see cref="PointF"/>s
+        /// </summary>
         public List<PointF> PointsText
         {
             get { return _pointText; }
             set { _pointText = value; }
         }
-        internal List<Point> _pointTextUp = new List<Point>();
+        
+        /// <summary>
+        /// Gets or sets a list of <see cref="PointF"/>s
+        /// </summary>
         public List<Point> PointsTextUp
         {
             get { return _pointTextUp; }
             set { _pointTextUp = value; }
         }
-        internal List<float> _angles = new List<float>();
+
+        /// <summary>
+        /// Gets or sets a list of angles (in radians?)
+        /// </summary>
         public List<float> Angles
         {
             get { return _angles; }
         }
-        internal float _rotateDegree;
-        private bool _showPath = false;
+
+        /// <summary>
+        /// Gets or sets a value indicating the rotation
+        /// </summary>
+        public float RotateDegree { get; set; } 
+
+        /// <summary>
+        /// Creates an instance of this class
+        /// </summary>
+        internal TextOnPath()
+        {
+            PathColorTop = Color.LightBlue;
+        }
+
+        /// <summary>
+        /// Gets or sets a value indicating the vertical aligmnent
+        /// </summary>
         public TextPathPosition TextPathPathPosition
         {
             get { return _textPathPathPosition; }
             set { _textPathPathPosition = value; }
         }
+
+        /// <summary>
+        /// Gets or sets a value indicating the path's data
+        /// </summary>
         public PathData PathDataTop
         {
             get { return _pathdata; }
             set { _pathdata = value; }
         }
 
-        public string Text
-        {
-            get { return _text; }
-            set { _text = value; }
-        }
+        /// <summary>
+        /// Gets or sets a value indicating the text to render
+        /// </summary>
+        public string Text { get; set; }
 
+        /// <summary>
+        /// Gets or sets the <see cref="Font"/> to use for drawing the text
+        /// </summary>
         public Font Font
         {
             get { return _font; }
             set { _font = value; }
         }
 
+        /// <summary>
+        /// Gets or sets the <see cref="Pen"/> to use for halo'ing the text
+        /// </summary>
         public Pen ColorHalo
         {
             get { return _colorHalo; }
             set { _colorHalo = value; }
         }
 
+        /// <summary>
+        /// Gets or sets a value indicating the <see cref="Brush"/> used to fill the text path
+        /// </summary>
         public Brush FillColorTop
         {
             get { return _fillBrush; }
             set { _fillBrush = value; }
         }
 
+        /// <summary>
+        /// Get or sets a value indicating the horizontal alignment of the path
+        /// </summary>
         public TextPathAlign TextPathAlignTop
         {
             get { return _pathalign; }
             set { _pathalign = value; }
         }
-        public Color PathColorTop
-        {
-            get { return _pathColorTop; }
-            set { _pathColorTop = value; }
-        }
+
+        /// <summary>
+        /// Gets or sets a value indicating the color of the <see cref="GraphicsPath"/>
+        /// </summary>
+        public Color PathColorTop { get; set; }
 
 
+        /// <summary>
+        /// Gets or sets a value controling the space between letters
+        /// </summary>
+        /// <remarks>The default value is <value>100</value></remarks>
         public int LetterSpacePercentage
         {
-            get { return _letterspacepercentage; }
-            set { _letterspacepercentage = value; }
+            get { return (int)(100 * _letterspacepercentage); }
+            set { _letterspacepercentage = value/100d; }
         }
-        public bool ShowPath
-        {
-            get { return _showPath; }
-            set { _showPath = value; }
-        }
-        public void DrawTextOnPath(PathData pathdata, string text, Font font, Pen color, Brush fillcolor, int letterspacepercentage)
+
+        /// <summary>
+        /// Gets or sets a value indicating that the used path should be rendered as well
+        /// </summary>
+        public bool ShowPath { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="pathdata">The path data</param>
+        /// <param name="text">The text</param>
+        /// <param name="font">The font</param>
+        /// <param name="haloPen">The halo pen</param>
+        /// <param name="fillcolor">The brush to fill letters</param>
+        /// <param name="letterspacepercentage">The </param>
+        public void DrawTextOnPath(PathData pathdata, string text, Font font, Pen haloPen, Brush fillcolor, int letterspacepercentage)
         {
 
             _pathdata = pathdata;
-            _text = text;
+            Text = text;
             _font = font;
-            _colorHalo= color;
+            _colorHalo= haloPen;
             _fillBrush = fillcolor;
-            _letterspacepercentage = letterspacepercentage;
+            _letterspacepercentage = letterspacepercentage / 100d;
 
             DrawTextOnPath();
         }
 
-
+        /// <summary>
+        /// Method to draw the text on the <see cref="GraphicsPath"/>
+        /// </summary>
         public void DrawTextOnPath()
         {
-            PointF[] tmpPoints;
-            PointF[] points = new PointF[25001];
-            int count = 0;
-            GraphicsPath gp = new GraphicsPath(_pathdata.Points, _pathdata.Types) { FillMode = FillMode.Winding };
+            var points = new PointF[25001];
+            var count = 0;
+            var gp = new GraphicsPath(_pathdata.Points, _pathdata.Types) { FillMode = FillMode.Winding };
             _regionList.Clear();
             _angles.Clear();
             _pointText.Clear();
@@ -226,8 +432,9 @@ namespace SharpMap.Rendering
             gp.Flatten(null, 1);
             try
             {
-                PointF tmpPoint = gp.PathPoints[0];
+                var tmpPoint = gp.PathPoints[0];
                 int i;
+                PointF[] tmpPoints;
                 for (i = 0; i <= gp.PathPoints.Length - 2; i++)
                 {
                     if (gp.PathTypes[i + 1] == (byte)PathPointType.Start | (gp.PathTypes[i] & (byte)PathPointType.CloseSubpath) == (byte)PathPointType.CloseSubpath)
@@ -250,10 +457,10 @@ namespace SharpMap.Rendering
                 points = CleanPoints(tmpPoints);
 
                 count = points.Length - 1;
-                if (isVisible(points, count) == true)
+                if (IsVisible(points, count))
                 {
                     // if can show all letter
-                    DrawText(points, count);
+                    DrawText(Graphics, points, count);
                 }
                 gp.Dispose();
                 //DrawText(points, count);
@@ -266,42 +473,45 @@ namespace SharpMap.Rendering
             }
         }
         /// <summary>
-        /// Clear same point
+        /// Method to remove consecutive same/equal <see cref="PointF"/>s from the array
         /// </summary>
-        /// <param name="points"></param>
-        /// <returns></returns>
+        /// <param name="points">An array of <see cref="PointF"/>s</param>
+        /// <returns>An array of <see cref="PointF"/>s without repeated values.</returns>
         private static PointF[] CleanPoints(PointF[] points)
         {
-
-            int i;
-            PointF[] tmppoints = new PointF[points.Length + 1];
-            PointF lastpoint = default(PointF);
-            int count = 0;
-
-            for (i = 0; i <= points.Length - 1; i++)
+            if (points == null)
+                return null;
+            if (points.Length == 0) 
+                return new PointF[0];
+            var tmpPoints = new List<PointF>(points.Length);
+            tmpPoints.Add(points[0]);
+            var lastIndex = 0;
+            for (var i = 1; i <= points.Length - 1; i++)
             {
-                if (i == 0 | points[i].X != lastpoint.X | points[i].Y != lastpoint.Y)
+                if (!tmpPoints[lastIndex].Equals(points[i]))
                 {
-                    tmppoints[count] = points[i];
-                    count += 1;
+                    tmpPoints.Add(points[i]);
+                    lastIndex++;
                 }
-                lastpoint = points[i];
             }
 
-
-            points = new PointF[count];
-            Array.Copy(tmppoints, points, count);
-
-            return points;
+            return tmpPoints.ToArray();
         }
-        public bool isVisible(PointF[] points, int maxPoints)
+
+        /// <summary>
+        /// Method to evaluate visibility
+        /// </summary>
+        /// <param name="points">An array of <see cref="PointF"/>s</param>
+        /// <param name="maxPoints">The maximum number of points</param>
+        /// <returns></returns>
+        public bool IsVisible(PointF[] points, int maxPoints)
         {
-            bool result = true;
-            Graphics g = _graphics;           
-            int count = 0;     
-            double maxWidthText = default(double);
+            var result = true;
+            var g = Graphics;           
+            var count = 0;     
+            var maxWidthText = default(double);
             int i;
-            for (i = 0; i <= _text.Length - 1; i++)
+            for (i = 0; i <= Text.Length - 1; i++)
             {
                 maxWidthText += StringRegion(g, i) * LetterSpacePercentage / 100;
             }
@@ -314,16 +524,16 @@ namespace SharpMap.Rendering
                     count = (int)((maxPoints - maxWidthText) / 2);                    
                     break;
                 case TextPathAlign.Right:
-                    count = (int)(maxPoints - maxWidthText - (double)StringRegion(g, _text.Length - 1) * LetterSpacePercentage / 100);                  
+                    count = (int)(maxPoints - maxWidthText - (double)StringRegion(g, Text.Length - 1) * LetterSpacePercentage / 100);                  
                     break;
             }
-            int lStrWidth = (int)(StringRegion(g, 0) * LetterSpacePercentage / 100);
+            var lStrWidth = (int)(StringRegion(g, 0) * LetterSpacePercentage / 100);
             if ((count + lStrWidth / 2) < 0)
             {
                 count = -(lStrWidth / 2);
             }
             double currentWidthText = 0;
-            for (int j =(int)(count+lStrWidth/2); j <= _text.Length - 1; j++)
+            for (int j =count+lStrWidth/2; j <= Text.Length - 1; j++)
             {
                 currentWidthText += StringRegion(g, j) * LetterSpacePercentage / 100;
             }          
@@ -334,31 +544,32 @@ namespace SharpMap.Rendering
             return result;
 
         }
-        private void DrawText(PointF[] points, int maxPoints)
+
+        private void DrawText(Graphics g, PointF[] points, int maxPoints)
         {
 
             //GraphicsPath gp = new GraphicsPath(_pathdata.Points, _pathdata.Types) { FillMode = FillMode.Winding };
             //gp.Flatten();
             //gp.Dispose();
-            Graphics g = _graphics;
+            //var g = _graphics;
             //GraphicsContainer graphicsContainer= g.BeginContainer();
             //g.TranslateTransform(_graphicsPath.GetBounds().X, _graphicsPath.GetBounds().Y);
-            if (_showPath == true)
+            if (ShowPath)
             {
-                Pen pen = new Pen(_pathColorTop);
-                foreach (PointF p in points)
+                var pen = new Pen(PathColorTop);
+                foreach (var p in points)
                 {
                     g.DrawEllipse(pen, p.X, p.Y, 1, 1);
                 }
                 pen.Dispose();
             }
-            int count = 0;
-            PointF point1 = default(PointF);
-            int charStep = 0;
-            double maxWidthText = default(double);
+            var count = 0;
+            var point1 = default(PointF);
+            var charStep = 0;
+            var maxWidthText = default(double);
             int i;
 
-            for (i = 0; i <= _text.Length - 1; i++)
+            for (i = 0; i <= Text.Length - 1; i++)
             {
                 maxWidthText += StringRegion(g, i) * LetterSpacePercentage / 100;
             }
@@ -371,48 +582,31 @@ namespace SharpMap.Rendering
                     break;
                 case TextPathAlign.Center:
                     count = (int)((maxPoints - maxWidthText) / 2);
-                    if (count > 0)
-                    {
-                        point1 = points[count];
-                    }
-                    else
-                    {
-                        point1 = points[0];
-                        //count = 0;
-                    }
+                    point1 = count > 0 ? points[count] : points[0];
 
                     break;
                 case TextPathAlign.Right:
-                    count = (int)(maxPoints - maxWidthText - (double)StringRegion(g, _text.Length - 1) * LetterSpacePercentage / 100);
-                    if (count > 0)
-                    {
-                        point1 = points[count];
-                    }
-                    else
-                    {
-                        point1 = points[0];
-                        //count = 0;
-                    }
+                    count = (int)(maxPoints - maxWidthText - (double)StringRegion(g, Text.Length - 1) * LetterSpacePercentage / 100);
+                    point1 = count > 0 ? points[count] : points[0];
 
                     break;
             }
-            int lStrWidth = (int)(StringRegion(g, charStep) * LetterSpacePercentage / 100);
+            var lStrWidth = (int)(StringRegion(g, charStep) * LetterSpacePercentage / 100);
             if ((count + lStrWidth / 2) < 0)
             {
                 count = -(lStrWidth / 2);
             }
-            while (!(charStep > _text.Length - 1))
+            while (!(charStep > Text.Length - 1))
             {
-                double angle = 0;
                 lStrWidth = (int)(StringRegion(g, charStep) * LetterSpacePercentage / 100);
                 if ((count + lStrWidth / 2) >= 0 && (count + lStrWidth) <= maxPoints)
                 {
                     count += lStrWidth;
-                    PointF point2 = points[count];
+                    var point2 = points[count];
                     //PointF point = points[count - lStrWidth / 2];
-                    PointF point = new PointF((point2.X+point1.X)/2,(point2.Y+point1.Y)/2);
-                    angle = GetAngle(point1, point2);
-                    DrawRotatedText(g, _text[charStep].ToString(), (float)angle, point);
+                    var point = new PointF((point2.X+point1.X)/2,(point2.Y+point1.Y)/2);
+                    var angle = GetAngle(point1, point2);
+                    DrawRotatedText(g, Text[charStep].ToString(CultureInfo.InvariantCulture), (float)angle, point);
                     point1 = points[count];
                 }
                 else
@@ -427,23 +621,23 @@ namespace SharpMap.Rendering
         private RectangleF StringRegionValue(Graphics g, int textpos)
         {
 
-            string measureString = _text.Substring(textpos, 1);
-            int numChars = measureString.Length;
-            CharacterRange[] characterRanges = new CharacterRange[numChars + 1];
-            StringFormat stringFormat = new StringFormat
+            var measureString = Text.Substring(textpos, 1);
+            var numChars = measureString.Length;
+            var characterRanges = new CharacterRange[numChars + 1];
+            var stringFormat = new StringFormat
             {
                 Trimming = StringTrimming.None,
                 FormatFlags =
                 StringFormatFlags.NoClip | StringFormatFlags.NoWrap |
                 StringFormatFlags.LineLimit
             };
-            SizeF size = g.MeasureString(_text, _font, LetterSpacePercentage);
-            RectangleF layoutRect = new RectangleF(0f, 0f, size.Width, size.Height);
+            var size = g.MeasureString(Text, _font, LetterSpacePercentage);
+            var layoutRect = new RectangleF(0f, 0f, size.Width, size.Height);
             characterRanges[0] = new CharacterRange(0, 1);
             stringFormat.FormatFlags = StringFormatFlags.NoClip;
             stringFormat.SetMeasurableCharacterRanges(characterRanges);
             stringFormat.Alignment = StringAlignment.Center;
-            Region[] stringRegions = g.MeasureCharacterRanges(_text.Substring(textpos), _font, layoutRect, stringFormat);
+            var stringRegions = g.MeasureCharacterRanges(Text.Substring(textpos), _font, layoutRect, stringFormat);
             return stringRegions[0].GetBounds(g);
         }
 
@@ -452,90 +646,102 @@ namespace SharpMap.Rendering
             return StringRegionValue(g, textpos).Width;
         }
 
+        /// <summary>
+        /// Method to compute the angle of a segment |<paramref name="point1"/>, <paramref name="point2"/>| compared to the horizontal line.
+        /// </summary>
+        /// <param name="point1">The 1st point of the segment</param>
+        /// <param name="point2">The 2nd point of the segment</param>
+        /// <returns>An angle in degrees</returns>
         private static double GetAngle(PointF point1, PointF point2)
         {
+            const double rad2Deg = 180d/Math.PI;
 
-            double c = Math.Sqrt(Math.Pow((point2.X - point1.X), 2) + Math.Pow((point2.Y - point1.Y), 2));
-            if (c == 0)
+            var c = Math.Sqrt(Math.Pow((point2.X - point1.X), 2) + Math.Pow((point2.Y - point1.Y), 2));
+            if (c == 0d)
             {
                 return 0;
             }
-            if (point1.X > point2.X)
-            {
-                //We must change the side where the triangle is
-                return Math.Asin((point1.Y - point2.Y) / c) * 180 / Math.PI - 180;
-            }
-            return Math.Asin((point2.Y - point1.Y) / c) * 180 / Math.PI;
-            
-            //return Math.Atan2(point1.Y - point2.Y, point1.X - point1.X) ;
-            //if (point1.X > point2.X)
-            //{
-            //    return Math.Atan((point1.Y - point2.Y) / (point1.X - point2.X)) * (180 / Math.PI);
-            //}
-            //else
-            //{
-            //    return Math.Atan((point2.Y - point1.Y) / (point1.X - point2.X)) * (180 / Math.PI);
-            //}    
+
+            var res = Math.Asin((point2.Y - point1.Y)/c)*rad2Deg;
+            return point1.X > point2.X
+                       ? res - 180
+                       : res;
         }
+
+        /// <summary>
+        /// Method to draw <paramref name="text"/>, rotated by <paramref name="angle"/> around <paramref name="pointCenter"/>.
+        /// </summary>
+        /// <param name="gr">The <see cref="Graphics"/> object to use.</param>
+        /// <param name="text">The text string</param>
+        /// <param name="angle">The rotation angle</param>
+        /// <param name="pointCenter">The center point around which to rotate</param>
         private void DrawRotatedText(Graphics gr, string text, float angle, PointF pointCenter)
         {
-            angle -= _rotateDegree;
-            StringFormat stringFormat =  new StringFormat { Alignment = StringAlignment.Center };
+            angle -= RotateDegree;
+            var stringFormat =  new StringFormat { Alignment = StringAlignment.Center };
 
             //gr.SmoothingMode = SmoothingMode.HighQuality;
             //gr.CompositingQuality = CompositingQuality.HighQuality;
             //gr.TextRenderingHint = TextRenderingHint.AntiAlias;
-            GraphicsPath graphicsPath = new GraphicsPath();
-            int x = (int)pointCenter.X;
-            int y = (int)pointCenter.Y;
-            Point pOrigin=new Point();
-            switch (TextPathPathPosition)
+            using (var graphicsPath = new GraphicsPath())
             {
-                case TextPathPosition.OverPath:
-                    pOrigin = new Point(x, (int)(y - _font.Size));
-                    graphicsPath.AddString(text, _font.FontFamily, (int)_font.Style, _font.Size, new Point(x, (int)(y - _font.Size)), stringFormat);
-                    break;
-                case TextPathPosition.CenterPath:
-                    pOrigin = new Point(x, (int)(y - _font.Size / 2));
-                    graphicsPath.AddString(text, _font.FontFamily, (int)_font.Style, _font.Size, new Point(x, (int)(y - _font.Size / 2)), stringFormat);
-                    break;
-                case TextPathPosition.UnderPath:
-                    pOrigin = new Point(x, y);
-                    graphicsPath.AddString(text, _font.FontFamily, (int)_font.Style, _font.Size, new Point(x, y), stringFormat);
-                    break;
-            }
-
-
-            Matrix rotationMatrix = gr.Transform.Clone();// new Matrix();
-            rotationMatrix.RotateAt(angle, new PointF(x, y));
-            graphicsPath.Transform(rotationMatrix);
-            if (!_measureString)
-            {
-                if (_colorHalo != null)
+                var x = (int) pointCenter.X;
+                var y = (int) pointCenter.Y;
+                var pOrigin = new Point();
+                switch (TextPathPathPosition)
                 {
-                    gr.DrawPath(_colorHalo, graphicsPath);
+                    case TextPathPosition.OverPath:
+                        pOrigin = new Point(x, (int) (y - _font.Size));
+                        graphicsPath.AddString(text, _font.FontFamily, (int) _font.Style, _font.Size,
+                                               new Point(x, (int) (y - _font.Size)), stringFormat);
+                        break;
+                    case TextPathPosition.CenterPath:
+                        pOrigin = new Point(x, (int) (y - _font.Size/2));
+                        graphicsPath.AddString(text, _font.FontFamily, (int) _font.Style, _font.Size,
+                                               new Point(x, (int) (y - _font.Size/2)), stringFormat);
+                        break;
+                    case TextPathPosition.UnderPath:
+                        pOrigin = new Point(x, y);
+                        graphicsPath.AddString(text, _font.FontFamily, (int) _font.Style, _font.Size, new Point(x, y),
+                                               stringFormat);
+                        break;
                 }
-                gr.FillPath(_fillBrush, graphicsPath);
-                
-            }
-            else
-            {
-                _regionList.Add(graphicsPath.GetBounds());
-                _angles.Add(angle);
-                _pointText.Add(pointCenter);
-                _pointTextUp.Add(pOrigin);
-            }
 
-            graphicsPath.Dispose();
+
+                var rotationMatrix = gr.Transform.Clone(); // new Matrix();
+                rotationMatrix.RotateAt(angle, new PointF(x, y));
+                graphicsPath.Transform(rotationMatrix);
+                if (!_measureString)
+                {
+                    if (_colorHalo != null)
+                    {
+                        gr.DrawPath(_colorHalo, graphicsPath);
+                    }
+                    gr.FillPath(_fillBrush, graphicsPath);
+
+                }
+                else
+                {
+                    _regionList.Add(graphicsPath.GetBounds());
+                    _angles.Add(angle);
+                    _pointText.Add(pointCenter);
+                    _pointTextUp.Add(pOrigin);
+                }
+            }
         }
 
-
-
+        /// <summary>
+        /// Metod to get
+        /// </summary>
+        /// <param name="p1"></param>
+        /// <param name="p2"></param>
+        /// <param name="stepWitdth"></param>
+        /// <returns></returns>
         public PointF[] GetLinePoints(PointF p1, PointF p2, int stepWitdth)
         {
 
             int lCount = 0;
-            PointF[] tmpPoints = new PointF[10001];
+            var tmpPoints = new PointF[10001];
             long ix;
             long iy;
             int dd;
@@ -632,7 +838,7 @@ namespace SharpMap.Rendering
                 while (true);
             }
 
-            PointF[] tmpPoints2 = new PointF[lCount];
+            var tmpPoints2 = new PointF[lCount];
 
             Array.Copy(tmpPoints, tmpPoints2, lCount);
 

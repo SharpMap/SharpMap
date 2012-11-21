@@ -3,6 +3,9 @@
 
 namespace SharpMap.Utilities.Wfs
 {
+    /// <summary>
+    /// Base class for <see cref="IWFS_TextResources"/> implementations
+    /// </summary>
     public class WFS_XPathTextResourcesBase
     {
         #region Fields and Properties

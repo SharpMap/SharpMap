@@ -83,12 +83,14 @@ namespace SharpMap.Layers
         /// <summary>
         /// Disposes the object
         /// </summary>
-        public void Dispose()
+        protected override void ReleaseManagedResources()
         {
-            foreach (Layer layer in Layers)
-                if (layer is IDisposable)
-                    ((IDisposable) layer).Dispose();
+            foreach (var layer in Layers)
+                if (layer != null)
+                    layer.Dispose();
+            
             Layers.Clear();
+            base.ReleaseManagedResources();
         }
 
         #endregion

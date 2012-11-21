@@ -204,6 +204,12 @@ namespace SharpMap.Rendering.Thematics
             }
         }
 
+        /// <summary>
+        /// Gets a linear gradient scale with six colours making a Bathymetry like used in MOHID.
+        /// </summary>
+        /// <remarks>
+        /// Colors pass from Dark Blue over Green , Yellow to Dark Red
+        /// </remarks>
         public static ColorBlend BathymetryMOHID
         {
             get

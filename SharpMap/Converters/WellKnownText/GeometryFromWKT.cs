@@ -282,6 +282,7 @@ namespace SharpMap.Converters.WellKnownText
         /// </summary>
         /// <param name="tokenizer">tokenizer over a stream of text in Well-known Text
         /// format. The next tokens must form a MultiPolygon.</param>
+        /// <param name="factory">The factory to create the result geometry</param>
         /// <returns>a <code>MultiPolygon</code> specified by the next token in the 
         /// stream, or if if the coordinates used to create the <see cref="IPolygon"/>
         /// shells and holes do not form closed linestrings.</returns>
@@ -309,6 +310,7 @@ namespace SharpMap.Converters.WellKnownText
         /// </summary>
         /// <param name="tokenizer">Tokenizer over a stream of text in Well-known Text
         ///  format. The next tokens must form a &lt;Polygon Text&gt;.</param>
+        /// <param name="factory">The factory to create the result geometry</param>
         /// <returns>Returns a Polygon specified by the next token
         ///  in the stream</returns>
         ///  <remarks>
@@ -340,6 +342,7 @@ namespace SharpMap.Converters.WellKnownText
         /// </summary>
         /// <param name="tokenizer">Tokenizer over a stream of text in Well-known Text
         /// format. The next tokens must form a &lt;Point Text&gt;.</param>
+        /// <param name="factory">The factory to create the result geometry</param>
         /// <returns>Returns a Point specified by the next token in
         /// the stream.</returns>
         /// <remarks>
@@ -362,6 +365,7 @@ namespace SharpMap.Converters.WellKnownText
         /// </summary>
         /// <param name="tokenizer">Tokenizer over a stream of text in Well-known Text
         /// format. The next tokens must form a &lt;Point Text&gt;.</param>
+        /// <param name="factory">The factory to create the result geometry</param>
         /// <returns>Returns a Point specified by the next token in
         /// the stream.</returns>
         /// <remarks>
@@ -388,6 +392,7 @@ namespace SharpMap.Converters.WellKnownText
         /// Creates a <see cref="IMultiLineString"/> using the next token in the stream. 
         /// </summary>
         /// <param name="tokenizer">tokenizer over a stream of text in Well-known Text format. The next tokens must form a MultiLineString Text</param>
+        /// <param name="factory">The factory to create the result geometry</param>
         /// <returns>a <see cref="MultiLineString"/> specified by the next token in the stream</returns>
         private static IMultiLineString ReadMultiLineStringText(WktStreamTokenizer tokenizer, IGeometryFactory factory)
         {
@@ -411,7 +416,7 @@ namespace SharpMap.Converters.WellKnownText
         /// </summary>
         /// <param name="tokenizer">Tokenizer over a stream of text in Well-known Text format.  The next
         ///   tokens must form a LineString Text.</param>
-        /// <param name="factory"> </param>
+        /// <param name="factory">The factory to create the result geometry</param>
         /// <returns>Returns a LineString specified by the next token in the stream.</returns>
         /// <remarks>
         /// ParseException is thrown if an unexpected token is encountered.
@@ -426,6 +431,7 @@ namespace SharpMap.Converters.WellKnownText
         /// </summary>
         /// <param name="tokenizer"> Tokenizer over a stream of text in Well-known Text
         /// format. The next tokens must form a GeometryCollection Text.</param>
+        /// <param name="factory">The factory to create the result geometry</param>
         /// <returns>
         /// A <see cref="GeometryCollection"/> specified by the next token in the stream.</returns>
         private static IGeometryCollection ReadGeometryCollectionText(WktStreamTokenizer tokenizer, IGeometryFactory factory)

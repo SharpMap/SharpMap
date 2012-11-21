@@ -36,6 +36,13 @@ namespace SharpMap.Rendering.Thematics
         private IStyle _minStyle;
         private ColorBlend _textColorBlend;
 
+        /// <summary>
+        /// Creates an instance of this class
+        /// </summary>
+        /// <param name="minValue">The minimum value</param>
+        /// <param name="maxValue">The maximum value</param>
+        /// <param name="minStyle">The <see cref="IStyle">style</see> to apply for values equal to <paramref name="minValue"/></param>
+        /// <param name="maxStyle">The <see cref="IStyle">style</see> to apply for values equal to <paramref name="maxValue"/></param>
         protected GradientThemeBase(double minValue, double maxValue, IStyle minStyle, IStyle maxStyle)
         {
             _min = minValue;
@@ -107,10 +114,16 @@ namespace SharpMap.Rendering.Thematics
             set { _fillColorBlend = value; }
         }
 
-
+        /// <summary>
+        /// Function to compute a new <see cref="VectorStyle">style</see> for the given <paramref name="value"/>
+        /// </summary>
+        /// <param name="min">The minimum <see cref="VectorStyle">style</see></param>
+        /// <param name="max">The maximum <see cref="VectorStyle">style</see></param>
+        /// <param name="value">The value</param>
+        /// <returns>A <see cref="VectorStyle">style</see></returns>
         protected VectorStyle CalculateVectorStyle(VectorStyle min, VectorStyle max, double value)
         {
-            VectorStyle style = new VectorStyle();
+            var style = new VectorStyle();
             double dFrac = Fraction(value);
             float fFrac = Convert.ToSingle(dFrac);
             style.Enabled = (dFrac > 0.5 ? min.Enabled : max.Enabled);
@@ -136,6 +149,13 @@ namespace SharpMap.Rendering.Thematics
             return style;
         }
 
+        /// <summary>
+        /// Function to compute a new <see cref="LabelStyle">style</see> for the given <paramref name="value"/>
+        /// </summary>
+        /// <param name="min">The minimum <see cref="LabelStyle">style</see></param>
+        /// <param name="max">The maximum <see cref="LabelStyle">style</see></param>
+        /// <param name="value">The value</param>
+        /// <returns>A <see cref="LabelStyle">style</see></returns>
         protected LabelStyle CalculateLabelStyle(LabelStyle min, LabelStyle max, double value)
         {
             LabelStyle style = new LabelStyle();
@@ -160,6 +180,11 @@ namespace SharpMap.Rendering.Thematics
             return style;
         }
 
+        /// <summary>
+        /// Function to compute the fraction for <paramref name="attr"/> based on <see cref="Min"/> and <see cref="Max"/>
+        /// </summary>
+        /// <param name="attr">The attribute value to compute the fraction for</param>
+        /// <returns>A value in the &#x211d;[0, 1]</returns>
         protected double Fraction(double attr)
         {
             if (attr < _min) return 0;
@@ -167,23 +192,50 @@ namespace SharpMap.Rendering.Thematics
             return (attr - _min) / (_max - _min);
         }
 
+        /// <summary>
+        /// Function to interpolate a <see cref="bool"/> value for <paramref name="attr"/>. 
+        /// </summary>
+        /// <param name="min">The value to return if <see cref="Fraction"/>/<paramref name="attr"/>) &lt;= <value>0.5d</value></param>
+        /// <param name="max">The value to return if <see cref="Fraction"/>/<paramref name="attr"/>) &gt; <value>0.5d</value></param>
+        /// <param name="attr">The value to test</param>
+        /// <returns><paramref name="min"/>, if <see cref="Fraction"/>/<paramref name="attr"/>) &lt;= <value>0.5d</value>, else <paramref name="max"/></returns>
         protected bool InterpolateBool(bool min, bool max, double attr)
         {
-            double frac = Fraction(attr);
-            if (frac > 0.5) return max;
-            return min;
+            return Fraction(attr) > 0.5d ? max : min;
         }
 
+        /// <summary>
+        /// Function to interpolate a <see cref="float"/> value for <paramref name="attr"/>
+        /// </summary>
+        /// <param name="min">The minimum value</param>
+        /// <param name="max">The maximum value</param>
+        /// <param name="attr">The value to test</param>
+        /// <returns>A value in the &#x211d;[<paramref name="min"/>, <paramref name="max"/>]</returns>
         protected float InterpolateFloat(float min, float max, double attr)
         {
             return Convert.ToSingle((max - min) * Fraction(attr) + min);
         }
 
+        /// <summary>
+        /// Function to interpolate a <see cref="float"/> value for <paramref name="attr"/>
+        /// </summary>
+        /// <param name="min">The minimum value</param>
+        /// <param name="max">The maximum value</param>
+        /// <param name="attr">The value to test</param>
+        /// <returns>A value in the &#x211d;[<paramref name="min"/>, <paramref name="max"/>]</returns>
         protected double InterpolateDouble(double min, double max, double attr)
         {
             return (max - min) * Fraction(attr) + min;
         }
 
+        /// <summary>
+        /// Function to interpolate a <see cref="Brush"/> value for <paramref name="attr"/>
+        /// </summary>
+        /// <remarks>Currently only <see cref="SolidBrush"/>es are interpolated</remarks>
+        /// <param name="min">The minimum value</param>
+        /// <param name="max">The maximum value</param>
+        /// <param name="attr">The value to test</param>
+        /// <returns>An interpolated <see cref="SolidBrush"/>.</returns>
         protected SolidBrush InterpolateBrush(Brush min, Brush max, double attr)
         {
             if (!(min is SolidBrush && max is SolidBrush))
@@ -191,6 +243,14 @@ namespace SharpMap.Rendering.Thematics
             return new SolidBrush(InterpolateColor((min as SolidBrush).Color, (max as SolidBrush).Color, attr));
         }
 
+        /// <summary>
+        /// Function to interpolate a <see cref="Pen"/> value for <paramref name="attr"/>
+        /// </summary>
+        /// <remarks>Currently only <see cref="PenType.SolidColor"/> pens are interpolated</remarks>
+        /// <param name="min">The minimum value</param>
+        /// <param name="max">The maximum value</param>
+        /// <param name="attr">The value to test</param>
+        /// <returns>An interpolated <see cref="Pen"/>.</returns>
         protected Pen InterpolatePen(Pen min, Pen max, double attr)
         {
             if (min.PenType != PenType.SolidColor || max.PenType != PenType.SolidColor)
@@ -214,6 +274,13 @@ namespace SharpMap.Rendering.Thematics
             return pen;
         }
 
+        /// <summary>
+        /// Function to interpolate a <see cref="Color"/> value for <paramref name="attr"/>
+        /// </summary>
+        /// <param name="minCol">The minimum <see cref="Color"/></param>
+        /// <param name="maxCol">The maximum <see cref="Color"/></param>
+        /// <param name="attr">The value to test</param>
+        /// <returns>An interpolated <see cref="Color"/>.</returns>
         protected Color InterpolateColor(Color minCol, Color maxCol, double attr)
         {
             double frac = Fraction(attr);
@@ -268,6 +335,11 @@ namespace SharpMap.Rendering.Thematics
             }
         }
 
+        /// <summary>
+        /// Function to get a <see cref="double"/> value from <paramref name="row"/>.
+        /// </summary>
+        /// <param name="row">The row</param>
+        /// <returns>A <see cref="double"/> value</returns>
         protected abstract double GetAttributeValue(FeatureDataRow row);
     }
 
@@ -337,6 +409,11 @@ namespace SharpMap.Rendering.Thematics
             set { _columnName = value; }
         }
 
+        /// <summary>
+        /// Function to get a <see cref="double"/> value for <see cref="ColumnName"/> from <paramref name="row"/>.
+        /// </summary>
+        /// <param name="row">The row</param>
+        /// <returns>A <see cref="double"/> value</returns>
         protected override double GetAttributeValue(FeatureDataRow row)
         {
             return Convert.ToDouble(row[_columnName]);

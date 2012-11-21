@@ -145,6 +145,12 @@ namespace SharpMap.Rendering.Symbolizer
                        };
         }
 
+        /// <summary>
+        /// Function to render the geometry
+        /// </summary>
+        /// <param name="map">The map object, mainly needed for transformation purposes.</param>
+        /// <param name="geometry">The geometry to symbolize.</param>
+        /// <param name="graphics">The graphics object to use.</param>
         public void Render(Map map, IPuntal geometry, Graphics graphics)
         {
             var mp = geometry as IMultiPoint;

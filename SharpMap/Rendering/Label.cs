@@ -294,31 +294,30 @@ namespace SharpMap.Rendering
         {
             if (this == other)
                 return 0;
-            else if (this.TextOnPathLabel == null)
+            if (TextOnPathLabel == null)
                 return -1;
-            else if (other.TextOnPathLabel == null)
+            if (other.TextOnPathLabel == null)
+                return 1;
+            
+            for (int i = 0; i < TextOnPathLabel.RegionList.Count; i++)
+            {
+                for (int j = 0; j < other.TextOnPathLabel.RegionList.Count; j++)
+                {
+                    if (TextOnPathLabel.RegionList[i].IntersectsWith(other.TextOnPathLabel.RegionList[j]))
+                        return 0;
+                }
+            }
+            if (_box == null)
+                return -1;
+            if (other.Box == null)
+                return 1;
+            if (other.Box.Left > this.Box.Right ||
+                other.Box.Bottom > this.Box.Top)
                 return 1;
             else
-            {
-                for (int i = 0; i < this.TextOnPathLabel._regionList.Count; i++)
-                {
-                    for (int j = 0; j < other.TextOnPathLabel._regionList.Count; j++)
-                    {
-                        if (this.TextOnPathLabel._regionList[i].IntersectsWith(other.TextOnPathLabel._regionList[j]))
-                            return 0;
-                    }
-                }
-                if (_box == null)
-                    return -1;
-                if (other.Box == null)
-                    return 1;
-                if (other.Box.Left > this.Box.Right ||
-                     other.Box.Bottom > this.Box.Top)
-                    return 1;
-                else
-                    return -1;
-            }
+                return -1;
         }
+
         #endregion
 
         #region IComparer<BaseLabel> Members
@@ -338,13 +337,20 @@ namespace SharpMap.Rendering
     }
 
     /// <summary>
-    /// 
+    /// Type specific base label class
     /// </summary>
     /// <typeparam name="T">The type of the location</typeparam>
     public abstract class BaseLabel<T> : BaseLabel
     {
-        /// <param name="text">The label's text</param>
-        /// <param name="location">Position of label</param>
+        /// <summary>
+        /// Creates an instance of this class
+        /// </summary>
+        /// <param name="text">The label text</param>
+        /// <param name="location">The position of label</param>
+        /// <param name="rotation">The rotation of the label (in degrees)</param>
+        /// <param name="priority">A priority value. Labels with lower priority are less likely to be rendered</param>
+        /// <param name="collisionbox">A bounding box for collision detection</param>
+        /// <param name="style">The label style to apply upon rendering</param>
         protected BaseLabel(string text, T location, float rotation, int priority, LabelBox collisionbox, LabelStyle style)
             : base(text, rotation, priority, collisionbox, style)
         {
@@ -356,7 +362,16 @@ namespace SharpMap.Rendering
                 throw new ArgumentException("Invalid location type", "location");
             Location = location;
         }
-        public BaseLabel(string text, T location, float rotation, int priority, LabelStyle style)
+
+        /// <summary>
+        /// Creates an instance of this class
+        /// </summary>
+        /// <param name="text">The label text</param>
+        /// <param name="location">The position of label</param>
+        /// <param name="rotation">The rotation of the label (in degrees)</param>
+        /// <param name="priority">A priority value. Labels with lower priority are less likely to be rendered</param>
+        /// <param name="style">The label style to apply upon rendering</param>
+        protected BaseLabel(string text, T location, float rotation, int priority, LabelStyle style)
             : base(text, rotation, priority, style)
         {
             if (location == null)
@@ -372,19 +387,55 @@ namespace SharpMap.Rendering
         public T Location { get; set; }
     }
 
+    /// <summary>
+    /// A label that is to be rendered on a <see cref="GraphicsPath"/>
+    /// </summary>
     public class PathLabel : BaseLabel<GraphicsPath>
     {
-        public PathLabel(string text, GraphicsPath location, float rotation, int priority, LabelBox collisionbox, LabelStyle style) : base(text, location, rotation, priority, collisionbox, style)
+        /// <summary>
+        /// Creates an instance of this class
+        /// </summary>
+        /// <param name="text">The label text</param>
+        /// <param name="location">The position of label</param>
+        /// <param name="rotation">The rotation of the label (in degrees)</param>
+        /// <param name="priority">A priority value. Labels with lower priority are less likely to be rendered</param>
+        /// <param name="collisionbox">A bounding box used for collision detection</param>
+        /// <param name="style">The label style to apply upon rendering</param>
+        public PathLabel(string text, GraphicsPath location, float rotation, int priority, LabelBox collisionbox, LabelStyle style)
+            : base(text, location, rotation, priority, collisionbox, style)
         {
         }
     }
 
+    /// <summary>
+    /// A label that is to be rendered at or around a <see cref="PointF"/>
+    /// </summary>
     public class Label : BaseLabel<PointF>
     {
-        public Label(string text, PointF location, float rotation, int priority, LabelBox collisionbox, LabelStyle style) : base(text, location, rotation, priority, collisionbox, style)
+        /// <summary>
+        /// Creates an instance of this class
+        /// </summary>
+        /// <param name="text">The label text</param>
+        /// <param name="location">The position of label</param>
+        /// <param name="rotation">The rotation of the label (in degrees)</param>
+        /// <param name="priority">A priority value. Labels with lower priority are less likely to be rendered</param>
+        /// <param name="collisionbox">A bounding box used for collision detection</param>
+        /// <param name="style">The label style to apply upon rendering</param>
+        public Label(string text, PointF location, float rotation, int priority, LabelBox collisionbox, LabelStyle style)
+            : base(text, location, rotation, priority, collisionbox, style)
         {
         }
-        public Label(string text, PointF location, float rotation, int priority, LabelStyle style): base(text, location, rotation, priority, style)
+
+        /// <summary>
+        /// Creates an instance of this class
+        /// </summary>
+        /// <param name="text">The label text</param>
+        /// <param name="location">The position of label</param>
+        /// <param name="rotation">The rotation of the label (in degrees)</param>
+        /// <param name="priority">A priority value. Labels with lower priority are less likely to be rendered</param>
+        /// <param name="style">The label style to apply upon rendering</param>
+        public Label(string text, PointF location, float rotation, int priority, LabelStyle style)
+            : base(text, location, rotation, priority, style)
         {
         }
         /// <summary>

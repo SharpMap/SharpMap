@@ -17,8 +17,8 @@ namespace SharpMap.Rendering.Symbolizer
         /// Function to symbolize the graphics path to the graphics object
         /// </summary>
         /// <param name="g">The graphics object</param>
-        /// <param name="path">The Path</param>
-        void SymbolizePaths(Graphics g, IEnumerable<GraphicsPath> path);
+        /// <param name="paths">The Paths</param>
+        void SymbolizePaths(Graphics g, IEnumerable<GraphicsPath> paths);
     }
 
     /// <summary>
@@ -31,12 +31,21 @@ namespace SharpMap.Rendering.Symbolizer
         /// </summary>
         public Pen Line { get; set; }
 
+
+        /// <summary>
+        /// Function to symbolize the graphics path to the graphics object
+        /// </summary>
+        /// <param name="g">The graphics object</param>
+        /// <param name="path">The Path</param>
         public void SymbolizePaths(Graphics g, IEnumerable<GraphicsPath> path)
         {
             foreach (var graphicsPath in path)
                 g.DrawPath(Line, graphicsPath);
         }
 
+        /// <summary>
+        /// Releases managed resources
+        /// </summary>
         protected override void ReleaseManagedResources()
         {
             if (Line != null)
@@ -51,6 +60,9 @@ namespace SharpMap.Rendering.Symbolizer
     /// </summary>
     public class WarpedLineSymbolizeHander : DisposableObject, ILineSymbolizeHandler
     {
+        /// <summary>
+        /// Releases managed resources
+        /// </summary>
         protected override void ReleaseManagedResources()
         {
             if (Line != null)
@@ -83,6 +95,11 @@ namespace SharpMap.Rendering.Symbolizer
         /// </summary>
         public float Interval { get; set; }
 
+        /// <summary>
+        /// Function to symbolize the graphics path to the graphics object
+        /// </summary>
+        /// <param name="g">The graphics object</param>
+        /// <param name="paths">The paths</param>
         public void SymbolizePaths(Graphics g, IEnumerable<GraphicsPath> paths)
         {
             foreach (var graphicsPath in paths)
@@ -118,6 +135,9 @@ namespace SharpMap.Rendering.Symbolizer
             _lineSymbolizeHandlers = new List<ILineSymbolizeHandler>();
         }
 
+        /// <summary>
+        /// Releases managed resources
+        /// </summary>
         protected override void ReleaseManagedResources()
         {
             if (_graphicsPaths != null)
@@ -179,15 +199,15 @@ namespace SharpMap.Rendering.Symbolizer
         /// </summary>
         /// <param name="map"></param>
         /// <param name="lineString"></param>
-        /// <param name="g"></param>
-        protected override void OnRenderInternal(Map map, ILineString lineString, Graphics g)
+        /// <param name="graphics"></param>
+        protected override void OnRenderInternal(Map map, ILineString lineString, Graphics graphics)
         {
             var gp = new GraphicsPath();
             gp.AddLines(/*LimitValues(*/lineString.TransformToImage(map)/*)*/);
             if (ImmediateMode)
             {
                 var tmp = new List<GraphicsPath>(new[] {gp});
-                Symbolize(g, map, tmp);
+                Symbolize(graphics, map, tmp);
             }
             else
                 _graphicsPaths.Add(gp);

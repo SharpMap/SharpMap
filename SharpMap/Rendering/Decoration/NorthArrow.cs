@@ -67,11 +67,23 @@ namespace SharpMap.Rendering.Decoration
 
         #region MapDecoration overrides
 
+        /// <summary>
+        /// Function to compute the required size for rendering the map decoration object
+        /// <para>This is just the size of the decoration object, border settings are excluded</para>
+        /// </summary>
+        /// <param name="g">The graphics object</param>
+        /// <param name="map">The map</param>
+        /// <returns>The size of the map decoration</returns>
         protected override Size InternalSize(Graphics g, Map map)
         {
             return Size;
         }
 
+        /// <summary>
+        /// Function to render the actual map decoration
+        /// </summary>
+        /// <param name="g"></param>
+        /// <param name="map"></param>
         protected override void OnRender(Graphics g, Map map)
         {
             var image = NorthArrowImage ?? DefaultNorthArrowBitmap;

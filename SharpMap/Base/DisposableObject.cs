@@ -66,6 +66,9 @@ namespace SharpMap.Base
         
         #endregion
 
+        /// <summary>
+        /// Method to check if this object has already been disposed
+        /// </summary>
         protected void CheckDisposed()
         {
             if (IsDisposed)

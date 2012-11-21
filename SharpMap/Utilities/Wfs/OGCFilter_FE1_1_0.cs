@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using System.Text;
 
+// ReSharper disable InconsistentNaming
 namespace SharpMap.Utilities.Wfs
 {
     /// <summary>
@@ -11,6 +12,10 @@ namespace SharpMap.Utilities.Wfs
     /// </summary>
     public interface IFilter
     {
+        /// <summary>
+        /// Method to encode the filter in XML.
+        /// </summary>
+        /// <returns>An XML string</returns>
         string Encode();
     }
 
@@ -26,7 +31,13 @@ namespace SharpMap.Utilities.Wfs
         /// </summary>
         public enum JunctorEnum
         {
+            /// <summary>
+            /// And junctor
+            /// </summary>
             And,
+            /// <summary>
+            /// Or junctor
+            /// </summary>
             Or
         } ;
 
@@ -34,17 +45,17 @@ namespace SharpMap.Utilities.Wfs
 
         #region Fields and Properties
 
-        private List<IFilter> _Filters;
+        private List<IFilter> _filters;
 
-        private JunctorEnum _Junctor = JunctorEnum.And;
+        private JunctorEnum _junctor = JunctorEnum.And;
 
         /// <summary>
         /// Gets and sets a collection of instances implementing <see cref="IFilter"/>.
         /// </summary>
         public List<IFilter> Filters
         {
-            get { return _Filters; }
-            set { _Filters = value; }
+            get { return _filters; }
+            set { _filters = value; }
         }
 
         /// <summary>
@@ -52,8 +63,8 @@ namespace SharpMap.Utilities.Wfs
         /// </summary>
         public JunctorEnum Junctor
         {
-            get { return _Junctor; }
-            set { _Junctor = value; }
+            get { return _junctor; }
+            set { _junctor = value; }
         }
 
         #endregion
@@ -65,7 +76,7 @@ namespace SharpMap.Utilities.Wfs
         /// </summary>
         public OGCFilterCollection()
         {
-            _Filters = new List<IFilter>();
+            _filters = new List<IFilter>();
         }
 
         #endregion
@@ -78,7 +89,7 @@ namespace SharpMap.Utilities.Wfs
         /// <param name="filter"></param>
         public void AddFilter(IFilter filter)
         {
-            _Filters.Add(filter);
+            _filters.Add(filter);
         }
 
         /// <summary>
@@ -88,7 +99,7 @@ namespace SharpMap.Utilities.Wfs
         public void AddFilterCollection(OGCFilterCollection filterCollection)
         {
             if (!ReferenceEquals(filterCollection, this))
-                _Filters.Add(filterCollection);
+                _filters.Add(filterCollection);
         }
 
         #endregion
@@ -101,11 +112,11 @@ namespace SharpMap.Utilities.Wfs
         /// <returns>An XML string</returns>
         public string Encode()
         {
-            StringBuilder filterBuilder = new StringBuilder();
-            filterBuilder.Append("<" + _Junctor + ">");
-            foreach (IFilter filter in Filters)
+            var filterBuilder = new StringBuilder();
+            filterBuilder.Append("<" + _junctor + ">");
+            foreach (var filter in Filters)
                 filterBuilder.Append(filter.Encode());
-            filterBuilder.Append("</" + _Junctor + ">");
+            filterBuilder.Append("</" + _junctor + ">");
             return filterBuilder.ToString();
         }
 
@@ -119,8 +130,10 @@ namespace SharpMap.Utilities.Wfs
     public abstract class OGCFilterBase
     {
         #region Fields
-
-        protected string[] _Args;
+        /// <summary>
+        /// The arguments for the filter
+        /// </summary>
+        protected string[] Args;
 
         #endregion
 
@@ -132,7 +145,7 @@ namespace SharpMap.Utilities.Wfs
         /// <param name="args">An array of arguments for the filter</param>
         protected OGCFilterBase(string[] args)
         {
-            _Args = args;
+            Args = args;
         }
 
         #endregion
@@ -165,9 +178,9 @@ namespace SharpMap.Utilities.Wfs
         {
             return @"
             <PropertyIsEqualTo>
-                <PropertyName>" + _Args[0] +
+                <PropertyName>" + Args[0] +
                    @"</PropertyName>
-                <Literal>" + _Args[1] +
+                <Literal>" + Args[1] +
                    @"</Literal>
             </PropertyIsEqualTo>";
         }
@@ -202,9 +215,9 @@ namespace SharpMap.Utilities.Wfs
         {
             return @"
             <PropertyIsNotEqualTo>
-                <PropertyName>" + _Args[0] +
+                <PropertyName>" + Args[0] +
                    @"</PropertyName>
-                <Literal>" + _Args[1] +
+                <Literal>" + Args[1] +
                    @"</Literal>
             </PropertyIsNotEqualTo>";
         }
@@ -239,9 +252,9 @@ namespace SharpMap.Utilities.Wfs
         {
             return @"
             <PropertyIsLessThan>
-                <PropertyName>" + _Args[0] +
+                <PropertyName>" + Args[0] +
                    @"</PropertyName>
-                <Literal>" + _Args[1] +
+                <Literal>" + Args[1] +
                    @"</Literal>
             </PropertyIsLessThan>";
         }
@@ -276,9 +289,9 @@ namespace SharpMap.Utilities.Wfs
         {
             return @"
             <PropertyIsGreaterThan>
-                <PropertyName>" + _Args[0] +
+                <PropertyName>" + Args[0] +
                    @"</PropertyName>
-                <Literal>" + _Args[1] +
+                <Literal>" + Args[1] +
                    @"</Literal>
             </PropertyIsGreaterThan>";
         }
@@ -313,9 +326,9 @@ namespace SharpMap.Utilities.Wfs
         {
             return @"
             <PropertyIsLessThanOrEqualTo>
-                <PropertyName>" + _Args[0] +
+                <PropertyName>" + Args[0] +
                    @"</PropertyName>
-                <Literal>" + _Args[1] +
+                <Literal>" + Args[1] +
                    @"</Literal>
             </PropertyIsLessThanOrEqualTo>";
         }
@@ -350,9 +363,9 @@ namespace SharpMap.Utilities.Wfs
         {
             return @"
             <PropertyIsGreaterThanOrEqualTo>
-                <PropertyName>" + _Args[0] +
+                <PropertyName>" + Args[0] +
                    @"</PropertyName>
-                <Literal>" + _Args[1] +
+                <Literal>" + Args[1] +
                    @"</Literal>
             </PropertyIsGreaterThanOrEqualTo>";
         }
@@ -387,11 +400,11 @@ namespace SharpMap.Utilities.Wfs
         {
             return @"
             <PropertyIsBetween>
-                <PropertyName>" + _Args[0] +
+                <PropertyName>" + Args[0] +
                    @"</PropertyName>
-                    <LowerBoundary><Literal>" + _Args[1] +
+                    <LowerBoundary><Literal>" + Args[1] +
                    @"</Literal></LowerBoundary>
-                    <UpperBoundary><Literal>" + _Args[2] +
+                    <UpperBoundary><Literal>" + Args[2] +
                    @"</Literal></UpperBoundary>
             </PropertyIsBetween>";
         }
@@ -428,8 +441,8 @@ namespace SharpMap.Utilities.Wfs
                 @"
             <PropertyIsLike wildCard='*' singleChar='#' escapeChar='!'>
                 <PropertyName>" +
-                _Args[0] + @"</PropertyName>
-                <Literal>" + _Args[1] +
+                Args[0] + @"</PropertyName>
+                <Literal>" + Args[1] +
                 @"</Literal>
             </PropertyIsLike>";
         }
@@ -462,7 +475,7 @@ namespace SharpMap.Utilities.Wfs
         /// <returns>An XML string</returns>
         public string Encode()
         {
-            return "<FeatureId fid=" + _Args[0] + "/>";
+            return "<FeatureId fid=" + Args[0] + "/>";
         }
 
         #endregion
@@ -498,7 +511,7 @@ namespace SharpMap.Utilities.Wfs
                 @"
             <PropertyIsNull>
                 <PropertyName>" +
-                _Args[0] + @"</PropertyName>
+                Args[0] + @"</PropertyName>
             </PropertyIsNull>";
         }
 

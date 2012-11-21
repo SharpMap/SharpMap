@@ -14,8 +14,6 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using SharpMap.Styles;
 
 namespace SharpMap.Rendering.Thematics
@@ -24,13 +22,14 @@ namespace SharpMap.Rendering.Thematics
     /// UniqueValuesTheme is a theme each rendered feature is matched against at category that have a different style
     /// </summary>
     /// <typeparam name="T">Type of the featureattribute to match</typeparam>
+    [Serializable]
     public class UniqueValuesTheme<T>  : ITheme
     {
-        IStyle _default = null;
+        readonly IStyle _default;
 
         //Internally we use strings to compare everything since we don't know what we might get from the datasource...
-        Dictionary<string, IStyle> _styleMap = null;
-        string _attributeName = null;
+        readonly Dictionary<string, IStyle> _styleMap;
+        readonly string _attributeName;
 
         /// <summary>
         /// CategoriesTheme is a theme each rendered feature is matched against at category that have a different style
@@ -48,7 +47,12 @@ namespace SharpMap.Rendering.Thematics
             _default = defaultStyle;
         }
 
-        public Styles.IStyle GetStyle(Data.FeatureDataRow attribute)
+        /// <summary>
+        /// Returns the style based on a feature
+        /// </summary>
+        /// <param name="attribute">Set of attribute values to calculate the <see cref="IStyle"/> from</param>
+        /// <returns>The style</returns>
+        public IStyle GetStyle(Data.FeatureDataRow attribute)
         {
             if (attribute.IsNull(_attributeName))
                 return _default;

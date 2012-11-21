@@ -1,10 +1,10 @@
 ﻿using System;
-using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 
 namespace SharpMap.Rendering.Decoration
 {
+    // ReSharper disable InconsistentNaming
     /// <summary>
     /// Abstract base class for all map decorations.
     /// <para>
@@ -14,9 +14,18 @@ namespace SharpMap.Rendering.Decoration
     [Serializable]
     public abstract class MapDecoration : /* Component, */IMapDecoration
     {
+        /// <summary>
+        /// The size of this map decoration as computed/assigned previously
+        /// </summary>
         protected Size _cachedSize;
+        /// <summary>
+        /// The bounding rectangle around the map decoration
+        /// </summary>
         protected Rectangle _boundingRectangle;
 
+        /// <summary>
+        /// Creates an instance of this class.
+        /// </summary>
         protected MapDecoration()
         {
             BackgroundColor = Color.Transparent;
@@ -91,6 +100,11 @@ namespace SharpMap.Rendering.Decoration
 
         #endregion
 
+        /// <summary>
+        /// Function to compute an transparent color by combining <see cref="Opacity"/> with <paramref name="color"/>.
+        /// </summary>
+        /// <param name="color">The base color</param>
+        /// <returns>The (semi) transparent color</returns>
         protected Color OpacityColor(Color color)
         {
             if (color.A != 255)
@@ -148,9 +162,9 @@ namespace SharpMap.Rendering.Decoration
         /// Function to compute the required size for rendering the map decoration object
         /// <para>This is just the size of the decoration object, border settings are excluded</para>
         /// </summary>
-        /// <param name="g"></param>
-        /// <param name="map"></param>
-        /// <returns>The</returns>
+        /// <param name="g">The graphics object</param>
+        /// <param name="map">The map</param>
+        /// <returns>The size of the map decoration</returns>
         protected abstract Size InternalSize(Graphics g, Map map);
 
         private void CalcMapDecorationMetrics(Graphics g, Map map)

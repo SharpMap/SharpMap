@@ -4,11 +4,14 @@
 using System.IO;
 using System.Text;
 using System.Xml;
-using SharpMap.Data.Providers;
 using GeoAPI.Geometries;
 
 namespace SharpMap.Utilities.Wfs
 {
+    //ReSharper disable InconsistentNaming
+    /// <summary>
+    /// Text resources class for WebFeatureService v1.0.0
+    /// </summary>
     public class WFS_1_0_0_TextResources : WFS_1_0_0_XPathTextResources, IWFS_TextResources
     {
         #region Public Member

@@ -14,6 +14,13 @@ namespace SharpMap.Rendering.Symbolizer
         private SmoothingMode _oldSmootingMode;
         private PixelOffsetMode _oldPixelOffsetMode;
 
+        /// <summary>
+        /// Creates an instance of this class.
+        /// </summary>
+        /// <remarks>
+        /// Sets <see cref="SmoothingMode"/> to <see cref="System.Drawing.Drawing2D.SmoothingMode.AntiAlias"/> and 
+        /// <see cref="PixelOffsetMode"/> to <see cref="System.Drawing.Drawing2D.PixelOffsetMode.Default"/>.
+        /// </remarks>
         protected BaseSymbolizer()
         {
             SmoothingMode = SmoothingMode.AntiAlias;
@@ -32,12 +39,22 @@ namespace SharpMap.Rendering.Symbolizer
 
         #region Implementation of ICloneable
 
+        /// <summary>
+        /// Creates a deep copy of this <see cref="ISymbolizer"/>.
+        /// </summary>
+        /// <returns></returns>
         public abstract object Clone();
 
         #endregion
 
         #region Implementation of ISymbolizer
 
+        /// <summary>
+        /// Method to perform preparatory work for symbilizing.
+        /// </summary>
+        /// <param name="g">The graphics object to symbolize upon</param>
+        /// <param name="map">The map</param>
+        /// <param name="aproximateNumberOfGeometries">An approximate number of geometries to symbolize</param>
         public virtual void Begin(Graphics g, Map map, int aproximateNumberOfGeometries)
         {
             _oldSmootingMode = g.SmoothingMode;
@@ -47,15 +64,20 @@ namespace SharpMap.Rendering.Symbolizer
             g.PixelOffsetMode = PixelOffsetMode;
         }
 
+        /// <summary>
+        /// Method to perform symbolization
+        /// </summary>
+        /// <param name="g">The grapics object to symbolize upon</param>
+        /// <param name="map">The map</param>
         public virtual void Symbolize(Graphics g, Map map)
         {
         }
 
         /// <summary>
-        /// Restores the gra
+        /// Method to restore the state of the graphics object and do cleanup work.
         /// </summary>
-        /// <param name="g"></param>
-        /// <param name="map"></param>
+        /// <param name="g">The graphics object to symbolize upon</param>
+        /// <param name="map">The map</param>
         public virtual void End(Graphics g, Map map)
         {
             g.SmoothingMode = _oldSmootingMode;

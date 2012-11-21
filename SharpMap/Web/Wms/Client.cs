@@ -603,7 +603,7 @@ namespace SharpMap.Web.Wms
                 _nsmgr = new XmlNamespaceManager(_xmlDoc.NameTable);
                 return _xmlDoc;
             }
-            catch (Exception ex)
+            catch (Exception /*ex*/)
             {
                 throw new ApplicationException("Could not convert the capabilities file into an XML document. Do you have illegal characters in the document.");
             }
@@ -973,11 +973,13 @@ namespace SharpMap.Web.Wms
                 switch (_version)
                 {
                     case "1.1.0":
-                        settings.ProhibitDtd = false;
+                        //settings.ProhibitDtd = false;
+                        settings.DtdProcessing = DtdProcessing.Parse;
                         settings.ValidationType = ValidationType.DTD;
                         break;
                     case "1.1.1":
-                        settings.ProhibitDtd = false;
+                        //settings.ProhibitDtd = false;
+                        settings.DtdProcessing = DtdProcessing.Parse;
                         settings.ValidationType = ValidationType.DTD;
                         break;
                     case "1.3.0":

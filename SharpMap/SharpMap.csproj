@@ -240,6 +240,7 @@
     <Compile Include="Utilities\Wfs\XPathQueryManager_CompiledExpressionsDecorator.cs" />
     <Compile Include="Utilities\Wfs\XPathQueryManager_DecoratorBase.cs" />
     <Compile Include="Web\IClient.cs" />
+    <Compile Include="Web\OgcException.cs" />
     <Compile Include="Web\Wcs\Capabilities.cs" />
     <Compile Include="Web\Wcs\Client.cs" />
     <Compile Include="Web\WebUtilities.cs" />
@@ -265,6 +266,30 @@
       </SubType>
     </EmbeddedResource>
     <None Include="Uml\SharpMap.cd" />
+    <None Include="Web\Wcs\Schemas\1.0.0\describeCoverage.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Web\Wcs\Schemas\1.0.0\getCoverage.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Web\Wcs\Schemas\1.0.0\gml4wcs.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Web\Wcs\Schemas\1.0.0\OGC-exception.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Web\Wcs\Schemas\1.0.0\owsBase.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Web\Wcs\Schemas\1.0.0\values.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Web\Wcs\Schemas\1.0.0\wcsAll.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Web\Wcs\Schemas\1.0.0\wcsCapabilities.xsd">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Web\Wfs\Schemas\1.0.0\OGC-exception.xsd" />
     <None Include="Web\Wfs\Schemas\1.0.0\WFS-basic.xsd" />
     <None Include="Web\Wfs\Schemas\1.0.0\WFS-capabilities.xsd" />
@@ -313,6 +338,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Web\Wcs\Schemas\WebCoverageService.txt" />
     <Content Include="Web\Wfs\Schemas\1.1.0\examples\WFS_Capabilities_Sample.xml" />
     <Content Include="Web\Wfs\Schemas\1.1.0\ReadMe.txt" />
     <Content Include="Web\Wfs\Schemas\1.1.0\wsdl\dependencies.jpeg" />
@@ -341,7 +367,7 @@
   </ItemGroup>
   -->
   <ItemGroup>
-    <Folder Include="Web\Wcs\Schemas\" />
+    <Folder Include="Web\Wcs\1.0.0\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

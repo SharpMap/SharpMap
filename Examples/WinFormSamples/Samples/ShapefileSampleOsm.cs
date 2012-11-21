@@ -7,6 +7,7 @@ using SharpMap;
 using SharpMap.Data;
 using SharpMap.Data.Providers;
 using SharpMap.Layers;
+using SharpMap.Rendering.Decoration;
 using SharpMap.Rendering.Thematics;
 using SharpMap.Styles;
 
@@ -325,9 +326,13 @@ namespace WinFormSamples.Samples
             map.Zoom = layRoads.Envelope.Width * 0.2d; ;
             map.Center = layRoads.Envelope.Centre;
 
-            map.Disclaimer = "Geodata from OpenStreetMap (CC-by-SA)\nTransformed to Shapefile by geofabrik.de";
-            map.DisclaimerFont = new Font("Arial", 7f, FontStyle.Italic);
-            map.DisclaimerLocation = 1;
+            var disclaimer = new Disclaimer
+                {
+                    Font = new Font("Arial", 7f, FontStyle.Italic),
+                    Text = "Geodata from OpenStreetMap (CC-by-SA)\nTransformed to Shapefile by geofabrik.de",
+                    Anchor = MapDecorationAnchor.CenterBottom
+                };
+            map.Decorations.Add(disclaimer);
             transparentStyle2.MaxVisible = map.MaximumZoom*0.3;
 
             Matrix mat = new Matrix();

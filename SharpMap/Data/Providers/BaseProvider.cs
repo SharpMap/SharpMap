@@ -21,13 +21,25 @@ namespace SharpMap.Data.Providers
         /// </summary>
         public event EventHandler SridChanged;
 
+        /// <summary>
+        /// Gets or sets the factory to create geometries.
+        /// </summary>
         protected IGeometryFactory Factory { get; set; }
 
+        /// <summary>
+        /// Creates an instance of this class. The <see cref="ConnectionID"/> is set to <see cref="String.Empty"/>,
+        /// the spatial reference id to <c>0</c> and an appropriate factory is chosen.
+        /// </summary>
         protected BaseProvider()
             :this(0)
         {
         }
 
+        /// <summary>
+        /// Creates an instance of this class. The <see cref="ConnectionID"/> is set to <see cref="String.Empty"/>,
+        /// the spatial reference id to <paramref name="srid"/> and an appropriate factory is chosen.
+        /// </summary>
+        /// <param name="srid">The spatial reference id</param>
         protected BaseProvider(int srid)
         {
             ConnectionID = string.Empty;
@@ -35,6 +47,9 @@ namespace SharpMap.Data.Providers
             Factory = GeometryServiceProvider.Instance.CreateGeometryFactory(SRID);
         }
 
+        /// <summary>
+        /// Releases all managed resources
+        /// </summary>
         protected override void ReleaseManagedResources()
         {
             Factory = null;
@@ -74,6 +89,10 @@ namespace SharpMap.Data.Providers
             }
         }
 
+        /// <summary>
+        /// Handler method to handle changes of <see cref="SRID"/>.
+        /// </summary>
+        /// <param name="eventArgs">Event arguments.</param>
         protected virtual void OnSridChanged(EventArgs eventArgs)
         {
             Factory = GeometryServiceProvider.Instance.CreateGeometryFactory(SRID);
@@ -119,17 +138,26 @@ namespace SharpMap.Data.Providers
             OnEndExecuteIntersectionQuery();
         }
 
+        /// <summary>
+        /// Method to perform preparatory things for executing an intersection query against the data source
+        /// </summary>
+        /// <param name="geom">The geometry to use as filter.</param>
         protected virtual void OnBeginExecuteIntersectionQuery(IGeometry geom)
         {
-            // ToDo: Do we need events raised?
         }
 
-        // ToDo: Do we need events raised?
+        /// <summary>
+        /// Method to perform the intersection query against the data source
+        /// </summary>
+        /// <param name="geom">The geometry to use as filter</param>
+        /// <param name="ds">The feature data set to store the results in</param>
         protected abstract void OnExecuteIntersectionQuery(IGeometry geom, FeatureDataSet ds);
 
+        /// <summary>
+        /// Method to do cleanup work after having performed the intersection query against the data source
+        /// </summary>
         protected virtual void OnEndExecuteIntersectionQuery()
         {
-            // ToDo: Do we need events raised?
         }
 
         /// <summary>
@@ -176,6 +204,11 @@ namespace SharpMap.Data.Providers
 
         #endregion
 
+        /// <summary>
+        /// Method to clone the feature data tables schema.
+        /// </summary>
+        /// <param name="baseTable">The feature data table</param>
+        /// <returns>An empty feature data table, having the same schema as <paramref name="baseTable"/></returns>
         protected static FeatureDataTable CloneTableStructure(FeatureDataTable baseTable)
         {
             var res = new FeatureDataTable(baseTable);

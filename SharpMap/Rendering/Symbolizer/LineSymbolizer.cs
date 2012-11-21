@@ -9,11 +9,17 @@ namespace SharpMap.Rendering.Symbolizer
     /// </summary>
     public abstract class LineSymbolizer : BaseSymbolizer, ILineSymbolizer
     {
+        /// <summary>
+        /// Creates an instance of this class. <see cref="Line"/> is set to a random <see cref="KnownColor"/>.
+        /// </summary>
         protected LineSymbolizer()
         {
             Line = new Pen(Utility.RandomKnownColor(), 1);
         }
 
+        /// <summary>
+        /// Releases managed resources
+        /// </summary>
         protected override void ReleaseManagedResources()
         {
             CheckDisposed();
@@ -74,6 +80,11 @@ namespace SharpMap.Rendering.Symbolizer
 
         #region ISymbolizer implementation
 
+        /// <summary>
+        /// Method to perform symbolization
+        /// </summary>
+        /// <param name="g">The grapics object to symbolize upon</param>
+        /// <param name="map">The map</param>
         public override void Symbolize(Graphics g, Map map)
         {
         }

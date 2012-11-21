@@ -24,20 +24,23 @@ using GeoAPI.Geometries;
 
 namespace SharpMap.Web.Wms.Tiling
 {
+    /// <summary>
+    /// Class for handling a set of tiles
+    /// </summary>
     public class TileSet
     {
         #region Fields
 
-        private Envelope boundingBox = null;
-        private string format;
-        private int height = 0;
-        private List<string> layers = new List<string>();
-        private string name;
-        private List<double> resolutions = new List<double>();
-        private string srs;
-        private List<string> styles = new List<string>();
-        private ITileCache tileCache;
-        private int width = 0;
+        private Envelope _boundingBox;
+        private string _format;
+        private int _height;
+        private List<string> _layers = new List<string>();
+        private string _name;
+        private List<double> _resolutions = new List<double>();
+        private string _srs;
+        private List<string> _styles = new List<string>();
+        private ITileCache _tileCache;
+        private int _width;
 
         #endregion
 
@@ -46,31 +49,31 @@ namespace SharpMap.Web.Wms.Tiling
         /// </summary>
         public void Verify()
         {
-            if (layers.Count == 0)
+            if (_layers.Count == 0)
             {
                 throw new Exception(String.Format("No Layers were added for the TileSet"));
             }
-            if (srs == String.Empty)
+            if (_srs == String.Empty)
             {
                 throw new Exception(String.Format("The SRS was not set for TileSet '{0}'", Name));
             }
-            if (boundingBox == null)
+            if (_boundingBox == null)
             {
                 throw new Exception(String.Format("The BoundingBox was not set for TileSet '{0}'", Name));
             }
-            if (resolutions.Count == 0)
+            if (_resolutions.Count == 0)
             {
                 throw new Exception(String.Format("No Resolutions were added for TileSet '{0}'", Name));
             }
-            if (width == 0)
+            if (_width == 0)
             {
                 throw new Exception(String.Format("The Width was not set for TileSet '{0}'", Name));
             }
-            if (height == 0)
+            if (_height == 0)
             {
                 throw new Exception(String.Format("The Height was not set for TileSet '{0}'", Name));
             }
-            if (format == String.Empty)
+            if (_format == String.Empty)
             {
                 throw new Exception(String.Format("The Format was not set for TileSet '{0}'", Name));
             }
@@ -81,10 +84,15 @@ namespace SharpMap.Web.Wms.Tiling
             //as tileset Srs because we do not project one to the other. 
         }
 
-        private static string CreateDefaultName(List<string> layers)
+        /// <summary>
+        /// Creates a default name from a list of <paramref name="layers"/> names
+        /// </summary>
+        /// <param name="layers">A series of layer names</param>
+        /// <returns>A string</returns>
+        private static string CreateDefaultName(IEnumerable<string> layers)
         {
-            StringBuilder stringBuilder = new StringBuilder();
-            foreach (string layer in layers)
+            var stringBuilder = new StringBuilder();
+            foreach (var layer in layers)
             {
                 stringBuilder.Append(layer + ",");
             }
@@ -92,6 +100,7 @@ namespace SharpMap.Web.Wms.Tiling
             return stringBuilder.ToString();
         }
 
+        /// <inheritdoc/>
         public override string ToString()
         {
             return Name;
@@ -102,39 +111,41 @@ namespace SharpMap.Web.Wms.Tiling
         /// and adds them to the TileSets member
         /// </summary>
         /// <param name="xnlVendorSpecificCapabilities">The VendorSpecificCapabilities node of the Capabilties</param>
-        /// <param name="nsmgr"></param>
+        /// <returns>A sorted list of <see cref="TileSet"/>s</returns>
         public static SortedList<string, TileSet> ParseVendorSpecificCapabilitiesNode(
             XmlNode xnlVendorSpecificCapabilities)
         {
-            SortedList<string, TileSet> tileSets = new SortedList<string, TileSet>();
-            XmlNamespaceManager nsmgr = new XmlNamespaceManager(new NameTable());
+            var tileSets = new SortedList<string, TileSet>();
+            var nsmgr = new XmlNamespaceManager(new NameTable());
             nsmgr.AddNamespace("sm", "");
 
-            XmlNodeList xnlTileSets = xnlVendorSpecificCapabilities.SelectNodes("sm:TileSet", nsmgr);
-
-            foreach (XmlNode xnlTileSet in xnlTileSets)
+            var xnlTileSets = xnlVendorSpecificCapabilities.SelectNodes("sm:TileSet", nsmgr);
+            if (xnlTileSets != null)
             {
-                TileSet tileSet = ParseTileSetNode(xnlTileSet, nsmgr);
-                tileSets.Add(tileSet.Name+"-" + tileSet.Format +"-"+tileSet.Srs , tileSet);
+                foreach (XmlNode xnlTileSet in xnlTileSets)
+                {
+                    var tileSet = ParseTileSetNode(xnlTileSet, nsmgr);
+                    tileSets.Add(tileSet.Name + "-" + tileSet.Format + "-" + tileSet.Srs, tileSet);
+                }
             }
             return tileSets;
         }
 
         private static TileSet ParseTileSetNode(XmlNode xnlTileSet, XmlNamespaceManager nsmgr)
         {
-            TileSet tileSet = new TileSet();
+            var tileSet = new TileSet();
 
-            XmlNode xnLayers = xnlTileSet.SelectSingleNode("sm:Layers", nsmgr);
+            var xnLayers = xnlTileSet.SelectSingleNode("sm:Layers", nsmgr);
             if (xnLayers != null)
-                tileSet.Layers.AddRange(xnLayers.InnerText.Split(new char[] {','}));
+                tileSet.Layers.AddRange(xnLayers.InnerText.Split(new[] {','}));
 
-            tileSet.Name = CreateDefaultName(tileSet.layers);
+            tileSet.Name = CreateDefaultName(tileSet._layers);
 
-            XmlNode xnSRS = xnlTileSet.SelectSingleNode("sm:SRS", nsmgr);
-            if (xnSRS != null)
-                tileSet.Srs = xnSRS.InnerText;
+            var xnSrs = xnlTileSet.SelectSingleNode("sm:SRS", nsmgr);
+            if (xnSrs != null)
+                tileSet.Srs = xnSrs.InnerText;
 
-            XmlNode xnWidth = xnlTileSet.SelectSingleNode("sm:Width", nsmgr);
+            var xnWidth = xnlTileSet.SelectSingleNode("sm:Width", nsmgr);
             if (xnWidth != null)
             {
                 int width;
@@ -143,56 +154,48 @@ namespace SharpMap.Web.Wms.Tiling
                 tileSet.Width = width;
             }
 
-            XmlNode xnHeight = xnlTileSet.SelectSingleNode("sm:Height", nsmgr);
+            var xnHeight = xnlTileSet.SelectSingleNode("sm:Height", nsmgr);
             if (xnHeight != null)
             {
                 int height;
-                if (!Int32.TryParse(xnWidth.InnerText, NumberStyles.Any, Map.NumberFormatEnUs, out height))
+                if (!Int32.TryParse(xnHeight.InnerText, NumberStyles.Any, Map.NumberFormatEnUs, out height))
                     throw new ArgumentException("Invalid width on tileset '" + tileSet.Name + "'");
                 tileSet.Height = height;
             }
 
-            XmlNode xnFormat = xnlTileSet.SelectSingleNode("sm:Format", nsmgr);
+            var xnFormat = xnlTileSet.SelectSingleNode("sm:Format", nsmgr);
             if (xnFormat != null)
                 tileSet.Format = xnFormat.InnerText;
 
-            XmlNode xnStyles = xnlTileSet.SelectSingleNode("sm:Styles", nsmgr);
+            var xnStyles = xnlTileSet.SelectSingleNode("sm:Styles", nsmgr);
             if (xnStyles != null)
-                tileSet.Styles.AddRange(xnStyles.InnerText.Split(new char[] {','}));
+                tileSet.Styles.AddRange(xnStyles.InnerText.Split(new[] {','}));
 
-            XmlNode xnBoundingBox = xnlTileSet.SelectSingleNode("sm:BoundingBox", nsmgr);
+            var xnBoundingBox = xnlTileSet.SelectSingleNode("sm:BoundingBox", nsmgr);
             if (xnBoundingBox != null)
             {
-                double minx = 0;
-                double miny = 0;
-                double maxx = 0;
-                double maxy = 0;
-                if
-                    (
-                    !double.TryParse(xnBoundingBox.Attributes["minx"].Value, NumberStyles.Any, Map.NumberFormatEnUs,
-                                     out minx) &
-                    !double.TryParse(xnBoundingBox.Attributes["miny"].Value, NumberStyles.Any, Map.NumberFormatEnUs,
-                                     out miny) &
-                    !double.TryParse(xnBoundingBox.Attributes["maxx"].Value, NumberStyles.Any, Map.NumberFormatEnUs,
-                                     out maxx) &
-                    !double.TryParse(xnBoundingBox.Attributes["maxy"].Value, NumberStyles.Any, Map.NumberFormatEnUs,
-                                     out maxy)
-                    )
+                var att = xnBoundingBox.Attributes;
+                double minx, miny, maxx, maxy;
+                if (att == null || (
+                    !double.TryParse(att["minx"].Value, NumberStyles.Any, Map.NumberFormatEnUs, out minx) &
+                    !double.TryParse(att["miny"].Value, NumberStyles.Any, Map.NumberFormatEnUs, out miny) &
+                    !double.TryParse(att["maxx"].Value, NumberStyles.Any, Map.NumberFormatEnUs, out maxx) &
+                    !double.TryParse(att["maxy"].Value, NumberStyles.Any, Map.NumberFormatEnUs, out maxy)))
                 {
                     throw new ArgumentException("Invalid LatLonBoundingBox on tileset '" + tileSet.Name + "'");
                 }
                 tileSet.BoundingBox = new Envelope(minx, maxx, miny, maxy);
             }
 
-            XmlNode xnResolutions = xnlTileSet.SelectSingleNode("sm:Resolutions", nsmgr);
+            var xnResolutions = xnlTileSet.SelectSingleNode("sm:Resolutions", nsmgr);
             if (xnResolutions != null)
             {
-                double resolution;
-                string[] resolutions = xnResolutions.InnerText.TrimEnd(' ').Split(new char[] {' '});
+                var resolutions = xnResolutions.InnerText.TrimEnd(' ').Split(new[] {' '});
                 foreach (string resolutionStr in resolutions)
                 {
                     if (resolutionStr != "")
                     {
+                        double resolution;
                         if (!Double.TryParse(resolutionStr, NumberStyles.Any, Map.NumberFormatEnUs, out resolution))
                             throw new ArgumentException("Invalid resolution on tileset '" + tileSet.Name + "'");
                         tileSet.Resolutions.Add(resolution);
@@ -210,62 +213,89 @@ namespace SharpMap.Web.Wms.Tiling
         /// </summary>
         public ITileCache TileCache
         {
-            get { return tileCache; }
-            set { tileCache = value; }
+            get { return _tileCache; }
+            set { _tileCache = value; }
         }
 
+        /// <summary>
+        /// Gets or sets a value indicating the name of the tile set
+        /// </summary>
         public string Name
         {
-            get { return name; }
-            set { name = value; }
+            get { return _name; }
+            set { _name = value; }
         }
 
+        /// <summary>
+        /// Gets or sets a string describing the spatial reference system of the tile set
+        /// </summary>
         public string Srs
         {
-            get { return srs; }
-            set { srs = value; }
+            get { return _srs; }
+            set { _srs = value; }
         }
 
+        /// <summary>
+        /// Gets or sets a value indicating the extent of the tile set
+        /// </summary>
         public Envelope BoundingBox
         {
-            get { return boundingBox; }
-            set { boundingBox = value; }
+            get { return _boundingBox; }
+            set { _boundingBox = value; }
         }
 
+        /// <summary>
+        /// Gets or sets a value indicating the resolutions covered by this tile set.
+        /// </summary>
         public List<double> Resolutions
         {
-            get { return resolutions; }
-            set { resolutions = value; }
+            get { return _resolutions; }
+            set { _resolutions = value; }
         }
 
+        /// <summary>
+        /// Gets or sets a value indicating the width (in pixel) of each tile.
+        /// </summary>
         public int Width
         {
-            get { return width; }
-            set { width = value; }
+            get { return _width; }
+            set { _width = value; }
         }
 
+        /// <summary>
+        /// Gets or sets a value indicating the height (in pixel) of each tile.
+        /// </summary>
         public int Height
         {
-            get { return height; }
-            set { height = value; }
+            get { return _height; }
+            set { _height = value; }
         }
 
+        /// <summary>
+        /// Gets or sets a value indicating the tile image format in this tile set.
+        /// </summary>
         public string Format
         {
-            get { return format; }
-            set { format = value; }
+            get { return _format; }
+            set { _format = value; }
         }
 
+        /// <summary>
+        /// Gets or sets a value indicating the layers contained in this tile set.
+        /// </summary>
         public List<string> Layers
         {
-            get { return layers; }
-            set { layers = value; }
+            get { return _layers; }
+            set { _layers = value; }
         }
 
+        /// <summary>
+        /// Gets or sets a value indicating the styles covered in this tile set.
+        /// </summary>
         public List<string> Styles
         {
-            get { return styles; }
-            set { styles = value; }
+            get { return _styles; }
+            set { _styles = value; }
         }
 
         #endregion

@@ -30,8 +30,8 @@ namespace SharpMap.Web.Wms.Tiling
     /// </summary>
     public class TileCacheFileStorage : ITileCache
     {
-        private CultureInfo cultureInfo = new CultureInfo("en-US", false);
-        private string directory;
+        private readonly CultureInfo _cultureInfo = new CultureInfo("en-US", false);
+        private readonly string _directory;
 
         /// <summary>
         /// This constructor creates the storage directory if it does not exist.
@@ -39,7 +39,7 @@ namespace SharpMap.Web.Wms.Tiling
         /// <param name="directory">Directory where the tiles will be stored</param>
         public TileCacheFileStorage(string directory)
         {
-            this.directory = directory;
+            _directory = directory;
 
             if (!Directory.Exists(directory))
             {
@@ -49,16 +49,31 @@ namespace SharpMap.Web.Wms.Tiling
 
         #region ITileCache Members
 
-        public void AddTile(Envelope box, Bitmap bitmap)
+        /// <summary>
+        /// Method to add a tile to the cache.
+        /// </summary>
+        /// <param name="box">The bounding <paramref name="box"/> of the area coverd by the <paramref name="tile"/>.</param>
+        /// <param name="tile">The tile image</param>
+        public void AddTile(Envelope box, Bitmap tile)
         {
-            bitmap.Save(GetFileName(box), ImageFormat.Png);
+            tile.Save(GetFileName(box), ImageFormat.Png);
         }
 
+        /// <summary>
+        /// Function to retrieve a tile from the cache that covers the provided <paramref name="box"/>.
+        /// </summary>
+        /// <param name="box">The area that is to be covered by the tile</param>
+        /// <returns></returns>
         public Bitmap GetTile(Envelope box)
         {
             return new Bitmap(GetFileName(box));
         }
 
+        /// <summary>
+        /// Function to evaluate if the cache contains a tile that covers the provided <paramref name="box"/>.
+        /// </summary>
+        /// <param name="box">The area that is to be covered by the tile</param>
+        /// <returns><value>true</value> if such a tile image is in the cache.</returns>
         public bool ContainsTile(Envelope box)
         {
             return File.Exists(GetFileName(box));
@@ -82,10 +97,10 @@ namespace SharpMap.Web.Wms.Tiling
 
         private string GetFileName(Envelope boundingBox)
         {
-            return String.Format("{0}/{1}_{2}_{3}_{4}.{5}", directory,
-                                 boundingBox.Left().ToString("r", cultureInfo), boundingBox.Top().ToString("r", cultureInfo),
-                                 boundingBox.Right().ToString("r", cultureInfo),
-                                 boundingBox.Bottom().ToString("r", cultureInfo),
+            return String.Format("{0}/{1}_{2}_{3}_{4}.{5}", _directory,
+                                 boundingBox.Left().ToString("r", _cultureInfo), boundingBox.Top().ToString("r", _cultureInfo),
+                                 boundingBox.Right().ToString("r", _cultureInfo),
+                                 boundingBox.Bottom().ToString("r", _cultureInfo),
                                  "png");
         }
     }

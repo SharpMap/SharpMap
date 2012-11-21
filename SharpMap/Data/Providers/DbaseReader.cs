@@ -148,6 +148,10 @@ namespace SharpMap.Data.Providers
             IsOpen = false;
         }
 
+
+        /// <summary>
+        /// Method to perform cleanup work for unmanaged resources
+        /// </summary>
         public void Dispose()
         {
             if (IsOpen)

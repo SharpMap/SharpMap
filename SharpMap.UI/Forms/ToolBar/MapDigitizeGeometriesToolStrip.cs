@@ -7,6 +7,9 @@ using System.Windows.Forms;
 
 namespace SharpMap.Forms.ToolBar
 {
+    /// <summary>
+    /// Map tool strip that contains geometry edit controls
+    /// </summary>
     [System.ComponentModel.DesignTimeVisible(true)]
     public class MapDigitizeGeometriesToolStrip : MapToolStrip
     {
@@ -17,10 +20,12 @@ namespace SharpMap.Forms.ToolBar
         private System.Windows.Forms.ToolStripButton _addPoint;
         private System.Windows.Forms.ToolStripButton _addLineString;
         private System.Windows.Forms.ToolStripButton _addPolygon;
-        private System.Windows.Forms.ToolStripButton _addPolygonRing;
-        private System.Windows.Forms.ToolStripSeparator _sep2;
-        private System.Windows.Forms.ToolStripButton _moveFeature;
-        private System.Windows.Forms.ToolStripButton _moveVertex;
+        /*
+                private System.Windows.Forms.ToolStripButton _addPolygonRing;
+                private System.Windows.Forms.ToolStripSeparator _sep2;
+                private System.Windows.Forms.ToolStripButton _moveFeature;
+                private System.Windows.Forms.ToolStripButton _moveVertex;
+        */
 
         private SharpMap.Data.Providers.GeometryProvider _geometryProvider;
         private SharpMap.Layers.VectorLayer _layer;

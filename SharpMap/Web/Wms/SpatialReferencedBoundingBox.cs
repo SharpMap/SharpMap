@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using GeoAPI.Geometries;
+﻿using GeoAPI.Geometries;
 
 namespace SharpMap.Web.Wms
 {
@@ -14,25 +11,36 @@ namespace SharpMap.Web.Wms
     /// </remarks>
     public class SpatialReferencedBoundingBox : Envelope
     {
-        int _SRID;
         /// <summary>
         /// Initializes a new SpatialReferencedBoundingBox which stores a boundingbox together with the SRID
         /// </summary>
         /// <remarks>This class is used to communicate all the boundingboxes of a WMS server between client.cs and wmslayer.cs</remarks>
-        /// <param name="BoundingBox">BoundingBox</param>
+        /// <param name="minX">The minimum x-ordinate value</param>
+        /// <param name="maxX">The maximum x-ordinate value</param>
+        /// <param name="minY">The minimum y-ordinate value</param>
+        /// <param name="maxY">The maximum y-ordinate value</param>
         /// <param name="srid">Spatial Reference ID</param>
-        public SpatialReferencedBoundingBox(double minX, double minY, double maxX, double maxY, int srid) : base(minX, minY, maxX, maxY)
+        public SpatialReferencedBoundingBox(double minX, double minY, double maxX, double maxY, int srid) 
+            : base(minX, minY, maxX, maxY)
         {
-            _SRID = srid;
+            SRID = srid;
+        }
+
+        /// <summary>
+        /// Initializes a new SpatialReferencedBoundingBox which stores a boundingbox together with the SRID
+        /// </summary>
+        /// <remarks>This class is used to communicate all the boundingboxes of a WMS server between client.cs and wmslayer.cs</remarks>
+        /// <param name="boundingBox">BoundingBox</param>
+        /// <param name="srid">Spatial Reference ID</param>
+        public SpatialReferencedBoundingBox(Envelope boundingBox, int srid)
+            : base(boundingBox.MinX, boundingBox.MinY, boundingBox.MaxX, boundingBox.MaxY)
+        {
+            SRID = srid;
         }
 
         /// <summary>
         /// The spatial reference ID (CRS)
         /// </summary>
-        public int SRID
-        {
-            get { return _SRID; }
-            set { _SRID = value; }
-        }
+        public int SRID { get; set; }
     }
 }

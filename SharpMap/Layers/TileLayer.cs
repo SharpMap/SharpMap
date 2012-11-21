@@ -13,8 +13,9 @@ using GeoAPI.Geometries;
 
 namespace SharpMap.Layers
 {
-
+    //ReSharper disable InconsistentNaming
     ///<summary>
+    /// Tile layer class
     ///</summary>
     public class TileLayer : Layer
     {
@@ -23,12 +24,35 @@ namespace SharpMap.Layers
         #region Fields
         
         //string layerName;
+        /// <summary>
+        /// The <see cref="ImageAttributes"/> used when rendering the tiles
+        /// </summary>
         protected readonly ImageAttributes _imageAttributes = new ImageAttributes();
+        /// <summary>
+        /// The tile source for this layer
+        /// </summary>
         protected readonly ITileSource _source;
+
+        /// <summary>
+        /// An in-memory tile cache
+        /// </summary>
         protected readonly MemoryCache<Bitmap> _bitmaps = new MemoryCache<Bitmap>(100, 200);
+
+        /// <summary>
+        /// A file cache
+        /// </summary>
         protected FileCache _fileCache = null;
+        
+        /// <summary>
+        /// The format of the images
+        /// </summary>
         protected ImageFormat _ImageFormat = null;
+        
+        /// <summary>
+        /// Value indicating if "error" tiles should be generated or not.
+        /// </summary>
         protected readonly bool _showErrorInTile = true;
+
         InterpolationMode _interpolationMode = InterpolationMode.HighQualityBicubic;
         //System.Collections.Hashtable _cacheTiles = new System.Collections.Hashtable();
 
@@ -141,6 +165,11 @@ namespace SharpMap.Layers
 
         #region Public methods
 
+        /// <summary>
+        /// Renders the layer
+        /// </summary>
+        /// <param name="graphics">Graphics object reference</param>
+        /// <param name="map">Map which is rendered</param>
         public override void Render(Graphics graphics, Map map)
         {
             if (!map.Size.IsEmpty && map.Size.Width > 0 && map.Size.Height > 0)
@@ -262,6 +291,11 @@ namespace SharpMap.Layers
             }
         }
 
+        /// <summary>
+        /// Method to add a tile image to the <see cref="FileCache"/>
+        /// </summary>
+        /// <param name="tileInfo">The tile info</param>
+        /// <param name="bitmap">The tile image</param>
         protected void AddImageToFileCache(TileInfo tileInfo, Bitmap bitmap)
         {
             using (var ms = new MemoryStream())
@@ -274,6 +308,11 @@ namespace SharpMap.Layers
             }
         }
 
+        /// <summary>
+        /// Functon to get a tile image from the <see cref="FileCache"/>.
+        /// </summary>
+        /// <param name="info">The tile info</param>
+        /// <returns>The tile-image, if already cached</returns>
         protected Image GetImageFromFileCache(TileInfo info)
         {
             using (var ms = new MemoryStream(_fileCache.Find(info.Index)))

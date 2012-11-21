@@ -170,6 +170,9 @@ namespace SharpMap.Layers
             set { _TimeOut = value; }
         }
 
+        /// <summary>
+        /// Gets a list of tile sets that are currently active
+        /// </summary>
         public Collection<string> TileSetsActive
         {
             get { return _TileSetsActive; }
@@ -206,6 +209,7 @@ namespace SharpMap.Layers
 
         #region ILayer Members
 
+        /// <summary>
         /// Renders the layer
         /// </summary>
         /// <param name="g">Graphics object reference</param>

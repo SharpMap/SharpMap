@@ -80,7 +80,7 @@ namespace WinFormSamples
             get
             {
 
-                if (wgs84toGoogle == null)
+                if (dhdn2towgs84 == null)
                 {
 #if DotSpatialProjections
                     var piSource = ProjectionInfo.FromEpsgCode(31466);
@@ -112,7 +112,7 @@ namespace WinFormSamples
                       "Google Mercator", wgs84, projection, LinearUnit.Metre, new AxisInfo("East", AxisOrientationEnum.East),
                       new AxisInfo("North", AxisOrientationEnum.North));
 
-                    wgs84toGoogle = ctFac.CreateFromCoordinateSystems(wgs84, epsg900913);
+                    dhdn2towgs84 = ctFac.CreateFromCoordinateSystems(wgs84, epsg900913);
 #endif
                 }
 
@@ -127,7 +127,7 @@ namespace WinFormSamples
             {
 
 
-                if (googletowgs84 == null)
+                if (dhdn2towgs84 == null)
                 {
 #if DotSpatialProjections
                     googletowgs84 = new CoordinateTransformation()

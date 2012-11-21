@@ -78,6 +78,11 @@ namespace SharpMap.Layers
             get { return _duplicateLayerName; }
         }
 
+        /// <summary>
+        /// Serialization function
+        /// </summary>
+        /// <param name="info">The serialization info</param>
+        /// <param name="context">The streaming context</param>
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             base.GetObjectData(info, context);

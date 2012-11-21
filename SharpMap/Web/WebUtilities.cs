@@ -63,7 +63,7 @@ namespace SharpMap.Web
                         //Found it, tested it, continue with useful stuff
                         break;
                     }
-                    catch (Exception ex)
+                    catch (Exception /*ex*/)
                     {
                     }
                 }

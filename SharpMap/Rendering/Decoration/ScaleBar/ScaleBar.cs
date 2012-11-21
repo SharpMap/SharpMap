@@ -102,6 +102,14 @@ namespace SharpMap.Rendering.Decoration.ScaleBar
         private int _marginRight = DefaultMarginX; //right margin for the scale bar
 
         #region MapDecoration overrides
+
+        /// <summary>
+        /// Function to compute the required size for rendering the map decoration object
+        /// <para>This is just the size of the decoration object, border settings are excluded</para>
+        /// </summary>
+        /// <param name="g">The graphics object</param>
+        /// <param name="map">The map</param>
+        /// <returns>The size of the map decoration</returns>
         protected override Size InternalSize(Graphics g, Map map)
         {
             CalcScale((int)g.DpiX);
@@ -110,6 +118,11 @@ namespace SharpMap.Rendering.Decoration.ScaleBar
             return new Size((int)width, (int)height);
         }
 
+        /// <summary>
+        /// Function to render the actual map decoration
+        /// </summary>
+        /// <param name="g"></param>
+        /// <param name="map"></param>
         protected override void OnRender(Graphics g, Map map)
         {
             var rectF = g.ClipBounds;
@@ -478,10 +491,10 @@ namespace SharpMap.Rendering.Decoration.ScaleBar
                 {
                     //Make sure this text is not overdrawn... (should be aligned with ticmark)
                     var size = MeasureDisplayStringWidthExact(g, text, _font);
-                    int endX = (int)(x + ticWidth * i + size);
-                    if (endX > base._boundingRectangle.Right)
+                    int endX = x + ticWidth * i + size;
+                    if (endX > _boundingRectangle.Right)
                     {
-                        offsetX = base._boundingRectangle.Right - endX;
+                        offsetX = _boundingRectangle.Right - endX;
                     }
 
                 }
@@ -1025,20 +1038,16 @@ namespace SharpMap.Rendering.Decoration.ScaleBar
             return precision;
         }
 
-        static public int MeasureDisplayStringWidthExact(Graphics graphics, string text,
+        static private int MeasureDisplayStringWidthExact(Graphics graphics, string text,
                                             Font font)
         {
-            System.Drawing.StringFormat format = new System.Drawing.StringFormat();
-            System.Drawing.RectangleF rect = new System.Drawing.RectangleF(0, 0,
-                                                                          1000, 1000);
-            System.Drawing.CharacterRange[] ranges = 
-                                       { new System.Drawing.CharacterRange(0, 
-                                                               text.Length) };
-            System.Drawing.Region[] regions = new System.Drawing.Region[1];
-
+            var ranges = new[] { new CharacterRange(0, text.Length) };
+            var format = new StringFormat();
             format.SetMeasurableCharacterRanges(ranges);
 
-            regions = graphics.MeasureCharacterRanges(text, font, rect, format);
+            var rect = new RectangleF(0, 0, 1000, 1000);
+
+            var regions = graphics.MeasureCharacterRanges(text, font, rect, format);
             rect = regions[0].GetBounds(graphics);
 
             return (int)(rect.Right + 1.0f);

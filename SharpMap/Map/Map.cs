@@ -403,7 +403,9 @@ namespace SharpMap
                 }
             }
 
+#pragma warning disable 612,618
             RenderDisclaimer(g);
+#pragma warning restore 612,618
 
             // Render all map decorations
             foreach (var mapDecoration in _decorations)
@@ -436,15 +438,27 @@ namespace SharpMap
             if (e != null) e(g); //Fire render event
         }
 
+        /// <summary>
+        /// Method called when starting to render <paramref name="layer"/> of <paramref name="layerCollectionType"/>. This fires the
+        /// <see cref="E:SharpMap.Map.LayerRendering"/> event.
+        /// </summary>
+        /// <param name="layer">The layer to render</param>
+        /// <param name="layerCollectionType">The collection type</param>
         protected virtual void OnLayerRendering(ILayer layer, LayerCollectionType layerCollectionType)
         {
             var e = LayerRendering;
             if (e != null) e(this, new LayerRenderingEventArgs(layer, layerCollectionType));
         }
 
+#pragma warning disable 612,618
+        /// <summary>
+        /// Method called when <paramref name="layer"/> of <paramref name="layerCollectionType"/> has been rendered. This fires the
+        /// <see cref="E:SharpMap.Map.LayerRendered"/> and <see cref="E:SharpMap.Map.LayerRenderedEx"/> event.
+        /// </summary>
+        /// <param name="layer">The layer to render</param>
+        /// <param name="layerCollectionType">The collection type</param>
         protected virtual void OnLayerRendered(ILayer layer, LayerCollectionType layerCollectionType)
         {
-#pragma warning disable 612,618
             var e = LayerRendered;
 #pragma warning restore 612,618
             if (e != null) e(this, EventArgs.Empty);
@@ -519,7 +533,9 @@ namespace SharpMap
             g.Transform = transform;
             if (layerCollectionType == LayerCollectionType.Static)
             {
+#pragma warning disable 612,618
                 RenderDisclaimer(g);
+#pragma warning restore 612,618
                 if (drawMapDecorations)
                 {
                     foreach (var mapDecoration in Decorations)
@@ -547,8 +563,10 @@ namespace SharpMap
                 clone = new Map()
                 {
                     BackColor = BackColor,
+#pragma warning disable 612,618
                     Disclaimer = Disclaimer,
                     DisclaimerLocation = DisclaimerLocation,
+#pragma warning restore 612,618
                     MaximumZoom = MaximumZoom,
                     MinimumZoom = MinimumZoom,
                     PixelAspectRatio = PixelAspectRatio,
@@ -557,8 +575,10 @@ namespace SharpMap
                     SRID = SRID
                 };
 
+#pragma warning disable 612,618
                 if (DisclaimerFont != null)
                     clone.DisclaimerFont = (Font)DisclaimerFont.Clone();
+#pragma warning restore 612,618
                 if (MapTransform != null)
                     clone.MapTransform = MapTransform.Clone();
                 if (!Size.IsEmpty)
@@ -567,34 +587,32 @@ namespace SharpMap
                     clone.Center = (Coordinate)Center.Clone();
 
             }
-            if (clone != null)
-            {
-                if (BackgroundLayer != null)
-                    clone.BackgroundLayer.AddCollection(BackgroundLayer.Clone());
 
-                for (int i = 0; i < Decorations.Count; i++)
-                    clone.Decorations.Add(Decorations[i]);
+            if (BackgroundLayer != null)
+                clone.BackgroundLayer.AddCollection(BackgroundLayer.Clone());
 
-                if (Layers != null)
-                    clone.Layers.AddCollection(Layers.Clone());
+            for (int i = 0; i < Decorations.Count; i++)
+                clone.Decorations.Add(Decorations[i]);
 
-                if (VariableLayers != null)
-                    clone.VariableLayers.AddCollection(VariableLayers.Clone());
+            if (Layers != null)
+                clone.Layers.AddCollection(Layers.Clone());
 
-            }
+            if (VariableLayers != null)
+                clone.VariableLayers.AddCollection(VariableLayers.Clone());
+
             return clone;
         }
 
+        [Obsolete]
         private void RenderDisclaimer(Graphics g)
         {
-
-            StringFormat sf;
             //Disclaimer
             if (!String.IsNullOrEmpty(_disclaimer))
             {
-                SizeF size = VectorRenderer.SizeOfString(g, _disclaimer, _disclaimerFont);
+                var size = VectorRenderer.SizeOfString(g, _disclaimer, _disclaimerFont);
                 size.Width = (Single)Math.Ceiling(size.Width);
                 size.Height = (Single)Math.Ceiling(size.Height);
+                StringFormat sf;
                 switch (DisclaimerLocation)
                 {
                     case 0: //Right-Bottom
@@ -699,12 +717,12 @@ namespace SharpMap
         /// <returns>Point in image coordinates</returns>
         public PointF WorldToImage(Coordinate p, bool careAboutMapTransform)
         {
-            PointF pTmp = Transform.WorldtoMap(p, this);
+            var pTmp = Transform.WorldtoMap(p, this);
             lock (MapTransform)
             {
                 if (careAboutMapTransform && !MapTransform.IsIdentity)
                 {
-                    PointF[] pts = new PointF[] { pTmp };
+                    var pts = new[] { pTmp };
                     MapTransform.TransformPoints(pts);
                     pTmp = pts[0];
                 }
@@ -746,7 +764,7 @@ namespace SharpMap
             {
                 if (careAboutMapTransform && !MapTransform.IsIdentity)
                 {
-                    PointF[] pts = new PointF[] { p };
+                    var pts = new[] { p };
                     MapTransformInverted.TransformPoints(pts);
                     p = pts[0];
                 }
@@ -793,7 +811,8 @@ namespace SharpMap
 
                 var ll = new Coordinate(Center.X - Zoom * .5, Center.Y - MapHeight * .5);
                 var ur = new Coordinate(Center.X + Zoom * .5, Center.Y + MapHeight * .5);
-                PointF ptfll = WorldToImage(ll, true);
+                
+                var ptfll = WorldToImage(ll, true);
                 ptfll = new PointF(Math.Abs(ptfll.X), Math.Abs(Size.Height - ptfll.Y));
                 if (!ptfll.IsEmpty)
                 {
@@ -1098,6 +1117,9 @@ namespace SharpMap
             set { _disclaimerLocation = value%4; }
         }
 
+        /// <summary>
+        /// Factory used to create geometries
+        /// </summary>
         public IGeometryFactory Factory { get; private set; }
 
         #endregion

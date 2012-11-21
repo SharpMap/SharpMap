@@ -37,12 +37,14 @@ namespace SharpMap.Data.Providers
             _spatialDbUtility = dbUtility;
         }
 
+        /// <inheritdoc/>
         protected override void ClearItems()
         {
             base.ClearItems();
             OnFeatureColumnsChanged(EventArgs.Empty);
         }
 
+        /// <inheritdoc/>
         protected override void RemoveItem(int index)
         {
             //var item = this[index];
@@ -58,6 +60,7 @@ namespace SharpMap.Data.Providers
         //    OnFeatureColumnsChanged(EventArgs.Empty);
         //}
 
+        /// <inheritdoc/>
         protected override void InsertItem(int index, SharpMapFeatureColumn item)
         {
             item.Ordinal = index;
@@ -65,6 +68,7 @@ namespace SharpMap.Data.Providers
             OnFeatureColumnsChanged(EventArgs.Empty);
         }
 
+        /// <inheritdoc/>
         protected override void SetItem(int index, SharpMapFeatureColumn item)
         {
             item.Ordinal = index;
@@ -184,15 +188,16 @@ namespace SharpMap.Data.Providers
             return GetWhereClause(null);
         }
 
+        // <param name="command">A command object to add parameters to</param>
+
         /// <summary>
         /// Gets the where clause
         /// </summary>
-        ///// <param name="command">A command object to add parameters to</param>
         /// <param name="spatialWhere">An optional spatial constraint</param>
         /// <returns>The </returns>
         public string GetWhereClause(/*DbCommand command,*/ string spatialWhere)
         {
-            if (_whereClause == null)
+            if (string.IsNullOrEmpty(_whereClause))
             {
                 var sqlBuilder = new StringBuilder();
                 foreach (var fc in this)
@@ -292,7 +297,7 @@ namespace SharpMap.Data.Providers
         /// <returns>The geometry column.</returns>
         public string GetGeometryColumn(bool usAs)
         {
-            var res = _provider.NeedsTransfrom
+            var res = _provider.NeedsTransform
                           ? string.Format(_spatialDbUtility.ToGeometryDecoratorFormat, _provider.GeometryColumn, _provider.TargetSRID)
                           : _spatialDbUtility.DecorateEntity(_provider.GeometryColumn);
 

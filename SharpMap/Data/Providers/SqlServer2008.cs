@@ -141,7 +141,7 @@ namespace SharpMap.Data.Providers
                     break;
             }
 
-            _ExtentsMode = (useSpatialIndexExtentAsExtent ? SqlServer2008ExtentsMode.SpatialIndex : SqlServer2008ExtentsMode.QueryIndividualFeatures);
+            _extentsMode = (useSpatialIndexExtentAsExtent ? SqlServer2008ExtentsMode.SpatialIndex : SqlServer2008ExtentsMode.QueryIndividualFeatures);
         }
 
         /// <summary>   
@@ -167,20 +167,16 @@ namespace SharpMap.Data.Providers
         {
         }
 
-        private SqlServer2008ExtentsMode _ExtentsMode = SqlServer2008ExtentsMode.QueryIndividualFeatures;
+        private SqlServer2008ExtentsMode _extentsMode = SqlServer2008ExtentsMode.QueryIndividualFeatures;
 
         /// <summary>
-        /// Gets or sets the method used in the <see cref="GetExtends"/> method.
+        /// Gets or sets the method used in the <see cref="GetExtents"/> method.
         /// </summary>
         public SqlServer2008ExtentsMode ExtentsMode
         {
-            get { return _ExtentsMode; }
-            set { _ExtentsMode = value; }
+            get { return _extentsMode; }
+            set { _extentsMode = value; }
         }
-
-        private bool _isOpen;   
-  
-
  
        /// <summary>   
        /// Connectionstring   
@@ -495,8 +491,6 @@ namespace SharpMap.Data.Providers
            }   
        }   
  
-       private int _srid;   
- 
        /// <summary>   
        /// Returns a datarow based on a RowID   
        /// </summary>   
@@ -546,7 +540,7 @@ namespace SharpMap.Data.Providers
             {
                 conn.Open();
                 string sql;
-                switch (_ExtentsMode)
+                switch (_extentsMode)
                 {
                     case SqlServer2008ExtentsMode.SpatialIndex:
                         sql =

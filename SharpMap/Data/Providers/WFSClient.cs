@@ -160,7 +160,13 @@ namespace SharpMap.Data.Providers
         /// </summary>
         public enum WFSVersionEnum
         {
+            /// <summary>
+            /// Version 1.0.0
+            /// </summary>
             WFS1_0_0,
+            /// <summary>
+            /// Version 1.1.0
+            /// </summary>
             WFS1_1_0
         } ;
 
@@ -170,21 +176,21 @@ namespace SharpMap.Data.Providers
 
         // Info about the featuretype to query obtained from 'GetCapabilites' and 'DescribeFeatureType'
 
-        private readonly GeometryTypeEnum _GeometryType = GeometryTypeEnum.Unknown;
-        private readonly string _GetCapabilitiesURI;
-        private readonly HttpClientUtil _HttpClientUtil = new HttpClientUtil();
-        private readonly IWFS_TextResources _TextResources;
+        private readonly GeometryTypeEnum _geometryType = GeometryTypeEnum.Unknown;
+        private readonly string _getCapabilitiesUri;
+        private readonly HttpClientUtil _httpClientUtil = new HttpClientUtil();
+        private readonly IWFS_TextResources _textResources;
 
-        private readonly WFSVersionEnum _WfsVersion;
+        private readonly WFSVersionEnum _wfsVersion;
 
-        private bool _Disposed;
-        private string _FeatureType;
-        private WfsFeatureTypeInfo _FeatureTypeInfo;
-        private IXPathQueryManager _FeatureTypeInfoQueryManager;
-        private bool _IsOpen;
-        private FeatureDataTable _LabelInfo;
+        private bool _disposed;
+        private string _featureType;
+        private WfsFeatureTypeInfo _featureTypeInfo;
+        private IXPathQueryManager _featureTypeInfoQueryManager;
+        private bool _isOpen;
+        private FeatureDataTable _labelInfo;
 
-        private string _NsPrefix;
+        private string _nsPrefix;
 
         // The type of geometry can be specified in case of unprecise information (e.g. 'GeometryAssociationType').
         // It helps to accelerate the rendering process significantly.
@@ -193,11 +199,11 @@ namespace SharpMap.Data.Providers
 
         #region Properties
 
-        private bool _GetFeatureGETRequest;
-        private string _Label;
-        private bool _MultiGeometries = true;
-        private IFilter _OGCFilter;
-        private bool _QuickGeometries;
+        private bool _getFeatureGETRequest;
+        private string _label;
+        private bool _multiGeometries = true;
+        private IFilter _ogcFilter;
+        private bool _quickGeometries;
 
         /// <summary>
         /// This cache (obtained from an already instantiated dataprovider that retrieves a featuretype hosted by the same service) 
@@ -205,8 +211,8 @@ namespace SharpMap.Data.Providers
         /// </summary>
         public IXPathQueryManager GetCapabilitiesCache
         {
-            get { return _FeatureTypeInfoQueryManager; }
-            set { _FeatureTypeInfoQueryManager = value; }
+            get { return _featureTypeInfoQueryManager; }
+            set { _featureTypeInfoQueryManager = value; }
         }
 
         /// <summary>
@@ -214,7 +220,7 @@ namespace SharpMap.Data.Providers
         /// </summary>
         public WfsFeatureTypeInfo FeatureTypeInfo
         {
-            get { return _FeatureTypeInfo; }
+            get { return _featureTypeInfo; }
         }
 
         /// <summary>
@@ -226,8 +232,8 @@ namespace SharpMap.Data.Providers
         /// </summary>
         public bool QuickGeometries
         {
-            get { return _QuickGeometries; }
-            set { _QuickGeometries = value; }
+            get { return _quickGeometries; }
+            set { _quickGeometries = value; }
         }
 
         /// <summary>
@@ -237,8 +243,8 @@ namespace SharpMap.Data.Providers
         /// </summary>
         public bool MultiGeometries
         {
-            get { return _MultiGeometries; }
-            set { _MultiGeometries = value; }
+            get { return _multiGeometries; }
+            set { _multiGeometries = value; }
         }
 
         /// <summary>
@@ -248,8 +254,8 @@ namespace SharpMap.Data.Providers
         /// </summary>
         public bool GetFeatureGETRequest
         {
-            get { return _GetFeatureGETRequest; }
-            set { _GetFeatureGETRequest = value; }
+            get { return _getFeatureGETRequest; }
+            set { _getFeatureGETRequest = value; }
         }
 
         /// <summary>
@@ -257,8 +263,8 @@ namespace SharpMap.Data.Providers
         /// </summary>
         public IFilter OGCFilter
         {
-            get { return _OGCFilter; }
-            set { _OGCFilter = value; }
+            get { return _ogcFilter; }
+            set { _ogcFilter = value; }
         }
 
         /// <summary>
@@ -266,8 +272,8 @@ namespace SharpMap.Data.Providers
         /// </summary>
         public string Label
         {
-            get { return _Label; }
-            set { _Label = value; }
+            get { return _label; }
+            set { _label = value; }
         }
 
         /// <summary>
@@ -275,8 +281,8 @@ namespace SharpMap.Data.Providers
         /// </summary>
         public ICredentials Credentials
         {
-            get { return _HttpClientUtil.Credentials; }
-            set { _HttpClientUtil.Credentials = value; }
+            get { return _httpClientUtil.Credentials; }
+            set { _httpClientUtil.Credentials = value; }
         }
 
         #endregion
@@ -287,33 +293,37 @@ namespace SharpMap.Data.Providers
         /// Use this constructor for initializing this dataprovider with all necessary
         /// parameters to gather metadata from 'GetCapabilities' contract.
         /// </summary>
+        /// <param name="getCapabilitiesURI">The URL for the 'GetCapabilities' request.</param>
         /// <param name="nsPrefix">
         /// Use an empty string or 'null', if there is no prefix for the featuretype.
         /// </param>
+        /// <param name="featureType">The name of the feature type</param>
         /// <param name="geometryType">
         /// Specifying the geometry type helps to accelerate the rendering process, 
         /// if the geometry type in 'DescribeFeatureType is unprecise.   
         /// </param>
+        /// <param name="wfsVersion">The desired WFS Server version.</param>
         public WFS(string getCapabilitiesURI, string nsPrefix, string featureType, GeometryTypeEnum geometryType,
                    WFSVersionEnum wfsVersion)
         {
-            _GetCapabilitiesURI = getCapabilitiesURI;
+            _getCapabilitiesUri = getCapabilitiesURI;
 
             if (wfsVersion == WFSVersionEnum.WFS1_0_0)
-                _TextResources = new WFS_1_0_0_TextResources();
-            else _TextResources = new WFS_1_1_0_TextResources();
+                _textResources = new WFS_1_0_0_TextResources();
+            else 
+                _textResources = new WFS_1_1_0_TextResources();
 
-            _WfsVersion = wfsVersion;
+            _wfsVersion = wfsVersion;
 
             if (string.IsNullOrEmpty(nsPrefix))
-                resolveFeatureType(featureType);
+                ResolveFeatureType(featureType);
             else
             {
-                _NsPrefix = nsPrefix;
-                _FeatureType = featureType;
+                _nsPrefix = nsPrefix;
+                _featureType = featureType;
             }
 
-            _GeometryType = geometryType;
+            _geometryType = geometryType;
             GetFeatureTypeInfo();
         }
 
@@ -321,9 +331,12 @@ namespace SharpMap.Data.Providers
         /// Use this constructor for initializing this dataprovider with all necessary
         /// parameters to gather metadata from 'GetCapabilities' contract.
         /// </summary>
+        /// <param name="getCapabilitiesURI">The URL for the 'GetCapabilities' request.</param>
         /// <param name="nsPrefix">
         /// Use an empty string or 'null', if there is no prefix for the featuretype.
         /// </param>
+        /// <param name="featureType">The name of the feature type</param>
+        /// <param name="wfsVersion">The desired WFS Server version.</param>
         public WFS(string getCapabilitiesURI, string nsPrefix, string featureType, WFSVersionEnum wfsVersion)
             : this(getCapabilitiesURI, nsPrefix, featureType, GeometryTypeEnum.Unknown, wfsVersion)
         {
@@ -336,46 +349,53 @@ namespace SharpMap.Data.Providers
         /// </summary>
         public WFS(WfsFeatureTypeInfo featureTypeInfo, WFSVersionEnum wfsVersion)
         {
-            _FeatureTypeInfo = featureTypeInfo;
+            _featureTypeInfo = featureTypeInfo;
 
             if (wfsVersion == WFSVersionEnum.WFS1_0_0)
-                _TextResources = new WFS_1_0_0_TextResources();
-            else _TextResources = new WFS_1_1_0_TextResources();
+                _textResources = new WFS_1_0_0_TextResources();
+            else _textResources = new WFS_1_1_0_TextResources();
 
-            _WfsVersion = wfsVersion;
+            _wfsVersion = wfsVersion;
         }
 
         /// <summary>
         /// Use this constructor for initializing this dataprovider with all mandatory
         /// metadata for retrieving a featuretype, so that 'GetCapabilities' and 'DescribeFeatureType' can be bypassed.
         /// </summary>
+        /// <param name="serviceURI">The service URL</param>
         /// <param name="nsPrefix">
         /// Use an empty string or 'null', if there is no prefix for the featuretype.
         /// </param>
         /// <param name="featureTypeNamespace">
         /// Use an empty string or 'null', if there is no namespace for the featuretype.
         /// You don't need to know the namespace of the feature type, if you use the quick geometries option.
+        /// </param>
+        /// <param name="geometryName">
+        /// The name of the geometry.   
         /// </param>
         /// <param name="geometryType">
         /// Specifying the geometry type helps to accelerate the rendering process.   
         /// </param>
+        /// <param name="featureType">The name of the feature type</param>
+        /// <param name="wfsVersion">The desired WFS Server version.</param>
         public WFS(string serviceURI, string nsPrefix, string featureTypeNamespace, string featureType,
                    string geometryName, GeometryTypeEnum geometryType, WFSVersionEnum wfsVersion)
         {
-            _FeatureTypeInfo = new WfsFeatureTypeInfo(serviceURI, nsPrefix, featureTypeNamespace, featureType,
+            _featureTypeInfo = new WfsFeatureTypeInfo(serviceURI, nsPrefix, featureTypeNamespace, featureType,
                                                       geometryName, geometryType);
 
             if (wfsVersion == WFSVersionEnum.WFS1_0_0)
-                _TextResources = new WFS_1_0_0_TextResources();
-            else _TextResources = new WFS_1_1_0_TextResources();
+                _textResources = new WFS_1_0_0_TextResources();
+            else _textResources = new WFS_1_1_0_TextResources();
 
-            _WfsVersion = wfsVersion;
+            _wfsVersion = wfsVersion;
         }
 
         /// <summary>
         /// Use this constructor for initializing this dataprovider with all mandatory
         /// metadata for retrieving a featuretype, so that 'GetCapabilities' and 'DescribeFeatureType' can be bypassed.
         /// </summary>
+        /// <param name="serviceURI">The service URL</param>
         /// <param name="nsPrefix">
         /// Use an empty string or 'null', if there is no prefix for the featuretype.
         /// </param>
@@ -383,6 +403,9 @@ namespace SharpMap.Data.Providers
         /// Use an empty string or 'null', if there is no namespace for the featuretype.
         /// You don't need to know the namespace of the feature type, if you use the quick geometries option.
         /// </param>
+        /// <param name="geometryName">The name of the geometry</param>
+        /// <param name="featureType">The name of the feature type</param>
+        /// <param name="wfsVersion">The desired WFS Server version.</param>
         public WFS(string serviceURI, string nsPrefix, string featureTypeNamespace, string featureType,
                    string geometryName, WFSVersionEnum wfsVersion)
             : this(
@@ -406,26 +429,28 @@ namespace SharpMap.Data.Providers
         /// Specifying the geometry type helps to accelerate the rendering process, 
         /// if the geometry type in 'DescribeFeatureType is unprecise.   
         /// </param>
+        /// <param name="featureType">The name of the feature type</param>
+        /// <param name="wfsVersion">The desired WFS Server version.</param>
         public WFS(IXPathQueryManager getCapabilitiesCache, string nsPrefix, string featureType,
                    GeometryTypeEnum geometryType, WFSVersionEnum wfsVersion)
         {
-            _FeatureTypeInfoQueryManager = getCapabilitiesCache;
+            _featureTypeInfoQueryManager = getCapabilitiesCache;
 
             if (wfsVersion == WFSVersionEnum.WFS1_0_0)
-                _TextResources = new WFS_1_0_0_TextResources();
-            else _TextResources = new WFS_1_1_0_TextResources();
+                _textResources = new WFS_1_0_0_TextResources();
+            else _textResources = new WFS_1_1_0_TextResources();
 
-            _WfsVersion = wfsVersion;
+            _wfsVersion = wfsVersion;
 
             if (string.IsNullOrEmpty(nsPrefix))
-                resolveFeatureType(featureType);
+                ResolveFeatureType(featureType);
             else
             {
-                _NsPrefix = nsPrefix;
-                _FeatureType = featureType;
+                _nsPrefix = nsPrefix;
+                _featureType = featureType;
             }
 
-            _GeometryType = geometryType;
+            _geometryType = geometryType;
             GetFeatureTypeInfo();
         }
 
@@ -440,6 +465,8 @@ namespace SharpMap.Data.Providers
         /// <param name="nsPrefix">
         /// Use an empty string or 'null', if there is no prefix for the featuretype.
         /// </param>
+        /// <param name="featureType">The name of the feature type</param>
+        /// <param name="wfsVersion">The desired WFS Server version.</param>
         public WFS(IXPathQueryManager getCapabilitiesCache, string nsPrefix, string featureType,
                    WFSVersionEnum wfsVersion)
             : this(getCapabilitiesCache, nsPrefix, featureType, GeometryTypeEnum.Unknown, wfsVersion)
@@ -450,28 +477,33 @@ namespace SharpMap.Data.Providers
 
         #region IProvider Member
 
+        /// <summary>
+        /// Gets the features within the specified <see cref="GeoAPI.Geometries.Envelope"/>
+        /// </summary>
+        /// <param name="bbox"></param>
+        /// <returns>Features within the specified <see cref="GeoAPI.Geometries.Envelope"/></returns>
         public Collection<IGeometry> GetGeometriesInView(Envelope bbox)
         {
-            if (_FeatureTypeInfo == null) return null;
+            if (_featureTypeInfo == null) return null;
 
-            Collection<IGeometry> geoms = new Collection<IGeometry>();
+            var geoms = new Collection<IGeometry>();
 
-            string geometryTypeString = _FeatureTypeInfo.Geometry._GeometryType;
+            string geometryTypeString = _featureTypeInfo.Geometry._GeometryType;
 
             GeometryFactory geomFactory = null;
 
-            if (!string.IsNullOrEmpty(_Label))
+            if (!string.IsNullOrEmpty(_label))
             {
-                _LabelInfo = new FeatureDataTable();
-                _LabelInfo.Columns.Add(_Label);
+                _labelInfo = new FeatureDataTable();
+                _labelInfo.Columns.Add(_label);
                 // Turn off quick geometries, if a label is applied...
-                _QuickGeometries = false;
+                _quickGeometries = false;
             }
 
             // Configuration for GetFeature request */
-            WFSClientHTTPConfigurator config = new WFSClientHTTPConfigurator(_TextResources);
-            config.configureForWfsGetFeatureRequest(_HttpClientUtil, _FeatureTypeInfo, _Label, bbox, _OGCFilter,
-                                                    _GetFeatureGETRequest);
+            WFSClientHTTPConfigurator config = new WFSClientHTTPConfigurator(_textResources);
+            config.configureForWfsGetFeatureRequest(_httpClientUtil, _featureTypeInfo, _label, bbox, _ogcFilter,
+                                                    _getFeatureGETRequest);
 
             try
             {
@@ -481,82 +513,82 @@ namespace SharpMap.Data.Providers
 
                         // GML2
                     case "PointPropertyType":
-                        geomFactory = new PointFactory(_HttpClientUtil, _FeatureTypeInfo, _LabelInfo);
+                        geomFactory = new PointFactory(_httpClientUtil, _featureTypeInfo, _labelInfo);
                         break;
 
                         // GML2
                     case "LineStringPropertyType":
-                        geomFactory = new LineStringFactory(_HttpClientUtil, _FeatureTypeInfo, _LabelInfo);
+                        geomFactory = new LineStringFactory(_httpClientUtil, _featureTypeInfo, _labelInfo);
                         break;
 
                         // GML2
                     case "PolygonPropertyType":
-                        geomFactory = new PolygonFactory(_HttpClientUtil, _FeatureTypeInfo, _LabelInfo);
+                        geomFactory = new PolygonFactory(_httpClientUtil, _featureTypeInfo, _labelInfo);
                         break;
 
                         // GML3
                     case "CurvePropertyType":
-                        geomFactory = new LineStringFactory(_HttpClientUtil, _FeatureTypeInfo, _LabelInfo);
+                        geomFactory = new LineStringFactory(_httpClientUtil, _featureTypeInfo, _labelInfo);
                         break;
 
                         // GML3
                     case "SurfacePropertyType":
-                        geomFactory = new PolygonFactory(_HttpClientUtil, _FeatureTypeInfo, _LabelInfo);
+                        geomFactory = new PolygonFactory(_httpClientUtil, _featureTypeInfo, _labelInfo);
                         break;
 
                         /* Aggregate geometry elements */
 
                         // GML2
                     case "MultiPointPropertyType":
-                        if (_MultiGeometries)
-                            geomFactory = new MultiPointFactory(_HttpClientUtil, _FeatureTypeInfo, _LabelInfo);
+                        if (_multiGeometries)
+                            geomFactory = new MultiPointFactory(_httpClientUtil, _featureTypeInfo, _labelInfo);
                         else
-                            geomFactory = new PointFactory(_HttpClientUtil, _FeatureTypeInfo, _LabelInfo);
+                            geomFactory = new PointFactory(_httpClientUtil, _featureTypeInfo, _labelInfo);
                         break;
 
                         // GML2
                     case "MultiLineStringPropertyType":
-                        if (_MultiGeometries)
-                            geomFactory = new MultiLineStringFactory(_HttpClientUtil, _FeatureTypeInfo, _LabelInfo);
+                        if (_multiGeometries)
+                            geomFactory = new MultiLineStringFactory(_httpClientUtil, _featureTypeInfo, _labelInfo);
                         else
-                            geomFactory = new LineStringFactory(_HttpClientUtil, _FeatureTypeInfo, _LabelInfo);
+                            geomFactory = new LineStringFactory(_httpClientUtil, _featureTypeInfo, _labelInfo);
                         break;
 
                         // GML2
                     case "MultiPolygonPropertyType":
-                        if (_MultiGeometries)
-                            geomFactory = new MultiPolygonFactory(_HttpClientUtil, _FeatureTypeInfo, _LabelInfo);
+                        if (_multiGeometries)
+                            geomFactory = new MultiPolygonFactory(_httpClientUtil, _featureTypeInfo, _labelInfo);
                         else
-                            geomFactory = new PolygonFactory(_HttpClientUtil, _FeatureTypeInfo, _LabelInfo);
+                            geomFactory = new PolygonFactory(_httpClientUtil, _featureTypeInfo, _labelInfo);
                         break;
 
                         // GML3
                     case "MultiCurvePropertyType":
-                        if (_MultiGeometries)
-                            geomFactory = new MultiLineStringFactory(_HttpClientUtil, _FeatureTypeInfo, _LabelInfo);
+                        if (_multiGeometries)
+                            geomFactory = new MultiLineStringFactory(_httpClientUtil, _featureTypeInfo, _labelInfo);
                         else
-                            geomFactory = new LineStringFactory(_HttpClientUtil, _FeatureTypeInfo, _LabelInfo);
+                            geomFactory = new LineStringFactory(_httpClientUtil, _featureTypeInfo, _labelInfo);
                         break;
 
                         // GML3
                     case "MultiSurfacePropertyType":
-                        if (_MultiGeometries)
-                            geomFactory = new MultiPolygonFactory(_HttpClientUtil, _FeatureTypeInfo, _LabelInfo);
+                        if (_multiGeometries)
+                            geomFactory = new MultiPolygonFactory(_httpClientUtil, _featureTypeInfo, _labelInfo);
                         else
-                            geomFactory = new PolygonFactory(_HttpClientUtil, _FeatureTypeInfo, _LabelInfo);
+                            geomFactory = new PolygonFactory(_httpClientUtil, _featureTypeInfo, _labelInfo);
                         break;
 
                         // .e.g. 'gml:GeometryAssociationType' or 'GeometryPropertyType'
                         //It's better to set the geometry type manually, if it is known...
                     default:
-                        geomFactory = new UnspecifiedGeometryFactory_WFS1_0_0_GML2(_HttpClientUtil, _FeatureTypeInfo,
-                                                                                   _MultiGeometries, _QuickGeometries,
-                                                                                   _LabelInfo);
+                        geomFactory = new UnspecifiedGeometryFactory_WFS1_0_0_GML2(_httpClientUtil, _featureTypeInfo,
+                                                                                   _multiGeometries, _quickGeometries,
+                                                                                   _labelInfo);
                         geoms = geomFactory.createGeometries();
                         return geoms;
                 }
 
-                geoms = _QuickGeometries
+                geoms = _quickGeometries
                             ? geomFactory.createQuickGeometries(geometryTypeString)
                             : geomFactory.createGeometries();
                 geomFactory.Dispose();
@@ -570,46 +602,88 @@ namespace SharpMap.Data.Providers
             }
         }
 
+        /// <summary>
+        /// Returns all objects whose <see cref="GeoAPI.Geometries.Envelope"/> intersects 'bbox'.
+        /// </summary>
+        /// <remarks>
+        /// This method is usually much faster than the QueryFeatures method, because intersection tests
+        /// are performed on objects simplifed by their <see cref="GeoAPI.Geometries.Envelope"/>, and using the Spatial Index
+        /// </remarks>
+        /// <param name="bbox">Box that objects should intersect</param>
+        /// <returns></returns>
+        /// <exception cref="Exception">Thrown in any case</exception>
         public Collection<uint> GetObjectIDsInView(Envelope bbox)
         {
             throw new Exception("The method or operation is not implemented.");
         }
 
+        /// <summary>
+        /// Returns the geometry corresponding to the Object ID
+        /// </summary>
+        /// <param name="oid">Object ID</param>
+        /// <returns>geometry</returns>
+        /// <exception cref="Exception">Thrown in any case</exception>
         public IGeometry GetGeometryByID(uint oid)
         {
             throw new Exception("The method or operation is not implemented.");
         }
 
+        /// <summary>
+        /// Returns the data associated with all the geometries that are intersected by 'geom'
+        /// </summary>
+        /// <param name="geom">Geometry to intersect with</param>
+        /// <param name="ds">FeatureDataSet to fill data into</param>
         public void ExecuteIntersectionQuery(IGeometry geom, FeatureDataSet ds)
         {
-            if (_LabelInfo == null) return;
-            ds.Tables.Add(_LabelInfo);
+            if (_labelInfo == null) return;
+            ds.Tables.Add(_labelInfo);
             // Destroy internal reference
-            _LabelInfo = null;
+            _labelInfo = null;
         }
 
+
+        /// <summary>
+        /// Returns the data associated with all the geometries that are intersected by 'geom'
+        /// </summary>
+        /// <param name="box">Geometry to intersect with</param>
+        /// <param name="ds">FeatureDataSet to fill data into</param>
         public void ExecuteIntersectionQuery(Envelope box, FeatureDataSet ds)
         {
-            if (_LabelInfo == null) return;
-            ds.Tables.Add(_LabelInfo);
+            if (_labelInfo == null) return;
+            ds.Tables.Add(_labelInfo);
             // Destroy internal reference
-            _LabelInfo = null;
+            _labelInfo = null;
         }
 
+        /// <summary>
+        /// Returns the number of features in the dataset
+        /// </summary>
+        /// <returns>number of features</returns>
+        /// <exception cref="Exception">Thrown in any case</exception>
         public int GetFeatureCount()
         {
             throw new Exception("The method or operation is not implemented.");
         }
 
+        /// <summary>
+        /// Returns a <see cref="SharpMap.Data.FeatureDataRow"/> based on a RowID
+        /// </summary>
+        /// <param name="rowId">The id of the row.</param>
+        /// <returns>datarow</returns>
+        /// <exception cref="Exception">Thrown in any case</exception>
         public FeatureDataRow GetFeature(uint rowId)
         {
             throw new Exception("The method or operation is not implemented.");
         }
 
+        /// <summary>
+        /// The <see cref="Envelope"/> of dataset
+        /// </summary>
+        /// <returns>The 2d extent of the layer</returns>
         public Envelope GetExtents()
         {
-            return new Envelope(new Coordinate(_FeatureTypeInfo.BBox._MinLong, _FeatureTypeInfo.BBox._MinLat),
-                                new Coordinate(_FeatureTypeInfo.BBox._MaxLong, _FeatureTypeInfo.BBox._MaxLat));
+            return new Envelope(new Coordinate(_featureTypeInfo.BBox._MinLong, _featureTypeInfo.BBox._MinLat),
+                                new Coordinate(_featureTypeInfo.BBox._MaxLong, _featureTypeInfo.BBox._MaxLat));
         }
 
         /// <summary>
@@ -620,35 +694,50 @@ namespace SharpMap.Data.Providers
         /// </summary>
         public string ConnectionID
         {
-            get { return _FeatureTypeInfo.ServiceURI + "/" + _FeatureTypeInfo.QualifiedName; }
+            get { return _featureTypeInfo.ServiceURI + "/" + _featureTypeInfo.QualifiedName; }
         }
 
+        /// <summary>
+        /// Opens the datasource
+        /// </summary>
         public void Open()
         {
-            _IsOpen = true;
+            _isOpen = true;
         }
 
+        /// <summary>
+        /// Closes the datasource
+        /// </summary>
         public void Close()
         {
-            _IsOpen = false;
-            _HttpClientUtil.Close();
+            _isOpen = false;
+            _httpClientUtil.Close();
         }
 
+        /// <summary>
+        /// Returns true if the datasource is currently open
+        /// </summary>
         public bool IsOpen
         {
-            get { return _IsOpen; }
+            get { return _isOpen; }
         }
 
+        /// <summary>
+        /// The spatial reference ID (CRS)
+        /// </summary>
         public int SRID
         {
-            get { return Convert.ToInt32(_FeatureTypeInfo.SRID); }
-            set { _FeatureTypeInfo.SRID = value.ToString(); }
+            get { return Convert.ToInt32(_featureTypeInfo.SRID); }
+            set { _featureTypeInfo.SRID = value.ToString(); }
         }
 
         #endregion
 
         #region IDisposable Member
 
+        /// <summary>
+        /// Method to perform cleanup work
+        /// </summary>
         public void Dispose()
         {
             Dispose(true);
@@ -656,15 +745,15 @@ namespace SharpMap.Data.Providers
 
         internal void Dispose(bool disposing)
         {
-            if (!_Disposed)
+            if (!_disposed)
             {
                 if (disposing)
                 {
-                    _FeatureTypeInfoQueryManager = null;
-                    _LabelInfo = null;
-                    _HttpClientUtil.Close();
+                    _featureTypeInfoQueryManager = null;
+                    _labelInfo = null;
+                    _httpClientUtil.Close();
                 }
-                _Disposed = true;
+                _disposed = true;
             }
         }
 
@@ -679,64 +768,64 @@ namespace SharpMap.Data.Providers
         {
             try
             {
-                _FeatureTypeInfo = new WfsFeatureTypeInfo();
-                WFSClientHTTPConfigurator config = new WFSClientHTTPConfigurator(_TextResources);
+                _featureTypeInfo = new WfsFeatureTypeInfo();
+                WFSClientHTTPConfigurator config = new WFSClientHTTPConfigurator(_textResources);
 
-                _FeatureTypeInfo.Prefix = _NsPrefix;
-                _FeatureTypeInfo.Name = _FeatureType;
+                _featureTypeInfo.Prefix = _nsPrefix;
+                _featureTypeInfo.Name = _featureType;
 
-                string featureQueryName = string.IsNullOrEmpty(_NsPrefix)
-                                              ? _FeatureType
-                                              : _NsPrefix + ":" + _FeatureType;
+                string featureQueryName = string.IsNullOrEmpty(_nsPrefix)
+                                              ? _featureType
+                                              : _nsPrefix + ":" + _featureType;
 
                 /***************************/
                 /* GetCapabilities request  /
                 /***************************/
 
-                if (_FeatureTypeInfoQueryManager == null)
+                if (_featureTypeInfoQueryManager == null)
                 {
                     /* Initialize IXPathQueryManager with configured HttpClientUtil */
-                    _FeatureTypeInfoQueryManager =
+                    _featureTypeInfoQueryManager =
                         new XPathQueryManager_CompiledExpressionsDecorator(new XPathQueryManager());
-                    _FeatureTypeInfoQueryManager.SetDocumentToParse(
-                        config.configureForWfsGetCapabilitiesRequest(_HttpClientUtil, _GetCapabilitiesURI));
+                    _featureTypeInfoQueryManager.SetDocumentToParse(
+                        config.configureForWfsGetCapabilitiesRequest(_httpClientUtil, _getCapabilitiesUri));
                     /* Namespaces for XPath queries */
-                    _FeatureTypeInfoQueryManager.AddNamespace(_TextResources.NSWFSPREFIX, _TextResources.NSWFS);
-                    _FeatureTypeInfoQueryManager.AddNamespace(_TextResources.NSOWSPREFIX, _TextResources.NSOWS);
-                    _FeatureTypeInfoQueryManager.AddNamespace(_TextResources.NSXLINKPREFIX, _TextResources.NSXLINK);
+                    _featureTypeInfoQueryManager.AddNamespace(_textResources.NSWFSPREFIX, _textResources.NSWFS);
+                    _featureTypeInfoQueryManager.AddNamespace(_textResources.NSOWSPREFIX, _textResources.NSOWS);
+                    _featureTypeInfoQueryManager.AddNamespace(_textResources.NSXLINKPREFIX, _textResources.NSXLINK);
                 }
 
                 /* Service URI (for WFS GetFeature request) */
-                _FeatureTypeInfo.ServiceURI = _FeatureTypeInfoQueryManager.GetValueFromNode
-                    (_FeatureTypeInfoQueryManager.Compile(_TextResources.XPATH_GETFEATURERESOURCE));
+                _featureTypeInfo.ServiceURI = _featureTypeInfoQueryManager.GetValueFromNode
+                    (_featureTypeInfoQueryManager.Compile(_textResources.XPATH_GETFEATURERESOURCE));
                 /* If no GetFeature URI could be found, try GetCapabilities URI */
-                if (_FeatureTypeInfo.ServiceURI == null) _FeatureTypeInfo.ServiceURI = _GetCapabilitiesURI;
-                else if (_FeatureTypeInfo.ServiceURI.EndsWith("?", StringComparison.Ordinal))
-                    _FeatureTypeInfo.ServiceURI =
-                        _FeatureTypeInfo.ServiceURI.Remove(_FeatureTypeInfo.ServiceURI.Length - 1);
+                if (_featureTypeInfo.ServiceURI == null) _featureTypeInfo.ServiceURI = _getCapabilitiesUri;
+                else if (_featureTypeInfo.ServiceURI.EndsWith("?", StringComparison.Ordinal))
+                    _featureTypeInfo.ServiceURI =
+                        _featureTypeInfo.ServiceURI.Remove(_featureTypeInfo.ServiceURI.Length - 1);
 
                 /* URI for DescribeFeatureType request */
-                string describeFeatureTypeUri = _FeatureTypeInfoQueryManager.GetValueFromNode
-                    (_FeatureTypeInfoQueryManager.Compile(_TextResources.XPATH_DESCRIBEFEATURETYPERESOURCE));
+                string describeFeatureTypeUri = _featureTypeInfoQueryManager.GetValueFromNode
+                    (_featureTypeInfoQueryManager.Compile(_textResources.XPATH_DESCRIBEFEATURETYPERESOURCE));
                 /* If no DescribeFeatureType URI could be found, try GetCapabilities URI */
-                if (describeFeatureTypeUri == null) describeFeatureTypeUri = _GetCapabilitiesURI;
+                if (describeFeatureTypeUri == null) describeFeatureTypeUri = _getCapabilitiesUri;
                 else if (describeFeatureTypeUri.EndsWith("?", StringComparison.Ordinal))
                     describeFeatureTypeUri =
                         describeFeatureTypeUri.Remove(describeFeatureTypeUri.Length - 1);
 
                 /* Spatial reference ID */
-                _FeatureTypeInfo.SRID = _FeatureTypeInfoQueryManager.GetValueFromNode(
-                    _FeatureTypeInfoQueryManager.Compile(_TextResources.XPATH_SRS),
+                _featureTypeInfo.SRID = _featureTypeInfoQueryManager.GetValueFromNode(
+                    _featureTypeInfoQueryManager.Compile(_textResources.XPATH_SRS),
                     new[] {new DictionaryEntry("_param1", featureQueryName)});
                 /* If no SRID could be found, try '4326' by default */
-                if (_FeatureTypeInfo.SRID == null) _FeatureTypeInfo.SRID = "4326";
+                if (_featureTypeInfo.SRID == null) _featureTypeInfo.SRID = "4326";
                 else
                     /* Extract number */
-                    _FeatureTypeInfo.SRID = _FeatureTypeInfo.SRID.Substring(_FeatureTypeInfo.SRID.LastIndexOf(":") + 1);
+                    _featureTypeInfo.SRID = _featureTypeInfo.SRID.Substring(_featureTypeInfo.SRID.LastIndexOf(":") + 1);
 
                 /* Bounding Box */
-                IXPathQueryManager bboxQuery = _FeatureTypeInfoQueryManager.GetXPathQueryManagerInContext(
-                    _FeatureTypeInfoQueryManager.Compile(_TextResources.XPATH_BBOX),
+                IXPathQueryManager bboxQuery = _featureTypeInfoQueryManager.GetXPathQueryManagerInContext(
+                    _featureTypeInfoQueryManager.Compile(_textResources.XPATH_BBOX),
                     new[] {new DictionaryEntry("_param1", featureQueryName)});
 
                 if (bboxQuery != null)
@@ -746,79 +835,79 @@ namespace SharpMap.Data.Providers
                     formatInfo.NumberDecimalSeparator = ".";
                     string bboxVal = null;
 
-                    if (_WfsVersion == WFSVersionEnum.WFS1_0_0)
+                    if (_wfsVersion == WFSVersionEnum.WFS1_0_0)
                         bbox._MinLat =
                             Convert.ToDouble(
                                 (bboxVal =
-                                 bboxQuery.GetValueFromNode(bboxQuery.Compile(_TextResources.XPATH_BOUNDINGBOXMINY))) !=
+                                 bboxQuery.GetValueFromNode(bboxQuery.Compile(_textResources.XPATH_BOUNDINGBOXMINY))) !=
                                 null
                                     ? bboxVal
                                     : "0.0", formatInfo);
-                    else if (_WfsVersion == WFSVersionEnum.WFS1_1_0)
+                    else if (_wfsVersion == WFSVersionEnum.WFS1_1_0)
                         bbox._MinLat =
                             Convert.ToDouble(
                                 (bboxVal =
-                                 bboxQuery.GetValueFromNode(bboxQuery.Compile(_TextResources.XPATH_BOUNDINGBOXMINY))) !=
+                                 bboxQuery.GetValueFromNode(bboxQuery.Compile(_textResources.XPATH_BOUNDINGBOXMINY))) !=
                                 null
                                     ? bboxVal.Substring(bboxVal.IndexOf(' ') + 1)
                                     : "0.0", formatInfo);
 
-                    if (_WfsVersion == WFSVersionEnum.WFS1_0_0)
+                    if (_wfsVersion == WFSVersionEnum.WFS1_0_0)
                         bbox._MaxLat =
                             Convert.ToDouble(
                                 (bboxVal =
-                                 bboxQuery.GetValueFromNode(bboxQuery.Compile(_TextResources.XPATH_BOUNDINGBOXMAXY))) !=
+                                 bboxQuery.GetValueFromNode(bboxQuery.Compile(_textResources.XPATH_BOUNDINGBOXMAXY))) !=
                                 null
                                     ? bboxVal
                                     : "0.0", formatInfo);
-                    else if (_WfsVersion == WFSVersionEnum.WFS1_1_0)
+                    else if (_wfsVersion == WFSVersionEnum.WFS1_1_0)
                         bbox._MaxLat =
                             Convert.ToDouble(
                                 (bboxVal =
-                                 bboxQuery.GetValueFromNode(bboxQuery.Compile(_TextResources.XPATH_BOUNDINGBOXMAXY))) !=
+                                 bboxQuery.GetValueFromNode(bboxQuery.Compile(_textResources.XPATH_BOUNDINGBOXMAXY))) !=
                                 null
                                     ? bboxVal.Substring(bboxVal.IndexOf(' ') + 1)
                                     : "0.0", formatInfo);
 
-                    if (_WfsVersion == WFSVersionEnum.WFS1_0_0)
+                    if (_wfsVersion == WFSVersionEnum.WFS1_0_0)
                         bbox._MinLong =
                             Convert.ToDouble(
                                 (bboxVal =
-                                 bboxQuery.GetValueFromNode(bboxQuery.Compile(_TextResources.XPATH_BOUNDINGBOXMINX))) !=
+                                 bboxQuery.GetValueFromNode(bboxQuery.Compile(_textResources.XPATH_BOUNDINGBOXMINX))) !=
                                 null
                                     ? bboxVal
                                     : "0.0", formatInfo);
-                    else if (_WfsVersion == WFSVersionEnum.WFS1_1_0)
+                    else if (_wfsVersion == WFSVersionEnum.WFS1_1_0)
                         bbox._MinLong =
                             Convert.ToDouble(
                                 (bboxVal =
-                                 bboxQuery.GetValueFromNode(bboxQuery.Compile(_TextResources.XPATH_BOUNDINGBOXMINX))) !=
+                                 bboxQuery.GetValueFromNode(bboxQuery.Compile(_textResources.XPATH_BOUNDINGBOXMINX))) !=
                                 null
                                     ? bboxVal.Substring(0, bboxVal.IndexOf(' ') + 1)
                                     : "0.0", formatInfo);
 
-                    if (_WfsVersion == WFSVersionEnum.WFS1_0_0)
+                    if (_wfsVersion == WFSVersionEnum.WFS1_0_0)
                         bbox._MaxLong =
                             Convert.ToDouble(
                                 (bboxVal =
-                                 bboxQuery.GetValueFromNode(bboxQuery.Compile(_TextResources.XPATH_BOUNDINGBOXMAXX))) !=
+                                 bboxQuery.GetValueFromNode(bboxQuery.Compile(_textResources.XPATH_BOUNDINGBOXMAXX))) !=
                                 null
                                     ? bboxVal
                                     : "0.0", formatInfo);
-                    else if (_WfsVersion == WFSVersionEnum.WFS1_1_0)
+                    else if (_wfsVersion == WFSVersionEnum.WFS1_1_0)
                         bbox._MaxLong =
                             Convert.ToDouble(
                                 (bboxVal =
-                                 bboxQuery.GetValueFromNode(bboxQuery.Compile(_TextResources.XPATH_BOUNDINGBOXMAXX))) !=
+                                 bboxQuery.GetValueFromNode(bboxQuery.Compile(_textResources.XPATH_BOUNDINGBOXMAXX))) !=
                                 null
                                     ? bboxVal.Substring(0, bboxVal.IndexOf(' ') + 1)
                                     : "0.0", formatInfo);
 
-                    _FeatureTypeInfo.BBox = bbox;
+                    _featureTypeInfo.BBox = bbox;
                 }
 
                 //Continue with a clone in order to preserve the 'GetCapabilities' response
-                IXPathQueryManager describeFeatureTypeQueryManager = _FeatureTypeInfoQueryManager.Clone();
+                IXPathQueryManager describeFeatureTypeQueryManager = _featureTypeInfoQueryManager.Clone();
 
                 /******************************/
                 /* DescribeFeatureType request /
@@ -827,21 +916,21 @@ namespace SharpMap.Data.Providers
                 /* Initialize IXPathQueryManager with configured HttpClientUtil */
                 describeFeatureTypeQueryManager.ResetNamespaces();
                 describeFeatureTypeQueryManager.SetDocumentToParse(config.configureForWfsDescribeFeatureTypeRequest
-                                                                       (_HttpClientUtil, describeFeatureTypeUri,
+                                                                       (_httpClientUtil, describeFeatureTypeUri,
                                                                         featureQueryName));
 
                 /* Namespaces for XPath queries */
-                describeFeatureTypeQueryManager.AddNamespace(_TextResources.NSSCHEMAPREFIX, _TextResources.NSSCHEMA);
-                describeFeatureTypeQueryManager.AddNamespace(_TextResources.NSGMLPREFIX, _TextResources.NSGML);
+                describeFeatureTypeQueryManager.AddNamespace(_textResources.NSSCHEMAPREFIX, _textResources.NSSCHEMA);
+                describeFeatureTypeQueryManager.AddNamespace(_textResources.NSGMLPREFIX, _textResources.NSGML);
 
                 /* Get target namespace */
                 string targetNs = describeFeatureTypeQueryManager.GetValueFromNode(
-                    describeFeatureTypeQueryManager.Compile(_TextResources.XPATH_TARGETNS));
+                    describeFeatureTypeQueryManager.Compile(_textResources.XPATH_TARGETNS));
                 if (targetNs != null)
-                    _FeatureTypeInfo.FeatureTypeNamespace = targetNs;
+                    _featureTypeInfo.FeatureTypeNamespace = targetNs;
 
                 /* Get geometry */
-                string geomType = _GeometryType == GeometryTypeEnum.Unknown ? null : _GeometryType.ToString();
+                string geomType = _geometryType == GeometryTypeEnum.Unknown ? null : _geometryType.ToString();
                 string geomName = null;
                 string geomComplexTypeName = null;
 
@@ -850,14 +939,14 @@ namespace SharpMap.Data.Providers
                 /* example: <xs:element nillable = "false" name = "the_geom" maxOccurs = "1" type = "gml:MultiPolygonPropertyType" minOccurs = "0" /> */
                 /* Try to get context of the geometry element by asking for a 'gml:*' type-attribute */
                 IXPathQueryManager geomQuery = describeFeatureTypeQueryManager.GetXPathQueryManagerInContext(
-                    describeFeatureTypeQueryManager.Compile(_TextResources.XPATH_GEOMETRYELEMENT_BYTYPEATTRIBUTEQUERY));
+                    describeFeatureTypeQueryManager.Compile(_textResources.XPATH_GEOMETRYELEMENT_BYTYPEATTRIBUTEQUERY));
                 if (geomQuery != null)
                 {
-                    geomName = geomQuery.GetValueFromNode(geomQuery.Compile(_TextResources.XPATH_NAMEATTRIBUTEQUERY));
+                    geomName = geomQuery.GetValueFromNode(geomQuery.Compile(_textResources.XPATH_NAMEATTRIBUTEQUERY));
 
                     /* Just, if not set manually... */
                     if (geomType == null)
-                        geomType = geomQuery.GetValueFromNode(geomQuery.Compile(_TextResources.XPATH_TYPEATTRIBUTEQUERY));
+                        geomType = geomQuery.GetValueFromNode(geomQuery.Compile(_textResources.XPATH_TYPEATTRIBUTEQUERY));
                 }
                 else
                 {
@@ -870,12 +959,12 @@ namespace SharpMap.Data.Providers
                     </xs:complexType> */
                     geomQuery = describeFeatureTypeQueryManager.GetXPathQueryManagerInContext(
                         describeFeatureTypeQueryManager.Compile(
-                            _TextResources.XPATH_GEOMETRYELEMENTCOMPLEXTYPE_BYELEMREFQUERY));
+                            _textResources.XPATH_GEOMETRYELEMENTCOMPLEXTYPE_BYELEMREFQUERY));
                     if (geomQuery != null)
                     {
                         /* Ask for the name of the complextype - use the local context*/
                         geomComplexTypeName =
-                            geomQuery.GetValueFromNode(geomQuery.Compile(_TextResources.XPATH_NAMEATTRIBUTEQUERY));
+                            geomQuery.GetValueFromNode(geomQuery.Compile(_textResources.XPATH_NAMEATTRIBUTEQUERY));
 
                         if (geomComplexTypeName != null)
                         {
@@ -883,11 +972,11 @@ namespace SharpMap.Data.Providers
                             geomName =
                                 describeFeatureTypeQueryManager.GetValueFromNode(
                                     describeFeatureTypeQueryManager.Compile(
-                                        _TextResources.XPATH_GEOMETRY_ELEMREF_GEOMNAMEQUERY), new[]
+                                        _textResources.XPATH_GEOMETRY_ELEMREF_GEOMNAMEQUERY), new[]
                                                                                                   {
                                                                                                       new DictionaryEntry
                                                                                                           ("_param1",
-                                                                                                           _FeatureTypeInfo
+                                                                                                           _featureTypeInfo
                                                                                                                .
                                                                                                                FeatureTypeNamespace)
                                                                                                       ,
@@ -911,7 +1000,7 @@ namespace SharpMap.Data.Providers
                             geomName =
                                 describeFeatureTypeQueryManager.GetValueFromNode(
                                     describeFeatureTypeQueryManager.Compile(
-                                        _TextResources.XPATH_GEOMETRY_ELEMREF_GEOMNAMEQUERY_ANONYMOUSTYPE));
+                                        _textResources.XPATH_GEOMETRY_ELEMREF_GEOMNAMEQUERY_ANONYMOUSTYPE));
                         }
                         /* Just, if not set manually... */
                         if (geomType == null)
@@ -920,7 +1009,7 @@ namespace SharpMap.Data.Providers
                             if (
                                 (geomType =
                                  geomQuery.GetValueFromNode(
-                                     geomQuery.Compile(_TextResources.XPATH_GEOMETRY_ELEMREF_GMLELEMENTQUERY))) != null)
+                                     geomQuery.Compile(_textResources.XPATH_GEOMETRY_ELEMREF_GMLELEMENTQUERY))) != null)
                             {
                                 switch (geomType)
                                 {
@@ -979,26 +1068,24 @@ namespace SharpMap.Data.Providers
                 WfsFeatureTypeInfo.GeometryInfo geomInfo = new WfsFeatureTypeInfo.GeometryInfo();
                 geomInfo._GeometryName = geomName;
                 geomInfo._GeometryType = geomType;
-                _FeatureTypeInfo.Geometry = geomInfo;
+                _featureTypeInfo.Geometry = geomInfo;
             }
             finally
             {
-                _HttpClientUtil.Close();
+                _httpClientUtil.Close();
             }
         }
 
-        private void resolveFeatureType(string featureType)
+        private void ResolveFeatureType(string featureType)
         {
-            string[] split = null;
-
             if (featureType.Contains(":"))
             {
-                split = featureType.Split(':');
-                _NsPrefix = split[0];
-                _FeatureType = split[1];
+                var split = featureType.Split(':');
+                _nsPrefix = split[0];
+                _featureType = split[1];
             }
             else
-                _FeatureType = featureType;
+                _featureType = featureType;
         }
 
         #endregion

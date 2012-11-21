@@ -316,16 +316,14 @@ namespace SharpMap.Rendering.Symbolizer
         internal static GraphicsPath ClipPath(GraphicsPath patternPath, float totalPathLength)
         {
             patternPath.Flatten();
-            GraphicsPath returnPath = new GraphicsPath(patternPath.FillMode);
+            var returnPath = new GraphicsPath(patternPath.FillMode);
 
-            using (GraphicsPathIterator iter = new GraphicsPathIterator(patternPath))
+            using (var iter = new GraphicsPathIterator(patternPath))
             {
-                GraphicsPath path = null;
-
-                List<PointF> pathPoints = new List<PointF>(patternPath.PointCount);
-                List<byte> pathTypes = new List<byte>(patternPath.PointCount);
-                PointF lastPoint = new PointF();
-                bool lastValid = true;
+                var pathPoints = new List<PointF>(patternPath.PointCount);
+                var pathTypes = new List<byte>(patternPath.PointCount);
+                var lastPoint = new PointF();
+                var lastValid = true;
                 for (int i = 0; i < patternPath.PointCount; i++)
                 {
                     //current point is valid

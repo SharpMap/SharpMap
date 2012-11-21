@@ -46,7 +46,7 @@ namespace SharpMap.Data.Providers
     /// </remarks>
     [Serializable]
     [Obsolete("Use MsSqlSpatial provider instead")]
-    public class MsSql : IProvider, IDisposable
+    public class MsSql : IProvider
     {
         private string _ConnectionString;
         private string _defintionQuery;
@@ -56,8 +56,16 @@ namespace SharpMap.Data.Providers
         private int _srid = -2;
 
         private string _Table;
+        private IGeometryFactory _factory;
 
-        public IGeometryFactory Factory { get; set; }
+        /// <summary>
+        /// Gets or sets the geometry factory used to create geometries
+        /// </summary>
+        public IGeometryFactory Factory
+        {
+            get { return _factory ?? (_factory = GeoAPI.GeometryServiceProvider.Instance.CreateGeometryFactory(_srid)); }
+            set { _factory = value; }
+        }
 
         /// <summary>
         /// Initializes a new connection to MS Sql Server
@@ -300,7 +308,13 @@ namespace SharpMap.Data.Providers
         public int SRID
         {
             get { return _srid; }
-            set { _srid = value; }
+            set
+            {
+                if (value == _srid)
+                    return;
+                _srid = value;
+                _factory = null;
+            }
         }
 
         /// <summary>
@@ -435,7 +449,7 @@ namespace SharpMap.Data.Providers
 
         #region Disposers and finalizers
 
-        private bool disposed = false;
+        private bool _disposed;
 
         /// <summary>
         /// Disposes the object
@@ -448,13 +462,13 @@ namespace SharpMap.Data.Providers
 
         internal void Dispose(bool disposing)
         {
-            if (!disposed)
+            if (!_disposed)
             {
                 if (disposing)
                 {
                     //Close();
                 }
-                disposed = true;
+                _disposed = true;
             }
         }
 

@@ -44,6 +44,9 @@ namespace SharpMap.Rendering.Symbolizer
             StringFormat = new StringFormat(StringFormatFlags.NoClip){ Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center, Trimming = StringTrimming.None };
         }
 
+        /// <summary>
+        /// Releases managed resources
+        /// </summary>
         protected override void ReleaseManagedResources()
         {
             if (Font != null)
@@ -67,6 +70,10 @@ namespace SharpMap.Rendering.Symbolizer
             base.ReleaseManagedResources();
         }
 
+        /// <summary>
+        /// Creates a clone of this object
+        /// </summary>
+        /// <returns>A <see cref="T:SharpMap.Rendering.Symbolizer.CharacterPointSymbolizer"/> that matches this instance</returns>
         public override object Clone()
         {
             var res = (CharacterPointSymbolizer) MemberwiseClone();
@@ -144,6 +151,9 @@ namespace SharpMap.Rendering.Symbolizer
         /// </summary>
         public StringFormat StringFormat { get; set; }
 
+        /// <summary>
+        /// Gets or sets the size of the generated symbol<br/>Always return <see cref="System.Drawing.Size.Empty"/> as the size is determined by the <see cref="System.Drawing.Font.Size"/>
+        /// </summary>
         public override Size Size
         {
             get
@@ -166,6 +176,9 @@ namespace SharpMap.Rendering.Symbolizer
             }
         }
 
+        /// <summary>
+        /// Gets or sets the scale factor for this symbol<br/>Always returns <c>1f</c>
+        /// </summary>
         public override float  Scale
         {
             get
@@ -175,15 +188,22 @@ namespace SharpMap.Rendering.Symbolizer
             set { }
         }
 
+        /// <summary>
+        /// Method that performs the symbolization of th feature
+        /// </summary>
+        /// <param name="pt">The point</param>
+        /// <param name="g">The graphics object</param>
         internal override void OnRenderInternal(PointF pt, Graphics g)
         {
             if (Halo > 0)
             {
                 //need to look it up
-                GraphicsPath path = new GraphicsPath(FillMode.Winding);
-                path.AddString(_text, Font.FontFamily, (int)Font.Style, Font.Size, pt, StringFormat);
-                g.DrawPath(new Pen(HaloBrush, 2*Halo), path);
-                g.FillPath(Foreground, path);
+                using (var path = new GraphicsPath(FillMode.Winding))
+                {
+                    path.AddString(_text, Font.FontFamily, (int) Font.Style, Font.Size, pt, StringFormat);
+                    g.DrawPath(new Pen(HaloBrush, 2*Halo), path);
+                    g.FillPath(Foreground, path);
+                }
             }
             else
             {

@@ -132,6 +132,9 @@ namespace SharpMap.Rendering.Symbolizer
 
             #region Implementation of IDisposable
 
+            /// <summary>
+            /// Method to perform cleanup methods for unmanaged resources
+            /// </summary>
             public void Dispose()
             {
                 if (Fill != null) Fill.Dispose();
@@ -176,6 +179,9 @@ namespace SharpMap.Rendering.Symbolizer
             _paths = paths;
         }
 
+        /// <summary>
+        /// Releases managed resources
+        /// </summary>
         protected override void ReleaseManagedResources()
         {
             if (_paths != null)
@@ -188,6 +194,7 @@ namespace SharpMap.Rendering.Symbolizer
             base.ReleaseManagedResources();
         }
 
+        /// <inheritdoc/>
         public override object Clone()
         {
             var pathDefinitions = new PathDefinition[_paths.Length];
@@ -197,6 +204,12 @@ namespace SharpMap.Rendering.Symbolizer
             return new PathPointSymbolizer(pathDefinitions);
         }
 
+        /// <summary>
+        /// Gets or sets the Size of the symbol
+        /// <para>
+        /// Implementations may ignore the setter, the getter must return a <see cref="PointSymbolizer.Size"/> with positive width and height values.
+        /// </para>
+        /// </summary>
         public override Size Size
         {
             get
@@ -216,6 +229,11 @@ namespace SharpMap.Rendering.Symbolizer
             }
         }
 
+        /// <summary>
+        /// Function that does the actual rendering
+        /// </summary>
+        /// <param name="pt">The point</param>
+        /// <param name="g">The graphics object</param>
         internal override void OnRenderInternal(PointF pt, Graphics g)
         {
             var f = new SizeF(pt);

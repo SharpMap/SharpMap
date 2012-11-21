@@ -1,17 +1,14 @@
 using System;
-using System.Collections.ObjectModel;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Globalization;
 using System.IO;
 using System.Net;
 using System.Text;
 using System.Xml;
-using System.Xml.Schema;
-using GeoAPI.Geometries;
 
 namespace SharpMap.Web.Wcs
 {
+    /// <summary>
+    /// Web Coverage Service Client class
+    /// </summary>
     public class Client : IClient
     {
         private XmlNamespaceManager _nsmgr;
@@ -29,8 +26,10 @@ namespace SharpMap.Web.Wcs
         private string _capabilitiesUrl;
         private IWebProxy _proxy;
         private int _timeOut;
-        private ICredentials _credentials = null;
-        private XmlNode _vendorSpecificCapabilities;
+        private ICredentials _credentials;
+        private string[] _exceptionFormats;
+
+        //private XmlNode _vendorSpecificCapabilities;
 
         /// <summary>
         /// Exposes the capabilities' VendorSpecificCapabilities as XmlNode object. External modules 
@@ -38,11 +37,14 @@ namespace SharpMap.Web.Wcs
         /// </summary>
         public XmlNode VendorSpecificCapabilities
         {
-            get { return _vendorSpecificCapabilities; }
+            get 
+            {
+                return null;// _vendorSpecificCapabilities; 
+            }
         }
 
         /// <summary>
-        /// Timeout of webrequest in milliseconds. Defaults to 10 seconds
+        /// Timeout of <see cref="WebRequest"/> in milliseconds. Defaults to 10 seconds
         /// </summary>
         public int TimeOut
         {
@@ -51,6 +53,7 @@ namespace SharpMap.Web.Wcs
         }
 
         ///<summary>
+        /// Gets or sets the credentials used to access the Web coverage service
         ///</summary>
         public ICredentials Credentials
         {
@@ -59,7 +62,7 @@ namespace SharpMap.Web.Wcs
         }
 
         /// <summary>
-        /// 
+        /// Gets or sets the proxy used to establish the connection to the web coverage service
         /// </summary>
         public IWebProxy Proxy
         {
@@ -105,10 +108,12 @@ namespace SharpMap.Web.Wcs
         {
             get
             {
-                StringWriter sw = new StringWriter();
-                XmlTextWriter xw = new XmlTextWriter(sw);
-                XmlDoc.WriteTo(xw);
-                return sw.ToString();
+                using (var sw = new StringWriter())
+                {
+                    var xw = new XmlTextWriter(sw);
+                    XmlDoc.WriteTo(xw);
+                    return sw.ToString();
+                }
             }
         }
 
@@ -119,11 +124,13 @@ namespace SharpMap.Web.Wcs
         {
             get
             {
-                StringWriter sw = new StringWriter();
-                XmlTextWriter xw = new XmlTextWriter(sw);
-                XmlDoc.WriteTo(xw);
-                byte[] baData = System.Text.Encoding.UTF8.GetBytes(sw.ToString());
-                return baData;
+                using (var sw = new StringWriter())
+                {
+                    var xw = new XmlTextWriter(sw);
+                    XmlDoc.WriteTo(xw);
+                    var baData = Encoding.UTF8.GetBytes(sw.ToString());
+                    return baData;
+                }
             }
         }
 
@@ -139,12 +146,14 @@ namespace SharpMap.Web.Wcs
         /// <summary>
         /// Gets a list of available exception mime type formats
         /// </summary>
-        private string[] _exceptionFormats;
         public string[] ExceptionFormats
         {
             get { return _exceptionFormats; }
         }
 
+        /// <summary>
+        /// Gets the full capabilities xml document
+        /// </summary>
         public XmlDocument XmlDoc
         {
             get { return _xmlDoc; }
@@ -160,14 +169,14 @@ namespace SharpMap.Web.Wcs
         public Client() { }
 
         /// <summary>
-        /// Initalizes WMS server and parses the Capabilities request
+        /// Initalizes client to WCS server and parses the Capabilities request
         /// </summary>
         /// <param name="url">URL of wms server</param>
         public Client(string url)
             : this(url, null, 10000, null, "") { }
 
         /// <summary>
-        /// This Initalizes WMS server and parses the Capabilities request
+        /// Initalizes client to WCS server and parses the Capabilities request
         /// </summary>
         /// <param name="url">URL of wms server</param>
         /// <param name="proxy">Proxy to use</param>
@@ -175,7 +184,7 @@ namespace SharpMap.Web.Wcs
             : this(url, proxy, 10000, null, "") { }
 
         /// <summary>
-        /// This Initalizes WMS server and parses the Capabilities request
+        /// Initalizes client to WCS server and parses the Capabilities request
         /// </summary>
         /// <param name="url">URL of wms server</param>
         /// <param name="proxy">Proxy to use</param>
@@ -184,16 +193,16 @@ namespace SharpMap.Web.Wcs
             : this(url, proxy, timeOut, null, "") { }
 
         /// <summary>
-        /// Initalizes WMS server and parses the Capabilities request
+        /// Initalizes client to WCS server and parses the Capabilities request
         /// </summary>
         /// <param name="url">URL of wms server</param>
         /// <param name="proxy">Proxy to use</param>
-        /// <param name="credentials">Credentials for autenticating against remote WMS-server</param>
+        /// <param name="credentials">Credentials for autenticating against remote WCS-server</param>
         public Client(string url, IWebProxy proxy, ICredentials credentials)
             : this(url, proxy, 10000, credentials, "") { }
 
         /// <summary>
-        /// Initalizes WMS server and parses the Capabilities request
+        /// Initalizes client to WCS server and parses the Capabilities request
         /// </summary>
         /// <param name="url">URL of wms server</param>
         /// <param name="proxy">Proxy to use</param>
@@ -203,7 +212,7 @@ namespace SharpMap.Web.Wcs
             : this(url, proxy, timeOut, credentials, "") { }
 
         /// <summary>
-        /// Initalizes WMS server and parses the Capabilities request
+        /// Initalizes client to WCS server and parses the Capabilities request
         /// </summary>
         /// <param name="url">URL of wms server</param>
         /// <param name="proxy">Proxy to use</param>
@@ -213,7 +222,7 @@ namespace SharpMap.Web.Wcs
             : this(url, proxy, timeOut, null, version) { }
 
         /// <summary>
-        /// Initalizes WMS server and parses the Capabilities request
+        /// Initalizes client to WCS server and parses the Capabilities request
         /// </summary>
         /// <param name="url">URL of wms server</param>
         /// <param name="proxy">Proxy to use</param>
@@ -242,15 +251,15 @@ namespace SharpMap.Web.Wcs
         /// <param name="byteXml">byte array version of capabilities document</param>
         public Client(byte[] byteXml)
         {
-            Stream stream = new MemoryStream(byteXml);
-            var r = new XmlTextReader(stream);
-            r.XmlResolver = null;
+            using (var stream = new MemoryStream(byteXml))
+            {
+                var r = new XmlTextReader(stream);
+                r.XmlResolver = null;
 
-            _xmlDoc = new XmlDocument();
-            XmlDoc.XmlResolver = null;
-            XmlDoc.Load(r);
-            stream.Close();
-
+                _xmlDoc = new XmlDocument();
+                XmlDoc.XmlResolver = null;
+                XmlDoc.Load(r);
+            }
             _nsmgr = new XmlNamespaceManager(XmlDoc.NameTable);
 
             _baseUrl = "";
@@ -268,10 +277,10 @@ namespace SharpMap.Web.Wcs
         #region Methods
 
         /// <summary>
-        /// 
+        /// Function to create a Capabilities Url
         /// </summary>
-        /// <param name="url"></param>
-        /// <returns></returns>
+        /// <param name="url">The base url</param>
+        /// <returns>A capabilities url</returns>
         public string CreateCapabilitiesUrl(string url)
         {
             var strReq = new StringBuilder(url);
@@ -279,7 +288,7 @@ namespace SharpMap.Web.Wcs
                 strReq.Append("?");
             if (!strReq.ToString().EndsWith("&") && !strReq.ToString().EndsWith("?"))
                 strReq.Append("&");
-            if (!url.ToLower().Contains("service=wms"))
+            if (!url.ToLower().Contains("service=wcs"))
                 strReq.AppendFormat("SERVICE=WCS&");
             if (!url.ToLower().Contains("request=getcapabilities"))
                 strReq.AppendFormat("REQUEST=GetCapabilities&");
@@ -299,10 +308,7 @@ namespace SharpMap.Web.Wcs
             {
                 throw (new ApplicationException("A valid WCS capabilities XML file was not loaded!"));
             }
-            else
-            {
-                throw new NotImplementedException();
-            }
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -311,20 +317,17 @@ namespace SharpMap.Web.Wcs
         /// <returns>XmlDocument from Url. Null if Url is empty or inproper XmlDocument</returns>
         public XmlDocument GetRemoteXml()
         {
-            Stream stream = null;
+            Stream stream;
 
             try
             {
-                WebRequest myRequest = WebRequest.Create(_capabilitiesUrl);
+                var myRequest = WebRequest.Create(_capabilitiesUrl);
                 myRequest.Timeout = _timeOut;
                 if (_proxy != null) myRequest.Proxy = _proxy;
-                WebResponse myResponse = myRequest.GetResponse();
-
-                if (myResponse == null)
-                    throw new ApplicationException("No web response");
-
-                stream = myResponse.GetResponseStream();
-
+                using (var myResponse = myRequest.GetResponse())
+                {
+                    stream = myResponse.GetResponseStream();
+                }
                 if (stream == null)
                     throw new ApplicationException("No response stream");
             }
@@ -335,16 +338,18 @@ namespace SharpMap.Web.Wcs
 
             try
             {
-                XmlTextReader xmlTextReader = new XmlTextReader(_capabilitiesUrl, stream);
-                xmlTextReader.XmlResolver = null;
+                using (var xmlTextReader = new XmlTextReader(_capabilitiesUrl, stream))
+                {
+                    xmlTextReader.XmlResolver = null;
 
-                _xmlDoc = new XmlDocument();
-                _xmlDoc.XmlResolver = null;
-                _xmlDoc.Load(xmlTextReader);
-                _nsmgr = new XmlNamespaceManager(_xmlDoc.NameTable);
+                    _xmlDoc = new XmlDocument();
+                    _xmlDoc.XmlResolver = null;
+                    _xmlDoc.Load(xmlTextReader);
+                    _nsmgr = new XmlNamespaceManager(_xmlDoc.NameTable);
+                }
                 return _xmlDoc;
             }
-            catch (Exception ex)
+            catch (Exception /*ex*/)
             {
                 throw new ApplicationException("Could not convert the capabilities file into an XML document. Do you have illegal characters in the document.");
             }
@@ -354,8 +359,12 @@ namespace SharpMap.Web.Wcs
             }
         }
 
+        /// <summary>
+        /// Parse the version number from the capabilities document
+        /// </summary>
         public void ParseVersion()
         {
+            
             if (XmlDoc.DocumentElement.Attributes["version"] != null)
             {
                 _version = XmlDoc.DocumentElement.Attributes["version"].Value;
@@ -384,6 +393,9 @@ namespace SharpMap.Web.Wcs
             }
         }
 
+        /// <summary>
+        /// Method to validate the web server's response
+        /// </summary>
         public void ValidateXml()
         {
             throw new NotImplementedException();

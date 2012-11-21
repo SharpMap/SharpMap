@@ -2,12 +2,18 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Data;
     using Data;
-    using GeoAPI.Geometries;
 
+    /// <summary>
+    /// GeoJSON helper class
+    /// </summary>
     public static class GeoJSONHelper
     {
+        /// <summary>
+        /// Method to convert a <see cref="T:SharpMap.Data.FeatureDataSet"/> to a series of <see cref="GeoJSON"/> objects
+        /// </summary>
+        /// <param name="data">The feature dataset</param>
+        /// <returns>A series of <see cref="GeoJSON"/> objects</returns>
         public static IEnumerable<GeoJSON> GetData(FeatureDataSet data)
         {
             if (data == null)
@@ -17,18 +23,18 @@
             {
                 foreach (FeatureDataTable table in data.Tables)
                 {
-                    DataColumnCollection columns = table.Columns;
-                    string[] keys = new string[columns.Count];
-                    for (int i = 0; i < columns.Count; i++)
+                    var columns = table.Columns;
+                    var keys = new string[columns.Count];
+                    for (var i = 0; i < columns.Count; i++)
                         keys[i] = columns[i].ColumnName;
 
-                    DataRowCollection rows = table.Rows;
+                    var rows = table.Rows;
                     for (int i = 0; i < rows.Count; i++)
                     {
-                        FeatureDataRow row = (FeatureDataRow)rows[i];
-                        IGeometry geometry = row.Geometry;
-                        Dictionary<string, object> values = new Dictionary<string, object>();
-                        for (int j = 0; j < keys.Length; j++)
+                        var row = (FeatureDataRow)rows[i];
+                        var geometry = row.Geometry;
+                        var values = new Dictionary<string, object>();
+                        for (var j = 0; j < keys.Length; j++)
                             values.Add(keys[j], row[j]);
                         yield return new GeoJSON(geometry, values);
                     }

@@ -20,10 +20,30 @@ using GeoAPI.Geometries;
 
 namespace SharpMap.Web.Wms.Tiling
 {
+    /// <summary>
+    /// Basic interface for a <see cref="ITileCache"/>
+    /// </summary>
     public interface ITileCache
     {
-        void AddTile(Envelope box, Bitmap bitmap);
+        /// <summary>
+        /// Method to add a tile to the cache.
+        /// </summary>
+        /// <param name="box">The bounding <paramref name="box"/> of the area coverd by the <paramref name="tile"/>.</param>
+        /// <param name="tile">The tile image</param>
+        void AddTile(Envelope box, Bitmap tile);
+        
+        /// <summary>
+        /// Function to retrieve a tile from the cache that covers the provided <paramref name="box"/>.
+        /// </summary>
+        /// <param name="box">The area that is to be covered by the tile</param>
+        /// <returns></returns>
         Bitmap GetTile(Envelope box);
+
+        /// <summary>
+        /// Function to evaluate if the cache contains a tile that covers the provided <paramref name="box"/>.
+        /// </summary>
+        /// <param name="box">The area that is to be covered by the tile</param>
+        /// <returns><value>true</value> if such a tile image is in the cache.</returns>
         bool ContainsTile(Envelope box);
     }
 }

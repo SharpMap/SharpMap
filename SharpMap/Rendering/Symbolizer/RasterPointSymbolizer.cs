@@ -35,6 +35,9 @@ namespace SharpMap.Rendering.Symbolizer
 
         private ImageAttributes _imageAttributes;
 
+        /// <summary>
+        /// Releases managed resources
+        /// </summary>
         protected override void ReleaseManagedResources()
         {
             if (ImageAttributes != null)
@@ -52,6 +55,7 @@ namespace SharpMap.Rendering.Symbolizer
             base.ReleaseManagedResources();
         }
 
+        /// <inheritdoc/>
         public override object Clone()
         {
             var res = (RasterPointSymbolizer)MemberwiseClone();
@@ -82,6 +86,12 @@ namespace SharpMap.Rendering.Symbolizer
             }
         }
 
+        /// <summary>
+        /// Gets or sets the Size of the symbol
+        /// <para>
+        /// Implementations may ignore the setter, the getter must return a <see cref="PointSymbolizer.Size"/> with positive width and height values.
+        /// </para>
+        /// </summary>
         public override Size Size
         {
             get
@@ -95,6 +105,11 @@ namespace SharpMap.Rendering.Symbolizer
             }
         }
 
+        /// <summary>
+        /// Function that does the actual rendering
+        /// </summary>
+        /// <param name="pt">The point</param>
+        /// <param name="g">The graphics object</param>
         internal override void OnRenderInternal(PointF pt, Graphics g)
         {
             Image symbol = Symbol ?? DefaultSymbol;

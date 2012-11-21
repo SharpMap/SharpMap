@@ -93,8 +93,8 @@ namespace SharpMap.Layers
         /// Specifies whether polygons should be clipped prior to rendering
         /// </summary>
         /// <remarks>
-        /// <para>Clipping will clip <see cref="SharpMap.Geometries.Polygon"/> and
-        /// <see cref="SharpMap.Geometries.MultiPolygon"/> to the current view prior
+        /// <para>Clipping will clip <see cref="GeoAPI.Geometries.IPolygon"/> and
+        /// <see cref="GeoAPI.Geometries.IMultiPolygon"/> to the current view prior
         /// to rendering the object.</para>
         /// <para>Enabling clipping might improve rendering speed if you are rendering 
         /// only small portions of very large objects.</para>
@@ -185,10 +185,11 @@ namespace SharpMap.Layers
         /// <summary>
         /// Disposes the object
         /// </summary>
-        public void Dispose()
-        {
+        protected override void ReleaseManagedResources()
+        {   
             if (DataSource != null)
                 DataSource.Dispose();
+ 	        base.ReleaseManagedResources();
         }
 
         #endregion
@@ -241,6 +242,13 @@ namespace SharpMap.Layers
             base.Render(g, map);
         }
 
+        /// <summary>
+        /// Method to render this layer to the map, applying <paramref name="theme"/>.
+        /// </summary>
+        /// <param name="g">The graphics object</param>
+        /// <param name="map">The map object</param>
+        /// <param name="envelope">The envelope to render</param>
+        /// <param name="theme">The theme to apply</param>
         protected void RenderInternal(Graphics g, Map map, Envelope envelope, ITheme theme)
         {
             var ds = new FeatureDataSet();
@@ -336,6 +344,12 @@ namespace SharpMap.Layers
             }
         }
 
+        /// <summary>
+        /// Method to render this layer to the map, applying <see cref="Style"/>.
+        /// </summary>
+        /// <param name="g">The graphics object</param>
+        /// <param name="map">The map object</param>
+        /// <param name="envelope">The envelope to render</param>
         protected void RenderInternal(Graphics g, Map map, Envelope envelope)
         {
             //if style is not enabled, we don't need to render anything
@@ -451,6 +465,13 @@ namespace SharpMap.Layers
             return stylesToRender;
         }
 
+        /// <summary>
+        /// Method to render <paramref name="feature"/> using <paramref name="style"/>
+        /// </summary>
+        /// <param name="g">The graphics object</param>
+        /// <param name="map">The map</param>
+        /// <param name="feature">The feature's geometry</param>
+        /// <param name="style">The style to apply</param>
         protected void RenderGeometry(Graphics g, Map map, IGeometry feature, VectorStyle style)
         {
             if (feature == null)

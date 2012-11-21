@@ -3,6 +3,7 @@
 
 namespace SharpMap.Utilities.Wfs
 {
+    //ReSharper disable InconsistentNaming
     /// <summary>
     /// This class provides text resources specific for WFS 1.1.0.
     /// </summary>

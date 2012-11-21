@@ -20,14 +20,12 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
 
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data;
 using System.Data.Common;
 using System.Data.SqlClient;
 using SharpMap.Converters.WellKnownBinary;
 using GeoAPI.Geometries;
-using SharpMap.Utilities.Wfs;
 
 namespace SharpMap.Data.Providers
 {
@@ -43,8 +41,9 @@ namespace SharpMap.Data.Providers
     /// </code>
     /// </example>
     [Serializable]
-    public class MsSqlSpatial : SpatialDbProvider, IDisposable
+    public class MsSqlSpatial : SpatialDbProvider
     {
+        /*
         private string _definitionQuery = String.Empty;
         private string _featureColumns = "*";
         private string _geometryColumn;
@@ -55,7 +54,7 @@ namespace SharpMap.Data.Providers
         //private int _srid = -2;
         private string _table;
         private int _targetSRID = -1;
-
+        */
         /// <summary>
         /// Initializes a new connection to MsSqlSpatial
         /// </summary>
@@ -71,6 +70,10 @@ namespace SharpMap.Data.Providers
             ObjectIdColumn = identifierColumnName;
         }
 
+        /// <summary>
+        /// Creates a new <see cref="SpatialDbUtility"/> to handle database backends specifics
+        /// </summary>
+        /// <returns>A <see cref="SpatialDbUtility"/></returns>
         protected static SpatialDbUtility CreateSpatialDbUtility()
         {
             return new SpatialDbUtility();
@@ -106,15 +109,15 @@ namespace SharpMap.Data.Providers
             GeometryColumn = GetGeometryColumn();
         }
 
-        private string TargetGeometryColumn
-        {
-            get
-            {
-                if (SRID > 0 && TargetSRID > 0 && SRID != TargetSRID)
-                    return "ST.Transform(" + GeometryColumn + "," + TargetSRID + ")";
-                return GeometryColumn;
-            }
-        }
+        //private string TargetGeometryColumn
+        //{
+        //    get
+        //    {
+        //        if (SRID > 0 && TargetSRID > 0 && SRID != TargetSRID)
+        //            return "ST.Transform(" + GeometryColumn + "," + TargetSRID + ")";
+        //        return GeometryColumn;
+        //    }
+        //}
 
         /// <summary>
         /// Gets a collection of columns in the dataset
@@ -171,6 +174,10 @@ namespace SharpMap.Data.Providers
 
         #region IProvider Members
 
+        /// <summary>
+        /// Convenience function to create and open a connection to the database backend.
+        /// </summary>
+        /// <returns>An open connection to the database backend.</returns>
         protected override DbConnection CreateOpenDbConnection()
         {
  	        var conn = new SqlConnection(ConnectionString);
@@ -178,6 +185,10 @@ namespace SharpMap.Data.Providers
             return conn;
         }
 
+        /// <summary>
+        /// Convenience function to create a data adapter.
+        /// </summary>
+        /// <returns>An open connection to the database backend.</returns>
         protected override DbDataAdapter CreateDataAdapter()
         {
  	        return new SqlDataAdapter();
@@ -266,11 +277,13 @@ namespace SharpMap.Data.Providers
                     var strSQL = "SELECT * FROM ST.FilterQuery('" + Table + "', '" + GeometryColumn + "', " +
                                 BuildEnvelope(bbox, command) + ")";
 
+#pragma warning disable 612,618
                     if (!String.IsNullOrEmpty(DefinitionQuery))
                         strSQL += " WHERE " + DefinitionQuery;
 
                     if (!String.IsNullOrEmpty(OrderQuery))
                         strSQL += " ORDER BY " + OrderQuery;
+#pragma warning restore 612,618
 
                     command.CommandText = strSQL;
 
@@ -291,11 +304,11 @@ namespace SharpMap.Data.Providers
             return objectlist;
         }
 
-        /// <summary>
-        /// Returns the features that intersects with 'geom'
-        /// </summary>
-        /// <param name="geom"></param>
-        /// <param name="ds">FeatureDataSet to fill data into</param>
+        ///// <summary>
+        ///// Returns the features that intersects with 'geom'
+        ///// </summary>
+        ///// <param name="geom"></param>
+        ///// <param name="ds">FeatureDataSet to fill data into</param>
         //protected override void OnExecuteIntersectionQuery(IGeometry geom, FeatureDataSet ds)
         //{
         //    var features = new List<IGeometry>();
@@ -450,9 +463,11 @@ namespace SharpMap.Data.Providers
         {
             using (var conn = (SqlConnection)CreateOpenDbConnection())
             {
+#pragma warning disable 612,618
                 var where = (String.IsNullOrEmpty(DefinitionQuery)
                                  ? FeatureColumns.GetWhereClause()
                                  : DefinitionQuery).Replace(" WHERE ", "").Replace("'", "''");
+#pragma warning restore 612,618
 
                 var strSQL = string.Format("SELECT ST.AsBinary(ST.EnvelopeQueryWhere('{0}', '{1}', '{2}'))", DbUtility.DecorateTable(Schema, Table),
                                               GeometryColumn, where);
@@ -522,29 +537,6 @@ namespace SharpMap.Data.Providers
 
         #region Disposers and finalizers
 
-        private bool disposed = false;
-
-        /// <summary>
-        /// Disposes the object
-        /// </summary>
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        internal void Dispose(bool disposing)
-        {
-            if (!disposed)
-            {
-                if (disposing)
-                {
-                    //Close();
-                }
-                disposed = true;
-            }
-        }
-
         /// <summary>
         /// Finalizer
         /// </summary>
@@ -580,11 +572,17 @@ namespace SharpMap.Data.Providers
             return "#" + Schema + "#" + Table + "#" + GeometryColumn;
         }
 
-        private string BuildGeometryExpression()
-        {
-            return string.Format(GeometryExpression, TargetGeometryColumn);
-        }
+        //private string BuildGeometryExpression()
+        //{
+        //    return string.Format(GeometryExpression, TargetGeometryColumn);
+        //}
 
+        /// <summary>
+        /// Function to generate a spatial where clause for the intersection queries.
+        /// </summary>
+        /// <param name="bbox">The bounding box</param>
+        /// <param name="command">The command object, that is supposed to execute the query.</param>
+        /// <returns>The spatial component of a SQL where clause</returns>
         protected override string GetSpatialWhere(Envelope bbox, DbCommand command)
         {
             return string.Empty;
@@ -594,6 +592,7 @@ namespace SharpMap.Data.Providers
         {
             var res = "ST.MakeEnvelope(?,?,?,?,?)";
 
+            var needsTransform = NeedsTransform;
             command.Parameters.AddRange(
                 new[]
                     {
@@ -601,10 +600,10 @@ namespace SharpMap.Data.Providers
                         new SqlParameter("@PMinY", bbox.MinY),
                         new SqlParameter("@PMaxX", bbox.MaxX),
                         new SqlParameter("@PMaxY", bbox.MaxY),
-                        new SqlParameter("@PTargetSrid", NeedsTransfrom ? TargetSRID : SRID),
+                        new SqlParameter("@PTargetSrid", needsTransform ? TargetSRID : SRID)
                     });
 
-            if (NeedsTransfrom)
+            if (needsTransform)
             {
                 res = string.Format("ST.Transform({0}, ?)", res);
                 command.Parameters.AddWithValue("@PSrid", SRID);
@@ -617,14 +616,15 @@ namespace SharpMap.Data.Providers
         {
             var res = "ST.GeomFromWKB(?,?)";
 
+            var needsTransform = NeedsTransform;
             command.Parameters.AddRange(
                 new[]
                     {
                         new SqlParameter("@PGeom", geometry.AsBinary()),
-                        new SqlParameter("@PTargetSrid", NeedsTransfrom ? TargetSRID : SRID),
+                        new SqlParameter("@PTargetSrid", needsTransform ? TargetSRID : SRID)
                     });
 
-            if (NeedsTransfrom)
+            if (needsTransform)
             {
                 res = string.Format("ST.Transform({0}, ?)", res);
                 command.Parameters.AddWithValue("@PSrid", SRID);
@@ -633,27 +633,48 @@ namespace SharpMap.Data.Providers
             return res;
         }
 
+        /// <summary>
+        /// Function to generate a spatial where clause for the intersection queries.
+        /// </summary>
+        /// <param name="bbox">The geometry</param>
+        /// <param name="command">The command object, that is supposed to execute the query.</param>
+        /// <returns>The spatial component of a SQL where clause</returns>
         protected override string GetSpatialWhere(IGeometry bbox, DbCommand command)
         {
             return string.Empty;
         }
 
-        protected override string GetFrom(Envelope box, DbCommand cmd)
+        /// <summary>
+        /// Method to generate a SQL-From statement for a bounding box query
+        /// </summary>
+        /// <param name="envelope">The envelope to query</param>
+        /// <param name="command">The command object that is supposed to perform the query</param>
+        /// <returns>A SQL From statement string</returns>
+        protected override string GetFrom(Envelope envelope, DbCommand command)
         {
             return string.Format("ST.FilterQuery{0}({1})", 
-                _spatialQueryPrefix, 
-                BuildEnvelope(box, (SqlCommand)cmd));
+                _spatialQueryPrefix,
+                BuildEnvelope(envelope, (SqlCommand)command));
         }
 
-        protected override string GetFrom(IGeometry box, DbCommand cmd)
+        /// <summary>
+        /// Method to generate a SQL-From statement for a geometry query
+        /// </summary>
+        /// <param name="geometry">The envelope to query</param>
+        /// <param name="command">The command object that is supposed to perform the query</param>
+        /// <returns>A SQL From statement string</returns>
+        protected override string GetFrom(IGeometry geometry, DbCommand command)
         {
             return string.Format("ST.RelateQuery{0}('{1}', 'intersects')",
                 _spatialQueryPrefix,
-                BuildGeometry(box, (SqlCommand)cmd));
+                BuildGeometry(geometry, (SqlCommand)command));
         }
 
         private string _spatialQueryPrefix;
 
+        /// <summary>
+        /// Method to initialize the spatial provider
+        /// </summary>
         protected override void InitializeInternal()
         {
             _spatialQueryPrefix = BuildSpatialQuerySuffix();

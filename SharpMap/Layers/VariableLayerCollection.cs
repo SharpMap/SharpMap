@@ -34,12 +34,17 @@ namespace SharpMap.Layers
     /// <summary>
     /// Layer collection 
     /// </summary>
+    /// TODO:REEVALUEATE
     public class VariableLayerCollection : LayerCollection
     {
         private readonly LayerCollection _staticLayers;
         private static Timer _timer = null;
 
         private static bool touchTest = false;
+        
+        /// <summary>
+        /// Method to restart the internal Timer
+        /// </summary>
         public static void TouchTimer()
         {
             if (touchTest == true)
@@ -84,6 +89,7 @@ namespace SharpMap.Layers
             }
         }
 
+        /// <inheritdoc/>
         protected override void InsertItem(int index, ILayer layer)
         {
             if (layer == null) 

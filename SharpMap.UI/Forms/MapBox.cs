@@ -177,6 +177,9 @@ namespace SharpMap.Forms
             None
         }
 
+        /// <summary>
+        /// Enumeration of map query types
+        /// </summary>
         public enum MapQueryType
         {
             /// <summary>
@@ -384,6 +387,10 @@ namespace SharpMap.Forms
 
         private readonly IMessageFilter _mousePreviewFilter = null;
 
+        /// <summary>
+        /// Assigns a random color to a vector layers style
+        /// </summary>
+        /// <param name="layer"></param>
         public static void RandomizeLayerColors(VectorLayer layer)
         {
             layer.Style.EnableOutline = true;
@@ -397,6 +404,9 @@ namespace SharpMap.Forms
             _defaultColorIndex++;
         }
 
+        /// <summary>
+        /// Gets or sets a value on whether to report progress of map generation
+        /// </summary>
         [Description("Define if the progress Bar is shown")]
         [Category("Appearance")]
         public bool ShowProgressUpdate
@@ -486,6 +496,9 @@ namespace SharpMap.Forms
         }
 
 
+        /// <summary>
+        /// Gets or sets the value of the back color for the selection rectangle
+        /// </summary>
         [Description("The color of selecting rectangle.")]
         [Category("Appearance")]
         public Color SelectionBackColor
@@ -498,18 +511,9 @@ namespace SharpMap.Forms
             }
         }
 
-        [Description("The map image currently visualized.")]
-        [Category("Appearance")]
-        public Image Image
-        {
-            get
-            {
-
-                GetImagesAsyncEnd(null);
-                return _image;
-            }
-        }
-
+        /// <summary>
+        /// Gets or sets the value of the border color for the selection rectangle
+        /// </summary>
         [Description("The color of selectiong rectangle frame.")]
         [Category("Appearance")]
         public Color SelectionForeColor
@@ -522,6 +526,24 @@ namespace SharpMap.Forms
             }
         }
 
+        /// <summary>
+        /// Gets the current map image
+        /// </summary>
+        [Description("The map image currently visualized.")]
+        [Category("Appearance")]
+        public Image Image
+        {
+            get
+            {
+
+                GetImagesAsyncEnd(null);
+                return _image;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the amount which a single movement of the mouse wheel zooms by.
+        /// </summary>
         [Description(
             "The amount which a single movement of the mouse wheel zooms by. (Negative values are similar as OpenLayers/Google, positive are like ArcMap"
             )]
@@ -533,6 +555,9 @@ namespace SharpMap.Forms
             set { _wheelZoomMagnitude = value; }
         }
 
+        /// <summary>
+        /// Gets or sets the mode used to create preview image while panning or zooming.
+        /// </summary>
         [Description("Mode used to create preview image while panning or zooming.")]
         [DefaultValue(PreviewModes.Best)]
         [Category("Behavior")]
@@ -546,6 +571,11 @@ namespace SharpMap.Forms
             }
         }
 
+        /// <summary>
+        /// Gets or sets a value indicating the amount which the WheelZoomMagnitude is divided by 
+        /// when the Control key is pressed. A number greater than 1 decreases 
+        /// the zoom, and less than 1 increases it. A negative number reverses it.
+        /// </summary>
         [Description("The amount which the WheelZoomMagnitude is divided by " +
                      "when the Control key is pressed. A number greater than 1 decreases " +
                      "the zoom, and less than 1 increases it. A negative number reverses it.")]
@@ -557,6 +587,9 @@ namespace SharpMap.Forms
             set { _fineZoomFactor = value; }
         }
 
+        /// <summary>
+        /// Gets or sets a value that enables shortcut to rectangle-zoom by holding down shift-button and drag rectangle
+        /// </summary>
         [Description("Enables shortcut to rectangle-zoom by holding down shift-button and drag rectangle")]
         [DefaultValue(true)]
         [Category("Behavior")]
@@ -567,7 +600,7 @@ namespace SharpMap.Forms
         }
 
         /// <summary>
-        /// Map reference
+        /// Gets or sets the map reference
         /// </summary>
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public Map Map
@@ -681,11 +714,16 @@ namespace SharpMap.Forms
             }
         }
 
-        private volatile bool isDisposed = false;
+        private volatile bool _isDisposed;
 
+        /// <summary>
+        /// Dispose method
+        /// </summary>
+        /// <param name="disposing">A parameter indicating that this method is called from either a call to <see cref="Control.Dispose()"/> (<c>true</c>)
+        /// or the finalizer (<c>false</c>)</param>
         protected override void Dispose(bool disposing)
         {
-            if (isDisposed || IsDisposed)
+            if (_isDisposed || IsDisposed)
                 return;
 
             VariableLayerCollection.VariableLayerCollectionRequery -= HandleVariableLayersRequery;
@@ -739,7 +777,7 @@ namespace SharpMap.Forms
                 }
 
                 base.Dispose(disposing);
-                isDisposed = true;
+                _isDisposed = true;
             }
         }
 
@@ -765,7 +803,7 @@ namespace SharpMap.Forms
         /// <param name="e"></param>
         private void HandleVariableLayersRequery(object sender, EventArgs e)
         {
-            if (IsDisposed || isDisposed)
+            if (IsDisposed || _isDisposed)
                 return;
 
             Image oldRef;
@@ -794,7 +832,7 @@ namespace SharpMap.Forms
                     var min = Point.Round(_map.WorldToImage(box.Min()));
                     var max = Point.Round(_map.WorldToImage(box.Max()));
 
-                    if (IsDisposed == false && isDisposed == false)
+                    if (IsDisposed == false && _isDisposed == false)
                     {
 
                         using (var g = Graphics.FromImage(_imageBackground))
@@ -872,7 +910,7 @@ namespace SharpMap.Forms
             Map safeMap = null;
             lock (maplocker)
             {
-                if (isDisposed)
+                if (_isDisposed)
                     return;
 
                 if (imageGeneration < _imageGeneration)
@@ -903,7 +941,7 @@ namespace SharpMap.Forms
         private void GetImagesAsyncEnd(GetImageEndResult res)
         {
             //draw only if generation is larger than the current, else we have aldready drawn something newer
-            if (res == null || res.generation < _imageGeneration || isDisposed)
+            if (res == null || res.generation < _imageGeneration || _isDisposed)
                 return;
 
 
@@ -1049,7 +1087,7 @@ namespace SharpMap.Forms
 
         private void UpdateImage(bool forceRefresh)
         {
-            if (isDisposed || IsDisposed)
+            if (_isDisposed || IsDisposed)
                 return;
 
             if (((_imageStatic == null && _imageVariable == null && _imageBackground == null) && !forceRefresh) ||
@@ -1166,6 +1204,10 @@ namespace SharpMap.Forms
         }
 
 
+        /// <summary>
+        /// Invokes the <see cref="E:System.Windows.Forms.Control.MouseHover"/>-event.
+        /// </summary>
+        /// <param name="e">A <see cref="T:System.EventArgs"/> that contains the event arguments.</param>
         protected override void OnMouseHover(EventArgs e)
         {
             if (_focusOnHover)
@@ -1177,13 +1219,17 @@ namespace SharpMap.Forms
         {
             if (!Focused)
             {
-                bool isFocused = Focus();
+                var isFocused = Focus();
                 logger.Debug("Focused: " + isFocused);
             }
         }
 
-        private System.Timers.Timer mouseWheelRefreshTimer;
+        private System.Timers.Timer _mouseWheelRefreshTimer;
 
+        /// <summary>
+        /// Invokes the <see cref="E:System.Windows.Forms.Control.MouseWheel"/>-event.
+        /// </summary>
+        /// <param name="e">A <see cref="T:System.Windows.Forms.MouseEventArgs"/> that contains the event arguments.</param>
         protected override void OnMouseWheel(MouseEventArgs e)
         {
             base.OnMouseWheel(e);
@@ -1191,41 +1237,44 @@ namespace SharpMap.Forms
             if (_map != null)
             {
                 if (_zoomToPointer)
-                    _map.Center = _map.ImageToWorld(new System.Drawing.Point(e.X, e.Y), true);
+                    _map.Center = _map.ImageToWorld(new PointF(e.X, e.Y), true);
 
-                double scale = (e.Delta/120.0);
-                double scaleBase = 1 + (_wheelZoomMagnitude/(10*(IsControlPressed ? _fineZoomFactor : 1)));
+                var scale = (e.Delta / 120.0);
+                var scaleBase = 1 + (_wheelZoomMagnitude/(10*(IsControlPressed ? _fineZoomFactor : 1)));
 
                 _map.Zoom *= Math.Pow(scaleBase, scale);
 
                 if (_zoomToPointer)
                 {
-                    int newCenterX = (this.Width/2) + ((this.Width/2) - e.X);
-                    int newCenterY = (this.Height/2) + ((this.Height/2) - e.Y);
+                    var newCenterX = (Width/2f) + (Width/2f - e.X);
+                    var newCenterY = (Height/2f) + (Height/2f - e.Y);
 
-                    var newCenter = _map.ImageToWorld(new System.Drawing.Point(newCenterX, newCenterY), true);
-                    if (!newCenter.Equals(_map.Center) && MapCenterChanged != null)
+                    var newCenter = _map.ImageToWorld(new PointF(newCenterX, newCenterY), true);
+                    if (!newCenter.Equals(_map.Center))
                     {
-                        MapCenterChanged(_map.Center);
+                        _map.Center = newCenter;
+                        if (MapCenterChanged != null)
+                            MapCenterChanged(newCenter);
                     }
-                    //_map.Center = _map.ImageToWorld(new System.Drawing.Point(newCenterX, newCenterY), true);
-                    if (MapCenterChanged != null)
-                        MapCenterChanged(_map.Center);
                 }
+
+                if (MapZoomChanged != null)
+                    MapZoomChanged(_map.Zoom);
+
                 Invalidate();
 
-                if (mouseWheelRefreshTimer == null)
+                if (_mouseWheelRefreshTimer == null)
                 {
-                    mouseWheelRefreshTimer = new System.Timers.Timer(50);
-                    mouseWheelRefreshTimer.Elapsed += new System.Timers.ElapsedEventHandler(timerUpdate);
-                    mouseWheelRefreshTimer.Enabled = true;
-                    mouseWheelRefreshTimer.AutoReset = false;
-                    mouseWheelRefreshTimer.Start();
+                    _mouseWheelRefreshTimer = new System.Timers.Timer(50);
+                    _mouseWheelRefreshTimer.Elapsed += new System.Timers.ElapsedEventHandler(timerUpdate);
+                    _mouseWheelRefreshTimer.Enabled = true;
+                    _mouseWheelRefreshTimer.AutoReset = false;
+                    _mouseWheelRefreshTimer.Start();
                 }
                 else
                 {
-                    mouseWheelRefreshTimer.Stop();
-                    mouseWheelRefreshTimer.Start();
+                    _mouseWheelRefreshTimer.Stop();
+                    _mouseWheelRefreshTimer.Start();
                 }
             }
         }
@@ -1241,6 +1290,10 @@ namespace SharpMap.Forms
         private GeoPoint _dragStartCoord = null;
         private double _orgScale = 0;
 
+        /// <summary>
+        /// Invokes the <see cref="E:System.Windows.Forms.Control.MouseDown"/>-event.
+        /// </summary>
+        /// <param name="e">A <see cref="T:System.Windows.Forms.MouseEventArgs"/> that contains the event arguments.</param>
         protected override void OnMouseDown(MouseEventArgs e)
         {
             base.OnMouseDown(e);
@@ -1259,6 +1312,10 @@ namespace SharpMap.Forms
             }
         }
 
+        /// <summary>
+        /// Invokes the <see cref="E:System.Windows.Forms.Control.MouseMove"/>-event.
+        /// </summary>
+        /// <param name="e">A <see cref="T:System.Windows.Forms.MouseEventArgs"/> that contains the event arguments.</param>
         protected override void OnMouseMove(MouseEventArgs e)
         {
             base.OnMouseMove(e);
@@ -1364,6 +1421,10 @@ namespace SharpMap.Forms
 
 #if EnableMetafileClipboardSupport
 
+        /// <summary>
+        /// Invokes the <see cref="E:System.Windows.Forms.Control.KeyDown"/>-event.
+        /// </summary>
+        /// <param name="e">A <see cref="T:System.Windows.Forms.KeyEventArgs"/> that contains the event arguments.</param>
         protected override void OnKeyDown(KeyEventArgs e)
         {
             if (e.Control && e.KeyCode == Keys.C)
@@ -1378,6 +1439,10 @@ namespace SharpMap.Forms
 
 #endif
 
+        /// <summary>
+        /// Invokes the <see cref="E:SharpMap.UI.MapBox.MapChanging"/>-event.
+        /// </summary>
+        /// <param name="e">A <see cref="T:System.ComponentModel.CancelEventArgs"/> that contains the event arguments.</param>
         protected virtual void OnMapChanging(CancelEventArgs e)
         {
             if (MapChanging != null) MapChanging(this, e);
@@ -1391,6 +1456,10 @@ namespace SharpMap.Forms
             }
         }
 
+        /// <summary>
+        /// Invokes the <see cref="E:SharpMap.UI.MapBox.MapChanged"/>-event.
+        /// </summary>
+        /// <param name="e">A <see cref="T:System.EventArgs"/> that contains the event arguments.</param>
         protected virtual void OnMapChanged(EventArgs e)
         {
             if (_map != null)
@@ -1501,6 +1570,11 @@ namespace SharpMap.Forms
             return new Rectangle(x, y, width, height);
         }
 
+
+        /// <summary>
+        /// Invokes the <see cref="E:System.Windows.Forms.Control.Paint"/>-event.
+        /// </summary>
+        /// <param name="e">A <see cref="T:System.Windows.Forms.PaintEventArgs"/> that contains the event arguments.</param>
         protected override void OnPaint(PaintEventArgs pe)
         {
             try
@@ -1645,6 +1719,10 @@ namespace SharpMap.Forms
             }
         }
 
+        /// <summary>
+        /// Invokes the <see cref="E:System.Windows.Forms.Control.MouseUp"/>-event.
+        /// </summary>
+        /// <param name="e">A <see cref="T:System.Windows.Forms.MouseEventArgs"/> that contains the event arguments.</param>
         protected override void OnMouseUp(MouseEventArgs e)
         {
             base.OnMouseUp(e);

@@ -110,6 +110,9 @@ namespace SharpMap.Styles
             _VerticalAlignment = VerticalAlignmentEnum.Middle;
         }
 
+        /// <summary>
+        /// Releases managed resources
+        /// </summary>
         protected override void ReleaseManagedResources()
         {
             if (IsDisposed)
@@ -121,7 +124,10 @@ namespace SharpMap.Styles
 
             base.ReleaseManagedResources();
         }
-
+        /// <summary>
+        /// Method to create a deep copy of this <see cref="LabelStyle"/>
+        /// </summary>
+        /// <returns>A LabelStyle resembling this instance.</returns>
         public LabelStyle Clone()
         {
             var res = (LabelStyle) MemberwiseClone();

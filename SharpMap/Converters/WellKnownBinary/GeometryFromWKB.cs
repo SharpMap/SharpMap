@@ -65,6 +65,7 @@ namespace SharpMap.Converters.WellKnownBinary
         /// Creates a <see cref="GeoAPI.Geometries.IGeometry"/> from the supplied byte[] containing the Well-known Binary representation.
         /// </summary>
         /// <param name="bytes">byte[] containing the Well-known Binary representation.</param>
+        /// <param name="factory">The factory to create the result geometry</param>
         /// <returns>A <see cref="GeoAPI.Geometries.IGeometry"/> bases on the supplied Well-known Binary representation.</returns>
         public static IGeometry Parse(byte[] bytes, IGeometryFactory factory)
         {            
@@ -84,6 +85,7 @@ namespace SharpMap.Converters.WellKnownBinary
         /// Creates a <see cref="GeoAPI.Geometries.IGeometry"/> based on the Well-known binary representation.
         /// </summary>
         /// <param name="reader">A <see cref="System.IO.BinaryReader">BinaryReader</see> used to read the Well-known binary representation.</param>
+        /// <param name="factory">The factory to create the result geometry</param>
         /// <returns>A <see cref="GeoAPI.Geometries.IGeometry"/> based on the Well-known binary representation.</returns>
         public static IGeometry Parse(BinaryReader reader, IGeometryFactory factory)
         {

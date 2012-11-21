@@ -23,7 +23,6 @@ using System.Globalization;
 using SharpMap.Converters.WellKnownText;
 using BoundingBox = GeoAPI.Geometries.Envelope;
 using Geometry = GeoAPI.Geometries.IGeometry;
-using GeoAPI.Geometries;
 using Common.Logging;
 
 namespace SharpMap.Data.Providers
@@ -37,7 +36,6 @@ namespace SharpMap.Data.Providers
         private string _geometryColumn;
         private string _objectIdColumn;
         private string _table;
-        private bool _disposed;
 
         public SqlLite(string connectionStr, string tablename, string geometryColumnName, string oidColumnName)
         {

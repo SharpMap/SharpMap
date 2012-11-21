@@ -142,6 +142,9 @@ namespace SharpMap.Rendering.Symbolizer
             return gp;
         }
 
+        /// <summary>
+        /// Releases managed resources
+        /// </summary>
         protected override void ReleaseManagedResources()
         {
             if (Fill != null)
@@ -159,6 +162,7 @@ namespace SharpMap.Rendering.Symbolizer
             base.ReleaseManagedResources();
         }
 
+        /// <inheritdoc/>
         public override object Clone()
         {
             var res = (WarpedLineSymbolizer)MemberwiseClone();
@@ -174,20 +178,26 @@ namespace SharpMap.Rendering.Symbolizer
         /// </summary>
         public Brush Fill { get; set; }
 
-        protected override void OnRenderInternal(Map map, ILineString linestring, Graphics g)
+        /// <summary>
+        /// Function that actually renders the linestring
+        /// </summary>
+        /// <param name="map">The map</param>
+        /// <param name="lineString">The line string to symbolize.</param>
+        /// <param name="graphics">The graphics</param>
+        protected override void OnRenderInternal(Map map, ILineString lineString, Graphics graphics)
         {
             var clonedPattern = (GraphicsPath) Pattern.Clone();
-            var graphicsPath = WarpPathToPath.Warp(LineStringToPath(linestring, map), clonedPattern, true, Interval);
+            var graphicsPath = WarpPathToPath.Warp(LineStringToPath(lineString, map), clonedPattern, true, Interval);
             
             if (graphicsPath == null) return;
 
             // Fill?
             if (Fill != null)
-                g.FillPath(Fill, graphicsPath);
+                graphics.FillPath(Fill, graphicsPath);
             
             // Outline
             if (Line != null)
-                g.DrawPath(Line, graphicsPath);
+                graphics.DrawPath(Line, graphicsPath);
         }
     }
 }

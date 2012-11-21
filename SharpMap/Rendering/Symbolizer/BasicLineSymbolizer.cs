@@ -1,8 +1,6 @@
 using System;
 using System.Drawing;
 using GeoAPI.Geometries;
-using SharpMap.Data;
-using SharpMap.Rendering.Thematics;
 
 namespace SharpMap.Rendering.Symbolizer
 {
@@ -13,14 +11,24 @@ namespace SharpMap.Rendering.Symbolizer
     [Serializable]
     public class BasicLineSymbolizer : LineSymbolizer
     {
+        /// <summary>
+        /// Creates a clone of this symbolizer
+        /// </summary>
+        /// <returns>A symbolizer exactly like this one</returns>
         public override object Clone()
         {
             return new BasicLineSymbolizer {Line = (Pen) Line.Clone()};
         }
 
-        protected override void OnRenderInternal(Map map, ILineString linestring, Graphics g)
+        /// <summary>
+        /// Method that does the actual rendering of individual features.
+        /// </summary>
+        /// <param name="map">The map</param>
+        /// <param name="lineString">The linestring</param>
+        /// <param name="graphics">The graphics object</param>
+        protected override void OnRenderInternal(Map map, ILineString lineString, Graphics graphics)
         {
-            g.DrawLines(Line, /*LimitValues(*/linestring.TransformToImage(map)/*)*/);
+            graphics.DrawLines(Line, /*LimitValues(*/lineString.TransformToImage(map)/*)*/);
         }
 
     }
@@ -32,6 +40,10 @@ namespace SharpMap.Rendering.Symbolizer
     [Serializable]
     public class BasicLineSymbolizerWithOffset : LineSymbolizer
     {
+        /// <summary>
+        /// Creates a clone of this symbolizer
+        /// </summary>
+        /// <returns>A symbolizer exactly like this one</returns>
         public override object Clone()
         {
             return new BasicLineSymbolizerWithOffset {Line = (Pen) Line.Clone(), Offset = Offset};
@@ -42,10 +54,16 @@ namespace SharpMap.Rendering.Symbolizer
         /// </summary>
         public float Offset { get; set; }
 
-        protected override void OnRenderInternal(Map map, ILineString linestring, Graphics g)
+        /// <summary>
+        /// Method that does the actual rendering of individual features.
+        /// </summary>
+        /// <param name="map">The map</param>
+        /// <param name="lineString">The linestring</param>
+        /// <param name="graphics">The graphics object</param>
+        protected override void OnRenderInternal(Map map, ILineString lineString, Graphics graphics)
         {
-            var pts = /*LimitValues(*/ VectorRenderer.OffsetRight(linestring.TransformToImage(map), Offset) /*)*/;
-            g.DrawLines(Line, pts);
+            var pts = /*LimitValues(*/ VectorRenderer.OffsetRight(lineString.TransformToImage(map), Offset) /*)*/;
+            graphics.DrawLines(Line, pts);
         }
 
     }

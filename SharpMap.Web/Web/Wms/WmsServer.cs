@@ -21,9 +21,12 @@ using System.Drawing.Imaging;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Web;
 using System.Xml;
 using GeoAPI.Geometries;
+using SharpMap.Data;
+using SharpMap.Data.Providers;
 using SharpMap.Layers;
 using System.Collections.Generic;
 using System.Text;
@@ -41,7 +44,7 @@ namespace SharpMap.Web.Wms
         
 		#region Delegates
 
-        public delegate SharpMap.Data.FeatureDataTable InterSectDelegate(SharpMap.Data.FeatureDataTable featureDataTable, GeoAPI.Geometries.Envelope box);
+        public delegate FeatureDataTable InterSectDelegate(FeatureDataTable featureDataTable, Envelope box);
 
         #endregion
 
@@ -52,10 +55,11 @@ namespace SharpMap.Web.Wms
 
         /// <summary>
         /// Set the characterset used in FeatureInfo responses
-        /// 
+        /// </summary>
+        /// <remarks>
         /// To use Windows-1252 set the FeatureInfoResponseEncoding = System.Text.Encoding.GetEncoding(1252);
         /// Set to Null to not set any specific encoding in response
-        /// </summary>
+        /// </remarks>
         public static Encoding FeatureInfoResponseEncoding
         {
             get { return _featureInfoResponseEncoding; }
@@ -112,7 +116,8 @@ namespace SharpMap.Web.Wms
         /// </remarks>
         /// <param name="map">Map to serve on WMS</param>
         /// <param name="description">Description of map service</param>
-        /// <param name="intersectDelegate">Delegate for Getfeatureinfo intersecting, when null, the WMS will default to ICanQueryLayer implementation</param>
+        ///<param name="pixelSensitivity"> </param>
+        ///<param name="intersectDelegate">Delegate for Getfeatureinfo intersecting, when null, the WMS will default to ICanQueryLayer implementation</param>
         public static void ParseQueryString(Map map, Capabilities.WmsServiceDescription description, int pixelSensitivity, InterSectDelegate intersectDelegate)
         {
             _intersectDelegate = intersectDelegate;
@@ -187,7 +192,7 @@ namespace SharpMap.Web.Wms
 
             //IgnoreCase value should be set according to the VERSION parameter
             //v1.3.0 is case sensitive, but since it causes a lot of problems with several WMS clients, we ignore casing anyway.
-            bool ignorecase = true;
+            const bool ignoreCase = true;
 
             //Check for required parameters
             //Request parameter is mandatory
@@ -199,7 +204,7 @@ namespace SharpMap.Web.Wms
             //Check if version is supported
             if (context.Request.Params["VERSION"] != null)
             {
-                if (String.Compare(context.Request.Params["VERSION"], "1.3.0", ignorecase) != 0)
+                if (String.Compare(context.Request.Params["VERSION"], "1.3.0", ignoreCase) != 0)
                 {
                     WmsException.ThrowWmsException("Only version 1.3.0 supported");
                     return;
@@ -208,7 +213,7 @@ namespace SharpMap.Web.Wms
             else
             //Version is mandatory if REQUEST!=GetCapabilities. Check if this is a capabilities request, since VERSION is null
             {
-                if (String.Compare(context.Request.Params["REQUEST"], "GetCapabilities", ignorecase) != 0)
+                if (String.Compare(context.Request.Params["REQUEST"], "GetCapabilities", ignoreCase) != 0)
                 {
                     WmsException.ThrowWmsException("VERSION parameter not supplied");
                     return;
@@ -216,7 +221,7 @@ namespace SharpMap.Web.Wms
             }
 
             //If Capabilities was requested
-            if (String.Compare(context.Request.Params["REQUEST"], "GetCapabilities", ignorecase) == 0)
+            if (String.Compare(context.Request.Params["REQUEST"], "GetCapabilities", ignoreCase) == 0)
             {
                 //Service parameter is mandatory for GetCapabilities request
                 if (context.Request.Params["SERVICE"] == null)
@@ -225,7 +230,7 @@ namespace SharpMap.Web.Wms
                     return;
                 }
 
-                if (String.Compare(context.Request.Params["SERVICE"], "WMS") != 0)
+                if (String.Compare(context.Request.Params["SERVICE"], "WMS", StringComparison.InvariantCulture/*IgnoreCase*/) != 0)
                     WmsException.ThrowWmsException(
                         "Invalid service for GetCapabilities Request. Service parameter must be 'WMS'");
 
@@ -237,7 +242,7 @@ namespace SharpMap.Web.Wms
                 writer.Close();
                 context.Response.End();
             }
-            else if (String.Compare(context.Request.Params["REQUEST"], "GetFeatureInfo", ignorecase) == 0) //FeatureInfo Requested
+            else if (String.Compare(context.Request.Params["REQUEST"], "GetFeatureInfo", ignoreCase) == 0) //FeatureInfo Requested
             {
                 if (context.Request.Params["LAYERS"] == null)
                 {
@@ -254,7 +259,7 @@ namespace SharpMap.Web.Wms
                     WmsException.ThrowWmsException("Required parameter CRS not specified");
                     return;
                 }
-                else if (context.Request.Params["CRS"] != "EPSG:" + map.Layers[0].TargetSRID)
+                if (context.Request.Params["CRS"] != "EPSG:" + map.Layers[0].TargetSRID)
                 {
                     WmsException.ThrowWmsException(WmsException.WmsExceptionCode.InvalidCRS, "CRS not supported");
                     return;
@@ -306,7 +311,8 @@ namespace SharpMap.Web.Wms
                 //sets the map size to the size of the client in order to calculate the coordinates of the projection of the client
                 try
                 {
-                    map.Size = new System.Drawing.Size(System.Convert.ToInt16(context.Request.Params["WIDTH"]), System.Convert.ToInt16(context.Request.Params["HEIGHT"]));
+                    map.Size = new Size(Convert.ToInt16(context.Request.Params["WIDTH"]), 
+                                        Convert.ToInt16(context.Request.Params["HEIGHT"]));
                 }
                 catch
                 {
@@ -323,14 +329,13 @@ namespace SharpMap.Web.Wms
                 map.ZoomToBox(bbox);
 
                 //sets the point clicked by the client
-                var p = new Coordinate();
-                Single x = 0;
-                Single y = 0;
+                Single x = 0f, y = 0f;
+                
                 //tries to set the x to the Param I, if the client send an X, it will try the X, if both fail, exception is thrown
                 if (context.Request.Params["X"] != null)
                     try
                     {
-                        x = System.Convert.ToSingle(context.Request.Params["X"]);
+                        x = Convert.ToSingle(context.Request.Params["X"]);
                     }
                     catch
                     {
@@ -339,7 +344,7 @@ namespace SharpMap.Web.Wms
                 if (context.Request.Params["I"] != null)
                     try
                     {
-                        x = System.Convert.ToSingle(context.Request.Params["I"]);
+                        x = Convert.ToSingle(context.Request.Params["I"]);
                     }
                     catch
                     {
@@ -349,7 +354,7 @@ namespace SharpMap.Web.Wms
                 if (context.Request.Params["Y"] != null)
                     try
                     {
-                        y = System.Convert.ToSingle(context.Request.Params["Y"]);
+                        y = Convert.ToSingle(context.Request.Params["Y"]);
                     }
                     catch
                     {
@@ -358,17 +363,17 @@ namespace SharpMap.Web.Wms
                 if (context.Request.Params["J"] != null)
                     try
                     {
-                        y = System.Convert.ToSingle(context.Request.Params["J"]);
+                        y = Convert.ToSingle(context.Request.Params["J"]);
                     }
                     catch
                     {
                         WmsException.ThrowWmsException("Invalid parameters for I");
                     }
-                p = map.ImageToWorld(new System.Drawing.PointF(x, y));
+                //var p = map.ImageToWorld(new PointF(x, y));
                 int fc;
                 try
                 {
-                    fc = System.Convert.ToInt16(context.Request.Params["FEATURE_COUNT"]);
+                    fc = Convert.ToInt16(context.Request.Params["FEATURE_COUNT"]);
                     if (fc < 1)
                         fc = 1;
                 }
@@ -376,17 +381,18 @@ namespace SharpMap.Web.Wms
                 {
                     fc = 1;
                 }
+
                 //default to text if an invalid format is requested
-                string infoFormat = context.Request.Params["INFO_FORMAT"];
+                var infoFormat = context.Request.Params["INFO_FORMAT"];
                 string cqlFilter = null;
                 if (context.Request.Params["CQL_FILTER"] != null)
                 {
                     cqlFilter = context.Request.Params["CQL_FILTER"];
                 }
 
-                string vstr = "";
-                string[] requestLayers = context.Request.Params["QUERY_LAYERS"].Split(new[] { ',' });
-                if (String.Compare(context.Request.Params["INFO_FORMAT"], "text/json", ignorecase) == 0)
+                string vstr;
+                var requestLayers = context.Request.Params["QUERY_LAYERS"].Split(new[] { ',' });
+                if (String.Compare(infoFormat, "text/json", ignoreCase) == 0)
                 {
                     vstr = CreateFeatureInfoGeoJSON(map, requestLayers, x, y, fc, cqlFilter);
                     context.Response.ContentType = "text/json";
@@ -405,7 +411,7 @@ namespace SharpMap.Web.Wms
                 context.Response.Flush();
                 context.Response.End();
             }
-            else if (String.Compare(context.Request.Params["REQUEST"], "GetMap", ignorecase) == 0) //Map requested
+            else if (String.Compare(context.Request.Params["REQUEST"], "GetMap", ignoreCase) == 0) //Map requested
             {
                 //Check for required parameters
                 if (context.Request.Params["LAYERS"] == null)
@@ -423,7 +429,7 @@ namespace SharpMap.Web.Wms
                     WmsException.ThrowWmsException("Required parameter CRS not specified");
                     return;
                 }
-                else if (context.Request.Params["CRS"] != "EPSG:" + map.Layers[0].TargetSRID)
+                if (context.Request.Params["CRS"] != "EPSG:" + map.Layers[0].TargetSRID)
                 {
                     WmsException.ThrowWmsException(WmsException.WmsExceptionCode.InvalidCRS, "CRS not supported");
                     return;
@@ -453,7 +459,7 @@ namespace SharpMap.Web.Wms
                 }
 
                 //Set background color of map
-                if (String.Compare(context.Request.Params["TRANSPARENT"], "TRUE", ignorecase) == 0)
+                if (String.Compare(context.Request.Params["TRANSPARENT"], "TRUE", ignoreCase) == 0)
                     map.BackColor = Color.Transparent;
                 else if (context.Request.Params["BGCOLOR"] != null)
                 {
@@ -466,7 +472,6 @@ namespace SharpMap.Web.Wms
                         WmsException.ThrowWmsException("Invalid parameter BGCOLOR");
                         return;
                     }
-                    ;
                 }
                 else
                     map.BackColor = Color.White;
@@ -480,15 +485,14 @@ namespace SharpMap.Web.Wms
                 }
 
                 //Parse map size
-                int width = 0;
-                int height = 0;
+                int width, height;
                 if (!int.TryParse(context.Request.Params["WIDTH"], out width))
                 {
                     WmsException.ThrowWmsException(WmsException.WmsExceptionCode.InvalidDimensionValue,
                                                    "Invalid parameter WIDTH");
                     return;
                 }
-                else if (description.MaxWidth > 0 && width > description.MaxWidth)
+                if (description.MaxWidth > 0 && width > description.MaxWidth)
                 {
                     WmsException.ThrowWmsException(WmsException.WmsExceptionCode.OperationNotSupported,
                                                    "Parameter WIDTH too large");
@@ -500,7 +504,7 @@ namespace SharpMap.Web.Wms
                                                    "Invalid parameter HEIGHT");
                     return;
                 }
-                else if (description.MaxHeight > 0 && height > description.MaxHeight)
+                if (description.MaxHeight > 0 && height > description.MaxHeight)
                 {
                     WmsException.ThrowWmsException(WmsException.WmsExceptionCode.OperationNotSupported,
                                                    "Parameter HEIGHT too large");
@@ -518,23 +522,22 @@ namespace SharpMap.Web.Wms
                 map.PixelAspectRatio = (width / (double)height) / (bbox.Width / bbox.Height);
                 map.Center = bbox.Centre;
                 map.Zoom = bbox.Width;
-				//set Styles for layers
+				
+                //set Styles for layers
                 //first, if the request ==  STYLES=, set all the vectorlayers with Themes not null the Theme to the first theme from Themes
                 if (String.IsNullOrEmpty(context.Request.Params["STYLES"]))
                 {
-                    foreach (ILayer layer in map.Layers)
+                    foreach (var layer in map.Layers)
                     {
-                        if (layer.GetType() == typeof(VectorLayer))
+                        var vectorLayer = layer as VectorLayer;
+                        if (vectorLayer!= null)
                         {
-                            if ((layer as VectorLayer).Themes != null)
+                            if (vectorLayer.Themes != null)
                             {
-                                if ((layer as VectorLayer).Themes.Count > 0)
+                                foreach (var kvp in vectorLayer.Themes)
                                 {
-                                    foreach (KeyValuePair<string, SharpMap.Rendering.Thematics.ITheme> kvp in (layer as VectorLayer).Themes)
-                                    {
-                                        (layer as VectorLayer).Theme = kvp.Value;
-                                        break;
-                                    }
+                                    vectorLayer.Theme = kvp.Value;
+                                    break;
                                 }
                             }
                         }
@@ -544,46 +547,46 @@ namespace SharpMap.Web.Wms
                 {
                     if (!String.IsNullOrEmpty(context.Request.Params["LAYERS"]))
                     {
-                        string[] layerz = context.Request.Params["LAYERS"].Split(new[] { ',' });
-                        string[] styles = context.Request.Params["STYLES"].Split(new[] { ',' });
+                        var layerz = context.Request.Params["LAYERS"].Split(new[] { ',' });
+                        var styles = context.Request.Params["STYLES"].Split(new[] { ',' });
                         //test whether the lengt of the layers and the styles is the same. WMS spec is unclear on what to do if there is no one-to-one correspondence
                         if (layerz.Length == styles.Length)
                         {
-                            foreach (ILayer layer in map.Layers)
+                            foreach (var layer in map.Layers)
                             {
-                                if (layer.GetType() == typeof(VectorLayer))
+                                //is this a vector layer at all
+                                var vectorLayer = layer as VectorLayer;
+                                if (vectorLayer == null) continue;
+                                
+                                //does it have several themes applied
+                                //ToDo -> Refactor VectorLayer.Themes to Rendering.Thematics.ThemeList : ITheme
+                                if (vectorLayer.Themes != null && vectorLayer.Themes.Count > 0)
                                 {
-                                    if ((layer as VectorLayer).Themes != null)
+                                    for (int i = 0; i < layerz.Length; i++)
                                     {
-                                        if ((layer as VectorLayer).Themes.Count > 0)
+                                        if (String.Equals(layer.LayerName, layerz[i], StringComparison.InvariantCultureIgnoreCase))
                                         {
-                                            for (int i = 0; i < layerz.Length; i++)
+                                            //take default style if style is empty
+                                            if (styles[i] =="")
                                             {
-                                                if (String.Equals(layer.LayerName, layerz[i], StringComparison.InvariantCultureIgnoreCase))
+                                                foreach (var kvp in vectorLayer.Themes)
                                                 {
-                                                    //take default style if style is empty
-                                                    if (styles[i] =="")
-                                                    {
-                                                        foreach (KeyValuePair<string, SharpMap.Rendering.Thematics.ITheme> kvp in (layer as VectorLayer).Themes)
-                                                        {
-                                                            (layer as VectorLayer).Theme = kvp.Value;
-                                                            break;
-                                                        }
-                                                    }
-                                                    else
-                                                    {
-                                                        if ((layer as VectorLayer).Themes.ContainsKey(styles[i]))
-                                                        {
-                                                            (layer as VectorLayer).Theme = (layer as VectorLayer).Themes[styles[i]];
-                                                        }
-                                                        else
-                                                        {
-                                                            WmsException.ThrowWmsException(WmsException.WmsExceptionCode.StyleNotDefined, "Style not advertised for this layer");
-                                                        }
-                                                    }
-                                                }                                                
+                                                    vectorLayer.Theme = kvp.Value;
+                                                    break;
+                                                }
                                             }
-                                        }
+                                            else
+                                            {
+                                                if (vectorLayer.Themes.ContainsKey(styles[i]))
+                                                {
+                                                    vectorLayer.Theme = vectorLayer.Themes[styles[i]];
+                                                }
+                                                else
+                                                {
+                                                    WmsException.ThrowWmsException(WmsException.WmsExceptionCode.StyleNotDefined, "Style not advertised for this layer");
+                                                }
+                                            }
+                                        }                                                
                                     }
                                 }
                             }
@@ -591,48 +594,33 @@ namespace SharpMap.Web.Wms
                     }
                 }
 
-                if (context.Request.Params["CQL_FILTER"] != null)
+                var cqlFilter = context.Request.Params["CQL_FILTER"];
+                if (!string.IsNullOrEmpty(cqlFilter))
                 {
-                    foreach (ILayer layer in map.Layers)
+                    foreach (var layer in map.Layers)
                     {
-                        if (layer.GetType() == typeof(VectorLayer))
+                        var vectorLayer = layer as VectorLayer;
+                        if (vectorLayer != null)
                         {
-                            //for layers with a filterprovider
-                            if (typeof(SharpMap.Data.Providers.FilterProvider).IsAssignableFrom((layer as VectorLayer).DataSource.GetType()))
-                            {
-                                SharpMap.Data.Providers.FilterProvider shape = (SharpMap.Data.Providers.FilterProvider)(layer as VectorLayer).DataSource;
-                                shape.FilterDelegate = new Data.Providers.FilterProvider.FilterMethod(delegate(SharpMap.Data.FeatureDataRow row) { return CQLFilter(row, context.Request.Params["CQL_FILTER"]); });
-                            }
-                            //for layers with a SQL datasource with a DefinitionQuery property
-                            IEnumerable<System.Reflection.PropertyInfo> defQuery = from c in (layer as VectorLayer).DataSource.GetType().GetProperties() where c.Name =="DefinitionQuery" && c.GetType() == typeof(string) select c;
-                            if (defQuery.Count() > 0)
-                                defQuery.First().SetValue((layer as VectorLayer).DataSource, context.Request.Params["CQL_FILTER"], null);
-
-                                
-
-
+                            PrepareDataSourceForCql(vectorLayer.DataSource, cqlFilter);
+                            continue;    
                         }
-                        else if(layer.GetType() == typeof(LabelLayer))
-                        {
-                            if (typeof(SharpMap.Data.Providers.FilterProvider).IsAssignableFrom((layer as VectorLayer).DataSource.GetType()))
-                            {
-                                SharpMap.Data.Providers.FilterProvider shape = (SharpMap.Data.Providers.FilterProvider)(layer as VectorLayer).DataSource;
-                                shape.FilterDelegate = new Data.Providers.FilterProvider.FilterMethod(delegate(SharpMap.Data.FeatureDataRow row) { return CQLFilter(row, context.Request.Params["CQL_FILTER"]); });
-                            }
-                            //for layers with a SQL datasource with a DefinitionQuery property
-                            IEnumerable<System.Reflection.PropertyInfo> defQuery = from c in (layer as VectorLayer).DataSource.GetType().GetProperties() where c.Name == "DefinitionQuery" && c.GetType() == typeof(string) select c;
-                            if (defQuery.Count() > 0)
-                                defQuery.First().SetValue((layer as VectorLayer).DataSource, context.Request.Params["CQL_FILTER"], null);
 
+                        var labelLayer = layer as LabelLayer;
+                        if(labelLayer != null)
+                        {
+                            PrepareDataSourceForCql(labelLayer.DataSource, cqlFilter);
+                            continue;
                         }
                     }
                 }
 
                 //Set layers on/off
-                if (!String.IsNullOrEmpty(context.Request.Params["LAYERS"]))
+                var layersString = context.Request.Params["LAYERS"];
+                if (!String.IsNullOrEmpty(layersString))
                 //If LAYERS is empty, use default layer on/off settings
                 {
-                    string[] layers = context.Request.Params["LAYERS"].Split(new[] { ',' });
+                    var layers = layersString.Split(new[] { ',' });
                     if (description.LayerLimit > 0)
                     {
                         if (layers.Length == 0 && map.Layers.Count > description.LayerLimit ||
@@ -643,9 +631,11 @@ namespace SharpMap.Web.Wms
                             return;
                         }
                     }
-                    foreach (ILayer layer in map.Layers)
+                    
+                    foreach (var layer in map.Layers)
                         layer.Enabled = false;
-                    foreach (string layer in layers)
+                    
+                    foreach (var layer in layers)
                     {
                         //SharpMap.Layers.ILayer lay = map.Layers.Find(delegate(SharpMap.Layers.ILayer findlay) { return findlay.LayerName == layer; });
                         ILayer lay = null;
@@ -661,18 +651,20 @@ namespace SharpMap.Web.Wms
                                                            "Unknown layer '" + layer + "'");
                             return;
                         }
-                        else
-                            lay.Enabled = true;
+                        lay.Enabled = true;
                     }
                 }
                 //Render map
-                Image img = map.GetMap();
+                var img = map.GetMap();
 
                 //Png can't stream directy. Going through a memorystream instead
-                MemoryStream MS = new MemoryStream();
-                img.Save(MS, imageEncoder, null);
-                img.Dispose();
-                byte[] buffer = MS.ToArray();
+                byte[] buffer;
+                using (var ms = new MemoryStream())
+                {
+                    img.Save(ms, imageEncoder, null);
+                    img.Dispose();
+                    buffer = ms.ToArray();
+                }
                 context.Response.Clear();
                 context.Response.ContentType = imageEncoder.MimeType;
                 context.Response.OutputStream.Write(buffer, 0, buffer.Length);
@@ -682,12 +674,27 @@ namespace SharpMap.Web.Wms
                 WmsException.ThrowWmsException(WmsException.WmsExceptionCode.OperationNotSupported, "Invalid request");
         }
 
+        private static void PrepareDataSourceForCql(IProvider provider, string cqlFilterString)
+        {
+            //for layers with a filterprovider
+            var filterProvider = provider as FilterProvider;
+            if (filterProvider != null)
+            {
+                filterProvider.FilterDelegate = row => CqlFilter(row, cqlFilterString);
+                return;
+            }
+            //for layers with a SQL datasource with a DefinitionQuery property
+            var piDefinitionQuery = provider.GetType().GetProperty("DefinitionQuery", BindingFlags.Public | BindingFlags.Instance);
+            if (piDefinitionQuery != null)
+                piDefinitionQuery.SetValue(provider, cqlFilterString, null);
+        }
+
         /// <summary>
         /// Used for setting up output format of image file
         /// </summary>
         public static ImageCodecInfo GetEncoderInfo(String mimeType)
         {
-            foreach (ImageCodecInfo encoder in ImageCodecInfo.GetImageEncoders())
+            foreach (var encoder in ImageCodecInfo.GetImageEncoders())
                 if (encoder.MimeType == mimeType)
                     return encoder;
             return null;
@@ -696,17 +703,17 @@ namespace SharpMap.Web.Wms
         /// <summary>
         /// Parses a boundingbox string to a boundingbox geometry from the format minx,miny,maxx,maxy. Returns null if the format is invalid
         /// </summary>
-        /// <param name="strBBOX">string representation of a boundingbox</param>
+        /// <param name="boundingBox">string representation of a boundingbox</param>
+        /// <param name="flipXY">Value indicating that x- and y-ordinates should be changed.</param>
         /// <returns>Boundingbox or null if invalid parameter</returns>
-        public static Envelope ParseBBOX(string strBBOX, bool flip)
+// ReSharper disable InconsistentNaming
+        public static Envelope ParseBBOX(string boundingBox, bool flipXY)
+// ReSharper restore InconsistentNaming
         {
-            string[] strVals = strBBOX.Split(new[] { ',' });
+            var strVals = boundingBox.Split(new[] { ',' });
             if (strVals.Length != 4)
                 return null;
-            double minx = 0;
-            double miny = 0;
-            double maxx = 0;
-            double maxy = 0;
+            double minx, miny, maxx, maxy;
             if (!double.TryParse(strVals[0], NumberStyles.Float, Map.NumberFormatEnUs, out minx))
                 return null;
             if (!double.TryParse(strVals[2], NumberStyles.Float, Map.NumberFormatEnUs, out maxx))
@@ -721,38 +728,45 @@ namespace SharpMap.Web.Wms
             if (maxy < miny)
                 return null;
 
-            return flip ? new Envelope(miny, maxy, minx, maxx) : new Envelope(minx, maxx, miny, maxy);
+            return flipXY 
+                ? new Envelope(miny, maxy, minx, maxx) 
+                : new Envelope(minx, maxx, miny, maxy);
         }
+
         /// <summary>
         /// Gets FeatureInfo as text/plain
         /// </summary>
-        /// <param name="strBBOX">string representation of a boundingbox</param>
+        /// <param name="map">The map</param>
+        /// <param name="requestedLayers">The requested layers</param>
+        /// <param name="x">The x-ordinate</param>
+        /// <param name="y">The y-ordinate</param>
+        /// <param name="featureCount"></param>
+        /// <param name="cqlFilter">The code query language</param>
         /// <returns>Plain text string with featureinfo results</returns>
-        public static string CreateFeatureInfoPlain(SharpMap.Map map, string[] requestedLayers, Single x, Single y, int featureCount, string cqlFilter)
+        public static string CreateFeatureInfoPlain(Map map, string[] requestedLayers, Single x, Single y, int featureCount, string cqlFilter)
         {
-            string vstr = "GetFeatureInfo results: \n";
+            var vstr = "GetFeatureInfo results: \n";
             foreach (string requestLayer in requestedLayers)
             {
                 bool found = false;
-                foreach (ILayer mapLayer in map.Layers)
+                foreach (var mapLayer in map.Layers)
                 {
                     if (String.Equals(mapLayer.LayerName, requestLayer,
                                       StringComparison.InvariantCultureIgnoreCase))
                     {
                         found = true;
-                        if (!(mapLayer is ICanQueryLayer)) continue;
+                        var queryLayer = mapLayer as ICanQueryLayer;
+                        if (queryLayer == null || !queryLayer.IsQueryEnabled) continue;
 
-                        ICanQueryLayer queryLayer = mapLayer as ICanQueryLayer;
-                        if (queryLayer.IsQueryEnabled)
-                        {
-                            Single queryBoxMinX = x - (_pixelSensitivity);
-                            Single queryBoxMinY = y - (_pixelSensitivity);
-                            Single queryBoxMaxX = x + (_pixelSensitivity);
-                            Single queryBoxMaxY = y + (_pixelSensitivity);
-                            var minXY = map.ImageToWorld(new System.Drawing.PointF(queryBoxMinX, queryBoxMinY));
-                            var maxXY = map.ImageToWorld(new System.Drawing.PointF(queryBoxMaxX, queryBoxMaxY));
+                        var queryBoxMinX = x - (_pixelSensitivity);
+                        var queryBoxMinY = y - (_pixelSensitivity);
+                        var queryBoxMaxX = x + (_pixelSensitivity);
+                        var queryBoxMaxY = y + (_pixelSensitivity);
+                            
+                        var minXY = map.ImageToWorld(new PointF(queryBoxMinX, queryBoxMinY));
+                            var maxXY = map.ImageToWorld(new PointF(queryBoxMaxX, queryBoxMaxY));
                             var queryBox = new Envelope(minXY, maxXY);
-                            var fds = new SharpMap.Data.FeatureDataSet();
+                            var fds = new FeatureDataSet();
                             queryLayer.ExecuteIntersectionQuery(queryBox, fds);
                             
                             if (_intersectDelegate != null)
@@ -776,7 +790,7 @@ namespace SharpMap.Web.Wms
                                     {
                                         for (int i = fds.Tables[0].Rows.Count - 1; i >= 0; i--)
                                         {
-                                            if (!CQLFilter((SharpMap.Data.FeatureDataRow)fds.Tables[0].Rows[i], cqlFilter))
+                                            if (!CqlFilter((FeatureDataRow)fds.Tables[0].Rows[i], cqlFilter))
                                             {
                                                 fds.Tables[0].Rows.RemoveAt(i);
                                             }
@@ -788,7 +802,7 @@ namespace SharpMap.Web.Wms
                                     double[] area = new double[fds.Tables[0].Rows.Count];
                                     for (int l = 0; l < fds.Tables[0].Rows.Count; l++)
                                     {
-                                        var fdr = (Data.FeatureDataRow)fds.Tables[0].Rows[l];
+                                        var fdr = (FeatureDataRow)fds.Tables[0].Rows[l];
                                         area[l] = fdr.Geometry.EnvelopeInternal.Area;
                                         keys[l] = l;
                                     }
@@ -808,7 +822,7 @@ namespace SharpMap.Web.Wms
                                     }
                                 }
                             }
-                        }
+                        
                     }
                 }
                 if (found == false)
@@ -822,75 +836,78 @@ namespace SharpMap.Web.Wms
         /// <summary>
         /// Gets FeatureInfo as GeoJSON
         /// </summary>
-        /// <param name="strBBOX">string representation of a boundingbox</param>
+        /// <param name="map">The map to create the feature info from</param>
+        /// <param name="requestedLayers">The layers to create the feature info for</param>
+        /// <param name="x">The x-Ordinate</param>
+        /// <param name="y">The y-Ordinate</param>
+        /// <param name="featureCount">The number of features</param>
+        /// <param name="cqlFilterString">The CQL Filter string</param>
         /// <returns>GeoJSON string with featureinfo results</returns>
-        public static string CreateFeatureInfoGeoJSON(SharpMap.Map map, string[] requestedLayers, Single x, Single y, int featureCount, string cqlFilter)
+        public static string CreateFeatureInfoGeoJSON(Map map, string[] requestedLayers, Single x, Single y, int featureCount, string cqlFilterString)
         {
-            List<SharpMap.Converters.GeoJSON.GeoJSON> items = new List<SharpMap.Converters.GeoJSON.GeoJSON>();
-            foreach (string requestLayer in requestedLayers)
+            var items = new List<Converters.GeoJSON.GeoJSON>();
+            foreach (var requestLayer in requestedLayers)
             {
-                bool found = false;
-                foreach (ILayer mapLayer in map.Layers)
+                var found = false;
+                foreach (var mapLayer in map.Layers)
                 {
                     if (String.Equals(mapLayer.LayerName, requestLayer,
                                       StringComparison.InvariantCultureIgnoreCase))
                     {
                         found = true;
-                        if (!(mapLayer is ICanQueryLayer)) continue;
+                        var queryLayer = mapLayer as ICanQueryLayer;
+                        if (queryLayer == null || !queryLayer.IsQueryEnabled) continue;
 
-                        ICanQueryLayer queryLayer = mapLayer as ICanQueryLayer;
-                        if (queryLayer.IsQueryEnabled)
+                        var queryBoxMinX = x - (_pixelSensitivity);
+                        var queryBoxMinY = y - (_pixelSensitivity);
+                        var queryBoxMaxX = x + (_pixelSensitivity);
+                        var queryBoxMaxY = y + (_pixelSensitivity);
+                        var minXY = map.ImageToWorld(new PointF(queryBoxMinX, queryBoxMinY));
+                        var maxXY = map.ImageToWorld(new PointF(queryBoxMaxX, queryBoxMaxY));
+                        var queryBox = new Envelope(minXY, maxXY);
+                        var fds = new FeatureDataSet();
+                        queryLayer.ExecuteIntersectionQuery(queryBox, fds);
+                        //
+                        if (_intersectDelegate != null)
                         {
-                            Single queryBoxMinX = x - (_pixelSensitivity);
-                            Single queryBoxMinY = y - (_pixelSensitivity);
-                            Single queryBoxMaxX = x + (_pixelSensitivity);
-                            Single queryBoxMaxY = y + (_pixelSensitivity);
-                            var minXY = map.ImageToWorld(new System.Drawing.PointF(queryBoxMinX, queryBoxMinY));
-                            var maxXY = map.ImageToWorld(new System.Drawing.PointF(queryBoxMaxX, queryBoxMaxY));
-                            var queryBox = new Envelope(minXY, maxXY);
-                            var fds = new Data.FeatureDataSet();
-                            queryLayer.ExecuteIntersectionQuery(queryBox, fds);
-                            //
-                            if (_intersectDelegate != null)
+                            fds.Tables[0] = _intersectDelegate(fds.Tables[0], queryBox);
+                        }
+                        //filter the rows with the CQLFilter if one is provided
+                        if (cqlFilterString != null)
+                        {
+                            for (var i = fds.Tables[0].Rows.Count-1; i >=0 ; i--)
                             {
-                                fds.Tables[0] = _intersectDelegate(fds.Tables[0], queryBox);
-                            }
-                            //filter the rows with the CQLFilter if one is provided
-                            if (cqlFilter != null)
-                            {
-                                for (int i = fds.Tables[0].Rows.Count-1; i >=0 ; i--)
+                                if (!CqlFilter((FeatureDataRow)fds.Tables[0].Rows[i], cqlFilterString))
                                 {
-                                    if (!CQLFilter((SharpMap.Data.FeatureDataRow)fds.Tables[0].Rows[i], cqlFilter))
-                                    {
-                                        fds.Tables[0].Rows.RemoveAt(i);
-                                    }
+                                    fds.Tables[0].Rows.RemoveAt(i);
                                 }
                             }
-                            IEnumerable<SharpMap.Converters.GeoJSON.GeoJSON> data = SharpMap.Converters.GeoJSON.GeoJSONHelper.GetData(fds);
+                        }
+                        var data = Converters.GeoJSON.GeoJSONHelper.GetData(fds);
 
 #if DotSpatialProjections
-                            throw new NotImplementedException();
+                        throw new NotImplementedException();
 #else
-                            // Reproject geometries if needed
-                            IMathTransform transform = null;
-                            if (queryLayer is VectorLayer)
-                            {
-                                ICoordinateTransformation transformation = (queryLayer as VectorLayer).CoordinateTransformation;
-                                transform = transformation == null ? null : transformation.MathTransform;
-                            }
-
-                            if (transform != null)
-                            {
-                                data = data.Select(d =>
-                                {
-                                    var converted = GeometryTransform.TransformGeometry(d.Geometry, transform, map.Factory);
-                                    d.SetGeometry(converted);
-                                    return d;
-                                });
-                            }
-#endif
-                            items.AddRange(data);
+                        // Reproject geometries if needed
+                        IMathTransform transform = null;
+                        if (queryLayer is VectorLayer)
+                        {
+                            ICoordinateTransformation transformation = (queryLayer as VectorLayer).CoordinateTransformation;
+                            transform = transformation == null ? null : transformation.MathTransform;
                         }
+
+                        if (transform != null)
+                        {
+                            data = data.Select(d =>
+                            {
+                                var converted = GeometryTransform.TransformGeometry(d.Geometry, transform, map.Factory);
+                                d.SetGeometry(converted);
+                                return d;
+                            });
+                        }
+#endif
+                        items.AddRange(data);
+                        
                     }
                 }
                 if (found == false)
@@ -904,25 +921,27 @@ namespace SharpMap.Web.Wms
             return writer.ToString();            
         }
         /// <summary>
-        ///Filters the features to be processed by a CQL filter
+        /// Filters the features to be processed by a CQL filter
         /// </summary>
-        /// <param name="row">FeatureDataRow </param>
-        /// <param name="cqlString">CQL String with the filter </param>
+        /// <param name="row">A <see cref="T:SharpMap.Data.FeatureDataRow"/> to test.</param>
+        /// <param name="cqlString">A CQL string defining the filter </param>
         /// <returns>GeoJSON string with featureinfo results</returns>
-        private static bool CQLFilter(SharpMap.Data.FeatureDataRow row, string cqlString)
+        private static bool CqlFilter(FeatureDataRow row, string cqlString)
         {
-            bool toreturn = true;
+            var toreturn = true;
             //check on filter type (AND, OR, NOT)
-            string[] splitstring =new string[1]{" "};
-            string[] cqlStringItems = cqlString.Split(splitstring, StringSplitOptions.RemoveEmptyEntries);
-            string[] comparers = new string[9] { "==", "!=", "<", ">", "<=", ">=", "BETWEEN", "LIKE", "IN" };
+            var splitstring =new[]{" "};
+            var cqlStringItems = cqlString.Split(splitstring, StringSplitOptions.RemoveEmptyEntries);
+            var comparers = new[] { "==", "!=", "<", ">", "<=", ">=", "BETWEEN", "LIKE", "IN" };
             for (int i = 0; i < cqlStringItems.Length; i++)
             {
-                bool result = true;
+                var tmpResult = true;
                 //check first on AND OR NOT, only the case if multiple checks have to be done
-                bool AND = true;
-                bool OR = false;
-                bool NOT = false;
+// ReSharper disable InconsistentNaming
+                var AND = true;
+                var OR = false;
+                var NOT = false;
+// ReSharper restore InconsistentNaming
                 if (cqlStringItems[i] == "AND") { i++; }
                 if (cqlStringItems[i] == "OR") { AND = false; OR = true; i++; }
                 if (cqlStringItems[i] == "NOT"){AND = false; NOT = true;i++;}
@@ -946,8 +965,7 @@ namespace SharpMap.Web.Wms
                     //read all the items until the list is closed by ')' and merge them
                     //all items are assumed to be separated by space merge them first
                     //items are merged because a item might contain a space itself, and in this case it's splitted at the wrong place
-                    int start = i;
-                    string IN = "";
+                    var IN = "";
                     while (!cqlStringItems[i].Contains(")"))
                     {
                         IN = IN + " " + cqlStringItems[i];
@@ -955,24 +973,25 @@ namespace SharpMap.Web.Wms
                     }
                     IN = IN + " " + cqlStringItems[i];
                     string[] splitters = { "('", "', '", "','", "')" };
-                    List<string> items = IN.Split(splitters, StringSplitOptions.RemoveEmptyEntries).ToList();
+                    var items = IN.Split(splitters, StringSplitOptions.RemoveEmptyEntries).ToList();
 
-                    result = items.Contains(Convert.ToString(row[columnIndex]));
+                    tmpResult = items.Contains(Convert.ToString(row[columnIndex]));
                 }
                 else if (comparer == comparers[7])//LIKE
                 {
                     //to implement
-                    result = true;
+                    //tmpResult = true;
                 }
                 else if (comparer == comparers[6])//BETWEEN
                 {
                     //get type number of string
                     if (t == typeof(string))
                     {
-                        string string1 = cqlStringItems[i];
+                        var string1 = cqlStringItems[i];
                         i += 2; //skip the AND in BETWEEN
-                        string string2 = cqlStringItems[i];
-                        result = 0 < Convert.ToString(row[columnIndex]).CompareTo(string1) && 0 > Convert.ToString(row[columnIndex]).CompareTo(string2);
+                        var string2 = cqlStringItems[i];
+                        tmpResult = 0 < String.Compare(Convert.ToString(row[columnIndex], NumberFormatInfo.InvariantInfo), string1, StringComparison.Ordinal) &&
+                                    0 > String.Compare(Convert.ToString(row[columnIndex], NumberFormatInfo.InvariantInfo), string2, StringComparison.Ordinal);
 
                     }
                     else if (t == typeof(double))
@@ -980,45 +999,45 @@ namespace SharpMap.Web.Wms
                         double value1 = Convert.ToDouble(cqlStringItems[i]);
                         i += 2; //skip the AND in BETWEEN
                         double value2 = Convert.ToDouble(cqlStringItems[i]);
-                        result = value1 < Convert.ToDouble(row[columnIndex]) && value2 > Convert.ToDouble(row[columnIndex]);
+                        tmpResult = value1 < Convert.ToDouble(row[columnIndex]) && value2 > Convert.ToDouble(row[columnIndex]);
                     }
                     else if (t == typeof(int))
                     {
                         int value1 = Convert.ToInt32(cqlStringItems[i]);
                         i += 2;
                         int value2 = Convert.ToInt32(cqlStringItems[i]);
-                        result = value1 < Convert.ToInt32(row[columnIndex]) && value2 > Convert.ToInt32(row[columnIndex]);
+                        tmpResult = value1 < Convert.ToInt32(row[columnIndex]) && value2 > Convert.ToInt32(row[columnIndex]);
                     }
                 }
                 else
                 {
                     if (t == typeof(string))
                     {
-                        string cqlValue = Convert.ToString(cqlStringItems[i]);
-                        string rowValue = Convert.ToString(row[columnIndex]);
+                        string cqlValue = Convert.ToString(cqlStringItems[i], NumberFormatInfo.InvariantInfo);
+                        string rowValue = Convert.ToString(row[columnIndex], NumberFormatInfo.InvariantInfo);
                         if (comparer == comparers[5])//>=
                         {
-                            result = 0 <= rowValue.CompareTo(cqlValue);
+                            tmpResult = 0 <= String.Compare(rowValue, cqlValue, StringComparison.Ordinal);
                         }
                         else if (comparer == comparers[4])//<=
                         {
-                            result = 0 >= rowValue.CompareTo(cqlValue);
+                            tmpResult = 0 >= String.Compare(rowValue, cqlValue, StringComparison.Ordinal);
                         }
                         else if (comparer == comparers[3])//>
                         {
-                            result = 0 < rowValue.CompareTo(cqlValue);
+                            tmpResult = 0 < String.Compare(rowValue, cqlValue, StringComparison.Ordinal);
                         }
                         else if (comparer == comparers[2])//<
                         {
-                            result = 0 > rowValue.CompareTo(cqlValue);
+                            tmpResult = 0 > String.Compare(rowValue, cqlValue, StringComparison.Ordinal);
                         }
                         else if (comparer == comparers[1])//!=
                         {
-                            result = rowValue != cqlValue;
+                            tmpResult = rowValue != cqlValue;
                         }
                         else if (comparer == comparers[0])//==
                         {
-                            result = rowValue == cqlValue;
+                            tmpResult = rowValue == cqlValue;
                         }
                     }
                     else
@@ -1026,36 +1045,36 @@ namespace SharpMap.Web.Wms
                         double value = Convert.ToDouble(cqlStringItems[i]);
                         if (comparer == comparers[5])//>=
                         {
-                            result = Convert.ToDouble(row[columnIndex]) >= value;
+                            tmpResult = Convert.ToDouble(row[columnIndex]) >= value;
                         }
                         else if (comparer == comparers[4])//<=
                         {
-                            result = Convert.ToDouble(row[columnIndex]) <= value;
+                            tmpResult = Convert.ToDouble(row[columnIndex]) <= value;
                         }
                         else if (comparer == comparers[3])//>
                         {
-                            result = Convert.ToDouble(row[columnIndex]) > value;
+                            tmpResult = Convert.ToDouble(row[columnIndex]) > value;
                         }
                         else if (comparer == comparers[2])//<
                         {
-                            result = Convert.ToDouble(row[columnIndex]) < value;
+                            tmpResult = Convert.ToDouble(row[columnIndex]) < value;
                         }
                         else if (comparer == comparers[1])//!=
                         {
-                            result = Convert.ToDouble(row[columnIndex]) != value;
+                            tmpResult = Convert.ToDouble(row[columnIndex]) != value;
                         }
                         else if (comparer == comparers[0])//==
                         {
-                            result = Convert.ToDouble(row[columnIndex]) == value;
+                            tmpResult = Convert.ToDouble(row[columnIndex]) == value;
                         }
                     }
                 }
                 if (AND)
-                        toreturn = result;
-                    if (OR && result)
-                        toreturn = result;
-                    if (toreturn && NOT && result)
-                        toreturn = !result;
+                    toreturn = tmpResult;
+                if (OR && tmpResult)
+                    toreturn = true;
+                if (toreturn && NOT && tmpResult)
+                    toreturn = false;
 
             }
                 //OpenLayers.Filter.Comparison.EQUAL_TO = “==”;

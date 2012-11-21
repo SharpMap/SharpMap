@@ -17,7 +17,6 @@
 
 using System.Drawing;
 using GeoAPI.Geometries;
-using Point=GeoAPI.Geometries.Coordinate;
 
 namespace SharpMap.Utilities
 {
@@ -28,22 +27,23 @@ namespace SharpMap.Utilities
     {
         /// <summary>
         /// Transforms from world coordinate system (WCS) to image coordinates
-        /// NOTE: This method DOES NOT take the MapTransform property into account (use SharpMap.Map.MapToWorld instead)
+        /// NOTE: This method DOES NOT take the MapTransform property into account (use <see cref="Map.WorldToImage(GeoAPI.Geometries.Coordinate,bool)"/> instead)
         /// </summary>
         /// <param name="p">Point in WCS</param>
         /// <param name="map">Map reference</param>
         /// <returns>Point in image coordinates</returns>
-        public static PointF WorldtoMap(Point p, Map map)
+        public static PointF WorldtoMap(Coordinate p, Map map)
         {
             //if (map.MapTransform != null && !map.MapTransform.IsIdentity)
             //	map.MapTransform.TransformPoints(new System.Drawing.PointF[] { p });
-            PointF result = new System.Drawing.Point();
-            if (p.IsEmpty() == true)
+            if (p.IsEmpty())
                 return PointF.Empty;
 
-            double height = (map.Zoom * map.Size.Height) / map.Size.Width;
-            double left = map.Center.X - map.Zoom * 0.5;
-            double top = map.Center.Y + height * 0.5 * map.PixelAspectRatio;
+            var result = new PointF();
+
+            var height = (map.Zoom * map.Size.Height) / map.Size.Width;
+            var left = map.Center.X - map.Zoom * 0.5;
+            var top = map.Center.Y + height * 0.5 * map.PixelAspectRatio;
             result.X = (float)((p.X - left) / map.PixelWidth);
             result.Y = (float)((top - p.Y) / map.PixelHeight);
             if (double.IsNaN(result.X) || double.IsNaN(result.Y))
@@ -53,23 +53,20 @@ namespace SharpMap.Utilities
 
         /// <summary>
         /// Transforms from image coordinates to world coordinate system (WCS).
-        /// NOTE: This method DOES NOT take the MapTransform property into account (use SharpMap.Map.MapToWorld instead)
+        /// NOTE: This method DOES NOT take the MapTransform property into account (use <see cref="Map.ImageToWorld(System.Drawing.PointF,bool)"/> instead)
         /// </summary>
         /// <param name="p">Point in image coordinate system</param>
         /// <param name="map">Map reference</param>
         /// <returns>Point in WCS</returns>
-        public static Point MapToWorld(PointF p, Map map)
+        public static Coordinate MapToWorld(PointF p, Map map)
         {
             if (map.Center.IsEmpty() || double.IsNaN(map.MapHeight))
             {
-                return new Point(0, 0);
+                return new Coordinate(0, 0);
             }
-            else
-            {
-                Point ul = new Point(map.Center.X - map.Zoom * .5, map.Center.Y + map.MapHeight * .5);
-                return new Point(ul.X + p.X * map.PixelWidth,
-                                 ul.Y - p.Y * map.PixelHeight);
-            }
+            var ul = new Coordinate(map.Center.X - map.Zoom * .5, map.Center.Y + map.MapHeight * .5);
+            return new Coordinate(ul.X + p.X * map.PixelWidth,
+                                  ul.Y - p.Y * map.PixelHeight);
         }
     }
 }

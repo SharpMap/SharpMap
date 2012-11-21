@@ -57,6 +57,10 @@ namespace SharpMap.Layers
         /// </summary>
         public event EventHandler SridChanged;
 
+        /// <summary>
+        /// Method called when <see cref="SRID"/> has changed, to invoke <see cref="E:SharpMap.Layers.Layer.SridChanged"/>
+        /// </summary>
+        /// <param name="eventArgs">The arguments associated with the event</param>
         protected virtual void OnSridChanged(EventArgs eventArgs)
         {
             if (SridChanged != null)
@@ -68,6 +72,10 @@ namespace SharpMap.Layers
         /// </summary>
         public event EventHandler StyleChanged;
 
+        /// <summary>
+        /// Method called when <see cref="Style"/> has changed, to invoke <see cref="E:SharpMap.Layers.Layer.StyleChanged"/>
+        /// </summary>
+        /// <param name="eventArgs">The arguments associated with the event</param>
         protected virtual void OnStyleChanged(EventArgs eventArgs)
         {
             if (StyleChanged != null)
@@ -79,6 +87,10 @@ namespace SharpMap.Layers
         /// </summary>
         public event EventHandler LayerNameChanged;
 
+        /// <summary>
+        /// Method called when <see cref="LayerName"/> has changed, to invoke <see cref="E:SharpMap.Layers.Layer.LayerNameChanged"/>
+        /// </summary>
+        /// <param name="eventArgs">The arguments associated with the event</param>
         protected virtual void OnLayerNameChanged(EventArgs eventArgs)
         {
             if (LayerNameChanged != null)
@@ -106,11 +118,17 @@ namespace SharpMap.Layers
             _style = style;
         }
 
+        /// <summary>
+        /// Creates an instance of this class
+        /// </summary>
         protected Layer() //Style style)
         {
             _style = new Style();
         }
 
+        /// <summary>
+        /// Releases managed resources
+        /// </summary>
         protected override void ReleaseManagedResources()
         {
             _coordinateTransform = null;
@@ -177,6 +195,9 @@ namespace SharpMap.Layers
             }
         }
 
+        /// <summary>
+        /// Gets or sets a value indicating the target spatial reference id
+        /// </summary>
         public int TargetSRID
         {
             get { return _targetSrid.HasValue ? _targetSrid.Value : SRID; }
@@ -207,6 +228,9 @@ namespace SharpMap.Layers
 
         #region Properties
 
+        /// <summary>
+        /// Proj4 projection definition string
+        /// </summary>
         public string Proj4Projection { get; set; }
         /*
         private bool _Enabled = true;

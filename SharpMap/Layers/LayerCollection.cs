@@ -74,11 +74,15 @@ namespace SharpMap.Layers
             }
         }
 
+        /// <summary>
+        /// Method to add all layers of <paramref name="other"/> to this collection
+        /// </summary>
+        /// <param name="other">A collection of layers</param>
         public void AddCollection(LayerCollection other)
         {
             lock (this)
             {
-                foreach (ILayer lay in other)
+                foreach (var lay in other)
                 {
                     Add(lay);
                 }
@@ -107,6 +111,7 @@ namespace SharpMap.Layers
             }
         }
 
+        /// <inheritdoc/>
         protected override void OnAddingNew(System.ComponentModel.AddingNewEventArgs e)
         {
             ILayer newLayer = (e.NewObject as ILayer);
@@ -126,6 +131,11 @@ namespace SharpMap.Layers
             base.OnAddingNew(new System.ComponentModel.AddingNewEventArgs(newLayer));
         }
 
+        /// <summary>
+        /// Function to search for a layer in this collection by its name
+        /// </summary>
+        /// <param name="layerName">The name of the layer to search for</param>
+        /// <returns>The layer if found, otherwise <value>null</value></returns>
         public ILayer GetLayerByName(string layerName)
         {
             lock (this)
