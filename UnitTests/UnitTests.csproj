@@ -116,6 +116,7 @@
     <Compile Include="CoordinateSystems\Transformations\GeometryTransformDotSpatialTest.cs" />
     <Compile Include="CoordinateSystems\Transformations\GeometryTransformTest.cs" />
     <Compile Include="Data\Providers\DataTablePointTests.cs" />
+    <Compile Include="Data\Providers\GeometryFeatureProviderTest.cs" />
     <Compile Include="Data\Providers\ManagedSQLiteTests.cs" />
     <Compile Include="Data\Providers\MsSqlServerSpatialTests.cs" />
     <Compile Include="Data\Providers\ShapeFileProviderTests.cs" />
