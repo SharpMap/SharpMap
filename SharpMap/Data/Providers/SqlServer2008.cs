@@ -267,7 +267,7 @@ namespace SharpMap.Data.Providers
                string strBbox = GetBoxFilterStr(bbox);   
  
                string strSQL = "SELECT g." + GeometryColumn +".STAsBinary() ";   
-               strSQL += " FROM " + Table + " g WHERE ";   
+               strSQL += " FROM " + Table + " g " + BuildTableHints() + " WHERE ";   
  
                if (!String.IsNullOrEmpty(_definitionQuery))   
                    strSQL += DefinitionQuery + " AND ";   
@@ -336,7 +336,7 @@ namespace SharpMap.Data.Providers
                var strBbox = GetBoxFilterStr(bbox);   
  
                string strSQL = "SELECT g." + ObjectIdColumn + " ";   
-               strSQL += "FROM " + Table + " g WHERE ";   
+               strSQL += "FROM " + Table + " g " + BuildTableHints() + " WHERE ";   
  
                if (!String.IsNullOrEmpty(_definitionQuery))   
                    strSQL += DefinitionQuery + " AND ";   

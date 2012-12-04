@@ -13,9 +13,9 @@
     <Setting Name="SqlServer2008" Type="(Connection string)" Scope="Application">
       <DesignTimeValue Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
 &lt;SerializableConnectionString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;ConnectionString&gt;Data Source=IVV-SQLD;Initial Catalog=OBE;Integrated Security=True&lt;/ConnectionString&gt;
+  &lt;ConnectionString&gt;Data Source=;Initial Catalog=;Integrated Security=True&lt;/ConnectionString&gt;
 &lt;/SerializableConnectionString&gt;</DesignTimeValue>
-      <Value Profile="(Default)">Data Source=IVV-SQLD;Initial Catalog=OBE;Integrated Security=True</Value>
+      <Value Profile="(Default)">Data Source=;Initial Catalog=;Integrated Security=True</Value>
     </Setting>
     <Setting Name="PostGis" Type="System.String" Scope="Application">
       <Value Profile="(Default)">Data Source=localhost;Port=5432;User Id=postgres;Password=1.Kennwort</Value>

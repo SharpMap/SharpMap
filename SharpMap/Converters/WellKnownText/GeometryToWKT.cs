@@ -88,7 +88,7 @@ namespace SharpMap.Converters.WellKnownText
         /// <param name="geometry">A geometry to process.</param>
         /// <param name="writer">Stream to write out the geometry's text representation.</param>
         /// <remarks>
-        /// Geometry is written to the output stream as &lt;Gemoetry Tagged Text&gt; string (see the OpenGIS
+        /// Geometry is written to the output stream as &lt;Geometry Tagged Text&gt; string (see the OpenGIS
         /// Simple Features Specification).
         /// </remarks>
         public static void Write(IGeometry geometry, StringWriter writer)

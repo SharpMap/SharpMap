@@ -34,7 +34,7 @@ namespace SharpMap.Data.Providers
     [Serializable]
     public class OleDbPoint : PreparedGeometryProvider
     {
-        private string _defintionQuery;
+        private string _definitionQuery;
 
         /// <summary>
         /// Initializes a new instance of the OleDbPoint provider
@@ -88,8 +88,8 @@ namespace SharpMap.Data.Providers
         /// </summary>
         public string DefinitionQuery
         {
-            get { return _defintionQuery; }
-            set { _defintionQuery = value; }
+            get { return _definitionQuery; }
+            set { _definitionQuery = value; }
         }
 
         /// <summary>
@@ -106,8 +106,8 @@ namespace SharpMap.Data.Providers
                 conn.Open();
 
                 var strSQL = "Select " + XColumn + ", " + YColumn + " FROM " + Table + " WHERE ";
-                if (!String.IsNullOrEmpty(_defintionQuery))
-                    strSQL += _defintionQuery + " AND ";
+                if (!String.IsNullOrEmpty(_definitionQuery))
+                    strSQL += _definitionQuery + " AND ";
                 //Limit to the points within the boundingbox
                 strSQL += XColumn + " BETWEEN " + bbox.Left().ToString(Map.NumberFormatEnUs) + " AND " +
                           bbox.Right().ToString(Map.NumberFormatEnUs) + " AND " +
@@ -146,8 +146,8 @@ namespace SharpMap.Data.Providers
                 conn.Open();
 
                 var strSQL = "Select " + ObjectIdColumn + " FROM " + Table + " WHERE ";
-                if (!String.IsNullOrEmpty(_defintionQuery))
-                    strSQL += _defintionQuery + " AND ";
+                if (!String.IsNullOrEmpty(_definitionQuery))
+                    strSQL += _definitionQuery + " AND ";
                 //Limit to the points within the boundingbox
                 strSQL += XColumn + " BETWEEN " + bbox.Left().ToString(Map.NumberFormatEnUs) + " AND " +
                           bbox.Right().ToString(Map.NumberFormatEnUs) + " AND " + YColumn +
@@ -215,9 +215,9 @@ namespace SharpMap.Data.Providers
             using (var conn = new OleDbConnection(ConnectionString))
             {
                 var strSQL = "Select * FROM " + Table + " WHERE ";
-                if (!String.IsNullOrEmpty(_defintionQuery))
+                if (!String.IsNullOrEmpty(_definitionQuery))
                     //If a definition query has been specified, add this as a filter on the query
-                    strSQL += _defintionQuery + " AND ";
+                    strSQL += _definitionQuery + " AND ";
                 //Limit to the points within the boundingbox
                 strSQL += XColumn + " BETWEEN " + bbox.Left().ToString(Map.NumberFormatEnUs) + " AND " +
                           bbox.Right().ToString(Map.NumberFormatEnUs) + " AND " + YColumn +
@@ -272,9 +272,9 @@ namespace SharpMap.Data.Providers
                 conn.Open();
 
                 var strSQL = "SELECT Count(*) FROM " + Table;
-                if (!String.IsNullOrEmpty(_defintionQuery))
+                if (!String.IsNullOrEmpty(_definitionQuery))
                     //If a definition query has been specified, add this as a filter on the query
-                    strSQL += " WHERE " + _defintionQuery;
+                    strSQL += " WHERE " + _definitionQuery;
 
                 return (int)new OleDbCommand(strSQL, conn).ExecuteScalar();
             }
@@ -331,9 +331,9 @@ namespace SharpMap.Data.Providers
                 conn.Open();
                 var strSQL = "SELECT Min(" + XColumn + ") as MinX, Min(" + YColumn + ") As MinY, " +
                                 "Max(" + XColumn + ") As MaxX, Max(" + YColumn + ") As MaxY FROM " + Table;
-                if (!String.IsNullOrEmpty(_defintionQuery))
+                if (!String.IsNullOrEmpty(_definitionQuery))
                     //If a definition query has been specified, add this as a filter on the query
-                    strSQL += " WHERE " + _defintionQuery;
+                    strSQL += " WHERE " + _definitionQuery;
 
                 using (var command = new OleDbCommand(strSQL, conn))
                 {

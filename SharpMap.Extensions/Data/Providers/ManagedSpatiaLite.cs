@@ -41,7 +41,7 @@ namespace SharpMap.Data.Providers
     {
         static ILog logger = LogManager.GetLogger(typeof(ManagedSpatiaLite));
 
-        private string _defintionQuery;
+        private string _definitionQuery;
         private string _geometryColumn;
         private string _objectIdColumn;
         private readonly string _spatiaLiteIndexClause;
@@ -217,10 +217,10 @@ namespace SharpMap.Data.Providers
         /// </summary>
         public string DefinitionQuery
         {
-            get { return _defintionQuery; }
+            get { return _definitionQuery; }
             set
             {
-                _defintionQuery = value;
+                _definitionQuery = value;
             }
         }
 
@@ -234,7 +234,7 @@ namespace SharpMap.Data.Providers
                 var strSql = "SELECT " + GeometryColumn + " AS Geom ";
                 strSql += "FROM " + Table + " WHERE ";
                 strSql += boxIntersect;
-                if (!String.IsNullOrEmpty(_defintionQuery))
+                if (!String.IsNullOrEmpty(_definitionQuery))
                     strSql += " AND " + DefinitionQuery;
 
                 using (var command = new SQLiteCommand(strSql, conn))
@@ -282,7 +282,7 @@ namespace SharpMap.Data.Providers
 
                 strSql += GetBoxClause(bbox);
 
-                if (!String.IsNullOrEmpty(_defintionQuery))
+                if (!String.IsNullOrEmpty(_definitionQuery))
                     strSql += " AND " + DefinitionQuery + " AND ";
 
                 using (var command = new SQLiteCommand(strSql, conn))
@@ -352,7 +352,7 @@ namespace SharpMap.Data.Providers
                 //strSql += GetOverlapsClause(geom);
                 strSql += GetBoxClause(geom.EnvelopeInternal);
 
-                if (!String.IsNullOrEmpty(_defintionQuery))
+                if (!String.IsNullOrEmpty(_definitionQuery))
                     strSql += " AND " + DefinitionQuery;
 
                 using (var adapter = new SQLiteDataAdapter(strSql, conn))
@@ -403,7 +403,7 @@ namespace SharpMap.Data.Providers
                 strSql += "FROM " + Table + " WHERE ";
                 strSql += GetBoxClause(box);
 
-                if (!String.IsNullOrEmpty(_defintionQuery))
+                if (!String.IsNullOrEmpty(_definitionQuery))
                     strSql += " AND " + DefinitionQuery;
 
                 //using (var adapter = new SQLiteDataAdapter(strSql, conn))
@@ -456,7 +456,7 @@ namespace SharpMap.Data.Providers
             using (var conn = GetConnection(ConnectionString))
             {
                 string strSql = "SELECT COUNT(*) as numrecs FROM " + Table;
-                if (!String.IsNullOrEmpty(_defintionQuery))
+                if (!String.IsNullOrEmpty(_definitionQuery))
                     strSql += " WHERE " + DefinitionQuery;
                 using (var command = new SQLiteCommand(strSql, conn))
                 {
@@ -664,7 +664,7 @@ namespace SharpMap.Data.Providers
             if (String.IsNullOrEmpty(DefinitionQuery))
                 return table;
 
-            return string.Format("{0} WHERE ({1})", table, _defintionQuery);
+            return string.Format("{0} WHERE ({1})", table, _definitionQuery);
         }
 
 

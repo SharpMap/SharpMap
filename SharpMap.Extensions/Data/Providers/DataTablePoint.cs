@@ -38,7 +38,7 @@ namespace SharpMap.Data.Providers
     public class DataTablePoint : PreparedGeometryProvider, IDisposable
     {
         private string _ConnectionString;
-        private string _defintionQuery;
+        private string _definitionQuery;
         private string _ObjectIdColumn;
         private DataTable _Table;
         private string _XColumn;
@@ -119,8 +119,8 @@ namespace SharpMap.Data.Providers
         /// </summary>
         public string DefinitionQuery
         {
-            get { return _defintionQuery; }
-            set { _defintionQuery = value; }
+            get { return _definitionQuery; }
+            set { _definitionQuery = value; }
         }
 
         #region IProvider Members

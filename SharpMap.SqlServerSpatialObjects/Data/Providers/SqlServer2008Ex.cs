@@ -71,7 +71,7 @@ namespace SharpMap.Data.Providers
                 string strBbox = GetBoxFilterStr(bbox);
 
                 string strSQL = "SELECT g." + GeometryColumn;
-                strSQL += " FROM " + Table + " g WHERE ";
+                strSQL += " FROM " + Table + " g " + BuildTableHints() + " WHERE ";
 
                 if (!String.IsNullOrEmpty(DefinitionQuery))
                     strSQL += DefinitionQuery + " AND ";

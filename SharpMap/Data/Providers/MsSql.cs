@@ -49,7 +49,7 @@ namespace SharpMap.Data.Providers
     public class MsSql : IProvider
     {
         private string _ConnectionString;
-        private string _defintionQuery;
+        private string _definitionQuery;
         private string _GeometryColumn;
         private bool _IsOpen;
         private string _ObjectIdColumn;
@@ -123,8 +123,8 @@ namespace SharpMap.Data.Providers
         /// </summary>
         public string DefinitionQuery
         {
-            get { return _defintionQuery; }
-            set { _defintionQuery = value; }
+            get { return _definitionQuery; }
+            set { _definitionQuery = value; }
         }
 
         /// <summary>
@@ -179,7 +179,7 @@ namespace SharpMap.Data.Providers
                 string strSQL = "SELECT " + GeometryColumn + " AS Geom ";
                 strSQL += "FROM " + Table + " WHERE ";
                 strSQL += BoxIntersect;
-                if (!String.IsNullOrEmpty(_defintionQuery))
+                if (!String.IsNullOrEmpty(_definitionQuery))
                     strSQL += " AND " + DefinitionQuery;
 
                 using (SqlCommand command = new SqlCommand(strSQL, conn))
@@ -247,7 +247,7 @@ namespace SharpMap.Data.Providers
 
                 strSQL += GetBoxClause(bbox);
 
-                if (!String.IsNullOrEmpty(_defintionQuery))
+                if (!String.IsNullOrEmpty(_definitionQuery))
                     strSQL += " AND " + DefinitionQuery + " AND ";
 
                 using (SqlCommand command = new SqlCommand(strSQL, conn))
@@ -290,7 +290,7 @@ namespace SharpMap.Data.Providers
             using (SqlConnection conn = new SqlConnection(_ConnectionString))
             {
                 string strSQL = "SELECT COUNT(*) FROM " + Table;
-                if (!String.IsNullOrEmpty(_defintionQuery))
+                if (!String.IsNullOrEmpty(_definitionQuery))
                     strSQL += " WHERE " + DefinitionQuery;
                 using (SqlCommand command = new SqlCommand(strSQL, conn))
                 {
@@ -374,7 +374,7 @@ namespace SharpMap.Data.Providers
                 string strSQL =
                     "SELECT Min(Envelope_MinX) AS MinX, Min(Envelope_MinY) AS MinY, Max(Envelope_MaxX) AS MaxX, Max(Envelope_MaxY) AS MaxY FROM " +
                     Table;
-                if (!String.IsNullOrEmpty(_defintionQuery))
+                if (!String.IsNullOrEmpty(_definitionQuery))
                     strSQL += " WHERE " + DefinitionQuery;
                 using (SqlCommand command = new SqlCommand(strSQL, conn))
                 {
@@ -412,7 +412,7 @@ namespace SharpMap.Data.Providers
                 strSQL += "FROM " + Table + " WHERE ";
                 strSQL += GetBoxClause(bbox);
 
-                if (!String.IsNullOrEmpty(_defintionQuery))
+                if (!String.IsNullOrEmpty(_definitionQuery))
                     strSQL += " AND " + DefinitionQuery;
 
                 using (SqlDataAdapter adapter = new SqlDataAdapter(strSQL, conn))

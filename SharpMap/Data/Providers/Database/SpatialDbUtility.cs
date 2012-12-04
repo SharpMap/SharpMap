@@ -203,12 +203,12 @@ namespace SharpMap.Data.Providers
         /// <remarks>
         /// The format must have
         /// <list type="bullet">
-        /// <item>a placeholder for the gemoetry ({0})</item>
+        /// <item>a placeholder for the geometry ({0})</item>
         /// <item>a placeholder for the srid ({1})</item>
         /// </list>
         /// <example language="C#">
         /// //e.g. Postgis
-        /// this.SetSridFromat = "ST_SetSrid({0}, {1})";
+        /// this.SetSridDecoratorFormat = "ST_SetSrid({0}, {1})";
         /// </example>
         /// </remarks>
         public string SetSridDecoratorFormat { get; set; }
@@ -219,12 +219,12 @@ namespace SharpMap.Data.Providers
         /// <remarks>
         /// The format must have
         /// <list type="bullet">
-        /// <item>a placeholder for the gemoetry ({0})</item>
+        /// <item>a placeholder for the geometry ({0})</item>
         /// <item>a placeholder for the target srid ({1})</item>
         /// </list>
         /// <example language="C#">
         /// //e.g. Postgis
-        /// this.SetSridFromat = "ST_Transform({0}, {1})";
+        /// this.TransformDecoratorFormat = "ST_Transform({0}, {1})";
         /// </example>
         /// </remarks>
         public string TransformDecoratorFormat { get; set; }
@@ -237,7 +237,7 @@ namespace SharpMap.Data.Providers
         /// <remarks>
         /// The format must have
         /// <list type="bullet">
-        /// <item>a placeholder for the gemoetry ({0})</item>
+        /// <item>a placeholder for the geometry ({0})</item>
         /// </list>
         /// </remarks>
         public string ToGeometryDecoratorFormat { get; set; }
@@ -262,7 +262,7 @@ namespace SharpMap.Data.Providers
         /// <remarks>
         /// The format must have
         /// <list type="bullet">
-        /// <item>a placeholder for the gemoetry ({0})</item>
+        /// <item>a placeholder for the geometry ({0})</item>
         /// </list>
         /// </remarks>
         public string FromGeometryDecoratorFormat { get; set; }

@@ -50,7 +50,7 @@ namespace SharpMap.Data.Providers
     [Serializable]
     public class PostGIS : BaseProvider
     {
-        private string _defintionQuery;
+        private string _definitionQuery;
         private string _geometryColumn;
         private string _objectIdColumn;
         private string _schema = "public";
@@ -157,8 +157,8 @@ namespace SharpMap.Data.Providers
         /// </summary>
         public string DefinitionQuery
         {
-            get { return _defintionQuery; }
-            set { _defintionQuery = value; }
+            get { return _definitionQuery; }
+            set { _definitionQuery = value; }
         }
 
         #region IProvider Members
@@ -184,7 +184,7 @@ namespace SharpMap.Data.Providers
                 string strSQL = "SELECT " + _prefixFunction + "AsBinary(\"" + GeometryColumn + "\") AS Geom ";
                 strSQL += "FROM " + QualifiedTable + " WHERE ";
 
-                if (!String.IsNullOrEmpty(_defintionQuery))
+                if (!String.IsNullOrEmpty(_definitionQuery))
                     strSQL += DefinitionQuery + " AND ";
 
                 if (_supportSTIntersects)
@@ -273,7 +273,7 @@ namespace SharpMap.Data.Providers
                 var strSQL = "SELECT \"" + ObjectIdColumn + "\" ";
                 strSQL += "FROM " + QualifiedTable + " WHERE ";
 
-                if (!String.IsNullOrEmpty(_defintionQuery))
+                if (!String.IsNullOrEmpty(_definitionQuery))
                     strSQL += DefinitionQuery + " AND ";
 
                 strSQL += "\"" + GeometryColumn + "\" && " + strBbox;
@@ -316,7 +316,7 @@ namespace SharpMap.Data.Providers
                 string strSQL = "SELECT * , " + _prefixFunction + "AsBinary(\"" + GeometryColumn + "\") As sharpmap_tempgeometry FROM " +
                                 QualifiedTable + " WHERE ";
 
-                if (!String.IsNullOrEmpty(_defintionQuery))
+                if (!String.IsNullOrEmpty(_definitionQuery))
                     strSQL += DefinitionQuery + " AND ";
 
                 strSQL += "\"" + GeometryColumn + "\" && " + strGeom + " AND " + _prefixFunction + "distance(\"" + GeometryColumn + "\", " +
@@ -361,7 +361,7 @@ namespace SharpMap.Data.Providers
             using (var conn = new NpgsqlConnection(ConnectionString))
             {
                 string strSQL = "SELECT COUNT(*) FROM " + QualifiedTable;
-                if (!String.IsNullOrEmpty(_defintionQuery))
+                if (!String.IsNullOrEmpty(_definitionQuery))
                     strSQL += " WHERE " + DefinitionQuery;
                 using (var command = new NpgsqlCommand(strSQL, conn))
                 {
@@ -454,7 +454,7 @@ namespace SharpMap.Data.Providers
             using (var conn = new NpgsqlConnection(ConnectionString))
             {
                 string strSQL = "SELECT " + _prefixFunction + "EXTENT(\"" + GeometryColumn + "\") FROM " + QualifiedTable;
-                if (!String.IsNullOrEmpty(_defintionQuery))
+                if (!String.IsNullOrEmpty(_definitionQuery))
                     strSQL += " WHERE " + DefinitionQuery;
                 using (var command = new NpgsqlCommand(strSQL, conn))
                 {
@@ -499,7 +499,7 @@ namespace SharpMap.Data.Providers
                 string strSQL = "SELECT *, " + _prefixFunction + "AsBinary(\"" + GeometryColumn + "\") AS sharpmap_tempgeometry ";
                 strSQL += "FROM " + QualifiedTable + " WHERE ";
 
-                if (!String.IsNullOrEmpty(_defintionQuery))
+                if (!String.IsNullOrEmpty(_definitionQuery))
                     strSQL += DefinitionQuery + " AND ";
 
                 if (_supportSTIntersects)

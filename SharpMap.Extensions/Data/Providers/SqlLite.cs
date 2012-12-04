@@ -32,7 +32,7 @@ namespace SharpMap.Data.Providers
         static ILog logger = LogManager.GetLogger(typeof(SqlLite));
 
         //string conStr = "Data Source=C:\\Workspace\\test.sqlite;Version=3;";
-        private string _defintionQuery;
+        private string _definitionQuery;
         private string _geometryColumn;
         private string _objectIdColumn;
         private string _table;
@@ -86,8 +86,8 @@ namespace SharpMap.Data.Providers
         /// </summary>
         public string DefinitionQuery
         {
-            get { return _defintionQuery; }
-            set { _defintionQuery = value; }
+            get { return _definitionQuery; }
+            set { _definitionQuery = value; }
         }
 
         #region IProvider Members
@@ -102,7 +102,7 @@ namespace SharpMap.Data.Providers
                 var strSQL = "SELECT " + GeometryColumn + " AS Geom ";
                 strSQL += "FROM " + Table + " WHERE ";
                 strSQL += boxIntersect;
-                if (!String.IsNullOrEmpty(_defintionQuery))
+                if (!String.IsNullOrEmpty(_definitionQuery))
                     strSQL += " AND " + DefinitionQuery;
 
                 using (var command = new SQLiteCommand(strSQL, conn))
@@ -136,7 +136,7 @@ namespace SharpMap.Data.Providers
 
                 strSQL += GetBoxClause(bbox);
 
-                if (!String.IsNullOrEmpty(_defintionQuery))
+                if (!String.IsNullOrEmpty(_definitionQuery))
                     strSQL += " AND " + DefinitionQuery + " AND ";
 
                 using (var command = new SQLiteCommand(strSQL, conn))
@@ -218,7 +218,7 @@ namespace SharpMap.Data.Providers
                 strSQL += "FROM " + Table + " WHERE ";
                 strSQL += GetBoxClause(box);
 
-                if (!String.IsNullOrEmpty(_defintionQuery))
+                if (!String.IsNullOrEmpty(_definitionQuery))
                     strSQL += " AND " + DefinitionQuery;
 
                 using (SQLiteDataAdapter adapter = new SQLiteDataAdapter(strSQL, conn))
@@ -257,7 +257,7 @@ namespace SharpMap.Data.Providers
             using (var conn = new SQLiteConnection(ConnectionString))
             {
                 string strSQL = "SELECT COUNT(*) FROM " + Table;
-                if (!String.IsNullOrEmpty(_defintionQuery))
+                if (!String.IsNullOrEmpty(_definitionQuery))
                     strSQL += " WHERE " + DefinitionQuery;
                 using (var command = new SQLiteCommand(strSQL, conn))
                 {
@@ -314,7 +314,7 @@ namespace SharpMap.Data.Providers
             {
                 string strSQL =
                     "SELECT Min(minx) AS MinX, Min(miny) AS MinY, Max(maxx) AS MaxX, Max(maxy) AS MaxY FROM " + Table;
-                if (!String.IsNullOrEmpty(_defintionQuery))
+                if (!String.IsNullOrEmpty(_definitionQuery))
                     strSQL += " WHERE " + DefinitionQuery;
                 using (var command = new SQLiteCommand(strSQL, conn))
                 {
@@ -340,12 +340,11 @@ namespace SharpMap.Data.Providers
         }
 
         /// <summary>
-        /// Creates a new table in a Microsoft SQL Server database and copies rows from an existing datasource.
+        /// Creates a new table in a SQLite database and copies rows from an existing datasource.
         /// </summary>
         /// <remarks>
-        /// <para>The datatable created will contain six extra columns besides the attribute data: "OID" (Object ID row), 
-        /// "WKB_Geometry" (Geometry stored as WKB), and Envelope_MinX, Envelope_MinY, Envelope_MaxX, Envelope_MaxY
-        /// for geometry bounding box.</para>
+        /// <para>The datatable created will contain six extra columns besides the attribute data: "oid" (Object ID row), 
+        /// "geom" (Geometry stored as WKT), and minx, miny, maxx, maxy for geometry bounding box.</para>
         /// <para>
         /// <example>
         /// Upload a ShapeFile to a database:
@@ -362,8 +361,8 @@ namespace SharpMap.Data.Providers
         ///		string tablename = shapeFile.Substring(shapeFile.LastIndexOf('\\') + 1,
         ///			shapeFile.LastIndexOf('.') - shapeFile.LastIndexOf('\\') - 1);
         ///		//Create connectionstring
-        ///		string connstr = @"Data Source=.\SQLEXPRESS;AttachDbFilename=|DataDirectory|GeoDatabase.mdf;Integrated Security=True;User Instance=True";
-        ///		int count = SharpMap.Data.Providers.MsSql.CreateDataTable(shp, tablename, connstr);
+        ///		string connstr = @"Data Source=|DataDirectory|GeoDatabase.sqlite;Version=3";
+        ///		int count = SharpMap.Data.Providers.SqlLite.CreateDataTable(shp, tablename, connstr);
         ///		MessageBox.Show("Uploaded " + count.ToString() + " features to datatable '" + tablename + "'");
         ///	}
         /// </code>

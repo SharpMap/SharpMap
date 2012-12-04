@@ -53,7 +53,7 @@ namespace SharpMap.Data.Providers
     [Serializable]
     public class Oracle : BaseProvider
     {
-        private string _defintionQuery;
+        private string _definitionQuery;
         private string _geometryColumn;
         private string _objectIdColumn;
         private string _table;
@@ -145,8 +145,8 @@ namespace SharpMap.Data.Providers
         /// </summary>
         public string DefinitionQuery
         {
-            get { return _defintionQuery; }
-            set { _defintionQuery = value; }
+            get { return _definitionQuery; }
+            set { _definitionQuery = value; }
         }
 
         #region IProvider Members
@@ -168,7 +168,7 @@ namespace SharpMap.Data.Providers
                 string strSQL = "SELECT g." + GeometryColumn + ".Get_WKB() ";
                 strSQL += " FROM " + Table + " g WHERE ";
 
-                if (!String.IsNullOrEmpty(_defintionQuery))
+                if (!String.IsNullOrEmpty(_definitionQuery))
                     strSQL += DefinitionQuery + " AND ";
 
                 strSQL += strBbox;
@@ -239,7 +239,7 @@ namespace SharpMap.Data.Providers
                 string strSQL = "SELECT g." + ObjectIdColumn + " ";
                 strSQL += "FROM " + Table + " g WHERE ";
 
-                if (!String.IsNullOrEmpty(_defintionQuery))
+                if (!String.IsNullOrEmpty(_definitionQuery))
                     strSQL += DefinitionQuery + " AND ";
 
                 strSQL += strBbox;
@@ -290,7 +290,7 @@ namespace SharpMap.Data.Providers
                 string strSQL = "SELECT g.* , g." + GeometryColumn + ").Get_WKB() As sharpmap_tempgeometry FROM " +
                                 Table + " g WHERE ";
 
-                if (!String.IsNullOrEmpty(_defintionQuery))
+                if (!String.IsNullOrEmpty(_definitionQuery))
                     strSQL += DefinitionQuery + " AND ";
 
                 strSQL += strGeom;
@@ -330,7 +330,7 @@ namespace SharpMap.Data.Providers
             using (var conn = new OracleConnection(ConnectionString))
             {
                 string strSQL = "SELECT COUNT(*) FROM " + Table;
-                if (!String.IsNullOrEmpty(_defintionQuery))
+                if (!String.IsNullOrEmpty(_definitionQuery))
                     strSQL += " WHERE " + DefinitionQuery;
                 using (var command = new OracleCommand(strSQL, conn))
                 {
@@ -425,7 +425,7 @@ namespace SharpMap.Data.Providers
             using (var conn = new OracleConnection(ConnectionString))
             {
                 string strSQL = "SELECT SDO_AGGR_MBR(g." + GeometryColumn + ").Get_WKT() FROM " + Table + " g ";
-                if (!String.IsNullOrEmpty(_defintionQuery))
+                if (!String.IsNullOrEmpty(_definitionQuery))
                     strSQL += " WHERE " + DefinitionQuery;
                 using (var command = new OracleCommand(strSQL, conn))
                 {
@@ -508,7 +508,7 @@ namespace SharpMap.Data.Providers
                 var strSQL = "SELECT g.*, g." + GeometryColumn + ".Get_WKB() AS sharpmap_tempgeometry ";
                 strSQL += "FROM " + Table + " g WHERE ";
 
-                if (!String.IsNullOrEmpty(_defintionQuery))
+                if (!String.IsNullOrEmpty(_definitionQuery))
                     strSQL += DefinitionQuery + " AND ";
 
                 strSQL += strBbox;
@@ -547,7 +547,7 @@ namespace SharpMap.Data.Providers
         /// </summary>
         /// <param name="bbox"></param>
         /// <returns></returns>
-        private string GetBoxFilterStr(BoundingBox bbox)
+        protected string GetBoxFilterStr(BoundingBox bbox)
         {
             string strBbox = "SDO_FILTER(g." + GeometryColumn + ", mdsys.sdo_geometry(2003,#SRID#,NULL," +
                              "mdsys.sdo_elem_info_array(1,1003,3)," +
