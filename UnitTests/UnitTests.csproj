@@ -143,6 +143,7 @@
     <Compile Include="Serialization\SurrogatesTest.cs" />
     <Compile Include="TestData\CreatingData.cs" />
     <Compile Include="TestWmsCapabilityParser.cs" />
+    <Compile Include="WFS\RequestValidationTest.cs" />
     <Compile Include="WMS\Encoding.cs" />
   </ItemGroup>
   <ItemGroup>

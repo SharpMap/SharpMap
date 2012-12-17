@@ -84,13 +84,16 @@ namespace SharpMap.Utilities.Wfs
             filterBuilder.Append("%3CBBOX%3E%3CPropertyName%3E");
             filterBuilder.Append(qualification);
             filterBuilder.Append(featureTypeInfo.Geometry._GeometryName);
-            filterBuilder.Append("%3C/PropertyName%3E%3Cgml:Box%20srsName='EPSG:" + featureTypeInfo.SRID + "'%3E");
-            filterBuilder.Append("%3Cgml:coordinates%3E");
-            filterBuilder.Append(XmlConvert.ToString(boundingBox.MinX) + ",");
-            filterBuilder.Append(XmlConvert.ToString(boundingBox.MinY) + "%20");
-            filterBuilder.Append(XmlConvert.ToString(boundingBox.MaxX) + ",");
+            filterBuilder.Append("%3C/PropertyName%3E%3Cgml:Envelope%20srsName='EPSG:" + featureTypeInfo.SRID + "'%3E");
+            filterBuilder.Append("%3Cgml:lowerCorner%3E");
+            filterBuilder.Append(XmlConvert.ToString(boundingBox.MinX) + "%20");
+            filterBuilder.Append(XmlConvert.ToString(boundingBox.MinY));
+            filterBuilder.Append("%3C/gml:lowerCorner%3E");
+            filterBuilder.Append("%3Cgml:upperCorner%3E");
+            filterBuilder.Append(XmlConvert.ToString(boundingBox.MaxX) + "%20");
             filterBuilder.Append(XmlConvert.ToString(boundingBox.MaxY));
-            filterBuilder.Append("%3C/gml:coordinates%3E%3C/gml:Box%3E%3C/BBOX%3E");
+            filterBuilder.Append("%3C/gml:upperCorner%3E");
+            filterBuilder.Append("%3C/gml:Envelope%3E%3C/BBOX%3E");
             filterBuilder.Append(filterString);
             if (filter != null)
             {

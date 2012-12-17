@@ -53,6 +53,7 @@ namespace SharpMap.Utilities.Wfs
                                   FeatureDataTable labelInfo)
         {
             _FeatureTypeInfo = featureTypeInfo;
+            Factory = featureTypeInfo.Factory;
             _HttpClientUtil = httpClientUtil;
             createReader(httpClientUtil);
 
@@ -83,6 +84,7 @@ namespace SharpMap.Utilities.Wfs
         protected GeometryFactory(XmlReader xmlReader, WfsFeatureTypeInfo featureTypeInfo)
         {
             _FeatureTypeInfo = featureTypeInfo;
+            Factory = featureTypeInfo.Factory;
             _XmlReader = xmlReader;
             initializePathNodes();
             initializeSeparators();
