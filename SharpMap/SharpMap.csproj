@@ -221,7 +221,9 @@
     <Compile Include="Utilities\LeastSquaresTransform.cs" />
     <Compile Include="Utilities\LineOffset.cs" />
     <Compile Include="Utilities\Providers.cs" />
+    <Compile Include="Utilities\Surrogates.Helper.cs" />
     <Compile Include="Utilities\Surrogates.cs" />
+    <Compile Include="Utilities\Surrogates.Brushes.cs" />
     <Compile Include="Utilities\Transform.cs" />
     <Compile Include="Utilities\Version.cs" />
     <Compile Include="Utilities\Wfs\FeatureTypeInfo.cs" />
@@ -231,6 +233,7 @@
     <Compile Include="Utilities\Wfs\IXPathQueryManager.cs" />
     <Compile Include="Utilities\Wfs\OGCFilter_FE1_1_0.cs" />
     <Compile Include="Utilities\Wfs\PathNode.cs" />
+    <Compile Include="Utilities\ReflectionUtility.cs" />
     <Compile Include="Utilities\Wfs\WFS1_0_0_XPathTextResources.cs" />
     <Compile Include="Utilities\Wfs\WFS1_1_0_XPathTextResources.cs" />
     <Compile Include="Utilities\Wfs\WFS_1_0_0_TextResources.cs" />

@@ -58,8 +58,9 @@ namespace SharpMap.Data.Providers
     /// </remarks>
     public class GeometryFeatureProvider : FilterProvider, IProvider
     {
+        private readonly object _featuresLock = new object();
         private readonly FeatureDataTable _features;
-        private int _SRID = -1;
+        private int _srid = -1;
 
         #region constructors
 
@@ -115,7 +116,13 @@ namespace SharpMap.Data.Providers
         /// </summary>
         public FeatureDataTable Features
         {
-            get { return _features; }
+            get
+            {
+                lock (_features)
+                {
+                    return _features;
+                }
+            }
         }
 
         #region IProvider Members
@@ -129,14 +136,43 @@ namespace SharpMap.Data.Providers
         {
             var list = new Collection<IGeometry>();
 
-            foreach (FeatureDataRow fdr in _features.Rows)
-                if (!fdr.Geometry.IsEmpty)
-                    if (FilterDelegate == null || FilterDelegate(fdr))
-                    {
-                        if (bbox.Intersects(fdr.Geometry.EnvelopeInternal))
-                            list.Add(fdr.Geometry);
-                    }
+            lock (_features)
+            {
+                foreach (FeatureDataRow fdr in _features.Rows)
+                    if (!fdr.Geometry.IsEmpty)
+                        if (FilterDelegate == null || FilterDelegate(fdr))
+                        {
+                            if (bbox.Intersects(fdr.Geometry.EnvelopeInternal))
+                                list.Add(fdr.Geometry);
+                        }
+            }
             return list;
+        }
+
+        private IEnumerable<KeyValuePair<uint, FeatureDataRow>> EnumerateFeatures(Envelope bbox)
+        {
+            lock (_featuresLock)
+            {
+                uint id = 0;
+                if (FilterDelegate == null)
+                    foreach (FeatureDataRow feature in _features.Rows)
+                    {
+                        var geom = feature.Geometry;
+                        var testBox = geom != null ? geom.EnvelopeInternal : new Envelope(bbox);
+                        if (bbox.Intersects(testBox))
+                            yield return new KeyValuePair<uint, FeatureDataRow>(id, feature);
+                        id++;
+                    }
+                else
+                    foreach (FeatureDataRow feature in _features.Rows)
+                    {
+                        var geom = feature.Geometry;
+                        var testBox = geom != null ? geom.EnvelopeInternal : new Envelope(bbox);
+                        if (bbox.Intersects(testBox) && FilterDelegate(feature))
+                            yield return new KeyValuePair<uint, FeatureDataRow>(id, feature);
+                        id++;
+                    }
+            }
         }
 
         /// <summary>
@@ -147,17 +183,10 @@ namespace SharpMap.Data.Providers
         public Collection<uint> GetObjectIDsInView(Envelope bbox)
         {
             var list = new Collection<uint>();
-            uint i = 0;
-            foreach (FeatureDataRow fdr in _features.Rows)
-            {
-                i++;
-                if (!fdr.Geometry.IsEmpty)
-                    if (FilterDelegate == null || FilterDelegate(fdr))
-                    {
-                        if (bbox.Intersects(fdr.Geometry.EnvelopeInternal))
-                            list.Add(i);
-                    }
-            }
+
+            foreach (var idFeature in EnumerateFeatures(bbox))
+                list.Add(idFeature.Key);
+
             return list;
         }
 
@@ -168,7 +197,10 @@ namespace SharpMap.Data.Providers
         /// <returns>geometry</returns>
         public IGeometry GetGeometryByID(uint oid)
         {
-            return ((FeatureDataRow)_features.Rows[(int)oid]).Geometry;
+            lock (_featuresLock)
+            {
+                return ((FeatureDataRow)_features.Rows[(int)oid]).Geometry;
+            }
         }
 
         /// <summary>
@@ -178,18 +210,24 @@ namespace SharpMap.Data.Providers
         /// <param name="ds">FeatureDataSet to fill data into</param>
         public void ExecuteIntersectionQuery(IGeometry geom, FeatureDataSet ds)
         {
-            var fdt = new FeatureDataTable();
-            fdt = _features.Clone();
+            FeatureDataTable fdt;
+            lock (_featuresLock)
+                fdt = _features.Clone();
 
-            foreach (FeatureDataRow fdr in _features)
-                if (FilterDelegate == null || FilterDelegate(fdr))
+            fdt.BeginLoadData();
+            var pg = new NetTopologySuite.Geometries.Prepared.PreparedGeometryFactory().Create(geom);
+            foreach (var idFeature in EnumerateFeatures(geom.EnvelopeInternal))
+            {
+                var fdr = idFeature.Value;
+                if (pg.Intersects(fdr.Geometry))
                 {
-                    if (fdr.Geometry.EnvelopeInternal.Intersects(geom.EnvelopeInternal))
-                    {
-                        fdt.LoadDataRow(fdr.ItemArray, false);
-                        ((FeatureDataRow)fdt.Rows[fdt.Rows.Count - 1]).Geometry = fdr.Geometry;
-                    }
+                    fdt.LoadDataRow(fdr.ItemArray, true);
+                    var tmpGeom = fdr.Geometry;
+                    if (tmpGeom != null)
+                        ((FeatureDataRow)fdt.Rows[fdt.Rows.Count - 1]).Geometry = (IGeometry)tmpGeom.Clone();
                 }
+            }
+            fdt.EndLoadData();
 
             ds.Tables.Add(fdt);
         }
@@ -201,21 +239,20 @@ namespace SharpMap.Data.Providers
         /// <param name="ds">FeatureDataSet to fill data into</param>
         public void ExecuteIntersectionQuery(Envelope box, FeatureDataSet ds)
         {
-            var fdt = new FeatureDataTable();
-            fdt = _features.Clone();
+            FeatureDataTable fdt;
+            lock (_featuresLock)
+                fdt = _features.Clone();
 
-            foreach (FeatureDataRow fdr in _features)
-                if (fdr.Geometry != null)
-                {
-                    if (FilterDelegate == null || FilterDelegate(fdr))
-                    {
-                        if (fdr.Geometry.EnvelopeInternal.Intersects(box))
-                        {                        
-                            fdt.LoadDataRow(fdr.ItemArray, false);
-                            (fdt.Rows[fdt.Rows.Count - 1] as FeatureDataRow).Geometry = fdr.Geometry;
-                        }
-                    }
-                }
+            fdt.BeginLoadData();
+            foreach (var idFeature in EnumerateFeatures(box))
+            {
+                var fdr = idFeature.Value;
+                fdt.LoadDataRow(fdr.ItemArray, false);
+                var geom =  fdr.Geometry;
+                if (geom != null)
+                    ((FeatureDataRow)fdt.Rows[fdt.Rows.Count - 1]).Geometry = (IGeometry)geom.Clone();
+            }
+            fdt.EndLoadData();
 
             ds.Tables.Add(fdt);
         }
@@ -226,18 +263,24 @@ namespace SharpMap.Data.Providers
         /// <returns>number of features</returns>
         public int GetFeatureCount()
         {
-            return _features.Rows.Count;
+            lock(_featuresLock)
+                return _features.Rows.Count;
         }
 
         /// <summary>
-        /// Throws an NotSupportedException. Attribute data is not supported by this datasource
+        /// Gets a specific feature from the data source by its <paramref name="rowId"/>
         /// </summary>
-        /// <param name="rowId"></param>
-        /// <returns></returns>
+        /// <param name="rowId">The id of the row</param>
+        /// <returns>A feature data row</returns>
         public FeatureDataRow GetFeature(uint rowId)
         {
-            if (FilterDelegate == null || FilterDelegate(_features[(int) rowId]))
-                return _features[(int) rowId];
+            lock (_featuresLock)
+            {
+                if (rowId > _features.Rows.Count)
+                    return null;
+                if (FilterDelegate != null && FilterDelegate(_features[(int) rowId]))
+                    return _features[(int) rowId];
+            }
 
             return null;
         }
@@ -248,15 +291,19 @@ namespace SharpMap.Data.Providers
         /// <returns>boundingbox</returns>
         public Envelope GetExtents()
         {
-            if (_features.Rows.Count == 0)
-                return null;
-            var box = new Envelope();
+            lock (_featuresLock)
+            {
+                if (_features.Rows.Count == 0)
+                    return null;
+                var box = new Envelope();
 
-            foreach (FeatureDataRow fdr in _features.Rows)
-                if (fdr.Geometry != null && !fdr.Geometry.IsEmpty)
-                    box.ExpandToInclude(fdr.Geometry.EnvelopeInternal);
-
-            return box;
+                foreach (FeatureDataRow fdr in _features.Rows)
+                {
+                    if (fdr.Geometry != null && !fdr.Geometry.IsEmpty)
+                        box.ExpandToInclude(fdr.Geometry.EnvelopeInternal);
+                }
+                return box;
+            }
         }
 
         /// <summary>
@@ -300,8 +347,8 @@ namespace SharpMap.Data.Providers
         /// </summary>
         public int SRID
         {
-            get { return _SRID; }
-            set { _SRID = value; }
+            get { return _srid; }
+            set { _srid = value; }
         }
 
         /// <summary>

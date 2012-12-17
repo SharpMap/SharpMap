@@ -247,17 +247,17 @@ namespace SharpMap.Layers
         private void GetTileOnThread(object parameter)
         {
             object[] parameters = (object[])parameter;
-            if (parameters.Length != 4) throw new ArgumentException("Three parameters expected");
+            if (parameters.Length != 5) throw new ArgumentException("Five parameters expected");
             ITileProvider tileProvider = (ITileProvider)parameters[0];
             TileInfo tileInfo = (TileInfo)parameters[1];
             MemoryCache<Bitmap> bitmaps = (MemoryCache<Bitmap>)parameters[2];
             AutoResetEvent autoResetEvent = (AutoResetEvent)parameters[3];
-            
+            bool retry = (bool) parameters[4];
 
-            byte[] bytes;
+            var setEvent = true;
             try
             {
-                bytes = tileProvider.GetTile(tileInfo);
+                byte[] bytes = tileProvider.GetTile(tileInfo);
                 Bitmap bitmap = new Bitmap(new MemoryStream(bytes));
                 bitmaps.Add(tileInfo.Index, bitmap);
                 if (_fileCache != null)
@@ -267,6 +267,12 @@ namespace SharpMap.Layers
             }
             catch (WebException ex)
             {
+                if (retry)
+                {
+                    GetTileOnThread(new object[] { tileProvider, tileInfo, bitmaps, autoResetEvent, false });
+                    setEvent = false;
+                    return;
+                }
                 if (_showErrorInTile)
                 {
                     //an issue with this method is that one an error tile is in the memory cache it will stay even
@@ -287,7 +293,7 @@ namespace SharpMap.Layers
             }
             finally
             {
-                autoResetEvent.Set();
+                if (setEvent) autoResetEvent.Set();
             }
         }
 

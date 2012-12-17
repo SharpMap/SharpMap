@@ -140,6 +140,7 @@
     <Compile Include="Rendering\Symbolizer\PolygonSymbolizerTest.cs" />
     <Compile Include="Rendering\Thematics\ColorBlendTest.cs" />
     <Compile Include="Serialization\MapDocSerializationTests.cs" />
+    <Compile Include="Serialization\SurrogatesTest.cs" />
     <Compile Include="TestData\CreatingData.cs" />
     <Compile Include="TestWmsCapabilityParser.cs" />
     <Compile Include="WMS\Encoding.cs" />
