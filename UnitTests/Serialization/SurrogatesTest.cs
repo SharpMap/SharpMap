@@ -1,33 +1,11 @@
 ﻿using System.Drawing;
 using System.Drawing.Drawing2D;
-using System.IO;
-using System.Runtime.Serialization;
-using System.Runtime.Serialization.Formatters.Binary;
 using NUnit.Framework;
 
 namespace UnitTests.Serialization
 {
-    public class SurrogatesTest
+    public class SurrogatesTest : BaseSerializationTest
     {
-        private static T SandD<T>(T input, IFormatter formatter)
-        {
-            using (var ms = new MemoryStream())
-            {
-                formatter.Serialize(ms, input);
-                ms.Seek(0, SeekOrigin.Begin);
-                return (T) formatter.Deserialize(ms);
-            }
-        }
-
-        private static IFormatter GetFormatter()
-        {
-            var formatter = new BinaryFormatter();
-            if (formatter.SurrogateSelector == null)
-                formatter.SurrogateSelector = new SurrogateSelector();
-            formatter.SurrogateSelector.ChainSelector(SharpMap.Utilities.Surrogates.GetSurrogateSelectors());
-            return formatter;
-        }
-
         [Test]
         public void TestPen()
         {

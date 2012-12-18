@@ -40,6 +40,7 @@ namespace SharpMap
     /// <example>
     /// Creating a new map instance, adding layers and rendering the map:
     /// </example>
+    [Serializable]
     public class Map : IDisposable
     {
         readonly ILog _logger = LogManager.GetLogger(typeof(Map));
@@ -80,7 +81,6 @@ namespace SharpMap
             Size = size;
             _layers = new LayerCollection();
             _backgroundLayers = new LayerCollection();
-            _backgroundLayers.ListChanged += HandleLayersCollectionChanged;
             _variableLayers = new VariableLayerCollection(_layers);
             BackColor = Color.Transparent;
             _MaximumZoom = double.MaxValue;
@@ -91,8 +91,18 @@ namespace SharpMap
             _Zoom = 1;
             _PixelAspectRatio = 1.0;
 
+            WireEvents();
+
             if (_logger.IsDebugEnabled)
                 _logger.DebugFormat("Map initialized with size {0},{1}", size.Width, size.Height);
+        }
+
+        /// <summary>
+        /// Wires the events
+        /// </summary>
+        private void WireEvents()
+        {
+            _backgroundLayers.ListChanged += HandleLayersCollectionChanged;
         }
 
         /// <summary>

@@ -17,6 +17,7 @@
 
 using System;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Reflection;
 using GeoAPI.Geometries;
 using SharpMap.Rendering.Symbolizer;
@@ -304,6 +305,165 @@ namespace SharpMap.Styles
                 _symbol = null;
             }
             base.ReleaseManagedResources();
+        }
+
+        /// <summary>
+        /// Utility function to create a random style
+        /// </summary>
+        /// <returns>A vector style</returns>
+        public static VectorStyle CreateRandomStyle()
+        {
+            var res = new VectorStyle();
+            RandomizePuntalStyle(res);
+            RandomizeLinealStyle(res);
+            RandomizePolygonalStyle(res);
+            return res;
+        }
+
+        /// <summary>
+        /// Factory method to create a random puntal style
+        /// </summary>
+        /// <returns>A puntal vector style</returns>
+        public static VectorStyle CreateRandomPuntalStyle()
+        {
+            var res = new VectorStyle();
+            ClearLinealStyle(res);
+            ClearPolygonalStyle(res);
+            RandomizePuntalStyle(res);
+            return res;
+        }
+
+        /// <summary>
+        /// Factory method to create a random puntal style
+        /// </summary>
+        /// <returns>A puntal vector style</returns>
+        public static VectorStyle CreateRandomLinealStyle()
+        {
+            var res = new VectorStyle();
+            ClearPuntalStyle(res);
+            ClearPolygonalStyle(res);
+            RandomizeLinealStyle(res);
+            return res;
+        }
+
+        /// <summary>
+        /// Factory method to create a random puntal style
+        /// </summary>
+        /// <returns>A puntal vector style</returns>
+        public static VectorStyle CreateRandomPolygonalStyle()
+        {
+            var res = new VectorStyle();
+            ClearPuntalStyle(res);
+            ClearLinealStyle(res);
+            RandomizePolygonalStyle(res);
+            return res;
+        }
+
+        /// <summary>
+        /// Utility function to modify <paramref name="style"/> in order to prevent drawing of any puntal components
+        /// </summary>
+        /// <param name="style">The style to modify</param>
+        private static void ClearPuntalStyle(VectorStyle style)
+        {
+            style.PointColor = Brushes.Transparent;
+            style.PointSize = 0f;
+            style.Symbol = null;
+            style.PointSymbolizer = null;
+        }
+
+        /// <summary>
+        /// Utility function to modify <paramref name="style"/> in order to prevent drawing of any puntal components
+        /// </summary>
+        /// <param name="style">The style to modify</param>
+        private static void ClearLinealStyle(VectorStyle style)
+        {
+            style.EnableOutline = false;
+            style.Line = Pens.Transparent;
+            style.Outline = Pens.Transparent;
+        }
+
+        /// <summary>
+        /// Utility function to modify <paramref name="style"/> in order to prevent drawing of any puntal components
+        /// </summary>
+        /// <param name="style">The style to modify</param>
+        private static void ClearPolygonalStyle(VectorStyle style)
+        {
+            style.EnableOutline = false;
+            style.Line = Pens.Transparent;
+            style.Outline = Pens.Transparent;
+            style.Fill = Brushes.Transparent;
+        }
+
+        /// <summary>
+        /// Utility function to randomize puntal settings
+        /// </summary>
+        /// <param name="res">The style to randomize</param>
+        private static void RandomizePuntalStyle(VectorStyle res)
+        {
+            var rnd = new Random();
+            switch (rnd.Next(2))
+            {
+                case 0:
+                    res.Symbol = DefaultSymbol;
+                    res.SymbolScale = 0.01f * new Random().Next(80, 200);
+                    break;
+                case 1:
+                    res.Symbol = null;
+                    res.PointColor = new SolidBrush(CreateRandomKnownColor(new Random().Next(67, 256)));
+                    res.PointSize = 0.1f*rnd.Next(5, 20);
+                    break;
+            }
+        }
+
+        /// <summary>
+        /// Utility function to randomize lineal settings
+        /// </summary>
+        /// <param name="res">The style to randomize</param>
+        private static void RandomizeLinealStyle(VectorStyle res)
+        {
+            var rnd = new Random();
+            
+            res.Line = new Pen(CreateRandomKnownColor(rnd.Next(67,256)), rnd.Next(1, 3));
+            res.EnableOutline = rnd.Next(0, 2) == 1;
+            if (res.EnableOutline)
+                res.Outline = new Pen(CreateRandomKnownColor(rnd.Next(67, 256)), rnd.Next((int) res.Line.Width, 5));
+        }
+
+        /// <summary>
+        /// Utility function to randomize polygonal settings
+        /// </summary>
+        /// <param name="res"></param>
+        private static void RandomizePolygonalStyle(VectorStyle res)
+        {
+            var rnd = new Random();
+            switch (rnd.Next(3))
+            {
+                case 0:
+                    res.Fill = new SolidBrush(CreateRandomKnownColor(rnd.Next(67, 256)));
+                    break;
+                case 1:
+                    res.Fill = new HatchBrush((HatchStyle)rnd.Next(0, 53),
+                        CreateRandomKnownColor(), CreateRandomKnownColor(rnd.Next(67,256)));
+                    break;
+                case 2:
+                    var alpha = rnd.Next(67, 256);
+                    res.Fill = new LinearGradientBrush(new Point(0, 0), new Point(rnd.Next(5, 10), rnd.Next(5, 10)),
+                        CreateRandomKnownColor(alpha), CreateRandomKnownColor(alpha));
+                    break;
+            }
+        }
+
+        /// <summary>
+        /// Factory method to create a random color from the <see cref="KnownColor"/>s enumeration
+        /// </summary>
+        /// <param name="alpha">An optional alpha value.</param>
+        /// <returns></returns>
+        public static Color CreateRandomKnownColor(int alpha = 255)
+        {
+            var kc = (KnownColor) new Random().Next(28, 168);
+            return alpha == 255 
+                ? Color.FromKnownColor(kc) 
+                : Color.FromArgb(alpha, Color.FromKnownColor(kc));
         }
     }
 }
