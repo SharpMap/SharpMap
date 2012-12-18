@@ -1,5 +1,5 @@
 <%@ Page Language="C#" MasterPageFile="~/MasterPage.master" AutoEventWireup="true" CodeFile="Ajax.aspx.cs" Inherits="Ajax" Title="AJAX map" %>
-<%@ Register TagPrefix="smap" Namespace="SharpMap.Web.UI.Ajax" Assembly="SharpMap.UI" %>
+<%@ Register TagPrefix="smap" Namespace="SharpMap.Web.UI.Ajax" Assembly="SharpMap.Web" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContent" Runat="Server">
 
 <div style="background-color: #fff; color:#000;">
