@@ -37,6 +37,7 @@ namespace SharpMap.Data.Providers
     /// Spatialite is a spatial extension for the popular SQLite database engine.
     /// </para>
     /// </summary>
+    [Serializable]
     public class ManagedSpatiaLite : BaseProvider
     {
         static ILog logger = LogManager.GetLogger(typeof(ManagedSpatiaLite));
