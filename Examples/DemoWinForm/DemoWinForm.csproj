@@ -121,7 +121,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\SharpMap.UI\SharpMap.UI.csproj">
-      <Project>{DD1CC1DB-4BF9-4C88-A100-733D84795F3A}</Project>
+      <Project>{dd1cc1db-4bf9-4c88-a100-733d84795f3a}</Project>
       <Name>SharpMap.UI</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\SharpMap\SharpMap.csproj">

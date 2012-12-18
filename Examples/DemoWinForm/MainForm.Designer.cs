@@ -109,7 +109,6 @@ namespace DemoWinForm
             this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.Panel2.SuspendLayout();
             this.splitContainer2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.MainMapImage)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.FeaturesDataGridView)).BeginInit();
             this.MainToolStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer4)).BeginInit();
@@ -614,7 +613,6 @@ namespace DemoWinForm
             this.splitContainer2.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
             this.splitContainer2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.MainMapImage)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.FeaturesDataGridView)).EndInit();
             this.MainToolStrip.ResumeLayout(false);
             this.MainToolStrip.PerformLayout();

@@ -268,7 +268,7 @@ namespace DemoWinForm
             ZoomInModeToolStripButton.Checked = (tool == MapBox.Tools.ZoomIn);
             ZoomOutModeToolStripButton.Checked = (tool == MapBox.Tools.ZoomOut);
             PanToolStripButton.Checked = (tool == MapBox.Tools.Pan);
-            QueryModeToolStripButton.Checked = (tool == MapBox.Tools.Query);
+            QueryModeToolStripButton.Checked = (tool == MapBox.Tools.QueryBox);
         }
 
         private object getLayerTypeIcon(Type type)
@@ -365,7 +365,7 @@ namespace DemoWinForm
 
         private void QueryModeToolStripButton_Click(object sender, EventArgs e)
         {
-            BeginInvoke((MethodInvoker)delegate { changeMode(MapBox.Tools.Query); });
+            BeginInvoke((MethodInvoker)delegate { changeMode(MapBox.Tools.QueryBox); });
         }
 
         private void ZoomInModeToolStripButton_Click(object sender, EventArgs e)
