@@ -1236,6 +1236,9 @@ namespace SharpMap.Forms
 
             if (_map != null)
             {
+                //If zoomToPointer is set, we first need to center the map around the mouse-location
+                //Then Zoom in the map
+                //Then pan the map back to it's original shift to have it still centered simultanously
                 if (_zoomToPointer)
                     _map.Center = _map.ImageToWorld(new PointF(e.X, e.Y), true);
 
@@ -1244,17 +1247,18 @@ namespace SharpMap.Forms
 
                 _map.Zoom *= Math.Pow(scaleBase, scale);
 
+                //If zoomtoPointer, move the map back to MousePointer is over same place
                 if (_zoomToPointer)
                 {
                     var newCenterX = (Width/2f) + (Width/2f - e.X);
                     var newCenterY = (Height/2f) + (Height/2f - e.Y);
 
                     var newCenter = _map.ImageToWorld(new PointF(newCenterX, newCenterY), true);
-                    if (!newCenter.Equals(_map.Center))
+                    bool centerChanged = !newCenter.Equals(_map.Center);
+                    _map.Center = newCenter;
+                    if (centerChanged && MapCenterChanged != null)
                     {
-                        _map.Center = newCenter;
-                        if (MapCenterChanged != null)
-                            MapCenterChanged(newCenter);
+                        MapCenterChanged(_map.Center);
                     }
                 }
 
