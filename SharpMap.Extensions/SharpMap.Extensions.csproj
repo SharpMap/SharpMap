@@ -134,7 +134,6 @@
     <Compile Include="Data\Providers\SpatiaLiteIndex.cs" />
     <Compile Include="Data\Providers\SqlLite.cs" />
     <Compile Include="GdalConfiguration.cs" />
-    <Compile Include="GdalNativeConfiguration.cs" />
     <Compile Include="Layers\GdalRasterLayer.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -154,8 +153,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="GdalConfiguration.vb" />
-    <Content Include="GdalNativeConfiguration.vb" />
     <Content Include="x64\SQLite.Interop.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

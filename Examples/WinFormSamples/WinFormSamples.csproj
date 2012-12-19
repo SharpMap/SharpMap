@@ -164,7 +164,6 @@
     <Compile Include="FormMovingObjectOverTileLayer.Designer.cs">
       <DependentUpon>FormMovingObjectOverTileLayer.cs</DependentUpon>
     </Compile>
-    <Compile Include="GdalNativeConfiguration.cs" />
     <Compile Include="LayerTools.cs" />
     <Compile Include="Samples\CreateTilesSample.cs" />
     <Compile Include="Samples\GdalSample.cs" />
@@ -343,7 +342,6 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
-    <Content Include="GdalNativeConfiguration.vb" />
     <Content Include="GeoData\GeoTiff\world_raster_mod.tif">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

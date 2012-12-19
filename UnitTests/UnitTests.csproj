@@ -126,7 +126,6 @@
     <Compile Include="Data\Providers\MsSqlServerSpatialTests.cs" />
     <Compile Include="Data\Providers\ShapeFileProviderTests.cs" />
     <Compile Include="Data\Providers\SQLServer2008Tests.cs" />
-    <Compile Include="GdalNativeConfiguration.cs" />
     <Compile Include="MapDecorationTest.cs" />
     <Compile Include="MapTest.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
@@ -213,9 +212,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Women.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="GdalNativeConfiguration.vb" />
   </ItemGroup>
   <PropertyGroup>
     <PreBuildEvent>"$(SolutionDir)BuildTools\nuget.exe" install "$(ProjectDir)packages.config" -o "$(SolutionDir)Packages"</PreBuildEvent>

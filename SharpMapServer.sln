@@ -5,6 +5,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpMap", "SharpMap\SharpM
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpMapServer", "SharpMapServer\SharpMapServer.csproj", "{FCA0E48D-9803-4F63-BA14-AB8F8810709B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpMap.Web", "SharpMap.Web\SharpMap.Web.csproj", "{292EF671-4063-4952-8DE0-423DF72A0950}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -29,6 +31,14 @@ Global
 		{FCA0E48D-9803-4F63-BA14-AB8F8810709B}.Release|Any CPU.Build.0 = Release|Any CPU
 		{FCA0E48D-9803-4F63-BA14-AB8F8810709B}.ReleaseDSProjection|Any CPU.ActiveCfg = Release|Any CPU
 		{FCA0E48D-9803-4F63-BA14-AB8F8810709B}.ReleaseDSProjection|Any CPU.Build.0 = Release|Any CPU
+		{292EF671-4063-4952-8DE0-423DF72A0950}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{292EF671-4063-4952-8DE0-423DF72A0950}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{292EF671-4063-4952-8DE0-423DF72A0950}.DebugDSProjection|Any CPU.ActiveCfg = DebugDSProjection|Any CPU
+		{292EF671-4063-4952-8DE0-423DF72A0950}.DebugDSProjection|Any CPU.Build.0 = DebugDSProjection|Any CPU
+		{292EF671-4063-4952-8DE0-423DF72A0950}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{292EF671-4063-4952-8DE0-423DF72A0950}.Release|Any CPU.Build.0 = Release|Any CPU
+		{292EF671-4063-4952-8DE0-423DF72A0950}.ReleaseDSProjection|Any CPU.ActiveCfg = ReleaseDSProjection|Any CPU
+		{292EF671-4063-4952-8DE0-423DF72A0950}.ReleaseDSProjection|Any CPU.Build.0 = ReleaseDSProjection|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

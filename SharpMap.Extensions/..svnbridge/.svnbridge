@@ -18,4 +18,13 @@ GdalNativeConfiguration.cs
 GdalNativeConfiguration.vb
 x64
 x86
+</Value></Property><Property><Name>svn:ignore</Name><Value>[Bb]in
+obj
+[Dd]ebug
+[Rr]elease
+*.user
+*.aps
+*.eto
+x64
+x86
 </Value></Property></Properties></ItemProperties>
