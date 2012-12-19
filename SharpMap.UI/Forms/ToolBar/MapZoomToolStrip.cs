@@ -19,6 +19,8 @@ namespace SharpMap.Forms.ToolBar
         public MapZoomToolStrip()
             :base()
         {
+            InitializeComponent();
+
             _predefinedScales.Items.AddRange(new string[] {"1:100", "1:250", "1:500", "1:1000", "1:2500", "1:5000", 
                 "1:10000", "1:25000", "1:50000", "1:100000"});
         }
@@ -26,11 +28,13 @@ namespace SharpMap.Forms.ToolBar
         public MapZoomToolStrip(IContainer container)
             :base(container)
         {
+            InitializeComponent();
+
             _predefinedScales.Items.AddRange(new string[] {"1:100", "1:250", "1:500", "1:1000", "1:2500", "1:5000", 
                 "1:10000", "1:25000", "1:50000", "1:100000"});
         }
 
-        protected override void InitializeComponent()
+        public void InitializeComponent()
         {
             this._zoomToExtents = new System.Windows.Forms.ToolStripButton();
             this._fixedZoomIn = new System.Windows.Forms.ToolStripButton();

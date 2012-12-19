@@ -89,6 +89,9 @@
     <Compile Include="Forms\MapBox.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Forms\MapImage.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Forms\ToolBar\MapDigitizeGeometriesToolStrip.cs">
       <SubType>Component</SubType>
     </Compile>

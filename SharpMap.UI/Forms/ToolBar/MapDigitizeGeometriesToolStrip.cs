@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
@@ -14,6 +15,18 @@ namespace SharpMap.Forms.ToolBar
     public class MapDigitizeGeometriesToolStrip : MapToolStrip
     {
         private static readonly Common.Logging.ILog Logger = Common.Logging.LogManager.GetCurrentClassLogger();
+
+        public MapDigitizeGeometriesToolStrip()
+            :base()
+        {
+            InitializeComponent();
+        }
+
+        public MapDigitizeGeometriesToolStrip(IContainer container)
+            : base(container)
+        {
+            InitializeComponent();
+        }
 
         private System.Windows.Forms.ToolStripButton _clear;
         private System.Windows.Forms.ToolStripSeparator _sep1;
@@ -30,7 +43,7 @@ namespace SharpMap.Forms.ToolBar
         private SharpMap.Data.Providers.GeometryProvider _geometryProvider;
         private SharpMap.Layers.VectorLayer _layer;
 
-        protected override void InitializeComponent()
+        public void InitializeComponent()
         {
             this.SuspendLayout();
 

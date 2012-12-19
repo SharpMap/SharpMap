@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
 using Common.Logging;
 
 namespace SharpMap.Forms
@@ -27,22 +24,14 @@ namespace SharpMap.Forms
 
         protected MapToolStrip()
         {
-            InitializeComponent();
-            AllowDrop = false;
             Enabled = false;
-
         }
 
         protected MapToolStrip(IContainer container)
         {
             container.Add(this);
-
-            InitializeComponent();
-            AllowDrop = false;
             Enabled = false;
         }
-
-        protected virtual void InitializeComponent() { }
 
         /// <summary>
         /// Gets or sets the control whose properties are currently being managed.
@@ -119,8 +108,7 @@ namespace SharpMap.Forms
         {
             var isChecked = btn.Checked;
 
-            System.Diagnostics.Debug.WriteLine(
-                string.Format("Trying to {0} active tool '{1}' by {2}.", isChecked ? "set" : "unset", associtatedTool, btn.Name));
+            Debug.WriteLine("Trying to {0} active tool '{1}' by {2}.", isChecked ? "set" : "unset", associtatedTool, btn.Name);
             //if (Logger.IsDebugEnabled)
             //  Logger.DebugFormat("Trying to {0} active tool '{1}' by ", isChecked ? "set" : "unset", associtatedTool, btn.Name);
 

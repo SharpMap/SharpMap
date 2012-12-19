@@ -1,33 +1,42 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 
 namespace SharpMap.Forms.ToolBar
 {
     using System.ComponentModel;
 
-    [System.ComponentModel.DesignTimeVisible(true)]
+    [DesignTimeVisible(true)]
     public class MapQueryToolStrip : MapToolStrip
     {
+        public MapQueryToolStrip()
+            :base()
+        {
+            InitializeComponent();
+        }
+
+        public MapQueryToolStrip(IContainer container)
+            :base(container)
+        {
+            InitializeComponent();
+        }
 
         private static readonly Common.Logging.ILog Logger = Common.Logging.LogManager.GetCurrentClassLogger();
 
-        private System.Windows.Forms.ToolStripButton _clear;
-        private System.Windows.Forms.ToolStripSeparator _sep1;
-        private System.Windows.Forms.ToolStripButton _queryWindow;
-        private System.Windows.Forms.ToolStripButton _queryGeometry;
-        private System.Windows.Forms.ToolStripSeparator _sep2;
-        private System.Windows.Forms.ToolStripComboBox _queryLayerPicker;
+        private ToolStripButton _clear;
+        private ToolStripSeparator _sep1;
+        private ToolStripButton _queryWindow;
+        private ToolStripButton _queryGeometry;
+        private ToolStripSeparator _sep2;
+        private ToolStripComboBox _queryLayerPicker;
 
-        private SharpMap.Data.Providers.GeometryFeatureProvider _geometryProvider;
-        private SharpMap.Layers.VectorLayer _layer;
+        private Data.Providers.GeometryFeatureProvider _geometryProvider;
+        private Layers.VectorLayer _layer;
 
         private readonly Dictionary<string, int> _dictLayerNameToIndex
             = new Dictionary<string,int>();
 
-       protected override void InitializeComponent()
+        public void InitializeComponent()
         {
             this._clear = new System.Windows.Forms.ToolStripButton();
             this._sep1 = new System.Windows.Forms.ToolStripSeparator();

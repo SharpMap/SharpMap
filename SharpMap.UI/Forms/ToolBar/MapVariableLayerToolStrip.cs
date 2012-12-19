@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.ComponentModel;
 using Common.Logging;
 
 namespace SharpMap.Forms.ToolBar
@@ -15,7 +13,20 @@ namespace SharpMap.Forms.ToolBar
         private System.Windows.Forms.ToolStripTextBox _interval;
         private System.Timers.Timer _timer;
 
-        protected override void InitializeComponent()
+        public MapVariableLayerToolStrip()
+            :base()
+        {
+            InitializeComponent();
+        }
+
+        public MapVariableLayerToolStrip(IContainer container)
+            : base(container)
+        {
+            InitializeComponent();
+        }
+
+
+        public void InitializeComponent()
         {
             this.SuspendLayout();
 
