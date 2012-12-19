@@ -14,18 +14,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ExternalReferences", "Exter
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "References4SharpMap.Extensions", "References4SharpMap.Extensions", "{AFA0024B-50B7-4CA3-84DC-EC0CA7109492}"
 	ProjectSection(SolutionItems) = preProject
-		ExternalReferences\References4SharpMap.Extensions\gdal_csharp.dll = ExternalReferences\References4SharpMap.Extensions\gdal_csharp.dll
-		ExternalReferences\References4SharpMap.Extensions\GeoAPI.dll = ExternalReferences\References4SharpMap.Extensions\GeoAPI.dll
-		ExternalReferences\References4SharpMap.Extensions\Mono.Security.dll = ExternalReferences\References4SharpMap.Extensions\Mono.Security.dll
-		ExternalReferences\References4SharpMap.Extensions\Npgsql.dll = ExternalReferences\References4SharpMap.Extensions\Npgsql.dll
-		ExternalReferences\References4SharpMap.Extensions\Npgsql.xml = ExternalReferences\References4SharpMap.Extensions\Npgsql.xml
-		ExternalReferences\References4SharpMap.Extensions\ogr_csharp.dll = ExternalReferences\References4SharpMap.Extensions\ogr_csharp.dll
 		ExternalReferences\References4SharpMap.Extensions\Oracle.DataAccess.dll = ExternalReferences\References4SharpMap.Extensions\Oracle.DataAccess.dll
 		ExternalReferences\References4SharpMap.Extensions\OraOps10w.dll = ExternalReferences\References4SharpMap.Extensions\OraOps10w.dll
-		ExternalReferences\References4SharpMap.Extensions\osr_csharp.dll = ExternalReferences\References4SharpMap.Extensions\osr_csharp.dll
 		ExternalReferences\References4SharpMap.Extensions\PostgreSql.Data.PostgreSqlClient.dll = ExternalReferences\References4SharpMap.Extensions\PostgreSql.Data.PostgreSqlClient.dll
-		ExternalReferences\References4SharpMap.Extensions\System.Data.SQLite.DLL = ExternalReferences\References4SharpMap.Extensions\System.Data.SQLite.DLL
-		ExternalReferences\References4SharpMap.Extensions\System.Data.SQLite.XML = ExternalReferences\References4SharpMap.Extensions\System.Data.SQLite.XML
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpMap", "SharpMap\SharpMap.csproj", "{C83777FC-AABB-47D9-911F-D76255D4D541}"
@@ -41,22 +32,22 @@ Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "DemoWebSite", "Examples\Dem
 		SccLocalPath = ""
 		SccProvider = ""
 		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.0"
-		ProjectReferences = "{C83777FC-AABB-47D9-911F-D76255D4D541}|SharpMap.dll;{A4140C12-53F5-438C-8D24-9E48C504FECF}|SharpMap.Extensions.dll;{292ef671-4063-4952-8de0-423df72a0950}|SharpMap.Web.dll;"
+		ProjectReferences = "{C83777FC-AABB-47D9-911F-D76255D4D541}|SharpMap.dll;{A4140C12-53F5-438C-8D24-9E48C504FECF}|SharpMap.Extensions.dll;{292ef671-4063-4952-8de0-423df72a0950}|SharpMap.Web.dll;{9961698e-4ee0-4a3b-84b7-a23e69e0c13c}|SharpMap.Extensions.x86.dll;"
 		Debug.AspNetCompiler.VirtualPath = "/DemoWebSite"
 		Debug.AspNetCompiler.PhysicalPath = "Examples\DemoWebSite\"
 		Debug.AspNetCompiler.TargetPath = "Examples\PrecompiledWeb\DemoWebSite\"
 		Debug.AspNetCompiler.Updateable = "true"
 		Debug.AspNetCompiler.ForceOverwrite = "true"
-		Debug.AspNetCompiler.FixedNames = "false"
+		Debug.AspNetCompiler.FixedNames = "true"
 		Debug.AspNetCompiler.Debug = "True"
 		Release.AspNetCompiler.VirtualPath = "/DemoWebSite"
 		Release.AspNetCompiler.PhysicalPath = "Examples\DemoWebSite\"
 		Release.AspNetCompiler.TargetPath = "Examples\PrecompiledWeb\DemoWebSite\"
 		Release.AspNetCompiler.Updateable = "true"
 		Release.AspNetCompiler.ForceOverwrite = "true"
-		Release.AspNetCompiler.FixedNames = "false"
+		Release.AspNetCompiler.FixedNames = "true"
 		Release.AspNetCompiler.Debug = "False"
-		VWDPort = "57050"
+		VWDPort = "54905"
 		StartServerOnDebug = "true"
 	EndProjectSection
 EndProject
@@ -99,6 +90,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docs", "Docs", "{7F47E0CC-D
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpMap.Web", "SharpMap.Web\SharpMap.Web.csproj", "{292EF671-4063-4952-8DE0-423DF72A0950}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpMap.Extensions.x86", "SharpMap.Extensions.x86\SharpMap.Extensions.x86.csproj", "{9961698E-4EE0-4A3B-84B7-A23E69E0C13C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -359,6 +352,26 @@ Global
 		{292EF671-4063-4952-8DE0-423DF72A0950}.ReleaseDSProjection|Any CPU.Build.0 = Release|Any CPU
 		{292EF671-4063-4952-8DE0-423DF72A0950}.ReleaseDSProjection|Mixed Platforms.ActiveCfg = ReleaseDSProjection|Any CPU
 		{292EF671-4063-4952-8DE0-423DF72A0950}.ReleaseDSProjection|Mixed Platforms.Build.0 = ReleaseDSProjection|Any CPU
+		{9961698E-4EE0-4A3B-84B7-A23E69E0C13C}.Debug|.NET.ActiveCfg = Debug|Any CPU
+		{9961698E-4EE0-4A3B-84B7-A23E69E0C13C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9961698E-4EE0-4A3B-84B7-A23E69E0C13C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9961698E-4EE0-4A3B-84B7-A23E69E0C13C}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{9961698E-4EE0-4A3B-84B7-A23E69E0C13C}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{9961698E-4EE0-4A3B-84B7-A23E69E0C13C}.DebugDSProjection|.NET.ActiveCfg = Debug|Any CPU
+		{9961698E-4EE0-4A3B-84B7-A23E69E0C13C}.DebugDSProjection|Any CPU.ActiveCfg = Debug|Any CPU
+		{9961698E-4EE0-4A3B-84B7-A23E69E0C13C}.DebugDSProjection|Any CPU.Build.0 = Debug|Any CPU
+		{9961698E-4EE0-4A3B-84B7-A23E69E0C13C}.DebugDSProjection|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{9961698E-4EE0-4A3B-84B7-A23E69E0C13C}.DebugDSProjection|Mixed Platforms.Build.0 = Debug|Any CPU
+		{9961698E-4EE0-4A3B-84B7-A23E69E0C13C}.Release|.NET.ActiveCfg = Release|Any CPU
+		{9961698E-4EE0-4A3B-84B7-A23E69E0C13C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9961698E-4EE0-4A3B-84B7-A23E69E0C13C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9961698E-4EE0-4A3B-84B7-A23E69E0C13C}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{9961698E-4EE0-4A3B-84B7-A23E69E0C13C}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{9961698E-4EE0-4A3B-84B7-A23E69E0C13C}.ReleaseDSProjection|.NET.ActiveCfg = Release|Any CPU
+		{9961698E-4EE0-4A3B-84B7-A23E69E0C13C}.ReleaseDSProjection|Any CPU.ActiveCfg = Release|Any CPU
+		{9961698E-4EE0-4A3B-84B7-A23E69E0C13C}.ReleaseDSProjection|Any CPU.Build.0 = Release|Any CPU
+		{9961698E-4EE0-4A3B-84B7-A23E69E0C13C}.ReleaseDSProjection|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{9961698E-4EE0-4A3B-84B7-A23E69E0C13C}.ReleaseDSProjection|Mixed Platforms.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
