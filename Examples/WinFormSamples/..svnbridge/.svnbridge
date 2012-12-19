@@ -13,4 +13,14 @@ obj
 *.aps
 *.eto
 app.config
+</Value></Property><Property><Name>svn:ignore</Name><Value>[Bb]in
+obj
+[Dd]ebug
+[Rr]elease
+*.user
+*.aps
+*.eto
+app.config
+GdalNativeConfiguration.cs
+GdalNativeConfiguration.vb
 </Value></Property></Properties></ItemProperties>

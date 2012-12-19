@@ -164,6 +164,7 @@
     <Compile Include="FormMovingObjectOverTileLayer.Designer.cs">
       <DependentUpon>FormMovingObjectOverTileLayer.cs</DependentUpon>
     </Compile>
+    <Compile Include="GdalNativeConfiguration.cs" />
     <Compile Include="LayerTools.cs" />
     <Compile Include="Samples\CreateTilesSample.cs" />
     <Compile Include="Samples\GdalSample.cs" />
@@ -342,6 +343,10 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <Content Include="GdalNativeConfiguration.vb" />
+    <Content Include="GeoData\GeoTiff\world_raster_mod.tif">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="GeoData\MapInfo\citiesMapInfo.dat">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -512,6 +517,10 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\SharpMap.Extensions.x86\SharpMap.Extensions.x86.csproj">
+      <Project>{9961698e-4ee0-4a3b-84b7-a23e69e0c13c}</Project>
+      <Name>SharpMap.Extensions.x86</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\SharpMap.Extensions\SharpMap.Extensions.csproj">
       <Project>{A4140C12-53F5-438C-8D24-9E48C504FECF}</Project>
       <Name>SharpMap.Extensions.VS2010</Name>
@@ -547,6 +556,15 @@
     <PreBuildEvent>
 echo "$(SolutionDir)BuildTools\nuget.exe" install "$(ProjectDir)packages.config -o "$(SolutionDir)Packages"
 "$(SolutionDir)BuildTools\nuget.exe" install "$(ProjectDir)packages.config" -o "$(SolutionDir)Packages"</PreBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup>
+    <PostBuildEvent>
+    if not exist "$(TargetDir)gdal" md "$(TargetDir)gdal"
+    xcopy /s /y "$(SolutionDir)packages\GDAL.1.9.1\gdal\*.*" "$(TargetDir)gdal"
+    if not exist "$(TargetDir)gdal" md "$(TargetDir)gdal"
+    xcopy /s /y "$(SolutionDir)packages\GDAL.1.9.1.1\gdal\*.*" "$(TargetDir)gdal"
+    if not exist "$(TargetDir)gdal" md "$(TargetDir)gdal"
+    xcopy /s /y "$(SolutionDir)packages\GDAL.Native.1.9.1.2\gdal\*.*" "$(TargetDir)gdal"</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
