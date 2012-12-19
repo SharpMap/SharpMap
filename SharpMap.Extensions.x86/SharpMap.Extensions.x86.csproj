@@ -70,7 +70,6 @@
     <Compile Include="..\SharpMap.Extensions\Data\Providers\SpatiaLite.cs">
       <Link>Data\Providers\SpatiaLite.cs</Link>
     </Compile>
-    <Compile Include="Class1.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

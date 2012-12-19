@@ -20,38 +20,16 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Configuration;
 using System.Data;
-using System.Data.SQLite;
 //using System.Diagnostics;
+using System.Data.SQLite;
 using System.Globalization;
+using Common.Logging;
 using GeoAPI.Geometries;
 using SharpMap.Converters.WellKnownBinary;
 using SharpMap.Converters.WellKnownText;
-using BoundingBox = GeoAPI.Geometries.Envelope;
-using Geometry = GeoAPI.Geometries.IGeometry;
-using Common.Logging;
 
 namespace SharpMap.Data.Providers
 {
-    /// <summary>
-    /// Defines possible spatial indices
-    /// </summary>
-    public enum SpatiaLiteIndex
-    {
-        /// <summary>
-        /// No spatial index defined
-        /// </summary>
-        None = 0,
-        /// <summary>
-        /// RTree
-        /// </summary>
-        RTree = 1,
-        /// <summary>
-        /// Cache of minimum bounding rectangles (MBR)
-        /// </summary>
-        [Obsolete("Do not use on purpose!")]
-        MbrCache = 2
-    }
-
     /// <summary>
     /// SpatiaLite Provider for SharpMap
     /// <para>
@@ -222,7 +200,9 @@ namespace SharpMap.Data.Providers
                                 indexName = string.Format(@"cache_{0}_{1}", tablename, geometryColumnName);
                                 whereClause = "mbr=FilterMbrIntersects({1}, {3}, {0}, {2})";
                                 _spatiaLiteIndexClause = string.Format(@"ROWID IN (SELECT ROWID FROM {0} WHERE {1})", indexName, whereClause);
+#pragma warning disable 612,618
                                 _spatiaLiteIndex = SpatiaLiteIndex.MbrCache;
+#pragma warning restore 612,618
                                 _useSpatialIndex = true;
                                 break;
                         }
@@ -241,7 +221,7 @@ namespace SharpMap.Data.Providers
         /// <summary>
         /// Gets or sets the extent for this data source
         /// </summary>
-        public BoundingBox CachedExtent 
+        public Envelope CachedExtent 
         {
             get
             {
@@ -327,9 +307,9 @@ namespace SharpMap.Data.Providers
             }
         }
 
-        public override Collection<Geometry> GetGeometriesInView(BoundingBox bbox)
+        public override Collection<IGeometry> GetGeometriesInView(Envelope bbox)
         {
-            var features = new Collection<Geometry>();
+            var features = new Collection<IGeometry>();
             using (var conn = SpatiaLiteConnection(ConnectionString))
             {
                 var boxIntersect = GetBoxClause(bbox);
@@ -360,7 +340,7 @@ namespace SharpMap.Data.Providers
             return features;
         }
 
-        public override Collection<uint> GetObjectIDsInView(BoundingBox bbox)
+        public override Collection<uint> GetObjectIDsInView(Envelope bbox)
         {
             var objectlist = new Collection<uint>();
             using (var conn = SpatiaLiteConnection(ConnectionString))
@@ -391,9 +371,9 @@ namespace SharpMap.Data.Providers
             return objectlist;
         }
 
-        public override Geometry GetGeometryByID(uint oid)
+        public override IGeometry GetGeometryByID(uint oid)
         {
-            Geometry geom = null;
+            IGeometry geom = null;
             using (var conn = SpatiaLiteConnection(ConnectionString))
             {
                 string strSql = "SELECT AsBinary(" + GeometryColumn + ") AS Geom FROM " + Table + " WHERE " +
@@ -416,7 +396,7 @@ namespace SharpMap.Data.Providers
             return geom;
         }
 
-        protected override void OnExecuteIntersectionQuery(Geometry geom, FeatureDataSet ds)
+        protected override void OnExecuteIntersectionQuery(IGeometry geom, FeatureDataSet ds)
         {
             using (var conn = SpatiaLiteConnection(ConnectionString))
             {
@@ -461,7 +441,7 @@ namespace SharpMap.Data.Providers
             }
         }
 
-        public override void ExecuteIntersectionQuery(BoundingBox box, FeatureDataSet ds)
+        public override void ExecuteIntersectionQuery(Envelope box, FeatureDataSet ds)
         {
             using (var conn = SpatiaLiteConnection(ConnectionString))
             {
@@ -574,7 +554,7 @@ namespace SharpMap.Data.Providers
             }
         }
 
-        private BoundingBox _cachedExtents;
+        private Envelope _cachedExtents;
 
         private struct RTreeNodeEntry
         {
@@ -644,7 +624,7 @@ namespace SharpMap.Data.Providers
                 }
             }
         }
-        public override BoundingBox GetExtents()
+        public override Envelope GetExtents()
         {
             if (_cachedExtents != null)
                 return new Envelope(_cachedExtents);
@@ -679,7 +659,7 @@ namespace SharpMap.Data.Providers
                             //    entities[i] = BitConverter.ToSingle(buffer, offset);
                             //    offset += 4;
                             //}
-                            //return new BoundingBox(entities[0], entities[2], entities[1], entities[3]);
+                            //return new Envelope(entities[0], entities[2], entities[1], entities[3]);
 
                         }
                         throw new Exception();
@@ -732,7 +712,7 @@ namespace SharpMap.Data.Providers
         }
 
 
-        private string GetBoxClause(BoundingBox bbox)
+        private string GetBoxClause(Envelope bbox)
         {
             if (UseSpatiaLiteIndex)
             {
@@ -754,13 +734,13 @@ namespace SharpMap.Data.Providers
             return "MBRIntersects(GeomFromText('" + wkt + "')," + _geometryColumn + ")=1";
         }
 
-        private Geometry LineFromBbox(BoundingBox bbox)
+        private IGeometry LineFromBbox(Envelope bbox)
         {
             var pointColl = new[] {bbox.Min(), bbox.Max()};
             return Factory.CreateLineString(pointColl);
         }
 
-        public string GetOverlapsClause(Geometry geom)
+        public string GetOverlapsClause(IGeometry geom)
         {
             string wkt = GeometryToWKT.Write(geom);
             string retval = "Intersects(GeomFromText('" + wkt + "')," + _geometryColumn + ")=1";
