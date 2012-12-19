@@ -25,6 +25,4 @@ obj
 *.user
 *.aps
 *.eto
-x64
-x86
 </Value></Property></Properties></ItemProperties>
