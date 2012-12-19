@@ -253,6 +253,34 @@ namespace SharpMap.Data.Providers
         }
 
 
+        private int _maxDop = 0;
+        /// <summary>
+        /// If set, sends an Option MaxDop to the SQL-Server to override the Paralell Execution of indexes
+        /// This can be used if Spatial indexes are not used on SQL-Servers with many processors.
+        /// 
+        /// MaxDop = 0 // Default behaviour
+        /// MaxDop = 1 // Suppress Paralell execution of Queryplan
+        /// MaxDop = [2..n] // Use X cores in in excution plan
+        /// </summary>
+        public int MaxDop
+        {
+            get { return _maxDop; }
+            set { _maxDop = value; }
+        }
+
+        private string GetExtraOptions()
+        {
+            if (_maxDop != 0)
+            {
+                return "OPTION (MAXDOP " + _maxDop + ")";
+            }
+            else
+            {
+                return null;
+            }
+        } 
+
+
         /// <summary>   
        /// Returns geometries within the specified bounding box   
        /// </summary>   
@@ -272,7 +300,11 @@ namespace SharpMap.Data.Providers
                if (!String.IsNullOrEmpty(_definitionQuery))   
                    strSQL += DefinitionQuery + " AND ";   
  
-               strSQL += strBbox;   
+               strSQL += strBbox;
+
+               string extraOptions = GetExtraOptions();
+               if (!string.IsNullOrEmpty(extraOptions))
+                   strSQL += " " + extraOptions;
  
                using (SqlCommand command = new SqlCommand(strSQL, conn))   
                {   
@@ -341,7 +373,12 @@ namespace SharpMap.Data.Providers
                if (!String.IsNullOrEmpty(_definitionQuery))   
                    strSQL += DefinitionQuery + " AND ";   
  
-               strSQL += strBbox;                   
+               strSQL += strBbox;
+
+               string extraOptions = GetExtraOptions();
+               if (!string.IsNullOrEmpty(extraOptions))
+                   strSQL += " " + extraOptions;
+ 
  
                using (var command = new SqlCommand(strSQL, conn))   
                {   
@@ -398,7 +435,12 @@ namespace SharpMap.Data.Providers
                if (!String.IsNullOrEmpty(_definitionQuery))   
                    strSQL += DefinitionQuery + " AND ";   
  
-               strSQL += strGeom;   
+               strSQL += strGeom;
+
+               string extraOptions = GetExtraOptions();
+               if (!string.IsNullOrEmpty(extraOptions))
+                   strSQL += " " + extraOptions;
+ 
  
                using (SqlDataAdapter adapter = new SqlDataAdapter(strSQL, conn))   
                {   
@@ -641,7 +683,12 @@ namespace SharpMap.Data.Providers
                if (!String.IsNullOrEmpty(_definitionQuery))   
                    strSQL += DefinitionQuery + " AND ";   
  
-               strSQL += strBbox;   
+               strSQL += strBbox;
+
+               string extraOptions = GetExtraOptions();
+               if (!string.IsNullOrEmpty(extraOptions))
+                   strSQL += " " + extraOptions;
+ 
  
                using (SqlDataAdapter adapter = new SqlDataAdapter(strSQL, conn))   
                {   
