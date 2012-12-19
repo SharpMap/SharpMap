@@ -51,7 +51,7 @@ namespace SharpMap.Data.Providers
     {
         static Ogr()
         {
-            FwToolsHelper.Configure();
+            GdalConfiguration.ConfigureOgr();
         }
 
         #region Fields

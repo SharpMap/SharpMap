@@ -22,10 +22,12 @@ using System.IO;
 
 namespace SharpMap.Extensions.Data
 {
+    [Obsolete("Call GdalConfiguration.ConfigureGdal() or GdalConfiguration.ConfigureOgr()")]
     public static class FwToolsHelper
     {
         static FwToolsHelper()
         {
+            /*
             string fwtoolsPath = ConfigurationManager.AppSettings["FWToolsBinPath"];
 
             if (String.IsNullOrEmpty(fwtoolsPath) || !Directory.Exists(fwtoolsPath))
@@ -53,9 +55,11 @@ namespace SharpMap.Extensions.Data
             SetFWToolsEnvironmentVariable("FWToolsGeoTiffCsv", "GEOTIFF_CSV");
             SetFWToolsEnvironmentVariable("FWToolsGdalData", "GDAL_DATA");
             SetFWToolsEnvironmentVariable("FWToolsGdalDriver", "GDAL_DRIVER");
+             */
 
         }
 
+        /*
         private static void SetFWToolsEnvironmentVariable(String setting, String envVariable)
         {
             string set = ConfigurationManager.AppSettings[setting];
@@ -66,14 +70,18 @@ namespace SharpMap.Extensions.Data
 
             Environment.SetEnvironmentVariable(envVariable, set);
         }
+         */
 
         public static string FwToolsVersion
         {
-            get { return "2.4.7"; }
+            get { return OSGeo.GDAL.Gdal.VersionInfo(""); }
         }
 
+        [Obsolete("Call GdalConfiguration.ConfigureGdal() or GdalConfiguration.ConfigureOgr()")]
         public static void Configure()
         {
+            GdalConfiguration.ConfigureGdal();
+            GdalConfiguration.ConfigureOgr();
             //does nothing but ensure that the Static initializer has been called.
         }
 

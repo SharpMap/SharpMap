@@ -61,7 +61,7 @@ namespace SharpMap.Layers
     {
         static GdalRasterLayer()
         {
-            FwToolsHelper.Configure();
+            GdalConfiguration.ConfigureGdal();
         }
 
         private IGeometryFactory _factory;
@@ -129,7 +129,9 @@ namespace SharpMap.Layers
         /// </summary>
         public static string FWToolsVersion
         {
+#pragma warning disable 612,618
             get { return FwToolsHelper.FwToolsVersion; }
+#pragma warning restore 612,618
         }
 
         /// <summary>
