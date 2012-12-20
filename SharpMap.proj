@@ -12,11 +12,11 @@
   </Target>
 
   <Target Name="BuildDebug">
-    <MSBuild Projects="$(SolutionFile)" Targets="SharpMap;SharpMap_UI;SharpMap_Extensions" Properties="Configuration=Debug" />
+    <MSBuild Projects="$(SolutionFile)" Targets="SharpMap;SharpMap_UI;SharpMap_Extensions;SharpMap_Extensions_x86;SharpMap_Web" Properties="Configuration=Debug" />
   </Target>
 
   <Target Name="BuildRelease">
-    <MSBuild Projects="$(SolutionFile)" Targets="SharpMap;SharpMap_UI;SharpMap_Extensions" Properties="Configuration=Release" />
+    <MSBuild Projects="$(SolutionFile)" Targets="SharpMap;SharpMap_UI;SharpMap_Extensions;SharpMap_Extensions_x86;SharpMap_Web" Properties="Configuration=Release" />
   </Target>
 
   <!-- build only for now, test on build server -->
