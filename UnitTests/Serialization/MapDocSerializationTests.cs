@@ -64,7 +64,7 @@ namespace UnitTests.Serialization
             SharpMap.Map m = SharpMap.Serialization.MapSerialization.LoadMapFromStream(ms);
             Assert.AreEqual(4326, m.SRID);
             Assert.AreEqual(1, m.Layers.Count);
-            Assert.IsInstanceOfType(typeof(SharpMap.Layers.WmsLayer), m.Layers[0]);
+            Assert.IsTrue(m.Layers[0] is SharpMap.Layers.WmsLayer);
             Assert.AreEqual("http://sampleserver1.arcgisonline.com/ArcGIS/services/Specialty/ESRI_StatesCitiesRivers_USA/MapServer/WMSServer", (m.Layers[0] as SharpMap.Layers.WmsLayer).CapabilitiesUrl);
             ms.Close();
         }
@@ -98,12 +98,15 @@ namespace UnitTests.Serialization
             SharpMap.Map m = SharpMap.Serialization.MapSerialization.LoadMapFromStream(ms);
             Assert.AreEqual(4326, m.SRID);
             Assert.AreEqual(1, m.Layers.Count);
-            Assert.IsInstanceOfType(typeof(SharpMap.Layers.WmsLayer), m.Layers[0]);
+            Assert.IsTrue(m.Layers[0] is SharpMap.Layers.WmsLayer);
             Assert.AreEqual("http://sampleserver1.arcgisonline.com/ArcGIS/services/Specialty/ESRI_StatesCitiesRivers_USA/MapServer/WMSServer", (m.Layers[0] as SharpMap.Layers.WmsLayer).CapabilitiesUrl);
             Assert.IsNotNull((m.Layers[0] as SharpMap.Layers.WmsLayer).Credentials);
-            Assert.IsInstanceOfType(typeof(NetworkCredential), (m.Layers[0] as SharpMap.Layers.WmsLayer).Credentials);
-            Assert.AreEqual("test", ((m.Layers[0] as SharpMap.Layers.WmsLayer).Credentials as NetworkCredential).UserName);
-            Assert.AreEqual("pw", ((m.Layers[0] as SharpMap.Layers.WmsLayer).Credentials as NetworkCredential).Password);
+            ICredentials c = null;
+            Assert.DoesNotThrow(() => c = ((SharpMap.Layers.WmsLayer) m.Layers[0]).Credentials);
+            Assert.IsTrue(c is NetworkCredential);
+            var nc = (NetworkCredential)c;
+            Assert.AreEqual("test", nc.UserName);
+            Assert.AreEqual("pw", nc.Password);
             ms.Close();
         }
 

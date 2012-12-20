@@ -42,18 +42,18 @@ namespace UnitTests.Converters.WKB
             var gPl = GeometryFromWKT.Parse(polygon);
 
             //Test with Xdr
-            Assert.AreEqual(gPn, ToBinaryAndBack(gPn, WkbByteOrder.Xdr));
-            Assert.AreEqual(gMp, ToBinaryAndBack(gMp, WkbByteOrder.Xdr));
-            Assert.AreEqual(gLi, ToBinaryAndBack(gLi, WkbByteOrder.Xdr));
-            Assert.AreEqual(gML, ToBinaryAndBack(gML, WkbByteOrder.Xdr));
-            Assert.AreEqual(gPl, ToBinaryAndBack(gPl, WkbByteOrder.Xdr));
+            Assert.IsTrue(gPn.EqualsExact(ToBinaryAndBack(gPn, WkbByteOrder.Xdr)));
+            Assert.IsTrue(gMp.EqualsExact(ToBinaryAndBack(gMp, WkbByteOrder.Xdr)));
+            Assert.IsTrue(gLi.EqualsExact(ToBinaryAndBack(gLi, WkbByteOrder.Xdr)));
+            Assert.IsTrue(gML.EqualsExact(ToBinaryAndBack(gML, WkbByteOrder.Xdr)));
+            Assert.IsTrue(gPl.EqualsExact(ToBinaryAndBack(gPl, WkbByteOrder.Xdr)));
 
             //Test with Ndr
-            Assert.AreEqual(gPn, ToBinaryAndBack(gPn, WkbByteOrder.Ndr));
-            Assert.AreEqual(gMp, ToBinaryAndBack(gMp, WkbByteOrder.Ndr));
-            Assert.AreEqual(gLi, ToBinaryAndBack(gLi, WkbByteOrder.Ndr));
-            Assert.AreEqual(gML, ToBinaryAndBack(gML, WkbByteOrder.Ndr));
-            Assert.AreEqual(gPl, ToBinaryAndBack(gPl, WkbByteOrder.Ndr));
+            Assert.IsTrue(gPn.EqualsExact(ToBinaryAndBack(gPn, WkbByteOrder.Ndr)));
+            Assert.IsTrue(gMp.EqualsExact(ToBinaryAndBack(gMp, WkbByteOrder.Ndr)));
+            Assert.IsTrue(gLi.EqualsExact(ToBinaryAndBack(gLi, WkbByteOrder.Ndr)));
+            Assert.IsTrue(gML.EqualsExact(ToBinaryAndBack(gML, WkbByteOrder.Ndr)));
+            Assert.IsTrue(gPl.EqualsExact(ToBinaryAndBack(gPl, WkbByteOrder.Ndr)));
         }
 
         [Test]
@@ -71,11 +71,11 @@ namespace UnitTests.Converters.WKB
             var gML1 = GeometryFromWKB.Parse(gML0.AsBinary(), gPn0.Factory);
             var gPl1 = GeometryFromWKB.Parse(gPl0.AsBinary(), gPn0.Factory);
 
-            Assert.AreEqual(gPn0, gPn1);
-            Assert.AreEqual(gMp0, gMp1);
-            Assert.AreEqual(gLi0, gLi1);
-            Assert.AreEqual(gML0, gML1);
-            Assert.AreEqual(gPl0, gPl1);
+            Assert.IsTrue(gPn0.EqualsExact(gPn1));
+            Assert.IsTrue(gMp0.EqualsExact(gMp1));
+            Assert.IsTrue(gLi0.EqualsExact(gLi1));
+            Assert.IsTrue(gML0.EqualsExact(gML1));
+            Assert.IsTrue(gPl0.EqualsExact(gPl1));
         }
     }
 }

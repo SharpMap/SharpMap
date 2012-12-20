@@ -152,7 +152,7 @@ namespace UnitTests.Data.Providers
             IGeometry actual = provider.GetGeometryByID(43);
 
             Assert.IsNotNull(actual);
-            Assert.IsInstanceOfType(typeof (Point), actual);
+            Assert.IsTrue(actual is Point);
             Assert.AreEqual(expected, actual);
         }
 

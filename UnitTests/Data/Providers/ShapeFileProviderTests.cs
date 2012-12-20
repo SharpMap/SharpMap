@@ -1,6 +1,4 @@
-﻿using System.IO;
-using NUnit.Framework;
-namespace UnitTests.Data.Providers
+﻿namespace UnitTests.Data.Providers
 {
 
     [NUnit.Framework.TestFixture]
@@ -28,24 +26,25 @@ namespace UnitTests.Data.Providers
 
         private string GetTestFile()
         {
-            return Path.Combine(GetPathToTestDataDir(), "roads_ugl.shp");
+            return System.IO.Path.Combine(GetPathToTestDataDir(), "roads_ugl.shp");
         }
+
         private string GetPathToTestDataDir()
         {
-            return Path.Combine(Path.GetDirectoryName(this.GetType().Assembly.CodeBase.Replace("file:///", "")), @"TestData\");
+            return System.IO.Path.Combine(System.IO.Path.GetDirectoryName(this.GetType().Assembly.CodeBase.Replace("file:///", "")), @"TestData\");
         }
 
         [NUnit.Framework.Test]
         public void TestReadPointZShapeFile()
         {
-            var file = Path.Combine(GetPathToTestDataDir(), "SPATIAL_F_SKARVMUFF.shp");
+            var file = System.IO.Path.Combine(GetPathToTestDataDir(), "SPATIAL_F_SKARVMUFF.shp");
             var sh = new SharpMap.Data.Providers.ShapeFile(file, true);
             var fc = sh.GetFeatureCount();
-            Assert.AreEqual(4342, fc);
+            NUnit.Framework.Assert.AreEqual(4342, fc);
 
             sh.Open();
             var featsInView = sh.GetGeometriesInView(new GeoAPI.Geometries.Envelope(sh.GetExtents()));
-            Assert.AreEqual(4342, featsInView.Count);
+            NUnit.Framework.Assert.AreEqual(4342, featsInView.Count);
             sh.Close();
         }
 
@@ -134,7 +133,7 @@ namespace UnitTests.Data.Providers
             var shp = new SharpMap.Data.Providers.ShapeFile(GetTestFile(), false, false);
             shp.Open();
             var feat = shp.GetFeature(0);
-            Assert.IsNotNull(feat);
+            NUnit.Framework.Assert.IsNotNull(feat);
             shp.Close();
         }
 
