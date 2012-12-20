@@ -101,6 +101,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\GDAL.1.9.1.2\lib\net40\ogr_csharp.dll</HintPath>
     </Reference>
+    <Reference Include="Oracle.DataAccess">
+      <HintPath>..\Packages\odp.net.x64.112.3.0\lib\net40\Oracle.DataAccess.dll</HintPath>
+    </Reference>
     <Reference Include="osr_csharp, Version=1.0.4551.38342, Culture=neutral, PublicKeyToken=db5a52b08dc5b321, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\GDAL.1.9.1.2\lib\net40\osr_csharp.dll</HintPath>
@@ -130,6 +133,7 @@
     <Compile Include="Data\Providers\ManagedSpatiaLite.cs" />
     <Compile Include="Data\Providers\NtsProvider.cs" />
     <Compile Include="Data\Providers\OgrProvider.cs" />
+    <Compile Include="Data\Providers\Oracle.cs" />
     <Compile Include="Data\Providers\PostGIS.cs" />
     <Compile Include="Data\Providers\SpatiaLiteIndex.cs" />
     <Compile Include="Data\Providers\SqlLite.cs" />
