@@ -9,7 +9,7 @@ using System.IO;
 
 namespace UnitTests.Data.Providers
 {
-    [TestFixture]
+    [TestFixture, Category("KnownToFailOnTeamCityAtCodebetter")]
     public class ManagedSQLiteTests
     {
         private string GetTestDBPath()
