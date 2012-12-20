@@ -74,13 +74,16 @@ namespace SharpMap.Layers
         }
 
 
+        /*
         /// <summary>
         /// right value of the image
         /// </summary>       
-        //  public double Right
-        //  {
-        ///      get { return this.Left + (this.HorizontalPixelResolution * _gdalDataset.XSize); }
-        //  }
+        public double Right
+        {
+              get { return this.Left + (this.HorizontalPixelResolution * _gdalDataset.XSize); }
+        }
+        */
+
         /// <summary>
         /// top value of the image
         /// </summary>
