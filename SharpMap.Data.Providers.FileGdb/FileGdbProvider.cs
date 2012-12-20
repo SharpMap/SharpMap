@@ -21,8 +21,9 @@ using System.Configuration;
 using System.Data;
 using System.Globalization;
 using System.IO;
+using GeoAPI.Geometries;
 using SharpMap.Data.Providers.Converter;
-using SharpMap.Geometries;
+
 using EsriGdb = Esri.FileGDB.Geodatabase;
 using EsriTable = Esri.FileGDB.Table;
 
@@ -34,28 +35,28 @@ namespace SharpMap.Data.Providers
         static FileGdbProvider()
         {
             var asr = new AppSettingsReader();
-            
-            var fileGdbPath = (string) asr.GetValue("FileGdbNativeDirectory", typeof(string));
+
+            var fileGdbPath = (string)asr.GetValue("FileGdbNativeDirectory", typeof(string));
             //ensure directory
             if (!Directory.Exists(fileGdbPath))
                 throw new DirectoryNotFoundException();
 
             var path = Environment.GetEnvironmentVariable("PATH");
-                
+
             var pathSet = false;
             if (!string.IsNullOrEmpty(path))
                 pathSet = path.ToLowerInvariant().Contains(fileGdbPath.ToLowerInvariant());
-                
+
             if (!pathSet)
             {
                 path = fileGdbPath + ";" + path;
                 Environment.SetEnvironmentVariable("PATH", path);
-            } 
+            }
         }
-        
+
         [NonSerialized]
         private EsriGdb _esriGdb;
-        
+
         private DirectoryInfo _esriGdbLocation;
 
         private EsriGdb EsriGdbInstance
@@ -96,7 +97,7 @@ namespace SharpMap.Data.Providers
         {
             if (IsDisposed)
                 return;
-            
+
             if (disposing)
             {
                 if (_esriGdb != null)
@@ -170,16 +171,16 @@ namespace SharpMap.Data.Providers
         }
 
         /// <summary>
-        /// Gets the features within the specified <see cref="SharpMap.Geometries.BoundingBox"/>
+        /// Gets the features within the specified <see cref="Envelope"/>
         /// </summary>
         /// <param name="bbox"></param>
-        /// <returns>Features within the specified <see cref="SharpMap.Geometries.BoundingBox"/></returns>
-        public Collection<Geometry> GetGeometriesInView(BoundingBox bbox)
+        /// <returns>Features within the specified <see cref="Envelope"/></returns>
+        public Collection<IGeometry> GetGeometriesInView(Envelope bbox)
         {
-            var res = new Collection<Geometry>();
+            var res = new Collection<IGeometry>();
             foreach (var row in _esriTable.Search("*", string.Empty, FileGdbGeometryConverter.ToEsriExtent(bbox), Esri.FileGDB.RowInstance.Recycle))
             {
-                using(var buffer = row.GetGeometry())
+                using (var buffer = row.GetGeometry())
                 {
                     var geom = FileGdbGeometryConverter.ToSharpMapGeometry(buffer);
                     if (geom != null)
@@ -198,7 +199,7 @@ namespace SharpMap.Data.Providers
         /// </remarks>
         /// <param name="bbox">Box that objects should intersect</param>
         /// <returns></returns>
-        public Collection<uint> GetObjectIDsInView(BoundingBox bbox)
+        public Collection<uint> GetObjectIDsInView(Envelope bbox)
         {
             var res = new Collection<uint>();
             foreach (var row in _esriTable.Search(string.Empty, string.Empty, FileGdbGeometryConverter.ToEsriExtent(bbox), Esri.FileGDB.RowInstance.Recycle))
@@ -211,7 +212,7 @@ namespace SharpMap.Data.Providers
         /// </summary>
         /// <param name="oid">Object ID</param>
         /// <returns>geometry</returns>
-        public Geometry GetGeometryByID(uint oid)
+        public IGeometry GetGeometryByID(uint oid)
         {
             var fdt = CreateTable(_esriTable);
             var where = string.Format(CultureInfo.InvariantCulture, "{0}={1}", fdt.PrimaryKey[0].ColumnName, oid);
@@ -227,9 +228,9 @@ namespace SharpMap.Data.Providers
         /// </summary>
         /// <param name="geom">Geometry to intersect with</param>
         /// <param name="ds">FeatureDataSet to fill data into</param>
-        public void ExecuteIntersectionQuery(Geometry geom, FeatureDataSet ds)
+        public void ExecuteIntersectionQuery(IGeometry geom, FeatureDataSet ds)
         {
-            ExecuteIntersectionQuery(geom.GetBoundingBox(), ds);
+            ExecuteIntersectionQuery(geom.EnvelopeInternal, ds);
         }
 
         /// <summary>
@@ -237,7 +238,7 @@ namespace SharpMap.Data.Providers
         /// </summary>
         /// <param name="box">Geometry to intersect with</param>
         /// <param name="ds">FeatureDataSet to fill data into</param>
-        public void ExecuteIntersectionQuery(BoundingBox box, FeatureDataSet ds)
+        public void ExecuteIntersectionQuery(Envelope box, FeatureDataSet ds)
         {
             var fdt = CreateTable(_esriTable);
             fdt.BeginLoadData();
@@ -253,7 +254,7 @@ namespace SharpMap.Data.Providers
                     tmp.Add(row[fi.GetFieldName(i)]);
                 }
                 var fdr = (FeatureDataRow)fdt.LoadDataRow(tmp.ToArray(), true);
-                
+
                 using (var buffer = row.GetGeometry())
                     fdr.Geometry = FileGdbGeometryConverter.ToSharpMapGeometry(buffer);
             }
@@ -278,11 +279,11 @@ namespace SharpMap.Data.Providers
         public FeatureDataRow GetFeature(uint rowId)
         {
             var fdt = CreateTable(_esriTable);
-            
+
             fdt.BeginLoadData();
             var where = string.Format(CultureInfo.InvariantCulture, "{0}={1}", fdt.PrimaryKey[0].ColumnName, rowId);
             var fi = _esriTable.FieldInformation;
-            
+
             foreach (var row in _esriTable.Search("*", where, Esri.FileGDB.RowInstance.Recycle))
             {
                 var tmp = new List<object>(_esriTable.FieldInformation.Count - 1);
@@ -296,7 +297,7 @@ namespace SharpMap.Data.Providers
                 fdr.Geometry = FileGdbGeometryConverter.ToSharpMapGeometry(row.GetGeometry());
             }
             fdt.EndLoadData();
-            
+
             return (FeatureDataRow)fdt.Rows[0];
         }
 
@@ -307,47 +308,47 @@ namespace SharpMap.Data.Providers
             var columns = fdt.Columns;
 
             var fi = table.FieldInformation;
-            for (var i = 0; i < fi.Count; i++ )
+            for (var i = 0; i < fi.Count; i++)
             {
                 var ft = fi.GetFieldType(i);
                 Type netType;
                 var primaryKey = false;
-                switch (ft  )
+                switch (ft)
                 {
                     case Esri.FileGDB.FieldType.OID:
-                        netType = typeof (int);
+                        netType = typeof(int);
                         primaryKey = true;
                         break;
                     case Esri.FileGDB.FieldType.Single:
-                        netType = typeof (float);
+                        netType = typeof(float);
                         break;
                     case Esri.FileGDB.FieldType.XML:
-                        netType = typeof (string);
+                        netType = typeof(string);
                         break;
                     case Esri.FileGDB.FieldType.GlobalID:
-                        netType = typeof (int);
+                        netType = typeof(int);
                         break;
                     case Esri.FileGDB.FieldType.GUID:
-                        netType = typeof (Guid);
+                        netType = typeof(Guid);
                         break;
                     case Esri.FileGDB.FieldType.String:
                         netType = typeof(string);
                         break;
                     case Esri.FileGDB.FieldType.Double:
-                        netType = typeof (double);
+                        netType = typeof(double);
                         break;
                     case Esri.FileGDB.FieldType.Blob:
                     case Esri.FileGDB.FieldType.Raster:
-                        netType = typeof (byte[]);
+                        netType = typeof(byte[]);
                         break;
                     case Esri.FileGDB.FieldType.Integer:
-                        netType = typeof (long);
+                        netType = typeof(long);
                         break;
                     case Esri.FileGDB.FieldType.SmallInteger:
                         netType = typeof(int);
                         break;
                     case Esri.FileGDB.FieldType.Date:
-                        netType = typeof (DateTime);
+                        netType = typeof(DateTime);
                         break;
                     case Esri.FileGDB.FieldType.Geometry:
                         //Do not add geometry column
@@ -357,30 +358,30 @@ namespace SharpMap.Data.Providers
                 }
 
                 var dc = new DataColumn(fi.GetFieldName(i), netType)
-                             {
-                                 AllowDBNull = fi.GetFieldIsNullable(i), 
-                                 
-                                 //MaxLength = fi.GetFieldLength(i)
-                             };
+                {
+                    AllowDBNull = fi.GetFieldIsNullable(i),
+
+                    //MaxLength = fi.GetFieldLength(i)
+                };
                 if (netType == typeof(string))
                     dc.MaxLength = fi.GetFieldLength(i);
 
                 columns.Add(dc);
 
                 if (primaryKey)
-                    fdt.PrimaryKey = new[] {dc};
+                    fdt.PrimaryKey = new[] { dc };
             }
             return fdt;
         }
 
         /// <summary>
-        /// <see cref="SharpMap.Geometries.BoundingBox"/> of dataset
+        /// <see cref="Envelope"/> of dataset
         /// </summary>
-        /// <returns>boundingbox</returns>
-        public BoundingBox GetExtents()
+        /// <returns>Envelope</returns>
+        public Envelope GetExtents()
         {
             var extent = _esriTable.Extent;
-            return new BoundingBox(extent.xMin, extent.yMin, extent.xMax, extent.yMax);
+            return new Envelope(extent.xMin, extent.xMax, extent.yMin, extent.yMax);
         }
 
         /// <summary>
@@ -423,10 +424,10 @@ namespace SharpMap.Data.Providers
         {
             var e = EsriGdbInstance;
             foreach (var table in e.GetChildDatasets(path, "Table"))
-                yield return "Table: " +table;
+                yield return "Table: " + table;
             foreach (var table in e.GetChildDatasets(path, "Feature Class"))
                 yield return "Feature Class: " + table;
-            
+
             foreach (var fds in e.GetChildDatasets(path, "Feature Dataset"))
             {
                 yield return "Feature Dataset: " + fds;
