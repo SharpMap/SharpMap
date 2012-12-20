@@ -1,6 +1,6 @@
 using System;
 using NUnit.Framework;
-using NUnit.Framework.SyntaxHelpers;
+//using NUnit.Framework.SyntaxHelpers;
 using Microsoft.SqlServer.Types;
 using SharpMap.Converters.SqlServer2008SpatialObjects;
 using SharpMap.Converters.WellKnownText;
