@@ -220,7 +220,7 @@ namespace SharpMap.Utilities.Indexing
             {
                 if (root.LeftNode != null)
                 {
-                    if (root.LeftNode.Item.Value.CompareTo(value) > 0)
+                    //if (root.LeftNode.Item.Value.CompareTo(value) > 0)
                         foreach (ItemValue item in ScanFind(value, root.LeftNode))
                         {
                             yield return item;
@@ -235,7 +235,7 @@ namespace SharpMap.Utilities.Indexing
             {
                 if (root.RightNode != null)
                 {
-                    if (root.RightNode.Item.Value.CompareTo(value) > 0)
+                    //if (root.RightNode.Item.Value.CompareTo(value) > 0)
                         foreach (ItemValue item in ScanFind(value, root.RightNode))
                         {
                             yield return item;
