@@ -26,14 +26,31 @@ using NetTopologySuite.Geometries;
 namespace UnitTests.Data.Providers
 {
     [TestFixture]
-    public class DataTablePointTests
+    public abstract class  ProviderTest
     {
         [TestFixtureSetUp]
-        public void SetupFixture()
+        public virtual void TestFixtureSetup()
         {
-            GeoAPI.GeometryServiceProvider.Instance = new NetTopologySuite.NtsGeometryServices();
+            GeoAPI.GeometryServiceProvider.Instance =
+                NetTopologySuite.NtsGeometryServices.Instance;
         }
 
+        protected string TestDataPath
+        {
+            get { return System.IO.Path.Combine(new Uri(GetType().Assembly.CodeBase).LocalPath, "TestData"); }
+        }
+
+        protected string GetTestDataFilePath(string fileName)
+        {
+            var uri = new Uri(fileName);
+            if (uri.IsAbsoluteUri)
+                return uri.LocalPath;
+            return System.IO.Path.Combine(TestDataPath, fileName);
+        }
+    }
+
+    public class DataTablePointTests : ProviderTest
+    {
         private static DataTable CreateDataTableSource()
         {
             var source = new DataTable("PointSource", "http://www.codeplex.com/SharpMap/v1/UnitTests");

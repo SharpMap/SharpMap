@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Windows.Forms;
 
 namespace SharpMap.Forms.ToolBar
 {
@@ -176,7 +177,8 @@ namespace SharpMap.Forms.ToolBar
             var scale = MapControl.Map.Zoom;
 
             if (InvokeRequired)
-                ;//Invoke(zoom => _predefinedScales.Text = string.Format("1:{0}", Math.Round(ZoomToScale(zoom), 0));
+                BeginInvoke((MethodInvoker)
+                    delegate { _predefinedScales.Text = string.Format("1:{0}", Math.Round(ZoomToScale(zoom), 0)); });
             else
                 _predefinedScales.Text = string.Format("1:{0}", Math.Round(ZoomToScale(zoom), 0));
 

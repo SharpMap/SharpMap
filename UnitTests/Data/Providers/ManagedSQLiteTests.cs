@@ -1,56 +1,51 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using NUnit.Framework;
-using System.Data;
-using System.Diagnostics;
-using System.IO;
-
-namespace UnitTests.Data.Providers
+﻿namespace UnitTests.Data.Providers
 {
-    [TestFixture, Category("KnownToFailOnTeamCityAtCodebetter")]
-    public class ManagedSQLiteTests
+    [NUnit.Framework.TestFixture, NUnit.Framework.Category("KnownToFailOnTeamCityAtCodebetter")]
+    public class ManagedSQLiteTests : ProviderTest
     {
         private string GetTestDBPath()
         {
-            return "Data Source=" + Path.Combine(Path.GetDirectoryName(this.GetType().Assembly.CodeBase.Replace("file:///", "")), @"TestData\test-2.3.sqlite");
-        }
-        [TestFixtureSetUp]
-        public void SetupFixture()
-        {
-            GeoAPI.GeometryServiceProvider.Instance = new NetTopologySuite.NtsGeometryServices();
+            return "Data Source=" + GetTestDataFilePath("test-2.3.sqlite");
         }
 
-        [Test]
+        [NUnit.Framework.Test]
         public void TestReadPoints()
         {
-            SharpMap.Data.Providers.ManagedSpatiaLite sq = new SharpMap.Data.Providers.ManagedSpatiaLite(GetTestDBPath(), "towns", "Geometry", "ROWID");
-            var ext = sq.GetExtents();
-            var ds = new SharpMap.Data.FeatureDataSet();
-            sq.ExecuteIntersectionQuery(ext, ds);
-            Assert.AreEqual(8101, ds.Tables[0].Count);
+            using (var sq = 
+                new SharpMap.Data.Providers.ManagedSpatiaLite(GetTestDBPath(), "towns", "Geometry", "ROWID"))
+            {
+                var ext = sq.GetExtents();
+                var ds = new SharpMap.Data.FeatureDataSet();
+                sq.ExecuteIntersectionQuery(ext, ds);
+                NUnit.Framework.Assert.AreEqual(8101, ds.Tables[0].Count);
+            }
 
         }
-        [Test]
+        [NUnit.Framework.Test]
         public void TestReadLines()
         {
-            SharpMap.Data.Providers.ManagedSpatiaLite sq = new SharpMap.Data.Providers.ManagedSpatiaLite(GetTestDBPath(), "highways", "Geometry", "ROWID");
-            var ext = sq.GetExtents();
-            var ds = new SharpMap.Data.FeatureDataSet();
-            sq.ExecuteIntersectionQuery(ext, ds);
-            Assert.AreEqual(775, ds.Tables[0].Count);
+            using (var sq = 
+                new SharpMap.Data.Providers.ManagedSpatiaLite(GetTestDBPath(), "highways", "Geometry", "ROWID"))
+            {
+                var ext = sq.GetExtents();
+                var ds = new SharpMap.Data.FeatureDataSet();
+                sq.ExecuteIntersectionQuery(ext, ds);
+                NUnit.Framework.Assert.AreEqual(775, ds.Tables[0].Count);
+            }
 
         }
 
-        [Test]
+        [NUnit.Framework.Test]
         public void TestReadPolys()
         {
-            SharpMap.Data.Providers.ManagedSpatiaLite sq = new SharpMap.Data.Providers.ManagedSpatiaLite(GetTestDBPath(), "regions", "Geometry", "ROWID");
-            var ext = sq.GetExtents();
-            var ds = new SharpMap.Data.FeatureDataSet();
-            sq.ExecuteIntersectionQuery(ext, ds);
-            Assert.AreEqual(109, ds.Tables[0].Count);
+            using (var sq = 
+                new SharpMap.Data.Providers.ManagedSpatiaLite(GetTestDBPath(), "regions", "Geometry", "ROWID"))
+            {
+                var ext = sq.GetExtents();
+                var ds = new SharpMap.Data.FeatureDataSet();
+                sq.ExecuteIntersectionQuery(ext, ds);
+                NUnit.Framework.Assert.AreEqual(109, ds.Tables[0].Count);
+            }
 
         }
     }

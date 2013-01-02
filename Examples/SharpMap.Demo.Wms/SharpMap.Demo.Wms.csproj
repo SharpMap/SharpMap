@@ -630,7 +630,9 @@
     <Content Include="Views\Home\Leaflet.aspx" />
     <Content Include="Views\Home\Geojson.aspx" />
     <Content Include="Views\Home\Polymaps.aspx" />
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <None Include="App_Data\berlin\osmbuildings.dbf" />

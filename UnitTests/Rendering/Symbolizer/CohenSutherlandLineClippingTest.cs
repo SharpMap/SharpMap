@@ -1,7 +1,9 @@
 ﻿using System.Collections.Concurrent;
+using System.Data;
 using NUnit.Framework;
 using GeoAPI.Geometries;
 using NetTopologySuite.Geometries;
+using SharpMap.Data.Providers;
 
 namespace UnitTests.Rendering.Symbolizer
 {
@@ -40,7 +42,7 @@ namespace UnitTests.Rendering.Symbolizer
             var l = Factory.CreateLineString(new[] { new Coordinate(-5, 4), new Coordinate(15, 4), new Coordinate(15, 6), new Coordinate(-5, 6), });
             var res = lc.ClipLineString(l);
             Assert.IsNotNull(res);
-            Assert.IsInstanceOfType(typeof (MultiLineString), res);
+            Assert.IsTrue(res is  MultiLineString);
             Assert.AreEqual("MULTILINESTRING ((0 4, 10 4), (10 6, 0 6))", res.ToString());
         }
 

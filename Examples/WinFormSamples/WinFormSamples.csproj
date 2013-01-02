@@ -171,6 +171,7 @@
     <Compile Include="FormMovingObjectOverTileLayer.Designer.cs">
       <DependentUpon>FormMovingObjectOverTileLayer.cs</DependentUpon>
     </Compile>
+    <Compile Include="GdalNativeConfiguration.cs" />
     <Compile Include="LayerTools.cs" />
     <Compile Include="Samples\CreateTilesSample.cs" />
     <Compile Include="Samples\GdalSample.cs" />
@@ -178,6 +179,7 @@
     <Compile Include="Samples\GradiantThemeSample.cs" />
     <Compile Include="Samples\OracleSample.cs" />
     <Compile Include="SharpMapTileSource.cs" />
+    <Content Include="GdalNativeConfiguration.vb" />
     <Content Include="x64\SQLite.Interop.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -571,11 +573,7 @@ echo "$(SolutionDir)BuildTools\nuget.exe" install "$(ProjectDir)packages.config 
   <PropertyGroup>
     <PostBuildEvent>
     if not exist "$(TargetDir)gdal" md "$(TargetDir)gdal"
-    xcopy /s /y "$(SolutionDir)packages\GDAL.1.9.1\gdal\*.*" "$(TargetDir)gdal"
-    if not exist "$(TargetDir)gdal" md "$(TargetDir)gdal"
-    xcopy /s /y "$(SolutionDir)packages\GDAL.1.9.1.1\gdal\*.*" "$(TargetDir)gdal"
-    if not exist "$(TargetDir)gdal" md "$(TargetDir)gdal"
-    xcopy /s /y "$(SolutionDir)packages\GDAL.Native.1.9.1.2\gdal\*.*" "$(TargetDir)gdal"</PostBuildEvent>
+    xcopy /s /y "$(SolutionDir)packages\GDAL.Native.1.9.2\gdal\*.*" "$(TargetDir)gdal"</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

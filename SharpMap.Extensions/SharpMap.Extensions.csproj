@@ -77,13 +77,13 @@
     <Reference Include="DotSpatial.Projections">
       <HintPath>..\packages\DotSpatial.Projections.1.2\lib\net40-Client\DotSpatial.Projections.dll</HintPath>
     </Reference>
-    <Reference Include="gdalconst_csharp, Version=1.0.4551.38343, Culture=neutral, PublicKeyToken=db5a52b08dc5b321, processorArchitecture=MSIL">
+    <Reference Include="gdalconst_csharp, Version=1.0.4704.32537, Culture=neutral, PublicKeyToken=db5a52b08dc5b321, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\GDAL.1.9.1.2\lib\net40\gdalconst_csharp.dll</HintPath>
+      <HintPath>..\packages\GDAL.1.9.2\lib\net40\gdalconst_csharp.dll</HintPath>
     </Reference>
-    <Reference Include="gdal_csharp, Version=1.0.4551.38342, Culture=neutral, PublicKeyToken=db5a52b08dc5b321, processorArchitecture=MSIL">
+    <Reference Include="gdal_csharp, Version=1.0.4704.32537, Culture=neutral, PublicKeyToken=db5a52b08dc5b321, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\GDAL.1.9.1.2\lib\net40\gdal_csharp.dll</HintPath>
+      <HintPath>..\packages\GDAL.1.9.2\lib\net40\gdal_csharp.dll</HintPath>
     </Reference>
     <Reference Include="GeoAPI">
       <HintPath>..\packages\GeoAPI.1.6.0\lib\net35\GeoAPI.dll</HintPath>
@@ -99,16 +99,16 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Npgsql.2.0.12.1\lib\net40\Npgsql.dll</HintPath>
     </Reference>
-    <Reference Include="ogr_csharp, Version=1.0.4551.38342, Culture=neutral, PublicKeyToken=db5a52b08dc5b321, processorArchitecture=MSIL">
+    <Reference Include="ogr_csharp, Version=1.0.4704.32537, Culture=neutral, PublicKeyToken=db5a52b08dc5b321, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\GDAL.1.9.1.2\lib\net40\ogr_csharp.dll</HintPath>
+      <HintPath>..\packages\GDAL.1.9.2\lib\net40\ogr_csharp.dll</HintPath>
     </Reference>
     <Reference Include="Oracle.DataAccess">
       <HintPath>..\Packages\odp.net.x64.112.3.0\lib\net40\Oracle.DataAccess.dll</HintPath>
     </Reference>
-    <Reference Include="osr_csharp, Version=1.0.4551.38342, Culture=neutral, PublicKeyToken=db5a52b08dc5b321, processorArchitecture=MSIL">
+    <Reference Include="osr_csharp, Version=1.0.4704.32536, Culture=neutral, PublicKeyToken=db5a52b08dc5b321, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\GDAL.1.9.1.2\lib\net40\osr_csharp.dll</HintPath>
+      <HintPath>..\packages\GDAL.1.9.2\lib\net40\osr_csharp.dll</HintPath>
     </Reference>
     <Reference Include="policy.2.0.Npgsql">
       <HintPath>..\packages\Npgsql.2.0.12.1\lib\net40\policy.2.0.Npgsql.dll</HintPath>
@@ -177,17 +177,11 @@
   <PropertyGroup>
     <PostBuildEvent>
     if not exist "$(TargetDir)gdal" md "$(TargetDir)gdal"
-    xcopy /s /y "$(SolutionDir)packages\GDAL.1.9.1\gdal\*.*" "$(TargetDir)gdal"
-    if not exist "$(TargetDir)gdal" md "$(TargetDir)gdal"
-    xcopy /s /y "$(SolutionDir)packages\GDAL.1.9.1.1\gdal\*.*" "$(TargetDir)gdal"
-    if not exist "$(TargetDir)gdal" md "$(TargetDir)gdal"
-    xcopy /s /y "$(SolutionDir)packages\GDAL.Native.1.9.1.2\gdal\*.*" "$(TargetDir)gdal"</PostBuildEvent>
+    xcopy /s /y "$(SolutionDir)packages\GDAL.Native.1.9.2\gdal\*.*" "$(TargetDir)gdal"
+    </PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
   </Target>  -->
-  <!--<PropertyGroup>
-    <PostBuildEvent>xcopy /Y "$(ProjectDir)..\ExternalReferences\References4SharpMap.Extensions\FWToolsUnmanaged2.4.2\*.dll" $(TargetDir)</PostBuildEvent>
-  </PropertyGroup>-->
 </Project>

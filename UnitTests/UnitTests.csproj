@@ -134,6 +134,7 @@
     <Compile Include="Data\Providers\MsSqlServerSpatialTests.cs" />
     <Compile Include="Data\Providers\ShapeFileProviderTests.cs" />
     <Compile Include="Data\Providers\SQLServer2008Tests.cs" />
+    <Compile Include="GdalNativeConfiguration.cs" />
     <Compile Include="MapDecorationTest.cs" />
     <Compile Include="MapTest.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
@@ -182,7 +183,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <None Include="packages.config" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -222,6 +225,7 @@
     <None Include="Resources\Women.png" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="GdalNativeConfiguration.vb" />
     <Content Include="x64\SQLite.Interop.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -235,6 +239,7 @@
   <PropertyGroup>
     <PostBuildEvent>
     if not exist "$(TargetDir)gdal" md "$(TargetDir)gdal"
-    xcopy /s /y "$(SolutionDir)packages\GDAL.Native.1.9.1.2\gdal\*.*" "$(TargetDir)gdal"</PostBuildEvent>
+    xcopy /s /y "$(SolutionDir)packages\GDAL.Native.1.9.2\gdal\*.*" "$(TargetDir)gdal"
+    </PostBuildEvent>
   </PropertyGroup>
 </Project>
