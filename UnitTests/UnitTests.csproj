@@ -134,7 +134,6 @@
     <Compile Include="Data\Providers\MsSqlServerSpatialTests.cs" />
     <Compile Include="Data\Providers\ShapeFileProviderTests.cs" />
     <Compile Include="Data\Providers\SQLServer2008Tests.cs" />
-    <Compile Include="GdalNativeConfiguration.cs" />
     <Compile Include="MapDecorationTest.cs" />
     <Compile Include="MapTest.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
@@ -225,7 +224,6 @@
     <None Include="Resources\Women.png" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="GdalNativeConfiguration.vb" />
     <Content Include="x64\SQLite.Interop.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
