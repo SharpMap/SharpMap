@@ -510,12 +510,12 @@ namespace SharpMap.Web.Wms
                 var requestLayers = context.Request.Params["QUERY_LAYERS"].Split(new[] { ',' });
                 if (String.Compare(infoFormat, "text/json", ignoreCase) == 0)
                 {
-                    vstr = CreateFeatureInfoGeoJSON(map, requestLayers, x, y, fc, cqlFilter);
+                    vstr = CreateFeatureInfoGeoJSON(map, requestLayers, x, y, fc, cqlFilter, context);
                     context.Response.ContentType = "text/json";
                 }
                 else
                 {
-                    vstr = CreateFeatureInfoPlain(map, requestLayers, x, y, fc, cqlFilter);
+                    vstr = CreateFeatureInfoPlain(map, requestLayers, x, y, fc, cqlFilter, context);
                     context.Response.ContentType = "text/plain";
                 }
                 context.Response.Clear();
