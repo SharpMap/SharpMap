@@ -125,6 +125,68 @@ namespace SharpMap.Web.Wms
                 _pixelSensitivity = pixelSensitivity;
             ParseQueryString(map, description);
         }
+
+        ///  <summary>
+        ///  Generates a WMS 1.3.0 compliant response based on a <see cref="SharpMap.Map"/> and the current HttpRequest.
+        ///  </summary>
+        ///  <remarks>
+        ///  <para>
+        ///  The Web Map Server implementation in SharpMap requires v1.3.0 compatible clients,
+        ///  and support the basic operations "GetCapabilities" and "GetMap"
+        ///  as required by the WMS v1.3.0 specification. SharpMap does not support the optional
+        ///  GetFeatureInfo operation for querying.
+        ///  </para>
+        ///  <example>
+        ///  Creating a WMS server in ASP.NET is very simple using the classes in the SharpMap.Web.Wms namespace.
+        ///  <code lang="C#">
+        ///  void page_load(object o, EventArgs e)
+        ///  {
+        /// 		//Get the path of this page
+        /// 		string url = (Request.Url.Query.Length>0?Request.Url.AbsoluteUri.Replace(Request.Url.Query,""):Request.Url.AbsoluteUri);
+        /// 		SharpMap.Web.Wms.Capabilities.WmsServiceDescription description =
+        /// 			new SharpMap.Web.Wms.Capabilities.WmsServiceDescription("Acme Corp. Map Server", url);
+        /// 		
+        /// 		// The following service descriptions below are not strictly required by the WMS specification.
+        /// 		
+        /// 		// Narrative description and keywords providing additional information 
+        /// 		description.Abstract = "Map Server maintained by Acme Corporation. Contact: webmaster@wmt.acme.com. High-quality maps showing roadrunner nests and possible ambush locations.";
+        /// 		description.Keywords.Add("bird");
+        /// 		description.Keywords.Add("roadrunner");
+        /// 		description.Keywords.Add("ambush");
+        /// 		
+        /// 		//Contact information 
+        /// 		description.ContactInformation.PersonPrimary.Person = "John Doe";
+        /// 		description.ContactInformation.PersonPrimary.Organisation = "Acme Inc";
+        /// 		description.ContactInformation.Address.AddressType = "postal";
+        /// 		description.ContactInformation.Address.Country = "Neverland";
+        /// 		description.ContactInformation.VoiceTelephone = "1-800-WE DO MAPS";
+        /// 		//Impose WMS constraints
+        /// 		description.MaxWidth = 1000; //Set image request size width
+        /// 		description.MaxHeight = 500; //Set image request size height
+        /// 		
+        /// 		//Call method that sets up the map
+        /// 		//We just add a dummy-size, since the wms requests will set the image-size
+        /// 		SharpMap.Map myMap = MapHelper.InitializeMap(new System.Drawing.Size(1,1));
+        /// 		
+        /// 		//Parse the request and create a response
+        /// 		SharpMap.Web.Wms.WmsServer.ParseQueryString(myMap,description);
+        ///  }
+        ///  </code>
+        ///  </example>
+        ///  </remarks>
+        /// <param name="map">Map to serve on WMS</param>
+        ///  <param name="description">Description of map service</param>
+        /// <param name="pixelSensitivity"> </param>
+        /// <param name="intersectDelegate">Delegate for Getfeatureinfo intersecting, when null, the WMS will default to ICanQueryLayer implementation</param>
+        /// <param name="context">The context the <see cref="WmsServer"/> is running in.</param>
+        public static void ParseQueryString(Map map, Capabilities.WmsServiceDescription description, int pixelSensitivity, InterSectDelegate intersectDelegate, HttpContext context)
+        {
+            _intersectDelegate = intersectDelegate;
+            if (pixelSensitivity > 0)
+                _pixelSensitivity = pixelSensitivity;
+            ParseQueryString(map, description);
+        }
+
         /// <summary>
         /// Generates a WMS 1.3.0 compliant response based on a <see cref="SharpMap.Map"/> and the current HttpRequest.
         /// </summary>
@@ -177,18 +239,72 @@ namespace SharpMap.Web.Wms
         /// <param name="description">Description of map service</param>
         public static void ParseQueryString(Map map, Capabilities.WmsServiceDescription description)
         {
+            if (HttpContext.Current == null)
+                throw (new ApplicationException(
+                    "An attempt was made to access the WMS server outside a valid HttpContext"));
+
+            ParseQueryString(map, description, HttpContext.Current);
+        }
+
+        /// <summary>
+        /// Generates a WMS 1.3.0 compliant response based on a <see cref="SharpMap.Map"/> and the current HttpRequest.
+        /// </summary>
+        /// <remarks>
+        /// <para>
+        /// The Web Map Server implementation in SharpMap requires v1.3.0 compatible clients,
+        /// and support the basic operations "GetCapabilities" and "GetMap"
+        /// as required by the WMS v1.3.0 specification. SharpMap does not support the optional
+        /// GetFeatureInfo operation for querying.
+        /// </para>
+        /// <example>
+        /// Creating a WMS server in ASP.NET is very simple using the classes in the SharpMap.Web.Wms namespace.
+        /// <code lang="C#">
+        /// void page_load(object o, EventArgs e)
+        /// {
+        ///		//Get the path of this page
+        ///		string url = (Request.Url.Query.Length>0?Request.Url.AbsoluteUri.Replace(Request.Url.Query,""):Request.Url.AbsoluteUri);
+        ///		SharpMap.Web.Wms.Capabilities.WmsServiceDescription description =
+        ///			new SharpMap.Web.Wms.Capabilities.WmsServiceDescription("Acme Corp. Map Server", url);
+        ///		
+        ///		// The following service descriptions below are not strictly required by the WMS specification.
+        ///		
+        ///		// Narrative description and keywords providing additional information 
+        ///		description.Abstract = "Map Server maintained by Acme Corporation. Contact: webmaster@wmt.acme.com. High-quality maps showing roadrunner nests and possible ambush locations.";
+        ///		description.Keywords.Add("bird");
+        ///		description.Keywords.Add("roadrunner");
+        ///		description.Keywords.Add("ambush");
+        ///		
+        ///		//Contact information 
+        ///		description.ContactInformation.PersonPrimary.Person = "John Doe";
+        ///		description.ContactInformation.PersonPrimary.Organisation = "Acme Inc";
+        ///		description.ContactInformation.Address.AddressType = "postal";
+        ///		description.ContactInformation.Address.Country = "Neverland";
+        ///		description.ContactInformation.VoiceTelephone = "1-800-WE DO MAPS";
+        ///		//Impose WMS constraints
+        ///		description.MaxWidth = 1000; //Set image request size width
+        ///		description.MaxHeight = 500; //Set image request size height
+        ///		
+        ///		//Call method that sets up the map
+        ///		//We just add a dummy-size, since the wms requests will set the image-size
+        ///		SharpMap.Map myMap = MapHelper.InitializeMap(new System.Drawing.Size(1,1));
+        ///		
+        ///		//Parse the request and create a response
+        ///		SharpMap.Web.Wms.WmsServer.ParseQueryString(myMap,description);
+        /// }
+        /// </code>
+        /// </example>
+        /// </remarks>
+        /// <param name="map">Map to serve on WMS</param>
+        /// <param name="description">Description of map service</param>
+        /// <param name="context">The context the <see cref="WmsServer"/> is running in.</param>
+        public static void ParseQueryString(Map map, Capabilities.WmsServiceDescription description, HttpContext context)
+        {
             if (_pixelSensitivity ==-1)
                 _pixelSensitivity = 1;
             if (map == null)
                 throw (new ArgumentException("Map for WMS is null"));
             if (map.Layers.Count == 0)
                 throw (new ArgumentException("Map doesn't contain any layers for WMS service"));
-
-            if (HttpContext.Current == null)
-                throw (new ApplicationException(
-                    "An attempt was made to access the WMS server outside a valid HttpContext"));
-
-            HttpContext context = HttpContext.Current;
 
             //IgnoreCase value should be set according to the VERSION parameter
             //v1.3.0 is case sensitive, but since it causes a lot of problems with several WMS clients, we ignore casing anyway.

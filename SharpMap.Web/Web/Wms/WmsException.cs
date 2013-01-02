@@ -15,6 +15,7 @@
 // along with SharpMap; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
 
+using System;
 using System.Web;
 
 namespace SharpMap.Web.Wms
@@ -24,25 +25,68 @@ namespace SharpMap.Web.Wms
     /// </summary>
     public class WmsException
     {
-        public static void ThrowWmsException(string Message)
+        /// <summary>
+        /// Throws a <see cref="WmsExceptionCode.NotApplicable"/> WMS excption. The <see cref="HttpContext.Current"/> is used to write the response stream.
+        /// </summary>
+        /// <param name="message">An additional message text</param>
+        /// <exception cref="InvalidOperationException">Thrown if this function is used outside a valid valid <see cref="HttpContext"/></exception>
+        public static void ThrowWmsException(string message)
         {
-            ThrowWmsException(WmsExceptionCode.NotApplicable, Message);
+            var context = HttpContext.Current;
+            ThrowWmsException(message, context);
         }
 
-        public static void ThrowWmsException(WmsExceptionCode code, string Message)
+
+        /// <summary>
+        /// Throws a <see cref="WmsExceptionCode.NotApplicable"/> WMS excption. The <paramref name="context"/> is used to write the response stream.
+        /// </summary>
+        /// <param name="message">An additional message text</param>
+        /// <param name="context">The <see cref="HttpContext"/></param>
+        /// <exception cref="InvalidOperationException">Thrown if this function is used outside a valid valid <see cref="HttpContext"/></exception>
+        public static void ThrowWmsException(string message, HttpContext context)
         {
-            HttpResponse Response = HttpContext.Current.Response;
-            Response.Clear();
-            Response.ContentType = "text/xml";
-            Response.Write("<?xml version=\"1.0\" encoding=\"utf-8\" ?>\n");
-            Response.Write(
+            if (context == null)
+                throw new InvalidOperationException("WmsException class cannot be used outside a valid HttpContext");
+
+            ThrowWmsException(WmsExceptionCode.NotApplicable, message, context);
+        }
+
+        /// <summary>
+        /// Throws a <paramref name="code"/> WMS excption. The <see cref="HttpContext.Current"/> is used to write the response stream.
+        /// </summary>
+        /// <param name="code">The WMS exception code</param>
+        /// <param name="message">An additional message text</param>
+        /// <exception cref="InvalidOperationException">Thrown if this function is used outside a valid valid <see cref="HttpContext"/></exception>
+        public static void ThrowWmsException(WmsExceptionCode code, string message)
+        {
+            var context = HttpContext.Current;
+            ThrowWmsException(code, message, context);
+        }
+
+        /// <summary>
+        /// Throws a <paramref name="code"/> WMS excption. The <paramref name="context"/> is used to write the response stream.
+        /// </summary>
+        /// <param name="code">The WMS exception code</param>
+        /// <param name="message">An additional message text</param>
+        /// <param name="context">The <see cref="HttpContext"/></param>
+        /// <exception cref="InvalidOperationException">Thrown if this function is used outside a valid valid <see cref="HttpContext"/></exception>
+        public static void ThrowWmsException(WmsExceptionCode code, string message, HttpContext context)
+        {
+            if (context == null)
+                throw new InvalidOperationException("WmsException class cannot be used outside a valid HttpContext");
+
+            var response = context.Response;
+            response.Clear();
+            response.ContentType = "text/xml";
+            response.Write("<?xml version=\"1.0\" encoding=\"utf-8\" ?>\n");
+            response.Write(
                 "<ServiceExceptionReport version=\"1.3.0\" xmlns=\"http://www.opengis.net/ogc\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://www.opengis.net/ogc http://schemas.opengis.net/wms/1.3.0/exceptions_1_3_0.xsd\">\n");
-            Response.Write("<ServiceException");
+            response.Write("<ServiceException");
             if (code != WmsExceptionCode.NotApplicable)
-                Response.Write(" code=\"" + code + "\"");
-            Response.Write(">" + Message + "</ServiceException>\n");
-            Response.Write("</ServiceExceptionReport>");
-            Response.End();
+                response.Write(" code=\"" + code + "\"");
+            response.Write(">" + message + "</ServiceException>\n");
+            response.Write("</ServiceExceptionReport>");
+            response.End();
         }
 
         #region Nested type: WmsExceptionCode
