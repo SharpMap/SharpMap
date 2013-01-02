@@ -30,6 +30,7 @@ namespace SharpMap.Web.Wms
         /// </summary>
         /// <param name="message">An additional message text</param>
         /// <exception cref="InvalidOperationException">Thrown if this function is used outside a valid valid <see cref="HttpContext"/></exception>
+        [Obsolete]
         public static void ThrowWmsException(string message)
         {
             var context = HttpContext.Current;
@@ -57,6 +58,7 @@ namespace SharpMap.Web.Wms
         /// <param name="code">The WMS exception code</param>
         /// <param name="message">An additional message text</param>
         /// <exception cref="InvalidOperationException">Thrown if this function is used outside a valid valid <see cref="HttpContext"/></exception>
+        [Obsolete]
         public static void ThrowWmsException(WmsExceptionCode code, string message)
         {
             var context = HttpContext.Current;

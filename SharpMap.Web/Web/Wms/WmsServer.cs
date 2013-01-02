@@ -314,7 +314,7 @@ namespace SharpMap.Web.Wms
             //Request parameter is mandatory
             if (context.Request.Params["REQUEST"] == null)
             {
-                WmsException.ThrowWmsException("Required parameter REQUEST not specified");
+                WmsException.ThrowWmsException("Required parameter REQUEST not specified", context);
                 return;
             }
             //Check if version is supported
@@ -322,7 +322,7 @@ namespace SharpMap.Web.Wms
             {
                 if (String.Compare(context.Request.Params["VERSION"], "1.3.0", ignoreCase) != 0)
                 {
-                    WmsException.ThrowWmsException("Only version 1.3.0 supported");
+                    WmsException.ThrowWmsException("Only version 1.3.0 supported", context);
                     return;
                 }
             }
@@ -331,7 +331,7 @@ namespace SharpMap.Web.Wms
             {
                 if (String.Compare(context.Request.Params["REQUEST"], "GetCapabilities", ignoreCase) != 0)
                 {
-                    WmsException.ThrowWmsException("VERSION parameter not supplied");
+                    WmsException.ThrowWmsException("VERSION parameter not supplied", context);
                     return;
                 }
             }
@@ -342,13 +342,13 @@ namespace SharpMap.Web.Wms
                 //Service parameter is mandatory for GetCapabilities request
                 if (context.Request.Params["SERVICE"] == null)
                 {
-                    WmsException.ThrowWmsException("Required parameter SERVICE not specified");
+                    WmsException.ThrowWmsException("Required parameter SERVICE not specified", context);
                     return;
                 }
 
                 if (String.Compare(context.Request.Params["SERVICE"], "WMS", StringComparison.InvariantCulture/*IgnoreCase*/) != 0)
                     WmsException.ThrowWmsException(
-                        "Invalid service for GetCapabilities Request. Service parameter must be 'WMS'");
+                        "Invalid service for GetCapabilities Request. Service parameter must be 'WMS'", context);
 
                 XmlDocument capabilities = ServerCapabilities.GetCapabilities(map, description);
                 context.Response.Clear();
@@ -362,66 +362,66 @@ namespace SharpMap.Web.Wms
             {
                 if (context.Request.Params["LAYERS"] == null)
                 {
-                    WmsException.ThrowWmsException("Required parameter LAYERS not specified");
+                    WmsException.ThrowWmsException("Required parameter LAYERS not specified", context);
                     return;
                 }
                 if (context.Request.Params["STYLES"] == null)
                 {
-                    WmsException.ThrowWmsException("Required parameter STYLES not specified");
+                    WmsException.ThrowWmsException("Required parameter STYLES not specified", context);
                     return;
                 }
                 if (context.Request.Params["CRS"] == null)
                 {
-                    WmsException.ThrowWmsException("Required parameter CRS not specified");
+                    WmsException.ThrowWmsException("Required parameter CRS not specified", context);
                     return;
                 }
                 if (context.Request.Params["CRS"] != "EPSG:" + map.Layers[0].TargetSRID)
                 {
-                    WmsException.ThrowWmsException(WmsException.WmsExceptionCode.InvalidCRS, "CRS not supported");
+                    WmsException.ThrowWmsException(WmsException.WmsExceptionCode.InvalidCRS, "CRS not supported", context);
                     return;
                 }
                 if (context.Request.Params["BBOX"] == null)
                 {
                     WmsException.ThrowWmsException(WmsException.WmsExceptionCode.InvalidDimensionValue,
-                                                   "Required parameter BBOX not specified");
+                                                   "Required parameter BBOX not specified", context);
                     return;
                 }
                 if (context.Request.Params["WIDTH"] == null)
                 {
                     WmsException.ThrowWmsException(WmsException.WmsExceptionCode.InvalidDimensionValue,
-                                                   "Required parameter WIDTH not specified");
+                                                   "Required parameter WIDTH not specified", context);
                     return;
                 }
                 if (context.Request.Params["HEIGHT"] == null)
                 {
                     WmsException.ThrowWmsException(WmsException.WmsExceptionCode.InvalidDimensionValue,
-                                                   "Required parameter HEIGHT not specified");
+                                                   "Required parameter HEIGHT not specified", context);
                     return;
                 }
                 if (context.Request.Params["FORMAT"] == null)
                 {
-                    WmsException.ThrowWmsException("Required parameter FORMAT not specified");
+                    WmsException.ThrowWmsException("Required parameter FORMAT not specified", context);
                     return;
                 }
                 if (context.Request.Params["QUERY_LAYERS"] == null)
                 {
-                    WmsException.ThrowWmsException("Required parameter QUERY_LAYERS not specified");
+                    WmsException.ThrowWmsException("Required parameter QUERY_LAYERS not specified", context);
                     return;
                 }
                 if (context.Request.Params["INFO_FORMAT"] == null)
                 {
-                    WmsException.ThrowWmsException("Required parameter INFO_FORMAT not specified");
+                    WmsException.ThrowWmsException("Required parameter INFO_FORMAT not specified", context);
                     return;
                 }
                 //parameters X&Y are not part of the 1.3.0 specification, but are included for backwards compatability with 1.1.1 (OpenLayers likes it when used together with wms1.1.1 services)
                 if (context.Request.Params["X"] == null && context.Request.Params["I"] == null)
                 {
-                    WmsException.ThrowWmsException("Required parameter I not specified");
+                    WmsException.ThrowWmsException("Required parameter I not specified", context);
                     return;
                 }
                 if (context.Request.Params["Y"] == null && context.Request.Params["J"] == null)
                 {
-                    WmsException.ThrowWmsException("Required parameter J not specified");
+                    WmsException.ThrowWmsException("Required parameter J not specified", context);
                     return;
                 }
                 //sets the map size to the size of the client in order to calculate the coordinates of the projection of the client
@@ -432,14 +432,14 @@ namespace SharpMap.Web.Wms
                 }
                 catch
                 {
-                    WmsException.ThrowWmsException("Invalid parameters for HEIGHT or WITDH");
+                    WmsException.ThrowWmsException("Invalid parameters for HEIGHT or WITDH", context);
                     return;
                 }
                 //sets the boundingbox to the boundingbox of the client in order to calculate the coordinates of the projection of the client
                 var bbox = ParseBBOX(context.Request.Params["bbox"], map.Layers[0].TargetSRID == 4326);                
                 if (bbox == null)
                 {
-                    WmsException.ThrowWmsException("Invalid parameter BBOX");
+                    WmsException.ThrowWmsException("Invalid parameter BBOX", context);
                     return;
                 }
                 map.ZoomToBox(bbox);
@@ -455,7 +455,7 @@ namespace SharpMap.Web.Wms
                     }
                     catch
                     {
-                        WmsException.ThrowWmsException("Invalid parameters for I");
+                        WmsException.ThrowWmsException("Invalid parameters for X", context);
                     }
                 if (context.Request.Params["I"] != null)
                     try
@@ -464,7 +464,7 @@ namespace SharpMap.Web.Wms
                     }
                     catch
                     {
-                        WmsException.ThrowWmsException("Invalid parameters for I");
+                        WmsException.ThrowWmsException("Invalid parameters for I", context);
                     }
                 //same procedure for J (Y)
                 if (context.Request.Params["Y"] != null)
@@ -474,7 +474,7 @@ namespace SharpMap.Web.Wms
                     }
                     catch
                     {
-                        WmsException.ThrowWmsException("Invalid parameters for I");
+                        WmsException.ThrowWmsException("Invalid parameters for Y", context);
                     }
                 if (context.Request.Params["J"] != null)
                     try
@@ -483,7 +483,7 @@ namespace SharpMap.Web.Wms
                     }
                     catch
                     {
-                        WmsException.ThrowWmsException("Invalid parameters for I");
+                        WmsException.ThrowWmsException("Invalid parameters for I", context);
                     }
                 //var p = map.ImageToWorld(new PointF(x, y));
                 int fc;
@@ -532,45 +532,45 @@ namespace SharpMap.Web.Wms
                 //Check for required parameters
                 if (context.Request.Params["LAYERS"] == null)
                 {
-                    WmsException.ThrowWmsException("Required parameter LAYERS not specified");
+                    WmsException.ThrowWmsException("Required parameter LAYERS not specified", context);
                     return;
                 }
                 if (context.Request.Params["STYLES"] == null)
                 {
-                    WmsException.ThrowWmsException("Required parameter STYLES not specified");
+                    WmsException.ThrowWmsException("Required parameter STYLES not specified", context);
                     return;
                 }
                 if (context.Request.Params["CRS"] == null)
                 {
-                    WmsException.ThrowWmsException("Required parameter CRS not specified");
+                    WmsException.ThrowWmsException("Required parameter CRS not specified", context);
                     return;
                 }
                 if (context.Request.Params["CRS"] != "EPSG:" + map.Layers[0].TargetSRID)
                 {
-                    WmsException.ThrowWmsException(WmsException.WmsExceptionCode.InvalidCRS, "CRS not supported");
+                    WmsException.ThrowWmsException(WmsException.WmsExceptionCode.InvalidCRS, "CRS not supported", context);
                     return;
                 }
                 if (context.Request.Params["BBOX"] == null)
                 {
                     WmsException.ThrowWmsException(WmsException.WmsExceptionCode.InvalidDimensionValue,
-                                                   "Required parameter BBOX not specified");
+                                                   "Required parameter BBOX not specified", context);
                     return;
                 }
                 if (context.Request.Params["WIDTH"] == null)
                 {
                     WmsException.ThrowWmsException(WmsException.WmsExceptionCode.InvalidDimensionValue,
-                                                   "Required parameter WIDTH not specified");
+                                                   "Required parameter WIDTH not specified", context);
                     return;
                 }
                 if (context.Request.Params["HEIGHT"] == null)
                 {
                     WmsException.ThrowWmsException(WmsException.WmsExceptionCode.InvalidDimensionValue,
-                                                   "Required parameter HEIGHT not specified");
+                                                   "Required parameter HEIGHT not specified", context);
                     return;
                 }
                 if (context.Request.Params["FORMAT"] == null)
                 {
-                    WmsException.ThrowWmsException("Required parameter FORMAT not specified");
+                    WmsException.ThrowWmsException("Required parameter FORMAT not specified", context);
                     return;
                 }
 
@@ -585,7 +585,7 @@ namespace SharpMap.Web.Wms
                     }
                     catch
                     {
-                        WmsException.ThrowWmsException("Invalid parameter BGCOLOR");
+                        WmsException.ThrowWmsException("Invalid parameter BGCOLOR", context);
                         return;
                     }
                 }
@@ -596,7 +596,7 @@ namespace SharpMap.Web.Wms
                 ImageCodecInfo imageEncoder = GetEncoderInfo(context.Request.Params["FORMAT"]);
                 if (imageEncoder == null)
                 {
-                    WmsException.ThrowWmsException("Invalid MimeType specified in FORMAT parameter");
+                    WmsException.ThrowWmsException("Invalid MimeType specified in FORMAT parameter", context);
                     return;
                 }
 
@@ -605,25 +605,25 @@ namespace SharpMap.Web.Wms
                 if (!int.TryParse(context.Request.Params["WIDTH"], out width))
                 {
                     WmsException.ThrowWmsException(WmsException.WmsExceptionCode.InvalidDimensionValue,
-                                                   "Invalid parameter WIDTH");
+                                                   "Invalid parameter WIDTH", context);
                     return;
                 }
                 if (description.MaxWidth > 0 && width > description.MaxWidth)
                 {
                     WmsException.ThrowWmsException(WmsException.WmsExceptionCode.OperationNotSupported,
-                                                   "Parameter WIDTH too large");
+                                                   "Parameter WIDTH too large", context);
                     return;
                 }
                 if (!int.TryParse(context.Request.Params["HEIGHT"], out height))
                 {
                     WmsException.ThrowWmsException(WmsException.WmsExceptionCode.InvalidDimensionValue,
-                                                   "Invalid parameter HEIGHT");
+                                                   "Invalid parameter HEIGHT", context);
                     return;
                 }
                 if (description.MaxHeight > 0 && height > description.MaxHeight)
                 {
                     WmsException.ThrowWmsException(WmsException.WmsExceptionCode.OperationNotSupported,
-                                                   "Parameter HEIGHT too large");
+                                                   "Parameter HEIGHT too large", context);
                     return;
                 }
                 map.Size = new Size(width, height);
@@ -631,7 +631,7 @@ namespace SharpMap.Web.Wms
                 var bbox = ParseBBOX(context.Request.Params["bbox"], map.Layers[0].TargetSRID == 4326);
                 if (bbox == null)
                 {
-                    WmsException.ThrowWmsException("Invalid parameter BBOX");
+                    WmsException.ThrowWmsException("Invalid parameter BBOX", context);
                     return;
                 }
                 
@@ -699,7 +699,7 @@ namespace SharpMap.Web.Wms
                                                 }
                                                 else
                                                 {
-                                                    WmsException.ThrowWmsException(WmsException.WmsExceptionCode.StyleNotDefined, "Style not advertised for this layer");
+                                                    WmsException.ThrowWmsException(WmsException.WmsExceptionCode.StyleNotDefined, "Style not advertised for this layer", context);
                                                 }
                                             }
                                         }                                                
@@ -743,7 +743,7 @@ namespace SharpMap.Web.Wms
                             layers.Length > description.LayerLimit)
                         {
                             WmsException.ThrowWmsException(WmsException.WmsExceptionCode.OperationNotSupported,
-                                                           "Too many layers requested");
+                                                           "Too many layers requested", context);
                             return;
                         }
                     }
@@ -764,7 +764,7 @@ namespace SharpMap.Web.Wms
                         if (lay == null)
                         {
                             WmsException.ThrowWmsException(WmsException.WmsExceptionCode.LayerNotDefined,
-                                                           "Unknown layer '" + layer + "'");
+                                                           "Unknown layer '" + layer + "'", context);
                             return;
                         }
                         lay.Enabled = true;
@@ -787,7 +787,7 @@ namespace SharpMap.Web.Wms
                 //context.Response.End();
             }
             else
-                WmsException.ThrowWmsException(WmsException.WmsExceptionCode.OperationNotSupported, "Invalid request");
+                WmsException.ThrowWmsException(WmsException.WmsExceptionCode.OperationNotSupported, "Invalid request", context);
         }
 
         private static void PrepareDataSourceForCql(IProvider provider, string cqlFilterString)
@@ -858,9 +858,17 @@ namespace SharpMap.Web.Wms
         /// <param name="y">The y-ordinate</param>
         /// <param name="featureCount"></param>
         /// <param name="cqlFilter">The code query language</param>
+        /// <param name="context">The <see cref="HttpContext"/> to use. If not specified or <value>null</value>, <see cref="HttpContext.Current"/> is used.</param>
+        /// <exception cref="InvalidOperationException">Thrown if this function is used without a valid <see cref="HttpContext"/> at hand</exception>
         /// <returns>Plain text string with featureinfo results</returns>
-        public static string CreateFeatureInfoPlain(Map map, string[] requestedLayers, Single x, Single y, int featureCount, string cqlFilter)
+        public static string CreateFeatureInfoPlain(Map map, string[] requestedLayers, Single x, Single y, int featureCount, string cqlFilter, HttpContext context = null)
         {
+            if (context == null)
+                context = HttpContext.Current;
+
+            if (context == null)
+                throw new InvalidOperationException("Cannot use CreateFeatureInfoPlain without a valid HttpContext");
+
             var vstr = "GetFeatureInfo results: \n";
             foreach (string requestLayer in requestedLayers)
             {
@@ -944,7 +952,7 @@ namespace SharpMap.Web.Wms
                 if (found == false)
                 {
                     WmsException.ThrowWmsException(WmsException.WmsExceptionCode.LayerNotDefined,
-                                                   "Unknown layer '" + requestLayer + "'");                    
+                                                   "Unknown layer '" + requestLayer + "'", context);                    
                 }
             }
             return vstr;
@@ -958,9 +966,17 @@ namespace SharpMap.Web.Wms
         /// <param name="y">The y-Ordinate</param>
         /// <param name="featureCount">The number of features</param>
         /// <param name="cqlFilterString">The CQL Filter string</param>
+        /// <param name="context">The <see cref="HttpContext"/> to use. If not specified or <value>null</value>, <see cref="HttpContext.Current"/> is used.</param>
+        /// <exception cref="InvalidOperationException">Thrown if this function is used without a valid <see cref="HttpContext"/> at hand</exception>
         /// <returns>GeoJSON string with featureinfo results</returns>
-        public static string CreateFeatureInfoGeoJSON(Map map, string[] requestedLayers, Single x, Single y, int featureCount, string cqlFilterString)
+        public static string CreateFeatureInfoGeoJSON(Map map, string[] requestedLayers, Single x, Single y, int featureCount, string cqlFilterString, HttpContext context = null)
         {
+            if (context == null)
+                context = HttpContext.Current;
+
+            if (context == null)
+                throw new InvalidOperationException("Cannot use CreateFeatureInfoGeoJSON without a valid HttpContext");
+
             var items = new List<Converters.GeoJSON.GeoJSON>();
             foreach (var requestLayer in requestedLayers)
             {
@@ -1029,7 +1045,7 @@ namespace SharpMap.Web.Wms
                 if (found == false)
                 {
                     WmsException.ThrowWmsException(WmsException.WmsExceptionCode.LayerNotDefined,
-                                                   "Unknown layer '" + requestLayer + "'");
+                                                   "Unknown layer '" + requestLayer + "'", context);
                 }
             }
             var writer = new StringWriter();

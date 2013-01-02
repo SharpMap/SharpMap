@@ -28,7 +28,7 @@ namespace SharpMap.Demo.Wms.Handlers
                 string s = context.Request.Params["BBOX"];
                 if (String.IsNullOrEmpty(s))
                 {
-                    WmsException.ThrowWmsException(WmsException.WmsExceptionCode.InvalidDimensionValue, "Required parameter BBOX not specified");
+                    WmsException.ThrowWmsException(WmsException.WmsExceptionCode.InvalidDimensionValue, "Required parameter BBOX not specified", context);
                     return;
                 }
 
@@ -37,7 +37,7 @@ namespace SharpMap.Demo.Wms.Handlers
                 BoundingBox bbox = WmsServer.ParseBBOX(s, flip);
                 if (bbox == null)
                 {
-                    WmsException.ThrowWmsException("Invalid parameter BBOX");
+                    WmsException.ThrowWmsException("Invalid parameter BBOX", context);
                     return;
                 }
 
