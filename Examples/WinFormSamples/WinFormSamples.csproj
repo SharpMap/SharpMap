@@ -171,7 +171,6 @@
     <Compile Include="FormMovingObjectOverTileLayer.Designer.cs">
       <DependentUpon>FormMovingObjectOverTileLayer.cs</DependentUpon>
     </Compile>
-    <Compile Include="GdalNativeConfiguration.cs" />
     <Compile Include="LayerTools.cs" />
     <Compile Include="Samples\CreateTilesSample.cs" />
     <Compile Include="Samples\GdalSample.cs" />
@@ -179,7 +178,6 @@
     <Compile Include="Samples\GradiantThemeSample.cs" />
     <Compile Include="Samples\OracleSample.cs" />
     <Compile Include="SharpMapTileSource.cs" />
-    <Content Include="GdalNativeConfiguration.vb" />
     <Content Include="x64\SQLite.Interop.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -530,10 +528,6 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\SharpMap.Extensions.x86\SharpMap.Extensions.x86.csproj">
-      <Project>{9961698e-4ee0-4a3b-84b7-a23e69e0c13c}</Project>
-      <Name>SharpMap.Extensions.x86</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\SharpMap.Extensions\SharpMap.Extensions.csproj">
       <Project>{A4140C12-53F5-438C-8D24-9E48C504FECF}</Project>
       <Name>SharpMap.Extensions.VS2010</Name>

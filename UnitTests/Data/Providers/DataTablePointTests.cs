@@ -37,14 +37,21 @@ namespace UnitTests.Data.Providers
 
         protected string TestDataPath
         {
-            get { return System.IO.Path.Combine(new Uri(GetType().Assembly.CodeBase).LocalPath, "TestData"); }
+            get { return System.IO.Path.Combine(System.IO.Path.GetDirectoryName(new Uri(GetType().Assembly.CodeBase).LocalPath), "TestData"); }
         }
 
         protected string GetTestDataFilePath(string fileName)
         {
-            var uri = new Uri(fileName);
-            if (uri.IsAbsoluteUri)
-                return uri.LocalPath;
+            try
+            {
+                var uri = new Uri(fileName);
+                if (uri.IsAbsoluteUri)
+                    return uri.LocalPath;
+            }
+            catch
+            {
+                
+            }
             return System.IO.Path.Combine(TestDataPath, fileName);
         }
     }

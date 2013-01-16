@@ -67,12 +67,12 @@
         [NUnit.Framework.Test]
         public void TestPerformanceLinealLayer()
         {
-            NUnit.Framework.Assert.IsTrue(System.IO.File.Exists(GetTestDataFilePath("SPATIAL_F_SKARVMUFF.shp")),
+            NUnit.Framework.Assert.IsTrue(System.IO.File.Exists(GetTestDataFilePath("roads_ugl.shp")),
                                           "Specified shapefile is not present!");
 
             var map = new SharpMap.Map(new System.Drawing.Size(1024, 768));
 
-            var shp = new SharpMap.Data.Providers.ShapeFile(GetTestDataFilePath("SPATIAL_F_SKARVMUFF.shp"), false, false);
+            var shp = new SharpMap.Data.Providers.ShapeFile(GetTestDataFilePath("roads_ugl.shp"), false, false);
             var lyr = new SharpMap.Layers.Symbolizer.LinealVectorLayer("Roads", shp)
                           {
                               Symbolizer =
