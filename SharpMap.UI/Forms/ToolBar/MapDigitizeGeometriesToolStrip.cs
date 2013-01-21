@@ -217,13 +217,9 @@ namespace SharpMap.Forms.ToolBar
                     if (MapControl != null)
                     {
                         var map = MapControl.Map ?? new Map();
-                        if (map.Layers.Contains(_layer))
+                        if (!map.Layers.Contains(_layer))
                         {
-                            if (map.Layers[0] != _layer)
-                            {
-                                map.Layers.Remove(_layer);
-                                map.Layers.Add(_layer);
-                            }
+                            map.Layers.Add(_layer);
                         }
                         MapControl.Refresh();
                     }

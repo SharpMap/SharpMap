@@ -16,10 +16,10 @@ namespace SharpMap.Forms
             _wktTokens.Add("POINT", "POINT(10 10)");
             _wktTokens.Add("LINESTRING", "LINESTRING(5 5, 7 16, 3 8)");
             _wktTokens.Add("POLYGON", "POLYGON((10 10, 10 20, 20 20, 20 10, 10 10), (12 12, 18 12, 18 18, 12 18, 12 12))");
-            _wktTokens.Add("MULTIPOINT", "MULTIPOINT((10 10), (15 15), (13, 9))");
-            _wktTokens.Add("MULTILINESTRING", "MULTILINESTRING((5 5, 7 16, 3 8), (15 15, 13, 9))");
+            _wktTokens.Add("MULTIPOINT", "MULTIPOINT((10 10), (15 15), (13 9))");
+            _wktTokens.Add("MULTILINESTRING", "MULTILINESTRING((5 5, 7 16, 3 8), (15 15, 13 9))");
             _wktTokens.Add("MULTIPOLYGON", "MULTIPOLYGON(((10 10, 10 20, 20 20, 20 10, 10 10), (12 12, 18 12, 18 18, 12 18, 12 12)), ((21 21, 21 31, 31 31, 31 21, 21 21)))");
-            _wktTokens.Add("GEOMETRYCOLLECTION", "GEOMETRYCOLLECTION(MULTIPOINT((10 10), (15 15), (13, 9)), LINESTRING(5 5, 7 16, 3 8))");
+            _wktTokens.Add("GEOMETRYCOLLECTION", "GEOMETRYCOLLECTION(MULTIPOINT((10 10), (15 15), (13 9)), LINESTRING(5 5, 7 16, 3 8))");
 
             ShowInTaskbar = false;
 

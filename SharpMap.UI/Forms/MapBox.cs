@@ -1422,7 +1422,7 @@ namespace SharpMap.Forms
                         _dragEndPoint = new Point(0, 0);
                         if (_pointArray != null)
                         {
-                            _pointArray[_pointArray.Count] = Map.ImageToWorld(ClipPoint(e.Location));
+                            _pointArray[_pointArray.Count-1] = Map.ImageToWorld(ClipPoint(e.Location));
                             _rectangle = GenerateRectangle(_dragStartPoint, ClipPoint(e.Location));
                             Invalidate(new Region(ClientRectangle));
                         }
@@ -1929,8 +1929,8 @@ namespace SharpMap.Forms
                         if (_pointArray == null)
                         {
                             _pointArray = new List<Coordinate>(2);
-                            _pointArray[0] = Map.ImageToWorld(e.Location);
-                            _pointArray[1] = Map.ImageToWorld(e.Location);
+                            _pointArray.Add(Map.ImageToWorld(e.Location));
+                            _pointArray.Add(Map.ImageToWorld(e.Location));
                         }
                         else
                         {
