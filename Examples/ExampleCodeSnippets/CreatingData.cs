@@ -1,5 +1,4 @@
-﻿using NetTopologySuite.Geometries;
-
+﻿
 namespace ExampleCodeSnippets
 {
     /// <summary>
@@ -133,7 +132,7 @@ namespace ExampleCodeSnippets
     public class TestShapeFactory
     {
         public static readonly GeoAPI.Geometries.IGeometryFactory Factory =
-            new NetTopologySuite.Geometries.GeometryFactory(new PrecisionModel(1000));
+            new NetTopologySuite.Geometries.GeometryFactory(new NetTopologySuite.Geometries.PrecisionModel(1000));
         
         [NUnit.Framework.Test]
         public void TestRectangle()
