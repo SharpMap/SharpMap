@@ -57,6 +57,7 @@ namespace SharpMap.Layers
     /// </code>
     /// </example>
     /// </remarks>
+    [Serializable]
     public class GdalRasterLayer : Layer, ICanQueryLayer, IDisposable
     {
         static GdalRasterLayer()
@@ -1277,10 +1278,10 @@ namespace SharpMap.Layers
                 for (int i = 0; i < _lbands + 1; i++)
                     _histogram.Add(new int[256]);
 
-                double left = Math.Max((sbyte)bbox.MinX, (sbyte)_envelope.MinX);
-                double top = Math.Min((sbyte)bbox.MaxY, (sbyte)_envelope.MaxY);
-                double right = Math.Min((sbyte)bbox.MaxX, (sbyte)_envelope.MaxX);
-                double bottom = Math.Max((sbyte)bbox.MinY, (sbyte)_envelope.MinY);
+                double left = Math.Max(bbox.MinX, _envelope.MinX);
+                double top = Math.Min(bbox.MaxY, _envelope.MaxY);
+                double right = Math.Min(bbox.MaxX, _envelope.MaxX);
+                double bottom = Math.Max(bbox.MinY, _envelope.MinY);
 
                 double x1 = Math.Abs(_geoTransform.PixelX(left));
                 double y1 = Math.Abs(_geoTransform.PixelY(top));
