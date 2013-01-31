@@ -252,7 +252,7 @@ namespace SharpMap.Data
         #region IEnumerable Members
 
         /// <summary>
-        /// Returns an enumerator for enumering the rows of the FeatureDataTable
+        /// Returns an enumerator for enumerating the rows of the FeatureDataTable
         /// </summary>
         /// <returns></returns>
         public IEnumerator GetEnumerator()

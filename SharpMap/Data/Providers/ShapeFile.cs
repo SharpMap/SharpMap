@@ -45,14 +45,14 @@ namespace SharpMap.Data.Providers
 		Null = 0,
 		/// <summary>
 		/// A point consists of a pair of double-precision coordinates.
-		/// SharpMap interpretes this as <see cref="GeoAPI.Geometries.IPoint"/>
+		/// SharpMap interprets this as <see cref="GeoAPI.Geometries.IPoint"/>
 		/// </summary>
 		Point = 1,
 		/// <summary>
 		/// PolyLine is an ordered set of vertices that consists of one or more parts. A part is a
 		/// connected sequence of two or more points. Parts may or may not be connected to one
 		///	another. Parts may or may not intersect one another.
-		/// SharpMap interpretes this as either <see cref="GeoAPI.Geometries.ILineString"/> or <see cref="GeoAPI.Geometries.IMultiLineString"/>
+		/// SharpMap interprets this as either <see cref="GeoAPI.Geometries.ILineString"/> or <see cref="GeoAPI.Geometries.IMultiLineString"/>
 		/// </summary>
 		PolyLine = 3,
 		/// <summary>
@@ -64,58 +64,58 @@ namespace SharpMap.Data.Providers
 		/// holes in polygons are in a counterclockwise direction. Vertices for a single, ringed
 		/// polygon are, therefore, always in clockwise order. The rings of a polygon are referred to
 		/// as its parts.
-        /// SharpMap interpretes this as either <see cref="GeoAPI.Geometries.IPolygon"/> or <see cref="GeoAPI.Geometries.IMultiPolygon"/>
+        /// SharpMap interprets this as either <see cref="GeoAPI.Geometries.IPolygon"/> or <see cref="GeoAPI.Geometries.IMultiPolygon"/>
 		/// </summary>
 		Polygon = 5,
 		/// <summary>
 		/// A MultiPoint represents a set of points.
-        /// SharpMap interpretes this as <see cref="GeoAPI.Geometries.IMultiPoint"/>
+        /// SharpMap interprets this as <see cref="GeoAPI.Geometries.IMultiPoint"/>
 		/// </summary>
 		Multipoint = 8,
 		/// <summary>
 		/// A PointZ consists of a triplet of double-precision coordinates plus a measure.
-        /// SharpMap interpretes this as <see cref="GeoAPI.Geometries.IPoint"/>
+        /// SharpMap interprets this as <see cref="GeoAPI.Geometries.IPoint"/>
 		/// </summary>
 		PointZ = 11,
 		/// <summary>
 		/// A PolyLineZ consists of one or more parts. A part is a connected sequence of two or
 		/// more points. Parts may or may not be connected to one another. Parts may or may not
 		/// intersect one another.
-        /// SharpMap interpretes this as <see cref="GeoAPI.Geometries.ILineString"/> or <see cref="GeoAPI.Geometries.IMultiLineString"/>
+        /// SharpMap interprets this as <see cref="GeoAPI.Geometries.ILineString"/> or <see cref="GeoAPI.Geometries.IMultiLineString"/>
 		/// </summary>
 		PolyLineZ = 13,
 		/// <summary>
 		/// A PolygonZ consists of a number of rings. A ring is a closed, non-self-intersecting loop.
 		/// A PolygonZ may contain multiple outer rings. The rings of a PolygonZ are referred to as
 		/// its parts.
-        /// SharpMap interpretes this as either <see cref="GeoAPI.Geometries.IPolygon"/> or <see cref="GeoAPI.Geometries.IMultiPolygon"/>
+        /// SharpMap interprets this as either <see cref="GeoAPI.Geometries.IPolygon"/> or <see cref="GeoAPI.Geometries.IMultiPolygon"/>
 		/// </summary>
 		PolygonZ = 15,
 		/// <summary>
 		/// A MultiPointZ represents a set of <see cref="PointZ"/>s.
-        /// SharpMap interpretes this as <see cref="GeoAPI.Geometries.IMultiPoint"/>
+        /// SharpMap interprets this as <see cref="GeoAPI.Geometries.IMultiPoint"/>
 		/// </summary>
 		MultiPointZ = 18,
 		/// <summary>
 		/// A PointM consists of a pair of double-precision coordinates in the order X, Y, plus a measure M.
-        /// SharpMap interpretes this as <see cref="GeoAPI.Geometries.IPoint"/>
+        /// SharpMap interprets this as <see cref="GeoAPI.Geometries.IPoint"/>
 		/// </summary>
 		PointM = 21,
 		/// <summary>
 		/// A shapefile PolyLineM consists of one or more parts. A part is a connected sequence of
 		/// two or more points. Parts may or may not be connected to one another. Parts may or may
 		/// not intersect one another.
-        /// SharpMap interpretes this as <see cref="GeoAPI.Geometries.ILineString"/> or <see cref="GeoAPI.Geometries.IMultiLineString"/>
+        /// SharpMap interprets this as <see cref="GeoAPI.Geometries.ILineString"/> or <see cref="GeoAPI.Geometries.IMultiLineString"/>
 		/// </summary>
 		PolyLineM = 23,
 		/// <summary>
 		/// A PolygonM consists of a number of rings. A ring is a closed, non-self-intersecting loop.
-        /// SharpMap interpretes this as either <see cref="GeoAPI.Geometries.IPolygon"/> or <see cref="GeoAPI.Geometries.IMultiPolygon"/>
+        /// SharpMap interprets this as either <see cref="GeoAPI.Geometries.IPolygon"/> or <see cref="GeoAPI.Geometries.IMultiPolygon"/>
 		/// </summary>
 		PolygonM = 25,
 		/// <summary>
 		/// A MultiPointM represents a set of <see cref="PointM"/>s.
-        /// SharpMap interpretes this as <see cref="GeoAPI.Geometries.IMultiPoint"/>
+        /// SharpMap interprets this as <see cref="GeoAPI.Geometries.IMultiPoint"/>
 		/// </summary>
 		MultiPointM = 28,
 		/// <summary>
@@ -605,7 +605,7 @@ namespace SharpMap.Data.Providers
 		/// <para>Please note that this method doesn't guarantee that the geometries returned actually intersect 'bbox', but only
 		/// that their boundingbox intersects 'bbox'.</para>
 		/// <para>This method is much faster than the QueryFeatures method, because intersection tests
-		/// are performed on objects simplifed by their boundingbox, and using the Spatial Index.</para>
+		/// are performed on objects simplified by their boundingbox, and using the Spatial Index.</para>
 		/// </remarks>
 		/// <param name="bbox"></param>
 		/// <returns></returns>
@@ -998,7 +998,7 @@ namespace SharpMap.Data.Providers
 		/// <summary>
 		/// If an index file is present (.shx) it reads the record offsets from the .shx index file and returns the information in an array.
         /// IfF an indexd array is not present it works out the indexes from the data file, by going through the record headers, finding the
-        /// data lengths and workingout the offsets. Which ever method is used a array of index is popuated to be use by the other methods.
+        /// data lengths and workingout the offsets. Which ever method is used a array of index is populated to be use by the other methods.
         /// This array is created when the open method is called, and removed when the close method called.
 		/// </summary>
         private void PopulateIndexes()

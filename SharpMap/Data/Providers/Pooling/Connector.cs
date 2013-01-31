@@ -39,7 +39,7 @@ namespace SharpMap.Data.Providers.Pooling
         private IProvider _Provider;
 
         /// <summary>Counts the numbers of Connections that share
-        /// this Connector. Used in Release() to decide wether this
+        /// this Connector. Used in Release() to decide whether this
         /// connector is to be moved to the PooledConnectors list.</summary>
         internal int _ShareCount;
 

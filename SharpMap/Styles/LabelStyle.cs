@@ -82,7 +82,7 @@ namespace SharpMap.Styles
 
         private Color _ForeColor;
         private Pen _Halo;
-        private HorizontalAlignmentEnum _HorisontalAlignment;
+        private HorizontalAlignmentEnum _HorizontalAlignment;
         private PointF _Offset;
         private VerticalAlignmentEnum _VerticalAlignment;
         private float _rotation;
@@ -106,7 +106,7 @@ namespace SharpMap.Styles
             _CollisionDetection = false;
             _CollisionBuffer = new Size(0, 0);
             _ForeColor = Color.Black;
-            _HorisontalAlignment = HorizontalAlignmentEnum.Center;
+            _HorizontalAlignment = HorizontalAlignmentEnum.Center;
             _VerticalAlignment = VerticalAlignmentEnum.Middle;
         }
 
@@ -264,13 +264,13 @@ namespace SharpMap.Styles
         }
 
         /// <summary>
-        /// The horisontal alignment of the text in relation to the labelpoint
+        /// The horizontal alignment of the text in relation to the labelpoint
         /// </summary>
         [System.ComponentModel.Category("Alignment")]
         public HorizontalAlignmentEnum HorizontalAlignment
         {
-            get { return _HorisontalAlignment; }
-            set { _HorisontalAlignment = value; }
+            get { return _HorizontalAlignment; }
+            set { _HorizontalAlignment = value; }
         }
 
         /// <summary>

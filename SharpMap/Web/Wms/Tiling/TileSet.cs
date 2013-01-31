@@ -107,10 +107,10 @@ namespace SharpMap.Web.Wms.Tiling
         }
 
         /// <summary>
-        /// Parses the TileSets from the VendorSpecificCapabilities node of the WMS Capabilties 
+        /// Parses the TileSets from the VendorSpecificCapabilities node of the WMS Capabilities 
         /// and adds them to the TileSets member
         /// </summary>
-        /// <param name="xnlVendorSpecificCapabilities">The VendorSpecificCapabilities node of the Capabilties</param>
+        /// <param name="xnlVendorSpecificCapabilities">The VendorSpecificCapabilities node of the Capabilities</param>
         /// <returns>A sorted list of <see cref="TileSet"/>s</returns>
         public static SortedList<string, TileSet> ParseVendorSpecificCapabilitiesNode(
             XmlNode xnlVendorSpecificCapabilities)

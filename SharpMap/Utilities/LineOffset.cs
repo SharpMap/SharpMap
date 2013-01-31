@@ -7,14 +7,14 @@ using System.Drawing;
 namespace SharpMap.Utilities
 {
     /// <summary>
-    /// Methods for calculationg line offsets
+    /// Methods for calculating line offsets
     /// </summary>
     public class LineOffset
     {
         
         /// <summary>
         /// Offset a Linestring the given amount perpendicular to the line
-        /// For example if a line should be drawn 10px to the right of its orgiginal position
+        /// For example if a line should be drawn 10px to the right of its original position
         ///
         /// Positive offset offsets right
         /// Negative offset offsets left

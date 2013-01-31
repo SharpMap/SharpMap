@@ -173,10 +173,10 @@ namespace SharpMap.Rendering.Symbolizer
         #region Implementation of ICloneable
 
         /// <summary>
-        /// Erstellt ein neues Objekt, das eine Kopie der aktuellen Instanz darstellt.
+        /// Creates a new object that is a copy of the current instance.
         /// </summary>
         /// <returns>
-        /// Ein neues Objekt, das eine Kopie dieser Instanz darstellt.
+        /// A new object that is a copy of this instance.
         /// </returns>
         /// <filterpriority>2</filterpriority>
         public object Clone()
@@ -192,7 +192,7 @@ namespace SharpMap.Rendering.Symbolizer
         #region Implementation of IDisposable
 
         /// <summary>
-        /// Führt anwendungsspezifische Aufgaben durch, die mit der Freigabe, der Zurückgabe oder dem Zurücksetzen von nicht verwalteten Ressourcen zusammenhängen.
+        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
         /// </summary>
         /// <filterpriority>2</filterpriority>
         public void Dispose()

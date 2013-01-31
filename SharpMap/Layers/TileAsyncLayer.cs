@@ -168,10 +168,10 @@ namespace SharpMap.Layers
         {
             //this is to wait for the main UI thread to finalize rendering ... (buggy code here)...
             System.Threading.Thread.Sleep(100);
-            object[] paramters = (object[])parameter;
-            if (paramters.Length != 2) throw new ArgumentException("Two parameters expected");
-            TileInfo tileInfo = (TileInfo)paramters[0];
-            Bitmap bm = (Bitmap)paramters[1];
+            object[] parameters = (object[])parameter;
+            if (parameters.Length != 2) throw new ArgumentException("Two parameters expected");
+            TileInfo tileInfo = (TileInfo)parameters[0];
+            Bitmap bm = (Bitmap)parameters[1];
             OnMapNewTileAvaliable(tileInfo, bm);
         }
         */

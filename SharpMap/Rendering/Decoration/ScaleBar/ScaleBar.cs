@@ -1007,7 +1007,7 @@ namespace SharpMap.Rendering.Decoration.ScaleBar
         }
 
         ///<summary>
-        /// Keep only 5 (ScalePrecisionDigits) digits of prcision for the scale and return the scale after formatted.
+        /// Keep only 5 (ScalePrecisionDigits) digits of precision for the scale and return the scale after formatted.
         ///</summary>
         private static double FormatRealScale(double scale)
         {

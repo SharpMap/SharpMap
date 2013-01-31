@@ -70,7 +70,7 @@ namespace SharpMap.Rendering
         /// <param name="s">The string to measure</param>
         /// <param name="font">The <see cref="Font"/> to use</param>
         /// <param name="brush">The <see cref="Brush"/> to use</param>
-        /// <param name="textPathAlign">The horizontal position on the <paramref name="graphicsPath"/>"/></param>
+        /// <param name="textPathAlign">The horizontal position on the <paramref name="graphicsPath"/></param>
         /// <param name="textPathPosition">The vertical position on the <paramref name="graphicsPath"/></param>
         /// <param name="graphicsPath">The <see cref="GraphicsPath"/> describing the </param>
         /// <returns>An array of <see cref="RectangleF"/>s</returns>
@@ -99,7 +99,7 @@ namespace SharpMap.Rendering
         /// <param name="s">The string to measure</param>
         /// <param name="font">The <see cref="Font"/> to use</param>
         /// <param name="brush">The <see cref="Brush"/> to use</param>
-        /// <param name="textPathAlign">The horizontal position on the <paramref name="graphicsPath"/>"/></param>
+        /// <param name="textPathAlign">The horizontal position on the <paramref name="graphicsPath"/></param>
         /// <param name="textPathPosition">The vertical position on the <paramref name="graphicsPath"/></param>
         /// <param name="graphicsPath">The <see cref="GraphicsPath"/> describing the </param>
         public static void DrawString(Graphics graphics, string s, Font font, Brush brush, TextPathAlign textPathAlign, TextPathPosition textPathPosition, GraphicsPath graphicsPath)
@@ -114,9 +114,9 @@ namespace SharpMap.Rendering
         /// <param name="s">The string to measure</param>
         /// <param name="font">The <see cref="Font"/> to use</param>
         /// <param name="brush">The <see cref="Brush"/> to use</param>
-        /// <param name="textPathAlign">The horizontal position on the <paramref name="graphicsPath"/>"/></param>
+        /// <param name="textPathAlign">The horizontal position on the <paramref name="graphicsPath"/></param>
         /// <param name="textPathPosition">The vertical position on the <paramref name="graphicsPath"/></param>
-        /// <param name="letterSpace">A value controling the spacing between letters</param>
+        /// <param name="letterSpace">A value controlling the spacing between letters</param>
         /// <param name="graphicsPath">The <see cref="GraphicsPath"/> describing the </param>
         /// <returns>An array of <see cref="RectangleF"/>s</returns>
         public static RectangleF[] MeasureString(Graphics graphics, string s, Font font, Brush brush, TextPathAlign textPathAlign, TextPathPosition textPathPosition, int letterSpace, GraphicsPath graphicsPath)
@@ -134,9 +134,9 @@ namespace SharpMap.Rendering
         /// <param name="s">The string to measure</param>
         /// <param name="font">The <see cref="Font"/> to use</param>
         /// <param name="brush">The <see cref="Brush"/> to use</param>
-        /// <param name="textPathAlign">The horizontal position on the <paramref name="graphicsPath"/>"/></param>
+        /// <param name="textPathAlign">The horizontal position on the <paramref name="graphicsPath"/></param>
         /// <param name="textPathPosition">The vertical position on the <paramref name="graphicsPath"/></param>
-        /// <param name="letterSpace">A value controling the spacing between letters</param>
+        /// <param name="letterSpace">A value controlling the spacing between letters</param>
         /// <param name="graphicsPath">The <see cref="GraphicsPath"/> describing the </param>
         /// <returns>An array of <see cref="RectangleF"/>s</returns>
         public static void DrawString(Graphics graphics, string s, Font font, Brush brush, TextPathAlign textPathAlign, TextPathPosition textPathPosition, int letterSpace, GraphicsPath graphicsPath)
@@ -151,10 +151,10 @@ namespace SharpMap.Rendering
         /// <param name="s">The string to measure</param>
         /// <param name="font">The <see cref="Font"/> to use</param>
         /// <param name="brush">The <see cref="Brush"/> to use</param>
-        /// <param name="textPathAlign">The horizontal position on the <paramref name="graphicsPath"/>"/></param>
+        /// <param name="textPathAlign">The horizontal position on the <paramref name="graphicsPath"/></param>
         /// <param name="textPathPosition">The vertical position on the <paramref name="graphicsPath"/></param>
-        /// <param name="letterSpace">A value controling the spacing between letters</param>
-        /// <param name="rotateDegree">A value controling the rotation of <paramref name="s"/></param>
+        /// <param name="letterSpace">A value controlling the spacing between letters</param>
+        /// <param name="rotateDegree">A value controlling the rotation of <paramref name="s"/></param>
         /// <param name="graphicsPath">The <see cref="GraphicsPath"/> along which to render.</param>
         /// <param name="angles">A list of angle values (in degrees), one for each letter</param>
         /// <param name="pointsText">A list of positions, one for each letter</param>
@@ -191,10 +191,10 @@ namespace SharpMap.Rendering
         /// <param name="s">The string to measure</param>
         /// <param name="font">The <see cref="Font"/> to use</param>
         /// <param name="brush">The <see cref="Brush"/> to use</param>
-        /// <param name="textPathAlign">The horizontal position on the <paramref name="graphicsPath"/>"/></param>
+        /// <param name="textPathAlign">The horizontal position on the <paramref name="graphicsPath"/></param>
         /// <param name="textPathPosition">The vertical position on the <paramref name="graphicsPath"/></param>
-        /// <param name="letterSpace">A value controling the spacing between letters</param>
-        /// <param name="rotateDegree">A value controling the rotation of <paramref name="s"/></param>
+        /// <param name="letterSpace">A value controlling the spacing between letters</param>
+        /// <param name="rotateDegree">A value controlling the rotation of <paramref name="s"/></param>
         /// <param name="graphicsPath">The <see cref="GraphicsPath"/> describing the </param>
         /// <param name="showPath">A value indicating if the <paramref name="graphicsPath"/> should be drawn, too.</param>
         public static void DrawString(Graphics graphics, string s, Font font, Brush brush, TextPathAlign textPathAlign, TextPathPosition textPathPosition, int letterSpace, float rotateDegree, GraphicsPath graphicsPath, bool showPath)
@@ -316,7 +316,7 @@ namespace SharpMap.Rendering
         }
 
         /// <summary>
-        /// Gets or sets a value indicating the vertical aligmnent
+        /// Gets or sets a value indicating the vertical alignment
         /// </summary>
         public TextPathPosition TextPathPathPosition
         {
@@ -381,7 +381,7 @@ namespace SharpMap.Rendering
 
 
         /// <summary>
-        /// Gets or sets a value controling the space between letters
+        /// Gets or sets a value controlling the space between letters
         /// </summary>
         /// <remarks>The default value is <value>100</value></remarks>
         public int LetterSpacePercentage

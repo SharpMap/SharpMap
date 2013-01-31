@@ -40,10 +40,10 @@ namespace SharpMap.Rendering.Symbolizer
         public Pen Outline { get; set; }
 
         /// <summary>
-        /// Erstellt ein neues Objekt, das eine Kopie der aktuellen Instanz darstellt.
+        /// Creates a new object that is a copy of the current instance.
         /// </summary>
         /// <returns>
-        /// Ein neues Objekt, das eine Kopie dieser Instanz darstellt.
+        /// A new object that is a copy of this instance.
         /// </returns>
         /// <filterpriority>2</filterpriority>
         public override object Clone()
@@ -117,10 +117,10 @@ namespace SharpMap.Rendering.Symbolizer
         public LineSymbolizer Outline { get; set; }
 
         /// <summary>
-        /// Erstellt ein neues Objekt, das eine Kopie der aktuellen Instanz darstellt.
+        /// Creates a new object that is a copy of the current instance.
         /// </summary>
         /// <returns>
-        /// Ein neues Objekt, das eine Kopie dieser Instanz darstellt.
+        /// A new object that is a copy of this instance.
         /// </returns>
         /// <filterpriority>2</filterpriority>
         public override object Clone()

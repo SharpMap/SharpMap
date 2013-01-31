@@ -28,7 +28,7 @@ namespace SharpMap.Layers
     /// Signature of function to handle VariableLayerCollectionRequery event
     /// </summary>
     /// <param name="sender">The sender of the event</param>
-    /// <param name="e">The argments, <c>EventArgs.Empty</c> in all cases</param>
+    /// <param name="e">The arguments, <c>EventArgs.Empty</c> in all cases</param>
     public delegate void VariableLayerCollectionRequeryHandler(object sender, EventArgs e);
     
     /// <summary>

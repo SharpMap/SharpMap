@@ -63,7 +63,7 @@ namespace SharpMap.Layers
         /// <paramref name="info"/>.
         /// </summary>
         /// <param name="info">The serialization data.</param>
-        /// <param name="context">Serialzation context.</param>
+        /// <param name="context">Serialization context.</param>
         protected DuplicateLayerException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {

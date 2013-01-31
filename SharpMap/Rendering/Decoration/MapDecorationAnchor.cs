@@ -1,7 +1,7 @@
 namespace SharpMap.Rendering.Decoration
 {
     /// <summary>
-    /// Anchor relative postion
+    /// Anchor relative position
     /// </summary>
     public enum MapDecorationAnchor
     {

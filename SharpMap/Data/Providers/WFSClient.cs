@@ -598,7 +598,10 @@ namespace SharpMap.Data.Providers
                 // Free resources (net connection of geometry factory)
             finally
             {
-                geomFactory.Dispose();
+                if (geomFactory != null)
+                {
+                    geomFactory.Dispose();
+                }
             }
         }
 
@@ -607,7 +610,7 @@ namespace SharpMap.Data.Providers
         /// </summary>
         /// <remarks>
         /// This method is usually much faster than the QueryFeatures method, because intersection tests
-        /// are performed on objects simplifed by their <see cref="GeoAPI.Geometries.Envelope"/>, and using the Spatial Index
+        /// are performed on objects simplified by their <see cref="GeoAPI.Geometries.Envelope"/>, and using the Spatial Index
         /// </remarks>
         /// <param name="bbox">Box that objects should intersect</param>
         /// <returns></returns>

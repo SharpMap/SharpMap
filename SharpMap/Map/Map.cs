@@ -51,7 +51,7 @@ namespace SharpMap
         public static NumberFormatInfo NumberFormatEnUs = new CultureInfo("en-US", false).NumberFormat;
 
         /// <summary>
-        /// Specifies wether to trigger a dispose on all layers (and their datasources) contained in this map when the map-object is disposed.
+        /// Specifies whether to trigger a dispose on all layers (and their datasources) contained in this map when the map-object is disposed.
         /// The default behaviour is true unless the map is a result of a Map.Clone() operation in which case the value is false
         /// <para/>
         /// If you reuse your datasources or layers between many map-objects you should set this property to false in order for them to keep existing after a map.dispose()
@@ -495,7 +495,7 @@ namespace SharpMap
         /// </summary>
         /// <param name="g">the <see cref="Graphics"/> object to use</param>
         /// <param name="layerCollectionType">the <see cref="LayerCollectionType"/> to use</param>
-        /// <param name="drawMapDecorations">Set wether to draw map decorations on the map (if such are set)</param>
+        /// <param name="drawMapDecorations">Set whether to draw map decorations on the map (if such are set)</param>
         /// <exception cref="ArgumentNullException">if <see cref="Graphics"/> object is null.</exception>
         /// <exception cref="InvalidOperationException">if there are no layers to render.</exception>
         public void RenderMap(Graphics g, LayerCollectionType layerCollectionType, bool drawMapDecorations)
@@ -1136,7 +1136,7 @@ namespace SharpMap
     }
 
     /// <summary>
-    /// Layer rendering event argumens class
+    /// Layer rendering event arguments class
     /// </summary>
     public class LayerRenderingEventArgs : EventArgs
     {

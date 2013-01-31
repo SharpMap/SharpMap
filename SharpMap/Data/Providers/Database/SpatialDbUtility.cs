@@ -146,7 +146,7 @@ namespace SharpMap.Data.Providers
         }
 
         /// <summary>
-        /// Decorates a colum name, optionally with a prefix
+        /// Decorates a column name, optionally with a prefix
         /// </summary>
         /// <param name="columnName">The column name</param>
         /// <returns>The decorated column name</returns>
@@ -156,7 +156,7 @@ namespace SharpMap.Data.Providers
         }
 
         /// <summary>
-        /// Decorates a colum name, optionally with a prefix
+        /// Decorates a column name, optionally with a prefix
         /// </summary>
         /// <param name="columnName">The column name</param>
         /// <param name="prefix">The (optional) prefix</param>

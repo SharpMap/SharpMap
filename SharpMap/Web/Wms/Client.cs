@@ -371,7 +371,7 @@ namespace SharpMap.Web.Wms
         }
 
         /// <summary>
-        /// Gets the hiarchial layer structure
+        /// Gets the hierarchical layer structure
         /// </summary>
         public WmsServerLayer Layer
         {
@@ -482,7 +482,7 @@ namespace SharpMap.Web.Wms
         /// </summary>
         /// <param name="url">URL of wms server</param>
         /// <param name="proxy">Proxy to use</param>
-        /// <param name="credentials">Credentials for autenticating against remote WMS-server</param>
+        /// <param name="credentials">Credentials for authenticating against remote WMS-server</param>
         public Client(string url, IWebProxy proxy, ICredentials credentials)
             : this(url, proxy, 10000, credentials, "") { }
 
@@ -492,7 +492,7 @@ namespace SharpMap.Web.Wms
         /// <param name="url">URL of wms server</param>
         /// <param name="proxy">Proxy to use</param>
         /// <param name="timeOut">Web request timeout</param>
-        /// <param name="credentials">Credentials for autenticating against remote WMS-server</param>
+        /// <param name="credentials">Credentials for authenticating against remote WMS-server</param>
         public Client(string url, IWebProxy proxy, int timeOut, ICredentials credentials)
             : this(url, proxy, timeOut, credentials, "") { }
 

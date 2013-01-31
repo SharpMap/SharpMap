@@ -24,7 +24,7 @@ using SharpMap.Styles;
 namespace SharpMap.Rendering.Thematics
 {
     /// <summary>
-    /// Gradinent theme base class
+    /// Gradient theme base class
     /// </summary>
     public abstract class GradientThemeBase : ITheme
     {

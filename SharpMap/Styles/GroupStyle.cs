@@ -22,7 +22,7 @@ using System.Collections.Generic;
 namespace SharpMap.Styles
 {
     /// <summary>
-    /// GroupStyle is a holder where serveral style can be applied in order
+    /// GroupStyle is a holder where several styles can be applied in order
     /// </summary>
     [Serializable]
     public class GroupStyle : VectorStyle

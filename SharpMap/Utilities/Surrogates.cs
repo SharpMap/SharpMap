@@ -69,7 +69,7 @@ namespace SharpMap.Utilities
                 private readonly Pen _pen;
 
                 /// <summary>
-                /// Serialzation constructor
+                /// Serialization constructor
                 /// </summary>
                 /// <param name="info">The serialization info</param>
                 /// <param name="context">The streaming context</param>

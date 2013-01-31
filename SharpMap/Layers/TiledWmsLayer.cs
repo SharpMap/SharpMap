@@ -39,7 +39,7 @@ namespace SharpMap.Layers
     /// Client layer for WMS-C service
     /// </summary>
     /// <remarks>
-    /// Initialize the TiledWmsLayer with the url to the capabilities documtent
+    /// Initialize the TiledWmsLayer with the url to the capabilities document
     /// and it will set the remaining BoundingBox property and proper requests that changes between the requests.
     /// See the example below.
     /// </remarks>
@@ -80,7 +80,7 @@ namespace SharpMap.Layers
         /// </summary>
         /// <remarks>In and ASP.NET application the service description is automatically cached for 24 hours when not specified</remarks>
         /// <param name="layername">Layername</param>
-        /// <param name="url">Url of WMS server's Capabilties</param>
+        /// <param name="url">Url of WMS server's Capabilities</param>
         public TiledWmsLayer(string layername, string url)
             : this(layername, url, new TimeSpan(24, 0, 0))
         {
@@ -91,7 +91,7 @@ namespace SharpMap.Layers
         /// Initializes a new layer, and downloads and parses the service description
         /// </summary>
         /// <param name="layername">Layername</param>
-        /// <param name="url">Url of WMS server's Capabilties</param>
+        /// <param name="url">Url of WMS server's Capabilities</param>
         /// <param name="cachetime">Time for caching Service Description (ASP.NET only)</param>
         public TiledWmsLayer(string layername, string url, TimeSpan cachetime)
             : this(layername, url, cachetime, null)
@@ -103,7 +103,7 @@ namespace SharpMap.Layers
         /// </summary>
         /// <remarks>In and ASP.NET application the service description is automatically cached for 24 hours when not specified</remarks>
         /// <param name="layername">Layername</param>
-        /// <param name="url">Url of WMS server's Capabilties</param>
+        /// <param name="url">Url of WMS server's Capabilities</param>
         /// <param name="proxy">Proxy</param>
         public TiledWmsLayer(string layername, string url, WebProxy proxy)
             : this(layername, url, new TimeSpan(24, 0, 0), proxy)
@@ -114,7 +114,7 @@ namespace SharpMap.Layers
         /// Initializes a new layer, and downloads and parses the service description
         /// </summary>
         /// <param name="layername">Layername</param>
-        /// <param name="url">Url of WMS server's Capabilties</param>
+        /// <param name="url">Url of WMS server's Capabilities</param>
         /// <param name="cachetime">Time for caching Service Description (ASP.NET only)</param>
         /// <param name="proxy">Proxy</param>
         public TiledWmsLayer(string layername, string url, TimeSpan cachetime, WebProxy proxy)
@@ -306,7 +306,7 @@ namespace SharpMap.Layers
         }
 
         /// <summary>
-        /// Removes a custom paramter name-value pair from the WMS request
+        /// Removes a custom parameter name-value pair from the WMS request
         /// </summary>
         /// <param name="name">Name of the custom parameter to remove</param>
         public void RemoveCustomParameter(string name)

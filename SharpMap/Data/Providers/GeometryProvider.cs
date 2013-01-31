@@ -49,7 +49,7 @@ namespace SharpMap.Data.Providers
     /// //Add two points
     /// geometries.Add(new SharpMap.Geometries.Point(23.345,64.325));
     /// geometries.Add(new SharpMap.Geometries.Point(23.879,64.194));
-    /// SharpMap.Layers.VectorLayer layerVehicles = new SharpMap.Layers.VectorLayer("Vechicles");
+    /// SharpMap.Layers.VectorLayer layerVehicles = new SharpMap.Layers.VectorLayer("Vehicles");
     /// layerVehicles.DataSource = new SharpMap.Data.Providers.GeometryProvider(geometries);
     /// layerVehicles.Style.Symbol = Bitmap.FromFile(@"C:\data\car.gif");
     /// myMap.Layers.Add(layerVehicles);

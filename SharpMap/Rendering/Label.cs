@@ -105,7 +105,7 @@ namespace SharpMap.Rendering
         }
 
         /// <summary>
-        /// Bottom of th ebox
+        /// Bottom of the box
         /// </summary>
         public float Bottom
         {

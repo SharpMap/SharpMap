@@ -77,7 +77,7 @@ namespace SharpMap.Rendering.Decoration
         /// <param name="mapToWgs84Transform">Transformation to transform MapCoordinates to WGS84</param>
         /// <param name="mapType">Type of Map Displayed</param>
         /// <param name="disclaimerDownloaded">Optional EventHandler that is called after Disclaimer Async Download (to be used to refresh map)</param>
-        /// <param name="runInAsyncMode">wether to download disclaimer information async (non blocking operation)</param>
+        /// <param name="runInAsyncMode">whether to download disclaimer information async (non blocking operation)</param>
         public GoogleMapsDisclaimer(IMathTransform mapToWgs84Transform, MapType mapType, EventHandler disclaimerDownloaded, bool runInAsyncMode) : this()
         {
             _mathTransform = mapToWgs84Transform;

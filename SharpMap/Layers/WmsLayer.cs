@@ -36,7 +36,7 @@ namespace SharpMap.Layers
     /// </summary>
     /// <remarks>
     /// The WmsLayer is currently very basic and doesn't support automatic fetching of the WMS Service Description.
-    /// Instead you would have to add the nessesary parameters to the URL,
+    /// Instead you would have to add the necessary parameters to the URL,
     /// and the WmsLayer will set the remaining BoundingBox property and proper requests that changes between the requests.
     /// See the example below.
     /// </remarks>
@@ -228,7 +228,7 @@ namespace SharpMap.Layers
         }
 
         /// <summary>
-        /// Gets the hiarchial list of available WMS layers from this service
+        /// Gets the hierarchical list of available WMS layers from this service
         /// </summary>
         public Client.WmsServerLayer RootLayer
         {
@@ -246,7 +246,7 @@ namespace SharpMap.Layers
         /// <summary>
         /// Sets the optional transparancy. The WMS server might ignore this when not implemented and will ignore if the imageformat is jpg
         /// </summary>
-        public bool Transparancy
+        public bool Transparancy // TODO Transparancy should be Transparency
         {
             get { return _Transparancy; }
             set { _Transparancy = value; }
@@ -254,7 +254,7 @@ namespace SharpMap.Layers
 
         /// <summary>
         /// Set the opacity on the drawn image, this method updates the ImageAttributes with opacity-values and is used when sharpmap draws the image, the the wms-server
-        /// 1.0 = No tranparency
+        /// 1.0 = No transparency
         /// 0.0 = full transparency
         /// </summary>
         /// <param name="opacity"></param>

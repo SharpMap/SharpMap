@@ -708,7 +708,7 @@ namespace SharpMap.Layers
         }
 
         /// <summary>
-        /// Very basic test to check for positve direction of Linestring
+        /// Very basic test to check for positive direction of Linestring
         /// </summary>
         /// <param name="line">The linestring to test</param>
         /// <param name="isRightToLeft">Value indicating whether labels are to be printed right to left</param>

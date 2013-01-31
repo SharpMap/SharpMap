@@ -26,7 +26,7 @@ using GeoAPI.Geometries;
 namespace SharpMap.Web.Wms.Tiling
 {
     /// <summary>
-    /// Very simple implemenation of ITileCache to demonstrate its functionality. It dumps all tiles als png's in a single directory.
+    /// Very simple implementation of ITileCache to demonstrate its functionality. It dumps all tiles as png's in a single directory.
     /// </summary>
     public class TileCacheFileStorage : ITileCache
     {
@@ -52,7 +52,7 @@ namespace SharpMap.Web.Wms.Tiling
         /// <summary>
         /// Method to add a tile to the cache.
         /// </summary>
-        /// <param name="box">The bounding <paramref name="box"/> of the area coverd by the <paramref name="tile"/>.</param>
+        /// <param name="box">The bounding <paramref name="box"/> of the area covered by the <paramref name="tile"/>.</param>
         /// <param name="tile">The tile image</param>
         public void AddTile(Envelope box, Bitmap tile)
         {
