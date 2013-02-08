@@ -214,16 +214,14 @@ namespace SharpMap.Data.Providers
             //List<Geometries.Geometry> features = new List<SharpMap.Geometries.Geometry>();
             using (var conn = new OleDbConnection(ConnectionString))
             {
-                var strSQL = "Select * FROM " + Table + " WHERE ";
+                var strSQL = "SELECT * FROM " + Table + " WHERE ";
                 if (!String.IsNullOrEmpty(_definitionQuery))
                     //If a definition query has been specified, add this as a filter on the query
                     strSQL += _definitionQuery + " AND ";
                 //Limit to the points within the boundingbox
-                strSQL += XColumn + " BETWEEN " + bbox.Left().ToString(Map.NumberFormatEnUs) + " AND " +
-                          bbox.Right().ToString(Map.NumberFormatEnUs) + " AND " + YColumn +
-                          " BETWEEN " + bbox.Bottom().ToString(Map.NumberFormatEnUs) + " AND " +
-                          bbox.Top().ToString(Map.NumberFormatEnUs);
-
+                strSQL += "(" + XColumn + " BETWEEN " + bbox.Left().ToString(Map.NumberFormatEnUs) + " AND " + bbox.Right().ToString(Map.NumberFormatEnUs) + ") AND " + 
+                          "(" + YColumn + " BETWEEN " + bbox.Bottom().ToString(Map.NumberFormatEnUs) + " AND " + bbox.Top().ToString(Map.NumberFormatEnUs) + ")";
+                
                 using (var adapter = new OleDbDataAdapter(strSQL, conn))
                 {
                     conn.Open();
@@ -240,20 +238,21 @@ namespace SharpMap.Data.Providers
                         {
                             IGeometry geom;
                             if (dr[XColumn] != DBNull.Value && dr[YColumn] != DBNull.Value)
-                                geom = Factory.CreatePoint(new Coordinate((double)dr[XColumn], (double)dr[YColumn]));
+                            {
+                                var c = new Coordinate((double) dr[XColumn], (double) dr[YColumn]);
+                                if (!bbox.Intersects(c)) continue;
+
+                                geom = Factory.CreatePoint(c);
+                            }
                             else
                                 continue;
 
-                            if (bbox.Intersects(geom.Coordinate))
-                            {
-                                var fdr = fdt.NewRow();
+                            var fdr = fdt.NewRow();
 
-                                foreach (DataColumn col in ds2.Tables[0].Columns)
-                                    fdr[col.Ordinal] = dr[col];
-                                fdr.Geometry = geom;
+                            foreach (DataColumn col in ds2.Tables[0].Columns)
+                                fdr[col.Ordinal] = dr[col];
+                            fdr.Geometry = geom;
 
-                                fdt.AddRow(fdr);
-                            }
                         }
                         ds.Tables.Add(fdt);
                     }
