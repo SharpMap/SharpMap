@@ -55,6 +55,7 @@ namespace SharpMap.Layers
     /// </code>
     /// </example>
     [Obsolete("use TileLayer instead") ]
+
     public class TiledWmsLayer : Layer, ILayer
     {
         ILog logger = LogManager.GetLogger(typeof(TiledWmsLayer));

@@ -90,6 +90,13 @@
     <Reference Include="NetTopologySuite">
       <HintPath>..\packages\NetTopologySuite.1.12.0\lib\net35\NetTopologySuite.dll</HintPath>
     </Reference>
+    <Reference Include="NetTopologySuite.IO.SqlServer2008">
+      <HintPath>..\packages\NetTopologySuite.IO.1.12.0\lib\net35\NetTopologySuite.IO.SqlServer2008.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.SqlServer.Types, Version=10.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.SqlServer.Types.10.50.1600.1\lib\Net20\Microsoft.SqlServer.Types.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Newtonsoft.Json.4.5.11\lib\net40\Newtonsoft.Json.dll</HintPath>
@@ -136,6 +143,7 @@
     <Compile Include="Data\Providers\GeometryProvider.cs" />
     <Compile Include="Data\Providers\FilterProvider.cs" />
     <Compile Include="Data\Providers\IProvider.cs" />
+    <Compile Include="Data\Providers\IProviderConfiguration.cs" />
     <Compile Include="Data\Providers\MsSql.cs" />
     <Compile Include="Data\Providers\MsSqlSpatial.cs" />
     <Compile Include="Data\Providers\OleDbPoint.cs" />

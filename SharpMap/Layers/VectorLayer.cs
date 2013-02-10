@@ -39,7 +39,8 @@ namespace SharpMap.Layers
     /// <summary>
     /// Class for vector layer properties
     /// </summary>
-    public class VectorLayer : Layer, ICanQueryLayer, IDisposable
+    [Serializable]
+    public class VectorLayer : Layer, ICanQueryLayer
     {
         static ILog logger = LogManager.GetLogger(typeof(VectorLayer));
 

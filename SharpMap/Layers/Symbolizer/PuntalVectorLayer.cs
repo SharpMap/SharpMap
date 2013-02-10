@@ -1,4 +1,5 @@
-﻿using GeoAPI.Geometries;
+﻿using System;
+using GeoAPI.Geometries;
 using SharpMap.Data.Providers;
 using SharpMap.Rendering.Symbolizer;
 
@@ -7,6 +8,7 @@ namespace SharpMap.Layers.Symbolizer
     /// <summary>
     /// A vector layer class that can symbolize puntal geometries
     /// </summary>
+    [Serializable]
     public class PuntalVectorLayer : BaseVectorLayer<IPuntal>
     {
         /// <summary>

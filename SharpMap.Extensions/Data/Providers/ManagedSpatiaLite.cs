@@ -18,7 +18,6 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Data;
 using System.Globalization;
 using GeoAPI.Geometries;
 using NetTopologySuite.IO;
@@ -39,9 +38,6 @@ namespace SharpMap.Data.Providers
     public class ManagedSpatiaLite : BaseProvider
     {
         static ILog logger = LogManager.GetLogger(typeof(ManagedSpatiaLite));
-
-        [NonSerialized]
-        private GaiaGeoReader _reader;
 
         private string _definitionQuery;
         private string _geometryColumn;
@@ -423,9 +419,9 @@ namespace SharpMap.Data.Providers
 
         protected override void OnExecuteIntersectionQuery(Geometry geom, FeatureDataSet ds)
         {
+            var prepGeom = NetTopologySuite.Geometries.Prepared.PreparedGeometryFactory.Prepare(geom);
             GetNonSpatialColumns();
 
-            var tmp = new DataSet("tmp");
             using (var conn = GetConnection(ConnectionString))
             {
                 var strSql = "SELECT " + _columns + ", \"" + GeometryColumn + "\" AS \"_smtmp_\" ";
@@ -438,48 +434,43 @@ namespace SharpMap.Data.Providers
                 // Spatial constraint
                 strSql += GetBoxClause(geom.EnvelopeInternal);
 
-                using (var adapter = new SQLiteDataAdapter(strSql, conn))
-                    adapter.Fill(ds);
-            }
-            
-            var prepGeom = NetTopologySuite.Geometries.Prepared.PreparedGeometryFactory.Prepare(geom);
-
-            if (tmp.Tables.Count == 0)
-                return;
-
-            using (var reader = new DataTableReader(tmp.Tables[0]))
-            {
-                var geomIndex = reader.FieldCount - 1;
-                var fdt = new FeatureDataTable();
-                for (var c = 0; c < geomIndex; c++)
-                    fdt.Columns.Add(reader.GetName(c), reader.GetFieldType(c));
-
-                var dataTransfer = new object[geomIndex];
-                var geoReader = new GaiaGeoReader(Factory.CoordinateSequenceFactory, Factory.PrecisionModel,
-                                                    _ordinates);
-                fdt.BeginLoadData();
-                while (reader.Read())
+                using (var cmd = new SQLiteCommand(strSql, conn))
                 {
-                    IGeometry g = null;
-                    if (!reader.IsDBNull(geomIndex))
-                        g = geoReader.Read((byte[])reader.GetValue(geomIndex));
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        var geomIndex = reader.FieldCount - 1;
+                        var fdt = new FeatureDataTable();
+                        for (var c = 0; c < geomIndex; c++)
+                            fdt.Columns.Add(reader.GetName(c), reader.GetFieldType(c));
 
-                    //No geometry, no feature!
-                    if (g == null)
-                        continue;
+                        var dataTransfer = new object[geomIndex];
+                        var geoReader = new GaiaGeoReader(Factory.CoordinateSequenceFactory, Factory.PrecisionModel,
+                                                          _ordinates);
+                        fdt.BeginLoadData();
+                        while (reader.Read())
+                        {
+                            IGeometry g = null;
+                            if (!reader.IsDBNull(geomIndex))
+                                g = geoReader.Read((byte[]) reader.GetValue(geomIndex));
 
-                    //If not intersecting
-                    if (!prepGeom.Intersects(g))
-                        continue;
+                            //No geometry, no feature!
+                            if (g == null)
+                                continue;
 
-                    //Get all the attribute data
-                    var count = reader.GetValues(dataTransfer);
+                            //If not intersecting
+                            if (!prepGeom.Intersects(g))
+                                continue;
 
-                    var fdr = (FeatureDataRow)fdt.LoadDataRow(dataTransfer, true);
-                    fdr.Geometry = g;
+                            //Get all the attribute data
+                            var count = reader.GetValues(dataTransfer);
+
+                            var fdr = (FeatureDataRow) fdt.LoadDataRow(dataTransfer, true);
+                            fdr.Geometry = g;
+                        }
+                        fdt.EndLoadData();
+                        ds.Tables.Add(fdt);
+                    }
                 }
-                fdt.EndLoadData();
-                ds.Tables.Add(fdt);
             }
         }
 
@@ -498,8 +489,7 @@ namespace SharpMap.Data.Providers
                 // Spatial constraint
                 strSql += GetBoxClause(box);
 
-                //using (var adapter = new SQLiteDataAdapter(strSql, conn))
-                using (var cmd = new SQLiteCommand(strSql,conn))
+                using (var cmd = new SQLiteCommand(strSql, conn))
                 {
                     using (var reader = cmd.ExecuteReader())
                     {
@@ -597,7 +587,7 @@ namespace SharpMap.Data.Providers
                                 continue;
 
                             //Get all the attribute data
-                            reader.GetValues(dataTransfer);
+                            var count = reader.GetValues(dataTransfer);
 
                             var fdr = (FeatureDataRow)fdt.LoadDataRow(dataTransfer, true);
                             fdr.Geometry = g;
@@ -748,7 +738,8 @@ namespace SharpMap.Data.Providers
         {
             if (UseSpatiaLiteIndex)
             {
-                return string.Format(Map.NumberFormatEnUs, _spatiaLiteIndexClause, bbox.MaxX, bbox.MinX, bbox.MaxY, bbox.MinY);
+                return string.Format(Map.NumberFormatEnUs, 
+                    _spatiaLiteIndexClause, bbox.MaxX, bbox.MinX, bbox.MaxY, bbox.MinY);
             }
             
             /*Without index, no  db filtering... :-( */

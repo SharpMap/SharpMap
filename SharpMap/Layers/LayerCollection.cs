@@ -25,6 +25,7 @@ namespace SharpMap.Layers
     /// <summary>
     /// A collection of <see cref="ILayer"/> instances.
     /// </summary>
+    [Serializable]
     public class LayerCollection : System.ComponentModel.BindingList<ILayer>
     {
         /// <summary>

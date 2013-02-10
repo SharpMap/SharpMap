@@ -62,7 +62,7 @@ namespace SharpMap.Data.Providers
 
             //index of last added feature data table
             var index = ds.Tables.Count - 1;
-            if (index <= 0) return;
+            if (index < 0) return;
 
             var res = CloneTableStructure(ds.Tables[index]);
             res.BeginLoadData();

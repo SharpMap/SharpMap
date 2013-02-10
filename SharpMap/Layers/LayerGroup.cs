@@ -31,9 +31,10 @@ namespace SharpMap.Layers
     /// The Group layer is useful for grouping a set of layers,
     /// for instance a set of image tiles, and expose them as a single layer
     /// </remarks>
-    public class LayerGroup : Layer, ICanQueryLayer, IDisposable
+    [Serializable]
+    public class LayerGroup : Layer, ICanQueryLayer
     {
-        private Collection<Layer> _Layers;
+        private Collection<Layer> _layers;
         private bool _isQueryEnabled = true;
         /// <summary>
         /// Initializes a new group layer
@@ -42,7 +43,7 @@ namespace SharpMap.Layers
         public LayerGroup(string layername)
         {
             LayerName = layername;
-            _Layers = new Collection<Layer>();
+            _layers = new Collection<Layer>();
         }
         /// <summary>
         /// Whether the layer is queryable when used in a SharpMap.Web.Wms.WmsServer, ExecuteIntersectionQuery() will be possible in all other situations when set to FALSE
@@ -57,8 +58,8 @@ namespace SharpMap.Layers
         /// </summary>
         public Collection<Layer> Layers
         {
-            get { return _Layers; }
-            set { _Layers = value; }
+            get { return _layers; }
+            set { _layers = value; }
         }
 
         /// <summary>
@@ -104,9 +105,9 @@ namespace SharpMap.Layers
         {
             //return _Layers.Find( delegate(SharpMap.Layers.Layer layer) { return layer.LayerName.Equals(name); });
 
-            for (int i = 0; i < _Layers.Count; i++)
-                if (String.Equals(_Layers[i].LayerName, name, StringComparison.InvariantCultureIgnoreCase))
-                    return _Layers[i];
+            for (int i = 0; i < _layers.Count; i++)
+                if (String.Equals(_layers[i].LayerName, name, StringComparison.InvariantCultureIgnoreCase))
+                    return _layers[i];
 
             return null;
         }
@@ -118,9 +119,9 @@ namespace SharpMap.Layers
         /// <param name="map">Map which is rendered</param>
         public override void Render(Graphics g, Map map)
         {
-            for (int i = 0; i < _Layers.Count; i++)
-                if (_Layers[i].Enabled && _Layers[i].MaxVisible >= map.Zoom && _Layers[i].MinVisible < map.Zoom)
-                    _Layers[i].Render(g, map);
+            for (int i = 0; i < _layers.Count; i++)
+                if (_layers[i].Enabled && _layers[i].MaxVisible >= map.Zoom && _layers[i].MinVisible < map.Zoom)
+                    _layers[i].Render(g, map);
         }
 
          #region Implementation of ICanQueryLayer

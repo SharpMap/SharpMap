@@ -18,7 +18,6 @@
 using System;
 using System.Collections.ObjectModel;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
@@ -59,24 +58,28 @@ namespace SharpMap.Layers
     /// myMap.MinimumZoom = 0.1;
     /// </code>
     /// </example>
+    [Serializable]
     public class WmsLayer : Layer
     {
 
         private static readonly ILog logger = LogManager.GetLogger(typeof(WmsLayer));
 
 
-        private Boolean _ContinueOnError;
-        private ICredentials _Credentials;
-        private ImageAttributes _ImageAttributes;
-        private Collection<string> _LayerList;
-        private string _MimeType = "";
-        private IWebProxy _Proxy;
-        private Collection<string> _StylesList;
-        private int _TimeOut;
-        private Client wmsClient;
-        private bool _Transparancy = true;
-        private Color _BgColor = Color.White;
-        private string _capabilitiesUrl;
+        private Boolean _continueOnError;
+        private ICredentials _credentials;
+        [NonSerialized]
+        private ImageAttributes _imageAttributes;
+
+        private float _transparency;
+        private readonly Collection<string> _layerList;
+        private string _mimeType = "";
+        private IWebProxy _proxy;
+        private readonly Collection<string> _stylesList;
+        private int _timeOut;
+        private readonly Client _wmsClient;
+        //private bool _Transparancy = true;
+        private Color _bgColor = Color.White;
+        private readonly string _capabilitiesUrl;
 
         /// <summary>
         /// Initializes a new layer, and downloads and parses the service description
@@ -135,19 +138,19 @@ namespace SharpMap.Layers
         public WmsLayer(string layername, string url, TimeSpan cachetime, IWebProxy proxy, ICredentials credentials)
         {
             _capabilitiesUrl = url;
-            _Proxy = proxy;
-            _TimeOut = 10000;
+            _proxy = proxy;
+            _timeOut = 10000;
             LayerName = layername;
-            _ContinueOnError = true;
-            _Credentials = credentials;
+            _continueOnError = true;
+            _credentials = credentials;
 
-            if (!Web.HttpCacheUtility.TryGetValue("SharpMap_WmsClient_" + url, out wmsClient))
+            if (!Web.HttpCacheUtility.TryGetValue("SharpMap_WmsClient_" + url, out _wmsClient))
             {
                 if (logger.IsDebugEnabled)
                     logger.Debug("Creating new client for url " + url);
-                wmsClient = new Client(url, _Proxy, _Credentials);
+                _wmsClient = new Client(url, _proxy, _credentials);
 
-                if (!Web.HttpCacheUtility.TryAddValue("SharpMap_WmsClient_" + url, wmsClient))
+                if (!Web.HttpCacheUtility.TryAddValue("SharpMap_WmsClient_" + url, _wmsClient))
                 {
                     if (logger.IsDebugEnabled)
                         logger.Debug("Adding client to Cache for url " + url + " failed");
@@ -177,9 +180,9 @@ namespace SharpMap.Layers
             }
              */
             //Set default mimetype - We prefer compressed formats
-            if (OutputFormats.Contains("image/jpeg")) _MimeType = "image/jpeg";
-            else if (OutputFormats.Contains("image/png")) _MimeType = "image/png";
-            else if (OutputFormats.Contains("image/gif")) _MimeType = "image/gif";
+            if (OutputFormats.Contains("image/jpeg")) _mimeType = "image/jpeg";
+            else if (OutputFormats.Contains("image/png")) _mimeType = "image/png";
+            else if (OutputFormats.Contains("image/gif")) _mimeType = "image/gif";
             else //None of the default formats supported - Look for the first supported output format
             {
                 bool formatSupported = false;
@@ -187,15 +190,15 @@ namespace SharpMap.Layers
                     if (OutputFormats.Contains(encoder.MimeType.ToLower()))
                     {
                         formatSupported = true;
-                        _MimeType = encoder.MimeType;
+                        _mimeType = encoder.MimeType;
                         break;
                     }
                 if (!formatSupported)
                     throw new ArgumentException(
                         "GDI+ doesn't not support any of the mimetypes supported by this WMS service");
             }
-            _LayerList = new Collection<string>();
-            _StylesList = new Collection<string>();
+            _layerList = new Collection<string>();
+            _stylesList = new Collection<string>();
         }
 
         /// <summary>
@@ -204,9 +207,9 @@ namespace SharpMap.Layers
         /// <param name="url">Url without any OGC specific parameters</param>
         public void ForceOnlineResourceUrl(string url)
         {
-            for (int i = 0; i < wmsClient.GetMapRequests.Length; i++)
+            for (int i = 0; i < _wmsClient.GetMapRequests.Length; i++)
             {
-                wmsClient.GetMapRequests[i].OnlineResource = url;
+                _wmsClient.GetMapRequests[i].OnlineResource = url;
             }        
         }
 
@@ -216,7 +219,7 @@ namespace SharpMap.Layers
         /// </summary>
         public Collection<string> LayerList
         {
-            get { return _LayerList; }
+            get { return _layerList; }
         }
 
         /// <summary>
@@ -224,7 +227,7 @@ namespace SharpMap.Layers
         /// </summary>
         public Collection<string> StylesList
         {
-            get { return _StylesList; }
+            get { return _stylesList; }
         }
 
         /// <summary>
@@ -232,7 +235,7 @@ namespace SharpMap.Layers
         /// </summary>
         public Client.WmsServerLayer RootLayer
         {
-            get { return wmsClient.Layer; }
+            get { return _wmsClient.Layer; }
         }
 
         /// <summary>
@@ -240,16 +243,41 @@ namespace SharpMap.Layers
         /// </summary>
         public Collection<string> OutputFormats
         {
-            get { return wmsClient.GetMapOutputFormats; }
+            get { return _wmsClient.GetMapOutputFormats; }
         }
 
         /// <summary>
         /// Sets the optional transparancy. The WMS server might ignore this when not implemented and will ignore if the imageformat is jpg
         /// </summary>
-        public bool Transparancy // TODO Transparancy should be Transparency
+        [Obsolete("Use Transparency")]
+        public bool Transparancy
         {
-            get { return _Transparancy; }
-            set { _Transparancy = value; }
+            get { return Transparency > 0f; }
+            set { Transparency = value ? 0.35f : 0f; }
+        }
+
+        /// <summary>
+        /// Gets or sets a value indicating the transparency degree.
+        /// </summary>
+        public float Transparency
+        {
+            get { return _transparency; }
+            set
+            {
+                if (value < 0f) value = 0f;
+                if (value > 1f) value = 1f;
+
+                _transparency = value;
+                if (_imageAttributes != null)
+                    _imageAttributes.Dispose();
+                
+                if (_transparency > 0f)
+                {
+                    _imageAttributes = new ImageAttributes();
+                    _imageAttributes.SetColorMatrix(new ColorMatrix {Matrix33 = 1f - _transparency},
+                        ColorMatrixFlag.Default, ColorAdjustType.Bitmap);
+                }
+            }
         }
 
         /// <summary>
@@ -260,6 +288,9 @@ namespace SharpMap.Layers
         /// <param name="opacity"></param>
         public void SetOpacity(float opacity)
         {
+            Transparency = 1f - opacity;
+
+            /*
             ColorMatrix cmxPic = new ColorMatrix();
             cmxPic.Matrix33 = opacity;
             ImageAttributes attrs = ImageAttributes;
@@ -267,6 +298,7 @@ namespace SharpMap.Layers
                 attrs = new System.Drawing.Imaging.ImageAttributes();
             attrs.SetColorMatrix(cmxPic, ColorMatrixFlag.Default, ColorAdjustType.Bitmap);
             ImageAttributes = attrs;
+             */
         }
 
         /// <summary>
@@ -274,8 +306,8 @@ namespace SharpMap.Layers
         /// </summary>
         public Color BgColor
         {
-            get { return _BgColor; }
-            set { _BgColor = value; }
+            get { return _bgColor; }
+            set { _bgColor = value; }
 
         }
 
@@ -285,7 +317,7 @@ namespace SharpMap.Layers
         /// </summary>
         public Capabilities.WmsServiceDescription ServiceDescription
         {
-            get { return wmsClient.ServiceDescription; }
+            get { return _wmsClient.ServiceDescription; }
         }
 
         /// <summary>
@@ -293,8 +325,8 @@ namespace SharpMap.Layers
         /// </summary>
         public string Version
         {
-            get { return wmsClient.Version; }
-            set { wmsClient.Version = value; }
+            get { return _wmsClient.Version; }
+            set { _wmsClient.Version = value; }
         }
 
         /// <summary>
@@ -331,10 +363,11 @@ namespace SharpMap.Layers
         /// </code>
         /// </example>
         /// </remarks>
+        [Obsolete("Use transparency instead")]
         public ImageAttributes ImageAttributes
         {
-            get { return _ImageAttributes; }
-            set { _ImageAttributes = value; }
+            get { return _imageAttributes; }
+            set { _imageAttributes = value; }
         }
 
         /// <summary>
@@ -378,8 +411,8 @@ namespace SharpMap.Layers
         /// </summary>
         public Boolean ContinueOnError
         {
-            get { return _ContinueOnError; }
-            set { _ContinueOnError = value; }
+            get { return _continueOnError; }
+            set { _continueOnError = value; }
         }
 
         /// <summary>
@@ -387,8 +420,8 @@ namespace SharpMap.Layers
         /// </summary>
         public ICredentials Credentials
         {
-            get { return _Credentials; }
-            set { _Credentials = value; }
+            get { return _credentials; }
+            set { _credentials = value; }
         }
 
         /// <summary>
@@ -396,8 +429,8 @@ namespace SharpMap.Layers
         /// </summary>
         public IWebProxy Proxy
         {
-            get { return _Proxy; }
-            set { _Proxy = value; }
+            get { return _proxy; }
+            set { _proxy = value; }
         }
 
         /// <summary>
@@ -405,8 +438,8 @@ namespace SharpMap.Layers
         /// </summary>
         public int TimeOut
         {
-            get { return _TimeOut; }
-            set { _TimeOut = value; }
+            get { return _timeOut; }
+            set { _timeOut = value; }
         }
 
         /// <summary>
@@ -417,10 +450,10 @@ namespace SharpMap.Layers
         /// <exception cref="System.ArgumentException">Throws an exception is an unknown layer is added</exception>
         public void AddLayer(string name)
         {
-            if (!LayerExists(wmsClient.Layer, name))
+            if (!LayerExists(_wmsClient.Layer, name))
                 throw new ArgumentException("Cannot add WMS Layer - Unknown layername");
 
-            _LayerList.Add(name);
+            _layerList.Add(name);
         }
 
         /// <summary>
@@ -443,7 +476,7 @@ namespace SharpMap.Layers
         /// <param name="name">Name of layer to remove</param>
         public void RemoveLayer(string name)
         {
-            _LayerList.Remove(name);
+            _layerList.Remove(name);
         }
 
         /// <summary>
@@ -452,7 +485,7 @@ namespace SharpMap.Layers
         /// <param name="index"></param>
         public void RemoveLayerAt(int index)
         {
-            _LayerList.RemoveAt(index);
+            _layerList.RemoveAt(index);
         }
 
         /// <summary>
@@ -460,7 +493,7 @@ namespace SharpMap.Layers
         /// </summary>
         public void RemoveAllLayers()
         {
-            _LayerList.Clear();
+            _layerList.Clear();
         }
 
         /// <summary>
@@ -470,9 +503,9 @@ namespace SharpMap.Layers
         /// <exception cref="System.ArgumentException">Throws an exception is an unknown layer is added</exception>
         public void AddStyle(string name)
         {
-            if (!StyleExists(wmsClient.Layer, name))
+            if (!StyleExists(_wmsClient.Layer, name))
                 throw new ArgumentException("Cannot add WMS Layer - Unknown layername");
-            _StylesList.Add(name);
+            _stylesList.Add(name);
         }
 
         /// <summary>
@@ -496,7 +529,7 @@ namespace SharpMap.Layers
         /// <param name="name">Name of style</param>
         public void RemoveStyle(string name)
         {
-            _StylesList.Remove(name);
+            _stylesList.Remove(name);
         }
 
         /// <summary>
@@ -505,7 +538,7 @@ namespace SharpMap.Layers
         /// <param name="index">Index</param>
         public void RemoveStyleAt(int index)
         {
-            _StylesList.RemoveAt(index);
+            _stylesList.RemoveAt(index);
         }
 
         /// <summary>
@@ -513,7 +546,7 @@ namespace SharpMap.Layers
         /// </summary>
         public void RemoveAllStyles()
         {
-            _StylesList.Clear();
+            _stylesList.Clear();
         }
 
         /// <summary>
@@ -539,7 +572,7 @@ namespace SharpMap.Layers
                 }
             if (!formatSupported)
                 throw new ArgumentException("GDI+ doesn't not support mimetype '" + mimeType + "'");
-            _MimeType = mimeType;
+            _mimeType = mimeType;
         }
 
         /// <summary>
@@ -556,29 +589,29 @@ namespace SharpMap.Layers
             Uri myUri = new Uri(GetRequestUrl(map.Envelope, map.Size));
 
             if (logger.IsDebugEnabled)
-                logger.Debug("Url: " + myUri.ToString());
+                logger.Debug("Url: " + myUri);
 
             WebRequest myWebRequest = WebRequest.Create(myUri);
             myWebRequest.Method = resource.Type;
-            myWebRequest.Timeout = _TimeOut;
+            myWebRequest.Timeout = _timeOut;
 
             if (myWebRequest is HttpWebRequest)
             {
-                (myWebRequest as HttpWebRequest).Accept = _MimeType;
+                (myWebRequest as HttpWebRequest).Accept = _mimeType;
                 (myWebRequest as HttpWebRequest).KeepAlive = false;
                 (myWebRequest as HttpWebRequest).UserAgent = "SharpMap-WMSLayer";
             }
 
-            if (_Credentials != null)
+            if (_credentials != null)
             {
-                myWebRequest.Credentials = _Credentials;
+                myWebRequest.Credentials = _credentials;
                 myWebRequest.PreAuthenticate = true;
             }
             else
                 myWebRequest.Credentials = CredentialCache.DefaultCredentials;
 
-            if (_Proxy != null)
-                myWebRequest.Proxy = _Proxy;
+            if (_proxy != null)
+                myWebRequest.Proxy = _proxy;
 
             try
             {
@@ -629,10 +662,10 @@ namespace SharpMap.Layers
                                         }
                                         else
                                         {
-                                            if (((TimeSpan)(DateTime.Now - lastTimeGotData)).TotalSeconds > _TimeOut)
+                                            if (((TimeSpan)(DateTime.Now - lastTimeGotData)).TotalSeconds > _timeOut)
                                             {
                                                 if (logger.IsInfoEnabled)
-                                                    logger.Info("Did not get any data for " + _TimeOut + " seconds, aborting");
+                                                    logger.Info("Did not get any data for " + _timeOut + " seconds, aborting");
                                                 return;
 
                                             }
@@ -679,9 +712,9 @@ namespace SharpMap.Layers
                         if (logger.IsDebugEnabled)
                             logger.Debug("Image read.. Drawing");
 
-                        if (_ImageAttributes != null)
+                        if (_imageAttributes != null)
                             g.DrawImage(img, new Rectangle(0, 0, img.Width, img.Height), 0, 0,
-                                        img.Width, img.Height, GraphicsUnit.Pixel, ImageAttributes);
+                                        img.Width, img.Height, GraphicsUnit.Pixel, _imageAttributes);
                         else
                             g.DrawImageUnscaled(img, 0, 0, map.Size.Width, map.Size.Height);
 
@@ -698,7 +731,7 @@ namespace SharpMap.Layers
             }
             catch (WebException webEx)
             {
-                if (!_ContinueOnError)
+                if (!_continueOnError)
                     throw (new RenderException(
                         "There was a problem connecting to the WMS server when rendering layer '" + LayerName + "'",
                         webEx));
@@ -707,7 +740,7 @@ namespace SharpMap.Layers
             }
             catch (Exception ex)
             {
-                if (!_ContinueOnError)
+                if (!_continueOnError)
                     throw (new RenderException("There was a problem rendering layer '" + LayerName + "'", ex));
                 logger.Error("There was a problem connecting to the WMS server when rendering layer '" + LayerName +
                             "'", ex);
@@ -734,30 +767,30 @@ namespace SharpMap.Layers
                                 box.MinX, box.MinY, box.MaxX, box.MaxY);
             strReq.AppendFormat("&WIDTH={0}&Height={1}", size.Width, size.Height);
             strReq.Append("&Layers=");
-            if (_LayerList != null && _LayerList.Count > 0)
+            if (_layerList != null && _layerList.Count > 0)
             {
-                foreach (string layer in _LayerList)
+                foreach (string layer in _layerList)
                     strReq.AppendFormat("{0},", layer);
                 strReq.Remove(strReq.Length - 1, 1);
             }
-            strReq.AppendFormat("&FORMAT={0}", _MimeType);
+            strReq.AppendFormat("&FORMAT={0}", _mimeType);
             if (SRID < 0)
                 throw new ApplicationException("Spatial reference system not set");
-            if (wmsClient.Version == "1.3.0")
+            if (_wmsClient.Version == "1.3.0")
                 strReq.AppendFormat("&CRS=EPSG:{0}", SRID);
             else
                 strReq.AppendFormat("&SRS=EPSG:{0}", SRID);
-            strReq.AppendFormat("&VERSION={0}", wmsClient.Version);
+            strReq.AppendFormat("&VERSION={0}", _wmsClient.Version);
             strReq.Append("&Styles=");
-            if (_StylesList != null && _StylesList.Count > 0)
+            if (_stylesList != null && _stylesList.Count > 0)
             {
-                foreach (string style in _StylesList)
+                foreach (string style in _stylesList)
                     strReq.AppendFormat("{0},", style);
                 strReq.Remove(strReq.Length - 1, 1);
             }
-            strReq.AppendFormat("&TRANSPARENT={0}", _Transparancy);
-            if (!_Transparancy)
-                strReq.AppendFormat("&BGCOLOR={0}", ColorTranslator.ToHtml(_BgColor));
+            strReq.AppendFormat("&TRANSPARENT={0}", Transparancy);
+            if (!Transparancy)
+                strReq.AppendFormat("&BGCOLOR={0}", ColorTranslator.ToHtml(_bgColor));
             return strReq.ToString();
         }
 
@@ -769,14 +802,14 @@ namespace SharpMap.Layers
         protected Client.WmsOnlineResource GetPreferredMethod()
         {
             //We prefer get. Seek for supported 'get' method
-            for (int i = 0; i < wmsClient.GetMapRequests.Length; i++)
-                if (wmsClient.GetMapRequests[i].Type.ToLower() == "get")
-                    return wmsClient.GetMapRequests[i];
+            for (int i = 0; i < _wmsClient.GetMapRequests.Length; i++)
+                if (_wmsClient.GetMapRequests[i].Type.ToLower() == "get")
+                    return _wmsClient.GetMapRequests[i];
             //Next we prefer the 'post' method
-            for (int i = 0; i < wmsClient.GetMapRequests.Length; i++)
-                if (wmsClient.GetMapRequests[i].Type.ToLower() == "post")
-                    return wmsClient.GetMapRequests[i];
-            return wmsClient.GetMapRequests[0];
+            for (int i = 0; i < _wmsClient.GetMapRequests.Length; i++)
+                if (_wmsClient.GetMapRequests[i].Type.ToLower() == "post")
+                    return _wmsClient.GetMapRequests[i];
+            return _wmsClient.GetMapRequests[0];
         }
 
         /// <summary>

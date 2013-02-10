@@ -33,17 +33,20 @@ namespace SharpMap.Rendering.Symbolizer
             Image.FromStream(
                 Assembly.GetExecutingAssembly().GetManifestResourceStream("SharpMap.Styles.DefaultSymbol.png"));
 
+        [NonSerialized]
         private ImageAttributes _imageAttributes;
+
+        private float _transparency = 0f;
 
         /// <summary>
         /// Releases managed resources
         /// </summary>
         protected override void ReleaseManagedResources()
         {
-            if (ImageAttributes != null)
+            if (_imageAttributes != null)
             {
-                ImageAttributes.Dispose();
-                ImageAttributes = null;
+                _imageAttributes.Dispose();
+                _imageAttributes = null;
             }
 
             if (Symbol != null)
@@ -55,11 +58,31 @@ namespace SharpMap.Rendering.Symbolizer
             base.ReleaseManagedResources();
         }
 
+        public float Transparency
+        {
+            get { return _transparency; }
+            set
+            {
+                _transparency = value;
+                
+                if (_imageAttributes != null)
+                    _imageAttributes.Dispose();
+
+                if (_transparency == 0)
+                    return;
+
+                _imageAttributes = new ImageAttributes();
+                var cm = new ColorMatrix();
+                cm.Matrix33 = 1f - _transparency;
+                _imageAttributes.SetColorMatrix(cm);
+            }
+        }
+
         /// <inheritdoc/>
         public override object Clone()
         {
             var res = (RasterPointSymbolizer)MemberwiseClone();
-            res.ImageAttributes = (ImageAttributes)ImageAttributes.Clone();
+            res.Transparency = Transparency;
             res.Symbol= (Image)Symbol.Clone();
 
             return res;
@@ -73,18 +96,14 @@ namespace SharpMap.Rendering.Symbolizer
         /// <summary>
         /// Gets or sets the <see cref="ImageAttributes"/> for rendering the <see cref="Symbol"/>
         /// </summary>
-        public ImageAttributes ImageAttributes
+        internal ImageAttributes ImageAttributes
         {
             get
             {
                 return _imageAttributes;
             }
-            set
-            {
-                _imageAttributes = value;
-                //if (_imageAttributes)
-            }
         }
+
 
         /// <summary>
         /// Gets or sets the Size of the symbol

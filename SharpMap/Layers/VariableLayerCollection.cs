@@ -35,6 +35,7 @@ namespace SharpMap.Layers
     /// Layer collection 
     /// </summary>
     /// TODO:REEVALUEATE
+    [Serializable]
     public class VariableLayerCollection : LayerCollection
     {
         private readonly LayerCollection _staticLayers;

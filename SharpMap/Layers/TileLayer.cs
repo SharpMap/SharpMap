@@ -17,6 +17,7 @@ namespace SharpMap.Layers
     ///<summary>
     /// Tile layer class
     ///</summary>
+    [Serializable]
     public class TileLayer : Layer
     {
         private static readonly ILog Logger = LogManager.GetCurrentClassLogger();
@@ -27,7 +28,8 @@ namespace SharpMap.Layers
         /// <summary>
         /// The <see cref="ImageAttributes"/> used when rendering the tiles
         /// </summary>
-        protected readonly ImageAttributes _imageAttributes = new ImageAttributes();
+        //protected readonly ImageAttributes _imageAttributes = new ImageAttributes();
+
         /// <summary>
         /// The tile source for this layer
         /// </summary>
@@ -54,6 +56,7 @@ namespace SharpMap.Layers
         protected readonly bool _showErrorInTile = true;
 
         InterpolationMode _interpolationMode = InterpolationMode.HighQualityBicubic;
+        protected Color _transparentColor;
         //System.Collections.Hashtable _cacheTiles = new System.Collections.Hashtable();
 
         #endregion
@@ -122,13 +125,9 @@ namespace SharpMap.Layers
         {
             _source = tileSource;
             LayerName = layerName;
-            if (!transparentColor.IsEmpty)
-                _imageAttributes.SetColorKey(transparentColor, transparentColor);
+            _transparentColor = transparentColor;
             _showErrorInTile = showErrorInTile;
 
-#if !PocketPC
-            _imageAttributes.SetWrapMode(WrapMode.TileFlipXY);
-#endif
             if (!string.IsNullOrEmpty(fileCacheDir))
             {
                 _fileCache = new FileCache(fileCacheDir, "png");
@@ -149,13 +148,9 @@ namespace SharpMap.Layers
         {
             _source = tileSource;
             LayerName = layerName;
-            if (!transparentColor.IsEmpty)
-                _imageAttributes.SetColorKey(transparentColor, transparentColor);
+            _transparentColor = transparentColor;
             _showErrorInTile = showErrorInTile;
 
-#if !PocketPC
-            _imageAttributes.SetWrapMode(WrapMode.TileFlipXY);
-#endif
             _fileCache = fileCache;
             _ImageFormat = imgFormat;
         }
@@ -206,31 +201,40 @@ namespace SharpMap.Layers
                     foreach (var handle in waitHandles)
                         handle.WaitOne();
 
-                    foreach (var info in tiles)
+                    using (var ia = new ImageAttributes())
                     {
-                        var bitmap = _bitmaps.Find(info.Index);
-                        if (bitmap == null) continue;
+                        if (!_transparentColor.IsEmpty)
+                            ia.SetColorKey(_transparentColor, _transparentColor);
+#if !PocketPC
+                        ia.SetWrapMode(WrapMode.TileFlipXY);
+#endif
 
-                        var min = map.WorldToImage(new Coordinate(info.Extent.MinX, info.Extent.MinY));
-                        var max = map.WorldToImage(new Coordinate(info.Extent.MaxX, info.Extent.MaxY));
-
-                        min = new PointF((float) Math.Round(min.X), (float) Math.Round(min.Y));
-                        max = new PointF((float) Math.Round(max.X), (float) Math.Round(max.Y));
-
-                        try
+                        foreach (var info in tiles)
                         {
-                            g.DrawImage(bitmap,
-                                        new Rectangle((int) min.X, (int) max.Y, (int) (max.X - min.X),
-                                                      (int) (min.Y - max.Y)),
-                                        0, 0, _source.Schema.Width, _source.Schema.Height,
-                                        GraphicsUnit.Pixel,
-                                        _imageAttributes);
-                        }
-                        catch (Exception ee)
-                        {
-                            Logger.Error(ee.Message);
-                        }
+                            var bitmap = _bitmaps.Find(info.Index);
+                            if (bitmap == null) continue;
 
+                            var min = map.WorldToImage(new Coordinate(info.Extent.MinX, info.Extent.MinY));
+                            var max = map.WorldToImage(new Coordinate(info.Extent.MaxX, info.Extent.MaxY));
+
+                            min = new PointF((float) Math.Round(min.X), (float) Math.Round(min.Y));
+                            max = new PointF((float) Math.Round(max.X), (float) Math.Round(max.Y));
+
+                            try
+                            {
+                                g.DrawImage(bitmap,
+                                            new Rectangle((int) min.X, (int) max.Y, (int) (max.X - min.X),
+                                                          (int) (min.Y - max.Y)),
+                                            0, 0, _source.Schema.Width, _source.Schema.Height,
+                                            GraphicsUnit.Pixel,
+                                            ia);
+                            }
+                            catch (Exception ee)
+                            {
+                                Logger.Error(ee.Message);
+                            }
+
+                        }
                     }
 
                     graphics.Transform = new Matrix();

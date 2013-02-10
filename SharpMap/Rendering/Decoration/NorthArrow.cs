@@ -9,6 +9,7 @@ namespace SharpMap.Rendering.Decoration
     /// <summary>
     /// North arrow map decoration
     /// </summary>
+    [Serializable]
     public class NorthArrow : MapDecoration
     {
         private static readonly object _lockObject = new object();

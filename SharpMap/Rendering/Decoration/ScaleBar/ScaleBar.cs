@@ -15,6 +15,7 @@ namespace SharpMap.Rendering.Decoration.ScaleBar
     /// <summary>
     /// Scale Bar map decoration
     /// </summary>
+    [Serializable]
     public class ScaleBar : MapDecoration
     {
         #region Constants

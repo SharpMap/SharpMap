@@ -30,41 +30,45 @@ namespace UnitTests.Serialization
 
         }
 
-        private static void ComparePens(Pen penS, Pen penD)
+        internal static void ComparePens(Pen penS, Pen penD, string testProperty = null)
         {
-            Assert.IsNotNull(penS);
-            Assert.IsNotNull(penD);
-            Assert.AreEqual(penS.PenType, penD.PenType);
-            Assert.AreEqual(penS.Color, penD.Color);
-            Assert.AreEqual(penS.Width, penD.Width);
-            Assert.AreEqual(penS.StartCap, penD.StartCap);
-            Assert.AreEqual(penS.DashCap, penD.DashCap);
-            Assert.AreEqual(penS.DashStyle, penD.DashStyle);
-            Assert.AreEqual(penS.DashOffset, penD.DashOffset);
-            Assert.AreEqual(penS.LineJoin, penD.LineJoin);
-            Assert.AreEqual(penS.MiterLimit, penD.MiterLimit);
-            Assert.AreEqual(penS.Alignment, penD.Alignment);
-            Assert.AreEqual(penS.EndCap, penD.EndCap);
+            testProperty = testProperty ?? string.Empty;
+
+            Assert.IsNotNull(penS, testProperty + " is null");
+            Assert.IsNotNull(penD, testProperty + " is null");
+            Assert.AreEqual(penS.PenType, penD.PenType, testProperty + " PenType differs");
+            Assert.AreEqual(penS.Color, penD.Color, testProperty + " Color differs");
+            Assert.AreEqual(penS.Width, penD.Width, testProperty + " Width differs");
+            Assert.AreEqual(penS.StartCap, penD.StartCap, testProperty + " StartCap differs");
+            Assert.AreEqual(penS.DashCap, penD.DashCap, testProperty + " DashCap differs");
+            Assert.AreEqual(penS.DashStyle, penD.DashStyle, testProperty + " DashStyle differs");
+            Assert.AreEqual(penS.DashOffset, penD.DashOffset, testProperty + " DashOffset differs");
+            Assert.AreEqual(penS.LineJoin, penD.LineJoin, testProperty + " LineJoin differs");
+            Assert.AreEqual(penS.MiterLimit, penD.MiterLimit, testProperty + " MiterLimit differs");
+            Assert.AreEqual(penS.Alignment, penD.Alignment, testProperty + " Alignment differs");
+            Assert.AreEqual(penS.EndCap, penD.EndCap, testProperty + " EndCap differs");
             if (penS.EndCap == LineCap.Custom)
                 Assert.IsNotNull(penD.CustomEndCap);
             if (penS.StartCap == LineCap.Custom)
                 Assert.IsNotNull(penD.CustomStartCap);
-            CompareArrays(penS.CompoundArray, penD.CompoundArray);
+            CompareArrays(penS.CompoundArray, penD.CompoundArray, testProperty + " CompoundArray");
             if (penS.DashStyle == DashStyle.Custom)
-                CompareArrays(penS.DashPattern, penD.DashPattern);
-            CompareArrays(penS.Transform.Elements, penD.Transform.Elements);
+                CompareArrays(penS.DashPattern, penD.DashPattern, testProperty + " DashPattern");
+            CompareArrays(penS.Transform.Elements, penD.Transform.Elements, testProperty + " Transform.Elements");
         }
 
-        private static void CompareArrays<T>(T[] a1, T[] a2)
+        private static void CompareArrays<T>(T[] a1, T[] a2, string testProperty = null)
         {
+            testProperty = testProperty ?? string.Empty;
+
             if (a1 == null && a2 == null)
                 return;
 
-            Assert.IsTrue(a1 != null && a2 != null);
+            Assert.IsTrue(a1 != null && a2 != null, testProperty + " one is null");
 
-            Assert.AreEqual(a1.Length, a2.Length);
+            Assert.AreEqual(a1.Length, a2.Length, testProperty + " different length");
             for (var i = 0; i < a1.Length; i++ )
-                Assert.AreEqual(a1[i], a2[i]);
+                Assert.AreEqual(a1[i], a2[i], string.Format("{0} differ at index {1} [{2}, {3}]", testProperty, i, a1.ToString(), a2.ToString()));
         }
 
         [Test]

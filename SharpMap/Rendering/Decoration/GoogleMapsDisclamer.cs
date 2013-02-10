@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Net;
 #if !DotSpatialProjections
+using System.Runtime.Serialization;
 using IMathTransform = ProjNet.CoordinateSystems.Transformations.MathTransform;
 #else
 using DotSpatial.Projections;
@@ -27,6 +28,7 @@ namespace SharpMap.Rendering.Decoration
     /// <para/>
     /// Supports Async-Mode (use special .ctor)
     /// </remarks>
+    [Serializable]
     public class GoogleMapsDisclaimer : MapDecoration
     {
         // Logging

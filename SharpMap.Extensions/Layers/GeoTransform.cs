@@ -29,6 +29,7 @@ namespace SharpMap.Layers
     /// In a north up image, T[1] is the pixel width, and T[5] is the pixel height.
     /// The upper left corner of the upper left pixel is at position (T[0],T[3]).
     /// </summary>
+    [Serializable]
     internal class GeoTransform
     {
         private readonly double[] _inverseTransform = new double[6];

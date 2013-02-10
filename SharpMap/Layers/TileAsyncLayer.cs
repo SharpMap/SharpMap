@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.Threading;
 using BruTile;
@@ -16,6 +17,7 @@ namespace SharpMap.Layers
     /// <summary>
     /// Tile layer class that gets and serves tiles asynchonously
     /// </summary>
+    [Serializable]
     public class TileAsyncLayer : TileLayer, ITileAsyncLayer
     {
         static readonly ILog Logger = LogManager.GetLogger(typeof(TileAsyncLayer));
@@ -89,40 +91,52 @@ namespace SharpMap.Layers
                 _threadList.Clear();
             }
 
-            foreach (TileInfo info in tiles)
+            using (var ia = new ImageAttributes())
             {
-                if (_bitmaps.Find(info.Index) != null)
+                if (!_transparentColor.IsEmpty)
+                    ia.SetColorKey(_transparentColor, _transparentColor);
+#if !PocketPC
+                ia.SetWrapMode(WrapMode.TileFlipXY);
+#endif
+                foreach (TileInfo info in tiles)
                 {
-                    //ThreadPool.QueueUserWorkItem(OnMapNewtileAvailableHelper, new object[] { info, _bitmaps.Find(info.Index) });
-                    //draws directly the bitmap
-                    var bb = new Envelope(new Coordinate(info.Extent.MinX, info.Extent.MinY), new Coordinate(info.Extent.MaxX, info.Extent.MaxY));
-                    HandleMapNewTileAvaliable(map,graphics, bb, _bitmaps.Find(info.Index), _source.Schema.Width, _source.Schema.Height, _imageAttributes);
-                }
-                else if (_fileCache != null && _fileCache.Exists(info.Index))
-                {
-                    
-                    Bitmap img = GetImageFromFileCache(info) as Bitmap;
-                    _bitmaps.Add(info.Index, img);
-                    
-                    //ThreadPool.QueueUserWorkItem(OnMapNewtileAvailableHelper, new object[] { info, img });
-                    //draws directly the bitmap
-                    var btExtent = info.Extent;
-                    var bb = new Envelope(new Coordinate(btExtent.MinX, btExtent.MinY), new Coordinate(btExtent.MaxX, btExtent.MaxY));
-                    HandleMapNewTileAvaliable(map, graphics, bb, _bitmaps.Find(info.Index), _source.Schema.Width, _source.Schema.Height, _imageAttributes);
-                }
-                else
-                {
-                    var b = new BackgroundWorker();
-                    b.WorkerSupportsCancellation = true;
-                    b.DoWork += DoWorkBackground;
-                    b.RunWorkerAsync(new object[] { _source.Provider, info, _bitmaps, true });
-                    //Thread t = new Thread(new ParameterizedThreadStart(GetTileOnThread));
-                    //t.Name = info.ToString();
-                    //t.IsBackground = true;
-                    //t.Start();
-                    lock (_threadList)
+                    if (_bitmaps.Find(info.Index) != null)
                     {
-                        _threadList.Add(b);
+                        //ThreadPool.QueueUserWorkItem(OnMapNewtileAvailableHelper, new object[] { info, _bitmaps.Find(info.Index) });
+                        //draws directly the bitmap
+                        var bb = new Envelope(new Coordinate(info.Extent.MinX, info.Extent.MinY),
+                                              new Coordinate(info.Extent.MaxX, info.Extent.MaxY));
+                        HandleMapNewTileAvaliable(map, graphics, bb, _bitmaps.Find(info.Index), _source.Schema.Width,
+                                                  _source.Schema.Height, ia);
+                    }
+                    else if (_fileCache != null && _fileCache.Exists(info.Index))
+                    {
+
+                        Bitmap img = GetImageFromFileCache(info) as Bitmap;
+                        _bitmaps.Add(info.Index, img);
+
+                        //ThreadPool.QueueUserWorkItem(OnMapNewtileAvailableHelper, new object[] { info, img });
+                        //draws directly the bitmap
+                        var btExtent = info.Extent;
+                        var bb = new Envelope(new Coordinate(btExtent.MinX, btExtent.MinY),
+                                              new Coordinate(btExtent.MaxX, btExtent.MaxY));
+                        HandleMapNewTileAvaliable(map, graphics, bb, _bitmaps.Find(info.Index), _source.Schema.Width,
+                                                  _source.Schema.Height, ia);
+                    }
+                    else
+                    {
+                        var b = new BackgroundWorker();
+                        b.WorkerSupportsCancellation = true;
+                        b.DoWork += DoWorkBackground;
+                        b.RunWorkerAsync(new object[] {_source.Provider, info, _bitmaps, true});
+                        //Thread t = new Thread(new ParameterizedThreadStart(GetTileOnThread));
+                        //t.Name = info.ToString();
+                        //t.IsBackground = true;
+                        //t.Start();
+                        lock (_threadList)
+                        {
+                            _threadList.Add(b);
+                        }
                     }
                 }
             }
@@ -255,7 +269,15 @@ namespace SharpMap.Layers
             if (MapNewTileAvaliable != null)
             {
                 var bb = new Envelope(new Coordinate(tileInfo.Extent.MinX, tileInfo.Extent.MinY), new Coordinate(tileInfo.Extent.MaxX, tileInfo.Extent.MaxY));
-                MapNewTileAvaliable(this, bb, bitmap, _source.Schema.Width, _source.Schema.Height, _imageAttributes);
+                using (var ia = new ImageAttributes())
+                {
+                    if (!_transparentColor.IsEmpty)
+                        ia.SetColorKey(_transparentColor, _transparentColor);
+#if !PocketPC
+                    ia.SetWrapMode(WrapMode.TileFlipXY);
+#endif
+                    MapNewTileAvaliable(this, bb, bitmap, _source.Schema.Width, _source.Schema.Height, ia);
+                }
             }
         }
 

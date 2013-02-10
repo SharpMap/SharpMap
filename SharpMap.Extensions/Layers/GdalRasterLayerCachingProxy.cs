@@ -17,6 +17,7 @@
  * 
  */
 
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 #if !DotSpatialProjections
@@ -30,6 +31,7 @@ using Point = System.Drawing.Point;
 
 namespace SharpMap.Layers
 {
+    [Serializable]
     public class GdalRasterLayerCachingProxy : Layer
     {
         private readonly GdalRasterLayer _innerLayer;

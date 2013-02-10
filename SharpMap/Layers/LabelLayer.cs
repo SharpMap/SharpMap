@@ -60,7 +60,8 @@ namespace SharpMap.Layers
     /// layLabel.Style.HorizontalAlignment = SharpMap.Styles.LabelStyle.HorizontalAlignmentEnum.Center;
     /// </code>
     /// </example>
-    public class LabelLayer : Layer, IDisposable
+    [Serializable]
+    public class LabelLayer : Layer
     {
         #region Delegates
 
@@ -135,13 +136,18 @@ namespace SharpMap.Layers
         /// A value indication the priority of the label in cases of label-collision detection
         /// </summary>
         private int _priority;
+
         /// <summary>
         /// Name of the column that contains the value indicating the priority of the label in case of label-collision detection
         /// </summary>
         private string _priorityColumn = "";
 
+        /// <summary>
+        /// Name of the column that contains the value indicating the rotation value of the label
+        /// </summary>
         private string _rotationColumn;
-        //private LabelStyle _Style;
+
+
         private TextRenderingHint _textRenderingHint;
 
         private ITheme _theme;

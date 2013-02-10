@@ -18,7 +18,7 @@
       <Value Profile="(Default)">Data Source=;Initial Catalog=;Integrated Security=True</Value>
     </Setting>
     <Setting Name="PostGis" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">Data Source=localhost;Port=5432;User Id=postgres;Password=1.Kennwort</Value>
+      <Value Profile="(Default)">Host=127.0.0.1;Port=5432;User Id=postgres;Password=1.Kennwort;database=postgis_sample</Value>
     </Setting>
     <Setting Name="SpatiaLite" Type="System.String" Scope="Application">
       <Value Profile="(Default)">Data Source=:memory:</Value>

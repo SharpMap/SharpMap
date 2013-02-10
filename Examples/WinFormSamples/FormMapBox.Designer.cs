@@ -214,7 +214,7 @@ namespace WinFormSamples
             this.mapDigitizeGeometriesToolStrip1.Dock = System.Windows.Forms.DockStyle.None;
             this.mapDigitizeGeometriesToolStrip1.Enabled = false;
             this.mapDigitizeGeometriesToolStrip1.Location = new System.Drawing.Point(3, 0);
-            this.mapDigitizeGeometriesToolStrip1.MapControl = null;
+            this.mapDigitizeGeometriesToolStrip1.MapControl = this.mapBox1;
             this.mapDigitizeGeometriesToolStrip1.Name = "mapDigitizeGeometriesToolStrip1";
             this.mapDigitizeGeometriesToolStrip1.Size = new System.Drawing.Size(110, 25);
             this.mapDigitizeGeometriesToolStrip1.TabIndex = 9;

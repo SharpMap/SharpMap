@@ -19,6 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.Drawing.Text;
 using System.Reflection;
 using System.Runtime.Serialization;
 
@@ -38,8 +39,9 @@ namespace SharpMap.Utilities
             var sc = new StreamingContext(StreamingContextStates.All);
             var ss = new SurrogateSelector();
             ss.AddSurrogate(typeof (Pen), sc, new PenSurrogate());
-            ss.AddSurrogate(typeof (SolidBrush), sc, new SolidBrushSurrogate());
-            ss.AddSurrogate(typeof (TextureBrush), sc, new TextureBrushSurrogate());
+            ss.AddSurrogate(typeof (Brush), sc, new BrushSurrogate());
+            ss.AddSurrogate(typeof(SolidBrush), sc, new SolidBrushSurrogate());
+            ss.AddSurrogate(typeof(TextureBrush), sc, new TextureBrushSurrogate());
             ss.AddSurrogate(typeof(HatchBrush), sc, new HatchBrushSurrogate());
             ss.AddSurrogate(typeof(LinearGradientBrush), sc, new LinearGradientBrushSurrogate());
             ss.AddSurrogate(typeof(AdjustableArrowCap), sc, new AdjustableArrowCapSurrogate());
@@ -50,8 +52,81 @@ namespace SharpMap.Utilities
             ss.AddSurrogate(typeof(Blend), sc, new BlendSurrogate());
             ss.AddSurrogate(typeof(ColorBlend), sc, new ColorBlendSurrogate());
             ss.AddSurrogate(typeof(Matrix), sc, new MatrixSurrogate());
+            ss.AddSurrogate(typeof(StringFormat), sc, new StringFormatSurrogate());
             return ss;
         }
+
+        #region Nested type: StringFormatSurrogate
+
+        /// <summary>
+        /// Surrogate class to serialize <see cref="StringFormat"/>
+        /// </summary>
+        private class StringFormatSurrogate : ISerializationSurrogate
+        {
+            [Serializable]
+            public class StringFormatRef: IObjectReference, ISerializable
+            {
+                private readonly StringFormat _format;
+                public StringFormatRef(SerializationInfo info, StreamingContext context)
+                {
+                    var sf = _format = new StringFormat();
+                    sf.Alignment = (StringAlignment)info.GetInt32("Alignment");
+                    var dsl = info.GetInt32("DigitSubstitutionLanguage");
+                    var dsm = (StringDigitSubstitute)info.GetInt32("DigitSubstitutionMethod");
+                    sf.FormatFlags = (StringFormatFlags)info.GetInt32("FormatFlags");
+                    sf.HotkeyPrefix = (HotkeyPrefix)info.GetInt32("HotkeyPrefix");
+                    sf.LineAlignment = (StringAlignment)info.GetInt32("LineAlignment");
+                    sf.Trimming = (StringTrimming)info.GetInt32("Trimming");
+                    var firstTabStop = info.GetSingle("FirstTabStop");
+                    var tabStops = (float[])info.GetValue("TabStops", typeof(float[]));
+
+                    sf.SetTabStops(firstTabStop, tabStops);
+                    sf.SetDigitSubstitution(dsl, dsm);
+                }
+
+                public object GetRealObject(StreamingContext context)
+                {
+                    return _format;
+                }
+
+                public void GetObjectData(SerializationInfo info, StreamingContext context)
+                {
+                    throw new NotSupportedException();
+                }
+            }
+            
+            /// <summary>
+            /// Populates the provided SerializationInfo with the data needed to serialize the object.
+            /// </summary>
+            /// <param name="obj">The object to serialize.</param>
+            /// <param name="info">The SerializationInfo to populate with data.</param>
+            /// <param name="context">The destination for this serialization.</param>
+            public void GetObjectData(object obj, SerializationInfo info, StreamingContext context)
+            {
+                info.SetType(typeof(StringFormatRef));
+
+                var sf = (StringFormat) obj;
+                info.AddValue("Alignment", (int)sf.Alignment);
+                info.AddValue("DigitSubstitutionLanguage", sf.DigitSubstitutionLanguage);
+                info.AddValue("DigitSubstitutionMethod", (int)sf.DigitSubstitutionMethod);
+                info.AddValue("FormatFlags", (int)sf.FormatFlags);
+                info.AddValue("HotkeyPrefix", (int) sf.HotkeyPrefix);
+                info.AddValue("LineAlignment", sf.LineAlignment);
+                info.AddValue("Trimming", sf.Trimming);
+                float firstTabStop;
+                var tabStops = sf.GetTabStops(out firstTabStop);
+                info.AddValue("FirstTabStop", firstTabStop);
+                info.AddValue("TabStops", tabStops);
+            }
+
+            public object SetObjectData(object obj, SerializationInfo info, StreamingContext context, ISurrogateSelector selector)
+            {
+                var sf = (StringFormat) obj;
+                
+                return null;
+            }
+        }
+        #endregion
 
         #region Nested type: PenSurrogate
 

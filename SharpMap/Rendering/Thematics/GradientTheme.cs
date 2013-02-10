@@ -26,6 +26,7 @@ namespace SharpMap.Rendering.Thematics
     /// <summary>
     /// Gradient theme base class
     /// </summary>
+    [Serializable]
     public abstract class GradientThemeBase : ITheme
     {
         private ColorBlend _fillColorBlend;
@@ -346,6 +347,7 @@ namespace SharpMap.Rendering.Thematics
     /// <summary>
     /// The GradientTheme class defines a gradient color thematic rendering of features based by a numeric attribute.
     /// </summary>
+    [Serializable]
     public class GradientTheme : GradientThemeBase
     {
         private string _columnName;

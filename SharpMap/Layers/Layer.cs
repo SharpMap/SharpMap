@@ -32,6 +32,7 @@ namespace SharpMap.Layers
     /// Abstract class for common layer properties
     /// Implement this class instead of the ILayer interface to save a lot of common code.
     /// </summary>
+    [Serializable]
     public abstract class Layer : DisposableObject, ILayer
     {
         #region Events

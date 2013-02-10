@@ -23,7 +23,7 @@ namespace SharpMap.Web.Wms
     /// <summary>
     /// Class for throwing WMS exceptions to client
     /// </summary>
-    public class WmsException
+    public static class WmsException
     {
         /// <summary>
         /// Throws a <see cref="WmsExceptionCode.NotApplicable"/> WMS excption. The <see cref="HttpContext.Current"/> is used to write the response stream.

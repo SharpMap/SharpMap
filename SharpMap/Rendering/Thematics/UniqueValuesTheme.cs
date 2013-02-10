@@ -64,5 +64,40 @@ namespace SharpMap.Rendering.Thematics
             return _default;
         }
 
+        /// <summary>
+        /// Gets the name of the attribute column
+        /// </summary>
+        public string AttributeName { get { return _attributeName; } }
+
+        /// <summary>
+        /// Gets the unique values
+        /// </summary>
+        public String[] UniqueValues
+        {
+            get
+            {
+                var res = new string[_styleMap.Count];
+                _styleMap.Keys.CopyTo(res, 0);
+                return res;
+            }
+        }
+
+        /// <summary>
+        /// Gets the default style, that is applied if <see cref="Attribute"/>
+        /// </summary>
+        public IStyle DefaultStyle { get { return _default; } }
+
+        /// <summary>
+        /// Function to retrieve the style for a given value
+        /// </summary>
+        /// <param name="value">The attribute value as string</param>
+        /// <returns>The style</returns>
+        public IStyle GetStyle(string value)
+        {
+            IStyle result;
+            if (_styleMap.TryGetValue(value, out result))
+                return result;
+            return _default;
+        }
     }
 }

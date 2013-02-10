@@ -15,6 +15,8 @@
 // along with SharpMap; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
 
+using System;
+using System.Runtime.Serialization;
 using SharpMap.Data;
 using SharpMap.Styles;
 
@@ -23,7 +25,8 @@ namespace SharpMap.Rendering.Thematics
     /// <summary>
     /// The CustomTheme class is used for defining your own thematic rendering by using a custom get-style-delegate.
     /// </summary>
-    public class CustomTheme : ITheme
+    [Serializable]
+    public class CustomTheme : ITheme, ISerializable
     {
         #region Delegates
 
@@ -69,10 +72,9 @@ namespace SharpMap.Rendering.Thematics
 
         #endregion
 
-        private IStyle _DefaultStyle;
+        private IStyle _defaultStyle;
 
         private GetStyleMethod _getStyleDelegate;
-
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CustomTheme"/> class
@@ -88,8 +90,8 @@ namespace SharpMap.Rendering.Thematics
         /// </summary>
         public IStyle DefaultStyle
         {
-            get { return _DefaultStyle; }
-            set { _DefaultStyle = value; }
+            get { return _defaultStyle; }
+            set { _defaultStyle = value; }
         }
 
         /// <summary>
@@ -134,7 +136,15 @@ namespace SharpMap.Rendering.Thematics
             if (style != null)
                 return style;
             else
-                return _DefaultStyle;
+                return _defaultStyle;
+        }
+
+        #endregion
+
+        #region ISerializable Members
+        void ISerializable.GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            info.AddValue("defaultStyle", _defaultStyle);
         }
 
         #endregion

@@ -21,6 +21,7 @@ namespace SharpMap.Layers.Symbolizer
     /// Base class for all vector layers using <see cref="ISymbolizer{TGeometry}"/> approach.
     /// </summary>
     /// <typeparam name="TGeometry">The geometry type</typeparam>
+    [Serializable]
     public abstract class BaseVectorLayer<TGeometry> : Layer, ICanQueryLayer
         where TGeometry : class//, IGeometry
     {

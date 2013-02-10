@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
 using System.Drawing.Drawing2D;
 
 namespace SharpMap.Rendering.Decoration
@@ -6,6 +7,7 @@ namespace SharpMap.Rendering.Decoration
     /// <summary>
     /// Eye of sight class
     /// </summary>
+    [Serializable]
     public class EyeOfSight : NorthArrow
     {
         private static readonly string[] Directions = {"N", "E", "S", "W"};

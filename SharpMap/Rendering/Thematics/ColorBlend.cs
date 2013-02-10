@@ -25,11 +25,12 @@ namespace SharpMap.Rendering.Thematics
     /// Defines arrays of colors and positions used for interpolating color blending in a multicolor gradient.
     /// </summary>
     /// <seealso cref="SharpMap.Rendering.Thematics.GradientTheme"/>
+    [Serializable]
     public class ColorBlend
     {
-        private Color[] _Colors;
+        private Color[] _colors;
 
-        private float[] _Positions;
+        private float[] _positions;
         private float _maximum = float.NaN;
         private float _minimum = float.NaN;
 
@@ -44,7 +45,7 @@ namespace SharpMap.Rendering.Thematics
         /// <param name="positions">An array of values that specify percentages of distance along the gradient line.</param>
         public ColorBlend(Color[] colors, float[] positions)
         {
-            _Colors = colors;
+            _colors = colors;
             Positions = positions;
         }
 
@@ -58,8 +59,8 @@ namespace SharpMap.Rendering.Thematics
         /// </remarks>
         public Color[] Colors
         {
-            get { return _Colors; }
-            set { _Colors = value; }
+            get { return _colors; }
+            set { _colors = value; }
         }
 
         /// <summary>
@@ -76,10 +77,10 @@ namespace SharpMap.Rendering.Thematics
         /// </remarks>
         public float[] Positions
         {
-            get { return _Positions; }
+            get { return _positions; }
             set 
             { 
-                _Positions = value;
+                _positions = value;
                 if ( value == null )
                     _minimum = _maximum = float.NaN;
                 else
@@ -101,9 +102,9 @@ namespace SharpMap.Rendering.Thematics
         {
             if (float.IsNaN(_minimum))
                 throw (new ArgumentException("Positions not set"));
-            if (_Colors.Length != _Positions.Length)
+            if (_colors.Length != _positions.Length)
                 throw (new ArgumentException("Colors and Positions arrays must be of equal length"));
-            if (_Colors.Length < 2)
+            if (_colors.Length < 2)
                 throw (new ArgumentException("At least two colors must be defined in the ColorBlend"));
             /*
             if (_Positions[0] != 0f)
@@ -113,15 +114,15 @@ namespace SharpMap.Rendering.Thematics
             if (pos > 1 || pos < 0) pos -= (float) Math.Floor(pos);
              */
             int i = 1;
-            while (i < _Positions.Length && _Positions[i] < pos)
+            while (i < _positions.Length && _positions[i] < pos)
                 i++;
-            float frac = (pos - _Positions[i - 1])/(_Positions[i] - _Positions[i - 1]);
+            float frac = (pos - _positions[i - 1])/(_positions[i] - _positions[i - 1]);
             frac = Math.Max(frac, 0.0f);
             frac = Math.Min(frac, 1.0f);
-            int R = (int) Math.Round((_Colors[i - 1].R*(1 - frac) + _Colors[i].R*frac));
-            int G = (int) Math.Round((_Colors[i - 1].G*(1 - frac) + _Colors[i].G*frac));
-            int B = (int) Math.Round((_Colors[i - 1].B*(1 - frac) + _Colors[i].B*frac));
-            int A = (int) Math.Round((_Colors[i - 1].A*(1 - frac) + _Colors[i].A*frac));
+            int R = (int) Math.Round((_colors[i - 1].R*(1 - frac) + _colors[i].R*frac));
+            int G = (int) Math.Round((_colors[i - 1].G*(1 - frac) + _colors[i].G*frac));
+            int B = (int) Math.Round((_colors[i - 1].B*(1 - frac) + _colors[i].B*frac));
+            int A = (int) Math.Round((_colors[i - 1].A*(1 - frac) + _colors[i].A*frac));
             return Color.FromArgb(A, R, G, B);
         }
 
@@ -135,12 +136,12 @@ namespace SharpMap.Rendering.Thematics
         {
             LinearGradientBrush br = new LinearGradientBrush(rectangle, Color.Black, Color.Black, angle, true);
             System.Drawing.Drawing2D.ColorBlend cb = new System.Drawing.Drawing2D.ColorBlend();
-            cb.Colors = _Colors;
+            cb.Colors = _colors;
             //scale and translate positions to range[0.0, 1.0]
-            float[] positions = new float[_Positions.Length];
+            float[] positions = new float[_positions.Length];
             float range = _maximum - _minimum;
-            for (int i = 0; i < _Positions.Length; i++)
-                positions[i] = (_Positions[i] - _minimum) / range;
+            for (int i = 0; i < _positions.Length; i++)
+                positions[i] = (_positions[i] - _minimum) / range;
             cb.Positions = positions;
             br.InterpolationColors = cb;
             return br;

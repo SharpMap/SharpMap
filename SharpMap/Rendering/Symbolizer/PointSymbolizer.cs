@@ -140,7 +140,7 @@ namespace SharpMap.Rendering.Symbolizer
                            Offset = Offset,
                            Rotation = Rotation,
                            Scale = Scale,
-                           ImageAttributes = new ImageAttributes(),
+                           //ImageAttributes = new ImageAttributes(),
                            Symbol = bitmap
                        };
         }

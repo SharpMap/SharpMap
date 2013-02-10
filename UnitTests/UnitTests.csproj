@@ -78,6 +78,10 @@
   </Target>
   -->
   <ItemGroup>
+    <Reference Include="BruTile, Version=0.6.4.0, Culture=neutral, PublicKeyToken=00e75fd79e391f40, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\BruTile.0.6.4\lib\net35\BruTile.dll</HintPath>
+    </Reference>
     <Reference Include="DotSpatial.Projections">
       <HintPath>..\packages\DotSpatial.Projections.1.2\lib\net40-Client\DotSpatial.Projections.dll</HintPath>
     </Reference>
@@ -108,6 +112,10 @@
     </Reference>
     <Reference Include="PowerCollections">
       <HintPath>..\packages\NetTopologySuite.1.12.0\lib\net35\PowerCollections.dll</HintPath>
+    </Reference>
+    <Reference Include="ProjNet, Version=1.2.3882.19088, Culture=neutral, PublicKeyToken=a1f5bdcd9c6f5740, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\SharpMap\bin\Debug\ProjNet.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -153,10 +161,15 @@
     <Compile Include="Rendering\Symbolizer\PolygonSymbolizerTest.cs" />
     <Compile Include="Rendering\Thematics\ColorBlendTest.cs" />
     <Compile Include="Serialization\BaseSerializationTest.cs" />
+    <Compile Include="Serialization\MapTest.cs" />
+    <Compile Include="Serialization\DecorationsTest.cs" />
+    <Compile Include="Serialization\LayerTest.cs" />
     <Compile Include="Serialization\MapDocSerializationTests.cs" />
     <Compile Include="Serialization\ProviderTest.cs" />
     <Compile Include="Serialization\StylesTest.cs" />
     <Compile Include="Serialization\SurrogatesTest.cs" />
+    <Compile Include="Serialization\SymbolizerTest.cs" />
+    <Compile Include="Serialization\ThemeTest.cs" />
     <Compile Include="TestData\CreatingData.cs" />
     <Compile Include="TestWmsCapabilityParser.cs" />
     <Compile Include="WFS\RequestValidationTest.cs" />
