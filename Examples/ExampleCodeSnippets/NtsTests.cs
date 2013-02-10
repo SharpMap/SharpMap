@@ -54,12 +54,20 @@
             var p = new SharpMap.Data.Providers.OleDbPoint(
                 "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=\"" + System.IO.Path.GetTempPath() + "\";" +
                 "Extended Properties=\"text;HDR=Yes;FMT=Delimited\"", table, "ID", "X", "Y");
+
+            var extents = p.GetExtents();
+
             var fds = new SharpMap.Data.FeatureDataSet();
+            p.ExecuteIntersectionQuery(extents, fds);
+            NUnit.Framework.Assert.AreEqual(1, fds.Tables.Count);
+            NUnit.Framework.Assert.AreEqual(4, fds.Tables[0].Rows.Count);
+
             p.ExecuteIntersectionQuery(poly, fds);
-            
+            NUnit.Framework.Assert.AreEqual(2, fds.Tables.Count);
+            NUnit.Framework.Assert.AreEqual(3, fds.Tables[1].Rows.Count);
 
             var inside = new System.Collections.Generic.List<bool>(new[] { false, true, true, true });
-            NUnit.Framework.Assert.AreEqual(System.Linq.Enumerable.Count(inside, (b) => b == true), fds.Tables[0].Rows.Count);
+            NUnit.Framework.Assert.AreEqual(System.Linq.Enumerable.Count(inside, (b) => b == true), fds.Tables[1].Rows.Count);
 
             System.IO.File.Delete(System.IO.Path.Combine(System.IO.Path.GetTempPath(), table));
         }

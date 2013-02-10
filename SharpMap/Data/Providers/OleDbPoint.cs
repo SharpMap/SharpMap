@@ -252,6 +252,7 @@ namespace SharpMap.Data.Providers
                             foreach (DataColumn col in ds2.Tables[0].Columns)
                                 fdr[col.Ordinal] = dr[col];
                             fdr.Geometry = geom;
+                            fdt.Rows.Add(fdr);
 
                         }
                         ds.Tables.Add(fdt);
@@ -344,7 +345,8 @@ namespace SharpMap.Data.Providers
                             //If the read row is OK, create a point geometry from the XColumn and YColumn and return it
                             if (dr[0] != DBNull.Value && dr[1] != DBNull.Value && dr[2] != DBNull.Value &&
                                 dr[3] != DBNull.Value)
-                                return new Envelope(new Coordinate((float)dr[0], (float)dr[1]), new Coordinate((float)dr[2], (float)dr[3]));
+                                return new Envelope(new Coordinate(Convert.ToDouble(dr[0]), Convert.ToDouble(dr[1])), 
+                                    new Coordinate(Convert.ToDouble(dr[2]), Convert.ToDouble(dr[3])));
                         }
                     }
                     conn.Close();
