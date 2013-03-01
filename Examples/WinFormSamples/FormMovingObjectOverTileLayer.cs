@@ -17,7 +17,7 @@ using WinFormSamples.Properties;
 #if DotSpatialProjections
 using GeometryTransform = DotSpatial.Projections.GeometryTransform;
 #else
-using GeometryTransform = ProjNet.CoordinateSystems.Transformations.GeometryTransform;
+using GeometryTransform = GeoAPI.CoordinateSystems.Transformations.GeometryTransform;
 #endif
 
 namespace WinFormSamples

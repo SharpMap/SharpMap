@@ -127,12 +127,12 @@
             if (geometry == null)
                 throw new ArgumentNullException("geometry");
 
-            IList<ILineString> lines = LineStringExtracter.GetLines(geometry);
-            IList<IGeometry> geoms = lines.Cast<IGeometry>().ToList();
+            var lines = LineStringExtracter.GetLines(geometry);
+            var geoms = lines.ToList();
 
-            Polygonizer polygonizer = new Polygonizer();            
+            var polygonizer = new Polygonizer();            
             polygonizer.Add(geoms);
-            IList<IGeometry> polys = polygonizer.GetPolygons();
+            var polys = polygonizer.GetPolygons();
             return geometry.Factory.BuildGeometry(polys);
         }
 

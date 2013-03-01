@@ -20,7 +20,7 @@
 using System;
 using GeoAPI.Geometries;
 
-namespace ProjNet.CoordinateSystems.Transformations
+namespace GeoAPI.CoordinateSystems.Transformations
 {
     /// <summary>
     /// Helper class for transforming <see cref="GeoAPI.Geometries.IGeometry"/>

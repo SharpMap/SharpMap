@@ -23,7 +23,7 @@ using System.IO;
 using System.Text;
 #if !DotSpatialProjections
 using ProjNet.Converters.WellKnownText;
-using ProjNet.CoordinateSystems;
+using GeoAPI.CoordinateSystems;
 #else
 using DotSpatial.Projections;
 #endif

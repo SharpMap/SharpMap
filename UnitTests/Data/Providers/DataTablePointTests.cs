@@ -25,37 +25,6 @@ using NetTopologySuite.Geometries;
 
 namespace UnitTests.Data.Providers
 {
-    [TestFixture]
-    public abstract class  ProviderTest
-    {
-        [TestFixtureSetUp]
-        public virtual void TestFixtureSetup()
-        {
-            GeoAPI.GeometryServiceProvider.Instance =
-                NetTopologySuite.NtsGeometryServices.Instance;
-        }
-
-        protected string TestDataPath
-        {
-            get { return System.IO.Path.Combine(System.IO.Path.GetDirectoryName(new Uri(GetType().Assembly.CodeBase).LocalPath), "TestData"); }
-        }
-
-        protected string GetTestDataFilePath(string fileName)
-        {
-            try
-            {
-                var uri = new Uri(fileName);
-                if (uri.IsAbsoluteUri)
-                    return uri.LocalPath;
-            }
-            catch
-            {
-                
-            }
-            return System.IO.Path.Combine(TestDataPath, fileName);
-        }
-    }
-
     public class DataTablePointTests : ProviderTest
     {
         private static DataTable CreateDataTableSource()

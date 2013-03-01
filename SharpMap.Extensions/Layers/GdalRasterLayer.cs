@@ -26,7 +26,9 @@ using GeoAPI;
 using GeoAPI.Geometries;
 using OSGeo.GDAL;
 #if !DotSpatialProjections
+using GeoAPI.CoordinateSystems;
 using ProjNet.CoordinateSystems;
+using GeoAPI.CoordinateSystems.Transformations;
 using ProjNet.CoordinateSystems.Transformations;
 #else
 using DotSpatial.Projections;

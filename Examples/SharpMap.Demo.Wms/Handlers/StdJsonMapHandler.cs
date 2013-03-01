@@ -9,7 +9,7 @@ namespace SharpMap.Demo.Wms.Handlers
 
     using NetTopologySuite.Geometries;
 
-    using ProjNet.CoordinateSystems.Transformations;
+    using GeoAPI.CoordinateSystems.Transformations;
 
     using SharpMap.Converters.GeoJSON;
     using SharpMap.Data;

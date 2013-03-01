@@ -17,7 +17,7 @@ using SharpMap.Data.Providers;
 using GeometryTransform = DotSpatial.Projections.GeometryTransform;
 using WinFormSamples.Samples;
 #else
-using GeometryTransform = ProjNet.CoordinateSystems.Transformations.GeometryTransform;
+using GeometryTransform = GeoAPI.CoordinateSystems.Transformations.GeometryTransform;
 #endif
 
 namespace WinFormSamples

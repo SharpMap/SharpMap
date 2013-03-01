@@ -40,6 +40,7 @@
                 NUnit.Framework.Assert.AreEqual(inside[i], prepPoly.Intersects(points[i]));
             }
         }
+
         [NUnit.Framework.Test]
         public void TestDiscussionNtsAndBaffeledOleDb()
         {
@@ -56,6 +57,12 @@
                 "Extended Properties=\"text;HDR=Yes;FMT=Delimited\"", table, "ID", "X", "Y");
 
             var extents = p.GetExtents();
+            NUnit.Framework.Assert.AreEqual(4, p.GetFeatureCount());
+            p.DefinitionQuery = "Name='One'";
+            NUnit.Framework.Assert.AreEqual(1, p.GetFeatureCount());
+            var fdr = p.GetFeature(1);
+            NUnit.Framework.Assert.AreEqual(1, (int)fdr[0]);
+            p.DefinitionQuery = string.Empty;
 
             var fds = new SharpMap.Data.FeatureDataSet();
             p.ExecuteIntersectionQuery(extents, fds);
@@ -69,6 +76,10 @@
             var inside = new System.Collections.Generic.List<bool>(new[] { false, true, true, true });
             NUnit.Framework.Assert.AreEqual(System.Linq.Enumerable.Count(inside, (b) => b == true), fds.Tables[1].Rows.Count);
 
+            var ext = p.GetExtents();
+            var oids = p.GetObjectIDsInView(ext);
+            NUnit.Framework.Assert.AreEqual(4, oids.Count);
+            
             System.IO.File.Delete(System.IO.Path.Combine(System.IO.Path.GetTempPath(), table));
         }
 

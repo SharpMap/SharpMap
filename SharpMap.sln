@@ -1,24 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ExternalReferences", "ExternalReferences", "{3BB63704-345C-400C-9146-0AD46859D76D}"
-	ProjectSection(SolutionItems) = preProject
-		ExternalReferences\DotSpatial.Projections.dll = ExternalReferences\DotSpatial.Projections.dll
-		ExternalReferences\DotSpatial.Projections.pdb = ExternalReferences\DotSpatial.Projections.pdb
-		ExternalReferences\DotSpatial.Projections.XML = ExternalReferences\DotSpatial.Projections.XML
-		ExternalReferences\NetTopologySuite.dll = ExternalReferences\NetTopologySuite.dll
-		ExternalReferences\nunit.framework.dll = ExternalReferences\nunit.framework.dll
-		ExternalReferences\nunit.framework.xml = ExternalReferences\nunit.framework.xml
-		ExternalReferences\ProjNET.XML = ExternalReferences\ProjNET.XML
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "References4SharpMap.Extensions", "References4SharpMap.Extensions", "{AFA0024B-50B7-4CA3-84DC-EC0CA7109492}"
-	ProjectSection(SolutionItems) = preProject
-		ExternalReferences\References4SharpMap.Extensions\Oracle.DataAccess.dll = ExternalReferences\References4SharpMap.Extensions\Oracle.DataAccess.dll
-		ExternalReferences\References4SharpMap.Extensions\OraOps10w.dll = ExternalReferences\References4SharpMap.Extensions\OraOps10w.dll
-		ExternalReferences\References4SharpMap.Extensions\PostgreSql.Data.PostgreSqlClient.dll = ExternalReferences\References4SharpMap.Extensions\PostgreSql.Data.PostgreSqlClient.dll
-	EndProjectSection
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpMap", "SharpMap\SharpMap.csproj", "{C83777FC-AABB-47D9-911F-D76255D4D541}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpMap.UI", "SharpMap.UI\SharpMap.UI.csproj", "{DD1CC1DB-4BF9-4C88-A100-733D84795F3A}"
@@ -92,6 +74,15 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpMap.Web", "SharpMap.Web\SharpMap.Web.csproj", "{292EF671-4063-4952-8DE0-423DF72A0950}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpMap.Extensions.x86", "SharpMap.Extensions.x86\SharpMap.Extensions.x86.csproj", "{9961698E-4EE0-4A3B-84B7-A23E69E0C13C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{40C5E4D3-B4E8-4BF2-9580-D0A19BFBF1B5}"
+	ProjectSection(SolutionItems) = preProject
+		.nuget\NuGet.Config = .nuget\NuGet.Config
+		.nuget\NuGet.exe = .nuget\NuGet.exe
+		.nuget\NuGet.targets = .nuget\NuGet.targets
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MSBuild", "MSBuild", "{A5E400B4-8360-4259-BDDD-292A134D14CC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -377,7 +368,6 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{AFA0024B-50B7-4CA3-84DC-EC0CA7109492} = {3BB63704-345C-400C-9146-0AD46859D76D}
 		{73A45373-6307-4D39-9FE9-E8803F95FAB6} = {480154D8-0960-416E-AE45-AF6B06794F77}
 		{F81C1843-3B2A-4D72-81AA-A658DB11FA85} = {480154D8-0960-416E-AE45-AF6B06794F77}
 		{A4184D38-C5A6-4E01-9D1C-8C63791AF825} = {480154D8-0960-416E-AE45-AF6B06794F77}

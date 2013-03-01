@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Web.UI;
-using ProjNet.CoordinateSystems;
-using ProjNet.CoordinateSystems.Transformations;
+using GeoAPI.CoordinateSystems;
+using GeoAPI.CoordinateSystems.Transformations;
 using GeoAPI.Geometries;
 
 public partial class TransformTests : Page

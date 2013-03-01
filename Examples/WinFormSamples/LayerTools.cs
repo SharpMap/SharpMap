@@ -9,7 +9,9 @@ using SharpMap.Styles;
 #if DotSpatialProjections
 using DotSpatial.Projections;
 #else
+using GeoAPI.CoordinateSystems.Transformations;
 using ProjNet.CoordinateSystems.Transformations;
+using GeoAPI.CoordinateSystems;
 using ProjNet.CoordinateSystems;
 #endif
 

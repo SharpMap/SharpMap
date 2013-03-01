@@ -31,7 +31,7 @@ using SharpMap.Layers;
 using System.Collections.Generic;
 using System.Text;
 #if !DotSpatialProjections
-using ProjNet.CoordinateSystems.Transformations;
+using GeoAPI.CoordinateSystems.Transformations;
 #endif
 
 namespace SharpMap.Web.Wms

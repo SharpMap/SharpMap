@@ -163,7 +163,7 @@ namespace WinFormSamples.Samples
 
 #if !DotSpatialProjections
 
-        private static ProjNet.CoordinateSystems.Transformations.ICoordinateTransformation GetCoordinateTransformation()
+        private static GeoAPI.CoordinateSystems.Transformations.ICoordinateTransformation GetCoordinateTransformation()
         {
 
             //The SRS for this datasource is EPSG:4326, therefore we need to transfrom it to OSM projection

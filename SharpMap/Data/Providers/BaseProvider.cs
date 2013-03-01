@@ -168,22 +168,22 @@ namespace SharpMap.Data.Providers
         public abstract void ExecuteIntersectionQuery(Envelope box, FeatureDataSet ds);
 
         /// <summary>
-        /// Returns the number of features in the dataset
+        /// Function to return the total number of features in the dataset
         /// </summary>
-        /// <returns>number of features</returns>
+        /// <returns>The number of features</returns>
         public abstract int GetFeatureCount();
 
         /// <summary>
-        /// Returns a <see cref="SharpMap.Data.FeatureDataRow"/> based on a RowID
+        /// Function to return a <see cref="SharpMap.Data.FeatureDataRow"/> based on <paramref name="rowId">RowID</paramref>
         /// </summary>
-        /// <param name="rowId"></param>
+        /// <param name="rowId">The unique identifier of the row</param>
         /// <returns>datarow</returns>
         public abstract FeatureDataRow GetFeature(uint rowId);
 
         /// <summary>
-        /// <see cref="Envelope"/> of dataset
+        /// Function to return the <see cref="Envelope"/> of dataset
         /// </summary>
-        /// <returns>boundingbox</returns>
+        /// <returns>The extent of the dataset</returns>
         public abstract Envelope GetExtents();
 
         /// <summary>

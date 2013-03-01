@@ -11,7 +11,7 @@ namespace SharpMap.Demo.Wms.Controllers
 
     using Mapstache;
 
-    using ProjNet.CoordinateSystems.Transformations;
+    using GeoAPI.CoordinateSystems.Transformations;
 
     using SharpMap.Converters.GeoJSON;
     using SharpMap.Data;

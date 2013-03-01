@@ -26,7 +26,7 @@ namespace WinFormSamples.Samples
             TileAsyncLayer tileLayer;
             //BruTile.Web.TmsTileSource source2 = new TmsTileSource(url);
 
-            List<ITileSource> source = WmscTileSource.TileSourceBuilder(new System.Uri(url), null);
+            var source = WmscTileSource.TileSourceBuilder(new System.Uri(url), null);
 
 //            foreach (ITileSource src in source)
 //            {

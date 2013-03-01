@@ -39,11 +39,11 @@ namespace SharpMap.Data.Providers
         /// <summary>
         /// Initializes a new instance of the OleDbPoint provider
         /// </summary>
-        /// <param name="connectionStr"></param>
-        /// <param name="tablename"></param>
-        /// <param name="oidColumnName"></param>
-        /// <param name="xColumn"></param>
-        /// <param name="yColumn"></param>
+        /// <param name="connectionStr">The connection string</param>
+        /// <param name="tablename">The name of the table</param>
+        /// <param name="oidColumnName">The name of the object id column</param>
+        /// <param name="xColumn">The name of the x-ordinates column</param>
+        /// <param name="yColumn">The name of the y-ordinates column</param>
         public OleDbPoint(string connectionStr, string tablename, string oidColumnName, string xColumn, string yColumn)
         {
             Table = tablename;
@@ -105,14 +105,13 @@ namespace SharpMap.Data.Providers
                 //open the connection
                 conn.Open();
 
-                var strSQL = "Select " + XColumn + ", " + YColumn + " FROM " + Table + " WHERE ";
-                if (!String.IsNullOrEmpty(_definitionQuery))
-                    strSQL += _definitionQuery + " AND ";
+                var strSQL = "SELECT " + XColumn + ", " + YColumn + " FROM " + Table + " WHERE ";
+                strSQL += GetDefinitionQueryConstraint(true);
                 //Limit to the points within the boundingbox
-                strSQL += XColumn + " BETWEEN " + bbox.Left().ToString(Map.NumberFormatEnUs) + " AND " +
-                          bbox.Right().ToString(Map.NumberFormatEnUs) + " AND " +
-                          YColumn + " BETWEEN " + bbox.Bottom().ToString(Map.NumberFormatEnUs) + " AND " +
-                          bbox.Top().ToString(Map.NumberFormatEnUs);
+                strSQL += GetSpatialConstraint(bbox);
+
+                var factory = Factory;
+                var precisionModel = factory.PrecisionModel;
 
                 using (var command = new OleDbCommand(strSQL, conn))
                 {
@@ -122,8 +121,12 @@ namespace SharpMap.Data.Providers
                         {
                             while (dr.Read())
                             {
-                                if (dr[0] != DBNull.Value && dr[1] != DBNull.Value)
-                                    features.Add(Factory.CreatePoint(new Coordinate((double) dr[0], (double) dr[1])));
+                                if (!(dr.IsDBNull(0) || dr.IsDBNull(1)))
+                                {
+                                    var c = new Coordinate(Convert.ToDouble(dr[0]), Convert.ToDouble(dr[1]));
+                                    precisionModel.MakePrecise(c);
+                                    features.Add(factory.CreatePoint(c));
+                                }
                             }
                         }
                     }
@@ -145,14 +148,13 @@ namespace SharpMap.Data.Providers
                 //open the connection
                 conn.Open();
 
-                var strSQL = "Select " + ObjectIdColumn + " FROM " + Table + " WHERE ";
-                if (!String.IsNullOrEmpty(_definitionQuery))
-                    strSQL += _definitionQuery + " AND ";
+                var strSQL = "SELECT " + ObjectIdColumn + " FROM " + Table + " WHERE ";
+                
+                //Limit to the DefinitionQuery
+                strSQL += GetDefinitionQueryConstraint(true);
+
                 //Limit to the points within the boundingbox
-                strSQL += XColumn + " BETWEEN " + bbox.Left().ToString(Map.NumberFormatEnUs) + " AND " +
-                          bbox.Right().ToString(Map.NumberFormatEnUs) + " AND " + YColumn +
-                          " BETWEEN " + bbox.Bottom().ToString(Map.NumberFormatEnUs) + " AND " +
-                          bbox.Top().ToString(Map.NumberFormatEnUs);
+                strSQL += GetSpatialConstraint(bbox);
 
                 using (var command = new OleDbCommand(strSQL, conn))
                 {
@@ -161,8 +163,8 @@ namespace SharpMap.Data.Providers
                         if (dr != null && dr.HasRows)
                         {
                             while (dr.Read())
-                                if (dr[0] != DBNull.Value)
-                                    objectlist.Add((uint) (int) dr[0]);
+                                if (!dr.IsDBNull(0))
+                                    objectlist.Add((uint) dr.GetInt32(0));
                         }
                     }
                     conn.Close();
@@ -180,12 +182,13 @@ namespace SharpMap.Data.Providers
         {
             using (var conn = new OleDbConnection(ConnectionString))
             {
-                var strSQL = "Select " + XColumn + ", " + YColumn + " FROM " + Table + " WHERE " + ObjectIdColumn +
+                conn.Open();
+
+                var strSQL = "SELECT " + XColumn + ", " + YColumn + " FROM " + Table + " WHERE " + ObjectIdColumn +
                                 "=" + oid.ToString(Map.NumberFormatEnUs);
 
                 using (var command = new OleDbCommand(strSQL, conn))
                 {
-                    conn.Open();
                     using (var dr = command.ExecuteReader())
                     {
                         if (dr != null && dr.HasRows)
@@ -193,8 +196,12 @@ namespace SharpMap.Data.Providers
                             if (dr.Read())
                             {
                                 //If the read row is OK, create a point geometry from the XColumn and YColumn and return it
-                                if (dr[0] != DBNull.Value && dr[1] != DBNull.Value)
-                                    return Factory.CreatePoint(new Coordinate((double) dr[0], (double) dr[1]));
+                                if (!(dr.IsDBNull(0) || dr.IsDBNull(1)))
+                                {
+                                    var c = new Coordinate(Convert.ToDouble(dr[0]), Convert.ToDouble(dr[1]));
+                                    Factory.PrecisionModel.MakePrecise(c);
+                                    return Factory.CreatePoint(c);
+                                }
                             }
                         }
                     }
@@ -202,6 +209,35 @@ namespace SharpMap.Data.Providers
                 }
             }
             return null;
+        }
+
+        /// <summary>
+        /// Function to limit the points to the <paramref name="bbox"/>.
+        /// </summary>
+        /// <param name="bbox">The spatial predicate bounding box</param>
+        /// <returns>A SQL string limiting the resultset based on an Envelope constraint.</returns>
+        private string GetSpatialConstraint(Envelope bbox)
+        {
+            return string.Format(Map.NumberFormatEnUs, "({0} BETWEEN {1} AND {2}) AND ({3} BETWEEN {4} AND {5})",
+                                 XColumn, bbox.MinX, bbox.MaxX,
+                                 YColumn, bbox.MinY, bbox.MaxY);
+            /*
+            return "(" + XColumn + " BETWEEN " + bbox.Left().ToString(Map.NumberFormatEnUs) + " AND " + bbox.Right().ToString(Map.NumberFormatEnUs) + ") AND " +
+                   "(" + YColumn + " BETWEEN " + bbox.Bottom().ToString(Map.NumberFormatEnUs) + " AND " + bbox.Top().ToString(Map.NumberFormatEnUs) + ")";
+             */
+        }
+
+        /// <summary>
+        /// Function to limit the features based on <see cref="DefinitionQuery"/>
+        /// </summary>
+        /// <param name="addAnd">Defines if " AND " should be appended.</param>
+        /// <returns>A SQL string limiting the resultset, if desired.</returns>
+        private string GetDefinitionQueryConstraint(bool addAnd)
+        {
+            var addAndText = addAnd ? " AND" : string.Empty;
+            if (!string.IsNullOrEmpty(_definitionQuery))
+                return string.Format("{0}{1} ", _definitionQuery, addAndText);
+            return string.Empty;
         }
 
         /// <summary>
@@ -214,47 +250,52 @@ namespace SharpMap.Data.Providers
             //List<Geometries.Geometry> features = new List<SharpMap.Geometries.Geometry>();
             using (var conn = new OleDbConnection(ConnectionString))
             {
+                conn.Open();
+
                 var strSQL = "SELECT * FROM " + Table + " WHERE ";
-                if (!String.IsNullOrEmpty(_definitionQuery))
-                    //If a definition query has been specified, add this as a filter on the query
-                    strSQL += _definitionQuery + " AND ";
-                //Limit to the points within the boundingbox
-                strSQL += "(" + XColumn + " BETWEEN " + bbox.Left().ToString(Map.NumberFormatEnUs) + " AND " + bbox.Right().ToString(Map.NumberFormatEnUs) + ") AND " + 
-                          "(" + YColumn + " BETWEEN " + bbox.Bottom().ToString(Map.NumberFormatEnUs) + " AND " + bbox.Top().ToString(Map.NumberFormatEnUs) + ")";
+                //If a definition query has been specified, add this as a filter on the query
+                strSQL += GetDefinitionQueryConstraint(true);
                 
-                using (var adapter = new OleDbDataAdapter(strSQL, conn))
+                //Limit to the points within the boundingbox
+                strSQL += GetSpatialConstraint(bbox);
+                
+                using (var cmd = new OleDbCommand(strSQL, conn))
                 {
-                    conn.Open();
-                    var ds2 = new DataSet();
-                    adapter.Fill(ds2);
-                    conn.Close();
-                    if (ds2.Tables.Count > 0)
+                    using (var reader = cmd.ExecuteReader())
                     {
-                        var fdt = new FeatureDataTable(ds2.Tables[0]);
-                        foreach (DataColumn col in ds2.Tables[0].Columns)
-                            fdt.Columns.Add(col.ColumnName, col.DataType, col.Expression);
+                        if (reader == null)
+                            throw new InvalidOperationException();
                         
-                        foreach (DataRow dr in ds2.Tables[0].Rows)
+                        //Set up result table
+                        var fdt = new FeatureDataTable();
+                        fdt.TableName = Table;
+                        for (var c = 0; c < reader.FieldCount; c++)
                         {
-                            IGeometry geom;
-                            if (dr[XColumn] != DBNull.Value && dr[YColumn] != DBNull.Value)
-                            {
-                                var c = new Coordinate((double) dr[XColumn], (double) dr[YColumn]);
-                                if (!bbox.Intersects(c)) continue;
-
-                                geom = Factory.CreatePoint(c);
-                            }
-                            else
-                                continue;
-
-                            var fdr = fdt.NewRow();
-
-                            foreach (DataColumn col in ds2.Tables[0].Columns)
-                                fdr[col.Ordinal] = dr[col];
-                            fdr.Geometry = geom;
-                            fdt.Rows.Add(fdr);
-
+                            var fieldType = reader.GetFieldType(c);
+                            if (fieldType == null)
+                                throw new Exception("Failed to retrieve field type for column: " + c);
+                            fdt.Columns.Add(reader.GetName(c), fieldType);
                         }
+
+                        var dataTransfer = new object[reader.FieldCount];
+                        
+                        //Get factory and precision model
+                        var factory = Factory;
+                        var pm = factory.PrecisionModel;
+
+                        fdt.BeginLoadData();
+                        while (reader.Read())
+                        {
+                            var count = reader.GetValues(dataTransfer);
+                            System.Diagnostics.Debug.Assert(count == dataTransfer.Length);
+
+                            var fdr = (FeatureDataRow) fdt.LoadDataRow(dataTransfer, true);
+                            var c = new Coordinate(Convert.ToDouble(fdr[XColumn]), Convert.ToDouble(fdr[YColumn]));
+                            pm.MakePrecise(c);
+                            fdr.Geometry = Factory.CreatePoint(c);
+                        }
+                        fdt.EndLoadData();
+
                         ds.Tables.Add(fdt);
                     }
                 }
@@ -290,10 +331,10 @@ namespace SharpMap.Data.Providers
             using (var conn = new OleDbConnection(ConnectionString))
             {
                 var strSQL = "SELECT * FROM " + Table + " WHERE " + ObjectIdColumn + "=" + rowId.ToString(Map.NumberFormatEnUs);
+                conn.Open();
 
                 using (var adapter = new OleDbDataAdapter(strSQL, conn))
                 {
-                    conn.Open();
                     var ds = new DataSet();
                     adapter.Fill(ds);
                     conn.Close();
@@ -321,18 +362,19 @@ namespace SharpMap.Data.Providers
         }
 
         /// <summary>
-        /// Boundingbox of dataset
+        /// Function to return the <see cref="Envelope"/> of dataset
         /// </summary>
-        /// <returns>boundingbox</returns>
+        /// <returns>The extent of the dataset</returns>
         public override Envelope GetExtents()
         {
             using (var conn = new OleDbConnection(ConnectionString))
             {
                 conn.Open();
                 var strSQL = "SELECT Min(" + XColumn + ") as MinX, Min(" + YColumn + ") As MinY, " +
-                                "Max(" + XColumn + ") As MaxX, Max(" + YColumn + ") As MaxY FROM " + Table;
+                                    "Max(" + XColumn + ") As MaxX, Max(" + YColumn + ") As MaxY FROM " + Table;
+
+                //If a definition query has been specified, add this as a filter on the query
                 if (!String.IsNullOrEmpty(_definitionQuery))
-                    //If a definition query has been specified, add this as a filter on the query
                     strSQL += " WHERE " + _definitionQuery;
 
                 using (var command = new OleDbCommand(strSQL, conn))

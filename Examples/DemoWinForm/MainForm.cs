@@ -167,7 +167,7 @@ namespace DemoWinForm
                 var sideLength = rndGen.NextDouble()*50;
 
                 // Make a square
-                vertices[0] = new GeoPoint(upperLeft);
+                vertices[0] = new GeoPoint(upperLeft.X, upperLeft.Y);
                 vertices[1] = new GeoPoint(upperLeft.X + sideLength, upperLeft.Y);
                 vertices[2] = new GeoPoint(upperLeft.X + sideLength, upperLeft.Y - sideLength);
                 vertices[3] = new GeoPoint(upperLeft.X, upperLeft.Y - sideLength);

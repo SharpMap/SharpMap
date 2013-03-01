@@ -23,7 +23,7 @@ namespace WinFormSamples
     using NetTopologySuite.Geometries;
 
 #if !DotSpatialProjections
-    using ProjNet.CoordinateSystems.Transformations;
+    using GeoAPI.CoordinateSystems.Transformations;
 #endif
 
     using SharpMap.Data.Providers;
