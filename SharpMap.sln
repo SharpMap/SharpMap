@@ -83,6 +83,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{40C5E4
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MSBuild", "MSBuild", "{A5E400B4-8360-4259-BDDD-292A134D14CC}"
+	ProjectSection(SolutionItems) = preProject
+		SharpMap.proj = SharpMap.proj
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
