@@ -3,8 +3,14 @@
     <SolutionDir Condition= "'$(SolutionDir)' == '' Or '$(SolutionDir)' == '*Undefined*'">.\</SolutionDir>
     <SolutionFile>SharpMap.sln</SolutionFile>
     <RequireRestoreConsent>false</RequireRestoreConsent>
+    <RestorePackages>true</RestorePackages>
+    <EnableNuGetPackageRestore>true</EnableNuGetPackageRestore>
   </PropertyGroup>
 
+  <Target Name="EnableNPR">
+    <SetEnvironmentVariable EnvKey ="EnableNuGetPackageRestore" EnvValue="TRUE"/>
+  </Target>
+  
   <Target Name="CleanDebug">
     <MSBuild Projects="$(SolutionFile)" Targets="Clean" Properties="Configuration=Debug" />
   </Target>
@@ -13,11 +19,11 @@
     <MSBuild Projects="$(SolutionFile)" Targets="Clean" Properties="Configuration=Release" />
   </Target>
 
-  <Target Name="BuildDebug">
+  <Target Name="BuildDebug" DependsOnTargets="EnableNPR">
     <MSBuild Projects="$(SolutionFile)" Targets="SharpMap;SharpMap_UI;SharpMap_Extensions;SharpMap_Extensions_x86;SharpMap_Web" Properties="Configuration=Debug" />
   </Target>
 
-  <Target Name="BuildRelease">
+  <Target Name="BuildRelease" DependsOnTargets="EnableNPR">
     <MSBuild Projects="$(SolutionFile)" Targets="SharpMap;SharpMap_UI;SharpMap_Extensions;SharpMap_Extensions_x86;SharpMap_Web" Properties="Configuration=Release" />
   </Target>
 
