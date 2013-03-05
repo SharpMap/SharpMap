@@ -22,6 +22,7 @@ namespace UnitTests.Serialization
             if (formatter.SurrogateSelector == null)
                 formatter.SurrogateSelector = new SurrogateSelector();
             formatter.SurrogateSelector.ChainSelector(SharpMap.Utilities.Surrogates.GetSurrogateSelectors());
+            BruTile.Utility.AddBruTileSurrogates(formatter);
             return formatter;
         }
     }
