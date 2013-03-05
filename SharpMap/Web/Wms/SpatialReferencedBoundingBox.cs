@@ -21,7 +21,7 @@ namespace SharpMap.Web.Wms
         /// <param name="maxY">The maximum y-ordinate value</param>
         /// <param name="srid">Spatial Reference ID</param>
         public SpatialReferencedBoundingBox(double minX, double minY, double maxX, double maxY, int srid) 
-            : base(minX, minY, maxX, maxY)
+            : base(minX, maxX, minY, maxY)
         {
             SRID = srid;
         }
@@ -33,7 +33,7 @@ namespace SharpMap.Web.Wms
         /// <param name="boundingBox">BoundingBox</param>
         /// <param name="srid">Spatial Reference ID</param>
         public SpatialReferencedBoundingBox(Envelope boundingBox, int srid)
-            : base(boundingBox.MinX, boundingBox.MinY, boundingBox.MaxX, boundingBox.MaxY)
+            : base(boundingBox.MinX, boundingBox.MaxX, boundingBox.MinY, boundingBox.MaxY)
         {
             SRID = srid;
         }
