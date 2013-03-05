@@ -324,11 +324,31 @@ namespace SharpMap.Data.Providers
 	    /// <param name="filename">Path to shape file</param>
 	    /// <param name="fileBasedIndex">Use file-based spatial index</param>
 	    /// <param name="useMemoryCache">Use the memory cache. BEWARE in case of large shapefiles</param>
-	    public ShapeFile(string filename, bool fileBasedIndex, bool useMemoryCache) : this(filename, fileBasedIndex)
+	    public ShapeFile(string filename, bool fileBasedIndex, bool useMemoryCache) : this(filename, fileBasedIndex,useMemoryCache,0)
 		{
-			_useMemoryCache = useMemoryCache;
 		}
 
+	    /// <summary>
+	    /// Initializes a ShapeFile DataProvider.
+	    /// </summary>
+	    /// <remarks>
+	    /// <para>If FileBasedIndex is true, the spatial index will be read from a local copy. If it doesn't exist,
+	    /// it will be generated and saved to [filename] + '.sidx'.</para>
+	    /// <para>Using a file-based index is especially recommended for ASP.NET applications which will speed up
+	    /// start-up time when the cache has been emptied.
+	    /// </para>
+	    /// </remarks>
+	    /// <param name="filename">Path to shape file</param>
+	    /// <param name="fileBasedIndex">Use file-based spatial index</param>
+	    /// <param name="useMemoryCache">Use the memory cache. BEWARE in case of large shapefiles</param>
+		/// <param name="useMemoryCache">Use the memory cache. BEWARE in case of large shapefiles</param>
+	    /// <param name="SRID">The spatial reference id</param>
+	    public ShapeFile(string filename, bool fileBasedIndex, bool useMemoryCache,int SRID) : this(filename, fileBasedIndex)
+		{
+			_useMemoryCache = useMemoryCache;
+			this.SRID=SRID;
+		}
+		
 		/// <summary>
 		/// Gets or sets the coordinate system of the ShapeFile. If a shapefile has 
 		/// a corresponding [filename].prj file containing a Well-Known Text 

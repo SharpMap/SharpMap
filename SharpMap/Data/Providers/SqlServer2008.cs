@@ -115,7 +115,22 @@ namespace SharpMap.Data.Providers
         /// <param name="spatialObjectType">The type of the spatial object to use for spatial queries</param>
         /// <param name="useSpatialIndexExtentAsExtent">If true, the bounds of the spatial index is used for the GetExtents() method which heavily increases performance instead of reading through all features in the table</param>
         public SqlServer2008(string connectionStr, string tablename, string geometryColumnName, string oidColumnName, SqlServerSpatialObjectType spatialObjectType, bool useSpatialIndexExtentAsExtent)   
-        {   
+        :this(connectionStr,tablename,geometryColumnName, oidColumnName, spatialObjectType,false,0)
+        {
+        }
+		
+		/// <summary>   
+        /// Initializes a new connection to SQL Server   
+        /// </summary>   
+        /// <param name="connectionStr">Connectionstring</param>   
+        /// <param name="tablename">Name of data table</param>   
+        /// <param name="geometryColumnName">Name of geometry column</param>   
+        /// <param name="oidColumnName">Name of column with unique identifier</param>   
+        /// <param name="spatialObjectType">The type of the spatial object to use for spatial queries</param>
+        /// <param name="useSpatialIndexExtentAsExtent">If true, the bounds of the spatial index is used for the GetExtents() method which heavily increases performance instead of reading through all features in the table</param>
+		/// <param name="SRID">The spatial reference id</param>
+        public SqlServer2008(string connectionStr, string tablename, string geometryColumnName, string oidColumnName, SqlServerSpatialObjectType spatialObjectType, bool useSpatialIndexExtentAsExtent, int SRID)   
+		{   
             ConnectionString = connectionStr;   
             Table = tablename;
 
@@ -142,6 +157,7 @@ namespace SharpMap.Data.Providers
             }
 
             _extentsMode = (useSpatialIndexExtentAsExtent ? SqlServer2008ExtentsMode.SpatialIndex : SqlServer2008ExtentsMode.QueryIndividualFeatures);
+			this.SRID = SRID;
         }
 
         /// <summary>   
