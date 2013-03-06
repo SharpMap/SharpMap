@@ -188,6 +188,7 @@
     <Compile Include="TestWmsCapabilityParser.cs" />
     <Compile Include="WFS\RequestValidationTest.cs" />
     <Compile Include="WMS\Encoding.cs" />
+    <Compile Include="WMS\SpatialReferencedBoundingBoxTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SharpMap.Extensions\SharpMap.Extensions.csproj">
