@@ -474,16 +474,27 @@ namespace SharpMap.Data.Providers
 
         private FeatureDataTable CreateTableFromReader(DbDataReader reader, int geomIndex)
         {
-            var res = new FeatureDataTable();
-            res.TableName = Table;
+            var res = new FeatureDataTable {TableName = Table};
             for (var c = 0; c < geomIndex; c++)
             {
                 var fieldType = reader.GetFieldType(c);
                 if (fieldType == null)
                     throw new Exception("Unable to retrieve field type for column " + c);
-                res.Columns.Add(reader.GetName(c), fieldType);
+                res.Columns.Add(DequoteIdentifier(reader.GetName(c)), fieldType);
             }
             return res;
+        }
+
+        /// <summary>
+        /// Function to remove double quotes from identifiers. SQLite returns quoted column names when querying a view.
+        /// </summary>
+        /// <param name="item">The identifier</param>
+        /// <returns>The unquoted <paramref name="item"/></returns>
+        private static string DequoteIdentifier(string item)
+        {
+            if (item.StartsWith("\"") && item.EndsWith("\""))
+                return item.Substring(1, item.Length - 2);
+            return item;
         }
 
         public override void ExecuteIntersectionQuery(Envelope box, FeatureDataSet ds)
@@ -772,7 +783,7 @@ namespace SharpMap.Data.Providers
                 try
                 {
                     cn.Open();
-                    var cmd = new SQLiteCommand("SELECT * FROM geometry_columns;", cn);
+                    var cmd = new SQLiteCommand("SELECT * FROM \"geometry_columns\";", cn);
                     using (var dr = cmd.ExecuteReader())
                     {
                         while (dr.Read())
