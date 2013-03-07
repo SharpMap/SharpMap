@@ -69,7 +69,7 @@ namespace SharpMap.Data.Providers
             get { return _geometries; }
             set
             {
-                if (value != _geometries)
+                if (!ReferenceEquals(_geometries, value))
                 {
                     var list = value as List<IGeometry> ?? new List<IGeometry>(value);
                     _geometries = list;
@@ -118,10 +118,7 @@ namespace SharpMap.Data.Providers
         /// <param name="geometry">Geometry to be in this datasource</param>
         public GeometryProvider(IGeometry geometry)
         {
-            if (geometry != null)
-                Geometries = new List<IGeometry> { geometry };
-            else
-                Geometries = new List<IGeometry>();
+            Geometries = geometry != null ? new List<IGeometry> { geometry } : new List<IGeometry>();
         }
 
         /// <summary>
