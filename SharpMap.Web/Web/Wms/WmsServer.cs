@@ -456,6 +456,7 @@ namespace SharpMap.Web.Wms
                     catch
                     {
                         WmsException.ThrowWmsException("Invalid parameters for X", context);
+                        return;
                     }
                 if (context.Request.Params["I"] != null)
                     try
@@ -465,6 +466,7 @@ namespace SharpMap.Web.Wms
                     catch
                     {
                         WmsException.ThrowWmsException("Invalid parameters for I", context);
+                        return;
                     }
                 //same procedure for J (Y)
                 if (context.Request.Params["Y"] != null)
@@ -475,6 +477,7 @@ namespace SharpMap.Web.Wms
                     catch
                     {
                         WmsException.ThrowWmsException("Invalid parameters for Y", context);
+                        return;
                     }
                 if (context.Request.Params["J"] != null)
                     try
@@ -484,6 +487,7 @@ namespace SharpMap.Web.Wms
                     catch
                     {
                         WmsException.ThrowWmsException("Invalid parameters for I", context);
+                        return;
                     }
                 //var p = map.ImageToWorld(new PointF(x, y));
                 int fc;
@@ -511,11 +515,15 @@ namespace SharpMap.Web.Wms
                 if (String.Compare(infoFormat, "text/json", ignoreCase) == 0)
                 {
                     vstr = CreateFeatureInfoGeoJSON(map, requestLayers, x, y, fc, cqlFilter, context);
+                    //string.Empty is the result if a WmsException.ThrowWmsException(...) has been called
+                    if (vstr == string.Empty) return;
                     context.Response.ContentType = "text/json";
                 }
                 else
                 {
                     vstr = CreateFeatureInfoPlain(map, requestLayers, x, y, fc, cqlFilter, context);
+                    //string.Empty is the result if a WmsException.ThrowWmsException(...) has been called
+                    if (vstr == string.Empty) return;
                     context.Response.ContentType = "text/plain";
                 }
                 context.Response.Clear();
@@ -547,7 +555,8 @@ namespace SharpMap.Web.Wms
                 }
                 if (context.Request.Params["CRS"] != "EPSG:" + map.Layers[0].TargetSRID)
                 {
-                    WmsException.ThrowWmsException(WmsException.WmsExceptionCode.InvalidCRS, "CRS not supported", context);
+                    WmsException.ThrowWmsException(WmsException.WmsExceptionCode.InvalidCRS, "CRS not supported",
+                                                   context);
                     return;
                 }
                 if (context.Request.Params["BBOX"] == null)
@@ -634,11 +643,11 @@ namespace SharpMap.Web.Wms
                     WmsException.ThrowWmsException("Invalid parameter BBOX", context);
                     return;
                 }
-                
-                map.PixelAspectRatio = (width / (double)height) / (bbox.Width / bbox.Height);
+
+                map.PixelAspectRatio = (width/(double) height)/(bbox.Width/bbox.Height);
                 map.Center = bbox.Centre;
                 map.Zoom = bbox.Width;
-				
+
                 //set Styles for layers
                 //first, if the request ==  STYLES=, set all the vectorlayers with Themes not null the Theme to the first theme from Themes
                 if (String.IsNullOrEmpty(context.Request.Params["STYLES"]))
@@ -646,7 +655,7 @@ namespace SharpMap.Web.Wms
                     foreach (var layer in map.Layers)
                     {
                         var vectorLayer = layer as VectorLayer;
-                        if (vectorLayer!= null)
+                        if (vectorLayer != null)
                         {
                             if (vectorLayer.Themes != null)
                             {
@@ -663,8 +672,8 @@ namespace SharpMap.Web.Wms
                 {
                     if (!String.IsNullOrEmpty(context.Request.Params["LAYERS"]))
                     {
-                        var layerz = context.Request.Params["LAYERS"].Split(new[] { ',' });
-                        var styles = context.Request.Params["STYLES"].Split(new[] { ',' });
+                        var layerz = context.Request.Params["LAYERS"].Split(new[] {','});
+                        var styles = context.Request.Params["STYLES"].Split(new[] {','});
                         //test whether the lengt of the layers and the styles is the same. WMS spec is unclear on what to do if there is no one-to-one correspondence
                         if (layerz.Length == styles.Length)
                         {
@@ -673,17 +682,18 @@ namespace SharpMap.Web.Wms
                                 //is this a vector layer at all
                                 var vectorLayer = layer as VectorLayer;
                                 if (vectorLayer == null) continue;
-                                
+
                                 //does it have several themes applied
                                 //ToDo -> Refactor VectorLayer.Themes to Rendering.Thematics.ThemeList : ITheme
                                 if (vectorLayer.Themes != null && vectorLayer.Themes.Count > 0)
                                 {
                                     for (int i = 0; i < layerz.Length; i++)
                                     {
-                                        if (String.Equals(layer.LayerName, layerz[i], StringComparison.InvariantCultureIgnoreCase))
+                                        if (String.Equals(layer.LayerName, layerz[i],
+                                                          StringComparison.InvariantCultureIgnoreCase))
                                         {
                                             //take default style if style is empty
-                                            if (styles[i] =="")
+                                            if (styles[i] == "")
                                             {
                                                 foreach (var kvp in vectorLayer.Themes)
                                                 {
@@ -699,10 +709,13 @@ namespace SharpMap.Web.Wms
                                                 }
                                                 else
                                                 {
-                                                    WmsException.ThrowWmsException(WmsException.WmsExceptionCode.StyleNotDefined, "Style not advertised for this layer", context);
+                                                    WmsException.ThrowWmsException(
+                                                        WmsException.WmsExceptionCode.StyleNotDefined,
+                                                        "Style not advertised for this layer", context);
+                                                    return;
                                                 }
                                             }
-                                        }                                                
+                                        }
                                     }
                                 }
                             }
@@ -719,11 +732,11 @@ namespace SharpMap.Web.Wms
                         if (vectorLayer != null)
                         {
                             PrepareDataSourceForCql(vectorLayer.DataSource, cqlFilter);
-                            continue;    
+                            continue;
                         }
 
                         var labelLayer = layer as LabelLayer;
-                        if(labelLayer != null)
+                        if (labelLayer != null)
                         {
                             PrepareDataSourceForCql(labelLayer.DataSource, cqlFilter);
                             continue;
@@ -734,9 +747,9 @@ namespace SharpMap.Web.Wms
                 //Set layers on/off
                 var layersString = context.Request.Params["LAYERS"];
                 if (!String.IsNullOrEmpty(layersString))
-                //If LAYERS is empty, use default layer on/off settings
+                    //If LAYERS is empty, use default layer on/off settings
                 {
-                    var layers = layersString.Split(new[] { ',' });
+                    var layers = layersString.Split(new[] {','});
                     if (description.LayerLimit > 0)
                     {
                         if (layers.Length == 0 && map.Layers.Count > description.LayerLimit ||
@@ -747,10 +760,10 @@ namespace SharpMap.Web.Wms
                             return;
                         }
                     }
-                    
+
                     foreach (var layer in map.Layers)
                         layer.Enabled = false;
-                    
+
                     foreach (var layer in layers)
                     {
                         //SharpMap.Layers.ILayer lay = map.Layers.Find(delegate(SharpMap.Layers.ILayer findlay) { return findlay.LayerName == layer; });
@@ -787,7 +800,10 @@ namespace SharpMap.Web.Wms
                 //context.Response.End();
             }
             else
+            {
                 WmsException.ThrowWmsException(WmsException.WmsExceptionCode.OperationNotSupported, "Invalid request", context);
+                return;
+            }
         }
 
         private static void PrepareDataSourceForCql(IProvider provider, string cqlFilterString)
@@ -952,7 +968,8 @@ namespace SharpMap.Web.Wms
                 if (found == false)
                 {
                     WmsException.ThrowWmsException(WmsException.WmsExceptionCode.LayerNotDefined,
-                                                   "Unknown layer '" + requestLayer + "'", context);                    
+                                                   "Unknown layer '" + requestLayer + "'", context);
+                    return string.Empty;
                 }
             }
             return vstr;
@@ -1046,6 +1063,7 @@ namespace SharpMap.Web.Wms
                 {
                     WmsException.ThrowWmsException(WmsException.WmsExceptionCode.LayerNotDefined,
                                                    "Unknown layer '" + requestLayer + "'", context);
+                    return string.Empty;
                 }
             }
             var writer = new StringWriter();
