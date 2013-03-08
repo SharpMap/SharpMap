@@ -664,6 +664,11 @@ namespace SharpMap.Data.Providers
                 _treedepth = BitConverter.ToInt16(buffer, 0);
                 Array.Reverse(buffer, 2, 2);
                 NodesCount = BitConverter.ToInt16(buffer, 2);
+                if (NodesCount == 0)
+                {
+                    XMin = XMax = YMin = YMax = Single.NaN;
+                    return;
+                }
 
                 Entries = new RTreeNodeEntry[NodesCount];
                 var entry = new byte[24];
@@ -711,8 +716,9 @@ namespace SharpMap.Data.Providers
                         {
                             var buffer = (byte[])result;
                             var node = new RTreeNode(buffer);
-
-                            _cachedExtents = new Envelope(node.XMin, node.XMax, node.YMin, node.YMax);
+                            _cachedExtents = float.IsNaN(node.XMin) 
+                                ? new Envelope() 
+                                : new Envelope(node.XMin, node.XMax, node.YMin, node.YMax);
                             return new Envelope(_cachedExtents);
                         }
                         throw new Exception();
@@ -728,26 +734,37 @@ namespace SharpMap.Data.Providers
                 {
                     using (var dr = command.ExecuteReader())
                     {
-                        double minx = double.MaxValue, miny = double.MaxValue, maxx = double.MinValue, maxy = double.MinValue;
-                        var geoReader = new GaiaGeoReader(Factory.CoordinateSequenceFactory, Factory.PrecisionModel,
-                                                          _ordinates);
-                        while (dr.Read())
+                        if (dr.HasRows)
                         {
-                            var geom = geoReader.Read((byte[])dr.GetValue(0));
+                            double minx = double.MaxValue,
+                                   miny = double.MaxValue,
+                                   maxx = double.MinValue,
+                                   maxy = double.MinValue;
+                            var geoReader = new GaiaGeoReader(Factory.CoordinateSequenceFactory, Factory.PrecisionModel,
+                                                              _ordinates);
 
-                            var env = geom.EnvelopeInternal;
-                            if (minx > env.MinX)
-                                minx = env.MinX;
-                            if (miny > env.MinY)
-                                miny = env.MinY;
-                            if (maxx < env.MaxX)
-                                maxx = env.MaxX;
-                            if (maxy < env.MaxY)
-                                maxy = env.MaxY;
+                            while (dr.Read())
+                            {
+                                var geom = geoReader.Read((byte[]) dr.GetValue(0));
 
-                            box = new Envelope(minx, maxx, miny, maxy);
+                                var env = geom.EnvelopeInternal;
+                                if (minx > env.MinX)
+                                    minx = env.MinX;
+                                if (miny > env.MinY)
+                                    miny = env.MinY;
+                                if (maxx < env.MaxX)
+                                    maxx = env.MaxX;
+                                if (maxy < env.MaxY)
+                                    maxy = env.MaxY;
+
+                                box = new Envelope(minx, maxx, miny, maxy);
+                            }
+                            dr.Close();
                         }
-                        dr.Close();
+                        else
+                        {
+                            box = new Envelope();
+                        }
                     }
                     conn.Close();
                 }

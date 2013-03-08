@@ -599,6 +599,13 @@ namespace SharpMap.Data.Providers
                 _treedepth = BitConverter.ToInt16(buffer, 0);
                 Array.Reverse(buffer, 2, 2);
                 NodesCount = BitConverter.ToInt16(buffer, 2);
+                if (NodesCount == 0)
+                {
+                    XMin = YMin = float.NaN;
+                    XMax = YMax = float.NaN;
+                    return;
+                }
+
 
                 Entries = new RTreeNodeEntry[NodesCount];
                 var entry = new byte[24];
@@ -648,7 +655,9 @@ namespace SharpMap.Data.Providers
                             var buffer = (byte[]) result;
                             var node = new RTreeNode(buffer);
 
-                            _cachedExtents = new Envelope(node.XMin, node.XMax, node.YMin, node.YMax);
+                            _cachedExtents = float.IsNaN(node.XMin)
+                                ? new Envelope()
+                                : new Envelope(node.XMin, node.XMax, node.YMin, node.YMax);
                             return new Envelope(_cachedExtents);
 
                             //var entities = new float[2*_numOrdinateDimensions];
