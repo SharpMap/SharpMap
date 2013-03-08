@@ -287,8 +287,8 @@ namespace SharpMap.Layers
                 {
                     for (int i = 0; i < features.Count; i++)
                     {
-                        FeatureDataRow feature = features[i];
-                        VectorStyle outlineStyle = Theme.GetStyle(feature) as VectorStyle;
+                        var feature = features[i];
+                        var outlineStyle = theme.GetStyle(feature) as VectorStyle;
                         if (outlineStyle == null) continue;
                         if (!(outlineStyle.Enabled && outlineStyle.EnableOutline)) continue;
                         if (!(outlineStyle.MinVisible <= map.Zoom && map.Zoom <= outlineStyle.MaxVisible)) continue;
@@ -317,7 +317,7 @@ namespace SharpMap.Layers
                 for (int i = 0; i < features.Count; i++)
                 {
                     var feature = features[i];
-                    var style = Theme.GetStyle(feature);
+                    var style = theme.GetStyle(feature);
                     if (style == null) continue;
                     if (!style.Enabled) continue;
                     if (!(style.MinVisible <= map.Zoom && map.Zoom <= style.MaxVisible)) continue;
