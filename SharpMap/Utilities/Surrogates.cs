@@ -16,11 +16,10 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
 
 using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.Drawing.Imaging;
 using System.Drawing.Text;
-using System.Reflection;
 using System.Runtime.Serialization;
 
 namespace SharpMap.Utilities
@@ -53,8 +52,59 @@ namespace SharpMap.Utilities
             ss.AddSurrogate(typeof(ColorBlend), sc, new ColorBlendSurrogate());
             ss.AddSurrogate(typeof(Matrix), sc, new MatrixSurrogate());
             ss.AddSurrogate(typeof(StringFormat), sc, new StringFormatSurrogate());
+            ss.AddSurrogate(typeof(ImageFormat), sc, new ImageFormatSurrogate());
             return ss;
         }
+
+        #region Nested type: StringFormatSurrogate
+
+        /// <summary>
+        /// Surrogate class to serialize <see cref="ImageFormat"/>
+        /// </summary>
+        private class ImageFormatSurrogate : ISerializationSurrogate
+        {
+            [Serializable]
+            public class ImageFormatRef : IObjectReference, ISerializable
+            {
+                private readonly ImageFormat _format;
+                public ImageFormatRef(SerializationInfo info, StreamingContext context)
+                {
+                    var guid = (Guid)info.GetValue("guid", typeof (Guid));
+                    _format = new ImageFormat(guid);
+                }
+
+                public object GetRealObject(StreamingContext context)
+                {
+                    return _format;
+                }
+
+                public void GetObjectData(SerializationInfo info, StreamingContext context)
+                {
+                    throw new NotSupportedException();
+                }
+            }
+
+            /// <summary>
+            /// Populates the provided SerializationInfo with the data needed to serialize the object.
+            /// </summary>
+            /// <param name="obj">The object to serialize.</param>
+            /// <param name="info">The SerializationInfo to populate with data.</param>
+            /// <param name="context">The destination for this serialization.</param>
+            public void GetObjectData(object obj, SerializationInfo info, StreamingContext context)
+            {
+                info.SetType(typeof(ImageFormatRef));
+
+                var sf = (ImageFormat)obj;
+                info.AddValue("guid", sf.Guid);
+            }
+
+            public object SetObjectData(object obj, SerializationInfo info, StreamingContext context, ISurrogateSelector selector)
+            {
+                var @if = (ImageFormat)obj;
+                return null;
+            }
+        }
+        #endregion
 
         #region Nested type: StringFormatSurrogate
 

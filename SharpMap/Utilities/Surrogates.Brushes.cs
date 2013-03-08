@@ -37,6 +37,32 @@ namespace SharpMap.Utilities
         /// </summary>
         public class SolidBrushSurrogate : ISerializationSurrogate
         {
+            [Serializable]
+            private class SolidBrushRef : IObjectReference, ISerializable
+            {
+                private SolidBrush _brush;
+                
+                /// <summary>
+                /// Serialization constructor
+                /// </summary>
+                /// <param name="info"></param>
+                /// <param name="context"></param>
+                public SolidBrushRef(SerializationInfo info, StreamingContext context)
+                {
+                    _brush = new SolidBrush((Color)info.GetValue("Color", typeof(Color)));
+                }
+
+
+                object IObjectReference.GetRealObject(StreamingContext context)
+                {
+                    return _brush;
+                }
+
+                void ISerializable.GetObjectData(SerializationInfo info, StreamingContext context)
+                {
+                    throw new NotSupportedException();
+                }
+            }
             #region ISerializationSurrogate Members
 
             /// <summary>
@@ -47,6 +73,7 @@ namespace SharpMap.Utilities
             /// <param name="context">The destination for this serialization.</param>
             void ISerializationSurrogate.GetObjectData(Object obj, SerializationInfo info, StreamingContext context)
             {
+                info.SetType(typeof(SolidBrushRef));
                 var brush = (SolidBrush)obj;
                 info.AddValue("Color", brush.Color);
             }
@@ -62,7 +89,7 @@ namespace SharpMap.Utilities
             Object ISerializationSurrogate.SetObjectData(Object obj, SerializationInfo info, StreamingContext context,
                                         ISurrogateSelector selector)
             {
-                ReflectionUtility.SetFieldValue(ref obj, "color", ReflectionUtility.PrivateInstance, (Color)info.GetValue("Color", typeof(Color)));
+                //ReflectionUtility.SetFieldValue(ref obj, "color", ReflectionUtility.PrivateInstance, (Color)info.GetValue("Color", typeof(Color)));
                 //brush.Color = (Color) info.GetValue("Color", typeof (Color));
                 return null;
             }
