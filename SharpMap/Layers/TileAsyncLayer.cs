@@ -66,6 +66,22 @@ namespace SharpMap.Layers
         public event MapNewTileAvaliabledHandler MapNewTileAvaliable;
 
         /// <summary>
+        /// Method to cancel the async layer
+        /// </summary>
+        public void Cancel()
+        {
+            lock (_threadList) 
+            {
+                foreach (var t in _threadList)
+                {
+                    if (t.IsBusy)
+                        t.CancelAsync();
+                }
+                _threadList.Clear();
+            } 
+        }
+
+        /// <summary>
         /// Renders the layer
         /// </summary>
         /// <param name="graphics">Graphics object reference</param>
@@ -79,17 +95,7 @@ namespace SharpMap.Layers
             var tiles = _source.Schema.GetTilesInView(extent, level);
 
             //Abort previous running Threads
-            lock (_threadList)
-            {
-                foreach (BackgroundWorker t in _threadList)
-                {
-                    if (t.IsBusy)
-                    {
-                        t.CancelAsync();
-                    }
-                }
-                _threadList.Clear();
-            }
+            Cancel();
 
             using (var ia = new ImageAttributes())
             {

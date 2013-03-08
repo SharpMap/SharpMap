@@ -24,5 +24,10 @@ namespace SharpMap.Layers
         /// Event raised when a new tile is available
         /// </summary>
         event MapNewTileAvaliabledHandler MapNewTileAvaliable;
+
+        /// <summary>
+        /// Method to cancel the async layer
+        /// </summary>
+        void Cancel();
     }
 }

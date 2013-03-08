@@ -168,6 +168,16 @@ namespace SharpMap.Layers
             return null;
         }
 
+        protected override void ClearItems()
+        {
+            foreach (var layer in Items)
+            {
+                var asyncLayer = layer as ITileAsyncLayer;
+                if (asyncLayer != null) asyncLayer.Cancel();
+            }
+            base.ClearItems();
+        }
+
         private static IEnumerable<ILayer> ToILayerEnumberable(IEnumerable<Layer> layers)
         {
             foreach (var layer in layers)
