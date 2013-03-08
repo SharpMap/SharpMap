@@ -18,7 +18,7 @@ namespace SharpMap.Layers
     /// Tile layer class
     ///</summary>
     [Serializable]
-    public class TileLayer : Layer
+    public class TileLayer : Layer, System.Runtime.Serialization.IDeserializationCallback
     {
         private static readonly ILog Logger = LogManager.GetCurrentClassLogger();
         
@@ -38,7 +38,8 @@ namespace SharpMap.Layers
         /// <summary>
         /// An in-memory tile cache
         /// </summary>
-        protected readonly MemoryCache<Bitmap> _bitmaps = new MemoryCache<Bitmap>(100, 200);
+        [NonSerialized]
+        protected MemoryCache<Bitmap> _bitmaps = new MemoryCache<Bitmap>(100, 200);
 
         /// <summary>
         /// A file cache
@@ -195,7 +196,7 @@ namespace SharpMap.Layers
                         var waitHandle = new AutoResetEvent(false);
                         waitHandles.Add(waitHandle);
                         ThreadPool.QueueUserWorkItem(GetTileOnThread,
-                                                     new object[] {_source.Provider, info, _bitmaps, waitHandle});
+                                                     new object[] {_source.Provider, info, _bitmaps, waitHandle, true});
                     }
 
                     foreach (var handle in waitHandles)
@@ -331,5 +332,11 @@ namespace SharpMap.Layers
             }
         }
         #endregion
+
+        public void OnDeserialization(object sender)
+        {
+            if (_bitmaps == null)
+                _bitmaps = new MemoryCache<Bitmap>(100, 200);
+        }
     }
 }
