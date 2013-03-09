@@ -196,6 +196,10 @@ namespace SharpMap.Data.Providers
 	    /// </summary>
         protected DbaseReader DbaseFile;
 		private Stream _fsShapeFile;
+        private IGeometryFactory _factory;
+        
+        private static int _memoryCacheLimit = 50000;
+
 
         private static readonly object GspLock = new object();
 
@@ -296,13 +300,23 @@ namespace SharpMap.Data.Providers
                 DbaseFile.IncludeOidChanged += ClearingOfCachedDataRequired;
             }
 
-			//By Default enable _MemoryCache
-			_useMemoryCache = true;
 			//Parse shape header
 			ParseHeader();
 			//Read projection file
 			ParseProjection();
-		}
+        
+            //By default, don't enable _MemoryCache if there are a lot of features
+            _useMemoryCache = GetFeatureCount() <= MemoryCacheLimit;
+        }
+
+        /// <summary>
+        /// Gets or sets a value indicating how many features are allowed for memory cache approach
+        /// </summary>
+	    protected static int MemoryCacheLimit
+	    {
+	        get { return _memoryCacheLimit; }
+	        set { _memoryCacheLimit = value; }
+	    }
 
 	    private void ClearingOfCachedDataRequired(object sender, EventArgs e)
 	    {
@@ -664,7 +678,7 @@ namespace SharpMap.Data.Providers
             var result = new Collection<IGeometry>();
             foreach(var oid in oids)
             {
-                result.Add(ReadGeometry(oid));
+                result.Add(GetGeometryByID(oid));
             }
 
             CleanInternalCache(oids);
@@ -1366,9 +1380,7 @@ namespace SharpMap.Data.Providers
 			//return boxes;
 		}
 
-	    private IGeometryFactory _factory;
-	    
-        /// <summary>
+	    /// <summary>
         /// Gets or sets the geometry factory
         /// </summary>
         protected IGeometryFactory Factory
