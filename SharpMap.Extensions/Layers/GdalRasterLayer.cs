@@ -2039,7 +2039,7 @@ namespace SharpMap.Layers
 
         #endregion
 
-        private Color _noDataInitColor = Color.Yellow;
+        private Color _noDataInitColor = Color.Magenta;
         public Color NoDataInitColor
         {
             get { return _noDataInitColor; }
