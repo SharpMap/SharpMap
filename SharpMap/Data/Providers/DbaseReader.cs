@@ -758,8 +758,17 @@ namespace SharpMap.Data.Providers
                 _baseTable.Columns.Add("Oid", typeof(UInt32));
 
             foreach (var dbf in _dbaseColumns)
+            {
                 //_baseTable.Columns.Add(dbf.ColumnName, dbf.DataType);
-                _baseTable.Columns.Add(dbf.ColumnName, TypeByTypeCode(dbf.DataTypeCode));
+                int suffix = 0;
+                string colname = suffix > 0 ? string.Format("{0}_{1}", dbf.ColumnName, suffix) : dbf.ColumnName;
+                while (_baseTable.Columns.Contains(colname))
+                {
+                    suffix++;
+                    colname = suffix > 0 ? string.Format("{0}_{1}", dbf.ColumnName, suffix) : dbf.ColumnName;
+                }
+                _baseTable.Columns.Add(colname, TypeByTypeCode(dbf.DataTypeCode));
+            }
         }
 
         /// <summary>
