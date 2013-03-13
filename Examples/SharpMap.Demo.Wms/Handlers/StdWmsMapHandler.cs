@@ -16,7 +16,7 @@
                 var url = this.GetFixedUrl(request);
                 var description = this.GetDescription(url);
                 var map = this.GetMap(request);
-                WmsServer.ParseQueryString(map, description, 10, null);
+                WmsServer.ParseQueryString(map, description, 10, null, context);
             }
             catch (Exception ex)
             {

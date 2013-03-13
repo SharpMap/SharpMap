@@ -109,6 +109,16 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\NetTopologySuite.1.13.0\lib\net40-client\NetTopologySuite.dll</HintPath>
     </Reference>
+    <Reference Include="NetTopologySuite.IO.GeoTools">
+      <HintPath>..\packages\NetTopologySuite.IO.1.13.0\lib\net40-client\NetTopologySuite.IO.GeoTools.dll</HintPath>
+    </Reference>
+    <Reference Include="NetTopologySuite.IO.MsSqlSpatial">
+      <HintPath>..\packages\NetTopologySuite.IO.1.13.0\lib\net40-client\NetTopologySuite.IO.MsSqlSpatial.dll</HintPath>
+    </Reference>
+    <Reference Include="NetTopologySuite.IO.PostGis, Version=1.13.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\NetTopologySuite.IO.1.13.0\lib\net40-client\NetTopologySuite.IO.PostGis.dll</HintPath>
+    </Reference>
     <Reference Include="Npgsql, Version=2.0.12.0, Culture=neutral, PublicKeyToken=5d8b90d52f46fda7, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Npgsql.2.0.12.1\lib\net40\Npgsql.dll</HintPath>
@@ -153,6 +163,8 @@
     <Compile Include="Data\Providers\ManagedSQLiteTests.cs" />
     <Compile Include="Data\Providers\MsSqlServerSpatialTests.cs" />
     <Compile Include="Data\Providers\OleDbPointProviderTest.cs" />
+    <Compile Include="Data\Providers\PostGisGeographyTests.cs" />
+    <Compile Include="Data\Providers\PostGisTests.cs" />
     <Compile Include="Data\Providers\ProviderTest.cs" />
     <Compile Include="Data\Providers\ShapeFileProviderTests.cs" />
     <Compile Include="Data\Providers\SQLServer2008Tests.cs" />
@@ -218,6 +230,9 @@
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="TestData\osm_aurich.sqlite">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="TestData\roads_ugl.dbf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

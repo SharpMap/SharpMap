@@ -95,7 +95,7 @@ namespace UnitTests.Serialization
 
         internal class ILayerEqualityComparer<T> : EqualityComparer<T> where T : ILayer
         {
-            protected readonly List<string> DifferAt = new List<string>();
+            public readonly List<string> DifferAt = new List<string>();
 
             public override bool Equals(T lhs, T rhs)
             {
