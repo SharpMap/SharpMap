@@ -35,69 +35,77 @@ namespace UnitTests.Data.Providers
 
 
             GeoAPI.GeometryServiceProvider.Instance = new NetTopologySuite.NtsGeometryServices();
-
-            // Set up sample table
-            using (var conn = new NpgsqlConnection(Properties.Settings.Default.PostGis))
+            try
             {
-                conn.Open();
-                // Load data
-                using (var shapeFile = new SharpMap.Data.Providers.ShapeFile(GetTestFile(), false, false, 4326))
+                // Set up sample table
+                using (var conn = new NpgsqlConnection(Properties.Settings.Default.PostGis))
                 {
-                    shapeFile.Open();
-
-                    using (var cmd = conn.CreateCommand())
+                    conn.Open();
+                    // Load data
+                    using (var shapeFile = new SharpMap.Data.Providers.ShapeFile(GetTestFile(), false, false, 4326))
                     {
-                        cmd.CommandText =
-                            "SELECT COUNT(*) FROM \"geometry_columns\" WHERE \"f_table_name\" = 'roads_ugl' AND \"f_geometry_column\"='geom';";
-                        var count = cmd.ExecuteScalar();
-                        if (Convert.ToInt32(count) > 0)
+                        shapeFile.Open();
+
+                        using (var cmd = conn.CreateCommand())
                         {
-                            cmd.CommandText = "SELECT DropGeometryColumn('roads_ugl', 'geom');";
+                            cmd.CommandText =
+                                "SELECT COUNT(*) FROM \"geometry_columns\" WHERE \"f_table_name\" = 'roads_ugl' AND \"f_geometry_column\"='geom';";
+                            var count = cmd.ExecuteScalar();
+                            if (Convert.ToInt32(count) > 0)
+                            {
+                                cmd.CommandText = "SELECT DropGeometryColumn('roads_ugl', 'geom');";
+                                cmd.ExecuteNonQuery();
+                                cmd.CommandText = "DROP TABLE roads_ugl";
+                                cmd.ExecuteNonQuery();
+                            }
+
+                            // The ID column cannot simply be int, because that would cause GetObjectIDsInView to fail. The provider internally works with uint
+                            cmd.CommandText =
+                                "CREATE TABLE roads_ugl(id integer primary key, name character varying(100));";
                             cmd.ExecuteNonQuery();
-                            cmd.CommandText = "DROP TABLE roads_ugl";
+                            cmd.CommandText = "SELECT AddGeometryColumn('roads_ugl', 'geom', " + shapeFile.SRID +
+                                              ", 'GEOMETRY', 2);";
                             cmd.ExecuteNonQuery();
                         }
 
-                        // The ID column cannot simply be int, because that would cause GetObjectIDsInView to fail. The provider internally works with uint
-                        cmd.CommandText = "CREATE TABLE roads_ugl(id integer primary key, name character varying(100));";
-                        cmd.ExecuteNonQuery();
-                        cmd.CommandText = "SELECT AddGeometryColumn('roads_ugl', 'geom', " + shapeFile.SRID +
-                                          ", 'GEOMETRY', 2);";
-                        cmd.ExecuteNonQuery();
-                    }
 
+                        IEnumerable<uint> indexes = shapeFile.GetObjectIDsInView(shapeFile.GetExtents());
 
-                    IEnumerable<uint> indexes = shapeFile.GetObjectIDsInView(shapeFile.GetExtents());
-
-                    _insertedIds = new List<uint>(indexes.Take(100));
-                    using (NpgsqlCommand cmd = conn.CreateCommand())
-                    {
-                        cmd.CommandText =
-                            "INSERT INTO roads_ugl(id, name, geom) VALUES (@PId, @PName, @PGeom);";
-                        var @params = cmd.Parameters;
-                        @params.AddRange(
-                            new[]
-                                {
-                                    new NpgsqlParameter("PId", NpgsqlDbType.Integer),
-                                    new NpgsqlParameter("PName", NpgsqlDbType.Varchar, 100),
-                                    new NpgsqlParameter("PGeom", NpgsqlDbType.Bytea)
-                                });
-
-                        var writer = new PostGisWriter();
-
-                        foreach (var idx in _insertedIds)
+                        _insertedIds = new List<uint>(indexes.Take(100));
+                        using (NpgsqlCommand cmd = conn.CreateCommand())
                         {
-                            var feature = shapeFile.GetFeature(idx);
+                            cmd.CommandText =
+                                "INSERT INTO roads_ugl(id, name, geom) VALUES (@PId, @PName, @PGeom);";
+                            var @params = cmd.Parameters;
+                            @params.AddRange(
+                                new[]
+                                    {
+                                        new NpgsqlParameter("PId", NpgsqlDbType.Integer),
+                                        new NpgsqlParameter("PName", NpgsqlDbType.Varchar, 100),
+                                        new NpgsqlParameter("PGeom", NpgsqlDbType.Bytea)
+                                    });
 
-                            @params["PId"].NpgsqlValue = (int)idx;
-                            @params["PName"].NpgsqlValue = feature["NAME"];
-                            @params["PGeom"].NpgsqlValue = writer.Write(feature.Geometry);
-                            cmd.ExecuteNonQuery();
+                            var writer = new PostGisWriter();
+
+                            foreach (var idx in _insertedIds)
+                            {
+                                var feature = shapeFile.GetFeature(idx);
+
+                                @params["PId"].NpgsqlValue = (int) idx;
+                                @params["PName"].NpgsqlValue = feature["NAME"];
+                                @params["PGeom"].NpgsqlValue = writer.Write(feature.Geometry);
+                                cmd.ExecuteNonQuery();
+                            }
                         }
                     }
+
                 }
-
             }
+            catch
+            {
+                Assert.Ignore("Failed to connect to PostgreSQL/PostGIS Server");
+            }
+
         }
 
         [TestFixtureTearDown]
