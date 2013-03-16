@@ -523,7 +523,9 @@ namespace WinFormSamples
                         if (!tbAngle.Visible) tbAngle.Value = 0;
                          */
                         mapBox1.Map = TileLayerSample.InitializeMap(tbAngle.Value);
-                        ((RadioButton)sender).Text = mapBox1.Map.Layers[0].LayerName;
+                        ((RadioButton)sender).Text = (mapBox1.Map.BackgroundLayer.Count > 0)
+                            ?((RadioButton)sender).Text = mapBox1.Map.BackgroundLayer[0].LayerName
+                            : ((RadioButton)sender).Text = mapBox1.Map.Layers[0].LayerName;
                         break;
                     case "PostGis":
                         mapBox1.Map = PostGisSample.InitializeMap(tbAngle.Value);

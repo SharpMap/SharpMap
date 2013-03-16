@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Text;
 using System.IO;
+using GeoAPI.Geometries;
 using SharpMap;
 using SharpMap.Data.Providers;
 using SharpMap.Layers;
@@ -126,7 +127,10 @@ namespace WinFormSamples.Samples
             map.MaximumZoom = 360;
             map.BackColor = Color.LightBlue;
 
-            map.Zoom = 30;
+            map.MaximumExtents = new Envelope(-20, 70, -65, 80);
+            map.MaximumZoom = 30;
+
+            map.Zoom = 20;
             map.Center = new Point(0, 0);
 
             Matrix mat = new Matrix();

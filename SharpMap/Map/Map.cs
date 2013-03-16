@@ -17,7 +17,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Globalization;
@@ -77,19 +76,18 @@ namespace SharpMap
         /// <param name="size">Size of map in pixels</param>
         public Map(Size size)
         {
+            _mapViewportGuard = new MapViewPortGuard(size, 0d, Double.MaxValue);
+
             Factory = new GeometryFactory();
             Size = size;
             _layers = new LayerCollection();
             _backgroundLayers = new LayerCollection();
             _variableLayers = new VariableLayerCollection(_layers);
             BackColor = Color.Transparent;
-            _MaximumZoom = double.MaxValue;
-            _MinimumZoom = 0;
-            _MapTransform = new Matrix();
+            _mapTransform = new Matrix();
             MapTransformInverted = new Matrix();
-            _Center = new Point(0, 0);
-            _Zoom = 1;
-            _PixelAspectRatio = 1.0;
+            _center = new Point(0, 0);
+            _zoom = 1;
 
             WireEvents();
 
@@ -706,15 +704,27 @@ namespace SharpMap
         {
             if (bbox != null && !bbox.IsNull)
             {
-                
-                _Zoom = bbox.Width; //Set the private center value so we only fire one MapOnViewChange event
+                var zoom = bbox.Width;
                 if (Envelope.Height < bbox.Height && Envelope.Height > 0)
-                    _Zoom *= bbox.Height / Envelope.Height;
-                if (_Zoom < _MinimumZoom)
-                    _Zoom = _MinimumZoom;
-                if (_Zoom > _MaximumZoom)
-                    _Zoom = _MaximumZoom;
-                Center = bbox.Centre;
+                    zoom *= bbox.Height / Envelope.Height;
+                var center = new Coordinate(bbox.Centre);
+
+                zoom = _mapViewportGuard.VerifyZoom(zoom, center);
+                var changed = false;
+                if (zoom != _zoom)
+                {
+                    _zoom = zoom;
+                    changed = true;
+                }
+
+                if (!center.Equals2D(_center))
+                {
+                    _center = center;
+                    changed = true;
+                }
+
+                if (changed && MapViewOnChange != null)
+                    MapViewOnChange();
             }
         }
 
@@ -788,18 +798,21 @@ namespace SharpMap
 
         private readonly List<IMapDecoration> _decorations = new List<IMapDecoration>();
 
-        private Color _BackgroundColor;
-        private Point _Center;
+        private Color _backgroundColor;
+        private double _zoom;
+        private Point _center;
         private readonly LayerCollection _layers;
         private readonly LayerCollection _backgroundLayers;
         private readonly VariableLayerCollection _variableLayers;
-        private Matrix _MapTransform;
-        private double _MaximumZoom;
-        private double _MinimumZoom;
-        private double _PixelAspectRatio = 1.0;
-        private Size _Size;
-        private double _Zoom;
+        private Matrix _mapTransform;
         internal Matrix MapTransformInverted;
+        
+        private readonly MapViewPortGuard _mapViewportGuard;
+
+        /// <summary>
+        /// Factory used to create geometries
+        /// </summary>
+        public IGeometryFactory Factory { get; private set; }
 
         /// <summary>
         /// List of all map decorations
@@ -849,11 +862,11 @@ namespace SharpMap
         /// </example>
         public Matrix MapTransform
         {
-            get { return _MapTransform; }
+            get { return _mapTransform; }
             set
             {
-                _MapTransform = value;
-                if (_MapTransform.IsInvertible)
+                _mapTransform = value;
+                if (_mapTransform.IsInvertible)
                 {
                     MapTransformInverted = value.Clone();
                     MapTransformInverted.Invert();
@@ -892,10 +905,10 @@ namespace SharpMap
         /// </summary>
         public Color BackColor
         {
-            get { return _BackgroundColor; }
+            get { return _backgroundColor; }
             set
             {
-                _BackgroundColor = value;
+                _backgroundColor = value;
                 if (MapViewOnChange != null)
                     MapViewOnChange();
             }
@@ -906,11 +919,31 @@ namespace SharpMap
         /// </summary>
         public Point Center
         {
-            get { return _Center; }
+            get { return _center; }
             set
             {
-                _Center = value;
-                if (MapViewOnChange != null)
+                if (value == null)
+                    throw new ArgumentNullException("value");
+
+                var newZoom = _zoom;
+                var newCenter = new Coordinate(value);
+
+                newZoom = _mapViewportGuard.VerifyZoom(newZoom, newCenter);
+
+                var changed = false;
+                if (newZoom != _zoom)
+                {
+                    _zoom = newZoom;
+                    changed = true;
+                }
+
+                if (!newCenter.Equals2D(_center))
+                {
+                    _center = newCenter;
+                    changed = true;
+                }
+                
+                if (changed && MapViewOnChange != null)
                     MapViewOnChange();
             }
         }
@@ -924,22 +957,26 @@ namespace SharpMap
         /// </remarks>
         public double Zoom
         {
-            get { return _Zoom; }
+            get { return _zoom; }
             set
             {
-                if (value < _MinimumZoom)
-                    _Zoom = _MinimumZoom;
-                else if (value > _MaximumZoom)
-                    _Zoom = _MaximumZoom;
-                else
-                    _Zoom = value;
+                var newCenter = new Coordinate(_center);
+                value = _mapViewportGuard.VerifyZoom(value, newCenter);
+
+                if (value.Equals(_zoom))
+                    return;
+
+                _zoom = value;
+                if (!newCenter.Equals2D(_center))
+                    _center = newCenter;
+
                 if (MapViewOnChange != null)
                     MapViewOnChange();
             }
         }
 
         /// <summary>
-        /// Returns the size of a pixel in world coordinate units
+        /// Get Returns the size of a pixel in world coordinate units
         /// </summary>
         public double PixelSize
         {
@@ -961,7 +998,7 @@ namespace SharpMap
         /// <remarks>The value returned is the same as <see cref="PixelSize"/> unless <see cref="PixelAspectRatio"/> is different from 1.</remarks>
         public double PixelHeight
         {
-            get { return PixelSize*_PixelAspectRatio; }
+            get { return PixelSize * _mapViewportGuard.PixelAspectRatio; }
         }
 
         /// <summary>
@@ -971,12 +1008,10 @@ namespace SharpMap
         /// <exception cref="ArgumentException">Throws an argument exception when value is 0 or less.</exception>
         public double PixelAspectRatio
         {
-            get { return _PixelAspectRatio; }
+            get { return _mapViewportGuard.PixelAspectRatio; }
             set
             {
-                if (_PixelAspectRatio <= 0)
-                    throw new ArgumentException("Invalid Pixel Aspect Ratio");
-                _PixelAspectRatio = value;
+                _mapViewportGuard.PixelAspectRatio = value;
             }
         }
 
@@ -994,8 +1029,8 @@ namespace SharpMap
         /// </summary>
         public Size Size
         {
-            get { return _Size; }
-            set { _Size = value; }
+            get { return _mapViewportGuard.Size; }
+            set { _mapViewportGuard.Size = value; }
         }
 
         /// <summary>
@@ -1003,12 +1038,10 @@ namespace SharpMap
         /// </summary>
         public double MinimumZoom
         {
-            get { return _MinimumZoom; }
+            get { return _mapViewportGuard.MinimumZoom; }
             set
             {
-                if (value < 0)
-                    throw (new ArgumentException("Minimum zoom must be 0 or more"));
-                _MinimumZoom = value;
+                _mapViewportGuard.MinimumZoom = value;
             }
         }
 
@@ -1017,12 +1050,10 @@ namespace SharpMap
         /// </summary>
         public double MaximumZoom
         {
-            get { return _MaximumZoom; }
+            get { return _mapViewportGuard.MaximumZoom; }
             set
             {
-                if (value <= 0)
-                    throw (new ArgumentException("Maximum zoom must larger than 0"));
-                _MaximumZoom = value;
+                _mapViewportGuard.MaximumZoom = value;
             }
         }
 
@@ -1032,6 +1063,9 @@ namespace SharpMap
         /// <returns>Full map extents</returns>
         public Envelope GetExtents()
         {
+            if (!_mapViewportGuard.MaximumExtents.IsNull)
+                return MaximumExtents;
+
             if ((Layers == null || Layers.Count == 0) &&
                 (VariableLayers == null || VariableLayers.Count == 0) &&
                 (BackgroundLayer == null || BackgroundLayer.Count == 0))
@@ -1044,6 +1078,24 @@ namespace SharpMap
             ExtendBoxForCollection(BackgroundLayer, ref bbox);
 
             return bbox;
+        }
+
+        /// <summary>
+        /// Gets or sets a value indicating the maximum visible extent
+        /// </summary>
+        public Envelope MaximumExtents
+        {
+            get { return _mapViewportGuard.MaximumExtents; }
+            set { _mapViewportGuard.MaximumExtents = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets a value indicating if <see cref="MaximumExtents"/> should be enforced or not.
+        /// </summary>
+        public bool EnforceMaximumExtents
+        {
+            get { return _mapViewportGuard.EnforceMaximumExtents; }
+            set { _mapViewportGuard.EnforceMaximumExtents = value; }
         }
 
         private static void ExtendBoxForCollection(LayerCollection layersCollection, ref Envelope bbox)
@@ -1114,6 +1166,7 @@ namespace SharpMap
         }
 
         private Int32 _disclaimerLocation;
+
         /// <summary>
         /// Location for the disclaimer
         /// 2|1
@@ -1127,12 +1180,9 @@ namespace SharpMap
             set { _disclaimerLocation = value%4; }
         }
 
-        /// <summary>
-        /// Factory used to create geometries
-        /// </summary>
-        public IGeometryFactory Factory { get; private set; }
 
         #endregion
+
     }
 
     /// <summary>
@@ -1161,4 +1211,5 @@ namespace SharpMap
             LayerCollectionType = layerCollectionType;
         }
     }
+
 }

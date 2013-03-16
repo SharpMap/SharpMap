@@ -206,5 +206,22 @@ namespace SharpMap.Properties {
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
+        internal static System.Drawing.Bitmap zoom_last
+        {
+            get
+            {
+                object obj = ResourceManager.GetObject("zoom_last", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+
+        internal static System.Drawing.Bitmap zoom_next
+        {
+            get
+            {
+                object obj = ResourceManager.GetObject("zoom_next", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
     }
 }

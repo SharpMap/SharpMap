@@ -42,13 +42,16 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="BruTile">
+    <Reference Include="BruTile, Version=0.7.3.0, Culture=neutral, PublicKeyToken=00e75fd79e391f40, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\BruTile.0.7.3\lib\net40\BruTile.dll</HintPath>
     </Reference>
-    <Reference Include="BruTile.Desktop">
+    <Reference Include="BruTile.Desktop, Version=0.7.3.0, Culture=neutral, PublicKeyToken=00e75fd79e391f40, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\BruTile.0.7.3\lib\net40\BruTile.Desktop.dll</HintPath>
     </Reference>
-    <Reference Include="BruTile.MbTiles">
+    <Reference Include="BruTile.MbTiles, Version=0.7.3.0, Culture=neutral, PublicKeyToken=00e75fd79e391f40, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\BruTile.0.7.3\lib\net40\BruTile.MbTiles.dll</HintPath>
     </Reference>
     <Reference Include="Common.Logging">

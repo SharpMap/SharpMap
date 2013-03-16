@@ -93,9 +93,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\ExternalReferences\nunit.framework.dll</HintPath>
     </Reference>
-    <Reference Include="ProjNet, Version=1.3.0.0, Culture=neutral, PublicKeyToken=a1f5bdcd9c6f5740, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\ProjNET4GeoAPI.1.3.0\lib\net40-client\ProjNet.dll</HintPath>
+    <Reference Include="ProjNet">
+      <HintPath>..\..\packages\ProjNET4GeoAPI.1.3.0.1\lib\net40-client\ProjNet.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />

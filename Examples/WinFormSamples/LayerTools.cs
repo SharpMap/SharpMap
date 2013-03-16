@@ -260,6 +260,18 @@ namespace WinFormSamples
                                 Style = GetRandomVectorStyle()
                             };
                 m.Layers.Add(l);
+                var ll = new LabelLayer("Label " + provider.ConnectionID);
+                ll.DataSource = provider;
+                
+                provider.Open();
+                var f = provider.GetFeature(1);
+                provider.Close();
+
+                ll.LabelColumn = f.Table.Columns[1].ColumnName;
+                ll.Style.CollisionDetection = false;
+                ll.Style.IgnoreLength = true;
+                
+                m.Layers.Add(ll);
             }
             m.ZoomToExtents();
             return m;

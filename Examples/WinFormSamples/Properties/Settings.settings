@@ -5,9 +5,9 @@
     <Setting Name="PostGisConnectionString" Type="(Connection string)" Scope="Application">
       <DesignTimeValue Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
 &lt;SerializableConnectionString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;ConnectionString&gt;Server=localhost;Port=5432;Database=postgis_sample;uid=postgres;password=sergtsop;&lt;/ConnectionString&gt;
+  &lt;ConnectionString&gt;Host=127.0.0.1;Port=5432;Database=postgis_sample;uid=postgres;password=1.Kennwort;&lt;/ConnectionString&gt;
 &lt;/SerializableConnectionString&gt;</DesignTimeValue>
-      <Value Profile="(Default)">Server=localhost;Port=5432;Database=postgis_sample;uid=postgres;password=sergtsop;</Value>
+      <Value Profile="(Default)">Host=127.0.0.1;Port=5432;Database=postgis_sample;uid=postgres;password=1.Kennwort;</Value>
     </Setting>
     <Setting Name="SpatiaLiteConnectionString" Type="(Connection string)" Scope="Application">
       <DesignTimeValue Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;

@@ -82,14 +82,16 @@
     <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="BruTile, Version=0.7.3.0, Culture=neutral, PublicKeyToken=00e75fd79e391f40, processorArchitecture=MSIL">
+    <Reference Include="BruTile, Version=0.7.3.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\BruTile.0.7.3\lib\net40\BruTile.dll</HintPath>
     </Reference>
-    <Reference Include="BruTile.Desktop">
+    <Reference Include="BruTile.Desktop, Version=0.7.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\BruTile.0.7.3\lib\net40\BruTile.Desktop.dll</HintPath>
     </Reference>
-    <Reference Include="BruTile.MbTiles">
+    <Reference Include="BruTile.MbTiles, Version=0.7.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\BruTile.0.7.3\lib\net40\BruTile.MbTiles.dll</HintPath>
     </Reference>
     <Reference Include="Common.Logging, Version=2.0.0.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
@@ -112,13 +114,22 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\NetTopologySuite.1.13.0\lib\net40-client\NetTopologySuite.dll</HintPath>
     </Reference>
+    <Reference Include="NetTopologySuite.IO.GeoTools">
+      <HintPath>..\..\packages\NetTopologySuite.IO.1.13.0\lib\net40-client\NetTopologySuite.IO.GeoTools.dll</HintPath>
+    </Reference>
+    <Reference Include="NetTopologySuite.IO.MsSqlSpatial">
+      <HintPath>..\..\packages\NetTopologySuite.IO.1.13.0\lib\net40-client\NetTopologySuite.IO.MsSqlSpatial.dll</HintPath>
+    </Reference>
+    <Reference Include="NetTopologySuite.IO.PostGis">
+      <HintPath>..\..\packages\NetTopologySuite.IO.1.13.0\lib\net40-client\NetTopologySuite.IO.PostGis.dll</HintPath>
+    </Reference>
     <Reference Include="PowerCollections, Version=1.0.0.0, Culture=neutral, PublicKeyToken=2573bf8a1bdddcd5, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\NetTopologySuite.1.13.0\lib\net40-client\PowerCollections.dll</HintPath>
     </Reference>
-    <Reference Include="ProjNet, Version=1.3.0.0, Culture=neutral, PublicKeyToken=a1f5bdcd9c6f5740, processorArchitecture=MSIL">
+    <Reference Include="ProjNet, Version=1.3.0.1, Culture=neutral, PublicKeyToken=a1f5bdcd9c6f5740, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\ProjNET4GeoAPI.1.3.0\lib\net40-client\ProjNet.dll</HintPath>
+      <HintPath>..\..\packages\ProjNET4GeoAPI.1.3.0.1\lib\net40-client\ProjNet.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
