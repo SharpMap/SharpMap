@@ -79,7 +79,6 @@ namespace SharpMap
             _mapViewportGuard = new MapViewPortGuard(size, 0d, Double.MaxValue);
 
             Factory = new GeometryFactory();
-            Size = size;
             _layers = new LayerCollection();
             _backgroundLayers = new LayerCollection();
             _variableLayers = new VariableLayerCollection(_layers);
@@ -704,9 +703,12 @@ namespace SharpMap
         {
             if (bbox != null && !bbox.IsNull)
             {
-                var zoom = bbox.Width;
-                if (Envelope.Height < bbox.Height && Envelope.Height > 0)
+                var oldZoom = _zoom;
+                var zoom = _zoom = bbox.Width;
+                var env = Envelope;
+                if (env.Height < bbox.Height && env.Height > 0)
                     zoom *= bbox.Height / Envelope.Height;
+                _zoom = oldZoom;
                 var center = new Coordinate(bbox.Centre);
 
                 zoom = _mapViewportGuard.VerifyZoom(zoom, center);

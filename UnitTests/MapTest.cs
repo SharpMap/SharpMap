@@ -277,17 +277,17 @@ namespace UnitTests
             Assert.AreEqual(1f, map.Size.Height);
             Assert.AreEqual(Color.Transparent, map.BackColor);
             Assert.AreEqual(double.MaxValue, map.MaximumZoom);
-            Assert.AreEqual(0, map.MinimumZoom);
+            Assert.IsTrue(map.MinimumZoom > 0);
             Assert.AreEqual(new Point(0, 0), map.Center, "map.Center should be initialized to (0,0)");
             Assert.AreEqual(1, map.Zoom, "Map zoom should be initialized to 1.0");
         }
 
         [Test]
-        [ExpectedException(typeof (ArgumentException))]
-        public void SetMaximumZoom_NegativeValue_ThrowException()
+        public void SetMaximumZoom_ValueLessThanMinimumZoom()
         {
             Map map = new Map();
             map.MaximumZoom = -1;
+            Assert.IsTrue(map.MaximumZoom >= map.MinimumZoom);
         }
 
         [Test]
@@ -299,11 +299,13 @@ namespace UnitTests
         }
 
         [Test]
-        [ExpectedException(typeof (ArgumentException))]
-        public void SetMinimumZoom_NegativeValue_ThrowException()
+        public void SetMinimumZoom_ValueLessThanTwoEpsilon()
         {
             Map map = new Map();
             map.MinimumZoom = -1;
+            Assert.IsTrue(map.MinimumZoom > 0);
+            map.MinimumZoom = Double.Epsilon;
+            Assert.IsTrue(map.MinimumZoom > Double.Epsilon);
         }
 
         [Test]
@@ -331,6 +333,20 @@ namespace UnitTests
             map.Zoom = 150;
             Assert.AreEqual(100, map.MaximumZoom);
         }
+
+        [Test]
+        public void ZoomToBoxWithEnforcedMaximumExtents()
+        {
+            Map map = new Map();
+            //map.MaximumZoom = 100;
+            map.MaximumExtents = new Envelope(-180, 180, -90, 90);
+            map.EnforceMaximumExtents = true;
+            map.ZoomToBox(new Envelope(-200, 200, -100, 100));
+            Assert.IsTrue(map.MaximumExtents.Contains(map.Envelope));
+            Assert.AreEqual(new BoundingBox(-120, 120, -90, 90), map.Envelope);
+        }
+
+
 
         [Test]
         public void WorldToImage()

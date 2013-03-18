@@ -105,7 +105,11 @@ namespace SharpMap
                 zoom = _maximumZoom;
 
             if (EnforceMaximumExtents)
+            {
+                if (zoom > _maximumExtents.Width)
+                    zoom = _maximumExtents.Width;
                 zoom = VerifyValidViewport(zoom, center);
+            }
 
             return zoom;
         }
@@ -124,6 +128,13 @@ namespace SharpMap
 
             var halfWidth = 0.5d * zoom;
             var halfHeight = halfWidth * PixelAspectRatio * ((double)Size.Height / Size.Width);
+            if (2 * halfHeight > _maximumExtents.Height)
+            { 
+                halfHeight = 0.5d * _maximumExtents.Height;
+                halfWidth = halfHeight / (_pixelAspectRatio * ((double)Size.Height / Size.Width));
+                zoom = 2 * halfWidth;
+            }
+
             var testEnvelope = new Envelope(center.X - halfWidth, center.X + halfWidth,
                                             center.Y - halfHeight, center.Y + halfHeight);
 
