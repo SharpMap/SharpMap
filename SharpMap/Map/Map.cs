@@ -703,12 +703,15 @@ namespace SharpMap
         {
             if (bbox != null && !bbox.IsNull)
             {
-                var oldZoom = _zoom;
-                var zoom = _zoom = bbox.Width;
-                var env = Envelope;
-                if (env.Height < bbox.Height && env.Height > 0)
-                    zoom *= bbox.Height / Envelope.Height;
-                _zoom = oldZoom;
+                //Ensure aspect ratio
+                var resX = Size.Width == 0 ? double.MaxValue : bbox.Width / Size.Width;
+                var resY = Size.Height == 0 ? double.MaxValue : bbox.Height / Size.Height;
+                var zoom = bbox.Width;
+                if (resY > resX && resX > 0)
+                {
+                    zoom *= resY / resX;
+                }
+
                 var center = new Coordinate(bbox.Centre);
 
                 zoom = _mapViewportGuard.VerifyZoom(zoom, center);
