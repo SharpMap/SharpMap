@@ -183,20 +183,29 @@ namespace SharpMap.Layers
                     var tiles = new List<TileInfo>(_source.Schema.GetTilesInView(extent, level));
 
                     IList<WaitHandle> waitHandles = new List<WaitHandle>();
-
+                    Dictionary<TileIndex, Bitmap> toRender = new Dictionary<TileIndex, Bitmap>();
+                    Dictionary<TileIndex, bool> takenFromCache = new Dictionary<TileIndex,bool>();
                     foreach (TileInfo info in tiles)
                     {
-                        if (_bitmaps.Find(info.Index) != null) continue;
+                        var image = _bitmaps.Find(info.Index);
+                        if (image != null)
+                        {
+                            toRender.Add(info.Index, image);
+                            takenFromCache.Add(info.Index,true);
+                            continue;
+                        }
                         if (_fileCache != null && _fileCache.Exists(info.Index))
                         {
                             _bitmaps.Add(info.Index, GetImageFromFileCache(info) as Bitmap);
+                            toRender.Add(info.Index, _bitmaps.Find(info.Index));
+                            takenFromCache.Add(info.Index,true);
                             continue;
                         }
 
                         var waitHandle = new AutoResetEvent(false);
                         waitHandles.Add(waitHandle);
                         ThreadPool.QueueUserWorkItem(GetTileOnThread,
-                                                     new object[] {_source.Provider, info, _bitmaps, waitHandle, true});
+                                                     new object[] { _source.Provider, info, toRender, waitHandle, true });
                     }
 
                     foreach (var handle in waitHandles)
@@ -212,7 +221,10 @@ namespace SharpMap.Layers
 
                         foreach (var info in tiles)
                         {
-                            var bitmap = _bitmaps.Find(info.Index);
+                            if (!toRender.ContainsKey(info.Index))
+                                continue;
+
+                            var bitmap = toRender[info.Index];//_bitmaps.Find(info.Index);
                             if (bitmap == null) continue;
 
                             var min = map.WorldToImage(new Coordinate(info.Extent.MinX, info.Extent.MinY));
@@ -238,6 +250,15 @@ namespace SharpMap.Layers
                         }
                     }
 
+                    //Add rendered tiles to cache
+                    foreach (var kvp in toRender)
+                    {
+                        if (takenFromCache.ContainsKey(kvp.Key) && !takenFromCache[kvp.Key])
+                        {
+                            _bitmaps.Add(kvp.Key, kvp.Value);
+                        }
+                    }
+
                     graphics.Transform = new Matrix();
                     graphics.DrawImageUnscaled(bmp, 0, 0);
                     graphics.Transform = g.Transform;
@@ -255,7 +276,8 @@ namespace SharpMap.Layers
             if (parameters.Length != 5) throw new ArgumentException("Five parameters expected");
             ITileProvider tileProvider = (ITileProvider)parameters[0];
             TileInfo tileInfo = (TileInfo)parameters[1];
-            MemoryCache<Bitmap> bitmaps = (MemoryCache<Bitmap>)parameters[2];
+            //MemoryCache<Bitmap> bitmaps = (MemoryCache<Bitmap>)parameters[2];
+            Dictionary<TileIndex, Bitmap> bitmaps = (Dictionary<TileIndex,Bitmap>)parameters[2];
             AutoResetEvent autoResetEvent = (AutoResetEvent)parameters[3];
             bool retry = (bool) parameters[4];
 
