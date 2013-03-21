@@ -166,8 +166,7 @@ namespace RoutingExample.RoutingSystem
                     throw new ArgumentException("An Error Occured - There are proabably no geomtryies within tolerence");
                 
                 // Get the last point on the source line.
-                var i = _splitSourceLine[0].NumPoints - 1;
-                return _splitSourceLine[0].StartPoint;
+                return _splitSourceLine[1].StartPoint;
             }
         }
 
@@ -180,7 +179,7 @@ namespace RoutingExample.RoutingSystem
             {
                 if (_splitDestinationLine == null)
                     throw new ArgumentException("An Error Occured - There are proabably no geomtryies within tolerence");
-                return _splitDestinationLine[1].StartPoint;
+                return _splitDestinationLine[0].EndPoint;
             }
         }
 
