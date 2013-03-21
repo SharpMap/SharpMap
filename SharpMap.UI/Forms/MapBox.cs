@@ -2002,6 +2002,20 @@ namespace SharpMap.Forms
         {
             base.OnMouseDoubleClick(e);
 
+            /*Remove duplicate coordinates in _pointArray
+             We will at least get one doubleclick since we did a DoubleClick*/
+            if (_pointArray != null && (_activeTool == Tools.DrawLine || _activeTool == Tools.DrawPolygon))
+            {
+                for (int i = 1; i < _pointArray.Count; i++)
+                {
+                    if (_pointArray[i].Equals2D(_pointArray[i - 1]))
+                    {
+                        _pointArray.RemoveAt(i);
+                        i--;
+                    }
+                }
+            }
+
             if (_activeTool == Tools.DrawPolygon)
             {
                 if (GeometryDefined != null)
