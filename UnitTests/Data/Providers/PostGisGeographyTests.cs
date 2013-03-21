@@ -98,7 +98,7 @@ namespace UnitTests.Data.Providers
         }
 
         [TestFixtureTearDown]
-        public void TearDownTestFixture()
+        public void FixtureTearDown()
         {
             var connStrBuilder = new NpgsqlConnectionStringBuilder(Properties.Settings.Default.PostGis);
             if (string.IsNullOrEmpty(connStrBuilder.Host) || string.IsNullOrEmpty(connStrBuilder.Database))
@@ -106,16 +106,20 @@ namespace UnitTests.Data.Providers
                 return;
             }
 
-            // Drop sample table
-            using (var conn = new NpgsqlConnection(Properties.Settings.Default.PostGis))
+            try
             {
-                conn.Open();
-                using (NpgsqlCommand cmd = conn.CreateCommand())
+                // Drop sample table
+                using (var conn = new NpgsqlConnection(Properties.Settings.Default.PostGis))
                 {
-                    cmd.CommandText = "DROP TABLE roads_ugl";
-                    cmd.ExecuteNonQuery();
+                    conn.Open();
+                    using (NpgsqlCommand cmd = conn.CreateCommand())
+                    {
+                        cmd.CommandText = "DROP TABLE roads_ugl";
+                        cmd.ExecuteNonQuery();
+                    }
                 }
             }
+            catch { }
         }
 
         private static SharpMap.Data.Providers.PostGIS GetTestProvider()
