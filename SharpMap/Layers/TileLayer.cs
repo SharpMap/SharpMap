@@ -360,5 +360,16 @@ namespace SharpMap.Layers
             if (_bitmaps == null)
                 _bitmaps = new MemoryCache<Bitmap>(100, 200);
         }
+
+        protected override void ReleaseManagedResources()
+        {
+            base.ReleaseManagedResources();
+
+            if (_source is IDisposable)
+            {
+                (_source as IDisposable).Dispose();
+            }
+
+        }
     }
 }
