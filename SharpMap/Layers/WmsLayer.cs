@@ -70,14 +70,14 @@ namespace SharpMap.Layers
         [NonSerialized]
         private ImageAttributes _imageAttributes;
 
-        private float _transparency;
+        private float _opacity = 1.0f;
         private readonly Collection<string> _layerList;
         private string _mimeType = "";
         private IWebProxy _proxy;
         private readonly Collection<string> _stylesList;
         private int _timeOut;
         private readonly Client _wmsClient;
-        //private bool _Transparancy = true;
+        private bool _transparent = true;
         private Color _bgColor = Color.White;
         private readonly string _capabilitiesUrl;
 
@@ -249,32 +249,43 @@ namespace SharpMap.Layers
         /// <summary>
         /// Sets the optional transparancy. The WMS server might ignore this when not implemented and will ignore if the imageformat is jpg
         /// </summary>
-        [Obsolete("Use Transparency")]
+        [Obsolete("Use Transparent")]
         public bool Transparancy
         {
-            get { return Transparency > 0f; }
-            set { Transparency = value ? 0.35f : 0f; }
+            get { return Transparent; }
+            set { Transparent = value; }
         }
 
         /// <summary>
-        /// Gets or sets a value indicating the transparency degree.
+        /// Sets if the image should have transparent background. The WMS server might ignore this when not implemented and will ignore if the imageformat is jpg
         /// </summary>
-        public float Transparency
+        public bool Transparent
         {
-            get { return _transparency; }
+            get { return _transparent; }
+            set { _transparent = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets a value indicating the opacity degree
+        /// 1.0 = No transparency (Default)
+        /// 0.0 = full transparency
+        /// </summary>
+        public float Opacity
+        {
+            get { return _opacity; }
             set
             {
                 if (value < 0f) value = 0f;
                 if (value > 1f) value = 1f;
 
-                _transparency = value;
+                _opacity = value;
                 if (_imageAttributes != null)
                     _imageAttributes.Dispose();
-                
-                if (_transparency > 0f)
+
+                if (_opacity < 1f)
                 {
                     _imageAttributes = new ImageAttributes();
-                    _imageAttributes.SetColorMatrix(new ColorMatrix {Matrix33 = 1f - _transparency},
+                    _imageAttributes.SetColorMatrix(new ColorMatrix { Matrix33 = _opacity },
                         ColorMatrixFlag.Default, ColorAdjustType.Bitmap);
                 }
             }
@@ -288,17 +299,7 @@ namespace SharpMap.Layers
         /// <param name="opacity"></param>
         public void SetOpacity(float opacity)
         {
-            Transparency = 1f - opacity;
-
-            /*
-            ColorMatrix cmxPic = new ColorMatrix();
-            cmxPic.Matrix33 = opacity;
-            ImageAttributes attrs = ImageAttributes;
-            if (attrs == null)
-                attrs = new System.Drawing.Imaging.ImageAttributes();
-            attrs.SetColorMatrix(cmxPic, ColorMatrixFlag.Default, ColorAdjustType.Bitmap);
-            ImageAttributes = attrs;
-             */
+            Opacity = opacity;
         }
 
         /// <summary>
@@ -788,8 +789,8 @@ namespace SharpMap.Layers
                     strReq.AppendFormat("{0},", style);
                 strReq.Remove(strReq.Length - 1, 1);
             }
-            strReq.AppendFormat("&TRANSPARENT={0}", Transparancy);
-            if (!Transparancy)
+            strReq.AppendFormat("&TRANSPARENT={0}", Transparent);
+            if (!Transparent)
                 strReq.AppendFormat("&BGCOLOR={0}", ColorTranslator.ToHtml(_bgColor));
             return strReq.ToString();
         }
