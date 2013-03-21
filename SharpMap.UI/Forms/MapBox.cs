@@ -42,7 +42,6 @@ using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using GeoAPI.Geometries;
-//using SharpMap.Data;
 using SharpMap.Layers;
 using System.Drawing.Imaging;
 using System.Diagnostics;
@@ -2002,27 +2001,13 @@ namespace SharpMap.Forms
         {
             base.OnMouseDoubleClick(e);
 
-            /*Remove duplicate coordinates in _pointArray
-             We will at least get one doubleclick since we did a DoubleClick*/
-            if (_pointArray != null && (_activeTool == Tools.DrawLine || _activeTool == Tools.DrawPolygon))
-            {
-                for (int i = 1; i < _pointArray.Count; i++)
-                {
-                    if (_pointArray[i].Equals2D(_pointArray[i - 1]))
-                    {
-                        _pointArray.RemoveAt(i);
-                        i--;
-                    }
-                }
-            }
-
             if (_activeTool == Tools.DrawPolygon)
             {
                 if (GeometryDefined != null)
                 {
-                    var cl = new NetTopologySuite.Geometries.CoordinateList(_pointArray);
+                    var cl = new NetTopologySuite.Geometries.CoordinateList(_pointArray, false);
                     cl.CloseRing();
-                    GeometryDefined(Map.Factory.CreatePolygon(Map.Factory.CreateLinearRing(cl.ToCoordinateArray()), null));
+                    GeometryDefined(Map.Factory.CreatePolygon(Map.Factory.CreateLinearRing(NetTopologySuite.Geometries.CoordinateArrays.AtLeastNCoordinatesOrNothing(4, cl.ToCoordinateArray())), null));
                 }
                 ActiveTool = Tools.None;
             }
@@ -2031,7 +2016,8 @@ namespace SharpMap.Forms
             {
                 if (GeometryDefined != null)
                 {
-                    GeometryDefined(Map.Factory.CreateLineString(_pointArray.ToArray()));
+                    var cl = new NetTopologySuite.Geometries.CoordinateList(_pointArray, false);
+                    GeometryDefined(Map.Factory.CreateLineString(NetTopologySuite.Geometries.CoordinateArrays.AtLeastNCoordinatesOrNothing(2, cl.ToCoordinateArray())));
                 }
                 ActiveTool = Tools.None;
             }
@@ -2044,10 +2030,13 @@ namespace SharpMap.Forms
             lowerLeft = new Coordinate(Math.Min(p1.X, p2.X), Math.Min(p1.Y, p2.Y));
             upperRight = new Coordinate(Math.Max(p1.X, p2.X), Math.Max(p1.Y, p2.Y));
 
-            Logger.Debug("p1: " + p1);
-            Logger.Debug("p2: " + p2);
-            Logger.Debug("lowerLeft: " + lowerLeft);
-            Logger.Debug("upperRight: " + upperRight);
+            if (Logger.IsDebugEnabled)
+            {
+                Logger.Debug("p1: " + p1);
+                Logger.Debug("p2: " + p2);
+                Logger.Debug("lowerLeft: " + lowerLeft);
+                Logger.Debug("upperRight: " + upperRight);
+            }
         }
 
         /// <summary>
