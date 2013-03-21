@@ -50,6 +50,15 @@ namespace UnitTests
         }
 
         [Test]
+        public void MapSridEqualsFactorySrid()
+        {
+            var m = new Map();
+            Assert.AreEqual(m.SRID, m.Factory.SRID);
+            m.SRID = 10;
+            Assert.AreEqual(m.SRID, m.Factory.SRID);
+        }
+
+        [Test]
         public void FindLayer_ReturnEnumerable()
         {
             Map map = new Map();

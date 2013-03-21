@@ -22,7 +22,6 @@ using System.Drawing.Drawing2D;
 using System.Globalization;
 using System.IO;
 using GeoAPI.Geometries;
-using NetTopologySuite.Geometries;
 using SharpMap.Layers;
 using SharpMap.Rendering;
 using SharpMap.Rendering.Decoration;
@@ -42,12 +41,35 @@ namespace SharpMap
     [Serializable]
     public class Map : IDisposable
     {
+        static Map()
+        {
+            if (GeoAPI.GeometryServiceProvider.Instance == null)
+                GeoAPI.GeometryServiceProvider.Instance = NetTopologySuite.NtsGeometryServices.Instance;
+        }
+
         readonly ILog _logger = LogManager.GetLogger(typeof(Map));
 
         /// <summary>
         /// Used for converting numbers to/from strings
         /// </summary>
         public static NumberFormatInfo NumberFormatEnUs = new CultureInfo("en-US", false).NumberFormat;
+
+        #region Fields
+        private readonly List<IMapDecoration> _decorations = new List<IMapDecoration>();
+
+        private Color _backgroundColor;
+        private int _srid = -1;
+        private double _zoom;
+        private Point _center;
+        private readonly LayerCollection _layers;
+        private readonly LayerCollection _backgroundLayers;
+        private readonly VariableLayerCollection _variableLayers;
+        private Matrix _mapTransform;
+        internal Matrix MapTransformInverted;
+        
+        private readonly MapViewPortGuard _mapViewportGuard;
+        #endregion
+
 
         /// <summary>
         /// Specifies whether to trigger a dispose on all layers (and their datasources) contained in this map when the map-object is disposed.
@@ -58,16 +80,11 @@ namespace SharpMap
         public bool DisposeLayersOnDispose = true;
 
         /// <summary>
-        /// Set the SRID of the Map
-        /// </summary>
-        public int SRID = -1;
-
-
-        /// <summary>
         /// Initializes a new map
         /// </summary>
         public Map() : this(new Size(640, 480))
         {
+
         }
 
         /// <summary>
@@ -78,7 +95,7 @@ namespace SharpMap
         {
             _mapViewportGuard = new MapViewPortGuard(size, 0d, Double.MaxValue);
 
-            Factory = new GeometryFactory();
+            Factory = GeoAPI.GeometryServiceProvider.Instance.CreateGeometryFactory(_srid);
             _layers = new LayerCollection();
             _backgroundLayers = new LayerCollection();
             _variableLayers = new VariableLayerCollection(_layers);
@@ -298,16 +315,16 @@ namespace SharpMap
         public Metafile GetMapAsMetafile(string metafileName)
         {
             Metafile metafile;
-            Bitmap bm = new Bitmap(1, 1);
-            using (Graphics g = Graphics.FromImage(bm))
+            var bm = new Bitmap(1, 1);
+            using (var g = Graphics.FromImage(bm))
             {
-                 IntPtr hdc = g.GetHdc();
-                 using (MemoryStream stream = new MemoryStream())
+                 var hdc = g.GetHdc();
+                 using (var stream = new MemoryStream())
                  {
                      metafile = new Metafile(stream, hdc, new RectangleF(0, 0, Size.Width, Size.Height),
                                              MetafileFrameUnit.Pixel, EmfType.EmfPlusDual);
 
-                     using (Graphics metafileGraphics = Graphics.FromImage(metafile))
+                     using (var metafileGraphics = Graphics.FromImage(metafile))
                      {
                          metafileGraphics.PageUnit = GraphicsUnit.Pixel;
                          metafileGraphics.TransformPoints(CoordinateSpace.Page, CoordinateSpace.Device,
@@ -801,18 +818,20 @@ namespace SharpMap
 
         #region Properties
 
-        private readonly List<IMapDecoration> _decorations = new List<IMapDecoration>();
-
-        private Color _backgroundColor;
-        private double _zoom;
-        private Point _center;
-        private readonly LayerCollection _layers;
-        private readonly LayerCollection _backgroundLayers;
-        private readonly VariableLayerCollection _variableLayers;
-        private Matrix _mapTransform;
-        internal Matrix MapTransformInverted;
-        
-        private readonly MapViewPortGuard _mapViewportGuard;
+        /// <summary>
+        /// Gets or sets the SRID of the map
+        /// </summary>
+        public int SRID
+        {
+            get { return _srid; }
+            set
+            {
+                if (_srid == value)
+                    return;
+                _srid = value;
+                Factory = GeoAPI.GeometryServiceProvider.Instance.CreateGeometryFactory(_srid);
+            }
+        }
 
         /// <summary>
         /// Factory used to create geometries
@@ -1187,7 +1206,6 @@ namespace SharpMap
 
 
         #endregion
-
     }
 
     /// <summary>
