@@ -49,21 +49,21 @@ namespace UnitTests.Data.Providers
                         using (var cmd = conn.CreateCommand())
                         {
                             cmd.CommandText =
-                                "SELECT COUNT(*) FROM \"geometry_columns\" WHERE \"f_table_name\" = 'roads_ugl' AND \"f_geometry_column\"='geom';";
+                                "SELECT COUNT(*) FROM \"geometry_columns\" WHERE \"f_table_name\" = 'roads_ugl_g' AND \"f_geometry_column\"='geom';";
                             var count = cmd.ExecuteScalar();
                             if (Convert.ToInt32(count) > 0)
                             {
-                                cmd.CommandText = "SELECT DropGeometryColumn('roads_ugl', 'geom');";
+                                cmd.CommandText = "SELECT DropGeometryColumn('roads_ugl_g', 'geom');";
                                 cmd.ExecuteNonQuery();
-                                cmd.CommandText = "DROP TABLE roads_ugl";
+                                cmd.CommandText = "DROP TABLE roads_ugl_g";
                                 cmd.ExecuteNonQuery();
                             }
 
                             // The ID column cannot simply be int, because that would cause GetObjectIDsInView to fail. The provider internally works with uint
                             cmd.CommandText =
-                                "CREATE TABLE roads_ugl(id integer primary key, name character varying(100));";
+                                "CREATE TABLE roads_ugl_g(id integer primary key, name character varying(100));";
                             cmd.ExecuteNonQuery();
-                            cmd.CommandText = "SELECT AddGeometryColumn('roads_ugl', 'geom', " + shapeFile.SRID +
+                            cmd.CommandText = "SELECT AddGeometryColumn('roads_ugl_g', 'geom', " + shapeFile.SRID +
                                               ", 'GEOMETRY', 2);";
                             cmd.ExecuteNonQuery();
                         }
@@ -75,7 +75,7 @@ namespace UnitTests.Data.Providers
                         using (NpgsqlCommand cmd = conn.CreateCommand())
                         {
                             cmd.CommandText =
-                                "INSERT INTO roads_ugl(id, name, geom) VALUES (@PId, @PName, @PGeom);";
+                                "INSERT INTO roads_ugl_g(id, name, geom) VALUES (@PId, @PName, @PGeom);";
                             var @params = cmd.Parameters;
                             @params.AddRange(
                                 new[]
@@ -125,9 +125,9 @@ namespace UnitTests.Data.Providers
                     conn.Open();
                     using (NpgsqlCommand cmd = conn.CreateCommand())
                     {
-                        cmd.CommandText = "SELECT DropGeometryColumn('roads_ugl', 'geom');";
+                        cmd.CommandText = "SELECT DropGeometryColumn('roads_ugl_g', 'geom');";
                         cmd.ExecuteNonQuery();
-                        cmd.CommandText = "DROP TABLE roads_ugl";
+                        cmd.CommandText = "DROP TABLE roads_ugl_g";
                         cmd.ExecuteNonQuery();
                     }
                 }
@@ -137,7 +137,7 @@ namespace UnitTests.Data.Providers
 
         private static SharpMap.Data.Providers.PostGIS GetTestProvider()
         {
-            return new SharpMap.Data.Providers.PostGIS(Properties.Settings.Default.PostGis, "roads_ugl", "geom", "id");
+            return new SharpMap.Data.Providers.PostGIS(Properties.Settings.Default.PostGis, "roads_ugl_g", "geom", "id");
         }
 
         /// <summary>

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using GeoAPI.Geometries;
 using NUnit.Framework;
 using NetTopologySuite.IO;
 using Npgsql;
@@ -65,7 +66,7 @@ namespace UnitTests.Data.Providers
                         using (NpgsqlCommand cmd = conn.CreateCommand())
                         {
                             cmd.CommandText =
-                                "INSERT INTO roads_ugl(id, name, geog) VALUES (@PId, @PName, geography(@PGeom));";
+                                "INSERT INTO roads_ugl(id, name, geog) VALUES (@PId, @PName, ST_GeogFromWKB(@PGeom));";
                             var @params = cmd.Parameters;
                             @params.AddRange(
                                 new[]
@@ -86,6 +87,15 @@ namespace UnitTests.Data.Providers
                                 @params["PGeom"].NpgsqlValue = writer.Write(feature.Geometry);
                                 cmd.ExecuteNonQuery();
                             }
+                        }
+
+                        // Verify
+                        var pgp = GetTestProvider();
+                        foreach (var idx in _insertedIds)
+                        {
+                            var g1 = pgp.GetGeometryByID(idx);
+                            var g2 = shapeFile.GetGeometryByID(idx);
+                            Assert.AreEqual(g1, g2);
                         }
                     }
 
@@ -130,9 +140,10 @@ namespace UnitTests.Data.Providers
         /// <summary>
         /// Get the envelope of the entire roads_ugl file
         /// </summary>
-        private static GeoAPI.Geometries.Envelope GetTestEnvelope()
+        private static Envelope GetTestEnvelope()
         {
-            return SharpMap.Converters.WellKnownText.GeometryFromWKT.Parse("POLYGON ((-97.23724071609665 41.698023105763589, -82.424263624596563 41.698023105763589, -82.424263624596563 49.000629000758515, -97.23724071609665 49.000629000758515, -97.23724071609665 41.698023105763589))").EnvelopeInternal;
+            return new Envelope(-97.23724071609665, -82.424263624596563, 41.698023105763589, 49.000629000758515);
+            //SharpMap.Converters.WellKnownText.GeometryFromWKT.Parse("POLYGON ((-97.23724071609665 41.698023105763589, -82.424263624596563 41.698023105763589, -82.424263624596563 49.000629000758515, -97.23724071609665 49.000629000758515, -97.23724071609665 41.698023105763589))").EnvelopeInternal;
         }
 
         [Test]
@@ -167,6 +178,7 @@ namespace UnitTests.Data.Providers
 
             Assert.IsNotNull(geometries);
             Assert.LessOrEqual(geometries.Count, 100);
+            Assert.Greater(geometries.Count, 0);
         }
 
         [Test]

@@ -240,6 +240,17 @@ namespace SharpMap.Data.Providers
 
         private string GetBoxClause(Envelope bbox)
         {
+            if (Logger.IsDebugEnabled)
+            {
+                var geom = Factory.ToGeometry(bbox);
+                Logger.Debug(string.Format("PEnv: SRID={1};{0}", geom.AsText(), Factory.SRID));
+            }
+
+            return string.Format(NumberFormatInfo.InvariantInfo, "ST_MakeEnvelope({0},{1},{2},{3},{4})",
+                                 bbox.MinX, bbox.MinY, bbox.MaxX, bbox.MaxY, Factory.SRID);
+
+            /*
+            
             var res = string.Format(NumberFormatInfo.InvariantInfo,
                     "box3d('BOX3D({0} {1} 0, {2} {3} 0)')", 
                     bbox.MinX, bbox.MinY, bbox.MaxX, bbox.MaxY);
@@ -249,6 +260,7 @@ namespace SharpMap.Data.Providers
                 res = string.Format(NumberFormatInfo.InvariantInfo, "{0}setsrid({1}, {2})", _prefixFunction, res, SRID);
             }
             return res;
+             */
         }
 
         #region IProvider Members
@@ -315,7 +327,7 @@ namespace SharpMap.Data.Providers
                 conn.Open();
 
                 var strSQL = "SELECT \"" + GeometryColumn + "\"" + _geometryCast + "::bytea AS \"_smGeom_\" FROM " + QualifiedTable +
-                             " WHERE \"" + ObjectIdColumn + "\"='" + oid + "'";
+                             " WHERE \"" + ObjectIdColumn + "\"=" + oid + ";";
 
                 if (Logger.IsDebugEnabled)
                     Logger.Debug(string.Format("{0}\n{1}", "GetGeometryByID: executing sql:", strSQL));
@@ -362,7 +374,9 @@ namespace SharpMap.Data.Providers
                 if (Logger.IsDebugEnabled)
                     Logger.Debug(string.Format("{0}\n{1}", "GetObjectIDsInView: executing sql:", strSQL));
 
-                using (var dr = new NpgsqlCommand(strSQL, conn).ExecuteReader())
+                var cmd = new NpgsqlCommand(strSQL, conn);
+
+                using (var dr = cmd.ExecuteReader())
                 {
                     while (dr.Read())
                     {
@@ -417,7 +431,7 @@ namespace SharpMap.Data.Providers
                 else
                 {
                     strSql += "\"" + GeometryColumn + "\" && @PGeo AND " + 
-                              _prefixFunction + "distance(\"" +GeometryColumn + "\", @PGeo)<0";
+                              _prefixFunction + "distance(\"" + GeometryColumn + "\", @PGeo)<0";
                 }
                 
                 /*
