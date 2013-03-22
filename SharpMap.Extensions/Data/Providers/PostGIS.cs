@@ -77,6 +77,8 @@ namespace SharpMap.Data.Providers
         
         private readonly double _postGisVersion;
         private readonly bool _supportSTIntersects;
+        private readonly bool _supportSTMakeBox2d;
+        private readonly bool _supportSTMakeEnvelope;
         private readonly string _prefixFunction = "";
         private readonly PostGisSpatialObjectType _postGisSpatialObject;
         private string _columns;
@@ -102,6 +104,8 @@ namespace SharpMap.Data.Providers
             ObjectIdColumn = objectIdColumnName;
             _postGisVersion = GetPostGISVersion();
             _supportSTIntersects = _postGisVersion >= 1.3;
+            _supportSTMakeBox2d = _postGisVersion >= 1.4;
+            _supportSTMakeEnvelope = _postGisVersion >= 2.0;
             if (_postGisVersion >= 1.5)
                 _prefixFunction = "ST_";
         }
@@ -246,21 +250,30 @@ namespace SharpMap.Data.Providers
                 Logger.Debug(string.Format("PEnv: SRID={1};{0}", geom.AsText(), Factory.SRID));
             }
 
-            return string.Format(NumberFormatInfo.InvariantInfo, "ST_MakeEnvelope({0},{1},{2},{3},{4})",
-                                 bbox.MinX, bbox.MinY, bbox.MaxX, bbox.MaxY, Factory.SRID);
-
-            /*
-            
-            var res = string.Format(NumberFormatInfo.InvariantInfo,
-                    "box3d('BOX3D({0} {1} 0, {2} {3} 0)')", 
-                    bbox.MinX, bbox.MinY, bbox.MaxX, bbox.MaxY);
-
-            if (SRID > 0)
+            if (_supportSTMakeEnvelope)
             {
-                res = string.Format(NumberFormatInfo.InvariantInfo, "{0}setsrid({1}, {2})", _prefixFunction, res, SRID);
+                return string.Format(NumberFormatInfo.InvariantInfo, "ST_MakeEnvelope({0},{1},{2},{3},{4})",
+                                     bbox.MinX, bbox.MinY, bbox.MaxX, bbox.MaxY, Factory.SRID);
             }
-            return res;
-             */
+            else if (_supportSTMakeBox2d)
+            {
+                return string.Format(NumberFormatInfo.InvariantInfo, "ST_SetSRID(ST_MakeBox2D(ST_Point({0},{1}),ST_Point({2},{3})),{4})",
+                                     bbox.MinX, bbox.MinY, bbox.MaxX, bbox.MaxY, Factory.SRID);
+            }
+            else
+            {
+
+
+                var res = string.Format(NumberFormatInfo.InvariantInfo,
+                        "box3d('BOX3D({0} {1} 0, {2} {3} 0)')",
+                        bbox.MinX, bbox.MinY, bbox.MaxX, bbox.MaxY);
+
+                if (SRID > 0)
+                {
+                    res = string.Format(NumberFormatInfo.InvariantInfo, "{0}setsrid({1}, {2})", _prefixFunction, res, SRID);
+                }
+                return res;
+            }
         }
 
         #region IProvider Members
