@@ -7,7 +7,7 @@ using System.Xml;
 namespace SharpMap.Web.Wfs
 {
     /// <summary>
-    /// Class for requesting and parsing a WMS servers capabilities
+    /// Class for requesting and parsing a WFS servers capabilities
     /// </summary>
     [Serializable]
     public class Client : IClient
@@ -136,7 +136,7 @@ namespace SharpMap.Web.Wfs
         }
 
         /// <summary>
-        /// Gets the version of the WMS server (ex. "1.3.0")
+        /// Gets the version of the WFS server (ex. "1.1.0")
         /// </summary>
         public string Version
         {
@@ -174,52 +174,52 @@ namespace SharpMap.Web.Wfs
         public Client() { }
 
         /// <summary>
-        /// Initalizes WMS server and parses the Capabilities request
+        /// Initalizes WFS server and parses the Capabilities request
         /// </summary>
-        /// <param name="url">URL of wms server</param>
+        /// <param name="url">URL of wfs server</param>
         public Client(string url)
             : this(url, null, 10000, null, "") { }
 
         /// <summary>
-        /// This Initalizes WMS server and parses the Capabilities request
+        /// This Initalizes WFS server and parses the Capabilities request
         /// </summary>
-        /// <param name="url">URL of wms server</param>
+        /// <param name="url">URL of wfs server</param>
         /// <param name="proxy">Proxy to use</param>
         public Client(string url, IWebProxy proxy)
             : this(url, proxy, 10000, null, "") { }
 
         /// <summary>
-        /// This Initalizes WMS server and parses the Capabilities request
+        /// This Initalizes WFS server and parses the Capabilities request
         /// </summary>
-        /// <param name="url">URL of wms server</param>
+        /// <param name="url">URL of wfs server</param>
         /// <param name="proxy">Proxy to use</param>
         /// <param name="timeOut">Web request timeout</param>
         public Client(string url, IWebProxy proxy, int timeOut)
             : this(url, proxy, timeOut, null, "") { }
 
         /// <summary>
-        /// Initalizes WMS server and parses the Capabilities request
+        /// Initalizes WFS server and parses the Capabilities request
         /// </summary>
-        /// <param name="url">URL of wms server</param>
+        /// <param name="url">URL of wfs server</param>
         /// <param name="proxy">Proxy to use</param>
-        /// <param name="credentials">Credentials for authenticating against remote WMS-server</param>
+        /// <param name="credentials">Credentials for authenticating against remote WFS-server</param>
         public Client(string url, IWebProxy proxy, ICredentials credentials)
             : this(url, proxy, 10000, credentials, "") { }
 
         /// <summary>
-        /// Initalizes WMS server and parses the Capabilities request
+        /// Initalizes WFS server and parses the Capabilities request
         /// </summary>
-        /// <param name="url">URL of wms server</param>
+        /// <param name="url">URL of wfs server</param>
         /// <param name="proxy">Proxy to use</param>
         /// <param name="timeOut">Web request timeout</param>
-        /// <param name="credentials">Credentials for authenticating against remote WMS-server</param>
+        /// <param name="credentials">Credentials for authenticating against remote WFS-server</param>
         public Client(string url, IWebProxy proxy, int timeOut, ICredentials credentials)
             : this(url, proxy, timeOut, credentials, "") { }
 
         /// <summary>
-        /// Initalizes WMS server and parses the Capabilities request
+        /// Initalizes WFS server and parses the Capabilities request
         /// </summary>
-        /// <param name="url">URL of wms server</param>
+        /// <param name="url">URL of wfs server</param>
         /// <param name="proxy">Proxy to use</param>
         /// <param name="timeOut">Web request timeout</param>
         /// <param name="version"></param>
@@ -227,13 +227,13 @@ namespace SharpMap.Web.Wfs
             : this(url, proxy, timeOut, null, version) { }
 
         /// <summary>
-        /// Initalizes WMS server and parses the Capabilities request
+        /// Initalizes WFS server and parses the Capabilities request
         /// </summary>
-        /// <param name="url">URL of wms server</param>
+        /// <param name="url">URL of wfs server</param>
         /// <param name="proxy">Proxy to use</param>
         /// <param name="timeOut">Web request timeout</param>
         /// <param name="version"></param>
-        /// <param name="credentials">Credentials for authenticating against remote WMS-server</param>
+        /// <param name="credentials">Credentials for authenticating against remote WFS-server</param>
         public Client(string url, IWebProxy proxy, int timeOut, ICredentials credentials, string version)
         {
             _baseUrl = url;
@@ -293,7 +293,7 @@ namespace SharpMap.Web.Wfs
                 strReq.Append("?");
             if (!strReq.ToString().EndsWith("&") && !strReq.ToString().EndsWith("?"))
                 strReq.Append("&");
-            if (!url.ToLower().Contains("service=wms"))
+            if (!url.ToLower().Contains("service=wfs"))
                 strReq.AppendFormat("SERVICE=WFS&");
             if (!url.ToLower().Contains("request=getcapabilities"))
                 strReq.AppendFormat("REQUEST=GetCapabilities&");
@@ -305,7 +305,7 @@ namespace SharpMap.Web.Wfs
         }
 
         /// <summary>
-        /// Downloads servicedescription from WMS service  
+        /// Downloads servicedescription from WFS service  
         /// </summary>
         /// <returns>XmlDocument from Url. Null if Url is empty or inproper XmlDocument</returns>
         public XmlDocument GetRemoteXml()

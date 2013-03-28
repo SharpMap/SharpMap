@@ -141,7 +141,7 @@ namespace SharpMap.Layers
 
 #if !DotSpatialProjections
         /// <summary>
-        /// Gets or sets the <see cref="ProjNet.CoordinateSystems.Transformations.ICoordinateTransformation"/> applied 
+        /// Gets or sets the <see cref="GeoAPI.CoordinateSystems.Transformations.ICoordinateTransformation"/> applied 
         /// to this vectorlayer prior to rendering
         /// </summary>
 #else
@@ -158,7 +158,7 @@ namespace SharpMap.Layers
 
 #if !DotSpatialProjections
         /// <summary>
-        /// Certain Transformations cannot be inverted in ProjNet, in those cases use this property to set the reverse <see cref="ProjNet.CoordinateSystems.Transformations.ICoordinateTransformation"/> (of CoordinateTransformation) to fetch data from Datasource
+        /// Certain Transformations cannot be inverted in ProjNet, in those cases use this property to set the reverse <see cref="GeoAPI.CoordinateSystems.Transformations.ICoordinateTransformation"/> (of CoordinateTransformation) to fetch data from Datasource
         /// 
         /// If your CoordinateTransformation can be inverted you can leave this property to null
         /// </summary>

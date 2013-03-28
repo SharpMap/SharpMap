@@ -355,7 +355,6 @@ namespace SharpMap.Data.Providers
 	    /// <param name="filename">Path to shape file</param>
 	    /// <param name="fileBasedIndex">Use file-based spatial index</param>
 	    /// <param name="useMemoryCache">Use the memory cache. BEWARE in case of large shapefiles</param>
-		/// <param name="useMemoryCache">Use the memory cache. BEWARE in case of large shapefiles</param>
 	    /// <param name="SRID">The spatial reference id</param>
 	    public ShapeFile(string filename, bool fileBasedIndex, bool useMemoryCache,int SRID) : this(filename, fileBasedIndex)
 		{
