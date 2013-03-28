@@ -29,6 +29,7 @@ using SharpMap.Utilities;
 using Point = GeoAPI.Geometries.Coordinate;
 using System.Drawing.Imaging;
 using Common.Logging;
+using System.Reflection;
 
 namespace SharpMap
 {
@@ -43,8 +44,20 @@ namespace SharpMap
     {
         static Map()
         {
-            if (GeoAPI.GeometryServiceProvider.Instance == null)
-                GeoAPI.GeometryServiceProvider.Instance = NetTopologySuite.NtsGeometryServices.Instance;
+            if (!(System.ComponentModel.LicenseManager.UsageMode == System.ComponentModel.LicenseUsageMode.Designtime))
+            {
+                // We have to do this initialization with reflection due to the fact that NTS can reference an older version of GeoAPI and redirection 
+                // is not available at design time..
+                var geoApiAssembly = Assembly.Load("GeoAPI");
+                var ntsAssembly = Assembly.Load("NetTopologySuite");
+                var geoApiGeometryServices= geoApiAssembly.GetType("GeoAPI.GeometryServiceProvider");
+                var pi = geoApiGeometryServices.GetProperty("Instance");
+                if (pi.GetValue(null, null) == null)
+                {
+                    var ntsApiGeometryServices = ntsAssembly.GetType("NetTopologySuite.NtsGeometryServices");
+                    pi.SetValue(null, ntsApiGeometryServices.GetProperty("Instance").GetValue(null, null), null);
+                }
+            }
         }
 
         readonly ILog _logger = LogManager.GetLogger(typeof(Map));
@@ -95,7 +108,10 @@ namespace SharpMap
         {
             _mapViewportGuard = new MapViewPortGuard(size, 0d, Double.MaxValue);
 
-            Factory = GeoAPI.GeometryServiceProvider.Instance.CreateGeometryFactory(_srid);
+            if (!(System.ComponentModel.LicenseManager.UsageMode == System.ComponentModel.LicenseUsageMode.Designtime))
+            {
+                Factory = GeoAPI.GeometryServiceProvider.Instance.CreateGeometryFactory(_srid);
+            }
             _layers = new LayerCollection();
             _backgroundLayers = new LayerCollection();
             _variableLayers = new VariableLayerCollection(_layers);
