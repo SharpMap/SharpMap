@@ -122,6 +122,13 @@ namespace SharpMap.Data.Providers
             int srid;
             GeometryColumn = GetGeometryColumn(out srid);
             SRID = srid;
+
+            if (!string.IsNullOrEmpty(GeometryColumn))
+            {
+                _postGisSpatialObject = GetSpatialObjectType();
+                SRID = GetGeometrySrid();
+            }
+            
         }
 
         /// <summary>
@@ -728,6 +735,32 @@ namespace SharpMap.Data.Providers
                             srid = dr.GetInt32(1);
                             return dr.GetString(0);
                         }
+                    }
+                }
+
+                if (_postGisVersion >= 1.5)
+                {
+                    try
+                    {
+                        //Check if this is a geography column
+                        strSQL = "SELECT \"f_geography_column\", \"srid\" from public.\"geography_columns\" WHERE \"f_table_schema\"='" + _schema +
+                                "' and \"f_table_name\"='" + _table + "'";
+
+                        using (var command = new NpgsqlCommand(strSQL, conn))
+                        {
+                            using (var dr = command.ExecuteReader())
+                            {
+                                if (dr != null && dr.Read())
+                                {
+                                    srid = dr.GetInt32(1);
+                                    return dr.GetString(0);
+                                }
+                            }
+                        }
+                    }
+                    catch (Exception ee)
+                    {
+
                     }
                 }
             }

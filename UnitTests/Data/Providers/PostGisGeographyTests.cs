@@ -82,7 +82,7 @@ namespace UnitTests.Data.Providers
                             {
                                 var feature = shapeFile.GetFeature(idx);
 
-                                @params["PId"].NpgsqlValue = (int) idx;
+                                @params["PId"].NpgsqlValue = (int)idx;
                                 @params["PName"].NpgsqlValue = feature["NAME"];
                                 @params["PGeom"].NpgsqlValue = writer.Write(feature.Geometry);
                                 cmd.ExecuteNonQuery();
@@ -90,18 +90,20 @@ namespace UnitTests.Data.Providers
                         }
 
                         // Verify
-                        var pgp = GetTestProvider();
-                        foreach (var idx in _insertedIds)
+                        foreach (var pgp in GetTestProvider())
                         {
-                            var g1 = pgp.GetGeometryByID(idx);
-                            var g2 = shapeFile.GetGeometryByID(idx);
-                            Assert.AreEqual(g1, g2);
+                            foreach (var idx in _insertedIds)
+                            {
+                                var g1 = pgp.GetGeometryByID(idx);
+                                var g2 = shapeFile.GetGeometryByID(idx);
+                                Assert.AreEqual(g1, g2);
+                            }
                         }
                     }
 
                 }
             }
-            catch
+            catch (Exception ee)
             {
                 Assert.Ignore("Failed to connect to PostgreSQL/PostGIS Server");
             }
@@ -132,9 +134,12 @@ namespace UnitTests.Data.Providers
             catch { }
         }
 
-        private static SharpMap.Data.Providers.PostGIS GetTestProvider()
+        private static SharpMap.Data.Providers.PostGIS[] GetTestProvider()
         {
-            return new SharpMap.Data.Providers.PostGIS(Properties.Settings.Default.PostGis, "roads_ugl", "geog", "id");
+            return new SharpMap.Data.Providers.PostGIS[] {
+                new SharpMap.Data.Providers.PostGIS(Properties.Settings.Default.PostGis, "roads_ugl", "geog", "id"),
+            new SharpMap.Data.Providers.PostGIS(Properties.Settings.Default.PostGis, "roads_ugl", "id")
+            };
         }
 
         /// <summary>
@@ -149,117 +154,134 @@ namespace UnitTests.Data.Providers
         [Test]
         public void TestGetExtents()
         {
-            var sq = GetTestProvider();
-
-            GeoAPI.Geometries.Envelope extents = sq.GetExtents();
-
-            Assert.IsNotNull(extents);
+            foreach (var sq in GetTestProvider())
+            {
+                GeoAPI.Geometries.Envelope extents = sq.GetExtents();
+                Assert.IsNotNull(extents);
+            }
         }
 
         [Test]
         public void TestGetGeometriesInView()
         {
-            var sq = GetTestProvider();
+            foreach (var sq in GetTestProvider())
+            {
 
-            var geometries = sq.GetGeometriesInView(GetTestEnvelope());
+                var geometries = sq.GetGeometriesInView(GetTestEnvelope());
 
-            Assert.IsNotNull(geometries);
-            Assert.AreEqual(100d, geometries.Count,2);
+                Assert.IsNotNull(geometries);
+                Assert.AreEqual(100d, geometries.Count, 2);
+            }
         }
 
         [Test]
         public void TestGetGeometriesInViewDefinitionQuery()
         {
-            var sq = GetTestProvider();
+            foreach (var sq in GetTestProvider())
+            {
+                sq.DefinitionQuery = "NAME LIKE 'A%'";
 
-            sq.DefinitionQuery = "NAME LIKE 'A%'";
+                var geometries = sq.GetGeometriesInView(GetTestEnvelope());
 
-            var geometries = sq.GetGeometriesInView(GetTestEnvelope());
-
-            Assert.IsNotNull(geometries);
-            Assert.LessOrEqual(geometries.Count, 100);
-            Assert.Greater(geometries.Count, 0);
+                Assert.IsNotNull(geometries);
+                Assert.LessOrEqual(geometries.Count, 100);
+                Assert.Greater(geometries.Count, 0);
+            }
         }
 
         [Test]
         public void TestGetObjectIDsInView()
         {
-            var sq = GetTestProvider();
+            foreach (var sq in GetTestProvider())
+            {
 
-            var objectIds = sq.GetObjectIDsInView(GetTestEnvelope());
+                var objectIds = sq.GetObjectIDsInView(GetTestEnvelope());
 
-            Assert.IsNotNull(objectIds);
-            Assert.AreEqual(100d, objectIds.Count, 2);
+                Assert.IsNotNull(objectIds);
+                Assert.AreEqual(100d, objectIds.Count, 2);
+            }
         }
 
         [Test]
         public void TestExecuteIntersectionQuery()
         {
-            var sq = GetTestProvider();
+            foreach (var sq in GetTestProvider())
+            {
 
-            var ds = new SharpMap.Data.FeatureDataSet();
+                var ds = new SharpMap.Data.FeatureDataSet();
 
-            sq.ExecuteIntersectionQuery(GetTestEnvelope(), ds);
+                sq.ExecuteIntersectionQuery(GetTestEnvelope(), ds);
 
-            Assert.AreEqual(100d, ds.Tables[0].Rows.Count, 2);
+                Assert.AreEqual(100d, ds.Tables[0].Rows.Count, 2);
+            }
         }
 
         [Test]
         public void TestGetFeatureCount()
         {
-            var sq = GetTestProvider();
+            foreach (var sq in GetTestProvider())
+            {
 
-            int count = sq.GetFeatureCount();
+                int count = sq.GetFeatureCount();
 
-            Assert.AreEqual(100, count);
+                Assert.AreEqual(100, count);
+            }
         }
 
         [Test]
         public void TestGetFeatureCountWithDefinitionQuery()
         {
-            var sq = GetTestProvider();
+            foreach (var sq in GetTestProvider())
+            {
 
-            sq.DefinitionQuery = "NAME LIKE 'A%'";
+                sq.DefinitionQuery = "NAME LIKE 'A%'";
 
-            int count = sq.GetFeatureCount();
+                int count = sq.GetFeatureCount();
 
-            Assert.LessOrEqual(count, 100);
+                Assert.LessOrEqual(count, 100);
+            }
         }
 
         [Test]
         public void TestGetFeature()
         {
-            var sq = GetTestProvider();
-            var rnd = new Random();
-            for (var i = 0; i < 10; i++ )
+            foreach (var sq in GetTestProvider())
             {
-                var feature = sq.GetFeature(_insertedIds[rnd.Next(0, 100)]);
+                var rnd = new Random();
+                for (var i = 0; i < 10; i++)
+                {
+                    var feature = sq.GetFeature(_insertedIds[rnd.Next(0, 100)]);
 
-                Assert.IsNotNull(feature);
+                    Assert.IsNotNull(feature);
+                }
             }
         }
 
         [Test]
         public void TestGetGeometryByID()
         {
-            var sq = GetTestProvider();
-            var rnd = new Random();
-            for (var i = 0; i < 10; i++)
+            foreach (var sq in GetTestProvider())
             {
-                var feature = sq.GetGeometryByID(_insertedIds[rnd.Next(0, 100)]);
+                var rnd = new Random();
+                for (var i = 0; i < 10; i++)
+                {
+                    var feature = sq.GetGeometryByID(_insertedIds[rnd.Next(0, 100)]);
 
-                Assert.IsNotNull(feature);
+                    Assert.IsNotNull(feature);
+                }
             }
         }
 
         [Test]
         public void TestGetFeatureNonExisting()
         {
-            var sq = GetTestProvider();
+            foreach (var sq in GetTestProvider())
+            {
 
-            var feature = sq.GetFeature(99999999);
+                var feature = sq.GetFeature(99999999);
 
-            Assert.IsNull(feature);
+                Assert.IsNull(feature);
+            }
         }
     }
 }
