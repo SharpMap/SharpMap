@@ -421,7 +421,7 @@ namespace SharpMap.Utilities
         /// <summary>
         /// Surrogate class used to serialize <see cref="T:System.Drawing.Drawing2D.CustomLineCap"/> objects
         /// </summary>
-        /// <remarks>Unfortunatly this does not work, since the</remarks>
+        /// <remarks>Unfortunately this does not work, since the</remarks>
         //[Obsolete("Does not work since there is no way to get a hold of the GraphicsPath that make up this object")]
 
         public class CustomLineCapSurrogate : ISerializationSurrogate

@@ -51,7 +51,7 @@ namespace SharpMap.Data
         }
 
         /// <summary>
-        /// nitializes a new instance of the FeatureDataSet class.
+        /// Initializes a new instance of the FeatureDataSet class.
         /// </summary>
         /// <param name="info">serialization info</param>
         /// <param name="context">streaming context</param>
@@ -203,7 +203,7 @@ namespace SharpMap.Data
         }
 
         /// <summary>
-        /// Intitalizes a new instance of the FeatureDataTable class with the specified table name.
+        /// Initializes a new instance of the FeatureDataTable class with the specified table name.
         /// </summary>
         /// <param name="table"></param>
         public FeatureDataTable(DataTable table)

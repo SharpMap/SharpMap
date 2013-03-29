@@ -33,7 +33,7 @@ namespace SharpMap.Utilities
         public const double MetersPerDegreeAtEquator = MetersPerMile * MilesPerDegreeAtEquator;
 
         /// <summary>
-        /// Calcualte the distance between 2 points on the great circle
+        /// Calculate the distance between 2 points on the great circle
         /// </summary>
         /// <param name="lon1">The first longitue value</param>
         /// <param name="lat1">The latitude value for <paramref name="lon1"/></param>
@@ -50,7 +50,7 @@ namespace SharpMap.Utilities
         }
 
         /// <summary>
-        /// Calcualte the distance between 2 points on the great circle
+        /// Calculate the distance between 2 points on the great circle
         /// </summary>
         /// <param name="lon1">The first longitue value</param>
         /// <param name="lon2">The second longitue value</param>

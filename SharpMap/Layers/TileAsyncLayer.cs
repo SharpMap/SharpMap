@@ -41,7 +41,7 @@ namespace SharpMap.Layers
         /// <param name="tileSource">The tile source</param>
         /// <param name="layerName">The layers name</param>
         /// <param name="transparentColor">The color that should be treated as <see cref="Color.Transparent"/></param>
-        /// <param name="showErrorInTile">Value indicating that an error tile should be generated for non-existant tiles</param>
+        /// <param name="showErrorInTile">Value indicating that an error tile should be generated for non-existent tiles</param>
         public TileAsyncLayer(ITileSource tileSource, string layerName, Color transparentColor, bool showErrorInTile)
             : base(tileSource, layerName, transparentColor, showErrorInTile, null)
         {
@@ -53,7 +53,7 @@ namespace SharpMap.Layers
         /// <param name="tileSource">The tile source</param>
         /// <param name="layerName">The layers name</param>
         /// <param name="transparentColor">The color that should be treated as <see cref="Color.Transparent"/></param>
-        /// <param name="showErrorInTile">Value indicating that an error tile should be generated for non-existant tiles</param>
+        /// <param name="showErrorInTile">Value indicating that an error tile should be generated for non-existent tiles</param>
         /// <param name="fileCacheDir">The directories where tiles should be stored</param>
         public TileAsyncLayer(ITileSource tileSource, string layerName, Color transparentColor, bool showErrorInTile, string fileCacheDir)
             : base(tileSource, layerName, transparentColor, showErrorInTile, fileCacheDir)

@@ -230,7 +230,7 @@ namespace SharpMap.Layers
         /// Data column or expression where label text is extracted from.
         /// </summary>
         /// <remarks>
-        /// This property is overriden by the <see cref="LabelStringDelegate"/>.
+        /// This property is overridden by the <see cref="LabelStringDelegate"/>.
         /// </remarks>
         public string LabelColumn
         {

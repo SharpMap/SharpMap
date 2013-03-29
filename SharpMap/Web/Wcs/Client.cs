@@ -169,14 +169,14 @@ namespace SharpMap.Web.Wcs
         public Client() { }
 
         /// <summary>
-        /// Initalizes client to WCS server and parses the Capabilities request
+        /// Initializes client to WCS server and parses the Capabilities request
         /// </summary>
         /// <param name="url">URL of wcs server</param>
         public Client(string url)
             : this(url, null, 10000, null, "") { }
 
         /// <summary>
-        /// Initalizes client to WCS server and parses the Capabilities request
+        /// Initializes client to WCS server and parses the Capabilities request
         /// </summary>
         /// <param name="url">URL of wcs server</param>
         /// <param name="proxy">Proxy to use</param>
@@ -184,7 +184,7 @@ namespace SharpMap.Web.Wcs
             : this(url, proxy, 10000, null, "") { }
 
         /// <summary>
-        /// Initalizes client to WCS server and parses the Capabilities request
+        /// Initializes client to WCS server and parses the Capabilities request
         /// </summary>
         /// <param name="url">URL of wcs server</param>
         /// <param name="proxy">Proxy to use</param>
@@ -193,7 +193,7 @@ namespace SharpMap.Web.Wcs
             : this(url, proxy, timeOut, null, "") { }
 
         /// <summary>
-        /// Initalizes client to WCS server and parses the Capabilities request
+        /// Initializes client to WCS server and parses the Capabilities request
         /// </summary>
         /// <param name="url">URL of wcs server</param>
         /// <param name="proxy">Proxy to use</param>
@@ -202,7 +202,7 @@ namespace SharpMap.Web.Wcs
             : this(url, proxy, 10000, credentials, "") { }
 
         /// <summary>
-        /// Initalizes client to WCS server and parses the Capabilities request
+        /// Initializes client to WCS server and parses the Capabilities request
         /// </summary>
         /// <param name="url">URL of wcs server</param>
         /// <param name="proxy">Proxy to use</param>
@@ -212,7 +212,7 @@ namespace SharpMap.Web.Wcs
             : this(url, proxy, timeOut, credentials, "") { }
 
         /// <summary>
-        /// Initalizes client to WCS server and parses the Capabilities request
+        /// Initializes client to WCS server and parses the Capabilities request
         /// </summary>
         /// <param name="url">URL of wcs server</param>
         /// <param name="proxy">Proxy to use</param>
@@ -222,7 +222,7 @@ namespace SharpMap.Web.Wcs
             : this(url, proxy, timeOut, null, version) { }
 
         /// <summary>
-        /// Initalizes client to WCS server and parses the Capabilities request
+        /// Initializes client to WCS server and parses the Capabilities request
         /// </summary>
         /// <param name="url">URL of wcs server</param>
         /// <param name="proxy">Proxy to use</param>

@@ -40,7 +40,7 @@ namespace SharpMap.Rendering.Symbolizer
         /// <summary>
         /// Create a "zigzag" pattern, sort of like a rotated by 90 degree Z
         /// </summary>
-        /// <param name="x">The width of a step op the linstring axis.</param>
+        /// <param name="x">The width of a step op the linestring axis.</param>
         /// <param name="y">The offset left and right from the axis.</param>
         /// <returns>The pattern</returns>
         public static GraphicsPath GetZigZag(float x, float y)

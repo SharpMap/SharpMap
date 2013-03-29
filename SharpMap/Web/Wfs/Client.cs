@@ -174,14 +174,14 @@ namespace SharpMap.Web.Wfs
         public Client() { }
 
         /// <summary>
-        /// Initalizes WFS server and parses the Capabilities request
+        /// Initializes WFS server and parses the Capabilities request
         /// </summary>
         /// <param name="url">URL of wfs server</param>
         public Client(string url)
             : this(url, null, 10000, null, "") { }
 
         /// <summary>
-        /// This Initalizes WFS server and parses the Capabilities request
+        /// This Initializes WFS server and parses the Capabilities request
         /// </summary>
         /// <param name="url">URL of wfs server</param>
         /// <param name="proxy">Proxy to use</param>
@@ -189,7 +189,7 @@ namespace SharpMap.Web.Wfs
             : this(url, proxy, 10000, null, "") { }
 
         /// <summary>
-        /// This Initalizes WFS server and parses the Capabilities request
+        /// This Initializes WFS server and parses the Capabilities request
         /// </summary>
         /// <param name="url">URL of wfs server</param>
         /// <param name="proxy">Proxy to use</param>
@@ -198,7 +198,7 @@ namespace SharpMap.Web.Wfs
             : this(url, proxy, timeOut, null, "") { }
 
         /// <summary>
-        /// Initalizes WFS server and parses the Capabilities request
+        /// Initializes WFS server and parses the Capabilities request
         /// </summary>
         /// <param name="url">URL of wfs server</param>
         /// <param name="proxy">Proxy to use</param>
@@ -207,7 +207,7 @@ namespace SharpMap.Web.Wfs
             : this(url, proxy, 10000, credentials, "") { }
 
         /// <summary>
-        /// Initalizes WFS server and parses the Capabilities request
+        /// Initializes WFS server and parses the Capabilities request
         /// </summary>
         /// <param name="url">URL of wfs server</param>
         /// <param name="proxy">Proxy to use</param>
@@ -217,7 +217,7 @@ namespace SharpMap.Web.Wfs
             : this(url, proxy, timeOut, credentials, "") { }
 
         /// <summary>
-        /// Initalizes WFS server and parses the Capabilities request
+        /// Initializes WFS server and parses the Capabilities request
         /// </summary>
         /// <param name="url">URL of wfs server</param>
         /// <param name="proxy">Proxy to use</param>
@@ -227,7 +227,7 @@ namespace SharpMap.Web.Wfs
             : this(url, proxy, timeOut, null, version) { }
 
         /// <summary>
-        /// Initalizes WFS server and parses the Capabilities request
+        /// Initializes WFS server and parses the Capabilities request
         /// </summary>
         /// <param name="url">URL of wfs server</param>
         /// <param name="proxy">Proxy to use</param>

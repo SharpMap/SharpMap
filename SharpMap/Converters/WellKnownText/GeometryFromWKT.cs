@@ -314,7 +314,7 @@ namespace SharpMap.Converters.WellKnownText
         /// <returns>Returns a Polygon specified by the next token
         ///  in the stream</returns>
         ///  <remarks>
-        ///  ParseException is thown if the coordinates used to create the Polygon
+        ///  ParseException is thrown if the coordinates used to create the Polygon
         ///  shell and holes do not form closed linestrings, or if an unexpected
         ///  token is encountered.
         ///  </remarks>

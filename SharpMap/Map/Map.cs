@@ -1043,7 +1043,7 @@ namespace SharpMap
 
         /// <summary>
         /// Gets or sets the aspect-ratio of the pixel scales. A value less than 
-        /// 1 will make the map streach upwards, and larger than 1 will make it smaller.
+        /// 1 will make the map stretch upwards, and larger than 1 will make it smaller.
         /// </summary>
         /// <exception cref="ArgumentException">Throws an argument exception when value is 0 or less.</exception>
         public double PixelAspectRatio

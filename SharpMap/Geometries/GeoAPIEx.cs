@@ -204,7 +204,7 @@ namespace GeoAPI.Geometries
         }
 
         /// <summary>
-        /// Increases the size of the boundingbox by the givent amount in all directions
+        /// Increases the size of the boundingbox by the given amount in all directions
         /// </summary>
         /// <param name="self">The envelope to grow</param>
         /// <param name="amount">Amount to grow in all directions</param>
@@ -215,7 +215,7 @@ namespace GeoAPI.Geometries
         }
 
         /// <summary>
-        /// Increases the size of the boundingbox by the givent amount in horizontal and vertical directions
+        /// Increases the size of the boundingbox by the given amount in horizontal and vertical directions
         /// </summary>
         /// <param name="self">The envelope</param>
         /// <param name="amountInX">Amount to grow in horizontal direction</param>
@@ -230,7 +230,7 @@ namespace GeoAPI.Geometries
         /// Transforms a <see cref="IPolygon"/> to an array of <see cref="PointF"/>s
         /// </summary>
         /// <param name="self">The polygon</param>
-        /// <param name="map">The map that defindes the affine coordinate transformation.</param>
+        /// <param name="map">The map that defines the affine coordinate transformation.</param>
         /// <returns>An array of PointFs</returns>
         public static PointF[] TransformToImage(this IPolygon self, Map map)
         {

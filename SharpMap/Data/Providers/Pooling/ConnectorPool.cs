@@ -33,7 +33,7 @@ namespace SharpMap.Data.Providers.Pooling
         /// <summary>Unique static instance of the connector pool manager.</summary>
         internal static ConnectorPool ConnectorPoolManager = new ConnectorPool();
 
-        /// <summary>List of unused, pooled connectors avaliable to the next RequestConnector() call.</summary>
+        /// <summary>List of unused, pooled connectors available to the next RequestConnector() call.</summary>
         internal List<Connector> PooledConnectors;
 
         /// <summary>List of shared, in use connectors.</summary>

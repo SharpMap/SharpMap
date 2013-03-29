@@ -83,7 +83,7 @@ namespace SharpMap.Rendering.Symbolizer
         /// <summary>
         /// Method to perform symbolization
         /// </summary>
-        /// <param name="g">The grapics object to symbolize upon</param>
+        /// <param name="g">The graphics object to symbolize upon</param>
         /// <param name="map">The map</param>
         public override void Symbolize(Graphics g, Map map)
         {

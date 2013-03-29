@@ -54,7 +54,7 @@ namespace SharpMap.Data.Providers
     /// <summary>
     /// PostgreSQL / PostGIS dataprovider
     /// <para/>Uses NPGSQL for communicating with database.
-    /// <para/>Detects PostGIS version and uses ST_Intersects method for PG_Verions >= 1.3 and && (bbox comparison) for others)
+    /// <para/>Detects PostGIS version and uses ST_Intersects method for PG_Verions >= 1.3 and &amp;&amp; (bbox comparison) for others)
     /// </summary>
     /// <example>
     /// Adding a datasource to a layer:
