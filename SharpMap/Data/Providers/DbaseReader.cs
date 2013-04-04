@@ -279,7 +279,7 @@ namespace SharpMap.Data.Providers
             {
                 if (!IsOpen)
                     throw (new ApplicationException("An attempt was made to read from a closed DBF file"));
-                
+
                 if (_currentRecordOid == value)
                     return;
 
@@ -288,7 +288,6 @@ namespace SharpMap.Data.Providers
 
                 _dbfStream.Seek(_headerLength + value * _recordLength, 0);
                 _dbfStream.Read(_currentRecordBuffer, 0, _recordLength);
-
                 _currentRecordOid = value;
             }
         }
@@ -814,28 +813,6 @@ namespace SharpMap.Data.Providers
 
         internal object GetValue(uint oid, int colid)
         {
-            ////if (!_isOpen)
-            ////    throw (new ApplicationException("An attempt was made to read from a closed DBF file"));
-            //if (oid >= _numberOfRecords)
-            //    throw (new ArgumentException("Invalid DataRow requested at index " + oid.ToString(CultureInfo.InvariantCulture)));
-            //if (colid >= _dbaseColumns.Length || colid < 0)
-            //    throw ((new ArgumentException("Column index out of range")));
-
-            //if (oid != _currentRecordOid)
-            //{
-            //    using (var s = GetStream())
-            //    {
-            //        s.Seek(_headerLength + oid*_recordLength, 0);
-            //        s.Read((_currentRecordBuffer ?? (_currentRecordBuffer = new byte[_recordLength])), 0,
-            //                        _recordLength);
-            //    }
-            //    /*
-            //    for (var i = 0; i < colid; i++)
-            //        _dbfStream.Seek(_dbaseColumns[i].Length, SeekOrigin.Current);
-            //     */   
-
-            //    _currentRecordOid = oid;
-            //}
             CurrentRecordOid = oid;
             return ReadDbfValue(_dbaseColumns[colid]);
         }
@@ -892,28 +869,17 @@ namespace SharpMap.Data.Providers
         {
             if (RecordDeleted(oid))
                 return null;
-            /*
-            if (!_isOpen)
-                throw (new ApplicationException("An attempt was made to read from a closed DBF file"));
-            if (oid >= _NumberOfRecords)
-                throw (new ArgumentException("Invalid DataRow requested at index " + oid));
-            fs.Seek(_HeaderLength + oid*_RecordLength, 0);
-
-            if (br.ReadChar() == '*') //is record marked deleted?
-                return null;
-             */
 
             var dr = table.NewRow();
-            
+
             if (IncludeOid) dr["Oid"] = oid;
 
-            for (var i = 0; i < _dbaseColumns.Length; i++ )
+            for (var i = 0; i < _dbaseColumns.Length; i++)
             {
                 var dbf = _dbaseColumns[i];
                 dr[dbf.ColumnName] = GetValue(oid, i);
             }
             return dr;
-
         }
 
         private static readonly NumberFormatInfo Nfi = NumberFormatInfo.InvariantInfo;
@@ -1083,12 +1049,12 @@ namespace SharpMap.Data.Providers
         {
             object[] result;
             var offset = 0;
-            
+
             //Preprare result buffer
             if (IncludeOid)
             {
                 offset = 1;
-                result = new object[1+_dbaseColumns.Length];
+                result = new object[1 + _dbaseColumns.Length];
                 result[0] = rowid;
             }
             else
@@ -1102,6 +1068,7 @@ namespace SharpMap.Data.Providers
                 for (var i = 0; i < _dbaseColumns.Length; i++)
                     result[i + offset] = GetValue(rowid, i);
             }
+
             return result;
         }
     }

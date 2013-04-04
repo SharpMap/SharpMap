@@ -48,14 +48,11 @@ namespace SharpMap
             {
                 // We have to do this initialization with reflection due to the fact that NTS can reference an older version of GeoAPI and redirection 
                 // is not available at design time..
-                var geoApiAssembly = Assembly.Load("GeoAPI");
                 var ntsAssembly = Assembly.Load("NetTopologySuite");
-                var geoApiGeometryServices = geoApiAssembly.GetType("GeoAPI.GeometryServiceProvider");
-                var pi = geoApiGeometryServices.GetProperty("Instance");
-                if (pi.GetValue(null, null) == null)
+                if (GeoAPI.GeometryServiceProvider.Instance == null)
                 {
                     var ntsApiGeometryServices = ntsAssembly.GetType("NetTopologySuite.NtsGeometryServices");
-                    pi.SetValue(null, ntsApiGeometryServices.GetProperty("Instance").GetValue(null, null), null);
+                    GeoAPI.GeometryServiceProvider.Instance = ntsApiGeometryServices.GetProperty("Instance").GetValue(null, null) as GeoAPI.IGeometryServices;
                 }
             }
         }
