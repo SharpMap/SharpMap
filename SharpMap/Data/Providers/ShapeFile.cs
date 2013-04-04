@@ -711,19 +711,20 @@ namespace SharpMap.Data.Providers
             var dt = DbaseFile.NewTable;
             dt.BeginLoadData();
 
-			for (var i = 0; i < objectlist.Count; i++)
-			{
-                //var fdr = GetFeature(objectlist[i], dt);
-                //if ( fdr != null ) dt.AddRow(fdr);
-
-			    var fdr = (FeatureDataRow) dt.LoadDataRow(DbaseFile.GetValues(objectlist[i]), true);
-			    fdr.Geometry = ReadGeometry(objectlist[i]);
+            for (var i = 0; i < objectlist.Count; i++)
+            {
+                FeatureDataRow fdr = null;
+                lock (DbaseFile)
+                {
+                    fdr = (FeatureDataRow)dt.LoadDataRow(DbaseFile.GetValues(objectlist[i]), true);
+                }
+                fdr.Geometry = ReadGeometry(objectlist[i]);
 
                 //Test if the feature data row corresponds to the FilterDelegate
                 if (FilterDelegate != null && !FilterDelegate(fdr))
                     fdr.Delete();
 
-			}
+            }
             dt.EndLoadData();
             dt.AcceptChanges();
 
@@ -815,7 +816,11 @@ namespace SharpMap.Data.Providers
                     continue;
 
                 //Get the feature data row and assign the geometry
-		        var fdr = (FeatureDataRow) dt.LoadDataRow(DbaseFile.GetValues(oid), true);
+                FeatureDataRow fdr;
+                lock (DbaseFile)
+                {
+                    fdr = (FeatureDataRow)dt.LoadDataRow(DbaseFile.GetValues(oid), true);
+                }
 		        fdr.Geometry = testGeom;
 
                 //Test if the feature data row corresponds to the FilterDelegate
@@ -1408,122 +1413,128 @@ namespace SharpMap.Data.Providers
             if (CheckIfRecordIsDeleted)
             {
                 //Test if record is deleted
-                if (DbaseFile.RecordDeleted(oid)) return null;
+                lock (DbaseFile)
+                {
+                    if (DbaseFile.RecordDeleted(oid)) return null;
+                }
             }
 
-            _brShapeFile.BaseStream.Seek(_offsetOfRecord[oid] + 8, 0); //Skip record number and content length
-			var type = (ShapeType) _brShapeFile.ReadInt32(); //Shape type
-			if (type == ShapeType.Null)
-				return null;
-			
-            if (_shapeType == ShapeType.Point || _shapeType == ShapeType.PointM || _shapeType == ShapeType.PointZ)
-			{
-			    return Factory.CreatePoint(new Coordinate(_brShapeFile.ReadDouble(), _brShapeFile.ReadDouble()));
-			}
-			
-            if (_shapeType == ShapeType.Multipoint || _shapeType == ShapeType.MultiPointM ||
-				_shapeType == ShapeType.MultiPointZ)
-			{
-				_brShapeFile.BaseStream.Seek(32 + _brShapeFile.BaseStream.Position, 0); //skip min/max box
-				var nPoints = _brShapeFile.ReadInt32(); // get the number of points
-				if (nPoints == 0)
-					return null;
-			    var feature = new Coordinate[nPoints];
-                for (var i = 0; i < nPoints; i++)
-					feature[i] = new Coordinate(_brShapeFile.ReadDouble(), _brShapeFile.ReadDouble());
+            lock (_brShapeFile)
+            {
+                _brShapeFile.BaseStream.Seek(_offsetOfRecord[oid] + 8, 0); //Skip record number and content length
+                var type = (ShapeType)_brShapeFile.ReadInt32(); //Shape type
+                if (type == ShapeType.Null)
+                    return null;
 
-                return Factory.CreateMultiPoint(feature);
-			}
-			
-            if (_shapeType == ShapeType.PolyLine || _shapeType == ShapeType.Polygon ||
-				_shapeType == ShapeType.PolyLineM || _shapeType == ShapeType.PolygonM ||
-				_shapeType == ShapeType.PolyLineZ || _shapeType == ShapeType.PolygonZ)
-			{
-				_brShapeFile.BaseStream.Seek(32 + _brShapeFile.BaseStream.Position, 0); //skip min/max box
+                if (_shapeType == ShapeType.Point || _shapeType == ShapeType.PointM || _shapeType == ShapeType.PointZ)
+                {
+                    return Factory.CreatePoint(new Coordinate(_brShapeFile.ReadDouble(), _brShapeFile.ReadDouble()));
+                }
 
-				var nParts = _brShapeFile.ReadInt32(); // get number of parts (segments)
-				if (nParts == 0 || nParts < 0)
-					return null;
-				
-                var nPoints = _brShapeFile.ReadInt32(); // get number of points
-                var segments = new int[nParts + 1];
-				//Read in the segment indexes
-				for (var b = 0; b < nParts; b++)
-					segments[b] = _brShapeFile.ReadInt32();
-				//add end point
-				segments[nParts] = nPoints;
+                if (_shapeType == ShapeType.Multipoint || _shapeType == ShapeType.MultiPointM ||
+                    _shapeType == ShapeType.MultiPointZ)
+                {
+                    _brShapeFile.BaseStream.Seek(32 + _brShapeFile.BaseStream.Position, 0); //skip min/max box
+                    var nPoints = _brShapeFile.ReadInt32(); // get the number of points
+                    if (nPoints == 0)
+                        return null;
+                    var feature = new Coordinate[nPoints];
+                    for (var i = 0; i < nPoints; i++)
+                        feature[i] = new Coordinate(_brShapeFile.ReadDouble(), _brShapeFile.ReadDouble());
 
-				if ((int) _shapeType%10 == 3)
-				{
-					var lineStrings = new ILineString[nParts];
-					for (var lineID = 0; lineID < nParts; lineID++)
-					{
-                        var line = new Coordinate[segments[lineID + 1] - segments[lineID]];
-                        var offset = segments[lineID];
-                        for (var i = segments[lineID]; i < segments[lineID + 1]; i++)
-                            line[i - offset] = new Coordinate(_brShapeFile.ReadDouble(), _brShapeFile.ReadDouble());
-						lineStrings[lineID] = Factory.CreateLineString(line);
-					}
-					
-                    if (lineStrings.Length == 1)
-                        return lineStrings[0];
-					
-                    return Factory.CreateMultiLineString(lineStrings);
-				}
+                    return Factory.CreateMultiPoint(feature);
+                }
 
-			    //First read all the rings
-			    var rings = new ILinearRing[nParts];
-			    for (var ringID = 0; ringID < nParts; ringID++)
-			    {
-			        var ring = new Coordinate[segments[ringID + 1] - segments[ringID]];
-			        var offset = segments[ringID];
-                    for (var i = segments[ringID]; i < segments[ringID+1]; i++)
-                        ring[i - offset] = new Coordinate(_brShapeFile.ReadDouble(), _brShapeFile.ReadDouble());
-			        rings[ringID] = Factory.CreateLinearRing(ring);
-			    }
+                if (_shapeType == ShapeType.PolyLine || _shapeType == ShapeType.Polygon ||
+                    _shapeType == ShapeType.PolyLineM || _shapeType == ShapeType.PolygonM ||
+                    _shapeType == ShapeType.PolyLineZ || _shapeType == ShapeType.PolygonZ)
+                {
+                    _brShapeFile.BaseStream.Seek(32 + _brShapeFile.BaseStream.Position, 0); //skip min/max box
 
-			    ILinearRing exteriorRing;
-			    var isCounterClockWise = new bool[rings.Length];
-			    var polygonCount = 0;
-			    for (var i = 0; i < rings.Length; i++)
-			    {
-			        isCounterClockWise[i] = rings[i].IsCCW();
-			        if (!isCounterClockWise[i])
-			            polygonCount++;
-			    }
-			    if (polygonCount == 1) //We only have one polygon
-			    {
-			        exteriorRing = rings[0];
-			        ILinearRing[] interiorRings = null;
-                    if (rings.Length > 1)
-			        {
-			            interiorRings = new ILinearRing[rings.Length - 1];
-                        Array.Copy(rings, 1, interiorRings, 0, interiorRings.Length);
+                    var nParts = _brShapeFile.ReadInt32(); // get number of parts (segments)
+                    if (nParts == 0 || nParts < 0)
+                        return null;
+
+                    var nPoints = _brShapeFile.ReadInt32(); // get number of points
+                    var segments = new int[nParts + 1];
+                    //Read in the segment indexes
+                    for (var b = 0; b < nParts; b++)
+                        segments[b] = _brShapeFile.ReadInt32();
+                    //add end point
+                    segments[nParts] = nPoints;
+
+                    if ((int)_shapeType % 10 == 3)
+                    {
+                        var lineStrings = new ILineString[nParts];
+                        for (var lineID = 0; lineID < nParts; lineID++)
+                        {
+                            var line = new Coordinate[segments[lineID + 1] - segments[lineID]];
+                            var offset = segments[lineID];
+                            for (var i = segments[lineID]; i < segments[lineID + 1]; i++)
+                                line[i - offset] = new Coordinate(_brShapeFile.ReadDouble(), _brShapeFile.ReadDouble());
+                            lineStrings[lineID] = Factory.CreateLineString(line);
+                        }
+
+                        if (lineStrings.Length == 1)
+                            return lineStrings[0];
+
+                        return Factory.CreateMultiLineString(lineStrings);
                     }
-			        return Factory.CreatePolygon(exteriorRing, interiorRings);
-			    }
 
-			    var polygons = new List<IPolygon>();
-			    exteriorRing = rings[0];
-			    var holes = new List<ILinearRing>();
+                    //First read all the rings
+                    var rings = new ILinearRing[nParts];
+                    for (var ringID = 0; ringID < nParts; ringID++)
+                    {
+                        var ring = new Coordinate[segments[ringID + 1] - segments[ringID]];
+                        var offset = segments[ringID];
+                        for (var i = segments[ringID]; i < segments[ringID + 1]; i++)
+                            ring[i - offset] = new Coordinate(_brShapeFile.ReadDouble(), _brShapeFile.ReadDouble());
+                        rings[ringID] = Factory.CreateLinearRing(ring);
+                    }
 
-			    for (var i = 1; i < rings.Length; i++)
-			    {
-			        if (!isCounterClockWise[i])
-			        {
-                        polygons.Add(Factory.CreatePolygon(exteriorRing, holes.ToArray()));
-                        holes.Clear();
-			            exteriorRing = rings[i];
-			        }
-			        else
-			            holes.Add(rings[i]);
-			    }
-                polygons.Add(Factory.CreatePolygon(exteriorRing, holes.ToArray()));
-                
-                return Factory.CreateMultiPolygon(polygons.ToArray());
-			}
-			else
-				throw (new ApplicationException("Shapefile type " + _shapeType.ToString() + " not supported"));
+                    ILinearRing exteriorRing;
+                    var isCounterClockWise = new bool[rings.Length];
+                    var polygonCount = 0;
+                    for (var i = 0; i < rings.Length; i++)
+                    {
+                        isCounterClockWise[i] = rings[i].IsCCW();
+                        if (!isCounterClockWise[i])
+                            polygonCount++;
+                    }
+                    if (polygonCount == 1) //We only have one polygon
+                    {
+                        exteriorRing = rings[0];
+                        ILinearRing[] interiorRings = null;
+                        if (rings.Length > 1)
+                        {
+                            interiorRings = new ILinearRing[rings.Length - 1];
+                            Array.Copy(rings, 1, interiorRings, 0, interiorRings.Length);
+                        }
+                        return Factory.CreatePolygon(exteriorRing, interiorRings);
+                    }
+
+                    var polygons = new List<IPolygon>();
+                    exteriorRing = rings[0];
+                    var holes = new List<ILinearRing>();
+
+                    for (var i = 1; i < rings.Length; i++)
+                    {
+                        if (!isCounterClockWise[i])
+                        {
+                            polygons.Add(Factory.CreatePolygon(exteriorRing, holes.ToArray()));
+                            holes.Clear();
+                            exteriorRing = rings[i];
+                        }
+                        else
+                            holes.Add(rings[i]);
+                    }
+                    polygons.Add(Factory.CreatePolygon(exteriorRing, holes.ToArray()));
+
+                    return Factory.CreateMultiPolygon(polygons.ToArray());
+                }
+                else
+                    throw (new ApplicationException("Shapefile type " + _shapeType.ToString() + " not supported"));
+            }
 		}
 
 		/// <summary>
@@ -1550,7 +1561,10 @@ namespace SharpMap.Data.Providers
 					_cacheDataTable.TryGetValue(rowId, out fdr);
 					if (fdr == null)
 					{
-						fdr = DbaseFile.GetFeature(rowId, dt);
+                        lock (DbaseFile)
+                        {
+                            fdr = DbaseFile.GetFeature(rowId, dt);
+                        }
 						fdr.Geometry = ReadGeometry(rowId);
 						_cacheDataTable.Add(rowId, fdr);
 					}
@@ -1566,7 +1580,10 @@ namespace SharpMap.Data.Providers
 					return fdr;
 				}
 
-			    fdr = DbaseFile.GetFeature(rowId, dt);
+                lock (DbaseFile)
+                {
+                    fdr = DbaseFile.GetFeature(rowId, dt);
+                }
                 
                 // GetFeature returns null if the record has deleted flag
                 if (fdr == null) 
