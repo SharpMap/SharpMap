@@ -454,14 +454,14 @@ namespace SharpMap.Web.Wms
         public Client() {}
 
         /// <summary>
-        /// Initalizes WMS server and parses the Capabilities request
+        /// Initializes WMS server and parses the Capabilities request
         /// </summary>
         /// <param name="url">URL of wms server</param>
         public Client(string url) 
             : this(url, null, 10000, null, "") { }
 
         /// <summary>
-        /// This Initalizes WMS server and parses the Capabilities request
+        /// This Initializes WMS server and parses the Capabilities request
         /// </summary>
         /// <param name="url">URL of wms server</param>
         /// <param name="proxy">Proxy to use</param>
@@ -469,7 +469,7 @@ namespace SharpMap.Web.Wms
             : this(url, proxy, 10000, null, "") { }
 
         /// <summary>
-        /// This Initalizes WMS server and parses the Capabilities request
+        /// This Initializes WMS server and parses the Capabilities request
         /// </summary>
         /// <param name="url">URL of wms server</param>
         /// <param name="proxy">Proxy to use</param>
@@ -478,7 +478,7 @@ namespace SharpMap.Web.Wms
             : this(url, proxy, timeOut, null, "") { }
 
         /// <summary>
-        /// Initalizes WMS server and parses the Capabilities request
+        /// Initializes WMS server and parses the Capabilities request
         /// </summary>
         /// <param name="url">URL of wms server</param>
         /// <param name="proxy">Proxy to use</param>
@@ -487,7 +487,7 @@ namespace SharpMap.Web.Wms
             : this(url, proxy, 10000, credentials, "") { }
 
         /// <summary>
-        /// Initalizes WMS server and parses the Capabilities request
+        /// Initializes WMS server and parses the Capabilities request
         /// </summary>
         /// <param name="url">URL of wms server</param>
         /// <param name="proxy">Proxy to use</param>
@@ -497,7 +497,7 @@ namespace SharpMap.Web.Wms
             : this(url, proxy, timeOut, credentials, "") { }
 
         /// <summary>
-        /// Initalizes WMS server and parses the Capabilities request
+        /// Initializes WMS server and parses the Capabilities request
         /// </summary>
         /// <param name="url">URL of wms server</param>
         /// <param name="proxy">Proxy to use</param>
@@ -507,7 +507,7 @@ namespace SharpMap.Web.Wms
             : this(url, proxy, timeOut, null, version) { }
 
         /// <summary>
-        /// Initalizes WMS server and parses the Capabilities request
+        /// Initializes WMS server and parses the Capabilities request
         /// </summary>
         /// <param name="url">URL of wms server</param>
         /// <param name="proxy">Proxy to use</param>

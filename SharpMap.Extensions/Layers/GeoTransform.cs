@@ -41,7 +41,7 @@ namespace SharpMap.Layers
         /// returns value of the transform array
         /// </summary>
         /// <param name="i">place in array</param>
-        /// <returns>value depedent on i</returns>
+        /// <returns>value dependent on i</returns>
         public double this[int i]
         {
             get { return Transform[i]; }

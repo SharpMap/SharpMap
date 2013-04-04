@@ -135,7 +135,7 @@ namespace SharpMap.Web.Wcs
         }
 
         /// <summary>
-        /// Gets the version of the WMS server (ex. "1.3.0")
+        /// Gets the version of the WCS server (ex. "1.0.0")
         /// </summary>
         public string Version
         {
@@ -169,52 +169,52 @@ namespace SharpMap.Web.Wcs
         public Client() { }
 
         /// <summary>
-        /// Initalizes client to WCS server and parses the Capabilities request
+        /// Initializes client to WCS server and parses the Capabilities request
         /// </summary>
-        /// <param name="url">URL of wms server</param>
+        /// <param name="url">URL of wcs server</param>
         public Client(string url)
             : this(url, null, 10000, null, "") { }
 
         /// <summary>
-        /// Initalizes client to WCS server and parses the Capabilities request
+        /// Initializes client to WCS server and parses the Capabilities request
         /// </summary>
-        /// <param name="url">URL of wms server</param>
+        /// <param name="url">URL of wcs server</param>
         /// <param name="proxy">Proxy to use</param>
         public Client(string url, IWebProxy proxy)
             : this(url, proxy, 10000, null, "") { }
 
         /// <summary>
-        /// Initalizes client to WCS server and parses the Capabilities request
+        /// Initializes client to WCS server and parses the Capabilities request
         /// </summary>
-        /// <param name="url">URL of wms server</param>
+        /// <param name="url">URL of wcs server</param>
         /// <param name="proxy">Proxy to use</param>
         /// <param name="timeOut"></param>
         public Client(string url, IWebProxy proxy, int timeOut)
             : this(url, proxy, timeOut, null, "") { }
 
         /// <summary>
-        /// Initalizes client to WCS server and parses the Capabilities request
+        /// Initializes client to WCS server and parses the Capabilities request
         /// </summary>
-        /// <param name="url">URL of wms server</param>
+        /// <param name="url">URL of wcs server</param>
         /// <param name="proxy">Proxy to use</param>
         /// <param name="credentials">Credentials for authenticating against remote WCS-server</param>
         public Client(string url, IWebProxy proxy, ICredentials credentials)
             : this(url, proxy, 10000, credentials, "") { }
 
         /// <summary>
-        /// Initalizes client to WCS server and parses the Capabilities request
+        /// Initializes client to WCS server and parses the Capabilities request
         /// </summary>
-        /// <param name="url">URL of wms server</param>
+        /// <param name="url">URL of wcs server</param>
         /// <param name="proxy">Proxy to use</param>
         /// <param name="timeOut">Web request timeout</param>
-        /// <param name="credentials">Credentials for authenticating against remote WMS-server</param>
+        /// <param name="credentials">Credentials for authenticating against remote WCS-server</param>
         public Client(string url, IWebProxy proxy, int timeOut, ICredentials credentials)
             : this(url, proxy, timeOut, credentials, "") { }
 
         /// <summary>
-        /// Initalizes client to WCS server and parses the Capabilities request
+        /// Initializes client to WCS server and parses the Capabilities request
         /// </summary>
-        /// <param name="url">URL of wms server</param>
+        /// <param name="url">URL of wcs server</param>
         /// <param name="proxy">Proxy to use</param>
         /// <param name="timeOut">Web request timeout</param>
         /// <param name="version"></param>
@@ -222,9 +222,9 @@ namespace SharpMap.Web.Wcs
             : this(url, proxy, timeOut, null, version) { }
 
         /// <summary>
-        /// Initalizes client to WCS server and parses the Capabilities request
+        /// Initializes client to WCS server and parses the Capabilities request
         /// </summary>
-        /// <param name="url">URL of wms server</param>
+        /// <param name="url">URL of wcs server</param>
         /// <param name="proxy">Proxy to use</param>
         /// <param name="timeOut">Web request timeout</param>
         /// <param name="version"></param>
@@ -312,7 +312,7 @@ namespace SharpMap.Web.Wcs
         }
 
         /// <summary>
-        /// Downloads servicedescription from WMS service  
+        /// Downloads servicedescription from WCS service  
         /// </summary>
         /// <returns>XmlDocument from Url. Null if Url is empty or inproper XmlDocument</returns>
         public XmlDocument GetRemoteXml()

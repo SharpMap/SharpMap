@@ -549,7 +549,7 @@ namespace SharpMap.Web.Wms
         //    public string Title;
 
         //    /// <summary>
-        //    /// Public url to access the servie in case service is hosted behind firewall
+        //    /// Public url to access the service in case service is hosted behind firewall
         //    /// </summary>
         //    public string PublicAccessURL;
 

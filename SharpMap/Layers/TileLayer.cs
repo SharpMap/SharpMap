@@ -342,7 +342,7 @@ namespace SharpMap.Layers
         }
 
         /// <summary>
-        /// Functon to get a tile image from the <see cref="FileCache"/>.
+        /// Function to get a tile image from the <see cref="FileCache"/>.
         /// </summary>
         /// <param name="info">The tile info</param>
         /// <returns>The tile-image, if already cached</returns>

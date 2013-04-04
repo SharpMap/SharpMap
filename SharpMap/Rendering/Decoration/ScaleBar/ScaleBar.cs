@@ -443,7 +443,7 @@ namespace SharpMap.Rendering.Decoration.ScaleBar
         /// Renders the verbal text above the scale bar.
         /// </summary>
         /// <param name="g">The graphics object</param>
-        /// <param name="x">x-ordinate of the refeernce point for the text, the center of the bar</param>
+        /// <param name="x">x-ordinate of the reference point for the text, the center of the bar</param>
         /// <param name="y">y-ordinate of the reference point for the text, the top or the bar</param>
         private void RenderVerbalScale(Graphics g, int x, int y)
         {

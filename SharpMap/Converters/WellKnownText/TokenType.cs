@@ -65,7 +65,7 @@ namespace SharpMap.Converters.WellKnownText
         /// </summary>
         Eof,
         /// <summary>
-        /// Indictaes that the token is white space (space, tab, newline).
+        /// Indicates that the token is white space (space, tab, newline).
         /// </summary>
         Whitespace,
         /// <summary>

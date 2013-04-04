@@ -56,7 +56,7 @@ namespace SharpMap.Data.Providers
     ///		map.Layers.Add(layRivers);
     /// }
     /// //Define geoprocessing delegate that buffers all geometries with a distance of 0.5 mapunits
-    /// public static void NtsOperation(List&tl;NetTopologySuite.Features.Feature&gt> geoms)
+    /// public static void NtsOperation(List&lt;NetTopologySuite.Features.Feature&gt; geoms)
     /// {
     ///		foreach (GisSharpBlog.NetTopologySuite.Features.Feature f in geoms)
     /// 		f.Geometry = f.Geometry.Buffer(0.5);

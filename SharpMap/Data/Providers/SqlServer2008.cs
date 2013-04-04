@@ -271,12 +271,12 @@ namespace SharpMap.Data.Providers
 
         private int _maxDop = 0;
         /// <summary>
-        /// If set, sends an Option MaxDop to the SQL-Server to override the Paralell Execution of indexes
+        /// If set, sends an Option MaxDop to the SQL-Server to override the Parallel Execution of indexes
         /// This can be used if Spatial indexes are not used on SQL-Servers with many processors.
         /// 
         /// MaxDop = 0 // Default behaviour
-        /// MaxDop = 1 // Suppress Paralell execution of Queryplan
-        /// MaxDop = [2..n] // Use X cores in in excution plan
+        /// MaxDop = 1 // Suppress Parallel execution of Queryplan
+        /// MaxDop = [2..n] // Use X cores in in execution plan
         /// </summary>
         public int MaxDop
         {

@@ -24,7 +24,7 @@ namespace SharpMap.Data.Providers
         //}
 
         /// <summary>
-        /// Gets or sets the name of the colum to get from the table
+        /// Gets or sets the name of the column to get from the table
         /// </summary>
         public string Column { get; set; }
 

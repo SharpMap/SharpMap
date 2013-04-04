@@ -168,6 +168,9 @@ namespace SharpMap.Layers
             return null;
         }
 
+        /// <summary>
+        /// Removes all layers from the collection.
+        /// </summary>
         protected override void ClearItems()
         {
             foreach (var layer in Items)

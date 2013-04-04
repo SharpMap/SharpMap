@@ -55,7 +55,7 @@ namespace SharpMap.Converters.WellKnownText
         /// <summary>
         /// Initializes a new instance of the WktStreamTokenizer class.
         /// </summary>
-        /// <remarks>The WktStreamTokenizer class ais in reading WKT streams.</remarks>
+        /// <remarks>The WktStreamTokenizer class aids in reading WKT streams.</remarks>
         /// <param name="reader">A TextReader that contains </param>
         public WktStreamTokenizer(TextReader reader) : base(reader, true)
         {

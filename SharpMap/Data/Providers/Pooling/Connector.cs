@@ -58,7 +58,7 @@ namespace SharpMap.Data.Providers.Pooling
         internal bool Pooled;
 
         /// <summary>
-        /// Construcor, initializes the Connector object.
+        /// Constructor, initializes the Connector object.
         /// </summary>
         internal Connector(IProvider provider, bool Shared)
         {

@@ -50,7 +50,7 @@ namespace SharpMap
                 // is not available at design time..
                 var geoApiAssembly = Assembly.Load("GeoAPI");
                 var ntsAssembly = Assembly.Load("NetTopologySuite");
-                var geoApiGeometryServices= geoApiAssembly.GetType("GeoAPI.GeometryServiceProvider");
+                var geoApiGeometryServices = geoApiAssembly.GetType("GeoAPI.GeometryServiceProvider");
                 var pi = geoApiGeometryServices.GetProperty("Instance");
                 if (pi.GetValue(null, null) == null)
                 {
@@ -1043,7 +1043,7 @@ namespace SharpMap
 
         /// <summary>
         /// Gets or sets the aspect-ratio of the pixel scales. A value less than 
-        /// 1 will make the map streach upwards, and larger than 1 will make it smaller.
+        /// 1 will make the map stretch upwards, and larger than 1 will make it smaller.
         /// </summary>
         /// <exception cref="ArgumentException">Throws an argument exception when value is 0 or less.</exception>
         public double PixelAspectRatio
