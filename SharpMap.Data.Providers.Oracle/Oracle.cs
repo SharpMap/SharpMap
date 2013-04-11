@@ -64,7 +64,7 @@ namespace SharpMap.Data.Providers
         /// <param name="tablename">The name of data table</param>
         /// <param name="geometryColumnName">The name of geometry column</param>
         /// <param name="oidColumnName">The name of column with unique identifier</param>
-        public Oracle(string connectionString, string tablename, string geometryColumnName, string oidColumnName)
+        public OracleProvider(string connectionString, string tablename, string geometryColumnName, string oidColumnName)
             : base(-2)
         {
             ConnectionString = connectionString;
@@ -82,8 +82,8 @@ namespace SharpMap.Data.Providers
         /// <param name="tablename">The name of data table</param>
         /// <param name="geometryColumnName">The name of geometry column</param>
         /// <param name="oidColumnName">The name of column with unique identifier</param>
-        public Oracle(string username, string password, string datasource, string tablename, string geometryColumnName,
-                      string oidColumnName)
+        public OracleProvider(string username, string password, string datasource, string tablename, string geometryColumnName,
+                              string oidColumnName)
             : this(
                 "User Id=" + username + ";Password=" + password + ";Data Source=" + datasource, tablename,
                 geometryColumnName, oidColumnName)
@@ -97,7 +97,7 @@ namespace SharpMap.Data.Providers
         /// <param name="connectionString">The connection string</param>
         /// <param name="tablename">The name of data table</param>
         /// <param name="oidColumnName">The name of column with unique identifier</param>
-        public Oracle(string connectionString, string tablename, string oidColumnName)
+        public OracleProvider(string connectionString, string tablename, string oidColumnName)
             : this(connectionString, tablename, string.Empty, oidColumnName)
         {
             GeometryColumn = GetGeometryColumn();
