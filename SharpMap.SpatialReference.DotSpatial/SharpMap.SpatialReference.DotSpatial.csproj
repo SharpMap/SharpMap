@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{EFB576E1-56FC-47DB-AC7E-683A535434BE}</ProjectGuid>
+    <ProjectGuid>{D1F4460C-B317-4795-9894-4C95DB944DCB}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>GeoAPI</RootNamespace>
-    <AssemblyName>GeoAPI.Extensions</AssemblyName>
+    <RootNamespace>SharpMap.SpatialReference</RootNamespace>
+    <AssemblyName>SharpMap.SpatialReference.DotSpatial</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
@@ -32,6 +32,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="DotSpatial.Projections">
+      <HintPath>..\packages\DotSpatial.Projections.1.2\lib\net40-Client\DotSpatial.Projections.dll</HintPath>
+    </Reference>
+    <Reference Include="DotSpatial.Projections.Forms">
+      <HintPath>..\packages\DotSpatial.Projections.1.2\lib\net40-Client\DotSpatial.Projections.Forms.dll</HintPath>
+    </Reference>
     <Reference Include="GeoAPI">
       <HintPath>..\packages\GeoAPI.1.7.1\lib\net40-client\GeoAPI.dll</HintPath>
     </Reference>
@@ -44,18 +50,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="SpatialReference\IReprojector.cs" />
-    <Compile Include="SpatialReference\ISpatialReference.cs" />
-    <Compile Include="SpatialReference\SpatialReferenceDefinitionType.cs" />
-    <Compile Include="Utilities\ThreadSafeStore.cs" />
-    <Content Include="Beware.txt" />
-    <Compile Include="Features\IFeature.cs" />
-    <Compile Include="Features\IFeatureFactory.cs" />
-    <Compile Include="Features\IFeatureSet.cs" />
-    <Compile Include="Features\IUnique.cs" />
+    <Compile Include="DotSpatialReprojector.cs" />
+    <Compile Include="DotSpatialSpatialReference.cs" />
+    <Compile Include="DotSpatialSpatialReferenceFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\GeoAPI.Extensions\GeoAPI.Extensions.csproj">
+      <Project>{efb576e1-56fc-47db-ac7e-683a535434be}</Project>
+      <Name>GeoAPI.Extensions</Name>
+    </ProjectReference>
+  </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
