@@ -4,11 +4,7 @@ using GeoAPI.Geometries;
 
 namespace GeoAPI.SpatialReference
 {
-    /// <summary>
-    /// Interface for objects that can reproject from one <see cref="ISpatialReference"/> 
-    /// to another <see cref="ISpatialReference"/>
-    /// </summary>
-    public interface IReprojector
+    public interface IReprojectorCore
     {
         /// <summary>
         /// Function to reproject a single coordinate
@@ -42,7 +38,14 @@ namespace GeoAPI.SpatialReference
         /// A <see cref="ICoordinateSequence"/> that represents <paramref name="sequence"/> in <paramref name="to"/> <see cref="ISpatialReference"/>.
         /// </returns>
         ICoordinateSequence Reproject(ICoordinateSequence sequence, ISpatialReference from, ISpatialReference to);
+    }
 
+    /// <summary>
+    /// Interface for objects that can reproject from one <see cref="ISpatialReference"/> 
+    /// to another <see cref="ISpatialReference"/>
+    /// </summary>
+    public interface IReprojector : IReprojectorCore
+    {
         /// <summary>
         /// Function to reproject an <see cref="IGeometry"/>
         /// </summary>

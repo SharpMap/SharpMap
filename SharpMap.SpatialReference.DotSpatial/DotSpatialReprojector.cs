@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Globalization;
-using DotSpatial.Projections;
-using GeoAPI.Features;
+﻿using DotSpatial.Projections;
 using GeoAPI.Geometries;
 using GeoAPI.SpatialReference;
 using GeoAPI.Utilities;
@@ -11,15 +8,10 @@ namespace SharpMap.SpatialReference
     /// <summary>
     /// Implementation of a <see cref="IReprojector"/>" that uses <see href="http://dotspatial.codeplex.com"/>'s reprojection functionality
     /// </summary>
-    public class DotSpatialReprojector : IReprojector
+    public class DotSpatialReprojector : IReprojectorCore
     {
-        private static volatile int _newId = 1000000;
-
         private static readonly ThreadSafeStore<ISpatialReference, ProjectionInfo> Infos = 
             new ThreadSafeStore<ISpatialReference, ProjectionInfo>(CreateProjectionInfo);
-        
-        private readonly ThreadSafeStore<ISpatialReference, IGeometryFactory> _factories = 
-            new ThreadSafeStore<ISpatialReference, IGeometryFactory>(CreateGeometryFactory);
 
         private static ProjectionInfo GetProjectionInfo(ISpatialReference spatialReference)
         {
@@ -29,29 +21,6 @@ namespace SharpMap.SpatialReference
         private static ProjectionInfo CreateProjectionInfo(ISpatialReference spatialReference)
         {
             return ProjectionInfo.FromProj4String(spatialReference.Definition);
-        }
-
-        private IGeometryFactory GetFactory(ISpatialReference spatialReference)
-        {
-            return _factories.Get(spatialReference);
-        }
-
-
-        private static IGeometryFactory CreateGeometryFactory(ISpatialReference spatialReference)
-        {
-            var split = spatialReference.Oid.Split(new [] {':'});
-            int srid;
-            if (split.Length < 2)
-            {
-                srid = ++_newId;
-            }
-            else
-            {
-                if (!(int.TryParse(split[1], NumberStyles.Integer, NumberFormatInfo.InvariantInfo, out srid)))
-                    srid = ++_newId;
-            }
-
-            return GeoAPI.GeometryServiceProvider.Instance.CreateGeometryFactory(srid);
         }
 
         public Coordinate Reproject(Coordinate coordinate, ISpatialReference @from, ISpatialReference to)
@@ -79,72 +48,6 @@ namespace SharpMap.SpatialReference
         }
 
         protected ICoordinateSequenceFactory DefaultSequenceFactory { get; private set; }
-
-        public IGeometry Reproject(IGeometry geometry, ISpatialReference @from, ISpatialReference to)
-        {
-            var factory = GetFactory(to);
-
-            switch (geometry.OgcGeometryType)
-            {
-                case OgcGeometryType.Point:
-                    return ReprojectPoint(factory, (IPoint)geometry, @from, to);
-
-                case OgcGeometryType.LineString:
-                    return ReprojectLineString(factory, (ILineString)geometry, @from, to);
-
-                case OgcGeometryType.Polygon:
-                    return ReprojectPolygon(factory, (IPolygon)geometry, @from, to);
-
-                default:
-                    var lst = new List<IGeometry>(geometry.NumGeometries);
-                    for (var i = 0; i < geometry.NumGeometries; i++)
-                    {
-                        lst.Add(Reproject(geometry.GetGeometryN(i), from, to));
-                    }
-                    return factory.BuildGeometry(lst);
-            }
-        }
-
-        private IPoint ReprojectPoint(IGeometryFactory factory, IPoint point, ISpatialReference @from,
-                                      ISpatialReference to)
-        {
-            return factory.CreatePoint(Reproject(point.CoordinateSequence, from, to));
-        }
-
-        private ILineString ReprojectLineString(IGeometryFactory factory, ILineString line, ISpatialReference @from,
-                                                  ISpatialReference to, bool lineString = true)
-        {
-            return lineString
-                       ? factory.CreateLineString(Reproject(line.CoordinateSequence, from, to))
-                       : factory.CreateLinearRing(Reproject(line.CoordinateSequence, from, to));
-        }
-
-        private IPolygon ReprojectPolygon(IGeometryFactory factory, IPolygon polygon, ISpatialReference @from,
-                                                 ISpatialReference to)
-        {
-            var exterior = (ILinearRing)ReprojectLineString(factory, polygon.ExteriorRing, from, to, false);
-            var interior = new ILinearRing[polygon.NumInteriorRings];
-            for (var i = 0; i < polygon.NumInteriorRings; i++)
-            {
-                interior[i] = (ILinearRing)ReprojectLineString(factory, polygon.GetInteriorRingN(i), from, to, false);
-            }
-
-            return factory.CreatePolygon(exterior, interior);
-        }
-
-        public IFeature Reproject(IFeature feature, ISpatialReference @from, ISpatialReference to)
-        {
-            feature.Geometry = Reproject(feature.Geometry, @from, to);
-            return feature;
-        }
-
-        public IEnumerable<IFeature> Reproject(IEnumerable<IFeature> features, ISpatialReference @from, ISpatialReference to)
-        {
-            foreach (var feature in features)
-            {
-                yield return Reproject(feature, @from, @to);
-            }
-        }
 
         #region Static helper methods and functions
         
