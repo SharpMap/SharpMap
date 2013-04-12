@@ -1,4 +1,5 @@
-﻿using DotSpatial.Projections;
+﻿using System;
+using DotSpatial.Projections;
 using GeoAPI.Geometries;
 using GeoAPI.SpatialReference;
 using GeoAPI.Utilities;
@@ -20,7 +21,27 @@ namespace SharpMap.SpatialReference
 
         private static ProjectionInfo CreateProjectionInfo(ISpatialReference spatialReference)
         {
-            return ProjectionInfo.FromProj4String(spatialReference.Definition);
+            var pisr = spatialReference as DotSpatialSpatialReference;
+            if (pisr != null && pisr.ProjectionInfo != null)
+                return pisr.ProjectionInfo;
+
+            switch (spatialReference.DefinitionType)
+            {
+                case SpatialReferenceDefinitionType.Proj4:
+                    return ProjectionInfo.FromProj4String(spatialReference.Definition);
+                
+                case SpatialReferenceDefinitionType.AuthorityCode:
+                    var ac = spatialReference.Definition.Split(new [] {':'});
+                    var srid = int.Parse(ac[1]);
+                    return ProjectionInfo.FromEpsgCode(srid);
+
+                case SpatialReferenceDefinitionType.WellKnownText:
+                    return ProjectionInfo.FromEsriString(spatialReference.Definition);
+                
+                default:
+                    throw new NotSupportedException();
+
+            }
         }
 
         public Coordinate Reproject(Coordinate coordinate, ISpatialReference @from, ISpatialReference to)

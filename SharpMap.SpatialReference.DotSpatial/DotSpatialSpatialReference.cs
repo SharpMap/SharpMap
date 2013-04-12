@@ -4,7 +4,7 @@ using GeoAPI.SpatialReference;
 namespace SharpMap.SpatialReference
 {
     /// <summary>
-    /// 
+    /// DotSpatial.Projections.Projection info wrapper
     /// </summary>
     public class DotSpatialSpatialReference : ISpatialReference
     {
@@ -22,21 +22,17 @@ namespace SharpMap.SpatialReference
         }
 
         public string Oid { get; private set; }
+
         public string Definition { get; private set; }
-        
+
+        public SpatialReferenceDefinitionType DefinitionType
+        {
+            get { return SpatialReferenceDefinitionType.Proj4; }
+        }
+
         /// <summary>
         /// Gets the projection info
         /// </summary>
         public ProjectionInfo ProjectionInfo { get; private set; }
-
-        public int CompareTo(string other)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public bool Equals(string other)
-        {
-            
-        }
     }
 }
