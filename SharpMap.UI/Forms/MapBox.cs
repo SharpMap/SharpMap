@@ -16,26 +16,6 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
 
 #define EnableMetafileClipboardSupport
-/*
- * Note:
- * 
- * If you want to use MapBox control along with MapImage controls
- * you have to define the compile time constant 'UseMapBox' in the
- * properties dialog of this project. As a result you will have the
- * MapImage control and the MapBox control included in your SharpMap.UI
- * assembly.
- * 
- * If you want to use MapBox control as a replacement of MapImage 
- * control you have to define the compile time constant 'UseMapBoxAsMapImage'.
- * in the  * properties dialog of this project. As a result you will have a
- * MapImage control in your SharpMap.UI assembly which is actually this
- * MapBox control.
- * 
- * If you don't define any of the two compile time constants this control
- * is omitted.
- * 
- * FObermaier
- */
 using System;
 using System.ComponentModel;
 using System.Drawing;
@@ -56,9 +36,6 @@ namespace SharpMap.Forms
     /// <summary>
     /// MapBox Class - MapBox control for Windows forms
     /// </summary>
-    /// <remarks>
-    /// The ExtendedMapImage control adds more than basic functionality to a Windows Form, such as dynamic pan, widow zoom and data query.
-    /// </remarks>
     [DesignTimeVisible(true)]
     public class MapBox : Control
     {
@@ -218,7 +195,7 @@ namespace SharpMap.Forms
         #region Events
 
         /// <summary>
-        /// MouseEventtype fired from the MapImage control
+        /// MouseEventtype fired from the MapBox control
         /// </summary>
         /// <param name="worldPos"></param>
         /// <param name="imagePos"></param>
