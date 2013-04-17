@@ -5,7 +5,7 @@ namespace GeoAPI.SpatialReference
     /// <summary>
     /// Interface for classes that hold spatial reference information
     /// </summary>
-    public interface ISpatialReference : IUnique<string>
+    public interface ISpatialReference : IEntity<string>
     {
         /// <summary>
         /// Gets the definition

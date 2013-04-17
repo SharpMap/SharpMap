@@ -1,20 +1,26 @@
-﻿using GeoAPI.Geometries;
+﻿using System;
+using GeoAPI.Geometries;
 
 namespace GeoAPI.Features
 {
     /// <summary>
-    /// 
+    /// Interface for all classes that can be used as a feature
     /// </summary>
-    public interface IFeature : IUnique<long>
+    public interface IFeature<T> : IEntity<T>, ICloneable, IDisposable where T : IComparable<T>, IEquatable<T>
     {
         /// <summary>
-        /// The Factory that created this feature
+        /// Gets the factory that created this feature
         /// </summary>
-        IFeatureFactory Factory { get; }
+        IFeatureFactory<T> Factory { get; }
 
         /// <summary>
-        /// The geometry defining the feature
+        /// Gets or sets the geometry defining the feature
         /// </summary>
         IGeometry Geometry { get; set; }
+
+        /// <summary>
+        /// Gets the attributes associated with this feature
+        /// </summary>
+        IFeatureAttributes Attributes { get; }
     }
 }

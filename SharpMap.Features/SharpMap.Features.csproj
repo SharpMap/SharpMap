@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{EFB576E1-56FC-47DB-AC7E-683A535434BE}</ProjectGuid>
+    <ProjectGuid>{F29DBE64-368F-4AEE-8EBD-68242E48EE55}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>GeoAPI</RootNamespace>
-    <AssemblyName>GeoAPI.Extensions</AssemblyName>
+    <RootNamespace>SharpMap</RootNamespace>
+    <AssemblyName>SharpMap.Features</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
@@ -44,23 +44,23 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Features\IFeatureAttributes.cs" />
-    <Compile Include="Features\IFeatureCollection.cs" />
-    <Compile Include="SpatialReference\IReprojector.cs" />
-    <Compile Include="SpatialReference\ISpatialReference.cs" />
-    <Compile Include="SpatialReference\SpatialReferenceDefinitionType.cs" />
-    <Compile Include="Utilities\ThreadSafeStore.cs" />
-    <Content Include="Beware.txt" />
-    <Compile Include="Features\IFeature.cs" />
-    <Compile Include="Features\IFeatureFactory.cs" />
-    <Compile Include="Features\IFeatureSet.cs" />
-    <Compile Include="Features\IEntity.cs" />
+    <Compile Include="Features\Entity.cs" />
+    <Compile Include="Features\Feature.cs" />
+    <Compile Include="Features\FeatureAttributes.cs" />
+    <Compile Include="Features\FeatureCollection.cs" />
+    <Compile Include="Features\FeatureFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\GeoAPI.Extensions\GeoAPI.Extensions.csproj">
+      <Project>{efb576e1-56fc-47db-ac7e-683a535434be}</Project>
+      <Name>GeoAPI.Extensions</Name>
+    </ProjectReference>
+  </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
