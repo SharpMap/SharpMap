@@ -50,7 +50,21 @@ namespace SharpMap.Features
         object IFeatureAttributes.this[int index]
         {
             get { return _attributes[index]; }
-            set { _attributes[index] = value; }
+            set
+            {
+                if (value == null && !_featureFactory.Attributes[index].IsNullable)
+                {
+                    throw new ArgumentException("Attribute " + _featureFactory.Attributes[index].AttributeName + " is not nullable");
+                }
+                else if (value != null && _featureFactory.Attributes[index].AttributeType != value.GetType())
+                {
+                    throw new ArgumentException("Wrong type for attribute " + _featureFactory.Attributes[index].AttributeName);
+                }
+                else
+                {
+                    _attributes[index] = value;
+                }
+            }
         }
 
         public int GetOrdinal(string name)
