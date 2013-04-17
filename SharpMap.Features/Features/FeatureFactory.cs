@@ -18,7 +18,7 @@ namespace SharpMap.Features
         {
 
             var list = new List<IFeatureAttributeDefinition>(attributes.Length + 1);
-            list.Add(new FeatureAttributeDefinition() { AttributeName = "Oid", AttributeType = typeof(int), AttributeDescription = "Object Id", IsNullable = false });
+            list.Add(new FeatureAttributeDefinition { AttributeName = "Oid", AttributeType = typeof(int), AttributeDescription = "Object Id", IsNullable = false });
             list.AddRange(attributes);
             _indexToName = new ReadOnlyCollection<IFeatureAttributeDefinition>(list);
             AttributeIndex = new Dictionary<string, int>(list.Count);
@@ -39,7 +39,7 @@ namespace SharpMap.Features
             return feature;
         }
 
-        public int GetNewId()
+        internal int GetNewId()
         {
             Interlocked.Increment(ref _newOid);
             while (_givenIds.Contains(_newOid))

@@ -44,6 +44,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Data\FeatureDataRowProxy.cs" />
+    <Compile Include="Data\FeatureDataTableProxy.cs" />
     <Compile Include="Features\Entity.cs" />
     <Compile Include="Features\Feature.cs" />
     <Compile Include="Features\FeatureAttributeDefinition.cs" />
@@ -56,6 +58,10 @@
     <ProjectReference Include="..\GeoAPI.Extensions\GeoAPI.Extensions.csproj">
       <Project>{efb576e1-56fc-47db-ac7e-683a535434be}</Project>
       <Name>GeoAPI.Extensions</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SharpMap\SharpMap.csproj">
+      <Project>{c83777fc-aabb-47d9-911f-d76255d4d541}</Project>
+      <Name>SharpMap</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
