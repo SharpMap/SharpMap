@@ -19,7 +19,7 @@ namespace WinFormSamples.Samples
             VectorLayer layCountries = new VectorLayer("OracleSample");
 
             //Set the datasource to a shapefile in the App_data folder
-            layCountries.DataSource = new SharpMap.Data.Providers.Oracle("system", "metsys", "127.0.0.1",
+            layCountries.DataSource = new SharpMap.Data.Providers.OracleProvider("system", "metsys", "127.0.0.1",
                                                                          "COUNTRIES", "GEOM", "ID");
             //System.Diagnostics.Debug.WriteLine(layCountries.DataSource.GetGeometryByID(101).ToString());
 
@@ -32,14 +32,14 @@ namespace WinFormSamples.Samples
             //Set up a river layer
             VectorLayer layRivers = new SharpMap.Layers.VectorLayer("Rivers");
             //Set the datasource to a shapefile in the App_data folder
-            layRivers.DataSource = new SharpMap.Data.Providers.Oracle("system", "metsys", "127.0.0.1", "RIVERS", "GEOM", "ID");
+            layRivers.DataSource = new SharpMap.Data.Providers.OracleProvider("system", "metsys", "127.0.0.1", "RIVERS", "GEOM", "ID");
             //Define a blue 1px wide pen
             layRivers.Style.Line = new Pen(Color.Blue, 1);
 
             //Set up a river layer
             VectorLayer layCities = new VectorLayer("Cities");
             //Set the datasource to a shapefile in the App_data folder
-            layCities.DataSource = new SharpMap.Data.Providers.Oracle("system", "metsys", "127.0.0.1", "CITIES", "GEOM", "ID");
+            layCities.DataSource = new SharpMap.Data.Providers.OracleProvider("system", "metsys", "127.0.0.1", "CITIES", "GEOM", "ID");
             layCities.Style.SymbolScale = 0.8f;
             layCities.MaxVisible = 40;
 
