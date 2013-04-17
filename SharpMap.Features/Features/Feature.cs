@@ -16,7 +16,7 @@ namespace SharpMap.Features
         internal Feature(FeatureFactory factory)
         {
             Factory = factory;
-            Attributes = new FeatureAttributes(factory.AttributeIndex);
+            Attributes = new FeatureAttributes(factory);
         }
 
         private Feature(IFeatureFactory<int> factory, int oid, IGeometry geometry, IFeatureAttributes attributes)

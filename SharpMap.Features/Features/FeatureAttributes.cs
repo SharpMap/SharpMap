@@ -10,20 +10,19 @@ namespace SharpMap.Features
     [Serializable]
     public class FeatureAttributes : IFeatureAttributes
     {
-        private readonly Dictionary<string, int> _index;
+        private readonly FeatureFactory _featureFactory;
         private readonly object[]  _attributes;
 
         /// <summary>
         /// Creates an instance of this class
         /// </summary>
         /// <param name="index">An index for key to index translation</param>
-        public FeatureAttributes(Dictionary<string, int> index)
+        public FeatureAttributes(FeatureFactory factory)
         {
-            if (index == null || index.Count == 0)
-                throw new ArgumentNullException("index");
+            if (factory== null || factory.Attributes.Count== 0)
+                throw new ArgumentNullException("Factory");
 
-            _index = index;
-            _attributes = new object[_index.Count];
+            _attributes = new object[factory.Attributes.Count];
         }
 
         /// <summary>
@@ -35,9 +34,9 @@ namespace SharpMap.Features
             if (attributes == null)
                 throw new ArgumentNullException("attributes");
 
-            _index = attributes._index;
-            _attributes = new object[_index.Count];
-            for (var i = 0; i < _index.Count; i++)
+            _featureFactory = attributes._featureFactory;
+            _attributes = new object[_featureFactory.Attributes.Count];
+            for (var i = 0; i < _attributes.Length; i++)
             {
                 var value = attributes._attributes[i];
                 if (value is ICloneable)
@@ -54,10 +53,29 @@ namespace SharpMap.Features
             set { _attributes[index] = value; }
         }
 
+        public int GetOrdinal(string name)
+        {
+            return _featureFactory.AttributeIndex[name];
+        }
+
         object IFeatureAttributes.this[string key]
         {
-            get { return _attributes[_index[key]]; }
-            set { _attributes[_index[key]] = value; }
+            get
+            {
+                int ordinal = GetOrdinal(key);
+                if (ordinal >= 0)
+                    return _attributes[ordinal];
+                else
+                    throw new ArgumentOutOfRangeException("Unknown attributename: " + key);
+            }
+            set
+            {
+                int ordinal = GetOrdinal(key);
+                if (ordinal >= 0)
+                    _attributes[ordinal] = value;
+                else
+                    throw new ArgumentOutOfRangeException("Unknown attributename: " + key);
+            }
         }
 
         public object[] GetValues()
