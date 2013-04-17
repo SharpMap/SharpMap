@@ -11,7 +11,7 @@ namespace SharpMap.SpatialReference
 
         public ISpatialReference Create(string oid, string definition)
         {
-            return new DotSpatialProjectionsSpatialReference(definition, definition);
+            return new DotSpatialSpatialReference(definition, definition);
         }
     }
 }

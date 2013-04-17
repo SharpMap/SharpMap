@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using GeoAPI.Features;
 using GeoAPI.Geometries;
 
@@ -58,15 +59,16 @@ namespace GeoAPI.SpatialReference
         IGeometry Reproject(IGeometry geometry, ISpatialReference from, ISpatialReference to);
 
         /// <summary>
-        /// Function to reproject an <see cref="IFeature"/>
+        /// Function to reproject an <see cref="IFeature{T}"/>
         /// </summary>
         /// <param name="feature">The coordinate to reproject</param>
         /// <param name="from">The spatial reference the <paramref name="feature"/> is in.</param>
         /// <param name="to">The spatial reference the return value should be in.</param>
         /// <returns>
-        /// A <see cref="IFeature"/> that represents <paramref name="feature"/> in <paramref name="to"/> <see cref="ISpatialReference"/>.
+        /// A <see cref="IFeature{T}"/> that represents <paramref name="feature"/> in <paramref name="to"/> <see cref="ISpatialReference"/>.
         /// </returns>
-        IFeature Reproject(IFeature feature, ISpatialReference from, ISpatialReference to);
+        IFeature<T> Reproject<T>(IFeature<T> feature, ISpatialReference from, ISpatialReference to) 
+            where T : IComparable<T>, IEquatable<T>;
 
         /// <summary>
         /// Function to reproject an <see cref="IGeometry"/>
@@ -77,6 +79,7 @@ namespace GeoAPI.SpatialReference
         /// <returns>
         /// A <see cref="IEnumerable{IFeature}"/> that represents <paramref name="features"/> in <paramref name="to"/> <see cref="ISpatialReference"/>.
         /// </returns>
-        IEnumerable<IFeature> Reproject(IEnumerable<IFeature> features, ISpatialReference from, ISpatialReference to);
+        IEnumerable<IFeature<T>> Reproject<T>(IEnumerable<IFeature<T>> features, ISpatialReference from, ISpatialReference to)
+            where T : IComparable<T>, IEquatable<T>;
     }
 }

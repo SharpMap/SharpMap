@@ -1,4 +1,5 @@
-﻿using DotSpatial.Projections;
+﻿using System;
+using DotSpatial.Projections;
 using GeoAPI.SpatialReference;
 
 namespace SharpMap.SpatialReference
@@ -8,6 +9,19 @@ namespace SharpMap.SpatialReference
     /// </summary>
     public class DotSpatialSpatialReference : ISpatialReference
     {
+        private readonly string _oid;
+
+        /// <summary>
+        /// Creates an instance of this class
+        /// </summary>
+        public DotSpatialSpatialReference(ProjectionInfo projectionInfo)
+        {
+            _oid = projectionInfo.ToProj4String();
+            Definition = projectionInfo.ToProj4String();
+            ProjectionInfo = projectionInfo;
+
+        }
+
         /// <summary>
         /// Creates an instance of this class
         /// </summary>
@@ -15,13 +29,25 @@ namespace SharpMap.SpatialReference
         /// <param name="definition"></param>
         public DotSpatialSpatialReference(string oid, string definition)
         {
-            Oid = oid;
+            _oid = oid;
             Definition = definition;
             ProjectionInfo = ProjectionInfo.FromProj4String(definition);
 
         }
 
-        public string Oid { get; private set; }
+        public string Oid
+        {
+            get { return _oid; }
+            set
+            {
+                throw new NotSupportedException();
+            }
+        }
+
+        public Type GetEntityType()
+        {
+            return GetType();
+        }
 
         public string Definition { get; private set; }
 

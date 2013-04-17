@@ -49,6 +49,7 @@
   <ItemGroup>
     <Compile Include="ProjNetReprojector.cs" />
     <Compile Include="ProjNetSpatialReference.cs" />
+    <Compile Include="ProjNetSpatialReferenceFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
