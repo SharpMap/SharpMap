@@ -88,8 +88,9 @@ namespace SharpMap.Data
 
         private readonly FeatureDataTable _table;
 
-        public FeatureDataTableProxy(FeatureDataTable table)
+        public FeatureDataTableProxy(IGeometryFactory factory, FeatureDataTable table)
         {
+            GeometryFactory = factory;
             _table = table;
         }
 
