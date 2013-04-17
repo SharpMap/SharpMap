@@ -10,28 +10,28 @@ namespace SharpMap.Features
     {
         private static int _newOid = -1;
 
-        private readonly ReadOnlyCollection<string> _indexToName;
+        private readonly ReadOnlyCollection<IFeatureAttributeDefinition> _indexToName;
         internal readonly Dictionary<string, int> AttributeIndex;
         private readonly HashSet<int> _givenIds = new HashSet<int>();
 
-        public FeatureFactory(IGeometryFactory factory, params string[] names)
+        public FeatureFactory(IGeometryFactory factory, params IFeatureAttributeDefinition[] attributes)
         {
-            
-            var list = new List<string>(names.Length + 1);
-            list.Add("Oid");
-            list.AddRange(names);
-            _indexToName = new ReadOnlyCollection<string>(list);
+
+            var list = new List<IFeatureAttributeDefinition>(attributes.Length + 1);
+            list.Add(new FeatureAttributeDefinition() { AttributeName = "Oid", AttributeType = typeof(int), AttributeDescription = "Object Id", IsNullable = false });
+            list.AddRange(attributes);
+            _indexToName = new ReadOnlyCollection<IFeatureAttributeDefinition>(list);
             AttributeIndex = new Dictionary<string, int>(list.Count);
             for (var i = 0; i < list.Count; i++)
             {
-                AttributeIndex.Add(names[i], i);
+                AttributeIndex.Add(attributes[i].AttributeName, i);
             }
             GeometryFactory = factory;
         }
 
         public IGeometryFactory GeometryFactory { get; private set; }
 
-        public IList<string> AttributeNames { get { return _indexToName; }}
+        public IList<IFeatureAttributeDefinition> Attributes { get { return _indexToName; }}
 
         public IFeature<int> Create()
         {

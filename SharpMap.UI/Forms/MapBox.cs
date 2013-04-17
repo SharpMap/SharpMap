@@ -116,26 +116,9 @@ namespace SharpMap.Forms
             QueryBox,
 
             /// <summary>
-            /// Query tool
-            /// </summary>
-            [Obsolete ("Use QueryBox")]
-            Query = QueryBox,
-
-            /// <summary>
             /// Attempt true intersection query on geometry
             /// </summary>
             QueryPoint,
-
-            /// <summary>
-            /// Attempt true intersection query on geometry
-            /// </summary>
-            [Obsolete ("Use QueryPoint")]
-            QueryGeometry = QueryPoint,
-
-            ///// <summary>
-            ///// Attempt true intersection query on polygonal geometry
-            ///// </summary>
-            //QueryPolygon,
 
             /// <summary>
             /// Zoom window tool

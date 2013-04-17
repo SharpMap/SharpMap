@@ -17,7 +17,7 @@ namespace GeoAPI.Features
         /// <summary>
         /// Gets a list of attribute names
         /// </summary>
-        IList<string> AttributeNames { get; }
+        IList<IFeatureAttributeDefinition> Attributes { get; }
 
         /// <summary>
         /// Creates a new feature

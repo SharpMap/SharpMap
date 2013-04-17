@@ -44,6 +44,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Features\IFeatureAttributeDefinition.cs" />
     <Compile Include="Features\IFeatureAttributes.cs" />
     <Compile Include="Features\IFeatureCollection.cs" />
     <Compile Include="SpatialReference\IReprojector.cs" />

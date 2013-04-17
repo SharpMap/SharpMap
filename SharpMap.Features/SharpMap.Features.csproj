@@ -46,6 +46,7 @@
   <ItemGroup>
     <Compile Include="Features\Entity.cs" />
     <Compile Include="Features\Feature.cs" />
+    <Compile Include="Features\FeatureAttributeDefinition.cs" />
     <Compile Include="Features\FeatureAttributes.cs" />
     <Compile Include="Features\FeatureCollection.cs" />
     <Compile Include="Features\FeatureFactory.cs" />

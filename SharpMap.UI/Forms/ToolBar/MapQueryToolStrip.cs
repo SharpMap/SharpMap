@@ -162,10 +162,6 @@ namespace SharpMap.Forms.ToolBar
             if (MapControl == null) return;
             switch (tool)
             {
-                case MapBox.Tools.QueryGeometry:
-                    _queryGeometry.Checked = true;
-                    _queryWindow.Checked = false;
-                    break;
                 case MapBox.Tools.QueryBox:
                     _queryGeometry.Checked = false;
                     _queryWindow.Checked = true;
@@ -256,8 +252,6 @@ namespace SharpMap.Forms.ToolBar
             MapBox.Tools newTool;
             if (sender == _queryWindow)
                 newTool = MapBox.Tools.QueryBox;
-            else if (sender == _queryGeometry)
-                newTool = MapBox.Tools.QueryGeometry;
             else
             {
                 if (Logger.IsWarnEnabled)
