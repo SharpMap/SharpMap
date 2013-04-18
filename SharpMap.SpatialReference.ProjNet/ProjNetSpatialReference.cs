@@ -1,5 +1,6 @@
 ﻿using System;
 using GeoAPI.CoordinateSystems;
+using GeoAPI.Features;
 using GeoAPI.SpatialReference;
 
 namespace SharpMap.SpatialReference
@@ -28,7 +29,13 @@ namespace SharpMap.SpatialReference
             Definition = cs.WKT;
             CoordinateSystem = cs;
         }
-        
+
+        object IEntity.Oid 
+        { 
+            get { return Oid; }
+            set { Oid = (string) value; }
+        }
+
         public string Oid
         {
             get { return _oid; }

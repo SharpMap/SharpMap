@@ -1,5 +1,6 @@
 ﻿using System;
 using DotSpatial.Projections;
+using GeoAPI.Features;
 using GeoAPI.SpatialReference;
 
 namespace SharpMap.SpatialReference
@@ -33,6 +34,12 @@ namespace SharpMap.SpatialReference
             Definition = definition;
             ProjectionInfo = ProjectionInfo.FromProj4String(definition);
 
+        }
+
+        object IEntity.Oid
+        {
+            get { return Oid; }
+            set { Oid = (string)value; }
         }
 
         public string Oid

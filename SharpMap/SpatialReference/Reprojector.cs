@@ -17,7 +17,7 @@ namespace SharpMap.SpatialReference
         /// <summary>
         /// The <see cref="IReprojector"/> implementation used internally
         /// </summary>
-        private readonly IReprojector _instance;
+        private readonly IReprojectorCore _instance;
 
         private readonly ThreadSafeStore<ISpatialReference, IGeometryFactory> _factories =
             new ThreadSafeStore<ISpatialReference, IGeometryFactory>(CreateGeometryFactory);
@@ -58,7 +58,7 @@ namespace SharpMap.SpatialReference
         /// Creates an instance of this class, that uses <paramref name="instance"/> <see cref="IReprojector"/> internally.
         /// </summary>
         /// <param name="instance"></param>
-        public Reprojector(IReprojector instance)
+        public Reprojector(IReprojectorCore instance)
         {
             _instance = instance;
         }

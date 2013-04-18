@@ -54,12 +54,7 @@ namespace SharpMap.Features
 
         public TEntity GetNewOid()
         {
-            var newOid = _oidGenerator.GetNewOid();
-            while (_givenIds.Contains(newOid))
-            {
-                newOid = _oidGenerator.GetNewOid();
-            }
-            return newOid;
+            return _oidGenerator.GetNewOid();
         }
 
         public TEntity UnassignedOid

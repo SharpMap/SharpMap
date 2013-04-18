@@ -1,30 +1,43 @@
-﻿using NUnit.Framework;
+﻿using GeoAPI.Features;
+using NUnit.Framework;
+
 
 namespace SharpMap.Features
 {
+    using IntFeatureFactory = FeatureFactory<int>;
+    using IntFeatureCollection = FeatureCollection<int>;
+    
     [TestFixture]
     public class FeatureTest
     {
-        private readonly FeatureFactory _featureFactory;
-        private readonly FeatureCollection _featureCollection;
+        private readonly IntFeatureFactory _featureFactory;
+        private readonly IntFeatureCollection _featureCollection;
+
 
         public FeatureTest()
         {
-            _featureFactory = new FeatureFactory(
+            var eg = new EntityOidGenerator<int>(-1, 1000, (t) => t + 1);
+            _featureFactory = new IntFeatureFactory(eg, 
                 NetTopologySuite.NtsGeometryServices.Instance.CreateGeometryFactory(4326),
-                "Attribut1", "Attribut2", "Attribut3");
+                new FeatureAttributeDefinition { AttributeName = "Attribute1", AttributeDescription = "1st Attribute", AttributeType = typeof(int) },
+                new FeatureAttributeDefinition { AttributeName = "Attribute2", AttributeDescription = "2nd Attribute", AttributeType = typeof(double) },
+                new FeatureAttributeDefinition { AttributeName = "Attribute3", AttributeDescription = "3rd Attribute", AttributeType = typeof(string) }
+                );
 
-            _featureCollection = new FeatureCollection(_featureFactory);
+            _featureCollection = new IntFeatureCollection(_featureFactory);
         }
 
         [Test]
         public void TestCreate()
         {
             var f = _featureCollection.Factory.Create();
-            
+            Assert.IsNotNull(f);
+            var fg = f as IFeature<int>;
+            Assert.IsNotNull(fg);
+
             Assert.IsTrue(f.Geometry == null);
             Assert.IsTrue(f.Attributes != null);
-            Assert.IsTrue(f.Oid == -1);
+            Assert.IsTrue(fg.Oid == _featureFactory.UnassignedOid);
             Assert.IsTrue((int)f.Attributes[0] == -1);
             
             Assert.IsTrue(f.Attributes[2] == null);

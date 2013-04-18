@@ -67,8 +67,7 @@ namespace GeoAPI.SpatialReference
         /// <returns>
         /// A <see cref="IFeature{T}"/> that represents <paramref name="feature"/> in <paramref name="to"/> <see cref="ISpatialReference"/>.
         /// </returns>
-        IFeature<T> Reproject<T>(IFeature<T> feature, ISpatialReference from, ISpatialReference to) 
-            where T : IComparable<T>, IEquatable<T>;
+        IFeature Reproject(IFeature feature, ISpatialReference from, ISpatialReference to);
 
         /// <summary>
         /// Function to reproject an <see cref="IGeometry"/>
@@ -79,7 +78,6 @@ namespace GeoAPI.SpatialReference
         /// <returns>
         /// A <see cref="IEnumerable{IFeature}"/> that represents <paramref name="features"/> in <paramref name="to"/> <see cref="ISpatialReference"/>.
         /// </returns>
-        IEnumerable<IFeature<T>> Reproject<T>(IEnumerable<IFeature<T>> features, ISpatialReference from, ISpatialReference to)
-            where T : IComparable<T>, IEquatable<T>;
+        IEnumerable<IFeature> Reproject(IEnumerable<IFeature> features, ISpatialReference from, ISpatialReference to);
     }
 }
