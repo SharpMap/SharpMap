@@ -1,24 +1,30 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Threading;
 using GeoAPI.Features;
 using GeoAPI.Geometries;
 
 namespace SharpMap.Features
 {
-    public class FeatureFactory : IFeatureFactory<int>
+    [Serializable]
+    public class FeatureFactory<TEntity> : IFeatureFactory<TEntity>
+        where TEntity: IComparable<TEntity>, IEquatable<TEntity>
     {
-        private static int _newOid = -1;
-
+        private readonly EntityOidGenerator<TEntity> _oidGenerator;
+ 
         private readonly ReadOnlyCollection<IFeatureAttributeDefinition> _indexToName;
         internal readonly Dictionary<string, int> AttributeIndex;
-        private readonly HashSet<int> _givenIds = new HashSet<int>();
 
-        public FeatureFactory(IGeometryFactory factory, params IFeatureAttributeDefinition[] attributes)
+        public FeatureFactory(EntityOidGenerator<TEntity> oidGenerator, IGeometryFactory factory, params IFeatureAttributeDefinition[] attributes)
         {
+            if (oidGenerator == null)
+            {
+                throw new ArgumentNullException("oidGenerator");
+            }
+            _oidGenerator = oidGenerator;
 
             var list = new List<IFeatureAttributeDefinition>(attributes.Length + 1);
-            list.Add(new FeatureAttributeDefinition { AttributeName = "Oid", AttributeType = typeof(int), AttributeDescription = "Object Id", IsNullable = false });
+            list.Add(new FeatureAttributeDefinition { AttributeName = "Oid", AttributeType = typeof(TEntity), AttributeDescription = "Object Id", IsNullable = false });
             list.AddRange(attributes);
             _indexToName = new ReadOnlyCollection<IFeatureAttributeDefinition>(list);
             AttributeIndex = new Dictionary<string, int>(list.Count);
@@ -33,26 +39,32 @@ namespace SharpMap.Features
 
         public IList<IFeatureAttributeDefinition> Attributes { get { return _indexToName; }}
 
-        public IFeature<int> Create()
+        public IFeature Create()
         {
-            var feature = new Feature(this) {Oid = -1};
+            var feature = new Feature<TEntity>(this) { Oid = UnassignedOid };
             return feature;
         }
 
-        internal int GetNewId()
-        {
-            Interlocked.Increment(ref _newOid);
-            while (_givenIds.Contains(_newOid))
-                Interlocked.Increment(ref _newOid);
-            _givenIds.Add(_newOid);
-            return _newOid;
-        }
-
-        public IFeature<int> Create(IGeometry geometry)
+        public IFeature Create(IGeometry geometry)
         {
             var res = Create();
             res.Geometry = geometry;
             return res;
+        }
+
+        public TEntity GetNewOid()
+        {
+            var newOid = _oidGenerator.GetNewOid();
+            while (_givenIds.Contains(newOid))
+            {
+                newOid = _oidGenerator.GetNewOid();
+            }
+            return newOid;
+        }
+
+        public TEntity UnassignedOid
+        {
+            get { return _oidGenerator.UnassignedOid; }
         }
     }
 }

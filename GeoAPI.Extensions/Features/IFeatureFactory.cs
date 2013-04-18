@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using GeoAPI.Geometries;
 
 namespace GeoAPI.Features
@@ -7,7 +6,7 @@ namespace GeoAPI.Features
     /// <summary>
     /// Interface for all classes that can create features
     /// </summary>
-    public interface IFeatureFactory<T> where T : IComparable<T>, IEquatable<T>
+    public interface IFeatureFactory
     {
         /// <summary>
         /// Gets the geometry factory to create features
@@ -23,12 +22,18 @@ namespace GeoAPI.Features
         /// Creates a new feature
         /// </summary>
         /// <returns>A new feature with no geometry and attributes</returns>
-        IFeature<T> Create();
+        IFeature Create();
 
         /// <summary>
         /// Creates a new feature with <paramref name="geometry"/>, but no attributes
         /// </summary>
         /// <returns>A new feature with <paramref name="geometry"/>, but no attributes</returns>
-        IFeature<T> Create(IGeometry geometry);
+        IFeature Create(IGeometry geometry);
+    }
+
+    public interface IFeatureFactory<out T> : IFeatureFactory
+    {
+        T GetNewOid();
+        T UnassignedOid { get; }
     }
 }

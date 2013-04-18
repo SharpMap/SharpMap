@@ -20,6 +20,8 @@ namespace SharpMap.Data
             set { _row[0] = value; }
         }
 
+        object IEntity.Oid { get { return Oid; } set { Oid = (uint)value; } }
+
         public Type GetEntityType()
         {
             return typeof(FeatureDataRow);
@@ -44,7 +46,7 @@ namespace SharpMap.Data
         {
         }
 
-        public IFeatureFactory<uint> Factory { get { return new FeatureDataTableProxy((FeatureDataTable)_row.Table); } }
+        public IFeatureFactory Factory { get { return new FeatureDataTableProxy(_row.Geometry.Factory, (FeatureDataTable)_row.Table); } }
 
         public IGeometry Geometry
         {

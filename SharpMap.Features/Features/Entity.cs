@@ -41,6 +41,9 @@ namespace SharpMap.Features
             }
         }
 
+        object IEntity.Oid { get { return Oid; } set { Oid = (T) value; } }
+
+
         /// <summary>
         /// Event invoker for the <see cref="OidChanged"/> event
         /// </summary>

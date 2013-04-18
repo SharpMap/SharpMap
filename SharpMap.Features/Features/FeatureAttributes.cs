@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using GeoAPI.Features;
 
 namespace SharpMap.Features
@@ -8,20 +7,21 @@ namespace SharpMap.Features
     /// Sample impementation of a feature attribute collection
     /// </summary>
     [Serializable]
-    public class FeatureAttributes : IFeatureAttributes
+    public class FeatureAttributes<T> : IFeatureAttributes where T : IComparable<T>, IEquatable<T>
     {
-        private readonly FeatureFactory _featureFactory;
+        private readonly FeatureFactory<T> _featureFactory;
         private readonly object[]  _attributes;
 
         /// <summary>
         /// Creates an instance of this class
         /// </summary>
-        /// <param name="index">An index for key to index translation</param>
-        public FeatureAttributes(FeatureFactory factory)
+        /// <param name="factory">The factory that can create new features</param>
+        public FeatureAttributes(FeatureFactory<T> factory)
         {
             if (factory== null || factory.Attributes.Count== 0)
-                throw new ArgumentNullException("Factory");
+                throw new ArgumentNullException("factory");
 
+            _featureFactory = factory;
             _attributes = new object[factory.Attributes.Count];
         }
 
@@ -29,7 +29,7 @@ namespace SharpMap.Features
         /// Creates an instance of this class, using the values provided in the <paramref name="attributes"/> collection
         /// </summary>
         /// <param name="attributes">A reference collection</param>
-        private FeatureAttributes(FeatureAttributes attributes)
+        private FeatureAttributes(FeatureAttributes<T> attributes)
         {
             if (attributes == null)
                 throw new ArgumentNullException("attributes");
@@ -101,7 +101,7 @@ namespace SharpMap.Features
 
         public object Clone()
         {
-            return new FeatureAttributes(this);
+            return new FeatureAttributes<T>(this);
         }
 
     }

@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace GeoAPI.Features
 {
-    public interface IFeatureSet<T> : ISet<IFeature<T>> where T : IComparable<T>, IEquatable<T>
+    public interface IFeatureSet : ISet<IFeature>
     {
-        IFeatureFactory<T> Factory { get; }
+        IFeatureFactory Factory { get; }
     }
 }

@@ -47,6 +47,7 @@
     <Compile Include="Data\FeatureDataRowProxy.cs" />
     <Compile Include="Data\FeatureDataTableProxy.cs" />
     <Compile Include="Features\Entity.cs" />
+    <Compile Include="Features\EntityOidGenerator.cs" />
     <Compile Include="Features\Feature.cs" />
     <Compile Include="Features\FeatureAttributeDefinition.cs" />
     <Compile Include="Features\FeatureAttributes.cs" />

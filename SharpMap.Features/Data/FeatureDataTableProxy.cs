@@ -7,7 +7,7 @@ using GeoAPI.Geometries;
 
 namespace SharpMap.Data
 {
-    public class FeatureDataTableProxy : IFeatureFactory<uint>, IFeatureCollection<uint>
+    public class FeatureDataTableProxy : IFeatureFactory, IFeatureCollection
     {
         #region NestedClasses
         
@@ -109,20 +109,20 @@ namespace SharpMap.Data
             }
         }
 
-        public IFeature<uint> Create()
+        public IFeature Create()
         {
             var row = _table.NewRow();
             return new FeatureDataRowProxy(row);
         }
 
-        public IFeature<uint> Create(IGeometry geometry)
+        public IFeature Create(IGeometry geometry)
         {
             var res = Create();
             res.Geometry = geometry;
             return res;
         }
 
-        public IEnumerator<IFeature<uint>> GetEnumerator()
+        public IEnumerator<IFeature> GetEnumerator()
         {
             return new FdrEnumerator(_table.Select()); 
         }
@@ -132,7 +132,7 @@ namespace SharpMap.Data
             return GetEnumerator();
         }
 
-        public void Add(IFeature<uint> item)
+        public void Add(IFeature item)
         {
             if (Contains(item))
                 throw new ArgumentException("This item is already in the table", "item");
@@ -155,12 +155,12 @@ namespace SharpMap.Data
             _table.Clear();
         }
 
-        public bool Contains(IFeature<uint> item)
+        public bool Contains(IFeature item)
         {
             return _table.Rows.Find(item.Oid) != null;
         }
 
-        public void CopyTo(IFeature<uint>[] array, int arrayIndex)
+        public void CopyTo(IFeature[] array, int arrayIndex)
         {
             var length = Math.Min(_table.Rows.Count, array.Length - arrayIndex);
             var rows = _table.Rows;
@@ -170,7 +170,7 @@ namespace SharpMap.Data
             }
         }
 
-        public bool Remove(IFeature<uint> item)
+        public bool Remove(IFeature item)
         {
             var row = item as FeatureDataRowProxy;
             if (row == null)
@@ -184,9 +184,9 @@ namespace SharpMap.Data
 
         public bool IsReadOnly { get { return false; } }
         
-        public IFeatureFactory<uint> Factory { get { return this; } }
+        public IFeatureFactory Factory { get { return this; } }
         
-        public IFeature<uint> New()
+        public IFeature New()
         {
             return Create();
         }

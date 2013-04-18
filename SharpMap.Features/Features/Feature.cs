@@ -7,22 +7,26 @@ namespace SharpMap.Features
     /// <summary>
     /// Sample implementation of a <see cref="IFeature{T}"/>.
     /// </summary>
-    public class Feature : Entity<int>, IFeature<int>
+    [Serializable]
+    public class Feature<T> : Entity<T>, IFeature<T> where T : IComparable<T>, IEquatable<T>
     {
+        private readonly FeatureFactory<T> _factory;
+        private readonly FeatureAttributes<T> _attributes;
+
         /// <summary>
         /// Creates a feature
         /// </summary>
         /// <param name="factory">The factory that created the feature</param>
-        internal Feature(FeatureFactory factory)
+        internal Feature(FeatureFactory<T> factory)
         {
-            Factory = factory;
-            Attributes = new FeatureAttributes(factory);
+            _factory = factory;
+            _attributes = new FeatureAttributes<T>(factory);
         }
 
-        private Feature(IFeatureFactory<int> factory, int oid, IGeometry geometry, IFeatureAttributes attributes)
+        private Feature(FeatureFactory<T> factory, T oid, IGeometry geometry, FeatureAttributes<T> attributes)
         {
-            Factory = factory;
-            Attributes = attributes;
+            _factory = factory;
+            _attributes = attributes;
             Geometry = geometry;
             Oid = oid;
         }
@@ -35,15 +39,21 @@ namespace SharpMap.Features
 
         public object Clone()
         {
-            return new Feature(Factory, Oid, Geometry, (IFeatureAttributes)Attributes.Clone());
+            return new Feature<T>(_factory, Oid, Geometry, (FeatureAttributes<T>)_attributes.Clone());
         }
 
-        public IFeatureFactory<int> Factory { get; private set; }
-        
+        public IFeatureFactory Factory
+        {
+            get { return _factory; }
+        }
+
         public IGeometry Geometry { get; set; }
         
-        public IFeatureAttributes Attributes { get; private set; }
-        
+        public IFeatureAttributes Attributes
+        {
+            get { return _attributes; }
+        }
+
         public void Dispose()
         {
         }
