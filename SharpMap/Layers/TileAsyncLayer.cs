@@ -61,6 +61,20 @@ namespace SharpMap.Layers
         }
 
         /// <summary>
+        /// Creates an instance of this class
+        /// </summary>
+        /// <param name="tileSource">The tile source</param>
+        /// <param name="layerName">The layers name</param>
+        /// <param name="transparentColor">The color that should be treated as <see cref="Color.Transparent"/></param>
+        /// <param name="showErrorInTile">Value indicating that an error tile should be generated for non-existent tiles</param>
+        /// <param name="fileCache">If the layer should use a file-cache so store tiles, set this to a fileCacheProvider. Set to null to avoid filecache</param>
+        /// <param name="imgFormat">Set the format of the tiles to be used</param>
+        public TileAsyncLayer(ITileSource tileSource, string layerName, Color transparentColor, bool showErrorInTile, FileCache fileCache, ImageFormat imgFormat)
+            : base(tileSource, layerName, transparentColor, showErrorInTile, fileCache,imgFormat)
+        {
+        }
+
+        /// <summary>
         /// EventHandler for event fired when a new Tile is available for rendering
         /// </summary>
         public event MapNewTileAvaliabledHandler MapNewTileAvaliable;
