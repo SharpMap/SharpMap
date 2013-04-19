@@ -78,6 +78,8 @@ namespace SharpMap.SpatialReference
             return _instance.Reproject(sequence, from, to);
         }
 
+        public ISpatialReferenceFactory Factory { get { return _instance.Factory; } }
+
 
         public IGeometry Reproject(IGeometry geometry, ISpatialReference @from, ISpatialReference to)
         {

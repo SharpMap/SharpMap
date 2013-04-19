@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿using System;
 using GeoAPI.Features;
 using GeoAPI.Geometries;
 using GeoAPI.SpatialReference;
@@ -10,6 +10,40 @@ namespace SharpMap.SpatialReference
     /// </summary>
     public class NoopReprojector : IReprojectorCore
     {
+        private class NoopSpatialReferenceFactory : ISpatialReferenceFactory
+        {
+            public ISpatialReference Create(string definition)
+            {
+                return new NoopSpatialReference(definition);
+            }
+        }
+
+        private struct NoopSpatialReference : ISpatialReference
+        {
+            private readonly string _definition;
+            public NoopSpatialReference(string definition)
+            {
+                _definition = definition;
+            }
+
+            object IEntity.Oid
+            {
+                get { return _definition; }
+                set { }
+            }
+
+            public string Oid { get { return _definition; } set {}}
+
+            public Type GetEntityType()
+            {
+                return GetType();
+            }
+
+            public string Definition { get { return _definition; } }
+
+            public SpatialReferenceDefinitionType DefinitionType { get { return SpatialReferenceDefinitionType.Unknown;} }
+        }
+
         public Coordinate Reproject(Coordinate coordinate, ISpatialReference @from, ISpatialReference to)
         {
             return coordinate;
@@ -24,5 +58,7 @@ namespace SharpMap.SpatialReference
         {
             return sequence;
         }
+
+        public ISpatialReferenceFactory Factory { get { return new NoopSpatialReferenceFactory(); } }
     }
 }
