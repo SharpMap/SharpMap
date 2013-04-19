@@ -7,19 +7,24 @@ namespace SharpMap.Features
 {
     public class FeatureCollection<T> : Collection<IFeature>, IFeatureCollection where T : IComparable<T>, IEquatable<T>
     {
+        private readonly FeatureFactory<T> _factory;
+
         protected FeatureCollection(FeatureCollection<T> collection)
             : base(collection)
         {
-            Factory = collection.Factory;
+            _factory = (FeatureFactory<T>)collection.Factory;
         }
 
-        public FeatureCollection(IFeatureFactory factory)
+        public FeatureCollection(FeatureFactory<T> factory)
         {
-            Factory = factory;
+            _factory = factory;
         }
         
-        public IFeatureFactory Factory { get; private set; }
-        
+        public IFeatureFactory Factory
+        {
+            get { return _factory; }
+        }
+
         public IFeature New()
         {
             return Factory.Create();
@@ -40,6 +45,7 @@ namespace SharpMap.Features
             {
                 throw new ArgumentException("The item to insert was not created by this collections factory", "item");
             }
+            _factory.AssignOid((Feature<T>) item);
             base.SetItem(index, item);
         }
     }

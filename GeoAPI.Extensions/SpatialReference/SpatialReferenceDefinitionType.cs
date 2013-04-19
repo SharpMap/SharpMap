@@ -19,5 +19,13 @@
         /// Authority and AuthorityCode separated by a colon. <para>Example: EPSG:4326</para>
         /// </summary>
         AuthorityCode,
+        Unknown
+    }
+
+    public struct SpatialReferenceDefinition
+    {
+        public SpatialReferenceDefinitionType Type { get; set; }
+        public string Definition { get; set; }
+
     }
 }

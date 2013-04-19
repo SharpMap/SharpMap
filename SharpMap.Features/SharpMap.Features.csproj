@@ -53,6 +53,11 @@
     <Compile Include="Features\FeatureAttributes.cs" />
     <Compile Include="Features\FeatureCollection.cs" />
     <Compile Include="Features\FeatureFactory.cs" />
+    <Compile Include="Features\Poco\PocoFeature.cs" />
+    <Compile Include="Features\Poco\PocoFeatureAttributeDefinition.cs" />
+    <Compile Include="Features\Poco\PocoFeatureAttributesDefinition.cs" />
+    <Compile Include="Features\Poco\PocoFeatureAttributesProxy.cs" />
+    <Compile Include="Properties\Annotations.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

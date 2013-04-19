@@ -30,27 +30,5 @@ namespace GeoAPI.SpatialReference
         /// <param name="definition">The string that defines spatial reference</param>
         /// <returns>A spatial reference</returns>
         ISpatialReference Create(string definition);
-
-        /// <summary>
-        /// Function to create a <see cref="ISpatialReference"/> by its <paramref name="definition"/>
-        /// </summary>
-        /// <param name="oid">The identifier</param>
-        /// <param name="definition">The string that defines spatial reference</param>
-        /// <returns>A spatial reference</returns>
-        ISpatialReference Create(string oid, string definition);
-    }
-
-    /// <summary>
-    /// Interface for classes that can parse or convert to and from
-    /// </summary>
-    public interface ISpatialReferenceConverter
-    {
-        ISpatialReference FromWellKnownText(string spatialReference);
-        ISpatialReference FromProj4(string proj4);
-        ISpatialReference FromAuthorityCode(string authorityCode);
-
-        string ToWellKnownText(ISpatialReference spatialReference);
-        string ToProj4(ISpatialReference spatialReference);
-        string ToAuthorityCode(ISpatialReference spatialReference);
     }
 }

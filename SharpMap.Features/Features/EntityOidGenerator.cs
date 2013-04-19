@@ -9,7 +9,7 @@ namespace SharpMap.Features
     /// </summary>
     /// <typeparam name="TEntity">The type of the object identifier (Oid)</typeparam>
     [Serializable]
-    public sealed class EntityOidGenerator<TEntity>
+    public class EntityOidGenerator<TEntity> where TEntity : IComparable<TEntity>, IEquatable<TEntity>
     {
         private TEntity _lastOid;
         private readonly Func<TEntity, TEntity> _newOidGenerator;
@@ -29,22 +29,22 @@ namespace SharpMap.Features
         /// Creates an instance of this class
         /// </summary>
         /// <param name="unassignedOid">The value an entities Oid should have to mark it as unset</param>
-        /// <param name="start">The value the last generated Oid is set to.</param>
+        /// <param name="startOid">The value the last generated Oid is set to.</param>
         /// <param name="newOidGenerator">A delegate function that produces a new oid, based on the last one provided</param>
-        public EntityOidGenerator(TEntity unassignedOid, TEntity start, Func<TEntity, TEntity> newOidGenerator)
+        public EntityOidGenerator(TEntity unassignedOid, TEntity startOid, Func<TEntity, TEntity> newOidGenerator)
         {
             if (newOidGenerator == null)
             {
                 throw new ArgumentNullException("newOidGenerator");
             }
-            if (newOidGenerator(start).Equals(start))
+            if (newOidGenerator(startOid).Equals(startOid))
             {
                 throw new ArgumentException("The provided generator does not produce new oid's", "newOidGenerator");
             }
 
             UnassignedOid = unassignedOid;
             _givenIds.Add(unassignedOid);
-            _lastOid = start;
+            _lastOid = startOid;
             _newOidGenerator = newOidGenerator;
         }
 
@@ -64,5 +64,21 @@ namespace SharpMap.Features
             return _lastOid;
         }
 
+        public void AssignOid(Entity<TEntity> item)
+        {
+            // Test for class Oids
+            if (typeof (TEntity).IsClass && ReferenceEquals(UnassignedOid, null))
+            {
+                return;
+            }
+
+            // Test for value
+            if (UnassignedOid.Equals(item.Oid))
+            {
+                return;
+            }
+
+            item.Oid = GetNewOid();
+        }
     }
 }

@@ -27,5 +27,29 @@ namespace SharpMap.Features
         /// True if this attribute can be null
         /// </summary>
         public bool IsNullable { get; set; }
+
+        /// <summary>
+        /// Method to verify input data
+        /// </summary>
+        /// <param name="value">The value to check</param>
+        /// <param name="exception">The exception to throw</param>
+        /// <returns><value>true</value> if this value is valid</returns>
+        internal protected virtual bool VerifyValue(object value, out Exception exception)
+        {
+            if (value == null && !IsNullable)
+            {
+                exception = new ArgumentException("Attribute " + AttributeName + " is not nullable");
+                return false;
+            }
+
+            if (value != null && AttributeType != value.GetType())
+            {
+                exception = new ArgumentException("Wrong type for attribute " + AttributeName);
+                return false;
+            }
+
+            exception = null;
+            return true;
+        }
     }
 }

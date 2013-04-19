@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using GeoAPI.Features;
 using GeoAPI.Geometries;
 
@@ -8,10 +9,12 @@ namespace SharpMap.Features
     /// Sample implementation of a <see cref="IFeature{T}"/>.
     /// </summary>
     [Serializable]
-    public class Feature<T> : Entity<T>, IFeature<T> where T : IComparable<T>, IEquatable<T>
+    public class Feature<T> : Entity<T>, IFeature<T>, INotifyPropertyChanged
+        where T : IComparable<T>, IEquatable<T>
     {
         private readonly FeatureFactory<T> _factory;
         private readonly FeatureAttributes<T> _attributes;
+        private IGeometry _geometry;
 
         /// <summary>
         /// Creates a feature
@@ -20,7 +23,7 @@ namespace SharpMap.Features
         internal Feature(FeatureFactory<T> factory)
         {
             _factory = factory;
-            _attributes = new FeatureAttributes<T>(factory);
+            _attributes = new FeatureAttributes<T>(this);
         }
 
         private Feature(FeatureFactory<T> factory, T oid, IGeometry geometry, FeatureAttributes<T> attributes)
@@ -47,8 +50,17 @@ namespace SharpMap.Features
             get { return _factory; }
         }
 
-        public IGeometry Geometry { get; set; }
-        
+        public IGeometry Geometry
+        {
+            get { return _geometry; }
+            set
+            {
+                if (ReferenceEquals(value, _geometry))
+                    return;
+                _geometry = value;
+            }
+        }
+
         public IFeatureAttributes Attributes
         {
             get { return _attributes; }
@@ -56,6 +68,30 @@ namespace SharpMap.Features
 
         public void Dispose()
         {
+        }
+
+        #region INotifyPropertyChanged
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected internal virtual void OnPropertyChanged(string propertyName)
+        {
+            if (PropertyChanged != null)
+            {
+                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
+
+        #endregion
+
+        internal int GetOrdinal(string key)
+        {
+            return _factory.AttributeIndex[key];
+        }
+
+        internal string GetFieldName(int index)
+        {
+            return _factory.Attributes[index].AttributeName;
         }
     }
 }

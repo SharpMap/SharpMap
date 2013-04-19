@@ -9,20 +9,20 @@ namespace SharpMap.Features
     [Serializable]
     public class FeatureAttributes<T> : IFeatureAttributes where T : IComparable<T>, IEquatable<T>
     {
-        private readonly FeatureFactory<T> _featureFactory;
+        private readonly Feature<T> _feature;
         private readonly object[]  _attributes;
 
         /// <summary>
         /// Creates an instance of this class
         /// </summary>
-        /// <param name="factory">The factory that can create new features</param>
-        public FeatureAttributes(FeatureFactory<T> factory)
+        /// <param name="feature">The feature this attribute collection belongs to</param>
+        public FeatureAttributes(Feature<T> feature)
         {
-            if (factory== null || factory.Attributes.Count== 0)
-                throw new ArgumentNullException("factory");
+            if (feature== null)
+                throw new ArgumentNullException("feature");
 
-            _featureFactory = factory;
-            _attributes = new object[factory.Attributes.Count];
+            _feature = feature;
+            _attributes = new object[feature.Factory.Attributes.Count];
         }
 
         /// <summary>
@@ -34,8 +34,8 @@ namespace SharpMap.Features
             if (attributes == null)
                 throw new ArgumentNullException("attributes");
 
-            _featureFactory = attributes._featureFactory;
-            _attributes = new object[_featureFactory.Attributes.Count];
+            _feature = attributes._feature;
+            _attributes = new object[_feature.Factory.Attributes.Count];
             for (var i = 0; i < _attributes.Length; i++)
             {
                 var value = attributes._attributes[i];
@@ -52,39 +52,30 @@ namespace SharpMap.Features
             get { return _attributes[index]; }
             set
             {
-                if (value == null && !_featureFactory.Attributes[index].IsNullable)
+                Exception exception;
+                var fdad = (FeatureAttributeDefinition)_feature.Factory.Attributes[index];
+                if (!fdad.VerifyValue(value, out exception))
                 {
-                    throw new ArgumentException("Attribute " + _featureFactory.Attributes[index].AttributeName + " is not nullable");
+                    throw exception;
                 }
-                else if (value != null && _featureFactory.Attributes[index].AttributeType != value.GetType())
-                {
-                    throw new ArgumentException("Wrong type for attribute " + _featureFactory.Attributes[index].AttributeName);
-                }
-                else
-                {
-                    _attributes[index] = value;
-                }
+                _attributes[index] = value;
+                _feature.OnPropertyChanged(_feature.GetFieldName(index));
             }
         }
 
-        public int GetOrdinal(string name)
-        {
-            return _featureFactory.AttributeIndex[name];
-        }
-
+        //TODO evaluate if it is not sufficient to have a KeyNotFound exception inside GetOrdinal
         object IFeatureAttributes.this[string key]
         {
             get
             {
-                int ordinal = GetOrdinal(key);
+                int ordinal = _feature.GetOrdinal(key);
                 if (ordinal >= 0)
                     return _attributes[ordinal];
-                else
-                    throw new ArgumentOutOfRangeException("Unknown attributename: " + key);
+                throw new ArgumentOutOfRangeException("Unknown attributename: " + key);
             }
             set
             {
-                int ordinal = GetOrdinal(key);
+                int ordinal = _feature.GetOrdinal(key);
                 if (ordinal >= 0)
                     _attributes[ordinal] = value;
                 else

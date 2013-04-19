@@ -1,28 +1,80 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Globalization;
 using GeoAPI.Features;
 using GeoAPI.Geometries;
 
 namespace SharpMap.Features
 {
-    [Serializable]
-    public class FeatureFactory<TEntity> : IFeatureFactory<TEntity>
-        where TEntity: IComparable<TEntity>, IEquatable<TEntity>
+    /// <summary>
+    /// Utility class for the creation of common FeatureFactories
+    /// </summary>
+    public static class FeatureFactory
     {
-        private readonly EntityOidGenerator<TEntity> _oidGenerator;
- 
-        private readonly ReadOnlyCollection<IFeatureAttributeDefinition> _indexToName;
-        internal readonly Dictionary<string, int> AttributeIndex;
+        public static FeatureFactory<int> CreateInt32(IGeometryFactory factory,
+            params FeatureAttributeDefinition[] attributes)
+        {
+            return new FeatureFactory<int>(-1, -1, i => i + 1, factory, attributes);
+        }
 
-        public FeatureFactory(EntityOidGenerator<TEntity> oidGenerator, IGeometryFactory factory, params IFeatureAttributeDefinition[] attributes)
+        public static FeatureFactory<long> CreateInt64(IGeometryFactory factory,
+            params FeatureAttributeDefinition[] attributes)
+        {
+            return new FeatureFactory<long>(-1, -1, i => i + 1, factory, attributes);
+        }
+
+        public static FeatureFactory<Guid> CreateGuid(IGeometryFactory factory,
+            params FeatureAttributeDefinition[] attributes)
+        {
+            return new FeatureFactory<Guid>(Guid.Empty, Guid.Empty, i => Guid.NewGuid(), factory, attributes);
+        }
+
+        public static FeatureFactory<string> CreateString(Func<string, string> oidGenerator, IGeometryFactory factory,
+            params FeatureAttributeDefinition[] attributes)
         {
             if (oidGenerator == null)
             {
-                throw new ArgumentNullException("oidGenerator");
-            }
-            _oidGenerator = oidGenerator;
+                oidGenerator = delegate(string t)
+                {
+                    if (string.IsNullOrEmpty(t))
+                        return "Oid0";
 
+                    long nr;
+                    if (!long.TryParse(t.Substring(3), NumberStyles.Any,
+                                       NumberFormatInfo.InvariantInfo, out nr))
+                    {
+                        throw new InvalidOperationException();
+                    }
+                    return "Oid" + (++nr).ToString(NumberFormatInfo.InvariantInfo);
+                };
+            }
+            return new FeatureFactory<string>(string.Empty, string.Empty, oidGenerator, factory, attributes);
+        }
+    }
+    
+    
+    [Serializable]
+    public class FeatureFactory<TEntity> : EntityOidGenerator<TEntity>, IFeatureFactory<TEntity>
+        where TEntity: IComparable<TEntity>, IEquatable<TEntity>
+    {
+        private readonly ReadOnlyCollection<IFeatureAttributeDefinition> _indexToName;
+        internal readonly Dictionary<string, int> AttributeIndex;
+
+        /// <summary>
+        /// Creates an instance of this class
+        /// </summary>
+        /// <param name="factory"></param>
+        /// <param name="attributes"></param>
+        /// <param name="unassignedOid">The value an entities Oid should have to mark it as unset</param>
+        /// <param name="startOid">The value the last generated Oid is set to.</param>
+        /// <param name="oidGenerator">A delegate function that produces a new oid, based on the last one provided</param>
+        internal FeatureFactory(
+            TEntity unassignedOid, TEntity startOid, Func<TEntity, TEntity> oidGenerator,
+            IGeometryFactory factory, 
+            params FeatureAttributeDefinition[] attributes)
+            :base(unassignedOid, startOid, oidGenerator)
+        {
             var list = new List<IFeatureAttributeDefinition>(attributes.Length + 1);
             list.Add(new FeatureAttributeDefinition { AttributeName = "Oid", AttributeType = typeof(TEntity), AttributeDescription = "Object Id", IsNullable = false });
             list.AddRange(attributes);
@@ -50,16 +102,6 @@ namespace SharpMap.Features
             var res = Create();
             res.Geometry = geometry;
             return res;
-        }
-
-        public TEntity GetNewOid()
-        {
-            return _oidGenerator.GetNewOid();
-        }
-
-        public TEntity UnassignedOid
-        {
-            get { return _oidGenerator.UnassignedOid; }
         }
     }
 }
