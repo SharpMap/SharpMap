@@ -11,12 +11,14 @@ namespace GeoAPI.Features
         /// <summary>
         /// Gets the geometry factory to create features
         /// </summary>
+        [FeatureAttribute(Ignore = true)]
         IGeometryFactory GeometryFactory { get; }
 
         /// <summary>
         /// Gets a list of attribute names
         /// </summary>
-        IList<IFeatureAttributeDefinition> Attributes { get; }
+        [FeatureAttribute(Ignore = true)]
+        IList<IFeatureAttributeDefinition> AttributesDefinition { get; }
 
         /// <summary>
         /// Creates a new feature
@@ -33,7 +35,15 @@ namespace GeoAPI.Features
 
     public interface IFeatureFactory<out T> : IFeatureFactory
     {
+        /// <summary>
+        /// Gets a new, unassigned id
+        /// </summary>
+        /// <returns></returns>
         T GetNewOid();
+        
+        /// <summary>
+        /// ToDo: Move to entity and have clients implement it using some static 
+        /// </summary>
         T UnassignedOid { get; }
     }
 }

@@ -13,6 +13,14 @@ namespace SharpMap.Features
         private int? _requestedHashCode;
         private T _oid;
 
+        public Entity()
+        {}
+
+        protected Entity(Entity<T> entity)
+        {
+            _oid = entity.Oid;
+        }
+
         /// <summary>
         /// Event raised when the <see cref="Oid"/> has changed
         /// </summary>
@@ -41,6 +49,7 @@ namespace SharpMap.Features
             }
         }
 
+        [FeatureAttribute(Ignore = true)]
         object IEntity.Oid { get { return Oid; } set { Oid = (T) value; } }
 
 

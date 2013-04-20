@@ -22,7 +22,7 @@ namespace SharpMap.Features
                 throw new ArgumentNullException("feature");
 
             _feature = feature;
-            _attributes = new object[feature.Factory.Attributes.Count];
+            _attributes = new object[feature.Factory.AttributesDefinition.Count];
         }
 
         /// <summary>
@@ -35,7 +35,7 @@ namespace SharpMap.Features
                 throw new ArgumentNullException("attributes");
 
             _feature = attributes._feature;
-            _attributes = new object[_feature.Factory.Attributes.Count];
+            _attributes = new object[_feature.Factory.AttributesDefinition.Count];
             for (var i = 0; i < _attributes.Length; i++)
             {
                 var value = attributes._attributes[i];
@@ -53,7 +53,7 @@ namespace SharpMap.Features
             set
             {
                 Exception exception;
-                var fdad = (FeatureAttributeDefinition)_feature.Factory.Attributes[index];
+                var fdad = (FeatureAttributeDefinition)_feature.Factory.AttributesDefinition[index];
                 if (!fdad.VerifyValue(value, out exception))
                 {
                     throw exception;

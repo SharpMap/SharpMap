@@ -10,16 +10,19 @@ namespace GeoAPI.Features
         /// <summary>
         /// Gets the factory that created this feature
         /// </summary>
+        [FeatureAttribute(Ignore = true)]
         IFeatureFactory Factory { get; }
 
         /// <summary>
         /// Gets or sets the geometry defining the feature
         /// </summary>
+        [FeatureAttribute(Ignore = false)]
         IGeometry Geometry { get; set; }
 
         /// <summary>
         /// Gets the attributes associated with this feature
         /// </summary>
+        [FeatureAttribute(Ignore = true)]
         IFeatureAttributes Attributes { get; }
     }
     

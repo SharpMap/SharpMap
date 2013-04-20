@@ -91,7 +91,7 @@ namespace SharpMap.Features
 
         internal string GetFieldName(int index)
         {
-            return _factory.Attributes[index].AttributeName;
+            return _factory.AttributesDefinition[index].AttributeName;
         }
     }
 }

@@ -7,6 +7,7 @@ namespace SharpMap.Features.Poco
     {
         private readonly PocoFeature _poco;
         private readonly ReadOnlyCollection<PocoFeatureAttributeDefinition> _att;
+        
         public PocoFeatureAttributesProxy(PocoFeature poco)
         {
             _poco = poco;
@@ -26,8 +27,8 @@ namespace SharpMap.Features.Poco
 
         object IFeatureAttributes.this[string key]
         {
-            get { throw new System.NotImplementedException(); }
-            set { throw new System.NotImplementedException(); }
+            get { return ((IFeatureAttributes)this)[_poco.GetOrdinal(key)]; }
+            set { ((IFeatureAttributes)this)[_poco.GetOrdinal(key)] = value; }
         }
 
         public object[] GetValues()

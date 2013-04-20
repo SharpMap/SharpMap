@@ -9,9 +9,13 @@ namespace SharpMap.Features.Poco
         private readonly bool _static;
         private bool _readonly;
 
-        public PocoFeatureAttributeDefinition(PropertyInfo propertyInfo)
+        public PocoFeatureAttributeDefinition(PropertyInfo propertyInfo, FeatureAttributeAttribute att)
         {
             AttributeName = propertyInfo.Name;
+            if (!string.IsNullOrEmpty(att.AttributeName)) AttributeName = att.AttributeName;
+
+            AttributeDescription = att.AttributeDescription;
+            
             AttributeType = propertyInfo.PropertyType;
             if (propertyInfo.CanRead)
             {
@@ -27,12 +31,18 @@ namespace SharpMap.Features.Poco
                 _readonly = true;
             }
             
+            /*
             var att = propertyInfo.GetCustomAttributes(typeof (FeatureAttributeAttribute), true);
             if (att.Length > 0) CorrectByAttribute((FeatureAttributeAttribute)att[0]);
+             */
+
+            CorrectByAttribute(att);
         }
 
         public PocoFeatureAttributeDefinition(FieldInfo fieldInfo)
         {
+            Ignore = true;
+
             AttributeName = fieldInfo.Name;
             AttributeType = fieldInfo.FieldType;
             _static = fieldInfo.IsStatic;
@@ -41,7 +51,11 @@ namespace SharpMap.Features.Poco
             _readonly = fieldInfo.IsInitOnly;
 
             var att = fieldInfo.GetCustomAttributes(typeof(FeatureAttributeAttribute), true);
-            if (att.Length > 0) CorrectByAttribute((FeatureAttributeAttribute)att[0]);
+            if (att.Length > 0)
+            {
+                Ignore = false;
+                CorrectByAttribute((FeatureAttributeAttribute)att[0]);
+            }
         }
 
         public void CorrectByAttribute(FeatureAttributeAttribute attribute)
@@ -52,9 +66,9 @@ namespace SharpMap.Features.Poco
                 return;
             }
 
-            if (string.IsNullOrEmpty(attribute.AttributeName))
+            if (!string.IsNullOrEmpty(attribute.AttributeName))
                 AttributeName = attribute.AttributeName;
-            if (string.IsNullOrEmpty(attribute.AttributeName))
+            if (!string.IsNullOrEmpty(attribute.AttributeName))
                 AttributeName = attribute.AttributeName;
 
             _readonly |= attribute.Readonly;
@@ -111,5 +125,13 @@ namespace SharpMap.Features.Poco
             }
             return null;
         }
+#if DEBUG
+        public override string ToString()
+        {
+            return (AttributeName ?? "No name") +
+                   (AttributeDescription != null ? " (" + AttributeDescription + ")" : string.Empty) + ", " +
+                   (AttributeType != null ? AttributeType.Name : "no type");
+        }
+#endif
     }
 }

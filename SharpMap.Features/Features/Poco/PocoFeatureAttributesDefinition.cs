@@ -5,6 +5,8 @@ using GeoAPI.Features;
 
 namespace SharpMap.Features.Poco
 {
+    using Tuple = KeyValuePair<PropertyInfo, FeatureAttributeAttribute>;
+    
     public class PocoFeatureAttributesDefinition : List<PocoFeatureAttributeDefinition>
     {
         public PocoFeatureAttributesDefinition(Type type)
@@ -15,31 +17,126 @@ namespace SharpMap.Features.Poco
             var props = GetPropertyInfos(type);
             while (props.Count > 0)
             {
-                var d = new PocoFeatureAttributeDefinition(props.Pop());
-                if (d.Valid) Add(d);
+                var t = props.Pop();
+                var d = new PocoFeatureAttributeDefinition(t.Key, t.Value);
+                if (!d.Ignore) Add(d);
             }
 
             var fields = GetFieldInfos(type);
             while (fields.Count > 0)
             {
                 var d = new PocoFeatureAttributeDefinition(fields.Pop());
-                if (d.Valid) Add(d);
+                if (!d.Ignore) Add(d);
             }
         }
 
-        private static Stack<PropertyInfo> GetPropertyInfos(Type type)
+        private static FeatureAttributeAttribute Copy(FeatureAttributeAttribute att)
         {
-            var res = new Stack<PropertyInfo>();
+            if (att == null) 
+                return null;
+            
+            return new FeatureAttributeAttribute
+                {
+                    AttributeName = att.AttributeName,
+                    AttributeDescription = att.AttributeDescription,
+                    Ignore = att.Ignore,
+                    Readonly = att.Readonly
+                };
+        }
+        private static IEnumerable<Tuple> Verify(List<InterfaceMapping> mappings,
+                                                 IEnumerable<PropertyInfo> propertyInfos)
+        {
 
-            var pi = type.GetProperties(BindingFlags.GetProperty | BindingFlags.SetProperty | 
+            foreach (var propertyInfo in propertyInfos)
+            {
+                FeatureAttributeAttribute fatt = null;
+                // Check if this property has a FeatureAttributeAttribute attached to it.
+                var att = propertyInfo.GetCustomAttributes(typeof (FeatureAttributeAttribute), true);
+                
+                if (att.Length > 0)
+                {
+                    fatt = (FeatureAttributeAttribute) att[0];
+                    // Does it say ignore?
+                    if (fatt.Ignore)
+                    {
+                        continue;
+                    }
+                }
+
+                // See if we can find some interface that defines this property
+                var foundInInterfaces = false;
+                foreach (var interfaceMapping in mappings)
+                {
+                    var index = Array.IndexOf(interfaceMapping.TargetMethods, propertyInfo.GetGetMethod());
+                    if (index >= 0)
+                    {
+                        // yes, here it is
+                        foundInInterfaces = true;
+
+                        var interfaceType = interfaceMapping.InterfaceType;
+                        var pi = interfaceType.GetProperty(interfaceMapping.InterfaceMethods[index].Name.Substring(4));
+                        
+                        // Check if this property has a FeatureAttributeAttribute attached to it.
+                        var attTmp = pi.GetCustomAttributes(typeof(FeatureAttributeAttribute), true);
+                        if (attTmp.Length > 0)
+                        {
+                            // Does it say don't ignore it
+                            if (!((FeatureAttributeAttribute)attTmp[0]).Ignore)
+                                yield return new Tuple(propertyInfo, Copy((FeatureAttributeAttribute)attTmp[0]));
+                        }
+
+                        /* this does not work
+
+                        // Check if this property has a FeatureAttributeAttribute attached to it.
+                        att = interfaceMapping.InterfaceMethods[index].GetCustomAttributes(
+                                typeof (FeatureAttributeAttribute), true);
+                        if (att.Length > 0)
+                        {
+                            // Does it say don't ignore it
+                            if (!((FeatureAttributeAttribute)att[0]).Ignore)
+                                yield return propertyInfo;
+                        }
+                        */
+
+                        // Won't find it in another interface
+                        break;
+                    }
+                }
+
+                if (!foundInInterfaces)
+                {
+                    yield return new Tuple(propertyInfo, Copy(fatt));
+                }
+            }
+        }
+
+        private static List<InterfaceMapping> GetInterfaceMappings(Type type)
+        {
+            var interfaces = type.GetInterfaces();
+            var interfaceMaps = new List<InterfaceMapping>(interfaces.Length);
+            foreach (var @interface in interfaces)
+            {
+                interfaceMaps.Add(type.GetInterfaceMap(@interface));
+            }
+            return interfaceMaps;
+        }
+
+        private static Stack<Tuple> GetPropertyInfos(Type type)
+        {
+            var res = new Stack<Tuple>();
+
+            var propertyInfos = type.GetProperties(BindingFlags.GetProperty | BindingFlags.SetProperty | 
                                         BindingFlags.Public | 
                                         BindingFlags.Static | BindingFlags.Instance);
 
-            foreach (var propertyInfo in pi)
+            foreach (var propertyInfo in Verify(GetInterfaceMappings(type), propertyInfos))
             {
                 res.Push(propertyInfo);
             }
 
+            /* This leads to duplicate entries
+             
+            // Add all those properties in base classes, but object!
             if (type.BaseType != typeof (object))
             {
                 var basePi = GetPropertyInfos(type.BaseType);
@@ -48,6 +145,7 @@ namespace SharpMap.Features.Poco
                     res.Push(propertyInfo);
                 }
             }
+             */
 
             return res;
         }

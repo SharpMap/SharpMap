@@ -96,7 +96,7 @@ namespace SharpMap.Data
 
         public IGeometryFactory GeometryFactory { get; private set; }
 
-        public IList<IFeatureAttributeDefinition> Attributes
+        public IList<IFeatureAttributeDefinition> AttributesDefinition
         {
             get
             {

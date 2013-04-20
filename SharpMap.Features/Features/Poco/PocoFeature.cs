@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using GeoAPI.Features;
@@ -12,12 +13,47 @@ namespace SharpMap.Features.Poco
         private static readonly object PocoLock = new object();
         protected static volatile PocoFeatureAttributesDefinition PocoFeatureAttributesDefinition;
         
+        [FeatureAttributeAttribute(Ignore = true)]
         private IGeometry _geometry;
+
+        protected PocoFeature()
+        {
+        }
+
+        protected PocoFeature(long oid, IGeometry geometry)
+            :base(new Entity<long>{Oid = oid})
+        {
+            _geometry = geometry;
+        }
+
+        protected PocoFeature(PocoFeature feature)
+            :base(feature)
+        {
+            if (feature == null)
+            {
+                throw new ArgumentNullException("feature");
+            }
+
+            if (feature.Geometry != null)
+            {
+                _geometry = (IGeometry)feature.Geometry.Clone();
+            }
+        }
 
         public abstract object Clone();
 
         public virtual void Dispose()
         {
+        }
+
+        /// <summary>
+        /// Overriden event invoker for the <see cref="Entity{T}.OidChanged"/> event
+        /// </summary>
+        /// <param name="e">The events argument</param>
+        protected override void OnOidChanged(System.EventArgs e)
+        {
+            OnPropertyChanged("Oid");
+            base.OnOidChanged(e);
         }
 
         /// <summary>
@@ -44,7 +80,9 @@ namespace SharpMap.Features.Poco
         /// <summary>
         /// Gets the geometry factory to create features
         /// </summary>
-        public IGeometryFactory GeometryFactory { get { return _geometry.Factory; } }
+        public IGeometryFactory GeometryFactory { get { return 
+            _geometry == null ? null :
+            _geometry.Factory; } }
 
         [FeatureAttribute(Ignore = true)]
         public ReadOnlyCollection<PocoFeatureAttributeDefinition> AttributesDefinition
@@ -71,7 +109,7 @@ namespace SharpMap.Features.Poco
         /// Gets a list of attribute names
         /// </summary>
         [FeatureAttribute(Ignore = true)]
-        IList<IFeatureAttributeDefinition> IFeatureFactory.Attributes
+        IList<IFeatureAttributeDefinition> IFeatureFactory.AttributesDefinition
         {
             get
             {
@@ -89,6 +127,11 @@ namespace SharpMap.Features.Poco
                 }
                 return PocoFeatureAttributesDefinition.AsList();
             }
+        }
+
+        public int GetOrdinal(string name)
+        {
+            return PocoFeatureAttributesDefinition.GetOrdinal(name);
         }
 
         /// <summary>
@@ -111,7 +154,7 @@ namespace SharpMap.Features.Poco
         /// <summary>
         /// Gets the attributes associated with this feature
         /// </summary>
-        IFeatureAttributes IFeature.Attributes { get { return new PocoFeatureAttributesProxy(this); } }
+        public IFeatureAttributes Attributes { get { return new PocoFeatureAttributesProxy(this); } }
 
         public abstract long GetNewOid();
 

@@ -89,7 +89,7 @@ namespace SharpMap.Features
 
         public IGeometryFactory GeometryFactory { get; private set; }
 
-        public IList<IFeatureAttributeDefinition> Attributes { get { return _indexToName; }}
+        public IList<IFeatureAttributeDefinition> AttributesDefinition { get { return _indexToName; }}
 
         public IFeature Create()
         {
