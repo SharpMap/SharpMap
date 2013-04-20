@@ -53,6 +53,11 @@ namespace SharpMap.SpatialReference
             return Infos.Get(new KeyValuePair<ICoordinateSystem, ICoordinateSystem>(fromCS, toCS));
         }
 
+        public ProjNetReprojector()
+        {
+            Factory = new ProjNetSpatialReferenceFactory();
+        }
+
         public Coordinate Reproject(Coordinate coordinate, ISpatialReference @from, ISpatialReference to)
         {
             var transformation = GetMathTransform(@from, to);
@@ -77,5 +82,7 @@ namespace SharpMap.SpatialReference
             var transformation = GetMathTransform(@from, to);
             return transformation.Transform(sequence);
         }
+
+        public ISpatialReferenceFactory Factory { get; private set; }
     }
 }

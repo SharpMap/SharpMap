@@ -44,6 +44,11 @@ namespace SharpMap.SpatialReference
             }
         }
 
+        public DotSpatialReprojector()
+        {
+            Factory = new DotSpatialProjectionsSpatialReferenceFactory();
+        }
+
         public Coordinate Reproject(Coordinate coordinate, ISpatialReference @from, ISpatialReference to)
         {
             double[] xy, z;
@@ -68,7 +73,9 @@ namespace SharpMap.SpatialReference
             return ToGeoAPI(DefaultSequenceFactory, xy, z, m);
         }
 
-        protected ICoordinateSequenceFactory DefaultSequenceFactory { get; private set; }
+        public ISpatialReferenceFactory Factory { get; private set; }
+
+        protected ICoordinateSequenceFactory DefaultSequenceFactory { get { return GeoAPI.GeometryServiceProvider.Instance.DefaultCoordinateSequenceFactory; } }
 
         #region Static helper methods and functions
         
