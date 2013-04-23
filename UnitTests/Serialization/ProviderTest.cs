@@ -44,7 +44,7 @@ namespace UnitTests.Serialization
                 return (T)(IProvider) new ManagedSpatiaLite("Data Source=test-2.3.sqlite;Database=Regions;",
                                                             "Roads", "Geometry", "PK_UID");
 
-            if (typeof(T) == typeof(ManagedSpatiaLite))
+            if (typeof(T) == typeof(SpatiaLite))
                 return (T)(IProvider)new SpatiaLite("Data Source=test-2.3.sqlite;Database=Regions;",
                                                     "Roads", "Geometry", "PK_UID");
 

@@ -168,6 +168,9 @@
     <Compile Include="Data\Providers\PreparedGeometryProvider.cs" />
     <Compile Include="Data\Providers\ShapeFile.cs" />
     <Compile Include="Data\Providers\Database\SpatialDbProvider.cs" />
+    <Compile Include="Data\Providers\ShapeFileHeader.cs" />
+    <Compile Include="Data\Providers\ShapeFileIndex.cs" />
+    <Compile Include="Data\Providers\ShapeType.cs" />
     <Compile Include="Data\Providers\SqlServer2008.cs" />
     <Compile Include="Data\Providers\WFSClient.cs" />
     <Compile Include="Geometries\GeoAPIEx.cs" />

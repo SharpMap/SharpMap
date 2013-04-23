@@ -170,6 +170,7 @@
     <Compile Include="Data\Providers\ProviderTest.cs" />
     <Compile Include="Data\Providers\ShapeFileProviderTests.cs" />
     <Compile Include="Data\Providers\SQLServer2008Tests.cs" />
+    <Compile Include="Data\Providers\ThreadingTest.cs" />
     <Compile Include="MapDecorationTest.cs" />
     <Compile Include="MapTest.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
