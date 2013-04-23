@@ -34,7 +34,7 @@ namespace UnitTests.Data.Providers
     {
         private struct tmp { }
 
-        private static string TestDataPath
+        internal static string TestDataPath
         {
             get
             {
@@ -224,6 +224,33 @@ namespace UnitTests.Data.Providers
                     if (allRun) break;
                 }
             }
+        }
+
+        [Test]
+        public void TestTwoOpenClose()
+        {
+            ///Simulates two threads using the same provider at the same time..
+            var provider = new ShapeFile(ShapeFileThreadingTest.TestDataPath, false, false);
+            provider.Open();
+            provider.Open();
+            provider.GetGeometriesInView(GetRandomEnvelope());
+            provider.Close();
+            provider.GetGeometriesInView(GetRandomEnvelope());
+            provider.Close();
+        }
+
+        [Test]
+        public void TestTwoThreadsUsingDifferentProviders()
+        {
+            ///Simulates two threads using the same provider at the same time..
+            var provider1 = new ShapeFile(ShapeFileThreadingTest.TestDataPath, false, false);
+            var provider2 = new ShapeFile(ShapeFileThreadingTest.TestDataPath, false, false);
+            provider1.Open();
+            provider2.Open();
+            provider1.GetGeometriesInView(GetRandomEnvelope());
+            provider1.Close();
+            provider2.GetGeometriesInView(GetRandomEnvelope());
+            provider2.Close();
         }
 
         private void ExecuteGetGeometriesInView(object arguments)
