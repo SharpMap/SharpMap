@@ -74,10 +74,13 @@ namespace SharpMap.Features
         {
             return GetType();
         }
-        
-        private static bool IsEntityPersistent(IEntity<T> e)
+
+        /// <summary>
+        /// Gets a value indicating that the <see cref="IEntity.Oid"/> has been assigned at least once.
+        /// </summary>
+        public bool HasOidAssigned
         {
-            return e != null && !Equals(e.Oid, default(T));
+            get { return !Equals(Oid, default(T)); }
         }
 
         public override bool Equals(object obj)
@@ -97,7 +100,7 @@ namespace SharpMap.Features
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
 
-            if (IsEntityPersistent(this) && IsEntityPersistent(other) && Equals(other.Oid, Oid))
+            if (HasOidAssigned && other.HasOidAssigned && Oid.Equals(other.Oid))
             {
                 var otherType = other.GetEntityType();
                 var thisType = GetEntityType();
@@ -115,11 +118,14 @@ namespace SharpMap.Features
 
 // ReSharper disable NonReadonlyFieldInGetHashCode
 // ReSharper disable BaseObjectGetHashCodeCallInGetHashCode
-            if (!_requestedHashCode.HasValue)
+            if (_requestedHashCode.HasValue)
             {
-                _requestedHashCode = IsEntityPersistent(this) ? Oid.GetHashCode() : base.GetHashCode();
+                return _requestedHashCode.Value;
             }
-            return _requestedHashCode.Value;
+
+            var hashCode = HasOidAssigned ? Oid.GetHashCode() : base.GetHashCode();
+            _requestedHashCode = hashCode;
+            return hashCode;
 // ReSharper restore BaseObjectGetHashCodeCallInGetHashCode
 // ReSharper restore NonReadonlyFieldInGetHashCode
         }

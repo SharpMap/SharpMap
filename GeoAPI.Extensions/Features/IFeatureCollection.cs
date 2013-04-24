@@ -6,7 +6,5 @@ namespace GeoAPI.Features
     public interface IFeatureCollection : ICollection<IFeature>
     {
         IFeatureFactory Factory { get; }
-
-        IFeature New();
     }
 }

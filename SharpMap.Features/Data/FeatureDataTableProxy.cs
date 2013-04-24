@@ -26,7 +26,11 @@ namespace SharpMap.Data
                 set { _column.ColumnName = value; }
             }
 
-            public string AttributeDescription { get { return _column.Caption; } set { _column.Caption = value; } }
+            public string AttributeDescription
+            {
+                get { return _column.Caption; }
+                set { _column.Caption = value; }
+            }
 
             public Type AttributeType
             {
@@ -37,7 +41,9 @@ namespace SharpMap.Data
                 } 
             }
 
-            public bool IsNullable { get { return _column.AllowDBNull; }
+            public bool IsNullable
+            {
+                get { return _column.AllowDBNull; }
                 set { _column.AllowDBNull = value; }
             }
         }

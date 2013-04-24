@@ -45,7 +45,7 @@ namespace SharpMap.Features
             {
                 throw new ArgumentException("The item to insert was not created by this collections factory", "item");
             }
-            _factory.AssignOid((Feature<T>) item);
+            _factory.AssignOidIfNotAlreadyDone((Feature<T>) item);
             base.SetItem(index, item);
         }
     }

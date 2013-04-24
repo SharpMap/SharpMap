@@ -18,20 +18,18 @@ namespace SharpMap.Features
         /// <summary>
         /// Creates an instance of this class
         /// </summary>
-        /// <param name="unassignedOid">The value an entities Oid should have to mark it as unset</param>
         /// <param name="newOidGenerator">A delegate function that produces a new oid, based on the last one provided</param>
-        public EntityOidGenerator(TEntity unassignedOid, Func<TEntity, TEntity> newOidGenerator)
-            :this(unassignedOid, unassignedOid, newOidGenerator)
+        public EntityOidGenerator(Func<TEntity, TEntity> newOidGenerator)
+            :this(default(TEntity), newOidGenerator)
         {
         }
 
         /// <summary>
         /// Creates an instance of this class
         /// </summary>
-        /// <param name="unassignedOid">The value an entities Oid should have to mark it as unset</param>
         /// <param name="startOid">The value the last generated Oid is set to.</param>
         /// <param name="newOidGenerator">A delegate function that produces a new oid, based on the last one provided</param>
-        public EntityOidGenerator(TEntity unassignedOid, TEntity startOid, Func<TEntity, TEntity> newOidGenerator)
+        public EntityOidGenerator(TEntity startOid, Func<TEntity, TEntity> newOidGenerator)
         {
             if (newOidGenerator == null)
             {
@@ -42,16 +40,9 @@ namespace SharpMap.Features
                 throw new ArgumentException("The provided generator does not produce new oid's", "newOidGenerator");
             }
 
-            UnassignedOid = unassignedOid;
-            _givenIds.Add(unassignedOid);
             _lastOid = startOid;
             _newOidGenerator = newOidGenerator;
         }
-
-        /// <summary>
-        /// Gets the "unassigned" Oid value
-        /// </summary>
-        public TEntity UnassignedOid { get; private set; }
 
         /// <summary>
         /// Function to generate a new Oid value
@@ -64,20 +55,10 @@ namespace SharpMap.Features
             return _lastOid;
         }
 
-        public void AssignOid(Entity<TEntity> item)
+        public void AssignOidIfNotAlreadyDone(Entity<TEntity> item)
         {
-            // Test for class Oids
-            if (typeof (TEntity).IsClass && ReferenceEquals(UnassignedOid, null))
-            {
+            if (item.HasOidAssigned)
                 return;
-            }
-
-            // Test for value
-            if (UnassignedOid.Equals(item.Oid))
-            {
-                return;
-            }
-
             item.Oid = GetNewOid();
         }
     }

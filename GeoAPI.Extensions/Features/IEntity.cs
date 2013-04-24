@@ -19,6 +19,11 @@ namespace GeoAPI.Features
         /// </summary>
         /// <returns>The entity's type</returns>
         Type GetEntityType();
+
+        /// <summary>
+        /// Gets a value indicating that the <see cref="Oid"/> has been assigned at least once.
+        /// </summary>
+        bool HasOidAssigned { get; }
     }
 
     /// <summary>

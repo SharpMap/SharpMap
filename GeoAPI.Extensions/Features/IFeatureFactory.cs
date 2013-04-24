@@ -40,10 +40,5 @@ namespace GeoAPI.Features
         /// </summary>
         /// <returns></returns>
         T GetNewOid();
-        
-        /// <summary>
-        /// ToDo: Move to entity and have clients implement it using some static 
-        /// </summary>
-        T UnassignedOid { get; }
     }
 }
