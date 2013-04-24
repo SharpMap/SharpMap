@@ -1431,16 +1431,13 @@ namespace SharpMap.Data.Providers
 
             var diff = _index.GetOffset(oid) - br.BaseStream.Position;
             br.BaseStream.Seek(diff, SeekOrigin.Current);
-#if DEBUG
-                return ParseGeometry(oid, Factory, _header.ShapeType, br);
-#else
             return ParseGeometry(Factory, _header.ShapeType, br);
-#endif
         }
 
-        private static IGeometry ParseGeometry(uint oid, IGeometryFactory factory, ShapeType shapeType, BinaryReader brGeometryStream)
+        private static IGeometry ParseGeometry(IGeometryFactory factory, ShapeType shapeType, BinaryReader brGeometryStream)
         {
-            brGeometryStream.BaseStream.Seek(8, SeekOrigin.Current); //Skip record number and content length
+            //Skip record number and content length
+            brGeometryStream.BaseStream.Seek(8, SeekOrigin.Current); 
 
             var type = (ShapeType)brGeometryStream.ReadInt32(); //Shape type
                 if (type == ShapeType.Null)
