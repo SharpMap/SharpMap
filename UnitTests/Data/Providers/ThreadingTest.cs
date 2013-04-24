@@ -12,13 +12,13 @@ namespace UnitTests.Data.Providers
 {
     public class ShapeFileWithMemoryCacheThreadingTest : ThreadingTest
     {
-        private struct tmp {}
+        private struct TMP {}
 
         private static string TestDataPath 
         {
             get
             {
-                var t = new tmp();
+                var t = new TMP();
                 var codeBase = Path.GetDirectoryName(t.GetType().Assembly.CodeBase);
                 return Path.Combine(new Uri(codeBase).LocalPath, "TestData", "roads_ugl.shp");
             }
@@ -28,6 +28,33 @@ namespace UnitTests.Data.Providers
             : base(new ShapeFile(TestDataPath, false, true))
         {
         }
+
+        [Test, Description("Simulates two threads using the same provider at the same time.")]
+        public void TestTwoOpenClose()
+        {
+            ///Simulates two threads using the same provider at the same time..
+            var provider = new ShapeFile(TestDataPath, false, true);
+            provider.Open();
+            provider.Open();
+            provider.GetGeometriesInView(GetRandomEnvelope());
+            provider.Close();
+            provider.GetGeometriesInView(GetRandomEnvelope());
+            provider.Close();
+        }
+
+        [Test, Description("Simulates two threads using the datasource with different providers at the same time.")]
+        public void TestTwoThreadsUsingDifferentProviders()
+        {
+            var provider1 = new ShapeFile(TestDataPath, false, true);
+            var provider2 = new ShapeFile(TestDataPath, false, true);
+            provider1.Open();
+            provider2.Open();
+            provider1.GetGeometriesInView(GetRandomEnvelope());
+            provider1.Close();
+            provider2.GetGeometriesInView(GetRandomEnvelope());
+            provider2.Close();
+        }
+
     }
 
     public class ShapeFileThreadingTest : ThreadingTest
@@ -48,6 +75,33 @@ namespace UnitTests.Data.Providers
             : base(new ShapeFile(TestDataPath, false, false))
         {
         }
+
+        [Test, Description("Simulates two threads using the same provider at the same time.")]
+        public void TestTwoOpenClose()
+        {
+            ///Simulates two threads using the same provider at the same time..
+            var provider = new ShapeFile(TestDataPath, false, false);
+            provider.Open();
+            provider.Open();
+            provider.GetGeometriesInView(GetRandomEnvelope());
+            provider.Close();
+            provider.GetGeometriesInView(GetRandomEnvelope());
+            provider.Close();
+        }
+
+        [Test, Description("Simulates two threads using the datasource with different providers at the same time.")]
+        public void TestTwoThreadsUsingDifferentProviders()
+        {
+            var provider1 = new ShapeFile(TestDataPath, false, false);
+            var provider2 = new ShapeFile(TestDataPath, false, false);
+            provider1.Open();
+            provider2.Open();
+            provider1.GetGeometriesInView(GetRandomEnvelope());
+            provider1.Close();
+            provider2.GetGeometriesInView(GetRandomEnvelope());
+            provider2.Close();
+        }
+
     }
 
     [Ignore("Only run if you have a proper postgis connection")]
@@ -80,13 +134,15 @@ namespace UnitTests.Data.Providers
     [TestFixture]
     public abstract class ThreadingTest
     {
+        //private static readonly ILog Logger = LogManager.GetCurrentClassLogger();
+        
         static ThreadingTest ()
         {
             GeoAPI.GeometryServiceProvider.Instance =
                 NetTopologySuite.NtsGeometryServices.Instance;
         }
 
-        private const int NumberOfTests = 500;
+        private const int NumberOfTests = 200;
         private readonly IProvider _provider;
         private readonly Envelope _extents;
         private readonly Random _rnd = new Random(6584);
@@ -102,7 +158,7 @@ namespace UnitTests.Data.Providers
             _provider.Close();
         }
 
-        private Envelope GetRandomEnvelope()
+        protected Envelope GetRandomEnvelope()
         {
             var minX = NextRandom(-0.1, 0.5, _extents.MinX, _extents.Width);
             var minY = NextRandom(-0.1, 0.5, _extents.MinY, _extents.Height);
@@ -144,6 +200,9 @@ namespace UnitTests.Data.Providers
 
         public void RunTest(int kind)
         {
+            var sw = new System.Diagnostics.Stopwatch();
+            sw.Start();
+
             _provider.Open();
 
             _testsRun.Clear();
@@ -191,8 +250,10 @@ namespace UnitTests.Data.Providers
             foreach (var exception in _testsFailed)
             {
                 if (exception != null)
-                    Assert.IsTrue(false);
+                    throw exception;
             }
+            sw.Stop();
+            Console.WriteLine("\nTest performed in {0}ms", sw.ElapsedMilliseconds);
         }
 
         private readonly object _runLock = new object();
@@ -226,45 +287,18 @@ namespace UnitTests.Data.Providers
             }
         }
 
-        [Test]
-        public void TestTwoOpenClose()
-        {
-            ///Simulates two threads using the same provider at the same time..
-            var provider = new ShapeFile(ShapeFileThreadingTest.TestDataPath, false, false);
-            provider.Open();
-            provider.Open();
-            provider.GetGeometriesInView(GetRandomEnvelope());
-            provider.Close();
-            provider.GetGeometriesInView(GetRandomEnvelope());
-            provider.Close();
-        }
-
-        [Test]
-        public void TestTwoThreadsUsingDifferentProviders()
-        {
-            ///Simulates two threads using the same provider at the same time..
-            var provider1 = new ShapeFile(ShapeFileThreadingTest.TestDataPath, false, false);
-            var provider2 = new ShapeFile(ShapeFileThreadingTest.TestDataPath, false, false);
-            provider1.Open();
-            provider2.Open();
-            provider1.GetGeometriesInView(GetRandomEnvelope());
-            provider1.Close();
-            provider2.GetGeometriesInView(GetRandomEnvelope());
-            provider2.Close();
-        }
-
         private void ExecuteGetGeometriesInView(object arguments)
         {
             var env = GetRandomEnvelope();
-            Console.WriteLine("Tread {0}: {2}. GetGeometriesInView({1})", Thread.CurrentThread.ManagedThreadId, env, arguments);
+            Console.WriteLine("Thread {0}: {2}. GetGeometriesInView({1})", Thread.CurrentThread.ManagedThreadId, env, arguments);
             try
             {
                 var geoms = _provider.GetGeometriesInView(env);
-                Console.WriteLine("Tread {0}: {2}.  {1} geometries", Thread.CurrentThread.ManagedThreadId, geoms.Count, arguments);
+                Console.WriteLine("Thread {0}: {2}.  {1} geometries", Thread.CurrentThread.ManagedThreadId, geoms.Count, arguments);
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Tread {0}: {1}. failed:\n{2}", Thread.CurrentThread.ManagedThreadId, arguments, ex.Message);
+                Console.WriteLine("Thread {0}: {1}. failed:\n{2}", Thread.CurrentThread.ManagedThreadId, arguments, ex.Message);
                 _testsFailed[(int)arguments] = ex;
             }
             
@@ -273,16 +307,16 @@ namespace UnitTests.Data.Providers
         private void ExecuteExecuteFeatureQueryEnvelope(object arguments)
         {
             var env = GetRandomEnvelope();
-            Console.WriteLine("Tread {0}:  {2}. ExecuteFeatureQuery with ({1})", Thread.CurrentThread.ManagedThreadId, env, arguments);
+            Console.WriteLine("Thread {0}:  {2}. ExecuteFeatureQuery with ({1})", Thread.CurrentThread.ManagedThreadId, env, arguments);
             try
             {
                 var fds = new FeatureDataSet();
                 _provider.ExecuteIntersectionQuery(env, fds);
-                Console.WriteLine("Tread {0}:  {2}. {1} features", Thread.CurrentThread.ManagedThreadId, fds.Tables[0].Count, arguments);
+                Console.WriteLine("Thread {0}:  {2}. {1} features", Thread.CurrentThread.ManagedThreadId, fds.Tables[0].Count, arguments);
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Tread {0}: {1}. failed:\n{2}", Thread.CurrentThread.ManagedThreadId, arguments, ex.Message);
+                Console.WriteLine("Thread {0}: {1}. failed:\n{2}", Thread.CurrentThread.ManagedThreadId, arguments, ex.Message);
                 _testsFailed[(int)arguments] = ex;
             }
 
@@ -292,16 +326,16 @@ namespace UnitTests.Data.Providers
         {
             var env = GetRandomEnvelope();
             var geom = GeometryFactory.Default.ToGeometry(env);
-            Console.WriteLine("Tread {0}:  {2}. ExecuteFeatureQuery with ({1})", Thread.CurrentThread.ManagedThreadId, geom, arguments);
+            Console.WriteLine("Thread {0}:  {2}. ExecuteFeatureQuery with ({1})", Thread.CurrentThread.ManagedThreadId, geom, arguments);
             try
             {
                 var fds = new FeatureDataSet();
                 _provider.ExecuteIntersectionQuery(geom, fds);
-                Console.WriteLine("Tread {0}:  {2}. {1} features", Thread.CurrentThread.ManagedThreadId, fds.Tables[0].Count, arguments);
+                Console.WriteLine("Thread {0}:  {2}. {1} features", Thread.CurrentThread.ManagedThreadId, fds.Tables[0].Count, arguments);
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Tread {0}: {1}. failed:\n{2}", Thread.CurrentThread.ManagedThreadId, arguments, ex.Message);
+                Console.WriteLine("Thread {0}: {1}. failed:\n{2}", Thread.CurrentThread.ManagedThreadId, arguments, ex.Message);
                 _testsFailed[(int)arguments] = ex;
             }
 
