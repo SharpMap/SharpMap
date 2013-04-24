@@ -80,16 +80,13 @@
   </Target>
   -->
   <ItemGroup>
-    <Reference Include="BruTile, Version=0.7.4.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="BruTile">
       <HintPath>..\packages\BruTile.0.7.4\lib\net40\BruTile.dll</HintPath>
     </Reference>
-    <Reference Include="BruTile.Desktop, Version=0.7.4.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="BruTile.Desktop">
       <HintPath>..\packages\BruTile.0.7.4\lib\net40\BruTile.Desktop.dll</HintPath>
     </Reference>
-    <Reference Include="BruTile.MbTiles, Version=0.7.4.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="BruTile.MbTiles">
       <HintPath>..\packages\BruTile.0.7.4\lib\net40\BruTile.MbTiles.dll</HintPath>
     </Reference>
     <Reference Include="DotSpatial.Projections">
