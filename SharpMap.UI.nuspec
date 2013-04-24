@@ -6,12 +6,12 @@
     <authors>SharpMap-Team</authors>
     <licenseUrl>http://sharpmap.codeplex.com/license</licenseUrl>
     <projectUrl>http://sharpmap.codeplex.com</projectUrl>
-    <iconUrl>http://download-codeplex.sec.s-msft.com/Download?ProjectName=sharpmap&DownloadId=668183</iconUrl>
+    <!--<iconUrl>"http://download-codeplex.sec.s-msft.com/Download?ProjectName=sharpmap&DownloadId=668183"</iconUrl>-->
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <summary>
       SharpMap is an easy-to-use mapping library for use in web and desktop applications.
-      It provides access to many types of GIS data, enables spatial querying of that data, and renders beautiful maps.
-      The engine is written in C# and based on the .Net 4.0 framework.
+It provides access to many types of GIS data, enables spatial querying of that data, and renders beautiful maps.
+The engine is written in C# and based on the .Net 4.0 framework.
     </summary>
     <description>
       This package contains the Windows Forms user interface components of SharpMap.
