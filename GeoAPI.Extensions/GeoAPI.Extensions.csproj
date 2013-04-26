@@ -48,6 +48,7 @@
     <Compile Include="Features\IFeatureAttributeDefinition.cs" />
     <Compile Include="Features\IFeatureAttributes.cs" />
     <Compile Include="Features\IFeatureCollection.cs" />
+    <Compile Include="Features\IFeatureProvider.cs" />
     <Compile Include="SpatialReference\IReprojector.cs" />
     <Compile Include="SpatialReference\IReprojectorCore.cs" />
     <Compile Include="SpatialReference\ISpatialReference.cs" />

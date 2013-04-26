@@ -54,6 +54,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Data\ProviderProxyTests.cs" />
     <Compile Include="Features\FeatureTest.cs" />
     <Compile Include="Features\Poco\PoIFeature.cs" />
     <Compile Include="Features\Poco\PoIFeatureTest.cs" />

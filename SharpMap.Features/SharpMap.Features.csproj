@@ -46,6 +46,7 @@
   <ItemGroup>
     <Compile Include="Data\FeatureDataRowProxy.cs" />
     <Compile Include="Data\FeatureDataTableProxy.cs" />
+    <Compile Include="Data\ProviderProxy.cs" />
     <Compile Include="Features\Entity.cs" />
     <Compile Include="Features\EntityOidGenerator.cs" />
     <Compile Include="Features\Feature.cs" />

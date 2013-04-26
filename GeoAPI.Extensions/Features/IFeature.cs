@@ -26,25 +26,6 @@ namespace GeoAPI.Features
         IFeatureAttributes Attributes { get; }
     }
     
-    public enum SpatialPredicate
-    {
-        Intersects,
-        Contains,
-        Within,
-        Overlaps,
-        Covers,
-        Covered,
-        CoveredBy
-    }
-
-    interface IFeatureReader
-    {
-        IEnumerable<IFeature> Execute();
-        IEnumerable<IFeature> Execute(Func<Envelope, IFeature, bool> spatialPredicate);
-        IEnumerable<IFeature> Execute(Func<Envelope, IFeature, bool> spatialPredicate, Func<IFeature, bool> featurePredicate);
-        IEnumerable<IFeature> Execute(Func<IPreparedGeometry, IFeature, bool> spatialPredicate);
-        IEnumerable<IFeature> Execute(Func<IPreparedGeometry, IFeature, bool> spatialPredicate, Func<IFeature, bool> featurePredicate);
-    }
 
     /// <summary>
     /// Interface for all classes that can be used as a feature

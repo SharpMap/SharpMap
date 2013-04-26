@@ -27,6 +27,15 @@ namespace SharpMap.Data
             return typeof(FeatureDataRow);
         }
 
+        public bool HasOidAssigned
+        {
+            get
+            {
+                return _row[0] != DBNull.Value;
+                return _row.RowState == DataRowState.Detached;
+            }
+        }
+
         public object Clone()
         {
             var res = (FeatureDataRowProxy)Factory.Create((IGeometry) Geometry.Clone());
