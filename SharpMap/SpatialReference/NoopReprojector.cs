@@ -34,6 +34,8 @@ namespace SharpMap.SpatialReference
 
             public string Oid { get { return _definition; } set {}}
 
+            public bool HasOidAssigned { get { return true; } }
+
             public Type GetEntityType()
             {
                 return GetType();
