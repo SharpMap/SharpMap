@@ -51,6 +51,8 @@ namespace SharpMap.SpatialReference
             }
         }
 
+        public bool HasOidAssigned { get { return true;}}
+        
         public Type GetEntityType()
         {
             return GetType();
