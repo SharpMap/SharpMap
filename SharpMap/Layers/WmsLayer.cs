@@ -717,7 +717,7 @@ namespace SharpMap.Layers
                             g.DrawImage(img, new Rectangle(0, 0, img.Width, img.Height), 0, 0,
                                         img.Width, img.Height, GraphicsUnit.Pixel, _imageAttributes);
                         else
-                            g.DrawImageUnscaled(img, 0, 0, map.Size.Width, map.Size.Height);
+                            g.DrawImage(img, Rectangle.FromLTRB(0, 0, map.Size.Width, map.Size.Height));
 
                         if (img != null)
                             img.Dispose();
