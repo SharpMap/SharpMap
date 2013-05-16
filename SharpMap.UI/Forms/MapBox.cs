@@ -691,6 +691,7 @@ namespace SharpMap.Forms
             base.DoubleBuffered = true;
             _map = new Map(ClientSize);
             VariableLayerCollection.VariableLayerCollectionRequery += HandleVariableLayersRequery;
+            _map.RefreshNeeded += HandleRefreshNeeded;
             _map.MapNewTileAvaliable += HandleMapNewTileAvaliable;
 
             _activeTool = Tools.None;
@@ -739,6 +740,7 @@ namespace SharpMap.Forms
             if (_map != null)
             {
                 _map.MapNewTileAvaliable -= HandleMapNewTileAvaliable;
+                _map.RefreshNeeded -= HandleRefreshNeeded;
             }
             LostFocus -= HandleMapBoxLostFocus;
 
@@ -1465,6 +1467,7 @@ namespace SharpMap.Forms
             {
                 VariableLayerCollection.VariableLayerCollectionRequery -= HandleVariableLayersRequery;
                 _map.MapNewTileAvaliable -= HandleMapNewTileAvaliable;
+                _map.RefreshNeeded -= HandleRefreshNeeded;
             }
         }
 
@@ -1478,10 +1481,16 @@ namespace SharpMap.Forms
             {
                 VariableLayerCollection.VariableLayerCollectionRequery += HandleVariableLayersRequery;
                 _map.MapNewTileAvaliable += HandleMapNewTileAvaliable;
+                _map.RefreshNeeded += HandleRefreshNeeded;
                 Refresh();
             }
 
             if (MapChanged != null) MapChanged(this, e);
+        }
+
+        void HandleRefreshNeeded(object sender, EventArgs e)
+        {
+            UpdateImage(true);
         }
 
         /*

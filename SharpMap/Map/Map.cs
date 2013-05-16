@@ -144,11 +144,28 @@ namespace SharpMap
             {
 
                 var l = _backgroundLayers[e.NewIndex];
-                var tileAsyncLayer   = l as ITileAsyncLayer;
+                var tileAsyncLayer = l as ITileAsyncLayer;
                 if (tileAsyncLayer != null)
                 {
-                    tileAsyncLayer.MapNewTileAvaliable += MapNewTileAvaliableHandler;
+                    if (tileAsyncLayer.OnlyRedrawWhenComplete)
+                    {
+                        tileAsyncLayer.DownloadProgressChanged += new DownloadProgressHandler(layer_DownloadProgressChanged);
+                    }
+                    else
+                    {
+                        tileAsyncLayer.MapNewTileAvaliable += MapNewTileAvaliableHandler;
+                    }
                 }
+            }
+        }
+
+        void layer_DownloadProgressChanged(int tilesRemaining)
+        {
+            if (tilesRemaining <= 0)
+            {
+                var e = RefreshNeeded;
+                if (e != null)
+                    e(this, new EventArgs());
             }
         }
 
@@ -222,7 +239,6 @@ namespace SharpMap
         public delegate void MapViewChangedHandler();
 
 
-
         #endregion
 
         /// <summary>
@@ -269,6 +285,11 @@ namespace SharpMap
         /// Event fired when a new Tile is available in a TileAsyncLayer
         /// </summary>
         public event MapNewTileAvaliabledHandler MapNewTileAvaliable;
+
+        /// <summary>
+        /// Event that is called when a layer have changed and the map need to redraw
+        /// </summary>
+        public event EventHandler RefreshNeeded;
 
         #endregion
 

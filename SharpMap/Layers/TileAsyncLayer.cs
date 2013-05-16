@@ -20,10 +20,37 @@ namespace SharpMap.Layers
     [Serializable]
     public class TileAsyncLayer : TileLayer, ITileAsyncLayer
     {
-        static readonly ILog Logger = LogManager.GetLogger(typeof(TileAsyncLayer));
+        class DownloadTask
+        {
+            public CancellationTokenSource CancellationToken;
+            public System.Threading.Tasks.Task Task;
+        }
 
-        private readonly List<BackgroundWorker> _threadList = new List<BackgroundWorker>();
-        private readonly Random _r = new Random(DateTime.Now.Second);
+        static readonly ILog Logger = LogManager.GetLogger(typeof(TileAsyncLayer));
+        private readonly List<DownloadTask> _currentTasks = new List<DownloadTask>();
+
+        int _numPendingDownloads = 0;
+        bool _onlyRedrawWhenComplete = false;
+
+        /// <summary>
+        /// Gets or Sets a value indicating if to redraw the map only when all tiles are downloaded
+        /// </summary>
+        public bool OnlyRedrawWhenComplete
+        {
+            get { return _onlyRedrawWhenComplete; }
+            set { _onlyRedrawWhenComplete = value; }
+        }
+        
+        /// <summary>
+        /// Returns the number of tiles that are in queue for download
+        /// </summary>
+        public int NumPendingDownloads { get { return _numPendingDownloads; } }
+
+        /// <summary>
+        /// Event raised when tiles are downloaded
+        /// </summary>
+        public event DownloadProgressHandler DownloadProgressChanged;
+
         
         /// <summary>
         /// Creates an instance of this class
@@ -84,15 +111,16 @@ namespace SharpMap.Layers
         /// </summary>
         public void Cancel()
         {
-            lock (_threadList) 
+            lock (_currentTasks)
             {
-                foreach (var t in _threadList)
+                foreach (var t in _currentTasks)
                 {
-                    if (t.IsBusy)
-                        t.CancelAsync();
+                    if (!t.Task.IsCompleted)
+                        t.CancellationToken.Cancel();
                 }
-                _threadList.Clear();
-            } 
+                _currentTasks.Clear();
+                _numPendingDownloads = 0;
+            }
         }
 
         /// <summary>
@@ -102,7 +130,6 @@ namespace SharpMap.Layers
         /// <param name="map">Map which is rendered</param>
         public override void Render(Graphics graphics, Map map)
         {
-
             var bbox = map.Envelope;
             var extent = new Extent(bbox.MinX, bbox.MinY, bbox.MaxX, bbox.MaxY);
             int level = BruTile.Utilities.GetNearestLevel(_source.Schema.Resolutions, map.PixelSize);
@@ -122,7 +149,6 @@ namespace SharpMap.Layers
                 {
                     if (_bitmaps.Find(info.Index) != null)
                     {
-                        //ThreadPool.QueueUserWorkItem(OnMapNewtileAvailableHelper, new object[] { info, _bitmaps.Find(info.Index) });
                         //draws directly the bitmap
                         var bb = new Envelope(new Coordinate(info.Extent.MinX, info.Extent.MinY),
                                               new Coordinate(info.Extent.MaxX, info.Extent.MaxY));
@@ -135,7 +161,6 @@ namespace SharpMap.Layers
                         Bitmap img = GetImageFromFileCache(info) as Bitmap;
                         _bitmaps.Add(info.Index, img);
 
-                        //ThreadPool.QueueUserWorkItem(OnMapNewtileAvailableHelper, new object[] { info, img });
                         //draws directly the bitmap
                         var btExtent = info.Extent;
                         var bb = new Envelope(new Coordinate(btExtent.MinX, btExtent.MinY),
@@ -145,27 +170,32 @@ namespace SharpMap.Layers
                     }
                     else
                     {
-                        var b = new BackgroundWorker();
-                        b.WorkerSupportsCancellation = true;
-                        b.DoWork += DoWorkBackground;
-                        b.RunWorkerAsync(new object[] {_source.Provider, info, _bitmaps, true});
-                        //Thread t = new Thread(new ParameterizedThreadStart(GetTileOnThread));
-                        //t.Name = info.ToString();
-                        //t.IsBackground = true;
-                        //t.Start();
-                        lock (_threadList)
+                        var cancelToken = new CancellationTokenSource();
+                        var token = cancelToken.Token;
+                        var l_info = info;
+                        var t = new System.Threading.Tasks.Task(delegate
                         {
-                            _threadList.Add(b);
+                            if (token.IsCancellationRequested)
+                                token.ThrowIfCancellationRequested();
+
+                            GetTileOnThread(token, _source.Provider, l_info, _bitmaps, true);
+                            Interlocked.Decrement(ref _numPendingDownloads);
+                            var e = DownloadProgressChanged;
+                            if (e != null)
+                                e(_numPendingDownloads);
+
+                        }, token);
+                        var dt = new DownloadTask() { CancellationToken = cancelToken, Task = t };
+                        lock (_currentTasks)
+                        {
+                            _currentTasks.Add(dt);
+                            _numPendingDownloads++;
                         }
+                        t.Start();
                     }
                 }
             }
 
-        }
-
-        private void DoWorkBackground(object sender, DoWorkEventArgs e)
-        {
-            GetTileOnThread((BackgroundWorker) sender, e.Argument);
         }
 
         static void HandleMapNewTileAvaliable(Map map, Graphics g, Envelope box, Bitmap bm, int sourceWidth, int sourceHeight, ImageAttributes imageAttributes)
@@ -197,39 +227,18 @@ namespace SharpMap.Layers
 
         }
 
-        /*
-        private void OnMapNewtileAvailableHelper(object parameter)
+        private void GetTileOnThread(CancellationToken cancelToken, ITileProvider tileProvider, TileInfo tileInfo, MemoryCache<Bitmap> bitmaps, bool retry)
         {
-            //this is to wait for the main UI thread to finalize rendering ... (buggy code here)...
-            System.Threading.Thread.Sleep(100);
-            object[] parameters = (object[])parameter;
-            if (parameters.Length != 2) throw new ArgumentException("Two parameters expected");
-            TileInfo tileInfo = (TileInfo)parameters[0];
-            Bitmap bm = (Bitmap)parameters[1];
-            OnMapNewTileAvaliable(tileInfo, bm);
-        }
-        */
-
-        private void GetTileOnThread(BackgroundWorker worker, object parameter)
-        {
-            Thread.Sleep(50 + (_r.Next(5)*10));
-            object[] parameters = (object[])parameter;
-            if (parameters.Length != 4) throw new ArgumentException("Four parameters expected");
-            ITileProvider tileProvider = (ITileProvider)parameters[0];
-            TileInfo tileInfo = (TileInfo)parameters[1];
-            MemoryCache<Bitmap> bitmaps = (MemoryCache<Bitmap>)parameters[2];
-            bool retry = (bool)parameters[3];
-
-
             byte[] bytes;
             try
             {
-                
-                if (worker.CancellationPending)
-                    return;
+                if (cancelToken.IsCancellationRequested)
+                    cancelToken.ThrowIfCancellationRequested();
+
                 bytes = tileProvider.GetTile(tileInfo);
-                if (worker.CancellationPending)
-                    return;
+                if (cancelToken.IsCancellationRequested)
+                    cancelToken.ThrowIfCancellationRequested();
+
                 Bitmap bitmap = new Bitmap(new MemoryStream(bytes));
                 bitmaps.Add(tileInfo.Index, bitmap);
                 if (_fileCache != null && !_fileCache.Exists(tileInfo.Index))
@@ -237,18 +246,15 @@ namespace SharpMap.Layers
                     AddImageToFileCache(tileInfo, bitmap);
                 }
 
-                if (worker.CancellationPending)
-                    return;
+                if (cancelToken.IsCancellationRequested)
+                    cancelToken.ThrowIfCancellationRequested();
                 OnMapNewTileAvaliable(tileInfo, bitmap);
-                //if (worker.CancellationPending)
-                //    return;
             }
             catch (WebException ex)
             {
                 if (retry)
                 {
-                    parameters[3] = false;
-                    GetTileOnThread( worker, parameters);
+                    GetTileOnThread(cancelToken, tileProvider, tileInfo, bitmaps, false);
                 }
                 else
                 {
@@ -286,6 +292,9 @@ namespace SharpMap.Layers
 
         private void OnMapNewTileAvaliable(TileInfo tileInfo, Bitmap bitmap)
         {
+            if (_onlyRedrawWhenComplete)
+                return;
+
             if (MapNewTileAvaliable != null)
             {
                 var bb = new Envelope(new Coordinate(tileInfo.Extent.MinX, tileInfo.Extent.MinY), new Coordinate(tileInfo.Extent.MaxX, tileInfo.Extent.MaxY));

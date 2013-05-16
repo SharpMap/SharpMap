@@ -16,6 +16,12 @@ namespace SharpMap.Layers
     public delegate void MapNewTileAvaliabledHandler(TileLayer sender, Envelope bbox, Bitmap bm, int sourceWidth, int sourceHeight, ImageAttributes imageAttributes);
 
     /// <summary>
+    /// Delegate for notifying download of tiles
+    /// </summary>
+    /// <param name="tilesRemaining"></param>
+    public delegate void DownloadProgressHandler(int tilesRemaining);
+
+    /// <summary>
     /// Interface for async tile layers
     /// </summary>
     public interface ITileAsyncLayer
@@ -26,8 +32,23 @@ namespace SharpMap.Layers
         event MapNewTileAvaliabledHandler MapNewTileAvaliable;
 
         /// <summary>
+        /// Event raised when downloadprogress of tiles changed
+        /// </summary>
+        event DownloadProgressHandler DownloadProgressChanged;
+
+        /// <summary>
+        /// Gets or Sets a value indicating if to redraw the map only when all tiles are downloaded
+        /// </summary>
+        bool OnlyRedrawWhenComplete { get; set; }
+
+        /// <summary>
         /// Method to cancel the async layer
         /// </summary>
         void Cancel();
+
+        /// <summary>
+        /// Returns the number of tiles that are in queue for download
+        /// </summary>
+        int NumPendingDownloads { get; }
     }
 }
