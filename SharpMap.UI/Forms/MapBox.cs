@@ -892,12 +892,14 @@ namespace SharpMap.Forms
 
                 using (var g = Graphics.FromImage(retval))
                 {
-                    map.RenderMap(g, layerCollectionType, false);
+                    g.Clear(Color.Transparent);
+                    map.RenderMap(g, layerCollectionType, false, true);
                 }
 
-                if (layerCollectionType == LayerCollectionType.Variable)
+                /*if (layerCollectionType == LayerCollectionType.Variable)
                     retval.MakeTransparent(_map.BackColor);
-
+                else if (layerCollectionType == LayerCollectionType.Static && map.BackgroundLayer.Count > 0)
+                    retval.MakeTransparent(_map.BackColor);*/
                 return retval;
             }
             catch (Exception ee)
@@ -987,6 +989,7 @@ namespace SharpMap.Forms
 
                         using (var g = Graphics.FromImage(bmp))
                         {
+                            g.Clear(_map.BackColor);
                             lock (_backgroundImagesLocker)
                             {
                                 //Draws the background Image
