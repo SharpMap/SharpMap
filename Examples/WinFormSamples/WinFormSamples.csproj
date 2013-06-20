@@ -198,6 +198,7 @@
     <Compile Include="Samples\GdalSample.cs" />
     <Compile Include="Samples\GeometryFeatureProviderSample.cs" />
     <Compile Include="Samples\GradiantThemeSample.cs" />
+    <Compile Include="Samples\HeatLayerSample.cs" />
     <Compile Include="Samples\OracleSample.cs" />
     <Compile Include="SharpMapTileSource.cs" />
     <Content Include="x64\SQLite.Interop.dll">
@@ -553,6 +554,10 @@
     <ProjectReference Include="..\..\SharpMap.Extensions\SharpMap.Extensions.csproj">
       <Project>{A4140C12-53F5-438C-8D24-9E48C504FECF}</Project>
       <Name>SharpMap.Extensions</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\SharpMap.Layers.HeatLayer\SharpMap.Layers.HeatLayer.csproj">
+      <Project>{47F790C2-6DC0-4A09-9026-FC81A09FD6A3}</Project>
+      <Name>SharpMap.Layers.HeatLayer</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\SharpMap.UI\SharpMap.UI.csproj">
       <Project>{DD1CC1DB-4BF9-4C88-A100-733D84795F3A}</Project>

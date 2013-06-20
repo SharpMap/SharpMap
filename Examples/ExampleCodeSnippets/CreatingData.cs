@@ -42,7 +42,7 @@ namespace ExampleCodeSnippets
         /// <returns></returns>
         public static SharpMap.Data.FeatureDataTable CreatePointFeatureDataTableFromArrays(double[] xcomponents, 
                                                                  double[] ycomponents,
-                                                                 double[] zcomponents)
+                                                                 double[] zcomponents, double[] data = null)
         {
             var factory = new NetTopologySuite.Geometries.GeometryFactory();
             var threedee = false;
@@ -61,6 +61,10 @@ namespace ExampleCodeSnippets
 
             var fdt = new SharpMap.Data.FeatureDataTable();
             fdt.Columns.Add("TimeStamp", typeof (System.DateTime)); // add example timestamp attribute
+            if (data != null)
+                fdt.Columns.Add("Data", typeof(System.Double)); // add example timestamp attribute
+
+            
             for (var i = 0; i < xcomponents.Length; i++)
             {
                 SharpMap.Data.FeatureDataRow fdr = fdt.NewRow();
@@ -70,6 +74,9 @@ namespace ExampleCodeSnippets
                                    : new GeoAPI.Geometries.Coordinate(xcomponents[i], ycomponents[i]));
 
                 fdr["TimeStamp"] = System.DateTime.Now; //set the timestamp property
+                if (data != null)
+                    fdr["Data"] = data[i];
+
                 fdt.AddRow(fdr);
             }
 

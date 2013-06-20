@@ -81,21 +81,5 @@ namespace WinFormSamples
                 return null;
             }
         }
-
-        private void btnCreateTiles_Click(object sender, EventArgs e)
-        {
-            if (mapBox1.Map == null)
-                return;
-
-            if (mapBox1.Map.Layers.Count == 0)
-                return;
-
-            using (var f = new FormCreateTilesSample())
-            {
-                f.Map = mapBox1.Map;
-                f.ShowDialog();
-            }
-        }
-
     }
 }

@@ -36,6 +36,7 @@ using ColorBlend = SharpMap.Rendering.Thematics.ColorBlend;
 
 namespace SharpMap.Layers
 {
+    [Serializable]
     public class HeatLayer : Layer, ICanQueryLayer
     {
         /// <summary>
@@ -77,16 +78,45 @@ namespace SharpMap.Layers
         /// <summary>
         /// Creates an instance of this class
         /// </summary>
+        /// <param name="vectorLayer">The base layer</param>
+        /// <param name="heatValueColumn">The name of the column that contains the heat value</param>
+        /// <param name="heatValueScale">A value that is responsible to scale the heat value to the range &#x211d;[0, 1f]</param>
+        public HeatLayer(VectorLayer vectorLayer, string heatValueColumn, float heatValueScale = 1f)
+            : this()
+        {
+            BaseLayer = vectorLayer;
+            DataSource = vectorLayer.DataSource;
+            HeatValueComputer = GetHeatValueFromColumn;
+            HeatValueColumn = heatValueColumn;
+            HeatValueScale = heatValueScale;
+        }
+
+        /// <summary>
+        /// Creates an instance of this class
+        /// </summary>
         /// <param name="provider">The provider</param>
         /// <param name="heatValueColumn">The name of the column that contains the heat value</param>
         /// <param name="heatValueScale">A value that is responsible to scale the heat value to the range &#x211d;[0, 1f]</param>
         public HeatLayer(IProvider provider, string heatValueColumn, float heatValueScale = 1f)
             :this()
         {
-            Provider = provider;
+            DataSource = provider;
             HeatValueComputer = GetHeatValueFromColumn;
             HeatValueColumn = heatValueColumn;
             HeatValueScale = heatValueScale;
+        }
+
+        /// <summary>
+        /// Creates an instance of this class
+        /// </summary>
+        /// <param name="vectorLayer">The base layer</param>
+        /// <param name="heatComputer">A function to compute the heat value from a <seealso cref="FeatureDataRow"/></param>
+        public HeatLayer(VectorLayer vectorLayer, Func<FeatureDataRow, float> heatComputer)
+            : this()
+        {
+            BaseLayer = vectorLayer;
+            DataSource = vectorLayer.DataSource;
+            HeatValueComputer = heatComputer;
         }
 
         /// <summary>
@@ -97,7 +127,7 @@ namespace SharpMap.Layers
         public HeatLayer(IProvider provider, Func<FeatureDataRow, float> heatComputer)
             : this()
         {
-            Provider = provider;
+            DataSource = provider;
             HeatValueComputer = heatComputer;
         }
 
@@ -112,9 +142,14 @@ namespace SharpMap.Layers
         public float HeatValueScale { get; set; }
 
         /// <summary>
+        /// Gets the base layer
+        /// </summary>
+        public VectorLayer BaseLayer { get; private set; }
+        
+        /// <summary>
         /// Gets the provider that serves the heat value features
         /// </summary>
-        public IProvider Provider { get; private set; }
+        public IProvider DataSource { get; private set; }
 
         /// <summary>
         /// Renders the layer
@@ -123,6 +158,11 @@ namespace SharpMap.Layers
         /// <param name="map">Map which is rendered</param>
         public override void Render(Graphics g, Map map)
         {
+            if (BaseLayer != null)
+            {
+                BaseLayer.Render(g, map);
+            }
+            
             var fds = new FeatureDataSet();
             var box = map.Envelope;
             ExecuteIntersectionQuery(box, fds);
@@ -188,7 +228,7 @@ namespace SharpMap.Layers
         {
             get
             {
-                var res = Provider.GetExtents();
+                var res = DataSource.GetExtents();
                 if (CoordinateTransformation != null)
                 {
                     return GeometryTransform.TransformBox(res, CoordinateTransformation.MathTransform);
@@ -210,7 +250,7 @@ namespace SharpMap.Layers
             {
                 box = GeometryTransform.TransformBox(box, CoordinateTransformation.MathTransform.Inverse());
             }
-            Provider.ExecuteIntersectionQuery(box, ds);
+            DataSource.ExecuteIntersectionQuery(box, ds);
             if (ds.Tables.Count > 0)
             {
                 ds.Tables[0].TableName = LayerName;
@@ -230,7 +270,7 @@ namespace SharpMap.Layers
             {
                 geometry = GeometryTransform.TransformGeometry(geometry, CoordinateTransformation.MathTransform.Inverse(), geometry.Factory);
             }
-            Provider.ExecuteIntersectionQuery(geometry, ds);
+            DataSource.ExecuteIntersectionQuery(geometry, ds);
             if (ds.Tables.Count > 0)
             {
                 ds.Tables[0].TableName = LayerName;
@@ -305,7 +345,7 @@ namespace SharpMap.Layers
                 throw new ArgumentException("portion");
             }
 
-            var ext = Provider.GetExtents();
+            var ext = DataSource.GetExtents();
             ZoomMin = ext.MaxExtent*portion;
             ZoomMax = ext.MaxExtent - ZoomMin;
         }
@@ -460,7 +500,7 @@ namespace SharpMap.Layers
                 if (heatValue <= 0) continue;
                 if (heatValue >= 1f) heatValue = 1;
 
-                var c = row.Geometry.Coordinate;
+                var c = row.Geometry.PointOnSurface.Coordinate;
                 if (CoordinateTransformation != null)
                 {
                     c = GeometryTransform.TransformCoordinate(c, CoordinateTransformation.MathTransform);
@@ -480,7 +520,7 @@ namespace SharpMap.Layers
         private void InterpolateOpacityValues()
         {
             _opacity[0] = (float)_opacityMax;
-            var dOpacity = (float)(_opacityMin - _opacityMax)/32f;
+            var dOpacity = (float)(_opacityMin - _opacityMax)/31f;
             for (var i = 1; i < 31; i++)
                 _opacity[i] = _opacity[i - 1] + dOpacity;
             _opacity[31] = (float)_opacityMin;

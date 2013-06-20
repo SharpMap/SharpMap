@@ -1722,7 +1722,10 @@ namespace SharpMap.Forms
                             pe.Graphics.DrawPolygon(new Pen(Color.Gray, 2F), pts);
                         }
                         else
+                        {
+                            if (pts.Length > 0)
                             pe.Graphics.DrawLines(new Pen(Color.Gray, 2F), pts);
+                        }
                     }
                 }
 

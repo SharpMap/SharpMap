@@ -70,6 +70,18 @@
     <Reference Include="alglibnet2">
       <HintPath>..\..\ExternalReferences\alglibnet2.dll</HintPath>
     </Reference>
+    <Reference Include="BruTile">
+      <HintPath>..\..\packages\BruTile.0.7.4\lib\net40\BruTile.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="BruTile.Desktop, Version=0.7.4.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\BruTile.0.7.4\lib\net40\BruTile.Desktop.dll</HintPath>
+    </Reference>
+    <Reference Include="BruTile.MbTiles, Version=0.7.4.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\BruTile.0.7.4\lib\net40\BruTile.MbTiles.dll</HintPath>
+    </Reference>
     <Reference Include="DotSpatial.Projections, Version=0.11.9.6, Culture=neutral, PublicKeyToken=272632bddd08a38b, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\DotSpatial.Projections.1.2\lib\net40-Client\DotSpatial.Projections.dll</HintPath>
@@ -107,6 +119,7 @@
   <ItemGroup>
     <Compile Include="CreatingData.cs" />
     <Compile Include="EnsureVisibleSample.cs" />
+    <Compile Include="HeatLayerExample.cs" />
     <Compile Include="LengthIndexedLineSample.cs" />
     <Compile Include="LineSymbolizerTest.cs" />
     <Compile Include="NtsTests.cs" />
@@ -127,6 +140,10 @@
     <ProjectReference Include="..\..\SharpMap.Extensions\SharpMap.Extensions.csproj">
       <Project>{A4140C12-53F5-438C-8D24-9E48C504FECF}</Project>
       <Name>SharpMap.Extensions</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\SharpMap.Layers.HeatLayer\SharpMap.Layers.HeatLayer.csproj">
+      <Project>{47F790C2-6DC0-4A09-9026-FC81A09FD6A3}</Project>
+      <Name>SharpMap.Layers.HeatLayer</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\SharpMap\SharpMap.csproj">
       <Project>{C83777FC-AABB-47D9-911F-D76255D4D541}</Project>

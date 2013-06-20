@@ -10,23 +10,23 @@ namespace WinFormSamples.Samples
         {
             switch (_num++ % 11)
             {
-                case 2:
-                    return InitializeMapOsm();
                 case 3:
-                    return InitializeMapBing(BruTile.Web.BingMapType.Roads);
+                    return InitializeMapOsm();
                 case 4:
-                    return InitializeMapBing(BruTile.Web.BingMapType.Aerial);
+                    return InitializeMapBing(BruTile.Web.BingMapType.Roads);
                 case 5:
-                    return InitializeMapBing(BruTile.Web.BingMapType.Hybrid);
+                    return InitializeMapBing(BruTile.Web.BingMapType.Aerial);
                 case 6:
-                    return InitializeMapGoogle(BruTile.Web.GoogleMapType.GoogleMap);
+                    return InitializeMapBing(BruTile.Web.BingMapType.Hybrid);
                 case 7:
-                    return InitializeMapGoogle(BruTile.Web.GoogleMapType.GoogleSatellite);
+                    return InitializeMapGoogle(BruTile.Web.GoogleMapType.GoogleMap);
                 case 8:
-                    return InitializeMapGoogle(BruTile.Web.GoogleMapType.GoogleSatellite | BruTile.Web.GoogleMapType.GoogleLabels);
+                    return InitializeMapGoogle(BruTile.Web.GoogleMapType.GoogleSatellite);
                 case 9:
-                    return InitializeMapGoogle(BruTile.Web.GoogleMapType.GoogleTerrain);
+                    return InitializeMapGoogle(BruTile.Web.GoogleMapType.GoogleSatellite | BruTile.Web.GoogleMapType.GoogleLabels);
                 case 10:
+                    return InitializeMapGoogle(BruTile.Web.GoogleMapType.GoogleTerrain);
+                case 11:
                     _num = 0;
                     return InitializeMapGoogle(BruTile.Web.GoogleMapType.GoogleLabels);
                 case 0:
@@ -37,6 +37,8 @@ namespace WinFormSamples.Samples
                     //return InitializeMapOsmWithVariableLayerCollection(angle);
                 case 1:
                     return InitializeMapOsmWithXls(angle);
+                case 2:
+                    return HeatLayerSample.InitializeMap(angle);
 
             }
             return InitializeMapOsm();

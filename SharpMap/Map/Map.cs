@@ -519,10 +519,16 @@ namespace SharpMap
         {
             var e = LayerRendered;
 #pragma warning restore 612,618
-            if (e != null) e(this, EventArgs.Empty);
+            if (e != null)
+            {
+                e(this, EventArgs.Empty);
+            }
 
             var eex = LayerRenderedEx;
-            if (eex != null) eex(this, new LayerRenderingEventArgs(layer, layerCollectionType));
+            if (eex != null)
+            {
+                eex(this, new LayerRenderingEventArgs(layer, layerCollectionType));
+            }
         }
 
 
