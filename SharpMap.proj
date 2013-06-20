@@ -5,6 +5,8 @@
     <RequireRestoreConsent>false</RequireRestoreConsent>
     <RestorePackages>true</RestorePackages>
     <EnableNuGetPackageRestore>true</EnableNuGetPackageRestore>
+    <!--- pass version in command line: MSBuild /t:NuGetPack SharpMap.proj /p:NuGetVersion=1.0.0  -->
+    <NuGetVersion>1.0.0</NuGetVersion>
   </PropertyGroup>
 
   <Target Name="EnableNPR">
@@ -33,6 +35,13 @@
     <MSBuild Projects="$(SolutionFile)" Targets="UnitTests" Properties="Configuration=Release" />
   </Target>
 
+  <Target Name="NugetPack" DependsOnTargets="BuildRelease">
+    <!--<Exec Command="IF NOT EXIST (""$(SolutionDir)\Release"") MKDIR ""$(SolutionDir)\Release""" />-->
+    <Exec Command="$(SolutionDir)\.nuget\NuGet pack SharpMap.nuspec -version $(NuGetVersion) -outputdirectory $(SolutionDir)\Release"/>
+    <Exec Command="$(SolutionDir)\.nuget\NuGet pack SharpMap.Extensions.nuspec -version $(NuGetVersion) -outputdirectory $(SolutionDir)\Release"/>
+    <Exec Command="$(SolutionDir)\.nuget\NuGet pack SharpMap.UI.nuspec -version $(NuGetVersion) -outputdirectory $(SolutionDir)\Release"/>
+    <Exec Command="$(SolutionDir)\.nuget\NuGet pack SharpMap.Web.nuspec -version $(NuGetVersion) -outputdirectory $(SolutionDir)\Release"/>
+  </Target>
   <!-- TODO: add targets here to build zip, NuGet, ... -->
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\nuget.targets" />

@@ -23,7 +23,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data;
 using System.Globalization;
-using Oracle.DataAccess.Client;
+using Oracle.ManagedDataAccess.Client;
 using SharpMap.Converters.WellKnownBinary;
 using BoundingBox = GeoAPI.Geometries.Envelope;
 using Geometry = GeoAPI.Geometries.IGeometry;
