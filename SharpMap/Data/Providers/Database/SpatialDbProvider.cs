@@ -21,8 +21,10 @@ namespace SharpMap.Data.Providers
         private string _schema;
         private string _table;
 
-        private readonly SharpMapFeatureColumn _oidColumn;
-        private readonly SharpMapFeatureColumn _geometryColumn;
+        // ReSharper disable InconsistentNaming
+        internal readonly SharpMapFeatureColumn _oidColumn;
+        internal readonly SharpMapFeatureColumn _geometryColumn;
+        // ReSharper restore InconsistentNaming
 
         private readonly SharpMapFeatureColumns _featureColumns;
 
@@ -301,7 +303,10 @@ namespace SharpMap.Data.Providers
         /// <summary>
         /// Method to initialize the spatial provider
         /// </summary>
-        protected abstract void InitializeInternal();
+        protected virtual void InitializeInternal()
+        {
+            Initialized = true;
+        }
 
         /// <summary>
         /// Gets the connection string.
@@ -528,7 +533,7 @@ namespace SharpMap.Data.Providers
                 using (var command = conn.CreateCommand())
                 {
                     var sql = new StringBuilder();
-                    sql.AppendFormat("SELECT COUNT(*) FROM {0}", _dbUtility.DecorateEntity(Table));
+                    sql.AppendFormat("SELECT COUNT(*) FROM {0}", _dbUtility.DecorateTable(Schema, Table));
 #pragma warning disable 612,618
                     if (!String.IsNullOrEmpty(DefinitionQuery))
                         sql.AppendFormat(" WHERE {0}", DefinitionQuery);
@@ -680,13 +685,16 @@ namespace SharpMap.Data.Providers
             {
                 using (var cmd = cn.CreateCommand())
                 {
-                    cmd.CommandText = FeatureColumns.GetSelectColumnClause(cmd, ObjectIdColumn, oid);
+                    cmd.CommandText = FeatureColumns.GetSelectColumnClause(cmd, _geometryColumn, oid);
                     using (var dr = cmd.ExecuteReader())
                     {
                         if (dr.HasRows)
                         {
-                            var geometry = GeometryFromWKB.Parse((byte[])dr.GetValue(0), Factory);
-                            return geometry;
+                            while (dr.Read())
+                            {
+                                var geometry = GeometryFromWKB.Parse((byte[])dr.GetValue(0), Factory);
+                                return geometry;
+                            }
                         }
                     }
                 }
@@ -718,7 +726,7 @@ namespace SharpMap.Data.Providers
             {
                 using (var cmd = cn.CreateCommand())
                 {
-                    cmd.CommandText = FeatureColumns.GetSelectColumnClause(cmd, FeatureColumns.GetGeometryColumn(true), GetSpatialWhere(bbox, cmd));
+                    cmd.CommandText = FeatureColumns.GetSelectColumnClause(cmd, _geometryColumn, GetSpatialWhere(bbox, cmd));
                     using (var dr = cmd.ExecuteReader())
                     {
                         if (dr.HasRows)
@@ -760,7 +768,7 @@ namespace SharpMap.Data.Providers
         }
 
         /// <summary>
-        /// Gets the object of features that lie within the specified <see cref="GeoAPI.Geometries.Envelope"/>
+        /// Gets the object ids of features that lie within the specified <see cref="GeoAPI.Geometries.Envelope"/>
         /// </summary>
         /// <param name="bbox">The bounding box</param>
         /// <returns>A collection of object ids</returns>
@@ -772,7 +780,7 @@ namespace SharpMap.Data.Providers
             {
                 using (var cmd = cn.CreateCommand())
                 {
-                    cmd.CommandText = FeatureColumns.GetSelectColumnClause(cmd, _dbUtility.DecorateEntity(ObjectIdColumn), GetSpatialWhere(bbox, cmd));
+                    cmd.CommandText = FeatureColumns.GetSelectColumnClause(cmd, _oidColumn, GetSpatialWhere(bbox, cmd));
                     using (var dr = cmd.ExecuteReader())
                     {
                         if (dr.HasRows)
@@ -847,17 +855,20 @@ namespace SharpMap.Data.Providers
                         + FeatureColumns.GetOrderByClause();
 
                     var numColumns = fdt.Columns.Count;
-                    var geomIndex = numColumns - 1;
+                    var geomIndex = numColumns;
 
                     using (var dr = cmd.ExecuteReader())
                     {
-                        var data = new object[numColumns];
-                        if (dr.GetValues(data) > 0)
+                        while (dr.Read())
                         {
-                            var loadData = new object[geomIndex];
-                            Array.Copy(data, 0, loadData, 0, geomIndex);
-                            var row = (FeatureDataRow)fdt.LoadDataRow(data, true);
-                            row.Geometry = GeometryFromWKB.Parse((byte[])data[geomIndex], Factory);
+                            var data = new object[numColumns+1];
+                            if (dr.GetValues(data) > 0)
+                            {
+                                var loadData = new object[geomIndex];
+                                Array.Copy(data, 0, loadData, 0, geomIndex);
+                                var row = (FeatureDataRow)fdt.LoadDataRow(loadData, true);
+                                row.Geometry = GeometryFromWKB.Parse((byte[])data[geomIndex], Factory);
+                            }
                         }
                     }
                 }

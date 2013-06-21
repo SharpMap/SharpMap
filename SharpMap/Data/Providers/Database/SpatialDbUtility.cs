@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data;
 using System.Data.Common;
 using System.Text;
 using GeoAPI.IO;
@@ -92,7 +93,7 @@ namespace SharpMap.Data.Providers
         /// <param name="constraint"></param>
         /// <param name="parameters"></param>
         /// <returns></returns>
-        public string DecorateEntityConstraintWithParameter(DbCommand command, string entity, string constraint, params object[] parameters)
+        public string DecorateEntityConstraintWithParameter(DbCommand command, SharpMapFeatureColumn entity, string constraint, params object[] parameters)
         {
             var sb = new StringBuilder();
             var pc = command.Parameters;
@@ -101,6 +102,7 @@ namespace SharpMap.Data.Providers
             foreach (var o in parameters)
             {
                 var p = command.CreateParameter();
+                p.DbType = entity.DbType;
                 p.ParameterName = string.Format(ParameterDecoratorFormat, pNr++);
                 p.Value = o;
                 pc.Add(p);
@@ -111,7 +113,7 @@ namespace SharpMap.Data.Providers
 
             var formattedConstraint = string.Format(constraint, sb);
 
-            return string.Format("{0} {1}", DecorateEntity(entity), formattedConstraint);
+            return string.Format("{0} {1}", DecorateEntity(entity.Column), formattedConstraint);
         }
 
         /// <summary>
@@ -139,7 +141,7 @@ namespace SharpMap.Data.Providers
 
             sb.Append(DecorateEntity(table));
 
-            if (string.IsNullOrEmpty(asSuffix))
+            if (!string.IsNullOrEmpty(asSuffix))
                 sb.AppendFormat("AS {0}", DecorateEntity(asSuffix));
 
             return sb.ToString();
@@ -253,6 +255,63 @@ namespace SharpMap.Data.Providers
         /// </list>
         /// </remarks>
         public string ToEnvelopeDecoratorFormat { get; set; }
+
+        public virtual object ToDbType(object obj, DbType type)
+        {
+            switch (type)
+            {
+                case DbType.String:
+                case DbType.StringFixedLength:
+                case DbType.AnsiString:
+                case DbType.AnsiStringFixedLength:
+                    return Convert.ToString(obj);
+                case DbType.Binary:
+                    return obj as byte[];
+                case DbType.Boolean:
+                    return Convert.ToBoolean(obj);
+                case DbType.Byte:
+                    return Convert.ToByte(obj);
+
+                case DbType.Time:
+                case DbType.Date:
+                case DbType.DateTime:
+                case DbType.DateTime2:
+                case DbType.DateTimeOffset:
+                    return Convert.ToDateTime(obj);
+                
+                case DbType.Decimal:
+                    return Convert.ToDecimal(obj);
+                case DbType.Double:
+                    return Convert.ToDouble(obj);
+                case DbType.Guid:
+                    return Convert.ToString(obj);
+
+                case DbType.Int16:
+                    return Convert.ToInt16(obj);
+                case DbType.Int32:
+                    return Convert.ToInt32(obj);
+                case DbType.Int64:
+                    return Convert.ToInt64(obj);
+
+                case DbType.UInt16:
+                    return Convert.ToUInt16(obj);
+                case DbType.UInt32:
+                    return Convert.ToUInt32(obj);
+                case DbType.UInt64:
+                    return Convert.ToUInt64(obj);
+
+                case DbType.SByte:
+                    return Convert.ToSByte(obj);
+
+                case DbType.Single:
+                    return Convert.ToSingle(obj);
+                
+                case DbType.Currency:
+                    return Convert.ToDecimal(obj);
+
+            }
+            return obj;
+        }
 
         /// <summary>
         /// Decorator for the transformation of the geometry data, in case the
