@@ -173,16 +173,24 @@ namespace SharpMap.Layers
                         var cancelToken = new CancellationTokenSource();
                         var token = cancelToken.Token;
                         var l_info = info;
+                        if (Logger.IsDebugEnabled)
+                            Logger.DebugFormat("Starting new Task to download tile {0},{1},{2}", info.Index.Level, info.Index.Col, info.Index.Row);
                         var t = new System.Threading.Tasks.Task(delegate
                         {
                             if (token.IsCancellationRequested)
                                 token.ThrowIfCancellationRequested();
 
-                            GetTileOnThread(token, _source.Provider, l_info, _bitmaps, true);
-                            Interlocked.Decrement(ref _numPendingDownloads);
-                            var e = DownloadProgressChanged;
-                            if (e != null)
-                                e(_numPendingDownloads);
+                            if (Logger.IsDebugEnabled)
+                                Logger.DebugFormat("Task started for download of tile {0},{1},{2}", info.Index.Level, info.Index.Col, info.Index.Row);
+
+                            var res = GetTileOnThread(token, _source.Provider, l_info, _bitmaps, true);
+                            if (res)
+                            {
+                                Interlocked.Decrement(ref _numPendingDownloads);
+                                var e = DownloadProgressChanged;
+                                if (e != null)
+                                    e(_numPendingDownloads);
+                            }
 
                         }, token);
                         var dt = new DownloadTask() { CancellationToken = cancelToken, Task = t };
@@ -227,7 +235,16 @@ namespace SharpMap.Layers
 
         }
 
-        private void GetTileOnThread(CancellationToken cancelToken, ITileProvider tileProvider, TileInfo tileInfo, MemoryCache<Bitmap> bitmaps, bool retry)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="cancelToken"></param>
+        /// <param name="tileProvider"></param>
+        /// <param name="tileInfo"></param>
+        /// <param name="bitmaps"></param>
+        /// <param name="retry"></param>
+        /// <returns>true if thread finished without getting cancellation signal, false = cancelled</returns>
+        private bool GetTileOnThread(CancellationToken cancelToken, ITileProvider tileProvider, TileInfo tileInfo, MemoryCache<Bitmap> bitmaps, bool retry)
         {
             byte[] bytes;
             try
@@ -235,26 +252,44 @@ namespace SharpMap.Layers
                 if (cancelToken.IsCancellationRequested)
                     cancelToken.ThrowIfCancellationRequested();
 
+
+                //We may have gotten the tile from another thread now..
+                if (bitmaps.Find(tileInfo.Index) != null)
+                {
+                    return true;
+                }
+
+                if (Logger.IsDebugEnabled)
+                    Logger.DebugFormat("Calling gettile on provider for tile {0},{1},{2}", tileInfo.Index.Level, tileInfo.Index.Col, tileInfo.Index.Row);
+
                 bytes = tileProvider.GetTile(tileInfo);
                 if (cancelToken.IsCancellationRequested)
                     cancelToken.ThrowIfCancellationRequested();
 
-                Bitmap bitmap = new Bitmap(new MemoryStream(bytes));
-                bitmaps.Add(tileInfo.Index, bitmap);
-                if (_fileCache != null && !_fileCache.Exists(tileInfo.Index))
+                using (var ms = new MemoryStream(bytes))
                 {
-                    AddImageToFileCache(tileInfo, bitmap);
-                }
+                    Bitmap bitmap = new Bitmap(ms);
+                    bitmaps.Add(tileInfo.Index, bitmap);
+                    if (_fileCache != null && !_fileCache.Exists(tileInfo.Index))
+                    {
+                        AddImageToFileCache(tileInfo, bitmap);
+                    }
 
-                if (cancelToken.IsCancellationRequested)
-                    cancelToken.ThrowIfCancellationRequested();
-                OnMapNewTileAvaliable(tileInfo, bitmap);
+
+                    if (cancelToken.IsCancellationRequested)
+                        cancelToken.ThrowIfCancellationRequested();
+                    OnMapNewTileAvaliable(tileInfo, bitmap);
+                }
+                return true;
             }
             catch (WebException ex)
             {
+                if (Logger.IsDebugEnabled)
+                    Logger.DebugFormat("Exception downloading tile {0},{1},{2} {3}", tileInfo.Index.Level, tileInfo.Index.Col, tileInfo.Index.Row, ex.Message);
+                
                 if (retry)
                 {
-                    GetTileOnThread(cancelToken, tileProvider, tileInfo, bitmaps, false);
+                    return GetTileOnThread(cancelToken, tileProvider, tileInfo, bitmaps, false);
                 }
                 else
                 {
@@ -270,23 +305,26 @@ namespace SharpMap.Layers
                         }
                         //Draw the Timeout Tile
                         OnMapNewTileAvaliable(tileInfo, bitmap);
-
                         //With timeout we don't add to the internal cache
                         //bitmaps.Add(tileInfo.Index, bitmap);
                     }
+                    return true;
                 }
             }
-            catch (ThreadAbortException tex)
+            catch (System.OperationCanceledException tex)
             {
                 if (Logger.IsInfoEnabled)
                 {
                     Logger.InfoFormat("TileAsyncLayer - Thread aborting: {0}", Thread.CurrentThread.Name);
                     Logger.InfoFormat(tex.Message);
                 }
+                return false;
             }
             catch (Exception ex)
             {
                 Logger.Warn("TileAsyncLayer - GetTileOnThread Exception", ex);
+                //This is not due to cancellation so return true
+                return true;
             }
         }
 
