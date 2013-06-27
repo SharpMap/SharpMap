@@ -14,6 +14,8 @@ namespace SharpMap.Data.Providers
     [Serializable]
     public abstract class SpatialDbProvider : BaseProvider
     {
+        private static readonly Common.Logging.ILog Logger = Common.Logging.LogManager.GetCurrentClassLogger();
+        
         private bool Initialized { get; set; }
 
         //private bool _isOpen;
@@ -75,6 +77,7 @@ namespace SharpMap.Data.Providers
         /// <param name="e">The arguments associated with the event</param>
         protected virtual void OnSchemaChanged(EventArgs e)
         {
+            Logger.Debug(t => t("Schema changed to {0}", _schema));
             Initialized = false;
 
             var handler = SchemaChanged;
@@ -93,6 +96,7 @@ namespace SharpMap.Data.Providers
         /// <param name="e">The arguments associated with the event</param>
         protected virtual void OnTableChanged(EventArgs e)
         {
+            Logger.Debug(t => t("Table changed to {0}", _table));
             Initialized = false;
 
             var handler = TableChanged;
@@ -111,6 +115,7 @@ namespace SharpMap.Data.Providers
         /// <param name="e">The arguments associated with the event</param>
         protected virtual void OnOidColumnChanged(EventArgs e)
         {
+            Logger.Debug(t => t("OidColumnChanged changed to {0}", _oidColumn.Column));
             Initialized = false;
 
             var handler = OidColumnChanged;
@@ -129,6 +134,7 @@ namespace SharpMap.Data.Providers
         /// <param name="e">The arguments associated with the event</param>
         protected virtual void OnGeometryColumnChanged(EventArgs e)
         {
+            Logger.Debug(t => t("Geometry column changed to {0}", _geometryColumn.Column));
             Initialized = false;
 
             var handler = GeometryColumnChanged;
@@ -148,6 +154,7 @@ namespace SharpMap.Data.Providers
         [Obsolete]
         protected virtual void OnDefinitionQueryChanged(EventArgs e)
         {
+            Logger.Debug(t => t("DefinitionQuery changed to {0}", _definitionQuery));
             Initialized = false;
 
             var handler = DefinitionQueryChanged;
@@ -167,6 +174,7 @@ namespace SharpMap.Data.Providers
         /// <param name="e">The arguments associated with the event</param>
         private void OnFeatureColumnsChanged(object sender, EventArgs e)
         {
+            Logger.Debug(t => t("FeatureColumns changed"));
             Initialized = false;
 
             var handler = FeatureColumnsChanged;
@@ -185,6 +193,7 @@ namespace SharpMap.Data.Providers
         /// <param name="e">The arguments associated with the event</param>
         protected virtual void OnTargetSridChanged(EventArgs e)
         {
+            Logger.Debug(t => t("TragetSrid changed to {0}", _targetSrid));
             Initialized = false;
 
             var handler = TargetSridChanged;
@@ -203,6 +212,7 @@ namespace SharpMap.Data.Providers
         /// <param name="e">The arguments associated with the event</param>
         protected void OnAreaOfInterestChanged(EventArgs e)
         {
+            Logger.Debug(t => t("Area of interst changed to {0}", _areaOfInterest));
             var handler = AreaOfInterestChanged;
             if (handler != null) handler(this, e);
         }
@@ -644,24 +654,47 @@ namespace SharpMap.Data.Providers
                 using (var cmd = cn.CreateCommand())
                 {
                     cmd.CommandText = FeatureColumns.GetSelectClause(From)
-                                      + string.Format(" WHERE {0}={1};", _dbUtility.DecorateEntity("_smOid_"), oid);
+                                      + string.Format(" WHERE {0}={1};", _dbUtility.DecorateEntity(ObjectIdColumn), oid);
 
+                    Logger.Debug(t => t("Executing query:\n{0}", PrintCommand(cmd)));
                     using (var dr = cmd.ExecuteReader())
                     {
                         if (dr.HasRows)
                         {
-                            var fdr = CreateNewTable().NewRow();
-                            fdr.Geometry = GeometryFromWKB.Parse((byte[])dr.GetValue(1), Factory);
-                            fdr[0] = dr.GetValue(0);
-                            for (var i = 2; i < dr.FieldCount; i++)
-                                fdr[i - 1] = dr.GetValue(i);
-                            return fdr;
+                            dr.Read();
+                            var fdt = CreateNewTable();
+                            FeatureDataRow row = null;
+                            fdt.BeginLoadData();
+                            var numColumns = fdt.Columns.Count;
+                            var data = new object[numColumns+1];
+                            if (dr.GetValues(data) > 0)
+                            {
+                                var loadData = new object[numColumns];
+                                Array.Copy(data, 0, loadData, 0, numColumns);
+                                row = (FeatureDataRow)fdt.LoadDataRow(loadData, true);
+                                row.Geometry = GeometryFromWKB.Parse((byte[])data[numColumns], Factory);
+                            }
+                            fdt.EndLoadData();
+                            return row;
                         }
                     }
                 }
             }
             return null;
         }
+
+        private static string PrintCommand(DbCommand cmd)
+        {
+            var sb = new StringBuilder();
+            foreach (DbParameter parameter in cmd.Parameters)
+            {
+                if (sb.Length == 0) sb.Append("Parameter:");
+                sb.AppendFormat("\n{0}({1}) = {2}", parameter.ParameterName, parameter.DbType, parameter.Value);
+            }
+            sb.AppendFormat("\n{0}", cmd.CommandText);
+            return sb.ToString();
+        }
+
 
         /// <summary>
         /// Function to get a specific feature's geometry from the database.
@@ -686,6 +719,7 @@ namespace SharpMap.Data.Providers
                 using (var cmd = cn.CreateCommand())
                 {
                     cmd.CommandText = FeatureColumns.GetSelectColumnClause(cmd, _geometryColumn, oid);
+                    Logger.Debug(t => t("Executing query:\n{0}", PrintCommand(cmd)));
                     using (var dr = cmd.ExecuteReader())
                     {
                         if (dr.HasRows)
@@ -727,6 +761,7 @@ namespace SharpMap.Data.Providers
                 using (var cmd = cn.CreateCommand())
                 {
                     cmd.CommandText = FeatureColumns.GetSelectColumnClause(cmd, _geometryColumn, GetSpatialWhere(bbox, cmd));
+                    Logger.Debug(t => t("Executing query:\n{0}", PrintCommand(cmd)));
                     using (var dr = cmd.ExecuteReader())
                     {
                         if (dr.HasRows)
@@ -781,6 +816,7 @@ namespace SharpMap.Data.Providers
                 using (var cmd = cn.CreateCommand())
                 {
                     cmd.CommandText = FeatureColumns.GetSelectColumnClause(cmd, _oidColumn, GetSpatialWhere(bbox, cmd));
+                    Logger.Debug(t => t("Executing query:\n{0}", PrintCommand(cmd)));
                     using (var dr = cmd.ExecuteReader())
                     {
                         if (dr.HasRows)
@@ -840,8 +876,7 @@ namespace SharpMap.Data.Providers
                         }
                     }
 
-                    cmd.CommandText =
-                          FeatureColumns.GetSelectClause(from)
+                    cmd.CommandText = FeatureColumns.GetSelectClause(from)
 #pragma warning disable 612,618
                         + (string.IsNullOrEmpty(DefinitionQuery)
 #pragma warning restore 612,618
@@ -857,6 +892,7 @@ namespace SharpMap.Data.Providers
                     var numColumns = fdt.Columns.Count;
                     var geomIndex = numColumns;
 
+                    Logger.Debug(t => t("Executing query:\n{0}", PrintCommand(cmd)));
                     using (var dr = cmd.ExecuteReader())
                     {
                         while (dr.Read())
