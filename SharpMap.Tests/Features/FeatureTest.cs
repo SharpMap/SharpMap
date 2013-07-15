@@ -31,7 +31,7 @@ namespace SharpMap.Features
 
             Assert.IsTrue(f.Geometry == null);
             Assert.IsTrue(f.Attributes != null);
-            Assert.IsTrue(fg.Oid.Equals(_featureFactory.UnassignedOid));
+            //Assert.IsTrue(fg.Oid.Equals(_featureCollection.UnassignedOid));
             Assert.IsTrue((int)f.Attributes[0] == -1);
             
             Assert.IsTrue(f.Attributes[2] == null);
