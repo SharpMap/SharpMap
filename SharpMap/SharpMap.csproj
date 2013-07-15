@@ -173,7 +173,6 @@
     <Compile Include="Data\Providers\ShapeFile.cs" />
     <Compile Include="Data\Providers\Database\SpatialDbProvider.cs" />
     <Compile Include="Data\Providers\SqlServer2008.cs" />
-    <Compile Include="Data\Providers\WFSClient.cs" />
     <Compile Include="Geometries\GeoAPIEx.cs" />
     <Compile Include="Layers\DuplicateLayerException.cs" />
     <Compile Include="Layers\IAsyncLayer.cs" />
@@ -189,11 +188,9 @@
     <Compile Include="Layers\Symbolizer\PolygonalVectorLayer.cs" />
     <Compile Include="Layers\Symbolizer\PuntalVectorLayer.cs" />
     <Compile Include="Layers\TileAsyncLayer.cs" />
-    <Compile Include="Layers\TiledWmsLayer.cs" />
     <Compile Include="Layers\TileLayer.cs" />
     <Compile Include="Layers\VariableLayerCollection.cs" />
     <Compile Include="Layers\VectorLayer.cs" />
-    <Compile Include="Layers\WmsLayer.cs" />
     <Compile Include="Map\MapViewportGuard.cs" />
     <Compile Include="Rendering\Decoration\Disclaimer.cs" />
     <Compile Include="Rendering\Decoration\EyeOfSight.cs" />
@@ -247,46 +244,19 @@
     <Compile Include="Rendering\Symbolizer\WarpPathToPath.cs" />
     <Compile Include="Styles\VectorStyle.cs" />
     <Compile Include="Utilities\GeoSpatialMath.cs" />
+    <Compile Include="Utilities\ICacheUtility.cs" />
     <Compile Include="Utilities\Indexing\BinaryTree.cs" />
     <Compile Include="Utilities\Indexing\SpatialIndexing.cs" />
     <Compile Include="Utilities\LeastSquaresTransform.cs" />
     <Compile Include="Utilities\LineOffset.cs" />
+    <Compile Include="Utilities\NullCacheUtility.cs" />
     <Compile Include="Utilities\Providers.cs" />
     <Compile Include="Utilities\Surrogates.Helper.cs" />
     <Compile Include="Utilities\Surrogates.cs" />
     <Compile Include="Utilities\Surrogates.Brushes.cs" />
     <Compile Include="Utilities\Transform.cs" />
     <Compile Include="Utilities\Version.cs" />
-    <Compile Include="Utilities\Wfs\FeatureTypeInfo.cs" />
-    <Compile Include="Utilities\Wfs\GeometryFactories.cs" />
-    <Compile Include="Utilities\Wfs\HttpClientUtil.cs" />
-    <Compile Include="Utilities\Wfs\IWFS_TextResources.cs" />
-    <Compile Include="Utilities\Wfs\IXPathQueryManager.cs" />
-    <Compile Include="Utilities\Wfs\OGCFilter_FE1_1_0.cs" />
-    <Compile Include="Utilities\Wfs\PathNode.cs" />
     <Compile Include="Utilities\ReflectionUtility.cs" />
-    <Compile Include="Utilities\Wfs\WFS1_0_0_XPathTextResources.cs" />
-    <Compile Include="Utilities\Wfs\WFS1_1_0_XPathTextResources.cs" />
-    <Compile Include="Utilities\Wfs\WFS_1_0_0_TextResources.cs" />
-    <Compile Include="Utilities\Wfs\WFS_1_1_0_TextResources.cs" />
-    <Compile Include="Utilities\Wfs\WFS_XPathTextResourcesBase.cs" />
-    <Compile Include="Utilities\Wfs\XPathQueryManager.cs" />
-    <Compile Include="Utilities\Wfs\XPathQueryManager_CompiledExpressionsDecorator.cs" />
-    <Compile Include="Utilities\Wfs\XPathQueryManager_DecoratorBase.cs" />
-    <Compile Include="Web\IClient.cs" />
-    <Compile Include="Web\OgcException.cs" />
-    <Compile Include="Web\Wcs\Capabilities.cs" />
-    <Compile Include="Web\Wcs\Client.cs" />
-    <Compile Include="Web\WebUtilities.cs" />
-    <Compile Include="Web\Wfs\Capabilities.cs" />
-    <Compile Include="Web\Wfs\Client.cs" />
-    <Compile Include="Web\Wms\Client.cs" />
-    <Compile Include="Web\Wms\SpatialReferencedBoundingBox.cs" />
-    <Compile Include="Web\Wms\Tiling\ITileCache.cs" />
-    <Compile Include="Web\Wms\Tiling\TileCacheFileStorage.cs" />
-    <Compile Include="Web\Wms\Tiling\TileExtents.cs" />
-    <Compile Include="Web\Wms\Tiling\TileSet.cs" />
-    <Compile Include="Web\Wms\Capabilities.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">
@@ -298,98 +268,7 @@
   <ItemGroup>
     <None Include="packages.config" />
     <None Include="SRID.csv" />
-    <EmbeddedResource Include="Web\Wms\Schemas\1.3.0\capabilities_1_3_0.xsd">
-      <SubType>
-      </SubType>
-    </EmbeddedResource>
     <None Include="Uml\SharpMap.cd" />
-    <None Include="Web\Wcs\Schemas\1.0.0\describeCoverage.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Web\Wcs\Schemas\1.0.0\getCoverage.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Web\Wcs\Schemas\1.0.0\gml4wcs.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Web\Wcs\Schemas\1.0.0\OGC-exception.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Web\Wcs\Schemas\1.0.0\owsBase.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Web\Wcs\Schemas\1.0.0\values.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Web\Wcs\Schemas\1.0.0\wcsAll.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Web\Wcs\Schemas\1.0.0\wcsCapabilities.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Web\Wfs\Schemas\1.0.0\OGC-exception.xsd" />
-    <None Include="Web\Wfs\Schemas\1.0.0\WFS-basic.xsd" />
-    <None Include="Web\Wfs\Schemas\1.0.0\WFS-capabilities.xsd" />
-    <None Include="Web\Wfs\Schemas\1.0.0\WFS-transaction.xsd" />
-    <None Include="Web\Wfs\Schemas\1.1.0\wfs.xsd" />
-    <None Include="Web\Wfs\Schemas\1.1.0\wsdl\example-endpoints.wsdl" />
-    <None Include="Web\Wfs\Schemas\1.1.0\wsdl\example-GET-endpoints.wsdl" />
-    <None Include="Web\Wfs\Schemas\1.1.0\wsdl\example-POST-endpoints.wsdl" />
-    <None Include="Web\Wfs\Schemas\1.1.0\wsdl\example-SOAP-endpoints.wsdl" />
-    <None Include="Web\Wfs\Schemas\1.1.0\wsdl\wfs-http-bindings.wsdl" />
-    <None Include="Web\Wfs\Schemas\1.1.0\wsdl\wfs-kvp-bindings.wsdl" />
-    <None Include="Web\Wfs\Schemas\1.1.0\wsdl\wfs-kvp-interfaces.wsdl" />
-    <None Include="Web\Wfs\Schemas\1.1.0\wsdl\wfs-kvp.xsd" />
-    <None Include="Web\Wfs\Schemas\1.1.0\wsdl\wfs-responses.wsdl" />
-    <None Include="Web\Wfs\Schemas\1.1.0\wsdl\wfs-soap-bindings.wsdl" />
-    <None Include="Web\Wfs\Schemas\1.1.0\wsdl\wfs-util.xsd" />
-    <None Include="Web\Wfs\Schemas\1.1.0\wsdl\wfs-xml-interfaces.wsdl" />
-    <None Include="Web\Wfs\Schemas\1.1.0\wsdl\WSDL2Java.bat" />
-    <None Include="Web\Wfs\Schemas\2.0.0\examples\Common\BuildingSchema.xsd" />
-    <None Include="Web\Wfs\Schemas\2.0.0\examples\Common\PersonSchema.xsd" />
-    <None Include="Web\Wfs\Schemas\2.0.0\examples\Common\RoadSchema.xsd" />
-    <None Include="Web\Wfs\Schemas\2.0.0\examples\Common\SampleSchema.xsd" />
-    <None Include="Web\Wfs\Schemas\2.0.0\wfs.xsd" />
-    <None Include="Web\Wfs\Schemas\2.0.0\wsdl\example-endpoints.wsdl" />
-    <None Include="Web\Wfs\Schemas\2.0.0\wsdl\example-GET-endpoints.wsdl" />
-    <None Include="Web\Wfs\Schemas\2.0.0\wsdl\example-POST-endpoints.wsdl" />
-    <None Include="Web\Wfs\Schemas\2.0.0\wsdl\example-SOAP-endpoints.wsdl" />
-    <None Include="Web\Wfs\Schemas\2.0.0\wsdl\wfs-http-bindings.wsdl" />
-    <None Include="Web\Wfs\Schemas\2.0.0\wsdl\wfs-kvp-bindings.wsdl" />
-    <None Include="Web\Wfs\Schemas\2.0.0\wsdl\wfs-kvp-interfaces.wsdl" />
-    <None Include="Web\Wfs\Schemas\2.0.0\wsdl\wfs-kvp.xsd" />
-    <None Include="Web\Wfs\Schemas\2.0.0\wsdl\wfs-responses.wsdl" />
-    <None Include="Web\Wfs\Schemas\2.0.0\wsdl\wfs-soap-bindings.wsdl" />
-    <None Include="Web\Wfs\Schemas\2.0.0\wsdl\wfs-util.xsd" />
-    <None Include="Web\Wfs\Schemas\2.0.0\wsdl\wfs-xml-interfaces.wsdl" />
-    <None Include="Web\Wfs\Schemas\2.0.0\wsdl\WSDL2Java.bat" />
-    <None Include="Web\Wms\Schemas\1.3.0\capabilities_1_3_0.xsx">
-      <DependentUpon>capabilities_1_3_0.xsd</DependentUpon>
-    </None>
-    <EmbeddedResource Include="Web\Wms\Schemas\1.3.0\exceptions_1_3_0.xsd">
-      <SubType>
-      </SubType>
-    </EmbeddedResource>
-    <None Include="Web\Wms\Schemas\1.3.0\exceptions_1_3_0.xsx">
-      <DependentUpon>exceptions_1_3_0.xsd</DependentUpon>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Web\Wcs\Schemas\WebCoverageService.txt" />
-    <Content Include="Web\Wfs\Schemas\1.1.0\examples\WFS_Capabilities_Sample.xml" />
-    <Content Include="Web\Wfs\Schemas\1.1.0\ReadMe.txt" />
-    <Content Include="Web\Wfs\Schemas\1.1.0\wsdl\dependencies.jpeg" />
-    <Content Include="Web\Wfs\Schemas\1.1.0\wsdl\readme.txt" />
-    <Content Include="Web\Wfs\Schemas\2.0.0\examples\Common\BuildingInstance.xml" />
-    <Content Include="Web\Wfs\Schemas\2.0.0\examples\Common\Exception.xml" />
-    <Content Include="Web\Wfs\Schemas\2.0.0\examples\Common\PersonInstance.xml" />
-    <Content Include="Web\Wfs\Schemas\2.0.0\examples\Common\SampleData.xml" />
-    <Content Include="Web\Wfs\Schemas\2.0.0\examples\GetCapabilities\GetCapabilities_Req_01.xml" />
-    <Content Include="Web\Wfs\Schemas\2.0.0\examples\GetCapabilities\GetCapabilities_Res_01.xml" />
-    <Content Include="Web\Wfs\Schemas\2.0.0\examples\GetCapabilities\GetCapabilities_Res_02.xml" />
-    <Content Include="Web\Wfs\Schemas\2.0.0\examples\GetCapabilities\GetCapabilities_Res_Min.xml" />
-    <Content Include="Web\Wfs\Schemas\2.0.0\ReadMe.txt" />
-    <Content Include="Web\Wfs\Schemas\2.0.0\wsdl\readme.txt" />
   </ItemGroup>
   <!--
   <ItemGroup>
@@ -403,9 +282,7 @@
     </ProjectReference>
   </ItemGroup>
   -->
-  <ItemGroup>
-    <Folder Include="Web\Wcs\1.0.0\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\GeoAPI.Extensions\GeoAPI.Extensions.csproj">
       <Project>{efb576e1-56fc-47db-ac7e-683a535434be}</Project>

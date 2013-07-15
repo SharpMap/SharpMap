@@ -16,7 +16,7 @@ namespace SharpMap.Features.Poco
 
         public PoIFeature()
         {
-            Oid = OidGenerator.UnassignedOid;
+            Oid = UnassignedOid;
         }
 
         public PoIFeature(PoIFeature feature)

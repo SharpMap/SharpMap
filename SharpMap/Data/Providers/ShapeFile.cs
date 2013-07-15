@@ -29,6 +29,7 @@ using DotSpatial.Projections;
 #endif
 using GeoAPI;
 using GeoAPI.Geometries;
+using SharpMap.Utilities;
 using SharpMap.Utilities.SpatialIndexing;
 using Common.Logging;
 
@@ -181,9 +182,10 @@ namespace SharpMap.Data.Providers
         private int _fileSize;
 		private Envelope _envelope;
 		private int _featureCount;
-		private bool _fileBasedIndex;
+        private bool _fileBasedIndex;
 	    private readonly bool _fileBasedIndexWanted;
 		private string _filename;
+        private ICacheUtility _cacheUtility;
 		//private FilterMethod _filterDelegate;
 		private bool _isOpen;
 		private ShapeType _shapeType;
@@ -237,9 +239,11 @@ namespace SharpMap.Data.Providers
 		/// Initializes a ShapeFile DataProvider without a file-based spatial index.
 		/// </summary>
 		/// <param name="filename">Path to shape file</param>
-		public ShapeFile(string filename) : this(filename, false)
-		{
-		}
+		public ShapeFile(string filename) 
+            : this(filename, false, new NullCacheUtility()) { }
+
+        public ShapeFile(string filename, ICacheUtility cacheUtility)
+            : this(filename, false, cacheUtility) { }
 
 		/// <summary>
 		/// Cleans the internal memory cached, expurging the objects that are not in the viewarea anymore
@@ -285,11 +289,12 @@ namespace SharpMap.Data.Providers
 		/// </remarks>
 		/// <param name="filename">Path to shape file</param>
 		/// <param name="fileBasedIndex">Use file-based spatial index</param>
-		public ShapeFile(string filename, bool fileBasedIndex)
+		public ShapeFile(string filename, bool fileBasedIndex, ICacheUtility cacheUtility)
 		{
 			_filename = filename;
 		    _fileBasedIndexWanted = fileBasedIndex;
 			_fileBasedIndex = (fileBasedIndex) && File.Exists(Path.ChangeExtension(filename, ".shx"));
+            _cacheUtility = cacheUtility;
 
 			//Initialize DBF
 			var dbffile = Path.ChangeExtension(filename, ".dbf");
@@ -356,7 +361,8 @@ namespace SharpMap.Data.Providers
 	    /// <param name="fileBasedIndex">Use file-based spatial index</param>
 	    /// <param name="useMemoryCache">Use the memory cache. BEWARE in case of large shapefiles</param>
 	    /// <param name="SRID">The spatial reference id</param>
-	    public ShapeFile(string filename, bool fileBasedIndex, bool useMemoryCache,int SRID) : this(filename, fileBasedIndex)
+	    public ShapeFile(string filename, bool fileBasedIndex, bool useMemoryCache,int SRID) 
+            : this(filename, fileBasedIndex, new NullCacheUtility())
 		{
 			_useMemoryCache = useMemoryCache;
 			this.SRID=SRID;
@@ -1259,9 +1265,9 @@ namespace SharpMap.Data.Providers
                 
                 // Is this a web application? If so lets store the index in the cache so we don't
 				// need to rebuild it for each request
-                if (Web.HttpCacheUtility.IsWebContext)
+                if (_cacheUtility.IsWebContext)
                 {
-                    if (!Web.HttpCacheUtility.TryGetValue(_filename, out _tree))
+                    if (!_cacheUtility.TryGetValue(_filename, out _tree))
                     {
                         if (!loadFromFile)
                             _tree = createSpatialIndex(_filename);
@@ -1269,7 +1275,7 @@ namespace SharpMap.Data.Providers
                             _tree = CreateSpatialIndexFromFile(_filename);
                         //Store the tree in the web cache
                         //TODO: Remove this when connection pooling is implemented
-                        Web.HttpCacheUtility.TryAddValue(_filename, _tree, TimeSpan.FromDays(1));
+                        _cacheUtility.TryAddValue(_filename, _tree, TimeSpan.FromDays(1));
                     }
                 }
 				/*
@@ -1328,9 +1334,9 @@ namespace SharpMap.Data.Providers
 				//TODO: Remove this when connection pooling is implemented:
 				HttpContext.Current.Cache.Insert(_filename, _tree, null, Cache.NoAbsoluteExpiration, TimeSpan.FromDays(1));
              */
-            if (Web.HttpCacheUtility.IsWebContext)
+            if (_cacheUtility.IsWebContext)
             {
-                Web.HttpCacheUtility.TryAddValue(_filename, _tree, TimeSpan.FromDays(1));
+                _cacheUtility.TryAddValue(_filename, _tree, TimeSpan.FromDays(1));
             }
 		}
 
