@@ -51,7 +51,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Common.Logging">
-      <HintPath>..\packages\Common.Logging.2.1.2\lib\net40\Common.Logging.dll</HintPath>
+      <HintPath>..\packages\Common.Logging.2.0.0\lib\net40\Common.Logging.dll</HintPath>
     </Reference>
     <Reference Include="GeoAPI, Version=1.7.0.0, Culture=neutral, PublicKeyToken=a1a0da7def465678, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -70,10 +70,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Data\Providers\WebShapeFileProviderConfiguration.cs" />
     <Compile Include="Data\Providers\WFSClient.cs" />
     <Compile Include="Layers\TiledWmsLayer.cs" />
     <Compile Include="Layers\WmsLayer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utilities\WebCacheUtility.cs" />
     <Compile Include="Utilities\Wfs\FeatureTypeInfo.cs" />
     <Compile Include="Utilities\Wfs\GeometryFactories.cs" />
     <Compile Include="Utilities\Wfs\HttpClientUtil.cs" />

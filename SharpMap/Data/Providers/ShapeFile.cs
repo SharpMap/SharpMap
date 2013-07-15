@@ -242,10 +242,92 @@ namespace SharpMap.Data.Providers
 		public ShapeFile(string filename) 
             : this(filename, false, new NullCacheUtility()) { }
 
-        public ShapeFile(string filename, ICacheUtility cacheUtility)
-            : this(filename, false, cacheUtility) { }
+        /// <summary>
+        /// Initializes a ShapeFile DataProvider.
+        /// </summary>
+        /// <remarks>
+        /// <para>If FileBasedIndex is true, the spatial index will be read from a local copy. If it doesn't exist,
+        /// it will be generated and saved to [filename] + '.sidx'.</para>
+        /// <para>Using a file-based index is especially recommended for ASP.NET applications which will speed up
+        /// start-up time when the cache has been emptied.
+        /// </para>
+        /// </remarks>
+        /// <param name="filename">Path to shape file</param>
+        /// <param name="fileBasedIndex">Use file-based spatial index</param>
+        public ShapeFile(string filename, bool fileBasedIndex)
+            : this(filename, fileBasedIndex, new NullCacheUtility()) { }
 
-		/// <summary>
+        /// <summary>
+        /// Initializes a ShapeFile DataProvider.
+        /// </summary>
+        /// <remarks>
+        /// <para>If FileBasedIndex is true, the spatial index will be read from a local copy. If it doesn't exist,
+        /// it will be generated and saved to [filename] + '.sidx'.</para>
+        /// <para>Using a file-based index is especially recommended for ASP.NET applications which will speed up
+        /// start-up time when the cache has been emptied.
+        /// </para>
+        /// </remarks>
+        /// <param name="filename">Path to shape file</param>
+        /// <param name="fileBasedIndex">Use file-based spatial index</param>
+        /// <param name="cacheUtility">
+        /// A <see cref="ICacheUtility"/> provider.
+        /// <remarks>
+        /// If <c>null</c>, no cache for index file is used.
+        /// A valid provider is especially recommended for ASP.NET applications which will speed up start-up time when the cache has been emptied.
+        /// </remarks>
+        /// </param>        
+	    public ShapeFile(string filename, bool fileBasedIndex, ICacheUtility cacheUtility)
+        {
+            _filename = filename;
+            _fileBasedIndexWanted = fileBasedIndex;
+            _fileBasedIndex = (fileBasedIndex) && File.Exists(Path.ChangeExtension(filename, ".shx"));
+            _cacheUtility = cacheUtility ?? new NullCacheUtility();
+
+            //Initialize DBF
+            var dbffile = Path.ChangeExtension(filename, ".dbf");
+            if (File.Exists(dbffile))
+            {
+                DbaseFile = new DbaseReader(dbffile);
+                DbaseFile.EncodingChanged += ClearingOfCachedDataRequired;
+                DbaseFile.IncludeOidChanged += ClearingOfCachedDataRequired;
+            }
+
+            //Parse shape header
+            ParseHeader();
+            //Read projection file
+            ParseProjection();
+
+            //By default, don't enable _MemoryCache if there are a lot of features
+            _useMemoryCache = GetFeatureCount() <= MemoryCacheLimit;
+        }
+
+        /// <summary>
+        /// Initializes a ShapeFile DataProvider.
+        /// </summary>
+        /// <remarks>
+        /// <para>If FileBasedIndex is true, the spatial index will be read from a local copy. If it doesn't exist,
+        /// it will be generated and saved to [filename] + '.sidx'.</para>
+        /// <para>Using a file-based index is especially recommended for ASP.NET applications which will speed up
+        /// start-up time when the cache has been emptied.
+        /// </para>
+        /// </remarks>
+        /// <param name="filename">Path to shape file</param>
+        /// <param name="fileBasedIndex">Use file-based spatial index</param>
+        /// <param name="cacheUtility">
+        /// A <see cref="ICacheUtility"/> provider.
+        /// <remarks>
+        /// If <c>null</c>, no cache for index file is used.
+        /// A valid provider is especially recommended for ASP.NET applications which will speed up start-up time when the cache has been emptied.
+        /// </remarks>
+        /// </param>
+        /// <param name="forceUseMemoryCache">force the provider to use the memory cache. BEWARE in case of large shapefiles</param>
+        public ShapeFile(string filename, bool fileBasedIndex, ICacheUtility cacheUtility, bool forceUseMemoryCache)
+            : this(filename, fileBasedIndex, cacheUtility)
+        {
+            _useMemoryCache = forceUseMemoryCache;
+        }
+
+        /// <summary>
 		/// Cleans the internal memory cached, expurging the objects that are not in the viewarea anymore
 		/// </summary>
 		/// <param name="objectlist">OID of the objects in the current viewarea</param>
@@ -275,44 +357,7 @@ namespace SharpMap.Data.Providers
 				//Reset the lastclean timestamp
 				_lastCleanTimestamp = DateTime.Now;
 			}
-		}
-
-		/// <summary>
-		/// Initializes a ShapeFile DataProvider.
-		/// </summary>
-		/// <remarks>
-		/// <para>If FileBasedIndex is true, the spatial index will be read from a local copy. If it doesn't exist,
-		/// it will be generated and saved to [filename] + '.sidx'.</para>
-		/// <para>Using a file-based index is especially recommended for ASP.NET applications which will speed up
-		/// start-up time when the cache has been emptied.
-		/// </para>
-		/// </remarks>
-		/// <param name="filename">Path to shape file</param>
-		/// <param name="fileBasedIndex">Use file-based spatial index</param>
-		public ShapeFile(string filename, bool fileBasedIndex, ICacheUtility cacheUtility)
-		{
-			_filename = filename;
-		    _fileBasedIndexWanted = fileBasedIndex;
-			_fileBasedIndex = (fileBasedIndex) && File.Exists(Path.ChangeExtension(filename, ".shx"));
-            _cacheUtility = cacheUtility;
-
-			//Initialize DBF
-			var dbffile = Path.ChangeExtension(filename, ".dbf");
-			if (File.Exists(dbffile))
-			{
-			    DbaseFile = new DbaseReader(dbffile);
-                DbaseFile.EncodingChanged += ClearingOfCachedDataRequired;
-                DbaseFile.IncludeOidChanged += ClearingOfCachedDataRequired;
-            }
-
-			//Parse shape header
-			ParseHeader();
-			//Read projection file
-			ParseProjection();
-        
-            //By default, don't enable _MemoryCache if there are a lot of features
-            _useMemoryCache = GetFeatureCount() <= MemoryCacheLimit;
-        }
+		}        
 
         /// <summary>
         /// Gets or sets a value indicating how many features are allowed for memory cache approach
@@ -331,44 +376,6 @@ namespace SharpMap.Data.Providers
 	    }
 
 	    /// <summary>
-	    /// Initializes a ShapeFile DataProvider.
-	    /// </summary>
-	    /// <remarks>
-	    /// <para>If FileBasedIndex is true, the spatial index will be read from a local copy. If it doesn't exist,
-	    /// it will be generated and saved to [filename] + '.sidx'.</para>
-	    /// <para>Using a file-based index is especially recommended for ASP.NET applications which will speed up
-	    /// start-up time when the cache has been emptied.
-	    /// </para>
-	    /// </remarks>
-	    /// <param name="filename">Path to shape file</param>
-	    /// <param name="fileBasedIndex">Use file-based spatial index</param>
-	    /// <param name="useMemoryCache">Use the memory cache. BEWARE in case of large shapefiles</param>
-	    public ShapeFile(string filename, bool fileBasedIndex, bool useMemoryCache) : this(filename, fileBasedIndex,useMemoryCache,0)
-		{
-		}
-
-	    /// <summary>
-	    /// Initializes a ShapeFile DataProvider.
-	    /// </summary>
-	    /// <remarks>
-	    /// <para>If FileBasedIndex is true, the spatial index will be read from a local copy. If it doesn't exist,
-	    /// it will be generated and saved to [filename] + '.sidx'.</para>
-	    /// <para>Using a file-based index is especially recommended for ASP.NET applications which will speed up
-	    /// start-up time when the cache has been emptied.
-	    /// </para>
-	    /// </remarks>
-	    /// <param name="filename">Path to shape file</param>
-	    /// <param name="fileBasedIndex">Use file-based spatial index</param>
-	    /// <param name="useMemoryCache">Use the memory cache. BEWARE in case of large shapefiles</param>
-	    /// <param name="SRID">The spatial reference id</param>
-	    public ShapeFile(string filename, bool fileBasedIndex, bool useMemoryCache,int SRID) 
-            : this(filename, fileBasedIndex, new NullCacheUtility())
-		{
-			_useMemoryCache = useMemoryCache;
-			this.SRID=SRID;
-		}
-		
-		/// <summary>
 		/// Gets or sets the coordinate system of the ShapeFile. If a shapefile has 
 		/// a corresponding [filename].prj file containing a Well-Known Text 
 		/// description of the coordinate system this will automatically be read.

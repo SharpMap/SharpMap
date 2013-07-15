@@ -50,7 +50,7 @@
 
             var map = new SharpMap.Map(new System.Drawing.Size(1024, 768));
 
-            var shp = new SharpMap.Data.Providers.ShapeFile(GetTestDataFilePath("SPATIAL_F_SKARVMUFF.shp"), false, false);
+            var shp = new SharpMap.Data.Providers.ShapeFile(GetTestDataFilePath("SPATIAL_F_SKARVMUFF.shp"));
             var lyr = new SharpMap.Layers.VectorLayer("Roads", shp);
 
             map.Layers.Add(lyr);
@@ -72,7 +72,7 @@
 
             var map = new SharpMap.Map(new System.Drawing.Size(1024, 768));
 
-            var shp = new SharpMap.Data.Providers.ShapeFile(GetTestDataFilePath("roads_ugl.shp"), false, false);
+            var shp = new SharpMap.Data.Providers.ShapeFile(GetTestDataFilePath("roads_ugl.shp"));
             var lyr = new SharpMap.Layers.Symbolizer.LinealVectorLayer("Roads", shp)
                           {
                               Symbolizer =
@@ -124,7 +124,7 @@
             NUnit.Framework.Assert.IsTrue(System.IO.File.Exists(GetTestDataFilePath("SPATIAL_F_SKARVMUFF.shp")),
                                           "Specified shapefile is not present!");
 
-            var shp = new SharpMap.Data.Providers.ShapeFile(GetTestDataFilePath("SPATIAL_F_SKARVMUFF.shp"), false, false);
+            var shp = new SharpMap.Data.Providers.ShapeFile(GetTestDataFilePath("SPATIAL_F_SKARVMUFF.shp"));
             shp.Open();
             var feat = shp.GetFeature(0);
             NUnit.Framework.Assert.IsNotNull(feat);
@@ -137,7 +137,7 @@
             NUnit.Framework.Assert.IsTrue(System.IO.File.Exists(GetTestDataFilePath("SPATIAL_F_SKARVMUFF.shp")),
                                           "Specified shapefile is not present!");
 
-            var shp = new SharpMap.Data.Providers.ShapeFile(GetTestDataFilePath("SPATIAL_F_SKARVMUFF.shp"), false, false);
+            var shp = new SharpMap.Data.Providers.ShapeFile(GetTestDataFilePath("SPATIAL_F_SKARVMUFF.shp"));
             shp.Open();
 
             var fds = new SharpMap.Data.FeatureDataSet();
@@ -174,7 +174,7 @@
             NUnit.Framework.Assert.IsTrue(System.IO.File.Exists(GetTestDataFilePath("SPATIAL_F_SKARVMUFF.shp")),
                                           "Specified shapefile is not present!");
 
-            var shp = new SharpMap.Data.Providers.ShapeFile(GetTestDataFilePath("SPATIAL_F_SKARVMUFF.shp"), false, false);
+            var shp = new SharpMap.Data.Providers.ShapeFile(GetTestDataFilePath("SPATIAL_F_SKARVMUFF.shp"));
             shp.Open();
 
             var fds = new SharpMap.Data.FeatureDataSet();

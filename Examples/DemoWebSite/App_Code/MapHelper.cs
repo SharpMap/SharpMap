@@ -10,6 +10,7 @@ using SharpMap.Layers;
 using SharpMap.Rendering;
 using SharpMap.Rendering.Thematics;
 using SharpMap.Styles;
+using SharpMap.Utilities;
 using ColorBlend=SharpMap.Rendering.Thematics.ColorBlend;
 using Point=GeoAPI.Geometries.Coordinate;
 
@@ -28,7 +29,7 @@ public class MapHelper
 			//Set up the countries layer
         VectorLayer layCountries = new VectorLayer("Countries");
 			//Set the datasource to a shapefile in the App_data folder
-        layCountries.DataSource = new ShapeFile(HttpContext.Current.Server.MapPath(@"~\App_data\countries.shp"), true);
+        layCountries.DataSource = new ShapeFile(HttpContext.Current.Server.MapPath(@"~\App_data\countries.shp"), true, new WebCacheUtility());
 
 			//Set fill-style to green
 			layCountries.Style.Fill = new SolidBrush(Color.Green);
@@ -40,7 +41,7 @@ public class MapHelper
 			//Set up a river layer
         VectorLayer layRivers = new VectorLayer("Rivers");
 			//Set the datasource to a shapefile in the App_data folder
-        layRivers.DataSource = new ShapeFile(HttpContext.Current.Server.MapPath(@"~\App_data\rivers.shp"), true);
+        layRivers.DataSource = new ShapeFile(HttpContext.Current.Server.MapPath(@"~\App_data\rivers.shp"), true, new WebCacheUtility());
 			//Define a blue 1px wide pen
         layRivers.Style.Line = new Pen(Color.Blue, 1);
 			layRivers.SRID = 4326;
@@ -48,7 +49,7 @@ public class MapHelper
 			//Set up a river layer
         VectorLayer layCities = new VectorLayer("Cities");
 			//Set the datasource to a shapefile in the App_data folder
-        layCities.DataSource = new ShapeFile(HttpContext.Current.Server.MapPath(@"~\App_data\cities.shp"), true);
+        layCities.DataSource = new ShapeFile(HttpContext.Current.Server.MapPath(@"~\App_data\cities.shp"), true, new WebCacheUtility());
 			//Define a blue 1px wide pen
 			//layCities.Style.Symbol = new Bitmap(HttpContext.Current.Server.MapPath(@"~\App_data\icon.png"));
 			layCities.Style.SymbolScale = 0.8f;
@@ -183,7 +184,7 @@ public class MapHelper
         //Set up the countries layer
         VectorLayer layCountries = new VectorLayer("Countries");
 			//Set the datasource to a shapefile in the App_data folder
-        layCountries.DataSource = new ShapeFile(HttpContext.Current.Server.MapPath(@"~\App_data\countries.shp"), true);
+        layCountries.DataSource = new ShapeFile(HttpContext.Current.Server.MapPath(@"~\App_data\countries.shp"), true, new WebCacheUtility());
 			//Set fill-style to green
 			layCountries.Style.Fill = new SolidBrush(Color.Green);
 			//Set the polygons to have a black outline

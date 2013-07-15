@@ -9,6 +9,8 @@ using SharpMap.Layers;
 using System.Globalization;
 using SharpMap.Styles;
 using GeoAPI.Geometries;
+using SharpMap.Utilities;
+
 namespace SharpMap.Serialization
 {
     /// <summary>
@@ -172,7 +174,7 @@ namespace SharpMap.Serialization
                         {
                             if (!Path.HasExtension(data))
                                 data = data + ".shp";
-                            SharpMap.Data.Providers.ShapeFile sf = new Data.Providers.ShapeFile(data, true);
+                            SharpMap.Data.Providers.ShapeFile sf = new Data.Providers.ShapeFile(data, true, new WebCacheUtility());
                             (lay as VectorLayer).DataSource = sf;
                         }
 

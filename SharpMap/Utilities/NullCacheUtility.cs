@@ -7,12 +7,12 @@ namespace SharpMap.Utilities
     {
         public bool IsWebContext { get { return false; } }
 
-        public bool TryGetValue(string s, out QuadTree quadTree)
+        public bool TryGetValue(string key, out QuadTree quadTree)
         {
             quadTree = null;
             return false;
         }
 
-        public void TryAddValue(string s, QuadTree quadTree, TimeSpan fromDays) { }
+        public void TryAddValue(string key, QuadTree quadTree, TimeSpan fromDays) { }
     }
 }

@@ -1,3 +1,5 @@
+using SharpMap.Utilities;
+
 namespace SharpMap.Demo.Wms.Controllers
 {
     using System;
@@ -53,7 +55,7 @@ namespace SharpMap.Demo.Wms.Controllers
             bbox.ExpandToInclude(new Coordinate(s, e));
 
             FeatureDataSet ds = new FeatureDataSet();
-            using (ShapeFile provider = new ShapeFile(path))
+            using (ShapeFile provider = new ShapeFile(path, true, new WebCacheUtility()))
             {
                 provider.DoTrueIntersectionQuery = true;
                 provider.Open();

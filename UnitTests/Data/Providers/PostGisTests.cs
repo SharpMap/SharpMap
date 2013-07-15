@@ -42,8 +42,9 @@ namespace UnitTests.Data.Providers
                 {
                     conn.Open();
                     // Load data
-                    using (var shapeFile = new SharpMap.Data.Providers.ShapeFile(GetTestFile(), false, false, 4326))
+                    using (var shapeFile = new SharpMap.Data.Providers.ShapeFile(GetTestFile()))
                     {
+                        shapeFile.SRID = 4326;
                         shapeFile.Open();
 
                         using (var cmd = conn.CreateCommand())

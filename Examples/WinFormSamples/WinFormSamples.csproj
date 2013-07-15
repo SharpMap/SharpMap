@@ -562,6 +562,10 @@
       <Project>{DD1CC1DB-4BF9-4C88-A100-733D84795F3A}</Project>
       <Name>SharpMap.UI</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\SharpMap.Web\SharpMap.Web.csproj">
+      <Project>{292ef671-4063-4952-8de0-423df72a0950}</Project>
+      <Name>SharpMap.Web</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\SharpMap\SharpMap.csproj">
       <Project>{C83777FC-AABB-47D9-911F-D76255D4D541}</Project>
       <Name>SharpMap</Name>

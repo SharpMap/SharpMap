@@ -26,7 +26,8 @@
     <UpgradeBackupLocation>
     </UpgradeBackupLocation>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
   </PropertyGroup>
@@ -216,6 +217,10 @@
     <ProjectReference Include="..\SharpMap.SqlServerSpatialObjects\SharpMap.SqlServerSpatialObjects.csproj">
       <Project>{6D681045-8EF1-44EA-A19D-C7A63A6D0F76}</Project>
       <Name>SharpMap.SqlServerSpatialObjects</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SharpMap.Web\SharpMap.Web.csproj">
+      <Project>{292ef671-4063-4952-8de0-423df72a0950}</Project>
+      <Name>SharpMap.Web</Name>
     </ProjectReference>
     <ProjectReference Include="..\SharpMap\SharpMap.csproj">
       <Project>{C83777FC-AABB-47D9-911F-D76255D4D541}</Project>
