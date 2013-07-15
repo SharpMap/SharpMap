@@ -1,7 +1,0 @@
-<?xml version="1.0" ?>
-<GetCapabilities
-   service="WFS"
-   xmlns="http://www.opengis.net/wfs/2.0"
-   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-   xsi:schemaLocation="http://www.opengis.net/wfs/2.0
-                       http://schemas.opengis.net/wfs/2.0/wfs.xsd"/>

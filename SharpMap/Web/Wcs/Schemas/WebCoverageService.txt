@@ -1,8 +1,0 @@
-﻿Web Coverage Service schema definition files can be found here:
-http://www.opengis.net/wcs
-
-Supporting schemas are:
-Prefix Namespace URI                            Description
-xsd    http://www.w3.org/2001/XMLSchema         XML Schema
-gml    http://www.opengis.net/gml/3.2           GML 3.2.1
-gmlcov http://www.opengis.net/gmlcov/1.0        GML Application Schema for Coverages 1.0
