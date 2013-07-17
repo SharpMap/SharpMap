@@ -75,17 +75,21 @@
     <Reference Include="Common.Logging, Version=2.0.0.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
       <HintPath>..\packages\Common.Logging.2.0.0\lib\2.0\Common.Logging.dll</HintPath>
     </Reference>
-    <Reference Include="GeoAPI, Version=1.7.0.0, Culture=neutral, PublicKeyToken=a1a0da7def465678, processorArchitecture=MSIL">
+    <Reference Include="GeoAPI, Version=1.7.1.0, Culture=neutral, PublicKeyToken=a1a0da7def465678, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\GeoAPI.1.7.1\lib\net40-client\GeoAPI.dll</HintPath>
+      <HintPath>..\packages\GeoAPI.1.7.1.1\lib\net40-client\GeoAPI.dll</HintPath>
     </Reference>
-    <Reference Include="NetTopologySuite, Version=1.13.0.0, Culture=neutral, PublicKeyToken=f580a05016ebada1, processorArchitecture=MSIL">
+    <Reference Include="NetTopologySuite, Version=1.13.1.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\NetTopologySuite.1.13.0\lib\net40-client\NetTopologySuite.dll</HintPath>
+      <HintPath>..\packages\NetTopologySuite.1.13.1\lib\net40-client\NetTopologySuite.dll</HintPath>
     </Reference>
     <Reference Include="PowerCollections, Version=1.0.0.0, Culture=neutral, PublicKeyToken=2573bf8a1bdddcd5, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\NetTopologySuite.1.13.0\lib\net40-client\PowerCollections.dll</HintPath>
+      <HintPath>..\packages\NetTopologySuite.1.13.1\lib\net40-client\PowerCollections.dll</HintPath>
+    </Reference>
+    <Reference Include="ProjNet, Version=1.3.0.1, Culture=neutral, PublicKeyToken=a1f5bdcd9c6f5740, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\ProjNET4GeoAPI.1.3.0.2\lib\net40-client\ProjNet.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />

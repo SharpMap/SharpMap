@@ -43,20 +43,20 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="BruTile">
-      <HintPath>..\packages\BruTile.0.7.4\lib\net40\BruTile.dll</HintPath>
+      <HintPath>..\packages\BruTile.0.7.4.1\lib\net40\BruTile.dll</HintPath>
     </Reference>
     <Reference Include="BruTile.Desktop">
-      <HintPath>..\packages\BruTile.0.7.4\lib\net40\BruTile.Desktop.dll</HintPath>
+      <HintPath>..\packages\BruTile.0.7.4.1\lib\net40\BruTile.Desktop.dll</HintPath>
     </Reference>
     <Reference Include="BruTile.MbTiles">
-      <HintPath>..\packages\BruTile.0.7.4\lib\net40\BruTile.MbTiles.dll</HintPath>
+      <HintPath>..\packages\BruTile.0.7.4.1\lib\net40\BruTile.MbTiles.dll</HintPath>
     </Reference>
     <Reference Include="Common.Logging">
       <HintPath>..\packages\Common.Logging.2.0.0\lib\2.0\Common.Logging.dll</HintPath>
     </Reference>
-    <Reference Include="GeoAPI, Version=1.7.0.0, Culture=neutral, PublicKeyToken=a1a0da7def465678, processorArchitecture=MSIL">
+    <Reference Include="GeoAPI, Version=1.7.1.0, Culture=neutral, PublicKeyToken=a1a0da7def465678, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\GeoAPI.1.7.1\lib\net40-client\GeoAPI.dll</HintPath>
+      <HintPath>..\packages\GeoAPI.1.7.1.1\lib\net40-client\GeoAPI.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
