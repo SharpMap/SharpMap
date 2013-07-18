@@ -110,8 +110,7 @@
       <HintPath>..\packages\NetTopologySuite.IO.1.13.1\lib\net40-client\NetTopologySuite.IO.PostGis.dll</HintPath>
     </Reference>
     <Reference Include="NetTopologySuite.IO.SpatiaLite, Version=1.13.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\NetTopologySuite.IO.SpatiaLite.1.13.1\lib\net40-client\NetTopologySuite.IO.SpatiaLite.dll</HintPath>
+      <HintPath>..\packages\NetTopologySuite.IO.SpatiaLite.1.13.1.1\lib\net40-client\NetTopologySuite.IO.SpatiaLite.dll</HintPath>
     </Reference>
     <Reference Include="Npgsql, Version=2.0.12.0, Culture=neutral, PublicKeyToken=5d8b90d52f46fda7, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
