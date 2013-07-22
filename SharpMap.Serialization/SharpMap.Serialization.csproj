@@ -71,6 +71,9 @@
     <Compile Include="MapSerialization.cs" />
     <Compile Include="MapServerMapFileLoader.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="..\SharedAssemblyVersion.cs">
+      <Link>Properties\SharedAssemblyVersion.cs</Link>
+    </Compile>
     <Compile Include="SharpMapSerializationClasses.cs" />
   </ItemGroup>
   <ItemGroup>

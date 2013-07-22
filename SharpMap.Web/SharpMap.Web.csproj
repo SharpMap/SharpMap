@@ -75,6 +75,9 @@
     <Compile Include="Web\Wms\ServerCapabilities.cs" />
     <Compile Include="Web\Wms\WmsException.cs" />
     <Compile Include="Web\Wms\WmsServer.cs" />
+    <Compile Include="..\SharedAssemblyVersion.cs">
+      <Link>Properties\SharedAssemblyVersion.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Web\UI\Ajax\AjaxMap.js" />

@@ -170,6 +170,9 @@
     <Compile Include="Layers\GdalRasterLayerCachingProxy.cs" />
     <Compile Include="Layers\GeoTransform.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="..\SharedAssemblyVersion.cs">
+      <Link>Properties\SharedAssemblyVersion.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SharpMap\SharpMap.csproj">

@@ -205,6 +205,9 @@
     <Compile Include="WFS\RequestValidationTest.cs" />
     <Compile Include="WMS\Encoding.cs" />
     <Compile Include="WMS\SpatialReferencedBoundingBoxTest.cs" />
+    <Compile Include="..\SharedAssemblyVersion.cs">
+      <Link>Properties\SharedAssemblyVersion.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SharpMap.Extensions\SharpMap.Extensions.csproj">
