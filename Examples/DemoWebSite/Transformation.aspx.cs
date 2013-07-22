@@ -11,6 +11,8 @@ using GeoAPI.Geometries;
 using SharpMap.Layers;
 using SharpMap.Web;
 using Point=GeoAPI.Geometries.Coordinate;
+using ProjNet.CoordinateSystems;
+using ProjNet.CoordinateSystems.Transformations;
 
 #if !DotSpatialProjections
 public partial class Transformation : Page
@@ -83,7 +85,7 @@ public partial class Transformation : Page
         if (PreviousProj != "Pseudo")
         {
             //Transform current view back to geographic coordinates
-            ProjNet.CoordinateSystems.Transformations.ICoordinateTransformation trans = GetTransform(PreviousProj);
+            ICoordinateTransformation trans = GetTransform(PreviousProj);
             left = GeometryTransform.TransformCoordinate(new Point(myMap.Envelope.MinX, myMap.Center.Y),
                                                     trans.MathTransform.Inverse());
             right = GeometryTransform.TransformCoordinate(new Point(myMap.Envelope.MaxX, myMap.Center.Y),
@@ -100,7 +102,7 @@ public partial class Transformation : Page
         else //Project coordinates to new projection
         {
             //Transform back to geographic and over to new projection
-            ProjNet.CoordinateSystems.Transformations.ICoordinateTransformation trans = GetTransform(SelectedProj);
+            ICoordinateTransformation trans = GetTransform(SelectedProj);
             left = GeometryTransform.TransformCoordinate(left, trans.MathTransform);
             right = GeometryTransform.TransformCoordinate(right, trans.MathTransform);
             center = GeometryTransform.TransformCoordinate(center, trans.MathTransform);
@@ -161,7 +163,7 @@ public partial class Transformation : Page
         return map;
     }
 
-    public ProjNet.CoordinateSystems.Transformations.ICoordinateTransformation GetTransform(string name)
+    public ICoordinateTransformation GetTransform(string name)
     {
         switch (name)
         {
@@ -176,7 +178,7 @@ public partial class Transformation : Page
         }
     }
 
-    public static ProjNet.CoordinateSystems.Transformations.ICoordinateTransformation Transform2Albers(ProjNet.CoordinateSystems.ICoordinateSystem source)
+    public static ICoordinateTransformation Transform2Albers(ICoordinateSystem source)
     {
         if (source == null)
             throw new ArgumentException("Source coordinate system is null");
@@ -206,7 +208,7 @@ public partial class Transformation : Page
         return new CoordinateTransformationFactory().CreateFromCoordinateSystems(source, coordsys);
     }
 
-    public static ProjNet.CoordinateSystems.Transformations.ICoordinateTransformation Transform2Mercator(ICoordinateSystem source)
+    public static ICoordinateTransformation Transform2Mercator(ICoordinateSystem source)
     {
         CoordinateSystemFactory cFac = new CoordinateSystemFactory();
 
@@ -230,7 +232,7 @@ public partial class Transformation : Page
     }
 
 
-    public static ProjNet.CoordinateSystems.Transformations.ICoordinateTransformation Transform2Lambert(ICoordinateSystem source)
+    public static ICoordinateTransformation Transform2Lambert(ICoordinateSystem source)
     {
         if (source == null)
             throw new ArgumentException("Source coordinate system is null");

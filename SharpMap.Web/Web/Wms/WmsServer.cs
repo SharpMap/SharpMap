@@ -818,7 +818,13 @@ namespace SharpMap.Web.Wms
             //for layers with a SQL datasource with a DefinitionQuery property
             var piDefinitionQuery = provider.GetType().GetProperty("DefinitionQuery", BindingFlags.Public | BindingFlags.Instance);
             if (piDefinitionQuery != null)
-                piDefinitionQuery.SetValue(provider, cqlFilterString, null);
+            {
+                string dq = piDefinitionQuery.GetValue(provider, null) as string;
+                if (string.IsNullOrEmpty(dq))
+                    piDefinitionQuery.SetValue(provider, cqlFilterString, null);
+                else
+                    piDefinitionQuery.SetValue(provider, "(" + dq + ") AND (" + cqlFilterString + ")", null);
+            }
         }
 
         /// <summary>

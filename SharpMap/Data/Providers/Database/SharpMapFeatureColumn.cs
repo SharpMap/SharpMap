@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Data;
 
 namespace SharpMap.Data.Providers
 {
@@ -11,6 +12,14 @@ namespace SharpMap.Data.Providers
     {
         private string _orderBy;
         private int _ordinal;
+
+        /// <summary>
+        /// Default constructor, forcing <seealso cref="Display"/> to be <value>true</value> by default
+        /// </summary>
+        public SharpMapFeatureColumn()
+        {
+            Display = true;
+        }
 
         ///// <summary>
         ///// Event raised when the ordinal of a feature column changed.
@@ -99,7 +108,10 @@ namespace SharpMap.Data.Providers
         /// </remarks>
         public string Constraint { get; set; }
 
-
+        /// <summary>
+        /// Gets or sets the type used in database
+        /// </summary>
+        public DbType DbType { get; set; }
     }
 
 }

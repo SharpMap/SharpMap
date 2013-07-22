@@ -24,7 +24,7 @@ namespace SharpMap.Data.Providers
         /// <summary>
         /// Gets or sets the factory to create geometries.
         /// </summary>
-        protected IGeometryFactory Factory { get; set; }
+        public IGeometryFactory Factory { get; protected set; }
 
         /// <summary>
         /// Creates an instance of this class. The <see cref="ConnectionID"/> is set to <see cref="String.Empty"/>,

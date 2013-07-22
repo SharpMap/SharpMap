@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>SharpMap</id>
+    <version>$version$</version>
+    <authors>SharpMap-Team</authors>
+	<licenseUrl>http://sharpmap.codeplex.com/license</licenseUrl>
+    <projectUrl>http://sharpmap.codeplex.com</projectUrl>
+    <!--<iconUrl>"http://download-codeplex.sec.s-msft.com/Download?ProjectName=sharpmap&DownloadId=668183"</iconUrl>-->
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <summary>
+      SharpMap is an easy-to-use mapping library for use in web and desktop applications.
+It provides access to many types of GIS data, enables spatial querying of that data, and renders beautiful maps.
+The engine is written in C# and based on the .Net 4.0 framework.
+      </summary>
+    <description>
+      This package contains the core components of SharpMap.
+    </description>
+	<tags>SharpMap GIS Map GeoSpatial</tags>
+    <frameworkAssemblies>
+      <frameworkAssembly assemblyName="System" targetFramework="net40-client" />
+      <frameworkAssembly assemblyName="System.Data" targetFramework="net40-client" />
+      <frameworkAssembly assemblyName="System.Drawing" targetFramework="net40-client" />
+      <frameworkAssembly assemblyName="System.Xml" targetFramework="net40-client" />
+    </frameworkAssemblies>
+	<dependencies>
+		<dependency id="BruTile" version="[0.7.4.1, 0.7.5)"/>
+		<dependency id="Common.Logging" version="2.0.0"/>
+		<dependency id="GeoAPI" version="[1.7.1,1.8)"/>
+		<dependency id="NetTopologySuite" version="[1.13.1, 1.14)"/>
+		<dependency id="NetTopologySuite.IO" version="[1.13.1, 1.14)"/>
+		<dependency id="NewtonSoft.Json" version="4.5.11"/>
+		<dependency id="ProjNET4GeoAPI" version="[1.3.0.2, 1.4)"/>
+	</dependencies>
+  </metadata>
+  <files>
+	  <file src="SharpMap\bin\Release\SharpMap.dll" target="lib\net40-client,lib\net40"/>
+  </files>
+</package>

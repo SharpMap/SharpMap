@@ -80,7 +80,8 @@ namespace SharpMap.Layers
 
         protected Envelope _envelope;
         protected Dataset _gdalDataset;
-        internal GeoTransform _geoTransform;
+        //internal GeoTransform _geoTransform;
+        
         //private double _histoBrightness, _histoContrast;
         //private double[] _histoMean;
         protected Size _imageSize;
@@ -254,7 +255,7 @@ namespace SharpMap.Layers
         /// </summary>
         public double GSD
         {
-            get { return _geoTransform.HorizontalPixelResolution; }
+            get { return new GeoTransform(_gdalDataset).HorizontalPixelResolution; }
         }
 
         ///<summary>
@@ -363,7 +364,7 @@ namespace SharpMap.Layers
         protected override void ReleaseManagedResources()
         {
             _factory = null;
-            _geoTransform = null;
+            //_geoTransform = null;
             _gdalDataset.Dispose();
             _gdalDataset = null;
             
@@ -1302,7 +1303,7 @@ namespace SharpMap.Layers
             if (!_useRotation && !HaveSpot || (geoTrans[0] == 0 && geoTrans[3] == 0))
                 geoTrans = new[] { 999.5, 1, 0, 1000.5, 0, -1 };
             Bitmap bitmap = null;
-            _geoTransform = new GeoTransform(geoTrans);
+            var geoTransform = new GeoTransform(geoTrans);
             int DsWidth = 0;
             int DsHeight = 0;
             BitmapData bitmapData = null;
@@ -1333,20 +1334,20 @@ namespace SharpMap.Layers
                 double right = Math.Min(bbox.MaxX, _envelope.MaxX);
                 double bottom = Math.Max(bbox.MinY, _envelope.MinY);
 
-                double x1 = Math.Abs(_geoTransform.PixelX(left));
-                double y1 = Math.Abs(_geoTransform.PixelY(top));
-                double imgPixWidth = _geoTransform.PixelXwidth(right - left);
-                double imgPixHeight = _geoTransform.PixelYwidth(bottom - top);
+                double x1 = Math.Abs(geoTransform.PixelX(left));
+                double y1 = Math.Abs(geoTransform.PixelY(top));
+                double imgPixWidth = geoTransform.PixelXwidth(right - left);
+                double imgPixHeight = geoTransform.PixelYwidth(bottom - top);
 
                 //get screen pixels image should fill 
                 double dblBBoxW = bbox.Width;
                 double dblBBoxtoImgPixX = imgPixWidth / dblBBoxW;
-                dblImginMapW = size.Width * dblBBoxtoImgPixX * _geoTransform.HorizontalPixelResolution;
+                dblImginMapW = size.Width * dblBBoxtoImgPixX * geoTransform.HorizontalPixelResolution;
 
 
                 double dblBBoxH = bbox.Height;
                 double dblBBoxtoImgPixY = imgPixHeight / dblBBoxH;
-                dblImginMapH = size.Height * dblBBoxtoImgPixY * -_geoTransform.VerticalPixelResolution;
+                dblImginMapH = size.Height * dblBBoxtoImgPixY * -geoTransform.VerticalPixelResolution;
 
                 if ((dblImginMapH == 0) || (dblImginMapW == 0))
                     return;
@@ -2048,7 +2049,9 @@ namespace SharpMap.Layers
             Double[] buffer = new double[1];
             Int32[] bandMap = new int[Bands];
             for (int i = 1; i <= Bands; i++) bandMap[i - 1] = i;
-            var imgPt = _geoTransform.GroundToImage(pt);
+
+            var geoTransform = new GeoTransform(_gdalDataset);
+            var imgPt = geoTransform.GroundToImage(pt);
             Int32 x = Convert.ToInt32(imgPt.X);
             Int32 y = Convert.ToInt32(imgPt.Y);
 

@@ -24,6 +24,7 @@ using System.Collections.ObjectModel;
 using System.Data;
 using System.Data.Common;
 using System.Data.SqlClient;
+using NetTopologySuite.IO;
 using SharpMap.Converters.WellKnownBinary;
 using GeoAPI.Geometries;
 
@@ -261,29 +262,31 @@ namespace SharpMap.Data.Providers
         //    return null;
         //}
 
+
         /// <summary>
-        /// Returns geometry Object IDs whose bounding box intersects 'bbox'
+        /// Gets the object of features that lie within the specified <see cref="GeoAPI.Geometries.Envelope"/>
         /// </summary>
-        /// <param name="bbox"></param>
-        /// <returns></returns>
+        /// <param name="bbox">The bounding box</param>
+        /// <returns>A collection of object ids</returns>
         protected override Collection<uint> GetObjectIDsInViewInternal(Envelope bbox)
         {
             var objectlist = new Collection<uint>();
-            using (var conn = new SqlConnection(ConnectionString))
+            using (var conn = CreateOpenDbConnection())
             {
-                using (var command = conn.CreateCommand())
+                using (var command = (SqlCommand)conn.CreateCommand())
                 {
-                    conn.Open();
-                    var strSQL = "SELECT * FROM ST.FilterQuery('" + Table + "', '" + GeometryColumn + "', " +
-                                BuildEnvelope(bbox, command) + ")";
+#pragma warning disable 612,618
+                    var @where = !string.IsNullOrEmpty(DefinitionQuery)
+                        ? DefinitionQuery 
+                        : FeatureColumns.GetWhereClause(null);
+#pragma warning restore 612,618
+                    var strSQL = string.Format("SELECT _sm_.{4} FROM ST.FilterQueryWhere('{0}','{1}',{3},'{2}') AS _sm_;",
+                                Table, GeometryColumn, @where, BuildEnvelope(bbox, command), ObjectIdColumn);
 
 #pragma warning disable 612,618
-                    if (!String.IsNullOrEmpty(DefinitionQuery))
-                        strSQL += " WHERE " + DefinitionQuery;
-
                     if (!String.IsNullOrEmpty(OrderQuery))
                         strSQL += " ORDER BY " + OrderQuery;
-#pragma warning restore 612,618
+#pragma restore 612,618
 
                     command.CommandText = strSQL;
 
@@ -291,9 +294,9 @@ namespace SharpMap.Data.Providers
                     {
                         while (dr.Read())
                         {
-                            if (dr[0] != DBNull.Value)
+                            if (!dr.IsDBNull(0))
                             {
-                                var id = (uint) (int) dr[0];
+                                var id = Convert.ToUInt32(dr[0]);
                                 objectlist.Add(id);
                             }
                         }
@@ -469,7 +472,7 @@ namespace SharpMap.Data.Providers
                                  : DefinitionQuery).Replace(" WHERE ", "").Replace("'", "''");
 #pragma warning restore 612,618
 
-                var strSQL = string.Format("SELECT ST.AsBinary(ST.EnvelopeQueryWhere('{0}', '{1}', '{2}'))", DbUtility.DecorateTable(Schema, Table),
+                var strSQL = string.Format("SELECT ST.AsBinary(ST.EnvelopeQueryWhere('{0}', '{1}', '{2}'))", /*DbUtility.DecorateTable(Schema, Table)*/ /* Schema, */Table,
                                               GeometryColumn, where);
                 
                 using (var command = new SqlCommand(strSQL, conn))
@@ -585,12 +588,22 @@ namespace SharpMap.Data.Providers
         /// <returns>The spatial component of a SQL where clause</returns>
         protected override string GetSpatialWhere(Envelope bbox, DbCommand command)
         {
-            return string.Empty;
+            var sqlCommand = (SqlCommand) command;
+
+#pragma warning disable 612,618
+            var pwhere = new SqlParameter("@PWhere", !string.IsNullOrEmpty(DefinitionQuery)
+                                                         ? DefinitionQuery
+                                                         : FeatureColumns.GetWhereClause(null));
+#pragma warning restore 612,618
+            sqlCommand.Parameters.Add(pwhere);
+
+            return string.Format("{3} IN (SELECT _tmp_.{3} FROM ST.FilterQueryWhere('{0}', '{1}', {2}, @PWhere) AS _tmp_)",
+                                  Table, GeometryColumn, BuildEnvelope(bbox, sqlCommand), DbUtility.DecorateColumn(ObjectIdColumn));
         }
 
         private string BuildEnvelope(Envelope bbox, SqlCommand command)
         {
-            var res = "ST.MakeEnvelope(?,?,?,?,?)";
+            var res = "ST.MakeEnvelope(@PMinX,@PMinY,@PMaxX,@PMaxY,@PTargetSrid)";
 
             var needsTransform = NeedsTransform;
             command.Parameters.AddRange(
@@ -605,7 +618,7 @@ namespace SharpMap.Data.Providers
 
             if (needsTransform)
             {
-                res = string.Format("ST.Transform({0}, ?)", res);
+                res = string.Format("ST.Transform({0}, @PSrid)", res);
                 command.Parameters.AddWithValue("@PSrid", SRID);
             }
 
@@ -614,7 +627,7 @@ namespace SharpMap.Data.Providers
 
         private string BuildGeometry(IGeometry geometry, SqlCommand command)
         {
-            var res = "ST.GeomFromWKB(?,?)";
+            var res = "ST.GeomFromWKB(@PGeom,@PTargetSrid)";
 
             var needsTransform = NeedsTransform;
             command.Parameters.AddRange(
@@ -626,7 +639,7 @@ namespace SharpMap.Data.Providers
 
             if (needsTransform)
             {
-                res = string.Format("ST.Transform({0}, ?)", res);
+                res = string.Format("ST.Transform({0}, @PSrid)", res);
                 command.Parameters.AddWithValue("@PSrid", SRID);
             }
 
@@ -641,43 +654,17 @@ namespace SharpMap.Data.Providers
         /// <returns>The spatial component of a SQL where clause</returns>
         protected override string GetSpatialWhere(IGeometry bbox, DbCommand command)
         {
-            return string.Empty;
-        }
+            var sqlCommand = (SqlCommand)command;
 
-        /// <summary>
-        /// Method to generate a SQL-From statement for a bounding box query
-        /// </summary>
-        /// <param name="envelope">The envelope to query</param>
-        /// <param name="command">The command object that is supposed to perform the query</param>
-        /// <returns>A SQL From statement string</returns>
-        protected override string GetFrom(Envelope envelope, DbCommand command)
-        {
-            return string.Format("ST.FilterQuery{0}({1})", 
-                _spatialQueryPrefix,
-                BuildEnvelope(envelope, (SqlCommand)command));
-        }
+#pragma warning disable 612,618
+            var pwhere = new SqlParameter("@PWhere", !string.IsNullOrEmpty(DefinitionQuery)
+                                                         ? DefinitionQuery
+                                                         : FeatureColumns.GetWhereClause(null));
+#pragma warning restore 612,618
+            sqlCommand.Parameters.Add(pwhere);
 
-        /// <summary>
-        /// Method to generate a SQL-From statement for a geometry query
-        /// </summary>
-        /// <param name="geometry">The envelope to query</param>
-        /// <param name="command">The command object that is supposed to perform the query</param>
-        /// <returns>A SQL From statement string</returns>
-        protected override string GetFrom(IGeometry geometry, DbCommand command)
-        {
-            return string.Format("ST.RelateQuery{0}('{1}', 'intersects')",
-                _spatialQueryPrefix,
-                BuildGeometry(geometry, (SqlCommand)command));
-        }
-
-        private string _spatialQueryPrefix;
-
-        /// <summary>
-        /// Method to initialize the spatial provider
-        /// </summary>
-        protected override void InitializeInternal()
-        {
-            _spatialQueryPrefix = BuildSpatialQuerySuffix();
+            return string.Format("{3} IN (SELECT _tmp_.{3} FROM ST.RelateQueryWhere('{0}', '{1}', {2}, 'Intersects', @PWhere) AS _tmp_)",
+                                  Table, GeometryColumn, BuildGeometry(bbox, sqlCommand), DbUtility.DecorateColumn(ObjectIdColumn));
         }
     }
 }

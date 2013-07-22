@@ -48,14 +48,11 @@ namespace SharpMap
             {
                 // We have to do this initialization with reflection due to the fact that NTS can reference an older version of GeoAPI and redirection 
                 // is not available at design time..
-                var geoApiAssembly = Assembly.Load("GeoAPI");
                 var ntsAssembly = Assembly.Load("NetTopologySuite");
-                var geoApiGeometryServices = geoApiAssembly.GetType("GeoAPI.GeometryServiceProvider");
-                var pi = geoApiGeometryServices.GetProperty("Instance");
-                if (pi.GetValue(null, null) == null)
+                if (GeoAPI.GeometryServiceProvider.Instance == null)
                 {
                     var ntsApiGeometryServices = ntsAssembly.GetType("NetTopologySuite.NtsGeometryServices");
-                    pi.SetValue(null, ntsApiGeometryServices.GetProperty("Instance").GetValue(null, null), null);
+                    GeoAPI.GeometryServiceProvider.Instance = ntsApiGeometryServices.GetProperty("Instance").GetValue(null, null) as GeoAPI.IGeometryServices;
                 }
             }
         }
@@ -147,11 +144,28 @@ namespace SharpMap
             {
 
                 var l = _backgroundLayers[e.NewIndex];
-                var tileAsyncLayer   = l as ITileAsyncLayer;
+                var tileAsyncLayer = l as ITileAsyncLayer;
                 if (tileAsyncLayer != null)
                 {
-                    tileAsyncLayer.MapNewTileAvaliable += MapNewTileAvaliableHandler;
+                    if (tileAsyncLayer.OnlyRedrawWhenComplete)
+                    {
+                        tileAsyncLayer.DownloadProgressChanged += new DownloadProgressHandler(layer_DownloadProgressChanged);
+                    }
+                    else
+                    {
+                        tileAsyncLayer.MapNewTileAvaliable += MapNewTileAvaliableHandler;
+                    }
                 }
+            }
+        }
+
+        void layer_DownloadProgressChanged(int tilesRemaining)
+        {
+            if (tilesRemaining <= 0)
+            {
+                var e = RefreshNeeded;
+                if (e != null)
+                    e(this, new EventArgs());
             }
         }
 
@@ -225,7 +239,6 @@ namespace SharpMap
         public delegate void MapViewChangedHandler();
 
 
-
         #endregion
 
         /// <summary>
@@ -272,6 +285,11 @@ namespace SharpMap
         /// Event fired when a new Tile is available in a TileAsyncLayer
         /// </summary>
         public event MapNewTileAvaliabledHandler MapNewTileAvaliable;
+
+        /// <summary>
+        /// Event that is called when a layer have changed and the map need to redraw
+        /// </summary>
+        public event EventHandler RefreshNeeded;
 
         #endregion
 
@@ -501,10 +519,16 @@ namespace SharpMap
         {
             var e = LayerRendered;
 #pragma warning restore 612,618
-            if (e != null) e(this, EventArgs.Empty);
+            if (e != null)
+            {
+                e(this, EventArgs.Empty);
+            }
 
             var eex = LayerRenderedEx;
-            if (eex != null) eex(this, new LayerRenderingEventArgs(layer, layerCollectionType));
+            if (eex != null)
+            {
+                eex(this, new LayerRenderingEventArgs(layer, layerCollectionType));
+            }
         }
 
 
@@ -517,7 +541,7 @@ namespace SharpMap
         /// <exception cref="InvalidOperationException">if there are no layers to render.</exception>
         public void RenderMap(Graphics g, LayerCollectionType layerCollectionType)
         {
-            RenderMap(g, layerCollectionType, true);
+            RenderMap(g, layerCollectionType, true, false);
         }
 
         /// <summary>
@@ -526,9 +550,10 @@ namespace SharpMap
         /// <param name="g">the <see cref="Graphics"/> object to use</param>
         /// <param name="layerCollectionType">the <see cref="LayerCollectionType"/> to use</param>
         /// <param name="drawMapDecorations">Set whether to draw map decorations on the map (if such are set)</param>
+        /// <param name="drawTransparent">Set wether to draw with transparent background or with BackColor as background</param>
         /// <exception cref="ArgumentNullException">if <see cref="Graphics"/> object is null.</exception>
         /// <exception cref="InvalidOperationException">if there are no layers to render.</exception>
-        public void RenderMap(Graphics g, LayerCollectionType layerCollectionType, bool drawMapDecorations)
+        public void RenderMap(Graphics g, LayerCollectionType layerCollectionType, bool drawMapDecorations, bool drawTransparent)
         {
             if (g == null)
                 throw new ArgumentNullException("g", "Cannot render map with null graphics object!");
@@ -557,7 +582,9 @@ namespace SharpMap
             {
                 g.Transform = MapTransform.Clone();
             }
-            g.Clear(BackColor);
+            if (!drawTransparent)
+                g.Clear(BackColor);
+
             g.PageUnit = GraphicsUnit.Pixel;
 
 
@@ -569,6 +596,9 @@ namespace SharpMap
                 if (layer.Enabled && layer.MaxVisible >= Zoom && layer.MinVisible < Zoom)
                     layer.Render(g, this);
             }
+
+            if (drawTransparent)
+                
 
             g.Transform = transform;
             if (layerCollectionType == LayerCollectionType.Static)
@@ -584,6 +614,8 @@ namespace SharpMap
                     }
                 }
             }
+
+
 
             VariableLayerCollection.Pause = false;
 

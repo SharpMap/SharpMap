@@ -82,14 +82,17 @@
     <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="BruTile">
-      <HintPath>..\..\packages\BruTile.0.7.4\lib\net40\BruTile.dll</HintPath>
+    <Reference Include="BruTile, Version=0.7.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\BruTile.0.7.4.1\lib\net40\BruTile.dll</HintPath>
     </Reference>
-    <Reference Include="BruTile.Desktop">
-      <HintPath>..\..\packages\BruTile.0.7.4\lib\net40\BruTile.Desktop.dll</HintPath>
+    <Reference Include="BruTile.Desktop, Version=0.7.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\BruTile.0.7.4.1\lib\net40\BruTile.Desktop.dll</HintPath>
     </Reference>
-    <Reference Include="BruTile.MbTiles">
-      <HintPath>..\..\packages\BruTile.0.7.4\lib\net40\BruTile.MbTiles.dll</HintPath>
+    <Reference Include="BruTile.MbTiles, Version=0.7.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\BruTile.0.7.4.1\lib\net40\BruTile.MbTiles.dll</HintPath>
     </Reference>
     <Reference Include="Common.Logging, Version=2.0.0.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Common.Logging.2.0.0\lib\2.0\Common.Logging.dll</HintPath>
@@ -100,44 +103,47 @@
     <Reference Include="DotSpatial.Projections">
       <HintPath>..\..\packages\DotSpatial.Projections.1.2\lib\net40-Client\DotSpatial.Projections.dll</HintPath>
     </Reference>
-    <Reference Include="GeoAPI, Version=1.7.0.0, Culture=neutral, PublicKeyToken=a1a0da7def465678, processorArchitecture=MSIL">
+    <Reference Include="GeoAPI, Version=1.7.1.0, Culture=neutral, PublicKeyToken=a1a0da7def465678, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\GeoAPI.1.7.1\lib\net40-client\GeoAPI.dll</HintPath>
+      <HintPath>..\..\packages\GeoAPI.1.7.1.1\lib\net40-client\GeoAPI.dll</HintPath>
     </Reference>
     <Reference Include="log4net, Version=1.2.10.0, Culture=neutral, PublicKeyToken=1b44e1d426115821, processorArchitecture=MSIL">
       <HintPath>..\..\packages\log4net.1.2.10\lib\2.0\log4net.dll</HintPath>
     </Reference>
-    <Reference Include="NetTopologySuite, Version=1.13.0.0, Culture=neutral, PublicKeyToken=f580a05016ebada1, processorArchitecture=MSIL">
+    <Reference Include="NetTopologySuite, Version=1.13.1.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\NetTopologySuite.1.13.0\lib\net40-client\NetTopologySuite.dll</HintPath>
+      <HintPath>..\..\packages\NetTopologySuite.1.13.1\lib\net40-client\NetTopologySuite.dll</HintPath>
     </Reference>
-    <Reference Include="NetTopologySuite.IO.GeoTools">
-      <HintPath>..\..\packages\NetTopologySuite.IO.1.13.0\lib\net40-client\NetTopologySuite.IO.GeoTools.dll</HintPath>
+    <Reference Include="NetTopologySuite.IO.GeoTools, Version=1.13.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\NetTopologySuite.IO.1.13.1\lib\net40-client\NetTopologySuite.IO.GeoTools.dll</HintPath>
     </Reference>
-    <Reference Include="NetTopologySuite.IO.MsSqlSpatial">
-      <HintPath>..\..\packages\NetTopologySuite.IO.1.13.0\lib\net40-client\NetTopologySuite.IO.MsSqlSpatial.dll</HintPath>
+    <Reference Include="NetTopologySuite.IO.MsSqlSpatial, Version=1.13.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\NetTopologySuite.IO.1.13.1\lib\net40-client\NetTopologySuite.IO.MsSqlSpatial.dll</HintPath>
     </Reference>
-    <Reference Include="NetTopologySuite.IO.PostGis">
-      <HintPath>..\..\packages\NetTopologySuite.IO.1.13.0\lib\net40-client\NetTopologySuite.IO.PostGis.dll</HintPath>
+    <Reference Include="NetTopologySuite.IO.PostGis, Version=1.13.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\NetTopologySuite.IO.1.13.1\lib\net40-client\NetTopologySuite.IO.PostGis.dll</HintPath>
     </Reference>
     <Reference Include="PowerCollections, Version=1.0.0.0, Culture=neutral, PublicKeyToken=2573bf8a1bdddcd5, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\NetTopologySuite.1.13.0\lib\net40-client\PowerCollections.dll</HintPath>
+      <HintPath>..\..\packages\NetTopologySuite.1.13.1\lib\net40-client\PowerCollections.dll</HintPath>
     </Reference>
     <Reference Include="ProjNet, Version=1.3.0.1, Culture=neutral, PublicKeyToken=a1f5bdcd9c6f5740, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\ProjNET4GeoAPI.1.3.0.1\lib\net40-client\ProjNet.dll</HintPath>
+      <HintPath>..\..\packages\ProjNET4GeoAPI.1.3.0.2\lib\net40-client\ProjNet.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Data" />
-    <Reference Include="System.Data.SQLite, Version=1.0.84.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
+    <Reference Include="System.Data.SQLite, Version=1.0.86.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\System.Data.SQLite.1.0.84.0\lib\net40\System.Data.SQLite.dll</HintPath>
+      <HintPath>..\..\packages\System.Data.SQLite.1.0.86.0\lib\net40\System.Data.SQLite.dll</HintPath>
     </Reference>
-    <Reference Include="System.Data.SQLite.Linq, Version=1.0.84.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
+    <Reference Include="System.Data.SQLite.Linq, Version=1.0.86.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\System.Data.SQLite.1.0.84.0\lib\net40\System.Data.SQLite.Linq.dll</HintPath>
+      <HintPath>..\..\packages\System.Data.SQLite.1.0.86.0\lib\net40\System.Data.SQLite.Linq.dll</HintPath>
     </Reference>
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
@@ -198,6 +204,7 @@
     <Compile Include="Samples\GdalSample.cs" />
     <Compile Include="Samples\GeometryFeatureProviderSample.cs" />
     <Compile Include="Samples\GradiantThemeSample.cs" />
+    <Compile Include="Samples\HeatLayerSample.cs" />
     <Compile Include="Samples\OracleSample.cs" />
     <Compile Include="SharpMapTileSource.cs" />
     <Content Include="x64\SQLite.Interop.dll">
@@ -557,6 +564,10 @@
     <ProjectReference Include="..\..\SharpMap.Extensions\SharpMap.Extensions.csproj">
       <Project>{A4140C12-53F5-438C-8D24-9E48C504FECF}</Project>
       <Name>SharpMap.Extensions</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\SharpMap.Layers.HeatLayer\SharpMap.Layers.HeatLayer.csproj">
+      <Project>{47F790C2-6DC0-4A09-9026-FC81A09FD6A3}</Project>
+      <Name>SharpMap.Layers.HeatLayer</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\SharpMap.UI\SharpMap.UI.csproj">
       <Project>{DD1CC1DB-4BF9-4C88-A100-733D84795F3A}</Project>

@@ -27,7 +27,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("SharpMap - Team")]
 [assembly: AssemblyProduct("SharpMap.UI Engine")]
-[assembly: AssemblyCopyright("Copyright © 2006 iter.dk\nCopyright © 2008-2012 SharpMap - Team")]
+[assembly: AssemblyCopyright("Copyright © 2006 iter.dk\nCopyright © 2008-2013 SharpMap - Team")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -40,16 +40,3 @@ using System.Runtime.InteropServices;
 // The following GUID is for the ID of the typelib if this project is exposed to COM
 
 [assembly: Guid("7f250d8b-16ab-438a-b003-c41ffe058832")]
-
-// Version information for an assembly consists of the following four values:
-//
-//      Major Version
-//      Minor Version 
-//      Build Number
-//      Revision
-//
-// You can specify all the values or you can default the Revision and Build Numbers 
-// by using the '*' as shown below:
-
-[assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyFileVersion("1.0.0.0")]

@@ -20,10 +20,37 @@ namespace SharpMap.Layers
     [Serializable]
     public class TileAsyncLayer : TileLayer, ITileAsyncLayer
     {
-        static readonly ILog Logger = LogManager.GetLogger(typeof(TileAsyncLayer));
+        class DownloadTask
+        {
+            public CancellationTokenSource CancellationToken;
+            public System.Threading.Tasks.Task Task;
+        }
 
-        private readonly List<BackgroundWorker> _threadList = new List<BackgroundWorker>();
-        private readonly Random _r = new Random(DateTime.Now.Second);
+        static readonly ILog Logger = LogManager.GetLogger(typeof(TileAsyncLayer));
+        private readonly List<DownloadTask> _currentTasks = new List<DownloadTask>();
+
+        int _numPendingDownloads = 0;
+        bool _onlyRedrawWhenComplete = false;
+
+        /// <summary>
+        /// Gets or Sets a value indicating if to redraw the map only when all tiles are downloaded
+        /// </summary>
+        public bool OnlyRedrawWhenComplete
+        {
+            get { return _onlyRedrawWhenComplete; }
+            set { _onlyRedrawWhenComplete = value; }
+        }
+        
+        /// <summary>
+        /// Returns the number of tiles that are in queue for download
+        /// </summary>
+        public int NumPendingDownloads { get { return _numPendingDownloads; } }
+
+        /// <summary>
+        /// Event raised when tiles are downloaded
+        /// </summary>
+        public event DownloadProgressHandler DownloadProgressChanged;
+
         
         /// <summary>
         /// Creates an instance of this class
@@ -61,6 +88,20 @@ namespace SharpMap.Layers
         }
 
         /// <summary>
+        /// Creates an instance of this class
+        /// </summary>
+        /// <param name="tileSource">The tile source</param>
+        /// <param name="layerName">The layers name</param>
+        /// <param name="transparentColor">The color that should be treated as <see cref="Color.Transparent"/></param>
+        /// <param name="showErrorInTile">Value indicating that an error tile should be generated for non-existent tiles</param>
+        /// <param name="fileCache">If the layer should use a file-cache so store tiles, set this to a fileCacheProvider. Set to null to avoid filecache</param>
+        /// <param name="imgFormat">Set the format of the tiles to be used</param>
+        public TileAsyncLayer(ITileSource tileSource, string layerName, Color transparentColor, bool showErrorInTile, FileCache fileCache, ImageFormat imgFormat)
+            : base(tileSource, layerName, transparentColor, showErrorInTile, fileCache,imgFormat)
+        {
+        }
+
+        /// <summary>
         /// EventHandler for event fired when a new Tile is available for rendering
         /// </summary>
         public event MapNewTileAvaliabledHandler MapNewTileAvaliable;
@@ -70,15 +111,16 @@ namespace SharpMap.Layers
         /// </summary>
         public void Cancel()
         {
-            lock (_threadList) 
+            lock (_currentTasks)
             {
-                foreach (var t in _threadList)
+                foreach (var t in _currentTasks)
                 {
-                    if (t.IsBusy)
-                        t.CancelAsync();
+                    if (!t.Task.IsCompleted)
+                        t.CancellationToken.Cancel();
                 }
-                _threadList.Clear();
-            } 
+                _currentTasks.Clear();
+                _numPendingDownloads = 0;
+            }
         }
 
         /// <summary>
@@ -88,7 +130,6 @@ namespace SharpMap.Layers
         /// <param name="map">Map which is rendered</param>
         public override void Render(Graphics graphics, Map map)
         {
-
             var bbox = map.Envelope;
             var extent = new Extent(bbox.MinX, bbox.MinY, bbox.MaxX, bbox.MaxY);
             int level = BruTile.Utilities.GetNearestLevel(_source.Schema.Resolutions, map.PixelSize);
@@ -108,7 +149,6 @@ namespace SharpMap.Layers
                 {
                     if (_bitmaps.Find(info.Index) != null)
                     {
-                        //ThreadPool.QueueUserWorkItem(OnMapNewtileAvailableHelper, new object[] { info, _bitmaps.Find(info.Index) });
                         //draws directly the bitmap
                         var bb = new Envelope(new Coordinate(info.Extent.MinX, info.Extent.MinY),
                                               new Coordinate(info.Extent.MaxX, info.Extent.MaxY));
@@ -121,7 +161,6 @@ namespace SharpMap.Layers
                         Bitmap img = GetImageFromFileCache(info) as Bitmap;
                         _bitmaps.Add(info.Index, img);
 
-                        //ThreadPool.QueueUserWorkItem(OnMapNewtileAvailableHelper, new object[] { info, img });
                         //draws directly the bitmap
                         var btExtent = info.Extent;
                         var bb = new Envelope(new Coordinate(btExtent.MinX, btExtent.MinY),
@@ -131,27 +170,40 @@ namespace SharpMap.Layers
                     }
                     else
                     {
-                        var b = new BackgroundWorker();
-                        b.WorkerSupportsCancellation = true;
-                        b.DoWork += DoWorkBackground;
-                        b.RunWorkerAsync(new object[] {_source.Provider, info, _bitmaps, true});
-                        //Thread t = new Thread(new ParameterizedThreadStart(GetTileOnThread));
-                        //t.Name = info.ToString();
-                        //t.IsBackground = true;
-                        //t.Start();
-                        lock (_threadList)
+                        var cancelToken = new CancellationTokenSource();
+                        var token = cancelToken.Token;
+                        var l_info = info;
+                        if (Logger.IsDebugEnabled)
+                            Logger.DebugFormat("Starting new Task to download tile {0},{1},{2}", info.Index.Level, info.Index.Col, info.Index.Row);
+                        var t = new System.Threading.Tasks.Task(delegate
                         {
-                            _threadList.Add(b);
+                            if (token.IsCancellationRequested)
+                                token.ThrowIfCancellationRequested();
+
+                            if (Logger.IsDebugEnabled)
+                                Logger.DebugFormat("Task started for download of tile {0},{1},{2}", info.Index.Level, info.Index.Col, info.Index.Row);
+
+                            var res = GetTileOnThread(token, _source.Provider, l_info, _bitmaps, true);
+                            if (res)
+                            {
+                                Interlocked.Decrement(ref _numPendingDownloads);
+                                var e = DownloadProgressChanged;
+                                if (e != null)
+                                    e(_numPendingDownloads);
+                            }
+
+                        }, token);
+                        var dt = new DownloadTask() { CancellationToken = cancelToken, Task = t };
+                        lock (_currentTasks)
+                        {
+                            _currentTasks.Add(dt);
+                            _numPendingDownloads++;
                         }
+                        t.Start();
                     }
                 }
             }
 
-        }
-
-        private void DoWorkBackground(object sender, DoWorkEventArgs e)
-        {
-            GetTileOnThread((BackgroundWorker) sender, e.Argument);
         }
 
         static void HandleMapNewTileAvaliable(Map map, Graphics g, Envelope box, Bitmap bm, int sourceWidth, int sourceHeight, ImageAttributes imageAttributes)
@@ -183,58 +235,61 @@ namespace SharpMap.Layers
 
         }
 
-        /*
-        private void OnMapNewtileAvailableHelper(object parameter)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="cancelToken"></param>
+        /// <param name="tileProvider"></param>
+        /// <param name="tileInfo"></param>
+        /// <param name="bitmaps"></param>
+        /// <param name="retry"></param>
+        /// <returns>true if thread finished without getting cancellation signal, false = cancelled</returns>
+        private bool GetTileOnThread(CancellationToken cancelToken, ITileProvider tileProvider, TileInfo tileInfo, MemoryCache<Bitmap> bitmaps, bool retry)
         {
-            //this is to wait for the main UI thread to finalize rendering ... (buggy code here)...
-            System.Threading.Thread.Sleep(100);
-            object[] parameters = (object[])parameter;
-            if (parameters.Length != 2) throw new ArgumentException("Two parameters expected");
-            TileInfo tileInfo = (TileInfo)parameters[0];
-            Bitmap bm = (Bitmap)parameters[1];
-            OnMapNewTileAvaliable(tileInfo, bm);
-        }
-        */
-
-        private void GetTileOnThread(BackgroundWorker worker, object parameter)
-        {
-            Thread.Sleep(50 + (_r.Next(5)*10));
-            object[] parameters = (object[])parameter;
-            if (parameters.Length != 4) throw new ArgumentException("Four parameters expected");
-            ITileProvider tileProvider = (ITileProvider)parameters[0];
-            TileInfo tileInfo = (TileInfo)parameters[1];
-            MemoryCache<Bitmap> bitmaps = (MemoryCache<Bitmap>)parameters[2];
-            bool retry = (bool)parameters[3];
-
-
             byte[] bytes;
             try
             {
-                
-                if (worker.CancellationPending)
-                    return;
-                bytes = tileProvider.GetTile(tileInfo);
-                if (worker.CancellationPending)
-                    return;
-                Bitmap bitmap = new Bitmap(new MemoryStream(bytes));
-                bitmaps.Add(tileInfo.Index, bitmap);
-                if (_fileCache != null && !_fileCache.Exists(tileInfo.Index))
+                if (cancelToken.IsCancellationRequested)
+                    cancelToken.ThrowIfCancellationRequested();
+
+
+                //We may have gotten the tile from another thread now..
+                if (bitmaps.Find(tileInfo.Index) != null)
                 {
-                    AddImageToFileCache(tileInfo, bitmap);
+                    return true;
                 }
 
-                if (worker.CancellationPending)
-                    return;
-                OnMapNewTileAvaliable(tileInfo, bitmap);
-                //if (worker.CancellationPending)
-                //    return;
+                if (Logger.IsDebugEnabled)
+                    Logger.DebugFormat("Calling gettile on provider for tile {0},{1},{2}", tileInfo.Index.Level, tileInfo.Index.Col, tileInfo.Index.Row);
+
+                bytes = tileProvider.GetTile(tileInfo);
+                if (cancelToken.IsCancellationRequested)
+                    cancelToken.ThrowIfCancellationRequested();
+
+                using (var ms = new MemoryStream(bytes))
+                {
+                    Bitmap bitmap = new Bitmap(ms);
+                    bitmaps.Add(tileInfo.Index, bitmap);
+                    if (_fileCache != null && !_fileCache.Exists(tileInfo.Index))
+                    {
+                        AddImageToFileCache(tileInfo, bitmap);
+                    }
+
+
+                    if (cancelToken.IsCancellationRequested)
+                        cancelToken.ThrowIfCancellationRequested();
+                    OnMapNewTileAvaliable(tileInfo, bitmap);
+                }
+                return true;
             }
             catch (WebException ex)
             {
+                if (Logger.IsDebugEnabled)
+                    Logger.DebugFormat("Exception downloading tile {0},{1},{2} {3}", tileInfo.Index.Level, tileInfo.Index.Col, tileInfo.Index.Row, ex.Message);
+                
                 if (retry)
                 {
-                    parameters[3] = false;
-                    GetTileOnThread( worker, parameters);
+                    return GetTileOnThread(cancelToken, tileProvider, tileInfo, bitmaps, false);
                 }
                 else
                 {
@@ -250,28 +305,34 @@ namespace SharpMap.Layers
                         }
                         //Draw the Timeout Tile
                         OnMapNewTileAvaliable(tileInfo, bitmap);
-
                         //With timeout we don't add to the internal cache
                         //bitmaps.Add(tileInfo.Index, bitmap);
                     }
+                    return true;
                 }
             }
-            catch (ThreadAbortException tex)
+            catch (System.OperationCanceledException tex)
             {
                 if (Logger.IsInfoEnabled)
                 {
                     Logger.InfoFormat("TileAsyncLayer - Thread aborting: {0}", Thread.CurrentThread.Name);
                     Logger.InfoFormat(tex.Message);
                 }
+                return false;
             }
             catch (Exception ex)
             {
                 Logger.Warn("TileAsyncLayer - GetTileOnThread Exception", ex);
+                //This is not due to cancellation so return true
+                return true;
             }
         }
 
         private void OnMapNewTileAvaliable(TileInfo tileInfo, Bitmap bitmap)
         {
+            if (_onlyRedrawWhenComplete)
+                return;
+
             if (MapNewTileAvaliable != null)
             {
                 var bb = new Envelope(new Coordinate(tileInfo.Extent.MinX, tileInfo.Extent.MinY), new Coordinate(tileInfo.Extent.MaxX, tileInfo.Extent.MaxY));

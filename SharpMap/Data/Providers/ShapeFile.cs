@@ -34,100 +34,7 @@ using Common.Logging;
 
 namespace SharpMap.Data.Providers
 {
-	/// <summary>
-	/// Shapefile geometry type.
-	/// </summary>
-	public enum ShapeType
-	{
-		/// <summary>
-		/// Null shape with no geometric data
-		/// </summary>
-		Null = 0,
-		/// <summary>
-		/// A point consists of a pair of double-precision coordinates.
-		/// SharpMap interprets this as <see cref="GeoAPI.Geometries.IPoint"/>
-		/// </summary>
-		Point = 1,
-		/// <summary>
-		/// PolyLine is an ordered set of vertices that consists of one or more parts. A part is a
-		/// connected sequence of two or more points. Parts may or may not be connected to one
-		///	another. Parts may or may not intersect one another.
-		/// SharpMap interprets this as either <see cref="GeoAPI.Geometries.ILineString"/> or <see cref="GeoAPI.Geometries.IMultiLineString"/>
-		/// </summary>
-		PolyLine = 3,
-		/// <summary>
-		/// A polygon consists of one or more rings. A ring is a connected sequence of four or more
-		/// points that form a closed, non-self-intersecting loop. A polygon may contain multiple
-		/// outer rings. The order of vertices or orientation for a ring indicates which side of the ring
-		/// is the interior of the polygon. The neighborhood to the right of an observer walking along
-		/// the ring in vertex order is the neighborhood inside the polygon. Vertices of rings defining
-		/// holes in polygons are in a counterclockwise direction. Vertices for a single, ringed
-		/// polygon are, therefore, always in clockwise order. The rings of a polygon are referred to
-		/// as its parts.
-        /// SharpMap interprets this as either <see cref="GeoAPI.Geometries.IPolygon"/> or <see cref="GeoAPI.Geometries.IMultiPolygon"/>
-		/// </summary>
-		Polygon = 5,
-		/// <summary>
-		/// A MultiPoint represents a set of points.
-        /// SharpMap interprets this as <see cref="GeoAPI.Geometries.IMultiPoint"/>
-		/// </summary>
-		Multipoint = 8,
-		/// <summary>
-		/// A PointZ consists of a triplet of double-precision coordinates plus a measure.
-        /// SharpMap interprets this as <see cref="GeoAPI.Geometries.IPoint"/>
-		/// </summary>
-		PointZ = 11,
-		/// <summary>
-		/// A PolyLineZ consists of one or more parts. A part is a connected sequence of two or
-		/// more points. Parts may or may not be connected to one another. Parts may or may not
-		/// intersect one another.
-        /// SharpMap interprets this as <see cref="GeoAPI.Geometries.ILineString"/> or <see cref="GeoAPI.Geometries.IMultiLineString"/>
-		/// </summary>
-		PolyLineZ = 13,
-		/// <summary>
-		/// A PolygonZ consists of a number of rings. A ring is a closed, non-self-intersecting loop.
-		/// A PolygonZ may contain multiple outer rings. The rings of a PolygonZ are referred to as
-		/// its parts.
-        /// SharpMap interprets this as either <see cref="GeoAPI.Geometries.IPolygon"/> or <see cref="GeoAPI.Geometries.IMultiPolygon"/>
-		/// </summary>
-		PolygonZ = 15,
-		/// <summary>
-		/// A MultiPointZ represents a set of <see cref="PointZ"/>s.
-        /// SharpMap interprets this as <see cref="GeoAPI.Geometries.IMultiPoint"/>
-		/// </summary>
-		MultiPointZ = 18,
-		/// <summary>
-		/// A PointM consists of a pair of double-precision coordinates in the order X, Y, plus a measure M.
-        /// SharpMap interprets this as <see cref="GeoAPI.Geometries.IPoint"/>
-		/// </summary>
-		PointM = 21,
-		/// <summary>
-		/// A shapefile PolyLineM consists of one or more parts. A part is a connected sequence of
-		/// two or more points. Parts may or may not be connected to one another. Parts may or may
-		/// not intersect one another.
-        /// SharpMap interprets this as <see cref="GeoAPI.Geometries.ILineString"/> or <see cref="GeoAPI.Geometries.IMultiLineString"/>
-		/// </summary>
-		PolyLineM = 23,
-		/// <summary>
-		/// A PolygonM consists of a number of rings. A ring is a closed, non-self-intersecting loop.
-        /// SharpMap interprets this as either <see cref="GeoAPI.Geometries.IPolygon"/> or <see cref="GeoAPI.Geometries.IMultiPolygon"/>
-		/// </summary>
-		PolygonM = 25,
-		/// <summary>
-		/// A MultiPointM represents a set of <see cref="PointM"/>s.
-        /// SharpMap interprets this as <see cref="GeoAPI.Geometries.IMultiPoint"/>
-		/// </summary>
-		MultiPointM = 28,
-		/// <summary>
-		/// A MultiPatch consists of a number of surface patches. Each surface patch describes a
-		/// surface. The surface patches of a MultiPatch are referred to as its parts, and the type of
-		/// part controls how the order of vertices of an MultiPatch part is interpreted.
-		/// SharpMap doesn't support this feature type.
-		/// </summary>
-		MultiPatch = 31
-	} ;
-
-	/// <summary>
+    /// <summary>
 	/// Shapefile dataprovider
 	/// </summary>
 	/// <remarks>
@@ -151,8 +58,7 @@ namespace SharpMap.Data.Providers
 	/// </example>
 	public class ShapeFile : FilterProvider, IProvider
 	{
-
-        ILog logger = LogManager.GetLogger(typeof(ShapeFile));
+	    readonly ILog _logger = LogManager.GetLogger(typeof(ShapeFile));
 
         //#region Delegates
 
@@ -171,36 +77,27 @@ namespace SharpMap.Data.Providers
 
         //#endregion
 
+        private ShapeFileHeader _header;
+        private ShapeFileIndex _index;
+        
 #if !DotSpatialProjections
 		private ICoordinateSystem _coordinateSystem;
 #else
 		private ProjectionInfo _coordinateSystem;
 #endif
 		private bool _coordsysReadFromFile;
-
-        private int _fileSize;
 		private Envelope _envelope;
-		private int _featureCount;
 		private bool _fileBasedIndex;
 	    private readonly bool _fileBasedIndexWanted;
 		private string _filename;
-		//private FilterMethod _filterDelegate;
-		private bool _isOpen;
-		private ShapeType _shapeType;
+        private string _dbfFile;
+        private Encoding _dbfSpecifiedEncoding = null;
 		private int _srid = -1;
-		private BinaryReader _brShapeFile;
-		private BinaryReader _brShapeIndex;
-	    
-        /// <summary>
-	    /// The Dbase-III File for attribute data
-	    /// </summary>
-        protected DbaseReader DbaseFile;
-		private Stream _fsShapeFile;
-        private IGeometryFactory _factory;
-        
+
+	    private readonly object _shapeFileLock = new object();
+		
+	    private IGeometryFactory _factory;
         private static int _memoryCacheLimit = 50000;
-
-
         private static readonly object GspLock = new object();
 
 #if USE_MEMORYMAPPED_FILE
@@ -220,13 +117,11 @@ namespace SharpMap.Data.Providers
             SpatialIndexCreationOption = SpatialIndexCreation.Recursive;
         }
 #endif
-        private Stream _fsShapeIndex;
 		private readonly bool _useMemoryCache;
 		private DateTime _lastCleanTimestamp = DateTime.Now;
 		private readonly TimeSpan _cacheExpireTimeout = TimeSpan.FromMinutes(1);
-		private readonly Dictionary <uint,FeatureDataRow> _cacheDataTable = new Dictionary<uint,FeatureDataRow>();
-
-        private int[] _offsetOfRecord;
+        private readonly object _cacheLock = new object();
+        private readonly Dictionary <uint,FeatureDataRow> _cacheDataTable = new Dictionary<uint,FeatureDataRow>();
 
 		/// <summary>
 		/// Tree used for fast query of data
@@ -239,38 +134,6 @@ namespace SharpMap.Data.Providers
 		/// <param name="filename">Path to shape file</param>
 		public ShapeFile(string filename) : this(filename, false)
 		{
-		}
-
-		/// <summary>
-		/// Cleans the internal memory cached, expurging the objects that are not in the viewarea anymore
-		/// </summary>
-		/// <param name="objectlist">OID of the objects in the current viewarea</param>
-		private void CleanInternalCache(IList<uint> objectlist)
-		{
-			//Only execute this if the memorycache is active and the expiretimespan has timed out
-			if (_useMemoryCache && 
-				DateTime.Now.Subtract(_lastCleanTimestamp) > _cacheExpireTimeout)
-			{
-				var notIntersectOid = new Collection<uint>();
-				
-                //identify the not intersected oid
-				foreach (uint oid in _cacheDataTable.Keys)
-				{
-					if (!objectlist.Contains(oid))
-					{
-						notIntersectOid.Add(oid);
-					}
-				}
-				
-                //Clean the cache
-				foreach (uint oid in notIntersectOid)
-				{
-					_cacheDataTable.Remove(oid);
-				}
-
-				//Reset the lastclean timestamp
-				_lastCleanTimestamp = DateTime.Now;
-			}
 		}
 
 		/// <summary>
@@ -288,17 +151,12 @@ namespace SharpMap.Data.Providers
 		public ShapeFile(string filename, bool fileBasedIndex)
 		{
 			_filename = filename;
-		    _fileBasedIndexWanted = fileBasedIndex;
-			_fileBasedIndex = (fileBasedIndex) && File.Exists(Path.ChangeExtension(filename, ".shx"));
+		    var shxFile = Path.ChangeExtension(filename, ".shx");
+            if (!File.Exists(shxFile)) ShapeFileIndex.Create(_filename);
 
-			//Initialize DBF
-			var dbffile = Path.ChangeExtension(filename, ".dbf");
-			if (File.Exists(dbffile))
-			{
-			    DbaseFile = new DbaseReader(dbffile);
-                DbaseFile.EncodingChanged += ClearingOfCachedDataRequired;
-                DbaseFile.IncludeOidChanged += ClearingOfCachedDataRequired;
-            }
+		    _fileBasedIndexWanted = fileBasedIndex;
+			_fileBasedIndex = (fileBasedIndex) && File.Exists(shxFile);
+			_dbfFile = Path.ChangeExtension(filename, ".dbf");
 
 			//Parse shape header
 			ParseHeader();
@@ -310,6 +168,45 @@ namespace SharpMap.Data.Providers
         }
 
         /// <summary>
+        /// Cleans the internal memory cached, expurging the objects that are not in the viewarea anymore
+        /// </summary>
+        /// <param name="objectlist">OID of the objects in the current viewarea</param>
+        private void CleanInternalCache(Collection<uint> objectlist)
+        {
+            if (!_useMemoryCache)
+            {
+                return;
+            }
+
+            lock (_cacheLock)
+            {
+                //Only execute this if the memorycache is active and the expiretimespan has timed out
+                if (DateTime.Now.Subtract(_lastCleanTimestamp) > _cacheExpireTimeout)
+                {
+                    var notIntersectOid = new Collection<uint>();
+
+                    //identify the not intersected oid
+                    foreach (var oid in _cacheDataTable.Keys)
+                    {
+                        if (!objectlist.Contains(oid))
+                        {
+                            notIntersectOid.Add(oid);
+                        }
+                    }
+
+                    //Clean the cache
+                    foreach (uint oid in notIntersectOid)
+                    {
+                        _cacheDataTable.Remove(oid);
+                    }
+
+                    //Reset the lastclean timestamp
+                    _lastCleanTimestamp = DateTime.Now;
+                }
+            }
+        }
+
+        /// <summary>
         /// Gets or sets a value indicating how many features are allowed for memory cache approach
         /// </summary>
 	    protected static int MemoryCacheLimit
@@ -318,12 +215,14 @@ namespace SharpMap.Data.Providers
 	        set { _memoryCacheLimit = value; }
 	    }
 
-	    private void ClearingOfCachedDataRequired(object sender, EventArgs e)
-	    {
-	        Debug.Assert(sender == DbaseFile);
+        private void ClearingOfCachedDataRequired(object sender, EventArgs e)
+        {
             if (_useMemoryCache)
-                _cacheDataTable.Clear();
-	    }
+                lock (_cacheLock)
+                {
+                    _cacheDataTable.Clear();
+                }
+        }
 
 	    /// <summary>
 	    /// Initializes a ShapeFile DataProvider.
@@ -396,7 +295,7 @@ namespace SharpMap.Data.Providers
 		/// </remarks>
 		public ShapeType ShapeType
 		{
-			get { return _shapeType; }
+			get { return _header.ShapeType; }
 		}
 
 
@@ -411,16 +310,11 @@ namespace SharpMap.Data.Providers
 			{
 				if (value != _filename)
 				{
-                    if (IsOpen)
-						throw new ApplicationException("Cannot change filename while datasource is open");
-
                     _filename = value;
                     _fileBasedIndex = (_fileBasedIndexWanted) && File.Exists(Path.ChangeExtension(value, ".shx"));
 
-                    var dbffile = Path.ChangeExtension(value, ".dbf");
-                    if (File.Exists(dbffile))
-                        DbaseFile = new DbaseReader(dbffile);
-
+                    _dbfFile = Path.ChangeExtension(value, ".dbf");
+                    
 					ParseHeader();
 					ParseProjection();
 					_tree = null;
@@ -434,44 +328,19 @@ namespace SharpMap.Data.Providers
 		/// <remarks>
 		/// The DBase default encoding is <see cref="System.Text.Encoding.UTF8"/>.
 		/// </remarks>
-		public Encoding Encoding
-		{
-			get { return DbaseFile.Encoding; }
-			set { DbaseFile.Encoding = value; }
-		}
-
-        ///// <summary>
-        ///// Filter Delegate Method for limiting the datasource
-        ///// </summary>
-        ///// <remarks>
-        ///// <example>
-        ///// Using an anonymous method for filtering all features where the NAME column starts with S:
-        ///// <code lang="C#">
-        ///// myShapeDataSource.FilterDelegate = new SharpMap.Data.Providers.ShapeFile.FilterMethod(delegate(SharpMap.Data.FeatureDataRow row) { return (!row["NAME"].ToString().StartsWith("S")); });
-        ///// </code>
-        ///// </example>
-        ///// <example>
-        ///// Declaring a delegate method for filtering (multi)polygon-features whose area is larger than 5.
-        ///// <code>
-        ///// myShapeDataSource.FilterDelegate = CountryFilter;
-        ///// [...]
-        ///// public static bool CountryFilter(SharpMap.Data.FeatureDataRow row)
-        ///// {
-        /////		if(row.Geometry.GetType()==typeof(SharpMap.Geometries.Polygon))
-        /////			return ((row.Geometry as SharpMap.Geometries.Polygon).Area>5);
-        /////		if (row.Geometry.GetType() == typeof(SharpMap.Geometries.MultiPolygon))
-        /////			return ((row.Geometry as SharpMap.Geometries.MultiPolygon).Area > 5);
-        /////		else return true;
-        ///// }
-        ///// </code>
-        ///// </example>
-        ///// </remarks>
-        ///// <seealso cref="FilterMethod"/>
-        //public FilterMethod FilterDelegate
-        //{
-        //    get { return _filterDelegate; }
-        //    set { _filterDelegate = value; }
-        //}
+        public Encoding Encoding
+        {
+            get
+            {
+                Encoding ret;
+                using (var DbaseFile = OpenDbfStream())
+                {
+                    ret = DbaseFile.Encoding;
+                }
+                return ret;
+            }
+            set { _dbfSpecifiedEncoding = value; }
+        }
 
 		#region Disposers and finalizers
 
@@ -536,43 +405,82 @@ namespace SharpMap.Data.Providers
 
 		#region IProvider Members
 
+        private Stream OpenShapefileStream()
+        {
+            Stream s;
+#if USE_MEMORYMAPPED_FILE
+
+                s = CheckCreateMemoryMappedStream(_filename, ref _haveRegistredForUsage);
+#else
+            s = new FileStream(_filename, FileMode.Open, FileAccess.Read);
+#endif
+            InitializeShape(_filename, _fileBasedIndex);
+            return s;
+        }
+
+
+        private DbaseReader OpenDbfStream()
+        {
+            DbaseReader dbfFile = null;
+            if (File.Exists(_dbfFile))
+            {
+                dbfFile = new DbaseReader(_dbfFile);
+                if (_dbfSpecifiedEncoding != null)
+                    dbfFile.Encoding = _dbfSpecifiedEncoding;
+
+                dbfFile.EncodingChanged += ClearingOfCachedDataRequired;
+                dbfFile.IncludeOidChanged += ClearingOfCachedDataRequired;
+                dbfFile.Open();
+            }
+
+            return dbfFile;
+        }
+
 		/// <summary>
 		/// Opens the datasource
 		/// </summary>
 		public void Open()
 		{
-			// TODO:
-			// Get a Connector.  The connector returned is guaranteed to be connected and ready to go.
-			// Pooling.Connector connector = Pooling.ConnectorPool.ConnectorPoolManager.RequestConnector(this,true);
-
-			if (!_isOpen )
-			{
-			    string shxFile = Path.ChangeExtension(_filename, "shx");
-                if (File.Exists(shxFile))
+            //Load SpatialIndexIfNotLoaded
+            if (_tree == null)
+            {
+                using (Stream s = OpenShapefileStream())
                 {
-#if USE_MEMORYMAPPED_FILE
-                    _fsShapeIndex = CheckCreateMemoryMappedStream(shxFile, ref _haveRegistredForShxUsage);
-#else
-					_fsShapeIndex = new FileStream(shxFile, FileMode.Open, FileAccess.Read);
-#endif
-                    _brShapeIndex = new BinaryReader(_fsShapeIndex, Encoding.Unicode);
+                    s.Close();
                 }
-#if USE_MEMORYMAPPED_FILE
+            }
+//            // TODO:
+//            // Get a Connector.  The connector returned is guaranteed to be connected and ready to go.
+//            // Pooling.Connector connector = Pooling.ConnectorPool.ConnectorPoolManager.RequestConnector(this,true);
 
-                _fsShapeFile = CheckCreateMemoryMappedStream(_filename, ref _haveRegistredForUsage);
-#else
-                _fsShapeFile = new FileStream(_filename, FileMode.Open, FileAccess.Read);
-#endif
-                _brShapeFile = new BinaryReader(_fsShapeFile);
-                // Create array to hold the index array for this open session
-                _offsetOfRecord = new int[_featureCount];
-                PopulateIndexes();
-				InitializeShape(_filename, _fileBasedIndex);
-				if (DbaseFile != null)
-					DbaseFile.Open();
-				_isOpen = true;
+//        //	if (!_isOpen )
+//        //	{
+////                if (File.Exists(shxFile))
+////                {
+////#if USE_MEMORYMAPPED_FILE
+////                    _fsShapeIndex = CheckCreateMemoryMappedStream(shxFile, ref _haveRegistredForShxUsage);
+////#else
+////                    _fsShapeIndex = new FileStream(shxFile, FileMode.Open, FileAccess.Read);
+////#endif
+////                    _brShapeIndex = new BinaryReader(_fsShapeIndex, Encoding.Unicode);
+////                }
+//#if USE_MEMORYMAPPED_FILE
 
-			}
+//                _fsShapeFile = CheckCreateMemoryMappedStream(_filename, ref _haveRegistredForUsage);
+//#else
+//                _fsShapeFile = new FileStream(_filename, FileMode.Open, FileAccess.Read);
+//#endif
+//                //_brShapeFile = new BinaryReader(_fsShapeFile);
+//                //// Create array to hold the index array for this open session
+//                ////_offsetOfRecord = new int[_featureCount];
+//                //_offsetOfRecord = new ShapeFileIndexEntry[_featureCount];
+//                //PopulateIndexes(shxFile);
+//                InitializeShape(_filename, _fileBasedIndex);
+//                if (DbaseFile != null)
+//                    DbaseFile.Open();
+//                _isOpen = true;
+
+//            }
 		}
 #if USE_MEMORYMAPPED_FILE
         private Stream CheckCreateMemoryMappedStream(string filename, ref bool haveRegistredForUsage)
@@ -601,26 +509,26 @@ namespace SharpMap.Data.Providers
 		/// </summary>
 		public void Close()
 		{
-			if (!_disposed)
+			/*if (!_disposed)
 			{
                 if (_isOpen)
 				{
-					_brShapeFile.Close();
+					//_brShapeFile.Close();
 					_fsShapeFile.Close();
-                    if (_brShapeIndex != null)
-                    {
-                        _brShapeIndex.Close();
-                        _fsShapeIndex.Close();
-                    }
+                    //if (_brShapeIndex != null)
+                    //{
+                    //    _brShapeIndex.Close();
+                    //    _fsShapeIndex.Close();
+                    //}
 
-                    // Give back the memory from the index array.
-                    _offsetOfRecord = null;
+                    //// Give back the memory from the index array.
+                    //_offsetOfRecord = null;
 
 					if (DbaseFile != null)
 						DbaseFile.Close();
 					_isOpen = false;
 				}
-            }
+            }*/
 		}
 
 		/// <summary>
@@ -628,7 +536,7 @@ namespace SharpMap.Data.Providers
 		/// </summary>		
 		public bool IsOpen
 		{
-			get { return _isOpen; }
+            get { return false; }
 		}
 
 		/// <summary>
@@ -657,27 +565,53 @@ namespace SharpMap.Data.Providers
 
         private Collection<IGeometry> GetGeometriesInViewWithFilter(Collection<uint> oids)
         {
-            var result = new Collection<IGeometry>();
-            var table = DbaseFile.NewTable;
-            var tmpOids = new Collection<uint>();
-            foreach(var oid in oids)
+            Collection<IGeometry> result = null;
+            using (Stream s = OpenShapefileStream())
             {
-                var fdr = GetFeature(oid, table);
-                if (!FilterDelegate(fdr)) continue;
-                result.Add(fdr.Geometry);
-                tmpOids.Add(oid);
-            }
+                using (BinaryReader br = new BinaryReader(s))
+                {
+                    using (DbaseReader DbaseFile = OpenDbfStream())
+                    {
+                        result = new Collection<IGeometry>();
+                        var table = DbaseFile.NewTable;
+                        var tmpOids = new Collection<uint>();
+                        foreach (var oid in oids)
+                        {
+                            var fdr = getFeature(oid, table, br, DbaseFile);
+                            if (!FilterDelegate(fdr)) continue;
+                            result.Add(fdr.Geometry);
+                            tmpOids.Add(oid);
+                        }
 
-            CleanInternalCache(tmpOids);
+                        CleanInternalCache(tmpOids);
+                        DbaseFile.Close();
+                    }
+                    br.Close();
+                }
+                s.Close();
+            }
             return result;
         }
 
         private Collection<IGeometry> GetGeometriesInViewWithoutFilter(Collection<uint> oids)
         {
             var result = new Collection<IGeometry>();
-            foreach(var oid in oids)
+            using (Stream s = OpenShapefileStream())
             {
-                result.Add(GetGeometryByID(oid));
+                using (BinaryReader br = new BinaryReader(s))
+                {
+                    using (DbaseReader DbaseFile = OpenDbfStream())
+                    {
+                        foreach (var oid in oids)
+                        {
+                            result.Add(GetGeometryByID(oid, br, DbaseFile));
+                        }
+
+                        DbaseFile.Close();
+                    }
+                    br.Close();
+                }
+                s.Close();
             }
 
             CleanInternalCache(oids);
@@ -696,56 +630,67 @@ namespace SharpMap.Data.Providers
 		/// <param name="bbox"></param>
 		/// <param name="ds"></param>
 		/// <returns></returns>
-		public void ExecuteIntersectionQuery(Envelope bbox, FeatureDataSet ds)
-		{
-			// Do true intersection query
+        public void ExecuteIntersectionQuery(Envelope bbox, FeatureDataSet ds)
+        {
+            // Do true intersection query
             if (DoTrueIntersectionQuery)
-			{
-			    ExecuteIntersectionQuery(Factory.ToGeometry(bbox), ds);
-                return;
-			}
-            
-            //Use the spatial index to get a list of features whose boundingbox intersects bbox
-			var objectlist = GetObjectIDsInView(bbox);
-			
-            var dt = DbaseFile.NewTable;
-            dt.BeginLoadData();
-
-            for (var i = 0; i < objectlist.Count; i++)
             {
-                FeatureDataRow fdr = null;
-                lock (DbaseFile)
-                {
-                    fdr = (FeatureDataRow)dt.LoadDataRow(DbaseFile.GetValues(objectlist[i]), true);
-                }
-                fdr.Geometry = ReadGeometry(objectlist[i]);
-
-                //Test if the feature data row corresponds to the FilterDelegate
-                if (FilterDelegate != null && !FilterDelegate(fdr))
-                    fdr.Delete();
-
+                ExecuteIntersectionQuery(Factory.ToGeometry(bbox), ds);
+                return;
             }
-            dt.EndLoadData();
-            dt.AcceptChanges();
 
-            ds.Tables.Add(dt);
+            //Use the spatial index to get a list of features whose boundingbox intersects bbox
+            var objectlist = GetObjectIDsInView(bbox);
 
-			CleanInternalCache(objectlist);
+            using (Stream s = OpenShapefileStream())
+            {
+                using (BinaryReader br = new BinaryReader(s))
+                {
+                    using (DbaseReader DbaseFile = OpenDbfStream())
+                    {
+                        var dt = DbaseFile.NewTable;
+                        dt.BeginLoadData();
 
-		}
+                        for (var i = 0; i < objectlist.Count; i++)
+                        {
+                            FeatureDataRow fdr;
+                            fdr = (FeatureDataRow)dt.LoadDataRow(DbaseFile.GetValues(objectlist[i]), true);
+                            fdr.Geometry = ReadGeometry(objectlist[i], br, DbaseFile);
+
+                            //Test if the feature data row corresponds to the FilterDelegate
+                            if (FilterDelegate != null && !FilterDelegate(fdr))
+                                fdr.Delete();
+                        }
+
+                        dt.EndLoadData();
+                        dt.AcceptChanges();
+
+                        ds.Tables.Add(dt);
+                        DbaseFile.Close();
+                    }
+                    br.Close();
+                }
+                s.Close();
+            }
+            CleanInternalCache(objectlist);
+        }
 
 		/// <summary>
 		/// Returns geometry Object IDs whose bounding box intersects 'bbox'
 		/// </summary>
 		/// <param name="bbox"></param>
 		/// <returns></returns>
-		public Collection<uint> GetObjectIDsInView(Envelope bbox)
-		{
-			if (!IsOpen)
-				throw (new ApplicationException("An attempt was made to read from a closed datasource"));
-			//Use the spatial index to get a list of features whose boundingbox intersects bbox
-			return _tree.Search(bbox);
-		}
+        public Collection<uint> GetObjectIDsInView(Envelope bbox)
+        {
+            //Use the spatial index to get a list of features whose boundingbox intersects bbox
+            var res = _tree.Search(bbox);
+
+            /*Sort oids so we get a forward only read of the shapefile*/
+            List<uint> ret = new List<uint>(res);
+            ret.Sort();
+
+            return new Collection<uint>(ret);
+        }
 
 		/// <summary>
 		/// Returns the geometry corresponding to the Object ID
@@ -753,22 +698,50 @@ namespace SharpMap.Data.Providers
 		/// <remarks>FilterDelegate is no longer applied to this ge</remarks>
 		/// <param name="oid">Object ID</param>
 		/// <returns>The geometry at the Id</returns>
-		public IGeometry GetGeometryByID(uint oid)
-		{
-			if (_useMemoryCache)
-			{
-				FeatureDataRow fdr;
-				_cacheDataTable.TryGetValue(oid, out fdr);
-				if (fdr == null)
-				{
+        public IGeometry GetGeometryByID(uint oid)
+        {
+            IGeometry geom;
+            using (Stream s = OpenShapefileStream())
+            {
+                using (BinaryReader br = new BinaryReader(s))
+                {
+                    using (DbaseReader dbf = OpenDbfStream())
+                    {
+                        geom = ReadGeometry(oid, br, dbf);
+                        dbf.Close();
+                    }
+                    br.Close();
+                }
+                s.Close();
+            }
+            return geom;
+        }
+            /// <summary>
+		/// Returns the geometry corresponding to the Object ID
+		/// </summary>
+		/// <remarks>FilterDelegate is no longer applied to this ge</remarks>
+		/// <param name="oid">Object ID</param>
+		/// <returns>The geometry at the Id</returns>
+        private IGeometry GetGeometryByID(uint oid, BinaryReader br, DbaseReader dbf)
+        {
+            if (_useMemoryCache)
+            {
+                FeatureDataRow fdr;
+                lock (_cacheLock)
+                {
+                    _cacheDataTable.TryGetValue(oid, out fdr);
+                }
+
+                if (fdr == null)
+                {
                     fdr = GetFeature(oid);
                 }
 
-			    return fdr.Geometry;
-			}
-
-		    return ReadGeometry(oid);
-		}
+                return fdr.Geometry;
+            }
+            IGeometry geom = ReadGeometry(oid, br, dbf);
+            return geom;
+        }
 
         /// <summary>
         /// Gets or sets a value indicating that for <see cref="ExecuteIntersectionQuery(GeoAPI.Geometries.Envelope,SharpMap.Data.FeatureDataSet)"/> the intersection of the geometries and the envelope should be tested.
@@ -786,57 +759,65 @@ namespace SharpMap.Data.Providers
 		/// </summary>
 		/// <param name="geom">The geometry to test intersection for</param>
 		/// <param name="ds">FeatureDataSet to fill data into</param>
-		public virtual void ExecuteIntersectionQuery(IGeometry geom, FeatureDataSet ds)
-		{
-			var bbox = new Envelope(geom.EnvelopeInternal);
+        public virtual void ExecuteIntersectionQuery(IGeometry geom, FeatureDataSet ds)
+        {
+            var bbox = new Envelope(geom.EnvelopeInternal);
 
             //Get a list of objects that possibly intersect with geom.
             var objectlist = GetObjectIDsInView(bbox);
 
             //Get a prepared geometry object
-		    var prepGeom = NetTopologySuite.Geometries.Prepared.PreparedGeometryFactory.Prepare(geom);
-            
-            //Get an empty table
-            var dt = DbaseFile.NewTable;
-            dt.BeginLoadData();
+            var prepGeom = NetTopologySuite.Geometries.Prepared.PreparedGeometryFactory.Prepare(geom);
 
-		    var tmpOids = new Collection<uint>();
-            //Cycle through all object ids
-		    foreach (var oid in objectlist)
-		    {
-		        //Get the geometry
-                var testGeom = ReadGeometry(oid);
-                
-                //We do not have a geometry => we do not have a feature
-                if (testGeom == null) 
-                    continue;
-
-                //Does the geometry really intersect with geom?
-                if (!prepGeom.Intersects(testGeom))
-                    continue;
-
-                //Get the feature data row and assign the geometry
-                FeatureDataRow fdr;
-                lock (DbaseFile)
+            using (Stream s = OpenShapefileStream())
+            {
+                using (BinaryReader br = new BinaryReader(s))
                 {
-                    fdr = (FeatureDataRow)dt.LoadDataRow(DbaseFile.GetValues(oid), true);
+                    using (DbaseReader DbaseFile = OpenDbfStream())
+                    {
+                        //Get an empty table
+                        var dt = DbaseFile.NewTable;
+                        dt.BeginLoadData();
+
+                        var tmpOids = new Collection<uint>();
+                        //Cycle through all object ids
+                        foreach (var oid in objectlist)
+                        {
+                            //Get the geometry
+                            var testGeom = ReadGeometry(oid, br, DbaseFile);
+
+                            //We do not have a geometry => we do not have a feature
+                            if (testGeom == null)
+                                continue;
+
+                            //Does the geometry really intersect with geom?
+                            if (!prepGeom.Intersects(testGeom))
+                                continue;
+
+                            //Get the feature data row and assign the geometry
+                            FeatureDataRow fdr;
+                            fdr = (FeatureDataRow)dt.LoadDataRow(DbaseFile.GetValues(oid), true);
+                            fdr.Geometry = testGeom;
+
+                            //Test if the feature data row corresponds to the FilterDelegate
+                            if (FilterDelegate != null && !FilterDelegate(fdr))
+                                fdr.Delete();
+                            else
+                                tmpOids.Add(oid);
+                        }
+
+                        dt.EndLoadData();
+                        dt.AcceptChanges();
+
+                        ds.Tables.Add(dt);
+                        DbaseFile.Close();
+                        CleanInternalCache(tmpOids);
+                    }
+                    br.Close();
                 }
-		        fdr.Geometry = testGeom;
-
-                //Test if the feature data row corresponds to the FilterDelegate
-                if (FilterDelegate != null && !FilterDelegate(fdr))
-                    fdr.Delete();
-                else
-                    tmpOids.Add(oid);
-		    }
-
-            dt.EndLoadData();
-            dt.AcceptChanges();
-
-            ds.Tables.Add(dt);
-
-            CleanInternalCache(tmpOids);
-		}
+                s.Close();
+            }
+        }
 
 
 		/// <summary>
@@ -845,23 +826,10 @@ namespace SharpMap.Data.Providers
 		/// <returns></returns>
 		public int GetFeatureCount()
 		{
-			return _featureCount;
+			return _index.FeatureCount;
 		}
 
-		/// <summary>
-		/// Gets a <see cref="FeatureDataRow"/> from the datasource at the specified index
-		/// <para/>
-		/// Please note well: It is not checked whether 
-		/// <list type="Bullet">
-		/// <item>the data record matches the <see cref="FilterProvider.FilterDelegate"/> assigned.</item>
-		/// </list>
-		/// </summary>
-		/// <param name="rowId">The object identifier for the record</param>
-		/// <returns>The feature data row</returns>
-		public FeatureDataRow GetFeature(uint rowId)
-		{
-			return GetFeature(rowId, DbaseFile.NewTable);
-		}
+		
 
 		/// <summary>
 		/// Returns the extents of the datasource
@@ -869,9 +837,9 @@ namespace SharpMap.Data.Providers
 		/// <returns></returns>
 		public Envelope GetExtents()
 		{
-			if (_tree == null)
-				throw new ApplicationException(
-					"File hasn't been spatially indexed. Try opening the datasource before retriving extents");
+            if (_tree == null)
+                throw new ApplicationException(
+                    "File hasn't been spatially indexed. Try opening the datasource before retriving extents");
 			return _tree.Box;
 		}
 
@@ -912,83 +880,103 @@ namespace SharpMap.Data.Providers
 			LoadSpatialIndex(fileBasedIndex); //Load spatial index			
 		}
 
-		/// <summary>
-		/// Reads and parses the header of the .shp index file
-		/// </summary>
-		private void ParseHeader()
-		{
-#if USE_MEMORYMAPPED_FILE
-            _fsShapeFile = CheckCreateMemoryMappedStream(_filename, ref _haveRegistredForUsage);
-#else
-            _fsShapeFile = new FileStream(_filename, FileMode.Open, FileAccess.Read);
-#endif
-            _brShapeFile = new BinaryReader(_fsShapeFile, Encoding.Unicode);
-
-            _brShapeFile.BaseStream.Seek(0, 0);
-			//Check file header
-            if (_brShapeFile.ReadInt32() != 170328064)
-				//File Code is actually 9994, but in Little Endian Byte Order this is '170328064'
-				throw (new ApplicationException("Invalid Shapefile (.shp)"));
-
-            //Read filelength as big-endian. The length is based on 16bit words
-            _brShapeFile.BaseStream.Seek(24, 0); //seek to File Length
-            _fileSize = 2 * SwapByteOrder(_brShapeFile.ReadInt32());
-				
-            _brShapeFile.BaseStream.Seek(32, 0); //seek to ShapeType
-            _shapeType = (ShapeType)_brShapeFile.ReadInt32();
-
-			//Read the spatial bounding box of the contents
-            _brShapeFile.BaseStream.Seek(36, 0); //seek to box
-		    _envelope = new Envelope(new Coordinate(_brShapeFile.ReadDouble(), _brShapeFile.ReadDouble()),
-		                             new Coordinate(_brShapeFile.ReadDouble(), _brShapeFile.ReadDouble()));
-
-            // Work out the numberof features, if we have an index file use that
-            if (File.Exists(Path.ChangeExtension(_filename, ".shx")))
-            //if (brShapeIndex != null)
+	    /// <summary>
+	    /// Reads and parses the header of the .shp index file
+	    /// </summary>
+	    private void ParseHeader()
+	    {
+            _header = new ShapeFileHeader(_filename);
+	        var shxPath = Path.ChangeExtension(_filename, ".shx");
+            if (!File.Exists(shxPath))
             {
-#if USE_MEMORYMAPPED_FILE
-                _fsShapeIndex = CheckCreateMemoryMappedStream(Path.ChangeExtension(_filename, ".shx"), ref _haveRegistredForShxUsage);
-#else
-                _fsShapeIndex = new FileStream(Path.ChangeExtension(_filename, ".shx"), FileMode.Open, FileAccess.Read);
-#endif
-                _brShapeIndex = new BinaryReader(_fsShapeIndex, Encoding.Unicode);
-
-                _brShapeIndex.BaseStream.Seek(24, 0); //seek to File Length
-                var indexFileSize = SwapByteOrder(_brShapeIndex.ReadInt32()); //Read filelength as big-endian. The length is based on 16bit words
-                _featureCount = (2 * indexFileSize - 100) / 8; //Calculate FeatureCount. Each feature takes up 8 bytes. The header is 100 bytes
-
-                _brShapeIndex.Close();
-                _fsShapeIndex.Close();
+                ShapeFileIndex.Create(_filename);
             }
-            else
-            {
-                // Move to the start of the data
-                _brShapeFile.BaseStream.Seek(100, 0); //Skip content length
-                long offset = 100; // Start of the data records
+            _index = new ShapeFileIndex(Path.ChangeExtension(_filename, ".shx"));
 
-                // Loop through the data to extablish the number of features contained within the data file
-                while (offset < _fileSize)
+            /*
+#if USE_MEMORYMAPPED_FILE
+            var fsShapeFile = CheckCreateMemoryMappedStream(_filename, ref _haveRegistredForUsage);
+#else
+            var fsShapeFile = new FileStream(_filename, FileMode.Open, FileAccess.Read);
+#endif
+            using (var brShapeFile = new BinaryReader(_fsShapeFile, Encoding.Unicode))
+            {
+                //Check file header
+                if (brShapeFile.ReadInt32() != 170328064)
+                    //File Code is actually 9994, but in Little Endian Byte Order this is '170328064'
+                    throw (new ApplicationException("Invalid Shapefile (.shp)"));
+
+                //Read filelength as big-endian. The length is based on 16bit words
+                fsShapeFile.Seek(24, 0); //seek to File Length
+                _fileSize = 2*SwapByteOrder(brShapeFile.ReadInt32());
+
+                fsShapeFile.Seek(32, 0); //seek to ShapeType
+                _shapeType = (ShapeType) brShapeFile.ReadInt32();
+
+                //Read the spatial bounding box of the contents
+                fsShapeFile.Seek(36, 0); //seek to box
+                _envelope = new Envelope(new Coordinate(brShapeFile.ReadDouble(), brShapeFile.ReadDouble()),
+                                         new Coordinate(brShapeFile.ReadDouble(), brShapeFile.ReadDouble()));
+
+                // Work out the numberof features, if we have an index file use that
+                var shxFile = Path.ChangeExtension(_filename, ".shx");
+                if (File.Exists(shxFile))
+                    //if (brShapeIndex != null)
                 {
-                    ++_featureCount;
-
-                    _brShapeFile.BaseStream.Seek(offset + 4, 0); //Skip content length
-                    var dataLength = 2 * SwapByteOrder(_brShapeFile.ReadInt32());
-
-                    // This is to cover the chance when the data is corupt
-                    // as seen with the sample counties file, in this example the index file
-                    // has been adjusted to cover the problem.
-                    if ((offset + dataLength) > _fileSize)
+                    using (var brShapeIndex = new BinaryReader(
+                        new FileStream(shxFile, FileMode.Open, FileAccess.Read),
+                        Encoding.Unicode))
                     {
-                        --_featureCount;
+                        brShapeIndex.BaseStream.Seek(24, 0); //seek to File Length
+                        var indexFileSize = SwapByteOrder(brShapeIndex.ReadInt32());
+                            //Read filelength as big-endian. The length is based on 16bit words
+                        _featureCount = (2*indexFileSize - 100)/8;
+                            //Calculate FeatureCount. Each feature takes up 8 bytes. The header is 100 bytes
                     }
+                    //#if USE_MEMORYMAPPED_FILE
+                    //                _fsShapeIndex = CheckCreateMemoryMappedStream(Path.ChangeExtension(_filename, ".shx"), ref _haveRegistredForShxUsage);
+                    //#else
+                    //                _fsShapeIndex = new FileStream(Path.ChangeExtension(_filename, ".shx"), FileMode.Open, FileAccess.Read);
+                    //#endif
+                    //                _brShapeIndex = new BinaryReader(_fsShapeIndex, Encoding.Unicode);
 
-                    offset += dataLength; // Add Record data length
-                    offset += 8; //  Plus add the record header size
+                    //                _brShapeIndex.BaseStream.Seek(24, 0); //seek to File Length
+                    //                var indexFileSize = SwapByteOrder(_brShapeIndex.ReadInt32()); //Read filelength as big-endian. The length is based on 16bit words
+                    //                _featureCount = (2 * indexFileSize - 100) / 8; //Calculate FeatureCount. Each feature takes up 8 bytes. The header is 100 bytes
+
+                    //                _brShapeIndex.Close();
+                    //                _fsShapeIndex.Close();
                 }
-            }
-            _brShapeFile.Close();
-            _fsShapeFile.Close();
+                else
+                {
+                    // Move to the start of the data
+                    fsShapeFile.Seek(100, 0); //Skip content length
+                    long offset = 100; // Start of the data records
 
+                    // Loop through the data to extablish the number of features contained within the data file
+                    while (offset < _fileSize)
+                    {
+                        ++_featureCount;
+
+                        fsShapeFile.Seek(offset + 4, 0); //Skip content length
+                        var dataLength = 2*SwapByteOrder(brShapeFile.ReadInt32());
+
+                        // This is to cover the chance when the data is corupt
+                        // as seen with the sample counties file, in this example the index file
+                        // has been adjusted to cover the problem.
+                        if ((offset + dataLength) > _fileSize)
+                        {
+                            --_featureCount;
+                        }
+
+                        offset += dataLength; // Add Record data length
+                        offset += 8; //  Plus add the record header size
+                    }
+                }
+                //brShapeFile.Close();
+                //fsShapeFile.Close();
+            }
+             */
 		}
 
 		/// <summary>
@@ -1033,56 +1021,72 @@ namespace SharpMap.Data.Providers
             }
 		}
 
-		/// <summary>
-		/// If an index file is present (.shx) it reads the record offsets from the .shx index file and returns the information in an array.
-        /// IfF an indexd array is not present it works out the indexes from the data file, by going through the record headers, finding the
-        /// data lengths and workingout the offsets. Which ever method is used a array of index is populated to be use by the other methods.
-        /// This array is created when the open method is called, and removed when the close method called.
-		/// </summary>
-        private void PopulateIndexes()
-		{
-            if (_brShapeIndex != null)
-            {
-                _brShapeIndex.BaseStream.Seek(100, 0);  //skip the header
+        ///// <summary>
+        ///// If an index file is present (.shx) it reads the record offsets from the .shx index file and returns the information in an array.
+        ///// IfF an indexd array is not present it works out the indexes from the data file, by going through the record headers, finding the
+        ///// data lengths and workingout the offsets. Which ever method is used a array of index is populated to be use by the other methods.
+        ///// This array is created when the open method is called, and removed when the close method called.
+        ///// </summary>
+        //private void PopulateIndexes(string shxFile)
+        //{
+        //    if (File.Exists(shxFile))
+        //    {
+        //        using (var brShapeIndex = new BinaryReader(File.OpenRead(shxFile)))
+        //        {
+        //            brShapeIndex.BaseStream.Seek(100, 0);  //skip the header
 
-                for (int x = 0; x < _featureCount; ++x)
-                {
-                    _offsetOfRecord[x] = 2 * SwapByteOrder(_brShapeIndex.ReadInt32()); //Read shape data position // ibuffer);
-                    _brShapeIndex.BaseStream.Seek(_brShapeIndex.BaseStream.Position + 4, 0); //Skip content length
-                }
-            }
-            else  
-            {
-                // we need to create an index from the shape file
+        //            for (int x = 0; x < _featureCount; ++x)
+        //            {
+        //                _offsetOfRecord[x] = new ShapeFileIndexEntry(brShapeIndex);
+        //                //_offsetOfRecord[x] = 2 * SwapByteOrder(brShapeIndex.ReadInt32()); //Read shape data position // ibuffer);
+        //                //brShapeIndex.BaseStream.Seek(brShapeIndex.BaseStream.Position + 4, 0); //Skip content length
+        //            }
+        //        }
+        //    }
+        //    //if (_brShapeIndex != null)
+        //    //{
+        //    //    _brShapeIndex.BaseStream.Seek(100, 0);  //skip the header
 
-                // Record the current position pointer for later
-                var oldPosition = _brShapeFile.BaseStream.Position;
+        //    //    for (int x = 0; x < _featureCount; ++x)
+        //    //    {
+        //    //        _offsetOfRecord[x] = 2 * SwapByteOrder(_brShapeIndex.ReadInt32()); //Read shape data position // ibuffer);
+        //    //        _brShapeIndex.BaseStream.Seek(_brShapeIndex.BaseStream.Position + 4, 0); //Skip content length
+        //    //    }
+        //    //}
+        //    else  
+        //    {
+        //        // we need to create an index from the shape file
+
+        //        // Record the current position pointer for later
+        //        var oldPosition = _brShapeFile.BaseStream.Position;
   
-                // Move to the start of the data
-                _brShapeFile.BaseStream.Seek(100, 0); //Skip content length
-                long offset = 100; // Start of the data records
+        //        // Move to the start of the data
+        //        _brShapeFile.BaseStream.Seek(100, 0); //Skip content length
+        //        long offset = 100; // Start of the data records
                 
-                for (int x = 0; x < _featureCount; ++x)
-                {
-                   _offsetOfRecord[x] = (int)offset; 
+        //        for (int x = 0; x < _featureCount; ++x)
+        //        {
+        //            var recordOffset = offset;
+        //            //_offsetOfRecord[x] = (int)offset;
                    
-                    _brShapeFile.BaseStream.Seek(offset + 4, 0); //Skip content length
-                    int dataLength = 2 * SwapByteOrder(_brShapeFile.ReadInt32());
-                    offset += dataLength; // Add Record data length
-                    offset += 8; //  Plus add the record header size
-                }
+        //            _brShapeFile.BaseStream.Seek(offset + 4, 0); //Skip content length
+        //            int dataLength = 2 * SwapByteOrder(_brShapeFile.ReadInt32());
+        //            _offsetOfRecord[x] = new ShapeFileIndexEntry((int)recordOffset, dataLength);
+        //            offset += dataLength; // Add Record data length
+        //            offset += 8; //  Plus add the record header size
+        //        }
 
-                // Return the position pointer
-                _brShapeFile.BaseStream.Seek(oldPosition, 0);
-            }
-		}
+        //        // Return the position pointer
+        //        _brShapeFile.BaseStream.Seek(oldPosition, 0);
+        //    }
+		//}
 
 		///<summary>
 		///Swaps the byte order of an int32
 		///</summary>
 		/// <param name="i">Integer to swap</param>
 		/// <returns>Byte Order swapped int32</returns>
-		private static int SwapByteOrder(int i)
+		internal static int SwapByteOrder(int i)
 		{
 			var buffer = BitConverter.GetBytes(i);
 			Array.Reverse(buffer, 0, buffer.Length);
@@ -1104,8 +1108,8 @@ namespace SharpMap.Data.Providers
                     sw.Start();
                     var tree = QuadTree.FromFile(filename + ".sidx");
                     sw.Stop();
-                    if (logger.IsDebugEnabled)
-                        logger.DebugFormat("Linear creation of QuadTree took {0}ms", sw.ElapsedMilliseconds);
+                    if (_logger.IsDebugEnabled)
+                        _logger.DebugFormat("Linear creation of QuadTree took {0}ms", sw.ElapsedMilliseconds);
 				    return tree;
 				}
 				catch (QuadTree.ObsoleteFileFormatException)
@@ -1115,7 +1119,7 @@ namespace SharpMap.Data.Providers
 				}
 				catch (Exception ex)
 				{
-                    logger.Error(ex);
+                    _logger.Error(ex);
 					throw ex;
 				}
 			}
@@ -1164,9 +1168,9 @@ namespace SharpMap.Data.Providers
             }
 
             sw.Stop();
-            if (logger.IsDebugEnabled)
+            if (_logger.IsDebugEnabled)
             {
-                logger.DebugFormat("Linear creation of QuadTree took {0}ms", sw.ElapsedMilliseconds);
+                _logger.DebugFormat("Linear creation of QuadTree took {0}ms", sw.ElapsedMilliseconds);
             }
 
             if (_fileBasedIndexWanted && !string.IsNullOrEmpty(filename))
@@ -1204,8 +1208,8 @@ namespace SharpMap.Data.Providers
             var root =  new QuadTree(objList, 0, heur);
 
             sw.Stop();
-            if (logger.IsDebugEnabled)
-                logger.DebugFormat("Recursive creation of QuadTree took {0}ms", sw.ElapsedMilliseconds);
+            if (_logger.IsDebugEnabled)
+                _logger.DebugFormat("Recursive creation of QuadTree took {0}ms", sw.ElapsedMilliseconds);
 
             if (_fileBasedIndexWanted && !String.IsNullOrEmpty(filename))
                 root.SaveIndex(filename + ".sidx");
@@ -1355,33 +1359,40 @@ namespace SharpMap.Data.Providers
 		                                       ? (RecordDeletedFunction) dbaseFile.RecordDeleted
 		                                       : NoRecordDeleted;
              */
-			if (_shapeType == ShapeType.Point || _shapeType == Providers.ShapeType.PointZ || _shapeType == Providers.ShapeType.PointM)
-			{
-				for (int a = 0; a < _featureCount; ++a)
-				{
-					//if (recDel((uint)a)) continue;
+		    var fsShapeFile = new FileStream(Filename, FileMode.Open, FileAccess.Read, FileShare.Read);
+		    var shapeType = _header.ShapeType;
 
-                    _fsShapeFile.Seek(_offsetOfRecord[a] + 8, 0); //skip record number and content length
-					if ((ShapeType) _brShapeFile.ReadInt32() != ShapeType.Null)
-					{
-						yield return new Envelope(new Coordinate(_brShapeFile.ReadDouble(), _brShapeFile.ReadDouble()));
-					}
-				}
-			}
-			else
-			{
-				for (int a = 0; a < _featureCount; ++a)
-				{
-                    //if (recDel((uint)a)) continue;
-                    _fsShapeFile.Seek(_offsetOfRecord[a] + 8, 0); //skip record number and content length
-					if ((ShapeType)_brShapeFile.ReadInt32() != ShapeType.Null)
-						yield return new Envelope(new Coordinate(_brShapeFile.ReadDouble(), _brShapeFile.ReadDouble()),
-												  new Coordinate(_brShapeFile.ReadDouble(), _brShapeFile.ReadDouble()));
-						//boxes.Add(new BoundingBox(brShapeFile.ReadDouble(), brShapeFile.ReadDouble(),
-						//                          brShapeFile.ReadDouble(), brShapeFile.ReadDouble()));
-				}
-			}
-			//return boxes;
+            using (var brShapeFile = new BinaryReader(fsShapeFile, Encoding.Unicode))
+		    {
+		        if (shapeType == ShapeType.Point || shapeType == ShapeType.PointZ ||
+		            shapeType == ShapeType.PointM)
+		        {
+		            for (var a = 0; a < _index.FeatureCount; ++a)
+		            {
+		                //if (recDel((uint)a)) continue;
+
+                        fsShapeFile.Seek(_index.GetOffset((uint)a) + 8, 0); //skip record number and content length
+		                if ((ShapeType) brShapeFile.ReadInt32() != ShapeType.Null)
+		                {
+		                    yield return new Envelope(new Coordinate(brShapeFile.ReadDouble(), brShapeFile.ReadDouble()));
+		                }
+		            }
+		        }
+		        else
+		        {
+		            for (var a = 0; a < _index.FeatureCount; ++a)
+		            {
+		                //if (recDel((uint)a)) continue;
+		                fsShapeFile.Seek(_index.GetOffset((uint)a) + 8, 0); //skip record number and content length
+		                if ((ShapeType) brShapeFile.ReadInt32() != ShapeType.Null)
+		                    yield return new Envelope(new Coordinate(brShapeFile.ReadDouble(), brShapeFile.ReadDouble()),
+		                                              new Coordinate(brShapeFile.ReadDouble(), brShapeFile.ReadDouble()));
+		                //boxes.Add(new BoundingBox(brShapeFile.ReadDouble(), brShapeFile.ReadDouble(),
+		                //                          brShapeFile.ReadDouble(), brShapeFile.ReadDouble()));
+		            }
+		        }
+		    }
+		    //return boxes;
 		}
 
 	    /// <summary>
@@ -1406,64 +1417,70 @@ namespace SharpMap.Data.Providers
 		/// Reads and parses the geometry with ID 'oid' from the ShapeFile
 		/// </summary>
 		/// <param name="oid">Object ID</param>
+        /// <param name="br">BinaryReader of the ShapeFileStream</param>
+        /// <param name="dBaseReader">dBaseReader of the DBaseFile</param>
 		/// <returns>geometry</returns>
-		private IGeometry ReadGeometry(uint oid)
-		{
+        private IGeometry ReadGeometry(uint oid, BinaryReader br, DbaseReader dBaseReader)
+        {
             // Do we want to receive geometries of deleted records as well?
             if (CheckIfRecordIsDeleted)
             {
                 //Test if record is deleted
-                lock (DbaseFile)
-                {
-                    if (DbaseFile.RecordDeleted(oid)) return null;
-                }
+                if (dBaseReader.RecordDeleted(oid)) return null;
             }
 
-            lock (_brShapeFile)
-            {
-                _brShapeFile.BaseStream.Seek(_offsetOfRecord[oid] + 8, 0); //Skip record number and content length
-                var type = (ShapeType)_brShapeFile.ReadInt32(); //Shape type
+            var diff = _index.GetOffset(oid) - br.BaseStream.Position;
+            br.BaseStream.Seek(diff, SeekOrigin.Current);
+            return ParseGeometry(Factory, _header.ShapeType, br);
+        }
+
+        private static IGeometry ParseGeometry(IGeometryFactory factory, ShapeType shapeType, BinaryReader brGeometryStream)
+        {
+            //Skip record number and content length
+            brGeometryStream.BaseStream.Seek(8, SeekOrigin.Current); 
+
+            var type = (ShapeType)brGeometryStream.ReadInt32(); //Shape type
                 if (type == ShapeType.Null)
                     return null;
 
-                if (_shapeType == ShapeType.Point || _shapeType == ShapeType.PointM || _shapeType == ShapeType.PointZ)
+                if (shapeType == ShapeType.Point || shapeType == ShapeType.PointM || shapeType == ShapeType.PointZ)
                 {
-                    return Factory.CreatePoint(new Coordinate(_brShapeFile.ReadDouble(), _brShapeFile.ReadDouble()));
+                    return factory.CreatePoint(new Coordinate(brGeometryStream.ReadDouble(), brGeometryStream.ReadDouble()));
                 }
 
-                if (_shapeType == ShapeType.Multipoint || _shapeType == ShapeType.MultiPointM ||
-                    _shapeType == ShapeType.MultiPointZ)
+                if (shapeType == ShapeType.Multipoint || shapeType == ShapeType.MultiPointM ||
+                    shapeType == ShapeType.MultiPointZ)
                 {
-                    _brShapeFile.BaseStream.Seek(32 + _brShapeFile.BaseStream.Position, 0); //skip min/max box
-                    var nPoints = _brShapeFile.ReadInt32(); // get the number of points
+                    brGeometryStream.BaseStream.Seek(32, SeekOrigin.Current); //skip min/max box
+                    var nPoints = brGeometryStream.ReadInt32(); // get the number of points
                     if (nPoints == 0)
                         return null;
                     var feature = new Coordinate[nPoints];
                     for (var i = 0; i < nPoints; i++)
-                        feature[i] = new Coordinate(_brShapeFile.ReadDouble(), _brShapeFile.ReadDouble());
+                        feature[i] = new Coordinate(brGeometryStream.ReadDouble(), brGeometryStream.ReadDouble());
 
-                    return Factory.CreateMultiPoint(feature);
+                    return factory.CreateMultiPoint(feature);
                 }
 
-                if (_shapeType == ShapeType.PolyLine || _shapeType == ShapeType.Polygon ||
-                    _shapeType == ShapeType.PolyLineM || _shapeType == ShapeType.PolygonM ||
-                    _shapeType == ShapeType.PolyLineZ || _shapeType == ShapeType.PolygonZ)
+                if (shapeType == ShapeType.PolyLine || shapeType == ShapeType.Polygon ||
+                    shapeType == ShapeType.PolyLineM || shapeType == ShapeType.PolygonM ||
+                    shapeType == ShapeType.PolyLineZ || shapeType == ShapeType.PolygonZ)
                 {
-                    _brShapeFile.BaseStream.Seek(32 + _brShapeFile.BaseStream.Position, 0); //skip min/max box
+                    brGeometryStream.BaseStream.Seek(32, SeekOrigin.Current); //skip min/max box
 
-                    var nParts = _brShapeFile.ReadInt32(); // get number of parts (segments)
+                    var nParts = brGeometryStream.ReadInt32(); // get number of parts (segments)
                     if (nParts == 0 || nParts < 0)
                         return null;
 
-                    var nPoints = _brShapeFile.ReadInt32(); // get number of points
+                    var nPoints = brGeometryStream.ReadInt32(); // get number of points
                     var segments = new int[nParts + 1];
                     //Read in the segment indexes
                     for (var b = 0; b < nParts; b++)
-                        segments[b] = _brShapeFile.ReadInt32();
+                        segments[b] = brGeometryStream.ReadInt32();
                     //add end point
                     segments[nParts] = nPoints;
 
-                    if ((int)_shapeType % 10 == 3)
+                    if ((int)shapeType % 10 == 3)
                     {
                         var lineStrings = new ILineString[nParts];
                         for (var lineID = 0; lineID < nParts; lineID++)
@@ -1471,14 +1488,14 @@ namespace SharpMap.Data.Providers
                             var line = new Coordinate[segments[lineID + 1] - segments[lineID]];
                             var offset = segments[lineID];
                             for (var i = segments[lineID]; i < segments[lineID + 1]; i++)
-                                line[i - offset] = new Coordinate(_brShapeFile.ReadDouble(), _brShapeFile.ReadDouble());
-                            lineStrings[lineID] = Factory.CreateLineString(line);
+                                line[i - offset] = new Coordinate(brGeometryStream.ReadDouble(), brGeometryStream.ReadDouble());
+                            lineStrings[lineID] = factory.CreateLineString(line);
                         }
 
                         if (lineStrings.Length == 1)
                             return lineStrings[0];
 
-                        return Factory.CreateMultiLineString(lineStrings);
+                        return factory.CreateMultiLineString(lineStrings);
                     }
 
                     //First read all the rings
@@ -1488,8 +1505,8 @@ namespace SharpMap.Data.Providers
                         var ring = new Coordinate[segments[ringID + 1] - segments[ringID]];
                         var offset = segments[ringID];
                         for (var i = segments[ringID]; i < segments[ringID + 1]; i++)
-                            ring[i - offset] = new Coordinate(_brShapeFile.ReadDouble(), _brShapeFile.ReadDouble());
-                        rings[ringID] = Factory.CreateLinearRing(ring);
+                            ring[i - offset] = new Coordinate(brGeometryStream.ReadDouble(), brGeometryStream.ReadDouble());
+                        rings[ringID] = factory.CreateLinearRing(ring);
                     }
 
                     ILinearRing exteriorRing;
@@ -1510,7 +1527,7 @@ namespace SharpMap.Data.Providers
                             interiorRings = new ILinearRing[rings.Length - 1];
                             Array.Copy(rings, 1, interiorRings, 0, interiorRings.Length);
                         }
-                        return Factory.CreatePolygon(exteriorRing, interiorRings);
+                        return factory.CreatePolygon(exteriorRing, interiorRings);
                     }
 
                     var polygons = new List<IPolygon>();
@@ -1521,21 +1538,35 @@ namespace SharpMap.Data.Providers
                     {
                         if (!isCounterClockWise[i])
                         {
-                            polygons.Add(Factory.CreatePolygon(exteriorRing, holes.ToArray()));
+                            polygons.Add(factory.CreatePolygon(exteriorRing, holes.ToArray()));
                             holes.Clear();
                             exteriorRing = rings[i];
                         }
                         else
                             holes.Add(rings[i]);
                     }
-                    polygons.Add(Factory.CreatePolygon(exteriorRing, holes.ToArray()));
+                    polygons.Add(factory.CreatePolygon(exteriorRing, holes.ToArray()));
 
-                    return Factory.CreateMultiPolygon(polygons.ToArray());
+                    return factory.CreateMultiPolygon(polygons.ToArray());
                 }
-                else
-                    throw (new ApplicationException("Shapefile type " + _shapeType.ToString() + " not supported"));
-            }
-		}
+
+	        throw (new ApplicationException("Shapefile type " + shapeType + " not supported"));
+	    }
+
+        /// <summary>
+        /// Gets a <see cref="FeatureDataRow"/> from the datasource at the specified index
+        /// <para/>
+        /// Please note well: It is not checked whether 
+        /// <list type="Bullet">
+        /// <item>the data record matches the <see cref="FilterProvider.FilterDelegate"/> assigned.</item>
+        /// </list>
+        /// </summary>
+        /// <param name="rowId">The object identifier for the record</param>
+        /// <returns>The feature data row</returns>
+        public FeatureDataRow GetFeature(uint rowId)
+        {
+            return GetFeature(rowId, null);
+        }
 
 		/// <summary>
 		/// Gets a datarow from the datasource at the specified index belonging to the specified datatable
@@ -1549,54 +1580,79 @@ namespace SharpMap.Data.Providers
         /// <param name="dt">The datatable the feature should belong to.</param>
         /// <returns>The feature data row</returns>
         public FeatureDataRow GetFeature(uint rowId, FeatureDataTable dt)
-		{
-			Debug.Assert(dt != null);
-			if (DbaseFile != null)
-			{
-			    FeatureDataRow fdr = null;
-                
-                //MemoryCache
-				if (_useMemoryCache)
-				{
-					_cacheDataTable.TryGetValue(rowId, out fdr);
-					if (fdr == null)
-					{
-                        lock (DbaseFile)
-                        {
-                            fdr = DbaseFile.GetFeature(rowId, dt);
-                        }
-						fdr.Geometry = ReadGeometry(rowId);
-						_cacheDataTable.Add(rowId, fdr);
-					}
+        {
+            FeatureDataRow ret = null;
+            using (Stream s = OpenShapefileStream())
+            {
+                using (BinaryReader br = new BinaryReader(s))
+                {
+                    using (DbaseReader dbfReader = OpenDbfStream())
+                    {
+                        if (dt == null)
+                            dt = dbfReader.NewTable;
+                        ret = getFeature(rowId, dt, br, dbfReader);
+                        dbfReader.Close();
+                    }
+                    br.Close();
+                }
+                s.Close();
+            }
+            return ret;
+        }
 
-					//Make a copy to return
-					var fdrNew = dt.NewRow();
+        private FeatureDataRow getFeature(uint rowid, FeatureDataTable dt, BinaryReader br, DbaseReader dbfFileReader)
+        {
+            Debug.Assert(dt != null);
+            if (dbfFileReader != null)
+            {
+                FeatureDataRow fdr;
+
+                //MemoryCache
+                if (_useMemoryCache)
+                {
+                    lock (_cacheLock)
+                    {
+                        _cacheDataTable.TryGetValue(rowid, out fdr);
+                    }
+                    if (fdr == null)
+                    {
+                        fdr = dbfFileReader.GetFeature(rowid, dt);
+                        fdr.Geometry = ReadGeometry(rowid, br, dbfFileReader);
+                        lock (_cacheLock)
+                        {
+                            // It is already present, so just pass it
+                            if (_cacheDataTable.ContainsKey(rowid))
+                                return fdr;
+
+                            _cacheDataTable.Add(rowid, fdr);
+                        }
+                    }
+
+                    //Make a copy to return
+                    var fdrNew = dt.NewRow();
                     Array.Copy(fdr.ItemArray, 0, fdrNew.ItemArray, 0, fdr.ItemArray.Length);
                     //for (var i = 0; i < fdr.Table.Columns.Count; i++)
                     //{
                     //    fdrNew[i] = fdr[i];
                     //}
-					fdrNew.Geometry = fdr.Geometry;
-					return fdr;
-				}
-
-                lock (DbaseFile)
-                {
-                    fdr = DbaseFile.GetFeature(rowId, dt);
+                    fdrNew.Geometry = fdr.Geometry;
+                    return fdr;
                 }
-                
+
+                fdr = dbfFileReader.GetFeature(rowid, dt);
+
                 // GetFeature returns null if the record has deleted flag
-                if (fdr == null) 
+                if (fdr == null)
                     return null;
 
                 // Read the geometry
-                fdr.Geometry = ReadGeometry(rowId);
-			    
+                fdr.Geometry = ReadGeometry(rowid, br, dbfFileReader);
+
                 return fdr;
-			}
-            
-		    throw (new ApplicationException(
-		        "An attempt was made to read DBase data from a shapefile without a valid .DBF file"));
-		}
+            }
+
+            throw (new ApplicationException(
+                "An attempt was made to read DBase data from a shapefile without a valid .DBF file"));
+        }
 	}
 }

@@ -5,6 +5,9 @@
     <RequireRestoreConsent>false</RequireRestoreConsent>
     <RestorePackages>true</RestorePackages>
     <EnableNuGetPackageRestore>true</EnableNuGetPackageRestore>
+    <MSBuildCommunityTasksPath>$(SolutionDir)</MSBuildCommunityTasksPath>
+    <!--- pass version in command line: MSBuild /t:NuGetPack SharpMap.proj /p:NuGetVersion=1.0.0  -->
+    <NuGetVersion>1.0.0</NuGetVersion>
   </PropertyGroup>
 
   <Target Name="EnableNPR">
@@ -32,8 +35,68 @@
   <Target Name="UnitTests">
     <MSBuild Projects="$(SolutionFile)" Targets="UnitTests" Properties="Configuration=Release" />
   </Target>
+ 
+  <Target Name="NugetPack" DependsOnTargets="BuildRelease">
+    <!--<Exec Command="IF NOT EXIST (""$(SolutionDir)\Release"") MKDIR ""$(SolutionDir)\Release""" />-->
+    <Exec Command="$(SolutionDir)\.nuget\NuGet pack SharpMap.nuspec -version $(NuGetVersion) -outputdirectory $(SolutionDir)\Release"/>
+    <Exec Command="$(SolutionDir)\.nuget\NuGet pack SharpMap.Extensions.nuspec -version $(NuGetVersion) -outputdirectory $(SolutionDir)\Release"/>
+    <Exec Command="$(SolutionDir)\.nuget\NuGet pack SharpMap.UI.nuspec -version $(NuGetVersion) -outputdirectory $(SolutionDir)\Release"/>
+    <Exec Command="$(SolutionDir)\.nuget\NuGet pack SharpMap.Web.nuspec -version $(NuGetVersion) -outputdirectory $(SolutionDir)\Release"/>
+  </Target>
 
+  <Target Name="ZipSharpMap" DependsOnTargets="BuildRelease">
+    <ItemGroup>
+      <SharpMapCore Include="SharpMap.dll;SharpMap.pdb;SharpMap.xml;SharpMap.UI.dll;SharpMap.UI.pdb;SharpMap.UI.xml;BruTile.dll;BruTile.Desktop.dll;Common.Logging.dll;GeoAPI.dll;NewtonSoft.Json.dll;NewtonSoft.Json.xml;PowerCollections.dll;ProjNet.dll;NetTopologySuite.dll" />
+	    <SharpMapFiles Include="$(SolutionDir)\SharpMap.UI\bin\Release\**\*.*" />
+      <!--
+      <SharpMapExtensionsFiles Include="$(SolutionDir)\SharpMap.Extensions\bin\Release\**\*.*" Exclude="@(SharpMapCoreFiles)"/>
+      <SharpMapExtensionsX86Files Include="$(SolutionDir)\SharpMap.Extensions.x86\bin\Release\**\*.*" Exclude="@(SharpMapCoreFiles)"/>
+	  <SharpMapWebFiles Include="$(SolutionDir)\SharpMap.Web\bin\Release\**\*.*" Exclude="@(SharpMapCoreFiles)"/>
+	  -->
+    </ItemGroup>
+
+    <Zip Files="@(SharpMapFiles)"
+         WorkingDirectory="$(SolutionDir)\SharpMap.UI\bin\Release"
+         ZipFileName="SharpMap.zip"
+		     Flatten="True"
+         ZipLevel="9"/>
+
+	<CreateItem Include="$(SolutionDir)\SharpMap.Extensions\bin\Release\**\*.*"
+	            Exclude="@(SharpMapCore->'$(SolutionDir)\SharpMap.Extensions\bin\Release\%(identity)')">
+		<Output TaskParameter="Include" ItemName="SharpMapExtensionsFiles"/>
+	</CreateItem>
+	
+	<Zip Files="@(SharpMapExtensionsFiles)"
+         WorkingDirectory="$(SolutionDir)\SharpMap.Extensions\bin\Release"
+         ZipFileName="SharpMap.Extensions.zip"
+         ZipLevel="9"/>
+
+	<CreateItem Include="$(SolutionDir)\SharpMap.Extensions.x86\bin\Release\**\*.*"
+	            Exclude="@(SharpMapCore->'$(SolutionDir)\SharpMap.Extensions.x86\bin\Release\%(identity)')">
+		<Output TaskParameter="Include" ItemName="SharpMapExtensionsX86Files"/>
+	</CreateItem>
+	
+	<Zip Files="@(SharpMapExtensionsX86Files)"
+         WorkingDirectory="$(SolutionDir)\SharpMap.Extensions.x86\bin\Release"
+         ZipFileName="SharpMap.Extensions.x86.zip"
+		     Flatten="True"
+         ZipLevel="9"/>
+
+	<CreateItem Include="$(SolutionDir)\SharpMap.Web\bin\Release\**\*.*"
+	            Exclude="@(SharpMapCore->'$(SolutionDir)\SharpMap.Web\bin\Release\%(identity)')">
+		<Output TaskParameter="Include" ItemName="SharpMapWebFiles"/>
+	</CreateItem>
+
+    <Zip Files="@(SharpMapWebFiles)"
+         WorkingDirectory="$(SolutionDir)\SharpMap.Web\bin\Release"
+         ZipFileName="SharpMap.Web.zip"
+		     Flatten="True"
+         ZipLevel="9"/>
+  </Target>
+  
+  
   <!-- TODO: add targets here to build zip, NuGet, ... -->
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(SolutionDir)\BuildTools\MSBuild.Community.Tasks.Targets"/>
   <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
 </Project>

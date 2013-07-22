@@ -553,22 +553,30 @@ namespace SharpMap.Data.Providers
 
         public override int GetFeatureCount()
         {
-            int count;
+            var count = 0;
             using (var conn = GetConnection(ConnectionString))
             {
                 var strSql = "SELECT COUNT(*) as numrecs FROM " + Table;
                 if (!String.IsNullOrEmpty(_definitionQuery))
+                {
                     strSql += " WHERE " + DefinitionQuery;
+                }
                 using (var command = new SQLiteCommand(strSql, conn))
                 {
-                    var dtr = command.ExecuteReader();
-                    if (dtr["numrecs"] != null)
+                    using (var dtr = command.ExecuteReader())
                     {
-                        count = Convert.ToInt32(dtr["numrecs"]); // (int)command.ExecuteScalar();
-                    }
-                    else
-                    {
-                        count = -1;
+                        if (dtr.HasRows)
+                        {
+                            dtr.Read();
+                            if (dtr["numrecs"] != null)
+                            {
+                                count = Convert.ToInt32(dtr["numrecs"]); // (int)command.ExecuteScalar();
+                            }
+                            else
+                            {
+                                count = -1;
+                            }
+                        }
                     }
                     conn.Close();
                 }
