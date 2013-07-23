@@ -34,6 +34,6 @@ The engine is written in C# and based on the .Net 4.0 framework.
 	</dependencies>
   </metadata>
   <files>
-	  <file src="SharpMap\bin\Release\SharpMap.dll" target="lib\net40-client,lib\net40"/>
+	  <file src="SharpMap\bin\Release\SharpMap.dll" target="lib\net40-client"/>
   </files>
 </package>
