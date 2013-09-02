@@ -276,10 +276,18 @@ namespace SharpMap.Data.Providers
         {
             lock (_featuresLock)
             {
-                if (rowId > _features.Rows.Count)
+                if (rowId >= _features.Rows.Count)
+                {
                     return null;
-                if (FilterDelegate != null && FilterDelegate(_features[(int) rowId]))
-                    return _features[(int) rowId];
+                }
+                else if (FilterDelegate != null && FilterDelegate(_features[(int)rowId]))
+                {
+                    return _features[(int)rowId];
+                }
+                else if (rowId < _features.Rows.Count)
+                {
+                    return _features[(int)rowId];
+                }
             }
 
             return null;
