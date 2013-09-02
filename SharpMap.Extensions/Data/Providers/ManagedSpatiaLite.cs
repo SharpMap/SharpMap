@@ -80,7 +80,7 @@ namespace SharpMap.Data.Providers
                     cn.Open();
                     var cm = new SQLiteCommand(
                         String.Format(
-                            "SELECT \"srid\", \"coord_dimension\", \"spatial_index_enabled\" FROM \"geometry_columns\" WHERE(\"f_table_name\" {2} '{0}' AND \"f_geometry_column\" {2} '{1}');",
+                            "SELECT \"srid\", \"coord_dimension\", \"spatial_index_enabled\" FROM \"geometry_columns\" WHERE(lower(\"f_table_name\") {2} lower('{0}') AND lower(\"f_geometry_column\") {2} lower('{1}'));",
                             tablename, geometryColumnName, op), cn);
                     var dr = cm.ExecuteReader();
                     if (dr.HasRows)
