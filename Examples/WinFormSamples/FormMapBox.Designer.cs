@@ -180,7 +180,7 @@ namespace WinFormSamples
             this.mapBox1.MapRefreshed += new System.EventHandler(this.mapImage_MapRefreshed);
             this.mapBox1.MapZoomChanged += new SharpMap.Forms.MapBox.MapZoomHandler(this.mapImage_MapZoomChanged);
             this.mapBox1.MapZooming += new SharpMap.Forms.MapBox.MapZoomHandler(this.mapImage_MapZooming);
-            this.mapBox1.MapQueried += new SharpMap.Forms.MapBox.MapQueryHandler(this.mapImage_MapQueried);
+            this.mapBox1.MapQueried += new SharpMap.Forms.MapBox.MapQueryHandler(this.mapBox1_OnMapQueried);
             this.mapBox1.MapQueryStarted += new System.EventHandler(this.mapBox1_MapQueryStarted);
             this.mapBox1.MapQueryDone += new System.EventHandler(this.mapBox1_MapQueryEnded);
             this.mapBox1.MapCenterChanged += new SharpMap.Forms.MapBox.MapCenterChangedHandler(this.mapImage_MapCenterChanged);
@@ -456,7 +456,8 @@ namespace WinFormSamples
 
         void mapBox1_MapQueryEnded(object sender, EventArgs e)
         {
-            dataGridView1.DataSource = _queriedData;
+            if (_queriedData != null && _queriedData.Tables.Count > 0)
+                dataGridView1.DataSource = _queriedData.Tables[0];
         }
 
         private FeatureDataSet _queriedData;
@@ -563,16 +564,6 @@ namespace WinFormSamples
             }
             Cursor = Cursors.Default;
             mapBox1.Cursor = mic;
-        }
-
-        private void mapImage_MapQueried(SharpMap.Data.FeatureDataTable data)
-        {
-            dataGridView1.DataSource = data as System.Data.DataTable;
-        }
-
-        private void mapImage_MapQueriedDataSet(SharpMap.Data.FeatureDataSet data)
-        {
-            dataGridView1.DataSource = data as System.Data.DataSet;
         }
 
         private void mapImage_ActiveToolChanged(MapBox.Tools tool)
