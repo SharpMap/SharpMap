@@ -164,7 +164,7 @@ namespace SharpMap.Data.Providers
                         {
                             while (dr.Read())
                                 if (!dr.IsDBNull(0))
-                                    objectlist.Add((uint) dr.GetInt32(0));
+                                    objectlist.Add(Convert.ToUInt32(dr.GetValue(0)));
                         }
                     }
                     conn.Close();
