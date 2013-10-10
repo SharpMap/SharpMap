@@ -202,17 +202,17 @@ namespace SharpMap.Converters.SpatiaLite
 
         private static double ReadDouble(byte[] geom, ref int idx, bool isLittleEndian)
         {
-            int ret;
+            double ret;
             if (isLittleEndian)
             {
-                ret = (int)BitConverter.ToDouble(geom, idx);
+                ret = BitConverter.ToDouble(geom, idx);
             }
             else
             {
                 byte[] data = new byte[8];
                 for (int i = 0; i < 8; i++)
                     data[i] = geom[idx + 7 - i];
-                ret = (int)BitConverter.ToDouble(data, 0);
+                ret = BitConverter.ToDouble(data, 0);
             }
             idx += 8;
             return ret;
