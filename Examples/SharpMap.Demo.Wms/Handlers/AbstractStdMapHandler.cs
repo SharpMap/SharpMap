@@ -1,14 +1,12 @@
+using System;
+using System.Web;
+using GeoAPI;
+using NetTopologySuite;
+using SharpMap.Demo.Wms.Helpers;
+using SharpMap.Web.Wms;
+
 namespace SharpMap.Demo.Wms.Handlers
 {
-    using System;
-    using System.Web;
-
-    using GeoAPI;
-
-    using NetTopologySuite;
-
-    using SharpMap.Demo.Wms.Helpers;
-
     public abstract class AbstractStdMapHandler : IHttpHandler
     {
         private static readonly object SyncLock = new object();
@@ -30,9 +28,9 @@ namespace SharpMap.Demo.Wms.Handlers
             return uri.Query.Length <= 0 ? absoluteUri : absoluteUri.Replace(uri.Query, String.Empty);
         }
 
-        protected Web.Wms.Capabilities.WmsServiceDescription GetDescription(string url) 
+        protected Capabilities.WmsServiceDescription GetDescription(string url) 
         {
-            var description = new Web.Wms.Capabilities.WmsServiceDescription("Acme Corp. Map Server", url);
+            Capabilities.WmsServiceDescription description = new Capabilities.WmsServiceDescription("Acme Corp. Map Server", url);
             description.MaxWidth = 500;
             description.MaxHeight = 500;
             description.Abstract = "Map Server maintained by Acme Corporation. Contact: webmaster@wmt.acme.com. High-quality maps showing roadrunner nests and possible ambush locations.";
@@ -54,6 +52,8 @@ namespace SharpMap.Demo.Wms.Handlers
                 return ShapefileHelper.Spherical();
             if (String.Equals(type, "SQL", StringComparison.InvariantCultureIgnoreCase))
                 return DatabaseHelper.SqlServer();
+            if (String.Equals(type, "BRU", StringComparison.InvariantCultureIgnoreCase))
+                return BruTileHelper.Osm();
             string format = String.Format("unsupported map type: '{0}'", type);
             throw new NotSupportedException(format);
         }        

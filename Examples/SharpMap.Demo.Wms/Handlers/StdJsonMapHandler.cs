@@ -1,23 +1,21 @@
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
+using System.Linq;
+using System.Web;
+using GeoAPI.CoordinateSystems.Transformations;
+using GeoAPI.Geometries;
+using NetTopologySuite.Geometries;
+using SharpMap.Converters.GeoJSON;
+using SharpMap.Data;
+using SharpMap.Layers;
+using SharpMap.Web.Wms;
+
 namespace SharpMap.Demo.Wms.Handlers
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Diagnostics;
-    using System.IO;
-    using System.Linq;
-    using System.Web;
-
-    using NetTopologySuite.Geometries;
-
-    using GeoAPI.CoordinateSystems.Transformations;
-
-    using SharpMap.Converters.GeoJSON;
-    using SharpMap.Data;
-    using SharpMap.Layers;
-    using SharpMap.Web.Wms;
-
-    using Geometry = GeoAPI.Geometries.IGeometry;
-    using BoundingBox = GeoAPI.Geometries.Envelope;
+    using Geometry = IGeometry;
+    using BoundingBox = Envelope;
 
     public class StdJsonMapHandler : AbstractStdMapHandler
     {
@@ -32,7 +30,7 @@ namespace SharpMap.Demo.Wms.Handlers
                     return;
                 }
 
-                Map map = this.GetMap(context.Request);
+                Map map = GetMap(context.Request);
                 bool flip = map.Layers[0].TargetSRID == 4326;
                 BoundingBox bbox = WmsServer.ParseBBOX(s, flip);
                 if (bbox == null)

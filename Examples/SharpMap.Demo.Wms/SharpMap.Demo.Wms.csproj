@@ -12,7 +12,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>SharpMap.Demo.Wms</RootNamespace>
     <AssemblyName>SharpMap.Demo.Wms</AssemblyName>
-    <TargetFrameworkVersion>v4.0.3</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
@@ -52,21 +52,25 @@
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="GeoAPI, Version=1.7.1.0, Culture=neutral, PublicKeyToken=a1a0da7def465678, processorArchitecture=MSIL">
+    <Reference Include="BruTile, Version=0.7.3.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\GeoAPI.1.7.1.1\lib\net403-client\GeoAPI.dll</HintPath>
+      <HintPath>..\..\packages\BruTile.0.7.4.1\lib\net40\BruTile.dll</HintPath>
+    </Reference>
+    <Reference Include="GeoAPI, Version=1.7.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\GeoAPI.1.7.1.1\lib\net40-client\GeoAPI.dll</HintPath>
     </Reference>
     <Reference Include="NetTopologySuite, Version=1.13.1.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\NetTopologySuite.1.13.1\lib\net403-client\NetTopologySuite.dll</HintPath>
+      <HintPath>..\..\packages\NetTopologySuite.1.13.1\lib\net40-client\NetTopologySuite.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\Newtonsoft.Json.4.5.11\lib\net40\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\..\packages\Newtonsoft.Json.5.0.7\lib\net40\Newtonsoft.Json.dll</HintPath>
     </Reference>
-    <Reference Include="PowerCollections, Version=1.0.0.0, Culture=neutral, PublicKeyToken=2573bf8a1bdddcd5, processorArchitecture=MSIL">
+    <Reference Include="PowerCollections, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\NetTopologySuite.1.13.1\lib\net403-client\PowerCollections.dll</HintPath>
+      <HintPath>..\..\packages\NetTopologySuite.1.13.1\lib\net40-client\PowerCollections.dll</HintPath>
     </Reference>
     <Reference Include="ProjNET, Version=1.2.3882.19088, Culture=neutral, PublicKeyToken=a1f5bdcd9c6f5740, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -105,6 +109,7 @@
     <Compile Include="Handlers\AbstractStdMapHandler.cs" />
     <Compile Include="Handlers\StdJsonMapHandler.cs" />
     <Compile Include="Handlers\StdWmsMapHandler.cs" />
+    <Compile Include="Helpers\BrutileHelper.cs" />
     <Compile Include="Helpers\DatabaseHelper.cs" />
     <Compile Include="Helpers\ExtensionMethods.cs" />
     <Compile Include="Helpers\ShapefileHelper.cs" />
@@ -463,6 +468,7 @@
     <Content Include="lib\OpenLayers\Tile\UTFGrid.js" />
     <Content Include="lib\OpenLayers\Tween.js" />
     <Content Include="lib\OpenLayers\Util.js" />
+    <Content Include="Scripts\script_brutile.js" />
     <Content Include="Scripts\script_d3.js" />
     <Content Include="Scripts\d3.v2.js" />
     <Content Include="Scripts\script_def.js" />
@@ -507,6 +513,7 @@
     <Content Include="theme\geosilk\img\splitFeature.png" />
     <Content Include="theme\geosilk\img\transformFeature.png" />
     <Content Include="Views\Home\Buildings.aspx" />
+    <Content Include="Views\Home\BruTile.aspx" />
     <Content Include="Views\Home\D3.aspx" />
     <Content Include="Views\Home\Default.aspx" />
     <Content Include="Views\Home\UtfGrid.aspx" />
