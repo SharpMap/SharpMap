@@ -1200,7 +1200,7 @@ namespace SharpMap.Forms
                     }
 
                     base.Refresh();
-                    Invalidate();
+                    //Invalidate();
 
                 }
             }

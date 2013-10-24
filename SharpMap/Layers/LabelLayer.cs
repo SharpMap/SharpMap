@@ -628,6 +628,8 @@ namespace SharpMap.Layers
 
         private static BaseLabel CreateLabel(FeatureDataRow fdr, IGeometry feature, string text, float rotation, int priority, LabelStyle style, Map map, Graphics g, GetLocationMethod _getLocationMethod)
         {
+            if (feature == null) return null;
+
             BaseLabel lbl = null;
 
             SizeF size = VectorRenderer.SizeOfString(g, text, style.Font);
