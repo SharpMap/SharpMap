@@ -115,7 +115,7 @@ namespace SharpMap.Data.Providers
         /// <param name="spatialObjectType">The type of the spatial object to use for spatial queries</param>
         /// <param name="useSpatialIndexExtentAsExtent">If true, the bounds of the spatial index is used for the GetExtents() method which heavily increases performance instead of reading through all features in the table</param>
         public SqlServer2008(string connectionStr, string tablename, string geometryColumnName, string oidColumnName, SqlServerSpatialObjectType spatialObjectType, bool useSpatialIndexExtentAsExtent)   
-        :this(connectionStr,tablename,geometryColumnName, oidColumnName, spatialObjectType,false,0)
+        :this(connectionStr,tablename,geometryColumnName, oidColumnName, spatialObjectType,useSpatialIndexExtentAsExtent,0)
         {
         }
 		
@@ -248,7 +248,7 @@ namespace SharpMap.Data.Providers
 
         private bool _makeValid;
         /// <summary>
-        /// Gets/Sets whether all <see cref="GeoAPI.Geometries"/> passed to SqlServer2008 should me made valid using this function.
+        /// Gets/Sets whether all <see cref="GeoAPI.Geometries"/> passed to SqlServer2008 should be made valid using this function.
         /// </summary>
         public Boolean ValidateGeometries { get { return _makeValid; } set { _makeValid = value; } }
 
@@ -284,7 +284,7 @@ namespace SharpMap.Data.Providers
             set { _maxDop = value; }
         }
 
-        private string GetExtraOptions()
+        protected string GetExtraOptions()
         {
             if (_maxDop != 0)
             {
@@ -651,7 +651,7 @@ namespace SharpMap.Data.Providers
                         }
                     
                     case SqlServer2008ExtentsMode.EnvelopeAggregate:
-                        sql = String.Format("SELECT {3}::EnvelopeAggregate(g.{0}{1}).STAsText() FROM {2} g;",
+                        sql = String.Format("SELECT {3}::EnvelopeAggregate(g.{0}{1}).STAsText() FROM {2} g ",
                                             GeometryColumn, MakeValidString, Table, _spatialObject);
 
                         if (!String.IsNullOrEmpty(_definitionQuery))
