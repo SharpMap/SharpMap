@@ -1302,12 +1302,13 @@ namespace SharpMap.Layers
             band.GetMaximum(out dblMax, out hasVal);
             if (hasVal == 0) dblMax = double.NaN;
 
-            if (double.IsNaN(dblMin) || double.IsNaN(dblMax))
-                return null;
+            if (double.IsNaN(dblMin) && double.IsNaN(dblMax))
+            {
 
-            double dblMean, dblStdDev;
-            band.GetStatistics(0, 1, out dblMin, out dblMax, out dblMean,
-                                   out dblStdDev);
+                double dblMean, dblStdDev;
+                band.GetStatistics(0, 1, out dblMin, out dblMax, out dblMean,
+                                       out dblStdDev);
+            }
             // ToDo: Colorblend positions
             var minmax = new[]
                 {

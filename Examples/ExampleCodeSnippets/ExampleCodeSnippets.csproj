@@ -118,6 +118,8 @@
   <ItemGroup>
     <Compile Include="CreatingData.cs" />
     <Compile Include="EnsureVisibleSample.cs" />
+    <Compile Include="GdalNativeConfiguration.cs" />
+    <Compile Include="GdalPluginConfiguration.cs" />
     <Compile Include="HeatLayerExample.cs" />
     <Compile Include="LengthIndexedLineSample.cs" />
     <Compile Include="LineSymbolizerTest.cs" />
@@ -149,10 +151,18 @@
       <Name>SharpMap</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="GdalNativeConfiguration.vb" />
+    <Content Include="GdalPluginConfiguration.vb" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
   <PropertyGroup>
-    <PostBuildEvent>copy /b /y "$(SolutionDir)Examples\DemoWinForm\Resources\Women.png" "$(TargetDir)Women.png"</PostBuildEvent>
+    <PostBuildEvent>copy /b /y "$(SolutionDir)Examples\DemoWinForm\Resources\Women.png" "$(TargetDir)Women.png"
+    if not exist "$(TargetDir)gdal" md "$(TargetDir)gdal"
+    xcopy /s /y "$(SolutionDir)packages\GDAL.Native.1.9.2\gdal\*.*" "$(TargetDir)gdal"
+    if not exist "$(TargetDir)gdal" md "$(TargetDir)gdal"
+    xcopy /s /y "$(SolutionDir)packages\GDAL.Plugins.1.9.2\gdal\*.*" "$(TargetDir)gdal"</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

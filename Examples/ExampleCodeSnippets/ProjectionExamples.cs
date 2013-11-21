@@ -420,21 +420,29 @@ namespace ExampleCodeSnippets
     
     #endif
 
-        [NUnit.Framework.Ignore("Must add valid raster files first")]
+        [NUnit.Framework.Test]
         public void TestGdalRasterLayer()
         {
-            var ecw1 = new SharpMap.Layers.GdalRasterLayer("ecw1", "ecw1.ecw");
-            var ecw2 = new SharpMap.Layers.GdalRasterLayer("ecw2", "ecw2.ecw");
+            if (!System.IO.File.Exists("D:\\Daten\\zone49_mga.ecw"))
+                NUnit.Framework.Assert.Ignore("Adjust file path");
+            if (!System.IO.File.Exists("D:\\Daten\\zone50_mga.ecw"))
+                NUnit.Framework.Assert.Ignore("Adjust file path");
+
+            var ecw1 = new SharpMap.Layers.GdalRasterLayer("zone49", "D:\\Daten\\zone49_mga.ecw");
+            var ecw2 = new SharpMap.Layers.GdalRasterLayer("zone50", "D:\\Daten\\zone50_mga.ecw");
 
             var p1 = ecw1.GetProjection();
             ecw2.ReprojectToCoordinateSystem(p1);
 
-            var m = new SharpMap.Map();
+            var m = new SharpMap.Map(new System.Drawing.Size( 1024, 768));
             m.Layers.Add(ecw1);
             m.Layers.Add(ecw2);
 
             m.ZoomToExtents();
-            
+            using (var img = m.GetMap())
+            {
+                img.Save("ecw.png");
+            }
         }
     }
 }
