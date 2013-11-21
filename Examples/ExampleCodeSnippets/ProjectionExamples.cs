@@ -419,7 +419,22 @@ namespace ExampleCodeSnippets
     }
     
     #endif
+
+        [NUnit.Framework.Ignore("Must add valid raster files first")]
+        public void TestGdalRasterLayer()
+        {
+            var ecw1 = new SharpMap.Layers.GdalRasterLayer("ecw1", "ecw1.ecw");
+            var ecw2 = new SharpMap.Layers.GdalRasterLayer("ecw2", "ecw2.ecw");
+
+            var p1 = ecw1.GetProjection();
+            ecw2.ReprojectToCoordinateSystem(p1);
+
+            var m = new SharpMap.Map();
+            m.Layers.Add(ecw1);
+            m.Layers.Add(ecw2);
+
+            m.ZoomToExtents();
+            
+        }
     }
-
-
 }

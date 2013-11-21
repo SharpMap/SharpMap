@@ -177,12 +177,13 @@ namespace UnitTests.Serialization
                 }
 
                 //ToDo compare transformation settings
-
+#if !DotSpatialProjections
                 if (lhs.ReverseCoordinateTransformation == null ^ rhs.ReverseCoordinateTransformation == null)
                 {
                     DifferAt.Add("ReverseCoordinateTransformation (== null)");
                     res = false;
                 }
+#endif
 
                 //ToDo compare transformation settings
 

@@ -11,6 +11,8 @@ using SharpMap.Data.Providers;
 using SharpMap.Layers;
 using SharpMap.Styles;
 
+#if !DotSpatialProjections
+
 namespace UnitTests.Serialization
 {
     public class MapTest : BaseSerializationTest
@@ -127,3 +129,4 @@ namespace UnitTests.Serialization
         }
     }
 }
+#endif

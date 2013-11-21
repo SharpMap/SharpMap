@@ -378,6 +378,7 @@ namespace SharpMap.Layers
             }
         }
 
+        [Obsolete("Use CoordinateTransformation instead")]
         public ICoordinateTransformation Transform
         {
             get { return _innerLayer.Transform; }
