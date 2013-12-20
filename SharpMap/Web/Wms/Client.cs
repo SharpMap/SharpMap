@@ -571,12 +571,11 @@ namespace SharpMap.Web.Wms
 
             try
             {
-                WebRequest myRequest = WebRequest.Create(_capabilitiesUrl);
-                if (_credentials != null)
-                    myRequest.Credentials = _credentials;
-
+                var myRequest = WebRequest.Create(_capabilitiesUrl);
+                myRequest.Credentials = _credentials ?? CredentialCache.DefaultCredentials;
                 myRequest.Timeout = _timeOut;
                 if (_proxy != null) myRequest.Proxy = _proxy;
+                
                 WebResponse myResponse = myRequest.GetResponse();
 
                 if (myResponse == null)
