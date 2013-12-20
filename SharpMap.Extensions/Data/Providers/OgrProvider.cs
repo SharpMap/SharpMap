@@ -166,12 +166,30 @@ namespace SharpMap.Data.Providers
             {
                 try
                 {
-                    OgrLayer layer = _ogrDataSource.GetLayerByName(value);
-                    _ogrLayer = layer;
-                    ConnectionID = string.Format("Data Source={0};Layer{1}", _ogrDataSource.name, value);
+                    var layer = _ogrDataSource.GetLayerByName(value);
+                    //*** FIX: Must check for null since GetLayerByName returns null if layer name does not exist.
+                    if (layer != null)
+                    {
+                        _ogrLayer = layer;
+                        ConnectionID = string.Format("Data Source={0};Layer{1}", _ogrDataSource.name, value);
+                    }
                 }
-// ReSharper disable once EmptyGeneralCatchClause
-                catch { }
+                // ReSharper disable once EmptyGeneralCatchClause
+                catch
+                { }
+            }
+        }
+
+        /// <summary>
+        /// Function to test if a the datasource contains the specified <paramref name="layerName"/>
+        /// </summary>
+        /// <param name="layerName">The name of the layer</param>
+        /// <returns><c>true</c> if the layer is present, otherwise <c>false</c></returns>
+        public Boolean ContainsLayer(string layerName)
+        {
+            using (OgrLayer layer = _ogrDataSource.GetLayerByName(layerName))
+            {
+                return (layer != null);
             }
         }
 
@@ -501,14 +519,22 @@ namespace SharpMap.Data.Providers
                             case OgrFieldType.OFTInteger:
                                 fdt.Columns.Add(ogrFldDef.GetName(), typeof(Int32));
                                 break;
+                            case OgrFieldType.OFTIntegerList:
+                                fdt.Columns.Add(ogrFldDef.GetName(), typeof(Int32[]));
+                                break;
                             case OgrFieldType.OFTReal:
                                 fdt.Columns.Add(ogrFldDef.GetName(), typeof(Double));
                                 break;
+                            case OgrFieldType.OFTRealList:
+                                fdt.Columns.Add(ogrFldDef.GetName(), typeof(Double[]));
+                                break;
+                            case OgrFieldType.OFTWideString:
                             case OgrFieldType.OFTString:
                                 fdt.Columns.Add(ogrFldDef.GetName(), typeof(String));
                                 break;
-                            case OgrFieldType.OFTWideString:
-                                fdt.Columns.Add(ogrFldDef.GetName(), typeof(String));
+                            case OgrFieldType.OFTStringList:
+                            case OgrFieldType.OFTWideStringList:
+                                fdt.Columns.Add(ogrFldDef.GetName(), typeof(String[]));
                                 break;
                             case OgrFieldType.OFTDate:
                             case OgrFieldType.OFTTime:
@@ -550,11 +576,13 @@ namespace SharpMap.Data.Providers
             
             for (var iField = 0; iField < ogrFeature.GetFieldCount(); iField++)
             {
+                // No need to get field value if there's no value available...
                 if (!ogrFeature.IsFieldSet(iField))
                 {
                     continue;
                 }
 
+                int count;
                 switch (ogrFeature.GetFieldType(iField))
                 {
                     case OgrFieldType.OFTString:
@@ -563,16 +591,19 @@ namespace SharpMap.Data.Providers
                         break;
                     case OgrFieldType.OFTStringList:
                     case OgrFieldType.OFTWideStringList:
+                        values[iField] = ogrFeature.GetFieldAsStringList(iField);
                         break;
                     case OgrFieldType.OFTInteger:
                         values[iField] = ogrFeature.GetFieldAsInteger(iField);
                         break;
                     case OgrFieldType.OFTIntegerList:
+                        values[iField] = ogrFeature.GetFieldAsIntegerList(iField, out count);
                         break;
                     case OgrFieldType.OFTReal:
                         values[iField] = ogrFeature.GetFieldAsDouble(iField);
                         break;
                     case OgrFieldType.OFTRealList:
+                        values[iField] = ogrFeature.GetFieldAsDoubleList(iField, out count);
                         break;
                     case OgrFieldType.OFTDate:
                     case OgrFieldType.OFTDateTime:
