@@ -21,6 +21,7 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using GeoAPI.Geometries;
 using SharpMap.Layers;
 using SharpMap.Rendering;
@@ -44,7 +45,7 @@ namespace SharpMap
     {
         static Map()
         {
-            if (!(System.ComponentModel.LicenseManager.UsageMode == System.ComponentModel.LicenseUsageMode.Designtime))
+            if (System.ComponentModel.LicenseManager.UsageMode != System.ComponentModel.LicenseUsageMode.Designtime)
             {
                 // We have to do this initialization with reflection due to the fact that NTS can reference an older version of GeoAPI and redirection 
                 // is not available at design time..
@@ -105,7 +106,7 @@ namespace SharpMap
         {
             _mapViewportGuard = new MapViewPortGuard(size, 0d, Double.MaxValue);
 
-            if (!(System.ComponentModel.LicenseManager.UsageMode == System.ComponentModel.LicenseUsageMode.Designtime))
+            if (System.ComponentModel.LicenseManager.UsageMode != System.ComponentModel.LicenseUsageMode.Designtime)
             {
                 Factory = GeoAPI.GeometryServiceProvider.Instance.CreateGeometryFactory(_srid);
             }
@@ -588,7 +589,7 @@ namespace SharpMap
             g.PageUnit = GraphicsUnit.Pixel;
 
 
-            ILayer[] layerList = new ILayer[lc.Count];
+            var layerList = new ILayer[lc.Count];
             lc.CopyTo(layerList, 0);
 
             foreach (ILayer layer in layerList)
@@ -629,10 +630,10 @@ namespace SharpMap
         /// <returns>Instance of <see cref="Map"/></returns>
         public Map Clone()
         {
-            Map clone = null;
+            Map clone;
             lock (MapTransform)
             {
-                clone = new Map()
+                clone = new Map
                 {
                     BackColor = BackColor,
 #pragma warning disable 612,618
@@ -718,9 +719,7 @@ namespace SharpMap
         /// <returns>IEnumerable</returns>
         public IEnumerable<ILayer> FindLayer(string layername)
         {
-            foreach (ILayer l in Layers)
-                if (l.LayerName.Contains(layername))
-                    yield return l;
+            return Layers.Where(l => l.LayerName.Contains(layername));
         }
 
         /// <summary>
