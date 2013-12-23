@@ -558,9 +558,9 @@ namespace SharpMap.Rendering.Decoration.ScaleBar
         {
             double fScale;
             if (_mapUnit == (int)Unit.Degree) //LatLong
-                fScale = CalcRepresentativeFractionScaleD(_lon1, _lon2, _lat, _pageWidth, dpi);
+                fScale = ScaleCalculations.CalculateScaleLatLong(_lon1, _lon2, _lat, _pageWidth, dpi);
             else
-                fScale = CalcRepresentativeFractionScale(_mapWidth, _pageWidth, _mapUnitFactor, dpi);
+                fScale = ScaleCalculations.CalculateScaleNonLatLong(_mapWidth, _pageWidth, _mapUnitFactor, dpi);
             _scale = fScale;
         }
 
@@ -952,45 +952,6 @@ namespace SharpMap.Rendering.Decoration.ScaleBar
                 }
             }
             return candidate; //return the maximum
-        }
-
-        //Calculate the Representative Fraction Scale for non Lat/Long map.
-        //MapUnitFactor is the factor the unit used on the map
-        private double CalcRepresentativeFractionScale(double widthMap, double widthPage, double mapUnitFactor, int dpi)
-        {
-            int nPxlPerInch = dpi;
-            double ratio;
-
-            if (widthPage <= 0) return 0.0;
-            //convert map width to meters
-            double mapWidth = widthMap*mapUnitFactor;
-            //convert page width to meters.
-            try
-            {
-                double pageWidth = widthPage/nPxlPerInch*GeoSpatialMath.MetersPerInch;
-                ratio = Math.Abs(mapWidth/pageWidth);
-            }
-            catch
-            {
-                ratio = 0.0;
-            }
-            return ratio;
-        }
-
-        /// <summary>
-        /// Calculate the representative fraction scale for lat/long map.
-        /// </summary>
-        /// <param name="lon1">The first longitue value</param>
-        /// <param name="lon2">The second longitue value</param>
-        /// <param name="lat">The common latitued value for <paramref name="lon1"/> and <paramref name="lon2"/></param>
-        /// <param name="widthPage">The width of the display area</param>
-        /// <param name="dpi">The "dots per inch" of the display</param>
-        /// <returns>The representative fraction</returns>
-        private double CalcRepresentativeFractionScaleD(double lon1, double lon2, double lat, double widthPage, int dpi)
-        {
-            double distance = GeoSpatialMath.GreatCircleDistance(lon1, lon2, lat);
-            double r = CalcRepresentativeFractionScale(distance, widthPage, 1, dpi);
-            return r;
         }
 
         private void CalcBarScale(int dpi, int widthOnDevice, int numTics, double mapScale, double fBarUnitFactor,

@@ -255,6 +255,7 @@
     <Compile Include="Utilities\LeastSquaresTransform.cs" />
     <Compile Include="Utilities\LineOffset.cs" />
     <Compile Include="Utilities\Providers.cs" />
+    <Compile Include="Utilities\ScaleCalculations.cs" />
     <Compile Include="Utilities\Surrogates.Helper.cs" />
     <Compile Include="Utilities\Surrogates.cs" />
     <Compile Include="Utilities\Surrogates.Brushes.cs" />

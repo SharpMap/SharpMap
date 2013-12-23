@@ -150,7 +150,7 @@ namespace SharpMap
                 {
                     if (tileAsyncLayer.OnlyRedrawWhenComplete)
                     {
-                        tileAsyncLayer.DownloadProgressChanged += new DownloadProgressHandler(layer_DownloadProgressChanged);
+                        tileAsyncLayer.DownloadProgressChanged += layer_DownloadProgressChanged;
                     }
                     else
                     {
@@ -181,21 +181,22 @@ namespace SharpMap
             {
                 if (Layers != null)
                 {
-                    foreach (ILayer layer in Layers)
-                        if (layer is IDisposable)
-                            ((IDisposable)layer).Dispose();
+                    foreach (IDisposable disposable in Layers.OfType<IDisposable>())
+                    {
+                        disposable.Dispose();
+                    }
                 }
                 if (BackgroundLayer != null)
                 {
-                    foreach (ILayer layer in BackgroundLayer)
-                        if (layer is IDisposable)
-                            ((IDisposable)layer).Dispose();
+                    foreach (IDisposable disposable in BackgroundLayer.OfType<IDisposable>())
+                    {
+                        disposable.Dispose();
+                    }
                 }
                 if (VariableLayers != null)
                 {
-                    foreach (ILayer layer in VariableLayers)
-                        if (layer is IDisposable)
-                            ((IDisposable)layer).Dispose();
+                    foreach (IDisposable layer in VariableLayers.OfType<IDisposable>())
+                        layer.Dispose();
                 }
             }
             if (Layers != null)
@@ -1020,6 +1021,56 @@ namespace SharpMap
         }
 
         /// <summary>
+        /// Gets or Sets the Scale of the map (related to current DPI-settings of rendering)
+        /// </summary>
+        public double MapScale
+        {
+            get
+            {
+                using (var img = new Bitmap(1, 1))
+                {
+                    using (var g = Graphics.FromImage(img))
+                    {
+                        return GetMapScale((int) g.DpiX);
+                    }
+                }
+            }
+            set
+            {
+
+                using (var img = new Bitmap(1, 1))
+                {
+                    using (var g = Graphics.FromImage(img))
+                    {
+                        Zoom = GetMapZoomFromScale(value, (int) g.DpiX);
+                    }
+                }
+            
+            }
+        }
+
+        /// <summary>
+        /// Calculated the Zoom value for a given Scale-value
+        /// </summary>
+        /// <param name="scale"></param>
+        /// <param name="dpi"></param>
+        /// <returns></returns>
+        public double GetMapZoomFromScale(double scale, int dpi)
+        {
+            return ScaleCalculations.GetMapZoomFromScaleNonLatLong(scale, 1, dpi, Size.Width);
+        }
+
+        /// <summary>
+        /// Returns the mapscale if the map was to be rendered with the specified DPI-settings
+        /// </summary>
+        /// <param name="dpi"></param>
+        /// <returns></returns>
+        public double GetMapScale(int dpi)
+        {
+            return ScaleCalculations.CalculateScaleNonLatLong(Envelope.Width, Size.Width, 1, dpi);
+        }
+
+        /// <summary>
         /// Gets or sets the zoom level of map.
         /// </summary>
         /// <remarks>
@@ -1169,7 +1220,7 @@ namespace SharpMap
             set { _mapViewportGuard.EnforceMaximumExtents = value; }
         }
 
-        private static void ExtendBoxForCollection(LayerCollection layersCollection, ref Envelope bbox)
+        private static void ExtendBoxForCollection(IEnumerable<ILayer> layersCollection, ref Envelope bbox)
         {
             foreach (var l in layersCollection)
             {
