@@ -199,7 +199,7 @@ namespace SharpMap.Layers
         /// <summary>
         /// Gets or sets a value indicating the target spatial reference id
         /// </summary>
-        public int TargetSRID
+        public virtual int TargetSRID
         {
             get { return _targetSrid.HasValue ? _targetSrid.Value : SRID; }
             set { _targetSrid = value; }
