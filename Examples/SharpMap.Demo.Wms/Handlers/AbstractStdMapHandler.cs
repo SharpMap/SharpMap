@@ -1,14 +1,13 @@
+using System;
+using System.Web;
+using GeoAPI;
+using NetTopologySuite;
+using SharpMap.Demo.Wms.Helpers;
+using SharpMap.Web.Wms;
+using SharpMap.Web.Wms.Server;
+
 namespace SharpMap.Demo.Wms.Handlers
 {
-    using System;
-    using System.Web;
-
-    using GeoAPI;
-
-    using NetTopologySuite;
-
-    using SharpMap.Demo.Wms.Helpers;
-
     public abstract class AbstractStdMapHandler : IHttpHandler
     {
         private static readonly object SyncLock = new object();
@@ -17,22 +16,22 @@ namespace SharpMap.Demo.Wms.Handlers
         {
             lock (SyncLock)
             {
-                GeometryServiceProvider.Instance = new NtsGeometryServices();            
+                GeometryServiceProvider.Instance = new NtsGeometryServices();
             }
         }
 
-        public abstract void ProcessRequest(HttpContext context);
+        public abstract void ProcessRequest(IContext context);
 
-        protected string GetFixedUrl(HttpRequest request)
+        protected string GetFixedUrl(IContext context)
         {
-            Uri uri = request.Url;
+            Uri uri = context.Url;
             string absoluteUri = uri.AbsoluteUri;
             return uri.Query.Length <= 0 ? absoluteUri : absoluteUri.Replace(uri.Query, String.Empty);
         }
 
-        protected Web.Wms.Capabilities.WmsServiceDescription GetDescription(string url) 
+        protected Capabilities.WmsServiceDescription GetDescription(string url)
         {
-            var description = new Web.Wms.Capabilities.WmsServiceDescription("Acme Corp. Map Server", url);
+            Capabilities.WmsServiceDescription description = new Capabilities.WmsServiceDescription("Acme Corp. Map Server", url);
             description.MaxWidth = 500;
             description.MaxHeight = 500;
             description.Abstract = "Map Server maintained by Acme Corporation. Contact: webmaster@wmt.acme.com. High-quality maps showing roadrunner nests and possible ambush locations.";
@@ -45,9 +44,9 @@ namespace SharpMap.Demo.Wms.Handlers
             return description;
         }
 
-        protected Map GetMap(HttpRequest request)
+        protected Map GetMap(IContext context)
         {
-            string type = request.Params["MAP_TYPE"];            
+            string type = context.Params["MAP_TYPE"];
             if (String.Equals(type, "DEF", StringComparison.InvariantCultureIgnoreCase))
                 return ShapefileHelper.Default();
             if (String.Equals(type, "SPH", StringComparison.InvariantCultureIgnoreCase))
@@ -56,7 +55,12 @@ namespace SharpMap.Demo.Wms.Handlers
                 return DatabaseHelper.SqlServer();
             string format = String.Format("unsupported map type: '{0}'", type);
             throw new NotSupportedException(format);
-        }        
+        }
+
+        public void ProcessRequest(HttpContext context)
+        {
+            ProcessRequest(new Context(context));
+        }
 
         public bool IsReusable
         {

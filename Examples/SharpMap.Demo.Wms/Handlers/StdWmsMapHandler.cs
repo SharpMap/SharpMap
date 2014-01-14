@@ -1,21 +1,19 @@
-﻿namespace SharpMap.Demo.Wms.Handlers
+﻿using System;
+using System.Diagnostics;
+using SharpMap.Web.Wms;
+using SharpMap.Web.Wms.Server;
+
+namespace SharpMap.Demo.Wms.Handlers
 {
-    using System;
-    using System.Diagnostics;
-    using System.Web;
-
-    using SharpMap.Web.Wms;
-
     public class StdWmsMapHandler : AbstractStdMapHandler
     {
-        public override void ProcessRequest(HttpContext context)
+        public override void ProcessRequest(IContext context)
         {
             try
             {
-                var request = context.Request;
-                var url = this.GetFixedUrl(request);
-                var description = this.GetDescription(url);
-                var map = this.GetMap(request);
+                string url = GetFixedUrl(context);
+                Capabilities.WmsServiceDescription description = GetDescription(url);
+                Map map = GetMap(context);
                 WmsServer.ParseQueryString(map, description, 10, null, context);
             }
             catch (Exception ex)

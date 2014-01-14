@@ -51,7 +51,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Common.Logging">
-      <HintPath>..\packages\Common.Logging.2.0.0\lib\net40\Common.Logging.dll</HintPath>
+      <HintPath>..\packages\Common.Logging.2.0.0\lib\2.0\Common.Logging.dll</HintPath>
     </Reference>
     <Reference Include="GeoAPI, Version=1.7.0.0, Culture=neutral, PublicKeyToken=a1a0da7def465678, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -105,6 +105,14 @@
     <Compile Include="Web\Wms\Capabilities.cs" />
     <Compile Include="Web\Wms\Client.cs" />
     <Compile Include="Web\Wms\ServerCapabilities.cs" />
+    <Compile Include="Web\Wms\Server\Handlers\AbstractHandler.cs" />
+    <Compile Include="Web\Wms\Server\Context.cs" />
+    <Compile Include="Web\Wms\Server\Handlers\GetCapabilities.cs" />
+    <Compile Include="Web\Wms\Server\Handlers\GetFeatureInfo.cs" />
+    <Compile Include="Web\Wms\Server\Handlers\GetMap.cs" />
+    <Compile Include="Web\Wms\Server\Handlers\WmsParams.cs" />
+    <Compile Include="Web\Wms\Server\IContext.cs" />
+    <Compile Include="Web\Wms\Server\Handlers\IHandler.cs" />
     <Compile Include="Web\Wms\SpatialReferencedBoundingBox.cs" />
     <Compile Include="Web\Wms\Tiling\ITileCache.cs" />
     <Compile Include="Web\Wms\Tiling\TileCacheFileStorage.cs" />

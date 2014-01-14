@@ -17,6 +17,7 @@
 
 using System;
 using System.Web;
+using SharpMap.Web.Wms.Server;
 
 namespace SharpMap.Web.Wms
 {
@@ -26,43 +27,14 @@ namespace SharpMap.Web.Wms
     public static class WmsException
     {
         /// <summary>
-        /// Throws a <see cref="WmsExceptionCode.NotApplicable"/> WMS excption. The <see cref="HttpContext.Current"/> is used to write the response stream.
-        /// </summary>
-        /// <param name="message">An additional message text</param>
-        /// <exception cref="InvalidOperationException">Thrown if this function is used outside a valid valid <see cref="HttpContext"/></exception>
-        [Obsolete]
-        public static void ThrowWmsException(string message)
-        {
-            var context = HttpContext.Current;
-            ThrowWmsException(message, context);
-        }
-
-
-        /// <summary>
         /// Throws a <see cref="WmsExceptionCode.NotApplicable"/> WMS excption. The <paramref name="context"/> is used to write the response stream.
         /// </summary>
         /// <param name="message">An additional message text</param>
         /// <param name="context">The <see cref="HttpContext"/></param>
         /// <exception cref="InvalidOperationException">Thrown if this function is used outside a valid valid <see cref="HttpContext"/></exception>
-        public static void ThrowWmsException(string message, HttpContext context)
+        public static void ThrowWmsException(string message, IContext context)
         {
-            if (context == null)
-                throw new InvalidOperationException("WmsException class cannot be used outside a valid HttpContext");
-
             ThrowWmsException(WmsExceptionCode.NotApplicable, message, context);
-        }
-
-        /// <summary>
-        /// Throws a <paramref name="code"/> WMS excption. The <see cref="HttpContext.Current"/> is used to write the response stream.
-        /// </summary>
-        /// <param name="code">The WMS exception code</param>
-        /// <param name="message">An additional message text</param>
-        /// <exception cref="InvalidOperationException">Thrown if this function is used outside a valid valid <see cref="HttpContext"/></exception>
-        [Obsolete]
-        public static void ThrowWmsException(WmsExceptionCode code, string message)
-        {
-            var context = HttpContext.Current;
-            ThrowWmsException(code, message, context);
         }
 
         /// <summary>
@@ -72,32 +44,30 @@ namespace SharpMap.Web.Wms
         /// <param name="message">An additional message text</param>
         /// <param name="context">The <see cref="HttpContext"/></param>
         /// <exception cref="InvalidOperationException">Thrown if this function is used outside a valid valid <see cref="HttpContext"/></exception>
-        public static void ThrowWmsException(WmsExceptionCode code, string message, HttpContext context)
+        public static void ThrowWmsException(WmsExceptionCode code, string message, IContext context)
         {
-            if (context == null)
-                throw new InvalidOperationException("WmsException class cannot be used outside a valid HttpContext");
-
-            var response = context.Response;
-            response.Clear();
-            response.ContentType = "text/xml";
-            response.Write("<?xml version=\"1.0\" encoding=\"utf-8\" ?>\n");
-            response.Write(
+            context.Clear();
+            context.ContentType = "text/xml";
+            context.Write("<?xml version=\"1.0\" encoding=\"utf-8\" ?>\n");
+            context.Write(
                 "<ServiceExceptionReport version=\"1.3.0\" xmlns=\"http://www.opengis.net/ogc\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://www.opengis.net/ogc http://schemas.opengis.net/wms/1.3.0/exceptions_1_3_0.xsd\">\n");
-            response.Write("<ServiceException");
+            context.Write("<ServiceException");
             if (code != WmsExceptionCode.NotApplicable)
-                response.Write(" code=\"" + code + "\"");
-            response.Write(">" + message + "</ServiceException>\n");
-            response.Write("</ServiceExceptionReport>");
-            response.End();
+                context.Write(" code=\"" + code + "\"");
+            context.Write(">" + message + "</ServiceException>\n");
+            context.Write("</ServiceExceptionReport>");
+            context.End();
         }
-
-        #region Nested type: WmsExceptionCode
 
         /// <summary>
         /// WMS Exception codes
         /// </summary>
         public enum WmsExceptionCode
         {
+            /// <summary>
+            /// No error code
+            /// </summary>
+            NotApplicable,
             /// <summary>
             /// Request contains a Format not offered by the server.
             /// </summary>
@@ -146,22 +116,7 @@ namespace SharpMap.Web.Wms
             /// <summary>
             /// Request is for an optional operation that is not supported by the server.
             /// </summary>
-            OperationNotSupported,
-            /// <summary>
-            /// No error code
-            /// </summary>
-            NotApplicable
+            OperationNotSupported            
         }
-
-        #endregion
-
-        //private static System.Xml.Schema.XmlSchema GetExceptionSchema()
-        //{
-        //    //Get XML Schema
-        //    System.IO.Stream stream = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("SharpMap.Web.Wms.Schemas._1._3._0.exceptions_1_3_0.xsd");
-        //    System.Xml.Schema.XmlSchema schema = System.Xml.Schema.XmlSchema.Read(stream, null);
-        //    stream.Close();
-        //    return schema;
-        //}
     }
 }
