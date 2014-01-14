@@ -5,7 +5,7 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{9BBED556-40D8-4DDC-AC11-7B03300E2A2E}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>SharpMap.Data.Providers.OracleSpatial</RootNamespace>
     <AssemblyName>SharpMap.Data.Providers.OracleSpatial</AssemblyName>
