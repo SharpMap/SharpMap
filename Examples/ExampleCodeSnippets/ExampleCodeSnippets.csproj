@@ -126,8 +126,6 @@
   <ItemGroup>
     <Compile Include="CreatingData.cs" />
     <Compile Include="EnsureVisibleSample.cs" />
-    <Compile Include="GdalNativeConfiguration.cs" />
-    <Compile Include="GdalPluginConfiguration.cs" />
     <Compile Include="HeatLayerExample.cs" />
     <Compile Include="LengthIndexedLineSample.cs" />
     <Compile Include="LineSymbolizerTest.cs" />
@@ -158,10 +156,6 @@
       <Project>{C83777FC-AABB-47D9-911F-D76255D4D541}</Project>
       <Name>SharpMap</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="GdalNativeConfiguration.vb" />
-    <Content Include="GdalPluginConfiguration.vb" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
