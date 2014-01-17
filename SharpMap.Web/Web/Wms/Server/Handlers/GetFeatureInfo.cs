@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Web;
 using GeoAPI.CoordinateSystems.Transformations;
 using GeoAPI.Geometries;
@@ -15,33 +16,43 @@ namespace SharpMap.Web.Wms.Server.Handlers
 {
     public class GetFeatureInfo : AbstractHandler
     {
-        public GetFeatureInfo(Capabilities.WmsServiceDescription description) :
-            base(description) { }
+        private readonly int _pixelSensitivity;
+        private readonly WmsServer.InterSectDelegate _intersectDelegate;
+        private readonly Encoding _encoding;
 
-        protected override WmsParams ValidateParams(IContext context, int targetSrid)
+        public GetFeatureInfo(Capabilities.WmsServiceDescription description, 
+            int pixelSensitivity, WmsServer.InterSectDelegate intersectDelegate, Encoding encoding) :
+            base(description)
         {
-            WmsParams @params = ValidateCommons(context, targetSrid);
+            _pixelSensitivity = pixelSensitivity;
+            _intersectDelegate = intersectDelegate;
+            _encoding = encoding;
+        }
+
+        protected override WmsParams ValidateParams(IContextRequest request, int targetSrid)
+        {
+            WmsParams @params = ValidateCommons(request, targetSrid);
             if (!@params.IsValid)
                 return @params;
 
             // Code specific for GetFeatureInfo
-            string queryLayers = context.Params["QUERY_LAYERS"];
+            string queryLayers = request.Params["QUERY_LAYERS"];
             if (queryLayers == null)
                 return WmsParams.Failure("Required parameter QUERY_LAYERS not specified");
             @params.QueryLayers = queryLayers;
 
-            string infoFormat = context.Params["INFO_FORMAT"];
+            string infoFormat = request.Params["INFO_FORMAT"];
             if (infoFormat == null)
                 return WmsParams.Failure("Required parameter INFO_FORMAT not specified");
             @params.InfoFormat = infoFormat;
 
             //parameters X&Y are not part of the 1.3.0 specification, but are included for backwards compatability with 1.1.1 (OpenLayers likes it when used together with wms1.1.1 services)
-            string x = context.Params["X"];
-            string i = context.Params["I"];
+            string x = request.Params["X"];
+            string i = request.Params["I"];
             if (x == null && i == null)
                 return WmsParams.Failure("Required parameter I not specified");
-            string y = context.Params["Y"];
-            string j = context.Params["J"];
+            string y = request.Params["Y"];
+            string j = request.Params["J"];
             if (y == null && j == null)
                 return WmsParams.Failure("Required parameter J not specified");
             float cx = 0, cy = 0;
@@ -80,15 +91,15 @@ namespace SharpMap.Web.Wms.Server.Handlers
             @params.X = cx;
             @params.Y = cy;
 
-            string featureCount = context.Params["FEATURE_COUNT"];
+            string featureCount = request.Params["FEATURE_COUNT"];
             int fc = Int32.TryParse(featureCount, out fc) ? Math.Max(fc, 1) : 1;
             @params.FeatureCount = fc;
             return @params;
         }
 
-        public override void Handle(Map map, IContext context)
+        public override IHandlerResponse Handle(Map map, IContextRequest request)
         {
-            WmsParams @params = ValidateParams(context, TargetSrid(map));
+            WmsParams @params = ValidateParams(request, TargetSrid(map));
             if (!@params.IsValid)
             {
                 throw new WmsInvalidParameterException(@params.Error, @params.ErrorCode);
@@ -100,31 +111,22 @@ namespace SharpMap.Web.Wms.Server.Handlers
             map.ZoomToBox(@params.BBOX);
 
             string vstr;
+            GetFeatureInfoResponse response;
             string[] requestLayers = @params.QueryLayers.Split(new[] { ',' });
-            if (String.Equals(@params.InfoFormat, "text/json", StringComparison.InvariantCultureIgnoreCase))
+            bool json = String.Equals(@params.InfoFormat, "text/json", StringComparison.InvariantCultureIgnoreCase);
+            if (json)
             {
-                vstr = CreateFeatureInfoGeoJSON(map, requestLayers, @params.X, @params.Y, @params.CqlFilter, context);
-                //string.Empty is the result if a return WmsParams.Failure(...) has been called
-                if (vstr == String.Empty)
-                    return;
-                context.ContentType = "text/json";
+                vstr = CreateFeatureInfoGeoJSON(map, requestLayers, @params.X, @params.Y, @params.CqlFilter, _pixelSensitivity, _intersectDelegate);
+                response = new GetFeatureInfoResponseJson(vstr);
             }
             else
             {
-                vstr = CreateFeatureInfoPlain(map, requestLayers, @params.X, @params.Y, @params.FeatureCount, @params.CqlFilter, context);
-                //string.Empty is the result if a return WmsParams.Failure(...) has been called
-                if (vstr == String.Empty)
-                    return;
-                context.ContentType = "text/plain";
+                vstr = CreateFeatureInfoPlain(map, requestLayers, @params.X, @params.Y, @params.FeatureCount, @params.CqlFilter, _pixelSensitivity, _intersectDelegate);
+                response = new GetFeatureInfoResponsePlain(vstr);
             }
-            context.Clear();
-            if (WmsServer.FeatureInfoResponseEncoding != null)
-            {
-                //"windows-1252";
-                context.Charset = WmsServer.FeatureInfoResponseEncoding.WebName;
-            }
-            context.Write(vstr);
-            context.End();
+            
+            response.Charset = _encoding.WebName;
+            return response;
         }
 
         /// <summary>
@@ -136,10 +138,11 @@ namespace SharpMap.Web.Wms.Server.Handlers
         /// <param name="y">The y-ordinate</param>
         /// <param name="featureCount"></param>
         /// <param name="cqlFilter">The code query language</param>
-        /// <param name="context">The <see cref="HttpContext"/> to use. If not specified or <value>null</value>, <see cref="HttpContext.Current"/> is used.</param>
+        /// <param name="pixelSensitivity"></param>
+        /// <param name="intersectDelegate"></param>
         /// <exception cref="InvalidOperationException">Thrown if this function is used without a valid <see cref="HttpContext"/> at hand</exception>
         /// <returns>Plain text string with featureinfo results</returns>
-        private string CreateFeatureInfoPlain(Map map, string[] requestedLayers, float x, float y, int featureCount, string cqlFilter, IContext context)
+        private string CreateFeatureInfoPlain(Map map, string[] requestedLayers, float x, float y, int featureCount, string cqlFilter, int pixelSensitivity, WmsServer.InterSectDelegate intersectDelegate)
         {
             string vstr = "GetFeatureInfo results: \n";
             foreach (string requestLayer in requestedLayers)
@@ -154,20 +157,20 @@ namespace SharpMap.Web.Wms.Server.Handlers
                         ICanQueryLayer queryLayer = mapLayer as ICanQueryLayer;
                         if (queryLayer == null || !queryLayer.IsQueryEnabled) continue;
 
-                        float queryBoxMinX = x - (WmsServer.PixelSensitivity);
-                        float queryBoxMinY = y - (WmsServer.PixelSensitivity);
-                        float queryBoxMaxX = x + (WmsServer.PixelSensitivity);
-                        float queryBoxMaxY = y + (WmsServer.PixelSensitivity);
+                        float queryBoxMinX = x - pixelSensitivity;
+                        float queryBoxMinY = y - pixelSensitivity;
+                        float queryBoxMaxX = x + pixelSensitivity;
+                        float queryBoxMaxY = y + pixelSensitivity;
 
                         Coordinate minXY = map.ImageToWorld(new PointF(queryBoxMinX, queryBoxMinY));
                         Coordinate maxXY = map.ImageToWorld(new PointF(queryBoxMaxX, queryBoxMaxY));
                         Envelope queryBox = new Envelope(minXY, maxXY);
                         FeatureDataSet fds = new FeatureDataSet();
                         queryLayer.ExecuteIntersectionQuery(queryBox, fds);
-
-                        if (WmsServer.IntersectDelegate != null)
+                        
+                        if (intersectDelegate != null)
                         {
-                            fds.Tables[0] = WmsServer.IntersectDelegate(fds.Tables[0], queryBox);
+                            fds.Tables[0] = intersectDelegate(fds.Tables[0], queryBox);
                         }
                         if (fds.Tables.Count == 0)
                         {
@@ -237,12 +240,13 @@ namespace SharpMap.Web.Wms.Server.Handlers
         /// <param name="x">The x-Ordinate</param>
         /// <param name="y">The y-Ordinate</param>
         /// <param name="cqlFilter">The CQL Filter string</param>
-        /// <param name="context">The <see cref="HttpContext"/> to use. If not specified or <value>null</value>, <see cref="HttpContext.Current"/> is used.</param>
+        /// <param name="pixelSensitivity"></param>
+        /// <param name="intersectDelegate"></param>
         /// <exception cref="InvalidOperationException">Thrown if this function is used without a valid <see cref="HttpContext"/> at hand</exception>
         /// <returns>GeoJSON string with featureinfo results</returns>
-        private string CreateFeatureInfoGeoJSON(Map map, string[] requestedLayers, float x, float y, string cqlFilter, IContext context)
+        private string CreateFeatureInfoGeoJSON(Map map, string[] requestedLayers, float x, float y, string cqlFilter, int pixelSensitivity, WmsServer.InterSectDelegate intersectDelegate)
         {
-            List<GeoJSON> items = new List<Converters.GeoJSON.GeoJSON>();
+            List<GeoJSON> items = new List<GeoJSON>();
             foreach (string requestLayer in requestedLayers)
             {
                 bool found = false;
@@ -255,19 +259,19 @@ namespace SharpMap.Web.Wms.Server.Handlers
                         ICanQueryLayer queryLayer = mapLayer as ICanQueryLayer;
                         if (queryLayer == null || !queryLayer.IsQueryEnabled) continue;
 
-                        float queryBoxMinX = x - (WmsServer.PixelSensitivity);
-                        float queryBoxMinY = y - (WmsServer.PixelSensitivity);
-                        float queryBoxMaxX = x + (WmsServer.PixelSensitivity);
-                        float queryBoxMaxY = y + (WmsServer.PixelSensitivity);
+                        float queryBoxMinX = x - pixelSensitivity;
+                        float queryBoxMinY = y - pixelSensitivity;
+                        float queryBoxMaxX = x + pixelSensitivity;
+                        float queryBoxMaxY = y + pixelSensitivity;
                         Coordinate minXY = map.ImageToWorld(new PointF(queryBoxMinX, queryBoxMinY));
                         Coordinate maxXY = map.ImageToWorld(new PointF(queryBoxMaxX, queryBoxMaxY));
                         Envelope queryBox = new Envelope(minXY, maxXY);
                         FeatureDataSet fds = new FeatureDataSet();
                         queryLayer.ExecuteIntersectionQuery(queryBox, fds);
-                        //
-                        if (WmsServer.IntersectDelegate != null)
+                        //                        
+                        if (intersectDelegate != null)
                         {
-                            fds.Tables[0] = WmsServer.IntersectDelegate(fds.Tables[0], queryBox);
+                            fds.Tables[0] = intersectDelegate(fds.Tables[0], queryBox);
                         }
                         //filter the rows with the CQLFilter if one is provided
                         if (cqlFilter != null)
@@ -315,6 +319,71 @@ namespace SharpMap.Web.Wms.Server.Handlers
             StringWriter writer = new StringWriter();
             GeoJSONWriter.Write(items, writer);
             return writer.ToString();
+        }
+    }
+
+    public abstract class GetFeatureInfoResponse : IHandlerResponse
+    {
+        private readonly string _response;
+        private string _charset;
+        private bool _bufferOutput;
+
+        protected GetFeatureInfoResponse(string response)
+        {
+            if (String.IsNullOrEmpty(response))
+                throw new ArgumentNullException("response");
+            _response = response;
+        }
+
+        public abstract string ContentType { get; }
+
+        public string Charset
+        {
+            get { return _charset; }
+            set { _charset = value; }
+        }
+
+        protected bool BufferOutput
+        {
+            get { return _bufferOutput; }
+            set { _bufferOutput = value; }
+        }
+
+        public void WriteToContextAndFlush(IContextResponse response)
+        {
+            response.Clear();
+            if (Charset != null)
+            {
+                //"windows-1252";
+                response.Charset = Charset;
+            }
+            response.BufferOutput = BufferOutput;
+            response.Write(_response);
+            response.End();
+        }
+    }
+
+    public class GetFeatureInfoResponseJson : GetFeatureInfoResponse
+    {
+        public GetFeatureInfoResponseJson(string response)
+            : base(response)
+        {
+            BufferOutput = true;
+        }
+
+        public override string ContentType
+        {
+            get { return "text/json"; }
+        }
+    }
+
+    public class GetFeatureInfoResponsePlain : GetFeatureInfoResponse
+    {
+        public GetFeatureInfoResponsePlain(string response) : base(response) { }
+
+        public override string ContentType
+        {
+            get { return "text/plain"; }
         }
     }
 }

@@ -17,18 +17,18 @@ namespace SharpMap.Web.Wms.Server.Handlers
         public GetMap(Capabilities.WmsServiceDescription description) :
             base(description) { }
 
-        protected override WmsParams ValidateParams(IContext context, int targetSrid)
+        protected override WmsParams ValidateParams(IContextRequest request, int targetSrid)
         {
-            WmsParams @params = ValidateCommons(context, targetSrid);
+            WmsParams @params = ValidateCommons(request, targetSrid);
             if (!@params.IsValid)
                 return @params;
 
             // Code specific for GetMap
             Color backColor;
-            bool transparent = String.Equals(context.Params["TRANSPARENT"], "TRUE", Case);
+            bool transparent = String.Equals(request.Params["TRANSPARENT"], "TRUE", Case);
             if (!transparent)
             {
-                string bgcolor = context.Params["BGCOLOR"];
+                string bgcolor = request.Params["BGCOLOR"];
                 if (bgcolor != null)
                 {
                     try { backColor = ColorTranslator.FromHtml(bgcolor); }
@@ -45,9 +45,9 @@ namespace SharpMap.Web.Wms.Server.Handlers
             return @params;
         }
 
-        public override void Handle(Map map, IContext context)
+        public override IHandlerResponse Handle(Map map, IContextRequest request)
         {
-            WmsParams @params = ValidateParams(context, TargetSrid(map));
+            WmsParams @params = ValidateParams(request, TargetSrid(map));
             if (!@params.IsValid)
             {
                 throw new WmsInvalidParameterException(@params.Error, @params.ErrorCode);
@@ -212,19 +212,7 @@ namespace SharpMap.Web.Wms.Server.Handlers
 
             //Render map
             Image img = map.GetMap();
-
-            //Png can't stream directy. Going through a memorystream instead
-            byte[] buffer;
-            using (MemoryStream ms = new MemoryStream())
-            {
-                img.Save(ms, imageEncoder, null);
-                img.Dispose();
-                buffer = ms.ToArray();
-            }
-            context.Clear();
-            context.ContentType = imageEncoder.MimeType;
-            context.Write(buffer);
-            context.End();
+            return new GetMapResponse(img, imageEncoder);
         }
 
         private void PrepareDataSourceForCql(IProvider provider, string cqlFilterString)
@@ -251,6 +239,38 @@ namespace SharpMap.Web.Wms.Server.Handlers
                 if (encoder.MimeType == mimeType)
                     return encoder;
             return null;
+        }
+    }
+
+    public class GetMapResponse : IHandlerResponse
+    {
+        private readonly Image _image;
+        private readonly ImageCodecInfo _codecInfo;
+
+        public GetMapResponse(Image image, ImageCodecInfo codecInfo)
+        {
+            if (image == null) 
+                throw new ArgumentNullException("image");
+            if (codecInfo == null) 
+                throw new ArgumentNullException("codecInfo");
+            _image = image;
+            _codecInfo = codecInfo;           
+        }
+
+        public void WriteToContextAndFlush(IContextResponse response)
+        {
+            //Png can't stream directy. Going through a memorystream instead
+            byte[] buffer;
+            using (MemoryStream ms = new MemoryStream())
+            {
+                _image.Save(ms, _codecInfo, null);
+                _image.Dispose();
+                buffer = ms.ToArray();
+            }
+            response.Clear();
+            response.ContentType = _codecInfo.MimeType;
+            response.Write(buffer);
+            response.End();
         }
     }
 }

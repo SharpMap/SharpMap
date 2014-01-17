@@ -8,7 +8,7 @@ using NetTopologySuite.Geometries;
 using SharpMap.Converters.GeoJSON;
 using SharpMap.Data;
 using SharpMap.Layers;
-using SharpMap.Web.Wms;
+using SharpMap.Web.Wms.Exceptions;
 using SharpMap.Web.Wms.Server;
 using SharpMap.Web.Wms.Server.Handlers;
 
@@ -21,25 +21,28 @@ namespace SharpMap.Demo.Wms.Handlers
     {
         public override void ProcessRequest(IContext context)
         {
+            IContextRequest request = context.Request;
+            IContextResponse response = context.Response;
             try
             {
-                string s = context.Params["BBOX"];
+                string s = request.Params["BBOX"];
                 if (String.IsNullOrEmpty(s))
                 {
-                    WmsException.ThrowWmsException(WmsException.WmsExceptionCode.InvalidDimensionValue, "Required parameter BBOX not specified", context);
+                    WmsExceptionHandler.ThrowWmsException(WmsExceptionCode.InvalidDimensionValue, "Required parameter BBOX not specified", context.Response);
                     return;
                 }
 
-                Map map = GetMap(context);
+                
+                Map map = GetMap(request);
                 bool flip = map.Layers[0].TargetSRID == 4326;
                 BoundingBox bbox = AbstractHandler.ParseBBOX(s, flip);
                 if (bbox == null)
                 {
-                    WmsException.ThrowWmsException("Invalid parameter BBOX", context);
+                    WmsExceptionHandler.ThrowWmsException("Invalid parameter BBOX", context.Response);
                     return;
                 }
 
-                string ls = context.Params["LAYERS"];
+                string ls = request.Params["LAYERS"];
                 if (!String.IsNullOrEmpty(ls))
                 {
                     string[] layers = ls.Split(',');
@@ -52,12 +55,10 @@ namespace SharpMap.Demo.Wms.Handlers
                 StringWriter writer = new StringWriter();
                 GeoJSONWriter.Write(items, writer);
                 string buffer = writer.ToString();
-
-                context.Clear();
-                context.ContentType = "text/json";
-                context.BufferOutput = true;
-                context.Write(buffer);
-                context.End();
+                    
+                IHandlerResponse result = new GetFeatureInfoResponseJson(buffer);
+                result.WriteToContextAndFlush(response);
+               
             }
             catch (Exception ex)
             {

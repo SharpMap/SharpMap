@@ -6,11 +6,18 @@ namespace SharpMap.Web.Wms.Server
 {
     public interface IContext
     {
-        // request
+        IContextRequest Request { get; }
+        IContextResponse Response { get; }
+    }
+
+    public interface IContextRequest
+    {
         Uri Url { get; }
         NameValueCollection Params { get; }
+    }
 
-        // response
+    public interface IContextResponse
+    {
         string ContentType { get; set; }
         string Charset { get; set; }
         bool BufferOutput { get; set; }
@@ -20,7 +27,7 @@ namespace SharpMap.Web.Wms.Server
 
         void Write(string s);
         void Write(byte[] buffer);
-        
+
         XmlWriter CreateXmlWriter();
     }
 }

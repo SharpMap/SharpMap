@@ -2,6 +2,11 @@
 {
     public interface IHandler
     {
-        void Handle(Map map, IContext context);
+        IHandlerResponse Handle(Map map, IContextRequest request);
+    }
+
+    public interface IHandlerResponse
+    {
+        void WriteToContextAndFlush(IContextResponse response);
     }
 }

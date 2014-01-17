@@ -25,18 +25,6 @@ namespace SharpMap.Web.Wms.Server.Handlers
             get { return _description; }
         }
 
-        internal static IHandler For(string request, Capabilities.WmsServiceDescription description)
-        {
-            const StringComparison comparison = StringComparison.InvariantCultureIgnoreCase;
-            if (String.Equals(request, "GetCapabilities", comparison))
-                return new GetCapabilities(description);
-            if (String.Equals(request, "GetFeatureInfo", comparison) )
-                return new GetFeatureInfo(description);
-            if (String.Equals(request, "GetMap", comparison))
-                return new GetMap(description);
-            return null;
-        }
-
         /// <summary>
         /// Parses a boundingbox string to a boundingbox geometry from the format minx,miny,maxx,maxy. Returns null if the format is invalid
         /// </summary>
@@ -71,47 +59,47 @@ namespace SharpMap.Web.Wms.Server.Handlers
             return new Envelope(minx, maxx, miny, maxy);
         }
 
-        public abstract void Handle(Map map, IContext context);
+        public abstract IHandlerResponse Handle(Map map, IContextRequest request);
 
-        protected abstract WmsParams ValidateParams(IContext context, int targetSrid);
+        protected abstract WmsParams ValidateParams(IContextRequest request, int targetSrid);
 
         /// <summary>
         /// Validate common arguments for GetFeatureInfo and GetMap requests
         /// </summary>
-        protected WmsParams ValidateCommons(IContext context, int targetSrid)
+        protected WmsParams ValidateCommons(IContextRequest request, int targetSrid)
         {
-            string version = context.Params["VERSION"];
+            string version = request.Params["VERSION"];
             if (version == null)
                 return WmsParams.Failure("VERSION parameter not supplied");
             if (!String.Equals(version, "1.3.0", Case))
                 return WmsParams.Failure("Only version 1.3.0 supported");
-            string layers = context.Params["LAYERS"];
+            string layers = request.Params["LAYERS"];
             if (layers == null)
                 return WmsParams.Failure("Required parameter LAYERS not specified");
-            string styles = context.Params["STYLES"];
+            string styles = request.Params["STYLES"];
             if (styles == null)
                 return WmsParams.Failure("Required parameter STYLES not specified");
-            string crs = context.Params["CRS"];
+            string crs = request.Params["CRS"];
             if (crs == null)
                 return WmsParams.Failure("Required parameter CRS not specified");
             if (crs != "EPSG:" + targetSrid)
                 return WmsParams.Failure(WmsExceptionCode.InvalidCRS, "CRS not supported");
-            string bbox = context.Params["BBOX"];
+            string bbox = request.Params["BBOX"];
             if (bbox == null)
                 return WmsParams.Failure(WmsExceptionCode.InvalidDimensionValue,
                     "Required parameter BBOX not (");
-            string width = context.Params["WIDTH"];
+            string width = request.Params["WIDTH"];
             if (width == null)
                 return WmsParams.Failure(WmsExceptionCode.InvalidDimensionValue,
                     "Required parameter WIDTH not specified");
-            string height = context.Params["HEIGHT"];
+            string height = request.Params["HEIGHT"];
             if (height == null)
                 return WmsParams.Failure(WmsExceptionCode.InvalidDimensionValue,
                     "Required parameter HEIGHT not specified");
-            string format = context.Params["FORMAT"];
+            string format = request.Params["FORMAT"];
             if (format == null)
                 return WmsParams.Failure("Required parameter FORMAT not specified");
-            string cqlFilter = context.Params["CQL_FILTER"];
+            string cqlFilter = request.Params["CQL_FILTER"];
             short w, h;
             if (!Int16.TryParse(width, out w) || !Int16.TryParse(height, out h))
                 return WmsParams.Failure("Invalid parameters for HEIGHT or WITDH");

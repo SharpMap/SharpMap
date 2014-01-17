@@ -36,8 +36,6 @@ namespace SharpMap.Web.Wms
         internal static InterSectDelegate IntersectDelegate;
         internal static int PixelSensitivity = -1;
 
-        private static Encoding _featureInfoResponseEncoding = Encoding.UTF8;
-
         /// <summary>
         /// Set the characterset used in FeatureInfo responses
         /// </summary>
@@ -45,11 +43,7 @@ namespace SharpMap.Web.Wms
         /// To use Windows-1252 set the FeatureInfoResponseEncoding = System.Text.Encoding.GetEncoding(1252);
         /// Set to Null to not set any specific encoding in response
         /// </remarks>
-        public static Encoding FeatureInfoResponseEncoding
-        {
-            get { return _featureInfoResponseEncoding; }
-            set { _featureInfoResponseEncoding = value; }
-        }
+        public static Encoding FeatureInfoResponseEncoding = Encoding.UTF8;
 
         /// <summary>
         /// Generates a WMS 1.3.0 compliant response based on a <see cref="SharpMap.Map"/> and the current HttpRequest.
@@ -225,6 +219,8 @@ namespace SharpMap.Web.Wms
         /// <param name="context">The context the <see cref="WmsServer"/> is running in.</param>
         public static void ParseQueryString(Map map, Capabilities.WmsServiceDescription description, IContext context)
         {
+            IContextRequest request = context.Request;
+            IContextResponse response = context.Response;
             try
             {
                 if (PixelSensitivity == -1)
@@ -234,22 +230,25 @@ namespace SharpMap.Web.Wms
                 if (map.Layers.Count == 0)
                     throw new WmsArgumentException("Map doesn't contain any layers for WMS service");
 
-                string request = context.Params["REQUEST"];
-                if (request == null)
-                {
+                string req = request.Params["REQUEST"];
+                if (req == null)
                     throw new WmsParameterNotSpecifiedException("Required parameter REQUEST not specified");
-                }
-                IHandler handler = AbstractHandler.For(request, description);
-                if (handler == null)
-                {
-                    throw new WmsOperationNotSupportedException("Invalid request");
-                }
+                const StringComparison comparison = StringComparison.InvariantCultureIgnoreCase;
+                IHandler handler;
+                if (String.Equals(req, "GetCapabilities", comparison))
+                    handler = new GetCapabilities(description);
+                else if (String.Equals(req, "GetFeatureInfo", comparison))
+                    handler = new GetFeatureInfo(description, PixelSensitivity, IntersectDelegate, FeatureInfoResponseEncoding);
+                else if (String.Equals(req, "GetMap", comparison))
+                    handler = new GetMap(description);
+                else throw new WmsOperationNotSupportedException("Invalid request");
 
-                handler.Handle(map, context);
+                IHandlerResponse result = handler.Handle(map, request);
+                result.WriteToContextAndFlush(response);
             }
             catch (WmsExceptionBase wmsEx)
             {
-                wmsEx.WriteToContextAndFlush(context);
+                wmsEx.WriteToContextAndFlush(response);
             }
         }
     }

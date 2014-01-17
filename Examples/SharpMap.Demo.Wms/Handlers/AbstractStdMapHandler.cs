@@ -22,9 +22,9 @@ namespace SharpMap.Demo.Wms.Handlers
 
         public abstract void ProcessRequest(IContext context);
 
-        protected string GetFixedUrl(IContext context)
+        protected string GetFixedUrl(IContextRequest request)
         {
-            Uri uri = context.Url;
+            Uri uri = request.Url;
             string absoluteUri = uri.AbsoluteUri;
             return uri.Query.Length <= 0 ? absoluteUri : absoluteUri.Replace(uri.Query, String.Empty);
         }
@@ -44,9 +44,9 @@ namespace SharpMap.Demo.Wms.Handlers
             return description;
         }
 
-        protected Map GetMap(IContext context)
+        protected Map GetMap(IContextRequest request)
         {
-            string type = context.Params["MAP_TYPE"];
+            string type = request.Params["MAP_TYPE"];
             if (String.Equals(type, "DEF", StringComparison.InvariantCultureIgnoreCase))
                 return ShapefileHelper.Default();
             if (String.Equals(type, "SPH", StringComparison.InvariantCultureIgnoreCase))

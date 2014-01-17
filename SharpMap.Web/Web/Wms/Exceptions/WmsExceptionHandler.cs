@@ -28,38 +28,38 @@ namespace SharpMap.Web.Wms.Exceptions
     public static class WmsExceptionHandler
     {
         /// <summary>
-        /// Throws a <see cref="WmsExceptionCode.NotApplicable"/> WMS excption. The <paramref name="context"/> is used to write the response stream.
+        /// Throws a <see cref="WmsExceptionCode.NotApplicable"/> WMS excption. The <paramref name="response"/> is used to write the response stream.
         /// </summary>
         /// <param name="message">An additional message text</param>
-        /// <param name="context">The <see cref="HttpContext"/></param>
+        /// <param name="response">The <see cref="HttpContext"/></param>
         /// <exception cref="InvalidOperationException">Thrown if this function is used outside a valid valid <see cref="HttpContext"/></exception>
         [Obsolete("This method has been depreciated use WmsExceptionBase.WriteToContextAndFlush method instead")]
-        public static void ThrowWmsException(string message, IContext context)
+        public static void ThrowWmsException(string message, IContextResponse response)
         {
-            ThrowWmsException(WmsExceptionCode.NotApplicable, message, context);
+            ThrowWmsException(WmsExceptionCode.NotApplicable, message, response);
         }
 
         /// <summary>
-        /// Throws a <paramref name="code"/> WMS excption. The <paramref name="context"/> is used to write the response stream.
+        /// Throws a <paramref name="code"/> WMS excption. The <paramref name="response"/> is used to write the response stream.
         /// </summary>
         /// <param name="code">The WMS exception code</param>
         /// <param name="message">An additional message text</param>
-        /// <param name="context">The <see cref="HttpContext"/></param>
+        /// <param name="response">The <see cref="HttpContext"/></param>
         /// <exception cref="InvalidOperationException">Thrown if this function is used outside a valid valid <see cref="HttpContext"/></exception>
        [Obsolete("This method has been depreciated use WmsExceptionBase.WriteToContextAndFlush method instead")]
-        public static void ThrowWmsException(WmsExceptionCode code, string message, IContext context)
+        public static void ThrowWmsException(WmsExceptionCode code, string message, IContextResponse response)
         {
-            context.Clear();
-            context.ContentType = "text/xml";
-            context.Write("<?xml version=\"1.0\" encoding=\"utf-8\" ?>\n");
-            context.Write(
+            response.Clear();
+            response.ContentType = "text/xml";
+            response.Write("<?xml version=\"1.0\" encoding=\"utf-8\" ?>\n");
+            response.Write(
                 "<ServiceExceptionReport version=\"1.3.0\" xmlns=\"http://www.opengis.net/ogc\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://www.opengis.net/ogc http://schemas.opengis.net/wms/1.3.0/exceptions_1_3_0.xsd\">\n");
-            context.Write("<ServiceException");
+            response.Write("<ServiceException");
             if (code != WmsExceptionCode.NotApplicable)
-                context.Write(" code=\"" + code + "\"");
-            context.Write(">" + message + "</ServiceException>\n");
-            context.Write("</ServiceExceptionReport>");
-            context.End();
+                response.Write(" code=\"" + code + "\"");
+            response.Write(">" + message + "</ServiceException>\n");
+            response.Write("</ServiceExceptionReport>");
+            response.End();
         }
     }
 

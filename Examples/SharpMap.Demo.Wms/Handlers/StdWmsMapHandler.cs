@@ -11,9 +11,9 @@ namespace SharpMap.Demo.Wms.Handlers
         {
             try
             {
-                string url = GetFixedUrl(context);
+                string url = GetFixedUrl(context.Request);
                 Capabilities.WmsServiceDescription description = GetDescription(url);
-                Map map = GetMap(context);
+                Map map = GetMap(context.Request);
                 WmsServer.ParseQueryString(map, description, 10, null, context);
             }
             catch (Exception ex)
