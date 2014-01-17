@@ -9,6 +9,7 @@ using GeoAPI.Geometries;
 using SharpMap.Converters.GeoJSON;
 using SharpMap.Data;
 using SharpMap.Layers;
+using SharpMap.Web.Wms.Exceptions;
 
 namespace SharpMap.Web.Wms.Server.Handlers
 {
@@ -90,8 +91,9 @@ namespace SharpMap.Web.Wms.Server.Handlers
             WmsParams @params = ValidateParams(context, TargetSrid(map));
             if (!@params.IsValid)
             {
-                WmsException.ThrowWmsException(@params.ErrorCode, @params.Error, context);
-                return;
+                throw new WmsInvalidParameterException(@params.Error, @params.ErrorCode);
+                //WmsException.ThrowWmsException(@params.ErrorCode, @params.Error, context);
+                //return;
             }
 
             map.Size = new Size(@params.Width, @params.Height);
@@ -221,9 +223,7 @@ namespace SharpMap.Web.Wms.Server.Handlers
                 }
                 if (found == false)
                 {
-                    WmsException.ThrowWmsException(WmsException.WmsExceptionCode.LayerNotDefined,
-                        String.Format("Unknown layer '{0}'", requestLayer), context);
-                    return String.Empty;
+                    throw new WmsLayerNotDefinedException(requestLayer);
                 }
             }
             return vstr;
@@ -309,9 +309,7 @@ namespace SharpMap.Web.Wms.Server.Handlers
                 }
                 if (found == false)
                 {
-                    WmsException.ThrowWmsException(WmsException.WmsExceptionCode.LayerNotDefined,
-                        String.Format("Unknown layer '{0}'", requestLayer), context);
-                    return String.Empty;
+                    throw new WmsLayerNotDefinedException(requestLayer);
                 }
             }
             StringWriter writer = new StringWriter();

@@ -1,13 +1,14 @@
 using System;
 using System.Drawing;
 using GeoAPI.Geometries;
+using SharpMap.Web.Wms.Exceptions;
 
 namespace SharpMap.Web.Wms.Server.Handlers
 {
     public class WmsParams
     {
         public string Error { get; set; }
-        public WmsException.WmsExceptionCode ErrorCode { get; set; }
+        public WmsExceptionCode ErrorCode { get; set; }
 
         public bool IsValid
         {
@@ -33,10 +34,10 @@ namespace SharpMap.Web.Wms.Server.Handlers
 
         public static WmsParams Failure(string s)
         {
-            return Failure(WmsException.WmsExceptionCode.NotApplicable, s);
+            return Failure(WmsExceptionCode.NotApplicable, s);
         }
 
-        public static WmsParams Failure(WmsException.WmsExceptionCode code, string s)
+        public static WmsParams Failure(WmsExceptionCode code, string s)
         {
             if (String.IsNullOrEmpty(s))
                 throw new ArgumentNullException("s", "an error message should be declared");

@@ -22,6 +22,7 @@ using GeoAPI.Geometries;
 using SharpMap.Data;
 using SharpMap.Web.Wms.Server;
 using SharpMap.Web.Wms.Server.Handlers;
+using SharpMap.Web.Wms.Exceptions;
 
 namespace SharpMap.Web.Wms
 {
@@ -224,27 +225,32 @@ namespace SharpMap.Web.Wms
         /// <param name="context">The context the <see cref="WmsServer"/> is running in.</param>
         public static void ParseQueryString(Map map, Capabilities.WmsServiceDescription description, IContext context)
         {
-            if (PixelSensitivity == -1)
-                PixelSensitivity = 1;
-            if (map == null)
-                throw new ArgumentException("Map for WMS is null");
-            if (map.Layers.Count == 0)
-                throw new ArgumentException("Map doesn't contain any layers for WMS service");
+            try
+            {
+                if (PixelSensitivity == -1)
+                    PixelSensitivity = 1;
+                if (map == null)
+                    throw new WmsArgumentException("Map for WMS is null");
+                if (map.Layers.Count == 0)
+                    throw new WmsArgumentException("Map doesn't contain any layers for WMS service");
 
-            string request = context.Params["REQUEST"];
-            if (request == null)
-            {
-                WmsException.ThrowWmsException("Required parameter REQUEST not specified", context);
-                return;
+                string request = context.Params["REQUEST"];
+                if (request == null)
+                {
+                    throw new WmsParameterNotSpecifiedException("Required parameter REQUEST not specified");
+                }
+                IHandler handler = AbstractHandler.For(request, description);
+                if (handler == null)
+                {
+                    throw new WmsOperationNotSupportedException("Invalid request");
+                }
+
+                handler.Handle(map, context);
             }
-            IHandler handler = AbstractHandler.For(request, description);
-            if (handler == null)
+            catch (WmsExceptionBase wmsEx)
             {
-                WmsException.ThrowWmsException(WmsException.WmsExceptionCode.OperationNotSupported, "Invalid request",
-                    context);
-                return;
+                wmsEx.WriteToContextAndFlush(context);
             }
-            handler.Handle(map, context);
         }
     }
 }

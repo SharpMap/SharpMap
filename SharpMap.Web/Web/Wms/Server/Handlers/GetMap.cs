@@ -8,12 +8,13 @@ using GeoAPI.Geometries;
 using SharpMap.Data.Providers;
 using SharpMap.Layers;
 using SharpMap.Rendering.Thematics;
+using SharpMap.Web.Wms.Exceptions;
 
 namespace SharpMap.Web.Wms.Server.Handlers
 {
     public class GetMap : AbstractHandler
     {
-        public GetMap(Capabilities.WmsServiceDescription description) : 
+        public GetMap(Capabilities.WmsServiceDescription description) :
             base(description) { }
 
         protected override WmsParams ValidateParams(IContext context, int targetSrid)
@@ -24,7 +25,7 @@ namespace SharpMap.Web.Wms.Server.Handlers
 
             // Code specific for GetMap
             Color backColor;
-            bool transparent = String.Equals(context.Params["TRANSPARENT"], "TRUE", Case);            
+            bool transparent = String.Equals(context.Params["TRANSPARENT"], "TRUE", Case);
             if (!transparent)
             {
                 string bgcolor = context.Params["BGCOLOR"];
@@ -33,13 +34,14 @@ namespace SharpMap.Web.Wms.Server.Handlers
                     try { backColor = ColorTranslator.FromHtml(bgcolor); }
                     catch
                     {
-                        return WmsParams.Failure("Invalid parameter BGCOLOR: " + bgcolor);
+                        throw new WmsInvalidParameterException("Invalid parameter BGCOLOR: " + bgcolor);
+                        //return WmsParams.Failure("Invalid parameter BGCOLOR: " + bgcolor);
                     }
                 }
                 else backColor = Color.White;
             }
             else backColor = Color.Transparent;
-            @params.BackColor = backColor;            
+            @params.BackColor = backColor;
             return @params;
         }
 
@@ -48,8 +50,9 @@ namespace SharpMap.Web.Wms.Server.Handlers
             WmsParams @params = ValidateParams(context, TargetSrid(map));
             if (!@params.IsValid)
             {
-                WmsException.ThrowWmsException(@params.ErrorCode, @params.Error, context);
-                return;
+                throw new WmsInvalidParameterException(@params.Error, @params.ErrorCode);
+                //WmsException.ThrowWmsException(@params.ErrorCode, @params.Error, context);
+                //return;
             }
 
             map.BackColor = @params.BackColor;
@@ -58,23 +61,18 @@ namespace SharpMap.Web.Wms.Server.Handlers
             ImageCodecInfo imageEncoder = GetEncoderInfo(@params.Format);
             if (imageEncoder == null)
             {
-                WmsException.ThrowWmsException("Invalid MimeType specified in FORMAT parameter", context);
-                return;
+                throw new WmsInvalidParameterException("Invalid MimeType specified in FORMAT parameter");
             }
 
             int width = @params.Width;
             if (Description.MaxWidth > 0 && width > Description.MaxWidth)
             {
-                WmsException.ThrowWmsException(WmsException.WmsExceptionCode.OperationNotSupported,
-                    "Parameter WIDTH too large", context);
-                return;
+                throw new WmsOperationNotSupportedException("Parameter WIDTH too large");
             }
             int height = @params.Height;
             if (Description.MaxHeight > 0 && height > Description.MaxHeight)
             {
-                WmsException.ThrowWmsException(WmsException.WmsExceptionCode.OperationNotSupported,
-                    "Parameter HEIGHT too large", context);
-                return;
+                throw new WmsOperationNotSupportedException("Parameter HEIGHT too large");
             }
             map.Size = new Size(width, height);
 
@@ -146,10 +144,7 @@ namespace SharpMap.Web.Wms.Server.Handlers
                                             }
                                             else
                                             {
-                                                WmsException.ThrowWmsException(
-                                                    WmsException.WmsExceptionCode.StyleNotDefined,
-                                                    "Style not advertised for this layer", context);
-                                                return;
+                                                throw new WmsStyleNotDefinedException("Style not advertised for this layer");
                                             }
                                         }
                                     }
@@ -191,9 +186,7 @@ namespace SharpMap.Web.Wms.Server.Handlers
                     if (layers.Length == 0 && map.Layers.Count > Description.LayerLimit ||
                         layers.Length > Description.LayerLimit)
                     {
-                        WmsException.ThrowWmsException(WmsException.WmsExceptionCode.OperationNotSupported,
-                            "Too many layers requested", context);
-                        return;
+                        throw new WmsOperationNotSupportedException("Too many layers requested");
                     }
                 }
 
@@ -201,7 +194,7 @@ namespace SharpMap.Web.Wms.Server.Handlers
                     layer.Enabled = false;
                 foreach (string layer in layers)
                 {
-                    //SharpMap.Layers.ILayer lay = map.Layers.Find(delegate(SharpMap.Layers.ILayer findlay) { return findlay.LayerName == layer; });
+                    //SharpMap.Layers.ILayer lay = map.Layers.Find(delegate(SharpMap.Layers.ILayer findlay) { return findlay.message == layer; });
                     ILayer lay = null;
                     for (int i = 0; i < map.Layers.Count; i++)
                         if (String.Equals(map.Layers[i].LayerName, layer,
@@ -211,9 +204,7 @@ namespace SharpMap.Web.Wms.Server.Handlers
 
                     if (lay == null)
                     {
-                        WmsException.ThrowWmsException(WmsException.WmsExceptionCode.LayerNotDefined,
-                            String.Format("Unknown layer '{0}'", layer), context);
-                        return;
+                        throw new WmsLayerNotDefinedException(layer);
                     }
                     lay.Enabled = true;
                 }

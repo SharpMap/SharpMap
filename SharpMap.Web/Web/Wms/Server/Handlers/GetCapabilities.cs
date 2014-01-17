@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SharpMap.Web.Wms.Exceptions;
+using System;
 using System.Xml;
 
 namespace SharpMap.Web.Wms.Server.Handlers
@@ -15,16 +16,19 @@ namespace SharpMap.Web.Wms.Server.Handlers
             if (version != null)
             {
                 if (!String.Equals(version, "1.3.0", Case))
-                    return WmsParams.Failure("Only version 1.3.0 supported");
+                    throw new WmsOperationNotSupportedException("Only version 1.3.0 supported");
+                    //return WmsParams.Failure("Only version 1.3.0 supported");
             }
             // Service parameter is mandatory for GetCapabilities request
             string service = context.Params["SERVICE"];
             if (service == null)
-                return WmsParams.Failure("Required parameter SERVICE not specified");
+                throw new WmsParameterNotSpecifiedException("SERVICE");
+                //return WmsParams.Failure("Required parameter SERVICE not specified");
 
             if (!String.Equals(service, "WMS", StringComparison.InvariantCulture))
-                return WmsParams.Failure(
-                    "Invalid service for GetCapabilities Request. Service parameter must be 'WMS'");
+                throw new WmsInvalidParameterException("Invalid service for GetCapabilities Request. Service parameter must be 'WMS'");
+                //return WmsParams.Failure(
+                //    "Invalid service for GetCapabilities Request. Service parameter must be 'WMS'");
 
             return new WmsParams { Service = service, Version = version };
         }
@@ -34,8 +38,9 @@ namespace SharpMap.Web.Wms.Server.Handlers
             WmsParams @params = ValidateParams(context, 0);
             if (!@params.IsValid)
             {
-                WmsException.ThrowWmsException(@params.ErrorCode, @params.Error, context);
-                return;
+                throw new WmsInvalidParameterException(@params.Error,@params.ErrorCode);
+                //WmsException.ThrowWmsException(@params.ErrorCode, @params.Error, context);
+                //return;
             }
 
             XmlDocument capabilities = ServerCapabilities.GetCapabilities(map, Description);

@@ -85,7 +85,7 @@ namespace SharpMap.Web.Wms.Tiling
         /// Helper for convenience. Generates a directory path the Application Data directory 
         /// which could be used to store tiles.
         /// </summary>
-        /// <param name="layerName">Name of the SharpMap layer</param>
+        /// <param name="message">Name of the SharpMap layer</param>
         /// <param name="tileSetName">Name of the TileSet</param>
         /// <returns></returns>
         public static string GenerateDirectoryPath(string layerName, string tileSetName)

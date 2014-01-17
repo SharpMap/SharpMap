@@ -5,6 +5,7 @@ using System.Linq;
 using GeoAPI.Geometries;
 using SharpMap.Data;
 using SharpMap.Layers;
+using SharpMap.Web.Wms.Exceptions;
 
 namespace SharpMap.Web.Wms.Server.Handlers
 {
@@ -94,18 +95,18 @@ namespace SharpMap.Web.Wms.Server.Handlers
             if (crs == null)
                 return WmsParams.Failure("Required parameter CRS not specified");
             if (crs != "EPSG:" + targetSrid)
-                return WmsParams.Failure(WmsException.WmsExceptionCode.InvalidCRS, "CRS not supported");
+                return WmsParams.Failure(WmsExceptionCode.InvalidCRS, "CRS not supported");
             string bbox = context.Params["BBOX"];
             if (bbox == null)
-                return WmsParams.Failure(WmsException.WmsExceptionCode.InvalidDimensionValue,
+                return WmsParams.Failure(WmsExceptionCode.InvalidDimensionValue,
                     "Required parameter BBOX not (");
             string width = context.Params["WIDTH"];
             if (width == null)
-                return WmsParams.Failure(WmsException.WmsExceptionCode.InvalidDimensionValue,
+                return WmsParams.Failure(WmsExceptionCode.InvalidDimensionValue,
                     "Required parameter WIDTH not specified");
             string height = context.Params["HEIGHT"];
             if (height == null)
-                return WmsParams.Failure(WmsException.WmsExceptionCode.InvalidDimensionValue,
+                return WmsParams.Failure(WmsExceptionCode.InvalidDimensionValue,
                     "Required parameter HEIGHT not specified");
             string format = context.Params["FORMAT"];
             if (format == null)
