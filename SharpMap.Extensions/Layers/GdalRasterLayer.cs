@@ -316,34 +316,41 @@ namespace SharpMap.Layers
 
         #endregion
 
-        /// <summary>
-        /// initialize a Gdal based raster layer
-        /// </summary>
-        /// <param name="strLayerName">Name of layer</param>
-        /// <param name="imageFilename">location of image</param>
-        public GdalRasterLayer(string strLayerName, string imageFilename)
+        protected GdalRasterLayer(string layerName)
         {
             SpotPoint = new PointF(0, 0);
             Projection = "";
             BitDepth = 8;
-            NonSpotGain = new double[] {1, 1, 1, 1};
-            SpotGain = new double[] {1, 1, 1, 1};
-            Gain = new double[] {1, 1, 1, 1};
+            NonSpotGain = new double[] { 1, 1, 1, 1 };
+            SpotGain = new double[] { 1, 1, 1, 1 };
+            Gain = new double[] { 1, 1, 1, 1 };
             NonSpotGamma = 1;
             SpotGamma = 1;
             Gamma = 1;
             TransparentColor = Color.Empty;
             ColorCorrect = true;
-            LayerName = strLayerName;
-            Filename = imageFilename;
 
-            //TilingSize = new Size(256, 128);
+            LayerName = layerName;
 
             Gdal.AllRegister();
+        }
 
+        /// <summary>
+        /// initialize a Gdal based raster layer
+        /// </summary>
+        /// <param name="strLayerName">Name of layer</param>
+        /// <param name="imageFilename">location of image</param>
+        public GdalRasterLayer(string strLayerName, string imageFilename) : this(strLayerName)
+        {
+            Filename = imageFilename;
+            OpenDataset(imageFilename);
+        }
+
+        protected void OpenDataset(string imageFilename)
+        {
             try
             {
-                _gdalDataset = Gdal.OpenShared(Filename, Access.GA_ReadOnly);
+                _gdalDataset = Gdal.OpenShared(imageFilename, Access.GA_ReadOnly);
 
                 // have gdal read the projection
                 Projection = _gdalDataset.GetProjectionRef();
@@ -359,8 +366,8 @@ namespace SharpMap.Layers
                 _imageSize = new Size(_gdalDataset.RasterXSize, _gdalDataset.RasterYSize);
                 _envelope = GetExtent();
 
-                HistoBounds = new Rectangle((int)_envelope.MinX, (int)_envelope.MinY, (int)_envelope.Width,
-                                            (int)_envelope.Height);
+                HistoBounds = new Rectangle((int) _envelope.MinX, (int) _envelope.MinY, (int) _envelope.Width,
+                    (int) _envelope.Height);
                 Bands = _gdalDataset.RasterCount;
             }
             catch (Exception ex)

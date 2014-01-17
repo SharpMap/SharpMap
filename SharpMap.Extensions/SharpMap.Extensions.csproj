@@ -164,6 +164,7 @@
     <Compile Include="Data\Providers\SpatiaLiteIndex.cs" />
     <Compile Include="Data\Providers\SqlLite.cs" />
     <Compile Include="GdalConfiguration.cs" />
+    <Compile Include="Layers\GdalTileIndexRasterLayer.cs" />
     <Compile Include="Layers\GdalRasterLayer.cs">
       <SubType>Code</SubType>
     </Compile>
