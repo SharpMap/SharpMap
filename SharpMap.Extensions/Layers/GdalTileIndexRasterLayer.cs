@@ -50,15 +50,14 @@ namespace SharpMap.Layers
         /// <summary>
         /// Open a TileIndex shapefile
         /// 
-        /// A tileindex is a shapefile that ties together several datasets into a single layer. Therefore, you don’t need to create separate layers for each piece of imagery or each county’s road data; make a tileindex and let MapServer piece the mosaic together on the fly.
-        /// Making a tileindex is easy using gdaltindex for GDAL data sources (rasters) and ogrtindex for OGR data sources (vectors). You just run them, specifying the index file to create and the list of data sources to add to the index.
+        /// A tileindex is a shapefile that ties together several datasets into a single layer. Therefore, you don’t need to create separate layers for each piece of imagery or each county’s road data; make a tileindex and let SharpMap piece the mosaic together on the fly.
+        /// Making a tileindex is easy using gdaltindex for GDAL data sources (rasters). You just run the tool, specifying the index file to create and the list of data sources to add to the index.
         ///
         /// For example, to make a mosaic of several TIFFs:
         ///
         /// gdaltindex imagery.shp imagery/*.tif
 
         /// See: http://mapserver.org/optimization/tileindex.html
-        /// </summary>
         /// </summary>
         /// <param name="layerName">Name of the layer</param>
         /// <param name="fileName">Path to the ShapeFile containing tile-indexes</param>
