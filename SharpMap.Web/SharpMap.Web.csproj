@@ -104,6 +104,16 @@
     <Compile Include="Web\Wfs\Client.cs" />
     <Compile Include="Web\Wms\Capabilities.cs" />
     <Compile Include="Web\Wms\Client.cs" />
+    <Compile Include="Web\Wms\Exceptions\WmsArgumentException.cs" />
+    <Compile Include="Web\Wms\Exceptions\WmsExceptionBase.cs" />
+    <Compile Include="Web\Wms\Exceptions\WmsExceptionHandler.cs" />
+    <Compile Include="Web\Wms\Exceptions\WmsInvalidParameterException.cs" />
+    <Compile Include="Web\Wms\Exceptions\WmsLayerNotDefinedException.cs" />
+    <Compile Include="Web\Wms\Exceptions\WmsLayerNotQueryableException.cs" />
+    <Compile Include="Web\Wms\Exceptions\WmsNotApplicableException.cs" />
+    <Compile Include="Web\Wms\Exceptions\WmsOperationNotSupportedException.cs" />
+    <Compile Include="Web\Wms\Exceptions\WmsParameterNotSpecifiedException.cs" />
+    <Compile Include="Web\Wms\Exceptions\WmsStyleNotDefinedException.cs" />
     <Compile Include="Web\Wms\ServerCapabilities.cs" />
     <Compile Include="Web\Wms\Server\Handlers\AbstractHandler.cs" />
     <Compile Include="Web\Wms\Server\Context.cs" />
@@ -118,7 +128,6 @@
     <Compile Include="Web\Wms\Tiling\TileCacheFileStorage.cs" />
     <Compile Include="Web\Wms\Tiling\TileExtents.cs" />
     <Compile Include="Web\Wms\Tiling\TileSet.cs" />
-    <Compile Include="Web\Wms\WmsException.cs" />
     <Compile Include="Web\Wms\WmsServer.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -24,6 +24,7 @@ namespace SharpMap.Web.Wms.Exceptions
     /// <summary>
     /// Class for throwing WMS exceptions to client
     /// </summary>
+    [Obsolete("This class has been depreciated use WmsExceptionBase class instead")]
     public static class WmsExceptionHandler
     {
         /// <summary>
@@ -32,6 +33,7 @@ namespace SharpMap.Web.Wms.Exceptions
         /// <param name="message">An additional message text</param>
         /// <param name="context">The <see cref="HttpContext"/></param>
         /// <exception cref="InvalidOperationException">Thrown if this function is used outside a valid valid <see cref="HttpContext"/></exception>
+        [Obsolete("This method has been depreciated use WmsExceptionBase.WriteToContextAndFlush method instead")]
         public static void ThrowWmsException(string message, IContext context)
         {
             ThrowWmsException(WmsExceptionCode.NotApplicable, message, context);
@@ -44,6 +46,7 @@ namespace SharpMap.Web.Wms.Exceptions
         /// <param name="message">An additional message text</param>
         /// <param name="context">The <see cref="HttpContext"/></param>
         /// <exception cref="InvalidOperationException">Thrown if this function is used outside a valid valid <see cref="HttpContext"/></exception>
+       [Obsolete("This method has been depreciated use WmsExceptionBase.WriteToContextAndFlush method instead")]
         public static void ThrowWmsException(WmsExceptionCode code, string message, IContext context)
         {
             context.Clear();
