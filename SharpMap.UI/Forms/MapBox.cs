@@ -1210,10 +1210,6 @@ namespace SharpMap.Forms
                             Cursor = c;
                         }
                     }
-
-                    base.Refresh();
-                    //Invalidate();
-
                 }
             }
             catch (Exception ex)
