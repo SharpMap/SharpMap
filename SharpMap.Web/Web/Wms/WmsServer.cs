@@ -246,9 +246,9 @@ namespace SharpMap.Web.Wms
                 IHandlerResponse result = handler.Handle(map, request);
                 result.WriteToContextAndFlush(response);
             }
-            catch (WmsExceptionBase wmsEx)
+            catch (WmsExceptionBase ex)
             {
-                wmsEx.WriteToContextAndFlush(response);
+                ex.WriteToContextAndFlush(response);
             }
         }
     }

@@ -1,14 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace SharpMap.Web.Wms.Exceptions
 {
     public class WmsParameterNotSpecifiedException : WmsExceptionBase
     {
-        public WmsParameterNotSpecifiedException(string Parameter)
-            : base("Required parameter " + Parameter + " not specified")
-        { }
+        public WmsParameterNotSpecifiedException(string parameter) :
+            base(String.Format("Required parameter {0} not specified", parameter)) { }
     }
 }

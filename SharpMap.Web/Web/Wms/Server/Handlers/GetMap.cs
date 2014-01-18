@@ -20,8 +20,6 @@ namespace SharpMap.Web.Wms.Server.Handlers
         protected override WmsParams ValidateParams(IContextRequest request, int targetSrid)
         {
             WmsParams @params = ValidateCommons(request, targetSrid);
-            if (!@params.IsValid)
-                return @params;
 
             // Code specific for GetMap
             Color backColor;
@@ -48,13 +46,7 @@ namespace SharpMap.Web.Wms.Server.Handlers
         public override IHandlerResponse Handle(Map map, IContextRequest request)
         {
             WmsParams @params = ValidateParams(request, TargetSrid(map));
-            if (!@params.IsValid)
-            {
-                throw new WmsInvalidParameterException(@params.Error, @params.ErrorCode);
-                //WmsException.ThrowWmsException(@params.ErrorCode, @params.Error, context);
-                //return;
-            }
-
+            
             map.BackColor = @params.BackColor;
 
             //Get the image format requested
@@ -249,12 +241,12 @@ namespace SharpMap.Web.Wms.Server.Handlers
 
         public GetMapResponse(Image image, ImageCodecInfo codecInfo)
         {
-            if (image == null) 
+            if (image == null)
                 throw new ArgumentNullException("image");
-            if (codecInfo == null) 
+            if (codecInfo == null)
                 throw new ArgumentNullException("codecInfo");
             _image = image;
-            _codecInfo = codecInfo;           
+            _codecInfo = codecInfo;
         }
 
         public void WriteToContextAndFlush(IContextResponse response)

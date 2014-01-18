@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using System.Web;
 using GeoAPI;
 using NetTopologySuite;
@@ -59,7 +60,15 @@ namespace SharpMap.Demo.Wms.Handlers
 
         public void ProcessRequest(HttpContext context)
         {
-            ProcessRequest(new Context(context));
+            try
+            {
+                ProcessRequest(new Context(context));
+            }
+            catch (Exception ex)
+            {
+                // unhandled exceptions
+                Trace.WriteLine(ex);
+            }
         }
 
         public bool IsReusable

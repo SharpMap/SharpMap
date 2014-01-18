@@ -1,7 +1,5 @@
-using System;
 using System.Drawing;
 using GeoAPI.Geometries;
-using SharpMap.Web.Wms.Exceptions;
 
 namespace SharpMap.Web.Wms.Server.Handlers
 {
@@ -23,6 +21,5 @@ namespace SharpMap.Web.Wms.Server.Handlers
         public int FeatureCount { get; set; }
         public string CqlFilter { get; set; }
         public Color BackColor { get; set; }
-       
     }
 }

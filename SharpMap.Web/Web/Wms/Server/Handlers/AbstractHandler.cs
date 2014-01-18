@@ -12,8 +12,11 @@ namespace SharpMap.Web.Wms.Server.Handlers
     public abstract class AbstractHandler : IHandler
     {
         protected const StringComparison Case = StringComparison.InvariantCultureIgnoreCase;
+        private const StringComparison Ordinal = StringComparison.Ordinal;
+        private static readonly NumberFormatInfo NfInfo = NumberFormatInfo.InvariantInfo;
 
         private readonly Capabilities.WmsServiceDescription _description;
+        
 
         protected AbstractHandler(Capabilities.WmsServiceDescription description)
         {
@@ -70,42 +73,39 @@ namespace SharpMap.Web.Wms.Server.Handlers
         {
             string version = request.Params["VERSION"];
             if (version == null)
-                return WmsParams.Failure("VERSION parameter not supplied");
+               throw new WmsParameterNotSpecifiedException("VERSION");
             if (!String.Equals(version, "1.3.0", Case))
-                return WmsParams.Failure("Only version 1.3.0 supported");
+                throw new WmsInvalidParameterException("Only version 1.3.0 supported");
             string layers = request.Params["LAYERS"];
             if (layers == null)
-                return WmsParams.Failure("Required parameter LAYERS not specified");
+                throw new WmsParameterNotSpecifiedException("LAYERS");
             string styles = request.Params["STYLES"];
             if (styles == null)
-                return WmsParams.Failure("Required parameter STYLES not specified");
+                throw new WmsParameterNotSpecifiedException("STYLES");
             string crs = request.Params["CRS"];
             if (crs == null)
-                return WmsParams.Failure("Required parameter CRS not specified");
+                throw new WmsParameterNotSpecifiedException("CRS");
             if (crs != "EPSG:" + targetSrid)
-                return WmsParams.Failure(WmsExceptionCode.InvalidCRS, "CRS not supported");
+                throw new WmsInvalidCRSException("CRS not supported");
             string bbox = request.Params["BBOX"];
             if (bbox == null)
-                return WmsParams.Failure(WmsExceptionCode.InvalidDimensionValue,
-                    "Required parameter BBOX not (");
+                throw new WmsParameterNotSpecifiedException("BBOX");
             string width = request.Params["WIDTH"];
             if (width == null)
-                return WmsParams.Failure(WmsExceptionCode.InvalidDimensionValue,
-                    "Required parameter WIDTH not specified");
+                throw new WmsParameterNotSpecifiedException("WIDTH");
             string height = request.Params["HEIGHT"];
             if (height == null)
-                return WmsParams.Failure(WmsExceptionCode.InvalidDimensionValue,
-                    "Required parameter HEIGHT not specified");
+                throw new WmsParameterNotSpecifiedException("HEIGHT");
             string format = request.Params["FORMAT"];
             if (format == null)
-                return WmsParams.Failure("Required parameter FORMAT not specified");
+                throw new WmsParameterNotSpecifiedException("FORMAT");
             string cqlFilter = request.Params["CQL_FILTER"];
             short w, h;
             if (!Int16.TryParse(width, out w) || !Int16.TryParse(height, out h))
-                return WmsParams.Failure("Invalid parameters for HEIGHT or WITDH");
+                throw new WmsInvalidParameterException("Invalid parameters for HEIGHT or WITDH");
             Envelope env = ParseBBOX(bbox, targetSrid == 4326);
             if (env == null)
-                return WmsParams.Failure("Invalid parameter BBOX");
+                throw new WmsInvalidParameterException("Invalid parameter BBOX");
 
             return new WmsParams
             {
@@ -159,7 +159,7 @@ namespace SharpMap.Web.Wms.Server.Handlers
                 //if the comparer isn't in the comparerslist stop
                 if (!comparers.Contains(comparer))
                     break;
-
+                ;
                 if (comparer == comparers[8])//IN 
                 {
                     //read all the items until the list is closed by ')' and merge them
@@ -175,7 +175,7 @@ namespace SharpMap.Web.Wms.Server.Handlers
                     string[] splitters = { "('", "', '", "','", "')" };
                     List<string> items = IN.Split(splitters, StringSplitOptions.RemoveEmptyEntries).ToList();
 
-                    tmpResult = items.Contains(Convert.ToString(row[columnIndex]));
+                    tmpResult = items.Contains(Convert.ToString(row[columnIndex], NfInfo));
                 }
                 else if (comparer == comparers[7])//LIKE
                 {
@@ -190,46 +190,46 @@ namespace SharpMap.Web.Wms.Server.Handlers
                         string string1 = cqlStringItems[i];
                         i += 2; //skip the AND in BETWEEN
                         string string2 = cqlStringItems[i];
-                        tmpResult = 0 < String.Compare(Convert.ToString(row[columnIndex], NumberFormatInfo.InvariantInfo), string1, StringComparison.Ordinal) &&
-                                    0 > String.Compare(Convert.ToString(row[columnIndex], NumberFormatInfo.InvariantInfo), string2, StringComparison.Ordinal);
+                        tmpResult = 0 < String.Compare(Convert.ToString(row[columnIndex], NfInfo), string1, Ordinal) &&
+                                    0 > String.Compare(Convert.ToString(row[columnIndex], NfInfo), string2, Ordinal);
 
                     }
                     else if (t == typeof(double))
                     {
-                        double value1 = Convert.ToDouble(cqlStringItems[i]);
+                        double value1 = Convert.ToDouble(cqlStringItems[i], NfInfo);
                         i += 2; //skip the AND in BETWEEN
-                        double value2 = Convert.ToDouble(cqlStringItems[i]);
-                        tmpResult = value1 < Convert.ToDouble(row[columnIndex]) && value2 > Convert.ToDouble(row[columnIndex]);
+                        double value2 = Convert.ToDouble(cqlStringItems[i], NfInfo);
+                        tmpResult = value1 < Convert.ToDouble(row[columnIndex], NfInfo) && value2 > Convert.ToDouble(row[columnIndex], NfInfo);
                     }
                     else if (t == typeof(int))
                     {
                         int value1 = Convert.ToInt32(cqlStringItems[i]);
                         i += 2;
                         int value2 = Convert.ToInt32(cqlStringItems[i]);
-                        tmpResult = value1 < Convert.ToInt32(row[columnIndex]) && value2 > Convert.ToInt32(row[columnIndex]);
+                        tmpResult = value1 < Convert.ToInt32(row[columnIndex], NfInfo) && value2 > Convert.ToInt32(row[columnIndex], NfInfo);
                     }
                 }
                 else
                 {
                     if (t == typeof(string))
                     {
-                        string cqlValue = Convert.ToString(cqlStringItems[i], NumberFormatInfo.InvariantInfo);
-                        string rowValue = Convert.ToString(row[columnIndex], NumberFormatInfo.InvariantInfo);
+                        string cqlValue = Convert.ToString(cqlStringItems[i], NfInfo);
+                        string rowValue = Convert.ToString(row[columnIndex], NfInfo);
                         if (comparer == comparers[5])//>=
                         {
-                            tmpResult = 0 <= String.Compare(rowValue, cqlValue, StringComparison.Ordinal);
+                            tmpResult = 0 <= String.Compare(rowValue, cqlValue, Ordinal);
                         }
                         else if (comparer == comparers[4])//<=
                         {
-                            tmpResult = 0 >= String.Compare(rowValue, cqlValue, StringComparison.Ordinal);
+                            tmpResult = 0 >= String.Compare(rowValue, cqlValue, Ordinal);
                         }
                         else if (comparer == comparers[3])//>
                         {
-                            tmpResult = 0 < String.Compare(rowValue, cqlValue, StringComparison.Ordinal);
+                            tmpResult = 0 < String.Compare(rowValue, cqlValue, Ordinal);
                         }
                         else if (comparer == comparers[2])//<
                         {
-                            tmpResult = 0 > String.Compare(rowValue, cqlValue, StringComparison.Ordinal);
+                            tmpResult = 0 > String.Compare(rowValue, cqlValue, Ordinal);
                         }
                         else if (comparer == comparers[1])//!=
                         {
@@ -242,30 +242,30 @@ namespace SharpMap.Web.Wms.Server.Handlers
                     }
                     else
                     {
-                        double value = Convert.ToDouble(cqlStringItems[i]);
+                        double value = Convert.ToDouble(cqlStringItems[i], NfInfo);
                         if (comparer == comparers[5])//>=
                         {
-                            tmpResult = Convert.ToDouble(row[columnIndex]) >= value;
+                            tmpResult = Convert.ToDouble(row[columnIndex], NfInfo) >= value;
                         }
                         else if (comparer == comparers[4])//<=
                         {
-                            tmpResult = Convert.ToDouble(row[columnIndex]) <= value;
+                            tmpResult = Convert.ToDouble(row[columnIndex], NfInfo) <= value;
                         }
                         else if (comparer == comparers[3])//>
                         {
-                            tmpResult = Convert.ToDouble(row[columnIndex]) > value;
+                            tmpResult = Convert.ToDouble(row[columnIndex], NfInfo) > value;
                         }
                         else if (comparer == comparers[2])//<
                         {
-                            tmpResult = Convert.ToDouble(row[columnIndex]) < value;
+                            tmpResult = Convert.ToDouble(row[columnIndex], NfInfo) < value;
                         }
                         else if (comparer == comparers[1])//!=
                         {
-                            tmpResult = Convert.ToDouble(row[columnIndex]) != value;
+                            tmpResult = Convert.ToDouble(row[columnIndex], NfInfo) != value;
                         }
                         else if (comparer == comparers[0])//==
                         {
-                            tmpResult = Convert.ToDouble(row[columnIndex]) == value;
+                            tmpResult = Convert.ToDouble(row[columnIndex], NfInfo) == value;
                         }
                     }
                 }
@@ -296,7 +296,7 @@ namespace SharpMap.Web.Wms.Server.Handlers
                 throw new ArgumentNullException("map");
             ILayer layer = map.Layers.FirstOrDefault();
             if (layer == null)
-                throw new ArgumentException("no layers defined");
+                throw new ArgumentException("map has no layers");
             return layer.TargetSRID;
         }
     }

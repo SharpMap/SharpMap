@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using GeoAPI.CoordinateSystems.Transformations;
@@ -27,43 +26,37 @@ namespace SharpMap.Demo.Wms.Handlers
             {
                 string s = request.Params["BBOX"];
                 if (String.IsNullOrEmpty(s))
-                {
-                    WmsExceptionHandler.ThrowWmsException(WmsExceptionCode.InvalidDimensionValue, "Required parameter BBOX not specified", context.Response);
-                    return;
-                }
+                    throw new WmsInvalidParameterException("BBOX");
 
-                
+
                 Map map = GetMap(request);
-                bool flip = map.Layers[0].TargetSRID == 4326;
+                LayerCollection layers = map.Layers;
+                ILayer first = layers.First();
+                bool flip = first.TargetSRID == 4326;
                 BoundingBox bbox = AbstractHandler.ParseBBOX(s, flip);
                 if (bbox == null)
-                {
-                    WmsExceptionHandler.ThrowWmsException("Invalid parameter BBOX", context.Response);
-                    return;
-                }
+                    throw new WmsInvalidParameterException("Invalid parameter BBOX");
 
                 string ls = request.Params["LAYERS"];
                 if (!String.IsNullOrEmpty(ls))
                 {
-                    string[] layers = ls.Split(',');
-                    foreach (ILayer layer in map.Layers)
-                        if (!layers.Contains(layer.LayerName))
-                             layer.Enabled = false;
+                    string[] strings = ls.Split(',');
+                    foreach (ILayer layer in layers)
+                        if (!strings.Contains(layer.LayerName))
+                            layer.Enabled = false;
                 }
 
-                IEnumerable<GeoJSON> items = GetData(map, bbox);                
+                IEnumerable<GeoJSON> items = GetData(map, bbox);
                 StringWriter writer = new StringWriter();
                 GeoJSONWriter.Write(items, writer);
                 string buffer = writer.ToString();
-                    
+
                 IHandlerResponse result = new GetFeatureInfoResponseJson(buffer);
                 result.WriteToContextAndFlush(response);
-               
             }
-            catch (Exception ex)
+            catch (WmsExceptionBase ex)
             {
-                Trace.WriteLine(ex);
-                throw;
+                ex.WriteToContextAndFlush(response);
             }
         }
 
@@ -71,11 +64,11 @@ namespace SharpMap.Demo.Wms.Handlers
         {
             if (map == null)
                 throw new ArgumentNullException("map");
-            
+
             // Only queryable data!
             IQueryable<ICanQueryLayer> coll = map.Layers
                 .AsQueryable()
-                .Where(l => l.Enabled) 
+                .Where(l => l.Enabled)
                 .OfType<ICanQueryLayer>()
                 .Where(l => l.IsQueryEnabled);
 

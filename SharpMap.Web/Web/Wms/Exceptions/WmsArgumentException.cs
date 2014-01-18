@@ -1,10 +1,8 @@
-﻿
-namespace SharpMap.Web.Wms.Exceptions
+﻿namespace SharpMap.Web.Wms.Exceptions
 {
     public class WmsArgumentException : WmsExceptionBase
     {
-        public WmsArgumentException(string Message)
-            : base(Message,WmsExceptionCode.NotApplicable)
-        { }
+        public WmsArgumentException(string message) :
+            base(message, WmsExceptionCode.NotApplicable) { }
     }
 }

@@ -20,7 +20,7 @@ namespace SharpMap.Web.Wms.Server.Handlers
         private readonly WmsServer.InterSectDelegate _intersectDelegate;
         private readonly Encoding _encoding;
 
-        public GetFeatureInfo(Capabilities.WmsServiceDescription description, 
+        public GetFeatureInfo(Capabilities.WmsServiceDescription description,
             int pixelSensitivity, WmsServer.InterSectDelegate intersectDelegate, Encoding encoding) :
             base(description)
         {
@@ -32,36 +32,34 @@ namespace SharpMap.Web.Wms.Server.Handlers
         protected override WmsParams ValidateParams(IContextRequest request, int targetSrid)
         {
             WmsParams @params = ValidateCommons(request, targetSrid);
-            if (!@params.IsValid)
-                return @params;
 
             // Code specific for GetFeatureInfo
             string queryLayers = request.Params["QUERY_LAYERS"];
             if (queryLayers == null)
-                return WmsParams.Failure("Required parameter QUERY_LAYERS not specified");
+                throw new WmsParameterNotSpecifiedException("QUERY_LAYERS");
             @params.QueryLayers = queryLayers;
 
             string infoFormat = request.Params["INFO_FORMAT"];
             if (infoFormat == null)
-                return WmsParams.Failure("Required parameter INFO_FORMAT not specified");
+                throw new WmsParameterNotSpecifiedException("INFO_FORMAT");
             @params.InfoFormat = infoFormat;
 
             //parameters X&Y are not part of the 1.3.0 specification, but are included for backwards compatability with 1.1.1 (OpenLayers likes it when used together with wms1.1.1 services)
             string x = request.Params["X"];
             string i = request.Params["I"];
             if (x == null && i == null)
-                return WmsParams.Failure("Required parameter I not specified");
+                throw new WmsParameterNotSpecifiedException("I");
             string y = request.Params["Y"];
             string j = request.Params["J"];
             if (y == null && j == null)
-                return WmsParams.Failure("Required parameter J not specified");
+                throw new WmsParameterNotSpecifiedException("J");
             float cx = 0, cy = 0;
             if (x != null)
             {
                 try { cx = Convert.ToSingle(x); }
                 catch
                 {
-                    return WmsParams.Failure("Invalid parameters for X");
+                    throw new WmsInvalidParameterException("Invalid parameters for X");
                 }
             }
             if (i != null)
@@ -69,7 +67,7 @@ namespace SharpMap.Web.Wms.Server.Handlers
                 try { cx = Convert.ToSingle(i); }
                 catch
                 {
-                    return WmsParams.Failure("Invalid parameters for I");
+                    throw new WmsInvalidParameterException("Invalid parameters for I");
                 }
             }
             if (y != null)
@@ -77,7 +75,7 @@ namespace SharpMap.Web.Wms.Server.Handlers
                 try { cy = Convert.ToSingle(y); }
                 catch
                 {
-                    return WmsParams.Failure("Invalid parameters for Y");
+                    throw new WmsInvalidParameterException("Invalid parameters for Y");
                 }
             }
             if (j != null)
@@ -85,7 +83,7 @@ namespace SharpMap.Web.Wms.Server.Handlers
                 try { cy = Convert.ToSingle(j); }
                 catch
                 {
-                    return WmsParams.Failure("Invalid parameters for I");
+                    throw new WmsInvalidParameterException("Invalid parameters for I");
                 }
             }
             @params.X = cx;
@@ -100,12 +98,6 @@ namespace SharpMap.Web.Wms.Server.Handlers
         public override IHandlerResponse Handle(Map map, IContextRequest request)
         {
             WmsParams @params = ValidateParams(request, TargetSrid(map));
-            if (!@params.IsValid)
-            {
-                throw new WmsInvalidParameterException(@params.Error, @params.ErrorCode);
-                //WmsException.ThrowWmsException(@params.ErrorCode, @params.Error, context);
-                //return;
-            }
 
             map.Size = new Size(@params.Width, @params.Height);
             map.ZoomToBox(@params.BBOX);
@@ -124,7 +116,7 @@ namespace SharpMap.Web.Wms.Server.Handlers
                 vstr = CreateFeatureInfoPlain(map, requestLayers, @params.X, @params.Y, @params.FeatureCount, @params.CqlFilter, _pixelSensitivity, _intersectDelegate);
                 response = new GetFeatureInfoResponsePlain(vstr);
             }
-            
+
             response.Charset = _encoding.WebName;
             return response;
         }
@@ -167,7 +159,7 @@ namespace SharpMap.Web.Wms.Server.Handlers
                         Envelope queryBox = new Envelope(minXY, maxXY);
                         FeatureDataSet fds = new FeatureDataSet();
                         queryLayer.ExecuteIntersectionQuery(queryBox, fds);
-                        
+
                         if (intersectDelegate != null)
                         {
                             fds.Tables[0] = intersectDelegate(fds.Tables[0], queryBox);

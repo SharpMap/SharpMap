@@ -1,20 +1,26 @@
-﻿using SharpMap.Web.Wms.Server;
-using System;
+﻿using System;
+using SharpMap.Web.Wms.Server;
 using SharpMap.Web.Wms.Server.Handlers;
 
 namespace SharpMap.Web.Wms.Exceptions
 {
     public abstract class WmsExceptionBase : Exception, IHandlerResponse
     {
-        public WmsExceptionCode ExceptionCode { get; private set; }
-        protected WmsExceptionBase(string Message)
-            : this(Message, WmsExceptionCode.NotApplicable)
-        { }
+        private WmsExceptionCode _exceptionCode;
 
-        protected WmsExceptionBase(string Message, WmsExceptionCode ExceptionCode)
-            : base(Message)
+        protected WmsExceptionBase(string message) :
+            this(message, WmsExceptionCode.NotApplicable) { }
+
+        protected WmsExceptionBase(string message, WmsExceptionCode exceptionCode) :
+            base(message)
         {
-            this.ExceptionCode = ExceptionCode;
+            ExceptionCode = exceptionCode;
+        }
+
+        public WmsExceptionCode ExceptionCode
+        {
+            get { return _exceptionCode; }
+            private set { _exceptionCode = value; }
         }
 
         public virtual void WriteToContextAndFlush(IContextResponse response)

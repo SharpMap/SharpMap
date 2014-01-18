@@ -1,10 +1,8 @@
-﻿
-namespace SharpMap.Web.Wms.Exceptions
+﻿namespace SharpMap.Web.Wms.Exceptions
 {
     public class WmsOperationNotSupportedException : WmsExceptionBase
     {
-        public WmsOperationNotSupportedException(string Message)
-            : base(Message, WmsExceptionCode.OperationNotSupported)
-        { }
+        public WmsOperationNotSupportedException(string message) :
+            base(message, WmsExceptionCode.OperationNotSupported) { }
     }
 }

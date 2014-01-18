@@ -17,31 +17,21 @@ namespace SharpMap.Web.Wms.Server.Handlers
             {
                 if (!String.Equals(version, "1.3.0", Case))
                     throw new WmsOperationNotSupportedException("Only version 1.3.0 supported");
-                //return WmsParams.Failure("Only version 1.3.0 supported");
             }
             // Service parameter is mandatory for GetCapabilities request
             string service = request.Params["SERVICE"];
             if (service == null)
                 throw new WmsParameterNotSpecifiedException("SERVICE");
-            //return WmsParams.Failure("Required parameter SERVICE not specified");
 
             if (!String.Equals(service, "WMS", StringComparison.InvariantCulture))
                 throw new WmsInvalidParameterException("Invalid service for GetCapabilities Request. Service parameter must be 'WMS'");
-            //return WmsParams.Failure(
-            //    "Invalid service for GetCapabilities Request. Service parameter must be 'WMS'");
 
             return new WmsParams { Service = service, Version = version };
         }
 
         public override IHandlerResponse Handle(Map map, IContextRequest request)
         {
-            WmsParams @params = ValidateParams(request, 0);
-            if (!@params.IsValid)
-            {
-                throw new WmsInvalidParameterException(@params.Error, @params.ErrorCode);
-                //WmsException.ThrowWmsException(@params.ErrorCode, @params.Error, context);
-                //return;
-            }
+            ValidateParams(request, 0);
 
             XmlDocument doc = ServerCapabilities.GetCapabilities(map, Description);
             return new GetCapabilitiesResponse(doc);
