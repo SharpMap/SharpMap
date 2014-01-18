@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Specialized;
 using System.Xml;
 
 namespace SharpMap.Web.Wms.Server
@@ -13,7 +12,7 @@ namespace SharpMap.Web.Wms.Server
     public interface IContextRequest
     {
         Uri Url { get; }
-        NameValueCollection Params { get; }
+        string GetParam(string key);
     }
 
     public interface IContextResponse

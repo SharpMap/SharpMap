@@ -71,35 +71,35 @@ namespace SharpMap.Web.Wms.Server.Handlers
         /// </summary>
         protected WmsParams ValidateCommons(IContextRequest request, int targetSrid)
         {
-            string version = request.Params["VERSION"];
+            string version = request.GetParam("VERSION");
             if (version == null)
                throw new WmsParameterNotSpecifiedException("VERSION");
             if (!String.Equals(version, "1.3.0", Case))
                 throw new WmsInvalidParameterException("Only version 1.3.0 supported");
-            string layers = request.Params["LAYERS"];
+            string layers = request.GetParam("LAYERS");
             if (layers == null)
                 throw new WmsParameterNotSpecifiedException("LAYERS");
-            string styles = request.Params["STYLES"];
+            string styles = request.GetParam("STYLES");
             if (styles == null)
                 throw new WmsParameterNotSpecifiedException("STYLES");
-            string crs = request.Params["CRS"];
+            string crs = request.GetParam("CRS");
             if (crs == null)
                 throw new WmsParameterNotSpecifiedException("CRS");
             if (crs != "EPSG:" + targetSrid)
                 throw new WmsInvalidCRSException("CRS not supported");
-            string bbox = request.Params["BBOX"];
+            string bbox = request.GetParam("BBOX");
             if (bbox == null)
                 throw new WmsParameterNotSpecifiedException("BBOX");
-            string width = request.Params["WIDTH"];
+            string width = request.GetParam("WIDTH");
             if (width == null)
                 throw new WmsParameterNotSpecifiedException("WIDTH");
-            string height = request.Params["HEIGHT"];
+            string height = request.GetParam("HEIGHT");
             if (height == null)
                 throw new WmsParameterNotSpecifiedException("HEIGHT");
-            string format = request.Params["FORMAT"];
+            string format = request.GetParam("FORMAT");
             if (format == null)
                 throw new WmsParameterNotSpecifiedException("FORMAT");
-            string cqlFilter = request.Params["CQL_FILTER"];
+            string cqlFilter = request.GetParam("CQL_FILTER");
             short w, h;
             if (!Int16.TryParse(width, out w) || !Int16.TryParse(height, out h))
                 throw new WmsInvalidParameterException("Invalid parameters for HEIGHT or WITDH");

@@ -24,7 +24,7 @@ namespace SharpMap.Demo.Wms.Handlers
             IContextResponse response = context.Response;
             try
             {
-                string s = request.Params["BBOX"];
+                string s = request.GetParam("BBOX");
                 if (String.IsNullOrEmpty(s))
                     throw new WmsInvalidParameterException("BBOX");
 
@@ -37,7 +37,7 @@ namespace SharpMap.Demo.Wms.Handlers
                 if (bbox == null)
                     throw new WmsInvalidParameterException("Invalid parameter BBOX");
 
-                string ls = request.Params["LAYERS"];
+                string ls = request.GetParam("LAYERS");
                 if (!String.IsNullOrEmpty(ls))
                 {
                     string[] strings = ls.Split(',');

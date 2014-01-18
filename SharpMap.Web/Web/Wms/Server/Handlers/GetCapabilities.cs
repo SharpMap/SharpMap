@@ -12,14 +12,14 @@ namespace SharpMap.Web.Wms.Server.Handlers
         protected override WmsParams ValidateParams(IContextRequest request, int targetSrid)
         {
             // Version is mandatory only if REQUEST != GetCapabilities
-            string version = request.Params["VERSION"];
+            string version = request.GetParam("VERSION");
             if (version != null)
             {
                 if (!String.Equals(version, "1.3.0", Case))
                     throw new WmsOperationNotSupportedException("Only version 1.3.0 supported");
             }
             // Service parameter is mandatory for GetCapabilities request
-            string service = request.Params["SERVICE"];
+            string service = request.GetParam("SERVICE");
             if (service == null)
                 throw new WmsParameterNotSpecifiedException("SERVICE");
 

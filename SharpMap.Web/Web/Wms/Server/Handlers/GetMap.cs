@@ -23,10 +23,10 @@ namespace SharpMap.Web.Wms.Server.Handlers
 
             // Code specific for GetMap
             Color backColor;
-            bool transparent = String.Equals(request.Params["TRANSPARENT"], "TRUE", Case);
+            bool transparent = String.Equals(request.GetParam("TRANSPARENT"), "TRUE", Case);
             if (!transparent)
             {
-                string bgcolor = request.Params["BGCOLOR"];
+                string bgcolor = request.GetParam("BGCOLOR");
                 if (bgcolor != null)
                 {
                     try { backColor = ColorTranslator.FromHtml(bgcolor); }

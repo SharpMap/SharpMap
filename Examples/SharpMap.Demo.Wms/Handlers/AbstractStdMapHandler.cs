@@ -5,6 +5,7 @@ using GeoAPI;
 using NetTopologySuite;
 using SharpMap.Demo.Wms.Helpers;
 using SharpMap.Web.Wms;
+using SharpMap.Web.Wms.Exceptions;
 using SharpMap.Web.Wms.Server;
 
 namespace SharpMap.Demo.Wms.Handlers
@@ -47,7 +48,9 @@ namespace SharpMap.Demo.Wms.Handlers
 
         protected Map GetMap(IContextRequest request)
         {
-            string type = request.Params["MAP_TYPE"];
+            string type = request.GetParam("MAP_TYPE");
+            if (String.IsNullOrEmpty(type))
+                throw new WmsParameterNotSpecifiedException("MAP_TYPE");
             if (String.Equals(type, "DEF", StringComparison.InvariantCultureIgnoreCase))
                 return ShapefileHelper.Default();
             if (String.Equals(type, "SPH", StringComparison.InvariantCultureIgnoreCase))

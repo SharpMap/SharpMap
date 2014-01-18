@@ -230,7 +230,7 @@ namespace SharpMap.Web.Wms
                 if (map.Layers.Count == 0)
                     throw new WmsArgumentException("Map doesn't contain any layers for WMS service");
 
-                string req = request.Params["REQUEST"];
+                string req = request.GetParam("REQUEST");
                 if (req == null)
                     throw new WmsParameterNotSpecifiedException("Required parameter REQUEST not specified");
                 const StringComparison comparison = StringComparison.InvariantCultureIgnoreCase;

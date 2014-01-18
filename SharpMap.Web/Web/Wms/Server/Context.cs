@@ -50,6 +50,13 @@ namespace SharpMap.Web.Wms.Server
         {
             get { return _request.Params; }
         }
+
+        public string GetParam(string key)
+        {
+            if (String.IsNullOrEmpty(key))
+                throw new ArgumentNullException("key");
+            return Params[key];
+        }
     }
 
     public class ContextResponse : IContextResponse

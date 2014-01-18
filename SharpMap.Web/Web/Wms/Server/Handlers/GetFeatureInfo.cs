@@ -34,23 +34,23 @@ namespace SharpMap.Web.Wms.Server.Handlers
             WmsParams @params = ValidateCommons(request, targetSrid);
 
             // Code specific for GetFeatureInfo
-            string queryLayers = request.Params["QUERY_LAYERS"];
+            string queryLayers = request.GetParam("QUERY_LAYERS");
             if (queryLayers == null)
                 throw new WmsParameterNotSpecifiedException("QUERY_LAYERS");
             @params.QueryLayers = queryLayers;
 
-            string infoFormat = request.Params["INFO_FORMAT"];
+            string infoFormat = request.GetParam("INFO_FORMAT");
             if (infoFormat == null)
                 throw new WmsParameterNotSpecifiedException("INFO_FORMAT");
             @params.InfoFormat = infoFormat;
 
             //parameters X&Y are not part of the 1.3.0 specification, but are included for backwards compatability with 1.1.1 (OpenLayers likes it when used together with wms1.1.1 services)
-            string x = request.Params["X"];
-            string i = request.Params["I"];
+            string x = request.GetParam("X");
+            string i = request.GetParam("I");
             if (x == null && i == null)
                 throw new WmsParameterNotSpecifiedException("I");
-            string y = request.Params["Y"];
-            string j = request.Params["J"];
+            string y = request.GetParam("Y");
+            string j = request.GetParam("J");
             if (y == null && j == null)
                 throw new WmsParameterNotSpecifiedException("J");
             float cx = 0, cy = 0;
@@ -89,7 +89,7 @@ namespace SharpMap.Web.Wms.Server.Handlers
             @params.X = cx;
             @params.Y = cy;
 
-            string featureCount = request.Params["FEATURE_COUNT"];
+            string featureCount = request.GetParam("FEATURE_COUNT");
             int fc = Int32.TryParse(featureCount, out fc) ? Math.Max(fc, 1) : 1;
             @params.FeatureCount = fc;
             return @params;
