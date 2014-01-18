@@ -7,14 +7,6 @@ namespace SharpMap.Web.Wms.Server.Handlers
 {
     public class WmsParams
     {
-        public string Error { get; set; }
-        public WmsExceptionCode ErrorCode { get; set; }
-
-        public bool IsValid
-        {
-            get { return String.IsNullOrEmpty(Error); }
-        }
-
         public string Service { get; set; }
         public string Version { get; set; }
         public string Layers { get; set; }
@@ -31,17 +23,6 @@ namespace SharpMap.Web.Wms.Server.Handlers
         public int FeatureCount { get; set; }
         public string CqlFilter { get; set; }
         public Color BackColor { get; set; }
-
-        public static WmsParams Failure(string s)
-        {
-            return Failure(WmsExceptionCode.NotApplicable, s);
-        }
-
-        public static WmsParams Failure(WmsExceptionCode code, string s)
-        {
-            if (String.IsNullOrEmpty(s))
-                throw new ArgumentNullException("s", "an error message should be declared");
-            return new WmsParams { Error = s, ErrorCode = code };
-        }
+       
     }
 }
