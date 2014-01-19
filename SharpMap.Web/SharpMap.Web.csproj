@@ -117,6 +117,7 @@
     <Compile Include="Web\Wms\Exceptions\WmsOperationNotSupportedException.cs" />
     <Compile Include="Web\Wms\Exceptions\WmsParameterNotSpecifiedException.cs" />
     <Compile Include="Web\Wms\Exceptions\WmsStyleNotDefinedException.cs" />
+    <Compile Include="Web\Wms\StringComparerIgnoreCase.cs" />
     <Compile Include="Web\Wms\ServerCapabilities.cs" />
     <Compile Include="Web\Wms\Server\Handlers\AbstractHandler.cs" />
     <Compile Include="Web\Wms\Server\Context.cs" />

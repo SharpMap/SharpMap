@@ -9,6 +9,7 @@ using SharpMap.Data.Providers;
 using SharpMap.Layers;
 using SharpMap.Rendering.Thematics;
 using SharpMap.Web.Wms.Exceptions;
+using System.Linq;
 
 namespace SharpMap.Web.Wms.Server.Handlers
 {
@@ -33,7 +34,6 @@ namespace SharpMap.Web.Wms.Server.Handlers
                     catch
                     {
                         throw new WmsInvalidParameterException("Invalid parameter BGCOLOR: " + bgcolor);
-                        //return WmsParams.Failure("Invalid parameter BGCOLOR: " + bgcolor);
                     }
                 }
                 else backColor = Color.White;
@@ -46,177 +46,199 @@ namespace SharpMap.Web.Wms.Server.Handlers
         public override IHandlerResponse Handle(Map map, IContextRequest request)
         {
             WmsParams @params = ValidateParams(request, TargetSrid(map));
-            
+
             map.BackColor = @params.BackColor;
 
             //Get the image format requested
             ImageCodecInfo imageEncoder = GetEncoderInfo(@params.Format);
-            if (imageEncoder == null)
-            {
-                throw new WmsInvalidParameterException("Invalid MimeType specified in FORMAT parameter");
-            }
 
-            int width = @params.Width;
-            if (Description.MaxWidth > 0 && width > Description.MaxWidth)
-            {
-                throw new WmsOperationNotSupportedException("Parameter WIDTH too large");
-            }
-            int height = @params.Height;
-            if (Description.MaxHeight > 0 && height > Description.MaxHeight)
-            {
-                throw new WmsOperationNotSupportedException("Parameter HEIGHT too large");
-            }
-            map.Size = new Size(width, height);
+            Size size = GetSize(@params);
 
+            map.Size = size;
             Envelope bbox = @params.BBOX;
-            map.PixelAspectRatio = (width / (double)height) / (bbox.Width / bbox.Height);
+            map.PixelAspectRatio = (size.Width / (double)size.Height) / (bbox.Width / bbox.Height);
             map.Center = bbox.Centre;
             map.Zoom = bbox.Width;
 
-            //set Styles for layers
+            //set Styles for layerNames
             //first, if the request ==  STYLES=, set all the vectorlayers with Themes not null the Theme to the first theme from Themes
-            string pstyle = @params.Styles;
+            string ptheme = @params.Styles;
             string players = @params.Layers;
-            if (String.IsNullOrEmpty(pstyle))
+            string cqlFilter = @params.CqlFilter;
+
+            if (!String.IsNullOrEmpty(players))
             {
+                string[] layerNames = GetLayerNames(map, players);
+
+                // we have a known set of layerNames in request 
+                // so we will set each layer to its default theme
+                // and disable the layer, layers will be enabled 
+                // later as per the request
                 foreach (ILayer layer in map.Layers)
                 {
                     VectorLayer vectorLayer = layer as VectorLayer;
-                    if (vectorLayer != null)
-                    {
-                        if (vectorLayer.Themes != null)
-                        {
-                            foreach (KeyValuePair<string, ITheme> kvp in vectorLayer.Themes)
-                            {
-                                vectorLayer.Theme = kvp.Value;
-                                break;
-                            }
-                        }
-                    }
+                    SetDefaultThemeForLayer(vectorLayer);
+                    layer.Enabled = false;
                 }
-            }
-            else
-            {
-                if (!String.IsNullOrEmpty(players))
+
+                var themeTable = new Dictionary<string, string>();
+
+                BuildThemeLookup(ptheme, layerNames, themeTable);
+
+                // since we have layerNames specified
+                // enable only those layerNames
+                for (int j = 0; j < layerNames.Length; j++)
                 {
-                    string[] layerz = players.Split(new[] { ',' });
-                    string[] styles = pstyle.Split(new[] { ',' });
-                    //test whether the lengt of the layers and the styles is the same. WMS spec is unclear on what to do if there is no one-to-one correspondence
-                    if (layerz.Length == styles.Length)
+                    var layerName = layerNames[j];
+                    var layer = GetMapLayerByName(map, layerName);
+
+                    //Set layer on/off
+                    layer.Enabled = true;
+
+                    //check if a styles have been specified for layers
+                    if (themeTable.Count > 0)
                     {
-                        foreach (ILayer layer in map.Layers)
+                        var themeName = themeTable[layerName];
+                        //do nothing if themeName is empty
+                        if (!string.IsNullOrEmpty(themeName))
                         {
                             //is this a vector layer at all
                             VectorLayer vectorLayer = layer as VectorLayer;
-                            if (vectorLayer == null) continue;
 
-                            //does it have several themes applied
+                            //does it have several themes to choose from
                             //TODO -> Refactor VectorLayer.Themes to Rendering.Thematics.ThemeList : ITheme
-                            if (vectorLayer.Themes != null && vectorLayer.Themes.Count > 0)
+                            if (vectorLayer != null && vectorLayer.Themes != null && vectorLayer.Themes.Count > 0)
                             {
-                                for (int i = 0; i < layerz.Length; i++)
+                                // we need to a case invariant comparison for themeName
+                                var themeDict = new Dictionary<string, ITheme>(vectorLayer.Themes, new StringComparerIgnoreCase());
+
+                                if (themeDict.ContainsKey(themeName))
                                 {
-                                    if (String.Equals(layer.LayerName, layerz[i],
-                                        StringComparison.InvariantCultureIgnoreCase))
-                                    {
-                                        //take default style if style is empty
-                                        if (styles[i] == "")
-                                        {
-                                            foreach (KeyValuePair<string, ITheme> kvp in vectorLayer.Themes)
-                                            {
-                                                vectorLayer.Theme = kvp.Value;
-                                                break;
-                                            }
-                                        }
-                                        else
-                                        {
-                                            if (vectorLayer.Themes.ContainsKey(styles[i]))
-                                            {
-                                                vectorLayer.Theme = vectorLayer.Themes[styles[i]];
-                                            }
-                                            else
-                                            {
-                                                throw new WmsStyleNotDefinedException("Style not advertised for this layer");
-                                            }
-                                        }
-                                    }
+                                    vectorLayer.Theme = themeDict[themeName];
+                                }
+                                else
+                                {
+                                    throw new WmsStyleNotDefinedException("Style not advertised for this layer");
                                 }
                             }
                         }
                     }
+
+                    if (!String.IsNullOrEmpty(cqlFilter))
+                    {
+                        ApplyCqlFilter(cqlFilter, layer);
+                    }
                 }
+
             }
-
-            string cqlFilter = @params.CqlFilter;
-            if (!String.IsNullOrEmpty(cqlFilter))
-            {
-                foreach (ILayer layer in map.Layers)
-                {
-                    VectorLayer vectorLayer = layer as VectorLayer;
-                    if (vectorLayer != null)
-                    {
-                        PrepareDataSourceForCql(vectorLayer.DataSource, cqlFilter);
-                        continue;
-                    }
-
-                    LabelLayer labelLayer = layer as LabelLayer;
-                    if (labelLayer != null)
-                    {
-                        PrepareDataSourceForCql(labelLayer.DataSource, cqlFilter);
-                    }
-                }
-            }
-
-            //Set layers on/off
-            string layersString = players;
-            if (!String.IsNullOrEmpty(layersString))
-            //If LAYERS is empty, use default layer on/off settings
-            {
-                string[] layers = layersString.Split(new[] { ',' });
-                if (Description.LayerLimit > 0)
-                {
-                    if (layers.Length == 0 && map.Layers.Count > Description.LayerLimit ||
-                        layers.Length > Description.LayerLimit)
-                    {
-                        throw new WmsOperationNotSupportedException("Too many layers requested");
-                    }
-                }
-
-                foreach (ILayer layer in map.Layers)
-                    layer.Enabled = false;
-                foreach (string layer in layers)
-                {
-                    //SharpMap.Layers.ILayer lay = map.Layers.Find(delegate(SharpMap.Layers.ILayer findlay) { return findlay.message == layer; });
-                    ILayer lay = null;
-                    for (int i = 0; i < map.Layers.Count; i++)
-                        if (String.Equals(map.Layers[i].LayerName, layer,
-                            StringComparison.InvariantCultureIgnoreCase))
-                            lay = map.Layers[i];
-
-
-                    if (lay == null)
-                    {
-                        throw new WmsLayerNotDefinedException(layer);
-                    }
-                    lay.Enabled = true;
-                }
-            }
-
             //Render map
             Image img = map.GetMap();
             return new GetMapResponse(img, imageEncoder);
         }
 
+        private string[] GetLayerNames(Map map, string players)
+        {
+            string[] layerNames = players.Split(new[] { ',' });
+            if (Description.LayerLimit > 0)
+            {
+                if (layerNames.Length == 0 &&
+                    map.Layers.Count > Description.LayerLimit ||
+                    layerNames.Length > Description.LayerLimit)
+                {
+                    throw new WmsOperationNotSupportedException("Too many layerNames requested");
+                }
+            }
+            return layerNames;
+        }
+
+        private static void BuildThemeLookup(string pstyle, string[] layerNames, Dictionary<string, string> themeTable)
+        {
+            if (!String.IsNullOrEmpty(pstyle))
+            {
+                string[] styleNames = pstyle.Split(new[] { ',' });
+                
+                //test whether the number of the layers and the styles specified are equal. 
+                //WMS spec is unclear on what to do if there is no one-to-one correspondence
+                if (layerNames.Length == styleNames.Length)
+                {
+                    for (var i = 0; i < layerNames.Length; i++)
+                    {
+                        themeTable.Add(layerNames[i], styleNames[i]);
+                    }
+                }
+            }
+        }
+
+
+
+        private Size GetSize(WmsParams @params)
+        {
+
+            if (Description.MaxWidth > 0 && @params.Width > Description.MaxWidth)
+            {
+                throw new WmsOperationNotSupportedException("Parameter WIDTH too large");
+            }
+
+            if (Description.MaxHeight > 0 && @params.Height > Description.MaxHeight)
+            {
+                throw new WmsOperationNotSupportedException("Parameter HEIGHT too large");
+            }
+
+            return new Size(@params.Width, @params.Height);
+        }
+
+        private ILayer GetMapLayerByName(Map map, string layerName)
+        {
+            for (int i = 0; i < map.Layers.Count; i++)
+            {
+                // this function should be an  map.GetLayerByName
+                if (String.Equals(map.Layers[i].LayerName, layerName, StringComparison.InvariantCultureIgnoreCase))
+                {
+                    return map.Layers[i];
+                }
+            }
+            throw new WmsLayerNotDefinedException(layerName);
+        }
+
+        private void ApplyCqlFilter(string cqlFilter, ILayer layer)
+        {
+            VectorLayer vectorLayer = layer as VectorLayer;
+            if (vectorLayer != null)
+            {
+                PrepareDataSourceForCql(vectorLayer.DataSource, cqlFilter);
+            }
+
+            LabelLayer labelLayer = layer as LabelLayer;
+            if (labelLayer != null)
+            {
+                PrepareDataSourceForCql(labelLayer.DataSource, cqlFilter);
+            }
+        }
+
+        private void SetDefaultThemeForLayer(VectorLayer vectorLayer)
+        {
+            if (vectorLayer != null && vectorLayer.Themes != null && vectorLayer.Themes.Count > 0)
+            {
+                // we assume that the first theme in the themes list is the default theme
+                foreach (KeyValuePair<string, ITheme> kvp in vectorLayer.Themes)
+                {
+                    vectorLayer.Theme = kvp.Value;
+                    break;
+                }
+            }
+        }
+
+
         private void PrepareDataSourceForCql(IProvider provider, string cqlFilterString)
         {
-            //for layers with a filterprovider
+            //for layerNames with a filterprovider
             FilterProvider filterProvider = provider as FilterProvider;
             if (filterProvider != null)
             {
                 filterProvider.FilterDelegate = row => CqlFilter(row, cqlFilterString);
                 return;
             }
-            //for layers with a SQL datasource with a DefinitionQuery property
+            //for layerNames with a SQL datasource with a DefinitionQuery property
             PropertyInfo piDefinitionQuery = provider.GetType().GetProperty("DefinitionQuery", BindingFlags.Public | BindingFlags.Instance);
             if (piDefinitionQuery != null)
                 piDefinitionQuery.SetValue(provider, cqlFilterString, null);
@@ -230,9 +252,10 @@ namespace SharpMap.Web.Wms.Server.Handlers
             foreach (ImageCodecInfo encoder in ImageCodecInfo.GetImageEncoders())
                 if (encoder.MimeType == mimeType)
                     return encoder;
-            return null;
+            throw new WmsInvalidParameterException("Invalid MimeType specified in FORMAT parameter");
         }
     }
+
 
     public class GetMapResponse : IHandlerResponse
     {
