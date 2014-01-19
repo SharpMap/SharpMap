@@ -16,7 +16,7 @@ namespace SharpMap.Web.Wms.Server.Handlers
         private readonly WmsServer.InterSectDelegate _intersectDelegate;
         private readonly Encoding _encoding;
 
-        public GetFeatureInfo(Capabilities.WmsServiceDescription description,
+        protected GetFeatureInfo(Capabilities.WmsServiceDescription description,
             int pixelSensitivity, WmsServer.InterSectDelegate intersectDelegate, Encoding encoding) :
             base(description)
         {
@@ -43,27 +43,23 @@ namespace SharpMap.Web.Wms.Server.Handlers
 
             // parameters X&Y are not part of the 1.3.0 specification, 
             // but are included for backwards compatability with 1.1.1 
-            //(OpenLayers likes it when used together with wms1.1.1 services)
+            // (OpenLayers likes it when used together with wms1.1.1 services)
             // we will assume that Openlayers is used by default 
             // so check X&Y first
             string x = request.GetParam("X") ?? request.GetParam("I");
-            string y = request.GetParam("Y") ?? request.GetParam("J");
-
-            if (x == null) 
+            if (x == null)
                 throw new WmsParameterNotSpecifiedException("I");
-
-            if (y == null) 
+            string y = request.GetParam("Y") ?? request.GetParam("J");
+            if (y == null)
                 throw new WmsParameterNotSpecifiedException("J");
 
-            float cx = 0, cy = 0;
-
-            if (!float.TryParse(x, out cx)) 
+            float cx;
+            if (!Single.TryParse(x, out cx))
                 throw new WmsInvalidParameterException("Invalid parameters for X / I");
-
-            if (!float.TryParse(y, out cy)) 
-                throw new WmsInvalidParameterException("Invalid parameters for Y / J");
-
             @params.X = cx;
+            float cy;
+            if (!Single.TryParse(y, out cy))
+                throw new WmsInvalidParameterException("Invalid parameters for Y / J");
             @params.Y = cy;
 
             string featureCount = request.GetParam("FEATURE_COUNT");
@@ -112,7 +108,6 @@ namespace SharpMap.Web.Wms.Server.Handlers
                 {
                     if (layer is ICanQueryLayer)
                         return layer as ICanQueryLayer;
-                    string s = String.Format("Layer cannot be queried: {0}", requestLayer);
                     throw new WmsLayerNotQueryableException(requestLayer);
                 }
             }
@@ -123,11 +118,11 @@ namespace SharpMap.Web.Wms.Server.Handlers
         /// Check if the layer can be queried and retrieve data, if there is any.
         /// </summary>
         protected bool TryGetData(Map map,
-            float x, float y, 
-            int pixelSensitivity, 
-            WmsServer.InterSectDelegate intersectDelegate, 
-            ICanQueryLayer queryLayer, 
-            string cqlFilter, 
+            float x, float y,
+            int pixelSensitivity,
+            WmsServer.InterSectDelegate intersectDelegate,
+            ICanQueryLayer queryLayer,
+            string cqlFilter,
             out FeatureDataSet fds)
         {
             if (!queryLayer.IsQueryEnabled)
