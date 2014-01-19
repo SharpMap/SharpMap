@@ -20,9 +20,9 @@ using System.Text;
 using System.Web;
 using GeoAPI.Geometries;
 using SharpMap.Data;
+using SharpMap.Web.Wms.Exceptions;
 using SharpMap.Web.Wms.Server;
 using SharpMap.Web.Wms.Server.Handlers;
-using SharpMap.Web.Wms.Exceptions;
 
 namespace SharpMap.Web.Wms
 {
@@ -219,11 +219,12 @@ namespace SharpMap.Web.Wms
         /// <param name="context">The context the <see cref="WmsServer"/> is running in.</param>
         public static void ParseQueryString(Map map, Capabilities.WmsServiceDescription description, IContext context)
         {
+            const StringComparison @case = StringComparison.InvariantCultureIgnoreCase;
             IContextRequest request = context.Request;
             IContextResponse response = context.Response;
             try
             {
-                if (PixelSensitivity == -1)
+                if (PixelSensitivity < 0)
                     PixelSensitivity = 1;
                 if (map == null)
                     throw new WmsArgumentException("Map for WMS is null");
@@ -232,16 +233,31 @@ namespace SharpMap.Web.Wms
 
                 string req = request.GetParam("REQUEST");
                 if (req == null)
-                    throw new WmsParameterNotSpecifiedException("Required parameter REQUEST not specified");
-                const StringComparison comparison = StringComparison.InvariantCultureIgnoreCase;
+                    throw new WmsParameterNotSpecifiedException("REQUEST");
+
                 IHandler handler;
-                if (String.Equals(req, "GetCapabilities", comparison))
+                if (String.Equals(req, "GetCapabilities", @case))
                     handler = new GetCapabilities(description);
-                else if (String.Equals(req, "GetFeatureInfo", comparison))
-                    handler = new GetFeatureInfo(description, PixelSensitivity, IntersectDelegate, FeatureInfoResponseEncoding);
-                else if (String.Equals(req, "GetMap", comparison))
+                else if (String.Equals(req, "GetFeatureInfo", @case))
+                {
+                    string format = request.GetParam("INFO_FORMAT");
+                    if (format == null)
+                        throw new WmsParameterNotSpecifiedException("INFO_FORMAT");
+
+                    bool json = String.Equals(format, "text/json", @case);
+                    if (json)
+                        handler = new GetFeatureInfoJson(description, PixelSensitivity, IntersectDelegate,
+                            FeatureInfoResponseEncoding);
+                    else handler = new GetFeatureInfoPlain(description, PixelSensitivity, IntersectDelegate,
+                        FeatureInfoResponseEncoding);
+                }
+                else if (String.Equals(req, "GetMap", @case))
                     handler = new GetMap(description);
-                else throw new WmsOperationNotSupportedException("Invalid request");
+                else
+                {
+                    string s = String.Format("Invalid request: {0}", req);
+                    throw new WmsOperationNotSupportedException(s);
+                }
 
                 IHandlerResponse result = handler.Handle(map, request);
                 result.WriteToContextAndFlush(response);
