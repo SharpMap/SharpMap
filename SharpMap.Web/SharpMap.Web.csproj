@@ -122,8 +122,15 @@
     <Compile Include="Web\Wms\Server\Handlers\AbstractHandler.cs" />
     <Compile Include="Web\Wms\Server\Context.cs" />
     <Compile Include="Web\Wms\Server\Handlers\GetCapabilities.cs" />
+    <Compile Include="Web\Wms\Server\Handlers\GetCapabilitiesResponse.cs" />
     <Compile Include="Web\Wms\Server\Handlers\GetFeatureInfo.cs" />
+    <Compile Include="Web\Wms\Server\Handlers\GetFeatureInfoJson.cs" />
+    <Compile Include="Web\Wms\Server\Handlers\GetFeatureInfoPlain.cs" />
+    <Compile Include="Web\Wms\Server\Handlers\GetFeatureInfoResponse.cs" />
+    <Compile Include="Web\Wms\Server\Handlers\GetFeatureInfoResponseJson.cs" />
+    <Compile Include="Web\Wms\Server\Handlers\GetFeatureInfoResponsePlain.cs" />
     <Compile Include="Web\Wms\Server\Handlers\GetMap.cs" />
+    <Compile Include="Web\Wms\Server\Handlers\GetMapResponse.cs" />
     <Compile Include="Web\Wms\Server\Handlers\WmsParams.cs" />
     <Compile Include="Web\Wms\Server\IContext.cs" />
     <Compile Include="Web\Wms\Server\Handlers\IHandler.cs" />

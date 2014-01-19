@@ -240,16 +240,16 @@ namespace SharpMap.Web.Wms
                     handler = new GetCapabilities(description);
                 else if (String.Equals(req, "GetFeatureInfo", @case))
                 {
-                    string format = request.GetParam("INFO_FORMAT");
-                    if (format == null)
-                        throw new WmsParameterNotSpecifiedException("INFO_FORMAT");
-
+                    // use text/plain as default handler
+                    // let the default handler validate params
+                    string format = request.GetParam("INFO_FORMAT") ?? String.Empty;
                     bool json = String.Equals(format, "text/json", @case);
-                    if (json)
+                    if (!json)
+                        handler = new GetFeatureInfoPlain(description, PixelSensitivity, IntersectDelegate,
+                            FeatureInfoResponseEncoding);
+                    else
                         handler = new GetFeatureInfoJson(description, PixelSensitivity, IntersectDelegate,
                             FeatureInfoResponseEncoding);
-                    else handler = new GetFeatureInfoPlain(description, PixelSensitivity, IntersectDelegate,
-                        FeatureInfoResponseEncoding);
                 }
                 else if (String.Equals(req, "GetMap", @case))
                     handler = new GetMap(description);

@@ -1,13 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Drawing;
-using System.IO;
-using System.Linq;
 using System.Text;
 using System.Web;
-using GeoAPI.CoordinateSystems.Transformations;
 using GeoAPI.Geometries;
-using SharpMap.Converters.GeoJSON;
 using SharpMap.Data;
 using SharpMap.Layers;
 using SharpMap.Web.Wms.Exceptions;
@@ -33,7 +30,7 @@ namespace SharpMap.Web.Wms.Server.Handlers
         {
             WmsParams @params = ValidateCommons(request, targetSrid);
 
-            // Code specific for GetFeatureInfo
+            // code specific for GetFeatureInfo
             string queryLayers = request.GetParam("QUERY_LAYERS");
             if (queryLayers == null)
                 throw new WmsParameterNotSpecifiedException("QUERY_LAYERS");
@@ -42,9 +39,12 @@ namespace SharpMap.Web.Wms.Server.Handlers
             string infoFormat = request.GetParam("INFO_FORMAT");
             if (infoFormat == null)
                 throw new WmsParameterNotSpecifiedException("INFO_FORMAT");
+
             @params.InfoFormat = infoFormat;
 
-            //parameters X&Y are not part of the 1.3.0 specification, but are included for backwards compatability with 1.1.1 (OpenLayers likes it when used together with wms1.1.1 services)
+            // parameters X&Y are not part of the 1.3.0 specification, 
+            // but are included for backwards compatability with 1.1.1 
+            //(OpenLayers likes it when used together with wms1.1.1 services)
             string x = request.GetParam("X");
             string i = request.GetParam("I");
             if (x == null && i == null)
@@ -98,10 +98,8 @@ namespace SharpMap.Web.Wms.Server.Handlers
         public override IHandlerResponse Handle(Map map, IContextRequest request)
         {
             WmsParams @params = ValidateParams(request, TargetSrid(map));
-
             map.Size = new Size(@params.Width, @params.Height);
             map.ZoomToBox(@params.BBOX);
-
             string[] requestLayers = @params.QueryLayers.Split(new[] { ',' });
             string info = CreateFeatureInfo(map, requestLayers, @params.X, @params.Y, @params.FeatureCount, @params.CqlFilter, _pixelSensitivity, _intersectDelegate);
             GetFeatureInfoResponse response = new GetFeatureInfoResponsePlain(info);
@@ -110,17 +108,16 @@ namespace SharpMap.Web.Wms.Server.Handlers
         }
 
         /// <summary>
-        /// Gets FeatureInfo as text/plain
+        /// Gets FeatureInfo
         /// </summary>
         /// <param name="map">The map to create the feature info from</param>
         /// <param name="requestedLayers">The layers to create the feature info for</param>
-        /// <param name="x">The x-Ordinate</param>
-        /// <param name="y">The y-Ordinate</param>
+        /// <param name="x">The x-ordinate</param>
+        /// <param name="y">The y-ordinate</param>
         /// <param name="featureCount">The max number of features retrieved.</param>
         /// <param name="cqlFilter">The CQL Filter string</param>
-        /// <param name="pixelSensitivity"></param>
-        /// <param name="intersectDelegate"></param>
-        /// <exception cref="InvalidOperationException">Thrown if this function is used without a valid <see cref="HttpContext"/> at hand</exception>
+        /// <param name="pixelSensitivity">The sensitivity to use when querying data.</param>
+        /// <param name="intersectDelegate">A <see cref="WmsServer.InterSectDelegate"/> to filter data.</param>
         /// <returns>Plain text string with featureinfo results</returns>
         protected abstract string CreateFeatureInfo(Map map, IEnumerable<string> requestedLayers, float x, float y,
             int featureCount, string cqlFilter, int pixelSensitivity, WmsServer.InterSectDelegate intersectDelegate);
@@ -128,18 +125,13 @@ namespace SharpMap.Web.Wms.Server.Handlers
         protected ICanQueryLayer GetQueryLayer(Map map, string requestLayer)
         {
             foreach (ILayer mapLayer in map.Layers)
-            {
-                if (!((String.Equals(mapLayer.LayerName, requestLayer, StringComparison.InvariantCultureIgnoreCase))))
-                    continue;
-
-                return mapLayer as ICanQueryLayer;
-            }
+                if (String.Equals(mapLayer.LayerName, requestLayer))
+                    return mapLayer as ICanQueryLayer;
             throw new WmsLayerNotDefinedException(requestLayer);
         }
 
         protected bool TryGetData(Map map, float x, float y, int pixelSensitivity, WmsServer.InterSectDelegate intersectDelegate, ICanQueryLayer queryLayer, string cqlFilter, out FeatureDataSet fds)
         {
-
             float queryBoxMinX = x - pixelSensitivity;
             float queryBoxMinY = y - pixelSensitivity;
             float queryBoxMaxX = x + pixelSensitivity;
@@ -151,196 +143,25 @@ namespace SharpMap.Web.Wms.Server.Handlers
             fds = new FeatureDataSet();
             queryLayer.ExecuteIntersectionQuery(queryBox, fds);
 
+            FeatureTableCollection tables = fds.Tables;
+            FeatureDataTable table = tables[0];
             if (intersectDelegate != null)
-            {
-                fds.Tables[0] = intersectDelegate(fds.Tables[0], queryBox);
-            }
+                tables[0] = intersectDelegate(table, queryBox);
 
-            //filter the rows with the CQLFilter if one is provided
+            // filter the rows with the CQLFilter if one is provided
             if (cqlFilter != null)
             {
-                for (int i = fds.Tables[0].Rows.Count - 1; i >= 0; i--)
+                DataRowCollection rows = table.Rows;
+                for (int i = rows.Count - 1; i >= 0; i--)
                 {
-                    if (!CqlFilter((FeatureDataRow)fds.Tables[0].Rows[i], cqlFilter))
-                    {
-                        fds.Tables[0].Rows.RemoveAt(i);
-                    }
+                    FeatureDataRow row = (FeatureDataRow) rows[i];
+                    bool b = CqlFilter(row, cqlFilter);
+                    if (!b)
+                        rows.RemoveAt(i);
                 }
             }
 
-            return fds.Tables.Count > 0 && fds.Tables[0].Rows.Count > 0;
-        }
-    }
-
-    public class GetFeatureInfoPlain : GetFeatureInfo
-    {
-        public GetFeatureInfoPlain(Capabilities.WmsServiceDescription description,
-            int pixelSensitivity, WmsServer.InterSectDelegate intersectDelegate, Encoding encoding) :
-            base(description, pixelSensitivity, intersectDelegate, encoding) { }
-
-        protected override string CreateFeatureInfo(Map map, IEnumerable<string> requestedLayers, float x, float y, int featureCount, string cqlFilter,
-            int pixelSensitivity, WmsServer.InterSectDelegate intersectDelegate)
-        {
-            StringBuilder vstr = new StringBuilder("GetFeatureInfo results: \n");
-            foreach (string requestLayer in requestedLayers)
-            {
-                ICanQueryLayer queryLayer = GetQueryLayer(map, requestLayer);
-
-                FeatureDataSet fds;
-                // at this point queryLayer should have a non null value
-                // check if the layer can be queried and if there is any data
-                if (queryLayer.IsQueryEnabled && TryGetData(map, x, y, pixelSensitivity, intersectDelegate, queryLayer, cqlFilter, out fds))
-                {
-                    //if featurecount < fds...count, select smallest bbox, because most likely to be clicked
-                    vstr.AppendFormat("\n Layer: '{0}'\n Featureinfo:\n", requestLayer);
-                    int[] keys = new int[fds.Tables[0].Rows.Count];
-                    double[] area = new double[fds.Tables[0].Rows.Count];
-                    for (int l = 0; l < fds.Tables[0].Rows.Count; l++)
-                    {
-                        FeatureDataRow fdr = (FeatureDataRow)fds.Tables[0].Rows[l];
-                        area[l] = fdr.Geometry.EnvelopeInternal.Area;
-                        keys[l] = l;
-                    }
-                    Array.Sort(area, keys);
-                    if (fds.Tables[0].Rows.Count < featureCount)
-                    {
-                        featureCount = fds.Tables[0].Rows.Count;
-                    }
-                    for (int k = 0; k < featureCount; k++)
-                    {
-                        for (int j = 0; j < fds.Tables[0].Rows[keys[k]].ItemArray.Length; j++)
-                        {
-                            vstr.AppendFormat(" '{0}'", fds.Tables[0].Rows[keys[k]].ItemArray[j]);
-                        }
-                        if ((k + 1) < featureCount)
-                            vstr.Append(",\n");
-                    }
-                }
-                else
-                {
-                    vstr.AppendFormat("\nSearch returned no results on layer: {0}", requestLayer);
-                }
-
-            }
-            return vstr.ToString();
-        }
-    }
-
-    public class GetFeatureInfoJson : GetFeatureInfo
-    {
-        public GetFeatureInfoJson(Capabilities.WmsServiceDescription description,
-            int pixelSensitivity, WmsServer.InterSectDelegate intersectDelegate, Encoding encoding) :
-            base(description, pixelSensitivity, intersectDelegate, encoding) { }
-
-        protected override string CreateFeatureInfo(Map map, IEnumerable<string> requestedLayers, float x, float y, int featureCount, string cqlFilter,
-            int pixelSensitivity, WmsServer.InterSectDelegate intersectDelegate)
-        {
-            List<GeoJSON> items = new List<GeoJSON>();
-            foreach (string requestLayer in requestedLayers)
-            {
-                ICanQueryLayer queryLayer = GetQueryLayer(map, requestLayer);
-
-                FeatureDataSet fds;
-                // at this point queryLayer should have a non null value
-                // check if the layer can be queried and if there is any data
-                if (queryLayer.IsQueryEnabled && TryGetData(map, x, y, pixelSensitivity, intersectDelegate, queryLayer, cqlFilter, out fds))
-                {
-                    // maybe this part should go into the TryGetData method
-                    // afterall we are going to use data after applying filter
-
-                    IEnumerable<GeoJSON> data = GeoJSONHelper.GetData(fds);
-#if DotSpatialProjections
-                        throw new NotImplementedException();
-#else
-                    // Reproject geometries if needed
-                    IMathTransform transform = null;
-                    if (queryLayer is VectorLayer)
-                    {
-                        ICoordinateTransformation transformation = (queryLayer as VectorLayer).CoordinateTransformation;
-                        transform = transformation == null ? null : transformation.MathTransform;
-                    }
-
-                    if (transform != null)
-                    {
-                        data = data.Select(d =>
-                        {
-                            IGeometry converted = GeometryTransform.TransformGeometry(d.Geometry, transform, map.Factory);
-                            d.SetGeometry(converted);
-                            return d;
-                        });
-                    }
-#endif
-                    items.AddRange(data);
-                }
-            }
-            StringWriter writer = new StringWriter();
-            GeoJSONWriter.Write(items, writer);
-            return writer.ToString();
-        }
-    }
-
-    public abstract class GetFeatureInfoResponse : IHandlerResponse
-    {
-        private readonly string _response;
-        private string _charset;
-        private bool _bufferOutput;
-
-        protected GetFeatureInfoResponse(string response)
-        {
-            if (String.IsNullOrEmpty(response))
-                throw new ArgumentNullException("response");
-            _response = response;
-        }
-
-        public abstract string ContentType { get; }
-
-        public string Charset
-        {
-            get { return _charset; }
-            set { _charset = value; }
-        }
-
-        protected bool BufferOutput
-        {
-            get { return _bufferOutput; }
-            set { _bufferOutput = value; }
-        }
-
-        public void WriteToContextAndFlush(IContextResponse response)
-        {
-            response.Clear();
-            if (Charset != null)
-            {
-                //"windows-1252";
-                response.Charset = Charset;
-            }
-            response.BufferOutput = BufferOutput;
-            response.Write(_response);
-            response.End();
-        }
-    }
-
-    public class GetFeatureInfoResponseJson : GetFeatureInfoResponse
-    {
-        public GetFeatureInfoResponseJson(string response)
-            : base(response)
-        {
-            BufferOutput = true;
-        }
-
-        public override string ContentType
-        {
-            get { return "text/json"; }
-        }
-    }
-
-    public class GetFeatureInfoResponsePlain : GetFeatureInfoResponse
-    {
-        public GetFeatureInfoResponsePlain(string response) : base(response) { }
-
-        public override string ContentType
-        {
-            get { return "text/plain"; }
+            return tables.Count > 0 && table.Rows.Count > 0;
         }
     }
 }
