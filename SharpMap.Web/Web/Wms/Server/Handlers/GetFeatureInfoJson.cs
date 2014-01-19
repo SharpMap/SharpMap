@@ -16,8 +16,13 @@ namespace SharpMap.Web.Wms.Server.Handlers
             int pixelSensitivity, WmsServer.InterSectDelegate intersectDelegate, Encoding encoding) :
             base(description, pixelSensitivity, intersectDelegate, encoding) { }
 
-        protected override string CreateFeatureInfo(Map map, IEnumerable<string> requestedLayers, float x, float y, int featureCount, string cqlFilter,
-            int pixelSensitivity, WmsServer.InterSectDelegate intersectDelegate)
+        protected override string CreateFeatureInfo(Map map, 
+            IEnumerable<string> requestedLayers, 
+            float x, float y, 
+            int featureCount, 
+            string cqlFilter,
+            int pixelSensitivity, 
+            WmsServer.InterSectDelegate intersectDelegate)
         {
             List<GeoJSON> items = new List<GeoJSON>();
             foreach (string requestLayer in requestedLayers)
@@ -25,9 +30,7 @@ namespace SharpMap.Web.Wms.Server.Handlers
                 ICanQueryLayer queryLayer = GetQueryLayer(map, requestLayer);
 
                 FeatureDataSet fds;
-                // at this point queryLayer should have a non null value
-                // check if the layer can be queried and if there is any data
-                if (queryLayer.IsQueryEnabled && TryGetData(map, x, y, pixelSensitivity, intersectDelegate, queryLayer, cqlFilter, out fds))
+                if (TryGetData(map, x, y, pixelSensitivity, intersectDelegate, queryLayer, cqlFilter, out fds))
                 {
                     // maybe this part should go into the TryGetData method
                     // afterall we are going to use data after applying filter
@@ -56,9 +59,9 @@ namespace SharpMap.Web.Wms.Server.Handlers
                     items.AddRange(data);
                 }
             }
-            StringWriter writer = new StringWriter();
-            GeoJSONWriter.Write(items, writer);
-            return writer.ToString();
+            StringWriter sb = new StringWriter();
+            GeoJSONWriter.Write(items, sb);
+            return sb.ToString();
         }
     }
 }

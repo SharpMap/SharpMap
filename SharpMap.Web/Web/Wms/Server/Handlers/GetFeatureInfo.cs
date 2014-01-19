@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
 using System.Text;
-using System.Web;
 using GeoAPI.Geometries;
 using SharpMap.Data;
 using SharpMap.Layers;
@@ -86,30 +85,57 @@ namespace SharpMap.Web.Wms.Server.Handlers
         }
 
         /// <summary>
-        /// Gets FeatureInfo
+        /// Gets FeatureInfo.
         /// </summary>
-        /// <param name="map">The map to create the feature info from</param>
-        /// <param name="requestedLayers">The layers to create the feature info for</param>
-        /// <param name="x">The x-ordinate</param>
-        /// <param name="y">The y-ordinate</param>
+        /// <param name="map">The map to create the feature info from.</param>
+        /// <param name="requestedLayers">The layers to create the feature info for.</param>
+        /// <param name="x">The x-ordinate.</param>
+        /// <param name="y">The y-ordinate.</param>
         /// <param name="featureCount">The max number of features retrieved.</param>
-        /// <param name="cqlFilter">The CQL Filter string</param>
+        /// <param name="cqlFilter">The CQL Filter string.</param>
         /// <param name="pixelSensitivity">The sensitivity to use when querying data.</param>
         /// <param name="intersectDelegate">A <see cref="WmsServer.InterSectDelegate"/> to filter data.</param>
-        /// <returns>Plain text string with featureinfo results</returns>
-        protected abstract string CreateFeatureInfo(Map map, IEnumerable<string> requestedLayers, float x, float y,
-            int featureCount, string cqlFilter, int pixelSensitivity, WmsServer.InterSectDelegate intersectDelegate);
+        /// <returns>Text string with featureinfo results.</returns>
+        protected abstract string CreateFeatureInfo(Map map,
+            IEnumerable<string> requestedLayers,
+            float x, float y,
+            int featureCount,
+            string cqlFilter,
+            int pixelSensitivity,
+            WmsServer.InterSectDelegate intersectDelegate);
 
         protected ICanQueryLayer GetQueryLayer(Map map, string requestLayer)
         {
-            foreach (ILayer mapLayer in map.Layers)
-                if (String.Equals(mapLayer.LayerName, requestLayer))
-                    return mapLayer as ICanQueryLayer;
+            foreach (ILayer layer in map.Layers)
+            {
+                if (String.Equals(layer.LayerName, requestLayer))
+                {
+                    if (layer is ICanQueryLayer)
+                        return layer as ICanQueryLayer;
+                    string s = String.Format("Layer cannot be queried: {0}", requestLayer);
+                    throw new WmsLayerNotQueryableException(requestLayer);
+                }
+            }
             throw new WmsLayerNotDefinedException(requestLayer);
         }
 
-        protected bool TryGetData(Map map, float x, float y, int pixelSensitivity, WmsServer.InterSectDelegate intersectDelegate, ICanQueryLayer queryLayer, string cqlFilter, out FeatureDataSet fds)
+        /// <summary>
+        /// Check if the layer can be queried and retrieve data, if there is any.
+        /// </summary>
+        protected bool TryGetData(Map map,
+            float x, float y, 
+            int pixelSensitivity, 
+            WmsServer.InterSectDelegate intersectDelegate, 
+            ICanQueryLayer queryLayer, 
+            string cqlFilter, 
+            out FeatureDataSet fds)
         {
+            if (!queryLayer.IsQueryEnabled)
+            {
+                fds = null;
+                return false;
+            }
+
             float queryBoxMinX = x - pixelSensitivity;
             float queryBoxMinY = y - pixelSensitivity;
             float queryBoxMaxX = x + pixelSensitivity;
@@ -118,6 +144,7 @@ namespace SharpMap.Web.Wms.Server.Handlers
             Coordinate minXY = map.ImageToWorld(new PointF(queryBoxMinX, queryBoxMinY));
             Coordinate maxXY = map.ImageToWorld(new PointF(queryBoxMaxX, queryBoxMaxY));
             Envelope queryBox = new Envelope(minXY, maxXY);
+
             fds = new FeatureDataSet();
             queryLayer.ExecuteIntersectionQuery(queryBox, fds);
 
@@ -139,7 +166,8 @@ namespace SharpMap.Web.Wms.Server.Handlers
                 }
             }
 
-            return tables.Count > 0 && table.Rows.Count > 0;
+            bool res = tables.Count > 0 && table.Rows.Count > 0;
+            return res;
         }
     }
 }

@@ -6,5 +6,5 @@ namespace SharpMap.Web.Wms.Exceptions
     {
         public WmsLayerNotDefinedException(string layerName) :
             base(String.Format("Unknown Layer : {0}", layerName), WmsExceptionCode.LayerNotDefined) { }
-    }
+    }    
 }

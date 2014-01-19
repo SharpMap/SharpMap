@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Text;
+using GeoAPI.Geometries;
 using SharpMap.Data;
 using SharpMap.Layers;
 
@@ -10,53 +12,64 @@ namespace SharpMap.Web.Wms.Server.Handlers
     {
         public GetFeatureInfoPlain(Capabilities.WmsServiceDescription description,
             int pixelSensitivity, WmsServer.InterSectDelegate intersectDelegate, Encoding encoding) :
-                base(description, pixelSensitivity, intersectDelegate, encoding) { }
+            base(description, pixelSensitivity, intersectDelegate, encoding) { }
 
-        protected override string CreateFeatureInfo(Map map, IEnumerable<string> requestedLayers, float x, float y, int featureCount, string cqlFilter,
-            int pixelSensitivity, WmsServer.InterSectDelegate intersectDelegate)
+        protected override string CreateFeatureInfo(Map map, 
+            IEnumerable<string> requestedLayers, 
+            float x, float y, 
+            int featureCount, 
+            string cqlFilter,
+            int pixelSensitivity, 
+            WmsServer.InterSectDelegate intersectDelegate)
         {
-            StringBuilder vstr = new StringBuilder("GetFeatureInfo results: \n");
+            StringBuilder sb = new StringBuilder("GetFeatureInfo results: \n");
             foreach (string requestLayer in requestedLayers)
             {
-                ICanQueryLayer queryLayer = GetQueryLayer(map, requestLayer);
-
+                ICanQueryLayer layer = GetQueryLayer(map, requestLayer);
                 FeatureDataSet fds;
-                // at this point queryLayer should have a non null value
-                // check if the layer can be queried and if there is any data
-                if (queryLayer.IsQueryEnabled && TryGetData(map, x, y, pixelSensitivity, intersectDelegate, queryLayer, cqlFilter, out fds))
+                if (!TryGetData(map, x, y, pixelSensitivity, intersectDelegate, layer, cqlFilter, out fds))
                 {
-                    //if featurecount < fds...count, select smallest bbox, because most likely to be clicked
-                    vstr.AppendFormat("\n Layer: '{0}'\n Featureinfo:\n", requestLayer);
-                    int[] keys = new int[fds.Tables[0].Rows.Count];
-                    double[] area = new double[fds.Tables[0].Rows.Count];
-                    for (int l = 0; l < fds.Tables[0].Rows.Count; l++)
-                    {
-                        FeatureDataRow fdr = (FeatureDataRow)fds.Tables[0].Rows[l];
-                        area[l] = fdr.Geometry.EnvelopeInternal.Area;
-                        keys[l] = l;
-                    }
-                    Array.Sort(area, keys);
-                    if (fds.Tables[0].Rows.Count < featureCount)
-                    {
-                        featureCount = fds.Tables[0].Rows.Count;
-                    }
-                    for (int k = 0; k < featureCount; k++)
-                    {
-                        for (int j = 0; j < fds.Tables[0].Rows[keys[k]].ItemArray.Length; j++)
-                        {
-                            vstr.AppendFormat(" '{0}'", fds.Tables[0].Rows[keys[k]].ItemArray[j]);
-                        }
-                        if ((k + 1) < featureCount)
-                            vstr.Append(",\n");
-                    }
-                }
-                else
-                {
-                    vstr.AppendFormat("\nSearch returned no results on layer: {0}", requestLayer);
+                    sb.AppendFormat("Search returned no results on layer: {0}", requestLayer);
+                    continue;
                 }
 
+                sb.AppendFormat("\n Layer: '{0}'\n Featureinfo:\n", requestLayer);
+                FeatureDataTable table = fds.Tables[0];
+                sb.Append(GetText(table, featureCount));
             }
-            return vstr.ToString();
+            return sb.ToString();
+        }
+        
+        private string GetText(FeatureDataTable table, int maxFeatures)
+        {
+            // if featurecount < fds...count, select smallest bbox, because most likely to be clicked
+            DataRowCollection rows = table.Rows;
+            int[] keys = new int[rows.Count];
+            double[] area = new double[rows.Count];
+            for (int i = 0; i < rows.Count; i++)
+            {
+                FeatureDataRow row = (FeatureDataRow)rows[i];
+                IGeometry geometry = row.Geometry;
+                Envelope envelope = geometry.EnvelopeInternal;
+                area[i] = envelope.Area;
+                keys[i] = i;
+            }
+            Array.Sort(area, keys);
+
+            if (rows.Count < maxFeatures)
+                maxFeatures = rows.Count;
+
+            StringBuilder sb = new StringBuilder();
+            for (int k = 0; k < maxFeatures; k++)
+            {
+                int i = keys[k];
+                object[] arr = rows[i].ItemArray;
+                foreach (object t in arr)
+                    sb.AppendFormat(" '{0}'", t);
+                if ((k + 1) < maxFeatures)
+                    sb.Append(",\n");
+            }
+            return sb.ToString();
         }
     }
 }
