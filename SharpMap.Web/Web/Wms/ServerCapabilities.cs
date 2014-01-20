@@ -140,17 +140,14 @@ namespace SharpMap.Web.Wms
 
             if (String.IsNullOrEmpty(publicWMSUrl))
             {
-                string port = HttpContext.Current.Request.Url.IsDefaultPort
-                                  ? ""
-                                  : ":" + HttpContext.Current.Request.Url.Port;
-                OnlineResource =
-                    HttpContext.Current.Server.HtmlEncode("http://" + HttpContext.Current.Request.Url.Host + port +
-                                                          HttpContext.Current.Request.Url.AbsolutePath);
+                HttpContext context = HttpContext.Current;
+                HttpRequest httpRequest = context.Request;
+                string port = httpRequest.Url.IsDefaultPort ? "" : ":" + httpRequest.Url.Port;
+                string s = String.Format("http://{0}{1}{2}", httpRequest.Url.Host, port,
+                    httpRequest.Url.AbsolutePath);
+                OnlineResource = context.Server.HtmlEncode(s);
             }
-            else
-            {
-                OnlineResource = publicWMSUrl;
-            }
+            else OnlineResource = publicWMSUrl;
 
             XmlNode CapabilityNode = capabilities.CreateNode(XmlNodeType.Element, "Capability", wmsNamespaceURI);
             XmlNode RequestNode = capabilities.CreateNode(XmlNodeType.Element, "Request", wmsNamespaceURI);

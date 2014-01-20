@@ -1,6 +1,6 @@
 namespace SharpMap.Demo.Wms.Models
 {
-    using SharpMap.Styles;
+    using Styles;
 
     public class LayerData
     {
