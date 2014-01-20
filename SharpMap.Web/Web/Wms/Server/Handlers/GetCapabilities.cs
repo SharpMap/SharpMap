@@ -33,7 +33,7 @@ namespace SharpMap.Web.Wms.Server.Handlers
         {
             ValidateParams(request, 0);
 
-            XmlDocument doc = ServerCapabilities.GetCapabilities(map, Description);
+            XmlDocument doc = ServerCapabilities.GetCapabilities(map, Description, request);
             return new GetCapabilitiesResponse(doc);
         }
     }

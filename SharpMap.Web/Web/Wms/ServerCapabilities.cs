@@ -25,6 +25,7 @@ using System.Xml.Schema;
 using GeoAPI.Geometries;
 using SharpMap.Layers;
 using System.Collections.Generic;
+using SharpMap.Web.Wms.Server;
 
 namespace SharpMap.Web.Wms
 {
@@ -42,8 +43,9 @@ namespace SharpMap.Web.Wms
         /// <remarks>The capabilities document uses the v1.3.0 OpenGIS WMS specification</remarks>
         /// <param name="map">The map to create capabilities for</param>
         /// <param name="serviceDescription">Additional description of WMS</param>
+        /// <param name="request">An abstraction of the <see cref="HttpContext"/> request</param>
         /// <returns>Returns XmlDocument describing capabilities</returns>
-        public static XmlDocument GetCapabilities(Map map, Capabilities.WmsServiceDescription serviceDescription)
+        public static XmlDocument GetCapabilities(Map map, WmsServiceDescription serviceDescription, IContextRequest request)
         {
             XmlDocument capabilities = new XmlDocument();
 
@@ -79,7 +81,8 @@ namespace SharpMap.Web.Wms
             RootNode.AppendChild(GenerateServiceNode(ref serviceDescription, capabilities));
 
             //Build Capability node
-            RootNode.AppendChild(GenerateCapabilityNode(map, capabilities, serviceDescription.PublicAccessURL));
+            XmlNode capabilityNode = GenerateCapabilityNode(map, capabilities, serviceDescription.PublicAccessURL, request);
+            RootNode.AppendChild(capabilityNode);
 
             capabilities.AppendChild(RootNode);
 
@@ -134,18 +137,16 @@ namespace SharpMap.Web.Wms
             return ServiceNode;
         }
 
-        private static XmlNode GenerateCapabilityNode(Map map, XmlDocument capabilities, string publicWMSUrl)
+        private static XmlNode GenerateCapabilityNode(Map map, XmlDocument capabilities, string publicWMSUrl, IContextRequest request)
         {
             string OnlineResource = "";
 
             if (String.IsNullOrEmpty(publicWMSUrl))
             {
-                HttpContext context = HttpContext.Current;
-                HttpRequest httpRequest = context.Request;
-                string port = httpRequest.Url.IsDefaultPort ? "" : ":" + httpRequest.Url.Port;
-                string s = String.Format("http://{0}{1}{2}", httpRequest.Url.Host, port,
-                    httpRequest.Url.AbsolutePath);
-                OnlineResource = context.Server.HtmlEncode(s);
+                string port = request.Url.IsDefaultPort ? "" : ":" + request.Url.Port;
+                string s = String.Format("http://{0}{1}{2}", request.Url.Host, port,
+                    request.Url.AbsolutePath);
+                OnlineResource = request.Encode(s);
             }
             else OnlineResource = publicWMSUrl;
 

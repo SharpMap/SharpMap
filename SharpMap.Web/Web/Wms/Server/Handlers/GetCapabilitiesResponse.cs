@@ -19,12 +19,17 @@ namespace SharpMap.Web.Wms.Server.Handlers
             get { return "text/xml"; }
         }
 
+        public XmlDocument Capabilities
+        {
+            get { return _capabilities; }
+        }
+
         public void WriteToContextAndFlush(IContextResponse response)
         {
             response.Clear();
-            response.ContentType = "text/xml";
+            response.ContentType = ContentType;
             using (XmlWriter writer = response.CreateXmlWriter())
-                _capabilities.WriteTo(writer);
+                Capabilities.WriteTo(writer);
             response.End();
         }
     }
