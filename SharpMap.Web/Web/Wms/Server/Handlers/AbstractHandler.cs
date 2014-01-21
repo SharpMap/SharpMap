@@ -39,20 +39,20 @@ namespace SharpMap.Web.Wms.Server.Handlers
             const NumberStyles ns = NumberStyles.Float;
             NumberFormatInfo nf = Map.NumberFormatEnUs;
 
-            string[] strVals = boundingBox.Split(new[] { ',' });
-            if (strVals.Length != 4)
+            string[] arr = boundingBox.Split(new[] { ',' });
+            if (arr.Length != 4)
                 return null;
 
             double minx, miny, maxx, maxy;
-            if (!Double.TryParse(strVals[0], ns, nf, out minx))
+            if (!Double.TryParse(arr[0], ns, nf, out minx))
                 return null;
-            if (!Double.TryParse(strVals[2], ns, nf, out maxx))
+            if (!Double.TryParse(arr[2], ns, nf, out maxx))
                 return null;
             if (maxx < minx)
                 return null;
-            if (!Double.TryParse(strVals[1], ns, nf, out miny))
+            if (!Double.TryParse(arr[1], ns, nf, out miny))
                 return null;
-            if (!Double.TryParse(strVals[3], ns, nf, out maxy))
+            if (!Double.TryParse(arr[3], ns, nf, out maxy))
                 return null;
             if (maxy < miny)
                 return null;
@@ -105,7 +105,7 @@ namespace SharpMap.Web.Wms.Server.Handlers
                 throw new WmsInvalidParameterException("Invalid parameters for HEIGHT or WITDH");
             Envelope env = ParseBBOX(bbox, targetSrid == 4326);
             if (env == null)
-                throw new WmsInvalidParameterException("Invalid parameter BBOX");
+                throw new WmsInvalidBboxException(bbox);
 
             return new WmsParams
             {

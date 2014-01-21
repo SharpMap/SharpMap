@@ -8,7 +8,6 @@ using SharpMap;
 using SharpMap.Data.Providers;
 using SharpMap.Layers;
 using SharpMap.Styles;
-using SharpMap.Utilities;
 using SharpMap.Web.Wms;
 
 namespace UnitTests.WMS.Server

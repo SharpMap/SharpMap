@@ -108,6 +108,7 @@
     <Compile Include="Web\Wms\Exceptions\WmsArgumentNullException.cs" />
     <Compile Include="Web\Wms\Exceptions\WmsExceptionBase.cs" />
     <Compile Include="Web\Wms\Exceptions\WmsExceptionCode.cs" />
+    <Compile Include="Web\Wms\Exceptions\WmsInvalidBboxException.cs" />
     <Compile Include="Web\Wms\Exceptions\WmsInvalidCRSException.cs" />
     <Compile Include="Web\Wms\Exceptions\WmsInvalidDimensionsException.cs" />
     <Compile Include="Web\Wms\Exceptions\WmsInvalidParameterException.cs" />

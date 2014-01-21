@@ -20,18 +20,28 @@ namespace SharpMap.Web.Wms.Server.Handlers
             _codecInfo = codecInfo;
         }
 
+        public Image Image
+        {
+            get { return _image; }
+        }
+
+        public ImageCodecInfo CodecInfo
+        {
+            get { return _codecInfo; }
+        }
+
         public void WriteToContextAndFlush(IContextResponse response)
         {
             //Png can't stream directy. Going through a memorystream instead
             byte[] buffer;
             using (MemoryStream ms = new MemoryStream())
             {
-                _image.Save(ms, _codecInfo, null);
-                _image.Dispose();
+                Image.Save(ms, CodecInfo, null);
+                Image.Dispose();
                 buffer = ms.ToArray();
             }
             response.Clear();
-            response.ContentType = _codecInfo.MimeType;
+            response.ContentType = CodecInfo.MimeType;
             response.Write(buffer);
             response.End();
         }

@@ -206,7 +206,9 @@
     <Compile Include="TestWmsCapabilityParser.cs" />
     <Compile Include="WFS\RequestValidationTest.cs" />
     <Compile Include="WMS\Encoding.cs" />
+    <Compile Include="WMS\Server\AbstractFixture.cs" />
     <Compile Include="WMS\Server\GetCapabilitiesFixture.cs" />
+    <Compile Include="WMS\Server\GetMapFixture.cs" />
     <Compile Include="WMS\Server\Helper.cs" />
     <Compile Include="WMS\SpatialReferencedBoundingBoxTest.cs" />
   </ItemGroup>
@@ -302,6 +304,7 @@
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

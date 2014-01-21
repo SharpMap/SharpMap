@@ -35,7 +35,7 @@ namespace SharpMap.Demo.Wms.Handlers
                 bool flip = first.TargetSRID == 4326;
                 BoundingBox bbox = AbstractHandler.ParseBBOX(s, flip);
                 if (bbox == null)
-                    throw new WmsInvalidParameterException("Invalid parameter BBOX");
+                    throw new WmsInvalidBboxException(s);
 
                 string ls = request.GetParam("LAYERS");
                 if (!String.IsNullOrEmpty(ls))
