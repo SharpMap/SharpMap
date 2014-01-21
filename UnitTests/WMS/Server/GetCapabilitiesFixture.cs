@@ -42,7 +42,7 @@ namespace UnitTests.WMS.Server
                     Assert.That(cap.ContentType, Is.EqualTo("text/xml"));
                     XmlDocument doc = cap.Capabilities;
                     Assert.That(doc, Is.Not.Null);
-                    Assert.That(doc.InnerXml, Is.EqualTo(Resources.expectedGetCapabilitiesXml));
+                    Assert.That(doc.DocumentElement.OuterXml, Is.EqualTo(Resources.expectedGetCapabilitiesXml));
                 });
         }
 
@@ -74,7 +74,7 @@ namespace UnitTests.WMS.Server
                     Assert.That(cap.ContentType, Is.EqualTo("text/xml"));
                     XmlDocument doc = cap.Capabilities;
                     Assert.That(doc, Is.Not.Null);
-                    Assert.That(doc.InnerXml, Is.EqualTo(Resources.expectedGetCapabilitiesXml));
+                    Assert.That(doc.DocumentElement.OuterXml, Is.EqualTo(Resources.expectedGetCapabilitiesXml));
                 });
         }
 
