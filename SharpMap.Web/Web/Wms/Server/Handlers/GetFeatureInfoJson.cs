@@ -12,11 +12,14 @@ namespace SharpMap.Web.Wms.Server.Handlers
 {
     public class GetFeatureInfoJson : GetFeatureInfo
     {
+        public GetFeatureInfoJson(Capabilities.WmsServiceDescription description) :
+            base(description) { }
+
         public GetFeatureInfoJson(Capabilities.WmsServiceDescription description,
             int pixelSensitivity, WmsServer.InterSectDelegate intersectDelegate, Encoding encoding) :
             base(description, pixelSensitivity, intersectDelegate, encoding) { }
 
-        protected override string CreateFeatureInfo(Map map, 
+        protected override GetFeatureInfoResponse CreateFeatureInfo(Map map, 
             IEnumerable<string> requestedLayers, 
             float x, float y, 
             int featureCount, 
@@ -61,7 +64,7 @@ namespace SharpMap.Web.Wms.Server.Handlers
             }
             StringWriter sb = new StringWriter();
             GeoJSONWriter.Write(items, sb);
-            return sb.ToString();
+            return new GetFeatureInfoResponseJson(sb.ToString());
         }
     }
 }

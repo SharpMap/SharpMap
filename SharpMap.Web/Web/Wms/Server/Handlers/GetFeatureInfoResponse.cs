@@ -23,10 +23,10 @@ namespace SharpMap.Web.Wms.Server.Handlers
             set { _charset = value; }
         }
 
-        protected bool BufferOutput
+        public bool BufferOutput
         {
             get { return _bufferOutput; }
-            set { _bufferOutput = value; }
+            protected set { _bufferOutput = value; }
         }
 
         public void WriteToContextAndFlush(IContextResponse response)

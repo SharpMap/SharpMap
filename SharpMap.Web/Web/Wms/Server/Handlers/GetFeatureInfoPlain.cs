@@ -10,11 +10,14 @@ namespace SharpMap.Web.Wms.Server.Handlers
 {
     public class GetFeatureInfoPlain : GetFeatureInfo
     {
+        public GetFeatureInfoPlain(Capabilities.WmsServiceDescription description) :
+            base(description) { }
+
         public GetFeatureInfoPlain(Capabilities.WmsServiceDescription description,
             int pixelSensitivity, WmsServer.InterSectDelegate intersectDelegate, Encoding encoding) :
             base(description, pixelSensitivity, intersectDelegate, encoding) { }
 
-        protected override string CreateFeatureInfo(Map map, 
+        protected override GetFeatureInfoResponse CreateFeatureInfo(Map map, 
             IEnumerable<string> requestedLayers, 
             float x, float y, 
             int featureCount, 
@@ -37,7 +40,7 @@ namespace SharpMap.Web.Wms.Server.Handlers
                 FeatureDataTable table = fds.Tables[0];
                 sb.Append(GetText(table, featureCount));
             }
-            return sb.ToString();
+            return new GetFeatureInfoResponsePlain(sb.ToString());
         }
         
         private string GetText(FeatureDataTable table, int maxFeatures)

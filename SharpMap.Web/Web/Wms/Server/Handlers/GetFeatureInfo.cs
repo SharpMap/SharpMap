@@ -16,6 +16,9 @@ namespace SharpMap.Web.Wms.Server.Handlers
         private readonly WmsServer.InterSectDelegate _intersectDelegate;
         private readonly Encoding _encoding;
 
+        protected GetFeatureInfo(Capabilities.WmsServiceDescription description) :
+            this(description, 1, null, Encoding.UTF8) { }
+
         protected GetFeatureInfo(Capabilities.WmsServiceDescription description,
             int pixelSensitivity, WmsServer.InterSectDelegate intersectDelegate, Encoding encoding) :
             base(description)
@@ -24,7 +27,7 @@ namespace SharpMap.Web.Wms.Server.Handlers
             _intersectDelegate = intersectDelegate;
             _encoding = encoding;
         }
-
+        
         protected override WmsParams ValidateParams(IContextRequest request, int targetSrid)
         {
             WmsParams @params = ValidateCommons(request, targetSrid);
@@ -74,10 +77,16 @@ namespace SharpMap.Web.Wms.Server.Handlers
             map.Size = new Size(@params.Width, @params.Height);
             map.ZoomToBox(@params.BBOX);
             string[] requestLayers = @params.QueryLayers.Split(new[] { ',' });
-            string info = CreateFeatureInfo(map, requestLayers, @params.X, @params.Y, @params.FeatureCount, @params.CqlFilter, _pixelSensitivity, _intersectDelegate);
-            GetFeatureInfoResponse response = new GetFeatureInfoResponsePlain(info);
-            response.Charset = _encoding.WebName;
-            return response;
+            GetFeatureInfoResponse info = CreateFeatureInfo(map,
+                requestLayers,
+                @params.X, @params.Y,
+                @params.FeatureCount,
+                @params.CqlFilter,
+                _pixelSensitivity,
+                _intersectDelegate);
+            if (_encoding != null)
+                info.Charset = _encoding.WebName;
+            return info;
         }
 
         /// <summary>
@@ -92,7 +101,7 @@ namespace SharpMap.Web.Wms.Server.Handlers
         /// <param name="pixelSensitivity">The sensitivity to use when querying data.</param>
         /// <param name="intersectDelegate">A <see cref="WmsServer.InterSectDelegate"/> to filter data.</param>
         /// <returns>Text string with featureinfo results.</returns>
-        protected abstract string CreateFeatureInfo(Map map,
+        protected abstract GetFeatureInfoResponse CreateFeatureInfo(Map map,
             IEnumerable<string> requestedLayers,
             float x, float y,
             int featureCount,
