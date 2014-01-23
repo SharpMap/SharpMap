@@ -36,13 +36,13 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="GeoAPI, Version=1.7.1.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="GeoAPI, Version=1.7.2.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\GeoAPI.1.7.1.1\lib\net40-client\GeoAPI.dll</HintPath>
+      <HintPath>..\packages\GeoAPI.1.7.2\lib\net40-client\GeoAPI.dll</HintPath>
     </Reference>
-    <Reference Include="NetTopologySuite, Version=1.13.1.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="NetTopologySuite, Version=1.13.2.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\NetTopologySuite.1.13.1\lib\net40-client\NetTopologySuite.dll</HintPath>
+      <HintPath>..\packages\NetTopologySuite.1.13.2\lib\net40-client\NetTopologySuite.dll</HintPath>
     </Reference>
     <Reference Include="Oracle.DataAccess">
       <HintPath>..\packages\odp.net.x86.112.3.20\lib\net40\Oracle.DataAccess.dll</HintPath>
@@ -52,7 +52,7 @@
     </Reference>
     <Reference Include="PowerCollections, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\NetTopologySuite.1.13.1\lib\net40-client\PowerCollections.dll</HintPath>
+      <HintPath>..\packages\NetTopologySuite.1.13.2\lib\net40-client\PowerCollections.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />

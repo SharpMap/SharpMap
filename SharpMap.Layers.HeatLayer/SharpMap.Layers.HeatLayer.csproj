@@ -54,9 +54,17 @@
     <Reference Include="DotSpatial.Projections.Forms">
       <HintPath>..\packages\DotSpatial.Projections.1.2\lib\net40-Client\DotSpatial.Projections.Forms.dll</HintPath>
     </Reference>
-    <Reference Include="GeoAPI, Version=1.7.1.0, Culture=neutral, PublicKeyToken=a1a0da7def465678, processorArchitecture=MSIL">
+    <Reference Include="GeoAPI, Version=1.7.2.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\GeoAPI.1.7.1.1\lib\net40-client\GeoAPI.dll</HintPath>
+      <HintPath>..\packages\GeoAPI.1.7.2\lib\net40-client\GeoAPI.dll</HintPath>
+    </Reference>
+    <Reference Include="NetTopologySuite, Version=1.13.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\NetTopologySuite.1.13.2\lib\net40-client\NetTopologySuite.dll</HintPath>
+    </Reference>
+    <Reference Include="PowerCollections, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\NetTopologySuite.1.13.2\lib\net40-client\PowerCollections.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
