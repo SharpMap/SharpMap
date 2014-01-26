@@ -1,8 +1,9 @@
 ﻿namespace SharpMap.Web.Wms.Server.Handlers
 {
-    public class GetFeatureInfoResponsePlain : GetFeatureInfoResponse
+    public class GetFeatureInfoResponsePlain : AbstractGetFeatureInfoResponse
     {
-        public GetFeatureInfoResponsePlain(string response) : base(response) { }
+        public GetFeatureInfoResponsePlain(string response) : 
+            base(response) { }
 
         public override string ContentType
         {

@@ -8,69 +8,61 @@ using SharpMap.Layers;
 
 namespace SharpMap.Web.Wms.Server.Handlers
 {
-    public class GetFeatureInfoPlain : GetFeatureInfo
+    public class GetFeatureInfoPlain : AbstractGetFeatureInfoText
     {
+        private const char NewLine = '\n';
+
         public GetFeatureInfoPlain(Capabilities.WmsServiceDescription description) :
             base(description) { }
 
         public GetFeatureInfoPlain(Capabilities.WmsServiceDescription description,
-            int pixelSensitivity, WmsServer.InterSectDelegate intersectDelegate, Encoding encoding) :
-            base(description, pixelSensitivity, intersectDelegate, encoding) { }
+            GetFeatureInfoParams @params) : base(description, @params) { }
 
-        protected override GetFeatureInfoResponse CreateFeatureInfo(Map map, 
-            IEnumerable<string> requestedLayers, 
-            float x, float y, 
-            int featureCount, 
+        protected override AbstractGetFeatureInfoResponse CreateFeatureInfo(Map map,
+            IEnumerable<string> requestedLayers,
+            float x, float y,
+            int featureCount,
             string cqlFilter,
-            int pixelSensitivity, 
+            int pixelSensitivity,
             WmsServer.InterSectDelegate intersectDelegate)
         {
-            StringBuilder sb = new StringBuilder("GetFeatureInfo results: \n");
+            StringBuilder sb = new StringBuilder();
+            sb.AppendFormat("GetFeatureInfo results:{0}", NewLine);
             foreach (string requestLayer in requestedLayers)
             {
                 ICanQueryLayer layer = GetQueryLayer(map, requestLayer);
                 FeatureDataSet fds;
                 if (!TryGetData(map, x, y, pixelSensitivity, intersectDelegate, layer, cqlFilter, out fds))
                 {
-                    sb.AppendFormat("Search returned no results on layer: {0}", requestLayer);
+                    sb.AppendFormat("Search returned no results on layer: {0}{1}", requestLayer, NewLine);
                     continue;
                 }
 
-                sb.AppendFormat("\n Layer: '{0}'\n Featureinfo:\n", requestLayer);
+                sb.AppendFormat("Layer: '{0}'{1}", requestLayer, NewLine);
+                sb.AppendFormat("Featureinfo:{0}", NewLine);
                 FeatureDataTable table = fds.Tables[0];
-                sb.Append(GetText(table, featureCount));
+                string rowsText = GetRowsText(table.Rows, featureCount);
+                sb.Append(rowsText).Append(NewLine);
             }
             return new GetFeatureInfoResponsePlain(sb.ToString());
         }
-        
-        private string GetText(FeatureDataTable table, int maxFeatures)
+
+        protected override string FormatRows(DataRowCollection rows, int[] keys, int maxFeatures)
         {
-            // if featurecount < fds...count, select smallest bbox, because most likely to be clicked
-            DataRowCollection rows = table.Rows;
-            int[] keys = new int[rows.Count];
-            double[] area = new double[rows.Count];
-            for (int i = 0; i < rows.Count; i++)
-            {
-                FeatureDataRow row = (FeatureDataRow)rows[i];
-                IGeometry geometry = row.Geometry;
-                Envelope envelope = geometry.EnvelopeInternal;
-                area[i] = envelope.Area;
-                keys[i] = i;
-            }
-            Array.Sort(area, keys);
-
-            if (rows.Count < maxFeatures)
-                maxFeatures = rows.Count;
-
             StringBuilder sb = new StringBuilder();
             for (int k = 0; k < maxFeatures; k++)
             {
-                int i = keys[k];
-                object[] arr = rows[i].ItemArray;
-                foreach (object t in arr)
-                    sb.AppendFormat(" '{0}'", t);
+                int key = keys[k];
+                object[] arr = rows[key].ItemArray;
+                int length = arr.Length;
+                for (int i = 0; i < length; i++)
+                {
+                    object t = arr[i];
+                    string separator = (i == length - 1) ? String.Empty : " ";
+                    sb.AppendFormat("'{0}'{1}", t, separator);
+                }
                 if ((k + 1) < maxFeatures)
-                    sb.Append(",\n");
+                    sb.AppendFormat(",{0}", NewLine);
             }
             return sb.ToString();
         }

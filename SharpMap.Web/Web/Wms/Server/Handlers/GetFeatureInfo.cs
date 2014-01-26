@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
-using System.Text;
 using GeoAPI.Geometries;
 using SharpMap.Data;
 using SharpMap.Layers;
@@ -12,20 +11,17 @@ namespace SharpMap.Web.Wms.Server.Handlers
 {
     public abstract class GetFeatureInfo : AbstractHandler
     {
-        private readonly int _pixelSensitivity;
-        private readonly WmsServer.InterSectDelegate _intersectDelegate;
-        private readonly Encoding _encoding;
-
+        private readonly GetFeatureInfoParams _params;
+        
         protected GetFeatureInfo(Capabilities.WmsServiceDescription description) :
-            this(description, 1, null, Encoding.UTF8) { }
+            this(description, GetFeatureInfoParams.Empty) { }
 
-        protected GetFeatureInfo(Capabilities.WmsServiceDescription description,
-            int pixelSensitivity, WmsServer.InterSectDelegate intersectDelegate, Encoding encoding) :
-            base(description)
+        protected GetFeatureInfo(Capabilities.WmsServiceDescription description, 
+            GetFeatureInfoParams @params) : base(description)
         {
-            _pixelSensitivity = pixelSensitivity;
-            _intersectDelegate = intersectDelegate;
-            _encoding = encoding;
+            if (@params == null) 
+                throw new ArgumentNullException("params");
+            _params = @params;
         }
         
         protected override WmsParams ValidateParams(IContextRequest request, int targetSrid)
@@ -77,15 +73,15 @@ namespace SharpMap.Web.Wms.Server.Handlers
             map.Size = new Size(@params.Width, @params.Height);
             map.ZoomToBox(@params.BBOX);
             string[] requestLayers = @params.QueryLayers.Split(new[] { ',' });
-            GetFeatureInfoResponse info = CreateFeatureInfo(map,
+            AbstractGetFeatureInfoResponse info = CreateFeatureInfo(map,
                 requestLayers,
                 @params.X, @params.Y,
                 @params.FeatureCount,
                 @params.CqlFilter,
-                _pixelSensitivity,
-                _intersectDelegate);
-            if (_encoding != null)
-                info.Charset = _encoding.WebName;
+                _params.PixelSensitivity,
+                _params.IntersectDelegate);
+            if (_params.Encoding != null)
+                info.Charset = _params.Encoding.WebName;
             return info;
         }
 
@@ -101,7 +97,7 @@ namespace SharpMap.Web.Wms.Server.Handlers
         /// <param name="pixelSensitivity">The sensitivity to use when querying data.</param>
         /// <param name="intersectDelegate">A <see cref="WmsServer.InterSectDelegate"/> to filter data.</param>
         /// <returns>Text string with featureinfo results.</returns>
-        protected abstract GetFeatureInfoResponse CreateFeatureInfo(Map map,
+        protected abstract AbstractGetFeatureInfoResponse CreateFeatureInfo(Map map,
             IEnumerable<string> requestedLayers,
             float x, float y,
             int featureCount,

@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using GeoAPI.CoordinateSystems.Transformations;
 using GeoAPI.Geometries;
 using SharpMap.Converters.GeoJSON;
@@ -16,10 +15,9 @@ namespace SharpMap.Web.Wms.Server.Handlers
             base(description) { }
 
         public GetFeatureInfoJson(Capabilities.WmsServiceDescription description,
-            int pixelSensitivity, WmsServer.InterSectDelegate intersectDelegate, Encoding encoding) :
-            base(description, pixelSensitivity, intersectDelegate, encoding) { }
+            GetFeatureInfoParams @params) : base(description, @params) { }
 
-        protected override GetFeatureInfoResponse CreateFeatureInfo(Map map, 
+        protected override AbstractGetFeatureInfoResponse CreateFeatureInfo(Map map, 
             IEnumerable<string> requestedLayers, 
             float x, float y, 
             int featureCount, 
@@ -31,37 +29,36 @@ namespace SharpMap.Web.Wms.Server.Handlers
             foreach (string requestLayer in requestedLayers)
             {
                 ICanQueryLayer queryLayer = GetQueryLayer(map, requestLayer);
-
                 FeatureDataSet fds;
-                if (TryGetData(map, x, y, pixelSensitivity, intersectDelegate, queryLayer, cqlFilter, out fds))
+                if (!TryGetData(map, x, y, pixelSensitivity, intersectDelegate, queryLayer, cqlFilter, out fds))
+                    continue;
+                
+                IEnumerable<GeoJSON> data = GeoJSONHelper.GetData(fds);
+                // reproject geometries if needed
+                IMathTransform transform = null;
+                if (queryLayer is VectorLayer)
                 {
-                    // maybe this part should go into the TryGetData method
-                    // afterall we are going to use data after applying filter
-                    IEnumerable<GeoJSON> data = GeoJSONHelper.GetData(fds);
-#if DotSpatialProjections
-                        throw new NotImplementedException();
-#else
-                    // reproject geometries if needed
-                    IMathTransform transform = null;
-                    if (queryLayer is VectorLayer)
-                    {
-                        ICoordinateTransformation transformation = (queryLayer as VectorLayer).CoordinateTransformation;
-                        transform = transformation == null ? null : transformation.MathTransform;
-                    }
-
-                    if (transform != null)
-                    {
-                        data = data.Select(d =>
-                        {
-                            IGeometry converted = GeometryTransform.TransformGeometry(d.Geometry, transform, map.Factory);
-                            d.SetGeometry(converted);
-                            return d;
-                        });
-                    }
-#endif
-                    items.AddRange(data);
+                    ICoordinateTransformation transformation = (queryLayer as VectorLayer).CoordinateTransformation;
+                    if (transformation != null)
+                        transform = transformation.MathTransform;                    
                 }
+
+                if (transform != null)
+                {
+#if DotSpatialProjections
+                    throw new NotImplementedException();
+#else
+                    data = data.Select(d =>
+                    {
+                        IGeometry converted = GeometryTransform.TransformGeometry(d.Geometry, transform, map.Factory);
+                        d.SetGeometry(converted);
+                        return d;
+                    });
+#endif
+                }
+                items.AddRange(data);
             }
+
             StringWriter sb = new StringWriter();
             GeoJSONWriter.Write(items, sb);
             return new GetFeatureInfoResponseJson(sb.ToString());

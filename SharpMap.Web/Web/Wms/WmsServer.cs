@@ -243,13 +243,13 @@ namespace SharpMap.Web.Wms
                     // use text/plain as default handler
                     // let the default handler validate params
                     string format = request.GetParam("INFO_FORMAT") ?? String.Empty;
-                    bool json = String.Equals(format, "text/json", @case);
-                    if (!json)
-                        handler = new GetFeatureInfoPlain(description, PixelSensitivity, IntersectDelegate,
-                            FeatureInfoResponseEncoding);
-                    else
-                        handler = new GetFeatureInfoJson(description, PixelSensitivity, IntersectDelegate,
-                            FeatureInfoResponseEncoding);
+                    GetFeatureInfoParams @params = new GetFeatureInfoParams(PixelSensitivity,
+                        IntersectDelegate, FeatureInfoResponseEncoding);
+                    if (String.Equals(format, "text/json", @case))
+                        handler = new GetFeatureInfoJson(description, @params);
+                    else if (String.Equals(format, "text/html", @case))
+                        handler = new GetFeatureInfoHtml(description, @params);
+                    else handler = new GetFeatureInfoPlain(description, @params);
                 }
                 else if (String.Equals(req, "GetMap", @case))
                     handler = new GetMap(description);

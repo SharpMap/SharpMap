@@ -53,7 +53,9 @@ namespace SharpMap.Web.Wms.Server.Handlers
             Size size = GetSize(@params);
             map.Size = size;
             Envelope bbox = @params.BBOX;
-            map.PixelAspectRatio = (size.Width / (double)size.Height) / (bbox.Width / bbox.Height);
+            double sizeRatio = size.Width / (double)size.Height;
+            double bboxRatio = bbox.Width / bbox.Height;
+            map.PixelAspectRatio = sizeRatio / bboxRatio;
             map.Center = bbox.Centre;
             map.Zoom = bbox.Width;
 

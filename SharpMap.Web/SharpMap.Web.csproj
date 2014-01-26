@@ -120,6 +120,10 @@
     <Compile Include="Web\Wms\Exceptions\WmsStyleNotDefinedException.cs" />
     <Compile Include="Web\Wms\Server\ContextRequest.cs" />
     <Compile Include="Web\Wms\Server\ContextResponse.cs" />
+    <Compile Include="Web\Wms\Server\Handlers\GetFeatureInfoHtml.cs" />
+    <Compile Include="Web\Wms\Server\Handlers\GetFeatureInfoParams.cs" />
+    <Compile Include="Web\Wms\Server\Handlers\GetFeatureInfoResponseHtml.cs" />
+    <Compile Include="Web\Wms\Server\Handlers\AbstractGetFeatureInfoText.cs" />
     <Compile Include="Web\Wms\Server\IContextRequest.cs" />
     <Compile Include="Web\Wms\Server\IContextResponse.cs" />
     <Compile Include="Web\Wms\StringComparerIgnoreCase.cs" />
@@ -131,7 +135,7 @@
     <Compile Include="Web\Wms\Server\Handlers\GetFeatureInfo.cs" />
     <Compile Include="Web\Wms\Server\Handlers\GetFeatureInfoJson.cs" />
     <Compile Include="Web\Wms\Server\Handlers\GetFeatureInfoPlain.cs" />
-    <Compile Include="Web\Wms\Server\Handlers\GetFeatureInfoResponse.cs" />
+    <Compile Include="Web\Wms\Server\Handlers\AbstractGetFeatureInfoResponse.cs" />
     <Compile Include="Web\Wms\Server\Handlers\GetFeatureInfoResponseJson.cs" />
     <Compile Include="Web\Wms\Server\Handlers\GetFeatureInfoResponsePlain.cs" />
     <Compile Include="Web\Wms\Server\Handlers\GetMap.cs" />

@@ -208,6 +208,7 @@
     <Compile Include="WMS\Encoding.cs" />
     <Compile Include="WMS\Server\AbstractFixture.cs" />
     <Compile Include="WMS\Server\GetCapabilitiesFixture.cs" />
+    <Compile Include="WMS\Server\GetFeatureInfoHtmlFixture.cs" />
     <Compile Include="WMS\Server\GetFeatureInfoJsonFixture.cs" />
     <Compile Include="WMS\Server\GetFeatureInfoPlainFixture.cs" />
     <Compile Include="WMS\Server\GetMapFixture.cs" />

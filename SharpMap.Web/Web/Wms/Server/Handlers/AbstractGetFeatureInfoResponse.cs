@@ -2,18 +2,22 @@
 
 namespace SharpMap.Web.Wms.Server.Handlers
 {
-    public abstract class GetFeatureInfoResponse : IHandlerResponse
+    public abstract class AbstractGetFeatureInfoResponse : IHandlerResponse
     {
         private readonly string _response;
         private string _charset;
-        private bool _bufferOutput;
+        private readonly bool _bufferOutput;
 
-        protected GetFeatureInfoResponse(string response)
+        protected AbstractGetFeatureInfoResponse(string response, bool bufferOutput)
         {
             if (String.IsNullOrEmpty(response))
                 throw new ArgumentNullException("response");
             _response = response;
+            _bufferOutput = bufferOutput;
         }
+
+        protected AbstractGetFeatureInfoResponse(string response) : 
+            this(response, false) { }
 
         public abstract string ContentType { get; }
 
@@ -23,10 +27,9 @@ namespace SharpMap.Web.Wms.Server.Handlers
             set { _charset = value; }
         }
 
-        public bool BufferOutput
+        public string Response
         {
-            get { return _bufferOutput; }
-            protected set { _bufferOutput = value; }
+            get { return _response; }
         }
 
         public void WriteToContextAndFlush(IContextResponse response)
@@ -37,8 +40,8 @@ namespace SharpMap.Web.Wms.Server.Handlers
                 //"windows-1252";
                 response.Charset = Charset;
             }
-            response.BufferOutput = BufferOutput;
-            response.Write(_response);
+            response.BufferOutput = _bufferOutput;
+            response.Write(Response);
             response.End();
         }
     }

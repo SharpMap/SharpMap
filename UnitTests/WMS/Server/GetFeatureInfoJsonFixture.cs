@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using NUnit.Framework;
 using Rhino.Mocks;
 using SharpMap.Web.Wms.Server;
@@ -45,7 +46,8 @@ namespace UnitTests.WMS.Server
                     string charset = json.Charset;
                     Assert.That(charset, Is.Not.Null);
                     Assert.That(charset, Is.EqualTo("utf-8"));
-                    Assert.That(json.BufferOutput, Is.True);
+                    string s = json.Response;
+                    Trace.WriteLine(s);
                 });
         }
     }
