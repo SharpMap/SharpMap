@@ -48,6 +48,7 @@ namespace UnitTests.WMS.Server
                     Assert.That(charset, Is.EqualTo("utf-8"));
                     string s = json.Response;
                     Trace.WriteLine(s);
+                    Assert.Fail("TODO: verify data");
                 });
         }
     }

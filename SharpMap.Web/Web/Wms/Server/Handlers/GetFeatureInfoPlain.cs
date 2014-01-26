@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Text;
-using GeoAPI.Geometries;
 using SharpMap.Data;
 using SharpMap.Layers;
 
@@ -57,9 +56,8 @@ namespace SharpMap.Web.Wms.Server.Handlers
                 int length = arr.Length;
                 for (int i = 0; i < length; i++)
                 {
-                    object t = arr[i];
                     string separator = (i == length - 1) ? String.Empty : " ";
-                    sb.AppendFormat("'{0}'{1}", t, separator);
+                    sb.AppendFormat("'{0}'{1}", arr[i], separator);
                 }
                 if ((k + 1) < maxFeatures)
                     sb.AppendFormat(",{0}", NewLine);

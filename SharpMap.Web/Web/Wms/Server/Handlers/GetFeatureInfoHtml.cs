@@ -13,12 +13,15 @@ namespace SharpMap.Web.Wms.Server.Handlers
         private const string HtmlTemplate = "<html>\n<head>\n<title>GetFeatureInfo output</title>\n</head>\n<style type=\'text/css\'>\n  table.featureInfo, table.featureInfo td, table.featureInfo th {\n  border:1px solid #ddd;\n  border-collapse:collapse;\n  margin:0;\n  padding:0;\n  font-size: 90%;\n  padding:.2em .1em;\n}\ntable.featureInfo th {\n  padding:.2em .2em;\n  font-weight:bold;\n  background:#eee;\n}\ntable.featureInfo td {\n  background:#fff;\n}\ntable.featureInfo tr.odd td {\n  background:#eee;\n}\ntable.featureInfo caption {\n  text-align:left;\n  font-size:100%;\n  font-weight:bold;\n  padding:.2em .2em;\n}\n</style>\n<body>\n{{HTML_BODY}}\n</body>\n</html>";
 
         private const string TableTemplate = "<table class=\'featureInfo\'>\n<caption class=\'featureInfo\'>{{LAYER_NAME}}</caption>\n{{LAYER_TABLE}}</table>";
+        private const string CssOdd = " class='odd'";
+        private const string CssEven = " class='even'";
 
         public GetFeatureInfoHtml(Capabilities.WmsServiceDescription description) :
             base(description) { }
 
         public GetFeatureInfoHtml(Capabilities.WmsServiceDescription description,
-            GetFeatureInfoParams @params) : base(description, @params) { }
+            GetFeatureInfoParams @params)
+            : base(description, @params) { }
 
         protected override AbstractGetFeatureInfoResponse CreateFeatureInfo(Map map,
             IEnumerable<string> requestedLayers,
@@ -42,14 +45,13 @@ namespace SharpMap.Web.Wms.Server.Handlers
                 foreach (DataColumn col in table.Columns)
                     sbTable.AppendFormat("<th>{0}</th>{1}", col.ColumnName, NewLine);
                 sbTable.AppendFormat("</tr>{0}", NewLine);
-
                 string rowsText = GetRowsText(table.Rows, featureCount);
                 sbTable.Append(rowsText);
 
                 string tpl = TableTemplate.
                     Replace("{{LAYER_NAME}}", requestLayer).
                     Replace("{{LAYER_TABLE}}", sbTable.ToString());
-                sb.AppendFormat("{0}{1}", tpl, "<br />");
+                sb.AppendFormat("{0}\n{1}\n", tpl, "<br />");
             }
 
 
@@ -59,18 +61,15 @@ namespace SharpMap.Web.Wms.Server.Handlers
 
         protected override string FormatRows(DataRowCollection rows, int[] keys, int maxFeatures)
         {
-            StringBuilder sb = new StringBuilder();            
+            StringBuilder sb = new StringBuilder();
             for (int k = 0; k < maxFeatures; k++)
             {
+                string css = k % 2 == 0 ? CssEven : CssOdd;
                 int key = keys[k];
                 object[] arr = rows[key].ItemArray;
-                int length = arr.Length;
-                sb.AppendFormat("<tr>{0}", NewLine);
-                for (int i = 0; i < length; i++)
-                {
-                    object t = arr[i];
-                    sb.AppendFormat("<td>{0}</td>{1}", t, NewLine);
-                }
+                sb.AppendFormat("<tr{0}>{1}", css, NewLine);
+                foreach (object el in arr)
+                    sb.AppendFormat("<td>{0}</td>{1}", el, NewLine);
                 sb.AppendFormat("</tr>{0}", NewLine);
             }
             return sb.ToString();

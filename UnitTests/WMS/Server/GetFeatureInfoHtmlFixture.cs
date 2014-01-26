@@ -5,7 +5,7 @@ using SharpMap.Web.Wms.Server;
 using SharpMap.Web.Wms.Server.Handlers;
 
 namespace UnitTests.WMS.Server
-{
+{   
     public class GetFeatureInfoHtmlFixture : AbstractFixture
     {
         [Test]
@@ -51,41 +51,45 @@ table.featureInfo caption {
 <th>CFCC</th>
 <th>LANAME</th>
 </tr>
-<tr>
+<tr class='even'>
 <td>52</td>
 <td>76</td>
 <td>D65</td>
 <td>City Hall</td>
 </tr>
-<tr>
+<tr class='odd'>
 <td>47</td>
 <td>69</td>
 <td>H11</td>
 <td>Hudson River</td>
 </tr>
-</table><br /><table class='featureInfo'>
+</table>
+<br />
+<table class='featureInfo'>
 <caption class='featureInfo'>tiger_roads</caption>
 <tr>
 <th>Oid</th>
 <th>CFCC</th>
 <th>NAME</th>
 </tr>
-<tr>
+<tr class='even'>
 <td>7664</td>
 <td>A41</td>
 <td>Broadway</td>
 </tr>
-<tr>
+<tr class='odd'>
 <td>7667</td>
 <td>A41</td>
 <td>Broadway</td>
 </tr>
-<tr>
+<tr class='even'>
 <td>6016</td>
 <td>A41</td>
 <td>Barclay St</td>
 </tr>
-</table><br />
+</table>
+<br />
+
 </body>
 </html>";
             MockRepository mocks = new MockRepository();
