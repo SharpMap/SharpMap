@@ -452,7 +452,7 @@ namespace SharpMap.Layers
             LastRenderedExtents = map.Envelope;
             if (RequiresRedraw || CachedBitmap == null)
             {
-                Bitmap bmp = new Bitmap(LastRenderedSize.Value.Width, LastRenderedSize.Value.Height);
+                var bmp = new Bitmap(LastRenderedSize.Value.Width, LastRenderedSize.Value.Height);
                 using (Graphics g2 = Graphics.FromImage(bmp))
                 {
                     _innerLayer.Render(g2, map);

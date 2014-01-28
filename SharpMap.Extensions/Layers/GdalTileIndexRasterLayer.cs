@@ -93,7 +93,7 @@ namespace SharpMap.Layers
                 {
                     if (fdr.Geometry.EnvelopeInternal.Intersects(map.Envelope))
                     {
-                        string file = fdr[_fieldName] as string;
+                        var file = fdr[_fieldName] as string;
                         if (!Path.IsPathRooted(file))
                             file = Path.Combine(Path.GetDirectoryName(_fileName), file);
 
