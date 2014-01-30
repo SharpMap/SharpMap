@@ -483,6 +483,10 @@
     <Content Include="Scripts\script_geojs.js" />
     <Content Include="Scripts\pl\webdb.js" />
     <Content Include="Scripts\ll\TileLayer.TileJSON.js" />
+    <Content Include="Scripts\typings\jquery\jquery.d.ts" />
+    <Content Include="Scripts\typings\knockout\knockout.d.ts" />
+    <Content Include="Scripts\typings\moment\moment.d.ts" />
+    <Content Include="Scripts\typings\underscore\underscore.d.ts" />
     <Content Include="theme\default\google.tidy.css" />
     <Content Include="theme\default\ie6-style.tidy.css" />
     <Content Include="theme\default\style.mobile.css" />
