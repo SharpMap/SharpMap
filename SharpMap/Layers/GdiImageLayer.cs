@@ -17,8 +17,10 @@
 
 using System;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.IO;
+using System.Net.Mail;
 using System.Runtime.Serialization;
 using GeoAPI.Geometries;
 
@@ -39,6 +41,16 @@ namespace SharpMap.Layers
         private Envelope _envelope;
         private float _transparency;
 
+        /// <summary>
+        /// Creates an instance of this class using the provided layer
+        /// </summary>
+        /// <param name="fileName">The path to the file</param>
+        public GdiImageLayer(string fileName)
+            : this(Path.GetFileName(fileName), Image.FromFile(fileName))
+        {
+            ImageFilename = fileName;
+            SetEnvelope(fileName);
+        }
         /// <summary>
         /// Creates an instance of this class using the provided layer
         /// </summary>
@@ -94,7 +106,11 @@ namespace SharpMap.Layers
         /// <returns>Bounding box corresponding to the extent of the features in the layer</returns>
         public override Envelope Envelope
         {
-            get { return _envelope; }
+            get
+            {
+                // Avoid manipulation, return a copy
+                return new Envelope(_envelope);
+            }
         }
 
         /// <summary>
@@ -112,7 +128,6 @@ namespace SharpMap.Layers
             }
         }
 
-
         /// <summary>
         /// Renders the layer
         /// </summary>
@@ -123,21 +138,35 @@ namespace SharpMap.Layers
             if (map.Center == null)
                 throw (new ApplicationException("Cannot render map. View center not specified"));
 
-            // View to render
-            var worldPos1 = Point.Truncate(map.WorldToImage(_envelope.BottomLeft()));
-            var worldPos2 = Point.Ceiling(map.WorldToImage(_envelope.TopRight()));
+            if (_image == null)
+                throw new Exception("Image not set");
 
-            var rect = new Rectangle(worldPos1, new Size(worldPos2.X - worldPos1.X, worldPos1.Y - worldPos2.Y));
+            // View to render
+            var worldPos1 = Point.Truncate(map.WorldToImage(_envelope.TopLeft()));
+            var worldPos2 = Point.Ceiling(map.WorldToImage(_envelope.BottomRight()));
+
+            var rect = new Rectangle(worldPos1, new Size(worldPos2.X - worldPos1.X, 
+                                                         worldPos2.Y - worldPos1.Y));
 
             // ToDo clip image to the required bounds
             //rect = Rectangle.Intersect(new Rectangle(new Point(), map.Size), rect);
 
+            // Set the interpolation mode
+            var smoothingMode = g.InterpolationMode;
+            g.InterpolationMode = InterpolationMode.HighQualityBicubic;
+
+            // Render the image
             using (var ia = new ImageAttributes())
             {
                 ia.SetColorMatrix(new ColorMatrix { Matrix44 = 1 - Transparency }, 
-                    ColorMatrixFlag.Default, ColorAdjustType.Bitmap);
-                g.DrawImage(_image, rect, 0, 0, _image.Size.Width, _image.Size.Height, GraphicsUnit.Pixel, ia);
+                                  ColorMatrixFlag.Default, ColorAdjustType.Bitmap);
+
+                g.DrawImage(_image, rect, 0, 0, _image.Size.Width, _image.Size.Height, 
+                            GraphicsUnit.Pixel, ia);
             }
+
+            // reset the interpolation mode
+            g.InterpolationMode = smoothingMode;
 
             base.Render(g, map);
         }
@@ -157,7 +186,7 @@ namespace SharpMap.Layers
             }
 
             var ext = CreateWorldFileExtension(Path.GetExtension(fileName));
-            if (!string.IsNullOrEmpty(ext)) return;
+            if (string.IsNullOrEmpty(ext)) return;
             {
                 wld = Path.ChangeExtension(fileName, ext);
                 if (File.Exists(wld))
@@ -191,8 +220,15 @@ namespace SharpMap.Layers
                         coefficients[i] = double.Parse(line);
                     }
                 }
-                return new Envelope(coefficients[5], coefficients[5] + coefficients[1] * Image.Size.Width,
-                                    coefficients[6], coefficients[6] + coefficients[4] * Image.Size.Height);
+
+                // Test for rotation or shear
+                if (coefficients[2] != 0d || coefficients[3] != 0d)
+                {
+                    throw new NotSupportedException("World files with rotation and/or shear are not supported");
+                }
+
+                return new Envelope(coefficients[4], coefficients[4] + coefficients[0] * Image.Size.Width,
+                                    coefficients[5], coefficients[5] + coefficients[3] * Image.Size.Height);
             }
             catch (Exception)
             {
@@ -212,6 +248,7 @@ namespace SharpMap.Layers
         }
 
         #region Serialization
+
         [OnSerializing]
         private void OnSerializing(StreamingContext context)
         {
@@ -224,11 +261,10 @@ namespace SharpMap.Layers
         {
             _image = _tmpImage;
             _tmpImage = null;
-
         }
 
         [OnDeserialized]
-        private void OnDeserialized()
+        private void OnDeserialized(StreamingContext context)
         {
             if (!string.IsNullOrEmpty(ImageFilename))
             {
