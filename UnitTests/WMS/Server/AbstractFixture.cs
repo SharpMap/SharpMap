@@ -8,10 +8,11 @@ namespace UnitTests.WMS.Server
     public abstract class AbstractFixture
     {
         public Map Map { get; private set; }
+
         public Capabilities.WmsServiceDescription Desc { get; private set; }
 
-        [TestFixtureSetUp]
-        public void setup_fixture()
+        [SetUp]
+        public void setup()
         {
             Desc = Helper.Description();
             Assert.That(Desc, Is.Not.Null);
@@ -19,12 +20,12 @@ namespace UnitTests.WMS.Server
             Assert.That(Map, Is.Not.Null);
         }
 
-        [TestFixtureTearDown]
-        public void teardown_fixture()
+        [TearDown]
+        public void teardown()
         {
             if (Map != null)
                 Map.Dispose();
             Map = null;
-        }
+        }        
     }
 }
