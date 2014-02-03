@@ -84,7 +84,6 @@ namespace UnitTests.Layers
             var e = new Envelope(10, 522, 10, 266);
             Assert.AreEqual(e, l.Envelope);
             Assert.AreEqual(0d, l.Transparency);
-            l.
             DeleteTmpFiles(imageFile);
         }
 
