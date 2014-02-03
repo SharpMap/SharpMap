@@ -589,7 +589,7 @@ namespace SharpMap.Layers
                             {
                                 VectorRenderer.DrawLabel(g, label.Location, label.Style.Offset,
                                                             label.Style.Font, label.Style.ForeColor,
-                                                            label.Style.BackColor, Style.Halo, label.Rotation,
+                                                            label.Style.BackColor, label.Style.Halo, label.Rotation,
                                                             label.Text, map);
                             }
                             else
