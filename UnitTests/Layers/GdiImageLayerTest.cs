@@ -43,14 +43,23 @@ namespace UnitTests.Layers
             }
         }
 
-        private void DeleteTmpFiles(string imageFile)
+        private static void DeleteTmpFiles(string imageFile)
         {
             if (File.Exists(imageFile))
             {
                 foreach (var file in Directory.GetFiles(Path.GetTempPath(), 
                     Path.GetFileNameWithoutExtension(imageFile) + ".*"))
                 {
-                    File.Delete(file);
+                    try
+                    {
+                        File.Delete(file);
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.Write(ex);
+                        Console.WriteLine();
+                        //throw;
+                    }
                 }
             }
         }
@@ -67,6 +76,7 @@ namespace UnitTests.Layers
             Assert.AreEqual(Path.GetFileName(imageFile), l.LayerName);
             var e = new Envelope(0, 512, 0, 256);
             Assert.AreEqual(e, l.Envelope);
+            l.Dispose();
 
             DeleteTmpFiles(imageFile);
         }
@@ -84,6 +94,8 @@ namespace UnitTests.Layers
             var e = new Envelope(10, 522, 10, 266);
             Assert.AreEqual(e, l.Envelope);
             Assert.AreEqual(0d, l.Transparency);
+            l.Dispose();
+
             DeleteTmpFiles(imageFile);
         }
 
