@@ -44,10 +44,10 @@ namespace WinFormSamples
             this.scMapProp = new System.Windows.Forms.SplitContainer();
             this.toolStripContainer1 = new System.Windows.Forms.ToolStripContainer();
             this.mapBox1 = new SharpMap.Forms.MapBox();
-            this.mapQueryToolStrip1 = new SharpMap.Forms.ToolBar.MapQueryToolStrip();
             this.mapZoomToolStrip1 = new SharpMap.Forms.ToolBar.MapZoomToolStrip(this.components);
-            this.mapDigitizeGeometriesToolStrip1 = new SharpMap.Forms.ToolBar.MapDigitizeGeometriesToolStrip();
-            this.mapVariableLayerToolStrip1 = new SharpMap.Forms.ToolBar.MapVariableLayerToolStrip();
+            this.mapQueryToolStrip1 = new SharpMap.Forms.ToolBar.MapQueryToolStrip(this.components);
+            this.mapDigitizeGeometriesToolStrip1 = new SharpMap.Forms.ToolBar.MapDigitizeGeometriesToolStrip(this.components);
+            this.mapVariableLayerToolStrip1 = new SharpMap.Forms.ToolBar.MapVariableLayerToolStrip(this.components);
             this.pgMap = new System.Windows.Forms.PropertyGrid();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.radioButton2 = new System.Windows.Forms.RadioButton();
@@ -63,6 +63,7 @@ namespace WinFormSamples
             this.btnCreateTiles = new System.Windows.Forms.Button();
             this.lvwDecorations = new System.Windows.Forms.ListView();
             this.pgMapDecoration = new System.Windows.Forms.PropertyGrid();
+            this.radioButton11 = new System.Windows.Forms.RadioButton();
             ((System.ComponentModel.ISupportInitialize)(this.scMain)).BeginInit();
             this.scMain.Panel2.SuspendLayout();
             this.scMain.SuspendLayout();
@@ -142,7 +143,7 @@ namespace WinFormSamples
             // toolStripContainer1.ContentPanel
             // 
             this.toolStripContainer1.ContentPanel.Controls.Add(this.mapBox1);
-            this.toolStripContainer1.ContentPanel.Size = new System.Drawing.Size(594, 345);
+            this.toolStripContainer1.ContentPanel.Size = new System.Drawing.Size(594, 320);
             this.toolStripContainer1.Location = new System.Drawing.Point(3, 3);
             this.toolStripContainer1.Name = "toolStripContainer1";
             this.toolStripContainer1.Size = new System.Drawing.Size(594, 395);
@@ -151,10 +152,10 @@ namespace WinFormSamples
             // 
             // toolStripContainer1.TopToolStripPanel
             // 
-            this.toolStripContainer1.TopToolStripPanel.Controls.Add(this.mapZoomToolStrip1);
-            this.toolStripContainer1.TopToolStripPanel.Controls.Add(this.mapQueryToolStrip1);
             this.toolStripContainer1.TopToolStripPanel.Controls.Add(this.mapDigitizeGeometriesToolStrip1);
+            this.toolStripContainer1.TopToolStripPanel.Controls.Add(this.mapQueryToolStrip1);
             this.toolStripContainer1.TopToolStripPanel.Controls.Add(this.mapVariableLayerToolStrip1);
+            this.toolStripContainer1.TopToolStripPanel.Controls.Add(this.mapZoomToolStrip1);
             // 
             // mapBox1
             // 
@@ -173,7 +174,7 @@ namespace WinFormSamples
             this.mapBox1.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(210)))), ((int)(((byte)(244)))), ((int)(((byte)(244)))), ((int)(((byte)(244)))));
             this.mapBox1.SelectionForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(244)))), ((int)(((byte)(244)))));
             this.mapBox1.ShowProgressUpdate = true;
-            this.mapBox1.Size = new System.Drawing.Size(588, 339);
+            this.mapBox1.Size = new System.Drawing.Size(588, 314);
             this.mapBox1.TabIndex = 7;
             this.mapBox1.Text = "mapBox1";
             this.mapBox1.WheelZoomMagnitude = 2D;
@@ -187,33 +188,33 @@ namespace WinFormSamples
             this.mapBox1.ActiveToolChanged += new SharpMap.Forms.MapBox.ActiveToolChangedHandler(this.mapImage_ActiveToolChanged);
             this.mapBox1.SizeChanged += new System.EventHandler(this.mapImage_SizeChanged);
             // 
+            // mapZoomToolStrip1
+            // 
+            this.mapZoomToolStrip1.Dock = System.Windows.Forms.DockStyle.None;
+            this.mapZoomToolStrip1.Enabled = false;
+            this.mapZoomToolStrip1.Location = new System.Drawing.Point(3, 0);
+            this.mapZoomToolStrip1.MapControl = this.mapBox1;
+            this.mapZoomToolStrip1.Name = "mapZoomToolStrip1";
+            this.mapZoomToolStrip1.Size = new System.Drawing.Size(314, 25);
+            this.mapZoomToolStrip1.TabIndex = 8;
+            this.mapZoomToolStrip1.Text = "mapZoomToolStrip1";
+            // 
             // mapQueryToolStrip1
             // 
             this.mapQueryToolStrip1.Dock = System.Windows.Forms.DockStyle.None;
             this.mapQueryToolStrip1.Enabled = false;
-            this.mapQueryToolStrip1.Location = new System.Drawing.Point(113, 0);
+            this.mapQueryToolStrip1.Location = new System.Drawing.Point(113, 25);
             this.mapQueryToolStrip1.MapControl = this.mapBox1;
             this.mapQueryToolStrip1.Name = "mapQueryToolStrip1";
             this.mapQueryToolStrip1.Size = new System.Drawing.Size(216, 25);
             this.mapQueryToolStrip1.TabIndex = 8;
             this.mapQueryToolStrip1.Text = "mapQueryToolStrip1";
             // 
-            // mapZoomToolStrip1
-            // 
-            this.mapZoomToolStrip1.Dock = System.Windows.Forms.DockStyle.None;
-            this.mapZoomToolStrip1.Enabled = false;
-            this.mapZoomToolStrip1.Location = new System.Drawing.Point(140, 25);
-            this.mapZoomToolStrip1.MapControl = this.mapBox1;
-            this.mapZoomToolStrip1.Name = "mapZoomToolStrip1";
-            this.mapZoomToolStrip1.Size = new System.Drawing.Size(262, 25);
-            this.mapZoomToolStrip1.TabIndex = 8;
-            this.mapZoomToolStrip1.Text = "mapZoomToolStrip1";
-            // 
             // mapDigitizeGeometriesToolStrip1
             // 
             this.mapDigitizeGeometriesToolStrip1.Dock = System.Windows.Forms.DockStyle.None;
             this.mapDigitizeGeometriesToolStrip1.Enabled = false;
-            this.mapDigitizeGeometriesToolStrip1.Location = new System.Drawing.Point(3, 0);
+            this.mapDigitizeGeometriesToolStrip1.Location = new System.Drawing.Point(3, 25);
             this.mapDigitizeGeometriesToolStrip1.MapControl = this.mapBox1;
             this.mapDigitizeGeometriesToolStrip1.Name = "mapDigitizeGeometriesToolStrip1";
             this.mapDigitizeGeometriesToolStrip1.Size = new System.Drawing.Size(110, 25);
@@ -223,7 +224,7 @@ namespace WinFormSamples
             // 
             this.mapVariableLayerToolStrip1.Dock = System.Windows.Forms.DockStyle.None;
             this.mapVariableLayerToolStrip1.Enabled = false;
-            this.mapVariableLayerToolStrip1.Location = new System.Drawing.Point(3, 25);
+            this.mapVariableLayerToolStrip1.Location = new System.Drawing.Point(3, 50);
             this.mapVariableLayerToolStrip1.MapControl = this.mapBox1;
             this.mapVariableLayerToolStrip1.Name = "mapVariableLayerToolStrip1";
             this.mapVariableLayerToolStrip1.Size = new System.Drawing.Size(137, 25);
@@ -250,6 +251,7 @@ namespace WinFormSamples
             this.flowLayoutPanel1.Controls.Add(this.radioButton8);
             this.flowLayoutPanel1.Controls.Add(this.radioButton9);
             this.flowLayoutPanel1.Controls.Add(this.radioButton10);
+            this.flowLayoutPanel1.Controls.Add(this.radioButton11);
             this.flowLayoutPanel1.Controls.Add(this.btnCreateTiles);
             this.flowLayoutPanel1.Controls.Add(this.lvwDecorations);
             this.flowLayoutPanel1.Controls.Add(this.pgMapDecoration);
@@ -388,7 +390,7 @@ namespace WinFormSamples
             // 
             // btnCreateTiles
             // 
-            this.btnCreateTiles.Location = new System.Drawing.Point(13, 237);
+            this.btnCreateTiles.Location = new System.Drawing.Point(13, 260);
             this.btnCreateTiles.Name = "btnCreateTiles";
             this.btnCreateTiles.Size = new System.Drawing.Size(147, 23);
             this.btnCreateTiles.TabIndex = 11;
@@ -399,7 +401,7 @@ namespace WinFormSamples
             // lvwDecorations
             // 
             this.lvwDecorations.CheckBoxes = true;
-            this.lvwDecorations.Location = new System.Drawing.Point(13, 266);
+            this.lvwDecorations.Location = new System.Drawing.Point(13, 289);
             this.lvwDecorations.MultiSelect = false;
             this.lvwDecorations.Name = "lvwDecorations";
             this.lvwDecorations.Size = new System.Drawing.Size(147, 58);
@@ -412,11 +414,23 @@ namespace WinFormSamples
             // pgMapDecoration
             // 
             this.pgMapDecoration.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.pgMapDecoration.Location = new System.Drawing.Point(15, 330);
+            this.pgMapDecoration.Location = new System.Drawing.Point(15, 353);
             this.pgMapDecoration.Name = "pgMapDecoration";
             this.pgMapDecoration.SelectedObject = this.lvwDecorations;
-            this.pgMapDecoration.Size = new System.Drawing.Size(143, 291);
+            this.pgMapDecoration.Size = new System.Drawing.Size(143, 262);
             this.pgMapDecoration.TabIndex = 9;
+            // 
+            // radioButton11
+            // 
+            this.radioButton11.AutoSize = true;
+            this.radioButton11.Location = new System.Drawing.Point(13, 237);
+            this.radioButton11.Name = "radioButton11";
+            this.radioButton11.Size = new System.Drawing.Size(96, 17);
+            this.radioButton11.TabIndex = 12;
+            this.radioButton11.TabStop = true;
+            this.radioButton11.Text = "GdiImageLayer";
+            this.radioButton11.UseVisualStyleBackColor = true;
+            this.radioButton11.Click += new System.EventHandler(this.radioButton_Click);
             // 
             // FormMapBox
             // 
@@ -539,6 +553,9 @@ namespace WinFormSamples
                         break;
                     case "shp_TextOnPath":
                         mapBox1.Map=TextOnPathSample.InitializeMapOrig(tbAngle.Value);
+                        break;
+                    case "GdiImageLayer":
+                        mapBox1.Map = GdiImageLayerSample.InitializeMap(tbAngle.Value);
                         break;
                     default:
                         break;
@@ -754,6 +771,8 @@ namespace WinFormSamples
                 f.ShowDialog();
             }
         }
+
+        private RadioButton radioButton11;
   }
 }
 

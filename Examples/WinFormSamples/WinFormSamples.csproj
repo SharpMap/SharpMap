@@ -205,6 +205,7 @@
     <Compile Include="LayerTools.cs" />
     <Compile Include="Samples\CreateTilesSample.cs" />
     <Compile Include="Samples\GdalSample.cs" />
+    <Compile Include="Samples\GdiImageLayerSample.cs" />
     <Compile Include="Samples\GeometryFeatureProviderSample.cs" />
     <Compile Include="Samples\GradiantThemeSample.cs" />
     <Compile Include="Samples\HeatLayerSample.cs" />
