@@ -50,10 +50,8 @@ namespace SharpMap.Layers
         /// </summary>
         /// <param name="fileName">The path to the file</param>
         public GdiImageLayer(string fileName)
-            : this(Path.GetFileName(fileName), Image.FromFile(fileName))
+            : this(Path.GetFileName(fileName), fileName)
         {
-            ImageFilename = fileName;
-            SetEnvelope(fileName);
         }
 
         /// <summary>
@@ -62,9 +60,10 @@ namespace SharpMap.Layers
         /// <param name="layerName">The name of the layer</param>
         /// <param name="fileName">The path to the file</param>
         public GdiImageLayer(string layerName, string fileName)
-            :this(fileName)
+            :this(layerName, Image.FromFile(fileName))
         {
-            LayerName = layerName;
+            ImageFilename = fileName;
+            SetEnvelope(fileName);
         }
 
         /// <summary>
@@ -74,6 +73,8 @@ namespace SharpMap.Layers
         /// <param name="image"></param>
         public GdiImageLayer(string layerName, Image image)
         {
+            InterpolationMode = InterpolationMode.HighQualityBicubic;
+
             LayerName = layerName;
             _image = image;
             SetEnvelope();
