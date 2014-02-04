@@ -239,17 +239,17 @@ namespace SharpMap.Layers
             if (File.Exists(wld))
             {
                 _worldFile = ReadWorldFile(wld);
-                return;
             }
-
-            var ext = CreateWorldFileExtension(Path.GetExtension(fileName));
-            if (string.IsNullOrEmpty(ext)) return;
+            else
             {
-                wld = Path.ChangeExtension(fileName, ext);
-                if (File.Exists(wld))
+                var ext = CreateWorldFileExtension(Path.GetExtension(fileName));
+                if (string.IsNullOrEmpty(ext)) return;
                 {
-                    _worldFile = ReadWorldFile(wld);
-                    return;
+                    wld = Path.ChangeExtension(fileName, ext);
+                    if (File.Exists(wld))
+                    {
+                        _worldFile = ReadWorldFile(wld);
+                    }
                 }
             }
 
@@ -274,12 +274,12 @@ namespace SharpMap.Layers
                         var line = sr.ReadLine();
                         while (string.IsNullOrEmpty(line))
                             line = sr.ReadLine();
-                        coefficients[i] = double.Parse(line);
+                        coefficients[i] = double.Parse(line, NumberFormatInfo.InvariantInfo);
                     }
                 }
 
                 // Test for rotation or shear
-                if (coefficients[2] != 0d || coefficients[3] != 0d)
+                if (coefficients[1] != 0d || coefficients[2] != 0d)
                 {
                     throw new NotSupportedException("World files with rotation and/or shear are not supported");
                 }
