@@ -170,6 +170,7 @@
     <Compile Include="Data\Providers\SQLServer2008Tests.cs" />
     <Compile Include="Data\Providers\ThreadingTest.cs" />
     <Compile Include="Layers\GdiImageLayerTest.cs" />
+    <Compile Include="Layers\LabelLayerTest.cs" />
     <Compile Include="Layers\TileLayerIssues.cs" />
     <Compile Include="MapDecorationTest.cs" />
     <Compile Include="MapTest.cs" />
@@ -201,6 +202,7 @@
     <Compile Include="Serialization\ThemeTest.cs" />
     <Compile Include="TestData\CreatingData.cs" />
     <Compile Include="TestWmsCapabilityParser.cs" />
+    <Compile Include="UnitTestsFixture.cs" />
     <Compile Include="WFS\RequestValidationTest.cs" />
     <Compile Include="WMS\Encoding.cs" />
     <Compile Include="WMS\SpatialReferencedBoundingBoxTest.cs" />
