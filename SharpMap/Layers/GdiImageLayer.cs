@@ -39,10 +39,15 @@ namespace SharpMap.Layers
     {
         private Image _image;
 
-        [NonSerialized] private Image _tmpImage;
+        [NonSerialized] 
+        private Image _tmpImage;
 
+        [NonSerialized]
         private WorldFile _worldFile;
+        
+        [NonSerialized]
         private Envelope _envelope;
+
         private float _transparency;
 
         /// <summary>
@@ -139,6 +144,12 @@ namespace SharpMap.Layers
         /// Gets or sets the <see cref="T:System.Drawing.Drawing2D.InterpolationMode"/> to use
         /// </summary>
         public InterpolationMode InterpolationMode { get; set; }
+
+        protected override void ReleaseManagedResources()
+        {
+            base.ReleaseManagedResources();
+            _image.Dispose();
+        }
 
         /// <summary>
         /// Renders the layer
