@@ -17,12 +17,15 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using GeoAPI.Geometries;
+using NetTopologySuite;
 using SharpMap.Layers;
 using SharpMap.Rendering;
 using SharpMap.Rendering.Decoration;
@@ -43,22 +46,77 @@ namespace SharpMap
     [Serializable]
     public class Map : IDisposable
     {
+        /// <summary>
+        /// Method to invoke the static constructor of this class
+        /// </summary>
+        public static void Configure()
+        {
+            // Methods sole purpose is to get the static constructor executed
+        }
+
+        /// <summary>
+        /// Static constructor. Needed to get <see cref="GeoAPI.GeometryServiceProvider.Instance"/> set.
+        /// </summary>
         static Map()
         {
+            try
+            {
+                var instance = GeoAPI.GeometryServiceProvider.Instance = NtsGeometryServices.Instance;
+                if (instance == null)
+                    throw new InvalidOperationException();
+            }
+            catch (InvalidOperationException)
+            {
+                /*var ntsAssembly = */
+                Assembly.Load("NetTopologySuite");
+                _logger.Debug("Loaded NetTopologySuite");
+                var instance = GeoAPI.GeometryServiceProvider.Instance;
+                if (instance == null)
+                    throw new InvalidOperationException();
+            }
+            
+            // The following code did not seem to work in all cases.
+            /*            
             if (System.ComponentModel.LicenseManager.UsageMode != System.ComponentModel.LicenseUsageMode.Designtime)
             {
+                _logger.Debug("In design mode");
+                Trace.WriteLine("In design mode");
                 // We have to do this initialization with reflection due to the fact that NTS can reference an older version of GeoAPI and redirection 
                 // is not available at design time..
                 var ntsAssembly = Assembly.Load("NetTopologySuite");
-                if (GeoAPI.GeometryServiceProvider.Instance == null)
+                _logger.Debug("Loaded NetTopologySuite");
+                Trace.WriteLine("Loaded NetTopologySuite");
+                try
                 {
-                    var ntsApiGeometryServices = ntsAssembly.GetType("NetTopologySuite.NtsGeometryServices");
-                    GeoAPI.GeometryServiceProvider.Instance = ntsApiGeometryServices.GetProperty("Instance").GetValue(null, null) as GeoAPI.IGeometryServices;
+                    _logger.Debug("Trying to access GeoAPI.GeometryServiceProvider.Instance");
+                    Trace.WriteLine("Trying to access GeoAPI.GeometryServiceProvider.Instance");
+                    if (GeoAPI.GeometryServiceProvider.Instance == null)
+                    {
+                        _logger.Debug("Returned null, setting it to default");
+                        Trace.WriteLine("Returned null, setting it to default");
+                        var ntsApiGeometryServices = ntsAssembly.GetType("NetTopologySuite.NtsGeometryServices");
+                        GeoAPI.GeometryServiceProvider.Instance =
+                            ntsApiGeometryServices.GetProperty("Instance").GetValue(null, null) as
+                                GeoAPI.IGeometryServices;
+                    }
                 }
+
+                catch (InvalidOperationException)
+                {
+                    _logger.Debug("InvalidOperationException thrown, setting it to default");
+                    Trace.WriteLine("InvalidOperationException thrown, setting it to default");
+                    var ntsApiGeometryServices = ntsAssembly.GetType("NetTopologySuite.NtsGeometryServices");
+                    GeoAPI.GeometryServiceProvider.Instance =
+                        ntsApiGeometryServices.GetProperty("Instance").GetValue(null, null) as
+                            GeoAPI.IGeometryServices;
+                }
+                _logger.Debug("Exiting design mode handling");
+                Trace.WriteLine("Exiting design mode handling");
             }
+             */
         }
 
-        readonly ILog _logger = LogManager.GetLogger(typeof(Map));
+        static readonly ILog _logger = LogManager.GetLogger(typeof(Map));
 
         /// <summary>
         /// Used for converting numbers to/from strings
