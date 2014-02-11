@@ -368,7 +368,7 @@ namespace SharpMap.Forms.ToolBar
             _zoomExtentStack.StoreExtents = true;
 
             _predefinedScales.Text = string.Format(NumberFormatInfo.CurrentInfo, "1:{0}", 
-                Math.Round(MapControl.Map.MapScale, 0, MidpointRounding.AwayFromZero));
+                Math.Round(MapControl.Map.GetMapScale(_dpiX), 0, MidpointRounding.AwayFromZero));
             MapControl.Map.MapViewOnChange += OnMapMapViewOnChange;
         }
 
@@ -390,7 +390,7 @@ namespace SharpMap.Forms.ToolBar
         {
             if (MapControl == null) return;
 
-            var scale = MapControl.Map.MapScale;
+            var scale = MapControl.Map.GetMapScale(_dpiX);
 
             //_zoomExtentStack.StoreExtents
 
@@ -455,21 +455,31 @@ namespace SharpMap.Forms.ToolBar
             double val;
             if (!double.TryParse(text.Substring(2), NumberStyles.Float, NumberFormatInfo.CurrentInfo, out val))
                 return;
-            _predefinedScales.Text = text;
+
+            //_predefinedScales.Text = text;
 
             MapControl.Map.MapScale = val;
             MapControl.Refresh();
+
+            BeginInvoke(new MethodInvoker(
+            delegate
+            {
+                _predefinedScales.Text = string.Format("1:{0}",
+                    Math.Round(MapControl.Map.GetMapScale(_dpiX), MidpointRounding.AwayFromZero));
+                _predefinedScales.SelectionStart = 0;
+                _predefinedScales.SelectionLength = _predefinedScales.Text.Length;
+            }));
         }
 
-        private float _dpiX, _dpiY;
+        private int _dpiX, _dpiY;
         private ZoomExtentStack _zoomExtentStack;
 
         protected override void OnCreateControl()
         {
             using (var g = CreateGraphics())
             {
-                _dpiX = g.DpiX;
-                _dpiY = g.DpiY;
+                _dpiX = (int)g.DpiX;
+                _dpiY = (int)g.DpiY;
             }
             base.OnCreateControl();
         }
