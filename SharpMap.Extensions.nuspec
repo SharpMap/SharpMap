@@ -21,14 +21,15 @@ The engine is written in C# and based on the .Net 4.0 framework.
       <frameworkAssembly assemblyName="System.Configuration" targetFramework="net40-client" />
     </frameworkAssemblies>
 	<dependencies>
-		<dependency id="SharpMap" version="[1.0.0,1.1)"/>
+		<dependency id="SharpMap" version="[$version$]"/>
 		<dependency id="GDAL" version="[1.9.2,1.10)" />
-		<dependency id="Npgsql" version="2.0.12.1"/>
+		<dependency id="Npgsql" version="[2.0.14.3]"/>
 		<dependency id="System.Data.SQLite.MSIL" version="1.0.86.0"/>
-		<dependency id="NetTopologySuite.IO.SpatiaLite" version="[1.13.1,1.14)"/>
+		<dependency id="NetTopologySuite.IO.SpatiaLite" version="[1.13.2,1.14)"/>
 	</dependencies>
   </metadata>
   <files>
 	<file src="SharpMap.Extensions\bin\Release\SharpMap.Extensions.dll" target="lib\net40-client"/>
+	<file src="SharpMap.Extensions\bin\Release\SharpMap.Extensions.xml" target="lib\net40-client"/>
   </files>
 </package>

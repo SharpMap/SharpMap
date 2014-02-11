@@ -83,7 +83,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{40C5E4
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MSBuild", "MSBuild", "{A5E400B4-8360-4259-BDDD-292A134D14CC}"
 	ProjectSection(SolutionItems) = preProject
+		SharpMap.Data.Providers.OracleSpatial.nuspec = SharpMap.Data.Providers.OracleSpatial.nuspec
 		SharpMap.Extensions.nuspec = SharpMap.Extensions.nuspec
+		SharpMap.Layers.HeatLayer.nuspec = SharpMap.Layers.HeatLayer.nuspec
 		SharpMap.nuspec = SharpMap.nuspec
 		SharpMap.proj = SharpMap.proj
 		SharpMap.UI.nuspec = SharpMap.UI.nuspec
