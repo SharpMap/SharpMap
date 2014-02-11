@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Reflection;
 using Common.Logging;
 
 namespace SharpMap.Forms
@@ -8,7 +9,7 @@ namespace SharpMap.Forms
     [DesignTimeVisible(false)]
     public partial class MapToolStrip : System.Windows.Forms.ToolStrip
     {
-        static ILog Logger = LogManager.GetLogger(typeof(MapToolStrip));
+        static readonly ILog _logger = LogManager.GetLogger(typeof(MapToolStrip));
 
         /// <summary>
         /// Event raised when the corresponding map control has changed.
@@ -19,6 +20,15 @@ namespace SharpMap.Forms
         /// Event raised when the corresponding map control is about to change
         /// </summary>
         public event CancelEventHandler MapControlChanging;
+
+        /// <summary>
+        /// Static constructor
+        /// </summary>
+        static MapToolStrip()
+        {
+            Map.Configure();
+        }
+
 
         private MapBox _mapBox;
 
@@ -63,13 +73,13 @@ namespace SharpMap.Forms
             if (_mapBox == null)
                 return;
 
-            Logger.Info("MapControlChanging");
+            _logger.Info("MapControlChanging");
             if (MapControlChanging != null)
                 MapControlChanging(this, e);
             
             if (e.Cancel)
             {
-                Logger.Info("Canceled");
+                _logger.Info("Canceled");
                 return;
             }
 
@@ -91,7 +101,7 @@ namespace SharpMap.Forms
 
         protected void OnMapControlChanged(EventArgs e)
         {
-            Logger.Info("Enter MapControlChanged");
+            _logger.Info("Enter MapControlChanged");
 
             Enabled = _mapBox != null;
             OnMapControlChangedInternal(e);
@@ -99,7 +109,7 @@ namespace SharpMap.Forms
             if (MapControlChanged != null)
                 MapControlChanged(this, e);
 
-            Logger.Info("Leave MapControlChanged");
+            _logger.Info("Leave MapControlChanged");
 
 
         }

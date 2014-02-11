@@ -20,7 +20,8 @@
                     var mat = new System.Drawing.Drawing2D.Matrix();
                     mat.RotateAt(angle, m.WorldToImage(m.Center));
                     m.MapTransform = mat;
-
+                    m.MaximumExtents = m.GetExtents();
+                    m.EnforceMaximumExtents = true;
                     return m;
                 }
             }

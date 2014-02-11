@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Globalization;
 using System.Windows.Forms;
 using GeoAPI.Geometries;
 
@@ -27,17 +28,24 @@ namespace SharpMap.Forms.ToolBar
         {
             InitializeComponent();
 
-            _predefinedScales.Items.AddRange(new string[] {"1:100", "1:250", "1:500", "1:1000", "1:2500", "1:5000", 
-                "1:10000", "1:25000", "1:50000", "1:100000"});
+            AddScales();
         }
 
         public MapZoomToolStrip(IContainer container)
             :base(container)
         {
             InitializeComponent();
+            AddScales();
+        }
 
-            _predefinedScales.Items.AddRange(new string[] {"1:100", "1:250", "1:500", "1:1000", "1:2500", "1:5000", 
-                "1:10000", "1:25000", "1:50000", "1:100000"});
+        private void AddScales()
+        {
+            _predefinedScales.Items.AddRange(new object[]
+            {
+                "1:100", "1:250", "1:500", "1:1000", "1:2500", "1:5000",
+                "1:10000", "1:25000", "1:50000", "1:100000", "1:250000",
+                "1:500000", "1:1000000", "1:2500000", "1:5000000", "1:10000000"
+            });
         }
 
         public void InitializeComponent()
@@ -139,6 +147,8 @@ namespace SharpMap.Forms.ToolBar
             // 
             this._predefinedScales.Name = "_predefinedScales";
             this._predefinedScales.Size = new System.Drawing.Size(121, 21);
+            this._predefinedScales.KeyPress += OnScaleEntered;
+            this._predefinedScales.SelectedIndexChanged += OnScaleSelected;
             // 
             // MapZoomToolStrip
             // 
@@ -357,6 +367,8 @@ namespace SharpMap.Forms.ToolBar
             _zoomExtentStack = new ZoomExtentStack(MapControl);
             _zoomExtentStack.StoreExtents = true;
 
+            _predefinedScales.Text = string.Format(NumberFormatInfo.CurrentInfo, "1:{0}", 
+                Math.Round(MapControl.Map.MapScale, 0, MidpointRounding.AwayFromZero));
             MapControl.Map.MapViewOnChange += OnMapMapViewOnChange;
         }
 
@@ -377,7 +389,8 @@ namespace SharpMap.Forms.ToolBar
         private void OnMapZoomChanged(double zoom)
         {
             if (MapControl == null) return;
-            var scale = MapControl.Map.Zoom;
+
+            var scale = MapControl.Map.MapScale;
 
             //_zoomExtentStack.StoreExtents
 
@@ -390,21 +403,15 @@ namespace SharpMap.Forms.ToolBar
                                 {
                                     _zoomPrev.Enabled = _zoomExtentStack.CanZoomPrevious;
                                     _zoomNext.Enabled = _zoomExtentStack.CanZoomNext;
-                                    _predefinedScales.Text = string.Format("1:{0}", Math.Round(ZoomToScale(zoom), 0));
+                                    _predefinedScales.Text = string.Format("1:{0}", 
+                                        Math.Round(scale, 0, MidpointRounding.AwayFromZero));
                                 });
             else
             {
                 _zoomPrev.Enabled = _zoomExtentStack.CanZoomPrevious;
                 _zoomNext.Enabled = _zoomExtentStack.CanZoomNext;
-                _predefinedScales.Text = string.Format("1:{0}", Math.Round(ZoomToScale(zoom), 0));
+                _predefinedScales.Text = string.Format("1:{0}", Math.Round(scale, 0));
             }
-
-
-        }
-
-        private double ZoomToScale(double zoom)
-        {
-            return MapControl.Map.Zoom;
         }
 
         private void OnMapControlActiveToolChanged(MapBox.Tools tool)
@@ -435,18 +442,22 @@ namespace SharpMap.Forms.ToolBar
 
         private void OnScaleSelected(object sender, EventArgs e)
         {
+            
             if (MapControl == null) return;
 
             if (string.IsNullOrEmpty(_predefinedScales.Text))
                 return;
 
-            if (!_predefinedScales.Text.StartsWith("1:"))
-                _predefinedScales.Text = "1:" + _predefinedScales.Text;
+            var text = _predefinedScales.Text;
+            if (!text.StartsWith("1:"))
+                 text = "1:" + text;
 
-            var val = double.Parse(_predefinedScales.Text.Substring(2), 
-                System.Globalization.NumberFormatInfo.InvariantInfo);
-            var zoom = ScaleToZoom(val);
-            MapControl.Map.Zoom = zoom;
+            double val;
+            if (!double.TryParse(text.Substring(2), NumberStyles.Float, NumberFormatInfo.CurrentInfo, out val))
+                return;
+            _predefinedScales.Text = text;
+
+            MapControl.Map.MapScale = val;
             MapControl.Refresh();
         }
 
@@ -462,67 +473,5 @@ namespace SharpMap.Forms.ToolBar
             }
             base.OnCreateControl();
         }
-
-
-        private double ScaleToZoom(double scale)
-        {
-            return MapControl.Map.Zoom;
-        }
-
-        /*
-        public Double MapScaleToWidth(Double mapScale)
-        {
-            var screenInches = MapControl.Map.MapHeight / _dpiY;
-            var worldInches = mapScale * screenInches;
-
-            return worldInches / InchesPerUnit;
-        }
-
-        private const double InchesPerMeter = 39.3700787;
-        private const double MetersPerNauticalMile = 1852;
-        private const double NauticalMilesPerDegree = 60;
-        private const double InchesPerDegree = NauticalMilesPerDegree * MetersPerNauticalMile * InchesPerMeter;
-
-        private double InchesPerUnit
-        {
-            get
-            {
-#if !DotSpatialProjections
-                var map = MapControl.Map;
-                var spatialReference = map.SpatialReference;
-                var projCs = spatialReference as ProjNet.CoordinateSystems.IProjectedCoordinateSystem;
-                if (projCs != null)
-                {
-                    return projCs.LinearUnit.MetersPerUnit * InchesPerMeter;
-                }
-
-                var latAdj = 1.0;
-                var centerLat = map.Center.Y;
-                if (centerLat != 0.0)
-                {
-                    var cosLat = Math.Cos(Math.PI * centerLat / 180.0);
-                    latAdj = Math.Sqrt(1 + cosLat * cosLat) / Math.Sqrt(2.0);
-                }
-                return InchesPerDegree * latAdj;
-            }
-        }
-#else
-#endif
-
-        /// <summary>
-        /// Function to compute map scale base on map width
-        /// </summary>
-        /// <param name="width">The world width of the map</param>
-        /// <returns>The map scale, e.g. 1:10000</returns>
-        public double WidthToMapScale(Double width)
-        {
-            double worldInches = width * InchesPerUnit;
-            double screenInches = MapControl.Map.MapWidth/_dpiX;
-            double scale = worldInches / screenInches;
-
-            return scale;
-        }
-         */
-
     }
 }

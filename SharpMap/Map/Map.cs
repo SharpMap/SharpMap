@@ -61,18 +61,26 @@ namespace SharpMap
         {
             try
             {
-                var instance = GeoAPI.GeometryServiceProvider.Instance = NtsGeometryServices.Instance;
+                _logger.Debug("Trying to get GeoAPI.GeometryServiceProvider.Instance");
+                var instance = GeoAPI.GeometryServiceProvider.Instance;
                 if (instance == null)
+                {
+                    _logger.Debug("Returned null");
                     throw new InvalidOperationException();
+                }
             }
             catch (InvalidOperationException)
             {
-                /*var ntsAssembly = */
+                _logger.Debug("Loading NetTopologySuite");
                 Assembly.Load("NetTopologySuite");
                 _logger.Debug("Loaded NetTopologySuite");
+                _logger.Debug("Trying to get GeoAPI.GeometryServiceProvider.Instance");
                 var instance = GeoAPI.GeometryServiceProvider.Instance;
                 if (instance == null)
+                {
+                    _logger.Debug("Returned null");
                     throw new InvalidOperationException();
+                }
             }
             
             // The following code did not seem to work in all cases.

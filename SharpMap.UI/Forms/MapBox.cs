@@ -65,6 +65,8 @@ namespace SharpMap.Forms
     {
         private static readonly ILog Logger = LogManager.GetLogger(typeof (MapBox));
 
+        static MapBox() { Map.Configure(); }
+
         #region PreviewModes enumerator
 
         // ReSharper disable UnusedMember.Local

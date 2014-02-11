@@ -59,6 +59,7 @@ namespace SharpMap.Data.Providers
     [Serializable]
     public class GeometryProvider : PreparedGeometryProvider
     {
+        static GeometryProvider() { Map.Configure();}
         private List<IGeometry> _geometries;
 
         /// <summary>

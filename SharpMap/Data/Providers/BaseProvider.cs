@@ -13,6 +13,11 @@ namespace SharpMap.Data.Providers
     [Serializable]
     public abstract class BaseProvider : DisposableObject, IProvider
     {
+        static BaseProvider()
+        {
+            Map.Configure();
+        }
+        
         private int _srid;
         private bool _isOpen;
 
