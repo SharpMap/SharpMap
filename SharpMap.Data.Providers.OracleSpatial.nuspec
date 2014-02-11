@@ -19,6 +19,8 @@
       <dependency id="odp.net.x86" version="[112.3.20]"/>
     </dependencies>
   </metadata>
-  <file src="SharpMap.Data.Providers.OracleSpatial\bin\Release\SharpMap.Data.Providers.OracleSpatial.dll" target="lib\net40"/>
-  <file src="SharpMap.Data.Providers.OracleSpatial\bin\Release\SharpMap.Data.Providers.OracleSpatial.xml" target="lib\net40"/>
+  <files>
+    <file src="SharpMap.Data.Providers.OracleSpatial\bin\Release\SharpMap.Data.Providers.OracleSpatial.dll" target="lib\net40"/>
+    <file src="SharpMap.Data.Providers.OracleSpatial\bin\Release\SharpMap.Data.Providers.OracleSpatial.xml" target="lib\net40"/>
+  </files>
 </package>

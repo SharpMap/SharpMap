@@ -23,10 +23,11 @@ The engine is written in C# and based on the .Net 4.0 framework.
       <frameworkAssembly assemblyName="System.Web"/>
     </frameworkAssemblies>
 	<dependencies>
-		<dependency id="SharpMap" version="[1.1]"/>
+		<dependency id="SharpMap" version="[$version$]"/>
 	</dependencies>
   </metadata>
   <files>
-	<file src="SharpMap.Web\bin\Release\SharpMap.Web.dll" target="lib\net40"/>
+	  <file src="SharpMap.Web\bin\Release\SharpMap.Web.dll" target="lib\net40"/>
+    <file src="SharpMap.Web\bin\Release\SharpMap.Web.xml" target="lib\net40"/>
   </files>
 </package>

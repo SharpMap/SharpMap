@@ -17,6 +17,8 @@
       <dependency id="SharpMap" version="[$version$]"/>
     </dependencies>
   </metadata>
-  <file src="SharpMap.Data.Layers.HeatLayer\bin\Release\SharpMap.Layers.HeatLayer.dll" target="lib\net40-client"/>
-  <file src="SharpMap.Data.Layers.HeatLayer\bin\Release\SharpMap.Layers.HeatLayer.xml" target="lib\net40-client"/>
+  <files>
+    <file src="SharpMap.Layers.HeatLayer\bin\Release\SharpMap.Layers.HeatLayer.dll" target="lib\net40-client"/>
+    <file src="SharpMap.Layers.HeatLayer\bin\Release\SharpMap.Layers.HeatLayer.xml" target="lib\net40-client"/>
+  </files>
 </package>
