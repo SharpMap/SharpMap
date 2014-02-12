@@ -26,6 +26,7 @@ using System.IO;
 using System.Runtime.Serialization;
 using GeoAPI.Geometries;
 using NetTopologySuite.Geometries;
+using RTools_NTS.Util;
 using Point = System.Drawing.Point;
 
 namespace SharpMap.Layers

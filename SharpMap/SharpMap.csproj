@@ -190,6 +190,7 @@
     <Compile Include="Geometries\GeoAPIEx.cs" />
     <Compile Include="Layers\DuplicateLayerException.cs" />
     <Compile Include="Layers\GdiImageLayer.cs" />
+    <Compile Include="Layers\GdiImageLayerProxy.cs" />
     <Compile Include="Layers\IAsyncLayer.cs" />
     <Compile Include="Layers\ILayer.cs" />
     <Compile Include="Layers\ICanQueryLayer.cs" />
