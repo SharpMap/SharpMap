@@ -31,7 +31,26 @@ namespace SharpMap.Layers
     public class GdiImageLayerProxy<T> : ILayer, IDisposable
         where T: class, ILayer
     {
-        private static readonly ILog Logger = Common.Logging.LogManager.GetCurrentClassLogger();
+        /// <summary>
+        /// Creates a proxy class that transforms all colors to grey scale
+        /// </summary>
+        /// <param name="baseLayer">The layer to be proxied</param>
+        /// <returns>A proxy layer</returns>
+        public static GdiImageLayerProxy<T> CreateGreyScale(T baseLayer)
+        {
+            var colorMatrix = new ColorMatrix(
+                new[]
+                {
+                    new[] {.3f, .3f, .3f, 0, 0},
+                    new[] {.59f, .59f, .59f, 0, 0},
+                    new[] {.11f, .11f, .11f, 0, 0},
+                    new[] {0f, 0, 0, 1, 0},
+                    new[] {0f, 0, 0, 0, 1}
+                });
+            return new GdiImageLayerProxy<T>(baseLayer, colorMatrix);
+        }
+
+        private static readonly ILog Logger = LogManager.GetCurrentClassLogger();
 
         private readonly ColorMatrix _colorMatrix;
         private readonly ColorMap[] _colorMap;
