@@ -1,4 +1,5 @@
-﻿using SharpMap;
+﻿using BruTile.Wmsc;
+using SharpMap;
 using SharpMap.Layers;
 using BruTile.Web;
 using BruTile;

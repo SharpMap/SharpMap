@@ -20,6 +20,7 @@ namespace WinFormSamples
 
         public SharpMapTileSource(ITileSchema schema, ITileCache<byte[]> cache, params ILayer[] layers)
         {
+            Title = "SharpMap.Map";
             if (schema == null)
                 throw new ArgumentNullException("schema");
             if (layers == null)
@@ -27,6 +28,8 @@ namespace WinFormSamples
 
             this.provider = new SharpMapTileProvider(schema, cache, layers);
         }
+
+        public string Title { get; set; }
 
         public ITileProvider Provider
         {
@@ -126,7 +129,9 @@ namespace WinFormSamples
         {
             lock (synclock)
             {
-                Size size = new Size(this.Schema.Width, this.Schema.Height);
+                var tileWidth = this.Schema.GetTileWidth(info.Index.Level);
+                var tileHeight = this.Schema.GetTileHeight(info.Index.Level);
+                Size size = new Size(tileWidth, tileHeight);
                 Map map = new Map(size) { BackColor = Color.Transparent };
                 map.Layers.AddCollection(this.layers);
 
