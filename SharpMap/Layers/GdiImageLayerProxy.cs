@@ -20,15 +20,21 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using Common.Logging;
 using GeoAPI.Geometries;
+using SharpMap.Data;
 
 namespace SharpMap.Layers
 {
     /// <summary>
     /// Image manipulation proxy layer
     /// </summary>
+    /// <remarks>This layer is not for layers implementing <see cref="ITileAsyncLayer"/>. Every </remarks>
     /// <typeparam name="T">The type of the proxy layer. <see cref="ITileAsyncLayer"/> are not excluded, but are not handled in any way.</typeparam>
+    // ToDo: think of a better name:
+    // - ImageManipulationProxyLayer
+    // - What to do with large images
+    // - 
     [Serializable]
-    public class GdiImageLayerProxy<T> : ILayer, IDisposable
+    public class GdiImageLayerProxy<T> : ICanQueryLayer, IDisposable
         where T: class, ILayer
     {
         /// <summary>
@@ -191,6 +197,37 @@ namespace SharpMap.Layers
             if (_baseLayer is IDisposable)
             {
                 ((IDisposable)_baseLayer).Dispose();
+            }
+        }
+
+        void ICanQueryLayer.ExecuteIntersectionQuery(Envelope box, FeatureDataSet ds)
+        {
+            if (_baseLayer is ICanQueryLayer)
+            {
+                ((ICanQueryLayer)_baseLayer).ExecuteIntersectionQuery(box, ds);
+            }
+        }
+
+        void ICanQueryLayer.ExecuteIntersectionQuery(IGeometry geometry, FeatureDataSet ds)
+        {
+            if (_baseLayer is ICanQueryLayer)
+            {
+                ((ICanQueryLayer)_baseLayer).ExecuteIntersectionQuery(geometry, ds);
+            }
+        }
+
+        bool ICanQueryLayer.IsQueryEnabled
+        {
+            get
+            {
+                if (_baseLayer is ICanQueryLayer)
+                    return ((ICanQueryLayer) _baseLayer).IsQueryEnabled;
+                return false;
+            }
+            set
+            {
+                if (_baseLayer is ICanQueryLayer)
+                    ((ICanQueryLayer)_baseLayer).IsQueryEnabled = value;
             }
         }
     }
