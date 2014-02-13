@@ -397,5 +397,26 @@ namespace UnitTests
             Assert.AreEqual(new Point(60, 95), map.Center);
             Assert.AreEqual(340, map.Zoom);
         }
+
+        [Test]
+        public void TestZoomToBoxRaisesMapViewOnChange()
+        {
+            var raised = false;
+            var map = new Map(new Size(400, 200));
+            map.MapViewOnChange += () => raised = true;
+
+            map.ZoomToBox(new BoundingBox(20, 100, 10, 180));
+            Assert.IsTrue(raised, "MapViewOnChange not fired when calling Map.ZoomToBox(...).");
+            raised = false;
+            map.ZoomToBox(new BoundingBox(20, 100, 10, 180));
+            Assert.IsFalse(raised, "MapViewOnChange fired when calling Map.ZoomToBox(map.Envelope).");
+
+            raised = false;
+            map.Center = new Coordinate(map.Center.X + 10, map.Center.Y);
+            Assert.IsTrue(raised, "MapViewOnChange not fired when setting Map.Center");
+            raised = false;
+            map.Center = map.Center;
+            Assert.IsFalse(raised, "MapViewOnChange fired when setting Map.Center = Map.Center");
+        }
     }
 }
