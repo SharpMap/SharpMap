@@ -101,6 +101,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpMap.Data.Providers.OracleSpatial", "SharpMap.Data.Providers.OracleSpatial\SharpMap.Data.Providers.OracleSpatial.csproj", "{9BBED556-40D8-4DDC-AC11-7B03300E2A2E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpMap.Data.Providers.Kml", "SharpMap.Data.Providers.Kml\SharpMap.Data.Providers.Kml.csproj", "{F9DA6934-413F-4744-84CE-923D901F60E6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|.NET = Debug|.NET
@@ -493,6 +495,30 @@ Global
 		{9BBED556-40D8-4DDC-AC11-7B03300E2A2E}.ReleaseDSProjection|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{9BBED556-40D8-4DDC-AC11-7B03300E2A2E}.ReleaseDSProjection|Mixed Platforms.Build.0 = Release|Any CPU
 		{9BBED556-40D8-4DDC-AC11-7B03300E2A2E}.ReleaseDSProjection|x86.ActiveCfg = Release|Any CPU
+		{F9DA6934-413F-4744-84CE-923D901F60E6}.Debug|.NET.ActiveCfg = Debug|Any CPU
+		{F9DA6934-413F-4744-84CE-923D901F60E6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F9DA6934-413F-4744-84CE-923D901F60E6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F9DA6934-413F-4744-84CE-923D901F60E6}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{F9DA6934-413F-4744-84CE-923D901F60E6}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{F9DA6934-413F-4744-84CE-923D901F60E6}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{F9DA6934-413F-4744-84CE-923D901F60E6}.DebugDSProjection|.NET.ActiveCfg = Debug|Any CPU
+		{F9DA6934-413F-4744-84CE-923D901F60E6}.DebugDSProjection|Any CPU.ActiveCfg = Debug|Any CPU
+		{F9DA6934-413F-4744-84CE-923D901F60E6}.DebugDSProjection|Any CPU.Build.0 = Debug|Any CPU
+		{F9DA6934-413F-4744-84CE-923D901F60E6}.DebugDSProjection|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{F9DA6934-413F-4744-84CE-923D901F60E6}.DebugDSProjection|Mixed Platforms.Build.0 = Debug|Any CPU
+		{F9DA6934-413F-4744-84CE-923D901F60E6}.DebugDSProjection|x86.ActiveCfg = Debug|Any CPU
+		{F9DA6934-413F-4744-84CE-923D901F60E6}.Release|.NET.ActiveCfg = Release|Any CPU
+		{F9DA6934-413F-4744-84CE-923D901F60E6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F9DA6934-413F-4744-84CE-923D901F60E6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F9DA6934-413F-4744-84CE-923D901F60E6}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{F9DA6934-413F-4744-84CE-923D901F60E6}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{F9DA6934-413F-4744-84CE-923D901F60E6}.Release|x86.ActiveCfg = Release|Any CPU
+		{F9DA6934-413F-4744-84CE-923D901F60E6}.ReleaseDSProjection|.NET.ActiveCfg = Release|Any CPU
+		{F9DA6934-413F-4744-84CE-923D901F60E6}.ReleaseDSProjection|Any CPU.ActiveCfg = Release|Any CPU
+		{F9DA6934-413F-4744-84CE-923D901F60E6}.ReleaseDSProjection|Any CPU.Build.0 = Release|Any CPU
+		{F9DA6934-413F-4744-84CE-923D901F60E6}.ReleaseDSProjection|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{F9DA6934-413F-4744-84CE-923D901F60E6}.ReleaseDSProjection|Mixed Platforms.Build.0 = Release|Any CPU
+		{F9DA6934-413F-4744-84CE-923D901F60E6}.ReleaseDSProjection|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
