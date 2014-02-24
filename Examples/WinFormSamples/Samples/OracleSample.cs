@@ -109,7 +109,6 @@ namespace WinFormSamples.Samples
             Matrix mat = new Matrix();
             mat.RotateAt(angle, map.WorldToImage(map.Center));
             map.MapTransform = mat;
-            //map.Center = new SharpMap.Geometries.Point(0, 0);
 
             return map;
 

@@ -143,7 +143,7 @@ namespace SharpMap.Data.Providers
     ///demoMap.Layers.Add(layer6);
     ///demoMap.Layers.Add(layLabel);
     ///
-    ///demoMap.Center = new SharpMap.Geometries.Point(-74.0, 40.7);
+    ///demoMap.Center = new GeoAPI.Geometries.Coordinate(-74.0, 40.7);
     ///demoMap.Zoom = 10;
     /// // Alternatively zoom closer
     /// // demoMap.Zoom = 0.2;

@@ -420,15 +420,6 @@ namespace SharpMap.Utilities.SpatialIndexing
             get { return (_objList != null); }
         }
 
-        ///// <summary>
-        ///// Gets/sets the list of objects in the node
-        ///// </summary>
-        //public List<SharpMap.Geometries.IGeometry> ObjList
-        //{
-        //    get { return _objList; }
-        //    set { _objList = value; }
-        //}
-
         /// <summary>
         /// Gets/sets the Axis Aligned Bounding Box
         /// </summary>

@@ -23,8 +23,8 @@
     <OldToolsVersion>3.5</OldToolsVersion>
     <UpgradeBackupLocation>
     </UpgradeBackupLocation>
+    <TargetFrameworkVersion>v4.0.3</TargetFrameworkVersion>
     <TargetFrameworkProfile>Client</TargetFrameworkProfile>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
   </PropertyGroup>
@@ -39,6 +39,7 @@
     <UseVSHostingProcess>true</UseVSHostingProcess>
     <DocumentationFile>bin\Debug\SharpMap.XML</DocumentationFile>
     <PlatformTarget>AnyCPU</PlatformTarget>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -49,10 +50,9 @@
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>bin\Release\SharpMap.XML</DocumentationFile>
     <PlatformTarget>AnyCPU</PlatformTarget>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'DebugDSProjection|AnyCPU'">
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <TargetFrameworkProfile />
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\DebugDSProjection\</OutputPath>
     <DefineConstants>TRACE;DEBUG;DotSpatialProjections, UseMapBox, USE_MEMORYMAPPED_FILE</DefineConstants>
@@ -63,10 +63,9 @@
     <CodeAnalysisIgnoreBuiltInRuleSets>true</CodeAnalysisIgnoreBuiltInRuleSets>
     <CodeAnalysisIgnoreBuiltInRules>true</CodeAnalysisIgnoreBuiltInRules>
     <CodeAnalysisFailOnMissingRules>true</CodeAnalysisFailOnMissingRules>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'ReleaseDSProjection|AnyCPU'">
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <TargetFrameworkProfile />
     <OutputPath>bin\ReleaseDSProjection\</OutputPath>
     <DefineConstants>TRACE;DotSpatialProjections, UseMapBox</DefineConstants>
     <DocumentationFile>bin\Release\SharpMap.XML</DocumentationFile>
@@ -75,6 +74,7 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="BruTile, Version=0.9.0.0, Culture=neutral, processorArchitecture=MSIL">
@@ -225,6 +225,7 @@
     </Compile>
     <Compile Include="Rendering\Label.cs" />
     <Compile Include="Rendering\LabelCollisionDetection.cs" />
+    <Compile Include="Rendering\LayerCollectionRenderer.cs" />
     <Compile Include="Rendering\RenderExceptions.cs" />
     <Compile Include="Rendering\Symbolizer\BaseSymbolizer.cs" />
     <Compile Include="Rendering\Symbolizer\CohenSutherlandLineClipping.cs" />

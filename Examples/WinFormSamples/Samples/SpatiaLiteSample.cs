@@ -122,7 +122,7 @@ namespace WinFormSamples.Samples
             map.BackColor = System.Drawing.Color.LightBlue;
 
             map.ZoomToExtents(); // = 360;
-            //map.Center = new SharpMap.Geometries.Point(0, 0);
+
             var mat = new System.Drawing.Drawing2D.Matrix();
             mat.RotateAt(angle, map.WorldToImage(map.Center));
             map.MapTransform = mat;

@@ -51,7 +51,7 @@ namespace SharpMap.Layers
     /// TiledWmsLayer tiledWmsLayer = new TiledWmsLayer("Metacarta", url);
     /// tiledWmsLayer.TileSetsActive.Add(tiledWmsLayer.TileSets["satellite"].Name);
     /// map.Layers.Add(tiledWmsLayer);
-    /// map.ZoomToBox(new SharpMap.Geometries.BoundingBox(-180.0, -90.0, 180.0, 90.0));
+    /// map.ZoomToBox(new GeoAPI.Geometries.Envelope(-180.0, 180.0, -90.0, 90.0));
     /// </code>
     /// </example>
     [Obsolete("use TileLayer instead") ]
