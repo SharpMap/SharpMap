@@ -118,6 +118,8 @@ namespace SharpMap.Data.Providers
         }
         #endregion
 
+        #region static constructor and fields
+
         private static readonly FeatureDataTable _schemaTable;
 
         static KmlProvider()
@@ -126,7 +128,9 @@ namespace SharpMap.Data.Providers
             AddColumnsToFeatureDataTable(_schemaTable);
         }
 
+        #endregion
 
+        #region private fields and constants
         private IGeometryFactory _geometryFactory;
         private Dictionary<Placemark, List<IGeometry>> _geometrys;
         private Dictionary<string, VectorStyle> _kmlStyles;
@@ -134,6 +138,8 @@ namespace SharpMap.Data.Providers
 
         private const string DefaultStyleId = "{6787C5B3-6482-4B96-9C2D-2C6236D2AC50}";
         private const string DefaultPointStyleId = "{E2892545-7CF4-48A1-B8F0-5A0BF06EF0E1}";
+
+        #endregion
 
         /// <summary>
         /// Method to create a theme for the Layer
@@ -173,10 +179,19 @@ namespace SharpMap.Data.Providers
             var kml = kmlFile.Root as Kml;
             if (kml == null)
             {
-                throw new Exception("Kml file is null, Please check that the file conforms to http://www.opengis.net/kml/2.2 standards");
+                throw new Exception("Kml file is null! Please check that the file conforms to http://www.opengis.net/kml/2.2 standards");
             }
+
+            var doc = kml.Feature as Document;
+            if (doc == null)
+            {
+                throw new Exception("Kml file does not have a document node! please check that the file conforms to http://www.opengis.net/kml/2.2 standards");
+            }
+
             _geometryFactory = GeoAPI.GeometryServiceProvider.Instance.CreateGeometryFactory(4326);
-            ConnectionID = kml.Feature.Name;
+            ConnectionID = doc.Name;
+            if (!string.IsNullOrEmpty(doc.Description.Text))
+                ConnectionID += " (" + doc.Description.Text + ")";
 
             ExtractStyles(kml);
             ExtractStyleMaps(kml);
@@ -184,7 +199,7 @@ namespace SharpMap.Data.Providers
 
         }
 
-        private void ExtractStyleMaps(Kml kml)
+        private void ExtractStyleMaps(Element kml)
         {
             _styleMaps = new List<StyleMap>();
             foreach (var style in kml.Flatten().OfType<StyleMapCollection>())
@@ -220,7 +235,7 @@ namespace SharpMap.Data.Providers
         }
 
         //todo needs buffing up
-        private void ExtractStyles(Kml kml)
+        private void ExtractStyles(Element kml)
         {
             _kmlStyles = new Dictionary<string, VectorStyle>();
 
@@ -379,7 +394,7 @@ namespace SharpMap.Data.Providers
             return vectorStyle;
         }
 
-        public void ExtractGeometries(Kml kml)
+        public void ExtractGeometries(Element kml)
         {
             _geometrys = new Dictionary<Placemark, List<IGeometry>>();
 

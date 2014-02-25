@@ -165,6 +165,7 @@
     <Compile Include="Data\Providers\DbaseReaderTests.cs" />
     <Compile Include="Data\Providers\DbTests.cs" />
     <Compile Include="Data\Providers\GeometryFeatureProviderTest.cs" />
+    <Compile Include="Data\Providers\KmlProviderTests.cs" />
     <Compile Include="Data\Providers\ManagedSQLiteTests.cs" />
     <Compile Include="Data\Providers\MsSqlServerSpatialTests.cs" />
     <Compile Include="Data\Providers\OleDbPointProviderTest.cs" />
@@ -216,6 +217,10 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\SharpMap.Data.Providers.Kml\SharpMap.Data.Providers.Kml.csproj">
+      <Project>{f9da6934-413f-4744-84ce-923d901f60e6}</Project>
+      <Name>SharpMap.Data.Providers.Kml</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SharpMap.Extensions\SharpMap.Extensions.csproj">
       <Project>{A4140C12-53F5-438C-8D24-9E48C504FECF}</Project>
       <Name>SharpMap.Extensions</Name>
@@ -243,6 +248,9 @@
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="TestData\KML_Samples.kml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="TestData\osm_aurich.sqlite">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
