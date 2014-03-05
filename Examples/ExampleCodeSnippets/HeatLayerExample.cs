@@ -51,7 +51,7 @@ namespace ExampleCodeSnippets
 
             var m = new SharpMap.Map(new Size(640, 640));
             m.Layers.Add(new TileLayer(
-                new OsmTileSource(new OsmRequest(KnownOsmTileServers.Mapnik) /*, 
+                new OsmTileSource(new OsmRequest(KnownTileServers.Mapnik) /*, 
                                   new FileCache(@"d:\temp\OSM", "png")*/), "OSM"));
 
             var l = new HeatLayer(p, "Data", 0.001f);

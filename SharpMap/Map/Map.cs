@@ -655,7 +655,13 @@ namespace SharpMap
 
             g.PageUnit = GraphicsUnit.Pixel;
 
+            LayerCollectionRenderer.AllowParallel = true;
+            using (var lcr = new LayerCollectionRenderer(lc))
+            {
+                lcr.Render(g, this);
+            }
 
+            /*
             var layerList = new ILayer[lc.Count];
             lc.CopyTo(layerList, 0);
 
@@ -664,6 +670,8 @@ namespace SharpMap
                 if (layer.Enabled && layer.MaxVisible >= Zoom && layer.MinVisible < Zoom)
                     layer.Render(g, this);
             }
+
+             */
 
             if (drawTransparent)
                 

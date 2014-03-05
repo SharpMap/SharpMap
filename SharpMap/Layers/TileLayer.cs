@@ -179,12 +179,14 @@ namespace SharpMap.Layers
 
                     var extent = new Extent(map.Envelope.MinX, map.Envelope.MinY, 
                                             map.Envelope.MaxX, map.Envelope.MaxY);
-                    int level = BruTile.Utilities.GetNearestLevel(_source.Schema.Resolutions, map.PixelSize);
+                    var level = BruTile.Utilities.GetNearestLevel(_source.Schema.Resolutions, map.PixelSize);
                     var tiles = new List<TileInfo>(_source.Schema.GetTilesInView(extent, level));
+                    var tileWidth = _source.Schema.GetTileWidth(level);
+                    var tileHeight = _source.Schema.GetTileWidth(level);
 
                     IList<WaitHandle> waitHandles = new List<WaitHandle>();
-                    Dictionary<TileIndex, Bitmap> toRender = new Dictionary<TileIndex, Bitmap>();
-                    Dictionary<TileIndex, bool> takenFromCache = new Dictionary<TileIndex,bool>();
+                    var toRender = new Dictionary<TileIndex, Bitmap>();
+                    var takenFromCache = new Dictionary<TileIndex,bool>();
                     foreach (TileInfo info in tiles)
                     {
                         var image = _bitmaps.Find(info.Index);
@@ -238,7 +240,7 @@ namespace SharpMap.Layers
                                 g.DrawImage(bitmap,
                                             new Rectangle((int) min.X, (int) max.Y, (int) (max.X - min.X),
                                                           (int) (min.Y - max.Y)),
-                                            0, 0, _source.Schema.Width, _source.Schema.Height,
+                                            0, 0, tileWidth, tileHeight,
                                             GraphicsUnit.Pixel,
                                             ia);
                             }
@@ -304,12 +306,13 @@ namespace SharpMap.Layers
                 {
                     //an issue with this method is that one an error tile is in the memory cache it will stay even
                     //if the error is resolved. PDD.
-                    var bitmap = new Bitmap(_source.Schema.Width, _source.Schema.Height);
+                    var schema = (TileSchema) _source.Schema;
+                    var bitmap = new Bitmap(schema.Width, schema.Height);
                     using (var graphics = Graphics.FromImage(bitmap))
                     {
                         graphics.DrawString(ex.Message, new Font(FontFamily.GenericSansSerif, 12),
                                             new SolidBrush(Color.Black),
-                                            new RectangleF(0, 0, _source.Schema.Width, _source.Schema.Height));
+                                            new RectangleF(0, 0, schema.Width, schema.Height));
                     }
                     bitmaps.Add(tileInfo.Index, bitmap);
                 }
@@ -367,7 +370,7 @@ namespace SharpMap.Layers
 
             if (_source is IDisposable)
             {
-                (_source as IDisposable).Dispose();
+                ((IDisposable)_source).Dispose();
             }
 
         }

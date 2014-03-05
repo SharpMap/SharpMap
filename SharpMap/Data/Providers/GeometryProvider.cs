@@ -45,10 +45,11 @@ namespace SharpMap.Data.Providers
     /// <example>
     /// Adding points of interest to the map. This is useful for vehicle tracking etc.
     /// <code lang="C#">
-    /// List&#60;SharpMap.Geometries.Geometry&#62; geometries = new List&#60;SharpMap.Geometries.Geometry&#62;();
+    /// GeoAPI.Geometries.IGeometryFactory gf = new NetTopologySuite.Geometries.GeometryFactory();
+    /// List&#60;GeoAPI.Geometries.IGeometry&#62; geometries = new List&#60;GeoAPI.Geometries.IGeometry&#62;();
     /// //Add two points
-    /// geometries.Add(new SharpMap.Geometries.Point(23.345,64.325));
-    /// geometries.Add(new SharpMap.Geometries.Point(23.879,64.194));
+    /// geometries.Add(new gf.CreatePoint(23.345,64.325));
+    /// geometries.Add(new gf.CreatePoint(23.879,64.194));
     /// SharpMap.Layers.VectorLayer layerVehicles = new SharpMap.Layers.VectorLayer("Vehicles");
     /// layerVehicles.DataSource = new SharpMap.Data.Providers.GeometryProvider(geometries);
     /// layerVehicles.Style.Symbol = Bitmap.FromFile(@"C:\data\car.gif");

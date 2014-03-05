@@ -158,7 +158,7 @@ namespace SharpMap.Data.Providers
                 //                        col.DataType = typeof(bool);
                 //                        break;
                 //                    case "geometry":
-                //                        col.DataType = typeof(SharpMap.Geometries.Geometry);
+                //                        col.DataType = typeof(GeoAPI.Geometries.IGeometry);
                 //                        break;
                 //                    default:
                 //                        col.DataType = typeof(object);

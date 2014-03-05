@@ -51,13 +51,6 @@ namespace WinFormSamples
             vl.DataSource = geoProvider;
             this.mapBox1.Map.Layers.Add(vl);
 
-            /*
-             * SharpMap.Geometries.BoundingBox geom = 
-             *     ProjNet.CoordinateSystems.Transformations.GeometryTransform.TransformBox(
-             *         new SharpMap.Geometries.BoundingBox(-9.205626, 38.690993, -9.123736, 38.740837), 
-             *         LayerTools.Wgs84toGoogleMercator.MathTransform);
-             */
-
 #if DotSpatialProjections
             var mathTransform = LayerTools.Wgs84toGoogleMercator;
             var geom = GeometryTransform.TransformBox(

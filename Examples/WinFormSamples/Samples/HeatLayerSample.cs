@@ -13,7 +13,7 @@
             var m = new SharpMap.Map();
             m.BackgroundLayer.Add(new SharpMap.Layers.TileAsyncLayer(
                 new BruTile.Web.OsmTileSource(
-                                  new BruTile.Web.OsmRequest(BruTile.Web.KnownOsmTileServers.Mapnik),
+                                  new BruTile.Web.OsmRequest(BruTile.Web.KnownTileServers.Mapnik),
                                   new BruTile.Cache.FileCache(@"d:\temp\OSM", "png")), "OSM"));
             m.BackgroundLayer[0].LayerName = "TileLayer with HeatLayer";
 

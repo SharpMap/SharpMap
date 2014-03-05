@@ -73,7 +73,7 @@ namespace UnitTests.Serialization
         public void TestMap2()
         {
             var m = new Map(_mapSize);
-            m.BackgroundLayer.Add(new TileLayer(new OsmTileSource(new OsmRequest(KnownOsmTileServers.MapQuest)), "MapQuest"));
+            m.BackgroundLayer.Add(new TileLayer(new OsmTileSource(new OsmRequest(KnownTileServers.MapQuest)), "MapQuest"));
             
             var codeBase = Path.GetDirectoryName(GetType().Assembly.CodeBase);
             var cn = string.Format("Data Source={0};",

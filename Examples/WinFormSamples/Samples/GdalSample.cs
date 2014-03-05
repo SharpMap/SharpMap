@@ -1,3 +1,5 @@
+using System.Linq;
+
 namespace WinFormSamples.Samples
 {
     public static class GdalSample
@@ -138,11 +140,13 @@ namespace WinFormSamples.Samples
 
         public static SharpMap.Map InitializeMap(int angle, string[] filenames)
         {
+            if (filenames == null || filenames.Length == 0) return null;
+
             var map = new SharpMap.Map();
             for (int i = 0; i < filenames.Length; i++)
                 map.Layers.Add(new SharpMap.Layers.GdalRasterLayer(System.IO.Path.GetFileName(filenames[i]), filenames[i]));
 
-            System.Drawing.Drawing2D.Matrix mat = new System.Drawing.Drawing2D.Matrix();
+            var mat = new System.Drawing.Drawing2D.Matrix();
             mat.RotateAt(angle, map.WorldToImage(map.Center));
             map.MapTransform = mat;
             map.ZoomToExtents();

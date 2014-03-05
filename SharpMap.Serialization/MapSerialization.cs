@@ -64,6 +64,7 @@ namespace SharpMap.Serialization
                 {
                     lay = new Layers.TileLayer(new BruTile.Web.OsmTileSource(), l.Name);
                 }
+                    /*
                 else if (l is GoogleLayer)
                 {
                     lay = new Layers.TileLayer(new BruTile.Web.GoogleTileSource(BruTile.Web.GoogleMapType.GoogleMap), l.Name);
@@ -76,7 +77,7 @@ namespace SharpMap.Serialization
                 {
                     lay = new Layers.TileLayer(new BruTile.Web.GoogleTileSource(BruTile.Web.GoogleMapType.GoogleTerrain), l.Name);
                 }
-
+                      */
                 if (lay != null)
                 {
                     lay.MinVisible = l.MinVisible;

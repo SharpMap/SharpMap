@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace SharpMap.Data.Providers
+﻿namespace SharpMap.Data.Providers
 {
     /// <summary>
     /// Abstract class for providers which support the FilterMethod Delegate
@@ -44,10 +39,10 @@ namespace SharpMap.Data.Providers
         /// [...]
         /// public static bool CountryFilter(SharpMap.Data.FeatureDataRow row)
         /// {
-        ///		if(row.Geometry.GetType()==typeof(SharpMap.Geometries.Polygon))
-        ///			return ((row.Geometry as SharpMap.Geometries.Polygon).Area>5);
-        ///		if (row.Geometry.GetType() == typeof(SharpMap.Geometries.MultiPolygon))
-        ///			return ((row.Geometry as SharpMap.Geometries.MultiPolygon).Area > 5);
+        ///		if(row.Geometry.GetType()==typeof(GeoAPI.Geometries.IPolygon))
+        ///			return ((row.Geometry as GeoAPI.Geometries.IPolygon).Area>5);
+        ///		if (row.Geometry.GetType() == typeof(GeoAPI.Geometries.IMultiPolygon))
+        ///			return ((row.Geometry as GeoAPI.Geometries.IMultiPolygon).Area > 5);
         ///		else return true;
         /// }
         /// </code>
