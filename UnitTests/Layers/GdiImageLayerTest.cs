@@ -160,7 +160,7 @@ namespace UnitTests.Layers
                 using (var img = (Bitmap)m.GetMap())
                 {
                     var color = img.GetPixel(225, 225);
-                    Assert.AreEqual(Color.MistyRose, color);
+                    Assert.AreEqual(Color.MistyRose.ToArgb(), color.ToArgb());
                 }
             }
             GdiImageLayerTest.DeleteTmpFiles(tmpFile);

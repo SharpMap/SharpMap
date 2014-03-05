@@ -291,6 +291,9 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
+    <None Include="TestData\Base 64.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <Content Include="x64\SQLite.Interop.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
