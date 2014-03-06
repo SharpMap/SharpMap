@@ -122,7 +122,7 @@ namespace UnitTests.Layers
                 using (var img = (Bitmap)m.GetMap())
                 {
                     var color = img.GetPixel(225, 225);
-                    Assert.AreEqual((byte)Math.Round(0.3f*255, MidpointRounding.AwayFromZero), color.A);
+                    Assert.LessOrEqual(Math.Abs((int)Math.Round(0.3f*255, MidpointRounding.AwayFromZero) - color.A),1);
                 }
             }
             GdiImageLayerTest.DeleteTmpFiles(tmpFile);
