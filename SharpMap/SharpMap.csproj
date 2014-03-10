@@ -389,6 +389,9 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="SpatialRefSys.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Web\Wcs\Schemas\WebCoverageService.txt" />
     <Content Include="Web\Wfs\Schemas\1.1.0\examples\WFS_Capabilities_Sample.xml" />
     <Content Include="Web\Wfs\Schemas\1.1.0\ReadMe.txt" />
