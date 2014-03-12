@@ -176,6 +176,8 @@ namespace UnitTests.Converters.WKT
         
     }
 
+    // No longer valid
+    /*
     public class SridToSpatialReferenceDefinitionTests
     {
         [Test]
@@ -199,4 +201,5 @@ namespace UnitTests.Converters.WKT
 
         }
     }
+     */
 }
