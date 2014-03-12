@@ -166,11 +166,30 @@ namespace SharpMap.Data.Providers
             {
                 try
                 {
-                    OgrLayer layer = _ogrDataSource.GetLayerByName(value);
-                    _ogrLayer = layer;
-                    ConnectionID = string.Format("Data Source={0};Layer{1}", _ogrDataSource.name, value);
+                    var layer = _ogrDataSource.GetLayerByName(value);
+                    //*** FIX: Must check for null since GetLayerByName returns null if layer name does not exist.
+                    if (layer != null)
+                    {
+                        _ogrLayer = layer;
+                        ConnectionID = string.Format("Data Source={0};Layer{1}", _ogrDataSource.name, value);
+                    }
                 }
-                catch { }
+                // ReSharper disable once EmptyGeneralCatchClause
+                catch
+                { }
+            }
+        }
+
+        /// <summary>
+        /// Function to test if a the datasource contains the specified <paramref name="layerName"/>
+        /// </summary>
+        /// <param name="layerName">The name of the layer</param>
+        /// <returns><c>true</c> if the layer is present, otherwise <c>false</c></returns>
+        public Boolean ContainsLayer(string layerName)
+        {
+            using (OgrLayer layer = _ogrDataSource.GetLayerByName(layerName))
+            {
+                return (layer != null);
             }
         }
 
@@ -323,11 +342,16 @@ namespace SharpMap.Data.Providers
         /// <returns>FeatureDataRow</returns>
         public override FeatureDataRow GetFeature(uint rowId)
         {
-            var fdt = new FeatureDataTable();
             _ogrLayer.ResetReading();
-            ReadColumnDefinition(fdt, _ogrLayer);
-            var feature = _ogrLayer.GetFeature((int) rowId);
-            return OgrFeatureToFeatureDataRow(fdt, feature, Factory);
+            var fdt = ReadColumnDefinition(_ogrLayer);
+            fdt.BeginLoadData();
+            FeatureDataRow res;
+            using (var feature = _ogrLayer.GetFeature((int) rowId))
+            {
+                res = LoadOgrFeatureToFeatureDataRow(fdt, feature, Factory);
+            }
+            fdt.EndLoadData();
+            return res;
         }
 
         /// <summary>
@@ -340,7 +364,7 @@ namespace SharpMap.Data.Providers
             _ogrLayer.SetSpatialFilterRect(bbox.MinX, bbox.MinY, bbox.MaxX, bbox.MaxY);
             _ogrLayer.ResetReading();
 
-            Collection<uint> objectIDs = new Collection<uint>();
+            var objectIDs = new Collection<uint>();
             OgrFeature ogrFeature;
             while ((ogrFeature = _ogrLayer.GetNextFeature()) != null)
             {
@@ -420,31 +444,32 @@ namespace SharpMap.Data.Providers
         /// <param name="ds">FeatureDataSet to fill data into</param>
         protected override void OnExecuteIntersectionQuery(Geometry geom, FeatureDataSet ds)
         {
-            OgrGeometry ogrGeometry = OgrGeometry.CreateFromWkb(GeometryToWKB.Write(geom));
-            _ogrLayer.SetSpatialFilter(ogrGeometry);
-            ExecuteIntersectionQuery(ds);
+            using (var ogrGeometry = OgrGeometry.CreateFromWkb(GeometryToWKB.Write(geom)))
+            {
+                _ogrLayer.SetSpatialFilter(ogrGeometry);
+                ExecuteIntersectionQuery(ds);
+            }
 
         }
 
         private void ExecuteIntersectionQuery(FeatureDataSet ds)
         {
-            if (!String.IsNullOrEmpty(_definitionQuery))
-                _ogrLayer.SetAttributeFilter(_definitionQuery);
-            else
-                _ogrLayer.SetAttributeFilter("");
+            _ogrLayer.SetAttributeFilter(String.IsNullOrEmpty(_definitionQuery) ? "" : _definitionQuery);
 
             _ogrLayer.ResetReading();
 
             //reads the column definition of the layer/feature
-            FeatureDataTable myDt = new FeatureDataTable();
-            ReadColumnDefinition(myDt, _ogrLayer);
+            var myDt = ReadColumnDefinition(_ogrLayer);
 
+            myDt.BeginLoadData();
             OgrFeature ogrFeature;
             while ((ogrFeature = _ogrLayer.GetNextFeature()) != null)
             {
-                FeatureDataRow fdr = OgrFeatureToFeatureDataRow(myDt, ogrFeature, Factory);
-                myDt.AddRow(fdr);
+                LoadOgrFeatureToFeatureDataRow(myDt, ogrFeature, Factory);
+                ogrFeature.Dispose();
             }
+            myDt.EndLoadData();
+
             ds.Tables.Add(myDt);
 
         }
@@ -471,32 +496,45 @@ namespace SharpMap.Data.Providers
         /// <summary>
         /// Reads the field types from the OgrFeatureDefinition -> OgrFieldDefinition
         /// </summary>
-        /// <param name="fdt">FeatureDatatTable</param>
         /// <param name="oLayer">OgrLayer</param>
-        private static void ReadColumnDefinition(FeatureDataTable fdt, OgrLayer oLayer)
+        /// <returns>The feature data table</returns>
+        private static FeatureDataTable ReadColumnDefinition(OgrLayer oLayer)
         {
-            using (OgrFeatureDefn ogrFeatureDefn = oLayer.GetLayerDefn())
+            var fdt = new FeatureDataTable
+            {
+                TableName = oLayer.GetName()
+            };
+
+            using (var ogrFeatureDefn = oLayer.GetLayerDefn())
             {
                 int iField;
 
                 for (iField = 0; iField < ogrFeatureDefn.GetFieldCount(); iField++)
                 {
-                    using (OgrFieldDefn ogrFldDef = ogrFeatureDefn.GetFieldDefn(iField))
+                    using (var ogrFldDef = ogrFeatureDefn.GetFieldDefn(iField))
                     {
-                        OgrFieldType type= ogrFldDef.GetFieldType();
+                        var type= ogrFldDef.GetFieldType();
                         switch (type)
                         {
                             case OgrFieldType.OFTInteger:
                                 fdt.Columns.Add(ogrFldDef.GetName(), typeof(Int32));
                                 break;
+                            case OgrFieldType.OFTIntegerList:
+                                fdt.Columns.Add(ogrFldDef.GetName(), typeof(Int32[]));
+                                break;
                             case OgrFieldType.OFTReal:
                                 fdt.Columns.Add(ogrFldDef.GetName(), typeof(Double));
                                 break;
+                            case OgrFieldType.OFTRealList:
+                                fdt.Columns.Add(ogrFldDef.GetName(), typeof(Double[]));
+                                break;
+                            case OgrFieldType.OFTWideString:
                             case OgrFieldType.OFTString:
                                 fdt.Columns.Add(ogrFldDef.GetName(), typeof(String));
                                 break;
-                            case OgrFieldType.OFTWideString:
-                                fdt.Columns.Add(ogrFldDef.GetName(), typeof(String));
+                            case OgrFieldType.OFTStringList:
+                            case OgrFieldType.OFTWideStringList:
+                                fdt.Columns.Add(ogrFldDef.GetName(), typeof(String[]));
                                 break;
                             case OgrFieldType.OFTDate:
                             case OgrFieldType.OFTTime:
@@ -513,6 +551,7 @@ namespace SharpMap.Data.Providers
                     }
                 }
             }
+            return fdt;
         }
 
         private static Geometry ParseOgrGeometry(OgrGeometry ogrGeometry, GeoAPI.Geometries.IGeometryFactory factory)
@@ -521,42 +560,50 @@ namespace SharpMap.Data.Providers
             {
                 //Just in case it isn't 2D
                 ogrGeometry.FlattenTo2D();
-                byte[] wkbBuffer = new byte[ogrGeometry.WkbSize()];
+                var wkbBuffer = new byte[ogrGeometry.WkbSize()];
                 ogrGeometry.ExportToWkb(wkbBuffer);
-                Geometry geom = GeometryFromWKB.Parse(wkbBuffer, factory);
+                var geom = GeometryFromWKB.Parse(wkbBuffer, factory);
                 if (geom == null)
-                    Debug.WriteLine(string.Format("Failed to parse '{0}'", ogrGeometry.GetGeometryType()));
+                    Debug.WriteLine("Failed to parse '{0}'", ogrGeometry.GetGeometryType());
                 return geom;
             }
             return null;
         }
 
-        private static FeatureDataRow OgrFeatureToFeatureDataRow(FeatureDataTable table, OSGeo.OGR.Feature ogrFeature, GeoAPI.Geometries.IGeometryFactory factory)
+        private static FeatureDataRow LoadOgrFeatureToFeatureDataRow(FeatureDataTable table, OSGeo.OGR.Feature ogrFeature, GeoAPI.Geometries.IGeometryFactory factory)
         {
-            FeatureDataRow fdr = table.NewRow();
-            Int32 fdrIndex = 0;
-            for (int iField = 0; iField < ogrFeature.GetFieldCount(); iField++)
+            var values = new object[ogrFeature.GetFieldCount()];
+            
+            for (var iField = 0; iField < ogrFeature.GetFieldCount(); iField++)
             {
-                if (!ogrFeature.IsFieldSet(iField)) continue;
+                // No need to get field value if there's no value available...
+                if (!ogrFeature.IsFieldSet(iField))
+                {
+                    continue;
+                }
 
+                int count;
                 switch (ogrFeature.GetFieldType(iField))
                 {
                     case OgrFieldType.OFTString:
                     case OgrFieldType.OFTWideString:
-                        fdr[fdrIndex++] = ogrFeature.GetFieldAsString(iField);
+                        values[iField] = ogrFeature.GetFieldAsString(iField);
                         break;
                     case OgrFieldType.OFTStringList:
                     case OgrFieldType.OFTWideStringList:
+                        values[iField] = ogrFeature.GetFieldAsStringList(iField);
                         break;
                     case OgrFieldType.OFTInteger:
-                        fdr[fdrIndex++] = ogrFeature.GetFieldAsInteger(iField);
+                        values[iField] = ogrFeature.GetFieldAsInteger(iField);
                         break;
                     case OgrFieldType.OFTIntegerList:
+                        values[iField] = ogrFeature.GetFieldAsIntegerList(iField, out count);
                         break;
                     case OgrFieldType.OFTReal:
-                        fdr[fdrIndex++] = ogrFeature.GetFieldAsDouble(iField);
+                        values[iField] = ogrFeature.GetFieldAsDouble(iField);
                         break;
                     case OgrFieldType.OFTRealList:
+                        values[iField] = ogrFeature.GetFieldAsDoubleList(iField, out count);
                         break;
                     case OgrFieldType.OFTDate:
                     case OgrFieldType.OFTDateTime:
@@ -566,17 +613,20 @@ namespace SharpMap.Data.Providers
                         try
                         {
                             if (y == 0 && m == 0 && d == 0)
-                                fdr[fdrIndex++] = DateTime.MinValue.AddMinutes(h*60 + mi);
+                                values[iField] = DateTime.MinValue.AddMinutes(h * 60 + mi);
                             else
-                                fdr[fdrIndex++] = new DateTime(y, m, d, h, mi, s);
+                                values[iField] = new DateTime(y, m, d, h, mi, s);
                         }
+// ReSharper disable once EmptyGeneralCatchClause
                         catch { }
                         break;
                     default:
-                        Debug.WriteLine(string.Format("Cannot handle Ogr DataType '{0}'", ogrFeature.GetFieldType(iField)));
+                        Debug.WriteLine("Cannot handle Ogr DataType '{0}'", ogrFeature.GetFieldType(iField));
                         break;
                 }
             }
+
+            var fdr = (FeatureDataRow)table.LoadDataRow(values, true);
 
             using (var gr = ogrFeature.GetGeometryRef())
             {
@@ -597,38 +647,22 @@ namespace SharpMap.Data.Providers
         {
             try
             {
-                FeatureDataSet ds = new FeatureDataSet();
-                FeatureDataTable myDt = new FeatureDataTable();
-
-                OgrLayer results = _ogrDataSource.ExecuteSQL(query, filter, "");
+                var results = _ogrDataSource.ExecuteSQL(query, filter, "");
+                results.ResetReading();
 
                 //reads the column definition of the layer/feature
-                ReadColumnDefinition(myDt, results);
+                var ds = new FeatureDataSet();
+                var myDt = ReadColumnDefinition(results);
 
+                myDt.BeginLoadData();
                 OgrFeature ogrFeature;
-                results.ResetReading();
                 while ((ogrFeature = results.GetNextFeature()) != null)
                 {
-                    FeatureDataRow dr = OgrFeatureToFeatureDataRow(myDt, ogrFeature, Factory);
-                    myDt.AddRow(dr);
-                    /*
-                    myDt.NewRow();
-                    for (int iField = 0; iField < ogrFeature.GetFieldCount(); iField++)
-                    {
-                        if (myDt.Columns[iField].DataType == Type.GetType("System.String"))
-                            dr[iField] = ogrFeature.GetFieldAsString(iField);
-                        else if (myDt.Columns[iField].GetType() == Type.GetType("System.Int32"))
-                            dr[iField] = ogrFeature.GetFieldAsInteger(iField);
-                        else if (myDt.Columns[iField].GetType() == Type.GetType("System.Double"))
-                            dr[iField] = ogrFeature.GetFieldAsDouble(iField);
-                        else
-                            dr[iField] = ogrFeature.GetFieldAsString(iField);
-                    }
-
-                    dr.Geometry = ParseOgrGeometry(ogrFeature.GetGeometryRef());
-                    myDt.AddRow(dr);
-                     */
+                    LoadOgrFeatureToFeatureDataRow(myDt, ogrFeature, Factory);
+                    ogrFeature.Dispose();
                 }
+                myDt.EndLoadData();
+
                 ds.Tables.Add(myDt);
                 _ogrDataSource.ReleaseResultSet(results);
 
@@ -660,7 +694,7 @@ namespace SharpMap.Data.Providers
         /// <returns>FeatureDataTable</returns>
         public FeatureDataTable ExecuteIntersectionQuery(Geometry geom)
         {
-            FeatureDataSet fds = new FeatureDataSet();
+            var fds = new FeatureDataSet();
             ExecuteIntersectionQuery(geom, fds);
             return fds.Tables[0];
         }

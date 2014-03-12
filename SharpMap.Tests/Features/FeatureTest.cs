@@ -26,20 +26,33 @@ namespace SharpMap.Features
         {
             var f = _featureCollection.Factory.Create();
             Assert.IsNotNull(f);
-            var fg = f as IFeature<int>;
+            var fg = f as IFeature<TEntity>;
             Assert.IsNotNull(fg);
 
             Assert.IsTrue(f.Geometry == null);
-            Assert.IsTrue(f.Attributes != null);
-            Assert.IsTrue(fg.Oid.Equals(_featureFactory.UnassignedOid));
-            Assert.IsTrue((int)f.Attributes[0] == -1);
+            Assert.IsNotNull(f.Attributes);
+            Assert.IsFalse(fg.Oid.Equals(default(TEntity)));
+            //Assert.IsTrue((int)f.Attributes[0] == 0);
             
-            Assert.IsTrue(f.Attributes[2] == null);
-            Assert.IsTrue(f.Attributes["Attribut2"] == null);
+            Assert.AreEqual(0, (int)f.Attributes[1]);
+            Assert.AreEqual(0, (int)f.Attributes["Attribute1"]);
 
-            f.Attributes[2] = "Test";
-            Assert.IsTrue((string)f.Attributes[2] == "Test");
-            Assert.IsTrue((string)f.Attributes["Attribut2"] == "Test");
+            f.Attributes[1] = 1;
+            Assert.AreEqual(1, (int)f.Attributes[1]);
+            Assert.AreEqual(1, (int)f.Attributes["Attribute1"]);
+
+            Assert.AreEqual(0d, (double)f.Attributes[2]);
+            Assert.AreEqual(0d, (double)f.Attributes["Attribute2"]);
+
+            f.Attributes[2] = 2d;
+            Assert.AreEqual(2d, (double)f.Attributes[2]);
+            Assert.AreEqual(2d, (double)f.Attributes["Attribute2"]);
+
+            Assert.IsTrue(f.Attributes[3] == null);
+            Assert.IsTrue(f.Attributes["Attribute3"] == null);
+            f.Attributes[3] = "Test";
+            Assert.IsTrue((string)f.Attributes[3] == "Test");
+            Assert.IsTrue((string)f.Attributes["Attribute3"] == "Test");
         }
     }
 

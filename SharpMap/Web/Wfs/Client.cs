@@ -315,8 +315,10 @@ namespace SharpMap.Web.Wfs
             try
             {
                 var myRequest = WebRequest.Create(_capabilitiesUrl);
+                myRequest.Credentials = _credentials ?? CredentialCache.DefaultCredentials;
                 myRequest.Timeout = _timeOut;
                 if (_proxy != null) myRequest.Proxy = _proxy;
+
                 using (var myResponse = myRequest.GetResponse())
                 {
                     stream = myResponse.GetResponseStream();

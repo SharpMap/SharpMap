@@ -46,6 +46,8 @@ namespace SharpMap.Data
                 get { return _column.AllowDBNull; }
                 set { _column.AllowDBNull = value; }
             }
+
+            public object Default { get { return _column.DefaultValue; } set { _column.DefaultValue = value; } }
         }
 
         private class FdrEnumerator : IEnumerator<IFeature<uint>>

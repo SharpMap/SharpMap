@@ -7,7 +7,7 @@
     <EnableNuGetPackageRestore>true</EnableNuGetPackageRestore>
     <MSBuildCommunityTasksPath>$(SolutionDir)</MSBuildCommunityTasksPath>
     <!--- pass version in command line: MSBuild /t:NuGetPack SharpMap.proj /p:NuGetVersion=1.0.0  -->
-    <NuGetVersion>1.0.0</NuGetVersion>
+    <NuGetVersion>1.1.0</NuGetVersion>
   </PropertyGroup>
 
   <Target Name="EnableNPR">
@@ -24,11 +24,11 @@
   </Target>
 
   <Target Name="BuildDebug" DependsOnTargets="EnableNPR">
-    <MSBuild Projects="$(SolutionFile)" Targets="SharpMap;SharpMap_UI;SharpMap_Extensions;SharpMap_Extensions_x86;SharpMap_Web" Properties="Configuration=Debug" />
+    <MSBuild Projects="$(SolutionFile)" Targets="SharpMap;SharpMap_UI;SharpMap_Extensions;SharpMap_Extensions_x86;SharpMap_Web;SharpMap_Layers_HeatLayer;SharpMap_Data_Providers_OracleSpatial" Properties="Configuration=Debug" />
   </Target>
 
   <Target Name="BuildRelease" DependsOnTargets="EnableNPR">
-    <MSBuild Projects="$(SolutionFile)" Targets="SharpMap;SharpMap_UI;SharpMap_Extensions;SharpMap_Extensions_x86;SharpMap_Web" Properties="Configuration=Release" />
+    <MSBuild Projects="$(SolutionFile)" Targets="SharpMap;SharpMap_UI;SharpMap_Extensions;SharpMap_Extensions_x86;SharpMap_Web;SharpMap_Layers_HeatLayer;SharpMap_Data_Providers_OracleSpatial" Properties="Configuration=Release" />
   </Target>
 
   <!-- build only for now, test on build server -->
@@ -42,11 +42,13 @@
     <Exec Command="$(SolutionDir)\.nuget\NuGet pack SharpMap.Extensions.nuspec -version $(NuGetVersion) -outputdirectory $(SolutionDir)\Release"/>
     <Exec Command="$(SolutionDir)\.nuget\NuGet pack SharpMap.UI.nuspec -version $(NuGetVersion) -outputdirectory $(SolutionDir)\Release"/>
     <Exec Command="$(SolutionDir)\.nuget\NuGet pack SharpMap.Web.nuspec -version $(NuGetVersion) -outputdirectory $(SolutionDir)\Release"/>
+    <Exec Command="$(SolutionDir)\.nuget\NuGet pack SharpMap.Layers.HeatLayer.nuspec -version $(NuGetVersion) -outputdirectory $(SolutionDir)\Release"/>
+    <Exec Command="$(SolutionDir)\.nuget\NuGet pack SharpMap.Data.Providers.OracleSpatial.nuspec -version $(NuGetVersion) -outputdirectory $(SolutionDir)\Release"/>
   </Target>
 
-  <Target Name="ZipSharpMap" DependsOnTargets="BuildRelease">
+  <Target Name="ZipSharpMap" DependsOnTargets="NugetPack">
     <ItemGroup>
-      <SharpMapCore Include="SharpMap.dll;SharpMap.pdb;SharpMap.xml;SharpMap.UI.dll;SharpMap.UI.pdb;SharpMap.UI.xml;BruTile.dll;BruTile.Desktop.dll;Common.Logging.dll;GeoAPI.dll;NewtonSoft.Json.dll;NewtonSoft.Json.xml;PowerCollections.dll;ProjNet.dll;NetTopologySuite.dll" />
+      <SharpMapCore Include="SharpMap.dll;SharpMap.pdb;SharpMap.xml;SharpMap.UI.dll;SharpMap.UI.pdb;SharpMap.UI.xml;BruTile.dll;BruTile.Desktop.dll;BruTile.Serialization.dll;BruTile.MbTiles.dll;Common.Logging.dll;GeoAPI.dll;NewtonSoft.Json.dll;NewtonSoft.Json.xml;PowerCollections.dll;ProjNet.dll;NetTopologySuite.dll" />
 	    <SharpMapFiles Include="$(SolutionDir)\SharpMap.UI\bin\Release\**\*.*" />
       <!--
       <SharpMapExtensionsFiles Include="$(SolutionDir)\SharpMap.Extensions\bin\Release\**\*.*" Exclude="@(SharpMapCoreFiles)"/>
@@ -54,11 +56,10 @@
 	  <SharpMapWebFiles Include="$(SolutionDir)\SharpMap.Web\bin\Release\**\*.*" Exclude="@(SharpMapCoreFiles)"/>
 	  -->
     </ItemGroup>
-
+    <Delete Files="SharpMap.zip;SharpMap.Extensions.zip;SharpMap.Extensions.x86.zip;SharpMap.Layers.HeatLayer.zip;SharpMap.Data.Providers.OracleSpatial.zip"/>
     <Zip Files="@(SharpMapFiles)"
          WorkingDirectory="$(SolutionDir)\SharpMap.UI\bin\Release"
-         ZipFileName="SharpMap.zip"
-		     Flatten="True"
+         ZipFileName="release\SharpMap.zip"
          ZipLevel="9"/>
 
 	<CreateItem Include="$(SolutionDir)\SharpMap.Extensions\bin\Release\**\*.*"
@@ -68,18 +69,17 @@
 	
 	<Zip Files="@(SharpMapExtensionsFiles)"
          WorkingDirectory="$(SolutionDir)\SharpMap.Extensions\bin\Release"
-         ZipFileName="SharpMap.Extensions.zip"
+         ZipFileName="release\SharpMap.Extensions.zip"
          ZipLevel="9"/>
 
 	<CreateItem Include="$(SolutionDir)\SharpMap.Extensions.x86\bin\Release\**\*.*"
 	            Exclude="@(SharpMapCore->'$(SolutionDir)\SharpMap.Extensions.x86\bin\Release\%(identity)')">
-		<Output TaskParameter="Include" ItemName="SharpMapExtensionsX86Files"/>
+		<Output TaskParameter="Include" ItemName="SMEX86Files"/>
 	</CreateItem>
 	
-	<Zip Files="@(SharpMapExtensionsX86Files)"
+	<Zip Files="@(SMEX86Files)"
          WorkingDirectory="$(SolutionDir)\SharpMap.Extensions.x86\bin\Release"
-         ZipFileName="SharpMap.Extensions.x86.zip"
-		     Flatten="True"
+         ZipFileName="release\SharpMap.Extensions.x86.zip"
          ZipLevel="9"/>
 
 	<CreateItem Include="$(SolutionDir)\SharpMap.Web\bin\Release\**\*.*"
@@ -89,11 +89,36 @@
 
     <Zip Files="@(SharpMapWebFiles)"
          WorkingDirectory="$(SolutionDir)\SharpMap.Web\bin\Release"
-         ZipFileName="SharpMap.Web.zip"
+         ZipFileName="release\SharpMap.Web.zip"
+         ZipLevel="9"/>
+
+  <!--
+    HeatLayer
+    -->
+	<CreateItem Include="$(SolutionDir)\SharpMap.Layers.HeatLayer\bin\Release\**\*.*"
+	            Exclude="@(SharpMapCore->'$(SolutionDir)\SharpMap.Layers.HeatLayer\bin\Release\%(identity)')">
+		<Output TaskParameter="Include" ItemName="SharpMapHeatLayer"/>
+	</CreateItem>
+
+    <Zip Files="@(SharpMapHeatLayer)"
+         WorkingDirectory="$(SolutionDir)\SharpMap.Layers.HeatLayer\bin\Release"
+         ZipFileName="release\SharpMap.Layers.HeatLayer.zip"
+         ZipLevel="9"/>
+    <!--
+    OracleSpatial
+    -->
+    <CreateItem Include="$(SolutionDir)\SharpMap.Data.Providers.OracleSpatial\bin\Release\**\*.*"
+                Exclude="@(SharpMapCore->'$(SolutionDir)\SharpMap.Data.Providers.OracleSpatial\bin\Release\%(identity)')">
+      <Output TaskParameter="Include" ItemName="SharpMapOracleSpatial"/>
+    </CreateItem>
+
+    <Zip Files="@(SharpMapOracleSpatial)"
+         WorkingDirectory="$(SolutionDir)\SharpMap.Data.Providers.OracleSpatial\bin\Release"
+         ZipFileName="release\SharpMap.Data.Providers.OracleSpatial.zip"
 		     Flatten="True"
          ZipLevel="9"/>
   </Target>
-  
+
   
   <!-- TODO: add targets here to build zip, NuGet, ... -->
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

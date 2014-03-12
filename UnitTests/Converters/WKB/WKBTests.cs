@@ -1,4 +1,6 @@
 using System.IO;
+using System.Runtime.InteropServices;
+using System.Text;
 using GeoAPI.Geometries;
 using NUnit.Framework;
 using NetTopologySuite.Geometries;
@@ -76,6 +78,26 @@ namespace UnitTests.Converters.WKB
             Assert.IsTrue(gLi0.EqualsExact(gLi1));
             Assert.IsTrue(gML0.EqualsExact(gML1));
             Assert.IsTrue(gPl0.EqualsExact(gPl1));
+        }
+
+        [Test]
+        public void TestHugeGeometryCollection()
+        {
+            IGeometry geom = null;
+            if (!File.Exists("TestData\\Base 64.txt"))
+                throw new IgnoreException("Test file not present!", new FileNotFoundException("TestData\\Base 64.txt"));
+
+            using (var sr = new StreamReader("TestData\\Base 64.txt"))
+            {
+                var sb = new StringBuilder(sr.ReadLine());
+                while (!sr.EndOfStream)
+                {
+                    sb.AppendLine(sr.ReadLine());
+                }
+                var wkb = System.Convert.FromBase64String(sb.ToString());
+                Assert.DoesNotThrow( () => geom = GeometryFromWKB.Parse(wkb, new GeometryFactory()));
+            }
+            Assert.IsTrue(geom.OgcGeometryType == OgcGeometryType.GeometryCollection);
         }
     }
 }

@@ -29,6 +29,11 @@ namespace SharpMap.Features
         public bool IsNullable { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating the default value
+        /// </summary>
+        public object Default { get; set; }
+
+        /// <summary>
         /// Method to verify input data
         /// </summary>
         /// <param name="value">The value to check</param>
@@ -42,7 +47,7 @@ namespace SharpMap.Features
                 return false;
             }
 
-            if (value != null && AttributeType != value.GetType())
+            if (value != null && !AttributeType.IsInstanceOfType(value))
             {
                 exception = new ArgumentException("Wrong type for attribute " + AttributeName);
                 return false;

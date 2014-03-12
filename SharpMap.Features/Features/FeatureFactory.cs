@@ -15,13 +15,13 @@ namespace SharpMap.Features
         public static FeatureFactory<int> CreateInt32(IGeometryFactory factory,
             params FeatureAttributeDefinition[] attributes)
         {
-            return new FeatureFactory<int>(-1, i => i + 1, factory, attributes);
+            return new FeatureFactory<int>(0, i => i + 1, factory, attributes);
         }
 
         public static FeatureFactory<long> CreateInt64(IGeometryFactory factory,
             params FeatureAttributeDefinition[] attributes)
         {
-            return new FeatureFactory<long>(-1, i => i + 1, factory, attributes);
+            return new FeatureFactory<long>(0, i => i + 1, factory, attributes);
         }
 
         public static FeatureFactory<Guid> CreateGuid(IGeometryFactory factory,
@@ -81,7 +81,7 @@ namespace SharpMap.Features
             AttributeIndex = new Dictionary<string, int>(list.Count);
             for (var i = 0; i < list.Count; i++)
             {
-                AttributeIndex.Add(attributes[i].AttributeName, i);
+                AttributeIndex.Add(list[i].AttributeName, i);
             }
             GeometryFactory = factory;
         }
@@ -93,12 +93,14 @@ namespace SharpMap.Features
         public IFeature Create()
         {
             var feature = new Feature<TEntity>(this);
+            feature.Oid = GetNewOid();
             return feature;
         }
 
         public IFeature Create(IGeometry geometry)
         {
             var res = Create();
+            res.Oid = GetNewOid();
             res.Geometry = geometry;
             return res;
         }

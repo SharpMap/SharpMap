@@ -1,3 +1,5 @@
+using System;
+using System.ComponentModel;
 using GeoAPI.Geometries;
 using NUnit.Framework;
 using NetTopologySuite.Geometries;
@@ -169,6 +171,32 @@ namespace UnitTests.Converters.WKT
             //Test empty geometry WKT
             Assert.IsTrue(GeomFromText("POLYGON EMPTY").IsEmpty);
             Assert.AreEqual("POLYGON EMPTY", Factory.CreatePolygon(null, null).AsText());
+        }
+
+        
+    }
+
+    public class SridToSpatialReferenceDefinitionTests
+    {
+        [Test]
+        public void TestWkt()
+        {
+            string wkt = null;
+            Assert.DoesNotThrow(() => wkt = SharpMap.Converters.WellKnownText.SpatialReference.SridToWkt(31466));
+            Assert.IsNotNullOrEmpty(wkt);
+            Console.WriteLine("SridToWkt(31466):\n{0}", wkt);
+
+        }
+
+        [Test]
+        public void TestProj4()
+        {
+            string proj4 = null;
+            Assert.DoesNotThrow(() => proj4 = SharpMap.Converters.WellKnownText.SpatialReference.SridToProj4(31466));
+            Assert.IsNotNullOrEmpty(proj4);
+            Console.WriteLine("SridToProj4(31466):\n{0}", proj4);
+
+
         }
     }
 }

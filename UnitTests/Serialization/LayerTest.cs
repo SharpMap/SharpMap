@@ -1,20 +1,18 @@
 ﻿using System.Collections.Generic;
+using System.Drawing.Imaging;
+using System.IO;
 using NUnit.Framework;
 using NetTopologySuite;
 using SharpMap.Layers;
 using SharpMap.Rendering.Symbolizer;
+using UnitTests.Properties;
 
 namespace UnitTests.Serialization
 {
     [TestFixture]
     public class LayerTest : BaseSerializationTest
     {
-        [TestFixtureSetUp]
-        public void FixtureSetUp()
-        {
-            GeoAPI.GeometryServiceProvider.Instance = NtsGeometryServices.Instance;
-        }
-        
+       
         [Test] 
         public void TestVectorLayer()
         {
@@ -40,6 +38,26 @@ namespace UnitTests.Serialization
 
             var vlec = new LayerEqualityComparer<LabelLayer>();
             Assert.IsTrue(vlec.Equals(vlayerS, vlayerD), vlec.ToString());
+        }
+
+        [Test]
+        public void TestGdiImageLayer()
+        {
+            var tmp = Path.ChangeExtension(Path.GetTempFileName(), "png");
+            Resources.Women.Save(tmp, ImageFormat.Png);
+
+            var gdiS = new GdiImageLayer("Frau", tmp);
+            GdiImageLayer gdiD = null;
+
+            Assert.DoesNotThrow(() => gdiD = SandD(gdiS, GetFormatter()), "Exception");
+            Assert.IsNotNull(gdiD, "GdiImageLayer is null");
+
+            Assert.IsTrue(new LayerEqualityComparer<GdiImageLayer>().Equals(gdiS, gdiD));
+
+            gdiS.Dispose();
+            gdiD.Dispose();
+
+            File.Delete(tmp);
         }
 
         [Test]
@@ -177,12 +195,13 @@ namespace UnitTests.Serialization
                 }
 
                 //ToDo compare transformation settings
-
+#if !DotSpatialProjections
                 if (lhs.ReverseCoordinateTransformation == null ^ rhs.ReverseCoordinateTransformation == null)
                 {
                     DifferAt.Add("ReverseCoordinateTransformation (== null)");
                     res = false;
                 }
+#endif
 
                 //ToDo compare transformation settings
 

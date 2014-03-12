@@ -55,6 +55,27 @@ namespace UnitTests.Data.Providers
         }
 
         [NUnit.Framework.Test]
+        public void GetItemByID()
+        {
+            var fdt = new SharpMap.Data.FeatureDataTable();
+            fdt.Columns.Add(new DataColumn("ID", typeof(uint)));
+
+            var gf = GeoAPI.GeometryServiceProvider.Instance.CreateGeometryFactory();
+
+            for (var i = 0; i < 5; i++)
+            {
+                var row = fdt.NewRow();
+                row[0] = (uint)i;
+                row.Geometry = gf.CreatePoint(new GeoAPI.Geometries.Coordinate(i, i));
+                fdt.AddRow(row);
+            }
+            var layer = new SharpMap.Layers.VectorLayer("TMP", new SharpMap.Data.Providers.GeometryFeatureProvider(fdt));
+
+            var res = layer.DataSource.GetFeature(0);
+            NUnit.Framework.Assert.IsNotNull(res);
+        }
+
+        [NUnit.Framework.Test]
         public void TestFindGeoNearPoint()
         {
             var fdt = new SharpMap.Data.FeatureDataTable();

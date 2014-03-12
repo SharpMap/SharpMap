@@ -8,7 +8,7 @@ namespace WinFormSamples.Samples
         
         public static SharpMap.Map InitializeMap(float angle)
         {
-            switch (_num++ % 11)
+            switch (_num++ % 6)
             {
                 case 3:
                     return InitializeMapOsm();
@@ -18,6 +18,8 @@ namespace WinFormSamples.Samples
                     return InitializeMapBing(BruTile.Web.BingMapType.Aerial);
                 case 6:
                     return InitializeMapBing(BruTile.Web.BingMapType.Hybrid);
+                    _num = 0;
+                    /*
                 case 7:
                     return InitializeMapGoogle(BruTile.Web.GoogleMapType.GoogleMap);
                 case 8:
@@ -29,6 +31,7 @@ namespace WinFormSamples.Samples
                 case 11:
                     _num = 0;
                     return InitializeMapGoogle(BruTile.Web.GoogleMapType.GoogleLabels);
+                     */
                 case 0:
                     _num++;
                     return InitializeMapOsmWithXls(angle);
@@ -194,7 +197,7 @@ namespace WinFormSamples.Samples
         }
 
 
-
+/*
         private static SharpMap.Map InitializeMapGoogle(BruTile.Web.GoogleMapType mt)
         {
             var map = new SharpMap.Map();
@@ -224,6 +227,7 @@ namespace WinFormSamples.Samples
             map.ZoomToBox(tileLayer.Envelope);
             return map;
         }
+        */
 
         private class PublicTransportTheme
         {

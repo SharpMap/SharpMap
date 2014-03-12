@@ -15,6 +15,9 @@ namespace SharpMap.SpatialReference
         protected SpatialReferenceBaseTest(IReprojectorCore core)
         {
             _reprojector = new Reprojector(core);
+
+            _fromSr = _reprojector.Factory.Create("EPSG:4326");
+            _toSr = _reprojector.Factory.Create("EPSG:3857");
         }
 
         [Test]
@@ -25,7 +28,7 @@ namespace SharpMap.SpatialReference
             Assert.DoesNotThrow(() => c2 = _reprojector.Reproject(c1, _fromSr, _toSr));
             //Assert.AreNotEqual(_c0, c1);
             //Assert.AreNotEqual(c1, c2);
-            Assert.AreEqual(0d, c2.Distance(_c0), 1.0E-7);
+            Assert.AreEqual(0d, c2.Distance(_c0), 1.0E-3);
         }
 
         [Test, Ignore("Not yet implemented")]

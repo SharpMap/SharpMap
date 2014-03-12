@@ -65,7 +65,7 @@ namespace SharpMap.Data.Providers
         /// <param name="geometryColumnName">Name of the desired geometry column</param>
         /// <param name="oidColumnName">Name of the object Id column</param>
         public ManagedSpatiaLite(string connectionStr, string tablename, string geometryColumnName, string oidColumnName)
-            :base(-2)
+            : base(-2)
         {
             ConnectionString = connectionStr;
             Table = tablename;
@@ -78,54 +78,58 @@ namespace SharpMap.Data.Providers
                 using (var cn = new SQLiteConnection(connectionStr))
                 {
                     cn.Open();
-                    var cm = new SQLiteCommand(
+                    using (var cm = new SQLiteCommand(
                         String.Format(
-                            "SELECT \"srid\", \"coord_dimension\", \"spatial_index_enabled\" FROM \"geometry_columns\" WHERE(\"f_table_name\" {2} '{0}' AND \"f_geometry_column\" {2} '{1}');",
-                            tablename, geometryColumnName, op), cn);
-                    var dr = cm.ExecuteReader();
-                    if (dr.HasRows)
+                            "SELECT \"srid\", \"coord_dimension\", \"spatial_index_enabled\" FROM \"geometry_columns\" WHERE(lower(\"f_table_name\") {2} lower('{0}') AND lower(\"f_geometry_column\") {2} lower('{1}'));",
+                            tablename, geometryColumnName, op), cn))
                     {
-                        dr.Read();
-                        SRID = dr.GetInt32(0);
-
-                        var coordDim = dr.GetFieldType(1) == typeof(long) 
-                            ? dr.GetInt64(1).ToString(NumberFormatInfo.InvariantInfo) 
-                            : dr.GetString(1);
-                        
-                        switch (coordDim)
+                        using (var dr = cm.ExecuteReader())
                         {
-                            case "2":
-                            case "XY":
-                                _ordinates = Ordinates.XY;
-                                break;
-                            case "3":
-                            case "XYZ":
-                                _ordinates = Ordinates.XYZ;
-                                break;
-                            case "XYM":
-                                _ordinates = Ordinates.XYM;
-                                break;
-                            case "4":
-                            case "XYZM":
-                                _ordinates = Ordinates.XYZM;
-                                break;
-                            default:
-                                throw new Exception("Cannot evaluate number of ordinate dimensions");
+                            if (dr.HasRows)
+                            {
+                                dr.Read();
+                                SRID = dr.GetInt32(0);
 
-                        }
+                                var coordDim = dr.GetFieldType(1) == typeof (long)
+                                    ? dr.GetInt64(1).ToString(NumberFormatInfo.InvariantInfo)
+                                    : dr.GetString(1);
 
-                        switch (dr.GetInt32(2))
-                        {
-                            case 1: //RTree
-                                var indexName = string.Format(@"idx_{0}_{1}", tablename, geometryColumnName);
-                                const string whereClause = @"xmin < {0} AND xmax > {1} AND ymin < {2} AND ymax > {3}";
-                                _spatiaLiteIndexClause = string.Format(@"ROWID IN (SELECT pkid FROM {0} WHERE {1})", indexName, whereClause);
-                                _spatiaLiteIndex = SpatiaLiteIndex.RTree;
-                                _useSpatialIndex = true;
-                                break;
+                                switch (coordDim)
+                                {
+                                    case "2":
+                                    case "XY":
+                                        _ordinates = Ordinates.XY;
+                                        break;
+                                    case "3":
+                                    case "XYZ":
+                                        _ordinates = Ordinates.XYZ;
+                                        break;
+                                    case "XYM":
+                                        _ordinates = Ordinates.XYM;
+                                        break;
+                                    case "4":
+                                    case "XYZM":
+                                        _ordinates = Ordinates.XYZM;
+                                        break;
+                                    default:
+                                        throw new Exception("Cannot evaluate number of ordinate dimensions");
+
+                                }
+
+                                switch (dr.GetInt32(2))
+                                {
+                                    case 1: //RTree
+                                        var indexName = string.Format(@"idx_{0}_{1}", tablename, geometryColumnName);
+                                        const string whereClause = @"xmin < {0} AND xmax > {1} AND ymin < {2} AND ymax > {3}";
+                                        _spatiaLiteIndexClause = string.Format(@"ROWID IN (SELECT pkid FROM {0} WHERE {1})", indexName, whereClause);
+                                        _spatiaLiteIndex = SpatiaLiteIndex.RTree;
+                                        _useSpatialIndex = true;
+                                        break;
+                                }
+                            }
+                            dr.Close();
                         }
                     }
-                    dr.Close();
                 }
 
                 GetNonSpatialColumns();
@@ -151,27 +155,30 @@ namespace SharpMap.Data.Providers
 
             using (var cn = GetConnection(ConnectionString))
             {
-                using (var dr = new SQLiteCommand(string.Format("PRAGMA table_info('{0}');", Table), cn).ExecuteReader())
+                using (var cmd = new SQLiteCommand(string.Format("PRAGMA table_info('{0}');", Table), cn))
                 {
-                    if (!dr.HasRows)
-                        throw new InvalidOperationException("Provider configuration incomplete or wrong!");
+                    using (var dr = cmd.ExecuteReader())
+                    {
+                        if (!dr.HasRows)
+                            throw new InvalidOperationException("Provider configuration incomplete or wrong!");
 
-                    var columns = new List<string>
+                        var columns = new List<string>
                         {
                             string.Equals(ObjectIdColumn, "rowid", StringComparison.OrdinalIgnoreCase)
                                 ? "\"ROWID\" AS \"ROWID\""
                                 : string.Format("\"{0}\"", ObjectIdColumn)
                         };
 
-                    while (dr.Read())
-                    {
-                        var column = dr.GetString(1);
-                        if (string.Equals(column, ObjectIdColumn)) continue;
-                        if (string.Equals(column, GeometryColumn)) continue;
-                        columns.Add(string.Format("\"{0}\"", column));
+                        while (dr.Read())
+                        {
+                            var column = dr.GetString(1);
+                            if (string.Equals(column, ObjectIdColumn, StringComparison.OrdinalIgnoreCase)) continue;
+                            if (string.Equals(column, GeometryColumn, StringComparison.OrdinalIgnoreCase)) continue;
+                            columns.Add(string.Format("\"{0}\"", column));
+                        }
+                        dr.Close();
+                        _columns = string.Join(", ", columns);
                     }
-
-                    _columns = string.Join(", ", columns);
                 }
             }
         }
@@ -325,6 +332,7 @@ namespace SharpMap.Data.Providers
 
                             features.Add(geom);
                         }
+                        dr.Close();
                     }
                 }
             }
@@ -383,6 +391,7 @@ namespace SharpMap.Data.Providers
                             var id = Convert.ToUInt32(dr[0]);
                             objectlist.Add(id);
                         }
+                        dr.Close();
                     }
                     conn.Close();
                 }
@@ -409,6 +418,7 @@ namespace SharpMap.Data.Providers
                                 geom = reader.Read((byte[]) dr[0]);
                             }
                         }
+                        dr.Close();
                     }
                 }
                 conn.Close();
@@ -465,6 +475,7 @@ namespace SharpMap.Data.Providers
                             var fdr = (FeatureDataRow) fdt.LoadDataRow(dataTransfer, true);
                             fdr.Geometry = g;
                         }
+                        reader.Close();
                         fdt.EndLoadData();
                         ds.Tables.Add(fdt);
                     }
@@ -492,7 +503,7 @@ namespace SharpMap.Data.Providers
         /// <returns>The unquoted <paramref name="item"/></returns>
         private static string DequoteIdentifier(string item)
         {
-            if (item.StartsWith("\"") && item.EndsWith("\""))
+            if (item.StartsWith("\"", System.StringComparison.Ordinal) && item.EndsWith("\"", System.StringComparison.Ordinal))
                 return item.Substring(1, item.Length - 2);
             return item;
         }
@@ -544,6 +555,7 @@ namespace SharpMap.Data.Providers
                             var fdr = (FeatureDataRow)fdt.LoadDataRow(dataTransfer, true);
                             fdr.Geometry = g;
                         }
+                        reader.Close();
                         fdt.EndLoadData();
                         ds.Tables.Add(fdt);
                     }
@@ -577,9 +589,10 @@ namespace SharpMap.Data.Providers
                                 count = -1;
                             }
                         }
+                        dtr.Close();
                     }
-                    conn.Close();
                 }
+                conn.Close();
             }
             return count;
         }
@@ -620,6 +633,7 @@ namespace SharpMap.Data.Providers
                             var fdr = (FeatureDataRow)fdt.LoadDataRow(dataTransfer, true);
                             fdr.Geometry = g;
                         }
+                        reader.Close();
                         fdt.EndLoadData();
                         return (FeatureDataRow)fdt.Rows[0];
                     }
@@ -767,15 +781,15 @@ namespace SharpMap.Data.Providers
 
                                 box = new Envelope(minx, maxx, miny, maxy);
                             }
-                            dr.Close();
                         }
                         else
                         {
                             box = new Envelope();
                         }
+                        dr.Close();
                     }
-                    conn.Close();
                 }
+                conn.Close();
                 _cachedExtents = box;
                 return new Envelope(box);
             }
@@ -808,12 +822,17 @@ namespace SharpMap.Data.Providers
                 try
                 {
                     cn.Open();
-                    var cmd = new SQLiteCommand("SELECT * FROM \"geometry_columns\";", cn);
-                    using (var dr = cmd.ExecuteReader())
+                    using (var cmd = new SQLiteCommand("SELECT * FROM \"geometry_columns\";", cn))
                     {
-                        while (dr.Read())
-                            res.Add(new ManagedSpatiaLite(connectionString, (string)dr["f_table_name"],
-                                                   (string)dr["f_geometry_column"], "ROWID"));
+                        using (var dr = cmd.ExecuteReader())
+                        {
+                            while (dr.Read())
+                            {
+                                res.Add(new ManagedSpatiaLite(connectionString, (string) dr["f_table_name"],
+                                    (string) dr["f_geometry_column"], "ROWID"));
+                            }
+                            dr.Close();
+                        }
                     }
 
                     /*

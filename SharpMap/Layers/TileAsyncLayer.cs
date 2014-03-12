@@ -132,7 +132,7 @@ namespace SharpMap.Layers
         {
             var bbox = map.Envelope;
             var extent = new Extent(bbox.MinX, bbox.MinY, bbox.MaxX, bbox.MaxY);
-            int level = BruTile.Utilities.GetNearestLevel(_source.Schema.Resolutions, map.PixelSize);
+            var level = BruTile.Utilities.GetNearestLevel(_source.Schema.Resolutions, map.PixelSize);
             var tiles = _source.Schema.GetTilesInView(extent, level);
 
             //Abort previous running Threads
@@ -145,6 +145,9 @@ namespace SharpMap.Layers
 #if !PocketPC
                 ia.SetWrapMode(WrapMode.TileFlipXY);
 #endif
+                var tileWidth = _source.Schema.GetTileWidth(level);
+                var tileHeight = _source.Schema.GetTileHeight(level);
+
                 foreach (TileInfo info in tiles)
                 {
                     if (_bitmaps.Find(info.Index) != null)
@@ -152,8 +155,8 @@ namespace SharpMap.Layers
                         //draws directly the bitmap
                         var bb = new Envelope(new Coordinate(info.Extent.MinX, info.Extent.MinY),
                                               new Coordinate(info.Extent.MaxX, info.Extent.MaxY));
-                        HandleMapNewTileAvaliable(map, graphics, bb, _bitmaps.Find(info.Index), _source.Schema.Width,
-                                                  _source.Schema.Height, ia);
+                        HandleMapNewTileAvaliable(map, graphics, bb, _bitmaps.Find(info.Index), 
+                                                  tileWidth, tileHeight, ia);
                     }
                     else if (_fileCache != null && _fileCache.Exists(info.Index))
                     {
@@ -165,8 +168,8 @@ namespace SharpMap.Layers
                         var btExtent = info.Extent;
                         var bb = new Envelope(new Coordinate(btExtent.MinX, btExtent.MinY),
                                               new Coordinate(btExtent.MaxX, btExtent.MaxY));
-                        HandleMapNewTileAvaliable(map, graphics, bb, _bitmaps.Find(info.Index), _source.Schema.Width,
-                                                  _source.Schema.Height, ia);
+                        HandleMapNewTileAvaliable(map, graphics, bb, _bitmaps.Find(info.Index),
+                                                  tileWidth, tileHeight, ia);
                     }
                     else
                     {
@@ -295,13 +298,15 @@ namespace SharpMap.Layers
                 {
                     if (_showErrorInTile)
                     {
+                        var tileWidth = _source.Schema.GetTileWidth(tileInfo.Index.Level);
+                        var tileHeight = _source.Schema.GetTileHeight(tileInfo.Index.Level);
                         //an issue with this method is that one an error tile is in the memory cache it will stay even
                         //if the error is resolved. PDD.
-                        var bitmap = new Bitmap(_source.Schema.Width, _source.Schema.Height);
+                        var bitmap = new Bitmap(tileWidth, tileHeight);
                         using (var graphics = Graphics.FromImage(bitmap))
                         {
                             graphics.DrawString(ex.Message, new Font(FontFamily.GenericSansSerif, 12), new SolidBrush(Color.Black),
-                                new RectangleF(0, 0, _source.Schema.Width, _source.Schema.Height));
+                                new RectangleF(0, 0, tileWidth, tileHeight));
                         }
                         //Draw the Timeout Tile
                         OnMapNewTileAvaliable(tileInfo, bitmap);
@@ -343,7 +348,9 @@ namespace SharpMap.Layers
 #if !PocketPC
                     ia.SetWrapMode(WrapMode.TileFlipXY);
 #endif
-                    MapNewTileAvaliable(this, bb, bitmap, _source.Schema.Width, _source.Schema.Height, ia);
+                    var tileWidth = _source.Schema.GetTileWidth(tileInfo.Index.Level);
+                    var tileHeight = _source.Schema.GetTileHeight(tileInfo.Index.Level);
+                    MapNewTileAvaliable(this, bb, bitmap, tileWidth, tileHeight, ia);
                 }
             }
         }

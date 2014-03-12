@@ -17,11 +17,15 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Globalization;
 using System.IO;
+using System.Linq;
+using System.Runtime.InteropServices;
 using GeoAPI.Geometries;
+using NetTopologySuite;
 using SharpMap.Layers;
 using SharpMap.Rendering;
 using SharpMap.Rendering.Decoration;
@@ -42,22 +46,85 @@ namespace SharpMap
     [Serializable]
     public class Map : IDisposable
     {
+        /// <summary>
+        /// Method to invoke the static constructor of this class
+        /// </summary>
+        public static void Configure()
+        {
+            // Methods sole purpose is to get the static constructor executed
+        }
+
+        /// <summary>
+        /// Static constructor. Needed to get <see cref="GeoAPI.GeometryServiceProvider.Instance"/> set.
+        /// </summary>
         static Map()
         {
-            if (!(System.ComponentModel.LicenseManager.UsageMode == System.ComponentModel.LicenseUsageMode.Designtime))
+            try
             {
+                _logger.Debug("Trying to get GeoAPI.GeometryServiceProvider.Instance");
+                var instance = GeoAPI.GeometryServiceProvider.Instance;
+                if (instance == null)
+                {
+                    _logger.Debug("Returned null");
+                    throw new InvalidOperationException();
+                }
+            }
+            catch (InvalidOperationException)
+            {
+                _logger.Debug("Loading NetTopologySuite");
+                Assembly.Load("NetTopologySuite");
+                _logger.Debug("Loaded NetTopologySuite");
+                _logger.Debug("Trying to get GeoAPI.GeometryServiceProvider.Instance");
+                var instance = GeoAPI.GeometryServiceProvider.Instance;
+                if (instance == null)
+                {
+                    _logger.Debug("Returned null");
+                    throw new InvalidOperationException();
+                }
+            }
+            
+            // The following code did not seem to work in all cases.
+            /*            
+            if (System.ComponentModel.LicenseManager.UsageMode != System.ComponentModel.LicenseUsageMode.Designtime)
+            {
+                _logger.Debug("In design mode");
+                Trace.WriteLine("In design mode");
                 // We have to do this initialization with reflection due to the fact that NTS can reference an older version of GeoAPI and redirection 
                 // is not available at design time..
                 var ntsAssembly = Assembly.Load("NetTopologySuite");
-                if (GeoAPI.GeometryServiceProvider.Instance == null)
+                _logger.Debug("Loaded NetTopologySuite");
+                Trace.WriteLine("Loaded NetTopologySuite");
+                try
                 {
-                    var ntsApiGeometryServices = ntsAssembly.GetType("NetTopologySuite.NtsGeometryServices");
-                    GeoAPI.GeometryServiceProvider.Instance = ntsApiGeometryServices.GetProperty("Instance").GetValue(null, null) as GeoAPI.IGeometryServices;
+                    _logger.Debug("Trying to access GeoAPI.GeometryServiceProvider.Instance");
+                    Trace.WriteLine("Trying to access GeoAPI.GeometryServiceProvider.Instance");
+                    if (GeoAPI.GeometryServiceProvider.Instance == null)
+                    {
+                        _logger.Debug("Returned null, setting it to default");
+                        Trace.WriteLine("Returned null, setting it to default");
+                        var ntsApiGeometryServices = ntsAssembly.GetType("NetTopologySuite.NtsGeometryServices");
+                        GeoAPI.GeometryServiceProvider.Instance =
+                            ntsApiGeometryServices.GetProperty("Instance").GetValue(null, null) as
+                                GeoAPI.IGeometryServices;
+                    }
                 }
+
+                catch (InvalidOperationException)
+                {
+                    _logger.Debug("InvalidOperationException thrown, setting it to default");
+                    Trace.WriteLine("InvalidOperationException thrown, setting it to default");
+                    var ntsApiGeometryServices = ntsAssembly.GetType("NetTopologySuite.NtsGeometryServices");
+                    GeoAPI.GeometryServiceProvider.Instance =
+                        ntsApiGeometryServices.GetProperty("Instance").GetValue(null, null) as
+                            GeoAPI.IGeometryServices;
+                }
+                _logger.Debug("Exiting design mode handling");
+                Trace.WriteLine("Exiting design mode handling");
             }
+             */
         }
 
-        readonly ILog _logger = LogManager.GetLogger(typeof(Map));
+        static readonly ILog _logger = LogManager.GetLogger(typeof(Map));
 
         /// <summary>
         /// Used for converting numbers to/from strings
@@ -105,7 +172,7 @@ namespace SharpMap
         {
             _mapViewportGuard = new MapViewPortGuard(size, 0d, Double.MaxValue);
 
-            if (!(System.ComponentModel.LicenseManager.UsageMode == System.ComponentModel.LicenseUsageMode.Designtime))
+            if (System.ComponentModel.LicenseManager.UsageMode != System.ComponentModel.LicenseUsageMode.Designtime)
             {
                 Factory = GeoAPI.GeometryServiceProvider.Instance.CreateGeometryFactory(_srid);
             }
@@ -149,7 +216,7 @@ namespace SharpMap
                 {
                     if (tileAsyncLayer.OnlyRedrawWhenComplete)
                     {
-                        tileAsyncLayer.DownloadProgressChanged += new DownloadProgressHandler(layer_DownloadProgressChanged);
+                        tileAsyncLayer.DownloadProgressChanged += layer_DownloadProgressChanged;
                     }
                     else
                     {
@@ -180,21 +247,22 @@ namespace SharpMap
             {
                 if (Layers != null)
                 {
-                    foreach (ILayer layer in Layers)
-                        if (layer is IDisposable)
-                            ((IDisposable)layer).Dispose();
+                    foreach (IDisposable disposable in Layers.OfType<IDisposable>())
+                    {
+                        disposable.Dispose();
+                    }
                 }
                 if (BackgroundLayer != null)
                 {
-                    foreach (ILayer layer in BackgroundLayer)
-                        if (layer is IDisposable)
-                            ((IDisposable)layer).Dispose();
+                    foreach (IDisposable disposable in BackgroundLayer.OfType<IDisposable>())
+                    {
+                        disposable.Dispose();
+                    }
                 }
                 if (VariableLayers != null)
                 {
-                    foreach (ILayer layer in VariableLayers)
-                        if (layer is IDisposable)
-                            ((IDisposable)layer).Dispose();
+                    foreach (IDisposable layer in VariableLayers.OfType<IDisposable>())
+                        layer.Dispose();
                 }
             }
             if (Layers != null)
@@ -587,8 +655,14 @@ namespace SharpMap
 
             g.PageUnit = GraphicsUnit.Pixel;
 
+            LayerCollectionRenderer.AllowParallel = true;
+            using (var lcr = new LayerCollectionRenderer(lc))
+            {
+                lcr.Render(g, this);
+            }
 
-            ILayer[] layerList = new ILayer[lc.Count];
+            /*
+            var layerList = new ILayer[lc.Count];
             lc.CopyTo(layerList, 0);
 
             foreach (ILayer layer in layerList)
@@ -596,6 +670,8 @@ namespace SharpMap
                 if (layer.Enabled && layer.MaxVisible >= Zoom && layer.MinVisible < Zoom)
                     layer.Render(g, this);
             }
+
+             */
 
             if (drawTransparent)
                 
@@ -629,10 +705,10 @@ namespace SharpMap
         /// <returns>Instance of <see cref="Map"/></returns>
         public Map Clone()
         {
-            Map clone = null;
+            Map clone;
             lock (MapTransform)
             {
-                clone = new Map()
+                clone = new Map
                 {
                     BackColor = BackColor,
 #pragma warning disable 612,618
@@ -718,9 +794,7 @@ namespace SharpMap
         /// <returns>IEnumerable</returns>
         public IEnumerable<ILayer> FindLayer(string layername)
         {
-            foreach (ILayer l in Layers)
-                if (l.LayerName.Contains(layername))
-                    yield return l;
+            return Layers.Where(l => l.LayerName.Contains(layername));
         }
 
         /// <summary>
@@ -1021,6 +1095,56 @@ namespace SharpMap
         }
 
         /// <summary>
+        /// Gets or Sets the Scale of the map (related to current DPI-settings of rendering)
+        /// </summary>
+        public double MapScale
+        {
+            get
+            {
+                using (var img = new Bitmap(1, 1))
+                {
+                    using (var g = Graphics.FromImage(img))
+                    {
+                        return GetMapScale((int) g.DpiX);
+                    }
+                }
+            }
+            set
+            {
+
+                using (var img = new Bitmap(1, 1))
+                {
+                    using (var g = Graphics.FromImage(img))
+                    {
+                        Zoom = GetMapZoomFromScale(value, (int) g.DpiX);
+                    }
+                }
+            
+            }
+        }
+
+        /// <summary>
+        /// Calculated the Zoom value for a given Scale-value
+        /// </summary>
+        /// <param name="scale"></param>
+        /// <param name="dpi"></param>
+        /// <returns></returns>
+        public double GetMapZoomFromScale(double scale, int dpi)
+        {
+            return ScaleCalculations.GetMapZoomFromScaleNonLatLong(scale, 1, dpi, Size.Width);
+        }
+
+        /// <summary>
+        /// Returns the mapscale if the map was to be rendered with the specified DPI-settings
+        /// </summary>
+        /// <param name="dpi"></param>
+        /// <returns></returns>
+        public double GetMapScale(int dpi)
+        {
+            return ScaleCalculations.CalculateScaleNonLatLong(Envelope.Width, Size.Width, 1, dpi);
+        }
+
+        /// <summary>
         /// Gets or sets the zoom level of map.
         /// </summary>
         /// <remarks>
@@ -1170,7 +1294,7 @@ namespace SharpMap
             set { _mapViewportGuard.EnforceMaximumExtents = value; }
         }
 
-        private static void ExtendBoxForCollection(LayerCollection layersCollection, ref Envelope bbox)
+        private static void ExtendBoxForCollection(IEnumerable<ILayer> layersCollection, ref Envelope bbox)
         {
             foreach (var l in layersCollection)
             {

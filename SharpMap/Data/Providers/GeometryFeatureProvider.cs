@@ -45,10 +45,11 @@ namespace SharpMap.Data.Providers
     /// <example>
     /// Adding points of interest to the map. This is useful for vehicle tracking etc.
     /// <code lang="C#">
+    /// GeoAPI.Geometries.IGeometryFactory gf = new NetTopologySuite.Geometries.GeometryFactory();
     /// List&#60;GeoAPI.Geometries.IGeometry&#62; geometries = new List&#60;GeoAPI.Geometries.IGeometry&#62;();
     /// //Add two points
-    /// geometries.Add(new SharpMap.Geometries.Point(23.345,64.325));
-    /// geometries.Add(new SharpMap.Geometries.Point(23.879,64.194));
+    /// geometries.Add(gf.CreatePoint(23.345,64.325));
+    /// geometries.Add(gf.CreatePoint(23.879,64.194));
     /// SharpMap.Layers.VectorLayer layerVehicles = new SharpMap.Layers.VectorLayer("Vehicles");
     /// layerVehicles.DataSource = new SharpMap.Data.Providers.GeometryFeatureProvider(geometries);
     /// layerVehicles.Style.Symbol = Bitmap.FromFile(@"C:\data\car.gif");
@@ -276,10 +277,18 @@ namespace SharpMap.Data.Providers
         {
             lock (_featuresLock)
             {
-                if (rowId > _features.Rows.Count)
+                if (rowId >= _features.Rows.Count)
+                {
                     return null;
-                if (FilterDelegate != null && FilterDelegate(_features[(int) rowId]))
-                    return _features[(int) rowId];
+                }
+                else if (FilterDelegate != null && FilterDelegate(_features[(int)rowId]))
+                {
+                    return _features[(int)rowId];
+                }
+                else if (rowId < _features.Rows.Count)
+                {
+                    return _features[(int)rowId];
+                }
             }
 
             return null;

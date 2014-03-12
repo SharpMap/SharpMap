@@ -29,5 +29,10 @@ namespace GeoAPI.Features
         /// True if this attribute can be null
         /// </summary>
         bool IsNullable { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating the default value
+        /// </summary>
+        object Default { get; set; }
     }
 }

@@ -22,6 +22,7 @@ using System.Drawing.Drawing2D;
 using System.Reflection;
 using GeoAPI.Geometries;
 using SharpMap.Rendering.Symbolizer;
+using SharpMap.Styles;
 using SharpMap.Utilities;
 using Point=GeoAPI.Geometries.Coordinate;
 using System.Runtime.CompilerServices;
@@ -38,7 +39,7 @@ namespace SharpMap.Rendering
 
         static VectorRenderer()
         {
-            SizeOfString = SizeOfStringCeiling;
+            SizeOfString = SizeOfString74;
         }
 
         private static readonly Bitmap Defaultsymbol =
@@ -271,7 +272,7 @@ namespace SharpMap.Rendering
         /// </summary>
         public static SizeOfStringDelegate SizeOfString
         {
-            get { return _sizeOfString; }
+            get { return _sizeOfString ?? (_sizeOfString = SizeOfString74); }
             set 
             { 
                 if (value != null )
@@ -298,12 +299,23 @@ namespace SharpMap.Rendering
         /// <param name="text">the text to render</param>
         /// <param name="font">the font to use</param>
         /// <returns>the size</returns>
+        public static SizeF SizeOfString74(Graphics g, string text, Font font)
+        {
+            var s = g.MeasureString(text, font);
+            return new SizeF(s.Width * 0.74f+1f, s.Height * 0.74f); 
+        }
+        /// <summary>
+        /// Function to get the <see cref="SizeF"/> of a string when rendered with the given font.
+        /// </summary>
+        /// <param name="g"><see cref="Graphics"/> object</param>
+        /// <param name="text">the text to render</param>
+        /// <param name="font">the font to use</param>
+        /// <returns>the size</returns>
         public static SizeF SizeOfStringCeiling(Graphics g, string text, Font font)
         {
             SizeF f = g.MeasureString(text, font);
             return new SizeF((float)Math.Ceiling(f.Width), (float)Math.Ceiling(f.Height));
         }
-
 
 
         /// <summary>
@@ -319,37 +331,76 @@ namespace SharpMap.Rendering
         /// <param name="rotation">Text rotation in degrees</param>
         /// <param name="text">Text to render</param>
         /// <param name="map">Map reference</param>
+        /// <param name="alignment">Horizontal alignment for multi line labels. If not set <see cref="StringAlignment.Near"/> is used</param>
+        /// <param name="rotationPoint">Point where the rotation should take place</param>
         [MethodImpl(MethodImplOptions.Synchronized)]
         public static void DrawLabel(Graphics g, PointF labelPoint, PointF offset, Font font, Color forecolor,
-                                     Brush backcolor, Pen halo, float rotation, string text, Map map)
+                                     Brush backcolor, Pen halo, float rotation, string text, Map map,
+                                     LabelStyle.HorizontalAlignmentEnum alignment = LabelStyle.HorizontalAlignmentEnum.Left,
+                                     PointF? rotationPoint = null)
+
         {
-            SizeF fontSize = _sizeOfString(g, text, font); //Calculate the size of the text
+            //Calculate the size of the text
+            var labelSize = _sizeOfString(g, text, font);
+            
+            //Add label offset
             labelPoint.X += offset.X;
-            labelPoint.Y += offset.Y; //add label offset
+            labelPoint.Y += offset.Y;
+
+            //Translate alignment to stringalignment
+            StringAlignment salign;
+            switch (alignment)
+            {
+                case LabelStyle.HorizontalAlignmentEnum.Left:
+                    salign = StringAlignment.Near;
+                    break;
+                case LabelStyle.HorizontalAlignmentEnum.Center:
+                    salign = StringAlignment.Center;
+                    break;
+                default:
+                    salign = StringAlignment.Far;
+                    break;
+            }
+
             if (rotation != 0 && !float.IsNaN(rotation))
             {
-                g.TranslateTransform(labelPoint.X, labelPoint.Y);
+                rotationPoint = rotationPoint ?? labelPoint;
+
+                g.FillEllipse(Brushes.LawnGreen, rotationPoint.Value.X - 1, rotationPoint.Value.Y - 1, 2, 2);
+                
+                var t = g.Transform.Clone();
+                g.TranslateTransform(rotationPoint.Value.X, rotationPoint.Value.Y);
                 g.RotateTransform(rotation);
-                g.TranslateTransform(-fontSize.Width/2, -fontSize.Height/2);
+                //g.TranslateTransform(-labelSize.Width/2, -labelSize.Height/2);
+
+                labelPoint = new PointF(labelPoint.X - rotationPoint.Value.X,
+                                        labelPoint.Y - rotationPoint.Value.Y);
+
+                //labelSize = new SizeF(labelSize.Width*0.74f + 1f, labelSize.Height*0.74f);
                 if (backcolor != null && backcolor != Brushes.Transparent)
-                    g.FillRectangle(backcolor, 0, 0, fontSize.Width*0.74f + 1f, fontSize.Height*0.74f);
+                    g.FillRectangle(backcolor, labelPoint.X, labelPoint.Y, labelSize.Width, labelSize.Height);
+
                 var path = new GraphicsPath();
-                path.AddString(text, font.FontFamily, (int) font.Style, font.Size, new System.Drawing.Point(0, 0), null);
+                path.AddString(text, font.FontFamily, (int) font.Style, font.Size,
+                               new RectangleF(labelPoint, labelSize) /* labelPoint*/, 
+                               new StringFormat { Alignment = salign } /*null*/);
                 if (halo != null)
                     g.DrawPath(halo, path);
+
                 g.FillPath(new SolidBrush(forecolor), path);
                 //g.DrawString(text, font, new System.Drawing.SolidBrush(forecolor), 0, 0);        
-                g.Transform = map.MapTransform;
+                g.Transform = t;
             }
             else
             {
                 if (backcolor != null && backcolor != Brushes.Transparent)
-                    g.FillRectangle(backcolor, labelPoint.X, labelPoint.Y, fontSize.Width*0.74f + 1,
-                                    fontSize.Height*0.74f);
+                    g.FillRectangle(backcolor, labelPoint.X, labelPoint.Y, labelSize.Width,
+                                    labelSize.Height);
 
                 var path = new GraphicsPath();
-
-                path.AddString(text, font.FontFamily, (int) font.Style, font.Size, labelPoint, null);
+                path.AddString(text, font.FontFamily, (int) font.Style, font.Size, 
+                               new RectangleF(labelPoint, labelSize) /* labelPoint*/,
+                               new StringFormat { Alignment = salign } /*null*/);
                 if (halo != null)
                     g.DrawPath(halo, path);
                 g.FillPath(new SolidBrush(forecolor), path);

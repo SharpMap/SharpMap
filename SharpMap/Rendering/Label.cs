@@ -424,6 +424,7 @@ namespace SharpMap.Rendering
         public Label(string text, PointF location, float rotation, int priority, LabelBox collisionbox, LabelStyle style)
             : base(text, location, rotation, priority, collisionbox, style)
         {
+            LabelPoint = location;
         }
 
         /// <summary>
@@ -437,15 +438,15 @@ namespace SharpMap.Rendering
         public Label(string text, PointF location, float rotation, int priority, LabelStyle style)
             : base(text, location, rotation, priority, style)
         {
+            LabelPoint = location;
         }
         /// <summary>
         /// Label position
         /// </summary>
-        [Obsolete("Use Location")]
         public PointF LabelPoint
         {
-            get { return Location; }
-            set { Location = value; }
+            get;
+            set;
         }
         
     }

@@ -30,7 +30,7 @@ namespace UnitTests.Serialization
       <Name>testwms</Name>
       <MinVisible>0</MinVisible>
       <MaxVisible>1.7976931348623157E+308</MaxVisible>
-      <OnlineURL>http://sampleserver1.arcgisonline.com/ArcGIS/services/Specialty/ESRI_StatesCitiesRivers_USA/MapServer/WMSServer</OnlineURL>
+      <OnlineURL>http://sampleserver1.arcgisonline.com/ArcGIS/services/Specialty/ESRI_StatesCitiesRivers_USA/MapServer/WMSServer?SERVICE=WMS&amp;REQUEST=GetCapabilities&amp;</OnlineURL>
       <WmsLayers>0,1,2</WmsLayers>
     </MapLayer>
   </Layers>"));
@@ -39,6 +39,38 @@ namespace UnitTests.Serialization
 
         [Test]
         public void TestDeSerializeWmsLayer()
+        {
+
+            MemoryStream ms = new MemoryStream(System.Text.ASCIIEncoding.ASCII.GetBytes(@"<?xml version=""1.0""?>
+<MapDefinition xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"" xmlns:xsd=""http://www.w3.org/2001/XMLSchema"">
+  <BackGroundColor>Transparent</BackGroundColor>
+  <Extent>
+    <Xmin>-0.5</Xmin>
+    <Ymin>-0.375</Ymin>
+    <Xmax>0.5</Xmax>
+    <Ymax>0.375</Ymax>
+  </Extent>
+  <Layers>
+    <MapLayer xsi:type=""WmsLayer"">
+      <Name>testwms</Name>
+      <MinVisible>0</MinVisible>
+      <MaxVisible>1.7976931348623157E+308</MaxVisible>
+      <OnlineURL>http://sampleserver1.arcgisonline.com/ArcGIS/services/Specialty/ESRI_StatesCitiesRivers_USA/MapServer/WMSServer?SERVICE=WMS&amp;REQUEST=GetCapabilities&amp;</OnlineURL>
+    </MapLayer>
+  </Layers>
+  <SRID>4326</SRID>
+</MapDefinition>
+"));
+            SharpMap.Map m = SharpMap.Serialization.MapSerialization.LoadMapFromStream(ms);
+            Assert.AreEqual(4326, m.SRID);
+            Assert.AreEqual(1, m.Layers.Count);
+            Assert.IsTrue(m.Layers[0] is SharpMap.Layers.WmsLayer);
+            Assert.AreEqual("http://sampleserver1.arcgisonline.com/ArcGIS/services/Specialty/ESRI_StatesCitiesRivers_USA/MapServer/WMSServer?SERVICE=WMS&REQUEST=GetCapabilities&", (m.Layers[0] as SharpMap.Layers.WmsLayer).CapabilitiesUrl);
+            ms.Close();
+        }
+
+        [Test]
+        public void TestDeSerializeWmsLayerWithBaseURL()
         {
 
             MemoryStream ms = new MemoryStream(System.Text.ASCIIEncoding.ASCII.GetBytes(@"<?xml version=""1.0""?>
@@ -65,7 +97,7 @@ namespace UnitTests.Serialization
             Assert.AreEqual(4326, m.SRID);
             Assert.AreEqual(1, m.Layers.Count);
             Assert.IsTrue(m.Layers[0] is SharpMap.Layers.WmsLayer);
-            Assert.AreEqual("http://sampleserver1.arcgisonline.com/ArcGIS/services/Specialty/ESRI_StatesCitiesRivers_USA/MapServer/WMSServer", (m.Layers[0] as SharpMap.Layers.WmsLayer).CapabilitiesUrl);
+            Assert.AreEqual("http://sampleserver1.arcgisonline.com/ArcGIS/services/Specialty/ESRI_StatesCitiesRivers_USA/MapServer/WMSServer?SERVICE=WMS&REQUEST=GetCapabilities&", (m.Layers[0] as SharpMap.Layers.WmsLayer).CapabilitiesUrl);
             ms.Close();
         }
 
@@ -99,7 +131,7 @@ namespace UnitTests.Serialization
             Assert.AreEqual(4326, m.SRID);
             Assert.AreEqual(1, m.Layers.Count);
             Assert.IsTrue(m.Layers[0] is SharpMap.Layers.WmsLayer);
-            Assert.AreEqual("http://sampleserver1.arcgisonline.com/ArcGIS/services/Specialty/ESRI_StatesCitiesRivers_USA/MapServer/WMSServer", (m.Layers[0] as SharpMap.Layers.WmsLayer).CapabilitiesUrl);
+            Assert.AreEqual("http://sampleserver1.arcgisonline.com/ArcGIS/services/Specialty/ESRI_StatesCitiesRivers_USA/MapServer/WMSServer?SERVICE=WMS&REQUEST=GetCapabilities&", (m.Layers[0] as SharpMap.Layers.WmsLayer).CapabilitiesUrl);
             Assert.IsNotNull((m.Layers[0] as SharpMap.Layers.WmsLayer).Credentials);
             ICredentials c = null;
             Assert.DoesNotThrow(() => c = ((SharpMap.Layers.WmsLayer) m.Layers[0]).Credentials);
@@ -128,7 +160,7 @@ namespace UnitTests.Serialization
       <Name>testwms</Name>
       <MinVisible>0</MinVisible>
       <MaxVisible>1.7976931348623157E+308</MaxVisible>
-      <OnlineURL>http://sampleserver1.arcgisonline.com/ArcGIS/services/Specialty/ESRI_StatesCitiesRivers_USA/MapServer/WMSServer</OnlineURL>
+      <OnlineURL>http://sampleserver1.arcgisonline.com/ArcGIS/services/Specialty/ESRI_StatesCitiesRivers_USA/MapServer/WMSServer?SERVICE=WMS&amp;REQUEST=GetCapabilities&amp;</OnlineURL>
       <WmsUser>test</WmsUser>
       <WmsPassword>pw</WmsPassword>
       <WmsLayers>0,1,2</WmsLayers>

@@ -3,6 +3,7 @@ using GeometryTransform = DotSpatial.Projections.GeometryTransform;
 #else
 
 #endif
+using BruTile.Predefined;
 
 namespace WinFormSamples
 {
@@ -15,7 +16,7 @@ namespace WinFormSamples
 
     using BruTile;
     using BruTile.Cache;
-    using BruTile.PreDefined;
+    //using BruTile.PreDefined;
     using BruTile.Web;
 
     using GeoAPI.Geometries;
@@ -95,7 +96,7 @@ namespace WinFormSamples
 
         private void button1_Click(object sender, EventArgs e)
         {
-            TileLayer googleLayer = new TileAsyncLayer(new GoogleTileSource(new GoogleRequest(GoogleMapType.GoogleMap), new MemoryCache<byte[]>(100, 1000)), "TileLayer - Google");
+            TileLayer googleLayer = new TileAsyncLayer(new BingTileSource(new BingRequest(BingRequest.UrlBingStaging, string.Empty, BingMapType.Hybrid )), "TileLayer - Bing");
             this.mapBox1.Map.BackgroundLayer.Clear();
             this.mapBox1.Map.BackgroundLayer.Add(googleLayer);
             this.mapBox1.Refresh();

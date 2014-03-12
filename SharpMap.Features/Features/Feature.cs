@@ -30,8 +30,8 @@ namespace SharpMap.Features
         {
             _factory = factory;
             _attributes = attributes;
-            Geometry = geometry;
             Oid = oid;
+            Geometry = geometry;
         }
 
         protected override void OnOidChanged(EventArgs e)

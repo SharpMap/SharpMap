@@ -49,7 +49,7 @@ namespace SharpMap.SpatialReference
             return GetType();
         }
 
-        public string Definition { get; private set; }
+        public string Definition { get; internal set; }
         
         public SpatialReferenceDefinitionType DefinitionType { get{ return SpatialReferenceDefinitionType.WellKnownText; } }
 

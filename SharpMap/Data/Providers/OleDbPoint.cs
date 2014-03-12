@@ -247,7 +247,7 @@ namespace SharpMap.Data.Providers
         /// <param name="ds">FeatureDataSet to fill data into</param>
         public override void ExecuteIntersectionQuery(Envelope bbox, FeatureDataSet ds)
         {
-            //List<Geometries.Geometry> features = new List<SharpMap.Geometries.Geometry>();
+            //List<Geometries.Geometry> features = new List<GeoAPI.Geometries.IGeometry>();
             using (var conn = new OleDbConnection(ConnectionString))
             {
                 conn.Open();

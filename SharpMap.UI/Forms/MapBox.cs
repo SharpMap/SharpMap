@@ -37,9 +37,12 @@ namespace SharpMap.Forms
     /// MapBox Class - MapBox control for Windows forms
     /// </summary>
     [DesignTimeVisible(true)]
-    public class MapBox : Control
+// ReSharper disable once PartialTypeWithSinglePart
+    public partial class MapBox : Control
     {
         private static readonly ILog Logger = LogManager.GetLogger(typeof (MapBox));
+
+        static MapBox() { Map.Configure(); }
 
         #region PreviewModes enumerator
 
@@ -1079,8 +1082,19 @@ namespace SharpMap.Forms
 
                 if (ShowProgressUpdate)
                 {
-                    _progressBar.Visible = true;
-                    _progressBar.Enabled = true;
+                    if (InvokeRequired)
+                    {
+                        _progressBar.BeginInvoke(new Action<ProgressBar>(p =>
+                        {
+                            p.Visible = true;
+                            p.Enabled = true;
+                        }), _progressBar);
+                    }
+                    else
+                    {
+                        _progressBar.Visible = true;
+                        _progressBar.Enabled = true;
+                    }
                 }
 
                 int generation = ++_imageGeneration;
@@ -1158,10 +1172,6 @@ namespace SharpMap.Forms
                             Cursor = c;
                         }
                     }
-
-                    base.Refresh();
-                    Invalidate();
-
                 }
             }
             catch (Exception ex)
@@ -1689,13 +1699,12 @@ namespace SharpMap.Forms
                     }
                 }
 
-
                 base.OnPaint(pe);
 
                 /*Draw Floating Map-Decorations*/
                 if (_map != null && _map.Decorations != null)
                 {
-                    foreach (SharpMap.Rendering.Decoration.IMapDecoration md in _map.Decorations)
+                    foreach (Rendering.Decoration.IMapDecoration md in _map.Decorations)
                     {
                         md.Render(pe.Graphics, _map);
                     }

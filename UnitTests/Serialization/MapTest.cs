@@ -11,6 +11,8 @@ using SharpMap.Data.Providers;
 using SharpMap.Layers;
 using SharpMap.Styles;
 
+#if !DotSpatialProjections
+
 namespace UnitTests.Serialization
 {
     public class MapTest : BaseSerializationTest
@@ -71,7 +73,7 @@ namespace UnitTests.Serialization
         public void TestMap2()
         {
             var m = new Map(_mapSize);
-            m.BackgroundLayer.Add(new TileLayer(new OsmTileSource(new OsmRequest(KnownOsmTileServers.MapQuest)), "MapQuest"));
+            m.BackgroundLayer.Add(new TileLayer(new OsmTileSource(new OsmRequest(KnownTileServers.MapQuest)), "MapQuest"));
             
             var codeBase = Path.GetDirectoryName(GetType().Assembly.CodeBase);
             var cn = string.Format("Data Source={0};",
@@ -127,3 +129,4 @@ namespace UnitTests.Serialization
         }
     }
 }
+#endif

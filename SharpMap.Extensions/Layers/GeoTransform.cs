@@ -380,7 +380,7 @@ namespace SharpMap.Layers
         /// <returns>The rotation angle</returns>
         public double RotationAngle()
         {
-            if (_transform[5] != 0)
+            if (Math.Abs(_transform[5]) > double.Epsilon)
                 return Math.Atan(_transform[2] / _transform[5]) * 57.2957795;
 
             return 0;

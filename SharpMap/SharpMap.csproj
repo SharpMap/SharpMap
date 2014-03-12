@@ -19,8 +19,8 @@
     <OldToolsVersion>3.5</OldToolsVersion>
     <UpgradeBackupLocation>
     </UpgradeBackupLocation>
+    <TargetFrameworkVersion>v4.0.3</TargetFrameworkVersion>
     <TargetFrameworkProfile>Client</TargetFrameworkProfile>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
   </PropertyGroup>
@@ -35,6 +35,7 @@
     <UseVSHostingProcess>true</UseVSHostingProcess>
     <DocumentationFile>bin\Debug\SharpMap.XML</DocumentationFile>
     <PlatformTarget>AnyCPU</PlatformTarget>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -45,10 +46,9 @@
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>bin\Release\SharpMap.XML</DocumentationFile>
     <PlatformTarget>AnyCPU</PlatformTarget>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'DebugDSProjection|AnyCPU'">
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <TargetFrameworkProfile />
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\DebugDSProjection\</OutputPath>
     <DefineConstants>TRACE;DEBUG;DotSpatialProjections, UseMapBox, USE_MEMORYMAPPED_FILE</DefineConstants>
@@ -59,10 +59,9 @@
     <CodeAnalysisIgnoreBuiltInRuleSets>true</CodeAnalysisIgnoreBuiltInRuleSets>
     <CodeAnalysisIgnoreBuiltInRules>true</CodeAnalysisIgnoreBuiltInRules>
     <CodeAnalysisFailOnMissingRules>true</CodeAnalysisFailOnMissingRules>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'ReleaseDSProjection|AnyCPU'">
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <TargetFrameworkProfile />
     <OutputPath>bin\ReleaseDSProjection\</OutputPath>
     <DefineConstants>TRACE;DotSpatialProjections, UseMapBox</DefineConstants>
     <DocumentationFile>bin\Release\SharpMap.XML</DocumentationFile>
@@ -71,19 +70,21 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="BruTile, Version=0.7.4.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="BruTile, Version=0.9.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\BruTile.0.7.4.1\lib\net40\BruTile.dll</HintPath>
+      <HintPath>..\packages\BruTile.0.9.0\lib\net40\BruTile.dll</HintPath>
     </Reference>
-    <Reference Include="BruTile.Desktop, Version=0.7.4.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\BruTile.0.7.4.1\lib\net40\BruTile.Desktop.dll</HintPath>
+    <Reference Include="BruTile.Desktop">
+      <HintPath>..\packages\BruTile.Desktop.0.9.0\lib\net40\BruTile.Desktop.dll</HintPath>
     </Reference>
-    <Reference Include="BruTile.MbTiles, Version=0.7.4.1, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\BruTile.0.7.4.1\lib\net40\BruTile.MbTiles.dll</HintPath>
+    <Reference Include="BruTile.MbTiles">
+      <HintPath>..\packages\BruTile.Desktop.0.9.0\lib\net40\BruTile.MbTiles.dll</HintPath>
+    </Reference>
+    <Reference Include="BruTile.Serialization">
+      <HintPath>..\packages\BruTile.Desktop.0.9.0\lib\net40\BruTile.Serialization.dll</HintPath>
     </Reference>
     <Reference Include="Common.Logging, Version=2.0.0.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
       <HintPath>..\packages\Common.Logging.2.0.0\lib\2.0\Common.Logging.dll</HintPath>
@@ -91,40 +92,46 @@
     <Reference Include="DotSpatial.Projections">
       <HintPath>..\packages\DotSpatial.Projections.1.2\lib\net40-Client\DotSpatial.Projections.dll</HintPath>
     </Reference>
-    <Reference Include="GeoAPI, Version=1.7.1.0, Culture=neutral, PublicKeyToken=a1a0da7def465678, processorArchitecture=MSIL">
+    <Reference Include="GeoAPI, Version=1.7.2.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\GeoAPI.1.7.1.1\lib\net40-client\GeoAPI.dll</HintPath>
+      <HintPath>..\packages\GeoAPI.1.7.2\lib\net403-client\GeoAPI.dll</HintPath>
     </Reference>
-    <Reference Include="NetTopologySuite, Version=1.13.1.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="NetTopologySuite, Version=1.13.2.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\NetTopologySuite.1.13.1\lib\net40-client\NetTopologySuite.dll</HintPath>
+      <HintPath>..\packages\NetTopologySuite.1.13.2\lib\net403-client\NetTopologySuite.dll</HintPath>
     </Reference>
-    <Reference Include="NetTopologySuite.IO.GeoTools, Version=1.13.1.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="NetTopologySuite.IO.GeoTools, Version=1.13.2.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\NetTopologySuite.IO.1.13.1\lib\net40-client\NetTopologySuite.IO.GeoTools.dll</HintPath>
+      <HintPath>..\packages\NetTopologySuite.IO.1.13.2\lib\net40-client\NetTopologySuite.IO.GeoTools.dll</HintPath>
     </Reference>
-    <Reference Include="NetTopologySuite.IO.MsSqlSpatial, Version=1.13.1.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="NetTopologySuite.IO.MsSqlSpatial, Version=1.13.2.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\NetTopologySuite.IO.1.13.1\lib\net40-client\NetTopologySuite.IO.MsSqlSpatial.dll</HintPath>
+      <HintPath>..\packages\NetTopologySuite.IO.1.13.2\lib\net40-client\NetTopologySuite.IO.MsSqlSpatial.dll</HintPath>
     </Reference>
-    <Reference Include="NetTopologySuite.IO.PostGis, Version=1.13.1.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="NetTopologySuite.IO.PostGis, Version=1.13.2.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\NetTopologySuite.IO.1.13.1\lib\net40-client\NetTopologySuite.IO.PostGis.dll</HintPath>
+      <HintPath>..\packages\NetTopologySuite.IO.1.13.2\lib\net40-client\NetTopologySuite.IO.PostGis.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Newtonsoft.Json.4.5.11\lib\net40\Newtonsoft.Json.dll</HintPath>
     </Reference>
-    <Reference Include="PowerCollections, Version=1.0.0.0, Culture=neutral, PublicKeyToken=2573bf8a1bdddcd5, processorArchitecture=MSIL">
+    <Reference Include="PowerCollections, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\NetTopologySuite.1.13.1\lib\net40-client\PowerCollections.dll</HintPath>
+      <HintPath>..\packages\NetTopologySuite.1.13.2\lib\net403-client\PowerCollections.dll</HintPath>
     </Reference>
-    <Reference Include="ProjNet, Version=1.3.0.1, Culture=neutral, PublicKeyToken=a1f5bdcd9c6f5740, processorArchitecture=MSIL">
+    <Reference Include="ProjNet, Version=1.3.0.3, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\ProjNET4GeoAPI.1.3.0.2\lib\net40-client\ProjNet.dll</HintPath>
+      <HintPath>..\packages\ProjNET4GeoAPI.1.3.0.3\lib\net40-client\ProjNet.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Data.SQLite">
+      <HintPath>..\packages\System.Data.SQLite.1.0.86.0\lib\net40\System.Data.SQLite.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Data.SQLite.Linq">
+      <HintPath>..\packages\System.Data.SQLite.1.0.86.0\lib\net40\System.Data.SQLite.Linq.dll</HintPath>
+    </Reference>
     <Reference Include="System.Drawing" />
     <Reference Include="System.Xml" />
   </ItemGroup>
@@ -174,6 +181,8 @@
     <Compile Include="Data\Providers\WFSClient.cs" />
     <Compile Include="Geometries\GeoAPIEx.cs" />
     <Compile Include="Layers\DuplicateLayerException.cs" />
+    <Compile Include="Layers\GdiImageLayer.cs" />
+    <Compile Include="Layers\GdiImageLayerProxy.cs" />
     <Compile Include="Layers\IAsyncLayer.cs" />
     <Compile Include="Layers\ILayer.cs" />
     <Compile Include="Layers\ICanQueryLayer.cs" />
@@ -212,6 +221,7 @@
     </Compile>
     <Compile Include="Rendering\Label.cs" />
     <Compile Include="Rendering\LabelCollisionDetection.cs" />
+    <Compile Include="Rendering\LayerCollectionRenderer.cs" />
     <Compile Include="Rendering\RenderExceptions.cs" />
     <Compile Include="Rendering\Symbolizer\BaseSymbolizer.cs" />
     <Compile Include="Rendering\Symbolizer\CohenSutherlandLineClipping.cs" />
@@ -253,6 +263,7 @@
     <Compile Include="Utilities\LeastSquaresTransform.cs" />
     <Compile Include="Utilities\LineOffset.cs" />
     <Compile Include="Utilities\Providers.cs" />
+    <Compile Include="Utilities\ScaleCalculations.cs" />
     <Compile Include="Utilities\Surrogates.Helper.cs" />
     <Compile Include="Utilities\Surrogates.cs" />
     <Compile Include="Utilities\Surrogates.Brushes.cs" />
@@ -298,7 +309,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-    <None Include="SRID.csv" />
     <EmbeddedResource Include="Web\Wms\Schemas\1.3.0\capabilities_1_3_0.xsd">
       <SubType>
       </SubType>
@@ -391,6 +401,12 @@
     <Content Include="Web\Wfs\Schemas\2.0.0\examples\GetCapabilities\GetCapabilities_Res_Min.xml" />
     <Content Include="Web\Wfs\Schemas\2.0.0\ReadMe.txt" />
     <Content Include="Web\Wfs\Schemas\2.0.0\wsdl\readme.txt" />
+    <Content Include="x64\SQLite.Interop.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="x86\SQLite.Interop.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <!--
   <ItemGroup>
@@ -415,6 +431,10 @@
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

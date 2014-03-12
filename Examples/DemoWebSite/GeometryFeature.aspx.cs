@@ -71,7 +71,7 @@ public partial class GeometryFeature : Page
             //This is the initial view of the map. Zoom to the extents of the map:
             //myMap.ZoomToExtents();
             //or center on 0,0 and zoom to full earth (360 degrees)
-            //myMap.Center = new SharpMap.Geometries.Point(0,0);
+            //myMap.Center = new GeoAPI.Geometries.Coordinate(0,0);
             //myMap.Zoom = 360;
             //Create the map
             GenerateMap();

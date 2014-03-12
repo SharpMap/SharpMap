@@ -1,5 +1,6 @@
 ﻿using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.Drawing.Imaging;
 using NUnit.Framework;
 
 namespace UnitTests.Serialization
@@ -68,7 +69,7 @@ namespace UnitTests.Serialization
 
             Assert.AreEqual(a1.Length, a2.Length, testProperty + " different length");
             for (var i = 0; i < a1.Length; i++ )
-                Assert.AreEqual(a1[i], a2[i], string.Format("{0} differ at index {1} [{2}, {3}]", testProperty, i, a1.ToString(), a2.ToString()));
+                Assert.AreEqual(a1[i], a2[i], string.Format("{0} differ at index {1} [{2}, {3}]", testProperty, i, a1, a2));
         }
 
         [Test]
@@ -197,5 +198,49 @@ namespace UnitTests.Serialization
             for (var i = 0; i < 6; i++)
                 Assert.AreEqual(brushS.Transform.Elements[i], brushD.Transform.Elements[i]);
         }
+
+        [Test]
+        public void TestColorMatrix()
+        {
+            var cmS = new ColorMatrix(new[]
+            {
+                new[] {0f, 1, 2, 3, 4},
+                new[] {10f, 11, 12, 13, 14},
+                new[] {20f, 21, 22, 23, 24},
+                new[] {30f, 31, 32, 33, 34},
+                new[] {40f, 41, 42, 43, 44}
+            });
+
+            var formatter = GetFormatter();
+            var cmD = SandD(cmS, formatter);
+
+            for (var i = 0; i < 5; i++)
+                for (var j = 0; j < 5; j++)
+                {
+                    Assert.AreEqual(cmS[i,j], cmD[i, j], "Colormatrix differs at {0}, {1}", i, j);
+                }
+        }
+
+        [Test]
+        public void TestColorMap()
+        {
+            var cmS = new []
+            {
+                new ColorMap {OldColor = Color.Red, NewColor = Color.Green},
+                new ColorMap {OldColor = Color.Green, NewColor = Color.Red},
+                new ColorMap {OldColor = Color.White, NewColor = Color.Black}
+            };
+
+            var formatter = GetFormatter();
+            var cmD = SandD(cmS, formatter);
+
+            Assert.AreEqual(cmS.Length, cmD.Length, "ColorMap arrays have different lengths");
+
+            for (var i = 0; i < cmS.Length; i++)
+            {
+                Assert.AreEqual(cmS[i].OldColor, cmD[i].OldColor, "Old color differs at {0}", i);
+                Assert.AreEqual(cmS[i].NewColor, cmD[i].NewColor, "New color differs at {0}", i);
+            }
+        }    
     }
 }

@@ -158,8 +158,6 @@ namespace SharpMap.Features.Poco
 
         public abstract long GetNewOid();
 
-        public virtual long UnassignedOid { get { return -1; } }
-        
         public event PropertyChangedEventHandler PropertyChanged;
 
         [NotifyPropertyChangedInvocator]

@@ -48,7 +48,7 @@ namespace ExampleCodeSnippets
     /// X' = _a*X + _b*Y + _c
     /// Y' = _d*X + _e*Y + _f
     /// </summary>
-    public class AffineCoordinateTransformation2D : ProjNet.CoordinateSystems.Transformations.MathTransform, ProjNet.CoordinateSystems.Transformations.ICoordinateTransformation
+    public class AffineCoordinateTransformation2D : ProjNet.CoordinateSystems.Transformations.MathTransform, GeoAPI.CoordinateSystems.Transformations.ICoordinateTransformation
     {
         private readonly double _a, _b, _c, _d, _e, _f;
         private readonly double _ainv, _binv, _cinv, _dinv, _einv, _finv;
@@ -125,7 +125,7 @@ namespace ExampleCodeSnippets
 
         #region Overrides of MathTransform
 
-        public override ProjNet.CoordinateSystems.Transformations.IMathTransform Inverse()
+        public override GeoAPI.CoordinateSystems.Transformations.IMathTransform Inverse()
         {
             //#warning(System.Drawing.Drawing2D.Matrix uses single precision floating point numbers. This involves reduction of precision, not at all accurate!)
 
@@ -159,7 +159,7 @@ namespace ExampleCodeSnippets
                        };
         }
 
-        public override System.Collections.Generic.List<double[]> TransformList(System.Collections.Generic.List<double[]> points)
+        public override System.Collections.Generic.IList<double[]> TransformList(System.Collections.Generic.IList<double[]> points)
         {
             System.Collections.Generic.List<System.Double[]> ret = new System.Collections.Generic.List<System.Double[]>(points.Count);
             foreach (var d in points)
@@ -175,6 +175,16 @@ namespace ExampleCodeSnippets
         public override void Invert()
         {
             IsInverse = !IsInverse;
+        }
+
+        public override int DimSource
+        {
+            get { throw new System.NotImplementedException(); }
+        }
+
+        public override int DimTarget
+        {
+            get { throw new System.NotImplementedException(); }
         }
 
         public override string WKT
@@ -206,7 +216,7 @@ namespace ExampleCodeSnippets
             get { throw new System.NotImplementedException(); }
         }
 
-        public ProjNet.CoordinateSystems.Transformations.IMathTransform MathTransform
+        public GeoAPI.CoordinateSystems.Transformations.IMathTransform MathTransform
         {
             get { return this; }
         }
@@ -221,19 +231,19 @@ namespace ExampleCodeSnippets
             get { return ""; }
         }
 
-        public ProjNet.CoordinateSystems.ICoordinateSystem SourceCS
+        public GeoAPI.CoordinateSystems.ICoordinateSystem SourceCS
         {
             get { return null; }
         }
 
-        public ProjNet.CoordinateSystems.ICoordinateSystem TargetCS
+        public GeoAPI.CoordinateSystems.ICoordinateSystem TargetCS
         {
             get { return null; }
         }
 
-        public ProjNet.CoordinateSystems.Transformations.TransformType TransformType
+        public GeoAPI.CoordinateSystems.Transformations.TransformType TransformType
         {
-            get { return ProjNet.CoordinateSystems.Transformations.TransformType.Transformation; }
+            get { return GeoAPI.CoordinateSystems.Transformations.TransformType.Transformation; }
         }
 
         #endregion
@@ -267,11 +277,11 @@ namespace ExampleCodeSnippets
                 for (System.Int32 i = 0; i < fdtClone.Columns.Count; i++)
                     newRow[i] = row[i];
 
-                SharpMap.Geometries.Point smpt = (SharpMap.Geometries.Point)row.Geometry;
+                GeoAPI.Geometries.IPoint smpt = (GeoAPI.Geometries.IPoint)row.Geometry;
                 System.Drawing.PointF[] pts = new System.Drawing.PointF[] 
                     { new System.Drawing.PointF((float)smpt.X, (float)smpt.Y) };
                 matrix.TransformPoints(pts);
-                newRow.Geometry = new SharpMap.Geometries.Point(pts[0].X, pts[0].Y);
+                newRow.Geometry = new NetTopologySuite.Geometries.Point(pts[0].X, pts[0].Y);
 
                 fdtClone.AddRow(newRow);
             }
@@ -282,7 +292,7 @@ namespace ExampleCodeSnippets
         [NUnit.Framework.Test]
         public void TestMatrix()
         {
-            SharpMap.Geometries.Point p = new Point(10, 10);
+            var p = new NetTopologySuite.Geometries.Point(10, 10);
             var b = p.AsBinary();
             
             System.Drawing.Drawing2D.Matrix mat = new System.Drawing.Drawing2D.Matrix();
@@ -345,12 +355,11 @@ namespace ExampleCodeSnippets
             matrix.RotateAt(30, new System.Drawing.PointF(0, 0));
             matrix.Translate(-20, -20, System.Drawing.Drawing2D.MatrixOrder.Append);
             matrix.Shear(0.95f, -0.2f, System.Drawing.Drawing2D.MatrixOrder.Append);
-
+            
             //Create some random sample data
-            CreatingData cd = new CreatingData();
             SharpMap.Data.FeatureDataTable fdt1 =
-                cd.CreatePointFeatureDataTableFromArrays(GetRandomOrdinates(80, -180, 180),
-                                                         GetRandomOrdinates(80, -90, 90), null);
+                CreatingData.CreatePointFeatureDataTableFromArrays(GetRandomOrdinates(80, -180, 180),
+                                                                   GetRandomOrdinates(80, -90, 90), null);
 
             //Clone random sample data and apply affine transformation on it
             SharpMap.Data.FeatureDataTable fdt2 = TransformedFeatureDataTable(matrix, fdt1);
@@ -360,23 +369,23 @@ namespace ExampleCodeSnippets
 
             //Add at least three corresponding points
             lst.AddInputOutputPoint(
-                ((SharpMap.Data.FeatureDataRow)fdt1.Rows[0]).Geometry as SharpMap.Geometries.Point,
-                ((SharpMap.Data.FeatureDataRow)fdt2.Rows[0]).Geometry as SharpMap.Geometries.Point);
+                ((SharpMap.Data.FeatureDataRow)fdt1.Rows[0]).Geometry.Coordinate,
+                ((SharpMap.Data.FeatureDataRow)fdt2.Rows[0]).Geometry.Coordinate);
 
             lst.AddInputOutputPoint(
-                ((SharpMap.Data.FeatureDataRow)fdt1.Rows[39]).Geometry as SharpMap.Geometries.Point,
-                ((SharpMap.Data.FeatureDataRow)fdt2.Rows[39]).Geometry as SharpMap.Geometries.Point);
+                ((SharpMap.Data.FeatureDataRow)fdt1.Rows[39]).Geometry.Coordinate,
+                ((SharpMap.Data.FeatureDataRow)fdt2.Rows[39]).Geometry.Coordinate);
 
             lst.AddInputOutputPoint(
-                ((SharpMap.Data.FeatureDataRow)fdt1.Rows[79]).Geometry as SharpMap.Geometries.Point,
-                ((SharpMap.Data.FeatureDataRow)fdt2.Rows[79]).Geometry as SharpMap.Geometries.Point);
+                ((SharpMap.Data.FeatureDataRow)fdt1.Rows[79]).Geometry.Coordinate,
+                ((SharpMap.Data.FeatureDataRow)fdt2.Rows[79]).Geometry.Coordinate);
 
             /*
             //Get affine transformation calculates mean points to improve accuaracy
             //Unfortunately the result is not very good, so, since I know better I manually set these
             //mean points.
-            lst.SetMeanPoints(new SharpMap.Geometries.Point(0, 0), 
-                              new SharpMap.Geometries.Point(matrix.OffsetX, matrix.OffsetY));
+            lst.SetMeanPoints(new GeoAPI.Geometries.IPoint(0, 0), 
+                              new GeoAPI.Geometries.IPoint(matrix.OffsetX, matrix.OffsetY));
              */
 
             //Create Affine
@@ -419,7 +428,30 @@ namespace ExampleCodeSnippets
     }
     
     #endif
+
+        [NUnit.Framework.Test]
+        public void TestGdalRasterLayer()
+        {
+            if (!System.IO.File.Exists("D:\\Daten\\zone49_mga.ecw"))
+                NUnit.Framework.Assert.Ignore("Adjust file path");
+            if (!System.IO.File.Exists("D:\\Daten\\zone50_mga.ecw"))
+                NUnit.Framework.Assert.Ignore("Adjust file path");
+
+            var ecw1 = new SharpMap.Layers.GdalRasterLayer("zone49", "D:\\Daten\\zone49_mga.ecw");
+            var ecw2 = new SharpMap.Layers.GdalRasterLayer("zone50", "D:\\Daten\\zone50_mga.ecw");
+
+            var p1 = ecw1.GetProjection();
+            ecw2.ReprojectToCoordinateSystem(p1);
+
+            var m = new SharpMap.Map(new System.Drawing.Size( 1024, 768));
+            m.Layers.Add(ecw1);
+            m.Layers.Add(ecw2);
+
+            m.ZoomToExtents();
+            using (var img = m.GetMap())
+            {
+                img.Save("ecw.png");
+            }
+        }
     }
-
-
 }

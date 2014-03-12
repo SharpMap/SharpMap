@@ -263,14 +263,14 @@ namespace SharpMap.Layers
         /// </summary>
         /// <remarks>
         /// <para>If this method is not null, it will override the position based on the centroid of the boundingbox of the feature </para>
-        /// <para>The label delegate must take a <see cref="SharpMap.Data.FeatureDataRow"/> and return a SharpMap.Geometries.Point.</para>
+        /// <para>The label delegate must take a <see cref="SharpMap.Data.FeatureDataRow"/> and return a GeoAPI.Geometries.Coordinate.</para>
         /// <para>If the delegate returns a null, the centroid of the feature will be used</para>
         /// <example>
         /// Creating a custom position by using X and Y values from the FeatureDataRow attributes "LabelX" and "LabelY", using
         /// an anonymous delegate:
         /// <code lang="C#">
         /// myLabelLayer.LabelPositionDelegate = delegate(SharpMap.Data.FeatureDataRow fdr)
-        ///				{ return new SharpMap.Geometries.Point(Convert.ToDouble(fdr["LabelX"]), Convert.ToDouble(fdr["LabelY"]));};
+        ///				{ return new GeoAPI.Geometries.Coordinate(Convert.ToDouble(fdr["LabelX"]), Convert.ToDouble(fdr["LabelY"]));};
         /// </code>
         /// </example>
         /// </remarks>
@@ -589,8 +589,9 @@ namespace SharpMap.Layers
                             {
                                 VectorRenderer.DrawLabel(g, label.Location, label.Style.Offset,
                                                             label.Style.Font, label.Style.ForeColor,
-                                                            label.Style.BackColor, Style.Halo, label.Rotation,
-                                                            label.Text, map);
+                                                            label.Style.BackColor, label.Style.Halo, label.Rotation,
+                                                            label.Text, map, label.Style.HorizontalAlignment,
+                                                            label.LabelPoint);
                             }
                             else
                             {
@@ -628,6 +629,8 @@ namespace SharpMap.Layers
 
         private static BaseLabel CreateLabel(FeatureDataRow fdr, IGeometry feature, string text, float rotation, int priority, LabelStyle style, Map map, Graphics g, GetLocationMethod _getLocationMethod)
         {
+            if (feature == null) return null;
+
             BaseLabel lbl = null;
 
             SizeF size = VectorRenderer.SizeOfString(g, text, style.Font);
@@ -671,29 +674,34 @@ namespace SharpMap.Layers
                 return lbl;
             }
 
-            PointF position = Transform.WorldtoMap(feature.EnvelopeInternal.Centre, map);
-            if (_getLocationMethod != null)
-            {
-                var p = _getLocationMethod(fdr);
-                if (p !=null)
-                    position = Transform.WorldtoMap(p, map);
-            }
-            position.X = position.X - size.Width*(short) style.HorizontalAlignment*0.5f;
-            position.Y = position.Y - size.Height*(short) (2-(int)style.VerticalAlignment)*0.5f;
-            if (position.X - size.Width > map.Size.Width || position.X + size.Width < 0 ||
-                position.Y - size.Height > map.Size.Height || position.Y + size.Height < 0)
+            var worldPosition = _getLocationMethod == null
+                ? feature.EnvelopeInternal.Centre
+                : _getLocationMethod(fdr);
+
+            if (worldPosition == null) return null;
+
+            var position = Transform.WorldtoMap(worldPosition, map);
+
+            var location = new PointF(
+                position.X - size.Width*(short) style.HorizontalAlignment*0.5f,
+                position.Y - size.Height*(short) (2 - (int) style.VerticalAlignment)*0.5f);
+
+            if (location.X - size.Width > map.Size.Width || location.X + size.Width < 0 ||
+                location.Y - size.Height > map.Size.Height || location.Y + size.Height < 0)
                 return null;
 
             if (!style.CollisionDetection)
-                lbl = new Label(text, position, rotation, priority, null, style);
+                lbl = new Label(text, location, rotation, priority, null, style)
+                    {LabelPoint = position};
             else
             {
                 //Collision detection is enabled so we need to measure the size of the string
-                lbl = new Label(text, position, rotation, priority,
-                                new LabelBox(position.X - size.Width*0.5f - style.CollisionBuffer.Width,
-                                             position.Y + size.Height*0.5f + style.CollisionBuffer.Height,
+                lbl = new Label(text, location, rotation, priority,
+                                new LabelBox(location.X - size.Width*0.5f - style.CollisionBuffer.Width,
+                                             location.Y + size.Height*0.5f + style.CollisionBuffer.Height,
                                              size.Width + 2f*style.CollisionBuffer.Width,
-                                             size.Height + style.CollisionBuffer.Height*2f), style);
+                                             size.Height + style.CollisionBuffer.Height*2f), style) 
+                                { LabelPoint = position }; 
             }
 
             /*

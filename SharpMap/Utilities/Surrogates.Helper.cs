@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.Drawing.Imaging;
 using System.Runtime.Serialization;
 
 namespace SharpMap.Utilities
@@ -182,5 +183,68 @@ namespace SharpMap.Utilities
         }
 
         #endregion
+
+        #region "Nested type: ColorMapSurrogate"
+        /// <summary>
+        /// Surrogate class for <see cref="T:System.Drawing.Imaging.ColorMap"/>
+        /// </summary>
+        public class ColorMapSurrogate : ISerializationSurrogate
+        {
+
+            void ISerializationSurrogate.GetObjectData(object obj, SerializationInfo info, StreamingContext context)
+            {
+                var colorMap = (ColorMap)obj;
+                info.AddValue("old", colorMap.OldColor);
+                info.AddValue("new", colorMap.NewColor);
+            }
+
+            object ISerializationSurrogate.SetObjectData(object obj, SerializationInfo info, StreamingContext context, ISurrogateSelector selector)
+            {
+                var blend = (ColorMap)obj;
+                blend.OldColor = (Color)info.GetValue("old", typeof(Color));
+                blend.NewColor = (Color)info.GetValue("new", typeof(Color));
+                return null;
+            }
+        }
+        #endregion
+
+        #region "Nested type: ColorMapSurrogate"
+        /// <summary>
+        /// Surrogate class for <see cref="T:System.Drawing.Imaging.ColorMap"/>
+        /// </summary>
+        public class ColorMatrixSurrogate : ISerializationSurrogate
+        {
+
+            void ISerializationSurrogate.GetObjectData(object obj, SerializationInfo info, StreamingContext context)
+            {
+                var colorMatrix = (ColorMatrix)obj;
+                info.AddValue("cm", ToFloatArray(colorMatrix));
+            }
+
+            object ISerializationSurrogate.SetObjectData(object obj, SerializationInfo info, StreamingContext context, ISurrogateSelector selector)
+            {
+                var colorMatrix = (ColorMatrix)obj;
+                var floatArray = (float[]) info.GetValue("cm", typeof (float[]));
+                for (var i = 0; i < floatArray.Length; i++)
+                {
+                    colorMatrix[i/5, i%5] = floatArray[i];
+                }
+                return null;
+            }
+
+            private static float[] ToFloatArray(ColorMatrix matrix)
+            {
+                return new[]
+                {
+                    matrix.Matrix00, matrix.Matrix01, matrix.Matrix02, matrix.Matrix03, matrix.Matrix04,
+                    matrix.Matrix10, matrix.Matrix11, matrix.Matrix12, matrix.Matrix13, matrix.Matrix14,
+                    matrix.Matrix20, matrix.Matrix21, matrix.Matrix22, matrix.Matrix23, matrix.Matrix24,
+                    matrix.Matrix30, matrix.Matrix31, matrix.Matrix32, matrix.Matrix33, matrix.Matrix34,
+                    matrix.Matrix40, matrix.Matrix41, matrix.Matrix42, matrix.Matrix43, matrix.Matrix44
+                };
+            }
+        }
+        #endregion
+
     }
 }

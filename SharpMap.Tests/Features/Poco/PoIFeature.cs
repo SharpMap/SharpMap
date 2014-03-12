@@ -9,14 +9,14 @@ namespace SharpMap.Features.Poco
     
     public class PoIFeature : PocoFeature
     {
-        private static readonly EntityOidGenerator<long> OidGenerator = new EntityOidGenerator<long>(-1, t => t + 1);
+        private static readonly EntityOidGenerator<long> _oidGenerator = new EntityOidGenerator<long>(-1, t => t + 1);
         
         private string _name;
         private PoIKind _kind;
 
         public PoIFeature()
         {
-            Oid = OidGenerator.UnassignedOid;
+            //Oid = _oidGenerator.UnassignedOid;
         }
 
         public PoIFeature(PoIFeature feature)
@@ -63,7 +63,7 @@ namespace SharpMap.Features.Poco
 
         public override long GetNewOid()
         {
-            return OidGenerator.GetNewOid();
+            return _oidGenerator.GetNewOid();
         }
     }
 }

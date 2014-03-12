@@ -280,18 +280,20 @@ namespace SharpMap.Utilities.SpatialIndexing
         /// <returns></returns>
         public static QuadTree FromFile(string filename)
         {
-            using (var fs = new FileStream(filename, FileMode.Open, FileAccess.Read))
-            using (var br = new BinaryReader(fs))
+            using (var fs = new FileStream(filename, FileMode.Open, FileAccess.Read, FileShare.Read))
             {
-                if (br.ReadDouble() != INDEXFILEVERSION) //Check fileindex version
+                using (var br = new BinaryReader(fs))
                 {
-                    fs.Close();
-                    fs.Dispose();
-                    throw new ObsoleteFileFormatException(
-                        "Invalid index file version. Please rebuild the spatial index by either deleting the index");
+                    if (br.ReadDouble() != INDEXFILEVERSION) //Check fileindex version
+                    {
+                        fs.Close();
+                        fs.Dispose();
+                        throw new ObsoleteFileFormatException(
+                            "Invalid index file version. Please rebuild the spatial index by either deleting the index");
+                    }
+                    var node = ReadNode(0, br);
+                    return node;
                 }
-                var node = ReadNode(0, br);
-                return node;
             }
         }
 
@@ -336,10 +338,12 @@ namespace SharpMap.Utilities.SpatialIndexing
         public void SaveIndex(string filename)
         {
             using (var fs = new FileStream(filename, FileMode.Create))
-            using (var bw = new BinaryWriter(fs))
             {
-                bw.Write(INDEXFILEVERSION); //Save index version
-                SaveNode(this, bw);
+                using (var bw = new BinaryWriter(fs))
+                {
+                    bw.Write(INDEXFILEVERSION); //Save index version
+                    SaveNode(this, bw);
+                }
             }
         }
 
@@ -415,15 +419,6 @@ namespace SharpMap.Utilities.SpatialIndexing
         {
             get { return (_objList != null); }
         }
-
-        ///// <summary>
-        ///// Gets/sets the list of objects in the node
-        ///// </summary>
-        //public List<SharpMap.Geometries.IGeometry> ObjList
-        //{
-        //    get { return _objList; }
-        //    set { _objList = value; }
-        //}
 
         /// <summary>
         /// Gets/sets the Axis Aligned Bounding Box

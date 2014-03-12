@@ -37,15 +37,12 @@ namespace GeoAPI.CoordinateSystems.Transformations
         {
             if (box == null)
                 return null;
-            var corners = new Coordinate[4];
-            var ll = box.Min().ToDoubleArray();
-            var ur = box.Max().ToDoubleArray();
-            var llTrans = transform.Transform(ll);
-            var urTrans = transform.Transform(ur);
-            corners[0] = new Coordinate(llTrans[0], llTrans[1]); //lower left
-            corners[2] = new Coordinate(llTrans[0], urTrans[1]); //upper left
-            corners[1] = new Coordinate(urTrans[0], urTrans[1]); //upper right
-            corners[3] = new Coordinate(urTrans[0], llTrans[1]); //lower right
+            
+            var corners = new [] {
+                transform.Transform(new Coordinate(box.MinX, box.MinY)),
+                transform.Transform(new Coordinate(box.MinX, box.MaxY)),
+                transform.Transform(new Coordinate(box.MaxX, box.MinY)),
+                transform.Transform(new Coordinate(box.MaxX, box.MaxY)) };
 
             var result = new Envelope(corners[0]);
             for (var i = 1; i < 4; i++)

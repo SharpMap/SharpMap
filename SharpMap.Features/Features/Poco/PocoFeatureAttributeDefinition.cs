@@ -80,6 +80,7 @@ namespace SharpMap.Features.Poco
         public string AttributeDescription { get; set; }
         public Type AttributeType { get; set; }
         public bool IsNullable { get; set; }
+        public object Default { get; set; }
 
         public bool Ignore { get; private set; }
 

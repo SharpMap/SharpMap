@@ -1,4 +1,11 @@
-﻿namespace UnitTests.Data.Providers
+﻿using System;
+using System.IO;
+using GeoAPI.Geometries;
+using NetTopologySuite.Operation.Distance;
+using NUnit.Framework;
+using SharpMap.Data.Providers;
+
+namespace UnitTests.Data.Providers
 {
     [NUnit.Framework.TestFixture, NUnit.Framework.Category("KnownToFailOnTeamCityAtCodebetter")]
     public class ManagedSQLiteTests : ProviderTest
@@ -11,6 +18,41 @@
         private SharpMap.Data.Providers.ManagedSpatiaLite CreateProvider(string tableName)
         {
             return new SharpMap.Data.Providers.ManagedSpatiaLite(GetTestDBPath(), tableName, "Geometry", "PK_UID");
+        }
+
+        [NUnit.Framework.Test]
+        public void TestCaseSensitiveKeyColumn()
+        {
+            var path = Path.GetTempFileName();
+            try
+            {
+                var sqlite = new System.Data.SQLite.SQLiteConnection("Data Source=" + path);
+                sqlite.Open();
+                var cmd = sqlite.CreateCommand();
+                cmd.CommandText = "create table test(col_ID integer primary key, name text, shape blob)";
+                cmd.ExecuteNonQuery();
+                cmd.Dispose();
+                sqlite.Close();
+                sqlite.Dispose();
+                using (var sq = new ManagedSpatiaLite("Data Source=" + path, "test", "shape", "COL_ID"))
+                {
+                    var ext = new Envelope();
+                    var ds = new SharpMap.Data.FeatureDataSet();
+                    sq.ExecuteIntersectionQuery(ext, ds);
+                    NUnit.Framework.Assert.AreEqual(0, ds.Tables[0].Count);
+                }
+
+            }
+            catch (Exception ex)
+            {
+                Assert.Fail("Got exception, should not happen");
+
+            }
+            finally
+            {
+                File.Delete(path);
+            }
+
         }
 
         [NUnit.Framework.Test]

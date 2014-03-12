@@ -201,7 +201,7 @@ namespace SharpMap.Rendering.Decoration
             }
         }
 
-        private void DownloadDisclaimerAsync(double[] ul, double[] lr, int level)
+        private void DownloadDisclaimerAsync(double[] ul, double[] lr, string level)
         {
             ThreadPool.QueueUserWorkItem(delegate
                 {
@@ -213,7 +213,7 @@ namespace SharpMap.Rendering.Decoration
                 });
         }
 
-        private void DownloadDisclaimer(double[] ul, double[] lr, int level)
+        private void DownloadDisclaimer(double[] ul, double[] lr, string level)
         {
             try
             {
@@ -246,13 +246,14 @@ namespace SharpMap.Rendering.Decoration
                 var kstrs = new List<string>();
 
                 var bbox = new Envelope(new Coordinate(ul[0],lr[1]),new Coordinate(lr[0],ul[1]));
+                var levelId = int.Parse(level, NumberStyles.Integer, NumberFormatInfo.InvariantInfo);
                 foreach (Match m in _rex.Matches(json))
                 {
                     if (m.Groups["txt"].Success && !string.IsNullOrEmpty(m.Groups["txt"].Value))
                     {
                         int minLevel = int.Parse(m.Groups["minlevel"].Value);
                         int maxLevel = int.Parse(m.Groups["maxlevel"].Value);
-                        if (level < minLevel || level > maxLevel)
+                        if (levelId < minLevel || levelId > maxLevel)
                             continue;
                         double minx = double.Parse(m.Groups["minx"].Value, CultureInfo.InvariantCulture);
                         double miny = double.Parse(m.Groups["miny"].Value, CultureInfo.InvariantCulture);

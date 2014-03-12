@@ -357,7 +357,10 @@ namespace SharpMap.Data.Providers
                                                              "' in column '" + _dbaseColumns[i].ColumnName + "'"));
                     }
                     _dbaseColumns[i].Address = br.ReadInt32();
-                    if (i > 0) _dbaseColumns[i].Address = _dbaseColumns[i - 1].Address + _dbaseColumns[i - 1].Length;
+                    if (i == 0) //Set it to 0 for first column and calculate it for the rest
+                        _dbaseColumns[i].Address = 0;
+                    else 
+                        _dbaseColumns[i].Address = _dbaseColumns[i - 1].Address + _dbaseColumns[i - 1].Length;
 
                     var length = (int)br.ReadByte();
                     if (length < 0) length = length + 256;

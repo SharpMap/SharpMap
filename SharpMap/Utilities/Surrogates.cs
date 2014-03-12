@@ -53,6 +53,8 @@ namespace SharpMap.Utilities
             ss.AddSurrogate(typeof(Matrix), sc, new MatrixSurrogate());
             ss.AddSurrogate(typeof(StringFormat), sc, new StringFormatSurrogate());
             ss.AddSurrogate(typeof(ImageFormat), sc, new ImageFormatSurrogate());
+            ss.AddSurrogate(typeof(ColorMap), sc, new ColorMapSurrogate());
+            ss.AddSurrogate(typeof(ColorMatrix), sc, new ColorMatrixSurrogate());
             return ss;
         }
 

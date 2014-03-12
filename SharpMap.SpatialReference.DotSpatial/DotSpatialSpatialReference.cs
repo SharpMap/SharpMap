@@ -32,7 +32,13 @@ namespace SharpMap.SpatialReference
         {
             _oid = oid;
             Definition = definition;
-            ProjectionInfo = ProjectionInfo.FromProj4String(definition);
+
+            if (definition.StartsWith("EPSG:"))
+                ProjectionInfo = ProjectionInfo.FromEpsgCode(int.Parse(definition.Substring(5)));
+            else if (definition.StartsWith("+proj"))
+                ProjectionInfo = ProjectionInfo.FromProj4String(definition);
+            else
+                ProjectionInfo = ProjectionInfo.FromEsriString(definition);
 
         }
 

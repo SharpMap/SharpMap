@@ -15,7 +15,7 @@ namespace SharpMap.Features.Poco
         public void TestCreate()
         {
             var t = new PoIFeature();
-            Assert.AreEqual(t.UnassignedOid, t.Oid, "Oid is not set to unassinged oid");
+            Assert.AreEqual(0, t.Oid, "Oid is not set to unassinged oid");
             Assert.IsTrue(string.IsNullOrEmpty(t.Name), "Assigned name is not null or empty");
             Assert.AreEqual(PoIKind.Undefined, t.Kind, "Assigned kind is not undefined");
             Assert.IsNull(t.Geometry);

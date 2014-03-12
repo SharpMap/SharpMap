@@ -52,7 +52,7 @@ namespace SharpMap.Layers
     /// myLayer.SetImageFormat(layWms.OutputFormats[0]);
     /// myLayer.SRID = 4326;	
     /// myMap.Layers.Add(myLayer);
-    /// myMap.Center = new SharpMap.Geometries.Point(0, 0);
+    /// myMap.Center = new GeoAPI.Geometries.Coordinate(0, 0);
     /// myMap.Zoom = 360;
     /// myMap.MaximumZoom = 360;
     /// myMap.MinimumZoom = 0.1;
@@ -62,24 +62,24 @@ namespace SharpMap.Layers
     public class WmsLayer : Layer
     {
 
-        private static readonly ILog logger = LogManager.GetLogger(typeof(WmsLayer));
+        private static readonly ILog Logger = LogManager.GetLogger(typeof(WmsLayer));
 
 
         private Boolean _continueOnError;
-        private ICredentials _credentials;
+        //private ICredentials _credentials;
         [NonSerialized]
         private ImageAttributes _imageAttributes;
 
         private float _opacity = 1.0f;
         private readonly Collection<string> _layerList;
         private string _mimeType = "";
-        private IWebProxy _proxy;
+        //private IWebProxy _proxy;
         private readonly Collection<string> _stylesList;
-        private int _timeOut;
+        //private int _timeOut;
         private readonly Client _wmsClient;
         private bool _transparent = true;
         private Color _bgColor = Color.White;
-        private readonly string _capabilitiesUrl;
+        //private readonly string _capabilitiesUrl;
 
         /// <summary>
         /// Initializes a new layer, and downloads and parses the service description
@@ -123,7 +123,7 @@ namespace SharpMap.Layers
         /// <param name="cachetime">Time for caching Service Description (ASP.NET only)</param>
         /// <param name="proxy">Proxy</param>
         public WmsLayer(string layername, string url, TimeSpan cachetime, IWebProxy proxy)
-            : this(layername, url, new TimeSpan(24, 0, 0), proxy, null)
+            : this(layername, url, cachetime, proxy, null)
         {
         }
 
@@ -135,50 +135,47 @@ namespace SharpMap.Layers
         /// <param name="cachetime">Time for caching Service Description (ASP.NET only)</param>
         /// <param name="proxy">Proxy</param>
         /// <param name="credentials"></param>
-        public WmsLayer(string layername, string url, TimeSpan cachetime, IWebProxy proxy, ICredentials credentials)
+        public WmsLayer(string layername, string url, TimeSpan cachetime, IWebProxy proxy,
+            ICredentials credentials)
+            :this(layername, GetClient(url, proxy, credentials, cachetime))
         {
-            _capabilitiesUrl = url;
-            _proxy = proxy;
-            _timeOut = 10000;
-            LayerName = layername;
-            _continueOnError = true;
-            _credentials = credentials;
+        }
 
-            if (!Web.HttpCacheUtility.TryGetValue("SharpMap_WmsClient_" + url, out _wmsClient))
+        private static Client GetClient(string capabilitiesUrl, IWebProxy proxy, ICredentials credentials, TimeSpan cacheTime)
+        {
+            Client result;
+            if (!Web.HttpCacheUtility.TryGetValue("SharpMap_WmsClient_" + capabilitiesUrl, out result))
             {
-                if (logger.IsDebugEnabled)
-                    logger.Debug("Creating new client for url " + url);
-                _wmsClient = new Client(url, _proxy, _credentials);
+                if (Logger.IsDebugEnabled)
+                    Logger.Debug("Creating new client for url " + capabilitiesUrl);
 
-                if (!Web.HttpCacheUtility.TryAddValue("SharpMap_WmsClient_" + url, _wmsClient))
+                result = new Client(capabilitiesUrl, proxy, credentials);
+
+                if (!Web.HttpCacheUtility.TryAddValue("SharpMap_WmsClient_" + capabilitiesUrl, result, cacheTime))
                 {
-                    if (logger.IsDebugEnabled)
-                        logger.Debug("Adding client to Cache for url " + url + " failed");
+                    if (Logger.IsDebugEnabled)
+                        Logger.Debug("Adding client to Cache for url " + capabilitiesUrl + " failed");
                 }
             }
             else
             {
-                if (logger.IsDebugEnabled)
-                    logger.Debug("Created client from Cache for url " + url);
+                if (Logger.IsDebugEnabled)
+                    Logger.Debug("Created client from Cache for url " + capabilitiesUrl);
             }
-            /*
-            if (HttpContext.Current != null && HttpContext.Current.Cache["SharpMap_WmsClient_" + url] != null)
-            {
-                if (logger.IsDebugEnabled)
-                    logger.Debug("Creating client from Cache for url " + url);
+            return result;
+        }
 
-                wmsClient = (Client)HttpContext.Current.Cache["SharpMap_WmsClient_" + url];
-            }
-            else
-            {
-                if (logger.IsDebugEnabled)
-                    logger.Debug("Creating new client for url " + url);
-                wmsClient = new Client(url, _Proxy, _Credentials);
-                if (HttpContext.Current != null)
-                    HttpContext.Current.Cache.Insert("SharpMap_WmsClient_" + url, wmsClient, null,
-                                                     Cache.NoAbsoluteExpiration, cachetime);
-            }
-             */
+        /// <summary>
+        /// Creates an instance of this class
+        /// </summary>
+        /// <param name="layername"></param>
+        /// <param name="wmsClient"></param>
+        public WmsLayer(string layername, Client wmsClient)
+        {
+            _wmsClient = wmsClient;
+            _continueOnError = true;
+
+            LayerName = layername;
             //Set default mimetype - We prefer compressed formats
             if (OutputFormats.Contains("image/jpeg")) _mimeType = "image/jpeg";
             else if (OutputFormats.Contains("image/png")) _mimeType = "image/png";
@@ -335,7 +332,7 @@ namespace SharpMap.Layers
         /// </summary>
         public string CapabilitiesUrl
         {
-            get { return _capabilitiesUrl; }
+            get { return _wmsClient.CapabilitiesUrl; }
         }
 
 
@@ -421,8 +418,8 @@ namespace SharpMap.Layers
         /// </summary>
         public ICredentials Credentials
         {
-            get { return _credentials; }
-            set { _credentials = value; }
+            get { return _wmsClient.Credentials; }
+            set { _wmsClient.Credentials = value; }
         }
 
         /// <summary>
@@ -430,8 +427,8 @@ namespace SharpMap.Layers
         /// </summary>
         public IWebProxy Proxy
         {
-            get { return _proxy; }
-            set { _proxy = value; }
+            get { return _wmsClient.Proxy; }
+            set { _wmsClient.Proxy = value; }
         }
 
         /// <summary>
@@ -439,8 +436,8 @@ namespace SharpMap.Layers
         /// </summary>
         public int TimeOut
         {
-            get { return _timeOut; }
-            set { _timeOut = value; }
+            get { return _wmsClient.TimeOut; }
+            set { _wmsClient.TimeOut = value; }
         }
 
         /// <summary>
@@ -460,14 +457,20 @@ namespace SharpMap.Layers
         /// <summary>
         /// Recursive method for checking whether a layername exists
         /// </summary>
-        /// <param name="layer"></param>
-        /// <param name="name"></param>
+        /// <param name="wmsServerLayer">The WMS Server layer</param>
+        /// <param name="name">The name of the desired layer</param>
         /// <returns></returns>
-        private bool LayerExists(Client.WmsServerLayer layer, string name)
+        private static bool LayerExists(Client.WmsServerLayer wmsServerLayer, string name)
         {
-            if (name == layer.Name) return true;
-            foreach (Client.WmsServerLayer childlayer in layer.ChildLayers)
+            if (name == wmsServerLayer.Name)
+            {
+                return true;
+            }
+
+            foreach (Client.WmsServerLayer childlayer in wmsServerLayer.ChildLayers)
+            {
                 if (LayerExists(childlayer, name)) return true;
+            }
             return false;
         }
 
@@ -515,12 +518,16 @@ namespace SharpMap.Layers
         /// <param name="layer">layer</param>
         /// <param name="name">name of style</param>
         /// <returns>True of style exists</returns>
-        private bool StyleExists(Client.WmsServerLayer layer, string name)
+        private static bool StyleExists(Client.WmsServerLayer layer, string name)
         {
             foreach (Client.WmsLayerStyle style in layer.Style)
+            {
                 if (name == style.Name) return true;
+            }
             foreach (Client.WmsServerLayer childlayer in layer.ChildLayers)
+            {
                 if (StyleExists(childlayer, name)) return true;
+            }
             return false;
         }
 
@@ -583,18 +590,18 @@ namespace SharpMap.Layers
         /// <param name="map">Map which is rendered</param>
         public override void Render(Graphics g, Map map)
         {
-            if (logger.IsDebugEnabled)
-                logger.Debug("Rendering wmslayer: " + this.LayerName);
+            if (Logger.IsDebugEnabled)
+                Logger.Debug("Rendering wmslayer: " + LayerName);
 
             Client.WmsOnlineResource resource = GetPreferredMethod();
-            Uri myUri = new Uri(GetRequestUrl(map.Envelope, map.Size));
+            var myUri = new Uri(GetRequestUrl(map.Envelope, map.Size));
 
-            if (logger.IsDebugEnabled)
-                logger.Debug("Url: " + myUri);
+            if (Logger.IsDebugEnabled)
+                Logger.Debug("Url: " + myUri);
 
-            WebRequest myWebRequest = WebRequest.Create(myUri);
+            var myWebRequest = WebRequest.Create(myUri);
             myWebRequest.Method = resource.Type;
-            myWebRequest.Timeout = _timeOut;
+            myWebRequest.Timeout = TimeOut;
 
             if (myWebRequest is HttpWebRequest)
             {
@@ -603,129 +610,123 @@ namespace SharpMap.Layers
                 (myWebRequest as HttpWebRequest).UserAgent = "SharpMap-WMSLayer";
             }
 
-            if (_credentials != null)
+            if (Credentials != null)
             {
-                myWebRequest.Credentials = _credentials;
+                myWebRequest.Credentials = Credentials;
                 myWebRequest.PreAuthenticate = true;
             }
             else
                 myWebRequest.Credentials = CredentialCache.DefaultCredentials;
 
-            if (_proxy != null)
-                myWebRequest.Proxy = _proxy;
+            if (Proxy != null)
+                myWebRequest.Proxy = Proxy;
 
             try
             {
-                if (logger.IsDebugEnabled)
-                    logger.Debug("Beginning request");
+                if (Logger.IsDebugEnabled)
+                    Logger.Debug("Beginning request");
 
-                HttpWebResponse myWebResponse = (HttpWebResponse)myWebRequest.GetResponse();
-
-                if (logger.IsDebugEnabled)
-                    logger.Debug("Got response");
-
-                if (myWebResponse != null)
+                using(var myWebResponse = (HttpWebResponse)myWebRequest.GetResponse())
                 {
-                    Stream dataStream = myWebResponse.GetResponseStream();
+                    if (Logger.IsDebugEnabled)
+                        Logger.Debug("Got response");
 
-                    if (dataStream != null && myWebResponse.ContentType.StartsWith("image"))
+                    using (var dataStream = myWebResponse.GetResponseStream())
                     {
-                        if (logger.IsDebugEnabled)
-                            logger.Debug("Reading image from stream");
-
-                        Image img = null;
-                        int cLength = (int)myWebResponse.ContentLength;
-
-                        if (logger.IsDebugEnabled)
-                            logger.Debug("Content-Length: " + cLength);
-
-                        using (MemoryStream ms = new MemoryStream())
+                        if (dataStream != null && myWebResponse.ContentType.StartsWith("image"))
                         {
-                            byte[] buf = new byte[50000];
-                            int numRead = 0;
-                            DateTime lastTimeGotData = DateTime.Now;
-                            bool moreToRead = true;
-                            do
-                            {
-                                try
-                                {
-                                    int nr = dataStream.Read(buf, 0, buf.Length);
-                                    ms.Write(buf, 0, nr);
-                                    numRead += nr;
+                            if (Logger.IsDebugEnabled)
+                                Logger.Debug("Reading image from stream");
 
-                                    if (nr == 0)
+                            var cLength = (int) myWebResponse.ContentLength;
+
+                            if (Logger.IsDebugEnabled)
+                                Logger.Debug("Content-Length: " + cLength);
+
+                            Image img;
+                            using (var ms = new MemoryStream())
+                            {
+                                var buf = new byte[50000];
+                                int numRead = 0;
+                                DateTime lastTimeGotData = DateTime.Now;
+                                var moreToRead = true;
+                                do
+                                {
+                                    try
                                     {
-                                        int testByte = dataStream.ReadByte();
-                                        if (testByte == -1)
+                                        int nr = dataStream.Read(buf, 0, buf.Length);
+                                        ms.Write(buf, 0, nr);
+                                        numRead += nr;
+
+                                        if (nr == 0)
                                         {
-                                            moreToRead = false;
-                                            break;
-                                        }
-                                        else
-                                        {
-                                            if (((TimeSpan)(DateTime.Now - lastTimeGotData)).TotalSeconds > _timeOut)
+                                            int testByte = dataStream.ReadByte();
+                                            if (testByte == -1)
                                             {
-                                                if (logger.IsInfoEnabled)
-                                                    logger.Info("Did not get any data for " + _timeOut + " seconds, aborting");
+                                                //moreToRead = false;
+                                                break;
+                                            }
+
+                                            if ((DateTime.Now - lastTimeGotData).TotalSeconds > TimeOut)
+                                            {
+                                                if (Logger.IsInfoEnabled)
+                                                    Logger.Info("Did not get any data for " + TimeOut +
+                                                                " seconds, aborting");
                                                 return;
 
                                             }
 
-                                            if (logger.IsDebugEnabled)
-                                                logger.Debug("No data to read. Have received: " + numRead + " of " + cLength);
+                                            if (Logger.IsDebugEnabled)
+                                                Logger.Debug("No data to read. Have received: " + 
+                                                             numRead + " of " + cLength);
 
 
                                             //Did not get data... sleep for a while to not spin
                                             System.Threading.Thread.Sleep(10);
                                         }
+                                        else
+                                        {
+                                            lastTimeGotData = DateTime.Now;
+                                        }
+
                                     }
-                                    else
+                                    catch (IOException /*ee*/)
                                     {
-                                        lastTimeGotData = DateTime.Now;
+                                        //This can be valid since in some cases .NET failed to parse 0-sized chunks in responses..
+                                        //For now, just safely ignore the exception and assume we read all data...
+                                        //Either way we will get an error later if we did not..
+                                        moreToRead = false;
+                                    }
+                                    catch (Exception ee)
+                                    {
+                                        Logger.Error("Error reading from WMS-server..", ee);
+                                        throw;
                                     }
 
-                                }
-                                catch (IOException /*ee*/)
-                                {
-                                    //This can be valid since in some cases .NET failed to parse 0-sized chunks in responses..
-                                    //For now, just safely ignore the exception and assume we read all data...
-                                    //Either way we will get an error later if we did not..
-                                    moreToRead = false;
-                                }
-                                catch (Exception ee)
-                                {
-                                    logger.Error("Error reading from WMS-server..", ee);
-                                    throw;
-                                }
+                                } while (moreToRead);
 
+                                if (Logger.IsDebugEnabled)
+                                    Logger.Debug("Have received: " + numRead);
+
+                                ms.Seek(0, SeekOrigin.Begin);
+                                img = Image.FromStream(ms);
                             }
-                            while (moreToRead);
-
-                            if (logger.IsDebugEnabled)
-                                logger.Debug("Have received: " + numRead);
 
 
-                            ms.Seek(0, SeekOrigin.Begin);
-                            img = Image.FromStream(ms);
+                            if (Logger.IsDebugEnabled)
+                                Logger.Debug("Image read.. Drawing");
+
+                            if (_imageAttributes != null)
+                                g.DrawImage(img, new Rectangle(0, 0, img.Width, img.Height), 0, 0,
+                                    img.Width, img.Height, GraphicsUnit.Pixel, _imageAttributes);
+                            else
+                                g.DrawImage(img, Rectangle.FromLTRB(0, 0, map.Size.Width, map.Size.Height));
+
+                            if (Logger.IsDebugEnabled)
+                                Logger.Debug("Draw complete");
+
+                            dataStream.Close();
                         }
-
-
-                        if (logger.IsDebugEnabled)
-                            logger.Debug("Image read.. Drawing");
-
-                        if (_imageAttributes != null)
-                            g.DrawImage(img, new Rectangle(0, 0, img.Width, img.Height), 0, 0,
-                                        img.Width, img.Height, GraphicsUnit.Pixel, _imageAttributes);
-                        else
-                            g.DrawImage(img, Rectangle.FromLTRB(0, 0, map.Size.Width, map.Size.Height));
-
-                        if (img != null)
-                            img.Dispose();
-
-                        if (logger.IsDebugEnabled)
-                            logger.Debug("Draw complete");
-
-                        dataStream.Close();
                     }
                     myWebResponse.Close();
                 }
@@ -736,14 +737,14 @@ namespace SharpMap.Layers
                     throw (new RenderException(
                         "There was a problem connecting to the WMS server when rendering layer '" + LayerName + "'",
                         webEx));
-                logger.Error("There was a problem connecting to the WMS server when rendering layer '" + LayerName +
+                Logger.Error("There was a problem connecting to the WMS server when rendering layer '" + LayerName +
                             "'", webEx);
             }
             catch (Exception ex)
             {
                 if (!_continueOnError)
                     throw (new RenderException("There was a problem rendering layer '" + LayerName + "'", ex));
-                logger.Error("There was a problem connecting to the WMS server when rendering layer '" + LayerName +
+                Logger.Error("There was a problem connecting to the WMS server when rendering layer '" + LayerName +
                             "'", ex);
             }
             base.Render(g, map);
@@ -758,7 +759,7 @@ namespace SharpMap.Layers
         public string GetRequestUrl(Envelope box, Size size)
         {
             Client.WmsOnlineResource resource = GetPreferredMethod();
-            StringBuilder strReq = new StringBuilder(resource.OnlineResource);
+            var strReq = new StringBuilder(resource.OnlineResource);
             if (!resource.OnlineResource.Contains("?"))
                 strReq.Append("?");
             if (!strReq.ToString().EndsWith("&") && !strReq.ToString().EndsWith("?"))
@@ -777,11 +778,11 @@ namespace SharpMap.Layers
             strReq.AppendFormat("&FORMAT={0}", _mimeType);
             if (SRID < 0)
                 throw new ApplicationException("Spatial reference system not set");
-            if (_wmsClient.Version == "1.3.0")
+            if (Version == "1.3.0")
                 strReq.AppendFormat("&CRS=EPSG:{0}", SRID);
             else
                 strReq.AppendFormat("&SRS=EPSG:{0}", SRID);
-            strReq.AppendFormat("&VERSION={0}", _wmsClient.Version);
+            strReq.AppendFormat("&VERSION={0}", Version);
             strReq.Append("&Styles=");
             if (_stylesList != null && _stylesList.Count > 0)
             {
@@ -819,7 +820,7 @@ namespace SharpMap.Layers
         /// <returns>List of all spatial referenced boundingboxes</returns>
         private List<SpatialReferencedBoundingBox> getBoundingBoxes(Client.WmsServerLayer layer)
         {
-            List<SpatialReferencedBoundingBox> box = new List<SpatialReferencedBoundingBox>();
+            var box = new List<SpatialReferencedBoundingBox>();
             box.AddRange(layer.SRIDBoundingBoxes);
             if (layer.ChildLayers.Length > 0)
             {
@@ -835,20 +836,19 @@ namespace SharpMap.Layers
         /// Recursive method for adding all WMS layers to layer list
         /// Skips "top level" layer if addFirstLayer is false
         /// </summary>
-        /// <param name="layer"></param>
+        /// <param name="wmsServerLayer"></param>
         /// <param name="addFirstLayer"></param>
         /// <returns></returns>
-        public void AddChildLayers(Client.WmsServerLayer layer, bool addFirstLayer)
+        public void AddChildLayers(Client.WmsServerLayer wmsServerLayer, bool addFirstLayer)
         {
             if (addFirstLayer)
-                this.AddLayer(layer.Name);
-            else
-                addFirstLayer = true;
-
-
-            foreach (Client.WmsServerLayer childlayer in layer.ChildLayers)
             {
-                AddChildLayers(childlayer, addFirstLayer);
+                AddLayer(wmsServerLayer.Name);
+            }
+
+            foreach (Client.WmsServerLayer childlayer in wmsServerLayer.ChildLayers)
+            {
+                AddChildLayers(childlayer, true);
             }
         }
     }

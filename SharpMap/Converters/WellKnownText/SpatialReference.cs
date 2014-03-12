@@ -47,5 +47,29 @@ namespace SharpMap.Converters.WellKnownText
             else
                 return "";
         }
+        /// <summary>
+        /// Converts a Spatial Reference ID to a Well-known Text representation
+        /// </summary>
+        /// <param name="srid">Spatial Reference ID</param>
+        /// <returns>Well-known text</returns>
+        public static string SridToProj4(int srid)
+        {
+            XmlDocument xmldoc = new XmlDocument();
+
+            string file = Path.GetDirectoryName(Assembly.GetExecutingAssembly().CodeBase) + "\\SpatialRefSys.xml";
+            //if (!System.IO.File.Exists(file))
+            //	throw new ApplicationException("Spatial reference system database not found: " + file);
+            xmldoc.Load(file);
+            //xmldoc.Load(System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("SharpMap.SpatialReference.SpatialRefSys.xml"));
+            XmlNode node =
+                xmldoc.DocumentElement.SelectSingleNode("/SpatialReference/ReferenceSystem[SRID='" + srid + "']");
+            if (node != null)
+            {
+                node = node.SelectSingleNode("PROJ4");
+                if (node != null)
+                return node.InnerText;
+            }
+            return "";
+        }
     }
 }
