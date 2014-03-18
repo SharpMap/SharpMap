@@ -15,6 +15,8 @@
 // along with SharpMap; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
 
+using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Xml;
@@ -26,6 +28,9 @@ namespace SharpMap.Converters.WellKnownText
     /// </summary>
     public class SpatialReference
     {
+        private static readonly Dictionary<int, string> _wkts = new Dictionary<int, string>();
+        private static readonly Dictionary<int, string> _proj4s = new Dictionary<int, string>();
+        
         /// <summary>
         /// Converts a Spatial Reference ID to a Well-known Text representation
         /// </summary>
@@ -33,20 +38,15 @@ namespace SharpMap.Converters.WellKnownText
         /// <returns>Well-known text</returns>
         public static string SridToWkt(int srid)
         {
-            XmlDocument xmldoc = new XmlDocument();
+            string wkt;
+            if (_wkts.TryGetValue(srid, out wkt))
+            {
+                return wkt;
+            }
 
-            string file = Path.GetDirectoryName(Assembly.GetExecutingAssembly().CodeBase) + "\\SpatialRefSys.xml";
-            //if (!System.IO.File.Exists(file))
-            //	throw new ApplicationException("Spatial reference system database not found: " + file);
-            xmldoc.Load(file);
-            //xmldoc.Load(System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("SharpMap.SpatialReference.SpatialRefSys.xml"));
-            XmlNode node =
-                xmldoc.DocumentElement.SelectSingleNode("/SpatialReference/ReferenceSystem[SRID='" + srid + "']");
-            if (node != null)
-                return node.LastChild.InnerText;
-            else
-                return "";
+            return SridToDefinition(srid, _wkts);
         }
+
         /// <summary>
         /// Converts a Spatial Reference ID to a Well-known Text representation
         /// </summary>
@@ -54,20 +54,39 @@ namespace SharpMap.Converters.WellKnownText
         /// <returns>Well-known text</returns>
         public static string SridToProj4(int srid)
         {
-            XmlDocument xmldoc = new XmlDocument();
-
-            string file = Path.GetDirectoryName(Assembly.GetExecutingAssembly().CodeBase) + "\\SpatialRefSys.xml";
-            //if (!System.IO.File.Exists(file))
-            //	throw new ApplicationException("Spatial reference system database not found: " + file);
-            xmldoc.Load(file);
-            //xmldoc.Load(System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("SharpMap.SpatialReference.SpatialRefSys.xml"));
-            XmlNode node =
-                xmldoc.DocumentElement.SelectSingleNode("/SpatialReference/ReferenceSystem[SRID='" + srid + "']");
-            if (node != null)
+            string proj4;
+            if (_proj4s.TryGetValue(srid, out proj4))
             {
-                node = node.SelectSingleNode("PROJ4");
+                return proj4;
+            }
+
+            return SridToDefinition(srid, _proj4s, "PROJ4");
+        }
+
+        private static string SridToDefinition(int srid, IDictionary<int, string> cache, string nodeName = null)
+        {
+
+            var xmldoc = new XmlDocument();
+
+            var file = Path.GetDirectoryName(Assembly.GetExecutingAssembly().CodeBase) + "\\SpatialRefSys.xml";
+            try
+            {
+                xmldoc.Load(file);
+                var node = xmldoc.DocumentElement.SelectSingleNode("/SpatialReference/ReferenceSystem[SRID='" + srid + "']");
                 if (node != null)
-                return node.InnerText;
+                {
+                    node = string.IsNullOrEmpty(nodeName) ? node.LastChild : node.SelectSingleNode("PROJ4");
+                    if (node != null)
+                    {
+                        var def = node.InnerText;
+                        if (!string.IsNullOrEmpty(def)) cache.Add(srid, def);
+                        return def;
+                    }
+                }
+            }
+            catch (Exception)
+            {
+
             }
             return "";
         }

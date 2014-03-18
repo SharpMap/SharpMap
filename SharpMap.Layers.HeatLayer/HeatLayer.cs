@@ -194,6 +194,9 @@ namespace SharpMap.Layers
                 
                 g.DrawImage(image, -dot.Width/2, -dot.Height/2);
             }
+
+            // Invoke the LayerRendered event.
+            OnLayerRendered(g);
         }
 
         /// <summary>

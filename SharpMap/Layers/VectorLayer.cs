@@ -19,12 +19,12 @@ using System;
 using System.Collections.ObjectModel;
 using System.Drawing;
 using System.Drawing.Drawing2D;
-#if !DotSpatialProjections
-using GeoAPI;
-using GeoAPI.CoordinateSystems.Transformations;
-#else
-using DotSpatial.Projections;
-#endif
+//#if !DotSpatialProjections
+//using GeoAPI;
+//using GeoAPI.CoordinateSystems.Transformations;
+//#else
+//using DotSpatial.Projections;
+//#endif
 using SharpMap.Data;
 using SharpMap.Data.Providers;
 using GeoAPI.Geometries;
@@ -153,16 +153,8 @@ namespace SharpMap.Layers
                     if (!wasOpen) //Restore state
                         DataSource.Close();
                 }
-                if (CoordinateTransformation != null)
-#if !DotSpatialProjections
-                {
-                    var boxTrans = GeometryTransform.TransformBox(box, CoordinateTransformation.MathTransform);
-                    return boxTrans;
-                }            
-#else
-                    return GeometryTransform.TransformBox(box, CoordinateTransformation.Source, CoordinateTransformation.Target);
-#endif
-                return box;
+
+                return ToTarget(box);
             }
         }
 
@@ -207,31 +199,10 @@ namespace SharpMap.Layers
                 throw (new ApplicationException("Cannot render map. View center not specified"));
 
             g.SmoothingMode = SmoothingMode;
-            var envelope = map.Envelope; //View to render
-            if (CoordinateTransformation != null)
-            {
-#if !DotSpatialProjections
-                if (ReverseCoordinateTransformation != null)
-                {
-                    envelope = GeometryTransform.TransformBox(envelope, ReverseCoordinateTransformation.MathTransform);
-                }
-                else
-                {
-                    CoordinateTransformation.MathTransform.Invert();
-                    envelope = GeometryTransform.TransformBox(envelope, CoordinateTransformation.MathTransform);
-                    CoordinateTransformation.MathTransform.Invert();
-                }
-#else
-                envelope = GeometryTransform.TransformBox(envelope, CoordinateTransformation.Target, CoordinateTransformation.Source);
-#endif
-            }
+            var envelope = ToSource(map.Envelope); //View to render
 
             if (DataSource == null)
                 throw (new ApplicationException("DataSource property not set on layer '" + LayerName + "'"));
-
-
-
-
 
             //If thematics is enabled, we use a slighty different rendering approach
             if (Theme != null)
@@ -264,22 +235,14 @@ namespace SharpMap.Layers
 
             foreach (FeatureDataTable features in ds.Tables)
             {
-
-
+                // Transform geometries if necessary
                 if (CoordinateTransformation != null)
+                {
                     for (int i = 0; i < features.Count; i++)
-#if !DotSpatialProjections
-                        features[i].Geometry = GeometryTransform.TransformGeometry(features[i].Geometry,
-                                                                                    CoordinateTransformation.
-                                                                                        MathTransform,
-                                GeometryServiceProvider.Instance.CreateGeometryFactory((int)CoordinateTransformation.TargetCS.AuthorityCode));
-#else
-                    features[i].Geometry = GeometryTransform.TransformGeometry(features[i].Geometry,
-                                                                                CoordinateTransformation.Source,
-                                                                                CoordinateTransformation.Target,
-                                                                                CoordinateTransformation.TargetFactory);
-
-#endif
+                    {
+                        features[i].Geometry = ToTarget(features[i].Geometry);
+                    }
+                }
 
                 //Linestring outlines is drawn by drawing the layer once with a thicker line
                 //before drawing the "inline" on top.
@@ -389,17 +352,16 @@ namespace SharpMap.Layers
                             // If was not open, close it
                             if (!alreadyOpen) { DataSource.Close(); }
                         }
+
+                        // Transform geometries if necessary
                         if (CoordinateTransformation != null)
+                        {
                             for (int i = 0; i < geoms.Count; i++)
-#if !DotSpatialProjections
-                                geoms[i] = GeometryTransform.TransformGeometry(geoms[i], CoordinateTransformation.MathTransform,
-                                    GeometryServiceProvider.Instance.CreateGeometryFactory((int)CoordinateTransformation.TargetCS.AuthorityCode));
-#else
-                    geoms[i] = GeometryTransform.TransformGeometry(geoms[i], 
-                        CoordinateTransformation.Source, 
-                        CoordinateTransformation.Target, 
-                        CoordinateTransformation.TargetFactory);
-#endif
+                            {
+                                geoms[i] = ToTarget(geoms[i]);
+                            }
+                        }
+
                         if (vStyle.LineSymbolizer != null)
                         {
                             vStyle.LineSymbolizer.Begin(g, map, geoms.Count);
@@ -424,7 +386,7 @@ namespace SharpMap.Layers
                             }
                         }
 
-                        for (int i = 0; i < geoms.Count; i++)
+                        for (var i = 0; i < geoms.Count; i++)
                         {
                             if (geoms[i] != null)
                                 RenderGeometry(g, map, geoms[i], vStyle);
@@ -445,14 +407,14 @@ namespace SharpMap.Layers
         /// </summary>
         /// <param name="style"></param>
         /// <returns></returns>
-        private IStyle[] GetStylesToRender(IStyle style)
+        private static IStyle[] GetStylesToRender(IStyle style)
         {
             IStyle[] stylesToRender = null;
             if (style is GroupStyle)
             {
                 var gs = style as GroupStyle;
-                List<IStyle> styles = new List<IStyle>();
-                for (int i = 0; i < gs.Count; i++)
+                var styles = new List<IStyle>();
+                for (var i = 0; i < gs.Count; i++)
                 {
                     styles.AddRange(GetStylesToRender(gs[i]));
                 }
@@ -460,7 +422,7 @@ namespace SharpMap.Layers
             }
             else if (style is VectorStyle)
             {
-                stylesToRender = new IStyle[] { style };
+                stylesToRender = new[] { style };
             }
 
             return stylesToRender;
@@ -565,23 +527,24 @@ namespace SharpMap.Layers
         /// <param name="ds">FeatureDataSet to fill data into</param>
         public void ExecuteIntersectionQuery(Envelope box, FeatureDataSet ds)
         {
-            if (CoordinateTransformation != null)
-            {
-#if !DotSpatialProjections
-                if (ReverseCoordinateTransformation != null)
-                {
-                    box = GeometryTransform.TransformBox(box, ReverseCoordinateTransformation.MathTransform);
-                }
-                else
-                {
-                    CoordinateTransformation.MathTransform.Invert();
-                    box = GeometryTransform.TransformBox(box, CoordinateTransformation.MathTransform);
-                    CoordinateTransformation.MathTransform.Invert();
-                }
-#else
-                box = GeometryTransform.TransformBox(box, CoordinateTransformation.Target, CoordinateTransformation.Source);
-#endif
-            }
+            box = ToSource(box);
+//            if (CoordinateTransformation != null)
+//            {
+//#if !DotSpatialProjections
+//                if (ReverseCoordinateTransformation != null)
+//                {
+//                    box = GeometryTransform.TransformBox(box, ReverseCoordinateTransformation.MathTransform);
+//                }
+//                else
+//                {
+//                    CoordinateTransformation.MathTransform.Invert();
+//                    box = GeometryTransform.TransformBox(box, CoordinateTransformation.MathTransform);
+//                    CoordinateTransformation.MathTransform.Invert();
+//                }
+//#else
+//                box = GeometryTransform.TransformBox(box, CoordinateTransformation.Target, CoordinateTransformation.Source);
+//#endif
+//            }
 
             lock (_dataSource)
             {
@@ -604,28 +567,29 @@ namespace SharpMap.Layers
         /// <param name="ds">FeatureDataSet to fill data into</param>
         public void ExecuteIntersectionQuery(IGeometry geometry, FeatureDataSet ds)
         {
-            if (CoordinateTransformation != null)
-            {
-#if !DotSpatialProjections
-                if (ReverseCoordinateTransformation != null)
-                {
-                    geometry = GeometryTransform.TransformGeometry(geometry, ReverseCoordinateTransformation.MathTransform,
-                            GeometryServiceProvider.Instance.CreateGeometryFactory((int)CoordinateTransformation.TargetCS.AuthorityCode));
-                }
-                else
-                {
-                    CoordinateTransformation.MathTransform.Invert();
-                    geometry = GeometryTransform.TransformGeometry(geometry, CoordinateTransformation.MathTransform,
-                            GeometryServiceProvider.Instance.CreateGeometryFactory((int)CoordinateTransformation.SourceCS.AuthorityCode));
-                    CoordinateTransformation.MathTransform.Invert();
-                }
-#else
-                geometry = GeometryTransform.TransformGeometry(geometry, 
-                    CoordinateTransformation.Target,
-                    CoordinateTransformation.Source,
-                    CoordinateTransformation.SourceFactory);
-#endif
-            }
+            geometry = ToSource(geometry);
+//            if (CoordinateTransformation != null)
+//            {
+//#if !DotSpatialProjections
+//                if (ReverseCoordinateTransformation != null)
+//                {
+//                    geometry = GeometryTransform.TransformGeometry(geometry, ReverseCoordinateTransformation.MathTransform,
+//                            GeometryServiceProvider.Instance.CreateGeometryFactory((int)CoordinateTransformation.TargetCS.AuthorityCode));
+//                }
+//                else
+//                {
+//                    CoordinateTransformation.MathTransform.Invert();
+//                    geometry = GeometryTransform.TransformGeometry(geometry, CoordinateTransformation.MathTransform,
+//                            GeometryServiceProvider.Instance.CreateGeometryFactory((int)CoordinateTransformation.SourceCS.AuthorityCode));
+//                    CoordinateTransformation.MathTransform.Invert();
+//                }
+//#else
+//                geometry = GeometryTransform.TransformGeometry(geometry, 
+//                    CoordinateTransformation.Target,
+//                    CoordinateTransformation.Source,
+//                    CoordinateTransformation.SourceFactory);
+//#endif
+//            }
 
             lock (_dataSource)
             {

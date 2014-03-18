@@ -22,13 +22,6 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Text;
 using System.Globalization;
-#if !DotSpatialProjections
-using GeoAPI;
-using NetTopologySuite.Geometries;
-using GeoAPI.CoordinateSystems.Transformations;
-#else
-using DotSpatial.Projections;
-#endif
 using SharpMap.Data;
 using SharpMap.Data.Providers;
 using GeoAPI.Geometries;
@@ -347,17 +340,7 @@ namespace SharpMap.Layers
                 var box = DataSource.GetExtents();
                 if (!wasOpen) //Restore state
                     DataSource.Close();
-                if (CoordinateTransformation != null)
-#if !DotSpatialProjections
-                {
-                    var boxTrans = GeometryTransform.TransformBox(box, CoordinateTransformation.MathTransform);
-                    return boxTrans; //.Intersection(CoordinateTransformation.TargetCS.DefaultEnvelope);
-
-                }
-#else
-                    return GeometryTransform.TransformBox(box, CoordinateTransformation.Source, CoordinateTransformation.Target);
-#endif
-                return box;
+                return ToTarget(box);
             }
         }
 
@@ -404,28 +387,11 @@ namespace SharpMap.Layers
                 g.TextRenderingHint = TextRenderingHint;
                 g.SmoothingMode = SmoothingMode;
 
-                var envelope = map.Envelope; //View to render
+                var envelope = ToSource(map.Envelope); //View to render
                 var lineClipping = new CohenSutherlandLineClipping(envelope.MinX, envelope.MinY,
                                                                    envelope.MaxX, envelope.MaxY);
 
-                if (CoordinateTransformation != null)
-                {
-#if !DotSpatialProjections
-                    if (ReverseCoordinateTransformation != null)
-                    {
-                        envelope = GeometryTransform.TransformBox(envelope, ReverseCoordinateTransformation.MathTransform);
-                    }
-                    else
-                    {
-                        CoordinateTransformation.MathTransform.Invert();
-                        envelope = GeometryTransform.TransformBox(envelope, CoordinateTransformation.MathTransform);
-                        CoordinateTransformation.MathTransform.Invert();
-                    }
-#else
-                    envelope = GeometryTransform.TransformBox(envelope, CoordinateTransformation.Target, CoordinateTransformation.Source);
-#endif
-                }
-                FeatureDataSet ds = new FeatureDataSet();
+                var ds = new FeatureDataSet();
                 DataSource.Open();
                 DataSource.ExecuteIntersectionQuery(envelope, ds);
                 DataSource.Close();
@@ -435,29 +401,19 @@ namespace SharpMap.Layers
                     return;
                 }
 
-                FeatureDataTable features = ds.Tables[0];
-
+                var features = ds.Tables[0];
 
                 //Initialize label collection
-                List<BaseLabel> labels = new List<BaseLabel>();
+                var labels = new List<BaseLabel>();
 
                 //List<System.Drawing.Rectangle> LabelBoxes; //Used for collision detection
                 //Render labels
+
                 for (int i = 0; i < features.Count; i++)
                 {
-                    FeatureDataRow feature = features[i];
-                    if (CoordinateTransformation != null)
-#if !DotSpatialProjections
-                        features[i].Geometry = GeometryTransform.TransformGeometry(
-                            features[i].Geometry, CoordinateTransformation.MathTransform,
-                            GeometryServiceProvider.Instance.CreateGeometryFactory((int)CoordinateTransformation.TargetCS.AuthorityCode)
-                            );
-#else
-                        features[i].Geometry = GeometryTransform.TransformGeometry(features[i].Geometry,
-                                                                               CoordinateTransformation.Source,
-                                                                               CoordinateTransformation.Target,
-                                                                               CoordinateTransformation.TargetFactory);
-#endif
+                    var feature = features[i];
+                    feature.Geometry = ToTarget(feature.Geometry);
+
                     LabelStyle style;
                     if (Theme != null) //If thematics is enabled, lets override the style
                         style = Theme.GetStyle(feature) as LabelStyle;
