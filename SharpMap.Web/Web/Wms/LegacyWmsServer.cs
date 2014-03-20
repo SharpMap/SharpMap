@@ -30,6 +30,7 @@ using SharpMap.Data.Providers;
 using SharpMap.Layers;
 using System.Collections.Generic;
 using System.Text;
+using SharpMap.Web.Wms.Server;
 #if !DotSpatialProjections
 using GeoAPI.CoordinateSystems.Transformations;
 #endif
@@ -351,7 +352,8 @@ namespace SharpMap.Web.Wms
                     WmsException.ThrowWmsException(
                         "Invalid service for GetCapabilities Request. Service parameter must be 'WMS'", context);
 
-                XmlDocument capabilities = ServerCapabilities.GetCapabilities(map, description, new SharpMap.Web.Wms.Server.ContextRequest(HttpContext.Current));
+                IContextRequest request = new Server.ContextRequest(HttpContext.Current);
+                XmlDocument capabilities = ServerCapabilities.GetCapabilities(map, description, request);
                 context.Response.Clear();
                 context.Response.ContentType = "text/xml";
                 XmlWriter writer = XmlWriter.Create(context.Response.OutputStream);
