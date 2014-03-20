@@ -178,6 +178,7 @@
     <Compile Include="Data\Providers\ShapeFileProviderTests.cs" />
     <Compile Include="Data\Providers\SQLServer2008Tests.cs" />
     <Compile Include="Data\Providers\ThreadingTest.cs" />
+    <Compile Include="GeoApiExTests.cs" />
     <Compile Include="Layers\GdiImageLayerTest.cs" />
     <Compile Include="Layers\LabelLayerTest.cs" />
     <Compile Include="Layers\TileLayerIssues.cs" />
@@ -223,6 +224,10 @@
     <ProjectReference Include="..\SharpMap.Data.Providers.Kml\SharpMap.Data.Providers.Kml.csproj">
       <Project>{f9da6934-413f-4744-84ce-923d901f60e6}</Project>
       <Name>SharpMap.Data.Providers.Kml</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SharpMap.Data.Providers.OracleSpatial\SharpMap.Data.Providers.OracleSpatial.csproj">
+      <Project>{9bbed556-40d8-4ddc-ac11-7b03300e2a2e}</Project>
+      <Name>SharpMap.Data.Providers.OracleSpatial</Name>
     </ProjectReference>
     <ProjectReference Include="..\SharpMap.Extensions\SharpMap.Extensions.csproj">
       <Project>{A4140C12-53F5-438C-8D24-9E48C504FECF}</Project>

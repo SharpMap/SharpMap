@@ -1,3 +1,5 @@
+using System.ComponentModel.Design;
+using System.Linq;
 using GeoAPI;
 using GeoAPI.Geometries;
 using Oracle.DataAccess.Types;
@@ -10,15 +12,23 @@ namespace SharpMap.Data.Providers.OracleUDT
     [Serializable]
     public static class SdoGeometryTypes
     {
-        //Oracle Documentation for SDO_ETYPE - SIMPLE
-        //Point//Line//Polygon//exterior counterclockwise - polygon ring = 1003//interior clockwise  polygon ring = 2003
+        /// <summary>
+        /// Oracle Documentation for SDO_ETYPE - SIMPLE
+        /// Point//Line//Polygon//exterior counterclockwise - polygon ring = 1003//interior clockwise  polygon ring = 2003
+        /// </summary>
         public enum EtypeSimple { Point = 1, Line = 2, Polygon = 3, PolygonExterior = 1003, PolygonInterior = 2003 }
-        //Oracle Documentation for SDO_ETYPE - COMPOUND
-        //1005: exterior polygon ring (must be specified in counterclockwise order)
-        //2005: interior polygon ring (must be specified in clockwise order)
+       
+        /// <summary>
+        ///  Oracle Documentation for SDO_ETYPE - COMPOUND
+        /// 1005: exterior polygon ring (must be specified in counterclockwise order)
+        /// 2005: interior polygon ring (must be specified in clockwise order)
+        /// </summary>
         public enum EtypeCompound { FourDigit = 4, PolygonExterior = 1005, PolygonInterior = 2005 }
-        //Oracle Documentation for SDO_GTYPE.
-        //This represents the last two digits in a GTYPE, where the first item is dimension(ality) and the second is LRS
+        
+        /// <summary>
+        /// Oracle Documentation for SDO_GTYPE.
+        /// This represents the last two digits in a GTYPE, where the first item is dimension(ality) and the second is LRS
+        /// </summary>
         public enum Gtype { UnknownGeometry = 00, Point = 01, Line = 02, Curve = 02, Polygon = 03, Collection = 04, Multipoint = 05, Multiline = 06, Multicurve = 06, Multipolygon = 07 }
         public enum Dimension { Dim2D = 2, Dim3D = 3, LRSDim3 = 3, LRSDim4 = 4 }
     }
@@ -209,6 +219,10 @@ namespace SharpMap.Data.Providers.OracleUDT
             return (v);
         }
 
+        /// <summary>
+        /// Get geometry as GeoAPI IGeometry
+        /// </summary>
+        /// <returns></returns>
         public IGeometry AsGeometry()
         {
             if (!SdoGtype.HasValue)
@@ -223,7 +237,8 @@ namespace SharpMap.Data.Providers.OracleUDT
                     GeometryServiceProvider.Instance.CreateGeometryFactory()
                         .CreatePoint(new Coordinate(Convert.ToDouble(SdoPoint.X), Convert.ToDouble(SdoPoint.Y)));
             }
-            else if (_ordinatesArray != null)
+            
+            if (_ordinatesArray != null)
             {
                 var coords = new List<Coordinate>();
 
@@ -239,16 +254,21 @@ namespace SharpMap.Data.Providers.OracleUDT
                 {
                     return GeometryServiceProvider.Instance.CreateGeometryFactory().CreateLineString(coords.ToArray());
                 }
-                else if (_elemArray[1] == 1003)
+
+                if (_elemArray[1] == 1003)
                 {
                     if (_elemArray[2] == 1)
                     {
-                        return GeometryServiceProvider.Instance.CreateGeometryFactory().CreatePolygon(coords.ToArray());
+                        //Check that the polygon is self-enclosing, else fix
+                        var seq = GeometryServiceProvider.Instance.DefaultCoordinateSequenceFactory.Create(coords.ToArray());
+                        
+                        coords.EnsureValidRing();
+                        return GeometryServiceProvider.Instance.CreateGeometryFactory().CreatePolygon(seq);
                     }
-                    else if (_elemArray[2] == 3)
+
+                    if (_elemArray[2] == 3)
                     {
                         //Only two coords LL and UR in coordlist, add others
-
                         coords.Add(new Coordinate(coords[1].X, coords[0].Y));
                         coords.Add(coords[0]);
                         coords.Insert(1, new Coordinate(coords[0].X, coords[1].Y));
@@ -261,6 +281,9 @@ namespace SharpMap.Data.Providers.OracleUDT
             return null;
         }
 
+        /// <summary>
+        /// Return as Text
+        /// </summary>
         public string AsText
         {
             get
