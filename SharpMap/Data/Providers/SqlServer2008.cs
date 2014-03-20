@@ -23,6 +23,7 @@ using System;
 using System.Collections.ObjectModel;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.Globalization;
 using GeoAPI.Geometries;
 
   
@@ -134,7 +135,7 @@ namespace SharpMap.Data.Providers
             ConnectionString = connectionStr;   
             Table = tablename;
 
-            if (Table.IndexOf(".") > 0)
+            if (Table.IndexOf(".", StringComparison.Ordinal) > 0)
             {
                 string[] parts = Table.Split('.');
                 Table = parts[1];
@@ -269,7 +270,7 @@ namespace SharpMap.Data.Providers
         }
 
 
-        private int _maxDop = 0;
+        private int _maxDop;
         /// <summary>
         /// If set, sends an Option MaxDop to the SQL-Server to override the Parallel Execution of indexes
         /// This can be used if Spatial indexes are not used on SQL-Servers with many processors.
@@ -310,19 +311,19 @@ namespace SharpMap.Data.Providers
                //Get bounding box string   
                string strBbox = GetBoxFilterStr(bbox);   
  
-               string strSQL = "SELECT g." + GeometryColumn +".STAsBinary() ";   
-               strSQL += " FROM " + Table + " g " + BuildTableHints() + " WHERE ";   
+               string strSql = "SELECT g." + GeometryColumn +".STAsBinary() ";   
+               strSql += " FROM " + Table + " g " + BuildTableHints() + " WHERE ";   
  
                if (!String.IsNullOrEmpty(_definitionQuery))   
-                   strSQL += DefinitionQuery + " AND ";   
+                   strSql += DefinitionQuery + " AND ";   
  
-               strSQL += strBbox;
+               strSql += strBbox;
 
                string extraOptions = GetExtraOptions();
                if (!string.IsNullOrEmpty(extraOptions))
-                   strSQL += " " + extraOptions;
+                   strSql += " " + extraOptions;
  
-               using (SqlCommand command = new SqlCommand(strSQL, conn))   
+               using (var command = new SqlCommand(strSql, conn))   
                {   
                    conn.Open();   
                    using (SqlDataReader dr = command.ExecuteReader())   
@@ -353,9 +354,9 @@ namespace SharpMap.Data.Providers
            IGeometry geom = null;   
            using (var conn = new SqlConnection(ConnectionString))   
            {   
-               string strSQL = "SELECT g." + GeometryColumn + ".STAsBinary() FROM " + Table + " g WHERE " + ObjectIdColumn + "='" + oid + "'";   
+               string strSql = "SELECT g." + GeometryColumn + ".STAsBinary() FROM " + Table + " g WHERE " + ObjectIdColumn + "='" + oid + "'";   
                conn.Open();   
-               using (var command = new SqlCommand(strSQL, conn))   
+               using (var command = new SqlCommand(strSql, conn))   
                {   
                    using (SqlDataReader dr = command.ExecuteReader())   
                    {   
@@ -383,29 +384,29 @@ namespace SharpMap.Data.Providers
                //Get bounding box string   
                var strBbox = GetBoxFilterStr(bbox);   
  
-               string strSQL = "SELECT g." + ObjectIdColumn + " ";   
-               strSQL += "FROM " + Table + " g " + BuildTableHints() + " WHERE ";   
+               string strSql = "SELECT g." + ObjectIdColumn + " ";   
+               strSql += "FROM " + Table + " g " + BuildTableHints() + " WHERE ";   
  
                if (!String.IsNullOrEmpty(_definitionQuery))   
-                   strSQL += DefinitionQuery + " AND ";   
+                   strSql += DefinitionQuery + " AND ";   
  
-               strSQL += strBbox;
+               strSql += strBbox;
 
                string extraOptions = GetExtraOptions();
                if (!string.IsNullOrEmpty(extraOptions))
-                   strSQL += " " + extraOptions;
+                   strSql += " " + extraOptions;
  
  
-               using (var command = new SqlCommand(strSQL, conn))   
+               using (var command = new SqlCommand(strSql, conn))   
                {   
                    conn.Open();   
                    using (var dr = command.ExecuteReader())   
                    {   
                        while (dr.Read())   
                        {   
-                           if (dr[0] != DBNull.Value)   
-                           {   
-                               uint id = (uint)(decimal)dr[0];   
+                           if (dr[0] != DBNull.Value)
+                           {
+                               uint id = Convert.ToUInt32(dr[0]);
                                objectlist.Add(id);   
                            }   
                        }   
@@ -437,35 +438,33 @@ namespace SharpMap.Data.Providers
        /// <param name="ds">FeatureDataSet to fill data into</param>   
        protected override void OnExecuteIntersectionQuery(IGeometry geom, FeatureDataSet ds)   
        {   
-           //List<Geometry> features = new List<Geometry>();   
            using (var conn = new SqlConnection(ConnectionString))   
            {   
-               //TODO: Convert to SQL Server   
                string strGeom = _spatialObject + "::STGeomFromText('" + geom.AsText() + "', #SRID#)";
 
-               strGeom = strGeom.Replace("#SRID#", SRID > 0 ? SRID.ToString() : "0");
+               strGeom = strGeom.Replace("#SRID#", SRID > 0 ? SRID.ToString(CultureInfo.InvariantCulture) : "0");
                strGeom = GeometryColumn + ".STIntersects(" + strGeom + ") = 1";   
  
-               string strSQL = "SELECT g.* , g." + GeometryColumn + ".STAsBinary() As sharpmap_tempgeometry FROM " + Table + " g " + BuildTableHints() + " WHERE ";   
+               string strSql = "SELECT g.* , g." + GeometryColumn + ".STAsBinary() As sharpmap_tempgeometry FROM " + Table + " g " + BuildTableHints() + " WHERE ";   
  
                if (!String.IsNullOrEmpty(_definitionQuery))   
-                   strSQL += DefinitionQuery + " AND ";   
+                   strSql += DefinitionQuery + " AND ";   
  
-               strSQL += strGeom;
+               strSql += strGeom;
 
                string extraOptions = GetExtraOptions();
                if (!string.IsNullOrEmpty(extraOptions))
-                   strSQL += " " + extraOptions;
+                   strSql += " " + extraOptions;
  
  
-               using (SqlDataAdapter adapter = new SqlDataAdapter(strSQL, conn))   
+               using (var adapter = new SqlDataAdapter(strSql, conn))   
                {   
                    conn.Open();   
                    adapter.Fill(ds);   
                    conn.Close();   
                    if (ds.Tables.Count > 0)   
                    {   
-                       FeatureDataTable fdt = new FeatureDataTable(ds.Tables[0]);   
+                       var fdt = new FeatureDataTable(ds.Tables[0]);   
                        foreach (System.Data.DataColumn col in ds.Tables[0].Columns)   
                            if (col.ColumnName != GeometryColumn && col.ColumnName != "sharpmap_tempgeometry")   
                                fdt.Columns.Add(col.ColumnName, col.DataType, col.Expression);   
@@ -513,10 +512,10 @@ namespace SharpMap.Data.Providers
            int count;   
            using (var conn = new SqlConnection(ConnectionString))   
            {   
-               var strSQL = "SELECT COUNT(*) FROM " + Table;   
+               var strSql = "SELECT COUNT(*) FROM " + Table;   
                if (!String.IsNullOrEmpty(_definitionQuery))   
-                   strSQL += " WHERE " + DefinitionQuery;   
-               using (var command = new SqlCommand(strSQL, conn))   
+                   strSql += " WHERE " + DefinitionQuery;   
+               using (var command = new SqlCommand(strSql, conn))   
                {   
                    conn.Open();   
                    count = (int)command.ExecuteScalar();   
@@ -558,10 +557,10 @@ namespace SharpMap.Data.Providers
        {   
            using (var conn = new SqlConnection(ConnectionString))   
            {   
-               string strSQL = "select g.* , g." + GeometryColumn + ".STAsBinary() As sharpmap_tempgeometry from " + Table + " g WHERE " + ObjectIdColumn + "=" + rowId + "";   
-               using (var adapter = new SqlDataAdapter(strSQL, conn))   
+               string strSql = "select g.* , g." + GeometryColumn + ".STAsBinary() As sharpmap_tempgeometry from " + Table + " g WHERE " + ObjectIdColumn + "=" + rowId + "";   
+               using (var adapter = new SqlDataAdapter(strSql, conn))   
                {   
-                   System.Data.DataSet ds = new System.Data.DataSet();
+                   var ds = new System.Data.DataSet();
                    conn.Open();   
                    adapter.Fill(ds);   
                    conn.Close();   
@@ -692,29 +691,29 @@ namespace SharpMap.Data.Providers
                string strBbox = GetBoxFilterStr(bbox);   
  
                //string strSQL = "SELECT g.*, g." + GeometryColumn + ".STAsBinary() AS sharpmap_tempgeometry ";   
-               string strSQL = String.Format(
+               string strSql = String.Format(
                    "SELECT g.*, g.{0}{1}.STAsBinary() AS sharpmap_tempgeometry FROM {2} g {3} WHERE ",
                    GeometryColumn, MakeValidString, Table, BuildTableHints());
  
                if (!String.IsNullOrEmpty(_definitionQuery))   
-                   strSQL += DefinitionQuery + " AND ";   
+                   strSql += DefinitionQuery + " AND ";   
  
-               strSQL += strBbox;
+               strSql += strBbox;
 
                string extraOptions = GetExtraOptions();
                if (!string.IsNullOrEmpty(extraOptions))
-                   strSQL += " " + extraOptions;
+                   strSql += " " + extraOptions;
  
  
-               using (SqlDataAdapter adapter = new SqlDataAdapter(strSQL, conn))   
+               using (var adapter = new SqlDataAdapter(strSql, conn))   
                {   
                    conn.Open();   
-                   System.Data.DataSet ds2 = new System.Data.DataSet();   
+                   var ds2 = new System.Data.DataSet();   
                    adapter.Fill(ds2);   
                    conn.Close();   
                    if (ds2.Tables.Count > 0)   
                    {   
-                       FeatureDataTable fdt = new FeatureDataTable(ds2.Tables[0]);   
+                       var fdt = new FeatureDataTable(ds2.Tables[0]);   
                        foreach (System.Data.DataColumn col in ds2.Tables[0].Columns)   
                            if (col.ColumnName != GeometryColumn && col.ColumnName != "sharpmap_tempgeometry")   
                                fdt.Columns.Add(col.ColumnName,col.DataType,col.Expression);   
@@ -734,7 +733,7 @@ namespace SharpMap.Data.Providers
        }  
        #endregion   
 
-       private bool _ForceSeekHint;
+       private bool _forceSeekHint;
 
        /// <summary>
        /// When <code>true</code>, uses the FORCESEEK table hint.
@@ -743,15 +742,15 @@ namespace SharpMap.Data.Providers
        {
            get
            {
-               return _ForceSeekHint;
+               return _forceSeekHint;
    }   
            set
            {
-               _ForceSeekHint = value;
+               _forceSeekHint = value;
            }
        }
 
-       private bool _NoLockHint;
+       private bool _noLockHint;
 
        /// <summary>
        /// When <code>true</code>, uses the NOLOCK table hint.
@@ -760,15 +759,15 @@ namespace SharpMap.Data.Providers
        {
            get
            {
-               return _NoLockHint;
+               return _noLockHint;
            }
            set
            {
-               _NoLockHint = value;
+               _noLockHint = value;
            }
        }
 
-       private string _ForceIndex;
+       private string _forceIndex;
 
        /// <summary>
        /// When set, forces use of the specified index
@@ -777,11 +776,11 @@ namespace SharpMap.Data.Providers
        {
            get
            {
-               return _ForceIndex;
+               return _forceIndex;
            }
            set
            {
-               _ForceIndex = value;
+               _forceIndex = value;
            }
        }
 
@@ -793,7 +792,7 @@ namespace SharpMap.Data.Providers
        {
            if (ForceSeekHint || NoLockHint || !string.IsNullOrEmpty(ForceIndex))
            {
-               List<string> hints = new List<string>(3);
+               var hints = new List<string>(3);
                if (!string.IsNullOrEmpty(ForceIndex))
                {
                    hints.Add("INDEX(" + ForceIndex + ")");
