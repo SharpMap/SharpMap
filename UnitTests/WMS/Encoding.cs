@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 
 namespace UnitTests.WMS
 {
@@ -12,12 +8,10 @@ namespace UnitTests.WMS
         [Test]
         public void TestEncodingWebName()
         {
-            var enc = System.Text.Encoding.GetEncoding(1252);
+            System.Text.Encoding enc = System.Text.Encoding.GetEncoding(1252);
             Assert.AreEqual("Windows-1252", enc.WebName);
             enc = System.Text.Encoding.UTF8;
             Assert.AreEqual("utf-8", enc.WebName);
         }
-
-        
     }
 }

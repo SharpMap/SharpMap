@@ -83,12 +83,51 @@
     <Compile Include="Web\HttpHandler.cs" />
     <Compile Include="Web\UI\Ajax\AjaxMapControl.cs" />
     <Compile Include="Web\UI\Ajax\AjaxMapControlDesigner.cs" />
+    <Compile Include="Web\Wms\Exceptions\WmsArgumentException.cs" />
+    <Compile Include="Web\Wms\Exceptions\WmsArgumentNullException.cs" />
+    <Compile Include="Web\Wms\Exceptions\WmsExceptionBase.cs" />
+    <Compile Include="Web\Wms\Exceptions\WmsExceptionCode.cs" />
+    <Compile Include="Web\Wms\Exceptions\WmsInvalidBboxException.cs" />
+    <Compile Include="Web\Wms\Exceptions\WmsInvalidCRSException.cs" />
+    <Compile Include="Web\Wms\Exceptions\WmsInvalidDimensionsException.cs" />
+    <Compile Include="Web\Wms\Exceptions\WmsInvalidParameterException.cs" />
+    <Compile Include="Web\Wms\Exceptions\WmsLayerNotDefinedException.cs" />
+    <Compile Include="Web\Wms\Exceptions\WmsLayerNotQueryableException.cs" />
+    <Compile Include="Web\Wms\Exceptions\WmsNotApplicableException.cs" />
+    <Compile Include="Web\Wms\Exceptions\WmsOperationNotSupportedException.cs" />
+    <Compile Include="Web\Wms\Exceptions\WmsParameterNotSpecifiedException.cs" />
+    <Compile Include="Web\Wms\Exceptions\WmsStyleNotDefinedException.cs" />
     <Compile Include="Web\Wms\ServerCapabilities.cs" />
+    <Compile Include="Web\Wms\Server\Context.cs" />
+    <Compile Include="Web\Wms\Server\ContextRequest.cs" />
+    <Compile Include="Web\Wms\Server\ContextResponse.cs" />
+    <Compile Include="Web\Wms\Server\Handlers\AbstractGetFeatureInfoResponse.cs" />
+    <Compile Include="Web\Wms\Server\Handlers\AbstractGetFeatureInfoText.cs" />
+    <Compile Include="Web\Wms\Server\Handlers\AbstractHandler.cs" />
+    <Compile Include="Web\Wms\Server\Handlers\GetCapabilities.cs" />
+    <Compile Include="Web\Wms\Server\Handlers\GetCapabilitiesResponse.cs" />
+    <Compile Include="Web\Wms\Server\Handlers\GetFeatureInfo.cs" />
+    <Compile Include="Web\Wms\Server\Handlers\GetFeatureInfoHtml.cs" />
+    <Compile Include="Web\Wms\Server\Handlers\GetFeatureInfoJson.cs" />
+    <Compile Include="Web\Wms\Server\Handlers\GetFeatureInfoParams.cs" />
+    <Compile Include="Web\Wms\Server\Handlers\GetFeatureInfoPlain.cs" />
+    <Compile Include="Web\Wms\Server\Handlers\GetFeatureInfoResponseHtml.cs" />
+    <Compile Include="Web\Wms\Server\Handlers\GetFeatureInfoResponseJson.cs" />
+    <Compile Include="Web\Wms\Server\Handlers\GetFeatureInfoResponsePlain.cs" />
+    <Compile Include="Web\Wms\Server\Handlers\GetMap.cs" />
+    <Compile Include="Web\Wms\Server\Handlers\GetMapResponse.cs" />
+    <Compile Include="Web\Wms\Server\Handlers\IHandler.cs" />
+    <Compile Include="Web\Wms\Server\Handlers\WmsParams.cs" />
+    <Compile Include="Web\Wms\Server\IContext.cs" />
+    <Compile Include="Web\Wms\Server\IContextRequest.cs" />
+    <Compile Include="Web\Wms\Server\IContextResponse.cs" />
+    <Compile Include="Web\Wms\Server\StringComparerIgnoreCase.cs" />
     <Compile Include="Web\Wms\WmsException.cs" />
-    <Compile Include="Web\Wms\WmsServer.cs" />
+    <Compile Include="Web\Wms\LegacyWmsServer.cs" />
     <Compile Include="..\SharedAssemblyVersion.cs">
       <Link>Properties\SharedAssemblyVersion.cs</Link>
     </Compile>
+    <Compile Include="Web\Wms\WmsServer.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Web\UI\Ajax\AjaxMap.js" />

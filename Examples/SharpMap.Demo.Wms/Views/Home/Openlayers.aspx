@@ -12,4 +12,7 @@
 <asp:Content ID="indexContent" ContentPlaceHolderID="MainContent" runat="server">
     <div id="map">
     </div>
+    <div id="nodelist">
+        <em>Click on the map to get feature info</em>
+    </div>
 </asp:Content>

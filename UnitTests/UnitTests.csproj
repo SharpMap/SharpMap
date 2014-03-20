@@ -22,7 +22,8 @@
     <UpgradeBackupLocation>
     </UpgradeBackupLocation>
     <TargetFrameworkVersion>v4.0.3</TargetFrameworkVersion>
-    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
   </PropertyGroup>
@@ -124,6 +125,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\NetTopologySuite.IO.1.13.2\lib\net40-client\NetTopologySuite.IO.PostGis.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\packages\Newtonsoft.Json.4.5.11\lib\net40\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="Npgsql, Version=2.0.14.3, Culture=neutral, PublicKeyToken=5d8b90d52f46fda7, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Npgsql.2.0.14.3\lib\net40\Npgsql.dll</HintPath>
@@ -139,6 +143,9 @@
     <Reference Include="ProjNet, Version=1.3.0.3, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\ProjNET4GeoAPI.1.3.0.3\lib\net40-client\ProjNet.dll</HintPath>
+    </Reference>
+    <Reference Include="Rhino.Mocks">
+      <HintPath>..\packages\RhinoMocks.3.6.1\lib\net\Rhino.Mocks.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -207,6 +214,13 @@
     <Compile Include="UnitTestsFixture.cs" />
     <Compile Include="WFS\RequestValidationTest.cs" />
     <Compile Include="WMS\Encoding.cs" />
+    <Compile Include="WMS\Server\AbstractFixture.cs" />
+    <Compile Include="WMS\Server\GetCapabilitiesFixture.cs" />
+    <Compile Include="WMS\Server\GetFeatureInfoHtmlFixture.cs" />
+    <Compile Include="WMS\Server\GetFeatureInfoJsonFixture.cs" />
+    <Compile Include="WMS\Server\GetFeatureInfoPlainFixture.cs" />
+    <Compile Include="WMS\Server\GetMapFixture.cs" />
+    <Compile Include="WMS\Server\Helper.cs" />
     <Compile Include="WMS\SpatialReferencedBoundingBoxTest.cs" />
     <Compile Include="..\SharedAssemblyVersion.cs">
       <Link>Properties\SharedAssemblyVersion.cs</Link>
@@ -228,6 +242,10 @@
     <ProjectReference Include="..\SharpMap.SqlServerSpatialObjects\SharpMap.SqlServerSpatialObjects.csproj">
       <Project>{6D681045-8EF1-44EA-A19D-C7A63A6D0F76}</Project>
       <Name>SharpMap.SqlServerSpatialObjects</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SharpMap.Web\SharpMap.Web.csproj">
+      <Project>{292ef671-4063-4952-8de0-423df72a0950}</Project>
+      <Name>SharpMap.Web</Name>
     </ProjectReference>
     <ProjectReference Include="..\SharpMap\SharpMap.csproj">
       <Project>{C83777FC-AABB-47D9-911F-D76255D4D541}</Project>
@@ -273,6 +291,33 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="TestData\test-2.3.sqlite">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="WMS\Server\data\nyc\poi.dbf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="WMS\Server\data\nyc\poi.shp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="WMS\Server\data\nyc\poi.shx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="WMS\Server\data\nyc\poly_landmarks.dbf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="WMS\Server\data\nyc\poly_landmarks.shp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="WMS\Server\data\nyc\poly_landmarks.shx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="WMS\Server\data\nyc\tiger_roads.dbf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="WMS\Server\data\nyc\tiger_roads.shp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="WMS\Server\data\nyc\tiger_roads.shx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
