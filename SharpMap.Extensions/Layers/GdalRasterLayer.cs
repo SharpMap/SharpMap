@@ -379,8 +379,11 @@ namespace SharpMap.Layers
         {
             _factory = null;
             //_geoTransform = null;
-            _gdalDataset.Dispose();
-            _gdalDataset = null;
+            if (_gdalDataset != null)
+            {
+                _gdalDataset.Dispose();
+                _gdalDataset = null;
+            }
             
             base.ReleaseManagedResources();
         }
