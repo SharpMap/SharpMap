@@ -297,31 +297,34 @@ namespace SharpMap.Data.Providers
 
                 using (var adapter = new OracleDataAdapter(strSql, conn))
                 {
-                    conn.Open();
-                    adapter.Fill(ds);
-                    conn.Close();
-                    if (ds.Tables.Count > 0)
+                    using (var sourceDataSet = new DataSet())
                     {
-                        var fdt = new FeatureDataTable(ds.Tables[0]);
-                        foreach (DataColumn col in ds.Tables[0].Columns)
-                            if (string.Compare(col.ColumnName, GeometryColumn, CultureInfo.InvariantCulture, CompareOptions.OrdinalIgnoreCase) != 0)
-                                fdt.Columns.Add(col.ColumnName, col.DataType, col.Expression);
-                        foreach (DataRow dr in ds.Tables[0].Rows)
+                        conn.Open();
+                        adapter.Fill(sourceDataSet);
+                        conn.Close();
+                        if (sourceDataSet.Tables.Count > 0)
                         {
-                            var fdr = fdt.NewRow();
-                            foreach (DataColumn col in ds.Tables[0].Columns)
+                            var fdt = new FeatureDataTable(sourceDataSet.Tables[0]);
+                            foreach (DataColumn col in sourceDataSet.Tables[0].Columns)
                                 if (string.Compare(col.ColumnName, GeometryColumn, CultureInfo.InvariantCulture, CompareOptions.OrdinalIgnoreCase) != 0)
-                                    fdr[col.ColumnName] = dr[col];
-                            var sdoGeometry = dr[GeometryColumn] as SdoGeometry;
-
-                            if (sdoGeometry != null)
+                                    fdt.Columns.Add(col.ColumnName, col.DataType, col.Expression);
+                            foreach (DataRow dr in sourceDataSet.Tables[0].Rows)
                             {
-                                fdr.Geometry = sdoGeometry.AsGeometry();
-                            }
+                                var fdr = fdt.NewRow();
+                                foreach (DataColumn col in sourceDataSet.Tables[0].Columns)
+                                    if (string.Compare(col.ColumnName, GeometryColumn, CultureInfo.InvariantCulture, CompareOptions.OrdinalIgnoreCase) != 0)
+                                        fdr[col.ColumnName] = dr[col];
+                                var sdoGeometry = dr[GeometryColumn] as SdoGeometry;
 
-                            fdt.AddRow(fdr);
+                                if (sdoGeometry != null)
+                                {
+                                    fdr.Geometry = sdoGeometry.AsGeometry();
+                                }
+
+                                fdt.AddRow(fdr);
+                            }
+                            ds.Tables.Add(fdt);
                         }
-                        ds.Tables.Add(fdt);
                     }
                 }
             }
@@ -359,21 +362,22 @@ namespace SharpMap.Data.Providers
                                 Table + " g WHERE " + ObjectIdColumn + "='" + rowId.ToString(NumberFormatInfo.InvariantInfo) + "'";
                 using (var adapter = new OracleDataAdapter(strSql, conn))
                 {
-                    var ds = new FeatureDataSet();
+                    var sourceDataset = new DataSet();
                     conn.Open();
-                    adapter.Fill(ds);
+                    adapter.Fill(sourceDataset);
                     conn.Close();
-                    if (ds.Tables.Count > 0)
+                    if (sourceDataset.Tables.Count > 0)
                     {
-                        var fdt = new FeatureDataTable(ds.Tables[0]);
-                        foreach (DataColumn col in ds.Tables[0].Columns)
+                        var fdt = new FeatureDataTable(sourceDataset.Tables[0]);
+                        foreach (DataColumn col in sourceDataset.Tables[0].Columns)
                             if (string.Compare(col.ColumnName, GeometryColumn,CultureInfo.InvariantCulture, CompareOptions.OrdinalIgnoreCase) != 0)
                                 fdt.Columns.Add(col.ColumnName, col.DataType, col.Expression);
-                        if (ds.Tables[0].Rows.Count > 0)
+
+                        if (sourceDataset.Tables[0].Rows.Count > 0)
                         {
-                            DataRow dr = ds.Tables[0].Rows[0];
+                            DataRow dr = sourceDataset.Tables[0].Rows[0];
                             var fdr = fdt.NewRow();
-                            foreach (DataColumn col in ds.Tables[0].Columns)
+                            foreach (DataColumn col in sourceDataset.Tables[0].Columns)
                                 if (string.Compare(col.ColumnName, GeometryColumn, CultureInfo.InvariantCulture, CompareOptions.OrdinalIgnoreCase) != 0)
                                     fdr[col.ColumnName] = dr[col];
 
