@@ -2081,7 +2081,7 @@ namespace SharpMap.Layers
             }
             
             //Setup resulting Table
-            var dt = new FeatureDataTable();
+            var dt = new FeatureDataTable {TableName = LayerName};
             dt.Columns.Add("Ordinate X", typeof(Double));
             dt.Columns.Add("Ordinate Y", typeof(Double));
             for (int i = 1; i <= Bands; i++)
