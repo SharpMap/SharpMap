@@ -18,6 +18,7 @@
 using System;
 using System.Collections.ObjectModel;
 using System.Data.SqlClient;
+using System.Globalization;
 using SharpMap.Converters.SqlServer2008SpatialObjects;
 using BoundingBox = GeoAPI.Geometries.Envelope;
 using Geometry = GeoAPI.Geometries.IGeometry;
@@ -55,7 +56,7 @@ namespace SharpMap.Data.Providers
         {
         }
 
-        private const string _spatialObject = "geometry";
+        private const string SpatialObject = "geometry";
 
         /// <summary>   
         /// Returns geometries within the specified bounding box   
@@ -64,21 +65,21 @@ namespace SharpMap.Data.Providers
         /// <returns></returns>   
         public override Collection<Geometry> GetGeometriesInView(BoundingBox bbox)
         {
-            Collection<Geometry> features = new Collection<Geometry>();
-            using (SqlConnection conn = new SqlConnection(ConnectionString))
+            var features = new Collection<Geometry>();
+            using (var conn = new SqlConnection(ConnectionString))
             {
                 //Get bounding box string   
                 string strBbox = GetBoxFilterStr(bbox);
 
-                string strSQL = "SELECT g." + GeometryColumn;
-                strSQL += " FROM " + Table + " g " + BuildTableHints() + " WHERE ";
+                string strSql = "SELECT g." + GeometryColumn;
+                strSql += " FROM " + Table + " g " + BuildTableHints() + " WHERE ";
 
                 if (!String.IsNullOrEmpty(DefinitionQuery))
-                    strSQL += DefinitionQuery + " AND ";
+                    strSql += DefinitionQuery + " AND ";
 
-                strSQL += strBbox;
+                strSql += strBbox;
 
-                using (SqlCommand command = new SqlCommand(strSQL, conn))
+                using (var command = new SqlCommand(strSql, conn))
                 {
                     conn.Open();
                     using (SqlDataReader dr = command.ExecuteReader())
@@ -107,11 +108,11 @@ namespace SharpMap.Data.Providers
         public override Geometry GetGeometryByID(uint oid)
         {
             Geometry geom = null;
-            using (SqlConnection conn = new SqlConnection(ConnectionString))
+            using (var conn = new SqlConnection(ConnectionString))
             {
-                string strSQL = "SELECT g." + GeometryColumn + " FROM " + Table + " g WHERE " + ObjectIdColumn + "='" + oid + "'";
+                string strSql = "SELECT g." + GeometryColumn + " FROM " + Table + " g WHERE " + ObjectIdColumn + "='" + oid + "'";
                 conn.Open();
-                using (SqlCommand command = new SqlCommand(strSQL, conn))
+                using (var command = new SqlCommand(strSql, conn))
                 {
                     using (SqlDataReader dr = command.ExecuteReader())
                     {
@@ -134,28 +135,28 @@ namespace SharpMap.Data.Providers
         /// <param name="ds">FeatureDataSet to fill data into</param>   
         protected override void OnExecuteIntersectionQuery(Geometry geom, FeatureDataSet ds)
         {
-            using (SqlConnection conn = new SqlConnection(ConnectionString))
+            using (var conn = new SqlConnection(ConnectionString))
             {
-                string strGeom = _spatialObject + "::STGeomFromText('" + geom.AsText() + "', #SRID#)";
+                string strGeom = SpatialObject + "::STGeomFromText('" + geom.AsText() + "', #SRID#)";
 
-                strGeom = strGeom.Replace("#SRID#", SRID > 0 ? SRID.ToString() : "0");
+                strGeom = strGeom.Replace("#SRID#", SRID > 0 ? SRID.ToString(CultureInfo.InvariantCulture) : "0");
                 strGeom = GeometryColumn + ".STIntersects(" + strGeom + ") = 1";
 
-                string strSQL = "SELECT g.* FROM " + Table + " g " + BuildTableHints() + " WHERE ";
+                string strSql = "SELECT g.* FROM " + Table + " g " + BuildTableHints() + " WHERE ";
 
                 if (!String.IsNullOrEmpty(DefinitionQuery))
-                    strSQL += DefinitionQuery + " AND ";
+                    strSql += DefinitionQuery + " AND ";
 
-                strSQL += strGeom;
+                strSql += strGeom;
 
-                using (SqlDataAdapter adapter = new SqlDataAdapter(strSQL, conn))
+                using (var adapter = new SqlDataAdapter(strSql, conn))
                 {
                     conn.Open();
                     adapter.Fill(ds);
                     conn.Close();
                     if (ds.Tables.Count > 0)
                     {
-                        FeatureDataTable fdt = new FeatureDataTable(ds.Tables[0]);
+                        var fdt = new FeatureDataTable(ds.Tables[0]);
                         foreach (System.Data.DataColumn col in ds.Tables[0].Columns)
                             if (col.ColumnName != GeometryColumn)
                                 fdt.Columns.Add(col.ColumnName, col.DataType, col.Expression);
@@ -181,18 +182,18 @@ namespace SharpMap.Data.Providers
         /// <returns>datarow</returns>   
         public override FeatureDataRow GetFeature(uint rowId)
         {
-            using (SqlConnection conn = new SqlConnection(ConnectionString))
+            using (var conn = new SqlConnection(ConnectionString))
             {
-                string strSQL = "select g.* from " + Table + " g WHERE " + ObjectIdColumn + "=" + rowId + "";
-                using (SqlDataAdapter adapter = new SqlDataAdapter(strSQL, conn))
+                string strSql = "select g.* from " + Table + " g WHERE " + ObjectIdColumn + "=" + rowId + "";
+                using (var adapter = new SqlDataAdapter(strSql, conn))
                 {
-                    System.Data.DataSet ds = new System.Data.DataSet();
+                    var ds = new System.Data.DataSet();
                     conn.Open();
                     adapter.Fill(ds);
                     conn.Close();
                     if (ds.Tables.Count > 0)
                     {
-                        FeatureDataTable fdt = new FeatureDataTable(ds.Tables[0]);
+                        var fdt = new FeatureDataTable(ds.Tables[0]);
                         foreach (System.Data.DataColumn col in ds.Tables[0].Columns)
                             if (col.ColumnName != GeometryColumn)
                                 fdt.Columns.Add(col.ColumnName, col.DataType, col.Expression);
@@ -220,29 +221,29 @@ namespace SharpMap.Data.Providers
         /// <param name="ds">FeatureDataSet to fill data into</param>   
         public override void ExecuteIntersectionQuery(BoundingBox bbox, FeatureDataSet ds)
         {
-            using (SqlConnection conn = new SqlConnection(ConnectionString))
+            using (var conn = new SqlConnection(ConnectionString))
             {
                 //Get bounding box string
                 string strBbox = GetBoxFilterStr(bbox);
 
-                string strSQL = String.Format(
+                string strSql = String.Format(
                     "SELECT g.* FROM {0} g {1} WHERE ",
                     Table, BuildTableHints());
 
                 if (!String.IsNullOrEmpty(DefinitionQuery))
-                    strSQL += DefinitionQuery + " AND ";
+                    strSql += DefinitionQuery + " AND ";
 
-                strSQL += strBbox;
+                strSql += strBbox;
 
-                using (SqlDataAdapter adapter = new SqlDataAdapter(strSQL, conn))
+                using (var adapter = new SqlDataAdapter(strSql, conn))
                 {
                     conn.Open();
-                    System.Data.DataSet ds2 = new System.Data.DataSet();
+                    var ds2 = new System.Data.DataSet();
                     adapter.Fill(ds2);
                     conn.Close();
                     if (ds2.Tables.Count > 0)
                     {
-                        FeatureDataTable fdt = new FeatureDataTable(ds2.Tables[0]);
+                        var fdt = new FeatureDataTable(ds2.Tables[0]);
                         foreach (System.Data.DataColumn col in ds2.Tables[0].Columns)
                             if (col.ColumnName != GeometryColumn)
                                 fdt.Columns.Add(col.ColumnName, col.DataType, col.Expression);
