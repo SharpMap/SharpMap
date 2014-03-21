@@ -1,12 +1,10 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
 using GeoAPI.Features;
+using GeoAPI.Geometries;
 
 namespace SharpMap.Converters.GeoJSON
 {
-    using System;
-    using System.Collections.Generic;
-    using Data;
-
     /// <summary>
     /// GeoJSON helper class
     /// </summary>
@@ -22,20 +20,18 @@ namespace SharpMap.Converters.GeoJSON
             if (data == null)
                 throw new ArgumentNullException("data");
 
-            foreach (var table in data)
+            foreach (IFeatureCollection table in data)
             {
-                var columns = table.AttributesDefinition;
-                var keys = new string[columns.Count];
-                for (var i = 0; i < columns.Count; i++)
+                IList<IFeatureAttributeDefinition> columns = table.AttributesDefinition;
+                string[] keys = new string[columns.Count];
+                for (int i = 0; i < columns.Count; i++)
                     keys[i] = columns[i].AttributeName;
 
-                var rows = table.ToList();
-                for (int i = 0; i < rows.Count; i++)
+                foreach (IFeature row in table)
                 {
-                    var row = rows[i];
-                    var geometry = row.Geometry;
-                    var values = new Dictionary<string, object>();
-                    for (var j = 0; j < keys.Length; j++)
+                    IGeometry geometry = row.Geometry;
+                    Dictionary<string, object> values = new Dictionary<string, object>();
+                    for (int j = 0; j < keys.Length; j++)
                         values.Add(keys[j], row.Attributes[j]);
                     yield return new GeoJSON(geometry, values);
                 }
