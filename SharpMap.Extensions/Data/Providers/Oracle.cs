@@ -380,7 +380,7 @@ namespace SharpMap.Data.Providers
                                 Table + " g WHERE " + ObjectIdColumn + "='" + rowId.ToString(NumberFormatInfo.InvariantInfo) + "'";
                 using (var adapter = new OracleDataAdapter(strSql, conn))
                 {
-                    var ds = new FeatureDataSet();
+                    var ds = new DataSet();
                     conn.Open();
                     adapter.Fill(ds);
                     conn.Close();
