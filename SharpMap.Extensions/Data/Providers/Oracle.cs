@@ -23,9 +23,9 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data;
 using System.Globalization;
+using GeoAPI.Geometries;
 using Oracle.ManagedDataAccess.Client;
 using SharpMap.Converters.WellKnownBinary;
-using BoundingBox = GeoAPI.Geometries.Envelope;
 using Geometry = GeoAPI.Geometries.IGeometry;
 
 namespace SharpMap.Data.Providers
@@ -61,17 +61,17 @@ namespace SharpMap.Data.Providers
         /// <summary>
         /// Initializes a new connection to Oracle
         /// </summary>
-        /// <param name="ConnectionStr">Connectionstring</param>
+        /// <param name="connectionStr">Connectionstring</param>
         /// <param name="tablename">Name of data table</param>
         /// <param name="geometryColumnName">Name of geometry column</param>
-        /// /// <param name="OID_ColumnName">Name of column with unique identifier</param>
-        public Oracle(string ConnectionStr, string tablename, string geometryColumnName, string OID_ColumnName)
+        /// /// <param name="oidColumnName">Name of column with unique identifier</param>
+        public Oracle(string connectionStr, string tablename, string geometryColumnName, string oidColumnName)
             :base(-2)
         {
-            ConnectionString = ConnectionStr;
+            ConnectionString = connectionStr;
             Table = tablename;
             GeometryColumn = geometryColumnName;
-            ObjectIdColumn = OID_ColumnName;
+            ObjectIdColumn = oidColumnName;
         }
 
         /// <summary>
@@ -82,12 +82,12 @@ namespace SharpMap.Data.Providers
         /// <param name="datasource">Datasoure</param>
         /// <param name="tablename">Tablename</param>
         /// <param name="geometryColumnName">Geometry column name</param>
-        /// <param name="OID_ColumnName">Object ID column</param>
+        /// <param name="oidColumnName">Object ID column</param>
         public Oracle(string username, string password, string datasource, string tablename, string geometryColumnName,
-                      string OID_ColumnName)
+                      string oidColumnName)
             : this(
                 "User Id=" + username + ";Password=" + password + ";Data Source=" + datasource, tablename,
-                geometryColumnName, OID_ColumnName)
+                geometryColumnName, oidColumnName)
         {
         }
 
@@ -95,11 +95,11 @@ namespace SharpMap.Data.Providers
         /// <summary>
         /// Initializes a new connection to Oracle
         /// </summary>
-        /// <param name="ConnectionStr">Connectionstring</param>
+        /// <param name="connectionStr">Connectionstring</param>
         /// <param name="tablename">Name of data table</param>
-        /// <param name="OID_ColumnName">Name of column with unique identifier</param>
-        public Oracle(string ConnectionStr, string tablename, string OID_ColumnName)
-            : this(ConnectionStr, tablename, "", OID_ColumnName)
+        /// <param name="oidColumnName">Name of column with unique identifier</param>
+        public Oracle(string connectionStr, string tablename, string oidColumnName)
+            : this(connectionStr, tablename, "", oidColumnName)
         {
             GeometryColumn = GetGeometryColumn();
         }
@@ -156,7 +156,7 @@ namespace SharpMap.Data.Providers
         /// </summary>
         /// <param name="bbox"></param>
         /// <returns></returns>
-        public override Collection<Geometry> GetGeometriesInView(BoundingBox bbox)
+        public override Collection<Geometry> GetGeometriesInView(Envelope bbox)
         {
             var features = new Collection<Geometry>();
             using (var conn = new OracleConnection(ConnectionString))
@@ -165,15 +165,15 @@ namespace SharpMap.Data.Providers
                 string strBbox = GetBoxFilterStr(bbox);
 
                 //string strSQL = "SELECT AsBinary(" + this.GeometryColumn + ") AS Geom ";
-                string strSQL = "SELECT g." + GeometryColumn + ".Get_WKB() ";
-                strSQL += " FROM " + Table + " g WHERE ";
+                string strSql = "SELECT g." + GeometryColumn + ".Get_WKB() ";
+                strSql += " FROM " + Table + " g WHERE ";
 
                 if (!String.IsNullOrEmpty(_definitionQuery))
-                    strSQL += DefinitionQuery + " AND ";
+                    strSql += DefinitionQuery + " AND ";
 
-                strSQL += strBbox;
+                strSql += strBbox;
 
-                using (OracleCommand command = new OracleCommand(strSQL, conn))
+                using (var command = new OracleCommand(strSql, conn))
                 {
                     conn.Open();
                     using (OracleDataReader dr = command.ExecuteReader())
@@ -202,12 +202,12 @@ namespace SharpMap.Data.Providers
         public override  Geometry GetGeometryByID(uint oid)
         {
             Geometry geom = null;
-            using (OracleConnection conn = new OracleConnection(ConnectionString))
+            using (var conn = new OracleConnection(ConnectionString))
             {
-                string strSQL = "SELECT g." + GeometryColumn + ".Get_WKB() FROM " + Table + " g WHERE " + ObjectIdColumn +
-                                "='" + oid.ToString() + "'";
+                string strSql = "SELECT g." + GeometryColumn + ".Get_WKB() FROM " + Table + " g WHERE " + ObjectIdColumn +
+                                "='" + oid.ToString(CultureInfo.InvariantCulture) + "'";
                 conn.Open();
-                using (OracleCommand command = new OracleCommand(strSQL, conn))
+                using (var command = new OracleCommand(strSql, conn))
                 {
                     using (OracleDataReader dr = command.ExecuteReader())
                     {
@@ -228,7 +228,7 @@ namespace SharpMap.Data.Providers
         /// </summary>
         /// <param name="bbox"></param>
         /// <returns></returns>
-        public override Collection<uint> GetObjectIDsInView(BoundingBox bbox)
+        public override Collection<uint> GetObjectIDsInView(Envelope bbox)
         {
             var objectlist = new Collection<uint>();
             using (var conn = new OracleConnection(ConnectionString))
@@ -236,15 +236,15 @@ namespace SharpMap.Data.Providers
                 //Get bounding box string
                 string strBbox = GetBoxFilterStr(bbox);
 
-                string strSQL = "SELECT g." + ObjectIdColumn + " ";
-                strSQL += "FROM " + Table + " g WHERE ";
+                string strSql = "SELECT g." + ObjectIdColumn + " ";
+                strSql += "FROM " + Table + " g WHERE ";
 
                 if (!String.IsNullOrEmpty(_definitionQuery))
-                    strSQL += DefinitionQuery + " AND ";
+                    strSql += DefinitionQuery + " AND ";
 
-                strSQL += strBbox;
+                strSql += strBbox;
 
-                using (OracleCommand command = new OracleCommand(strSQL, conn))
+                using (var command = new OracleCommand(strSql, conn))
                 {
                     conn.Open();
                     using (OracleDataReader dr = command.ExecuteReader())
@@ -275,27 +275,20 @@ namespace SharpMap.Data.Providers
             {
                 string strGeom = "MDSYS.SDO_GEOMETRY('" + geom.AsText() + "', #SRID#)";
 
-                if (SRID > 0)
-                {
-                    strGeom = strGeom.Replace("#SRID#", SRID.ToString(Map.NumberFormatEnUs));
-                }
-                else
-                {
-                    strGeom = strGeom.Replace("#SRID#", "NULL");
-                }
+                strGeom = strGeom.Replace("#SRID#", SRID > 0 ? SRID.ToString(Map.NumberFormatEnUs) : "NULL");
 
                 strGeom = "SDO_RELATE(g." + GeometryColumn + ", " + strGeom +
                           ", 'mask=ANYINTERACT querytype=WINDOW') = 'TRUE'";
 
-                string strSQL = "SELECT g.* , g." + GeometryColumn + ").Get_WKB() As sharpmap_tempgeometry FROM " +
+                string strSql = "SELECT g.* , g." + GeometryColumn + ").Get_WKB() As sharpmap_tempgeometry FROM " +
                                 Table + " g WHERE ";
 
                 if (!String.IsNullOrEmpty(_definitionQuery))
-                    strSQL += DefinitionQuery + " AND ";
+                    strSql += DefinitionQuery + " AND ";
 
-                strSQL += strGeom;
+                strSql += strGeom;
 
-                using (var adapter = new OracleDataAdapter(strSQL, conn))
+                using (var adapter = new OracleDataAdapter(strSql, conn))
                 {
                     conn.Open();
                     adapter.Fill(ds);
@@ -329,10 +322,10 @@ namespace SharpMap.Data.Providers
         {
             using (var conn = new OracleConnection(ConnectionString))
             {
-                string strSQL = "SELECT COUNT(*) FROM " + Table;
+                string strSql = "SELECT COUNT(*) FROM " + Table;
                 if (!String.IsNullOrEmpty(_definitionQuery))
-                    strSQL += " WHERE " + DefinitionQuery;
-                using (var command = new OracleCommand(strSQL, conn))
+                    strSql += " WHERE " + DefinitionQuery;
+                using (var command = new OracleCommand(strSql, conn))
                 {
                     conn.Open();
                     return (int) command.ExecuteScalar();
@@ -383,9 +376,9 @@ namespace SharpMap.Data.Providers
         {
             using (var conn = new OracleConnection(ConnectionString))
             {
-                string strSQL = "select g.* , g." + GeometryColumn + ").Get_WKB() As sharpmap_tempgeometry from " +
+                string strSql = "select g.* , g." + GeometryColumn + ").Get_WKB() As sharpmap_tempgeometry from " +
                                 Table + " g WHERE " + ObjectIdColumn + "='" + rowId.ToString(NumberFormatInfo.InvariantInfo) + "'";
-                using (var adapter = new OracleDataAdapter(strSQL, conn))
+                using (var adapter = new OracleDataAdapter(strSql, conn))
                 {
                     var ds = new FeatureDataSet();
                     conn.Open();
@@ -420,14 +413,14 @@ namespace SharpMap.Data.Providers
         /// Boundingbox of dataset
         /// </summary>
         /// <returns>boundingbox</returns>
-        public override BoundingBox GetExtents()
+        public override Envelope GetExtents()
         {
             using (var conn = new OracleConnection(ConnectionString))
             {
-                string strSQL = "SELECT SDO_AGGR_MBR(g." + GeometryColumn + ").Get_WKT() FROM " + Table + " g ";
+                string strSql = "SELECT SDO_AGGR_MBR(g." + GeometryColumn + ").Get_WKT() FROM " + Table + " g ";
                 if (!String.IsNullOrEmpty(_definitionQuery))
-                    strSQL += " WHERE " + DefinitionQuery;
-                using (var command = new OracleCommand(strSQL, conn))
+                    strSql += " WHERE " + DefinitionQuery;
+                using (var command = new OracleCommand(strSql, conn))
                 {
                     conn.Open();
                     var result = command.ExecuteScalar();
@@ -446,13 +439,11 @@ namespace SharpMap.Data.Providers
                         var yY = new List<double>();
 
                         String[] points = strBox.Split(',');
-                        String[] nums;
-                        string point;
 
                         foreach (string s in points)
                         {
-                            point = s.Trim();
-                            nums = point.Split(' ');
+                            string point = s.Trim();
+                            String[] nums = point.Split(' ');
                             xX.Add(double.Parse(nums[0], Map.NumberFormatEnUs));
                             yY.Add(double.Parse(nums[1], Map.NumberFormatEnUs));
                         }
@@ -486,7 +477,7 @@ namespace SharpMap.Data.Providers
                             }
                         }
 
-                        return new BoundingBox(minX, maxX, minY, maxY);
+                        return new Envelope(minX, maxX, minY, maxY);
                     }
                     return null;
                 }
@@ -498,22 +489,22 @@ namespace SharpMap.Data.Providers
         /// </summary>
         /// <param name="bbox">view box</param>
         /// <param name="ds">FeatureDataSet to fill data into</param>
-        public override void ExecuteIntersectionQuery(BoundingBox bbox, FeatureDataSet ds)
+        public override void ExecuteIntersectionQuery(Envelope bbox, FeatureDataSet ds)
         {
             using (var conn = new OracleConnection(ConnectionString))
             {
                 //Get bounding box string
                 var strBbox = GetBoxFilterStr(bbox);
 
-                var strSQL = "SELECT g.*, g." + GeometryColumn + ".Get_WKB() AS sharpmap_tempgeometry ";
-                strSQL += "FROM " + Table + " g WHERE ";
+                var strSql = "SELECT g.*, g." + GeometryColumn + ".Get_WKB() AS sharpmap_tempgeometry ";
+                strSql += "FROM " + Table + " g WHERE ";
 
                 if (!String.IsNullOrEmpty(_definitionQuery))
-                    strSQL += DefinitionQuery + " AND ";
+                    strSql += DefinitionQuery + " AND ";
 
-                strSQL += strBbox;
+                strSql += strBbox;
 
-                using (var adapter = new OracleDataAdapter(strSQL, conn))
+                using (var adapter = new OracleDataAdapter(strSql, conn))
                 {
                     conn.Open();
                     var ds2 = new DataSet();
@@ -547,7 +538,7 @@ namespace SharpMap.Data.Providers
         /// </summary>
         /// <param name="bbox"></param>
         /// <returns></returns>
-        protected string GetBoxFilterStr(BoundingBox bbox)
+        protected string GetBoxFilterStr(Envelope bbox)
         {
             string strBbox = "SDO_FILTER(g." + GeometryColumn + ", mdsys.sdo_geometry(2003,#SRID#,NULL," +
                              "mdsys.sdo_elem_info_array(1,1003,3)," +
@@ -558,14 +549,7 @@ namespace SharpMap.Data.Providers
                              bbox.MaxY.ToString(Map.NumberFormatEnUs) + ")), " +
                              "'querytype=window') = 'TRUE'";
 
-            if (SRID > 0)
-            {
-                strBbox = strBbox.Replace("#SRID#", SRID.ToString(Map.NumberFormatEnUs));
-            }
-            else
-            {
-                strBbox = strBbox.Replace("#SRID#", "NULL");
-            }
+            strBbox = strBbox.Replace("#SRID#", SRID > 0 ? SRID.ToString(Map.NumberFormatEnUs) : "NULL");
             return strBbox;
         }
 
@@ -595,9 +579,9 @@ namespace SharpMap.Data.Providers
         /// <returns>Name of column containing geometry</returns>
         private string GetGeometryColumn()
         {
-            string strSQL = "select COLUMN_NAME from USER_SDO_GEOM_METADATA WHERE TABLE_NAME='" + Table + "'";
+            string strSql = "select COLUMN_NAME from USER_SDO_GEOM_METADATA WHERE TABLE_NAME='" + Table + "'";
             using (var conn = new OracleConnection(ConnectionString))
-            using (var command = new OracleCommand(strSQL, conn))
+            using (var command = new OracleCommand(strSql, conn))
             {
                 conn.Open();
                 object columnname = command.ExecuteScalar();
@@ -614,9 +598,9 @@ namespace SharpMap.Data.Providers
         /// <param name="bbox">view box</param>
         /// <param name="ds">FeatureDataSet to fill data into</param>
         [Obsolete("Use ExecuteIntersectionQuery(box) instead")]
-        public void GetFeaturesInView(BoundingBox bbox, FeatureDataSet ds)
+        public void GetFeaturesInView(Envelope bbox, FeatureDataSet ds)
         {
-            GetFeaturesInView(bbox, ds);
+            ExecuteIntersectionQuery(bbox, ds);
         }
     }
 }
