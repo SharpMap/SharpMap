@@ -23,6 +23,7 @@ using System.Drawing.Imaging;
 using System.IO;
 using Common.Logging;
 using GeoAPI;
+using GeoAPI.Features;
 using GeoAPI.Geometries;
 using OSGeo.GDAL;
 #if !DotSpatialProjections
@@ -2047,14 +2048,14 @@ namespace SharpMap.Layers
         /// </summary>
         /// <param name="box">Envelope to intersect with</param>
         /// <param name="ds">FeatureDataSet to fill data into</param>
-        public void ExecuteIntersectionQuery(Envelope box, FeatureDataSet ds)
+        public void ExecuteIntersectionQuery(Envelope box, IFeatureCollectionSet ds)
         {
             var pt = new Coordinate(box.MinX + 0.5 * box.Width,
                                   box.MaxY - 0.5 * box.Height);
             ExecuteIntersectionQuery(pt, ds);
         }
 
-        private void ExecuteIntersectionQuery(Coordinate pt, FeatureDataSet ds)
+        private void ExecuteIntersectionQuery(Coordinate pt, IFeatureCollectionSet ds)
         {
 
             if (CoordinateTransformation != null)
@@ -2125,7 +2126,7 @@ namespace SharpMap.Layers
             dt.Rows.Add(dr);
 
             //Add table to dataset
-            ds.Tables.Add(dt);
+            ds.Add(dt);
         }
 
         /// <summary>
@@ -2133,7 +2134,7 @@ namespace SharpMap.Layers
         /// </summary>
         /// <param name="geometry">Geometry to intersect with</param>
         /// <param name="ds">FeatureDataSet to fill data into</param>
-        public void ExecuteIntersectionQuery(Geometry geometry, FeatureDataSet ds)
+        public void ExecuteIntersectionQuery(Geometry geometry, IFeatureCollectionSet ds)
         {
             ExecuteIntersectionQuery(geometry.EnvelopeInternal, ds);
         }

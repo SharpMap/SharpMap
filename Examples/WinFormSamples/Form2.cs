@@ -65,7 +65,7 @@ namespace WinFormSamples
             VectorLayer pushPinLayer = new VectorLayer("PushPins");
             List<IGeometry> geos = new List<IGeometry>();
             geos.Add(gf.CreatePoint(geom.Centre));
-            GeometryProvider geoProvider = new GeometryProvider(geos);
+            var geoProvider = new FeatureProvider(geos);
             pushPinLayer.DataSource = geoProvider;
             //this.mapBox1.Map.Layers.Add(pushPinLayer);
 

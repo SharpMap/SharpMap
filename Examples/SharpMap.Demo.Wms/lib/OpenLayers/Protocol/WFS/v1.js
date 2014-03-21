@@ -143,7 +143,7 @@ OpenLayers.Protocol.WFS.v1 = OpenLayers.Class(OpenLayers.Protocol, {
     /**
      * APIMethod: read
      * Construct a request for reading new features.  Since WFS splits the
-     *     basic CRUD operations into GetFeature requests (for read) and
+     *     basic CRUD operations into GetFeatureByOid requests (for read) and
      *     Transactions (for all others), this method does not make use of the
      *     format's read method (that is only about reading transaction
      *     responses).
@@ -176,7 +176,7 @@ OpenLayers.Protocol.WFS.v1 = OpenLayers.Class(OpenLayers.Protocol, {
      * });
      * (end)
      *
-     * To limit the attributes returned by the GetFeature request, applications
+     * To limit the attributes returned by the GetFeatureByOid request, applications
      * can use the propertyNames option to specify the properties to include in
      * the response:
      *
@@ -193,7 +193,7 @@ OpenLayers.Protocol.WFS.v1 = OpenLayers.Class(OpenLayers.Protocol, {
         var response = new OpenLayers.Protocol.Response({requestType: "read"});
         
         var data = OpenLayers.Format.XML.prototype.write.apply(
-            this.format, [this.format.writeNode("wfs:GetFeature", options)]
+            this.format, [this.format.writeNode("wfs:GetFeatureByOid", options)]
         );
 
         response.priv = OpenLayers.Request.POST({

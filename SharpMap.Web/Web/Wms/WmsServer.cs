@@ -18,6 +18,7 @@
 using System;
 using System.Text;
 using System.Web;
+using GeoAPI.Features;
 using GeoAPI.Geometries;
 using SharpMap.Data;
 using SharpMap.Web.Wms.Exceptions;
@@ -31,7 +32,7 @@ namespace SharpMap.Web.Wms
     /// </summary>
     public static class WmsServer
     {
-        public delegate FeatureDataTable InterSectDelegate(FeatureDataTable featureDataTable, Envelope box);
+        public delegate IFeatureCollection InterSectDelegate(IFeatureCollection featureDataTable, Envelope box);
 
         internal static InterSectDelegate IntersectDelegate;
         internal static int PixelSensitivity = -1;

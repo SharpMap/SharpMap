@@ -16,8 +16,15 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA    
   
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data.SqlClient;
+using System.Globalization;
+using System.Threading;
+using GeoAPI.Features;
+using GeoAPI.IO;
+using Microsoft.SqlServer.Types;
+using NetTopologySuite.IO;
 using SharpMap.Converters.SqlServer2008SpatialObjects;
 using BoundingBox = GeoAPI.Geometries.Envelope;
 using Geometry = GeoAPI.Geometries.IGeometry;
@@ -55,16 +62,16 @@ namespace SharpMap.Data.Providers
         {
         }
 
-        private const string _spatialObject = "geometry";
+        //private const string SpatialObject = "geometry";
 
         /// <summary>   
         /// Returns geometries within the specified bounding box   
         /// </summary>   
         /// <param name="bbox"></param>   
         /// <returns></returns>   
-        public override Collection<Geometry> GetGeometriesInView(BoundingBox bbox)
+        public override IEnumerable<Geometry> GetGeometriesInView(BoundingBox bbox, CancellationToken? cancellationToken = null)
         {
-            Collection<Geometry> features = new Collection<Geometry>();
+            var features = new Collection<Geometry>();
             using (SqlConnection conn = new SqlConnection(ConnectionString))
             {
                 //Get bounding box string   
@@ -87,11 +94,13 @@ namespace SharpMap.Data.Providers
                     conn.Open();
                     using (SqlDataReader dr = command.ExecuteReader())
                     {
+                        var spatialReader = CreateReader();
+                        
                         while (dr.Read())
                         {
                             if (dr[0] != DBNull.Value)
                             {
-                                Geometry geom = SqlGeometryConverter.ToSharpMapGeometry((Microsoft.SqlServer.Types.SqlGeometry)dr[0]);
+                                var geom = spatialReader.Read(dr[0]);
                                 if (geom != null)
                                     features.Add(geom);
                             }
@@ -103,12 +112,22 @@ namespace SharpMap.Data.Providers
             return features;
         }
 
+        private ISpatialObjectReader CreateReader()
+        {
+            switch (SpatialObjectType)
+            {
+                case SqlServerSpatialObjectType.Geography:
+                    return new SpatialObjectReader<SqlGeography>( new MsSql2008GeographyReader());
+                default:
+                    return new SpatialObjectReader<SqlGeometry>(new MsSql2008GeometryReader());
+            }
+        }
         /// <summary>   
         /// Returns the geometry corresponding to the Object ID   
         /// </summary>   
         /// <param name="oid">Object ID</param>   
         /// <returns>geometry</returns>   
-        public override Geometry GetGeometryByID(uint oid)
+        public override Geometry GetGeometryByOid(object oid)
         {
             Geometry geom = null;
             using (SqlConnection conn = new SqlConnection(ConnectionString))
@@ -119,10 +138,11 @@ namespace SharpMap.Data.Providers
                 {
                     using (SqlDataReader dr = command.ExecuteReader())
                     {
+                        var spatialReader = CreateReader();
                         while (dr.Read())
                         {
                             if (dr[0] != DBNull.Value)
-                                geom = SqlGeometryConverter.ToSharpMapGeometry((Microsoft.SqlServer.Types.SqlGeometry)dr[0]);
+                                geom = spatialReader.Read(dr[0]);
                         }
                     }
                 }
@@ -135,14 +155,14 @@ namespace SharpMap.Data.Providers
         /// Returns the features that intersects with 'geom'   
         /// </summary>   
         /// <param name="geom"></param>   
-        /// <param name="ds">FeatureDataSet to fill data into</param>   
-        protected override void OnExecuteIntersectionQuery(Geometry geom, FeatureDataSet ds)
+        /// <param name="fcs">FeatureDataSet to fill data into</param>   
+        protected override void OnExecuteIntersectionQuery(Geometry geom, IFeatureCollectionSet fcs, CancellationToken? cancellationToken = null)
         {
             using (SqlConnection conn = new SqlConnection(ConnectionString))
             {
-                string strGeom = _spatialObject + "::STGeomFromText('" + geom.AsText() + "', #SRID#)";
+                string strGeom = SpatialObjectType + "::STGeomFromText('" + geom.AsText() + "', #SRID#)";
 
-                strGeom = strGeom.Replace("#SRID#", SRID > 0 ? SRID.ToString() : "0");
+                strGeom = strGeom.Replace("#SRID#", SRID > 0 ? SRID.ToString(NumberFormatInfo.InvariantInfo) : "0");
                 strGeom = GeometryColumn + ".STIntersects(" + strGeom + ") = 1";
 
                 string strSQL = "SELECT g.* FROM " + Table + " g " + BuildTableHints() + " WHERE ";
@@ -156,6 +176,7 @@ namespace SharpMap.Data.Providers
                 if (!string.IsNullOrEmpty(extraOptions))
                     strSQL += " " + extraOptions;
 
+                var ds = (System.Data.DataSet) new FeatureDataSet();
                 using (SqlDataAdapter adapter = new SqlDataAdapter(strSQL, conn))
                 {
                     conn.Open();
@@ -167,13 +188,14 @@ namespace SharpMap.Data.Providers
                         foreach (System.Data.DataColumn col in ds.Tables[0].Columns)
                             if (col.ColumnName != GeometryColumn)
                                 fdt.Columns.Add(col.ColumnName, col.DataType, col.Expression);
+                        var geometryReader = CreateReader();
                         foreach (System.Data.DataRow dr in ds.Tables[0].Rows)
                         {
                             FeatureDataRow fdr = fdt.NewRow();
                             foreach (System.Data.DataColumn col in ds.Tables[0].Columns)
                                 if (col.ColumnName != GeometryColumn)
                                     fdr[col.ColumnName] = dr[col];
-                            fdr.Geometry = SqlGeometryConverter.ToSharpMapGeometry((Microsoft.SqlServer.Types.SqlGeometry)dr[GeometryColumn]);
+                            fdr.Geometry = geometryReader.Read(dr[GeometryColumn]);
                             fdt.AddRow(fdr);
                         }
                         ds.Tables.Add(fdt);
@@ -185,15 +207,16 @@ namespace SharpMap.Data.Providers
         /// <summary>   
         /// Returns a datarow based on a RowID   
         /// </summary>   
-        /// <param name="rowId"></param>   
+        /// <param name="oid"></param>   
         /// <returns>datarow</returns>   
-        public override FeatureDataRow GetFeature(uint rowId)
+        public override IFeature GetFeatureByOid(object oid)
         {
             using (SqlConnection conn = new SqlConnection(ConnectionString))
             {
-                string strSQL = "select g.* from " + Table + " g WHERE " + ObjectIdColumn + "=" + rowId + "";
+                string strSQL = "select g.* from " + Table + " g WHERE " + ObjectIdColumn + "=:POid";
                 using (SqlDataAdapter adapter = new SqlDataAdapter(strSQL, conn))
                 {
+                    adapter.SelectCommand.Parameters.Add(new SqlParameter("POid", oid));
                     System.Data.DataSet ds = new System.Data.DataSet();
                     conn.Open();
                     adapter.Fill(ds);
@@ -204,6 +227,7 @@ namespace SharpMap.Data.Providers
                         foreach (System.Data.DataColumn col in ds.Tables[0].Columns)
                             if (col.ColumnName != GeometryColumn)
                                 fdt.Columns.Add(col.ColumnName, col.DataType, col.Expression);
+                        var geometryReader = CreateReader();
                         if (ds.Tables[0].Rows.Count > 0)
                         {
                             System.Data.DataRow dr = ds.Tables[0].Rows[0];
@@ -211,7 +235,7 @@ namespace SharpMap.Data.Providers
                             foreach (System.Data.DataColumn col in ds.Tables[0].Columns)
                                 if (col.ColumnName != GeometryColumn)
                                     fdr[col.ColumnName] = dr[col];
-                            fdr.Geometry = SqlGeometryConverter.ToSharpMapGeometry((Microsoft.SqlServer.Types.SqlGeometry)dr[GeometryColumn]);
+                            fdr.Geometry = geometryReader.Read(dr[GeometryColumn]);
                             return fdr;
                         }
                         return null;
@@ -226,7 +250,7 @@ namespace SharpMap.Data.Providers
         /// </summary>   
         /// <param name="bbox">view box</param>   
         /// <param name="ds">FeatureDataSet to fill data into</param>   
-        public override void ExecuteIntersectionQuery(BoundingBox bbox, FeatureDataSet ds)
+        public override void ExecuteIntersectionQuery(BoundingBox bbox, IFeatureCollectionSet fcs, CancellationToken? cancellationToken = null)
         {
             using (SqlConnection conn = new SqlConnection(ConnectionString))
             {
@@ -258,20 +282,45 @@ namespace SharpMap.Data.Providers
                         foreach (System.Data.DataColumn col in ds2.Tables[0].Columns)
                             if (col.ColumnName != GeometryColumn)
                                 fdt.Columns.Add(col.ColumnName, col.DataType, col.Expression);
+                        var geometryReader = CreateReader();
                         foreach (System.Data.DataRow dr in ds2.Tables[0].Rows)
                         {
                             FeatureDataRow fdr = fdt.NewRow();
                             foreach (System.Data.DataColumn col in ds2.Tables[0].Columns)
                                 if (col.ColumnName != GeometryColumn)
                                     fdr[col.ColumnName] = dr[col];
-                            fdr.Geometry = SqlGeometryConverter.ToSharpMapGeometry((Microsoft.SqlServer.Types.SqlGeometry)dr[GeometryColumn]);
+                            fdr.Geometry = geometryReader.Read(dr[GeometryColumn]);
                             fdt.AddRow(fdr);
                         }
-                        ds.Tables.Add(fdt);
+                        fcs.Add(fdt);
                     }
                 }
             }
         }
+
+        #region nested utility classes
+        private interface ISpatialObjectReader
+        {
+            Geometry Read(object obj);
+        }
+
+        private class SpatialObjectReader<T> : ISpatialObjectReader
+        {
+            private readonly IGeometryReader<T> _reader;
+
+            public SpatialObjectReader(IGeometryReader<T> reader)
+            {
+                _reader = reader;
+            }
+
+            public Geometry Read(object obj)
+            {
+                if (obj.GetType() == typeof(T))
+                    return _reader.Read((T)obj);
+                return null;
+            }
+        }
+        #endregion
 
     }
 }

@@ -376,7 +376,7 @@
                 "OpenLayers/Format/XLS/v1.js",
                 "OpenLayers/Format/XLS/v1_1_0.js",
                 "OpenLayers/Format/OGCExceptionReport.js",
-                "OpenLayers/Control/GetFeature.js",
+                "OpenLayers/Control/GetFeatureByOid.js",
                 "OpenLayers/Control/NavToolbar.js",
                 "OpenLayers/Control/PanPanel.js",
                 "OpenLayers/Control/Pan.js",

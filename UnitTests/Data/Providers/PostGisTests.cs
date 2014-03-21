@@ -59,7 +59,7 @@ namespace UnitTests.Data.Providers
                                 cmd.ExecuteNonQuery();
                             }
 
-                            // The ID column cannot simply be int, because that would cause GetObjectIDsInView to fail. The provider internally works with uint
+                            // The ID column cannot simply be int, because that would cause GetOidsInView to fail. The provider internally works with uint
                             cmd.CommandText =
                                 "CREATE TABLE roads_ugl_g(id integer primary key, name character varying(100));";
                             cmd.ExecuteNonQuery();
@@ -69,7 +69,7 @@ namespace UnitTests.Data.Providers
                         }
 
 
-                        IEnumerable<uint> indexes = shapeFile.GetObjectIDsInView(shapeFile.GetExtents());
+                        IEnumerable<uint> indexes = shapeFile.GetOidsInView(shapeFile.GetExtents());
 
                         _insertedIds = new List<uint>(indexes.Take(100));
                         using (NpgsqlCommand cmd = conn.CreateCommand())
@@ -89,10 +89,10 @@ namespace UnitTests.Data.Providers
 
                             foreach (var idx in _insertedIds)
                             {
-                                var feature = shapeFile.GetFeature(idx);
+                                var feature = shapeFile.GetFeatureByOid(idx);
 
                                 @params["PId"].NpgsqlValue = (int) idx;
-                                @params["PName"].NpgsqlValue = feature["NAME"];
+                                @params["PName"].NpgsqlValue = feature.Attributes["NAME"];
                                 @params["PGeom"].NpgsqlValue = writer.Write(feature.Geometry);
                                 cmd.ExecuteNonQuery();
                             }
@@ -166,7 +166,7 @@ namespace UnitTests.Data.Providers
             var geometries = sq.GetGeometriesInView(GetTestEnvelope());
 
             Assert.IsNotNull(geometries);
-            Assert.AreEqual(100, geometries.Count);
+            Assert.AreEqual(100, geometries.Count());
         }
 
         [Test]
@@ -179,7 +179,7 @@ namespace UnitTests.Data.Providers
             var geometries = sq.GetGeometriesInView(GetTestEnvelope());
 
             Assert.IsNotNull(geometries);
-            Assert.LessOrEqual(geometries.Count, 100);
+            Assert.LessOrEqual(geometries.Count(), 100);
         }
 
         [Test]
@@ -187,10 +187,10 @@ namespace UnitTests.Data.Providers
         {
             var sq = GetTestProvider();
 
-            var objectIds = sq.GetObjectIDsInView(GetTestEnvelope());
+            var objectIds = sq.GetOidsInView(GetTestEnvelope());
 
             Assert.IsNotNull(objectIds);
-            Assert.AreEqual(100, objectIds.Count);
+            Assert.AreEqual(100, objectIds.Count());
         }
 
         [Test]
@@ -234,20 +234,20 @@ namespace UnitTests.Data.Providers
             var rnd = new Random();
             for (var i = 0; i < 10; i++)
             {
-                var feature = sq.GetFeature(_insertedIds[rnd.Next(0, 100)]);
+                var feature = sq.GetFeatureByOid(_insertedIds[rnd.Next(0, 100)]);
 
                 Assert.IsNotNull(feature);
             }
         }
 
         [Test]
-        public void TestGetGeometryByID()
+        public void TestGetGeometryByOid()
         {
             var sq = GetTestProvider();
             var rnd = new Random();
             for (var i = 0; i < 10; i++)
             {
-                var feature = sq.GetGeometryByID(_insertedIds[rnd.Next(0, 100)]);
+                var feature = sq.GetGeometryByOid(_insertedIds[rnd.Next(0, 100)]);
 
                 Assert.IsNotNull(feature);
             }
@@ -258,7 +258,7 @@ namespace UnitTests.Data.Providers
         {
             var sq = GetTestProvider();
 
-            var feature = sq.GetFeature(99999999);
+            var feature = sq.GetFeatureByOid(99999999);
 
             Assert.IsNull(feature);
         }

@@ -98,16 +98,16 @@ namespace UnitTests.Converters
 
                 for (uint i = 0; i < p.GetFeatureCount(); i++ )
                 {
-                    var fdr = p.GetFeature(i);
+                    var fdr = p.GetFeatureByOid(i);
                     try
                     {
                         var res = ToSqlServerAndBack(fdr.Geometry);
                         Assert.AreEqual(fdr.Geometry, res);
-                        Console.WriteLine(string.Format("Feature {0} ({1}) converted!", i, fdr[0]));
+                        Console.WriteLine(string.Format("Feature {0} ({1}) converted!", i, fdr.Attributes[0]));
                     }
                     catch (SqlGeometryConverterException)
                     {
-                        Console.WriteLine(string.Format("Feature {0} ({1}) conversion failed!", i, fdr[0]));
+                        Console.WriteLine(string.Format("Feature {0} ({1}) conversion failed!", i, fdr.Attributes[0]));
                     }
                 }
             }

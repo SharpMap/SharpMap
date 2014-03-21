@@ -67,7 +67,7 @@ public static void EnsureVisible(SharpMap.Map map, GeoAPI.Geometries.Coordinate 
                                                          cd.GetRandomOrdinates(80, -90, 90), null);
 
             //Create layer and datasource
-            SharpMap.Layers.VectorLayer vl = new SharpMap.Layers.VectorLayer("Points", new SharpMap.Data.Providers.GeometryFeatureProvider(fdt));
+            SharpMap.Layers.VectorLayer vl = new SharpMap.Layers.VectorLayer("Points", new SharpMap.Data.Providers.FeatureProvider(fdt));
             
             //Create default style
             SharpMap.Styles.VectorStyle defaultStyle = new SharpMap.Styles.VectorStyle();

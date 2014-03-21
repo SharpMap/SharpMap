@@ -2,6 +2,7 @@ using System;
 using System.Drawing;
 using System.Web;
 using System.Web.UI;
+using GeoAPI.Features;
 using GeoAPI.Geometries;
 using SharpMap;
 using SharpMap.Data;
@@ -22,10 +23,10 @@ public partial class Bins : Page
     /// </summary>
     /// <param name="row"></param>
     /// <returns></returns>
-    private VectorStyle GetCountryStyle(FeatureDataRow row)
+    private VectorStyle GetCountryStyle(IFeature row)
     {
         VectorStyle style = new VectorStyle();
-        switch (row["NAME"].ToString().ToLower())
+        switch (row.Attributes["NAME"].ToString().ToLower())
         {
             case "denmark": //If country name is Danmark, fill it with green
                 style.Fill = Brushes.Green;
@@ -41,7 +42,7 @@ public partial class Bins : Page
                 break;
         }
         //If country name starts with S make it yellow
-        if (row["NAME"].ToString().StartsWith("S"))
+        if (row.Attributes["NAME"].ToString().StartsWith("S"))
         {
             style.Fill = Brushes.Yellow;
             return style;

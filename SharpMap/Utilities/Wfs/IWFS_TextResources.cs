@@ -127,7 +127,7 @@ namespace SharpMap.Utilities.Wfs
         string XPATH_GEOMETRYELEMENTCOMPLEXTYPE_BYELEMREFQUERY { get; }
 
         /// <summary>
-        /// Gets an XPath string addressing the URI of 'GetFeature'in 'GetCapabilities'.
+        /// Gets an XPath string addressing the URI of 'GetFeatureByOid'in 'GetCapabilities'.
         /// </summary>
         string XPATH_GETFEATURERESOURCE { get; }
 
@@ -164,22 +164,22 @@ namespace SharpMap.Utilities.Wfs
         string GetCapabilitiesRequest();
 
         /// <summary>
-        /// Method to return the query string for a 'GetFeature' - <b>GET</b> request.
+        /// Method to return the query string for a 'GetFeatureByOid' - <b>GET</b> request.
         /// </summary>
         /// <param name="featureTypeInfo">A <see cref="Wfs.WfsFeatureTypeInfo"/> instance providing metadata of the featuretype to query</param>
         /// <param name="boundingBox">The bounding box of the query</param>
         /// <param name="filter">An instance implementing <see cref="IFilter"/></param>
-        /// <returns>An URI for a 'GetFeature' - <b>GET</b> request.</returns>
+        /// <returns>An URI for a 'GetFeatureByOid' - <b>GET</b> request.</returns>
         string GetFeatureGETRequest(WfsFeatureTypeInfo featureTypeInfo, Envelope boundingBox, IFilter filter);
 
         /// <summary>
-        /// Method to return the query string for a 'GetFeature - <b>POST</b> request'.
+        /// Method to return the query string for a 'GetFeatureByOid - <b>POST</b> request'.
         /// </summary>
         /// <param name="featureTypeInfo">A <see cref="Wfs.WfsFeatureTypeInfo"/> instance providing metadata of the featuretype to query</param>
         /// <param name="labelProperty">A property necessary for label rendering</param>
         /// <param name="boundingBox">The bounding box of the query</param>
         /// <param name="filter">An instance implementing <see cref="IFilter"/></param>
-        /// <returns>An URI for a 'GetFeature' - <b>POST</b> request.</returns>
+        /// <returns>An URI for a 'GetFeatureByOid' - <b>POST</b> request.</returns>
         byte[] GetFeaturePOSTRequest(WfsFeatureTypeInfo featureTypeInfo, string labelProperty, Envelope boundingBox,
                                      IFilter filter);
     }

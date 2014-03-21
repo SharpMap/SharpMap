@@ -16,11 +16,12 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
 
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data;
+using System.Threading;
+using GeoAPI.Features;
 using GeoAPI.Geometries;
-using Geometry = GeoAPI.Geometries.IGeometry;
-using BoundingBox = GeoAPI.Geometries.Envelope;
 
 namespace SharpMap.Data.Providers
 {
@@ -35,7 +36,7 @@ namespace SharpMap.Data.Providers
     /// and an integer-type column containing a unique identifier for each row.
     /// </para>
     /// </remarks>
-    public class DataTablePoint : PreparedGeometryProvider, IDisposable
+    public class DataTablePoint : PreparedGeometryProvider
     {
         private string _ConnectionString;
         private string _definitionQuery;
@@ -130,14 +131,12 @@ namespace SharpMap.Data.Providers
         /// </summary>
         /// <param name="bbox"></param>
         /// <returns></returns>
-        public override Collection<IGeometry> GetGeometriesInView(Envelope bbox)
+        public override IEnumerable<IGeometry> GetGeometriesInView(Envelope bbox, CancellationToken? cancllationToken= null)
         {
-            DataRow[] drow;
-            var features = new Collection<IGeometry>();
 
             if (Table.Rows.Count == 0)
             {
-                return null;
+                yield break;
             }
 
             string strSQL = XColumn + " > " + bbox.Left().ToString(Map.NumberFormatEnUs) + " AND " +
@@ -145,14 +144,12 @@ namespace SharpMap.Data.Providers
                             YColumn + " > " + bbox.Bottom().ToString(Map.NumberFormatEnUs) + " AND " +
                             YColumn + " < " + bbox.Top().ToString(Map.NumberFormatEnUs);
 
-            drow = Table.Select(strSQL);
+            var drow = Table.Select(strSQL);
 
-            foreach (DataRow dr in drow)
+            foreach (var dr in drow)
             {
-                features.Add(Factory.CreatePoint(new Coordinate((double) dr[XColumn], (double) dr[YColumn])));
+                yield return Factory.CreatePoint(new Coordinate((double) dr[XColumn], (double) dr[YColumn]));
             }
-
-            return features;
         }
 
         /// <summary>
@@ -160,29 +157,24 @@ namespace SharpMap.Data.Providers
         /// </summary>
         /// <param name="bbox"></param>
         /// <returns></returns>
-        public override Collection<uint> GetObjectIDsInView(BoundingBox bbox)
+        public override IEnumerable<object> GetOidsInView(Envelope bbox, CancellationToken? cancellationToken = null)
         {
-            DataRow[] drow;
-            Collection<uint> objectlist = new Collection<uint>();
-
             if (Table.Rows.Count == 0)
             {
-                return null;
+                yield break;
             }
 
-            string strSQL = XColumn + " > " + bbox.Left().ToString(Map.NumberFormatEnUs) + " AND " +
-                            XColumn + " < " + bbox.Right().ToString(Map.NumberFormatEnUs) + " AND " +
-                            YColumn + " > " + bbox.Bottom().ToString(Map.NumberFormatEnUs) + " AND " +
-                            YColumn + " < " + bbox.Top().ToString(Map.NumberFormatEnUs);
+            var strSQL = XColumn + " > " + bbox.Left().ToString(Map.NumberFormatEnUs) + " AND " +
+                         XColumn + " < " + bbox.Right().ToString(Map.NumberFormatEnUs) + " AND " +
+                         YColumn + " > " + bbox.Bottom().ToString(Map.NumberFormatEnUs) + " AND " +
+                         YColumn + " < " + bbox.Top().ToString(Map.NumberFormatEnUs);
 
-            drow = Table.Select(strSQL);
+            var drow = Table.Select(strSQL);
 
-            foreach (DataRow dr in drow)
+            foreach (var dr in drow)
             {
-                objectlist.Add((uint) (int) dr[0]);
+                yield return dr[ObjectIdColumn];
             }
-
-            return objectlist;
         }
 
         /// <summary>
@@ -190,11 +182,8 @@ namespace SharpMap.Data.Providers
         /// </summary>
         /// <param name="oid">Object ID</param>
         /// <returns>geometry</returns>
-        public override Geometry GetGeometryByID(uint oid)
+        public override IGeometry GetGeometryByOid(object oid)
         {
-            DataRow[] rows;
-            Geometry geom = null;
-
             if (Table.Rows.Count == 0)
             {
                 return null;
@@ -202,52 +191,47 @@ namespace SharpMap.Data.Providers
 
             string selectStatement = ObjectIdColumn + " = " + oid;
 
-            rows = Table.Select(selectStatement);
+            var rows = Table.Select(selectStatement);
 
-            foreach (DataRow dr in rows)
-            {
-                geom = Factory.CreatePoint(new Coordinate((double) dr[XColumn], (double) dr[YColumn]));
-            }
-
-            return geom;
+            return rows.Length > 0
+                    ? Factory.CreatePoint(new Coordinate((double) rows[0][XColumn], (double) rows[0][YColumn]))
+                    : null;
         }
 
         /// <summary>
         /// Retrieves all features within the given BoundingBox.
         /// </summary>
-        /// <param name="bbox">Bounds of the region to search.</param>
-        /// <param name="ds">FeatureDataSet to fill data into</param>
-        public override void ExecuteIntersectionQuery(BoundingBox bbox, FeatureDataSet ds)
+        /// <param name="bounds">Bounds of the region to search.</param>
+        /// <param name="fcs">FeatureDataSet to fill data into</param>
+        public override void ExecuteIntersectionQuery(Envelope bounds, IFeatureCollectionSet fcs, CancellationToken? cancellationToken = null)
         {
-            DataRow[] rows;
-
             if (Table.Rows.Count == 0)
             {
                 return;
             }
 
-            string statement = XColumn + " > " + bbox.Left().ToString(Map.NumberFormatEnUs) + " AND " +
-                               XColumn + " < " + bbox.Right().ToString(Map.NumberFormatEnUs) + " AND " +
-                               YColumn + " > " + bbox.Bottom().ToString(Map.NumberFormatEnUs) + " AND " +
-                               YColumn + " < " + bbox.Top().ToString(Map.NumberFormatEnUs);
+            string statement = XColumn + " > " + bounds.MinX.ToString(Map.NumberFormatEnUs) + " AND " +
+                               XColumn + " < " + bounds.MaxX.ToString(Map.NumberFormatEnUs) + " AND " +
+                               YColumn + " > " + bounds.MinY.ToString(Map.NumberFormatEnUs) + " AND " +
+                               YColumn + " < " + bounds.MaxY.ToString(Map.NumberFormatEnUs);
 
-            rows = Table.Select(statement);
+            var rows = Table.Select(statement);
 
-            FeatureDataTable fdt = new FeatureDataTable(Table);
+            var fdt = new FeatureDataTable(Table);
 
             foreach (DataColumn col in Table.Columns)
             {
                 fdt.Columns.Add(col.ColumnName, col.DataType, col.Expression);
             }
 
-            foreach (DataRow dr in rows)
+            foreach (var dr in rows)
             {
                 fdt.ImportRow(dr);
-                FeatureDataRow fdr = fdt.Rows[fdt.Rows.Count - 1] as FeatureDataRow;
+                var fdr = (FeatureDataRow)fdt.Rows[fdt.Rows.Count - 1];
                 fdr.Geometry = Factory.CreatePoint(new Coordinate((double) dr[XColumn], (double) dr[YColumn]));
             }
 
-            ds.Tables.Add(fdt);
+            fcs.Add(fdt);
         }
 
         /// <summary>
@@ -262,44 +246,34 @@ namespace SharpMap.Data.Providers
         /// <summary>
         /// Returns a datarow based on a RowID
         /// </summary>
-        /// <param name="rowId"></param>
+        /// <param name="oid"></param>
         /// <returns>datarow</returns>
-        public override FeatureDataRow GetFeature(uint rowId)
+        public override IFeature GetFeatureByOid(object oid)
         {
             throw new NotSupportedException();
         }
 
         /// <summary>
         /// Computes the full extents of the data source as a 
-        /// <see cref="BoundingBox"/>.
+        /// <see cref="Envelope"/>.
         /// </summary>
         /// <returns>
         /// A BoundingBox instance which minimally bounds all the features
         /// available in this data source.
         /// </returns>
-        public override BoundingBox GetExtents()
+        public override Envelope GetExtents()
         {
             if (Table.Rows.Count == 0)
             {
                 return null;
             }
 
-            BoundingBox box;
-
-            double minX = Double.PositiveInfinity,
-                   minY = Double.PositiveInfinity,
-                   maxX = Double.NegativeInfinity,
-                   maxY = Double.NegativeInfinity;
+            var box = new Envelope();
 
             foreach (DataRowView dr in Table.DefaultView)
             {
-                if (minX > (double) dr[XColumn]) minX = (double) dr[XColumn];
-                if (maxX < (double) dr[XColumn]) maxX = (double) dr[XColumn];
-                if (minY > (double) dr[YColumn]) minY = (double) dr[YColumn];
-                if (maxY < (double) dr[YColumn]) maxY = (double) dr[YColumn];
+                box.ExpandToInclude((double) dr[XColumn], (double) dr[YColumn]);
             }
-
-            box = new BoundingBox(minX, maxX, minY, maxY);
 
             return box;
         }

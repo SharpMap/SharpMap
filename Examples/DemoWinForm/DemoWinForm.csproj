@@ -127,6 +127,14 @@
     <Compile Include="ShapeFileLayerFactory.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\GeoAPI.Extensions\GeoAPI.Extensions.csproj">
+      <Project>{efb576e1-56fc-47db-ac7e-683a535434be}</Project>
+      <Name>GeoAPI.Extensions</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\SharpMap.Data\SharpMap.Data.csproj">
+      <Project>{79703116-03e1-4579-8412-e5fa87a701b2}</Project>
+      <Name>SharpMap.Data</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\SharpMap.UI\SharpMap.UI.csproj">
       <Project>{dd1cc1db-4bf9-4c88-a100-733d84795f3a}</Project>
       <Name>SharpMap.UI</Name>

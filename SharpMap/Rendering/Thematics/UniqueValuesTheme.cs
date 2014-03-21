@@ -14,6 +14,8 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
 using System;
 using System.Collections.Generic;
+using GeoAPI.Features;
+using SharpMap.Features;
 using SharpMap.Styles;
 
 namespace SharpMap.Rendering.Thematics
@@ -50,14 +52,14 @@ namespace SharpMap.Rendering.Thematics
         /// <summary>
         /// Returns the style based on a feature
         /// </summary>
-        /// <param name="attribute">Set of attribute values to calculate the <see cref="IStyle"/> from</param>
+        /// <param name="feature">Set of attribute values to calculate the <see cref="IStyle"/> from</param>
         /// <returns>The style</returns>
-        public IStyle GetStyle(Data.FeatureDataRow attribute)
+        public IStyle GetStyle(IFeature feature)
         {
-            if (attribute.IsNull(_attributeName))
+            if (feature.IsNull(_attributeName))
                 return _default;
 
-            var val = attribute[_attributeName].ToString();
+            var val = feature.Attributes[_attributeName].ToString();
             if (_styleMap.ContainsKey(val))
                 return _styleMap[val];          
 

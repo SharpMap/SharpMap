@@ -16,6 +16,7 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
 
 using System;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Globalization;
@@ -24,9 +25,11 @@ using System.Linq;
 using System.Reflection;
 using System.Web;
 using System.Xml;
+using GeoAPI.Features;
 using GeoAPI.Geometries;
 using SharpMap.Data;
 using SharpMap.Data.Providers;
+using SharpMap.Features;
 using SharpMap.Layers;
 using System.Collections.Generic;
 using System.Text;
@@ -46,7 +49,7 @@ namespace SharpMap.Web.Wms
         
 		#region Delegates
 
-        public delegate FeatureDataTable InterSectDelegate(FeatureDataTable featureDataTable, Envelope box);
+        public delegate IFeatureCollection InterSectDelegate(IFeatureCollection featureDataTable, Envelope box);
 
         #endregion
 
@@ -911,67 +914,73 @@ namespace SharpMap.Web.Wms
                         var queryBoxMinY = y - (_pixelSensitivity);
                         var queryBoxMaxX = x + (_pixelSensitivity);
                         var queryBoxMaxY = y + (_pixelSensitivity);
-                            
+
                         var minXY = map.ImageToWorld(new PointF(queryBoxMinX, queryBoxMinY));
-                            var maxXY = map.ImageToWorld(new PointF(queryBoxMaxX, queryBoxMaxY));
-                            var queryBox = new Envelope(minXY, maxXY);
-                            var fds = new FeatureDataSet();
-                            queryLayer.ExecuteIntersectionQuery(queryBox, fds);
-                            
-                            if (_intersectDelegate != null)
+                        var maxXY = map.ImageToWorld(new PointF(queryBoxMaxX, queryBoxMaxY));
+                        var queryBox = new Envelope(minXY, maxXY);
+                        var fds = new FeatureCollectionSet();
+                        queryLayer.ExecuteIntersectionQuery(queryBox, fds);
+
+                        if (fds.Count == 0)
+                        {
+                            vstr = vstr + "\nSearch returned no results on layer: " + requestLayer;
+                        }
+                        if (_intersectDelegate != null)
+                        {
+                            var fdt = fds[0];
+                            fds.RemoveAt(0);
+                            fds.Add(_intersectDelegate(fdt, queryBox));
+                        }
+                        else
+                        {
+                            if (fds[0].Count == 0)
                             {
-                                fds.Tables[0] = _intersectDelegate(fds.Tables[0], queryBox);
-                            }
-                            if (fds.Tables.Count == 0)
-                            {
-                                vstr = vstr + "\nSearch returned no results on layer: " + requestLayer;
+                                vstr = vstr + "\nSearch returned no results on layer: " + requestLayer + " ";
                             }
                             else
                             {
-                                if (fds.Tables[0].Rows.Count == 0)
+                                //filter the rows with the CQLFilter if one is provided
+                                if (cqlFilter != null)
                                 {
-                                    vstr = vstr + "\nSearch returned no results on layer: " + requestLayer + " ";
+                                    var toKeep = fds[0].Clone();
+                                    foreach (var f in fds[0])
+                                    {
+                                        if (!CqlFilter(f, cqlFilter))
+                                        {
+                                            toKeep.Add(f);
+                                        }
+                                    }
+                                    fds[0] = toKeep;
                                 }
-                                else
+                                //if featurecount < fds...count, select smallest bbox, because most likely to be clicked
+                                vstr = vstr + "\n Layer: '" + requestLayer + "'\n Featureinfo:\n";
+                                var keys = new object[fds[0].Count];
+                                var area = new double[fds[0].Count];
+                                var l = 0;
+                                foreach (var f in fds[0])
                                 {
-                                    //filter the rows with the CQLFilter if one is provided
-                                    if (cqlFilter != null)
+                                    area[l] = f.Geometry.EnvelopeInternal.Area;
+                                    keys[l] = f.Attributes[0];
+                                }
+                                Array.Sort(area, keys);
+                                if (fds[0].Count < featureCount)
+                                {
+                                    featureCount = fds[0].Count;
+                                }
+                                for (int k = 0; k < featureCount; k++)
+                                {
+                                    var f = fds[0][keys[k]];
+                                    var att = f.Factory.AttributesDefinition;
+                                    for (int j = 0; j < att.Count; j++)
                                     {
-                                        for (int i = fds.Tables[0].Rows.Count - 1; i >= 0; i--)
-                                        {
-                                            if (!CqlFilter((FeatureDataRow)fds.Tables[0].Rows[i], cqlFilter))
-                                            {
-                                                fds.Tables[0].Rows.RemoveAt(i);
-                                            }
-                                        }
+                                        vstr = vstr + " '" + f.Attributes[j] + "'";
                                     }
-                                    //if featurecount < fds...count, select smallest bbox, because most likely to be clicked
-                                    vstr = vstr + "\n Layer: '" + requestLayer + "'\n Featureinfo:\n";
-                                    int[] keys = new int[fds.Tables[0].Rows.Count];
-                                    double[] area = new double[fds.Tables[0].Rows.Count];
-                                    for (int l = 0; l < fds.Tables[0].Rows.Count; l++)
-                                    {
-                                        var fdr = (FeatureDataRow)fds.Tables[0].Rows[l];
-                                        area[l] = fdr.Geometry.EnvelopeInternal.Area;
-                                        keys[l] = l;
-                                    }
-                                    Array.Sort(area, keys);
-                                    if (fds.Tables[0].Rows.Count < featureCount)
-                                    {
-                                        featureCount = fds.Tables[0].Rows.Count;
-                                    }
-                                    for (int k = 0; k < featureCount; k++)
-                                    {
-                                        for (int j = 0; j < fds.Tables[0].Rows[keys[k]].ItemArray.Length; j++)
-                                        {
-                                            vstr = vstr + " '" + fds.Tables[0].Rows[keys[k]].ItemArray[j] + "'";
-                                        }
-                                        if ((k + 1) < featureCount)
-                                            vstr = vstr + ",\n";
-                                    }
+                                    if ((k + 1) < featureCount)
+                                        vstr = vstr + ",\n";
                                 }
                             }
-                        
+                        }
+
                     }
                 }
                 if (found == false)
@@ -1023,23 +1032,28 @@ namespace SharpMap.Web.Wms
                         var minXY = map.ImageToWorld(new PointF(queryBoxMinX, queryBoxMinY));
                         var maxXY = map.ImageToWorld(new PointF(queryBoxMaxX, queryBoxMaxY));
                         var queryBox = new Envelope(minXY, maxXY);
-                        var fds = new FeatureDataSet();
+                        var fds = new FeatureCollectionSet();
                         queryLayer.ExecuteIntersectionQuery(queryBox, fds);
+
                         //
                         if (_intersectDelegate != null)
                         {
-                            fds.Tables[0] = _intersectDelegate(fds.Tables[0], queryBox);
+                            var fc = fds[0];
+                            fds.RemoveAt(0);
+                            fds.Add(_intersectDelegate(fc, queryBox));
                         }
                         //filter the rows with the CQLFilter if one is provided
                         if (cqlFilterString != null)
                         {
-                            for (var i = fds.Tables[0].Rows.Count-1; i >=0 ; i--)
+                            var toKeep = fds[0].Clone();
+                            foreach (var f in fds[0].Clone())
                             {
-                                if (!CqlFilter((FeatureDataRow)fds.Tables[0].Rows[i], cqlFilterString))
+                                if (CqlFilter(f, cqlFilterString))
                                 {
-                                    fds.Tables[0].Rows.RemoveAt(i);
+                                    toKeep.Add(f);
                                 }
                             }
+                            fds[0] = toKeep;
                         }
                         var data = Converters.GeoJSON.GeoJSONHelper.GetData(fds);
 
@@ -1065,7 +1079,7 @@ namespace SharpMap.Web.Wms
                         }
 #endif
                         items.AddRange(data);
-                        
+
                     }
                 }
                 if (found == false)
@@ -1077,7 +1091,7 @@ namespace SharpMap.Web.Wms
             }
             var writer = new StringWriter();
             Converters.GeoJSON.GeoJSONWriter.Write(items, writer);
-            return writer.ToString();            
+            return writer.ToString();
         }
         /// <summary>
         /// Filters the features to be processed by a CQL filter
@@ -1085,33 +1099,38 @@ namespace SharpMap.Web.Wms
         /// <param name="row">A <see cref="T:SharpMap.Data.FeatureDataRow"/> to test.</param>
         /// <param name="cqlString">A CQL string defining the filter </param>
         /// <returns>GeoJSON string with featureinfo results</returns>
-        private static bool CqlFilter(FeatureDataRow row, string cqlString)
+        private static bool CqlFilter(IFeature row, string cqlString)
         {
             var toreturn = true;
             //check on filter type (AND, OR, NOT)
-            var splitstring =new[]{" "};
+            var splitstring = new[] { " " };
             var cqlStringItems = cqlString.Split(splitstring, StringSplitOptions.RemoveEmptyEntries);
             var comparers = new[] { "==", "!=", "<", ">", "<=", ">=", "BETWEEN", "LIKE", "IN" };
             for (int i = 0; i < cqlStringItems.Length; i++)
             {
                 var tmpResult = true;
                 //check first on AND OR NOT, only the case if multiple checks have to be done
-// ReSharper disable InconsistentNaming
+                // ReSharper disable InconsistentNaming
                 var AND = true;
                 var OR = false;
                 var NOT = false;
-// ReSharper restore InconsistentNaming
+                // ReSharper restore InconsistentNaming
                 if (cqlStringItems[i] == "AND") { i++; }
                 if (cqlStringItems[i] == "OR") { AND = false; OR = true; i++; }
-                if (cqlStringItems[i] == "NOT"){AND = false; NOT = true;i++;}
+                if (cqlStringItems[i] == "NOT") { AND = false; NOT = true; i++; }
                 if ((NOT && !toreturn) || (AND && !toreturn))
-                    break;                
+                    break;
                 //valid cql starts always with the column name
                 string column = cqlStringItems[i];
-                int columnIndex = row.Table.Columns.IndexOf(column);
-                Type t = row.Table.Columns[columnIndex].DataType;
-                if (columnIndex <0)
+                var fad = row.Factory.AttributesDefinition.FirstOrDefault(ad => ad.AttributeName == column);
+                if (fad == null)
                     break;
+
+                var columnIndex = row.Factory.AttributesDefinition.IndexOf(fad);
+                Type t = fad.AttributeType;
+
+                Debug.Assert(columnIndex > 0);
+
                 i++;
                 string comparer = cqlStringItems[i];
                 i++;
@@ -1134,7 +1153,7 @@ namespace SharpMap.Web.Wms
                     string[] splitters = { "('", "', '", "','", "')" };
                     var items = IN.Split(splitters, StringSplitOptions.RemoveEmptyEntries).ToList();
 
-                    tmpResult = items.Contains(Convert.ToString(row[columnIndex]));
+                    tmpResult = items.Contains(Convert.ToString(row.Attributes[columnIndex]));
                 }
                 else if (comparer == comparers[7])//LIKE
                 {
@@ -1149,8 +1168,8 @@ namespace SharpMap.Web.Wms
                         var string1 = cqlStringItems[i];
                         i += 2; //skip the AND in BETWEEN
                         var string2 = cqlStringItems[i];
-                        tmpResult = 0 < String.Compare(Convert.ToString(row[columnIndex], NumberFormatInfo.InvariantInfo), string1, StringComparison.Ordinal) &&
-                                    0 > String.Compare(Convert.ToString(row[columnIndex], NumberFormatInfo.InvariantInfo), string2, StringComparison.Ordinal);
+                        tmpResult = 0 < String.Compare(Convert.ToString(row.Attributes[columnIndex], NumberFormatInfo.InvariantInfo), string1, StringComparison.Ordinal) &&
+                                    0 > String.Compare(Convert.ToString(row.Attributes[columnIndex], NumberFormatInfo.InvariantInfo), string2, StringComparison.Ordinal);
 
                     }
                     else if (t == typeof(double))
@@ -1158,14 +1177,14 @@ namespace SharpMap.Web.Wms
                         double value1 = Convert.ToDouble(cqlStringItems[i]);
                         i += 2; //skip the AND in BETWEEN
                         double value2 = Convert.ToDouble(cqlStringItems[i]);
-                        tmpResult = value1 < Convert.ToDouble(row[columnIndex]) && value2 > Convert.ToDouble(row[columnIndex]);
+                        tmpResult = value1 < Convert.ToDouble(row.Attributes[columnIndex]) && value2 > Convert.ToDouble(row.Attributes[columnIndex]);
                     }
                     else if (t == typeof(int))
                     {
                         int value1 = Convert.ToInt32(cqlStringItems[i]);
                         i += 2;
                         int value2 = Convert.ToInt32(cqlStringItems[i]);
-                        tmpResult = value1 < Convert.ToInt32(row[columnIndex]) && value2 > Convert.ToInt32(row[columnIndex]);
+                        tmpResult = value1 < Convert.ToInt32(row.Attributes[columnIndex]) && value2 > Convert.ToInt32(row.Attributes[columnIndex]);
                     }
                 }
                 else
@@ -1173,7 +1192,7 @@ namespace SharpMap.Web.Wms
                     if (t == typeof(string))
                     {
                         string cqlValue = Convert.ToString(cqlStringItems[i], NumberFormatInfo.InvariantInfo);
-                        string rowValue = Convert.ToString(row[columnIndex], NumberFormatInfo.InvariantInfo);
+                        string rowValue = Convert.ToString(row.Attributes[columnIndex], NumberFormatInfo.InvariantInfo);
                         if (comparer == comparers[5])//>=
                         {
                             tmpResult = 0 <= String.Compare(rowValue, cqlValue, StringComparison.Ordinal);
@@ -1204,27 +1223,27 @@ namespace SharpMap.Web.Wms
                         double value = Convert.ToDouble(cqlStringItems[i]);
                         if (comparer == comparers[5])//>=
                         {
-                            tmpResult = Convert.ToDouble(row[columnIndex]) >= value;
+                            tmpResult = Convert.ToDouble(row.Attributes[columnIndex]) >= value;
                         }
                         else if (comparer == comparers[4])//<=
                         {
-                            tmpResult = Convert.ToDouble(row[columnIndex]) <= value;
+                            tmpResult = Convert.ToDouble(row.Attributes[columnIndex]) <= value;
                         }
                         else if (comparer == comparers[3])//>
                         {
-                            tmpResult = Convert.ToDouble(row[columnIndex]) > value;
+                            tmpResult = Convert.ToDouble(row.Attributes[columnIndex]) > value;
                         }
                         else if (comparer == comparers[2])//<
                         {
-                            tmpResult = Convert.ToDouble(row[columnIndex]) < value;
+                            tmpResult = Convert.ToDouble(row.Attributes[columnIndex]) < value;
                         }
                         else if (comparer == comparers[1])//!=
                         {
-                            tmpResult = Convert.ToDouble(row[columnIndex]) != value;
+                            tmpResult = Convert.ToDouble(row.Attributes[columnIndex]) != value;
                         }
                         else if (comparer == comparers[0])//==
                         {
-                            tmpResult = Convert.ToDouble(row[columnIndex]) == value;
+                            tmpResult = Convert.ToDouble(row.Attributes[columnIndex]) == value;
                         }
                     }
                 }
@@ -1236,16 +1255,16 @@ namespace SharpMap.Web.Wms
                     toreturn = false;
 
             }
-                //OpenLayers.Filter.Comparison.EQUAL_TO = “==”;
-                //OpenLayers.Filter.Comparison.NOT_EQUAL_TO = “!=”;
-                //OpenLayers.Filter.Comparison.LESS_THAN = “<”;
-                //OpenLayers.Filter.Comparison.GREATER_THAN = “>”;
-                //OpenLayers.Filter.Comparison.LESS_THAN_OR_EQUAL_TO = “<=”;
-                //OpenLayers.Filter.Comparison.GREATER_THAN_OR_EQUAL_TO = “>=”;
-                //OpenLayers.Filter.Comparison.BETWEEN = “..”;
-                //OpenLayers.Filter.Comparison.LIKE = “~”;
-                //IN (,,)
-            
+            //OpenLayers.Filter.Comparison.EQUAL_TO = “==”;
+            //OpenLayers.Filter.Comparison.NOT_EQUAL_TO = “!=”;
+            //OpenLayers.Filter.Comparison.LESS_THAN = “<”;
+            //OpenLayers.Filter.Comparison.GREATER_THAN = “>”;
+            //OpenLayers.Filter.Comparison.LESS_THAN_OR_EQUAL_TO = “<=”;
+            //OpenLayers.Filter.Comparison.GREATER_THAN_OR_EQUAL_TO = “>=”;
+            //OpenLayers.Filter.Comparison.BETWEEN = “..”;
+            //OpenLayers.Filter.Comparison.LIKE = “~”;
+            //IN (,,)
+
             return toreturn;
         }
         

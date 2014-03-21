@@ -19,6 +19,9 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data;
+using System.Runtime.InteropServices;
+using System.Threading;
+using GeoAPI.Features;
 using GeoAPI.Geometries;
 #if GisSharpBlog
 using GisSharpBlog.NetTopologySuite.Features;
@@ -65,6 +68,8 @@ namespace SharpMap.Data.Providers
     /// </remarks>
     public class NtsProvider : PreparedGeometryProvider
     {
+        //TODO: MAKE NETTOPOLGYSUITE.FEATURES adhere to GeoAPI.Features
+        
         #region Delegates
 
         /// <summary>
@@ -201,17 +206,19 @@ namespace SharpMap.Data.Providers
             {
                 // Load all features from the given provider
                 provider.Open();
-                Collection<uint> ids = provider.GetObjectIDsInView(provider.GetExtents());
+                var ids = provider.GetOidsInView(provider.GetExtents());
                 foreach (uint id in ids)
                 {
-                    var dataRow = provider.GetFeature(id);
+                    var dataRow = provider.GetFeatureByOid(id);
                     var geometry = dataRow.Geometry;
                     AttributesTable attributes = new AttributesTable();
-                    foreach (DataColumn column in dataRow.Table.Columns)
+                    var att = dataRow.Attributes;
+                    foreach (var column in dataRow.Factory.AttributesDefinition)
                     {
-                        if (dataRow[column] == null || dataRow[column] is DBNull)
+                        var attName = column.AttributeName;
+                        if (att[attName] == null || att[attName] is DBNull)
                             throw new ApplicationException("Null values not supported");
-                        attributes.AddAttribute(column.ColumnName, dataRow[column]);
+                        attributes.AddAttribute(attName, att[column.AttributeName]);
                     }
                     _features.Add(new Feature(geometry, attributes));
                 }
@@ -244,7 +251,7 @@ namespace SharpMap.Data.Providers
         /// </summary>
         /// <param name="rowId">The row ID.</param>
         /// <returns></returns>
-        public override FeatureDataRow GetFeature(uint rowId)
+        public override IFeature GetFeatureByOid(object rowId)
         {
             var feature = _features[Convert.ToInt32(rowId)];
             
@@ -273,7 +280,7 @@ namespace SharpMap.Data.Providers
         /// </summary>
         /// <param name="envelope"></param>
         /// <returns></returns>
-        public override Collection<Geometry> GetGeometriesInView(BoundingBox envelope)
+        public override IEnumerable<Geometry> GetGeometriesInView(BoundingBox envelope, CancellationToken? ct=null)
         {
             // Identifies all the features within the given BoundingBox
             var geoms = new Collection<Geometry>();
@@ -288,7 +295,7 @@ namespace SharpMap.Data.Providers
         /// </summary>
         /// <param name="envelope"></param>
         /// <param name="ds"></param>
-        public override void ExecuteIntersectionQuery(BoundingBox envelope, FeatureDataSet ds)
+        public override void ExecuteIntersectionQuery(BoundingBox envelope, IFeatureCollectionSet ds, CancellationToken? ct = null)
         {
             // Identifies all the features within the given BoundingBox
             var dataTable = CreateFeatureDataTable();
@@ -300,24 +307,7 @@ namespace SharpMap.Data.Providers
             }
             dataTable.EndLoadData();
 
-            ds.Tables.Add(dataTable);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="geom"></param>
-        /// <param name="ds"></param>
-        protected override void OnExecuteIntersectionQuery(Geometry geom, FeatureDataSet ds)
-        {
-            FeatureDataTable dataTable = CreateFeatureDataTable();
-            dataTable.BeginLoadData();
-            foreach (Feature feature in _features)
-                if (PreparedGeometry.Intersects(feature.Geometry))
-                    CreateNewRow(dataTable, feature);
-            dataTable.EndLoadData();
-
-            ds.Tables.Add(dataTable);
+            ds.Add(dataTable);
         }
 
         /// <summary>
@@ -325,7 +315,7 @@ namespace SharpMap.Data.Providers
         /// </summary>
         /// <param name="oid">The oid.</param>
         /// <returns></returns>
-        public override Geometry GetGeometryByID(uint oid)
+        public override Geometry GetGeometryByOid(object oid)
         {
             var feature = _features[Convert.ToInt32(oid)];
             return feature.Geometry;
@@ -336,11 +326,11 @@ namespace SharpMap.Data.Providers
         /// </summary>
         /// <param name="bbox">The bbox.</param>
         /// <returns></returns>
-        public override Collection<uint> GetObjectIDsInView(BoundingBox bbox)
+        public override IEnumerable<object> GetOidsInView(BoundingBox bbox, CancellationToken? ct= null)
         {
             // Identifies all the features within the given BoundingBox
             Envelope envelope = bbox;
-            Collection<uint> geoms = new Collection<uint>();
+            var geoms = new Collection<object>();
             for (int i = 0; i < _features.Count; i++)
                 if (envelope.Intersects(_features[i].Geometry.EnvelopeInternal))
                     geoms.Add(Convert.ToUInt32(i));

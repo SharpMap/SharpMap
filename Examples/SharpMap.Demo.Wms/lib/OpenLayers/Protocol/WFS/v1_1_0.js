@@ -42,7 +42,7 @@ OpenLayers.Protocol.WFS.v1_1_0 = OpenLayers.Class(OpenLayers.Protocol.WFS.v1, {
      * featurePrefix - {String} Feature namespace alias (optional - only used
      *     if featureNS is provided).  Default is 'feature'.
      * geometryName - {String} Name of geometry attribute.  Default is 'the_geom'.
-     * outputFormat - {String} Optional output format to use for WFS GetFeature
+     * outputFormat - {String} Optional output format to use for WFS GetFeatureByOid
      *     requests. This can be any format advertized by the WFS's
      *     GetCapabilities response. If set, an appropriate readFormat also
      *     has to be provided, unless outputFormat is GML3, GML2 or JSON.

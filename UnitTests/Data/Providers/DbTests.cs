@@ -1,4 +1,6 @@
-﻿namespace UnitTests.Data.Providers
+﻿using System.Linq;
+
+namespace UnitTests.Data.Providers
 {
     [NUnit.Framework.TestFixture]
     public abstract class DbTests<TProvider> where TProvider : SharpMap.Data.Providers.SpatialDbProvider
@@ -84,9 +86,9 @@
             using (var provider = GetProvider())
             {
                 var extent = provider.GetExtents();
-                var oids = provider.GetObjectIDsInView(extent);
+                var oids = provider.GetOidsInView(extent);
                 NUnit.Framework.Assert.IsNotNull(oids);
-                NUnit.Framework.Assert.AreEqual(provider.GetFeatureCount(), oids.Count);
+                NUnit.Framework.Assert.AreEqual(provider.GetFeatureCount(), oids.Count());
             }
         }
 
@@ -98,17 +100,17 @@
                 var extent = provider.GetExtents();
                 var geoms = provider.GetGeometriesInView(extent);
                 NUnit.Framework.Assert.IsNotNull(geoms);
-                NUnit.Framework.Assert.AreEqual(provider.GetFeatureCount(), geoms.Count);
+                NUnit.Framework.Assert.AreEqual(provider.GetFeatureCount(), geoms.Count());
             }
         }
 
         [NUnit.Framework.Test]
-        public void Test07GetGeometryByID()
+        public void Test07GetGeometryByOid()
         {
             using (var provider = GetProvider())
             {
                 GeoAPI.Geometries.IGeometry result = null;
-                NUnit.Framework.Assert.DoesNotThrow( () => result = provider.GetGeometryByID(1));
+                NUnit.Framework.Assert.DoesNotThrow( () => result = provider.GetGeometryByOid(1));
                 NUnit.Framework.Assert.IsNotNull(result);
             }
         }
@@ -150,10 +152,10 @@
         {
             using (var provider = GetProvider())
             {
-                SharpMap.Data.FeatureDataRow feature = null;
-                NUnit.Framework.Assert.DoesNotThrow(()=>  feature = provider.GetFeature(5));
+                GeoAPI.Features.IFeature feature = null;
+                NUnit.Framework.Assert.DoesNotThrow(()=>  feature = provider.GetFeatureByOid(5));
                 NUnit.Framework.Assert.NotNull(feature);
-                NUnit.Framework.Assert.AreEqual(5, feature[provider.ObjectIdColumn]);
+                NUnit.Framework.Assert.AreEqual(5, feature.Attributes[provider.ObjectIdColumn]);
             }
         }
 

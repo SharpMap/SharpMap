@@ -132,8 +132,8 @@ OpenLayers.Format.WFST.v1_1_0 = OpenLayers.Class(
      */
     writers: {
         "wfs": OpenLayers.Util.applyDefaults({
-            "GetFeature": function(options) {
-                var node = OpenLayers.Format.WFST.v1.prototype.writers["wfs"]["GetFeature"].apply(this, arguments);
+            "GetFeatureByOid": function(options) {
+                var node = OpenLayers.Format.WFST.v1.prototype.writers["wfs"]["GetFeatureByOid"].apply(this, arguments);
                 options && this.setAttributes(node, {
                     resultType: options.resultType,
                     startIndex: options.startIndex,

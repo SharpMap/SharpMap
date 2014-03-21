@@ -31,8 +31,18 @@ namespace GeoAPI.Features
         /// </summary>
         /// <returns>A new feature with <paramref name="geometry"/>, but no attributes</returns>
         IFeature Create(IGeometry geometry);
+
+        /// <summary>
+        /// Method to create a clone of this feature factory
+        /// </summary>
+        /// <returns>A clone of this feature factory</returns>
+        IFeatureFactory Clone();
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     public interface IFeatureFactory<out T> : IFeatureFactory
     {
         /// <summary>

@@ -23,7 +23,7 @@ New Features
 -GDALTileIndexRasterLayer to be able to use TileIndex-shapefiles created by gdaltindex.exe to draw mosaics of rasters in an efficient way
 -GdiImageLayer with (optional) use of a world file
 Bug fixes
--GetFeature of GeometryFeatureProvider
+-GetFeatureByOid of GeometryFeatureProvider
 -Change to make spatialindex detection of ManagedSQLiteprovider case-insensitive
 -Fix for #34754. OgrProvider: implementation for xxxList data types, better check if desired layer really exists.
 -Fix for Oracle in OleDbProvider which made Number-fields throw invalid cast exception

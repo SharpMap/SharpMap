@@ -164,6 +164,7 @@
     <Compile Include="Converters\WKT\WktGeometryTests.cs" />
     <Compile Include="CoordinateSystems\Transformations\GeometryTransformDotSpatialTest.cs" />
     <Compile Include="CoordinateSystems\Transformations\GeometryTransformTest.cs" />
+    <Compile Include="Data\FeatureDataSetTests.cs" />
     <Compile Include="Data\Providers\DataTablePointTests.cs" />
     <Compile Include="Data\Providers\DbaseReaderTests.cs" />
     <Compile Include="Data\Providers\DbTests.cs" />
@@ -183,6 +184,7 @@
     <Compile Include="Layers\TileLayerIssues.cs" />
     <Compile Include="MapDecorationTest.cs" />
     <Compile Include="MapTest.cs" />
+    <Compile Include="Presentation\MapPresenterTest.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -227,9 +229,17 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\GeoAPI.Extensions\GeoAPI.Extensions.csproj">
+      <Project>{efb576e1-56fc-47db-ac7e-683a535434be}</Project>
+      <Name>GeoAPI.Extensions</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SharpMap.Data.Providers.Kml\SharpMap.Data.Providers.Kml.csproj">
       <Project>{f9da6934-413f-4744-84ce-923d901f60e6}</Project>
       <Name>SharpMap.Data.Providers.Kml</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SharpMap.Data\SharpMap.Data.csproj">
+      <Project>{79703116-03e1-4579-8412-e5fa87a701b2}</Project>
+      <Name>SharpMap.Data</Name>
     </ProjectReference>
     <ProjectReference Include="..\SharpMap.Extensions\SharpMap.Extensions.csproj">
       <Project>{A4140C12-53F5-438C-8D24-9E48C504FECF}</Project>

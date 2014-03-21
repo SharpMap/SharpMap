@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
+using GeoAPI.Features;
 using GeoAPI.Geometries;
 using SharpMap.Data;
+using SharpMap.Features;
 using SharpMap.Layers;
 using SharpMap.Web.Wms.Exceptions;
 
@@ -128,7 +130,7 @@ namespace SharpMap.Web.Wms.Server.Handlers
             WmsServer.InterSectDelegate intersectDelegate,
             ICanQueryLayer queryLayer,
             string cqlFilter,
-            out FeatureDataSet fds)
+            out IFeatureCollectionSet fds)
         {
             if (!queryLayer.IsQueryEnabled)
             {
@@ -145,29 +147,34 @@ namespace SharpMap.Web.Wms.Server.Handlers
             Coordinate maxXY = map.ImageToWorld(new PointF(queryBoxMaxX, queryBoxMaxY));
             Envelope queryBox = new Envelope(minXY, maxXY);
 
-            fds = new FeatureDataSet();
+            fds = new FeatureCollectionSet();
             queryLayer.ExecuteIntersectionQuery(queryBox, fds);
 
-            FeatureTableCollection tables = fds.Tables;
-            FeatureDataTable table = tables[0];
+            if (fds.Count == 0)
+                return false;
+
+            var table = fds[0];
             if (intersectDelegate != null)
-                tables[0] = intersectDelegate(table, queryBox);
+            {
+                fds.Remove(table);
+                fds.Add(intersectDelegate(table, queryBox));
+                table = fds[0];
+            }
 
             // filter the rows with the CQLFilter if one is provided
             if (cqlFilter != null)
             {
-                DataRowCollection rows = table.Rows;
-                for (int i = rows.Count - 1; i >= 0; i--)
+                var toKeep = table.Clone();
+                foreach (var feature in table)
                 {
-                    FeatureDataRow row = (FeatureDataRow)rows[i];
-                    bool b = CqlFilter(row, cqlFilter);
-                    if (!b)
-                        rows.RemoveAt(i);
+                    if (CqlFilter(feature, cqlFilter))
+                        toKeep.Add(feature);
                 }
+                fds.Remove(table);
+                fds.Add(toKeep);
             }
 
-            bool res = tables.Count > 0 && table.Rows.Count > 0;
-            return res;
+            return fds[0].Count > 0;
         }
     }
 }

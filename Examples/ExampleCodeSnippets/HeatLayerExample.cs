@@ -28,7 +28,7 @@ namespace ExampleCodeSnippets
                 CreatingData.GetRandomOrdinates(150, 52, 53), null,
                 CreatingData.GetRandomOrdinates(150, 0, 1));
 
-            var p = new SharpMap.Data.Providers.GeometryFeatureProvider(data);
+            var p = new SharpMap.Data.Providers.FeatureProvider(data);
             var l = new HeatLayer(p, "Data");
 
             m.Layers.Add(l);
@@ -46,7 +46,7 @@ namespace ExampleCodeSnippets
             var fdt = GetRealFeatureDataTable();
             FillRealDataTable(fdt);
 
-            var p = new SharpMap.Data.Providers.GeometryFeatureProvider(fdt);
+            var p = new SharpMap.Data.Providers.FeatureProvider(fdt);
 
 
             var m = new SharpMap.Map(new Size(640, 640));

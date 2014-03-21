@@ -62,11 +62,12 @@
     <Compile Include="SpatialReference\ISpatialReference.cs" />
     <Compile Include="SpatialReference\ISpatialReferenceConverter.cs" />
     <Compile Include="SpatialReference\SpatialReferenceDefinitionType.cs" />
+    <Compile Include="GeometryServicesExtensions.cs" />
     <Compile Include="Utilities\ThreadSafeStore.cs" />
     <Content Include="Beware.txt" />
     <Compile Include="Features\IFeature.cs" />
     <Compile Include="Features\IFeatureFactory.cs" />
-    <Compile Include="Features\IFeatureSet.cs" />
+    <Compile Include="Features\IFeatureCollectionSet.cs" />
     <Compile Include="Features\IEntity.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -60,25 +60,26 @@
             NUnit.Framework.Assert.AreEqual(4, p.GetFeatureCount());
             p.DefinitionQuery = "Name='One'";
             NUnit.Framework.Assert.AreEqual(1, p.GetFeatureCount());
-            var fdr = p.GetFeature(1);
-            NUnit.Framework.Assert.AreEqual(1, (int)fdr[0]);
+            var fdr = p.GetFeatureByOid(1);
+            NUnit.Framework.Assert.AreEqual(1, (int)fdr.Attributes[0]);
             p.DefinitionQuery = string.Empty;
 
             var fds = new SharpMap.Data.FeatureDataSet();
             p.ExecuteIntersectionQuery(extents, fds);
             NUnit.Framework.Assert.AreEqual(1, fds.Tables.Count);
             NUnit.Framework.Assert.AreEqual(4, fds.Tables[0].Rows.Count);
+            fds.Tables.Remove(fds.Tables[0]);
 
             p.ExecuteIntersectionQuery(poly, fds);
-            NUnit.Framework.Assert.AreEqual(2, fds.Tables.Count);
-            NUnit.Framework.Assert.AreEqual(3, fds.Tables[1].Rows.Count);
+            NUnit.Framework.Assert.AreEqual(1, fds.Tables.Count);
+            NUnit.Framework.Assert.AreEqual(3, fds.Tables[0].Rows.Count);
 
             var inside = new System.Collections.Generic.List<bool>(new[] { false, true, true, true });
-            NUnit.Framework.Assert.AreEqual(System.Linq.Enumerable.Count(inside, (b) => b == true), fds.Tables[1].Rows.Count);
+            NUnit.Framework.Assert.AreEqual(System.Linq.Enumerable.Count(inside, b => b), fds.Tables[0].Rows.Count);
 
             var ext = p.GetExtents();
-            var oids = p.GetObjectIDsInView(ext);
-            NUnit.Framework.Assert.AreEqual(4, oids.Count);
+            var oids = p.GetOidsInView(ext);
+            NUnit.Framework.Assert.AreEqual(4, System.Linq.Enumerable.Count(oids));
             
             System.IO.File.Delete(System.IO.Path.Combine(System.IO.Path.GetTempPath(), table));
         }

@@ -1,3 +1,4 @@
+using GeoAPI.Features;
 using GeoAPI.Geometries;
 using SharpMap.Data;
 
@@ -15,7 +16,7 @@ namespace SharpMap.Layers
         /// </summary>
         /// <param name="box">Bounding box to intersect with</param>
         /// <param name="ds">FeatureDataSet to fill data into</param>
-        void ExecuteIntersectionQuery(Envelope box, FeatureDataSet ds);
+        void ExecuteIntersectionQuery(Envelope box, IFeatureCollectionSet ds);
 
         /// <summary>
         /// Returns the data associated with all the geometries that are intersected by 'geom'
@@ -24,7 +25,7 @@ namespace SharpMap.Layers
         /// </summary>
         /// <param name="geometry">Geometry to intersect with</param>
         /// <param name="ds">FeatureDataSet to fill data into</param>
-        void ExecuteIntersectionQuery(IGeometry geometry, FeatureDataSet ds);
+        void ExecuteIntersectionQuery(IGeometry geometry, IFeatureCollectionSet ds);
 
         /// <summary>
         /// Whether the layer is queryable when used in a SharpMap.Web.Wms.WmsServer, 

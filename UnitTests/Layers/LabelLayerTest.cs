@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
+using GeoAPI.Features;
 using GeoAPI.Geometries;
 using NUnit.Framework;
 using SharpMap.Data;
@@ -47,12 +48,12 @@ namespace UnitTests.Layers
             return new CustomTheme(StyleBasedOnAlignment);
         }
 
-        private static IStyle StyleBasedOnAlignment(FeatureDataRow dr)
+        private static IStyle StyleBasedOnAlignment(IFeature dr)
         {
             var style = new LabelStyle
             {
-                HorizontalAlignment = (LabelStyle.HorizontalAlignmentEnum)(int) dr[2],
-                VerticalAlignment = (LabelStyle.VerticalAlignmentEnum)(int) dr[3],
+                HorizontalAlignment = (LabelStyle.HorizontalAlignmentEnum)(int) dr.Attributes[2],
+                VerticalAlignment = (LabelStyle.VerticalAlignmentEnum)(int)dr.Attributes[3],
                 Rotation = -20,
                 BackColor = Brushes.Pink,
                 Halo = new Pen(Brushes.LightBlue, 2)
@@ -67,7 +68,7 @@ namespace UnitTests.Layers
             {
                 m.BackColor = Color.SeaShell;
                 //_featureDataTable.Clear();
-                var gfp = new GeometryFeatureProvider(_featureDataTable);
+                var gfp = new FeatureProvider(_featureDataTable);
                 var vl = new VectorLayer("VL", gfp);
                 var ll = new LabelLayer("MultiLineCenterAligned") {DataSource = gfp};
                 ll.Theme = CreateTheme();

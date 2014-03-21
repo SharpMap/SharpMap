@@ -238,7 +238,7 @@ OpenLayers.Format.WPSExecute = OpenLayers.Class(OpenLayers.Format.XML, {
                     // instance and not in the options
                     this.featureType = body.wfs.featureType;
                     this.version = body.wfs.version;
-                    this.writeNode("wfs:GetFeature", body.wfs, node);
+                    this.writeNode("wfs:GetFeatureByOid", body.wfs, node);
                 } else {
                     this.writeNode("wps:Execute", body, node);
                 }

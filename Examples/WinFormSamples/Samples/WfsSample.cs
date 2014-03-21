@@ -91,7 +91,7 @@ namespace WinFormSamples.Samples
                 layer5.Style.Fill = new SolidBrush(Color.LightBlue);
 
                 // Labels
-                // Labels are collected when parsing the geometry. So there's just one 'GetFeature' call necessary.
+                // Labels are collected when parsing the geometry. So there's just one 'GetFeatureByOid' call necessary.
                 // Otherwise (when calling twice for retrieving labels) there may be an inconsistent read...
                 // If a label property is set, the quick geometry option is automatically set to 'false'.
                 prov3.Label = "STATE_NAME";

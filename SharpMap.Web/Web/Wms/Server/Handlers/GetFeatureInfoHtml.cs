@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using System.Text;
+using GeoAPI.Features;
 using SharpMap.Data;
 using SharpMap.Layers;
 
@@ -35,17 +37,18 @@ namespace SharpMap.Web.Wms.Server.Handlers
             foreach (string requestLayer in requestedLayers)
             {
                 ICanQueryLayer layer = GetQueryLayer(map, requestLayer);
-                FeatureDataSet fds;
+                IFeatureCollectionSet fds;
                 if (!TryGetData(map, x, y, pixelSensitivity, intersectDelegate, layer, cqlFilter, out fds))
                     continue;
 
-                FeatureDataTable table = fds.Tables[0];
+                var table = fds[0];
+                var attributeDefinition = table[0].Factory.AttributesDefinition;
                 StringBuilder sbTable = new StringBuilder();
                 sbTable.AppendFormat("<tr>{0}", NewLine);
-                foreach (DataColumn col in table.Columns)
-                    sbTable.AppendFormat("<th>{0}</th>{1}", col.ColumnName, NewLine);
+                foreach (IFeatureAttributeDefinition col in attributeDefinition)
+                    sbTable.AppendFormat("<th>{0}</th>{1}", col.AttributeName, NewLine);
                 sbTable.AppendFormat("</tr>{0}", NewLine);
-                string rowsText = GetRowsText(table.Rows, featureCount);
+                string rowsText = GetRowsText(table, featureCount);
                 sbTable.Append(rowsText);
 
                 string tpl = TableTemplate.
@@ -59,17 +62,17 @@ namespace SharpMap.Web.Wms.Server.Handlers
             return new GetFeatureInfoResponseHtml(html);
         }
 
-        protected override string FormatRows(DataRowCollection rows, int[] keys, int maxFeatures)
+        protected override string FormatRows(IFeatureCollection rows, int[] keys, int maxFeatures)
         {
             StringBuilder sb = new StringBuilder();
+            var attributeDefinition = rows[0].Factory.AttributesDefinition;
             for (int k = 0; k < maxFeatures; k++)
             {
                 string css = k % 2 == 0 ? CssEven : CssOdd;
                 int key = keys[k];
-                object[] arr = rows[key].ItemArray;
                 sb.AppendFormat("<tr{0}>{1}", css, NewLine);
-                foreach (object el in arr)
-                    sb.AppendFormat("<td>{0}</td>{1}", el, NewLine);
+                for (var i = 0; i < attributeDefinition.Count;i++)
+                    sb.AppendFormat("<td>{0}</td>{1}", rows[key].Attributes[i], NewLine);
                 sb.AppendFormat("</tr>{0}", NewLine);
             }
             return sb.ToString();

@@ -5,7 +5,7 @@ using System.Xml;
 
 namespace SharpMap.Web
 {
-    internal class HttpCacheUtility
+    public class HttpCacheUtility
     {
         private static bool _systemWebTested;
         private static readonly DateTime NoAbsoluteExpiration = DateTime.MaxValue;
@@ -109,7 +109,7 @@ namespace SharpMap.Web
             return GetHttpContextCache(/*httpContext*/);
         }
 
-        internal static bool TryGetValue<T>(string key, out T instance)
+        public static bool TryGetValue<T>(string key, out T instance)
             where T: class
         {
             var cache = GetCurrentCache();
@@ -126,7 +126,7 @@ namespace SharpMap.Web
         /// <summary>
         /// Gets a value indicating that the code is being run in a web context
         /// </summary>
-        internal static bool IsWebContext { get { return GetCurrentCache() != null; } }
+        public static bool IsWebContext { get { return GetCurrentCache() != null; } }
 
         /// <summary>
         /// Function that tries to get an object from the WebCache
@@ -141,7 +141,7 @@ namespace SharpMap.Web
             return TryAddValue(key, instance, TimeSpan.FromDays(1));
         }
 
-        internal static bool TryAddValue<T>(string key, T instance, TimeSpan timeSpan)
+        public static bool TryAddValue<T>(string key, T instance, TimeSpan timeSpan)
             where T : class
         {
             var cache = GetCurrentCache();

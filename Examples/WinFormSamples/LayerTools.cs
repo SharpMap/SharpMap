@@ -264,10 +264,10 @@ namespace WinFormSamples
                 ll.DataSource = provider;
                 
                 provider.Open();
-                var f = provider.GetFeature(1);
+                var f = provider.GetFeatureByOid(1);
                 provider.Close();
 
-                ll.LabelColumn = f.Table.Columns[1].ColumnName;
+                ll.LabelColumn = f.Factory.AttributesDefinition[1].AttributeName;
                 ll.Style.CollisionDetection = false;
                 ll.Style.IgnoreLength = true;
                 

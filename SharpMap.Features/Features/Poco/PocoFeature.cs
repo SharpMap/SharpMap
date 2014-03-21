@@ -151,6 +151,11 @@ namespace SharpMap.Features.Poco
             return res;
         }
 
+        IFeatureFactory IFeatureFactory.Clone()
+        {
+            return (IFeatureFactory)Clone();
+        }
+
         /// <summary>
         /// Gets the attributes associated with this feature
         /// </summary>

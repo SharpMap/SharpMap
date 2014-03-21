@@ -1,4 +1,8 @@
 // code adapted from: https://github.com/awcoats/mapstache
+
+using System.Linq.Expressions;
+using SharpMap.Features;
+
 namespace SharpMap.Demo.Wms.Controllers
 {
     using System;
@@ -14,7 +18,6 @@ namespace SharpMap.Demo.Wms.Controllers
     using GeoAPI.CoordinateSystems.Transformations;
 
     using SharpMap.Converters.GeoJSON;
-    using SharpMap.Data;
     using SharpMap.Demo.Wms.Helpers;
     using SharpMap.Layers;
 
@@ -67,7 +70,7 @@ namespace SharpMap.Demo.Wms.Controllers
             using (Utf8Grid grid = new Utf8Grid(UtfGridResolution, x, y, z))
             {
                 Envelope bbox = this.GetBoundingBoxInLatLngWithMargin(x, y, z);
-                FeatureDataSet ds = new FeatureDataSet();
+                var ds = new FeatureCollectionSet();
                 query.ExecuteIntersectionQuery(bbox, ds);
                 IEnumerable<GeoJSON> data = GeoJSONHelper.GetData(ds);
 

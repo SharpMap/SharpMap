@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Timers;
+using GeoAPI.Features;
 using SharpMap;
 using SharpMap.Data;
 using SharpMap.Data.Providers;
@@ -26,7 +27,7 @@ namespace WinFormSamples.Samples
         //Could have used SharpMap.Rendering.Thematics.CustomTheme,
         //but that one does not perserve styles for fast retrieval.
         //Maybe a category theme would be a good idea...
-        private delegate IStyle GetStyleHandler(FeatureDataRow row);
+        private delegate IStyle GetStyleHandler(IFeature row);
         class ThemeViaDelegate : ITheme
         {
             public GetStyleHandler GetStyleFunction;
@@ -44,15 +45,15 @@ namespace WinFormSamples.Samples
 
             #region Implementation of ITheme
 
-            public IStyle GetStyle(FeatureDataRow attribute)
+            public IStyle GetStyle(IFeature feature)
             {
                 IStyle returnStyle;
-                String value = Convert.ToString(attribute[_columnName]);
+                String value = Convert.ToString(feature.Attributes[_columnName]);
                 if (!_stylePreserver.TryGetValue(value, out returnStyle))
                 {
                     if (GetStyleFunction != null)
                     {
-                        returnStyle = GetStyleFunction(attribute);
+                        returnStyle = GetStyleFunction(feature);
                         if (returnStyle == null) returnStyle = _default;
                         _stylePreserver.Add(value, returnStyle);
                     }
@@ -99,9 +100,9 @@ namespace WinFormSamples.Samples
             layNatural.Style = transparentStyle;
             //Set theme
             ThemeViaDelegate theme = new ThemeViaDelegate(layNatural.Style, "type");
-            theme.GetStyleFunction = delegate(FeatureDataRow row)
+            theme.GetStyleFunction = delegate(IFeature row)
                                          {
-                                             string caseVal = (String) row["type"];
+                                             string caseVal = (String) row.Attributes["type"];
                                              caseVal = caseVal.ToLowerInvariant();
                                              VectorStyle returnStyle = new VectorStyle();
                                              
@@ -143,11 +144,11 @@ namespace WinFormSamples.Samples
             //layRoads.DataSource.Close();
             layRoads.Style = transparentStyle;
             ThemeViaDelegate themeRoads = new ThemeViaDelegate(transparentStyle, "type");
-            themeRoads.GetStyleFunction = delegate(FeatureDataRow row)
+            themeRoads.GetStyleFunction = delegate(IFeature row)
                                               {
                                                   VectorStyle returnStyle = new VectorStyle();
 
-                                                  switch ((String)row["type"])
+                                                  switch ((String)row.Attributes["type"])
                                                   {
                                                       case "rail":
                                                           returnStyle.Fill = Brushes.White;
@@ -235,13 +236,13 @@ namespace WinFormSamples.Samples
             layWaterways.DataSource = new ShapeFile(string.Format("{0}/waterways.shp", PathOsm)) { Encoding = encoding };
             layRoads.Style = transparentStyle;
             ThemeViaDelegate themeWater = new ThemeViaDelegate(transparentStyle, "type");
-            themeWater.GetStyleFunction = delegate(FeatureDataRow row)
+            themeWater.GetStyleFunction = delegate(IFeature row)
             {
                 VectorStyle returnStyle = new VectorStyle();
                 returnStyle.Line.Brush = Brushes.Aqua;
                 returnStyle.EnableOutline = true;
                 Int32 lineWidth = 1;
-                switch ((String)row["type"])
+                switch ((String)row.Attributes["type"])
                 {
                     case "canal":
                     case "derelict_canal":
@@ -269,10 +270,10 @@ namespace WinFormSamples.Samples
             layPoints.DataSource = new ShapeFile(string.Format("{0}/points.shp", PathOsm)) { Encoding = encoding };
             layPoints.Style = transparentStyle2;
             ThemeViaDelegate themePoints = new ThemeViaDelegate(transparentStyle2, "type");
-            themePoints.GetStyleFunction = delegate(FeatureDataRow row)
+            themePoints.GetStyleFunction = delegate(IFeature row)
             {
                 VectorStyle returnStyle = new VectorStyle();
-                switch ((String)row["type"])
+                switch ((String)row.Attributes["type"])
                 {
                     case "bank":
                         returnStyle.Symbol = new Bitmap("Images/Bank.gif");
@@ -369,9 +370,9 @@ namespace WinFormSamples.Samples
                 if (_id == _modValue) _id = 0;
             }
 
-            bool Filter(FeatureDataRow fdr)
+            bool Filter(IFeature fdr)
             {
-                return Convert.ToInt32(fdr[0]) == _id;
+                return Convert.ToInt32(fdr.Attributes[0]) == _id;
             }
 
         }

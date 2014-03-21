@@ -1,8 +1,10 @@
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using GeoAPI;
+using GeoAPI.Features;
 using GeoAPI.Geometries;
 #if !DotSpatialProjections
 using GeoAPI.CoordinateSystems.Transformations;
@@ -29,7 +31,7 @@ namespace SharpMap.Layers.Symbolizer
 
         private readonly object _dataSourceLock = new object();
         private IProvider _dataSource;
-        private Collection<IGeometry> _geometries;
+        private List<IGeometry> _geometries;
 
         #endregion
 
@@ -172,7 +174,7 @@ namespace SharpMap.Layers.Symbolizer
                 var wasOpen = _dataSource.IsOpen;
                 if (!_dataSource.IsOpen) _dataSource.Open();
 
-                _geometries = DataSource.GetGeometriesInView(envelope);
+                _geometries = new List<IGeometry>(DataSource.GetGeometriesInView(envelope));
 
                 if (logger.IsDebugEnabled)
                     logger.DebugFormat("Layer {0}, NumGeometries {1}", LayerName, _geometries.Count);
@@ -234,7 +236,7 @@ namespace SharpMap.Layers.Symbolizer
         /// </summary>
         /// <param name="box">Geometry to intersect with</param>
         /// <param name="ds">FeatureDataSet to fill data into</param>
-        public void ExecuteIntersectionQuery(Envelope box, FeatureDataSet ds)
+        public void ExecuteIntersectionQuery(Envelope box, IFeatureCollectionSet ds)
         {
             if (CoordinateTransformation != null)
             {
@@ -267,7 +269,7 @@ namespace SharpMap.Layers.Symbolizer
         /// </summary>
         /// <param name="geometry">Geometry to intersect with</param>
         /// <param name="ds">FeatureDataSet to fill data into</param>
-        public void ExecuteIntersectionQuery(IGeometry geometry, FeatureDataSet ds)
+        public void ExecuteIntersectionQuery(IGeometry geometry, IFeatureCollectionSet ds)
         {
             if (CoordinateTransformation != null)
             {

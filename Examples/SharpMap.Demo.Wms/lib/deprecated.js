@@ -2375,7 +2375,7 @@ OpenLayers.Layer.WFS = OpenLayers.Class(
      */
     DEFAULT_PARAMS: { service: "WFS",
                       version: "1.0.0",
-                      request: "GetFeature"
+                      request: "GetFeatureByOid"
                     },
 
     /**

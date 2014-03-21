@@ -1,4 +1,5 @@
 ﻿using System;
+using SharpMap.Data;
 
 namespace WinFormSamples.Samples
 {
@@ -259,11 +260,11 @@ namespace WinFormSamples.Samples
             {
                 _brush = brush;
             }
-            public SharpMap.Styles.IStyle GetStyle(SharpMap.Data.FeatureDataRow fdr)
+            public SharpMap.Styles.IStyle GetStyle(GeoAPI.Features.IFeature fdr)
             {
                 var retval = new SharpMap.Styles.VectorStyle();
 
-                if (fdr["Bearing"] == DBNull.Value)
+                if (fdr.Attributes["Bearing"] == DBNull.Value)
                 {
                     var bmp = new System.Drawing.Bitmap(36, 36);
                     using (var g = System.Drawing.Graphics.FromImage(bmp))
@@ -286,7 +287,7 @@ namespace WinFormSamples.Samples
                 else
                 {
                     retval.Symbol = ColoredArrow(_brush);
-                    var rot =  (Single)(Double)fdr["Bearing"];
+                    var rot =  Convert.ToSingle(fdr.Attributes["Bearing"]);
                     retval.SymbolRotation = rot % 360f;
                 }
                 return retval;
@@ -298,7 +299,7 @@ namespace WinFormSamples.Samples
         /// This class is directly derived from GreatMaps
         /// http://gmaps.codeplex.com
         /// </summary>
-        private class VilniusTransportData : SharpMap.Data.Providers.GeometryFeatureProvider
+        private class VilniusTransportData : SharpMap.Data.Providers.FeatureProvider
         {
 
             private bool _isActive;
@@ -479,15 +480,15 @@ namespace WinFormSamples.Samples
                 }
 
                 Features.Clear();
-
+                var features = (FeatureDataTable) Features;
                 foreach (SharpMap.Data.FeatureDataRow featureDataRow in fdt.Rows)
                 {
-                    var fdr = Features.NewRow();
+                    var fdr = features.NewRow();
                     fdr.ItemArray = featureDataRow.ItemArray;
                     fdr.Geometry = featureDataRow.Geometry;
-                    Features.AddRow(fdr);
+                    features.AddRow(fdr);
                 }
-                Features.AcceptChanges();
+                features.AcceptChanges();
 
                 _isActive = false;
             }

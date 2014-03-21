@@ -7,7 +7,7 @@
             var fdt = GetRealFeatureDataTable();
             FillRealDataTable(fdt);
 
-            var p = new SharpMap.Data.Providers.GeometryFeatureProvider(fdt);
+            var p = new SharpMap.Data.Providers.FeatureProvider(fdt);
 
 
             var m = new SharpMap.Map();

@@ -23,7 +23,7 @@ namespace UnitTests.Serialization
         public void TestMap1()
         {
             var m = new Map(_mapSize);
-            m.Layers.Add(new VectorLayer("tmp", new GeometryProvider(
+            m.Layers.Add(new VectorLayer("tmp", new FeatureProvider(
                 new LineString(new [] {new Coordinate(0, 0), new Coordinate(10, 10), }))));
 
             m.ZoomToExtents();

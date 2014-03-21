@@ -28,7 +28,7 @@ public partial class GeometryFeature : Page
         fdt.EndLoadData();
 
         var vLayer = new VectorLayer("GeometryProvider");
-        vLayer.DataSource = new GeometryFeatureProvider(fdt);
+        vLayer.DataSource = new FeatureProvider(fdt);
         vLayer.SRID = 4326;
 
         return vLayer;

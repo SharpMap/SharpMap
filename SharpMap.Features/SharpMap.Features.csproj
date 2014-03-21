@@ -55,13 +55,6 @@
     <Compile Include="Data\FeatureDataRowProxy.cs" />
     <Compile Include="Data\FeatureDataTableProxy.cs" />
     <Compile Include="Data\ProviderProxy.cs" />
-    <Compile Include="Features\Entity.cs" />
-    <Compile Include="Features\EntityOidGenerator.cs" />
-    <Compile Include="Features\Feature.cs" />
-    <Compile Include="Features\FeatureAttributeDefinition.cs" />
-    <Compile Include="Features\FeatureAttributes.cs" />
-    <Compile Include="Features\FeatureCollection.cs" />
-    <Compile Include="Features\FeatureFactory.cs" />
     <Compile Include="Features\Poco\PocoFeature.cs" />
     <Compile Include="Features\Poco\PocoFeatureAttributeDefinition.cs" />
     <Compile Include="Features\Poco\PocoFeatureAttributesDefinition.cs" />
@@ -73,6 +66,10 @@
     <ProjectReference Include="..\GeoAPI.Extensions\GeoAPI.Extensions.csproj">
       <Project>{efb576e1-56fc-47db-ac7e-683a535434be}</Project>
       <Name>GeoAPI.Extensions</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SharpMap.Data\SharpMap.Data.csproj">
+      <Project>{79703116-03e1-4579-8412-e5fa87a701b2}</Project>
+      <Name>SharpMap.Data</Name>
     </ProjectReference>
     <ProjectReference Include="..\SharpMap\SharpMap.csproj">
       <Project>{c83777fc-aabb-47d9-911f-d76255d4d541}</Project>

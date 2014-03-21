@@ -1,4 +1,9 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Threading;
+using Common.Logging.Configuration;
+using GeoAPI.Features;
 using GeoAPI.Geometries;
 using GeoAPI.Geometries.Prepared;
 
@@ -45,7 +50,7 @@ namespace SharpMap.Data.Providers
         /// Method to perform preparatory things for executing an intersection query against the data source
         /// </summary>
         /// <param name="geom">The geometry to use as filter.</param>
-        protected override void OnBeginExecuteIntersectionQuery(IGeometry geom)
+        protected override void OnBeginExecuteIntersectionQuery(IGeometry geom, CancellationToken? cancellationToken = null)
         {
             PreparedGeometry = NetTopologySuite.Geometries.Prepared.PreparedGeometryFactory.Prepare(geom);
             base.OnBeginExecuteIntersectionQuery(geom);
@@ -56,33 +61,29 @@ namespace SharpMap.Data.Providers
         /// </summary>
         /// <param name="geom">The geometry to use as filter</param>
         /// <param name="ds">The feature data set to store the results in</param>
-        protected override void OnExecuteIntersectionQuery(IGeometry geom, FeatureDataSet ds)
+        protected override void OnExecuteIntersectionQuery(IGeometry geom, IFeatureCollectionSet ds, CancellationToken? cancellationToken = null)
         {
             ExecuteIntersectionQuery(geom.EnvelopeInternal, ds);
 
             //index of last added feature data table
-            var index = ds.Tables.Count - 1;
+            var index = ds.Count - 1;
             if (index < 0) return;
 
-            var res = CloneTableStructure(ds.Tables[index]);
-            res.BeginLoadData();
+            var fds = ds[index].Clone();
+            fds.AddRange(FilterFeatures(ds[index]));
 
-            var fdt = ds.Tables[index];
-            foreach (FeatureDataRow row in fdt.Rows)
-            {
-                if (PreparedGeometry.Intersects(row.Geometry))
-                {
-                    var fdr = (FeatureDataRow)res.LoadDataRow(row.ItemArray, true);
-                    fdr.Geometry = row.Geometry;
-                }
-            }
-
-            res.EndLoadData();
-
-            ds.Tables.RemoveAt(index);
-            ds.Tables.Add(res);
+            ds.Remove(ds[index]);
+            ds.Add(fds);
         }
 
+        private IEnumerable<IFeature> FilterFeatures(IEnumerable<IFeature> features)
+        {
+            foreach (var feature in features)
+            {
+                if (PreparedGeometry.Intersects(feature.Geometry))
+                    yield return feature;
+            }
+        }
         /// <summary>
         /// Method to do cleanup work after having performed the intersection query against the data source
         /// </summary>

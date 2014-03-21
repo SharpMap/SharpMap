@@ -124,7 +124,7 @@ namespace DemoWinForm
                     throw new NotSupportedException();
             }
 
-            var provider = new GeometryProvider(geometry);
+            var provider = new FeatureProvider(geometry);
             layer.DataSource = provider;
 
             addLayer(layer);

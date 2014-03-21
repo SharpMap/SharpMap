@@ -15,6 +15,7 @@
 // along with SharpMap; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
 
+using GeoAPI.Features;
 using SharpMap.Data;
 using SharpMap.Styles;
 
@@ -28,8 +29,8 @@ namespace SharpMap.Rendering.Thematics
         /// <summary>
         /// Returns the style based on a feature
         /// </summary>
-        /// <param name="attribute">Set of attribute values to calculate the <see cref="IStyle"/> from</param>
+        /// <param name="feature">Set of attribute values to calculate the <see cref="IStyle"/> from</param>
         /// <returns>The style</returns>
-        IStyle GetStyle(FeatureDataRow attribute);
+        IStyle GetStyle(IFeature feature);
     }
 }

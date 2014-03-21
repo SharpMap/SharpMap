@@ -122,7 +122,7 @@ namespace SharpMap.Utilities.Wfs
         }
 
         /// <summary>
-        /// Gets or sets the service URI for WFS 'GetFeature' request.
+        /// Gets or sets the service URI for WFS 'GetFeatureByOid' request.
         /// This argument is obligatory for data retrieving.
         /// </summary>
         public string ServiceURI

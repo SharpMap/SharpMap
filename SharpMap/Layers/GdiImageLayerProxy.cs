@@ -19,6 +19,7 @@ using System;
 using System.Drawing;
 using System.Drawing.Imaging;
 using Common.Logging;
+using GeoAPI.Features;
 using GeoAPI.Geometries;
 using SharpMap.Data;
 
@@ -200,7 +201,7 @@ namespace SharpMap.Layers
             }
         }
 
-        void ICanQueryLayer.ExecuteIntersectionQuery(Envelope box, FeatureDataSet ds)
+        void ICanQueryLayer.ExecuteIntersectionQuery(Envelope box, IFeatureCollectionSet ds)
         {
             if (_baseLayer is ICanQueryLayer)
             {
@@ -208,7 +209,7 @@ namespace SharpMap.Layers
             }
         }
 
-        void ICanQueryLayer.ExecuteIntersectionQuery(IGeometry geometry, FeatureDataSet ds)
+        void ICanQueryLayer.ExecuteIntersectionQuery(IGeometry geometry, IFeatureCollectionSet ds)
         {
             if (_baseLayer is ICanQueryLayer)
             {

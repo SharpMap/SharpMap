@@ -15,11 +15,11 @@ namespace UnitTests.Data.Providers
                 sf.Open();
                 var fds = new SharpMap.Data.FeatureDataSet();
                 sf.ExecuteIntersectionQuery(sf.GetExtents(), fds);
-                _provider = new SharpMap.Data.Providers.GeometryFeatureProvider(fds.Tables[0]);
+                _provider = new SharpMap.Data.Providers.FeatureProvider(fds.Tables[0]);
             }
         }
 
-        private SharpMap.Data.Providers.GeometryFeatureProvider _provider;
+        private SharpMap.Data.Providers.FeatureProvider _provider;
         private readonly Random _rnd = new Random(47652);
 
         [NUnit.Framework.Test]
@@ -69,9 +69,9 @@ namespace UnitTests.Data.Providers
                 row.Geometry = gf.CreatePoint(new GeoAPI.Geometries.Coordinate(i, i));
                 fdt.AddRow(row);
             }
-            var layer = new SharpMap.Layers.VectorLayer("TMP", new SharpMap.Data.Providers.GeometryFeatureProvider(fdt));
+            var layer = new SharpMap.Layers.VectorLayer("TMP", new SharpMap.Data.Providers.FeatureProvider(fdt));
 
-            var res = layer.DataSource.GetFeature(0);
+            var res = layer.DataSource.GetFeatureByOid(0);
             NUnit.Framework.Assert.IsNotNull(res);
         }
 
@@ -90,7 +90,7 @@ namespace UnitTests.Data.Providers
                 row.Geometry = gf.CreatePoint(new GeoAPI.Geometries.Coordinate(i, i));
                 fdt.AddRow(row);
             }
-            var layer = new SharpMap.Layers.VectorLayer("TMP", new SharpMap.Data.Providers.GeometryFeatureProvider(fdt));
+            var layer = new SharpMap.Layers.VectorLayer("TMP", new SharpMap.Data.Providers.FeatureProvider(fdt));
 
             var res = FindGeoNearPoint(gf.CreatePoint(new GeoAPI.Geometries.Coordinate(0.1, 0.1)), layer, 0.2d);
             NUnit.Framework.Assert.IsNotNull(res);

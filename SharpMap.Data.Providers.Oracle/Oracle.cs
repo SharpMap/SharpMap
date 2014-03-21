@@ -20,9 +20,9 @@
 
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Data;
-using System.Globalization;
+using System.Threading;
+using GeoAPI.Features;
 using GeoAPI.Geometries;
 using Oracle.ManagedDataAccess.Client;
 using SharpMap.Converters.WellKnownBinary;
@@ -155,9 +155,8 @@ namespace SharpMap.Data.Providers
         /// </summary>
         /// <param name="bbox"></param>
         /// <returns></returns>
-        public override Collection<IGeometry> GetGeometriesInView(Envelope bbox)
+        public override IEnumerable<IGeometry> GetGeometriesInView(Envelope bbox, CancellationToken? cancellationToken=null)
         {
-            var features = new Collection<IGeometry>();
             using (var conn = new OracleConnection(ConnectionString))
             {
                 //Get bounding box string
@@ -182,14 +181,13 @@ namespace SharpMap.Data.Providers
                             if (!dr.IsDBNull(0))
                             {
                                 var geom = GeometryFromWKB.Parse((byte[]) dr[0], Factory);
-                                if (geom != null) features.Add(geom);
+                                if (geom != null) yield return geom;
                             }
                         }
                     }
                     conn.Close();
                 }
             }
-            return features;
         }
 
         /// <summary>
@@ -197,16 +195,17 @@ namespace SharpMap.Data.Providers
         /// </summary>
         /// <param name="oid">Object ID</param>
         /// <returns>IGeometry</returns>
-        public override IGeometry GetGeometryByID(uint oid)
+        public override IGeometry GetGeometryByOid(object oid)
         {
             IGeometry geom = null;
             using (var conn = new OracleConnection(ConnectionString))
             {
                 string strSQL = "SELECT g." + GeometryColumn + ".Get_WKB() FROM " + Table + " g WHERE " + ObjectIdColumn +
-                                "='" + oid.ToString(NumberFormatInfo.InvariantInfo) + "'";
+                                "=:POid;";
                 conn.Open();
                 using (var command = new OracleCommand(strSQL, conn))
                 {
+                    command.Parameters.Add(new OracleParameter("POid", oid));
                     using (var dr = command.ExecuteReader())
                     {
                         while (dr.Read())
@@ -228,9 +227,8 @@ namespace SharpMap.Data.Providers
         /// </summary>
         /// <param name="bbox"></param>
         /// <returns></returns>
-        public override Collection<uint> GetObjectIDsInView(Envelope bbox)
+        public override IEnumerable<object> GetOidsInView(Envelope bbox, CancellationToken? cancellationToken=null)
         {
-            var objectlist = new Collection<uint>();
             using (var conn = new OracleConnection(ConnectionString))
             {
                 //Get bounding box string
@@ -251,24 +249,20 @@ namespace SharpMap.Data.Providers
                     {
                         while (dr.Read())
                         {
-                            if (dr.IsDBNull(0)) continue;
-
-                            var id = (uint) (decimal) dr[0];
-                            objectlist.Add(id);
+                            if (!dr.IsDBNull(0)) yield return dr.GetValue(0);
                         }
                     }
                     conn.Close();
                 }
             }
-            return objectlist;
         }
 
         /// <summary>
         /// Returns the features that intersects with 'geom'
         /// </summary>
         /// <param name="geom"></param>
-        /// <param name="ds">FeatureDataSet to fill data into</param>
-        protected override void OnExecuteIntersectionQuery(IGeometry geom, FeatureDataSet ds)
+        /// <param name="fcs">FeatureCollectionSet to fill data into</param>
+        protected override void OnExecuteIntersectionQuery(IGeometry geom, IFeatureCollectionSet fcs, CancellationToken? cancellationToken=null)
         {
             using (var conn = new OracleConnection(ConnectionString))
             {
@@ -286,6 +280,7 @@ namespace SharpMap.Data.Providers
                     strSQL += DefinitionQuery + " AND ";
 
                 strSQL += strGeom;
+                var ds = new FeatureDataSet();
 
                 using (var adapter = new OracleDataAdapter(strSQL, conn))
                 {
@@ -315,7 +310,7 @@ namespace SharpMap.Data.Providers
                         fdr.Geometry = GeometryFromWKB.Parse((byte[]) dr["sharpmap_tempgeometry"], Factory);
                         fdt.AddRow(fdr);
                     }
-                    ds.Tables.Add(fdt);
+                    fcs.Add(fdt);
                 }
             }
         }
@@ -376,17 +371,17 @@ namespace SharpMap.Data.Providers
         /// <summary>
         /// Returns a datarow based on a RowID
         /// </summary>
-        /// <param name="rowId"></param>
+        /// <param name="oid"></param>
         /// <returns>datarow</returns>
-        public override FeatureDataRow GetFeature(uint rowId)
+        public override IFeature GetFeatureByOid(object oid)
         {
             using (var conn = new OracleConnection(ConnectionString))
             {
                 string strSQL = "select g.* , g." + GeometryColumn + ").Get_WKB() As sharpmap_tempgeometry from " +
-                                Table + " g WHERE " + ObjectIdColumn + "='" +
-                                rowId.ToString(NumberFormatInfo.InvariantInfo) + "'";
+                                Table + " g WHERE " + ObjectIdColumn + "=:POid";
                 using (var adapter = new OracleDataAdapter(strSQL, conn))
                 {
+                    adapter.SelectCommand.Parameters.Add("POid", oid);
                     var ds = new FeatureDataSet();
                     conn.Open();
                     adapter.Fill(ds);
@@ -493,7 +488,7 @@ namespace SharpMap.Data.Providers
         /// </summary>
         /// <param name="bbox">view box</param>
         /// <param name="ds">FeatureDataSet to fill data into</param>
-        public override void ExecuteIntersectionQuery(Envelope bbox, FeatureDataSet ds)
+        public override void ExecuteIntersectionQuery(Envelope bbox, IFeatureCollectionSet ds, CancellationToken? cancellationToken = null)
         {
             using (var conn = new OracleConnection(ConnectionString))
             {
@@ -529,7 +524,7 @@ namespace SharpMap.Data.Providers
                             fdr.Geometry = GeometryFromWKB.Parse((byte[]) dr["sharpmap_tempgeometry"], Factory);
                             fdt.AddRow(fdr);
                         }
-                        ds.Tables.Add(fdt);
+                        ds.Add(fdt);
                     }
                 }
             }

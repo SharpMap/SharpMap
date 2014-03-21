@@ -18,6 +18,7 @@
 using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using GeoAPI.Features;
 using SharpMap.Data;
 using SharpMap.Styles;
 
@@ -308,14 +309,14 @@ namespace SharpMap.Rendering.Thematics
         /// Returns the style based on a numeric DataColumn, where style
         /// properties are linearly interpolated between max and min values.
         /// </summary>
-        /// <param name="row">Feature</param>
+        /// <param name="feature">Feature</param>
         /// <returns><see cref="SharpMap.Styles.IStyle">Style</see> calculated by a linear interpolation between the min/max styles</returns>
-        public virtual IStyle GetStyle(FeatureDataRow row)
+        public virtual IStyle GetStyle(IFeature feature)
         {
             double attr;
             try
             {
-                attr = GetAttributeValue(row);
+                attr = GetAttributeValue(feature);
             }
             catch
             {
@@ -341,7 +342,7 @@ namespace SharpMap.Rendering.Thematics
         /// </summary>
         /// <param name="row">The row</param>
         /// <returns>A <see cref="double"/> value</returns>
-        protected abstract double GetAttributeValue(FeatureDataRow row);
+        protected abstract double GetAttributeValue(IFeature row);
     }
 
     /// <summary>
@@ -416,9 +417,9 @@ namespace SharpMap.Rendering.Thematics
         /// </summary>
         /// <param name="row">The row</param>
         /// <returns>A <see cref="double"/> value</returns>
-        protected override double GetAttributeValue(FeatureDataRow row)
+        protected override double GetAttributeValue(IFeature row)
         {
-            return Convert.ToDouble(row[_columnName]);
+            return Convert.ToDouble(row.Attributes[_columnName]);
         }
     }
 }

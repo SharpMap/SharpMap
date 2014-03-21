@@ -71,10 +71,10 @@ namespace WinFormSamples.Samples
                 DataSource = layCities.DataSource,
                 LabelColumn = "name",
                 PriorityColumn = "population",
-                PriorityDelegate = delegate(SharpMap.Data.FeatureDataRow fdr) 
+                PriorityDelegate = delegate(GeoAPI.Features.IFeature fdr) 
                 { 
-                    System.Int32 retVal = 10000000 * ( (System.String)fdr["capital"] == "Y" ? 1 : 0 );
-                    return  retVal + System.Convert.ToInt32(fdr["population"]);
+                    System.Int32 retVal = 10000000 * ( (System.String)fdr.Attributes["capital"] == "Y" ? 1 : 0 );
+                    return  retVal + System.Convert.ToInt32(fdr.Attributes["population"]);
                 },
                 TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAlias,
                 SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias,
@@ -166,7 +166,7 @@ namespace WinFormSamples.Samples
             return null;
         }
 
-        internal static int GetRiverLength(SharpMap.Data.FeatureDataRow row)
+        internal static int GetRiverLength(GeoAPI.Features.IFeature row)
         {
             if (row == null) return 0;
             if (row.Geometry == null)

@@ -72,12 +72,12 @@ OpenLayers.Format.WFSCapabilities.v1_0_0 = OpenLayers.Class(
                 obj.request = {};
                 this.readChildNodes(node, obj.request);
             },
-            "GetFeature": function(node, request) {
-                request.getfeature = {
+            "GetFeatureByOid": function(node, request) {
+                request.GetFeatureByOid = {
                     href: {}, // DCPType
                     formats: [] // ResultFormat
                 };
-                this.readChildNodes(node, request.getfeature);
+                this.readChildNodes(node, request.GetFeatureByOid);
             },
             "ResultFormat": function(node, obj) {
                 var children = node.childNodes;

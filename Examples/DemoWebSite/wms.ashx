@@ -56,13 +56,13 @@ public class wms : IHttpHandler
     /// </summary>
     /// <param name="featureDataTable">The FeatureDataTable instance to filter</param>
     /// <param name="testEnvelope">the envelope to compare against</param>
-    public SharpMap.Data.FeatureDataTable PostFilterExistingFeatureDataTable(SharpMap.Data.FeatureDataTable featureDataTable, GeoAPI.Geometries.Envelope testEnvelope)
+    public GeoAPI.Features.IFeatureCollection PostFilterExistingFeatureDataTable(GeoAPI.Features.IFeatureCollection featureDataTable, GeoAPI.Geometries.Envelope testEnvelope)
     {
-        if (featureDataTable == null || featureDataTable.Rows.Count == 0)
+        if (featureDataTable == null || featureDataTable.Count == 0)
             return featureDataTable;
         
         //first we get a GeometryFactory.
-        var geometryFactory = ((SharpMap.Data.FeatureDataRow)featureDataTable.Rows[0]).Geometry.Factory;
+        var geometryFactory = featureDataTable[0].Geometry.Factory;
 
         //create a test polygon from testenvelope
 	    var testPolygon = geometryFactory.ToGeometry(testEnvelope);
@@ -71,10 +71,10 @@ public class wms : IHttpHandler
 	    var pp = NetTopologySuite.Geometries.Prepared.PreparedGeometryFactory.Prepare(testPolygon);
 
         //now we loop backwards through the FeatureDataTable 
-        for (var i = featureDataTable.Rows.Count - 1; i > -1; i--)
+        for (var i = featureDataTable.Count - 1; i > -1; i--)
         {
             //we get each row
-            var featureDataRow = featureDataTable.Rows[i] as SharpMap.Data.FeatureDataRow;
+            var featureDataRow = featureDataTable[i];// as SharpMap.Data.FeatureDataRow;
             if (featureDataRow != null)
             {
                 //and get the rows' geometry
@@ -85,12 +85,14 @@ public class wms : IHttpHandler
 
                 //if it doesn't intersect remove the row.
                 if (!intersects)
-                    featureDataTable.Rows.RemoveAt(i);
+                    featureDataTable.Remove(featureDataRow);
             }
+                /*
             else
             {
                 featureDataTable.Rows.RemoveAt(i);
             }
+                 */
         }
         return featureDataTable;
     }

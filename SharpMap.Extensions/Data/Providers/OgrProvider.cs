@@ -16,9 +16,12 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
 
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 //using OSGeo.OGR;
+using System.Threading;
+using GeoAPI.Features;
 using SharpMap.Converters.WellKnownBinary;
 using SharpMap.Extensions.Data;
 //using SharpMap.Geometries;
@@ -340,13 +343,13 @@ namespace SharpMap.Data.Providers
         /// </summary>
         /// <param name="rowId"></param>
         /// <returns>FeatureDataRow</returns>
-        public override FeatureDataRow GetFeature(uint rowId)
+        public override IFeature GetFeatureByOid(object rowId)
         {
             _ogrLayer.ResetReading();
             var fdt = ReadColumnDefinition(_ogrLayer);
             fdt.BeginLoadData();
             FeatureDataRow res;
-            using (var feature = _ogrLayer.GetFeature((int) rowId))
+            using (var feature = _ogrLayer.GetFeature(Convert.ToInt32(rowId)))
             {
                 res = LoadOgrFeatureToFeatureDataRow(fdt, feature, Factory);
             }
@@ -359,19 +362,17 @@ namespace SharpMap.Data.Providers
         /// </summary>
         /// <param name="bbox"></param>
         /// <returns></returns>
-        public override Collection<uint> GetObjectIDsInView(BoundingBox bbox)
+        public override IEnumerable<object> GetOidsInView(BoundingBox bbox, CancellationToken? ct = null)
         {
             _ogrLayer.SetSpatialFilterRect(bbox.MinX, bbox.MinY, bbox.MaxX, bbox.MaxY);
             _ogrLayer.ResetReading();
 
-            var objectIDs = new Collection<uint>();
             OgrFeature ogrFeature;
             while ((ogrFeature = _ogrLayer.GetNextFeature()) != null)
             {
-                objectIDs.Add((uint)ogrFeature.GetFID());
+                yield return ogrFeature.GetFID();
                 ogrFeature.Dispose();
             }
-            return objectIDs;
         }
 
         /// <summary>
@@ -379,9 +380,9 @@ namespace SharpMap.Data.Providers
         /// </summary>
         /// <param name="oid">Object ID</param>
         /// <returns>geometry</returns>
-        public override Geometry GetGeometryByID(uint oid)
+        public override Geometry GetGeometryByOid(object oid)
         {
-            using (var ogrFeature = _ogrLayer.GetFeature((int)oid))
+            using (var ogrFeature = _ogrLayer.GetFeature(Convert.ToInt32(oid)))
             {
                 using (var gr = ogrFeature.GetGeometryRef())
                 {
@@ -396,7 +397,7 @@ namespace SharpMap.Data.Providers
         /// </summary>
         /// <param name="bbox"></param>
         /// <returns></returns>
-        public override Collection<Geometry> GetGeometriesInView(BoundingBox bbox)
+        public override IEnumerable<Geometry> GetGeometriesInView(BoundingBox bbox, CancellationToken? ct = null)
         {
             var geoms = new Collection<Geometry>();
 
@@ -421,7 +422,6 @@ namespace SharpMap.Data.Providers
             {
                 Debug.WriteLine(ex.Message);
             }
-
             return geoms;
         }
 
@@ -431,10 +431,12 @@ namespace SharpMap.Data.Providers
         /// </summary>
         /// <param name="bbox">Geometry to intersect with</param>
         /// <param name="ds">FeatureDataSet to fill data into</param>
-        public override void ExecuteIntersectionQuery(BoundingBox bbox, FeatureDataSet ds)
+        public override void ExecuteIntersectionQuery(BoundingBox bbox, IFeatureCollectionSet fcs, CancellationToken? ct = null)
         {
             _ogrLayer.SetSpatialFilterRect(bbox.MinX, bbox.MinY, bbox.MaxX, bbox.MaxY);
-            ExecuteIntersectionQuery(ds);
+            var fds = new FeatureDataSet();
+            ExecuteIntersectionQuery(fds);
+            foreach (var fd in fds) fcs.Add(fd);
         }
 
         /// <summary>
@@ -442,12 +444,14 @@ namespace SharpMap.Data.Providers
         /// </summary>
         /// <param name="geom">Geometry to intersect with</param>
         /// <param name="ds">FeatureDataSet to fill data into</param>
-        protected override void OnExecuteIntersectionQuery(Geometry geom, FeatureDataSet ds)
+        protected override void OnExecuteIntersectionQuery(Geometry geom, IFeatureCollectionSet fcs, CancellationToken? ct = null)
         {
             using (var ogrGeometry = OgrGeometry.CreateFromWkb(GeometryToWKB.Write(geom)))
             {
                 _ogrLayer.SetSpatialFilter(ogrGeometry);
-                ExecuteIntersectionQuery(ds);
+                var fds = new FeatureDataSet();
+                ExecuteIntersectionQuery(fds);
+                foreach (var fd in fds) fcs.Add(fd);
             }
 
         }
@@ -462,11 +466,17 @@ namespace SharpMap.Data.Providers
             var myDt = ReadColumnDefinition(_ogrLayer);
 
             myDt.BeginLoadData();
-            OgrFeature ogrFeature;
-            while ((ogrFeature = _ogrLayer.GetNextFeature()) != null)
+            try
             {
-                LoadOgrFeatureToFeatureDataRow(myDt, ogrFeature, Factory);
-                ogrFeature.Dispose();
+                OgrFeature ogrFeature;
+                while ((ogrFeature = _ogrLayer.GetNextFeature()) != null)
+                {
+                    LoadOgrFeatureToFeatureDataRow(myDt, ogrFeature, Factory);
+                    ogrFeature.Dispose();
+                }
+            }
+            catch (Exception)
+            {
             }
             myDt.EndLoadData();
 
@@ -676,18 +686,6 @@ namespace SharpMap.Data.Providers
         }
 
         /// <summary>
-        /// Returns the data associated with all the geometries that is within 'distance' of 'geom'
-        /// </summary>
-        /// <param name="geom"></param>
-        /// <param name="distance"></param>
-        /// <returns></returns>
-        [Obsolete("Use ExecuteIntersectionQuery instead")]
-        public FeatureDataTable QueryFeatures(Geometry geom, double distance)
-        {
-            throw new NotSupportedException();
-        }
-
-        /// <summary>
         /// Returns the features that intersects with 'geom'
         /// </summary>
         /// <param name="geom">Geometry</param>
@@ -697,17 +695,6 @@ namespace SharpMap.Data.Providers
             var fds = new FeatureDataSet();
             ExecuteIntersectionQuery(geom, fds);
             return fds.Tables[0];
-        }
-
-        /// <summary>
-        /// Returns all features with the view box
-        /// </summary>
-        /// <param name="bbox">view box</param>
-        /// <param name="ds">FeatureDataSet to fill data into</param>
-        [Obsolete("Use ExecuteIntersectionQuery(BoundingBox,FeatureDataSet) instead")]
-        public void GetFeaturesInView(BoundingBox bbox, FeatureDataSet ds)
-        {
-            ExecuteIntersectionQuery(bbox, ds);
         }
     }
 }

@@ -104,6 +104,8 @@ namespace SharpMap.Data
 
         public IGeometryFactory GeometryFactory { get; private set; }
 
+        public string Name { get; set; }
+
         public IList<IFeatureAttributeDefinition> AttributesDefinition
         {
             get
@@ -117,6 +119,33 @@ namespace SharpMap.Data
             }
         }
 
+        public IFeature this[int index]
+        {
+            get { return new FeatureDataRowProxy((FeatureDataRow)_table.Rows[index]); }
+        }
+
+        public IFeature this[object oid]
+        {
+            get { return new FeatureDataRowProxy((FeatureDataRow)_table.Rows.Find(oid)); }
+        }
+
+        IFeatureCollection IFeatureCollection.Clone()
+        {
+            return new FeatureDataTableProxy(Factory.GeometryFactory, (FeatureDataTable)_table.Copy());
+        }
+
+        public void AddRange(IEnumerable<IFeature> features)
+        {
+            _table.BeginLoadData();
+            foreach (var feature in features)
+            {
+                if (feature is FeatureDataRow)
+                    _table.AddRow((FeatureDataRow)feature);
+            }
+            _table.EndLoadData();
+            _table.AcceptChanges();
+        }
+
         public IFeature Create()
         {
             var row = _table.NewRow();
@@ -128,6 +157,12 @@ namespace SharpMap.Data
             var res = Create();
             res.Geometry = geometry;
             return res;
+        }
+
+        IFeatureFactory IFeatureFactory.Clone()
+        {
+            throw new NotSupportedException();
+
         }
 
         public IEnumerator<IFeature> GetEnumerator()

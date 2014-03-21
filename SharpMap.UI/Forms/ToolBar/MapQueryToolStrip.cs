@@ -30,7 +30,7 @@ namespace SharpMap.Forms.ToolBar
         private ToolStripSeparator _sep2;
         private ToolStripComboBox _queryLayerPicker;
 
-        private Data.Providers.GeometryFeatureProvider _geometryProvider;
+        private Data.Providers.FeatureProvider _geometryProvider;
         private Layers.VectorLayer _layer;
 
         private readonly Dictionary<string, int> _dictLayerNameToIndex
@@ -226,7 +226,7 @@ namespace SharpMap.Forms.ToolBar
 
             if (MapControl == null) return;
 
-            _geometryProvider = new SharpMap.Data.Providers.GeometryFeatureProvider(features);
+            _geometryProvider = new SharpMap.Data.Providers.FeatureProvider(features);
             _layer = new SharpMap.Layers.VectorLayer("QueriedFeatures", _geometryProvider);
             _layer.IsQueryEnabled = false;
             

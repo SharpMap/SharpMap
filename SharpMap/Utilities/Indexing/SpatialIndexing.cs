@@ -398,7 +398,7 @@ namespace SharpMap.Utilities.SpatialIndexing
             return new QuadTree(b, 0);
         }
 
-        internal class ObsoleteFileFormatException : Exception
+        public class ObsoleteFileFormatException : Exception
         {
             /// <summary>
             /// Exception thrown when layer rendering has failed

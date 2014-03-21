@@ -14,7 +14,7 @@ Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "DemoWebSite", "Examples\Dem
 		SccLocalPath = "SAK"
 		SccProvider = "SAK"
 		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.0"
-		ProjectReferences = "{C83777FC-AABB-47D9-911F-D76255D4D541}|SharpMap.dll;{A4140C12-53F5-438C-8D24-9E48C504FECF}|SharpMap.Extensions.dll;{292ef671-4063-4952-8de0-423df72a0950}|SharpMap.Web.dll;{9961698e-4ee0-4a3b-84b7-a23e69e0c13c}|SharpMap.Extensions.x86.dll;{EFB576E1-56FC-47DB-AC7E-683A535434BE}|GeoAPI.Extensions.dll;"
+		ProjectReferences = "{C83777FC-AABB-47D9-911F-D76255D4D541}|SharpMap.dll;{A4140C12-53F5-438C-8D24-9E48C504FECF}|SharpMap.Extensions.dll;{292ef671-4063-4952-8de0-423df72a0950}|SharpMap.Web.dll;{9961698e-4ee0-4a3b-84b7-a23e69e0c13c}|SharpMap.Extensions.x86.dll;{EFB576E1-56FC-47DB-AC7E-683A535434BE}|GeoAPI.Extensions.dll;{79703116-03E1-4579-8412-E5FA87A701B2}|SharpMap.Data.dll;"
 		Debug.AspNetCompiler.VirtualPath = "/DemoWebSite"
 		Debug.AspNetCompiler.PhysicalPath = "Examples\DemoWebSite\"
 		Debug.AspNetCompiler.TargetPath = "Examples\PrecompiledWeb\DemoWebSite\"
@@ -121,9 +121,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpMap.Data.Providers.Ora
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpMap.Data.Providers.Kml", "SharpMap.Data.Providers.Kml\SharpMap.Data.Providers.Kml.csproj", "{F9DA6934-413F-4744-84CE-923D901F60E6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpMap.Rendering.Gdi", "SharpMap.Rendering.Gdi\SharpMap.Rendering.Gdi.csproj", "{2C520EFF-4F67-4353-9B33-7C25949DF42C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpMap.Data", "SharpMap.Data\SharpMap.Data.csproj", "{79703116-03E1-4579-8412-E5FA87A701B2}"
+EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 23
+		SccNumberOfProjects = 25
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://tfs.codeplex.com/tfs/tfs01
 		SccLocalPath0 = .
@@ -205,6 +209,12 @@ Global
 		SccProjectUniqueName22 = SharpMap.Data.Providers.OracleSpatial\\SharpMap.Data.Providers.OracleSpatial.csproj
 		SccProjectName22 = SharpMap.Data.Providers.OracleSpatial
 		SccLocalPath22 = SharpMap.Data.Providers.OracleSpatial
+		SccProjectUniqueName23 = SharpMap.Rendering.Gdi\\SharpMap.Rendering.Gdi.csproj
+		SccProjectName23 = SharpMap.Rendering.Gdi
+		SccLocalPath23 = SharpMap.Rendering.Gdi
+		SccProjectUniqueName24 = SharpMap.Data\\SharpMap.Data.csproj
+		SccProjectName24 = SharpMap.Data
+		SccLocalPath24 = SharpMap.Data
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|.NET = Debug|.NET
@@ -308,6 +318,7 @@ Global
 		{32ECD993-CB5A-4AD9-8C8F-45C73A088C13}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{32ECD993-CB5A-4AD9-8C8F-45C73A088C13}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{32ECD993-CB5A-4AD9-8C8F-45C73A088C13}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{32ECD993-CB5A-4AD9-8C8F-45C73A088C13}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
 		{32ECD993-CB5A-4AD9-8C8F-45C73A088C13}.Debug|x86.ActiveCfg = Debug|Any CPU
 		{32ECD993-CB5A-4AD9-8C8F-45C73A088C13}.DebugDSProjection|.NET.ActiveCfg = Debug|Any CPU
 		{32ECD993-CB5A-4AD9-8C8F-45C73A088C13}.DebugDSProjection|Any CPU.ActiveCfg = Debug|Any CPU
@@ -765,6 +776,53 @@ Global
 		{F9DA6934-413F-4744-84CE-923D901F60E6}.ReleaseDSProjection|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{F9DA6934-413F-4744-84CE-923D901F60E6}.ReleaseDSProjection|Mixed Platforms.Build.0 = Release|Any CPU
 		{F9DA6934-413F-4744-84CE-923D901F60E6}.ReleaseDSProjection|x86.ActiveCfg = Release|Any CPU
+		{2C520EFF-4F67-4353-9B33-7C25949DF42C}.Debug|.NET.ActiveCfg = Debug|Any CPU
+		{2C520EFF-4F67-4353-9B33-7C25949DF42C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2C520EFF-4F67-4353-9B33-7C25949DF42C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2C520EFF-4F67-4353-9B33-7C25949DF42C}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{2C520EFF-4F67-4353-9B33-7C25949DF42C}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{2C520EFF-4F67-4353-9B33-7C25949DF42C}.DebugDSProjection|.NET.ActiveCfg = Debug|Any CPU
+		{2C520EFF-4F67-4353-9B33-7C25949DF42C}.DebugDSProjection|Any CPU.ActiveCfg = Debug|Any CPU
+		{2C520EFF-4F67-4353-9B33-7C25949DF42C}.DebugDSProjection|Any CPU.Build.0 = Debug|Any CPU
+		{2C520EFF-4F67-4353-9B33-7C25949DF42C}.DebugDSProjection|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{2C520EFF-4F67-4353-9B33-7C25949DF42C}.DebugDSProjection|Mixed Platforms.Build.0 = Debug|Any CPU
+		{2C520EFF-4F67-4353-9B33-7C25949DF42C}.DebugDSProjection|x86.ActiveCfg = Debug|Any CPU
+		{2C520EFF-4F67-4353-9B33-7C25949DF42C}.Release|.NET.ActiveCfg = Release|Any CPU
+		{2C520EFF-4F67-4353-9B33-7C25949DF42C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2C520EFF-4F67-4353-9B33-7C25949DF42C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2C520EFF-4F67-4353-9B33-7C25949DF42C}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{2C520EFF-4F67-4353-9B33-7C25949DF42C}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{2C520EFF-4F67-4353-9B33-7C25949DF42C}.Release|x86.ActiveCfg = Release|Any CPU
+		{2C520EFF-4F67-4353-9B33-7C25949DF42C}.ReleaseDSProjection|.NET.ActiveCfg = Release|Any CPU
+		{2C520EFF-4F67-4353-9B33-7C25949DF42C}.ReleaseDSProjection|Any CPU.ActiveCfg = Release|Any CPU
+		{2C520EFF-4F67-4353-9B33-7C25949DF42C}.ReleaseDSProjection|Any CPU.Build.0 = Release|Any CPU
+		{2C520EFF-4F67-4353-9B33-7C25949DF42C}.ReleaseDSProjection|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{2C520EFF-4F67-4353-9B33-7C25949DF42C}.ReleaseDSProjection|Mixed Platforms.Build.0 = Release|Any CPU
+		{2C520EFF-4F67-4353-9B33-7C25949DF42C}.ReleaseDSProjection|x86.ActiveCfg = Release|Any CPU
+		{79703116-03E1-4579-8412-E5FA87A701B2}.Debug|.NET.ActiveCfg = Debug|Any CPU
+		{79703116-03E1-4579-8412-E5FA87A701B2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{79703116-03E1-4579-8412-E5FA87A701B2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{79703116-03E1-4579-8412-E5FA87A701B2}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{79703116-03E1-4579-8412-E5FA87A701B2}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{79703116-03E1-4579-8412-E5FA87A701B2}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{79703116-03E1-4579-8412-E5FA87A701B2}.DebugDSProjection|.NET.ActiveCfg = Debug|Any CPU
+		{79703116-03E1-4579-8412-E5FA87A701B2}.DebugDSProjection|Any CPU.ActiveCfg = Debug|Any CPU
+		{79703116-03E1-4579-8412-E5FA87A701B2}.DebugDSProjection|Any CPU.Build.0 = Debug|Any CPU
+		{79703116-03E1-4579-8412-E5FA87A701B2}.DebugDSProjection|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{79703116-03E1-4579-8412-E5FA87A701B2}.DebugDSProjection|Mixed Platforms.Build.0 = Debug|Any CPU
+		{79703116-03E1-4579-8412-E5FA87A701B2}.DebugDSProjection|x86.ActiveCfg = Debug|Any CPU
+		{79703116-03E1-4579-8412-E5FA87A701B2}.Release|.NET.ActiveCfg = Release|Any CPU
+		{79703116-03E1-4579-8412-E5FA87A701B2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{79703116-03E1-4579-8412-E5FA87A701B2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{79703116-03E1-4579-8412-E5FA87A701B2}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{79703116-03E1-4579-8412-E5FA87A701B2}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{79703116-03E1-4579-8412-E5FA87A701B2}.Release|x86.ActiveCfg = Release|Any CPU
+		{79703116-03E1-4579-8412-E5FA87A701B2}.ReleaseDSProjection|.NET.ActiveCfg = Release|Any CPU
+		{79703116-03E1-4579-8412-E5FA87A701B2}.ReleaseDSProjection|Any CPU.ActiveCfg = Release|Any CPU
+		{79703116-03E1-4579-8412-E5FA87A701B2}.ReleaseDSProjection|Any CPU.Build.0 = Release|Any CPU
+		{79703116-03E1-4579-8412-E5FA87A701B2}.ReleaseDSProjection|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{79703116-03E1-4579-8412-E5FA87A701B2}.ReleaseDSProjection|Mixed Platforms.Build.0 = Release|Any CPU
+		{79703116-03E1-4579-8412-E5FA87A701B2}.ReleaseDSProjection|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -16,7 +16,9 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
 
 using System;
-using System.Collections.ObjectModel;
+using System.Collections.Generic;
+using System.Threading;
+using GeoAPI.Features;
 using GeoAPI.Geometries;
 using IGeometry = GeoAPI.Geometries.IGeometry;
 
@@ -50,9 +52,10 @@ namespace SharpMap.Data.Providers
         /// <summary>
         /// Gets the features within the specified <see cref="GeoAPI.Geometries.Envelope"/>
         /// </summary>
-        /// <param name="bbox"></param>
-        /// <returns>Features within the specified <see cref="GeoAPI.Geometries.Envelope"/></returns>
-        Collection<IGeometry> GetGeometriesInView(Envelope bbox);
+        /// <param name="extent">The extent to be queried</param>
+        /// <param name="cancellationToken">A cancellation token</param>
+        /// <returns>A stream of geometries of features within the specified <see cref="GeoAPI.Geometries.Envelope"/></returns>
+        IEnumerable<IGeometry> GetGeometriesInView(Envelope extent, CancellationToken? cancellationToken = null);
 
         /// <summary>
         /// Returns all objects whose <see cref="GeoAPI.Geometries.Envelope"/> intersects 'bbox'.
@@ -61,30 +64,33 @@ namespace SharpMap.Data.Providers
         /// This method is usually much faster than the QueryFeatures method, because intersection tests
         /// are performed on objects simplified by their <see cref="GeoAPI.Geometries.Envelope"/>, and using the Spatial Index
         /// </remarks>
-        /// <param name="bbox">Box that objects should intersect</param>
-        /// <returns></returns>
-        Collection<uint> GetObjectIDsInView(Envelope bbox);
+        /// <param name="extent">The extent to be queried</param>
+        /// <param name="cancellationToken">A cancellation token</param>
+        /// <returns>Object ids of features</returns>
+        IEnumerable<object> GetOidsInView(Envelope extent, CancellationToken? cancellationToken = null);
 
         /// <summary>
         /// Returns the geometry corresponding to the Object ID
         /// </summary>
-        /// <param name="oid">Object ID</param>
+        /// <param name="oid">The object Id</param>
         /// <returns>geometry</returns>
-        IGeometry GetGeometryByID(uint oid);
+        IGeometry GetGeometryByOid(object oid);
 
         /// <summary>
         /// Returns the data associated with all the geometries that are intersected by 'geom'
         /// </summary>
         /// <param name="geom">Geometry to intersect with</param>
         /// <param name="ds">FeatureDataSet to fill data into</param>
-        void ExecuteIntersectionQuery(IGeometry geom, FeatureDataSet ds);
+        /// <param name="cancellationToken">A cancellation token</param>
+        void ExecuteIntersectionQuery(IGeometry geom, IFeatureCollectionSet ds, CancellationToken? cancellationToken = null);
 
         /// <summary>
         /// Returns the data associated with all the geometries that are intersected by 'geom'
         /// </summary>
-        /// <param name="box">Geometry to intersect with</param>
+        /// <param name="box">Envelope to intersect with</param>
         /// <param name="ds">FeatureDataSet to fill data into</param>
-        void ExecuteIntersectionQuery(Envelope box, FeatureDataSet ds);
+        /// <param name="cancellationToken">A cancellation token</param>
+        void ExecuteIntersectionQuery(Envelope box, IFeatureCollectionSet ds, CancellationToken? cancellationToken = null);
 
         /// <summary>
         /// Returns the number of features in the dataset
@@ -93,16 +99,16 @@ namespace SharpMap.Data.Providers
         int GetFeatureCount();
 
         /// <summary>
-        /// Returns a <see cref="SharpMap.Data.FeatureDataRow"/> based on a RowID
+        /// Returns a <see cref="GeoAPI.Features.IFeature"/> based on its unique <paramref name="oid">object id</paramref>
         /// </summary>
-        /// <param name="rowId">The id of the row.</param>
-        /// <returns>datarow</returns>
-        FeatureDataRow GetFeature(uint rowId);
+        /// <param name="oid">The object id of the feature to get.</param>
+        /// <returns>A feature</returns>
+        IFeature GetFeatureByOid(object oid);
 
         /// <summary>
         /// <see cref="Envelope"/> of dataset
         /// </summary>
-        /// <returns>The 2d extent of the layer</returns>
+        /// <returns>The 2-dimensional extent of the layer</returns>
         Envelope GetExtents();
 
         /// <summary>
@@ -114,5 +120,43 @@ namespace SharpMap.Data.Providers
         /// Closes the datasource
         /// </summary>
         void Close();
+    }
+
+    /// <summary>
+    /// Interface for specific provider implementations
+    /// </summary>
+    /// <typeparam name="TEntity">The type of the entity</typeparam>
+    public interface IProvider<TEntity> : IProvider 
+        where TEntity : IComparable<TEntity>, IEquatable<TEntity>
+    {
+        /// <summary>
+        /// Returns all feature identifieres of features whose <see cref="GeoAPI.Geometries.Envelope"/> intersects <paramref name="view"/>.
+        /// </summary>
+        /// <param name="view">The envelope that objects should intersect</param>
+        /// <param name="cancellationToken">A cancellation token</param>
+        /// <returns>A stream of identifiers</returns>
+        IEnumerable<TEntity> GetFidsInView(Envelope view, CancellationToken? cancellationToken = null);
+
+        /// <summary>
+        /// Returns the geometry of a feature corresponding to the feature's identifier <paramref name="fid"/>
+        /// </summary>
+        /// <param name="fid">The identifier of the feature to get the geometry from</param>
+        /// <returns>A geometry, if the feature exists, otherwise implementiation should throw <see cref="ArgumentOutOfRangeException"/>.</returns>
+        IGeometry GetGeometryByFid(TEntity fid);
+
+        /// <summary>
+        /// Returns the geometry corresponding to the Object ID
+        /// </summary>
+        /// <param name="view">The view</param>
+        /// <param name="cancellationToken">A cancellation token</param>
+        /// <returns>A stream of features</returns>
+        IFeature<TEntity> GetFeaturesInView(Envelope view, CancellationToken? cancellationToken = null);
+
+        /// <summary>
+        /// Returns the feature corresponding to the feature's identifier <paramref name="fid"/>
+        /// </summary>
+        /// <param name="fid">The identifier of the feature to get the geometry from</param>
+        /// <returns>A feature, if one exists, otherwise implementiation should throw <see cref="ArgumentOutOfRangeException"/>.</returns>
+        IFeature<TEntity> GetFeatureByFid(TEntity fid);
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace UnitTests.Data.Providers
+﻿using System.Linq;
+
+namespace UnitTests.Data.Providers
 {
 
     [NUnit.Framework.TestFixture]
@@ -38,7 +40,7 @@
 
             sh.Open();
             var featsInView = sh.GetGeometriesInView(new GeoAPI.Geometries.Envelope(sh.GetExtents()));
-            NUnit.Framework.Assert.AreEqual(4342, featsInView.Count);
+            NUnit.Framework.Assert.AreEqual(4342, featsInView.Count());
             sh.Close();
         }
 
@@ -126,7 +128,7 @@
 
             var shp = new SharpMap.Data.Providers.ShapeFile(GetTestDataFilePath("SPATIAL_F_SKARVMUFF.shp"), false, false);
             shp.Open();
-            var feat = shp.GetFeature(0);
+            var feat = shp.GetFeatureByOid(0);
             NUnit.Framework.Assert.IsNotNull(feat);
             shp.Close();
         }
@@ -148,7 +150,7 @@
             //Just to avoid that initial query does not impose performance penalty
             shp.DoTrueIntersectionQuery = false;
             shp.ExecuteIntersectionQuery(bbox, fds);
-            fds.Tables.RemoveAt(0);
+            fds.Tables.Clear();
 
             //Perform query once more
             var sw = new System.Diagnostics.Stopwatch();
@@ -157,7 +159,7 @@
             sw.Stop();
             System.Console.WriteLine("Queried using just envelopes:\n" + fds.Tables[0].Rows.Count + " in " +
                                      sw.ElapsedMilliseconds + "ms.");
-            fds.Tables.RemoveAt(0);
+            fds.Tables.Clear();
             
             shp.DoTrueIntersectionQuery = true;
             sw.Reset();
@@ -187,7 +189,7 @@
             shp.FilterDelegate = JustTracks;
 
             shp.ExecuteIntersectionQuery(bbox, fds);
-            fds.Tables.RemoveAt(0);
+            fds.Tables.Clear();
 
             //Perform query once more
             var sw = new System.Diagnostics.Stopwatch();
@@ -196,7 +198,7 @@
             sw.Stop();
             System.Console.WriteLine("Queried using just envelopes:\n" + fds.Tables[0].Rows.Count + " in " +
                                      sw.ElapsedMilliseconds + "ms.");
-            fds.Tables.RemoveAt(0);
+            fds.Tables.Clear();
             
             shp.DoTrueIntersectionQuery = true;
             sw.Reset();
@@ -207,10 +209,10 @@
                                      sw.ElapsedMilliseconds + "ms.");
         }
 
-        public static bool JustTracks(SharpMap.Data.FeatureDataRow fdr)
+        public static bool JustTracks(GeoAPI.Features.IFeature fdr)
         {
             //System.Console.WriteLine(fdr [0] + ";"+ fdr[4]);
-            var s = fdr[4] as string;
+            var s = fdr.Attributes[4] as string;
             if (s != null)
                 return s == "track";
             return true;

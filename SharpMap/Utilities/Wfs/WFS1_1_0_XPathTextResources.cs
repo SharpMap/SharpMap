@@ -28,7 +28,7 @@ namespace SharpMap.Utilities.Wfs
             "/wfs:WFS_Capabilities/ows:OperationsMetadata/ows:Operation[@name='DescribeFeatureType']/ows:DCP/ows:HTTP/ows:Post/@xlink:href";
 
         private static string _XPATH_GETFEATURERESOURCE =
-            "/wfs:WFS_Capabilities/ows:OperationsMetadata/ows:Operation[@name='GetFeature']/ows:DCP/ows:HTTP/ows:Post/@xlink:href";
+            "/wfs:WFS_Capabilities/ows:OperationsMetadata/ows:Operation[@name='GetFeatureByOid']/ows:DCP/ows:HTTP/ows:Post/@xlink:href";
 
         private static string _XPATH_SRS =
             "/wfs:WFS_Capabilities/wfs:FeatureTypeList/wfs:FeatureType[_PARAMCOMP_(wfs:Name, $_param1)]/wfs:DefaultSRS";
@@ -50,7 +50,7 @@ namespace SharpMap.Utilities.Wfs
         }
 
         /// <summary>
-        /// Gets an XPath string addressing the URI of 'GetFeature'in 'GetCapabilities'.
+        /// Gets an XPath string addressing the URI of 'GetFeatureByOid'in 'GetCapabilities'.
         /// </summary>
         public string XPATH_GETFEATURERESOURCE
         {

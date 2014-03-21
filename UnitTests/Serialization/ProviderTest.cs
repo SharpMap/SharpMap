@@ -20,7 +20,7 @@ namespace UnitTests.Serialization
             {
                 default:
                 //case "geometryprovider":
-                    return CreateProvider<GeometryProvider>();
+                    return CreateProvider<FeatureProvider>();
                 case "shapefile":
                     return CreateProvider<ShapeFile>();
                 case "managedspatialite":
@@ -37,8 +37,8 @@ namespace UnitTests.Serialization
         {
             var gf = GeoAPI.GeometryServiceProvider.Instance.CreateGeometryFactory();
 
-            if (typeof(T) == typeof(GeometryProvider))
-                return (T)(IProvider)new GeometryProvider(gf.CreatePoint(new Coordinate(1, 1)));
+            if (typeof(T) == typeof(FeatureProvider))
+                return (T)(IProvider)new FeatureProvider(gf.CreatePoint(new Coordinate(1, 1)));
 
             if (typeof(T) == typeof(ManagedSpatiaLite))
                 return (T)(IProvider) new ManagedSpatiaLite("Data Source=test-2.3.sqlite;Database=Regions;",
@@ -61,14 +61,14 @@ namespace UnitTests.Serialization
         [Test]
         public void TestGeometryProvider()
         {
-            var gpS = CreateProvider<GeometryProvider>();
+            var gpS = CreateProvider<FeatureProvider>();
             var gpD = SandD(gpS, GetFormatter());
 
             Assert.AreEqual(gpS.GetType(), gpD.GetType());
-            Assert.AreEqual(gpS.Geometries.Count, gpD.Geometries.Count);
+            Assert.AreEqual(gpS.Features.Count, gpD.Features.Count);
             Assert.AreEqual(gpS.GetExtents(), gpD.GetExtents());
 
-            Assert.IsTrue(gpS.Geometries[0].Coordinate.X == 1);
+            Assert.IsTrue(gpS.Features[0].Geometry.Coordinate.X == 1);
         }
 
         [Test]

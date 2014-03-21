@@ -109,7 +109,7 @@ OpenLayers.Format.WFST.v1 = OpenLayers.Class(OpenLayers.Format.XML, {
     /**
      * APIMethod: read
      * Parse the response from a transaction.  Because WFS is split into
-     *     Transaction requests (create, update, and delete) and GetFeature
+     *     Transaction requests (create, update, and delete) and GetFeatureByOid
      *     requests (read), this method handles parsing of both types of
      *     responses.
      *
@@ -219,8 +219,8 @@ OpenLayers.Format.WFST.v1 = OpenLayers.Class(OpenLayers.Format.XML, {
      */
     writers: {
         "wfs": {
-            "GetFeature": function(options) {
-                var node = this.createElementNSPlus("wfs:GetFeature", {
+            "GetFeatureByOid": function(options) {
+                var node = this.createElementNSPlus("wfs:GetFeatureByOid", {
                     attributes: {
                         service: "WFS",
                         version: this.version,

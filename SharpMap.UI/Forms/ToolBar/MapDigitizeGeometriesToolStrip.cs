@@ -40,7 +40,7 @@ namespace SharpMap.Forms.ToolBar
                 private System.Windows.Forms.ToolStripButton _moveVertex;
         */
 
-        private SharpMap.Data.Providers.GeometryProvider _geometryProvider;
+        private SharpMap.Data.Providers.FeatureProvider _geometryProvider;
         private SharpMap.Layers.VectorLayer _layer;
 
         public void InitializeComponent()
@@ -121,7 +121,7 @@ namespace SharpMap.Forms.ToolBar
                 return;
             }
 
-            _geometryProvider = new SharpMap.Data.Providers.GeometryProvider((GeoAPI.Geometries.IGeometry)null);
+            _geometryProvider = new SharpMap.Data.Providers.FeatureProvider((GeoAPI.Geometries.IGeometry)null);
             _layer = new SharpMap.Layers.VectorLayer("_tmp_Geometries", _geometryProvider);
 
             MapControl.ActiveToolChanged += OnMapControlActiveToolChanged;
@@ -134,7 +134,7 @@ namespace SharpMap.Forms.ToolBar
         private void OnRemoveFeatures(object sender, EventArgs e)
         {
             if (_geometryProvider != null)
-                _geometryProvider.Geometries.Clear();
+                _geometryProvider.Features.Clear();
             if (MapControl != null)
                 MapControl.Refresh();
         }
@@ -213,7 +213,11 @@ namespace SharpMap.Forms.ToolBar
                 frm.Geometry = geom;
                 if (frm.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                 {
-                    _geometryProvider.Geometries.Add(frm.Geometry);
+                    var factory = _geometryProvider.Factory;
+                    if (factory == null)
+                        throw new InvalidOperationException("Feature provider does not have a IFeatureFactory");
+                    var f = _geometryProvider.Factory.Create(frm.Geometry);
+                    _geometryProvider.Features.Add(f);
                     if (MapControl != null)
                     {
                         var map = MapControl.Map ?? new Map();

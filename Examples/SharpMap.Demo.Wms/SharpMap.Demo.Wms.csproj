@@ -681,6 +681,14 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\GeoAPI.Extensions\GeoAPI.Extensions.csproj">
+      <Project>{EFB576E1-56FC-47DB-AC7E-683A535434BE}</Project>
+      <Name>GeoAPI.Extensions</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\SharpMap.Data\SharpMap.Data.csproj">
+      <Project>{79703116-03e1-4579-8412-e5fa87a701b2}</Project>
+      <Name>SharpMap.Data</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\SharpMap.Web\SharpMap.Web.csproj">
       <Project>{292ef671-4063-4952-8de0-423df72a0950}</Project>
       <Name>SharpMap.Web</Name>

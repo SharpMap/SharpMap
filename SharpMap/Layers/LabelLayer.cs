@@ -22,6 +22,8 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Text;
 using System.Globalization;
+using GeoAPI.Features;
+using SharpMap.Features;
 #if !DotSpatialProjections
 using GeoAPI;
 using NetTopologySuite.Geometries;
@@ -68,23 +70,23 @@ namespace SharpMap.Layers
         /// <summary>
         /// Delegate method for creating advanced label texts
         /// </summary>
-        /// <param name="fdr">the <see cref="FeatureDataRow"/> to build the label for</param>
+        /// <param name="fdr">the <see cref="IFeature"/> to build the label for</param>
         /// <returns>the label</returns>
-        public delegate string GetLabelMethod(FeatureDataRow fdr);
+        public delegate string GetLabelMethod(IFeature fdr);
 
         /// <summary>
         /// Delegate method for calculating the priority of label rendering
         /// </summary>
-        /// <param name="fdr">the <see cref="FeatureDataRow"/> to compute the priority value from</param>
+        /// <param name="fdr">the <see cref="IFeature"/> to compute the priority value from</param>
         /// <returns>the priority value</returns>
-        public delegate int GetPriorityMethod(FeatureDataRow fdr);
+        public delegate int GetPriorityMethod(IFeature fdr);
 
         /// <summary>
         /// Delegate method for advanced placement of the label position
         /// </summary>
-        /// <param name="fdr">the <see cref="FeatureDataRow"/> to compute the label position from</param>
+        /// <param name="fdr">the <see cref="IFeature"/> to compute the label position from</param>
         /// <returns>the priority value</returns>
-        public delegate Coordinate GetLocationMethod(FeatureDataRow fdr);
+        public delegate Coordinate GetLocationMethod(IFeature fdr);
         #endregion
 
         #region MultipartGeometryBehaviourEnum enum
@@ -425,17 +427,17 @@ namespace SharpMap.Layers
                     envelope = GeometryTransform.TransformBox(envelope, CoordinateTransformation.Target, CoordinateTransformation.Source);
 #endif
                 }
-                FeatureDataSet ds = new FeatureDataSet();
+                var ds = new FeatureCollectionSet();
                 DataSource.Open();
                 DataSource.ExecuteIntersectionQuery(envelope, ds);
                 DataSource.Close();
-                if (ds.Tables.Count == 0)
+                if (ds.Count == 0)
                 {
                     base.Render(g, map);
                     return;
                 }
 
-                FeatureDataTable features = ds.Tables[0];
+                var features = ds[0];
 
 
                 //Initialize label collection
@@ -443,17 +445,17 @@ namespace SharpMap.Layers
 
                 //List<System.Drawing.Rectangle> LabelBoxes; //Used for collision detection
                 //Render labels
-                for (int i = 0; i < features.Count; i++)
+                foreach(var feature in features)
                 {
-                    FeatureDataRow feature = features[i];
+                    var featureGeometry = (IGeometry)feature.Geometry.Clone();
                     if (CoordinateTransformation != null)
 #if !DotSpatialProjections
-                        features[i].Geometry = GeometryTransform.TransformGeometry(
-                            features[i].Geometry, CoordinateTransformation.MathTransform,
+                        featureGeometry = GeometryTransform.TransformGeometry(
+                            featureGeometry, CoordinateTransformation.MathTransform,
                             GeometryServiceProvider.Instance.CreateGeometryFactory((int)CoordinateTransformation.TargetCS.AuthorityCode)
                             );
 #else
-                        features[i].Geometry = GeometryTransform.TransformGeometry(features[i].Geometry,
+                        featuresGeometry = GeometryTransform.TransformGeometry(features[i].Geometry,
                                                                                CoordinateTransformation.Source,
                                                                                CoordinateTransformation.Target,
                                                                                CoordinateTransformation.TargetFactory);
@@ -467,7 +469,7 @@ namespace SharpMap.Layers
                     float rotationStyle = style != null ? style.Rotation : 0f;
                     float rotationColumn = 0f;
                     if (!String.IsNullOrEmpty(RotationColumn))
-                        Single.TryParse(feature[RotationColumn].ToString(), NumberStyles.Any, Map.NumberFormatEnUs,
+                        Single.TryParse(feature.Attributes[RotationColumn].ToString(), NumberStyles.Any, Map.NumberFormatEnUs,
                                        out rotationColumn);
                     float rotation = rotationStyle + rotationColumn;
 
@@ -475,48 +477,47 @@ namespace SharpMap.Layers
                     if (_getPriorityMethod != null)
                         priority = _getPriorityMethod(feature);
                     else if (!String.IsNullOrEmpty(PriorityColumn))
-                        Int32.TryParse(feature[PriorityColumn].ToString(), NumberStyles.Any, Map.NumberFormatEnUs,
+                        Int32.TryParse(feature.Attributes[PriorityColumn].ToString(), NumberStyles.Any, Map.NumberFormatEnUs,
                                      out priority);
 
                     string text;
                     if (_getLabelMethod != null)
                         text = _getLabelMethod(feature);
                     else
-                        text = feature[LabelColumn].ToString();
+                        text = feature.Attributes[LabelColumn].ToString();
 
                     if (!String.IsNullOrEmpty(text))
                     {
                         // for lineal geometries, try clipping to ensure proper labeling
-                        if (feature.Geometry is ILineal)
+                        if (featureGeometry is ILineal)
                         {
-                            if (feature.Geometry is ILineString)
-                                feature.Geometry = lineClipping.ClipLineString(feature.Geometry as ILineString);
-                            else if (feature.Geometry is IMultiLineString)
-                                feature.Geometry = lineClipping.ClipLineString(feature.Geometry as IMultiLineString);
+                            if (featureGeometry is ILineString)
+                                featureGeometry = lineClipping.ClipLineString(featureGeometry as ILineString);
+                            else if (featureGeometry is IMultiLineString)
+                                featureGeometry = lineClipping.ClipLineString(featureGeometry as IMultiLineString);
                         }
 
-                        if (feature.Geometry is IGeometryCollection)
+                        if (featureGeometry is IGeometryCollection)
                         {
                             if (MultipartGeometryBehaviour == MultipartGeometryBehaviourEnum.All)
                             {
-                                foreach (var geom in (feature.Geometry as IGeometryCollection))
+                                foreach (var geom in (featureGeometry as IGeometryCollection))
                                 {
-                                    BaseLabel lbl = CreateLabel(feature,geom, text, rotation, priority, style, map, g, _getLocationMethod);
+                                    BaseLabel lbl = CreateLabel(feature, geom, text, rotation, priority, style, map, g, _getLocationMethod);
                                     if (lbl != null)
                                         labels.Add(lbl);
                                 }
                             }
                             else if (MultipartGeometryBehaviour == MultipartGeometryBehaviourEnum.CommonCenter)
                             {
-                                BaseLabel lbl = CreateLabel(feature, feature.Geometry, text, rotation, priority, style, map, g, _getLocationMethod);
-                                if (lbl != null)
-                                    labels.Add(lbl);
+                                BaseLabel lbl = CreateLabel(feature, featureGeometry, text, rotation, priority, style, map, g, _getLocationMethod);
+                                if (lbl != null) labels.Add(lbl);
                             }
                             else if (MultipartGeometryBehaviour == MultipartGeometryBehaviourEnum.First)
                             {
-                                if ((feature.Geometry as IGeometryCollection).NumGeometries > 0)
+                                if ((featureGeometry as IGeometryCollection).NumGeometries > 0)
                                 {
-                                    BaseLabel lbl = CreateLabel(feature, (feature.Geometry as IGeometryCollection).GetGeometryN(0), text,
+                                    BaseLabel lbl = CreateLabel(feature, (featureGeometry as IGeometryCollection).GetGeometryN(0), text,
                                                             rotation, style, map, g);
                                     if (lbl != null)
                                         labels.Add(lbl);
@@ -524,7 +525,7 @@ namespace SharpMap.Layers
                             }
                             else if (MultipartGeometryBehaviour == MultipartGeometryBehaviourEnum.Largest)
                             {
-                                var coll = (feature.Geometry as IGeometryCollection);
+                                var coll = (featureGeometry as IGeometryCollection);
                                 if (coll.NumGeometries > 0)
                                 {
                                     var largestVal = 0d;
@@ -563,7 +564,7 @@ namespace SharpMap.Layers
                         }
                         else
                         {
-                            BaseLabel lbl = CreateLabel(feature, feature.Geometry, text, rotation, priority, style, map, g, _getLocationMethod);
+                            BaseLabel lbl = CreateLabel(feature, featureGeometry, text, rotation, priority, style, map, g, _getLocationMethod);
                             if (lbl != null)
                                 labels.Add(lbl);
                         }
@@ -622,12 +623,12 @@ namespace SharpMap.Layers
         }
 
 
-        private BaseLabel CreateLabel(FeatureDataRow fdr, IGeometry feature, string text, float rotation, LabelStyle style, Map map, Graphics g)
+        private BaseLabel CreateLabel(IFeature fdr, IGeometry feature, string text, float rotation, LabelStyle style, Map map, Graphics g)
         {
             return CreateLabel(fdr, feature, text, rotation, Priority, style, map, g, _getLocationMethod);
         }
 
-        private static BaseLabel CreateLabel(FeatureDataRow fdr, IGeometry feature, string text, float rotation, int priority, LabelStyle style, Map map, Graphics g, GetLocationMethod _getLocationMethod)
+        private static BaseLabel CreateLabel(IFeature fdr, IGeometry feature, string text, float rotation, int priority, LabelStyle style, Map map, Graphics g, GetLocationMethod _getLocationMethod)
         {
             if (feature == null) return null;
 

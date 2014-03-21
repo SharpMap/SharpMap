@@ -12,7 +12,7 @@
  */
 
 /**
- * Class: OpenLayers.Control.GetFeature
+ * Class: OpenLayers.Control.GetFeatureByOid
  * Gets vector features for locations underneath the mouse cursor. Can be
  *     configured to act on click, hover or dragged boxes. Uses an
  *     <OpenLayers.Protocol> that supports spatial filters to retrieve
@@ -22,7 +22,7 @@
  * Inherits from:
  *  - <OpenLayers.Control>
  */
-OpenLayers.Control.GetFeature = OpenLayers.Class(OpenLayers.Control, {
+OpenLayers.Control.GetFeatureByOid = OpenLayers.Class(OpenLayers.Control, {
     
     /**
      * APIProperty: protocol
@@ -206,7 +206,7 @@ OpenLayers.Control.GetFeature = OpenLayers.Class(OpenLayers.Control, {
      */
 
     /**
-     * Constructor: OpenLayers.Control.GetFeature
+     * Constructor: OpenLayers.Control.GetFeatureByOid
      * Create a new control for fetching remote features.
      *
      * Parameters:
@@ -359,7 +359,7 @@ OpenLayers.Control.GetFeature = OpenLayers.Class(OpenLayers.Control, {
 
     /**
      * Method: request
-     * Sends a GetFeature request to the WFS
+     * Sends a GetFeatureByOid request to the WFS
      * 
      * Parameters:
      * bounds - {<OpenLayers.Bounds>} bounds for the request's BBOX filter
@@ -594,5 +594,5 @@ OpenLayers.Control.GetFeature = OpenLayers.Class(OpenLayers.Control, {
         return new OpenLayers.Bounds(ll.lon, ll.lat, ur.lon, ur.lat);
     },
 
-    CLASS_NAME: "OpenLayers.Control.GetFeature"
+    CLASS_NAME: "OpenLayers.Control.GetFeatureByOid"
 });

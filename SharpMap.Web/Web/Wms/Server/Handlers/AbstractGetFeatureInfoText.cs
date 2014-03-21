@@ -1,5 +1,6 @@
 using System;
 using System.Data;
+using GeoAPI.Features;
 using GeoAPI.Geometries;
 using SharpMap.Data;
 
@@ -13,14 +14,14 @@ namespace SharpMap.Web.Wms.Server.Handlers
         protected AbstractGetFeatureInfoText(Capabilities.WmsServiceDescription description,
             GetFeatureInfoParams @params) : base(description, @params) { }
 
-        protected string GetRowsText(DataRowCollection rows, int maxFeatures)
+        protected string GetRowsText(IFeatureCollection rows, int maxFeatures)
         {
             // if featurecount < fds...count, select smallest bbox, because most likely to be clicked
             int[] keys = new int[rows.Count];
             double[] area = new double[rows.Count];
             for (int i = 0; i < rows.Count; i++)
             {
-                FeatureDataRow row = (FeatureDataRow)rows[i];
+                IFeature row = rows[i];
                 IGeometry geometry = row.Geometry;
                 Envelope envelope = geometry.EnvelopeInternal;
                 area[i] = envelope.Area;
@@ -34,6 +35,6 @@ namespace SharpMap.Web.Wms.Server.Handlers
             return FormatRows(rows, keys, maxFeatures);
         }
 
-        protected abstract string FormatRows(DataRowCollection rows, int[] keys, int maxFeatures);
+        protected abstract string FormatRows(IFeatureCollection rows, int[] keys, int maxFeatures);
     }
 }

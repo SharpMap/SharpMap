@@ -7,6 +7,7 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Globalization;
 using System.Xml;
+using GeoAPI.Features;
 using SharpMap.Data;
 using GeoAPI.Geometries;
 
@@ -33,7 +34,7 @@ namespace SharpMap.Utilities.Wfs
 
         protected Collection<IGeometry> _Geoms = new Collection<IGeometry>();
 
-        protected FeatureDataTable _LabelInfo;
+        protected IFeatureCollection _LabelInfo;
         protected IPathNode _LabelNode;
         protected AlternativePathNodesCollection _ServiceExceptionNode;
         private string _Ts;
@@ -50,7 +51,7 @@ namespace SharpMap.Utilities.Wfs
         /// <param name="featureTypeInfo">A <see cref="WfsFeatureTypeInfo"/> instance providing metadata of the featuretype to query</param>
         /// <param name="labelInfo">A FeatureDataTable for labels</param>
         protected GeometryFactory(HttpClientUtil httpClientUtil, WfsFeatureTypeInfo featureTypeInfo,
-                                  FeatureDataTable labelInfo)
+                                  IFeatureCollection labelInfo)
         {
             _FeatureTypeInfo = featureTypeInfo;
             Factory = featureTypeInfo.Factory;
@@ -62,7 +63,7 @@ namespace SharpMap.Utilities.Wfs
                 if (labelInfo != null)
                 {
                     _LabelInfo = labelInfo;
-                    _LabelNode = new PathNode(_FeatureTypeInfo.FeatureTypeNamespace, _LabelInfo.Columns[0].ColumnName,
+                    _LabelNode = new PathNode(_FeatureTypeInfo.FeatureTypeNamespace, _LabelInfo.AttributesDefinition[0].AttributeName,
                                               (NameTable) _XmlReader.NameTable);
                 }
             }
@@ -173,7 +174,7 @@ namespace SharpMap.Utilities.Wfs
         #region Protected Member
 
         /// <summary>
-        /// This method parses a coordinates or posList(from 'GetFeature' response). 
+        /// This method parses a coordinates or posList(from 'GetFeatureByOid' response). 
         /// </summary>
         /// <param name="reader">An XmlReader instance at the position of the coordinates to read</param>
         /// <returns>A point collection (the collected coordinates)</returns>
@@ -266,6 +267,7 @@ namespace SharpMap.Utilities.Wfs
             return null;
         }
 
+        private IFeatureFactory _featureFactory;
         /// <summary>
         /// This method adds a label to the collection.
         /// </summary>
@@ -275,10 +277,16 @@ namespace SharpMap.Utilities.Wfs
 
             try
             {
-                FeatureDataRow row = _LabelInfo.NewRow();
+                var f = _featureFactory.Create(geom);
+                f.Attributes[1] = labelValue;
+                _LabelInfo.Add(f);
+                
+                /*
+                var row = _LabelInfo.NewRow();
                 row[0] = labelValue;
                 row.Geometry = geom;
                 _LabelInfo.AddRow(row);
+                 */
             }
             catch (Exception ex)
             {
@@ -379,7 +387,7 @@ namespace SharpMap.Utilities.Wfs
         /// <param name="featureTypeInfo">A <see cref="WfsFeatureTypeInfo"/> instance providing metadata of the featuretype to query</param>
         /// <param name="labelInfo">A FeatureDataTable for labels</param>
         internal PointFactory(HttpClientUtil httpClientUtil, WfsFeatureTypeInfo featureTypeInfo,
-                              FeatureDataTable labelInfo) : base(httpClientUtil, featureTypeInfo, labelInfo)
+                              IFeatureCollection labelInfo) : base(httpClientUtil, featureTypeInfo, labelInfo)
         {
         }
 
@@ -451,7 +459,8 @@ namespace SharpMap.Utilities.Wfs
         /// <param name="featureTypeInfo">A <see cref="WfsFeatureTypeInfo"/> instance providing metadata of the featuretype to query</param>
         /// <param name="labelInfo">A FeatureDataTable for labels</param>
         internal LineStringFactory(HttpClientUtil httpClientUtil, WfsFeatureTypeInfo featureTypeInfo,
-                                   FeatureDataTable labelInfo) : base(httpClientUtil, featureTypeInfo, labelInfo)
+                                   IFeatureCollection labelInfo)
+            : base(httpClientUtil, featureTypeInfo, labelInfo)
         {
         }
 
@@ -524,7 +533,8 @@ namespace SharpMap.Utilities.Wfs
         /// <param name="featureTypeInfo">A <see cref="WfsFeatureTypeInfo"/> instance providing metadata of the featuretype to query</param>
         /// <param name="labelInfo">A FeatureDataTable for labels</param>
         internal PolygonFactory(HttpClientUtil httpClientUtil, WfsFeatureTypeInfo featureTypeInfo,
-                                FeatureDataTable labelInfo) : base(httpClientUtil, featureTypeInfo, labelInfo)
+                                IFeatureCollection labelInfo)
+            : base(httpClientUtil, featureTypeInfo, labelInfo)
         {
         }
 
@@ -621,7 +631,8 @@ namespace SharpMap.Utilities.Wfs
         /// <param name="featureTypeInfo">A <see cref="WfsFeatureTypeInfo"/> instance providing metadata of the featuretype to query</param>
         /// <param name="labelInfo">A FeatureDataTable for labels</param>
         internal MultiPointFactory(HttpClientUtil httpClientUtil, WfsFeatureTypeInfo featureTypeInfo,
-                                   FeatureDataTable labelInfo) : base(httpClientUtil, featureTypeInfo, labelInfo)
+                                   IFeatureCollection labelInfo)
+            : base(httpClientUtil, featureTypeInfo, labelInfo)
         {
         }
 
@@ -701,7 +712,8 @@ namespace SharpMap.Utilities.Wfs
         /// <param name="featureTypeInfo">A <see cref="WfsFeatureTypeInfo"/> instance providing metadata of the featuretype to query</param>
         /// <param name="labelInfo">A FeatureDataTable for labels</param>
         internal MultiLineStringFactory(HttpClientUtil httpClientUtil, WfsFeatureTypeInfo featureTypeInfo,
-                                        FeatureDataTable labelInfo) : base(httpClientUtil, featureTypeInfo, labelInfo)
+                                        IFeatureCollection labelInfo)
+            : base(httpClientUtil, featureTypeInfo, labelInfo)
         {
         }
 
@@ -786,7 +798,8 @@ namespace SharpMap.Utilities.Wfs
         /// <param name="featureTypeInfo">A <see cref="WfsFeatureTypeInfo"/> instance providing metadata of the featuretype to query</param>
         /// <param name="labelInfo">A FeatureDataTable for labels</param>
         internal MultiPolygonFactory(HttpClientUtil httpClientUtil, WfsFeatureTypeInfo featureTypeInfo,
-                                     FeatureDataTable labelInfo) : base(httpClientUtil, featureTypeInfo, labelInfo)
+                                     IFeatureCollection labelInfo)
+            : base(httpClientUtil, featureTypeInfo, labelInfo)
         {
         }
 
@@ -885,7 +898,7 @@ namespace SharpMap.Utilities.Wfs
         /// <param name="labelInfo">A FeatureDataTable for labels</param>
         internal UnspecifiedGeometryFactory_WFS1_0_0_GML2(HttpClientUtil httpClientUtil,
                                                           WfsFeatureTypeInfo featureTypeInfo, bool multiGeometries,
-                                                          bool quickGeometries, FeatureDataTable labelInfo)
+                                                          bool quickGeometries, IFeatureCollection labelInfo)
             : base(httpClientUtil, featureTypeInfo, labelInfo)
         {
             _HttpClientUtil = httpClientUtil;
@@ -898,7 +911,7 @@ namespace SharpMap.Utilities.Wfs
         #region Internal Member
 
         /// <summary>
-        /// This method detects the geometry type from 'GetFeature' response and uses a geometry factory to create the 
+        /// This method detects the geometry type from 'GetFeatureByOid' response and uses a geometry factory to create the 
         /// appropriate geometries.
         /// </summary>
         /// <returns></returns>

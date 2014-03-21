@@ -24,10 +24,11 @@
 
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
+using GeoAPI.Features;
+using SharpMap.Features;
 #if !DotSpatialProjection
 using GeoAPI.CoordinateSystems.Transformations;
 #else
@@ -35,7 +36,6 @@ using ICoordinateTransformation = DotSpatial.Projections.ICoordinateTransformati
 using GeometryTransform = DotSpatial.Projections.GeometryTransform; 
 #endif
 using GeoAPI.Geometries;
-using SharpMap.Data;
 using SharpMap.Data.Providers;
 using ColorBlend = SharpMap.Rendering.Thematics.ColorBlend;
 
@@ -45,10 +45,10 @@ namespace SharpMap.Layers
     public class HeatLayer : Layer, ICanQueryLayer
     {
         /// <summary>
-        /// A delegate function definition that computes the heat value from a <seealso cref="FeatureDataRow"/>
+        /// A delegate function definition that computes the heat value from a <seealso cref="IFeature"/>
         /// </summary>
         /// <returns>A value in the range &#x211d;[0, 1f] </returns>
-        public Func<FeatureDataRow, float> HeatValueComputer { get; set; }
+        public Func<IFeature, float> HeatValueComputer { get; set; }
 
         /// <summary>
         /// A color blend that transforms heat values into colors.
@@ -115,8 +115,8 @@ namespace SharpMap.Layers
         /// Creates an instance of this class
         /// </summary>
         /// <param name="vectorLayer">The base layer</param>
-        /// <param name="heatComputer">A function to compute the heat value from a <seealso cref="FeatureDataRow"/></param>
-        public HeatLayer(VectorLayer vectorLayer, Func<FeatureDataRow, float> heatComputer)
+        /// <param name="heatComputer">A function to compute the heat value from a <seealso cref="IFeature"/></param>
+        public HeatLayer(VectorLayer vectorLayer, Func<IFeature, float> heatComputer)
             : this()
         {
             BaseLayer = vectorLayer;
@@ -128,8 +128,8 @@ namespace SharpMap.Layers
         /// Creates an instance of this class
         /// </summary>
         /// <param name="provider">The provider</param>
-        /// <param name="heatComputer">A function to compute the heat value from a <seealso cref="FeatureDataRow"/></param>
-        public HeatLayer(IProvider provider, Func<FeatureDataRow, float> heatComputer)
+        /// <param name="heatComputer">A function to compute the heat value from a <seealso cref="IFeature"/></param>
+        public HeatLayer(IProvider provider, Func<IFeature, float> heatComputer)
             : this()
         {
             DataSource = provider;
@@ -168,11 +168,11 @@ namespace SharpMap.Layers
                 BaseLayer.Render(g, map);
             }
             
-            var fds = new FeatureDataSet();
+            var fds = new FeatureCollectionSet();
             var box = map.Envelope;
             ExecuteIntersectionQuery(box, fds);
             
-            if (fds.Tables.Count == 0 || fds.Tables[0].Rows.Count == 0)
+            if (fds.Count == 0 || fds[0].Count == 0)
             {
                 base.Render(g, map);
                 return;
@@ -189,7 +189,7 @@ namespace SharpMap.Layers
                     gr.Clear(Color.White);
                 }
 
-                DrawPoints(map, fds.Tables[0].Select(), dot, image);
+                DrawPoints(map, fds[0], dot, image);
                 Colorize(image, HeatColorBlend, opacity);
                 
                 g.DrawImage(image, -dot.Width/2, -dot.Height/2);
@@ -253,7 +253,7 @@ namespace SharpMap.Layers
         /// </summary>
         /// <param name="box">Bounding box to intersect with</param>
         /// <param name="ds">FeatureDataSet to fill data into</param>
-        public void ExecuteIntersectionQuery(Envelope box, FeatureDataSet ds)
+        public void ExecuteIntersectionQuery(Envelope box, IFeatureCollectionSet ds)
         {
             if (CoordinateTransformation != null)
             {
@@ -264,9 +264,9 @@ namespace SharpMap.Layers
 #endif
             }
             DataSource.ExecuteIntersectionQuery(box, ds);
-            if (ds.Tables.Count > 0)
+            if (ds.Count > 0)
             {
-                ds.Tables[0].TableName = LayerName;
+                ds[0].Name = LayerName;
             }
         }
 
@@ -277,7 +277,7 @@ namespace SharpMap.Layers
         /// </summary>
         /// <param name="geometry">Geometry to intersect with</param>
         /// <param name="ds">FeatureDataSet to fill data into</param>
-        public void ExecuteIntersectionQuery(IGeometry geometry, FeatureDataSet ds)
+        public void ExecuteIntersectionQuery(IGeometry geometry, IFeatureCollectionSet ds)
         {
             if (CoordinateTransformation != null)
             {
@@ -288,9 +288,9 @@ namespace SharpMap.Layers
 #endif
             }
             DataSource.ExecuteIntersectionQuery(geometry, ds);
-            if (ds.Tables.Count > 0)
+            if (ds.Count > 0)
             {
-                ds.Tables[0].TableName = LayerName;
+                ds[0].Name = LayerName;
             }
         }
 
@@ -435,15 +435,15 @@ namespace SharpMap.Layers
             return tempImage;
         }
 
-        private float GetHeatValueFromColumn(FeatureDataRow row)
+        private float GetHeatValueFromColumn(IFeature row)
         {
             if (row == null)
                 return 0;
 
-            if (row[HeatValueColumn] == DBNull.Value)
+            if (row.Attributes[HeatValueColumn] == DBNull.Value)
                 return 0;
 
-            var res = HeatValueScale * Convert.ToSingle(row[HeatValueColumn]);
+            var res = HeatValueScale * Convert.ToSingle(row.Attributes[HeatValueColumn]);
             return res < 0f ? 0f : res > 1f ? 1f : res;
 
         }
@@ -507,11 +507,11 @@ namespace SharpMap.Layers
             image.UnlockBits(imageData);
         }
 
-        private void DrawPoints(Map map, IEnumerable<DataRow> features, Bitmap dot, Bitmap image)
+        private void DrawPoints(Map map, IEnumerable<IFeature> features, Bitmap dot, Bitmap image)
         {
             var size = new Size(dot.Width, dot.Height);
 
-            foreach (FeatureDataRow row in features)
+            foreach (var row in features)
             {
                 var heatValue = HeatValueComputer(row);
                 if (heatValue <= 0) continue;

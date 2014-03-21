@@ -483,10 +483,10 @@ public class MapHelper
         layCityLabel.Enabled = true;
         layCityLabel.LabelColumn = "name";
         layCityLabel.PriorityColumn = "population";
-        layCityLabel.PriorityDelegate = delegate(SharpMap.Data.FeatureDataRow fdr)
+        layCityLabel.PriorityDelegate = delegate(GeoAPI.Features.IFeature fdr)
         {
-            Int32 retVal = 10000000 * (Int32)((String)fdr["capital"] == "Y" ? 1 : 0);
-            return retVal + Convert.ToInt32(fdr["population"]);
+            Int32 retVal = 10000000 * (Int32)((String)fdr.Attributes["capital"] == "Y" ? 1 : 0);
+            return retVal + Convert.ToInt32(fdr.Attributes["population"]);
         };
         layCityLabel.TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAlias;
         layCityLabel.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;

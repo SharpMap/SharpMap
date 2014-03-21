@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using GeoAPI.Geometries;
 using NUnit.Framework;
@@ -294,7 +295,7 @@ namespace UnitTests.Data.Providers
             try
             {
                 var geoms = _provider.GetGeometriesInView(env);
-                Console.WriteLine("Thread {0}: {2}.  {1} geometries", Thread.CurrentThread.ManagedThreadId, geoms.Count, arguments);
+                Console.WriteLine("Thread {0}: {2}.  {1} geometries", Thread.CurrentThread.ManagedThreadId, geoms.Count(), arguments);
             }
             catch (Exception ex)
             {

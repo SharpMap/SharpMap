@@ -3,10 +3,14 @@
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Net;
+using System.Threading;
+using GeoAPI.Features;
 using GeoAPI.Geometries;
+using SharpMap.Features;
 using SharpMap.Utilities.Wfs;
 
 namespace SharpMap.Data.Providers
@@ -14,7 +18,7 @@ namespace SharpMap.Data.Providers
     /// <summary>
     /// WFS dataprovider
     /// This provider can be used to obtain data from an OGC Web Feature Service.
-    /// It performs the following requests: 'GetCapabilities', 'DescribeFeatureType' and 'GetFeature'.
+    /// It performs the following requests: 'GetCapabilities', 'DescribeFeatureType' and 'GetFeatureByOid'.
     /// This class is optimized for performing requests to GeoServer (http://geoserver.org).
     /// Supported geometries are:
     /// - PointPropertyType
@@ -97,7 +101,7 @@ namespace SharpMap.Data.Providers
     ///layer5.Style.Fill = new SolidBrush(Color.LightBlue);
     ///
     /// // Labels
-    /// // Labels are collected when parsing the geometry. So there's just one 'GetFeature' call necessary.
+    /// // Labels are collected when parsing the geometry. So there's just one 'GetFeatureByOid' call necessary.
     /// // Otherwise (when calling twice for retrieving labels) there may be an inconsistent read...
     /// // If a label property is set, the quick geometry option is automatically set to 'false'.
     ///prov3.Label = "STATE_NAME";
@@ -188,7 +192,7 @@ namespace SharpMap.Data.Providers
         private WfsFeatureTypeInfo _featureTypeInfo;
         private IXPathQueryManager _featureTypeInfoQueryManager;
         private bool _isOpen;
-        private FeatureDataTable _labelInfo;
+        private IFeatureCollection _labelInfo;
 
         private string _nsPrefix;
 
@@ -225,7 +229,7 @@ namespace SharpMap.Data.Providers
 
         /// <summary>
         /// Gets or sets a value indicating whether extracting geometry information 
-        /// from 'GetFeature' response shall be done quickly without paying attention to
+        /// from 'GetFeatureByOid' response shall be done quickly without paying attention to
         /// context validation, polygon boundaries and multi-geometries.
         /// This option accelerates the geometry parsing process, 
         /// but in scarce cases can lead to errors. 
@@ -237,7 +241,7 @@ namespace SharpMap.Data.Providers
         }
 
         /// <summary>
-        /// Gets or sets a value indicating whether the 'GetFeature' parser
+        /// Gets or sets a value indicating whether the 'GetFeatureByOid' parser
         /// should ignore multi-geometries (MultiPoint, MultiLineString, MultiCurve, MultiPolygon, MultiSurface). 
         /// By default it does not. Ignoring multi-geometries can lead to a better performance.
         /// </summary>
@@ -248,7 +252,7 @@ namespace SharpMap.Data.Providers
         }
 
         /// <summary>
-        /// Gets or sets a value indicating whether the 'GetFeature' request
+        /// Gets or sets a value indicating whether the 'GetFeatureByOid' request
         /// should be done with HTTP GET. This option can be important when obtaining
         /// data from a WFS provided by an UMN MapServer.
         /// </summary>
@@ -310,7 +314,7 @@ namespace SharpMap.Data.Providers
 
             if (wfsVersion == WFSVersionEnum.WFS1_0_0)
                 _textResources = new WFS_1_0_0_TextResources();
-            else 
+            else
                 _textResources = new WFS_1_1_0_TextResources();
 
             _wfsVersion = wfsVersion;
@@ -482,7 +486,7 @@ namespace SharpMap.Data.Providers
         /// </summary>
         /// <param name="bbox"></param>
         /// <returns>Features within the specified <see cref="GeoAPI.Geometries.Envelope"/></returns>
-        public Collection<IGeometry> GetGeometriesInView(Envelope bbox)
+        public IEnumerable<IGeometry> GetGeometriesInView(Envelope bbox, CancellationToken? cancellationToken = null)
         {
             if (_featureTypeInfo == null) return null;
 
@@ -494,13 +498,20 @@ namespace SharpMap.Data.Providers
 
             if (!string.IsNullOrEmpty(_label))
             {
-                _labelInfo = new FeatureDataTable();
-                _labelInfo.Columns.Add(_label);
+                var ff = FeatureFactory.CreateInt32(GeoAPI.GeometryServiceProvider.Instance.CreateGeometryFactory(SRID),
+                    new FeatureAttributeDefinition
+                    {
+                        AttributeName = "Label",
+                        Default = string.Empty,
+                        AttributeType = typeof(string),
+                        IsNullable = true
+                    });
+                _labelInfo = new FeatureCollection<int>(ff);
                 // Turn off quick geometries, if a label is applied...
                 _quickGeometries = false;
             }
 
-            // Configuration for GetFeature request */
+            // Configuration for GetFeatureByOid request */
             WFSClientHTTPConfigurator config = new WFSClientHTTPConfigurator(_textResources);
             config.configureForWfsGetFeatureRequest(_httpClientUtil, _featureTypeInfo, _label, bbox, _ogcFilter,
                                                     _getFeatureGETRequest);
@@ -509,36 +520,36 @@ namespace SharpMap.Data.Providers
             {
                 switch (geometryTypeString)
                 {
-                        /* Primitive geometry elements */
+                    /* Primitive geometry elements */
 
-                        // GML2
+                    // GML2
                     case "PointPropertyType":
                         geomFactory = new PointFactory(_httpClientUtil, _featureTypeInfo, _labelInfo);
                         break;
 
-                        // GML2
+                    // GML2
                     case "LineStringPropertyType":
                         geomFactory = new LineStringFactory(_httpClientUtil, _featureTypeInfo, _labelInfo);
                         break;
 
-                        // GML2
+                    // GML2
                     case "PolygonPropertyType":
                         geomFactory = new PolygonFactory(_httpClientUtil, _featureTypeInfo, _labelInfo);
                         break;
 
-                        // GML3
+                    // GML3
                     case "CurvePropertyType":
                         geomFactory = new LineStringFactory(_httpClientUtil, _featureTypeInfo, _labelInfo);
                         break;
 
-                        // GML3
+                    // GML3
                     case "SurfacePropertyType":
                         geomFactory = new PolygonFactory(_httpClientUtil, _featureTypeInfo, _labelInfo);
                         break;
 
-                        /* Aggregate geometry elements */
+                    /* Aggregate geometry elements */
 
-                        // GML2
+                    // GML2
                     case "MultiPointPropertyType":
                         if (_multiGeometries)
                             geomFactory = new MultiPointFactory(_httpClientUtil, _featureTypeInfo, _labelInfo);
@@ -546,7 +557,7 @@ namespace SharpMap.Data.Providers
                             geomFactory = new PointFactory(_httpClientUtil, _featureTypeInfo, _labelInfo);
                         break;
 
-                        // GML2
+                    // GML2
                     case "MultiLineStringPropertyType":
                         if (_multiGeometries)
                             geomFactory = new MultiLineStringFactory(_httpClientUtil, _featureTypeInfo, _labelInfo);
@@ -554,7 +565,7 @@ namespace SharpMap.Data.Providers
                             geomFactory = new LineStringFactory(_httpClientUtil, _featureTypeInfo, _labelInfo);
                         break;
 
-                        // GML2
+                    // GML2
                     case "MultiPolygonPropertyType":
                         if (_multiGeometries)
                             geomFactory = new MultiPolygonFactory(_httpClientUtil, _featureTypeInfo, _labelInfo);
@@ -562,7 +573,7 @@ namespace SharpMap.Data.Providers
                             geomFactory = new PolygonFactory(_httpClientUtil, _featureTypeInfo, _labelInfo);
                         break;
 
-                        // GML3
+                    // GML3
                     case "MultiCurvePropertyType":
                         if (_multiGeometries)
                             geomFactory = new MultiLineStringFactory(_httpClientUtil, _featureTypeInfo, _labelInfo);
@@ -570,7 +581,7 @@ namespace SharpMap.Data.Providers
                             geomFactory = new LineStringFactory(_httpClientUtil, _featureTypeInfo, _labelInfo);
                         break;
 
-                        // GML3
+                    // GML3
                     case "MultiSurfacePropertyType":
                         if (_multiGeometries)
                             geomFactory = new MultiPolygonFactory(_httpClientUtil, _featureTypeInfo, _labelInfo);
@@ -578,8 +589,8 @@ namespace SharpMap.Data.Providers
                             geomFactory = new PolygonFactory(_httpClientUtil, _featureTypeInfo, _labelInfo);
                         break;
 
-                        // .e.g. 'gml:GeometryAssociationType' or 'GeometryPropertyType'
-                        //It's better to set the geometry type manually, if it is known...
+                    // .e.g. 'gml:GeometryAssociationType' or 'GeometryPropertyType'
+                    //It's better to set the geometry type manually, if it is known...
                     default:
                         geomFactory = new UnspecifiedGeometryFactory_WFS1_0_0_GML2(_httpClientUtil, _featureTypeInfo,
                                                                                    _multiGeometries, _quickGeometries,
@@ -595,7 +606,7 @@ namespace SharpMap.Data.Providers
 
                 return geoms;
             }
-                // Free resources (net connection of geometry factory)
+            // Free resources (net connection of geometry factory)
             finally
             {
                 if (geomFactory != null)
@@ -615,7 +626,7 @@ namespace SharpMap.Data.Providers
         /// <param name="bbox">Box that objects should intersect</param>
         /// <returns></returns>
         /// <exception cref="Exception">Thrown in any case</exception>
-        public Collection<uint> GetObjectIDsInView(Envelope bbox)
+        public IEnumerable<object> GetOidsInView(Envelope bbox, CancellationToken? cancellationToken = null)
         {
             throw new Exception("The method or operation is not implemented.");
         }
@@ -626,7 +637,7 @@ namespace SharpMap.Data.Providers
         /// <param name="oid">Object ID</param>
         /// <returns>geometry</returns>
         /// <exception cref="Exception">Thrown in any case</exception>
-        public IGeometry GetGeometryByID(uint oid)
+        public IGeometry GetGeometryByOid(object oid)
         {
             throw new Exception("The method or operation is not implemented.");
         }
@@ -636,10 +647,10 @@ namespace SharpMap.Data.Providers
         /// </summary>
         /// <param name="geom">Geometry to intersect with</param>
         /// <param name="ds">FeatureDataSet to fill data into</param>
-        public void ExecuteIntersectionQuery(IGeometry geom, FeatureDataSet ds)
+        public void ExecuteIntersectionQuery(IGeometry geom, IFeatureCollectionSet ds, CancellationToken? cancellationToken = null)
         {
             if (_labelInfo == null) return;
-            ds.Tables.Add(_labelInfo);
+            ds.Add(_labelInfo);
             // Destroy internal reference
             _labelInfo = null;
         }
@@ -650,10 +661,10 @@ namespace SharpMap.Data.Providers
         /// </summary>
         /// <param name="box">Geometry to intersect with</param>
         /// <param name="ds">FeatureDataSet to fill data into</param>
-        public void ExecuteIntersectionQuery(Envelope box, FeatureDataSet ds)
+        public void ExecuteIntersectionQuery(Envelope box, IFeatureCollectionSet ds, CancellationToken? cancellationToken = null)
         {
             if (_labelInfo == null) return;
-            ds.Tables.Add(_labelInfo);
+            ds.Add(_labelInfo);
             // Destroy internal reference
             _labelInfo = null;
         }
@@ -669,12 +680,12 @@ namespace SharpMap.Data.Providers
         }
 
         /// <summary>
-        /// Returns a <see cref="SharpMap.Data.FeatureDataRow"/> based on a RowID
+        /// Returns a <see cref="T:GeoAPI.Features.IFeature"/> based on a RowID
         /// </summary>
         /// <param name="rowId">The id of the row.</param>
         /// <returns>datarow</returns>
         /// <exception cref="Exception">Thrown in any case</exception>
-        public FeatureDataRow GetFeature(uint rowId)
+        public IFeature GetFeatureByOid(object rowId)
         {
             throw new Exception("The method or operation is not implemented.");
         }
@@ -798,10 +809,10 @@ namespace SharpMap.Data.Providers
                     _featureTypeInfoQueryManager.AddNamespace(_textResources.NSXLINKPREFIX, _textResources.NSXLINK);
                 }
 
-                /* Service URI (for WFS GetFeature request) */
+                /* Service URI (for WFS GetFeatureByOid request) */
                 _featureTypeInfo.ServiceURI = _featureTypeInfoQueryManager.GetValueFromNode
                     (_featureTypeInfoQueryManager.Compile(_textResources.XPATH_GETFEATURERESOURCE));
-                /* If no GetFeature URI could be found, try GetCapabilities URI */
+                /* If no GetFeatureByOid URI could be found, try GetCapabilities URI */
                 if (_featureTypeInfo.ServiceURI == null) _featureTypeInfo.ServiceURI = _getCapabilitiesUri;
                 else if (_featureTypeInfo.ServiceURI.EndsWith("?", StringComparison.Ordinal))
                     _featureTypeInfo.ServiceURI =
@@ -819,7 +830,7 @@ namespace SharpMap.Data.Providers
                 /* Spatial reference ID */
                 _featureTypeInfo.SRID = _featureTypeInfoQueryManager.GetValueFromNode(
                     _featureTypeInfoQueryManager.Compile(_textResources.XPATH_SRS),
-                    new[] {new DictionaryEntry("_param1", featureQueryName)});
+                    new[] { new DictionaryEntry("_param1", featureQueryName) });
                 /* If no SRID could be found, try '4326' by default */
                 if (_featureTypeInfo.SRID == null) _featureTypeInfo.SRID = "4326";
                 else
@@ -829,7 +840,7 @@ namespace SharpMap.Data.Providers
                 /* Bounding Box */
                 IXPathQueryManager bboxQuery = _featureTypeInfoQueryManager.GetXPathQueryManagerInContext(
                     _featureTypeInfoQueryManager.Compile(_textResources.XPATH_BBOX),
-                    new[] {new DictionaryEntry("_param1", featureQueryName)});
+                    new[] { new DictionaryEntry("_param1", featureQueryName) });
 
                 if (bboxQuery != null)
                 {
@@ -1046,7 +1057,7 @@ namespace SharpMap.Data.Providers
                                     case "gml:multiSurfaceProperty":
                                         geomType = "MultiSurfacePropertyType";
                                         break;
-                                        // e.g. 'gml:_geometryProperty' 
+                                    // e.g. 'gml:_geometryProperty' 
                                     default:
                                         break;
                                 }
@@ -1061,7 +1072,7 @@ namespace SharpMap.Data.Providers
 
                 if (geomType == null)
                     /* Set geomType to an empty string in order to avoid exceptions.
-                    The geometry type is not necessary by all means - it can be detected in 'GetFeature' response too.. */
+                    The geometry type is not necessary by all means - it can be detected in 'GetFeatureByOid' response too.. */
                     geomType = string.Empty;
 
                 /* Remove prefix */
@@ -1154,7 +1165,7 @@ namespace SharpMap.Data.Providers
             }
 
             /// <summary>
-            /// Configures for WFS 'GetFeature' request using an instance implementing <see cref="SharpMap.Utilities.Wfs.IWFS_TextResources"/>.
+            /// Configures for WFS 'GetFeatureByOid' request using an instance implementing <see cref="SharpMap.Utilities.Wfs.IWFS_TextResources"/>.
             /// The <see cref="SharpMap.Utilities.Wfs.HttpClientUtil"/> instance is returned for immediate usage. 
             /// </summary>
             internal HttpClientUtil configureForWfsGetFeatureRequest(HttpClientUtil httpClientUtil,

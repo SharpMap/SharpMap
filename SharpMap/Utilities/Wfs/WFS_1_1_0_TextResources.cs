@@ -45,7 +45,7 @@ namespace SharpMap.Utilities.Wfs
         #region IWFS_TextResources Member
 
         /// <summary>
-        /// This method returns the query string for 'GetFeature'.
+        /// This method returns the query string for 'GetFeatureByOid'.
         /// </summary>
         /// <param name="featureTypeInfo">A <see cref="Wfs.WfsFeatureTypeInfo"/> instance providing metadata of the featuretype to query</param>
         /// <param name="boundingBox">The bounding box of the query</param>
@@ -108,13 +108,13 @@ namespace SharpMap.Utilities.Wfs
                                      featureTypeInfo.FeatureTypeNamespace + ")");
             }
 
-            return "?SERVICE=WFS&Version=1.1.0&REQUEST=GetFeature&TYPENAME=" + qualification + featureTypeInfo.Name +
+            return "?SERVICE=WFS&Version=1.1.0&REQUEST=GetFeatureByOid&TYPENAME=" + qualification + featureTypeInfo.Name +
                    "&PROPERTYNAME=" + qualification + featureTypeInfo.Geometry._GeometryName +
                    "&SRS=" + featureTypeInfo.SRID + filterBuilder;
         }
 
         /// <summary>
-        /// This method returns the POST request for 'GetFeature'.
+        /// This method returns the POST request for 'GetFeatureByOid'.
         /// </summary>
         /// <param name="featureTypeInfo">A <see cref="Wfs.WfsFeatureTypeInfo"/> instance providing metadata of the featuretype to query</param>
         /// <param name="labelProperty">A property necessary for label rendering</param>
@@ -132,7 +132,7 @@ namespace SharpMap.Utilities.Wfs
                 using (XmlTextWriter xWriter = new XmlTextWriter(sWriter))
                 {
                     xWriter.Namespaces = true;
-                    xWriter.WriteStartElement("GetFeature", NSWFS);
+                    xWriter.WriteStartElement("GetFeatureByOid", NSWFS);
                     xWriter.WriteAttributeString("service", "WFS");
                     xWriter.WriteAttributeString("version", "1.1.0");
                     if (!string.IsNullOrEmpty(featureTypeInfo.Prefix) &&

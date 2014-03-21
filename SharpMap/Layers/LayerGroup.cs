@@ -18,6 +18,7 @@
 using System;
 using System.Collections.ObjectModel;
 using System.Drawing;
+using GeoAPI.Features;
 using SharpMap.Data;
 using GeoAPI.Geometries;
 using SharpMap.Styles;
@@ -131,15 +132,13 @@ namespace SharpMap.Layers
         /// </summary>
         /// <param name="box">Geometry to intersect with</param>
         /// <param name="ds">FeatureDataSet to fill data into</param>
-        public void ExecuteIntersectionQuery(Envelope box, FeatureDataSet ds)
+        public void ExecuteIntersectionQuery(Envelope box, IFeatureCollectionSet ds)
         {
             foreach (Layer layer in Layers)
             {
                 if (layer is ICanQueryLayer)
                 {
-                    FeatureDataSet dsTmp = new FeatureDataSet();
-                    ((ICanQueryLayer)layer).ExecuteIntersectionQuery(box, dsTmp);
-                    ds.Tables.AddRange(dsTmp.Tables.ToArray());
+                    ((ICanQueryLayer)layer).ExecuteIntersectionQuery(box, ds);
                 }
             }
         }
@@ -149,15 +148,13 @@ namespace SharpMap.Layers
         /// </summary>
         /// <param name="geometry">Geometry to intersect with</param>
         /// <param name="ds">FeatureDataSet to fill data into</param>
-        public void ExecuteIntersectionQuery(IGeometry geometry, FeatureDataSet ds)
+        public void ExecuteIntersectionQuery(IGeometry geometry, IFeatureCollectionSet ds)
         {
-            foreach (Layer layer in Layers)
+            foreach (var layer in Layers)
             {
                 if (layer is ICanQueryLayer)
                 {
-                    FeatureDataSet dsTmp = new FeatureDataSet();
-                    ((ICanQueryLayer)layer).ExecuteIntersectionQuery(geometry, dsTmp);
-                    ds.Tables.AddRange(dsTmp.Tables.ToArray());
+                    ((ICanQueryLayer)layer).ExecuteIntersectionQuery(geometry, ds);
                 }
             }
         }

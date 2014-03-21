@@ -19,6 +19,11 @@ using System;
 using System.Collections.ObjectModel;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.Linq;
+using System.Linq.Expressions;
+using GeoAPI.Features;
+using NetTopologySuite.Features;
+using SharpMap.Features;
 #if !DotSpatialProjections
 using GeoAPI;
 using GeoAPI.CoordinateSystems.Transformations;
@@ -252,9 +257,11 @@ namespace SharpMap.Layers
         /// <param name="theme">The theme to apply</param>
         protected void RenderInternal(Graphics g, Map map, Envelope envelope, ITheme theme)
         {
-            var ds = new FeatureDataSet();
+            
+            IFeatureCollectionSet ds;
             lock (_dataSource)
             {
+                ds = new FeatureCollectionSet();
                 DataSource.Open();
                 DataSource.ExecuteIntersectionQuery(envelope, ds);
                 DataSource.Close();
@@ -262,7 +269,7 @@ namespace SharpMap.Layers
 
 
 
-            foreach (FeatureDataTable features in ds.Tables)
+            foreach (var features in ds)
             {
 
 
@@ -369,7 +376,7 @@ namespace SharpMap.Layers
                 {
                     if (vStyle != null)
                     {
-                        Collection<IGeometry> geoms;
+                        List<IGeometry> geoms;
                         // Is datasource already open?
                         lock (_dataSource)
                         {
@@ -379,18 +386,18 @@ namespace SharpMap.Layers
                             if (!alreadyOpen) { DataSource.Open(); }
 
                             // Read data
-                            geoms = DataSource.GetGeometriesInView(envelope);
+                            geoms = new List<IGeometry>(DataSource.GetGeometriesInView(envelope));
 
                             if (logger.IsDebugEnabled)
                             {
-                                logger.DebugFormat("Layer {0}, NumGeometries {1}", LayerName, geoms.Count);
+                                logger.DebugFormat("Layer {0}, NumGeometries {1}", LayerName, geoms.Count());
                             }
 
                             // If was not open, close it
                             if (!alreadyOpen) { DataSource.Close(); }
                         }
                         if (CoordinateTransformation != null)
-                            for (int i = 0; i < geoms.Count; i++)
+                            for (int i = 0; i < geoms.Count(); i++)
 #if !DotSpatialProjections
                                 geoms[i] = GeometryTransform.TransformGeometry(geoms[i], CoordinateTransformation.MathTransform,
                                     GeometryServiceProvider.Instance.CreateGeometryFactory((int)CoordinateTransformation.TargetCS.AuthorityCode));
@@ -563,7 +570,7 @@ namespace SharpMap.Layers
         /// </summary>
         /// <param name="box">Geometry to intersect with</param>
         /// <param name="ds">FeatureDataSet to fill data into</param>
-        public void ExecuteIntersectionQuery(Envelope box, FeatureDataSet ds)
+        public void ExecuteIntersectionQuery(Envelope box, IFeatureCollectionSet ds)
         {
             if (CoordinateTransformation != null)
             {
@@ -586,12 +593,13 @@ namespace SharpMap.Layers
             lock (_dataSource)
             {
                 _dataSource.Open();
-                int tableCount = ds.Tables.Count;
+                int tableCount = ds.Count;
                 _dataSource.ExecuteIntersectionQuery(box, ds);
-                if (ds.Tables.Count > tableCount)
+                if (ds.Count > tableCount)
                 {
                     //We added a table, name it according to layer
-                    ds.Tables[ds.Tables.Count - 1].TableName = LayerName;
+                    var table = ds[ds.Count - 1];
+                    table.Name = LayerName;
                 }
                 _dataSource.Close();
             }
@@ -602,7 +610,7 @@ namespace SharpMap.Layers
         /// </summary>
         /// <param name="geometry">Geometry to intersect with</param>
         /// <param name="ds">FeatureDataSet to fill data into</param>
-        public void ExecuteIntersectionQuery(IGeometry geometry, FeatureDataSet ds)
+        public void ExecuteIntersectionQuery(IGeometry geometry, IFeatureCollectionSet ds)
         {
             if (CoordinateTransformation != null)
             {
@@ -630,12 +638,13 @@ namespace SharpMap.Layers
             lock (_dataSource)
             {
                 _dataSource.Open();
-                int tableCount = ds.Tables.Count;
+                int tableCount = ds.Count;
                 _dataSource.ExecuteIntersectionQuery(geometry, ds);
-                if (ds.Tables.Count > tableCount)
+                if (ds.Count > tableCount)
                 {
                     //We added a table, name it according to layer
-                    ds.Tables[ds.Tables.Count - 1].TableName = LayerName;
+                    var table = ds[ds.Count - 1];
+                    table.Name = LayerName;
                 }
                 _dataSource.Close();
             }

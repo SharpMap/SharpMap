@@ -46,7 +46,7 @@ namespace UnitTests
                                 GeomFromText("MULTIPOINT EMPTY"),
                                 GeomFromText("LINESTRING EMPTY")
                             };
-            return new GeometryProvider(geoms);
+            return new FeatureProvider(geoms);
         }
 
         [Test]

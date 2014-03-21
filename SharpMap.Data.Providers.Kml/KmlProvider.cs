@@ -24,6 +24,8 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Threading;
+using GeoAPI.Features;
 using GeoAPI.Geometries;
 using SharpKml.Dom;
 using SharpKml.Engine;
@@ -327,10 +329,10 @@ namespace SharpMap.Data.Providers
             }
         }
 
-        public VectorStyle GetKmlStyle(FeatureDataRow row)
+        public VectorStyle GetKmlStyle(IFeature row)
         {
             //get styleID from row
-            var styleId = (string)row["StyleUrl"];
+            var styleId = (string)row.Attributes["StyleUrl"];
 
             if (_kmlStyles.ContainsKey(styleId))
             {
@@ -547,7 +549,7 @@ namespace SharpMap.Data.Providers
             // throw new System.NotImplementedException();
         }
 
-        public Collection<IGeometry> GetGeometriesInView(Envelope bbox)
+        public IEnumerable<IGeometry> GetGeometriesInView(Envelope bbox, CancellationToken? cancellationToken = null)
         {
             var box = _geometryFactory.ToGeometry(bbox);
             var retCollection = new Collection<IGeometry>();
@@ -561,31 +563,25 @@ namespace SharpMap.Data.Providers
 
         }
 
-        public Collection<uint> GetObjectIDsInView(Envelope bbox)
+        public IEnumerable<object> GetOidsInView(Envelope bbox, CancellationToken? cancellationToken = null)
         {
             var box = _geometryFactory.ToGeometry(bbox);
-            var res = new Collection<uint>();
 
-            uint id = 0;
-            
-            _geometrys.Where(x => box.Intersects(_geometryFactory.BuildGeometry(x.Value))).ToList().ForEach(x =>
-            {
-                res.Add(id);
-                id++;
-            });
+            var res = new Collection<object>();
+            _geometrys.Where(x => box.Intersects(_geometryFactory.BuildGeometry(x.Value))).ToList().ForEach(x => res.Add(x.Key.Id));
             return res;
         }
 
-        public IGeometry GetGeometryByID(uint oid)
+        public IGeometry GetGeometryByOid(object oid)
         {
-            var sid = oid.ToString(NumberFormatInfo.InvariantInfo);
+            var sid = string.Format(NumberFormatInfo.InvariantInfo, "{0}", oid);
             var tmp = _geometrys.FirstOrDefault(x => x.Key.Id == sid);
             
             return tmp.Value != null ?
                 _geometryFactory.BuildGeometry(tmp.Value) : null;
         }
 
-        public void ExecuteIntersectionQuery(IGeometry geom, FeatureDataSet ds)
+        public void ExecuteIntersectionQuery(IGeometry geom, IFeatureCollectionSet ds, CancellationToken? cancellationToken = null)
         {
             var fdt = (FeatureDataTable)_schemaTable.Copy();
 
@@ -614,10 +610,10 @@ namespace SharpMap.Data.Providers
             }
             fdt.EndLoadData();
 
-            ds.Tables.Add(fdt);
+            ds.Add(fdt);
         }
 
-        public void ExecuteIntersectionQuery(Envelope box, FeatureDataSet ds)
+        public void ExecuteIntersectionQuery(Envelope box, IFeatureCollectionSet ds, CancellationToken? cancellationToken = null)
         {
             ExecuteIntersectionQuery(_geometryFactory.ToGeometry(box), ds);
         }
@@ -627,14 +623,14 @@ namespace SharpMap.Data.Providers
             return _geometrys.Count;
         }
 
-        public FeatureDataRow GetFeature(uint oid)
+        public IFeature GetFeatureByOid(object oid)
         {
-            var sid = oid.ToString(NumberFormatInfo.InvariantInfo);
+            var sid = string.Format(NumberFormatInfo.InvariantInfo, "{0}", oid);
             var tmp = _geometrys.FirstOrDefault(x => x.Key.Id == sid);
 
             if (tmp.Value != null)
             {
-                var res = (FeatureDataRow) _schemaTable.NewRow();
+                var res = _schemaTable.NewRow();
                 res.ItemArray = GetAssetProperties(tmp.Key);
                 res.Geometry = _geometryFactory.BuildGeometry(tmp.Value);
                 res.AcceptChanges();

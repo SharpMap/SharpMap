@@ -102,7 +102,7 @@ namespace UnitTests.Data.Providers
         {
             using (var sq = CreateProvider("regions"))
             {
-                var g = sq.GetGeometryByID(53);
+                var g = sq.GetGeometryByOid(53);
                 var env = g.EnvelopeInternal;
 
                 using (var sqPoints = CreateProvider("towns"))

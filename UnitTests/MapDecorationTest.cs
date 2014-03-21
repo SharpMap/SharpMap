@@ -30,11 +30,9 @@ namespace UnitTests
         [Test]
         public void TestMapDecorationTest()
         {
-            var m = new Map(new Size(780, 540)) {BackColor = Color.White};
-            var p = new GeometryProvider(new List<IGeometry>());
+            var m = new Map(new Size(780, 540)) {BackColor = Color.White, SRID = 0};
             var pts = new [] {new GeoPoint(0, 0), new GeoPoint(779, 539)};
-            var ls = m.Factory.CreateLineString(pts);
-            p.Geometries.Add(ls);
+            var p = new FeatureProvider(m.Factory.CreateLineString(pts));
             m.Layers.Add(new VectorLayer("t",p));
             m.ZoomToExtents();
 

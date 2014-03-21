@@ -10,7 +10,7 @@ namespace UnitTests.Rendering.Symbolizer
         {
             var fdt = TestData.CreatingData.CreatePointFeatureDataTableFromArrays(
                 TestData.CreatingData.GetRandomOrdinates(50, -180, 180), TestData.CreatingData.GetRandomOrdinates(50, -90, 90), null);
-            var geometryFeatureProvider = new SharpMap.Data.Providers.GeometryFeatureProvider(fdt);
+            var geometryFeatureProvider = new SharpMap.Data.Providers.FeatureProvider(fdt);
             var layer = new SharpMap.Layers.VectorLayer("randompoints", geometryFeatureProvider);
             var cps  = new SharpMap.Rendering.Symbolizer.CharacterPointSymbolizer
                                               {
@@ -43,7 +43,7 @@ namespace UnitTests.Rendering.Symbolizer
         {
             var fdt = TestData.CreatingData.CreatePointFeatureDataTableFromArrays(
                 TestData.CreatingData.GetRandomOrdinates(50, -180, 180), TestData.CreatingData.GetRandomOrdinates(50, -90, 90), null);
-            var geometryFeatureProvider = new SharpMap.Data.Providers.GeometryFeatureProvider(fdt);
+            var geometryFeatureProvider = new SharpMap.Data.Providers.FeatureProvider(fdt);
             var layer = new SharpMap.Layers.VectorLayer("randompoints", geometryFeatureProvider);
             var pps =
                 SharpMap.Rendering.Symbolizer.PathPointSymbolizer.CreateSquare(new System.Drawing.Pen(System.Drawing.Color.Red, 2),
@@ -104,7 +104,7 @@ namespace UnitTests.Rendering.Symbolizer
         {
             var fdt = TestData.CreatingData.CreatePointFeatureDataTableFromArrays(
                 TestData.CreatingData.GetRandomOrdinates(50, -180, 180), TestData.CreatingData.GetRandomOrdinates(50, -90, 90), null);
-            var geometryFeatureProvider = new SharpMap.Data.Providers.GeometryFeatureProvider(fdt);
+            var geometryFeatureProvider = new SharpMap.Data.Providers.FeatureProvider(fdt);
             var layer = new SharpMap.Layers.VectorLayer("randompoints", geometryFeatureProvider);
             var rps =
                 new SharpMap.Rendering.Symbolizer.RasterPointSymbolizer {Symbol = Properties.Resources.Women};
@@ -143,7 +143,7 @@ namespace UnitTests.Rendering.Symbolizer
         {
             var fdt = TestData.CreatingData.CreatePointFeatureDataTableFromArrays(
                 TestData.CreatingData.GetRandomOrdinates(50, -180, 180), TestData.CreatingData.GetRandomOrdinates(50, -90, 90), null);
-            var geometryFeatureProvider = new SharpMap.Data.Providers.GeometryFeatureProvider(fdt);
+            var geometryFeatureProvider = new SharpMap.Data.Providers.FeatureProvider(fdt);
             var layer = new SharpMap.Layers.VectorLayer("randompoints", geometryFeatureProvider);
             var pps =
                 SharpMap.Rendering.Symbolizer.PathPointSymbolizer.CreateSquare(new System.Drawing.Pen(System.Drawing.Color.Red, 2),

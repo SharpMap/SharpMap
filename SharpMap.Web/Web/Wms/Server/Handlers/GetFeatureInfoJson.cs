@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using GeoAPI.CoordinateSystems.Transformations;
+using GeoAPI.Features;
 using GeoAPI.Geometries;
 using SharpMap.Converters.GeoJSON;
 using SharpMap.Data;
@@ -29,7 +30,7 @@ namespace SharpMap.Web.Wms.Server.Handlers
             foreach (string requestLayer in requestedLayers)
             {
                 ICanQueryLayer queryLayer = GetQueryLayer(map, requestLayer);
-                FeatureDataSet fds;
+                IFeatureCollectionSet fds;
                 if (!TryGetData(map, x, y, pixelSensitivity, intersectDelegate, queryLayer, cqlFilter, out fds))
                     continue;
                 

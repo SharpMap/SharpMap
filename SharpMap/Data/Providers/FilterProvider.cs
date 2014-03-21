@@ -1,8 +1,12 @@
-﻿namespace SharpMap.Data.Providers
+﻿using System;
+using GeoAPI.Features;
+
+namespace SharpMap.Data.Providers
 {
     /// <summary>
     /// Abstract class for providers which support the FilterMethod Delegate
     /// </summary>
+    [Serializable]
     public abstract class FilterProvider
     {
         #region Delegates
@@ -18,7 +22,7 @@
         /// <seealso cref="FilterDelegate"/>
         /// <param name="dr"><see cref="SharpMap.Data.FeatureDataRow"/> to test on</param>
         /// <returns>true if this feature should be included, false if it should be filtered</returns>
-        public delegate bool FilterMethod(FeatureDataRow dr);
+        public delegate bool FilterMethod(IFeature dr);
 
         #endregion
 

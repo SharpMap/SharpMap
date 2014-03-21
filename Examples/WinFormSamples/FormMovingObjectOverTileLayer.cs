@@ -69,7 +69,7 @@ namespace WinFormSamples
             var aux = new List<IGeometry>();
             aux.Add(gf.CreatePoint(geom.Centre));
             staticLayer.Style.Symbol = Resources.PumpSmall;
-            var geoProviderFixed = new SharpMap.Data.Providers.GeometryProvider(aux);
+            var geoProviderFixed = new SharpMap.Data.Providers.FeatureProvider(aux);
             staticLayer.DataSource = geoProviderFixed;
             this.mapBox1.Map.Layers.Add(staticLayer);
 
@@ -79,7 +79,7 @@ namespace WinFormSamples
             position = geom.Centre;
             geos.Add(gf.CreatePoint(position));
             pushPinLayer.Style.Symbol = Resources.OutfallSmall;
-            var geoProvider = new SharpMap.Data.Providers.GeometryProvider(geos);
+            var geoProvider = new SharpMap.Data.Providers.FeatureProvider(geos);
             pushPinLayer.DataSource = geoProvider;
             this.mapBox1.Map.VariableLayers.Add(pushPinLayer);
 

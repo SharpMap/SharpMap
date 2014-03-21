@@ -25,7 +25,7 @@ namespace WinFormSamples
     public partial class FormDemoDrawGeometries : Form
     {
 
-        private SharpMap.Data.Providers.GeometryProvider geoProvider;
+        private SharpMap.Data.Providers.FeatureProvider geoProvider;
 
         public FormDemoDrawGeometries()
         {
@@ -47,7 +47,7 @@ namespace WinFormSamples
 
 
             SharpMap.Layers.VectorLayer vl = new VectorLayer("My Geometries");
-            geoProvider = new SharpMap.Data.Providers.GeometryProvider(new List<IGeometry>());
+            geoProvider = new SharpMap.Data.Providers.FeatureProvider(new List<IGeometry>());
             vl.DataSource = geoProvider;
             this.mapBox1.Map.Layers.Add(vl);
 
@@ -87,7 +87,8 @@ namespace WinFormSamples
         {
             MessageBox.Show("Geometry defined!\r\n"+geometry);
 
-            geoProvider.Geometries.Add(geometry);
+            var f = geoProvider.Factory.Create(geometry);
+            geoProvider.Features.Add(f);
 
             this.mapBox1.ActiveTool = SharpMap.Forms.MapBox.Tools.Pan;
             this.mapBox1.Refresh();
@@ -133,7 +134,7 @@ namespace WinFormSamples
 
         private void button1_Click(object sender, EventArgs e)
         {
-            this.geoProvider.Geometries.Clear();
+            this.geoProvider.Features.Clear();
             this.mapBox1.Refresh();
         }
 
