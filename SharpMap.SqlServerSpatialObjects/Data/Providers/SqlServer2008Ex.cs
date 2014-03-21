@@ -14,12 +14,12 @@
 // You should have received a copy of the GNU Lesser General Public License   
 // along with SharpMap; if not, write to the Free Software   
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA    
-  
+
+using SharpMap.Converters.SqlServer2008SpatialObjects;
 using System;
 using System.Collections.ObjectModel;
 using System.Data.SqlClient;
 using System.Globalization;
-using SharpMap.Converters.SqlServer2008SpatialObjects;
 using BoundingBox = GeoAPI.Geometries.Envelope;
 using Geometry = GeoAPI.Geometries.IGeometry;
 
@@ -86,9 +86,9 @@ namespace SharpMap.Data.Providers
                     {
                         while (dr.Read())
                         {
-                            if (dr[0] != DBNull.Value)
+                            if (dr[0] != null && dr[0] != DBNull.Value)
                             {
-                                Geometry geom = SqlGeometryConverter.ToSharpMapGeometry((Microsoft.SqlServer.Types.SqlGeometry)dr[0]);
+                                Geometry geom = SqlGeometryConverter.ToSharpMapGeometry((Microsoft.SqlServer.Types.SqlGeometry) dr[0]);
                                 if (geom != null)
                                     features.Add(geom);
                             }
@@ -118,7 +118,7 @@ namespace SharpMap.Data.Providers
                     {
                         while (dr.Read())
                         {
-                            if (dr[0] != DBNull.Value)
+                            if (dr[0] != null && dr[0] != DBNull.Value)
                                 geom = SqlGeometryConverter.ToSharpMapGeometry((Microsoft.SqlServer.Types.SqlGeometry)dr[0]);
                         }
                     }
@@ -166,7 +166,12 @@ namespace SharpMap.Data.Providers
                             foreach (System.Data.DataColumn col in ds.Tables[0].Columns)
                                 if (col.ColumnName != GeometryColumn)
                                     fdr[col.ColumnName] = dr[col];
-                            fdr.Geometry = SqlGeometryConverter.ToSharpMapGeometry((Microsoft.SqlServer.Types.SqlGeometry)dr[GeometryColumn]);
+
+                            var ogeom = dr[GeometryColumn];
+                            Geometry sqlGeometry = null;
+                            if (ogeom != null && ogeom != DBNull.Value)
+                                sqlGeometry = SqlGeometryConverter.ToSharpMapGeometry((Microsoft.SqlServer.Types.SqlGeometry)ogeom);
+                            fdr.Geometry = sqlGeometry;
                             fdt.AddRow(fdr);
                         }
                         ds.Tables.Add(fdt);
@@ -204,7 +209,12 @@ namespace SharpMap.Data.Providers
                             foreach (System.Data.DataColumn col in ds.Tables[0].Columns)
                                 if (col.ColumnName != GeometryColumn)
                                     fdr[col.ColumnName] = dr[col];
-                            fdr.Geometry = SqlGeometryConverter.ToSharpMapGeometry((Microsoft.SqlServer.Types.SqlGeometry)dr[GeometryColumn]);
+
+                            var geom = dr[GeometryColumn];
+                            Geometry sqlGeometry = null;
+                            if (geom != null && geom != DBNull.Value)
+                                sqlGeometry = SqlGeometryConverter.ToSharpMapGeometry((Microsoft.SqlServer.Types.SqlGeometry)geom);
+                            fdr.Geometry = sqlGeometry;
                             return fdr;
                         }
                         return null;
@@ -250,10 +260,16 @@ namespace SharpMap.Data.Providers
                         foreach (System.Data.DataRow dr in ds2.Tables[0].Rows)
                         {
                             FeatureDataRow fdr = fdt.NewRow();
+
                             foreach (System.Data.DataColumn col in ds2.Tables[0].Columns)
                                 if (col.ColumnName != GeometryColumn)
                                     fdr[col.ColumnName] = dr[col];
-                            fdr.Geometry = SqlGeometryConverter.ToSharpMapGeometry((Microsoft.SqlServer.Types.SqlGeometry)dr[GeometryColumn]);
+
+                            var geom = dr[GeometryColumn];
+                            Geometry sqlGeometry = null;
+                            if (geom != null && geom != DBNull.Value)
+                                sqlGeometry = SqlGeometryConverter.ToSharpMapGeometry((Microsoft.SqlServer.Types.SqlGeometry) geom);
+                            fdr.Geometry = sqlGeometry;
                             fdt.AddRow(fdr);
                         }
                         ds.Tables.Add(fdt);
