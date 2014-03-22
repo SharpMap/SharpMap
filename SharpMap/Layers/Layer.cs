@@ -56,18 +56,18 @@ namespace SharpMap.Layers
         /// <summary>
         /// Event raised when the layer's <see cref="SRID"/> property has changed
         /// </summary>
-        public event EventHandler SridChanged;
+        public event EventHandler SRIDChanged;
 
         /// <summary>
-        /// Method called when <see cref="SRID"/> has changed, to invoke <see cref="E:SharpMap.Layers.Layer.SridChanged"/>
+        /// Method called when <see cref="SRID"/> has changed, to invoke <see cref="E:SharpMap.Layers.Layer.SRIDChanged"/>
         /// </summary>
         /// <param name="eventArgs">The arguments associated with the event</param>
         protected virtual void OnSridChanged(EventArgs eventArgs)
         {
             _sourceFactory = GeoAPI.GeometryServiceProvider.Instance.CreateGeometryFactory(SRID);
-            
-            if (SridChanged != null)
-                SridChanged(this, eventArgs);
+
+            if (SRIDChanged != null)
+                SRIDChanged(this, eventArgs);
         }
 
         /// <summary>

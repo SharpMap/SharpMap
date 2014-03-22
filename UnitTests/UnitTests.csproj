@@ -155,6 +155,7 @@
     </Reference>
     <Reference Include="System.Drawing" />
     <Reference Include="System.Web" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
@@ -181,6 +182,7 @@
     <Compile Include="GeoApiExTests.cs" />
     <Compile Include="Layers\GdiImageLayerTest.cs" />
     <Compile Include="Layers\LabelLayerTest.cs" />
+    <Compile Include="Layers\LayerTest.cs" />
     <Compile Include="Layers\TileLayerIssues.cs" />
     <Compile Include="MapDecorationTest.cs" />
     <Compile Include="MapTest.cs" />
