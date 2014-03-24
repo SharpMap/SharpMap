@@ -756,7 +756,7 @@ namespace SharpMap.Layers
         /// <param name="box">Area the WMS request should cover</param>
         /// <param name="size">Size of image</param>
         /// <returns>URL for WMS request</returns>
-        public string GetRequestUrl(Envelope box, Size size)
+        public virtual string GetRequestUrl(Envelope box, Size size)
         {
             Client.WmsOnlineResource resource = GetPreferredMethod();
             var strReq = new StringBuilder(resource.OnlineResource);
@@ -792,10 +792,19 @@ namespace SharpMap.Layers
             }
             strReq.AppendFormat("&TRANSPARENT={0}", Transparent);
             if (!Transparent)
-                strReq.AppendFormat("&BGCOLOR={0}", ColorTranslator.ToHtml(_bgColor));
+            {
+                //var background = Uri.EscapeDataString(ColorTranslator.ToHtml(_bgColor));
+                strReq.AppendFormat("&BGCOLOR={0}", ToHexValue(_bgColor));
+            }
             return strReq.ToString();
         }
 
+        private static string ToHexValue(Color color)
+        {
+            return "#" + color.R.ToString("X2") +
+                         color.G.ToString("X2") +
+                         color.B.ToString("X2");
+        }
         /// <summary>
         /// Returns the preferred URL to use when communicating with the wms-server
         /// Favors GET-requests over POST-requests
