@@ -184,6 +184,7 @@
     <Compile Include="Layers\LabelLayerTest.cs" />
     <Compile Include="Layers\LayerTest.cs" />
     <Compile Include="Layers\TileLayerIssues.cs" />
+    <Compile Include="Layers\WmsLayerTest.cs" />
     <Compile Include="MapDecorationTest.cs" />
     <Compile Include="MapTest.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
@@ -304,6 +305,7 @@
     <None Include="TestData\Base 64.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <EmbeddedResource Include="Layers\wms.atlantedesertificazione.xml" />
     <Content Include="x64\SQLite.Interop.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
