@@ -431,11 +431,11 @@ namespace SharpMap.Data
 
         void ICollection<IFeature>.CopyTo(IFeature[] array, int arrayIndex)
         {
-            if (array.GetType() != typeof(FeatureDataRow[]))
-                throw new ArgumentException("array");
-
             for (var i = 0; i < Rows.Count; i++)
-                array[i + arrayIndex] = (FeatureDataRow) Rows[i];
+            {
+                var item = (IFeature) Rows[i];                
+                array[i + arrayIndex] = item;
+            }
         }
 
         bool ICollection<IFeature>.Remove(IFeature item)
