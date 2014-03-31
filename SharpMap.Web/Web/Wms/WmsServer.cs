@@ -32,6 +32,8 @@ using System.Collections.Generic;
 using System.Text;
 #if !DotSpatialProjections
 using GeoAPI.CoordinateSystems.Transformations;
+#else
+using ICoordinateTransformation = DotSpatial.Projections.ICoordinateTransformation;
 #endif
 
 namespace SharpMap.Web.Wms

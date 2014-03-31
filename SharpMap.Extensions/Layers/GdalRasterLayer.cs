@@ -707,7 +707,7 @@ namespace SharpMap.Layers
 #if !DotSpatialProjections
                         double[] dblPoint = CoordinateTransformation.MathTransform.Transform(new[] { points[i].X, points[i].Y });
 #else
-                        dblPoint = points[i].ToDoubleArray();
+                        var dblPoint = points[i].ToDoubleArray();
                         var t = (DotSpatial.Projections.CoordinateTransformation) CoordinateTransformation;
                         Reproject.ReprojectPoints(dblPoint, null, t.Source, t.Target, 0, 1);
 #endif

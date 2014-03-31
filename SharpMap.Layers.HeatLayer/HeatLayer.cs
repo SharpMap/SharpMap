@@ -28,7 +28,7 @@ using System.Data;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
-#if !DotSpatialProjection
+#if !DotSpatialProjections
 using GeoAPI.CoordinateSystems.Transformations;
 #else
 using ICoordinateTransformation = DotSpatial.Projections.ICoordinateTransformation;
@@ -239,7 +239,7 @@ namespace SharpMap.Layers
                 var res = DataSource.GetExtents();
                 if (CoordinateTransformation != null)
                 {
-#if !DotSpatialProjection
+#if !DotSpatialProjections
                     return GeometryTransform.TransformBox(res, CoordinateTransformation.MathTransform);
 #else
                     return GeometryTransform.TransformBox(res, CoordinateTransformation.Source, CoordinateTransformation.Target);
@@ -260,7 +260,7 @@ namespace SharpMap.Layers
         {
             if (CoordinateTransformation != null)
             {
-#if !DotSpatialProjection
+#if !DotSpatialProjections
                 box = GeometryTransform.TransformBox(box, CoordinateTransformation.MathTransform.Inverse());
 #else
                 box = GeometryTransform.TransformBox(box, CoordinateTransformation.Target, CoordinateTransformation.Source);
@@ -284,7 +284,7 @@ namespace SharpMap.Layers
         {
             if (CoordinateTransformation != null)
             {
-#if !DotSpatialProjection
+#if !DotSpatialProjections
                 geometry = GeometryTransform.TransformGeometry(geometry, CoordinateTransformation.MathTransform.Inverse(), geometry.Factory);
 #else
                 geometry = GeometryTransform.TransformGeometry(geometry, CoordinateTransformation.Target, CoordinateTransformation.Source, CoordinateTransformation.TargetFactory);
@@ -523,7 +523,7 @@ namespace SharpMap.Layers
                 var c = row.Geometry.PointOnSurface.Coordinate;
                 if (CoordinateTransformation != null)
                 {
-#if !DotSpatialProjection
+#if !DotSpatialProjections
                     c = GeometryTransform.TransformCoordinate(c, CoordinateTransformation.MathTransform);
 #else
                     c = GeometryTransform.TransformCoordinate(c, CoordinateTransformation.Source, CoordinateTransformation.Target);
