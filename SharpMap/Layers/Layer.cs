@@ -386,7 +386,7 @@ namespace SharpMap.Layers
 #if !DotSpatialProjections
             return GeometryTransform.TransformBox(envelope, CoordinateTransformation.MathTransform);
 #else
-            return GeometryTransform.TransformBox(box, CoordinateTransformation.Source, CoordinateTransformation.Target);
+            return GeometryTransform.TransformBox(envelope, CoordinateTransformation.Source, CoordinateTransformation.Target);
 #endif
         }
 

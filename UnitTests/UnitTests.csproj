@@ -182,6 +182,7 @@
     <Compile Include="GeoApiExTests.cs" />
     <Compile Include="Layers\GdiImageLayerTest.cs" />
     <Compile Include="Layers\LabelLayerTest.cs" />
+    <Compile Include="Layers\LayerGroupTest.cs" />
     <Compile Include="Layers\LayerTest.cs" />
     <Compile Include="Layers\TileLayerIssues.cs" />
     <Compile Include="Layers\WmsLayerTest.cs" />

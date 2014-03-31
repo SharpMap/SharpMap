@@ -18,9 +18,14 @@
 using System;
 using System.Collections.ObjectModel;
 using System.Drawing;
+using System.Linq;
 using SharpMap.Data;
 using GeoAPI.Geometries;
-using SharpMap.Styles;
+#if DotSpatialProjections
+using ICoordinateTransformation = DotSpatial.Projections.ICoordinateTransformation;
+#else
+using GeoAPI.CoordinateSystems.Transformations;
+#endif
 
 namespace SharpMap.Layers
 {
@@ -32,7 +37,7 @@ namespace SharpMap.Layers
     /// for instance a set of image tiles, and expose them as a single layer
     /// </remarks>
     [Serializable]
-    public class LayerGroup : Layer, ICanQueryLayer
+    public partial class LayerGroup : Layer, ICanQueryLayer
     {
         private Collection<Layer> _layers;
         private bool _isQueryEnabled = true;
@@ -48,7 +53,7 @@ namespace SharpMap.Layers
         /// <summary>
         /// Whether the layer is queryable when used in a SharpMap.Web.Wms.WmsServer, ExecuteIntersectionQuery() will be possible in all other situations when set to FALSE
         /// </summary>
-        public bool IsQueryEnabled
+        public virtual bool IsQueryEnabled
         {
             get { return _isQueryEnabled; }
             set { _isQueryEnabled = value; }
@@ -56,7 +61,7 @@ namespace SharpMap.Layers
         /// <summary>
         /// Sublayers in the group
         /// </summary>
-        public Collection<Layer> Layers
+        public virtual Collection<Layer> Layers
         {
             get { return _layers; }
             set { _layers = value; }
@@ -79,6 +84,65 @@ namespace SharpMap.Layers
             }
         }
 
+        /// <summary>
+        /// Gets or sets whether coordinate transformations applied to the group should propagate to inner layers.
+        /// </summary>
+        /// <remarks>
+        /// Default is false, transformations are propagated to children layers.
+        /// </remarks>
+        public virtual bool SkipTransformationPropagation { get; set; }
+
+#if !DotSpatialProjections
+        /// <summary>
+        /// Gets or sets the <see cref="GeoAPI.CoordinateSystems.Transformations.ICoordinateTransformation"/> applied 
+        /// to this vectorlayer prior to rendering
+        /// </summary>
+#else
+        /// <summary>
+        /// Gets or sets the <see cref="DotSpatial.Projections.ICoordinateTransformation"/> applied 
+        /// to this vectorlayer prior to rendering
+        /// </summary>
+#endif
+        public override ICoordinateTransformation CoordinateTransformation
+        {
+            get { return base.CoordinateTransformation; }
+            set
+            {
+                base.CoordinateTransformation = value;
+
+                if (!SkipTransformationPropagation)
+                {
+                    var layers = Layers.ToArray();
+
+                    foreach (var layer in layers)
+                        layer.CoordinateTransformation = value;
+                }
+            }
+        }
+
+#if !DotSpatialProjections
+        /// <summary>
+        /// Certain Transformations cannot be inverted in ProjNet, in those cases use this property to set the reverse <see cref="GeoAPI.CoordinateSystems.Transformations.ICoordinateTransformation"/> (of CoordinateTransformation) to fetch data from Datasource
+        /// 
+        /// If your CoordinateTransformation can be inverted you can leave this property to null
+        /// </summary>
+        public override ICoordinateTransformation ReverseCoordinateTransformation
+        {
+            get { return base.ReverseCoordinateTransformation; }
+            set
+            {
+                base.ReverseCoordinateTransformation = value;
+
+                if (!SkipTransformationPropagation)
+                {
+                    var layers = Layers.ToArray();
+
+                    foreach (var layer in layers)
+                        layer.ReverseCoordinateTransformation = value;
+                }
+            }
+        }
+#endif
         #region IDisposable Members
 
         /// <summary>
@@ -101,15 +165,12 @@ namespace SharpMap.Layers
         /// </summary>
         /// <param name="name">Name of layer</param>
         /// <returns>Layer</returns>
-        public Layer GetLayerByName(string name)
+        public virtual Layer GetLayerByName(string name)
         {
             //return _Layers.Find( delegate(SharpMap.Layers.Layer layer) { return layer.LayerName.Equals(name); });
+            var layers = Layers.ToArray();
 
-            for (int i = 0; i < _layers.Count; i++)
-                if (String.Equals(_layers[i].LayerName, name, StringComparison.InvariantCultureIgnoreCase))
-                    return _layers[i];
-
-            return null;
+            return layers.FirstOrDefault(t => String.Equals(t.LayerName, name, StringComparison.InvariantCultureIgnoreCase));
         }
 
         /// <summary>
@@ -119,9 +180,14 @@ namespace SharpMap.Layers
         /// <param name="map">Map which is rendered</param>
         public override void Render(Graphics g, Map map)
         {
-            for (int i = 0; i < _layers.Count; i++)
-                if (_layers[i].Enabled && _layers[i].MaxVisible >= map.Zoom && _layers[i].MinVisible < map.Zoom)
-                    _layers[i].Render(g, map);
+            var layers = Layers.ToArray();
+
+            foreach (var layer in layers)
+            {
+                if (layer.Enabled && layer.MaxVisible >= map.Zoom &&
+                    layer.MinVisible < map.Zoom)
+                    layer.Render(g, map);
+            }
         }
 
          #region Implementation of ICanQueryLayer
@@ -131,16 +197,15 @@ namespace SharpMap.Layers
         /// </summary>
         /// <param name="box">Geometry to intersect with</param>
         /// <param name="ds">FeatureDataSet to fill data into</param>
-        public void ExecuteIntersectionQuery(Envelope box, FeatureDataSet ds)
+        public virtual void ExecuteIntersectionQuery(Envelope box, FeatureDataSet ds)
         {
-            foreach (Layer layer in Layers)
+            var layers = Layers.ToArray();
+
+            foreach (var layer in layers.OfType<ICanQueryLayer>())
             {
-                if (layer is ICanQueryLayer)
-                {
-                    FeatureDataSet dsTmp = new FeatureDataSet();
-                    ((ICanQueryLayer)layer).ExecuteIntersectionQuery(box, dsTmp);
-                    ds.Tables.AddRange(dsTmp.Tables.ToArray());
-                }
+                var dsTmp = new FeatureDataSet();
+                layer.ExecuteIntersectionQuery(box, dsTmp);
+                ds.Tables.AddRange(dsTmp.Tables.ToArray());
             }
         }
 
@@ -149,16 +214,15 @@ namespace SharpMap.Layers
         /// </summary>
         /// <param name="geometry">Geometry to intersect with</param>
         /// <param name="ds">FeatureDataSet to fill data into</param>
-        public void ExecuteIntersectionQuery(IGeometry geometry, FeatureDataSet ds)
+        public virtual void ExecuteIntersectionQuery(IGeometry geometry, FeatureDataSet ds)
         {
-            foreach (Layer layer in Layers)
+            var layers = Layers.ToArray();
+
+            foreach (var layer in layers.OfType<ICanQueryLayer>())
             {
-                if (layer is ICanQueryLayer)
-                {
-                    FeatureDataSet dsTmp = new FeatureDataSet();
-                    ((ICanQueryLayer)layer).ExecuteIntersectionQuery(geometry, dsTmp);
-                    ds.Tables.AddRange(dsTmp.Tables.ToArray());
-                }
+                var dsTmp = new FeatureDataSet();
+                layer.ExecuteIntersectionQuery(geometry, dsTmp);
+                ds.Tables.AddRange(dsTmp.Tables.ToArray());
             }
         }
 
