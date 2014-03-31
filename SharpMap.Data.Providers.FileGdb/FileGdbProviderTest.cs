@@ -127,7 +127,7 @@ namespace SharpMap.Data.Providers
 
             m.ZoomToExtents();
             var b = m.GetMap();
-            b.Save("fgdb-usa-states.bmp");
+            b.Save("fgdb-usa-states.png");
             
             //var fds = new FeatureDataSet();
             //lc.ExecuteIntersectionQuery(m.GetExtents().GetCentroid(), fds);
