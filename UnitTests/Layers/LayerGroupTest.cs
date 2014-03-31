@@ -13,7 +13,17 @@ namespace UnitTests.Layers
         {
             public override Envelope Envelope
             {
-                get { throw new NotImplementedException(); }
+                get { return null; }
+            }
+        } 
+        #endregion
+
+        #region FooLayer class
+        private class FooLayer : Layer
+        {
+            public override Envelope Envelope
+            {
+                get { return new Envelope(5, 10, 5, 10); }
             }
         } 
         #endregion
@@ -91,5 +101,32 @@ namespace UnitTests.Layers
                 "LayerGroup.ReverseCoordinateTransformation should NOT propagate to inner layers because SkipTransformationPropagation was true");
         }
 #endif
+
+        [Test(Description = "Envelope returns null when the inner layer Envelope is null")]
+        public void Envelope_WhenInnerLayerEnvelopeIsNull_ReturnsNull()
+        {
+            var group = new LayerGroup("group");
+            group.Layers.Add(new DummyLayer());
+
+            Assert.That(group.Envelope, Is.Null,
+                "LayerGroup envelope should be null since we added a layer with a null envelope");
+        }
+
+        [Test(Description = "Envelope returns null when there are no layers")]
+        public void Envelope_NoInnerLayers_ReturnsNull()
+        {
+            var group = new LayerGroup("group");
+            Assert.IsNull(group.Envelope);
+        }
+
+        [Test(Description = "Envelope skips inner layers which return null envelope")]
+        public void Envelope_SomeInnerLayerWithNullEnvelope_SkipNulls()
+        {
+            var group = new LayerGroup("group");
+            group.Layers.Add(new DummyLayer());
+            group.Layers.Add(new FooLayer());
+
+            Assert.That(group.Envelope, Is.EqualTo(new Envelope(5, 10, 5, 10)));
+        }
     }
 }

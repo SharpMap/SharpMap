@@ -75,11 +75,19 @@ namespace SharpMap.Layers
         {
             get
             {
-                if (Layers.Count == 0)
-                    return null;
-                var bbox = new Envelope(Layers[0].Envelope);
-                for (int i = 1; i < Layers.Count; i++)
-                    bbox.ExpandToInclude(Layers[i].Envelope);
+                Envelope bbox = null;
+                for (int i = 0; i < Layers.Count; i++)
+                {
+                    var layerEnvelope = Layers[i].Envelope;
+                    if (layerEnvelope != null)
+                    {
+                        if(bbox == null)
+                            bbox = new Envelope(layerEnvelope);
+                        else
+                            bbox.ExpandToInclude(layerEnvelope);
+                    }
+                }
+                    
                 return bbox;
             }
         }
