@@ -635,7 +635,7 @@ namespace SharpMap.Data.Providers
                             fileName = Path.ChangeExtension(fileName, "cst");
                         if (File.Exists(fileName))
                         {
-                            var encoding = File.ReadAllText(fileName);
+                            var encoding = File.ReadAllText(fileName).Trim('\r','\n');
                             try
                             {
                                 return Encoding.GetEncoding(encoding);
