@@ -230,9 +230,7 @@ namespace SharpMap
         {
             if (tilesRemaining <= 0)
             {
-                var e = RefreshNeeded;
-                if (e != null)
-                    e(this, new EventArgs());
+                OnRefreshNeeded(EventArgs.Empty);
             }
         }
 
@@ -542,6 +540,17 @@ namespace SharpMap
             VariableLayerCollection.Pause = false;
 
             OnMapRendered(g);
+        }
+
+        /// <summary>
+        /// Fires the RefreshNeeded event.
+        /// </summary>
+        /// <param name="e">EventArgs argument.</param>
+        protected virtual void OnRefreshNeeded(EventArgs e)
+        {
+            var handler = RefreshNeeded;
+            if (handler != null)
+                handler(this, e);
         }
 
         /// <summary>
