@@ -955,8 +955,10 @@ namespace SharpMap.Forms
 
         private void GetImagesAsyncEnd(GetImageEndResult res)
         {
-            //draw only if generation is larger than the current, else we have aldready drawn something newer
-            if (res == null || res.generation < _imageGeneration || _isDisposed)
+            // draw only if generation is larger than the current, else we have aldready drawn something newer
+            // we must to check also IsHandleCreated because during disposal, the handle of the parent is detroyed sooner than progress bar's handle,
+            // this leads to cross thread operation and exception because InvokeRequired returns false, but for the progress bar it is true.
+            if (res == null || res.generation < _imageGeneration || _isDisposed || !IsHandleCreated)
                 return;
 
 
