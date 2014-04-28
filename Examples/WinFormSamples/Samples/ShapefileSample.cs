@@ -173,7 +173,7 @@ namespace WinFormSamples.Samples
             //Set the datasource to a shapefile in the App_data folder
             layCountries.DataSource = new ShapeFile("GeoData/World/countries.shp", true);
             //Set fill-style to green
-            layCountries.Style.Fill = new SolidBrush(Color.Green);
+            layCountries.Style.Fill = new SolidBrush(Color.FromArgb(64, Color.Green));
             //Set the polygons to have a black outline
             layCountries.Style.Outline = Pens.Black;
             layCountries.Style.EnableOutline = true;

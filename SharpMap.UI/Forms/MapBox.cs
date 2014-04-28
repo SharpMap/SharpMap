@@ -1325,21 +1325,55 @@ namespace SharpMap.Forms
         /// <param name="e">A <see cref="T:System.Windows.Forms.MouseEventArgs"/> that contains the event arguments.</param>
         protected override void OnMouseDown(MouseEventArgs e)
         {
+            // call base function
             base.OnMouseDown(e);
-            if (_map != null)
-            {
-                if (e.Button == MouseButtons.Left || e.Button == MouseButtons.Middle) //dragging
-                {
-                    _dragStartPoint = e.Location;
-                    _dragEndPoint = e.Location;
-                    _dragStartCoord = _map.Center;
-                    _orgScale = _map.Zoom;
-                }
 
-                if (MouseDown != null)
-                    MouseDown(_map.ImageToWorld(new Point(e.X, e.Y)), e);
+            // Do we have a map? If not bail out
+            if (_map == null)
+                return;
+
+            // Position in world coordinates
+            var p = _map.ImageToWorld(new Point(e.X, e.Y));
+
+            // Raise event
+            if (MouseDown != null)
+                MouseDown(p, e);
+
+            // Do we have a predefined tool
+            if (_activeTool == Tools.None)
+                return;
+
+            if (e.Button == MouseButtons.Left || e.Button == MouseButtons.Middle) //dragging
+            {
+                _dragStartPoint = e.Location;
+                _dragEndPoint = e.Location;
+                _dragStartCoord = _map.Center;
+                _orgScale = _map.Zoom;
             }
         }
+
+        //private bool ActionCheck(object sender, EventArgs e, Action<object, EventArgs> baseFunction, out Coordinate point,
+        //    Action<Coordinate, EventArgs> mapDelegate)
+        //{
+        //    // call base function
+        //    if (baseFunction != null)
+        //        baseFunction(sender, e);
+
+        //    // Do we have a map?
+        //    point = null;
+        //    if (_map == null) 
+        //        return false;
+
+        //    // Do we have a map delegate
+        //    if (e is MouseEventArgs && mapDelegate != null)
+        //    {
+        //        point = _map.ImageToWorld(((MouseEventArgs) e).Location);
+        //        mapDelegate(point, e);
+        //    }
+
+        //    // Do we have an active predefined tool
+        //    return _activeTool != Tools.None;
+        //}
 
         /// <summary>
         /// Invokes the <see cref="E:System.Windows.Forms.Control.MouseMove"/>-event.
@@ -1347,101 +1381,110 @@ namespace SharpMap.Forms
         /// <param name="e">A <see cref="T:System.Windows.Forms.MouseEventArgs"/> that contains the event arguments.</param>
         protected override void OnMouseMove(MouseEventArgs e)
         {
+            // call base function
             base.OnMouseMove(e);
 
-            if (_map != null)
+            // Do we have a map? If not bail out
+            if (_map == null)
+                return;
+
+            // Position in world coordinates
+            var p = _map.ImageToWorld(new Point(e.X, e.Y));
+
+            // Raise event
+            if (MouseMove != null)
+                MouseMove(p, e);
+
+            // If no tool is selected, bail out
+            if (ActiveTool == Tools.None)
+                return;
+
+            bool isStartDrag = _image != null && e.Location != _dragStartPoint && !_dragging &&
+                               (e.Button == MouseButtons.Left || e.Button == MouseButtons.Middle) &&
+                               //Left of middle button can start drag
+                               !(_setActiveToolNoneDuringRedraw &&
+                                 (_activeTool == Tools.DrawLine || _activeTool == Tools.DrawPoint ||
+                                  _activeTool == Tools.DrawPolygon)); //It should not be any of these tools
+
+            if (isStartDrag)
             {
-                Coordinate p = _map.ImageToWorld(new Point(e.X, e.Y));
+                _dragging = true;
+            }
 
-                if (MouseMove != null)
-                    MouseMove(p, e);
+            if (_dragging)
+            {
+                if (MouseDrag != null)
+                    MouseDrag(p, e);
 
-                bool isStartDrag = _image != null && e.Location != _dragStartPoint && !_dragging &&
-                                   (e.Button == MouseButtons.Left || e.Button == MouseButtons.Middle) &&
-                                   //Left of middle button can start drag
-                                   !(_setActiveToolNoneDuringRedraw &&
-                                     (_activeTool == Tools.DrawLine || _activeTool == Tools.DrawPoint ||
-                                      _activeTool == Tools.DrawPolygon)); //It should not be any of these tools
+                //Pan can be if we have ActiveTool Pan and not doing a ShiftButtonZoom-Operation
+                bool isPanOperation = _activeTool == Tools.Pan &&
+                                      !(_shiftButtonDragRectangleZoom &&
+                                        (Control.ModifierKeys & Keys.Shift) != Keys.None);
 
-                if (isStartDrag)
+                //Pan can also be if we are in a drawline/drawpoint/drawpoly operation and pressed left mousebutton while dragging..
+                //If we not are setting tool non while redrawing..
+                if ((_activeTool == Tools.DrawLine || _activeTool == Tools.DrawPolygon)
+                    && e.Button == MouseButtons.Left && !_setActiveToolNoneDuringRedraw)
                 {
-                    _dragging = true;
+                    isPanOperation = true;
                 }
 
-                if (_dragging)
+
+                //Zoom in or Zoom Out
+                bool isZoomOperation = _activeTool == Tools.ZoomIn || _activeTool == Tools.ZoomOut;
+
+                //Tool ZoomWindow or ShiftButtonDragRectangle
+                bool isZoomWindowOperation = _activeTool == Tools.ZoomWindow || _activeTool == Tools.QueryBox ||
+                                             _activeTool == Tools.QueryPoint ||
+                                             /*_activeTool == Tools.QueryPolygon || */
+                                             (_shiftButtonDragRectangleZoom &&
+                                              (Control.ModifierKeys & Keys.Shift) != Keys.None);
+
+                if (isPanOperation)
                 {
-                    if (MouseDrag != null)
-                        MouseDrag(p, e);
-
-                    //Pan can be if we have ActiveTool Pan and not doing a ShiftButtonZoom-Operation
-                    bool isPanOperation = _activeTool == Tools.Pan &&
-                                          !(_shiftButtonDragRectangleZoom &&
-                                            (Control.ModifierKeys & Keys.Shift) != Keys.None);
-
-                    //Pan can also be if we are in a drawline/drawpoint/drawpoly operation and pressed left mousebutton while dragging..
-                    //If we not are setting tool non while redrawing..
-                    if ((_activeTool == Tools.DrawLine || _activeTool == Tools.DrawPolygon)
-                        && e.Button == MouseButtons.Left && !_setActiveToolNoneDuringRedraw)
+                    _dragEndPoint = ClipPoint(e.Location);
+                    if (_dragStartCoord != null)
                     {
-                        isPanOperation = true;
-                    }
-
-
-                    //Zoom in or Zoom Out
-                    bool isZoomOperation = _activeTool == Tools.ZoomIn || _activeTool == Tools.ZoomOut;
-
-                    //Tool ZoomWindow or ShiftButtonDragRectangle
-                    bool isZoomWindowOperation = _activeTool == Tools.ZoomWindow || _activeTool == Tools.QueryBox ||
-                                                 _activeTool == Tools.QueryPoint || /*_activeTool == Tools.QueryPolygon || */
-                                                 (_shiftButtonDragRectangleZoom &&
-                                                  (Control.ModifierKeys & Keys.Shift) != Keys.None);
-
-                    if (isPanOperation)
-                    {
-                        _dragEndPoint = ClipPoint(e.Location);
-                        if (_dragStartCoord != null)
-                        {
-                            _map.Center =
-                                new Coordinate(_dragStartCoord.X - _map.PixelSize*(_dragEndPoint.X - _dragStartPoint.X),
-                                             _dragStartCoord.Y - _map.PixelSize*(_dragStartPoint.Y - _dragEndPoint.Y));
-                            if (MapCenterChanged != null)
-                                MapCenterChanged(_map.Center);
-
-                            Invalidate(ClientRectangle);
-                        }
-                    }
-                    else if (isZoomOperation)
-                    {
-                        _dragEndPoint = ClipPoint(e.Location);
-                        if (_dragEndPoint.Y - _dragStartPoint.Y < 0) //Zoom out
-                            _scaling = (float) Math.Pow(1/(float) (_dragStartPoint.Y - _dragEndPoint.Y), 0.5);
-                        else //Zoom in
-                            _scaling = 1 + (_dragEndPoint.Y - _dragStartPoint.Y)*0.1f;
-
-                        _map.Zoom = _orgScale/_scaling;
-                        if (MapZooming != null)
-                            MapZooming(_map.Zoom);
+                        _map.Center =
+                            new Coordinate(_dragStartCoord.X - _map.PixelSize*(_dragEndPoint.X - _dragStartPoint.X),
+                                _dragStartCoord.Y - _map.PixelSize*(_dragStartPoint.Y - _dragEndPoint.Y));
+                        if (MapCenterChanged != null)
+                            MapCenterChanged(_map.Center);
 
                         Invalidate(ClientRectangle);
                     }
-                    else if (isZoomWindowOperation)
-                    {
-                        _dragEndPoint = ClipPoint(e.Location);
-                        _rectangle = GenerateRectangle(_dragStartPoint, _dragEndPoint);
-                        Invalidate(new Region(ClientRectangle));
-                    }
                 }
-                else
+                else if (isZoomOperation)
                 {
-                    if (_activeTool == Tools.DrawPolygon || _activeTool == Tools.DrawLine)
+                    _dragEndPoint = ClipPoint(e.Location);
+                    if (_dragEndPoint.Y - _dragStartPoint.Y < 0) //Zoom out
+                        _scaling = (float) Math.Pow(1/(float) (_dragStartPoint.Y - _dragEndPoint.Y), 0.5);
+                    else //Zoom in
+                        _scaling = 1 + (_dragEndPoint.Y - _dragStartPoint.Y)*0.1f;
+
+                    _map.Zoom = _orgScale/_scaling;
+                    if (MapZooming != null)
+                        MapZooming(_map.Zoom);
+
+                    Invalidate(ClientRectangle);
+                }
+                else if (isZoomWindowOperation)
+                {
+                    _dragEndPoint = ClipPoint(e.Location);
+                    _rectangle = GenerateRectangle(_dragStartPoint, _dragEndPoint);
+                    Invalidate(new Region(ClientRectangle));
+                }
+            }
+            else
+            {
+                if (_activeTool == Tools.DrawPolygon || _activeTool == Tools.DrawLine)
+                {
+                    _dragEndPoint = new Point(0, 0);
+                    if (_pointArray != null)
                     {
-                        _dragEndPoint = new Point(0, 0);
-                        if (_pointArray != null)
-                        {
-                            _pointArray[_pointArray.Count-1] = Map.ImageToWorld(ClipPoint(e.Location));
-                            _rectangle = GenerateRectangle(_dragStartPoint, ClipPoint(e.Location));
-                            Invalidate(new Region(ClientRectangle));
-                        }
+                        _pointArray[_pointArray.Count - 1] = Map.ImageToWorld(ClipPoint(e.Location));
+                        _rectangle = GenerateRectangle(_dragStartPoint, ClipPoint(e.Location));
+                        Invalidate(new Region(ClientRectangle));
                     }
                 }
             }
@@ -1764,222 +1807,235 @@ namespace SharpMap.Forms
         /// <param name="e">A <see cref="T:System.Windows.Forms.MouseEventArgs"/> that contains the event arguments.</param>
         protected override void OnMouseUp(MouseEventArgs e)
         {
+            // call base function
             base.OnMouseUp(e);
-            if (_map != null)
+
+            // Do we have a map? If not bail out
+            if (_map == null)
+                return;
+
+            // Position in world coordinates
+            var p = _map.ImageToWorld(new Point(e.X, e.Y));
+
+            // Raise event
+            if (MouseUp != null)
+                MouseUp(p, e);
+
+            // If no tool is selected, bail out
+            if (_activeTool == Tools.None)
+                return;
+
+            if (e.Button == MouseButtons.Left || e.Button == MouseButtons.Middle)
             {
-                if (MouseUp != null)
-                    MouseUp(_map.ImageToWorld(new Point(e.X, e.Y)), e);
-
-                if (e.Button == MouseButtons.Left || e.Button == MouseButtons.Middle)
+                if (_activeTool == Tools.ZoomOut)
                 {
-                    if (_activeTool == Tools.ZoomOut)
+                    double scale = 0.5;
+                    if (_dragging)
                     {
-                        double scale = 0.5;
-                        if (_dragging)
-                        {
-                            if (e.Y - _dragStartPoint.Y < 0) //Zoom out
-                                scale = (float) Math.Pow(1/(float) (_dragStartPoint.Y - e.Y), 0.5);
-                            else //Zoom in
-                                scale = 1 + (e.Y - _dragStartPoint.Y)*0.1;
-                        }
-                        else
+                        if (e.Y - _dragStartPoint.Y < 0) //Zoom out
+                            scale = (float) Math.Pow(1/(float) (_dragStartPoint.Y - e.Y), 0.5);
+                        else //Zoom in
+                            scale = 1 + (e.Y - _dragStartPoint.Y)*0.1;
+                    }
+                    else
+                    {
+                        _map.Center = _map.ImageToWorld(new Point(e.X, e.Y));
+
+                        if (MapCenterChanged != null)
+                            MapCenterChanged(_map.Center);
+                    }
+
+                    _map.Zoom /= scale;
+
+                    if (MapZoomChanged != null)
+                        MapZoomChanged(_map.Zoom);
+                }
+                else if (_activeTool == Tools.ZoomIn)
+                {
+                    double scale = 2;
+                    if (_dragging)
+                    {
+                        if (e.Y - _dragStartPoint.Y < 0) //Zoom out
+                            scale = (float) Math.Pow(1/(float) (_dragStartPoint.Y - e.Y), 0.5);
+                        else //Zoom in
+                            scale = 1 + (e.Y - _dragStartPoint.Y)*0.1;
+                    }
+                    else
+                    {
+                        _map.Center = _map.ImageToWorld(new Point(e.X, e.Y));
+
+                        if (MapCenterChanged != null)
+                            MapCenterChanged(_map.Center);
+                    }
+
+                    _map.Zoom *= 1/scale;
+
+                    if (MapZoomChanged != null)
+                        MapZoomChanged(_map.Zoom);
+
+                }
+                else if ((_activeTool == Tools.Pan &&
+                          !(_shiftButtonDragRectangleZoom && (Control.ModifierKeys & Keys.Shift) != Keys.None)) ||
+                         (e.Button == System.Windows.Forms.MouseButtons.Left && _dragging &&
+                          (_activeTool == Tools.DrawLine || _activeTool == Tools.DrawPolygon)))
+                {
+                    if (_dragging)
+                    {
+                        if (MapCenterChanged != null)
+                            MapCenterChanged(_map.Center);
+                    }
+                    else
+                    {
+                        if (_panOnClick)
                         {
                             _map.Center = _map.ImageToWorld(new Point(e.X, e.Y));
 
                             if (MapCenterChanged != null)
                                 MapCenterChanged(_map.Center);
                         }
-
-                        _map.Zoom /= scale;
-
-                        if (MapZoomChanged != null)
-                            MapZoomChanged(_map.Zoom);
                     }
-                    else if (_activeTool == Tools.ZoomIn)
+                }
+                else if (_activeTool == Tools.QueryBox || _activeTool == Tools.QueryPoint
+                    /*|| _activeTool == Tools.QueryPolygon*/)
+                {
+                    //OnMouseUpQuery(e);
+                    var mqs = MapQueryStarted;
+                    if (mqs != null)
+                        mqs(this, new EventArgs());
+
+                    var layersToQuery = GetLayersToQuery();
+
+                    if (layersToQuery.Count > 0)
                     {
-                        double scale = 2;
-                        if (_dragging)
+                        var foundData = false;
+                        foreach (var layer in layersToQuery)
                         {
-                            if (e.Y - _dragStartPoint.Y < 0) //Zoom out
-                                scale = (float) Math.Pow(1/(float) (_dragStartPoint.Y - e.Y), 0.5);
-                            else //Zoom in
-                                scale = 1 + (e.Y - _dragStartPoint.Y)*0.1;
-                        }
-                        else
-                        {
-                            _map.Center = _map.ImageToWorld(new Point(e.X, e.Y));
-
-                            if (MapCenterChanged != null)
-                                MapCenterChanged(_map.Center);
-                        }
-
-                        _map.Zoom *= 1/scale;
-
-                        if (MapZoomChanged != null)
-                            MapZoomChanged(_map.Zoom);
-
-                    }
-                    else if ((_activeTool == Tools.Pan &&
-                              !(_shiftButtonDragRectangleZoom && (Control.ModifierKeys & Keys.Shift) != Keys.None)) ||
-                             (e.Button == System.Windows.Forms.MouseButtons.Left && _dragging &&
-                              (_activeTool == Tools.DrawLine || _activeTool == Tools.DrawPolygon)))
-                    {
-                        if (_dragging)
-                        {
-                            if (MapCenterChanged != null)
-                                MapCenterChanged(_map.Center);
-                        }
-                        else
-                        {
-                            if (_panOnClick)
+                            Envelope bounding;
+                            var isPoint = false;
+                            if (_dragging)
                             {
-                                _map.Center = _map.ImageToWorld(new Point(e.X, e.Y));
+                                Coordinate lowerLeft, upperRight;
+                                GetBounds(_map.ImageToWorld(_dragStartPoint), _map.ImageToWorld(_dragEndPoint),
+                                    out lowerLeft, out upperRight);
 
-                                if (MapCenterChanged != null)
-                                    MapCenterChanged(_map.Center);
+                                bounding = new Envelope(lowerLeft, upperRight);
                             }
-                        }
-                    }
-                    else if (_activeTool == Tools.QueryBox || _activeTool == Tools.QueryPoint /*|| _activeTool == Tools.QueryPolygon*/)
-                    {
-                        //OnMouseUpQuery(e);
-                        var mqs = MapQueryStarted;
-                        if (mqs != null)
-                            mqs(this, new EventArgs());
-
-                        var layersToQuery = GetLayersToQuery();
-
-                        if (layersToQuery.Count > 0)
-                        {
-                            var foundData = false;
-                            foreach (var layer in layersToQuery)
+                            else
                             {
-                                Envelope bounding;
-                                var isPoint = false;
-                                if (_dragging)
-                                {
-                                    Coordinate lowerLeft, upperRight;
-                                    GetBounds(_map.ImageToWorld(_dragStartPoint), _map.ImageToWorld(_dragEndPoint),
-                                              out lowerLeft, out upperRight);
+                                bounding = new Envelope(_map.ImageToWorld(new Point(e.X, e.Y)));
+                                bounding = bounding.Grow(_map.PixelSize*_queryGrowFactor);
+                                isPoint = true;
+                            }
 
-                                    bounding = new Envelope(lowerLeft, upperRight);
-                                }
+                            var ds = new Data.FeatureDataSet();
+                            if (_activeTool == Tools.QueryBox)
+                            {
+                                layer.ExecuteIntersectionQuery(bounding, ds);
+                            }
+                            else
+                            {
+                                IGeometry geom;
+                                if (isPoint && QueryGrowFactor == 0)
+                                    geom = _map.Factory.CreatePoint(_map.ImageToWorld(new Point(e.X, e.Y)));
                                 else
-                                {
-                                    bounding = new Envelope(_map.ImageToWorld(new Point(e.X, e.Y)));
-                                    bounding = bounding.Grow(_map.PixelSize*_queryGrowFactor);
-                                    isPoint = true;
-                                }
+                                    geom = _map.Factory.ToGeometry(bounding);
+                                layer.ExecuteIntersectionQuery(geom, ds);
+                            }
 
-                                var ds = new Data.FeatureDataSet();
-                                if (_activeTool == Tools.QueryBox)
+                            if (MapQueried != null)
+                            {
+                                if (ds.Tables.Count > 0)
                                 {
-                                    layer.ExecuteIntersectionQuery(bounding, ds);
-                                }
-                                else
-                                {
-                                    IGeometry geom;
-                                    if (isPoint && QueryGrowFactor == 0)
-                                        geom = _map.Factory.CreatePoint(_map.ImageToWorld(new Point(e.X, e.Y)));
-                                    else
-                                        geom = _map.Factory.ToGeometry(bounding);
-                                    layer.ExecuteIntersectionQuery(geom, ds);
-                                }
-
-                                if (MapQueried != null)
-                                {
-                                    if (ds.Tables.Count > 0)
+                                    //Fire the event for all the resulting tables
+                                    foreach (var dt in ds.Tables)
                                     {
-                                        //Fire the event for all the resulting tables
-                                        foreach (var dt in ds.Tables)
+                                        if (dt.Rows.Count > 0)
                                         {
-                                            if (dt.Rows.Count > 0)
-                                            {
-                                                MapQueried(dt);
-                                                foundData = true;
-                                                if (_mapQueryMode == MapQueryType.TopMostLayer)
-                                                    break;
-                                            }
+                                            MapQueried(dt);
+                                            foundData = true;
+                                            if (_mapQueryMode == MapQueryType.TopMostLayer)
+                                                break;
                                         }
                                     }
-                                    else
-                                    {
-                                        if (_mapQueryMode == MapQueryType.LayerByIndex)
-                                            MapQueried(
-                                                new Data.FeatureDataTable(new System.Data.DataTable(layer.LayerName)));
-                                    }
                                 }
-
-                                //If we found data and querymode is TopMostLayer we should abort now..
-                                if (foundData && _mapQueryMode == MapQueryType.TopMostLayer)
+                                else
                                 {
-                                    break;
+                                    if (_mapQueryMode == MapQueryType.LayerByIndex)
+                                        MapQueried(
+                                            new Data.FeatureDataTable(new System.Data.DataTable(layer.LayerName)));
                                 }
                             }
-                        }
-                        var mqd = MapQueryDone;
-                        if (mqd != null)
-                            mqd(this, new EventArgs());
-                    }
 
-                    else if (_activeTool == Tools.ZoomWindow ||
-                             (_shiftButtonDragRectangleZoom && (Control.ModifierKeys & Keys.Shift) != Keys.None))
-                    {
-                        if (_rectangle.Width > 0 && _rectangle.Height > 0)
-                        {
-                            Coordinate lowerLeft;
-                            Coordinate upperRight;
-                            GetBounds(_map.ImageToWorld(_dragStartPoint), _map.ImageToWorld(_dragEndPoint),
-                                      out lowerLeft, out upperRight);
-                            _dragEndPoint.X = 0;
-                            _dragEndPoint.Y = 0;
-
-                            _map.ZoomToBox(new Envelope(lowerLeft, upperRight));
-
-                            if (MapZoomChanged != null)
-                                MapZoomChanged(_map.Zoom);
-
+                            //If we found data and querymode is TopMostLayer we should abort now..
+                            if (foundData && _mapQueryMode == MapQueryType.TopMostLayer)
+                            {
+                                break;
+                            }
                         }
                     }
-                    else if (_activeTool == Tools.DrawPoint)
-                    {
-                        if (GeometryDefined != null)
-                        {
-                            GeometryDefined(_map.Factory.CreatePoint(Map.ImageToWorld(new PointF(e.X, e.Y))));
-                        }
-                    }
-                    else if (_activeTool == Tools.DrawPolygon || _activeTool == Tools.DrawLine)
-                    {
-                        //pointArray = null;
-                        if (_pointArray == null)
-                        {
-                            _pointArray = new List<Coordinate>(2);
-                            _pointArray.Add(Map.ImageToWorld(e.Location));
-                            _pointArray.Add(Map.ImageToWorld(e.Location));
-                        }
-                        else
-                        {
-                            //var temp = new Coordinate[_pointArray.Count + 2];
-                            _pointArray.Add(Map.ImageToWorld(e.Location));
-                        }
-                    }
+                    var mqd = MapQueryDone;
+                    if (mqd != null)
+                        mqd(this, new EventArgs());
                 }
 
-
-                if (_dragging)
+                else if (_activeTool == Tools.ZoomWindow ||
+                         (_shiftButtonDragRectangleZoom && (Control.ModifierKeys & Keys.Shift) != Keys.None))
                 {
-                    _dragging = false;
-                    if (_activeTool == Tools.QueryBox)
-                        Invalidate(_rectangle);
-                    if (_activeTool == Tools.ZoomWindow || _activeTool == Tools.QueryBox /*|| _activeTool == Tools.QueryPolygon*/)
-                        _rectangle = Rectangle.Empty;
+                    if (_rectangle.Width > 0 && _rectangle.Height > 0)
+                    {
+                        Coordinate lowerLeft;
+                        Coordinate upperRight;
+                        GetBounds(_map.ImageToWorld(_dragStartPoint), _map.ImageToWorld(_dragEndPoint),
+                            out lowerLeft, out upperRight);
+                        _dragEndPoint.X = 0;
+                        _dragEndPoint.Y = 0;
 
-                    Refresh();
+                        _map.ZoomToBox(new Envelope(lowerLeft, upperRight));
+
+                        if (MapZoomChanged != null)
+                            MapZoomChanged(_map.Zoom);
+
+                    }
                 }
-                else if (_activeTool == Tools.ZoomIn || _activeTool == Tools.ZoomOut || _activeTool == Tools.Pan)
+                else if (_activeTool == Tools.DrawPoint)
                 {
-                    Refresh();
+                    if (GeometryDefined != null)
+                    {
+                        GeometryDefined(_map.Factory.CreatePoint(Map.ImageToWorld(new PointF(e.X, e.Y))));
+                    }
                 }
+                else if (_activeTool == Tools.DrawPolygon || _activeTool == Tools.DrawLine)
+                {
+                    //pointArray = null;
+                    if (_pointArray == null)
+                    {
+                        _pointArray = new List<Coordinate>(2);
+                        _pointArray.Add(Map.ImageToWorld(e.Location));
+                        _pointArray.Add(Map.ImageToWorld(e.Location));
+                    }
+                    else
+                    {
+                        //var temp = new Coordinate[_pointArray.Count + 2];
+                        _pointArray.Add(Map.ImageToWorld(e.Location));
+                    }
+                }
+            }
+
+
+            if (_dragging)
+            {
+                _dragging = false;
+                if (_activeTool == Tools.QueryBox)
+                    Invalidate(_rectangle);
+                if (_activeTool == Tools.ZoomWindow || _activeTool == Tools.QueryBox
+                    /*|| _activeTool == Tools.QueryPolygon*/)
+                    _rectangle = Rectangle.Empty;
+
+                Refresh();
+            }
+            else if (_activeTool == Tools.ZoomIn || _activeTool == Tools.ZoomOut || _activeTool == Tools.Pan)
+            {
+                Refresh();
             }
         }
 
@@ -2025,7 +2081,15 @@ namespace SharpMap.Forms
 
         protected override void OnMouseDoubleClick(MouseEventArgs e)
         {
+            // call base function
             base.OnMouseDoubleClick(e);
+
+            if (_map == null)
+                return;
+
+            // Do we have an active tool?
+            if (_activeTool == Tools.None)
+                return;
 
             if (_activeTool == Tools.DrawPolygon)
             {
