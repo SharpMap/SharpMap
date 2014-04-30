@@ -25,6 +25,15 @@ namespace UnitTests.Layers
                 "Layer.BgColor does not produce a valid Url");
         }
 
+        [Test(Description = "Contact")]
+        public void ContactInfo_ContactOrganization_IsParsedCorrectly()
+        {
+            var client = CreateClientFromXmlResult("wms.atlantedesertificazione.xml");
+
+            Assert.That(client.ServiceDescription.ContactInformation.PersonPrimary.Organisation,
+                Is.EqualTo("Geoportale Nazionale - Ministero dell'Ambiente e della Tutela del Territorio e del Mare"));
+        }
+
         private Client CreateClientFromXmlResult(string xmlFilename)
         {
             var resourceName = typeof (WmsLayerTest).Namespace + "." + xmlFilename;

@@ -697,7 +697,7 @@ namespace SharpMap.Web.Wms
             _serviceDescription.ContactInformation.FacsimileTelephone = (node != null ? node.InnerText : null);
             node =
                 xnlServiceDescription.SelectSingleNode(
-                    "sm:ContactInformation/sm:ContactPersonPrimary/sm:ContactOrganisation", _nsmgr);
+                    "sm:ContactInformation/sm:ContactPersonPrimary/sm:ContactOrganization", _nsmgr);
             _serviceDescription.ContactInformation.PersonPrimary.Organisation = (node != null ? node.InnerText : null);
             node =
                 xnlServiceDescription.SelectSingleNode(
