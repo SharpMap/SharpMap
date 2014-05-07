@@ -792,9 +792,9 @@ namespace SharpMap.Layers
 
         private static string ToHexValue(Color color)
         {
-            return "#" + color.R.ToString("X2") +
-                         color.G.ToString("X2") +
-                         color.B.ToString("X2");
+            return color.R.ToString("X2") +
+                   color.G.ToString("X2") +
+                   color.B.ToString("X2");
         }
         /// <summary>
         /// Returns the preferred URL to use when communicating with the wms-server

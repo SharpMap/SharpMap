@@ -21,7 +21,7 @@ namespace UnitTests.Layers
             var url = layer.GetRequestUrl(new Envelope(1, 1, 1, 1), new Size(1, 1));
             var queryString = HttpUtility.ParseQueryString(url);
 
-            Assert.That(queryString["BGCOLOR"], Is.EqualTo("#FF0000"), 
+            Assert.That(queryString["BGCOLOR"], Is.EqualTo("FF0000"), 
                 "Layer.BgColor does not produce a valid Url");
         }
 
