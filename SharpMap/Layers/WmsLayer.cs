@@ -24,6 +24,9 @@ using System.IO;
 using System.Net;
 using System.Text;
 using GeoAPI.Geometries;
+using ProjNet.CoordinateSystems;
+using ProjNet.CoordinateSystems.Transformations;
+using SharpMap.CoordinateSystems;
 using SharpMap.Rendering.Exceptions;
 using SharpMap.Web.Wms;
 using Common.Logging;
@@ -80,6 +83,7 @@ namespace SharpMap.Layers
         private bool _transparent = true;
         private Color _bgColor = Color.White;
         //private readonly string _capabilitiesUrl;
+        private Envelope _envelope;
 
         /// <summary>
         /// Initializes a new layer, and downloads and parses the service description
@@ -374,33 +378,20 @@ namespace SharpMap.Layers
         /// <returns>Bounding box corresponding to the extent of the features in the layer</returns>
         public override Envelope Envelope
         {
-            //There are two boundingboxes available: 1 as EPSG:4326 with LatLonCoordinates and or one with the coordinates of the FIRST BoundingBox with SRID of the layer
-            //If the request is using EPSG:4326, it should use the boundingbox with LatLon coordinates, else, it should use the boundingbox with the coordinates in the SRID
             get
             {
-                var boxes = new Collection<Envelope>();
-                var sridBoxes = getBoundingBoxes(RootLayer);
-                foreach (var sridBox in sridBoxes)
-                {
-                    if (SRID == sridBox.SRID)
-                        boxes.Add(sridBox);
-                }
+                return _envelope ?? (_envelope = GetEnvelope());
+            }
+        }
 
-                if (boxes.Count > 0)
-                {
-                    var res = new Envelope();
-                    foreach (var envelope in boxes)
-                        res.ExpandToInclude(envelope);
+        public override int SRID
+        {
+            get { return base.SRID; }
+            set
+            {
+                base.SRID = value;
 
-                    return res;
-                }
-
-                if (SRID == 4326)
-                    return RootLayer.LatLonBoundingBox;
-
-                //There is no boundingbox defined. Maybe we should throw a NotImplementedException
-                //TODO: project one of the available bboxes to layers projection
-                return null;
+                _envelope = null;
             }
         }
 
@@ -821,6 +812,61 @@ namespace SharpMap.Layers
                 if (_wmsClient.GetMapRequests[i].Type.ToLower() == "post")
                     return _wmsClient.GetMapRequests[i];
             return _wmsClient.GetMapRequests[0];
+        }
+
+        private Envelope GetEnvelope()
+        {
+            var boxes = new Collection<Envelope>();
+            var sridBoxes = getBoundingBoxes(RootLayer);
+            foreach (var sridBox in sridBoxes)
+            {
+                if (SRID == sridBox.SRID)
+                    boxes.Add(sridBox);
+            }
+
+            if (boxes.Count > 0)
+            {
+                var res = new Envelope();
+                foreach (var envelope in boxes)
+                    res.ExpandToInclude(envelope);
+
+                return res;
+            }
+
+            if (SRID == 4326)
+                return RootLayer.LatLonBoundingBox;
+
+            try
+            {
+                var projection = this.GetCoordinateSystem();
+                if (projection == null)
+                {
+                    Logger.Warn("WmsLayer envelope is null because there is no Coordinate System found for SRID " + SRID);
+                    return null;
+                }
+                    
+
+#if !DotSpatialProjections
+                var wgs84 = GeographicCoordinateSystem.WGS84;
+
+                var ctf = new CoordinateTransformationFactory();
+                var transformation = ctf.CreateFromCoordinateSystems(wgs84, projection);
+#else
+                var wgs84 = DotSpatial.Projections.KnownCoordinateSystems.Geographic.World.WGS1984;
+
+                var transformation = new DotSpatial.Projections.CoordinateTransformation
+                {
+                    Source = wgs84,
+                    Target = projection
+                };
+#endif
+                return ToTarget(RootLayer.LatLonBoundingBox, transformation);
+            }
+            catch (Exception e)
+            {
+                Logger.Warn("Error calculating Envelope Transformation from WGS84 to SRID " + SRID, e);
+                return null;
+            }
         }
 
         /// <summary>

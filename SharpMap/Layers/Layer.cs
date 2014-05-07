@@ -33,7 +33,7 @@ namespace SharpMap.Layers
     /// Implement this class instead of the ILayer interface to save a lot of common code.
     /// </summary>
     [Serializable]
-    public abstract class Layer : DisposableObject, ILayer
+    public abstract partial class Layer : DisposableObject, ILayer
     {
         #region Events
 
@@ -375,19 +375,31 @@ namespace SharpMap.Layers
         #region Reprojection utility functions
 
         /// <summary>
+        /// Utility function to transform given envelope using a specific transformation
+        /// </summary>
+        /// <param name="envelope">The source envelope</param>
+        /// <param name="coordinateTransformation">The <see cref="GeoAPI.CoordinateSystems.Transformations.ICoordinateTransformation"/> to use.</param>
+        /// <returns>The target envelope</returns>
+        protected virtual Envelope ToTarget(Envelope envelope, ICoordinateTransformation coordinateTransformation)
+        {
+            if (coordinateTransformation == null)
+                return envelope;
+
+#if !DotSpatialProjections
+            return GeometryTransform.TransformBox(envelope, coordinateTransformation.MathTransform);
+#else
+            return GeometryTransform.TransformBox(envelope, coordinateTransformation.Source, coordinateTransformation.Target);
+#endif
+        }
+
+        /// <summary>
         /// Utility function to transform given envelope to the target envelope
         /// </summary>
         /// <param name="envelope">The source envelope</param>
         /// <returns>The target envelope</returns>
-        protected virtual Envelope ToTarget(Envelope envelope)
+        protected Envelope ToTarget(Envelope envelope)
         {
-            if (CoordinateTransformation == null)
-                return envelope;
-#if !DotSpatialProjections
-            return GeometryTransform.TransformBox(envelope, CoordinateTransformation.MathTransform);
-#else
-            return GeometryTransform.TransformBox(envelope, CoordinateTransformation.Source, CoordinateTransformation.Target);
-#endif
+            return ToTarget(envelope, CoordinateTransformation);
         }
 
         /// <summary>

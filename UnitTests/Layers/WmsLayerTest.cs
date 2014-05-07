@@ -25,7 +25,7 @@ namespace UnitTests.Layers
                 "Layer.BgColor does not produce a valid Url");
         }
 
-        [Test(Description = "Contact")]
+        [Test]
         public void ContactInfo_ContactOrganization_IsParsedCorrectly()
         {
             var client = CreateClientFromXmlResult("wms.atlantedesertificazione.xml");
