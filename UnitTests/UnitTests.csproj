@@ -161,6 +161,7 @@
   <ItemGroup>
     <Compile Include="Converters\SqlServer2008.cs" />
     <Compile Include="Converters\WKB\WKBTests.cs" />
+    <Compile Include="Converters\WKT\SpatialReferenceTests.cs" />
     <Compile Include="Converters\WKT\WktGeometryTests.cs" />
     <Compile Include="CoordinateSystems\CoordinateSystemExtensionsTest.cs" />
     <Compile Include="CoordinateSystems\Transformations\GeometryTransformDotSpatialTest.cs" />
