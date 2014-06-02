@@ -1,4 +1,5 @@
 // Copyright 2005, 2006 - Morten Nielsen (www.iter.dk)
+// Copyright 2014       - Spartaco Giubbolini, Felix Obermaier
 //
 // This file is part of SharpMap.
 // SharpMap is free software; you can redistribute it and/or modify
@@ -23,32 +24,27 @@ using System.Data;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Runtime.Serialization;
-using System.Xml;
-using System.Xml.Schema;
+using GeoAPI;
 using GeoAPI.Geometries;
+using NetTopologySuite.IO;
 
 namespace SharpMap.Data
 {
     /// <summary>
     /// Represents an in-memory cache of spatial data. The FeatureDataSet is an extension of System.Data.DataSet
     /// </summary>
-    [Serializable()]
-    public class FeatureDataSet : DataSet
+    /// <remarks>Serialization is achieved using the approach described in http://support.microsoft.com/kb/829740/en-us
+    /// </remarks>
+    [Serializable] 
+    public class FeatureDataSet : DataSet, ISerializable
     {
-        private FeatureTableCollection _FeatureTables;
-
         /// <summary>
         /// Initializes a new instance of the FeatureDataSet class.
         /// </summary>
         public FeatureDataSet()
-        {
-            InitClass();
-            CollectionChangeEventHandler schemaChangedHandler = new CollectionChangeEventHandler(SchemaChanged);
-            //this.Tables.CollectionChanged += schemaChangedHandler;
-            Relations.CollectionChanged += schemaChangedHandler;
-            InitClass();
-        }
+        {}
 
         /// <summary>
         /// Initializes a new instance of the FeatureDataSet class.
@@ -57,39 +53,33 @@ namespace SharpMap.Data
         /// <param name="context">streaming context</param>
         protected FeatureDataSet(SerializationInfo info, StreamingContext context)
         {
-            string strSchema = ((string) (info.GetValue("XmlSchema", typeof (string))));
-            if ((strSchema != null))
-            {
-                DataSet ds = new DataSet();
-                ds.ReadXmlSchema(new XmlTextReader(new StringReader(strSchema)));
-                if ((ds.Tables["FeatureTable"] != null))
-                {
-                    Tables.Add(new FeatureDataTable(ds.Tables["FeatureTable"]));
-                }
-                DataSetName = ds.DataSetName;
-                Prefix = ds.Prefix;
-                Namespace = ds.Namespace;
-                Locale = ds.Locale;
-                CaseSensitive = ds.CaseSensitive;
-                EnforceConstraints = ds.EnforceConstraints;
-                Merge(ds, false, MissingSchemaAction.Add);
-            }
-            else
-            {
-                InitClass();
-            }
-            GetSerializationData(info, context);
-            CollectionChangeEventHandler schemaChangedHandler = new CollectionChangeEventHandler(SchemaChanged);
-            //this.Tables.CollectionChanged += schemaChangedHandler;
-            Relations.CollectionChanged += schemaChangedHandler;
-        }
+            DataSetName = info.GetString("name");
+            Namespace = info.GetString("ns");
+            Prefix = info.GetString("prefix");
+            CaseSensitive = info.GetBoolean("case");
+            Locale = new CultureInfo(info.GetInt32("locale"));
+            EnforceConstraints = info.GetBoolean("enforceCons");
+            
+            var tables = (DataTable[]) info.GetValue("tables", typeof (DataTable[]));
+            base.Tables.AddRange(tables);
+
+            var constraints = (ArrayList)info.GetValue("constraints", typeof(ArrayList));
+            SetForeignKeyConstraints(constraints);
+
+            var relations = (ArrayList)info.GetValue("relations", typeof(ArrayList));
+            SetRelations(relations);
+
+            var extendedProperties = (PropertyCollection)info.GetValue("extendedProperties", typeof (PropertyCollection));
+            if (extendedProperties.Count > 0) // otherwise the next foreach throws exception... weird.
+                foreach (DictionaryEntry keyPair in extendedProperties)
+                    ExtendedProperties.Add(keyPair.Key, keyPair.Value);        }
 
         /// <summary>
         /// Gets the collection of tables contained in the FeatureDataSet
         /// </summary>
         public new FeatureTableCollection Tables
         {
-            get { return _FeatureTables; }
+            get { return new FeatureTableCollection(base.Tables); }
         }
 
         /// <summary>
@@ -98,87 +88,234 @@ namespace SharpMap.Data
         /// <returns></returns>
         public new FeatureDataSet Clone()
         {
-            FeatureDataSet cln = ((FeatureDataSet) (base.Clone()));
+            var cln = ((FeatureDataSet) (base.Clone()));
             return cln;
         }
 
-        /// <summary>
-        /// Gets a value indicating whether Tables property should be persisted.
-        /// </summary>
-        /// <returns></returns>
-        protected override bool ShouldSerializeTables()
+        //private void InitClass()
+        //{
+        //    Prefix = "";
+        //    Namespace = "sm";
+        //    Locale = new CultureInfo("en-US");
+        //    CaseSensitive = false;
+        //    EnforceConstraints = true;
+        //}
+
+        void ISerializable.GetObjectData(SerializationInfo info, StreamingContext context)
         {
-            return false;
+            info.AddValue("name", DataSetName);
+            info.AddValue("ns", Namespace);
+            info.AddValue("prefix", Prefix);
+            info.AddValue("case", CaseSensitive);
+            info.AddValue("locale", Locale.LCID);
+            info.AddValue("enforceCons", EnforceConstraints);
+            info.AddValue("tables", base.Tables.OfType<DataTable>().ToArray());
+            info.AddValue("constraints", GetForeignKeyConstraints());
+            info.AddValue("relations", GetRelations());
+            info.AddValue("extendedProperties", ExtendedProperties);
         }
 
-        /// <summary>
-        /// Gets a value indicating whether Relations property should be persisted.
-        /// </summary>
-        /// <returns></returns>
-        protected override bool ShouldSerializeRelations()
-        {
-            return false;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="reader"></param>
-        protected override void ReadXmlSerializable(XmlReader reader)
-        {
-            Reset();
-            DataSet ds = new DataSet();
-            ds.ReadXml(reader);
-            //if ((ds.Tables["FeatureTable"] != null))
-            //{
-            //    this.Tables.Add(new FeatureDataTable(ds.Tables["FeatureTable"]));
-            //}
-            DataSetName = ds.DataSetName;
-            Prefix = ds.Prefix;
-            Namespace = ds.Namespace;
-            Locale = ds.Locale;
-            CaseSensitive = ds.CaseSensitive;
-            EnforceConstraints = ds.EnforceConstraints;
-            Merge(ds, false, MissingSchemaAction.Add);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        protected override XmlSchema GetSchemaSerializable()
-        {
-            MemoryStream stream = new MemoryStream();
-            WriteXmlSchema(new XmlTextWriter(stream, null));
-            stream.Position = 0;
-            return XmlSchema.Read(new XmlTextReader(stream), null);
-        }
-
-
-        private void InitClass()
-        {
-            _FeatureTables = new FeatureTableCollection();
-            //this.DataSetName = "FeatureDataSet";
-            Prefix = "";
-            Namespace = "http://tempuri.org/FeatureDataSet.xsd";
-            Locale = new CultureInfo("en-US");
-            CaseSensitive = false;
-            EnforceConstraints = true;
-        }
-
-        private bool ShouldSerializeFeatureTable()
-        {
-            return false;
-        }
-
-        private void SchemaChanged(object sender, CollectionChangeEventArgs e)
-        {
-            if ((e.Action == CollectionChangeAction.Remove))
+        private ArrayList GetForeignKeyConstraints()
+         {
+            var constraintList = new ArrayList();
+            var tables = base.Tables;
+            for (int i = 0; i < tables.Count; i++)
             {
-                //this.InitVars();
+                DataTable dt = tables[i];
+                for (int j = 0; j < dt.Constraints.Count; j++)
+                {
+                    Constraint c = dt.Constraints[j];
+                    var fk = c as ForeignKeyConstraint;
+                    if (fk != null)
+                    {
+                        string constraintName = c.ConstraintName;
+                        var parentInfo = new int[fk.RelatedColumns.Length + 1];
+                        parentInfo[0] = tables.IndexOf(fk.RelatedTable);
+                        for (int k = 1; k < parentInfo.Length; k++)
+                        {
+                            parentInfo[k] = fk.RelatedColumns[k - 1].Ordinal;
+                        }
+
+                        int[] childInfo = new int[fk.Columns.Length + 1];
+                        childInfo[0] = i;//Since the constraint is on the current table, this is the child table.
+                        for (int k = 1; k < childInfo.Length; k++)
+                        {
+                            childInfo[k] = fk.Columns[k - 1].Ordinal;
+                        }
+
+                        var list = new ArrayList
+                        {
+                            constraintName,
+                            parentInfo,
+                            childInfo,
+                            new[] {(int) fk.AcceptRejectRule, (int) fk.UpdateRule, (int) fk.DeleteRule}
+                        };
+                        var extendedProperties = new Hashtable();
+                        if (fk.ExtendedProperties.Keys.Count > 0)
+                        {
+                            foreach (object propertyKey in fk.ExtendedProperties.Keys)
+                            {
+                                extendedProperties.Add(propertyKey, fk.ExtendedProperties[propertyKey]);
+                            }
+                        }
+                        list.Add(extendedProperties);
+
+                        constraintList.Add(list);
+                    }
+                }
+            }
+            return constraintList;
+         }
+
+        private ArrayList GetRelations()
+        {
+            var relationList = new ArrayList();
+
+            var tables = base.Tables;
+            foreach (DataRelation rel in Relations)
+            {
+                string relationName = rel.RelationName;
+                var parentInfo = new int[rel.ParentColumns.Length + 1];
+                parentInfo[0] = tables.IndexOf(rel.ParentTable);
+                for (int j = 1; j < parentInfo.Length; j++)
+                {
+                    parentInfo[j] = rel.ParentColumns[j - 1].Ordinal;
+                }
+
+                var childInfo = new int[rel.ChildColumns.Length + 1];
+                childInfo[0] = tables.IndexOf(rel.ChildTable);
+                for (int j = 1; j < childInfo.Length; j++)
+                {
+                    childInfo[j] = rel.ChildColumns[j - 1].Ordinal;
+                }
+
+                var list = new ArrayList {relationName, parentInfo, childInfo, rel.Nested};
+                var extendedProperties = new Hashtable();
+                if (rel.ExtendedProperties.Keys.Count > 0)
+                {
+                    foreach (object propertyKey in rel.ExtendedProperties.Keys)
+                    {
+                        extendedProperties.Add(propertyKey, rel.ExtendedProperties[propertyKey]);
+                    }
+                }
+                list.Add(extendedProperties);
+
+                relationList.Add(list);
+            }
+            return relationList;
+        }
+
+        private void SetForeignKeyConstraints(ArrayList constraintList)
+        {
+            Debug.Assert(constraintList != null);
+
+            var tables = base.Tables;
+
+            foreach (ArrayList list in constraintList)
+            {
+                Debug.Assert(list.Count == 5);
+                string constraintName = (string)list[0];
+                int[] parentInfo = (int[])list[1];
+                int[] childInfo = (int[])list[2];
+                int[] rules = (int[])list[3];
+                Hashtable extendedProperties = (Hashtable)list[4];
+
+                //ParentKey Columns.
+                Debug.Assert(parentInfo.Length >= 1);
+                DataColumn[] parentkeyColumns = new DataColumn[parentInfo.Length - 1];
+                for (int i = 0; i < parentkeyColumns.Length; i++)
+                {
+                    Debug.Assert(tables.Count > parentInfo[0]);
+                    Debug.Assert(tables[parentInfo[0]].Columns.Count > parentInfo[i + 1]);
+                    parentkeyColumns[i] = tables[parentInfo[0]].Columns[parentInfo[i + 1]];
+                }
+
+                //ChildKey Columns.
+                Debug.Assert(childInfo.Length >= 1);
+                DataColumn[] childkeyColumns = new DataColumn[childInfo.Length - 1];
+                for (int i = 0; i < childkeyColumns.Length; i++)
+                {
+                    Debug.Assert(tables.Count > childInfo[0]);
+                    Debug.Assert(tables[childInfo[0]].Columns.Count > childInfo[i + 1]);
+                    childkeyColumns[i] = tables[childInfo[0]].Columns[childInfo[i + 1]];
+                }
+
+                //Create the Constraint.
+                ForeignKeyConstraint fk = new ForeignKeyConstraint(constraintName, parentkeyColumns, childkeyColumns);
+                Debug.Assert(rules.Length == 3);
+                fk.AcceptRejectRule = (AcceptRejectRule)rules[0];
+                fk.UpdateRule = (Rule)rules[1];
+                fk.DeleteRule = (Rule)rules[2];
+
+                //Extended Properties.
+                Debug.Assert(extendedProperties != null);
+                if (extendedProperties.Keys.Count > 0)
+                {
+                    foreach (object propertyKey in extendedProperties.Keys)
+                    {
+                        fk.ExtendedProperties.Add(propertyKey, extendedProperties[propertyKey]);
+                    }
+                }
+
+                //Add the constraint to the child datatable.
+                Debug.Assert(tables.Count > childInfo[0]);
+                tables[childInfo[0]].Constraints.Add(fk);
             }
         }
-    }
+
+        private void SetRelations(ArrayList relationList)
+        {
+            Debug.Assert(relationList != null);
+
+            var tables = base.Tables;
+            foreach (ArrayList list in relationList)
+            {
+                Debug.Assert(list.Count == 5);
+                var relationName = (string)list[0];
+                var parentInfo = (int[])list[1];
+                var childInfo = (int[])list[2];
+                var isNested = (bool)list[3];
+                var extendedProperties = (Hashtable)list[4];
+
+                //ParentKey Columns.
+                Debug.Assert(parentInfo.Length >= 1);
+                var parentkeyColumns = new DataColumn[parentInfo.Length - 1];
+                for (int i = 0; i < parentkeyColumns.Length; i++)
+                {
+                    Debug.Assert(tables.Count > parentInfo[0]);
+                    Debug.Assert(tables[parentInfo[0]].Columns.Count > parentInfo[i + 1]);
+                    parentkeyColumns[i] = tables[parentInfo[0]].Columns[parentInfo[i + 1]];
+                }
+
+                //ChildKey Columns.
+                Debug.Assert(childInfo.Length >= 1);
+                var childkeyColumns = new DataColumn[childInfo.Length - 1];
+                for (int i = 0; i < childkeyColumns.Length; i++)
+                {
+                    Debug.Assert(tables.Count > childInfo[0]);
+                    Debug.Assert(tables[childInfo[0]].Columns.Count > childInfo[i + 1]);
+                    childkeyColumns[i] = tables[childInfo[0]].Columns[childInfo[i + 1]];
+                }
+
+                //Create the Relation, without any constraints[Assumption: The constraints are added earlier than the relations]
+                var rel = new DataRelation(relationName, parentkeyColumns, childkeyColumns, false);
+                rel.Nested = isNested;
+
+                //Extended Properties.
+                Debug.Assert(extendedProperties != null);
+                if (extendedProperties.Keys.Count > 0)
+                {
+                    foreach (object propertyKey in extendedProperties.Keys)
+                    {
+                        rel.ExtendedProperties.Add(propertyKey, extendedProperties[propertyKey]);
+                    }
+                }
+
+                //Add the relations to the dataset.
+                Relations.Add(rel);
+            }
+        }
+   }
 
     /// <summary>
     /// Represents the method that will handle the RowChanging, RowChanged, RowDeleting, and RowDeleted events of a FeatureDataTable. 
@@ -190,18 +327,42 @@ namespace SharpMap.Data
     /// <summary>
     /// Represents one feature table of in-memory spatial data. 
     /// </summary>
-    [DebuggerStepThrough()]
-    [Serializable()]
+    [DebuggerStepThrough]
+    [Serializable]
     public class FeatureDataTable : DataTable, IEnumerable
     {
         /// <summary>
         /// Initializes a new instance of the FeatureDataTable class with no arguments.
         /// </summary>
-        public FeatureDataTable() : base()
+        public FeatureDataTable() 
         {
-            InitClass();
+            //InitClass();
         }
 
+        /// <summary>
+        /// Creates an instance of this class from serialization
+        /// </summary>
+        /// <param name="info">The serialization info</param>
+        /// <param name="context">The streaming context</param>
+        public FeatureDataTable(SerializationInfo info, StreamingContext context)
+            : base(info, context)
+        {
+            using (var ms = new MemoryStream((byte[]) info.GetValue("geometries", typeof(byte[]))))
+            {
+                using (var reader = new BinaryReader(ms))
+            {
+                while (reader.BaseStream.Position < reader.BaseStream.Length)
+                {
+                    var rowIndex = reader.ReadInt32();
+                    var row = (FeatureDataRow) Rows[rowIndex];
+                    var srid = reader.ReadInt32();
+                    var wkbReader = new WKBReader(GeometryServiceProvider.Instance.CreateGeometryFactory(srid));
+                    var wkbSize = reader.ReadInt32();
+                    var wkb = reader.ReadBytes(wkbSize);
+                    row.Geometry = wkbReader.Read(wkb);
+                }
+            }}
+        }
         /// <summary>
         /// Initializes a new instance of the FeatureDataTable class with the specified table name.
         /// </summary>
@@ -229,14 +390,14 @@ namespace SharpMap.Data
             MinimumCapacity = table.MinimumCapacity;
             DisplayExpression = table.DisplayExpression;
         }
-
+        
         /// <summary>
         /// Gets the number of rows in the table
         /// </summary>
         [Browsable(false)]
         public int Count
         {
-            get { return base.Rows.Count; }
+            get { return Rows.Count; }
         }
 
         /// <summary>
@@ -246,7 +407,7 @@ namespace SharpMap.Data
         /// <returns>FeatureDataRow</returns>
         public FeatureDataRow this[int index]
         {
-            get { return (FeatureDataRow) base.Rows[index]; }
+            get { return (FeatureDataRow) Rows[index]; }
         }
 
         #region IEnumerable Members
@@ -257,7 +418,7 @@ namespace SharpMap.Data
         /// <returns></returns>
         public IEnumerator GetEnumerator()
         {
-            return base.Rows.GetEnumerator();
+            return Rows.GetEnumerator();
         }
 
         #endregion
@@ -288,7 +449,7 @@ namespace SharpMap.Data
         /// <param name="row"></param>
         public void AddRow(FeatureDataRow row)
         {
-            base.Rows.Add(row);
+            Rows.Add(row);
         }
 
         /// <summary>
@@ -297,8 +458,8 @@ namespace SharpMap.Data
         /// <returns></returns>
         public new FeatureDataTable Clone()
         {
-            FeatureDataTable cln = ((FeatureDataTable) (base.Clone()));
-            cln.InitVars();
+            var cln = ((FeatureDataTable) (base.Clone()));
+            //cln.InitVars();
             return cln;
         }
 
@@ -311,16 +472,16 @@ namespace SharpMap.Data
             return new FeatureDataTable();
         }
 
-        internal void InitVars()
-        {
-            //this.columnFeatureGeometry = this.Columns["FeatureGeometry"];
-        }
+        //internal void InitVars()
+        //{
+        //    //this.columnFeatureGeometry = this.Columns["FeatureGeometry"];
+        //}
 
-        private void InitClass()
-        {
-            //this.columnFeatureGeometry = new DataColumn("FeatureGeometry", typeof(GeoAPI.Geometries.IGeometry), null, System.Data.MappingType.Element);
-            //this.Columns.Add(this.columnFeatureGeometry);
-        }
+        //private void InitClass()
+        //{
+        //    //this.columnFeatureGeometry = new DataColumn("FeatureGeometry", typeof(GeoAPI.Geometries.IGeometry), null, System.Data.MappingType.Element);
+        //    //this.Columns.Add(this.columnFeatureGeometry);
+        //}
 
         /// <summary>
         /// Creates a new FeatureDataRow with the same schema as the table.
@@ -417,10 +578,35 @@ namespace SharpMap.Data
         /// <param name="row">Row to remove</param>
         public void RemoveRow(FeatureDataRow row)
         {
-            base.Rows.Remove(row);
+            Rows.Remove(row);
+        }
+
+        public override void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            base.GetObjectData(info, context);
+
+            var rowIndex = 0;
+            using (var ms = new MemoryStream())
+            {
+                using (var writer = new BinaryWriter(ms))
+                {
+                    foreach (FeatureDataRow row in Rows)
+                    {
+                        if (row.IsFeatureGeometryNull()) continue;
+                        writer.Write(rowIndex++);
+                        writer.Write(row.Geometry.SRID);
+                        var wkb = row.Geometry.AsBinary();
+                        writer.Write(wkb.Length);
+                        writer.Write(wkb);
+                    }
+                    ms.Seek(0, SeekOrigin.Begin);
+                    info.AddValue("geometries", ms.ToArray(), typeof(byte[]));
+                }
+            }
         }
     }
 
+    /*
     /// <summary>
     /// Represents the collection of tables for the FeatureDataSet.
     /// </summary>
@@ -428,19 +614,186 @@ namespace SharpMap.Data
     public class FeatureTableCollection : List<FeatureDataTable>
     {
     }
+     */
+
+    /// <summary>
+    /// Represents the collection of tables for the FeatureDataSet.
+    /// It is a proxy to the <see cref="DataSet.Tables"/> object. 
+    /// It filters out those <see cref="T:System.Data.DataTable"/> 
+    /// that are <see cref="T:SharpMap.Data.FeatureDataTable"/>s.
+    /// </summary>
+    public class FeatureTableCollection : ICollection<FeatureDataTable>
+    {
+        private readonly DataTableCollection _dataTables;
+
+        internal FeatureTableCollection(DataTableCollection dataTables)
+        {
+            _dataTables = dataTables;
+        }
+
+        public IEnumerator<FeatureDataTable> GetEnumerator()
+        {
+            var dataTables = new DataTable[_dataTables.Count];
+            _dataTables.CopyTo(dataTables, 0);
+
+            foreach (var dataTable in dataTables)
+            {
+                if (dataTable is FeatureDataTable)
+                    yield return (FeatureDataTable) dataTable;
+            }
+
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
+
+        public void Add(FeatureDataTable item)
+        {
+            _dataTables.Add(item);
+        }
+
+        /// <summary>
+        /// Method to add a range of <see cref="FeatureDataTable"/>s to the (Feature)DataTableCollection.
+        /// </summary>
+        /// <param name="items">The tables to add</param>
+        public void AddRange(IEnumerable<FeatureDataTable> items)
+        {
+            foreach (var item in items)
+            {
+                _dataTables.Add(item);
+            }
+        }
+
+        public void Clear()
+        {
+            _dataTables.Clear();
+        }
+
+        public bool Contains(FeatureDataTable item)
+        {
+            return _dataTables.Contains(item.TableName, item.Namespace);
+        }
+
+        public void CopyTo(FeatureDataTable[] array, int arrayIndex)
+        {
+            if (array == null)
+                throw new ArgumentNullException("array");
+            if (arrayIndex < 0)
+                throw new ArgumentException("Negative arrayIndex");
+
+            var j = 0;
+            for (var i = 0; i < _dataTables.Count; i++)
+            {
+                if (_dataTables[i] is FeatureDataTable)
+                {
+                    if (j >= array.Length)
+                        throw new ArgumentException("Insufficient space provided for array");
+                    array[j++] = (FeatureDataTable) _dataTables[i];
+                }
+            }
+        }
+
+        public bool Remove(FeatureDataTable item)
+        {
+            if (_dataTables.CanRemove(item))
+            {
+                _dataTables.Remove(item);
+                return true;
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Remove the feature data table at the provided index
+        /// </summary>
+        /// <param name="index">The index of the table to remove</param>
+        /// <returns><c>true</c> if the table was successfully removed</returns>
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
+        public bool RemoveAt(int index)
+        {
+            if (index < 0)
+                throw new ArgumentOutOfRangeException("index");
+            var tmp = 0;
+
+            DataTable tableToRemove = null;
+            foreach (DataTable dataTable in _dataTables)
+            {
+                if (dataTable is FeatureDataTable)
+                {
+                    if (tmp == index)
+                    {
+                        tableToRemove = dataTable;
+                        break;
+                    }
+                    tmp++;
+                }        
+            }
+
+            if (tableToRemove != null)
+                return Remove((FeatureDataTable)tableToRemove);
+
+            return false;
+        }
+
+        public int Count
+        {
+            get
+            {
+                var i = 0;
+                foreach (var dataTable in _dataTables)
+                {
+                    if (dataTable is FeatureDataTable)
+                        i++;
+                }
+                return i;
+            }
+        }
+
+        public bool IsReadOnly
+        {
+            get { return false; }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="index"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
+        public FeatureDataTable this[int index]
+        {
+            get
+            {
+                var i = 0;
+                foreach (var dataTable in _dataTables)
+                {
+                    if (dataTable is FeatureDataTable)
+                    {
+                        if (i == index)
+                            return (FeatureDataTable) dataTable;
+                        i++;
+                    }
+                }
+                throw new ArgumentOutOfRangeException("index");
+            }
+        }
+    }
 
     /// <summary>
     /// Represents a row of data in a FeatureDataTable.
     /// </summary>
-    [DebuggerStepThrough()]
-    [Serializable()]
+    [DebuggerStepThrough]
+    [Serializable]
     public class FeatureDataRow : DataRow
     {
         //private FeatureDataTable tableFeatureTable;
 
-        private IGeometry _Geometry;
+        private IGeometry _geometry;
 
-        internal FeatureDataRow(DataRowBuilder rb) : base(rb)
+        internal FeatureDataRow(DataRowBuilder rb)
+            : base(rb)
         {
         }
 
@@ -449,8 +802,8 @@ namespace SharpMap.Data
         /// </summary>
         public IGeometry Geometry
         {
-            get { return _Geometry; }
-            set { _Geometry = value; }
+            get { return _geometry; }
+            set { _geometry = value; }
         }
 
         /// <summary>
@@ -459,7 +812,7 @@ namespace SharpMap.Data
         /// <returns></returns>
         public bool IsFeatureGeometryNull()
         {
-            return Geometry == null;
+            return _geometry == null;
         }
 
         /// <summary>
@@ -467,18 +820,18 @@ namespace SharpMap.Data
         /// </summary>
         public void SetFeatureGeometryNull()
         {
-            Geometry = null;
+            _geometry = null;
         }
     }
 
     /// <summary>
     /// Occurs after a FeatureDataRow has been changed successfully.
     /// </summary>
-    [DebuggerStepThrough()]
+    [DebuggerStepThrough]
     public class FeatureDataRowChangeEventArgs : EventArgs
     {
-        private DataRowAction eventAction;
-        private FeatureDataRow eventRow;
+        private readonly DataRowAction _eventAction;
+        private readonly FeatureDataRow _eventRow;
 
         /// <summary>
         /// Initializes a new instance of the FeatureDataRowChangeEventArgs class.
@@ -487,8 +840,8 @@ namespace SharpMap.Data
         /// <param name="action"></param>
         public FeatureDataRowChangeEventArgs(FeatureDataRow row, DataRowAction action)
         {
-            eventRow = row;
-            eventAction = action;
+            _eventRow = row;
+            _eventAction = action;
         }
 
         /// <summary>
@@ -496,7 +849,7 @@ namespace SharpMap.Data
         /// </summary>
         public FeatureDataRow Row
         {
-            get { return eventRow; }
+            get { return _eventRow; }
         }
 
         /// <summary>
@@ -504,7 +857,7 @@ namespace SharpMap.Data
         /// </summary>
         public DataRowAction Action
         {
-            get { return eventAction; }
+            get { return _eventAction; }
         }
     }
 }

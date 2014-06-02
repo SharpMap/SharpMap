@@ -166,6 +166,7 @@
     <Compile Include="CoordinateSystems\CoordinateSystemExtensionsTest.cs" />
     <Compile Include="CoordinateSystems\Transformations\GeometryTransformDotSpatialTest.cs" />
     <Compile Include="CoordinateSystems\Transformations\GeometryTransformTest.cs" />
+    <Compile Include="Data\FeatureDataSetTests.cs" />
     <Compile Include="Data\Providers\DataTablePointTests.cs" />
     <Compile Include="Data\Providers\DbaseReaderTests.cs" />
     <Compile Include="Data\Providers\DbTests.cs" />
