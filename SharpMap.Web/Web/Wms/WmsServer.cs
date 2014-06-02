@@ -919,7 +919,9 @@ namespace SharpMap.Web.Wms
                             
                             if (_intersectDelegate != null)
                             {
-                                fds.Tables[0] = _intersectDelegate(fds.Tables[0], queryBox);
+                                var tmp = _intersectDelegate(fds.Tables[0], queryBox);
+                                fds.Tables.RemoveAt(0);
+                                fds.Tables.Add(tmp);
                             }
                             if (fds.Tables.Count == 0)
                             {
@@ -1027,7 +1029,9 @@ namespace SharpMap.Web.Wms
                         //
                         if (_intersectDelegate != null)
                         {
-                            fds.Tables[0] = _intersectDelegate(fds.Tables[0], queryBox);
+                            var tmp =  _intersectDelegate(fds.Tables[0], queryBox);
+                            fds.Tables.RemoveAt(0);
+                            fds.Tables.Add(tmp);
                         }
                         //filter the rows with the CQLFilter if one is provided
                         if (cqlFilterString != null)
