@@ -37,7 +37,7 @@ namespace SharpMap.Layers
         event DownloadProgressHandler DownloadProgressChanged;
 
         /// <summary>
-        /// Gets or Sets a value indicating if to redraw the map only when all tiles are downloaded
+        /// Gets or sets a value indicating if to redraw the map only when all tiles are downloaded
         /// </summary>
         bool OnlyRedrawWhenComplete { get; set; }
 
