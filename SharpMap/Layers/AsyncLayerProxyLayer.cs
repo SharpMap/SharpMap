@@ -152,15 +152,15 @@ namespace SharpMap.Layers
             }
 
             // Create a backbuffer
-            if (_bitmap == null || _bitmap.Size != map.Size)
+            lock (_renderLock)
             {
-                System.Threading.Monitor.Enter(_renderLock);
-                _bitmap = new Bitmap(map.Size.Width, map.Size.Height, PixelFormat.Format32bppArgb);
-                using (var tmpGraphics = Graphics.FromImage(_bitmap))
-                    tmpGraphics.Clear(Color.Transparent);
-                System.Threading.Monitor.Exit(_renderLock);
+                if (_bitmap == null || _bitmap.Size != map.Size)
+                {
+                    _bitmap = new Bitmap(map.Size.Width, map.Size.Height, PixelFormat.Format32bppArgb);
+                    using (var tmpGraphics = Graphics.FromImage(_bitmap))
+                        tmpGraphics.Clear(Color.Transparent);
+                }
             }
-
             // Save the last viewport
             _lastViewport = map.Envelope;
 

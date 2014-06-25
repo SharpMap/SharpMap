@@ -185,6 +185,7 @@
     <Compile Include="Data\Providers\SqlServer2008.cs" />
     <Compile Include="Data\Providers\WFSClient.cs" />
     <Compile Include="Geometries\GeoAPIEx.cs" />
+    <Compile Include="Layers\AsyncLayerProxyLayer.cs" />
     <Compile Include="Layers\DuplicateLayerException.cs" />
     <Compile Include="Layers\GdiImageLayer.cs" />
     <Compile Include="Layers\GdiImageLayerProxy.cs" />

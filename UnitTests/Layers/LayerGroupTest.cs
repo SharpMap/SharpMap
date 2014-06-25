@@ -2,6 +2,7 @@
 using GeoAPI.Geometries;
 using NUnit.Framework;
 using SharpMap.Layers;
+using SharpMap.Styles;
 
 namespace UnitTests.Layers
 {
@@ -52,7 +53,7 @@ namespace UnitTests.Layers
 
             group.CoordinateTransformation = transf;
 
-            Assert.That(group.Layers[0].CoordinateTransformation, Is.EqualTo(transf),
+            Assert.That(((Layer)group.Layers[0]).CoordinateTransformation, Is.EqualTo(transf),
                 "LayerGroup.CoordinateTransformation should propagate to inner layers");
         }
 
@@ -67,7 +68,7 @@ namespace UnitTests.Layers
             group.SkipTransformationPropagation = true;
             group.CoordinateTransformation = transf;
 
-            Assert.That(group.Layers[0].CoordinateTransformation, Is.Not.EqualTo(transf),
+            Assert.That(((Layer)group.Layers[0]).CoordinateTransformation, Is.Not.EqualTo(transf),
                 "LayerGroup.CoordinateTransformation should NOT propagate to inner layers because SkipTransformationPropagation was true");
         }
 
@@ -82,7 +83,7 @@ namespace UnitTests.Layers
 
             group.ReverseCoordinateTransformation = transf;
 
-            Assert.That(group.Layers[0].ReverseCoordinateTransformation, Is.EqualTo(transf),
+            Assert.That(((Layer)group.Layers[0]).ReverseCoordinateTransformation, Is.EqualTo(transf),
                 "LayerGroup.ReverseCoordinateTransformation should propagate to inner layers");
         }
 
@@ -97,7 +98,7 @@ namespace UnitTests.Layers
             group.SkipTransformationPropagation = true;
             group.ReverseCoordinateTransformation = transf;
 
-            Assert.That(group.Layers[0].ReverseCoordinateTransformation, Is.Not.EqualTo(transf),
+            Assert.That(((Layer)group.Layers[0]).ReverseCoordinateTransformation, Is.Not.EqualTo(transf),
                 "LayerGroup.ReverseCoordinateTransformation should NOT propagate to inner layers because SkipTransformationPropagation was true");
         }
 #endif
@@ -127,6 +128,34 @@ namespace UnitTests.Layers
             group.Layers.Add(new FooLayer());
 
             Assert.That(group.Envelope, Is.EqualTo(new Envelope(5, 10, 5, 10)));
+        }
+
+        [Test(Description = "Clone clones all the properties")]
+        public void Clone_ClonesTheProperties()
+        {
+            var group = new LayerGroup("group");
+
+            group.CoordinateTransformation = CreateTransformation();
+            group.Enabled = true;
+            group.IsQueryEnabled = true;
+            group.MinVisible = 10;
+            group.MaxVisible = 100;
+            group.SRID = 4326;
+            group.Proj4Projection = "dummy";
+            group.TargetSRID = 4327;
+            group.Style = new LabelStyle();
+
+            var clonedGroup = (LayerGroup)group.Clone();
+
+            Assert.That(clonedGroup.CoordinateTransformation, Is.EqualTo(group.CoordinateTransformation), "CoordinateTransformation mismatch");
+            Assert.That(clonedGroup.Enabled, Is.EqualTo(group.Enabled), "Enabled mismatch");
+            Assert.That(clonedGroup.IsQueryEnabled, Is.EqualTo(group.IsQueryEnabled), "IsQueryEnabled mismatch");
+            Assert.That(clonedGroup.MinVisible, Is.EqualTo(group.MinVisible), "MinVisible mismatch");
+            Assert.That(clonedGroup.MaxVisible, Is.EqualTo(group.MaxVisible), "MaxVisible mismatch");
+            Assert.That(clonedGroup.SRID, Is.EqualTo(group.SRID), "SRID mismatch");
+            Assert.That(clonedGroup.Proj4Projection, Is.EqualTo(group.Proj4Projection), "Proj4Projection mismatch");
+            Assert.That(clonedGroup.TargetSRID, Is.EqualTo(group.TargetSRID), "TargetSRID mismatch");
+            Assert.That(clonedGroup.Style, Is.EqualTo(group.Style), "Style mismatch");
         }
     }
 }

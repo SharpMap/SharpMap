@@ -37,10 +37,39 @@ namespace SharpMap.Layers
     /// for instance a set of image tiles, and expose them as a single layer
     /// </remarks>
     [Serializable]
-    public partial class LayerGroup : Layer, ICanQueryLayer
+    public partial class LayerGroup : Layer, ICanQueryLayer, ICloneable
     {
-        private Collection<Layer> _layers;
+        private ObservableCollection<ILayer> _layers;
         private bool _isQueryEnabled = true;
+
+        /// <summary>
+        /// Event fired when the Layers collection is replaced.
+        /// </summary>
+        public event EventHandler LayersChanged;
+
+        /// <summary>
+        /// Fires the LayersChanged event.
+        /// </summary>
+        protected virtual void OnLayersChanged()
+        {
+            EventHandler handler = LayersChanged;
+            if (handler != null) handler(this, EventArgs.Empty);
+        }
+
+        /// <summary>
+        /// Event fires when the Layers collection is going to be replaced.
+        /// </summary>
+        public event EventHandler LayersChanging;
+
+        /// <summary>
+        /// Fires the LayersChanging event.
+        /// </summary>
+        protected virtual void OnLayersChanging()
+        {
+            EventHandler handler = LayersChanging;
+            if (handler != null) handler(this, EventArgs.Empty);
+        }
+
         /// <summary>
         /// Initializes a new group layer
         /// </summary>
@@ -48,7 +77,7 @@ namespace SharpMap.Layers
         public LayerGroup(string layername)
         {
             LayerName = layername;
-            _layers = new Collection<Layer>();
+            _layers = new ObservableCollection<ILayer>();
         }
         /// <summary>
         /// Whether the layer is queryable when used in a SharpMap.Web.Wms.WmsServer, ExecuteIntersectionQuery() will be possible in all other situations when set to FALSE
@@ -61,10 +90,18 @@ namespace SharpMap.Layers
         /// <summary>
         /// Sublayers in the group
         /// </summary>
-        public virtual Collection<Layer> Layers
+        public virtual ObservableCollection<ILayer> Layers
         {
             get { return _layers; }
-            set { _layers = value; }
+            set
+            {
+                if (!Equals(value, _layers))
+                {
+                    OnLayersChanging();
+                    _layers = value;
+                    OnLayersChanged();
+                }
+            }
         }
 
         /// <summary>
@@ -122,7 +159,7 @@ namespace SharpMap.Layers
                 {
                     var layers = Layers.ToArray();
 
-                    foreach (var layer in layers)
+                    foreach (var layer in layers.OfType<Layer>())
                         layer.CoordinateTransformation = value;
                 }
             }
@@ -145,7 +182,7 @@ namespace SharpMap.Layers
                 {
                     var layers = Layers.ToArray();
 
-                    foreach (var layer in layers)
+                    foreach (var layer in layers.OfType<Layer>())
                         layer.ReverseCoordinateTransformation = value;
                 }
             }
@@ -158,9 +195,8 @@ namespace SharpMap.Layers
         /// </summary>
         protected override void ReleaseManagedResources()
         {
-            foreach (var layer in Layers)
-                if (layer != null)
-                    layer.Dispose();
+            foreach (var layer in Layers.OfType<IDisposable>().Where(layer => layer != null))
+                layer.Dispose();
             
             Layers.Clear();
             base.ReleaseManagedResources();
@@ -173,7 +209,7 @@ namespace SharpMap.Layers
         /// </summary>
         /// <param name="name">Name of layer</param>
         /// <returns>Layer</returns>
-        public virtual Layer GetLayerByName(string name)
+        public virtual ILayer GetLayerByName(string name)
         {
             //return _Layers.Find( delegate(SharpMap.Layers.Layer layer) { return layer.LayerName.Equals(name); });
             var layers = Layers.ToArray();
@@ -235,5 +271,49 @@ namespace SharpMap.Layers
         }
 
          #endregion
+
+        /// <summary>
+        /// Create an empty new LayerGroup instance.
+        /// </summary>
+        /// <remarks>This is used by the Clone() method, inheritors must override this method.</remarks>
+        /// <returns>Returns an empty LayerGroup.</returns>
+        protected virtual LayerGroup CreateUninitializedInstance()
+        {
+            return new LayerGroup(LayerName);
+        }
+
+        /// <summary>
+        /// Returns a cloned copy of the group.
+        /// </summary>
+        /// <returns></returns>
+        public virtual object Clone()
+        {
+            var clonedGroup = CreateUninitializedInstance();
+
+            clonedGroup.CoordinateTransformation = CoordinateTransformation;
+            clonedGroup.Enabled = Enabled;
+            clonedGroup.IsQueryEnabled = IsQueryEnabled;
+            clonedGroup.MaxVisible = MaxVisible;
+            clonedGroup.MinVisible = MinVisible;
+            clonedGroup.Proj4Projection = Proj4Projection;
+            clonedGroup.SRID = SRID;
+#if !DotSpatialProjections
+            clonedGroup.ReverseCoordinateTransformation = ReverseCoordinateTransformation;
+#endif
+            clonedGroup.Style = Style;
+            clonedGroup.TargetSRID = TargetSRID;
+
+            if (Layers != null)
+                foreach (var layer in Layers)
+                {
+                    var cloneable = layer as ICloneable;
+                    if (cloneable != null)
+                        clonedGroup.Layers.Add((ILayer) cloneable.Clone());
+                    else
+                        clonedGroup.Layers.Add(layer);
+                }
+
+            return clonedGroup;
+        }
     }
 }

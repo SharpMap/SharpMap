@@ -1,7 +1,17 @@
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Drawing;
+using System.Drawing.Imaging;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Reactive;
+using System.Reactive.Linq;
+using System.Reflection;
+using System.Reflection.Emit;
 using GeoAPI.Geometries;
+using Microsoft.SqlServer.Server;
+using Moq;
 using NUnit.Framework;
 using NetTopologySuite.Geometries;
 using NetTopologySuite.IO;
@@ -435,6 +445,378 @@ namespace UnitTests
             map.Center = map.Center;
             Assert.IsFalse(raised, "MapViewOnChange fired when setting Map.Center = Map.Center.");
         
+        }
+    
+        
+        [TestCase(LayerCollectionType.Background, Description = "The map fires MapNewTileAvailable event when an ITileAsyncLayer added to background collection, fires the MapNewTileAvailable event")]
+        [TestCase(LayerCollectionType.Static, Description = "The map fires MapNewTileAvailable event when an ITileAsyncLayer added to static collection, fires the MapNewTileAvailable event")]
+        public void AddingTileAsyncLayers_HookItsMapNewTileAvaliableEvent(LayerCollectionType collectionType)
+        {
+            var map = new Map();
+
+            var layer = CreateTileAsyncLayer();
+
+            AddTileLayerToMap(layer, map, collectionType);
+            
+            var eventSource = map.GetMapNewTileAvailableAsObservable();
+
+            RaiseMapNewtileAvailableOn(layer);
+            
+            Assert.That(eventSource.Count().First(), Is.EqualTo(1), TestContext.CurrentContext.Test.GetDescription());
+        }
+
+        [TestCase(LayerCollectionType.Static, Description = "The map should not fire MapNewTileAvailable event for removed ITileAsyncLayers, case: layer from StaticLayers")]
+        [TestCase(LayerCollectionType.Background, Description = "The map should not fire MapNewTileAvailable event for removed ITileAsyncLayers, case: layer from BackgroundLayers")]
+        public void AfterRemovingTileAsyncLayer_MapDoesNotHookAnymoreItsMapNewTileAvailableEvent(LayerCollectionType collectionType)
+        {
+            var map = new Map();
+
+            var tileAsyncLayer = CreateTileAsyncLayer();
+
+            AddTileLayerToMap(tileAsyncLayer, map, collectionType);
+
+            var eventSource = map.GetMapNewTileAvailableAsObservable();
+
+            map.GetCollection(collectionType).RemoveAt(0); 
+
+            RaiseMapNewtileAvailableOn(tileAsyncLayer);
+
+            Assert.That(eventSource.Count().First(), Is.EqualTo(0), TestContext.CurrentContext.Test.GetDescription());
+        }
+
+        [TestCase(LayerCollectionType.Static, Description = "The map should not fire MapNewTileAvailable event for replaced TileAsyncLayers from Layer collection")]
+        [TestCase(LayerCollectionType.Background, Description = "The map should not fire MapNewTileAvailable event for replaced TileAsyncLayers from BackgroundLayer collection")]
+        public void MapDoesNotGenerateMapNewTile_ReplacedLayers(LayerCollectionType collectionType)
+        {
+            var map = new Map();
+
+            var layer = CreateTileAsyncLayer();
+
+            AddTileLayerToMap(layer, map, collectionType);
+
+            var eventSource = map.GetMapNewTileAvailableAsObservable();
+
+            var newLayer = CreateTileAsyncLayer();
+            map.GetCollection(collectionType)[0] = newLayer.Item1.Object;
+
+            RaiseMapNewtileAvailableOn(layer);
+
+            Assert.That(eventSource.IsEmpty().First(), Is.EqualTo(true), TestContext.CurrentContext.Test.GetDescription());
+        }
+
+        [TestCase(LayerCollectionType.Static, Description = "The map should fire MapNewTileAvailable event for new added by replace TileAsyncLayers, case: Layer")]
+        [TestCase(LayerCollectionType.Background, Description = "The map should fire MapNewTileAvailable event for new added by replace TileAsyncLayers, case: BackgroundLayer")]
+        public void MapGeneratesMapNewTile_NewReplacedLayers(LayerCollectionType collectionType)
+        {
+            var map = new Map();
+
+            var tileAsyncLayer = CreateTileAsyncLayer();
+
+            AddTileLayerToMap(tileAsyncLayer, map, collectionType);
+
+            var eventSource = map.GetMapNewTileAvailableAsObservable();
+
+            var newLayer = CreateTileAsyncLayer();
+            map.GetCollection(collectionType)[0] = newLayer.Item1.Object;
+
+            RaiseMapNewtileAvailableOn(newLayer);
+
+            Assert.That(eventSource.Count().First(), Is.EqualTo(1), TestContext.CurrentContext.Test.GetDescription());
+        }
+
+        [TestCase(LayerCollectionType.Static, Description = "The map should not fire MapNewTileAvailable event after the Layers are cleared from Layers collection")]
+        [TestCase(LayerCollectionType.Background, Description = "The map should not fire MapNewTileAvailable event after the Layers are cleared from Background collection")]
+        public void MapDoesNoGenerateMapNewTile_AfterClear(LayerCollectionType collectionType)
+        {
+            var map = new Map();
+
+            var tileAsyncLayer = CreateTileAsyncLayer();
+
+            AddTileLayerToMap(tileAsyncLayer, map, collectionType);
+
+            var eventSource = map.GetMapNewTileAvailableAsObservable();
+
+            map.GetCollection(collectionType).Clear();
+
+            RaiseMapNewtileAvailableOn(tileAsyncLayer);
+
+            Assert.That(eventSource.IsEmpty().First(), TestContext.CurrentContext.Test.GetDescription());
+        }
+
+        [TestCase(LayerCollectionType.Static, Description = "Map should fire MapNewtileAvailable event for TileAsyncLayers contained inside of a LayerGroup, case Layer")]
+        [TestCase(LayerCollectionType.Background, Description = "Map should fire MapNewtileAvailable event for TileAsyncLayers contained inside of a LayerGroup, case BackgroundLayer")]
+        public void Map_TileAsyncInsideGroup_FiresMapNewtileAvailable(LayerCollectionType collectionType)
+        {
+            var map = new Map();
+
+            var group = CreateLayerGroup();
+            map.GetCollection(collectionType).Add(group);
+
+            var tileLayer = CreateTileAsyncLayer();
+            AddTileLayerToLayerGroup(tileLayer, group);
+
+            var eventSource = map.GetMapNewTileAvailableAsObservable();
+
+            RaiseMapNewtileAvailableOn(tileLayer);
+
+            Assert.That(eventSource.Count().First(), Is.EqualTo(1), TestContext.CurrentContext.Test.GetDescription());
+        }
+
+        [TestCase(LayerCollectionType.Static, Description = "Map should NOT fire MapNewtileAvailable event for TileAsyncLayers removed from a group belonging to Layers")]
+        [TestCase(LayerCollectionType.Background, Description = "Map should NOT fire MapNewtileAvailable event for TileAsyncLayers removed from a group belonging to BackgroundLayers")]
+        public void Map_TileAsyncRemovedFromGroup_DoesNotFiredMapNewTileAvailable(LayerCollectionType collectionType)
+        {
+            var map = new Map();
+
+            var group = CreateLayerGroup();
+            map.GetCollection(collectionType).Add(group);
+
+            var tileLayer = CreateTileAsyncLayer();
+            AddTileLayerToLayerGroup(tileLayer, group);
+
+            RemoveTileLayerFromGroup(group, tileLayer);
+
+            var eventSource = map.GetMapNewTileAvailableAsObservable();
+
+            RaiseMapNewtileAvailableOn(tileLayer);
+            Assert.That(eventSource.IsEmpty().First(), TestContext.CurrentContext.Test.GetDescription());
+        }
+
+        [TestCase(LayerCollectionType.Static, Description = "Map should fire MapNewTileAvailable event for new TileAsyncLayer replaced from a group and not for the old layer, case: Layers")]
+        [TestCase(LayerCollectionType.Background, Description = "Map should fire MapNewTileAvailable event for new TileAsyncLayer replaced from a group and not for the old layer, case: BackgroundLayers")]
+        public void Map_TileAsyncReplacedFromGroup_DoesNotFireMapNewTileAvailable(LayerCollectionType collectionType)
+        {
+            var map = new Map();
+
+            var group = CreateLayerGroup();
+            map.GetCollection(collectionType).Add(group);
+
+            var tileLayer = CreateTileAsyncLayer();
+            AddTileLayerToLayerGroup(tileLayer, group);
+
+            var newTileLayer = CreateTileAsyncLayer();
+            ReplaceExistingAsyncLayerFromGroup(group, tileLayer, newTileLayer);
+
+            var eventSource = map.GetMapNewTileAvailableAsObservable();
+            RaiseMapNewtileAvailableOn(tileLayer);
+
+            Assert.That(eventSource.IsEmpty().First(),
+                "Map should NOT fire MapNewTileAvailable event for TileAsyncLayers replaced from a group");
+
+            RaiseMapNewtileAvailableOn(newTileLayer);
+
+            Assert.That(eventSource.Count().First(), Is.EqualTo(1), TestContext.CurrentContext.Test.GetDescription());
+        }
+
+        [TestCase(LayerCollectionType.Static, Description = "Map should not fire MapNewTileAvailable event for TileAsyncLayer belonging to a group that has been cleared, case: Layers")]
+        [TestCase(LayerCollectionType.Background, Description = "Map should not fire MapNewTileAvailable event for TileAsyncLayer belonging to a group that has been cleared, case: BackgroundLayers")]
+        public void Map_TileAsyncFromClearedGroup_DoesNotFireMapNewTileAvailable(LayerCollectionType collectionType)
+        {
+            var map = new Map();
+
+            var group = CreateLayerGroup();
+            map.GetCollection(collectionType).Add(group);
+
+            var tileLayer = CreateTileAsyncLayer();
+            AddTileLayerToLayerGroup(tileLayer, group);
+
+            group.Layers.Clear();
+
+            var eventSource = map.GetMapNewTileAvailableAsObservable();
+            RaiseMapNewtileAvailableOn(tileLayer);
+
+            Assert.That(eventSource.IsEmpty().First(), TestContext.CurrentContext.Test.GetDescription());
+        }
+
+        [TestCase(LayerCollectionType.Static, Description = "Map should fire MapNewTileAvailable event for TileAsyncLayers belonging to an added group, case Layers")]
+        [TestCase(LayerCollectionType.Background, Description = "Map should fire MapNewTileAvailable event for TileAsyncLayers belonging to an added group, case BackgroundLayers")]
+        public void Map_TileAsyncInsideAddedGroup_FiresMapNewTileAvail(LayerCollectionType collectionType)
+        {
+            var map = new Map();
+
+            var group = CreateLayerGroup();
+            var tileLayer = CreateTileAsyncLayer();
+            AddTileLayerToLayerGroup(tileLayer, group);
+
+            map.GetCollection(collectionType).Add(group);
+
+            var eventSource = map.GetMapNewTileAvailableAsObservable();
+            RaiseMapNewtileAvailableOn(tileLayer);
+            Assert.That(eventSource.Count().First(), Is.EqualTo(1), TestContext.CurrentContext.Test.GetDescription());
+        }
+
+        [TestCase(LayerCollectionType.Static, Description = "Map should fire MapNewtileAvailable event for TileAsyncLayers contained inside nested group, case Layers")]
+        [TestCase(LayerCollectionType.Background, Description = "Map should fire MapNewtileAvailable event for TileAsyncLayers contained inside nested group, case BackgroundLayers")]
+        public void Map_TilAsyncInsideNephew_FiresMapNewTileAvailable(LayerCollectionType collectionType)
+        {
+            var map = new Map();
+
+            var group = CreateLayerGroup();
+            map.GetCollection(collectionType).Add(group);
+
+            var subGroup = CreateLayerGroup("subgroup");
+
+            var tileAsyncLayer = CreateTileAsyncLayer();
+            AddTileLayerToLayerGroup(tileAsyncLayer, subGroup);
+
+            group.Layers.Add(subGroup);
+
+            var eventSource = map.GetMapNewTileAvailableAsObservable();
+            RaiseMapNewtileAvailableOn(tileAsyncLayer);
+            Assert.That(eventSource.Count().First(), Is.EqualTo(1), TestContext.CurrentContext.Test.GetDescription());
+        }
+
+        [TestCase(LayerCollectionType.Static, Description = "Map should not fire MapNewtileAvailable event for TileAsyncLayers removed from a nested group, case Layers")]
+        [TestCase(LayerCollectionType.Background, Description = "Map should not fire MapNewtileAvailable event for TileAsyncLayers removed from a nested group, case BackgroundLayers")]
+        public void Map_TileAsyncRemovedFromNephew_DoesNotFireMapNewtileAvailable(LayerCollectionType collectionType)
+        {
+            var map = new Map();
+
+            var group = CreateLayerGroup();
+            map.GetCollection(collectionType).Add(group);
+
+            var subGroup = CreateLayerGroup("subgroup");
+
+            var tileAsyncLayer = CreateTileAsyncLayer();
+            AddTileLayerToLayerGroup(tileAsyncLayer, subGroup);
+
+            group.Layers.Add(subGroup);
+
+            // test
+            RemoveTileLayerFromGroup(subGroup, tileAsyncLayer);
+
+            var eventSource = map.GetMapNewTileAvailableAsObservable();
+            RaiseMapNewtileAvailableOn(tileAsyncLayer);
+            Assert.That(eventSource.Count().First(), Is.EqualTo(0), TestContext.CurrentContext.Test.GetDescription());
+        }
+
+        [TestCase(LayerCollectionType.Static, Description = "Map should not fire MapNewTileAvailable event for TileAsyncLayers belonging to a group collection replaced, case Layers")]
+        [TestCase(LayerCollectionType.Background, Description = "Map should not fire MapNewTileAvailable event for TileAsyncLayers belonging to a group collection replaced, case BackgroundLayers")]
+        public void Map_TileAsyncInsideReplacedCollection_DoesNotFireMapNewTileAvailable(LayerCollectionType collectionType)
+        {
+            var map = new Map();
+
+            var group = CreateLayerGroup();
+            map.GetCollection(collectionType).Add(group);
+
+            var tileAsync = CreateTileAsyncLayer();
+            AddTileLayerToLayerGroup(tileAsync, group);
+
+            group.Layers = new ObservableCollection<ILayer>();
+
+            var eventSource = map.GetMapNewTileAvailableAsObservable();
+            RaiseMapNewtileAvailableOn(tileAsync);
+            Assert.That(eventSource.Count().First(), Is.EqualTo(0), TestContext.CurrentContext.Test.GetDescription());
+        }
+
+        [TestCase(LayerCollectionType.Static, Description = "Map should fire MapNewTileAvailable event for TileAsyncLayers added to a new replaced collection, case Layers")]
+        [TestCase(LayerCollectionType.Background, Description = "Map should fire MapNewTileAvailable event for TileAsyncLayers added to a new replaced collection, case BackgroundLayers")]
+        public void Map_TileAsyncAddedToReplacedCollection_FiresMapNewtileAvailable(LayerCollectionType collectionType)
+        {
+            var map = new Map();
+
+            var group = CreateLayerGroup();
+            map.GetCollection(collectionType).Add(group);
+
+            group.Layers = new ObservableCollection<ILayer>();
+
+            var tileAsync = CreateTileAsyncLayer();
+            AddTileLayerToLayerGroup(tileAsync, group);
+
+            var eventSource = map.GetMapNewTileAvailableAsObservable();
+            RaiseMapNewtileAvailableOn(tileAsync);
+            Assert.That(eventSource.Count().First(), Is.EqualTo(1), TestContext.CurrentContext.Test.GetDescription());
+        }
+
+        [TestCase(LayerCollectionType.Background, Description = "Map should not fire MapNewTileAvailable event for TileAsyncLayers added to detached collections, case BackgroundLayers")]
+        public void Map_TileAsyncAddedToDetachedCollection_DoesNotFireMapNewTileAvailable(LayerCollectionType collectionType)
+        {
+            var map = new Map();
+
+            var group = CreateLayerGroup();
+            map.GetCollection(collectionType).Add(group);
+
+            var detachedCollection = group.Layers;
+
+            group.Layers = new ObservableCollection<ILayer>();
+
+            var tileAsync = CreateTileAsyncLayer();
+            detachedCollection.Add(tileAsync.Item1.Object);
+
+            var eventSource = map.GetMapNewTileAvailableAsObservable();
+            RaiseMapNewtileAvailableOn(tileAsync);
+            Assert.That(eventSource.Count().First(), Is.EqualTo(0), TestContext.CurrentContext.Test.GetDescription());
+        }
+
+        [Test(Description = "Removing a non empty group from layers empties the collection")]
+        public void MapLayers_AfterRemovingNotEmptyGroup_IsEmpty()
+        {
+            var map = new Map();
+            
+            var group = CreateLayerGroup();
+            group.Layers.Add(new LabelLayer("labels"));
+            
+            map.Layers.Add(group);
+
+            map.Layers.Remove(group);
+
+            Assert.That(map.Layers, Is.Empty);
+        }
+
+        [Test(Description = "The cloning should clone also the LayerGroups")]
+        public void Clone_ShoulCloneTheGroups()
+        {
+            // LayerGroups must be cloned because we want that each instance of the map listens to only the notification events of its children.
+
+            var map = new Map();
+
+            var group = CreateLayerGroup();
+
+            map.Layers.Add(group);
+
+            var clonedMap = map.Clone();
+
+            Assert.That(clonedMap.Layers[0], Is.Not.EqualTo(group), TestContext.CurrentContext.Test.GetDescription());
+        }
+
+        private Tuple<Mock<ILayer>, Mock<ITileAsyncLayer>> CreateTileAsyncLayer()
+        {
+            var tileAsync = new Mock<ITileAsyncLayer>();
+            tileAsync.SetupAllProperties();
+            var layer = tileAsync.As<ILayer>();
+            layer.SetupAllProperties();
+
+            return new Tuple<Mock<ILayer>, Mock<ITileAsyncLayer>>(layer, tileAsync);
+        }
+        private void ReplaceExistingAsyncLayerFromGroup(LayerGroup group, Tuple<Mock<ILayer>, Mock<ITileAsyncLayer>> oldTileLayer,
+            Tuple<Mock<ILayer>, Mock<ITileAsyncLayer>> newTileLayer)
+        {
+            var oldLayer = oldTileLayer.Item1.Object;
+            var idx = group.Layers.IndexOf(oldLayer);
+            group.Layers[idx] = newTileLayer.Item1.Object;
+        }
+        private void RemoveTileLayerFromGroup(LayerGroup group, Tuple<Mock<ILayer>, Mock<ITileAsyncLayer>> tileLayer)
+        {
+            group.Layers.Remove(tileLayer.Item1.Object);
+        }
+        private void AddTileLayerToLayerGroup(Tuple<Mock<ILayer>, Mock<ITileAsyncLayer>> tileLayer, LayerGroup group)
+        {
+            group.Layers.Add(tileLayer.Item1.Object);
+        }
+        private void AddTileLayerToMap(Tuple<Mock<ILayer>, Mock<ITileAsyncLayer>> tileLayer, Map map, LayerCollectionType collectionType = LayerCollectionType.Background)
+        {
+            var layer = tileLayer.Item1.Object;
+
+            map.GetCollection(collectionType).Add(layer);
+        }
+        private LayerGroup CreateLayerGroup(string layerName = "group")
+        {
+            return new LayerGroup(layerName);
+        }
+        private void RaiseMapNewtileAvailableOn(Tuple<Mock<ILayer>, Mock<ITileAsyncLayer>> tileAsync)
+        {
+            tileAsync.Item2.Raise(tal => tal.MapNewTileAvaliable += null, (TileLayer) null, (Envelope) null, (Bitmap) null, 0,
+                0, (ImageAttributes) null);
         }
     }
 }

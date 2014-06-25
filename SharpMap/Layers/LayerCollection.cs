@@ -18,7 +18,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 
 namespace SharpMap.Layers
 {
@@ -26,7 +26,7 @@ namespace SharpMap.Layers
     /// A collection of <see cref="ILayer"/> instances.
     /// </summary>
     [Serializable]
-    public class LayerCollection : System.ComponentModel.BindingList<ILayer>
+    public class LayerCollection : System.ComponentModel.BindingList<ILayer>, INotifyCollectionChanged
     {
         /// <summary>
         /// Gets or sets the layer with the given <paramref name="layerName"/>.
@@ -59,17 +59,24 @@ namespace SharpMap.Layers
         }
 
         /// <summary>
-        /// Returns a cloned copy of the LayerCollection (the layer instances are the same as in the original Collection)
+        /// Returns a cloned copy of the LayerCollection
         /// </summary>
+        /// <remarks>
+        /// The layer instances are the same as in the original collection, however if a layer implements ICloneable this could not be true.
+        /// </remarks>
         /// <returns></returns>
         public LayerCollection Clone()
         {
             lock (this)
             {
-                LayerCollection newColl = new LayerCollection();
+                var newColl = new LayerCollection();
                 foreach (ILayer lay in this)
                 {
-                    newColl.Add(lay);
+                    var cloneable = lay as ICloneable;
+                    if (cloneable != null)
+                        newColl.Add((ILayer) cloneable.Clone());
+                    else
+                        newColl.Add(lay);
                 }
                 return newColl;
             }
@@ -108,7 +115,7 @@ namespace SharpMap.Layers
                     throw new ArgumentOutOfRangeException("index", index, "Index not in range");
                 }
 
-                base.InsertItem(index, layer);
+                InsertItem(index, layer);
             }
         }
 
@@ -159,7 +166,7 @@ namespace SharpMap.Layers
                 if (layer is LayerGroup)
                 {
                     LayerGroup lg = layer as LayerGroup;
-                    ILayer lay = GetLayerByNameInternal(layerName, ToILayerEnumberable(lg.Layers));
+                    ILayer lay = GetLayerByNameInternal(layerName, lg.Layers);
                     if (lay != null)
                         return lay;
                 }
@@ -179,16 +186,44 @@ namespace SharpMap.Layers
                 if (asyncLayer != null) asyncLayer.Cancel();
             }
             base.ClearItems();
+
+            OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
         }
 
-        private static IEnumerable<ILayer> ToILayerEnumberable(IEnumerable<Layer> layers)
+        public event NotifyCollectionChangedEventHandler CollectionChanged;
+
+        /// <summary>
+        /// Fires the CollectionChanged event.
+        /// </summary>
+        /// <param name="e">Event to fire-</param>
+        protected virtual void OnCollectionChanged(NotifyCollectionChangedEventArgs e)
         {
-            foreach (var layer in layers)
-            {
-                var ilayer = layer as ILayer;
-                if (ilayer != null)
-                    yield return ilayer;
-            }
+            NotifyCollectionChangedEventHandler handler = CollectionChanged;
+            if (handler != null) handler(this, e);
+        }
+
+        protected override void InsertItem(int index, ILayer item)
+        {
+            base.InsertItem(index, item);
+
+            OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, item, index));
+        }
+
+        protected override void RemoveItem(int index)
+        {
+            var removedItem = this[index];
+            base.RemoveItem(index);
+
+            OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, removedItem, index));
+        }
+
+        protected override void SetItem(int index, ILayer item)
+        {
+            var oldItem = this[index];
+
+            base.SetItem(index, item);
+
+            OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Replace, item, oldItem, index));
         }
     }
 }

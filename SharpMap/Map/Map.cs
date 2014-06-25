@@ -16,7 +16,11 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
@@ -145,6 +149,8 @@ namespace SharpMap
         internal Matrix MapTransformInverted;
         
         private readonly MapViewPortGuard _mapViewportGuard;
+        private readonly Dictionary<object, List<ILayer>> _layersPerGroup = new Dictionary<object, List<ILayer>>();
+        private ObservableCollection<ILayer> _replacingCollection;
         #endregion
 
 
@@ -177,8 +183,11 @@ namespace SharpMap
                 Factory = GeoAPI.GeometryServiceProvider.Instance.CreateGeometryFactory(_srid);
             }
             _layers = new LayerCollection();
+            _layersPerGroup.Add(_layers, new List<ILayer>());
             _backgroundLayers = new LayerCollection();
+            _layersPerGroup.Add(_backgroundLayers, new List<ILayer>());
             _variableLayers = new VariableLayerCollection(_layers);
+            _layersPerGroup.Add(_variableLayers, new List<ILayer>());
             BackColor = Color.Transparent;
             _mapTransform = new Matrix();
             MapTransformInverted = new Matrix();
@@ -196,43 +205,155 @@ namespace SharpMap
         /// </summary>
         private void WireEvents()
         {
-            _backgroundLayers.ListChanged += HandleLayersCollectionChanged;
+            _backgroundLayers.CollectionChanged += OnLayersCollectionChanged;
+            _layers.CollectionChanged += OnLayersCollectionChanged;
         }
 
         /// <summary>
         /// Event handler to intercept when a new ITileAsymclayer is added to the Layers List and associate the MapNewTile Handler Event
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void HandleLayersCollectionChanged(object sender, System.ComponentModel.ListChangedEventArgs e)
+        private void OnLayersCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            if (sender == _backgroundLayers)
-            if (e.ListChangedType == System.ComponentModel.ListChangedType.ItemAdded)
+            if (e.Action == NotifyCollectionChangedAction.Reset)
             {
+                var cloneList = _layersPerGroup[sender];
+                IterUnHookEvents(sender, cloneList);
+            }
+            if (e.Action == NotifyCollectionChangedAction.Replace || e.Action == NotifyCollectionChangedAction.Remove)
+            {
+                IterUnHookEvents(sender, e.OldItems.Cast<ILayer>());
+            }
+            if (e.Action == NotifyCollectionChangedAction.Replace || e.Action == NotifyCollectionChangedAction.Add)
+            {
+                IterWireEvents(sender, e.NewItems.Cast<ILayer>());
+            }
+            
+        }
 
-                var l = _backgroundLayers[e.NewIndex];
-                var tileAsyncLayer = l as ITileAsyncLayer;
+        private void IterWireEvents(object owner, IEnumerable<ILayer> layers)
+        {
+            foreach(var layer in layers)
+            {
+                _layersPerGroup[owner].Add(layer);
+
+                var tileAsyncLayer = layer as ITileAsyncLayer;
                 if (tileAsyncLayer != null)
                 {
-                    if (tileAsyncLayer.OnlyRedrawWhenComplete)
+                    WireTileAsyncEvents(tileAsyncLayer);
+                }
+
+                var group = layer as LayerGroup;
+                if (group != null)
+                {
+                    group.LayersChanging += OnLayerGroupCollectionReplaching;
+                    group.LayersChanged += OnLayerGroupCollectionReplached;
+
+                    var nestedList = group.Layers;
+                    if (group.Layers != null)
                     {
-                        tileAsyncLayer.DownloadProgressChanged += layer_DownloadProgressChanged;
+                        group.Layers.CollectionChanged += OnLayersCollectionChanged;
+                        _layersPerGroup.Add(nestedList, new List<ILayer>());
                     }
                     else
                     {
-                        tileAsyncLayer.MapNewTileAvaliable += MapNewTileAvaliableHandler;
+                        _layersPerGroup.Add(nestedList, new List<ILayer>());
                     }
+
+                    IterWireEvents(nestedList, nestedList);
                 }
             }
         }
 
-        void layer_DownloadProgressChanged(int tilesRemaining)
+        private void IterUnHookEvents(object owner, IEnumerable<ILayer> layers)
+        {
+            var toBeRemoved = new List<ILayer>();
+
+            foreach (var layer in layers)
+            {
+                toBeRemoved.Add(layer);
+
+                var tileAsyncLayer = layer as ITileAsyncLayer;
+                if (tileAsyncLayer != null)
+                {
+                    UnhookTileAsyncEvents(tileAsyncLayer);
+                }
+
+                var group = layer as LayerGroup;
+                if (group != null)
+                {
+                    group.LayersChanging -= OnLayerGroupCollectionReplaching;
+                    group.LayersChanged -= OnLayerGroupCollectionReplached;
+
+                    var nestedList = group.Layers;
+
+                    if (nestedList != null)
+                    {
+                        nestedList.CollectionChanged -= OnLayersCollectionChanged;
+
+                        IterUnHookEvents(nestedList, nestedList);
+
+                        _layersPerGroup.Remove(nestedList);
+                    }
+                }
+            }
+
+            var clonedList = _layersPerGroup[owner];
+            toBeRemoved.ForEach(layer => clonedList.Remove(layer));
+        }
+        
+        private void OnLayerGroupCollectionReplached(object sender, EventArgs eventArgs)
+        {
+            var layerGroup = (LayerGroup)sender;
+
+            var newCollection = layerGroup.Layers;
+
+            IterUnHookEvents(_replacingCollection, _replacingCollection);
+            _layersPerGroup.Remove(_replacingCollection);
+            _replacingCollection.CollectionChanged -= OnLayersCollectionChanged;
+
+            if (newCollection != null)
+            {
+                IterWireEvents(newCollection, newCollection);
+
+                _layersPerGroup.Add(newCollection, new List<ILayer>(newCollection));
+
+                newCollection.CollectionChanged += OnLayersCollectionChanged;
+            }
+        }
+
+        private void OnLayerGroupCollectionReplaching(object sender, EventArgs eventArgs)
+        {
+            var layerGroup = (LayerGroup) sender;
+
+            _replacingCollection = layerGroup.Layers;
+        }
+
+        private void layer_DownloadProgressChanged(int tilesRemaining)
         {
             if (tilesRemaining <= 0)
             {
                 OnRefreshNeeded(EventArgs.Empty);
             }
         }
+
+        private void WireTileAsyncEvents(ITileAsyncLayer tileAsyncLayer)
+        {
+            if (tileAsyncLayer.OnlyRedrawWhenComplete)
+            {
+                tileAsyncLayer.DownloadProgressChanged += layer_DownloadProgressChanged;
+            }
+            else
+            {
+                tileAsyncLayer.MapNewTileAvaliable += MapNewTileAvaliableHandler;
+            }
+        }
+
+        private void UnhookTileAsyncEvents(ITileAsyncLayer tileAsyncLayer)
+        {
+            tileAsyncLayer.DownloadProgressChanged -= layer_DownloadProgressChanged;
+            tileAsyncLayer.MapNewTileAvaliable -= MapNewTileAvaliableHandler;
+        }
+
 
         #region IDisposable Members
 
