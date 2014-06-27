@@ -68,7 +68,7 @@
     <Compile Include="Features\IFeature.cs" />
     <Compile Include="Features\IFeatureFactory.cs" />
     <Compile Include="Features\IFeatureCollectionSet.cs" />
-    <Compile Include="Features\IEntity.cs" />
+    <Compile Include="Features\IUnique.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

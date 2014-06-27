@@ -26,7 +26,7 @@ namespace SharpMap.SpatialReference
                 _definition = definition;
             }
 
-            object IEntity.Oid
+            object IUnique.Oid
             {
                 get { return _definition; }
                 set { }

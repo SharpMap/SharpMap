@@ -9,7 +9,7 @@ namespace SharpMap.Features
     /// Sample implementation of a <see cref="IFeature{T}"/>.
     /// </summary>
     [Serializable]
-    public class Feature<T> : Entity<T>, IFeature<T>, INotifyPropertyChanged
+    public class Feature<T> : Unique<T>, IFeature<T>, INotifyPropertyChanged
         where T : IComparable<T>, IEquatable<T>
     {
         private readonly FeatureFactory<T> _factory;

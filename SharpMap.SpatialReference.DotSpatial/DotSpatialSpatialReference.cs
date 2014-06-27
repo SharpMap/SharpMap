@@ -42,7 +42,7 @@ namespace SharpMap.SpatialReference
 
         }
 
-        object IEntity.Oid
+        object IUnique.Oid
         {
             get { return Oid; }
             set { Oid = (string)value; }

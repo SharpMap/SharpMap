@@ -130,7 +130,7 @@ namespace SharpMap.Data.Providers
 
             public bool HasOidAssigned { get { return Oid > 0; } }
 
-            object IEntity.Oid
+            object IUnique.Oid
             {
                 get { return Oid; }
                 set { Oid = (uint)value; }

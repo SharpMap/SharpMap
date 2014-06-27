@@ -5,7 +5,7 @@ using GeoAPI.Features;
 namespace SharpMap.Features
 {
     /// <summary>
-    /// Class that can produce unique values for use as <see cref="IEntity{T}.Oid"/> values
+    /// Class that can produce unique values for use as <see cref="IUnique{T}.Oid"/> values
     /// </summary>
     /// <typeparam name="TEntity">The type of the object identifier (Oid)</typeparam>
     [Serializable]
@@ -56,7 +56,7 @@ namespace SharpMap.Features
             return _lastOid;
         }
 
-        public void AssignOidIfNotAlreadyDone(Entity<TEntity> item)
+        public void AssignOidIfNotAlreadyDone(Unique<TEntity> item)
         {
             if (item.HasOidAssigned)
                 return;

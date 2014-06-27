@@ -5,7 +5,7 @@ using GeoAPI.Geometries.Prepared;
 
 namespace GeoAPI.Features
 {
-    public interface IFeature : IEntity, ICloneable, IDisposable
+    public interface IFeature : IUnique, ICloneable, IDisposable
     {
         /// <summary>
         /// Gets the factory that created this feature
@@ -30,7 +30,7 @@ namespace GeoAPI.Features
     /// <summary>
     /// Interface for all classes that can be used as a feature
     /// </summary>
-    public interface IFeature<T> : IFeature, IEntity<T>
+    public interface IFeature<T> : IFeature, IUnique<T>
         where T : IComparable<T>, IEquatable<T>
     {
     }

@@ -5,7 +5,7 @@ namespace GeoAPI.Features
     /// <summary>
     /// Interface for objects that have an object identifier
     /// </summary>
-    public interface IEntity
+    public interface IUnique
     {
         /// <summary>
         /// Gets or sets a value indicating the objects's identifier (Oid)
@@ -30,7 +30,7 @@ namespace GeoAPI.Features
     /// Interface for objects that have an object identifier
     /// </summary>
     /// <typeparam name="T">The type of the identifier</typeparam>
-    public interface IEntity<T> : IEntity
+    public interface IUnique<T> : IUnique
         where T : /*struct, */IComparable<T>, IEquatable<T>
     {
         /// <summary>

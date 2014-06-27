@@ -20,7 +20,7 @@ namespace SharpMap.Data
             set { _row[0] = value; }
         }
 
-        object IEntity.Oid { get { return Oid; } set { Oid = (uint)value; } }
+        object IUnique.Oid { get { return Oid; } set { Oid = (uint)value; } }
 
         public Type GetEntityType()
         {

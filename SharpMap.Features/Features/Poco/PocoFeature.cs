@@ -8,7 +8,7 @@ using SharpMap.Annotations;
 
 namespace SharpMap.Features.Poco
 {
-    public abstract class PocoFeature : Entity<long>, IFeature<long>, IFeatureFactory<long>, INotifyPropertyChanged
+    public abstract class PocoFeature : Unique<long>, IFeature<long>, IFeatureFactory<long>, INotifyPropertyChanged
     {
         private static readonly object PocoLock = new object();
         protected static volatile PocoFeatureAttributesDefinition PocoFeatureAttributesDefinition;
@@ -21,7 +21,7 @@ namespace SharpMap.Features.Poco
         }
 
         protected PocoFeature(long oid, IGeometry geometry)
-            :base(new Entity<long>{Oid = oid})
+            :base(new Unique<long>{Oid = oid})
         {
             _geometry = geometry;
         }
@@ -47,7 +47,7 @@ namespace SharpMap.Features.Poco
         }
 
         /// <summary>
-        /// Overriden event invoker for the <see cref="Entity{T}.OidChanged"/> event
+        /// Overriden event invoker for the <see cref="Unique{T}.OidChanged"/> event
         /// </summary>
         /// <param name="e">The events argument</param>
         protected override void OnOidChanged(System.EventArgs e)

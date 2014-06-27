@@ -8,17 +8,17 @@ namespace SharpMap.Features
     /// </summary>
     /// <typeparam name="T">The type of the objects identifier</typeparam>
     [Serializable]
-    public class Entity<T> : IEntity<T> where T : IComparable<T>, IEquatable<T>
+    public class Unique<T> : IUnique<T> where T : IComparable<T>, IEquatable<T>
     {
         private int? _requestedHashCode;
         private T _oid;
 
-        public Entity()
+        public Unique()
         {}
 
-        protected Entity(Entity<T> entity)
+        protected Unique(Unique<T> unique)
         {
-            _oid = entity.Oid;
+            _oid = unique.Oid;
         }
 
         /// <summary>
@@ -50,7 +50,7 @@ namespace SharpMap.Features
         }
 
         [FeatureAttribute(Ignore = true)]
-        object IEntity.Oid { get { return Oid; } set { Oid = (T) value; } }
+        object IUnique.Oid { get { return Oid; } set { Oid = (T) value; } }
 
 
         /// <summary>
@@ -76,7 +76,7 @@ namespace SharpMap.Features
         }
 
         /// <summary>
-        /// Gets a value indicating that the <see cref="IEntity.Oid"/> has been assigned at least once.
+        /// Gets a value indicating that the <see cref="IUnique.Oid"/> has been assigned at least once.
         /// </summary>
         public bool HasOidAssigned
         {
@@ -88,14 +88,14 @@ namespace SharpMap.Features
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
 
-            if (obj is IEntity<T>)
+            if (obj is IUnique<T>)
             {
-                return Equals((IEntity<T>) obj);
+                return Equals((IUnique<T>) obj);
             }
             return false;
         }
 
-        public virtual bool Equals(IEntity<T> other)
+        public virtual bool Equals(IUnique<T> other)
         {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
@@ -130,12 +130,12 @@ namespace SharpMap.Features
 // ReSharper restore NonReadonlyFieldInGetHashCode
         }
 
-        public static bool operator ==(Entity<T> left, Entity<T> right)
+        public static bool operator ==(Unique<T> left, Unique<T> right)
         {
             return Equals(left, right);
         }
 
-        public static bool operator !=(Entity<T> left, Entity<T> right)
+        public static bool operator !=(Unique<T> left, Unique<T> right)
         {
             return !Equals(left, right);
         }

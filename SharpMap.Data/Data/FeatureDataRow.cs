@@ -73,7 +73,7 @@ namespace SharpMap.Data
         #endregion
 
         #region IEntity implementation
-        object IEntity.Oid
+        object IUnique.Oid
         {
             get
             {
@@ -90,14 +90,14 @@ namespace SharpMap.Data
             }
         }
 
-        Type IEntity.GetEntityType()
+        Type IUnique.GetEntityType()
         {
             return typeof (uint);
         }
 
-        bool IEntity.HasOidAssigned 
+        bool IUnique.HasOidAssigned 
         {
-            get { return ((IEntity) this).Oid != null; }
+            get { return ((IUnique) this).Oid != null; }
         }
         #endregion
 
