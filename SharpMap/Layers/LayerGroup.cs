@@ -264,9 +264,7 @@ namespace SharpMap.Layers
 
             foreach (var layer in layers.OfType<ICanQueryLayer>())
             {
-                var dsTmp = new FeatureDataSet();
-                layer.ExecuteIntersectionQuery(geometry, dsTmp);
-                ds.Tables.AddRange(dsTmp.Tables.ToArray());
+                layer.ExecuteIntersectionQuery(geometry, ds);
             }
         }
 
