@@ -207,7 +207,7 @@ namespace SharpMap.Data.Providers
                 // Load all features from the given provider
                 provider.Open();
                 var ids = provider.GetOidsInView(provider.GetExtents());
-                foreach (uint id in ids)
+                foreach (var id in ids)
                 {
                     var dataRow = provider.GetFeatureByOid(id);
                     var geometry = dataRow.Geometry;
@@ -325,6 +325,7 @@ namespace SharpMap.Data.Providers
         /// Gets the object IDs in the view.
         /// </summary>
         /// <param name="bbox">The bbox.</param>
+        /// <param name="ct">A cancellation token</param>
         /// <returns></returns>
         public override IEnumerable<object> GetOidsInView(BoundingBox bbox, CancellationToken? ct= null)
         {
