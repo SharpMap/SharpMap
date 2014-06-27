@@ -10,6 +10,7 @@ namespace GeoAPI.Features
         /// <summary>
         /// Gets or sets a value indicating the objects's identifier (Oid)
         /// </summary>
+        /// <remarks>Can be interpreted as index in a collection of features that don't have a <i>unique</i> object identifier.</remarks>
         [FeatureAttribute(AttributeDescription = "This feature's object identifier")]
         object Oid { get; set; }
 
@@ -36,6 +37,7 @@ namespace GeoAPI.Features
         /// <summary>
         /// Gets or sets a value indicating the objects's identifier (Oid)
         /// </summary>
+        /// <remarks>Can be interpreted as index in a collection of features that don't have a <i>unique</i> object identifier.</remarks>
         [FeatureAttribute(AttributeDescription = "This feature's object identifier")]
         new T Oid { get; set; }
     }

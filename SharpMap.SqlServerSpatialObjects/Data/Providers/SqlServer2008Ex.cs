@@ -25,7 +25,6 @@ using GeoAPI.Features;
 using GeoAPI.IO;
 using Microsoft.SqlServer.Types;
 using NetTopologySuite.IO;
-using SharpMap.Converters.SqlServer2008SpatialObjects;
 using BoundingBox = GeoAPI.Geometries.Envelope;
 using Geometry = GeoAPI.Geometries.IGeometry;
 
@@ -67,7 +66,8 @@ namespace SharpMap.Data.Providers
         /// <summary>   
         /// Returns geometries within the specified bounding box   
         /// </summary>   
-        /// <param name="bbox"></param>   
+        /// <param name="bbox"></param>
+        /// <param name="cancellationToken">A cancellation token</param>
         /// <returns></returns>   
         public override IEnumerable<Geometry> GetGeometriesInView(BoundingBox bbox, CancellationToken? cancellationToken = null)
         {
@@ -155,7 +155,8 @@ namespace SharpMap.Data.Providers
         /// Returns the features that intersects with 'geom'   
         /// </summary>   
         /// <param name="geom"></param>   
-        /// <param name="fcs">FeatureDataSet to fill data into</param>   
+        /// <param name="fcs">FeatureDataSet to fill data into</param>
+        /// <param name="cancellationToken">A cancellation token</param>   
         protected override void OnExecuteIntersectionQuery(Geometry geom, IFeatureCollectionSet fcs, CancellationToken? cancellationToken = null)
         {
             using (SqlConnection conn = new SqlConnection(ConnectionString))
@@ -198,7 +199,7 @@ namespace SharpMap.Data.Providers
                             fdr.Geometry = geometryReader.Read(dr[GeometryColumn]);
                             fdt.AddRow(fdr);
                         }
-                        ds.Tables.Add(fdt);
+                        fcs.Add(fdt);
                     }
                 }
             }
@@ -249,7 +250,8 @@ namespace SharpMap.Data.Providers
         /// Returns all features with the view box   
         /// </summary>   
         /// <param name="bbox">view box</param>   
-        /// <param name="ds">FeatureDataSet to fill data into</param>   
+        /// <param name="fcs">FeatureDataSet to fill data into</param>
+        /// <param name="cancellationToken">A cancellation token</param>   
         public override void ExecuteIntersectionQuery(BoundingBox bbox, IFeatureCollectionSet fcs, CancellationToken? cancellationToken = null)
         {
             using (SqlConnection conn = new SqlConnection(ConnectionString))
