@@ -304,17 +304,27 @@ namespace SharpMap.Layers
                 }
                 if (_showErrorInTile)
                 {
-                    //an issue with this method is that one an error tile is in the memory cache it will stay even
-                    //if the error is resolved. PDD.
-                    var schema = (TileSchema) _source.Schema;
-                    var bitmap = new Bitmap(schema.Width, schema.Height);
-                    using (var graphics = Graphics.FromImage(bitmap))
+                    try
                     {
-                        graphics.DrawString(ex.Message, new Font(FontFamily.GenericSansSerif, 12),
-                                            new SolidBrush(Color.Black),
-                                            new RectangleF(0, 0, schema.Width, schema.Height));
+                        //an issue with this method is that one an error tile is in the memory cache it will stay even
+                        //if the error is resolved. PDD.
+                        var tileWidth = _source.Schema.GetTileWidth(tileInfo.Index.Level);
+                        var tileHeight = _source.Schema.GetTileHeight(tileInfo.Index.Level);
+                        var bitmap = new Bitmap(tileWidth, tileHeight);
+                        using (var graphics = Graphics.FromImage(bitmap))
+                        {
+                            graphics.DrawString(ex.Message, new Font(FontFamily.GenericSansSerif, 12),
+                                                new SolidBrush(Color.Black),
+                                                new RectangleF(0, 0, tileWidth, tileHeight));
+                        }
+                        bitmaps.Add(tileInfo.Index, bitmap);
                     }
-                    bitmaps.Add(tileInfo.Index, bitmap);
+                    catch (Exception e)
+                    {
+                        // we don't want fatal exceptions here!
+                        Logger.Error(e);
+                    }
+                    
                 }
             }
             catch(Exception ex)
