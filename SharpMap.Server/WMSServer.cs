@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using SharpMap.Web.Wms.Server;
 
 namespace SharpMapServer
 {
@@ -19,7 +20,8 @@ namespace SharpMapServer
             //Clone the map-instance since the parse-query-string request will modify sice etc.
             using (var safeMap = m_Map.Clone())
             {
-                SharpMap.Web.Wms.WmsServer.ParseQueryString(safeMap, m_Capabilities);
+                var c = new Context(context);
+                SharpMap.Web.Wms.WmsServer.ParseQueryString(safeMap, m_Capabilities, c);
             }
         }
     }
