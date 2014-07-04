@@ -207,7 +207,7 @@ namespace SharpMap.Layers
                         var waitHandle = new AutoResetEvent(false);
                         waitHandles.Add(waitHandle);
                         ThreadPool.QueueUserWorkItem(GetTileOnThread,
-                                                     new object[] { _source.Provider, info, toRender, waitHandle, true });
+                                                     new object[] { _source.Provider, info, toRender, waitHandle, true, takenFromCache });
                     }
 
                     foreach (var handle in waitHandles)
@@ -275,13 +275,14 @@ namespace SharpMap.Layers
         private void GetTileOnThread(object parameter)
         {
             object[] parameters = (object[])parameter;
-            if (parameters.Length != 5) throw new ArgumentException("Five parameters expected");
+            if (parameters.Length != 6) throw new ArgumentException("Six parameters expected");
             ITileProvider tileProvider = (ITileProvider)parameters[0];
             TileInfo tileInfo = (TileInfo)parameters[1];
             //MemoryCache<Bitmap> bitmaps = (MemoryCache<Bitmap>)parameters[2];
             Dictionary<TileIndex, Bitmap> bitmaps = (Dictionary<TileIndex,Bitmap>)parameters[2];
             AutoResetEvent autoResetEvent = (AutoResetEvent)parameters[3];
             bool retry = (bool) parameters[4];
+            var takenFromCache = (Dictionary<TileIndex, bool>) parameters[5];
 
             var setEvent = true;
             try
@@ -289,10 +290,16 @@ namespace SharpMap.Layers
                 byte[] bytes = tileProvider.GetTile(tileInfo);
                 Bitmap bitmap = new Bitmap(new MemoryStream(bytes));
                 bitmaps.Add(tileInfo.Index, bitmap);
+
+                // this bitmap will later be memory cached
+                takenFromCache.Add(tileInfo.Index, false);
+
+                // add to persistent cache if enabled
                 if (_fileCache != null)
                 {
                     AddImageToFileCache(tileInfo, bitmap);
                 }
+                
             }
             catch (WebException ex)
             {
