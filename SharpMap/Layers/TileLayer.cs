@@ -305,7 +305,7 @@ namespace SharpMap.Layers
             {
                 if (retry)
                 {
-                    GetTileOnThread(new object[] { tileProvider, tileInfo, bitmaps, autoResetEvent, false });
+                    GetTileOnThread(new object[] { tileProvider, tileInfo, bitmaps, autoResetEvent, false, takenFromCache });
                     setEvent = false;
                     return;
                 }
