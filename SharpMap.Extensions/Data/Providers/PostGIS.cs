@@ -30,6 +30,7 @@ using GeoAPI.Geometries;
 using NetTopologySuite.IO;
 using Npgsql;
 using System.Globalization;
+using NpgsqlTypes;
 
 namespace SharpMap.Data.Providers
 {
@@ -436,7 +437,7 @@ namespace SharpMap.Data.Providers
             {
                 conn.Open();
 
-                var strSql = "SELECT " + _columns + ", \"" + GeometryColumn + "\" AS \"_smtmp_\" ";
+                var strSql = "SELECT " + _columns + ", \"" + GeometryColumn + "\"::bytea AS \"_smtmp_\" ";
                 strSql += "FROM " + Table + " WHERE ";
 
                 // Attribute constraint
@@ -475,7 +476,10 @@ namespace SharpMap.Data.Providers
                 using (var cmd = new NpgsqlCommand(strSql, conn))
                 {
                     geom.SRID = SRID;
-                    cmd.Parameters.AddWithValue("PGeo", new PostGisWriter().Write(geom));
+                    var par = new NpgsqlParameter("PGeo", NpgsqlDbType.Bytea);
+                    par.NpgsqlValue = new PostGisWriter().Write(geom);
+                    cmd.Parameters.Add(par);
+                    //cmd.Parameters.AddWithValue("PGeo", new PostGisWriter().Write(geom));
                     using (var reader = cmd.ExecuteReader())
                     {
                         var geomIndex = reader.FieldCount - 1;
