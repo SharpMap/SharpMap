@@ -46,22 +46,17 @@ namespace DemoWinForm
 		private void InitializeComponent()
 		{
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             this.toolStripContainer1 = new System.Windows.Forms.ToolStripContainer();
             this.MainStatusStrip = new System.Windows.Forms.StatusStrip();
             this.CoordinatesLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.LayersDataGridView = new System.Windows.Forms.DataGridView();
-            this.EnabledColumn = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.LayerTypeColumn = new System.Windows.Forms.DataGridViewImageColumn();
-            this.LayerNameColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.LayerPropertiesColumn = new System.Windows.Forms.DataGridViewButtonColumn();
             this.LayerContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.MoveUpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.MoveDownToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -69,7 +64,6 @@ namespace DemoWinForm
             this.AddLayerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.RemoveLayerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
-            this.MainMapImage = new SharpMap.Forms.MapBox();
             this.FeaturesDataGridView = new System.Windows.Forms.DataGridView();
             this.MainToolStrip = new System.Windows.Forms.ToolStrip();
             this.NewToolStripButton = new System.Windows.Forms.ToolStripButton();
@@ -94,6 +88,14 @@ namespace DemoWinForm
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.splitContainer4 = new System.Windows.Forms.SplitContainer();
             this.AddLayerDialog = new System.Windows.Forms.OpenFileDialog();
+            this.MainMapImage = new SharpMap.Forms.MapBox();
+            this.splitContainer3 = new System.Windows.Forms.SplitContainer();
+            this.LayersDataGridView = new System.Windows.Forms.DataGridView();
+            this.EnabledColumn = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.LayerTypeColumn = new System.Windows.Forms.DataGridViewImageColumn();
+            this.LayerNameColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.LayerPropertiesColumn = new System.Windows.Forms.DataGridViewButtonColumn();
+            this.miniMapControl1 = new SharpMap.Forms.MiniMapControl();
             this.toolStripContainer1.BottomToolStripPanel.SuspendLayout();
             this.toolStripContainer1.ContentPanel.SuspendLayout();
             this.toolStripContainer1.TopToolStripPanel.SuspendLayout();
@@ -103,7 +105,6 @@ namespace DemoWinForm
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.LayersDataGridView)).BeginInit();
             this.LayerContextMenu.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
             this.splitContainer2.Panel1.SuspendLayout();
@@ -113,6 +114,11 @@ namespace DemoWinForm
             this.MainToolStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer4)).BeginInit();
             this.splitContainer4.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer3)).BeginInit();
+            this.splitContainer3.Panel1.SuspendLayout();
+            this.splitContainer3.Panel2.SuspendLayout();
+            this.splitContainer3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.LayersDataGridView)).BeginInit();
             this.SuspendLayout();
             // 
             // toolStripContainer1
@@ -162,96 +168,14 @@ namespace DemoWinForm
             // 
             // splitContainer1.Panel1
             // 
-            this.splitContainer1.Panel1.Controls.Add(this.LayersDataGridView);
+            this.splitContainer1.Panel1.Controls.Add(this.splitContainer3);
             // 
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.splitContainer2);
             this.splitContainer1.Size = new System.Drawing.Size(686, 452);
-            this.splitContainer1.SplitterDistance = 187;
+            this.splitContainer1.SplitterDistance = 186;
             this.splitContainer1.TabIndex = 1;
-            // 
-            // LayersDataGridView
-            // 
-            this.LayersDataGridView.AllowUserToAddRows = false;
-            this.LayersDataGridView.AllowUserToDeleteRows = false;
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.LayersDataGridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
-            this.LayersDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.LayersDataGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.EnabledColumn,
-            this.LayerTypeColumn,
-            this.LayerNameColumn,
-            this.LayerPropertiesColumn});
-            this.LayersDataGridView.ContextMenuStrip = this.LayerContextMenu;
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.LayersDataGridView.DefaultCellStyle = dataGridViewCellStyle2;
-            this.LayersDataGridView.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.LayersDataGridView.GridColor = System.Drawing.SystemColors.ControlLightLight;
-            this.LayersDataGridView.Location = new System.Drawing.Point(0, 0);
-            this.LayersDataGridView.MultiSelect = false;
-            this.LayersDataGridView.Name = "LayersDataGridView";
-            this.LayersDataGridView.ReadOnly = true;
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.LayersDataGridView.RowHeadersDefaultCellStyle = dataGridViewCellStyle3;
-            this.LayersDataGridView.RowHeadersVisible = false;
-            this.LayersDataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.LayersDataGridView.Size = new System.Drawing.Size(187, 452);
-            this.LayersDataGridView.TabIndex = 0;
-            this.LayersDataGridView.SelectionChanged += new System.EventHandler(this.LayersDataGridView_SelectionChanged);
-            // 
-            // EnabledColumn
-            // 
-            this.EnabledColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.EnabledColumn.Frozen = true;
-            this.EnabledColumn.HeaderText = "";
-            this.EnabledColumn.MinimumWidth = 25;
-            this.EnabledColumn.Name = "EnabledColumn";
-            this.EnabledColumn.ReadOnly = true;
-            this.EnabledColumn.Width = 25;
-            // 
-            // LayerTypeColumn
-            // 
-            this.LayerTypeColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.LayerTypeColumn.HeaderText = "";
-            this.LayerTypeColumn.MinimumWidth = 25;
-            this.LayerTypeColumn.Name = "LayerTypeColumn";
-            this.LayerTypeColumn.ReadOnly = true;
-            this.LayerTypeColumn.Width = 25;
-            // 
-            // LayerNameColumn
-            // 
-            this.LayerNameColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.LayerNameColumn.HeaderText = "Layer";
-            this.LayerNameColumn.Name = "LayerNameColumn";
-            this.LayerNameColumn.ReadOnly = true;
-            // 
-            // LayerPropertiesColumn
-            // 
-            this.LayerPropertiesColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.LayerPropertiesColumn.HeaderText = "";
-            this.LayerPropertiesColumn.MinimumWidth = 25;
-            this.LayerPropertiesColumn.Name = "LayerPropertiesColumn";
-            this.LayerPropertiesColumn.ReadOnly = true;
-            this.LayerPropertiesColumn.Width = 25;
             // 
             // LayerContextMenu
             // 
@@ -262,12 +186,12 @@ namespace DemoWinForm
             this.AddLayerToolStripMenuItem,
             this.RemoveLayerToolStripMenuItem});
             this.LayerContextMenu.Name = "LayerContextMenu";
-            this.LayerContextMenu.Size = new System.Drawing.Size(155, 98);
+            this.LayerContextMenu.Size = new System.Drawing.Size(149, 98);
             // 
             // MoveUpToolStripMenuItem
             // 
             this.MoveUpToolStripMenuItem.Name = "MoveUpToolStripMenuItem";
-            this.MoveUpToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
+            this.MoveUpToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
             this.MoveUpToolStripMenuItem.Text = "Move &Up";
             this.MoveUpToolStripMenuItem.Visible = false;
             this.MoveUpToolStripMenuItem.Click += new System.EventHandler(this.MoveUpToolStripMenuItem_Click);
@@ -275,7 +199,7 @@ namespace DemoWinForm
             // MoveDownToolStripMenuItem
             // 
             this.MoveDownToolStripMenuItem.Name = "MoveDownToolStripMenuItem";
-            this.MoveDownToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
+            this.MoveDownToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
             this.MoveDownToolStripMenuItem.Text = "Move &Down";
             this.MoveDownToolStripMenuItem.Visible = false;
             this.MoveDownToolStripMenuItem.Click += new System.EventHandler(this.MoveDownToolStripMenuItem_Click);
@@ -283,20 +207,20 @@ namespace DemoWinForm
             // LayerContextMenuSeparator
             // 
             this.LayerContextMenuSeparator.Name = "LayerContextMenuSeparator";
-            this.LayerContextMenuSeparator.Size = new System.Drawing.Size(151, 6);
+            this.LayerContextMenuSeparator.Size = new System.Drawing.Size(145, 6);
             this.LayerContextMenuSeparator.Visible = false;
             // 
             // AddLayerToolStripMenuItem
             // 
             this.AddLayerToolStripMenuItem.Name = "AddLayerToolStripMenuItem";
-            this.AddLayerToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
+            this.AddLayerToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
             this.AddLayerToolStripMenuItem.Text = "&Add Layer";
             this.AddLayerToolStripMenuItem.Click += new System.EventHandler(this.AddLayerToolStripMenuItem_Click);
             // 
             // RemoveLayerToolStripMenuItem
             // 
             this.RemoveLayerToolStripMenuItem.Name = "RemoveLayerToolStripMenuItem";
-            this.RemoveLayerToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
+            this.RemoveLayerToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
             this.RemoveLayerToolStripMenuItem.Text = "&Remove Layer";
             this.RemoveLayerToolStripMenuItem.Click += new System.EventHandler(this.RemoveLayerToolStripMenuItem_Click);
             // 
@@ -314,27 +238,9 @@ namespace DemoWinForm
             // splitContainer2.Panel2
             // 
             this.splitContainer2.Panel2.Controls.Add(this.FeaturesDataGridView);
-            this.splitContainer2.Size = new System.Drawing.Size(495, 452);
+            this.splitContainer2.Size = new System.Drawing.Size(496, 452);
             this.splitContainer2.SplitterDistance = 277;
             this.splitContainer2.TabIndex = 0;
-            // 
-            // MainMapImage
-            // 
-            this.MainMapImage.ActiveTool = SharpMap.Forms.MapBox.Tools.None;
-            this.MainMapImage.Cursor = System.Windows.Forms.Cursors.Cross;
-            this.MainMapImage.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.MainMapImage.FineZoomFactor = 10D;
-            this.MainMapImage.Location = new System.Drawing.Point(0, 0);
-            this.MainMapImage.Name = "MainMapImage";
-            this.MainMapImage.PanOnClick = false;
-            this.MainMapImage.QueryLayerIndex = 0;
-            this.MainMapImage.Size = new System.Drawing.Size(495, 277);
-            this.MainMapImage.TabIndex = 0;
-            this.MainMapImage.TabStop = false;
-            this.MainMapImage.WheelZoomMagnitude = 2D;
-            //this.MainMapImage.ZoomOnDblClick = false;
-            this.MainMapImage.ZoomToPointer = true;
-            this.MainMapImage.MouseMove += new SharpMap.Forms.MapBox.MouseEventHandler(this.MainMapImage_MouseMove);
             // 
             // FeaturesDataGridView
             // 
@@ -368,7 +274,7 @@ namespace DemoWinForm
             dataGridViewCellStyle6.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
             dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
             this.FeaturesDataGridView.RowHeadersDefaultCellStyle = dataGridViewCellStyle6;
-            this.FeaturesDataGridView.Size = new System.Drawing.Size(495, 171);
+            this.FeaturesDataGridView.Size = new System.Drawing.Size(496, 171);
             this.FeaturesDataGridView.TabIndex = 0;
             // 
             // MainToolStrip
@@ -586,6 +492,138 @@ namespace DemoWinForm
             this.AddLayerDialog.RestoreDirectory = true;
             this.AddLayerDialog.Title = "Choose Layer Data";
             // 
+            // MainMapImage
+            // 
+            this.MainMapImage.ActiveTool = SharpMap.Forms.MapBox.Tools.Pan;
+            this.MainMapImage.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.MainMapImage.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.MainMapImage.FineZoomFactor = 10D;
+            this.MainMapImage.Location = new System.Drawing.Point(0, 0);
+            this.MainMapImage.MapQueryMode = SharpMap.Forms.MapBox.MapQueryType.LayerByIndex;
+            this.MainMapImage.Name = "MainMapImage";
+            this.MainMapImage.PanOnClick = false;
+            this.MainMapImage.QueryGrowFactor = 5F;
+            this.MainMapImage.QueryLayerIndex = 0;
+            this.MainMapImage.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(210)))), ((int)(((byte)(244)))), ((int)(((byte)(244)))), ((int)(((byte)(244)))));
+            this.MainMapImage.SelectionForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(244)))), ((int)(((byte)(244)))));
+            this.MainMapImage.ShowProgressUpdate = false;
+            this.MainMapImage.Size = new System.Drawing.Size(496, 277);
+            this.MainMapImage.TabIndex = 0;
+            this.MainMapImage.TabStop = false;
+            this.MainMapImage.WheelZoomMagnitude = 2D;
+            this.MainMapImage.MouseMove += new SharpMap.Forms.MapBox.MouseEventHandler(this.MainMapImage_MouseMove);
+            // 
+            // splitContainer3
+            // 
+            this.splitContainer3.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer3.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer3.Name = "splitContainer3";
+            this.splitContainer3.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            // 
+            // splitContainer3.Panel1
+            // 
+            this.splitContainer3.Panel1.Controls.Add(this.LayersDataGridView);
+            // 
+            // splitContainer3.Panel2
+            // 
+            this.splitContainer3.Panel2.Controls.Add(this.miniMapControl1);
+            this.splitContainer3.Size = new System.Drawing.Size(186, 452);
+            this.splitContainer3.SplitterDistance = 310;
+            this.splitContainer3.TabIndex = 1;
+            // 
+            // LayersDataGridView
+            // 
+            this.LayersDataGridView.AllowUserToAddRows = false;
+            this.LayersDataGridView.AllowUserToDeleteRows = false;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.LayersDataGridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+            this.LayersDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.LayersDataGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.EnabledColumn,
+            this.LayerTypeColumn,
+            this.LayerNameColumn,
+            this.LayerPropertiesColumn});
+            this.LayersDataGridView.ContextMenuStrip = this.LayerContextMenu;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.LayersDataGridView.DefaultCellStyle = dataGridViewCellStyle2;
+            this.LayersDataGridView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LayersDataGridView.GridColor = System.Drawing.SystemColors.ControlLightLight;
+            this.LayersDataGridView.Location = new System.Drawing.Point(0, 0);
+            this.LayersDataGridView.MultiSelect = false;
+            this.LayersDataGridView.Name = "LayersDataGridView";
+            this.LayersDataGridView.ReadOnly = true;
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.LayersDataGridView.RowHeadersDefaultCellStyle = dataGridViewCellStyle3;
+            this.LayersDataGridView.RowHeadersVisible = false;
+            this.LayersDataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.LayersDataGridView.Size = new System.Drawing.Size(186, 310);
+            this.LayersDataGridView.TabIndex = 1;
+            // 
+            // EnabledColumn
+            // 
+            this.EnabledColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.EnabledColumn.Frozen = true;
+            this.EnabledColumn.HeaderText = "";
+            this.EnabledColumn.MinimumWidth = 25;
+            this.EnabledColumn.Name = "EnabledColumn";
+            this.EnabledColumn.ReadOnly = true;
+            this.EnabledColumn.Width = 25;
+            // 
+            // LayerTypeColumn
+            // 
+            this.LayerTypeColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.LayerTypeColumn.HeaderText = "";
+            this.LayerTypeColumn.MinimumWidth = 25;
+            this.LayerTypeColumn.Name = "LayerTypeColumn";
+            this.LayerTypeColumn.ReadOnly = true;
+            this.LayerTypeColumn.Width = 25;
+            // 
+            // LayerNameColumn
+            // 
+            this.LayerNameColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.LayerNameColumn.HeaderText = "Layer";
+            this.LayerNameColumn.Name = "LayerNameColumn";
+            this.LayerNameColumn.ReadOnly = true;
+            // 
+            // LayerPropertiesColumn
+            // 
+            this.LayerPropertiesColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.LayerPropertiesColumn.HeaderText = "";
+            this.LayerPropertiesColumn.MinimumWidth = 25;
+            this.LayerPropertiesColumn.Name = "LayerPropertiesColumn";
+            this.LayerPropertiesColumn.ReadOnly = true;
+            this.LayerPropertiesColumn.Width = 25;
+            // 
+            // miniMapControl1
+            // 
+            this.miniMapControl1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.miniMapControl1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.miniMapControl1.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.miniMapControl1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.miniMapControl1.Location = new System.Drawing.Point(0, 0);
+            this.miniMapControl1.MapBoxControl = this.MainMapImage;
+            this.miniMapControl1.Name = "miniMapControl1";
+            this.miniMapControl1.Size = new System.Drawing.Size(186, 138);
+            this.miniMapControl1.TabIndex = 0;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -607,7 +645,6 @@ namespace DemoWinForm
             this.splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.LayersDataGridView)).EndInit();
             this.LayerContextMenu.ResumeLayout(false);
             this.splitContainer2.Panel1.ResumeLayout(false);
             this.splitContainer2.Panel2.ResumeLayout(false);
@@ -618,6 +655,11 @@ namespace DemoWinForm
             this.MainToolStrip.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer4)).EndInit();
             this.splitContainer4.ResumeLayout(false);
+            this.splitContainer3.Panel1.ResumeLayout(false);
+            this.splitContainer3.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer3)).EndInit();
+            this.splitContainer3.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.LayersDataGridView)).EndInit();
             this.ResumeLayout(false);
 
 		}
@@ -644,12 +686,7 @@ namespace DemoWinForm
 		private System.Windows.Forms.ToolStripButton ZoomToExtentsToolStripButton;
 		private System.Windows.Forms.ToolStripButton ZoomInModeToolStripButton;
 		private System.Windows.Forms.ToolStripButton QueryModeToolStripButton;
-		private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
-		private System.Windows.Forms.DataGridView LayersDataGridView;
-		private System.Windows.Forms.DataGridViewCheckBoxColumn EnabledColumn;
-		private System.Windows.Forms.DataGridViewImageColumn LayerTypeColumn;
-		private System.Windows.Forms.DataGridViewTextBoxColumn LayerNameColumn;
-		private System.Windows.Forms.DataGridViewButtonColumn LayerPropertiesColumn;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
 		private System.Windows.Forms.DataGridView FeaturesDataGridView;
 		private System.Windows.Forms.ToolStripButton AddLayerToolStripButton;
 		private System.Windows.Forms.ToolStripButton RemoveLayerToolStripButton;
@@ -664,7 +701,14 @@ namespace DemoWinForm
 		private System.Windows.Forms.ToolStripButton ZoomOutModeToolStripButton;
 		private System.Windows.Forms.ToolStripButton PanToolStripButton;
 		private System.Windows.Forms.ToolStripButton AddNewRandomGeometryLayer;
-		private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
+        private System.Windows.Forms.SplitContainer splitContainer3;
+        private System.Windows.Forms.DataGridView LayersDataGridView;
+        private System.Windows.Forms.DataGridViewCheckBoxColumn EnabledColumn;
+        private System.Windows.Forms.DataGridViewImageColumn LayerTypeColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn LayerNameColumn;
+        private System.Windows.Forms.DataGridViewButtonColumn LayerPropertiesColumn;
+        private SharpMap.Forms.MiniMapControl miniMapControl1;
 	}
 }
 

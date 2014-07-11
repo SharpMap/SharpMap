@@ -129,6 +129,12 @@
     <Compile Include="Forms\MapImage.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Forms\MiniMapControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\MiniMapControl.Designer.cs">
+      <DependentUpon>MiniMapControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\ToolBar\MapDigitizeGeometriesToolStrip.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -157,6 +163,9 @@
     <Compile Include="Properties\Resources.Designer.cs" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Forms\MiniMapControl.resx">
+      <DependentUpon>MiniMapControl.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\ToolBar\MapQueryToolStrip.resx">
       <DependentUpon>MapQueryToolStrip.cs</DependentUpon>
     </EmbeddedResource>
