@@ -612,8 +612,8 @@ namespace SharpMap.Data.Providers
                                 if (dr.Read())
                                 {
                                     return new Envelope(
-                                        Convert.ToDouble(dr["bounding_box_xmin"]), Convert.ToDouble(dr["bounding_box_ymin"]),
-                                        Convert.ToDouble(dr["bounding_box_xmax"]), Convert.ToDouble(dr["bounding_box_ymax"]));
+                                        Convert.ToDouble(dr["bounding_box_xmin"]), Convert.ToDouble(dr["bounding_box_xmax"]),
+                                        Convert.ToDouble(dr["bounding_box_ymin"]), Convert.ToDouble(dr["bounding_box_ymax"]));
                                 }
                             }
                         }
