@@ -186,21 +186,21 @@ namespace SharpMap.Layers
 
                     IList<WaitHandle> waitHandles = new List<WaitHandle>();
                     var toRender = new Dictionary<TileIndex, Bitmap>();
-                    var takenFromCache = new Dictionary<TileIndex,bool>();
+                    var takenFromCache = new System.Collections.Concurrent.ConcurrentDictionary<TileIndex,bool>();
                     foreach (TileInfo info in tiles)
                     {
                         var image = _bitmaps.Find(info.Index);
                         if (image != null)
                         {
                             toRender.Add(info.Index, image);
-                            takenFromCache.Add(info.Index,true);
+                            takenFromCache.TryAdd(info.Index,true);
                             continue;
                         }
                         if (_fileCache != null && _fileCache.Exists(info.Index))
                         {
                             _bitmaps.Add(info.Index, GetImageFromFileCache(info) as Bitmap);
                             toRender.Add(info.Index, _bitmaps.Find(info.Index));
-                            takenFromCache.Add(info.Index,true);
+                            takenFromCache.TryAdd(info.Index, true);
                             continue;
                         }
 
@@ -282,7 +282,7 @@ namespace SharpMap.Layers
             Dictionary<TileIndex, Bitmap> bitmaps = (Dictionary<TileIndex,Bitmap>)parameters[2];
             AutoResetEvent autoResetEvent = (AutoResetEvent)parameters[3];
             bool retry = (bool) parameters[4];
-            var takenFromCache = (Dictionary<TileIndex, bool>) parameters[5];
+            var takenFromCache = (IDictionary<TileIndex, bool>) parameters[5];
 
             var setEvent = true;
             try
