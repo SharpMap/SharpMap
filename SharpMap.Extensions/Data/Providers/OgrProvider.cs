@@ -220,27 +220,27 @@ namespace SharpMap.Data.Providers
 
         #region Constructors
 
-        /// <summary>
-        /// Loads a Ogr datasource with the specified layer
-        /// </summary>
-        /// <param name="filename">datasource</param>
-        /// <param name="layerName">name of layer</param>
-        ///If you want this functionality use
-        ///<example>
-        ///SharpMap.Data.Providers.Ogr prov = new SharpMap.Data.Providers.Ogr(datasource);
-        ///prov.LayerName = layerName;
-        ///</example>
-        [Obsolete("This constructor does not work well with VB.NET. Use LayerName property instead")]
-        public Ogr(string filename, string layerName)
-        {
-            Filename = filename;
+        ///// <summary>
+        ///// Loads a Ogr datasource with the specified layer
+        ///// </summary>
+        ///// <param name="filename">datasource</param>
+        ///// <param name="layerName">name of layer</param>
+        /////If you want this functionality use
+        /////<example>
+        /////SharpMap.Data.Providers.Ogr prov = new SharpMap.Data.Providers.Ogr(datasource);
+        /////prov.LayerName = layerName;
+        /////</example>
+        //[Obsolete("This constructor does not work well with VB.NET. Use LayerName property instead")]
+        //public Ogr(string filename, string layerName)
+        //{
+        //    Filename = filename;
 
-            _ogrDataSource = OgrOgr.Open(filename, 1);
-            _ogrLayer = _ogrDataSource.GetLayerByName(layerName);
-            OsrSpatialReference spatialReference = _ogrLayer.GetSpatialRef();
-            if (spatialReference != null)
-                SRID = spatialReference.AutoIdentifyEPSG();
-        }
+        //    _ogrDataSource = OgrOgr.Open(filename, 1);
+        //    _ogrLayer = _ogrDataSource.GetLayerByName(layerName);
+        //    OsrSpatialReference spatialReference = _ogrLayer.GetSpatialRef();
+        //    if (spatialReference != null)
+        //        SRID = spatialReference.AutoIdentifyEPSG();
+        //}
 
         /// <summary>
         /// Loads a Ogr datasource with the specified layer
@@ -258,23 +258,23 @@ namespace SharpMap.Data.Providers
                 SRID = spatialReference.AutoIdentifyEPSG();
         }
 
-        /// <summary>
-        /// Loads a Ogr datasource with the specified layer
-        /// </summary>
-        /// <param name="datasource">datasource</param>
-        /// <param name="layerNum">number of layer</param>
-        /// <param name="name">Returns the name of the loaded layer</param>
-        ///If you want this functionality use
-        ///<example>
-        ///SharpMap.Data.Providers.Ogr prov = new SharpMap.Data.Providers.Ogr(datasource, layerNum);
-        ///string layerName = prov.Layername;
-        ///</example>
-        [Obsolete("This constructor does not work well with VB.NET. Use LayerName property instead")]
-        public Ogr(string datasource, int layerNum, out string name)
-            : this(datasource, layerNum)
-        {
-            name = _ogrLayer.GetName();
-        }
+        ///// <summary>
+        ///// Loads a Ogr datasource with the specified layer
+        ///// </summary>
+        ///// <param name="datasource">datasource</param>
+        ///// <param name="layerNum">number of layer</param>
+        ///// <param name="name">Returns the name of the loaded layer</param>
+        /////If you want this functionality use
+        /////<example>
+        /////SharpMap.Data.Providers.Ogr prov = new SharpMap.Data.Providers.Ogr(datasource, layerNum);
+        /////string layerName = prov.Layername;
+        /////</example>
+        //[Obsolete("This constructor does not work well with VB.NET. Use LayerName property instead")]
+        //public Ogr(string datasource, int layerNum, out string name)
+        //    : this(datasource, layerNum)
+        //{
+        //    name = _ogrLayer.GetName();
+        //}
 
         /// <summary>
         /// Loads a Ogr datasource with the first layer
@@ -285,24 +285,24 @@ namespace SharpMap.Data.Providers
         {
         }
 
-        /// <summary>
-        /// Loads a Ogr datasource with the first layer
-        /// </summary>
-        /// <param name="datasource">datasource</param>
-        /// <param name="name">Returns the name of the loaded layer</param>
-        ///<remarks>
-        ///This constructor is obsolete!
-        ///If you want this functionality use
-        ///<example>
-        ///SharpMap.Data.Providers.Ogr prov = new SharpMap.Data.Providers.Ogr(datasource);
-        ///string layerName = prov.Layername;
-        ///</example>
-        ///</remarks>
-        [Obsolete("This constructor does not work well with VB.NET. Use LayerName property instead")]
-        public Ogr(string datasource, out string name)
-            : this(datasource, 0, out name)
-        {
-        }
+        ///// <summary>
+        ///// Loads a Ogr datasource with the first layer
+        ///// </summary>
+        ///// <param name="datasource">datasource</param>
+        ///// <param name="name">Returns the name of the loaded layer</param>
+        /////<remarks>
+        /////This constructor is obsolete!
+        /////If you want this functionality use
+        /////<example>
+        /////SharpMap.Data.Providers.Ogr prov = new SharpMap.Data.Providers.Ogr(datasource);
+        /////string layerName = prov.Layername;
+        /////</example>
+        /////</remarks>
+        //[Obsolete("This constructor does not work well with VB.NET. Use LayerName property instead")]
+        //public Ogr(string datasource, out string name)
+        //    : this(datasource, 0, out name)
+        //{
+        //}
 
         #endregion
 
