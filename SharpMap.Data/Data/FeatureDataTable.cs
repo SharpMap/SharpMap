@@ -418,7 +418,10 @@ namespace SharpMap.Data
         void ICollection<IFeature>.Add(IFeature item)
         {
             if (item is FeatureDataRow)
+            {
                 Rows.Add((FeatureDataRow) item);
+                return;
+            }
             throw new ArgumentException("item");
         }
 
