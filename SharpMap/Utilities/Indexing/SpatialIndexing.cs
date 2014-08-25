@@ -18,8 +18,138 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.IO;
+using Common.Logging;
 using GeoAPI.Geometries;
+using NetTopologySuite.Utilities;
+using SharpMap.Data.Providers;
+using SharpMap.Utilities.Indexing;
+
+namespace SharpMap.Utilities.Indexing
+{
+
+    /// <summary>
+    /// Interface for items stored in a spatial index
+    /// </summary>
+    /// <typeparam name="TOid">The type of the object identifier</typeparam>
+    public interface ISpatialIndexItem<out TOid>
+    {
+        /// <summary>
+        /// Gets the object's identifier
+        /// </summary>
+        TOid ID { get; }
+
+        /// <summary>
+        /// Gets the spatial extent of the object
+        /// </summary>
+        Envelope Box { get; }
+    }
+
+    /// <summary>
+    /// Interface for a spatial index
+    /// </summary>
+    /// <typeparam name="TOid">The type of the object identifier</typeparam>
+    public interface ISpatialIndex<TOid>
+    {
+        /// <summary>
+        /// Method to search for 
+        /// </summary>
+        /// <param name="extent">The extent to search</param>
+        /// <returns>A collection of items</returns>
+        Collection<TOid> Search(Envelope extent);
+
+        /// <summary>
+        /// Gets a value indicating the area covered by this spatial index
+        /// </summary>
+        Envelope Box { get; }
+
+        /// <summary>
+        /// Method to save the spatial index to disk
+        /// </summary>
+        /// <param name="filename">The filename</param>
+        void SaveIndex(string filename);
+
+        /// <summary>
+        /// Method to delete the spatial index from the disk
+        /// </summary>
+        /// <param name="filename">The filename</param>
+        void DeleteIndex(string filename);
+    }
+
+    /// <summary>
+    /// Interface for all classes that can create a spatial index
+    /// </summary>
+    /// <typeparam name="TOid">The type of the object identifier</typeparam>
+    public interface ISpatialIndexFactory<TOid>
+    {
+        /// <summary>
+        /// Method to create a spatial index item
+        /// </summary>
+        /// <param name="oid">The object's identifier</param>
+        /// <param name="box">The extent</param>
+        /// <returns>A new spatial index item</returns>
+        ISpatialIndexItem<TOid> Create(TOid oid, Envelope box);
+
+        /// <summary>
+        /// Method to create a spatial index
+        /// </summary>
+        /// <param name="extent">The extent covered by the spatial index</param>
+        /// <param name="expectedNumberOfEntries"></param>
+        /// <param name="entries">The entries</param>
+        /// <returns>A spatial index</returns>
+        ISpatialIndex<TOid> Create(Envelope extent, int expectedNumberOfEntries,
+            IEnumerable<ISpatialIndexItem<TOid>> entries);
+
+        /// <summary>
+        /// Method to create a spatial index by loading it from file
+        /// </summary>
+        /// <param name="fileName">The filename of the file, the spatial index 
+        /// is associated with. The implementation has to take care of the 
+        /// renaming strategy, e.g. change the extension.</param>
+        /// <returns>The loaded index</returns>
+        ISpatialIndex<TOid> Load(string fileName);
+
+        /// <summary>
+        /// Gets a value indicating the file extension
+        /// </summary>
+        string Extension { get; }
+    }
+
+    /// <summary>
+    /// A pseudo tree.
+    /// </summary>
+    internal class AllFeaturesTree : ISpatialIndex<uint>
+    {
+        private readonly uint _featureCount;
+        private readonly Envelope _box;
+
+        public AllFeaturesTree(Envelope box, uint featureCount)
+        {
+            _box = box;
+            _featureCount = featureCount;
+
+        }
+
+        Collection<uint> ISpatialIndex<uint>.Search(Envelope extent)
+        {
+            var res = new Collection<uint>();
+            for (uint i = 0; i < _featureCount; i++)
+                res.Add(i);
+            return res;
+        }
+
+        Envelope ISpatialIndex<uint>.Box
+        {
+            get { return _box; }
+        }
+
+        void ISpatialIndex<uint>.SaveIndex(string filename) { }
+
+        void ISpatialIndex<uint>.DeleteIndex(string filename) { }
+    }
+
+}
 
 namespace SharpMap.Utilities.SpatialIndexing
 {
@@ -54,18 +184,18 @@ namespace SharpMap.Utilities.SpatialIndexing
     /// <summary>
     /// Constructs a Quad-tree node from a object list and creates its children recursively
     /// </summary>
-    public class QuadTree : IDisposable
+    public class QuadTree : IDisposable, ISpatialIndex<uint>
     {
         private Envelope _box;
-        
+
         private QuadTree _child0;
         private QuadTree _child1;
 
         /// <summary>
         /// Gets the number of Nodes
         /// </summary>
-        public int NodeCount 
-        { 
+        public int NodeCount
+        {
             get
             {
                 if (_child0 != null)
@@ -78,7 +208,10 @@ namespace SharpMap.Utilities.SpatialIndexing
         /// <summary>
         /// Gets a value indicating whether this branch is prunable
         /// </summary>
-        public bool IsPrunable { get { return NodeCount == 0; } }
+        public bool IsPrunable
+        {
+            get { return NodeCount == 0; }
+        }
 
         /// <summary>
         /// Nodes depth in a tree
@@ -197,10 +330,10 @@ namespace SharpMap.Utilities.SpatialIndexing
         /// <param name="h">The child node creation heuristic</param>
         public void AddNode(BoxObjects o, Heuristic h)
         {
-          /* -------------------------------------------------------------------- */
-          /*      If there are subnodes, then consider whether this object        */
-          /*      will fit in them.                                               */
-          /* -------------------------------------------------------------------- */
+            /* -------------------------------------------------------------------- */
+            /*      If there are subnodes, then consider whether this object        */
+            /*      will fit in them.                                               */
+            /* -------------------------------------------------------------------- */
             if (_child0 != null && _depth < h.maxdepth)
             {
                 if (_child0.Box.Contains(o.Box.Centre))
@@ -209,43 +342,43 @@ namespace SharpMap.Utilities.SpatialIndexing
                     _child1.AddNode(o, h);
                 return;
             }
-        
+
             /* -------------------------------------------------------------------- */
             /*      Otherwise, consider creating two subnodes if could fit into     */
             /*      them, and adding to the appropriate subnode.                    */
             /* -------------------------------------------------------------------- */
-            if( h.maxdepth > _depth && !IsLeaf )
+            if (h.maxdepth > _depth && !IsLeaf)
             {
                 Envelope half1, half2;
                 SplitBoundingBox(Box, out half1, out half2);
-            
 
-                if( half1.Contains(o.Box.Centre)) 
+
+                if (half1.Contains(o.Box.Centre))
                 {
                     _child0 = new QuadTree(half1, _depth + 1);
                     _child1 = new QuadTree(half2, _depth + 1);
                     _child0.AddNode(o, h);
                     return;
-                }    
-	            if(half2.Contains(o.Box.Centre))
-	            {
+                }
+                if (half2.Contains(o.Box.Centre))
+                {
                     _child0 = new QuadTree(half1, _depth + 1);
                     _child1 = new QuadTree(half2, _depth + 1);
-	                _child1.AddNode(o, h);
-	                return;
-	            }
+                    _child1.AddNode(o, h);
+                    return;
+                }
             }
-        
+
             /* -------------------------------------------------------------------- */
             /*      If none of that worked, just add it to this nodes list.         */
             /* -------------------------------------------------------------------- */
             //Debug.Assert(_child0 == null);
-            
+
             if (_objList == null)
                 _objList = new List<BoxObjects>();
 
-            Box.ExpandToInclude(o.Box); 
-            
+            Box.ExpandToInclude(o.Box);
+
             _objList.Add(o);
 
         }
@@ -271,7 +404,7 @@ namespace SharpMap.Utilities.SpatialIndexing
 
         #region Read/Write index to/from a file
 
-        private const double INDEXFILEVERSION = 1.0;
+        private const double INDEXFILEVERSION = 1.1;
 
         /// <summary>
         /// Loads a quadtree from a file
@@ -280,20 +413,18 @@ namespace SharpMap.Utilities.SpatialIndexing
         /// <returns></returns>
         public static QuadTree FromFile(string filename)
         {
-            using (var fs = new FileStream(filename, FileMode.Open, FileAccess.Read, FileShare.Read))
+            var fs = new FileStream(filename, FileMode.Open, FileAccess.Read, FileShare.Read);
+            using (var br = new BinaryReader(fs))
             {
-                using (var br = new BinaryReader(fs))
+                if (br.ReadDouble() != INDEXFILEVERSION) //Check fileindex version
                 {
-                    if (br.ReadDouble() != INDEXFILEVERSION) //Check fileindex version
-                    {
-                        fs.Close();
-                        fs.Dispose();
-                        throw new ObsoleteFileFormatException(
-                            "Invalid index file version. Please rebuild the spatial index by either deleting the index");
-                    }
-                    var node = ReadNode(0, br);
-                    return node;
+                    fs.Close();
+                    fs.Dispose();
+                    throw new ObsoleteFileFormatException(
+                        "Invalid index file version. Please rebuild the spatial index by either deleting the index");
                 }
+                var node = ReadNode(0, br);
+                return node;
             }
         }
 
@@ -306,9 +437,9 @@ namespace SharpMap.Utilities.SpatialIndexing
         private static QuadTree ReadNode(uint depth, BinaryReader br)
         {
             var bbox = new Envelope(new Coordinate(br.ReadDouble(), br.ReadDouble()),
-                                    new Coordinate(br.ReadDouble(), br.ReadDouble()));
+                new Coordinate(br.ReadDouble(), br.ReadDouble()));
             var node = new QuadTree(bbox, depth);
-            
+
             var isLeaf = br.ReadBoolean();
             if (isLeaf)
             {
@@ -318,7 +449,7 @@ namespace SharpMap.Utilities.SpatialIndexing
                 {
                     var box = new BoxObjects();
                     box.Box = new Envelope(new Coordinate(br.ReadDouble(), br.ReadDouble()),
-                                           new Coordinate(br.ReadDouble(), br.ReadDouble()));
+                        new Coordinate(br.ReadDouble(), br.ReadDouble()));
                     box.ID = (uint) br.ReadInt32();
                     node._objList.Add(box);
                 }
@@ -337,7 +468,7 @@ namespace SharpMap.Utilities.SpatialIndexing
         /// <param name="filename"></param>
         public void SaveIndex(string filename)
         {
-            using (var fs = new FileStream(filename, FileMode.Create))
+            using (var fs = new FileStream(filename + ".sidx", FileMode.Create))
             {
                 using (var bw = new BinaryWriter(fs))
                 {
@@ -345,6 +476,16 @@ namespace SharpMap.Utilities.SpatialIndexing
                     SaveNode(this, bw);
                 }
             }
+        }
+
+        /// <summary>
+        /// Method to delete the spatial index from the disk
+        /// </summary>
+        /// <param name="filename">The filename</param>
+        public void DeleteIndex(string filename)
+        {
+            if (File.Exists(filename + ".sidx"))
+                File.Delete(filename + ".sidx");
         }
 
         /// <summary>
@@ -503,8 +644,10 @@ namespace SharpMap.Utilities.SpatialIndexing
             {
                 foreach (var boxObject in node._objList)
                 {
-                    if(box.Intersects(boxObject.Box))
+                    if (box.Intersects(boxObject.Box))
+                    {
                         list.Add(boxObject.ID);
+                    }
 
                 }
                 /*
@@ -531,19 +674,187 @@ namespace SharpMap.Utilities.SpatialIndexing
         /// <summary>
         /// BoundingBox and Feature ID structure used for storing in the quadtree 
         /// </summary>
-        public struct BoxObjects
+        public struct BoxObjects : ISpatialIndexItem<uint>
         {
             /// <summary>
             /// Boundingbox
             /// </summary>
-            public Envelope Box;
+            public Envelope Box { get; set; }
 
             /// <summary>
             /// Feature ID
             /// </summary>
-            public uint ID;
+            public uint ID { get; set; }
         }
 
         #endregion
+    }
+
+    /// <summary>
+    /// A factory to create <see cref="QuadTree"/> spatial indices.
+    /// </summary>
+    public class QuadTreeFactory : ISpatialIndexFactory<uint>
+    {
+        private static ShapeFile.SpatialIndexCreation _spatialIndexSpatialIndexCreationOption;
+        private string _extension;
+
+        /// <summary>
+        /// Gets or sets the default spatial index creation option
+        /// </summary>
+        public static ShapeFile.SpatialIndexCreation SpatialIndexCreationOption
+        {
+            get { return _spatialIndexSpatialIndexCreationOption; }
+            set
+            {
+                if (
+                    !((value == ShapeFile.SpatialIndexCreation.Linear) ||
+                      (value == ShapeFile.SpatialIndexCreation.Recursive)))
+                    throw new ArgumentException("value");
+
+                _spatialIndexSpatialIndexCreationOption = value;
+            }
+        }
+
+        /// <summary>
+        /// Method to create a spatial index item
+        /// </summary>
+        /// <param name="oid">The object's identifier</param>
+        /// <param name="box">The extent</param>
+        /// <returns>A new spatial index item</returns>
+        public ISpatialIndexItem<uint> Create(uint oid, Envelope box)
+        {
+            return new QuadTree.BoxObjects {ID = oid, Box = box};
+        }
+
+        /// <summary>
+        /// Method to create a spatial index
+        /// </summary>
+        /// <param name="extent">The extent covered by the spatial index</param>
+        /// <param name="expectedNumberOfEntries"></param>
+        /// <param name="entries">The entries</param>
+        /// <returns>A spatial index</returns>
+        public ISpatialIndex<uint> Create(Envelope extent, int expectedNumberOfEntries,
+            IEnumerable<ISpatialIndexItem<uint>> entries)
+        {
+            switch (SpatialIndexCreationOption)
+            {
+                case ShapeFile.SpatialIndexCreation.Linear:
+                    return CreateSpatialIndexLinear(extent, expectedNumberOfEntries, entries);
+                default:
+                    return CreateSpatialIndexRecursive(extent, expectedNumberOfEntries, entries);
+            }
+        }
+
+        /// <summary>
+        /// Method to create a spatial index by loading it from file
+        /// </summary>
+        /// <param name="fileName">The filename of the spatial index</param>
+        /// <returns>The loaded index</returns>
+        public ISpatialIndex<uint> Load(string fileName)
+        {
+            var sidxFileName = fileName + ".sidx";
+            if (!File.Exists(sidxFileName))
+                return null;
+
+            var logger = LogManager.GetCurrentClassLogger();
+            try
+            {
+                var sw = new Stopwatch();
+                sw.Start();
+                var tree = QuadTree.FromFile(sidxFileName);
+                sw.Stop();
+                if (logger.IsDebugEnabled)
+                    logger.DebugFormat("Loading QuadTree took {0}ms", sw.ElapsedMilliseconds);
+                return tree;
+            }
+            catch (QuadTree.ObsoleteFileFormatException)
+            {
+                File.Delete(sidxFileName);
+                return null;
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex);
+                throw ex;
+            }
+        }
+
+        public string Extension
+        {
+            get { return ".shp.sidx"; }
+        }
+
+
+        /// <summary>
+        /// Generates a spatial index for a specified shape file.
+        /// </summary>
+        private static QuadTree CreateSpatialIndexLinear(Envelope extent, int expectedNumberOfEntries,
+            IEnumerable<ISpatialIndexItem<uint>> entries)
+        {
+            var sw = new Stopwatch();
+            sw.Start();
+            var root = QuadTree.CreateRootNode(extent);
+            var h = new Heuristic
+            {
+                maxdepth = (int) Math.Ceiling(Math.Log(expectedNumberOfEntries, 2)),
+                // These are not used for this approach
+                minerror = 10,
+                tartricnt = 5,
+                mintricnt = 2
+            };
+
+            uint i = 0;
+            foreach (var entry in entries)
+            {
+                //is the box valid?
+                if (!entry.Box.IsNull) continue;
+                root.AddNode((QuadTree.BoxObjects)entry, h);
+                i++;
+            }
+
+            sw.Stop();
+            var logger = LogManager.GetCurrentClassLogger();
+            if (logger.IsDebugEnabled)
+                logger.DebugFormat("Linear creation of QuadTree took {0}ms", sw.ElapsedMilliseconds);
+
+            return root;
+
+
+        }
+
+        /// <summary>
+        /// Generates a spatial index for a specified shape file.
+        /// </summary>
+        private static QuadTree CreateSpatialIndexRecursive(Envelope extent, int expectedNumberOfEntries,
+            IEnumerable<ISpatialIndexItem<uint>> entries)
+        {
+            var sw = new Stopwatch();
+            sw.Start();
+
+            var objList = new List<QuadTree.BoxObjects>();
+            foreach (var entry in entries)
+            {
+                if (entry.Box.IsNull) continue;
+
+                //var g = new QuadTree.BoxObjects { Box = box, ID = i };
+                objList.Add((QuadTree.BoxObjects)entry);
+            }
+
+            Heuristic heur;
+            heur.maxdepth = (int) Math.Ceiling(Math.Log(objList.Count, 2));
+            heur.minerror = 10;
+            heur.tartricnt = 5;
+            heur.mintricnt = 2;
+            var root = new QuadTree(objList, 0, heur);
+
+            sw.Stop();
+
+            var logger = LogManager.GetCurrentClassLogger();
+            if (logger.IsDebugEnabled)
+                logger.DebugFormat("Recursive creation of QuadTree took {0}ms", sw.ElapsedMilliseconds);
+
+            return root;
+        }
+
     }
 }

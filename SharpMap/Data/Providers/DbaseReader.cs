@@ -30,6 +30,10 @@ namespace SharpMap.Data.Providers
     /// <summary>
     /// Straight forward Dbase file reader
     /// </summary>
+    /// <remarks>
+    /// NOTE: This implementation assumes that the record 
+    /// index starts with <b>0</b> (Zero) instead of 1.
+    /// </remarks>
     public class DbaseReader : IDisposable
     {
         /// <summary>
@@ -796,7 +800,8 @@ namespace SharpMap.Data.Providers
         /// <param name="e">The event's arguments</param>
         protected virtual void OnIncludeOidChanged(EventArgs e)
         {
-            CreateBaseTable();
+            if (_headerIsParsed)
+                CreateBaseTable();
 
             if (IncludeOidChanged != null)
                 IncludeOidChanged(this, e);
@@ -1048,7 +1053,7 @@ namespace SharpMap.Data.Providers
         /// Gets all attribute values for data record <paramref name="rowid"/>
         /// </summary>
         /// <returns></returns>
-        public object[] GetValues(uint rowid)
+        public object[] GetValues(uint oid)
         {
             object[] result;
             var offset = 0;
@@ -1058,7 +1063,7 @@ namespace SharpMap.Data.Providers
             {
                 offset = 1;
                 result = new object[1 + _dbaseColumns.Length];
-                result[0] = rowid;
+                result[0] = oid;
             }
             else
             {
@@ -1066,10 +1071,10 @@ namespace SharpMap.Data.Providers
             }
 
             //Fill result buffer
-            if (!RecordDeleted(rowid))
+            if (!RecordDeleted(oid))
             {
                 for (var i = 0; i < _dbaseColumns.Length; i++)
-                    result[i + offset] = GetValue(rowid, i);
+                    result[i + offset] = GetValue(oid, i);
             }
 
             return result;
