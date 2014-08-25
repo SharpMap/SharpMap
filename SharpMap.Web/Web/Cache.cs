@@ -21,7 +21,6 @@ using System.Drawing.Imaging;
 using System.IO;
 using System.Web;
 using System.Web.Caching;
-using SharpMap.Web.Wcs;
 
 namespace SharpMap.Web
 {

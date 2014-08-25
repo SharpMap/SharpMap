@@ -15,10 +15,11 @@
 // along with SharpMap; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
 
-using System.Drawing;
+using System;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Web;
+using Image = System.Drawing.Image;
 
 namespace SharpMap.Web
 {
@@ -43,36 +44,112 @@ namespace SharpMap.Web
         /// <param name="context">HttpContext</param>
         public void ProcessRequest(HttpContext context)
         {
-            string imgID = context.Request.QueryString["ID"];
-            if (context.Cache[imgID] == null)
+            var imgID = context.Request.QueryString["ID"];
+            var cached = context.Cache[imgID];
+            if (cached == null)
             {
                 context.Response.Clear();
+                context.Response.ContentType = "text/plain";
                 context.Response.Write("Invalid Image requested");
+                context.Response.End();
                 return;
             }
-            if (context.Cache[imgID] is Bitmap)
-            {
-                context.Response.ContentType = "image/png";
-                Bitmap b = (Bitmap) context.Cache[imgID];
-                // send the image to the viewer
-                MemoryStream MS = new MemoryStream();
-                b.Save(MS, ImageFormat.Png);
-                // tidy up  
-                b.Dispose();
 
-                byte[] buffer = MS.ToArray();
-                context.Response.OutputStream.Write(buffer, 0, buffer.Length);
-            }
-            else if (context.Cache[imgID].GetType() == typeof (byte[]))
+            if (cached is byte[])
             {
+                /*
                 context.Response.ContentType = "image/png";
-                byte[] buffer = (byte[]) context.Cache[imgID];
+                var buffer = (byte[])cached;
                 context.Response.OutputStream.Write(buffer, 0, buffer.Length);
+                 */
+                WriteResponseInChunks((byte[])cached, context.Response);
                 return;
             }
-            context.Response.End();
+
+            //FObermaier:
+            // Do we really need to check this, InsertIntoCache does the transformation to
+            // an array of bytes.
+            if (cached is Image)
+            {
+                //context.Response.ContentType = "image/png";
+                var b = (Image) cached;
+                
+                // send the image to the viewer
+                using (var ms = new MemoryStream())
+                {
+                    b.Save(ms, ImageFormat.Png);
+
+                    //Don't tidy up we might need it again. If we want to tidy up we need to update the cached object to the 
+                    //the buffer created below. Don't know if that works
+                    //// tidy up  
+                    //b.Dispose();
+
+                    WriteResponseInChunks(ms.ToArray(), context.Response);
+                    return;
+                    //var buffer = ms.ToArray();
+                    //context.Response.OutputStream.Write(buffer, 0, buffer.Length);
+                }
+            }
+
         }
 
         #endregion
+
+        /// <summary>
+        /// The size of the chunks written to response.
+        /// </summary>
+        private const int ChunkSize = 2 * 8192;
+
+        /// <summary>
+        /// Method to write an array of bytes in chunks to a http response
+        /// </summary>
+        /// <remarks>
+        /// The code was adopted from http://support.microsoft.com/kb/812406/en-us
+        /// </remarks>
+        /// <param name="buffer">The array of bytes</param>
+        /// <param name="response">The response</param>
+        private static void WriteResponseInChunks(byte[] buffer, HttpResponse response)
+        {
+            try
+            {
+                response.ClearContent();
+                response.ContentType = "image/png";
+                using (var ms = new MemoryStream(buffer))
+                {
+                    var dataToRead = buffer.Length;
+                    while (dataToRead > 0)
+                    {
+                        if (response.IsClientConnected)
+                        {
+                            {
+                                var tmpBuffer = new byte[ChunkSize];
+                                
+                                var length = ms.Read(tmpBuffer, 0, tmpBuffer.Length);
+                                response.OutputStream.Write(tmpBuffer, 0, length);
+                                response.Flush();
+
+                                dataToRead -= length;
+                            }
+                        }
+                        else
+                        {
+                            dataToRead = -1;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                response.ClearContent();
+                response.ContentType = "text/plain";
+                response.Write(string.Format("Error     : {0}", ex.Message));
+                response.Write(string.Format("Source    : {0}", ex.Message));
+                response.Write(string.Format("StackTrace: {0}", ex.StackTrace));
+            }
+            finally
+            {
+                response.End();
+            }
+        }
     }
 }
