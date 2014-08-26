@@ -36,8 +36,9 @@
     <Reference Include="GeoAPI">
       <HintPath>..\packages\GeoAPI.1.7.2\lib\net403-client\GeoAPI.dll</HintPath>
     </Reference>
-    <Reference Include="SharpSbn.GeoAPI">
-      <HintPath>..\packages\SharpSbn.GeoAPI.1.0\lib\net403-client\SharpSbn.GeoAPI.dll</HintPath>
+    <Reference Include="SharpSbn.GeoAPI, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\SharpSbn.GeoAPI.1.0-pre\lib\net403-client\SharpSbn.GeoAPI.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
