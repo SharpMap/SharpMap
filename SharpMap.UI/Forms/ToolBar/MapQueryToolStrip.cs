@@ -131,12 +131,14 @@ namespace SharpMap.Forms.ToolBar
         private void OnMapChanged(object sender, EventArgs e)
         {
             MapControl.Map.Layers.ListChanged += OnListChanged;
+            MapControl.Map.BackgroundLayer.ListChanged += OnListChanged;
             OnListChanged(MapControl.Map.Layers, new ListChangedEventArgs(ListChangedType.Reset, 0));
         }
 
         private void OnMapChanging(object sender, CancelEventArgs e)
         {
             MapControl.Map.Layers.ListChanged -= OnListChanged;
+            MapControl.Map.BackgroundLayer.ListChanged -= OnListChanged;
         }
 
         private void OnSelectedIndexChanged(object sender, EventArgs e)
