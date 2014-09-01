@@ -619,7 +619,7 @@ namespace DemoWinForm
             this.miniMapControl1.Cursor = System.Windows.Forms.Cursors.Hand;
             this.miniMapControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.miniMapControl1.Location = new System.Drawing.Point(0, 0);
-            this.miniMapControl1.MapBoxControl = this.MainMapImage;
+            this.miniMapControl1.MapControl = this.MainMapImage;
             this.miniMapControl1.Name = "miniMapControl1";
             this.miniMapControl1.Size = new System.Drawing.Size(186, 138);
             this.miniMapControl1.TabIndex = 0;

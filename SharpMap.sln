@@ -9,10 +9,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "UnitTests\Unit
 EndProject
 Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "DemoWebSite", "Examples\DemoWebSite\", "{32ECD993-CB5A-4AD9-8C8F-45C73A088C13}"
 	ProjectSection(WebsiteProperties) = preProject
-		SccProjectName = ""
-		SccAuxPath = ""
-		SccLocalPath = ""
-		SccProvider = ""
+		SccProjectName = "Svn"
+		SccAuxPath = "Svn"
+		SccLocalPath = "Svn"
+		SccProvider = "SubversionScc"
 		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.0"
 		ProjectReferences = "{C83777FC-AABB-47D9-911F-D76255D4D541}|SharpMap.dll;{A4140C12-53F5-438C-8D24-9E48C504FECF}|SharpMap.Extensions.dll;{292ef671-4063-4952-8de0-423df72a0950}|SharpMap.Web.dll;{9961698e-4ee0-4a3b-84b7-a23e69e0c13c}|SharpMap.Extensions.x86.dll;"
 		Debug.AspNetCompiler.VirtualPath = "/DemoWebSite"
@@ -31,6 +31,11 @@ Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "DemoWebSite", "Examples\Dem
 		Release.AspNetCompiler.Debug = "False"
 		VWDPort = "52193"
 		StartServerOnDebug = "true"
+	EndProjectSection
+	ProjectSection(SvnOrigin) = preProject
+		@Keys = Enlist,Svn.Uri
+		Enlist = Required
+		Svn.Uri = Examples/DemoWebSite/
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpMap.Extensions", "SharpMap.Extensions\SharpMap.Extensions.csproj", "{A4140C12-53F5-438C-8D24-9E48C504FECF}"
@@ -104,6 +109,10 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpMap.Data.Providers.Kml", "SharpMap.Data.Providers.Kml\SharpMap.Data.Providers.Kml.csproj", "{F9DA6934-413F-4744-84CE-923D901F60E6}"
 EndProject
 Global
+	GlobalSection(SubversionScc) = preSolution
+		Svn-Managed = True
+		Manager = AnkhSVN - Subversion Support for Visual Studio
+	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|.NET = Debug|.NET
 		Debug|Any CPU = Debug|Any CPU
