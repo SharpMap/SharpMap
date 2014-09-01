@@ -106,8 +106,12 @@ namespace SharpMap
 
             if (EnforceMaximumExtents)
             {
+                var arWidth = (double) Size.Width/Size.Height;
+
                 if (zoom > _maximumExtents.Width)
                     zoom = _maximumExtents.Width;
+                if (zoom > arWidth * _maximumExtents.Height)
+                    zoom = arWidth * _maximumExtents.Height;
                 zoom = VerifyValidViewport(zoom, center);
             }
 
@@ -128,9 +132,11 @@ namespace SharpMap
 
             var halfWidth = 0.5d * zoom;
             var halfHeight = halfWidth * PixelAspectRatio * ((double)Size.Height / Size.Width);
-            if (2 * halfHeight > _maximumExtents.Height)
-            { 
-                halfHeight = 0.5d * _maximumExtents.Height;
+
+            var maxZoomHeight = _maximumZoom < double.MaxValue ? _maximumZoom : double.MaxValue;
+            if (2 * halfHeight > maxZoomHeight)
+            {
+                halfHeight = 0.5d*maxZoomHeight;
                 halfWidth = halfHeight / (_pixelAspectRatio * ((double)Size.Height / Size.Width));
                 zoom = 2 * halfWidth;
             }
@@ -157,6 +163,71 @@ namespace SharpMap
             center.Y += dy;
 
             return zoom;
+        }
+    }
+
+
+    /// <summary>
+    /// Utility class to lock a map's viewport so it cannot be changed
+    /// </summary>
+    public class MapViewportLock
+    {
+        private readonly Map _map;
+        private double _minimumZoom;
+        private double _maximumZoom;
+        private Envelope _maximumExtents;
+        private bool _enforce;
+
+        /// <summary>
+        /// Creates an instance of this class
+        /// </summary>
+        /// <param name="map"></param>
+        public MapViewportLock(Map map)
+        {
+            _map = map;
+        }
+
+        /// <summary>
+        /// Lock the viewport of the map
+        /// </summary>
+        public void Lock()
+        {
+            if (IsLocked)
+                return;
+
+            // Signal the viewport as locked
+            IsLocked = true;
+
+            // store the current extent settings
+            _minimumZoom = _map.MinimumZoom;
+            _maximumZoom = _map.MaximumZoom;
+            _maximumExtents = _map.MaximumExtents;
+            _enforce = _map.EnforceMaximumExtents;
+
+            // Lock the viewport
+            _map.MinimumZoom = _map.MaximumZoom = _map.Zoom;
+            _map.MaximumExtents = _map.Envelope;
+            _map.EnforceMaximumExtents = true;
+        }
+
+        /// <summary>
+        /// Gets a value indicating that the map's viewport is locked
+        /// </summary>
+        public bool IsLocked { get; private set; }
+
+        /// <summary>
+        /// Unlock the viewport of the map
+        /// </summary>
+        public void Unlock()
+        {
+            // Unlock the viewport
+            _map.EnforceMaximumExtents = _enforce;
+            _map.MaximumExtents = _maximumExtents;
+            _map.MinimumZoom = _minimumZoom;
+            _map.MaximumZoom = _maximumZoom;
+
+            // Signal the viewport as unlocked
+            IsLocked = false;
         }
     }
 }
