@@ -223,5 +223,21 @@ namespace SharpMap.Properties {
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
+        internal static System.Drawing.Bitmap locked
+        {
+            get
+            {
+                object obj = ResourceManager.GetObject("locked", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        internal static System.Drawing.Bitmap unlocked
+        {
+            get
+            {
+                object obj = ResourceManager.GetObject("unlocked", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
     }
 }

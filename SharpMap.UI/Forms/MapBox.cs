@@ -1261,6 +1261,11 @@ namespace SharpMap.Forms
 
             if (_map != null)
             {
+                /* TODO: 
+                 * Think of logic that does not change center to rescale as this leads to
+                 * three (3) Map.ZoomChanged events
+                 */
+
                 //If zoomToPointer is set, we first need to center the map around the mouse-location
                 //Then Zoom in the map
                 //Then pan the map back to it's original shift to have it still centered simultanously

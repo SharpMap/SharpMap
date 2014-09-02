@@ -5,6 +5,7 @@ using System.Globalization;
 using System.Security.AccessControl;
 using System.Windows.Forms;
 using GeoAPI.Geometries;
+using SharpMap.Properties;
 
 namespace SharpMap.Forms.ToolBar
 {
@@ -144,6 +145,7 @@ namespace SharpMap.Forms.ToolBar
             this._zoomPrev.Name = "_zoomPrev";
             this._zoomPrev.Size = new System.Drawing.Size(23, 20);
             this._zoomPrev.ToolTipText = "Zoom to previous viewport";
+            this._zoomPrev.Click += (sender, args) => _zoomExtentStack.ZoomPrevious();
             // 
             // _zoomNext
             // 
@@ -152,6 +154,7 @@ namespace SharpMap.Forms.ToolBar
             this._zoomNext.Name = "_zoomNext";
             this._zoomNext.Size = new System.Drawing.Size(23, 20);
             this._zoomNext.ToolTipText = "Restore last viewport";
+            this._zoomNext.Click += (sender, args) => _zoomExtentStack.ZoomNext();
             // 
             // _sep3
             // 
@@ -205,6 +208,7 @@ namespace SharpMap.Forms.ToolBar
             this._lock.Size = new System.Drawing.Size(23, 20);
             this._lock.ToolTipText = "Lock the viewport";
             this._lock.CheckOnClick = true;
+            this._lock.Image = global::SharpMap.Properties.Resources.unlocked;
             this._lock.CheckedChanged += OnCheckedChanged;
             // 
             // MapZoomToolStrip
@@ -267,9 +271,20 @@ namespace SharpMap.Forms.ToolBar
             private readonly MapBox _mapBox;
             private readonly List<Envelope> _zoomExtentStack = new List<Envelope>();
             private bool _blockStoringWhenPanning;
+
+            /// <summary>
+            /// Value indicating if zoom changes that have been invoked by user interaction should be saved or not
+            /// </summary>
+
             private bool _storeExtentsUser;
+            /// <summary>
+            /// Value indicating if zoom changes that have been invoked by this class should be stored or not
+            /// </summary>
             private bool _storeExtentsInternal;
+
             private int _index;
+            private bool _isPanning;
+            private int _skip = 0;
 
             /// <summary>
             /// Initialisation; no extents will be stored until .StoreExtents = true
@@ -281,22 +296,54 @@ namespace SharpMap.Forms.ToolBar
                 _mapBox.Map.MapViewOnChange += HandleMapMapViewOnChange;
                 _mapBox.MouseDown += HandleMapBoxMouseDown;
                 _mapBox.MouseUp += HandleMapBoxMouseUp;
+                _mapBox.MouseWheel += HandleMouseWheel;
+            }
+
+            private void HandleMouseWheel(object sender, MouseEventArgs e)
+            {
+                // Is the map box going to keep the position under the cursor
+                // untouched?
+                if (_mapBox.ZoomToPointer)
+                {
+                    /* 
+                     * For the computation of the new zoom and center, the
+                     * Map.Center is moved, Map.Zoom is changed and Map.Center 
+                     * then reset. We only want the last viewport, this we're
+                     * going to skip the next two zoom changes.
+                     */
+                    _skip = 2;
+                }
             }
 
             private void HandleMapBoxMouseDown(Coordinate worldPos, MouseEventArgs imagePos)
             {
-                if (_mapBox.ActiveTool == MapBox.Tools.Pan) _blockStoringWhenPanning = false;
+                if (_mapBox.ActiveTool == MapBox.Tools.Pan)
+                {
+                    //_blockStoringWhenPanning = false;
+                    _isPanning = true;
+                    Add(_mapBox.Map.Envelope);
+                }
             }
 
             private void HandleMapBoxMouseUp(Coordinate worldPos, MouseEventArgs imagePos)
             {
-                if (_mapBox.ActiveTool == MapBox.Tools.Pan) _blockStoringWhenPanning = true;
+                if (_mapBox.ActiveTool == MapBox.Tools.Pan)
+                {
+                    //_blockStoringWhenPanning = true;
+                    _isPanning = false;
+                }
             }
 
             private void HandleMapMapViewOnChange()
             {
-                if (_storeExtentsUser && _storeExtentsInternal && !_blockStoringWhenPanning)
-                    Add(_mapBox.Map.Envelope);
+
+                if (_storeExtentsUser && _storeExtentsInternal /*&& (!_blockStoringWhenPanning)*/)
+                {
+                    if (_isPanning)
+                        _zoomExtentStack[_index] = _mapBox.Map.Envelope;
+                    else
+                        Add(_mapBox.Map.Envelope);
+                }
                 else
                     _storeExtentsInternal = true;
             }
@@ -350,6 +397,7 @@ namespace SharpMap.Forms.ToolBar
                     _storeExtentsInternal = false;
                     _index--;
                     _mapBox.Map.ZoomToBox(_zoomExtentStack[_index]);
+                    _mapBox.Refresh();
                 }
             }
 
@@ -363,6 +411,7 @@ namespace SharpMap.Forms.ToolBar
                     _storeExtentsInternal = false;
                     _index++;
                     _mapBox.Map.ZoomToBox(_zoomExtentStack[_index]);
+                    _mapBox.Refresh();
                 }
             }
 
@@ -378,7 +427,10 @@ namespace SharpMap.Forms.ToolBar
                 // add given extent
                 _zoomExtentStack.Add(newExtent);
                 // correct index
-                _index = _zoomExtentStack.Count - 1;
+                if (_skip == 0)
+                    _index = _zoomExtentStack.Count - 1;
+                else 
+                    _skip--;
             }
         }
         
@@ -412,10 +464,16 @@ namespace SharpMap.Forms.ToolBar
 
             if (tsb == _lock)
             {
-                if (_lock.Checked) 
+                if (_lock.Checked)
+                {
                     mvpLock.Lock();
+                    tsb.Image = global::SharpMap.Properties.Resources.locked;
+                }
                 else
+                {
                     mvpLock.Unlock();
+                    tsb.Image = global::SharpMap.Properties.Resources.unlocked;
+                }
 
             }
         }

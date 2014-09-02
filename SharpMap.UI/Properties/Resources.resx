@@ -136,6 +136,9 @@
   <data name="line_create" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Forms\Icons\24x24\line-create.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="locked" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Forms\Icons\24x24\locked.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="measure" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Forms\Icons\24x24\measure.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -168,6 +171,9 @@
   </data>
   <data name="show" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Forms\Icons\24x24\show.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="unlocked" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Forms\Icons\24x24\unlocked.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="zoom_extent" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Forms\Icons\24x24\zoom-extent.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>

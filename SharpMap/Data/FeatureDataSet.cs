@@ -651,6 +651,14 @@ namespace SharpMap.Data
 
         public void Add(FeatureDataTable item)
         {
+            var itemDataSet = item.DataSet;
+            if (itemDataSet != null)
+            {
+                if (itemDataSet.Tables.CanRemove(item))
+                    itemDataSet.Tables.Remove(item);
+                else
+                    item = (FeatureDataTable) item.Copy();
+            }
             _dataTables.Add(item);
         }
 
