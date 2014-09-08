@@ -238,6 +238,7 @@
     <Compile Include="Styles\GroupStyle.cs" />
     <Compile Include="Styles\IStyle.cs" />
     <Compile Include="Styles\LabelStyle.cs" />
+    <Compile Include="Styles\SldConverter.cs" />
     <Compile Include="Styles\Style.cs" />
     <Compile Include="Rendering\Symbolizer\BasicLineSymbolizer.cs" />
     <Compile Include="Rendering\Symbolizer\BasicPolygonSymbolizer.cs" />
