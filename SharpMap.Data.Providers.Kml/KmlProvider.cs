@@ -190,7 +190,7 @@ namespace SharpMap.Data.Providers
 
             _geometryFactory = GeoAPI.GeometryServiceProvider.Instance.CreateGeometryFactory(4326);
             ConnectionID = doc.Name;
-            if (!string.IsNullOrEmpty(doc.Description.Text))
+            if (doc.Description != null && !string.IsNullOrEmpty(doc.Description.Text))
                 ConnectionID += " (" + doc.Description.Text + ")";
 
             ExtractStyles(kml);
