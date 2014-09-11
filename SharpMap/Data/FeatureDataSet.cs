@@ -28,6 +28,7 @@ using System.Linq;
 using System.Runtime.Serialization;
 using GeoAPI;
 using GeoAPI.Geometries;
+using NetTopologySuite.Features;
 using NetTopologySuite.IO;
 
 namespace SharpMap.Data
@@ -800,7 +801,7 @@ namespace SharpMap.Data
 
         private IGeometry _geometry;
 
-        internal FeatureDataRow(DataRowBuilder rb)
+        public FeatureDataRow(DataRowBuilder rb)
             : base(rb)
         {
         }

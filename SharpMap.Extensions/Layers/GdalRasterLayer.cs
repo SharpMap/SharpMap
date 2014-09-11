@@ -348,7 +348,12 @@ namespace SharpMap.Layers
         {
             try
             {
+                if (_logger.IsDebugEnabled)
+                    _logger.Debug("Opening dataset " + imageFilename);
                 _gdalDataset = Gdal.OpenShared(imageFilename, Access.GA_ReadOnly);
+
+                if (_logger.IsDebugEnabled)
+                    _logger.Debug("Reading projection for " + imageFilename);
 
                 // have gdal read the projection
                 Projection = _gdalDataset.GetProjectionRef();
@@ -361,12 +366,19 @@ namespace SharpMap.Layers
                         File.ReadAllText(imageFilename.Substring(0, imageFilename.LastIndexOf(".", StringComparison.CurrentCultureIgnoreCase)) + ".prj");
                 }
 
+                if (_logger.IsDebugEnabled)
+                    _logger.Debug("Read sizes" + imageFilename);
+
                 _imageSize = new Size(_gdalDataset.RasterXSize, _gdalDataset.RasterYSize);
                 _envelope = GetExtent();
 
                 HistoBounds = new Rectangle((int) _envelope.MinX, (int) _envelope.MinY, (int) _envelope.Width,
                     (int) _envelope.Height);
                 Bands = _gdalDataset.RasterCount;
+
+                if (_logger.IsDebugEnabled)
+                    _logger.Debug("Dataset open, " + imageFilename);
+
             }
             catch (Exception ex)
             {
@@ -814,6 +826,9 @@ namespace SharpMap.Layers
                                           Envelope displayBbox, ProjectionInfo mapProjection, Map map)
 #endif
         {
+            DateTime drawStart = DateTime.Now;
+            double totalReadDataTime = 0;
+            double totalTimeSetPixel = 0;
 
             if (!NeedRotation(dataset))
             {
@@ -825,9 +840,6 @@ namespace SharpMap.Layers
             
             Bitmap bitmap = null;
             var bitmapTl = new Point();
-
-            //Coordinate imageTL = new Coordinate(), imageBR = new Coordinate();
-            //int bitmapWidth, bitmapHeight;
             var bitmapSize = new Size();
 
             const int pixelSize = 3; //Format24bppRgb = byte[b,g,r] 
@@ -843,12 +855,6 @@ namespace SharpMap.Layers
                 Histogram = new List<int[]>();
                 for (int i = 0; i < Bands + 1; i++)
                     Histogram.Add(new int[256]);
-
-                // bounds of section of image to be displayed
-                //var left = Math.Max(displayBbox.MinX, _envelope.MinX);
-                //var top = Math.Min(displayBbox.MaxY, _envelope.MaxY);
-                //var right = Math.Min(displayBbox.MaxX, _envelope.MaxX);
-                //var bottom = Math.Max(displayBbox.MinY, _envelope.MinY);
 
                 var trueImageBbox = displayBbox.Intersection(_envelope);
 
@@ -871,10 +877,6 @@ namespace SharpMap.Layers
                 var g2I = geoTransform.GroundToImage(shownImageBbox).Intersection(new Envelope(0, _imageSize.Width, 0, _imageSize.Height));
                 var gdalImageRect = ToRectangle(g2I);
                 var displayImageSize = gdalImageRect.Size;
-
-                //// find ground coordinates of image pixels
-                //var groundBR = geoTransform.ImageToGround(imageBR);
-                //var groundTL = geoTransform.ImageToGround(imageTL);
 
                 // convert ground coordinates to map coordinates to figure out where to place the bitmap
                 var bitmapBr = new Point((int)map.WorldToImage(trueImageBbox.BottomRight()).X + 1,
@@ -908,11 +910,6 @@ namespace SharpMap.Layers
                 BitmapData bitmapData;
                 bitmap = InitializeBitmap(bitmapSize, PixelFormat.Format24bppRgb, out bitmapData);
                 
-                /*
-                bitmap = new Bitmap(bitmapLength, bitmapHeight, PixelFormat.Format24bppRgb);
-                BitmapData bitmapData = bitmap.LockBits(new Rectangle(0, 0, bitmapLength, bitmapHeight),
-                                                        ImageLockMode.ReadWrite, bitmap.PixelFormat);
-                 */
                 try
                 {
                     unsafe
@@ -921,25 +918,8 @@ namespace SharpMap.Layers
                         var cg = _noDataInitColor.G;
                         var cb = _noDataInitColor.B;
 
-                        /* functionality moved to InitializeBitmap
-                        // turn everything to _noDataInitColor, so we can make fill transparent
-
-                        for (int y = 0; y < bitmapHeight; y++)
-                        {
-                            byte* brow = (byte*)bitmapData.Scan0 + (y * bitmapData.Stride);
-                            for (int x = 0; x < bitmapLength; x++)
-                            {
-                                Int32 offsetX = x * 3;
-                                brow[offsetX++] = cb;
-                                brow[offsetX++] = cg;
-                                brow[offsetX] = cr;
-                            }
-                        }
-                        */
-
 
                         // create 3 dimensional buffer [band][x pixel][y pixel]
-                        //var tempBuffer = new double[Bands][];
                         var buffer = new double[Bands][][];
                         for (int i = 0; i < Bands; i++)
                         {
@@ -948,13 +928,12 @@ namespace SharpMap.Layers
                                 buffer[i][j] = new double[displayImageSize.Height];
                         }
 
-                        //Band[] band = new Band[Bands];
                         var ch = new int[Bands];
 
-                        //
                         var noDataValues = new Double[Bands];
                         var scales = new Double[Bands];
                         ColorTable colorTable = null;
+                        short[][] colorTableCache = null;
 
                         var imageRect = gdalImageRect;
 
@@ -1007,6 +986,19 @@ namespace SharpMap.Layers
                                             colorTable.Dispose();
                                         }
                                         colorTable = band.GetRasterColorTable();
+
+                                        int numColors = colorTable.GetCount();
+                                        colorTableCache = new short[numColors][];
+                                        for (int col = 0; col < numColors; col++)
+                                        {
+                                            using (var colEntry = colorTable.GetColorEntry(col))
+                                            {
+                                                colorTableCache[col] = new short[]{
+                                                    colEntry.c1, colEntry.c2, colEntry.c3
+                                                };
+                                            }
+                                        }
+
                                         ch[i] = 5;
                                         intermediateValue = new Double[3];
                                         break;
@@ -1055,11 +1047,11 @@ namespace SharpMap.Layers
 
                         var rowsRead = 0;
                         var displayImageStep = displayImageSize.Height;
-                        while (rowsRead < displayImageSize.Height)
+                        while (rowsRead < displayImageStep)
                         {
                             var rowsToRead = displayImageStep;
-                            if (rowsRead + rowsToRead > displayImageSize.Height)
-                                rowsToRead = displayImageSize.Height - rowsRead;
+                            if (rowsRead + rowsToRead > displayImageStep)
+                                rowsToRead = displayImageStep - rowsRead;
 
                             var tempBuffer = new double[displayImageSize.Width * rowsToRead];
                             for (var i = 0; i < Bands; i++)
@@ -1067,9 +1059,16 @@ namespace SharpMap.Layers
                                 // read the buffer
                                 using (var band = dataset.GetRasterBand(i + 1))
                                 {
+                                    DateTime start = DateTime.Now;
                                     band.ReadRaster(imageRect.Left, imageRect.Top,
                                                     imageRect.Width, imageRect.Height,
                                                     tempBuffer, displayImageSize.Width, rowsToRead, 0, 0);
+
+                                    if (_logger.IsDebugEnabled)
+                                    {
+                                        TimeSpan took = DateTime.Now - start;
+                                        totalReadDataTime += took.TotalMilliseconds;
+                                    }
                                 }
 
                                 // parse temp buffer into the image x y value buffer
@@ -1150,16 +1149,13 @@ namespace SharpMap.Layers
 
                                         else if (ch[i] == 5 && colorTable != null)
                                         {
-                                            if (!DoublesAreEqual(imageVal,noDataValues[i]))
+                                            if (double.IsNaN(noDataValues[i]) || !DoublesAreEqual(imageVal, noDataValues[i]))
                                             {
-                                                using (var ce = colorTable.GetColorEntry(Convert.ToInt32(imageVal)))
-                                                {
-                                                    intermediateValue[0] = ce.c3;
-                                                    intermediateValue[1] = ce.c2;
-                                                    intermediateValue[2] = ce.c1;
-                                                    //intVal[3] = ce.c4;
-                                                }
+                                                var ce = colorTableCache[Convert.ToInt32(imageVal)];
 
+                                                intermediateValue[0] = ce[2];
+                                                intermediateValue[1] = ce[1];
+                                                intermediateValue[2] = ce[0];
                                             }
                                             else
                                             {
@@ -1171,7 +1167,6 @@ namespace SharpMap.Layers
 
                                         else
                                         {
-
                                             if (ColorCorrect)
                                             {
                                                 intermediateValue[i] = ApplyColorCorrection(imageVal, spotVal, ch[i],
@@ -1201,7 +1196,15 @@ namespace SharpMap.Layers
                                              intermediateValue[0]*0.0722)]
                                             ++;
 
+                                    DateTime writeStart = DateTime.MinValue;
+                                    if (_logger.IsDebugEnabled)
+                                        writeStart = DateTime.Now;
                                     WritePixel(pixX, intermediateValue, pixelSize, ch, row);
+                                    if (_logger.IsDebugEnabled)
+                                    {
+                                        TimeSpan took = DateTime.Now - writeStart;
+                                        totalTimeSetPixel += took.TotalMilliseconds;
+                                    }
                                 }
                             }
                         }
@@ -1219,20 +1222,20 @@ namespace SharpMap.Layers
                 }
             }
 
-            //using (var ia = new ImageAttributes())
-            //{
-            //    var colorMap = new[]
-            //        {
-            //            new ColorMap {OldColor = _noDataInitColor, NewColor = Color.Transparent},
-            //            new ColorMap {OldColor = TransparentColor, NewColor = Color.Transparent}
-            //        }; 
-            //    
-            //    ia.SetRemapTable(colorMap, ColorAdjustType.Bitmap);
+            
+            DateTime drawGdiStart = DateTime.Now;
                 bitmap.MakeTransparent(_noDataInitColor);
                 if (TransparentColor != Color.Empty)
                     bitmap.MakeTransparent(TransparentColor);
                 g.DrawImage(bitmap, bitmapTl);
-            //}
+            
+            if (_logger.IsDebugEnabled)
+            {
+                TimeSpan took = DateTime.Now - drawStart;
+                TimeSpan drawGdiTook = DateTime.Now - drawGdiStart;
+                _logger.DebugFormat("Draw GdalImage in {0}ms, readTime: {1}, setPixelTime: {2}, drawTime: {3}", took.TotalMilliseconds, totalReadDataTime,
+                    totalTimeSetPixel, drawGdiTook.TotalMilliseconds);
+            }
         }
 
  

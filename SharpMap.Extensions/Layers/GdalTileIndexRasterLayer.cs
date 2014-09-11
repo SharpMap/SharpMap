@@ -16,10 +16,14 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
 
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using Common.Logging;
 using GeoAPI.Geometries;
+using Mono.Security.Protocol.Ntlm;
+using OSGeo.GDAL;
+using ProjNet.CoordinateSystems;
 using SharpMap.Data;
 using SharpMap.Data.Providers;
 
@@ -40,12 +44,25 @@ namespace SharpMap.Layers
     public class GdalTileIndexRasterLayer : GdalRasterLayer
     {
 
+        class CacheHolder
+        {
+            public Dataset Dataset;
+            public string Projection;
+            public Size ImageSize;
+            public Envelope Envelope;
+            public Rectangle HistoBounds;
+            public int Bands;
+
+
+        }
+
         private static readonly ILog _logger = LogManager.GetLogger(typeof (GdalTileIndexRasterLayer));
 
         private readonly ShapeFile _shapeFile;
         private readonly string _fieldName;
         private readonly string _fileName;
         private readonly Envelope _extents;
+        private Dictionary<string, CacheHolder> _openDatasets;
 
         /// <summary>
         /// Open a TileIndex shapefile
@@ -70,7 +87,10 @@ namespace SharpMap.Layers
             _extents = _shapeFile.GetExtents();
             _shapeFile.Close();
             _fieldName = fieldName;
+            _openDatasets = new Dictionary<string, CacheHolder>();
         }
+
+        
 
         public override Envelope Envelope
         {
@@ -97,18 +117,38 @@ namespace SharpMap.Layers
                         if (!Path.IsPathRooted(file))
                             file = Path.Combine(Path.GetDirectoryName(_fileName), file);
 
+                        if (file == null)
+                            continue;
+
                         if (_logger.IsDebugEnabled)
                             _logger.Debug("Drawing " + file);
 
-                        OpenDataset(file);
+                        if (!_openDatasets.ContainsKey(file))
+                        {
+                            OpenDataset(file);
+                            _openDatasets.Add(file, new CacheHolder(){
+                                Bands = Bands,
+                                Dataset = _gdalDataset,
+                                Envelope = _envelope,
+                                HistoBounds = HistoBounds,
+                                ImageSize = _imageSize,
+                                Projection = Projection
+                            });
+                        }
+                        else
+                        {
+                            CacheHolder hld = _openDatasets[file];
+                            Bands = hld.Bands;
+                            _gdalDataset = hld.Dataset;
+                            _envelope = hld.Envelope;
+                            HistoBounds = hld.HistoBounds;
+                            _imageSize = hld.ImageSize;
+                            Projection = hld.Projection;
+                        }
 
                         base.Render(g, map);
                         _envelope = null;
-                        if (_gdalDataset != null)
-                        {
-                            _gdalDataset.Dispose();
-                            _gdalDataset = null;
-                        }
+                        _gdalDataset = null;
                     }
                 }
 
@@ -123,6 +163,14 @@ namespace SharpMap.Layers
         protected override void ReleaseManagedResources()
         {
             _shapeFile.Dispose();
+
+            foreach (var kvp in _openDatasets)
+            {
+                if (kvp.Value  != null)
+                {
+                    kvp.Value.Dataset.Dispose();
+                }
+            }
             
             base.ReleaseManagedResources();
         }
