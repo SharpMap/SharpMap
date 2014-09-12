@@ -42,6 +42,7 @@ using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using GeoAPI.Geometries;
+using SharpMap.Forms.Tools;
 using SharpMap.Layers;
 using System.Drawing.Imaging;
 using System.Diagnostics;
@@ -186,7 +187,12 @@ namespace SharpMap.Forms
             /// <summary>
             /// No active tool
             /// </summary>
-            None
+            None,
+
+            /// <summary>
+            /// Custom tool, implementing <see cref="IMapTool"/>
+            /// </summary>
+            Custom
         }
 
         /// <summary>
@@ -365,6 +371,7 @@ namespace SharpMap.Forms
 #endif
 
         //private bool m_IsCtrlPressed;
+        private IMapTool _currentTool;
         private double _wheelZoomMagnitude = -2;
         private Tools _activeTool;
         private double _fineZoomFactor = 10;
@@ -668,10 +675,47 @@ namespace SharpMap.Forms
 
                 _pointArray = null;
 
-                if (check && ActiveToolChanged != null)
-                    ActiveToolChanged(value);
+                OnActiveToolChanged(value);
             }
         }
+
+        /// <summary>
+        /// Event invoker for the <see cref="ActiveToolChanged"/> event
+        /// </summary>
+        /// <param name="activeTool">The tool</param>
+        protected virtual void OnActiveToolChanged(Tools activeTool)
+        {
+            var handler = ActiveToolChanged;
+            if (handler != null)
+                handler(activeTool);
+        }
+
+        /// <summary>
+        /// Gets or sets a value indicating the currently active custom tool
+        /// </summary>
+        public IMapTool CustomTool
+        {
+            get { return _currentTool; }
+            set
+            {
+                if (value == _currentTool)
+                    return;
+
+                var raiseActiveToolChanged = ActiveTool == Tools.Custom && value != null;
+
+                _currentTool = value;
+                ActiveTool = _currentTool != null
+                    ? Tools.Custom
+                    : Tools.None;
+
+                if (_currentTool != null)
+                    _currentTool.Map = _map;
+
+                if (raiseActiveToolChanged)
+                    OnActiveToolChanged(ActiveTool);
+            }
+        }
+
 
 #pragma warning disable 1587
 #if DEBUG
@@ -1163,16 +1207,31 @@ namespace SharpMap.Forms
                 return;
             }
 
-            if (_activeTool == Tools.None)
-                Cursor = Cursors.Default;
-            if (_activeTool == Tools.Pan)
-                Cursor = Cursors.Hand;
-            else if (_activeTool == Tools.QueryBox || _activeTool == Tools.QueryPoint /*|| _activeTool == Tools.QueryPolygon*/)
-                Cursor = Cursors.Help;
-            else if (_activeTool == Tools.ZoomIn || _activeTool == Tools.ZoomOut || _activeTool == Tools.ZoomWindow)
-                Cursor = Cursors.Cross;
-            else if (_activeTool == Tools.DrawPoint || _activeTool == Tools.DrawPolygon || _activeTool == Tools.DrawLine)
-                Cursor = Cursors.Cross;
+            switch (_activeTool)
+            {
+                case Tools.None:
+                    Cursor = Cursors.Default;
+                    break;
+                case Tools.Pan:
+                    Cursor = Cursors.Hand;
+                    break;
+                case Tools.QueryBox:
+                case Tools.QueryPoint:
+                    Cursor = Cursors.Help;
+                    break;
+                case Tools.ZoomIn:
+                case Tools.ZoomOut:
+                    Cursor = Cursors.Cross;
+                    break;
+                case Tools.DrawPoint:
+                case Tools.DrawLine:
+                case Tools.DrawPolygon:
+                    Cursor = Cursors.Cross;
+                    break;
+                case Tools.Custom:
+                    Cursor = _currentTool.Cursor;
+                    break;
+            }
         }
 
 
@@ -1229,15 +1288,31 @@ namespace SharpMap.Forms
         }
 
 
+        private Point _lastHoverPostiton;
+
         /// <summary>
         /// Invokes the <see cref="E:System.Windows.Forms.Control.MouseHover"/>-event.
         /// </summary>
         /// <param name="e">A <see cref="T:System.EventArgs"/> that contains the event arguments.</param>
         protected override void OnMouseHover(EventArgs e)
         {
+            // update the last hover position
+            _lastHoverPostiton = PointToClient(MousePosition);
+
+            // If required test and grab focus
             if (_focusOnHover)
                 TestAndGrabFocus();
+
+            // Invoke the base implementation
             base.OnMouseHover(e);
+
+            // Do we have a custom tool, execute it
+            if (UseCurrentTool)
+            {
+                var p = _map.ImageToWorld((_lastHoverPostiton));
+                if (_currentTool.DoMouseHover(p))
+                    return;
+            }
         }
 
         private void TestAndGrabFocus()
@@ -1248,6 +1323,27 @@ namespace SharpMap.Forms
                 Logger.Debug("Focused: " + isFocused);
             }
         }
+
+        protected override void OnMouseEnter(EventArgs e)
+        {
+            base.OnMouseEnter(e);
+            if (UseCurrentTool)
+            {
+                if (_currentTool.DoMouseEnter())
+                    return;
+            }
+        }
+
+        protected override void OnMouseLeave(EventArgs e)
+        {
+            base.OnMouseLeave(e);
+            if (UseCurrentTool)
+            {
+                if (_currentTool.DoMouseLeave())
+                    return;
+            }
+        }
+
 
         private System.Timers.Timer _mouseWheelRefreshTimer;
 
@@ -1261,6 +1357,13 @@ namespace SharpMap.Forms
 
             if (_map != null)
             {
+                // Do we have a custom tool
+                if (UseCurrentTool)
+                {
+                    if (_currentTool.DoMouseWheel(_map.ImageToWorld(e.Location), e))
+                        return;
+                }
+
                 /* TODO: 
                  * Think of logic that does not change center to rescale as this leads to
                  * three (3) Map.ZoomChanged events
@@ -1344,6 +1447,14 @@ namespace SharpMap.Forms
             if (MouseDown != null)
                 MouseDown(p, e);
 
+            // Do we have a custom tool
+            if (UseCurrentTool)
+            {
+                if (_currentTool.DoMouseDown(p, e))
+                    return;
+            }
+
+
             // Do we have a predefined tool
             if (_activeTool == Tools.None)
                 return;
@@ -1381,6 +1492,26 @@ namespace SharpMap.Forms
         //}
 
         /// <summary>
+        /// Private method to check if we need to reenable the <see cref="Control.MouseHover"/> event.
+        /// </summary>
+        /// <param name="position">The current position of the cursor</param>
+        private void CheckEnableHover(Point position)
+        {
+            var delta = new Size(position.X - _lastHoverPostiton.X,
+                                 position.Y - _lastHoverPostiton.Y);
+
+            if (Math.Abs(delta.Width) > SystemInformation.MouseHoverSize.Width ||
+                Math.Abs(delta.Height) > SystemInformation.MouseHoverSize.Height)
+            {
+                Logger.Debug(fmh => fmh("Reenabling MouseHover event neccessary: {0}", delta));
+                ResetMouseEventArgs();
+                return;
+            }
+            Logger.Debug(fmh => fmh("Reenabling MouseHover NOT event neccessary: {0}", delta));
+
+        }
+
+        /// <summary>
         /// Invokes the <see cref="E:System.Windows.Forms.Control.MouseMove"/>-event.
         /// </summary>
         /// <param name="e">A <see cref="T:System.Windows.Forms.MouseEventArgs"/> that contains the event arguments.</param>
@@ -1391,7 +1522,10 @@ namespace SharpMap.Forms
 
             // Do we have a map? If not bail out
             if (_map == null)
+            {
+                CheckEnableHover(e.Location);
                 return;
+            }
 
             // Position in world coordinates
             var p = _map.ImageToWorld(new Point(e.X, e.Y));
@@ -1400,9 +1534,23 @@ namespace SharpMap.Forms
             if (MouseMove != null)
                 MouseMove(p, e);
 
+            // Do we have a custom tool
+            if (UseCurrentTool)
+            {
+                if (_currentTool.DoMouseMove(p, e))
+                {
+                    CheckEnableHover(e.Location);
+                    return;
+                }
+            }
+
+
             // If no tool is selected, bail out
             if (ActiveTool == Tools.None)
+            {
+                CheckEnableHover(e.Location);
                 return;
+            }
 
             bool isStartDrag = _image != null && e.Location != _dragStartPoint && !_dragging &&
                                (e.Button == MouseButtons.Left || e.Button == MouseButtons.Middle) &&
@@ -1493,10 +1641,9 @@ namespace SharpMap.Forms
                     }
                 }
             }
+
+            CheckEnableHover(e.Location);
         }
-
-
-#if EnableMetafileClipboardSupport
 
         /// <summary>
         /// Invokes the <see cref="E:System.Windows.Forms.Control.KeyDown"/>-event.
@@ -1504,17 +1651,23 @@ namespace SharpMap.Forms
         /// <param name="e">A <see cref="T:System.Windows.Forms.KeyEventArgs"/> that contains the event arguments.</param>
         protected override void OnKeyDown(KeyEventArgs e)
         {
+#if EnableMetafileClipboardSupport
             if (e.Control && e.KeyCode == Keys.C)
             {
                 Clipboard.Clear();
                 ClipboardMetafileHelper.PutEnhMetafileOnClipboard(Handle, _map.GetMapAsMetafile());
                 e.Handled = true;
             }
+#endif
 
+            if (UseCurrentTool)
+            {
+                _currentTool.DoKeyDown(_map.ImageToWorld(MousePosition), e);
+            }
             base.OnKeyDown(e);
         }
 
-#endif
+        private bool UseCurrentTool { get { return _currentTool != null && _currentTool.Enabled; }}
 
         /// <summary>
         /// Invokes the <see cref="E:SharpMap.Forms.MapBox.MapChanging"/>-event.
@@ -1548,7 +1701,11 @@ namespace SharpMap.Forms
                 Refresh();
             }
 
-            if (MapChanged != null) MapChanged(this, e);
+            // Assign the map to the custom tool, too.
+            if (_currentTool != null) _currentTool.Map = _map;
+
+            var handler = MapChanged;
+            if (handler != null) handler(this, e);
         }
 
         void HandleRefreshNeeded(object sender, EventArgs e)
@@ -1789,7 +1946,11 @@ namespace SharpMap.Forms
                     }
                 }
 
+                // Invoke the base implementation to get the event fired
                 base.OnPaint(pe);
+
+                // Do we have a custom tool
+                if (UseCurrentTool) { _currentTool.DoPaint(pe); }
 
                 /*Draw Floating Map-Decorations*/
                 if (_map != null && _map.Decorations != null)
@@ -1825,6 +1986,13 @@ namespace SharpMap.Forms
             // Raise event
             if (MouseUp != null)
                 MouseUp(p, e);
+
+            // Do we have a custom tool
+            if (UseCurrentTool)
+            {
+                if (_currentTool.DoMouseUp(p, e))
+                    return;
+            }
 
             // If no tool is selected, bail out
             if (_activeTool == Tools.None)
@@ -2095,6 +2263,14 @@ namespace SharpMap.Forms
             // Do we have an active tool?
             if (_activeTool == Tools.None)
                 return;
+
+            // Do we have a custom tool
+            if (UseCurrentTool)
+            {
+                if (_currentTool.DoMouseDoubleClick(_map.ImageToWorld(e.Location), e))
+                    return;
+            }
+
 
             if (_activeTool == Tools.DrawPolygon)
             {

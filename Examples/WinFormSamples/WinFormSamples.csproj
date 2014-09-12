@@ -208,6 +208,7 @@
     <Compile Include="Samples\GradiantThemeSample.cs" />
     <Compile Include="Samples\HeatLayerSample.cs" />
     <Compile Include="Samples\OracleSample.cs" />
+    <Compile Include="SampleTool.cs" />
     <Compile Include="SharpMapTileSource.cs" />
     <Content Include="x64\SQLite.Interop.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

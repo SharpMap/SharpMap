@@ -143,6 +143,8 @@
     <Compile Include="Forms\ToolBar\MapZoomToolStrip.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Forms\Tools\IMapTool.cs" />
+    <Compile Include="Forms\Tools\MapTool.cs" />
     <Compile Include="Forms\WktGeometryCreator.cs">
       <SubType>Form</SubType>
     </Compile>

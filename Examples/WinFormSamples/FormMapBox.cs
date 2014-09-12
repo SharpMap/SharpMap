@@ -81,5 +81,16 @@ namespace WinFormSamples
                 return null;
             }
         }
+
+        private void btnTool_Click(object sender, EventArgs e)
+        {
+            if (mapBox1.CustomTool == null)
+                mapBox1.CustomTool = new SampleTool(mapBox1);
+            else
+            {
+                mapBox1.CustomTool = null;
+                mapBox1.ActiveTool = MapBox.Tools.Pan;
+            }
+        }
     }
 }
