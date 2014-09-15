@@ -333,14 +333,14 @@ namespace SharpMap.Layers
         {
             if (!((ICanQueryLayer)this).IsQueryEnabled)
                 return;
-            ((ICanQueryLayer)this).ExecuteIntersectionQuery(box, ds);
+            ((ICanQueryLayer)_baseLayer).ExecuteIntersectionQuery(box, ds);
         }
 
         void ICanQueryLayer.ExecuteIntersectionQuery(IGeometry geometry, FeatureDataSet ds)
         {
             if (!((ICanQueryLayer)this).IsQueryEnabled)
                 return;
-            ((ICanQueryLayer)this).ExecuteIntersectionQuery(geometry, ds);
+            ((ICanQueryLayer)_baseLayer).ExecuteIntersectionQuery(geometry, ds);
         }
 
         bool ICanQueryLayer.IsQueryEnabled

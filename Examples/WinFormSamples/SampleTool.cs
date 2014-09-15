@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Common.Logging;
 using GeoAPI.Geometries;
+using SharpMap;
 using SharpMap.Data;
 using SharpMap.Forms;
 using SharpMap.Forms.Tools;
@@ -162,8 +163,6 @@ namespace WinFormSamples
             return sb.ToString(0, sb.Length - 1);
         }
 
-        private CancellationToken _token;
-
         private FeatureDataRow FindGeoNearPoint(object/*Coordinate*/ coord)
         {
             var mapPosition = (Coordinate) coord;
@@ -174,20 +173,23 @@ namespace WinFormSamples
             var fdrs = new List<Tuple<double, FeatureDataRow>>();
             var fds = new FeatureDataSet();
             var tableCount = 0;
-            for (var i = Map.Layers.Count - 1; i >= 0; i--)
+
+            var layersToQuery = GetLayersToQuery(Map);
+
+            for (var i = layersToQuery.Count - 1; i >= 0; i--)
             {
-                if (_token.IsCancellationRequested)
+                if (_cts.Token.IsCancellationRequested)
                 {
                     Logger.Debug("Cancellation requested");
                     return null;
                 }
 
-                var l = Map.Layers[i];
+                var l = layersToQuery[i];
                 if (l.Enabled && l.MinVisible < Map.Zoom &&
-                    l.MaxVisible >= Map.Zoom && l is ICanQueryLayer)
+                    l.MaxVisible >= Map.Zoom)
                 {
-                    var cql = (ICanQueryLayer) l;
-                    cql.ExecuteIntersectionQuery(env, fds);
+                    if (!l.IsQueryEnabled) continue;
+                    l.ExecuteIntersectionQuery(env, fds);
                     for (var j = tableCount; j < fds.Tables.Count; j++)
                     {
                         var fdt = fds.Tables[j];
@@ -213,6 +215,28 @@ namespace WinFormSamples
                 return fdrs[0].Item2;
             }
             return null;
+        }
+
+        private static List<ICanQueryLayer> GetLayersToQuery(Map map)
+        {
+            var res = new List<ICanQueryLayer>();
+            for (var i = 0; i < map.BackgroundLayer.Count; i++)
+            {
+                if (map.BackgroundLayer[i] is ICanQueryLayer)
+                {
+                    if (((ICanQueryLayer)map.BackgroundLayer[i]).IsQueryEnabled)
+                        res.Add((ICanQueryLayer)map.BackgroundLayer[i]);
+                }
+            }
+            for (var i = 0; i < map.Layers.Count; i++)
+            {
+                if (map.Layers[i] is ICanQueryLayer)
+                {
+                    if (((ICanQueryLayer)map.Layers[i]).IsQueryEnabled)
+                        res.Add((ICanQueryLayer)map.Layers[i]);
+                }
+            }
+            return res;
         }
 
         public MapBox MapControl { get; private set; }

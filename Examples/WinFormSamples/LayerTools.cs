@@ -257,21 +257,30 @@ namespace WinFormSamples
             {
                 var l = new VectorLayer(provider.ConnectionID, provider)
                             {
-                                Style = GetRandomVectorStyle()
+                                Style = GetRandomVectorStyle(),
+                                IsQueryEnabled = true
+                                
                             };
-                m.Layers.Add(l);
-                var ll = new LabelLayer("Label " + provider.ConnectionID);
-                ll.DataSource = provider;
-                
-                provider.Open();
-                var f = provider.GetFeature(1);
-                provider.Close();
+                if (provider.GetFeatureCount() > 50000)
+                    m.BackgroundLayer.Add(AsyncLayerProxyLayer.Create(l, new Size(256, 128)));
+                else    
+                    m.Layers.Add(l);
 
-                ll.LabelColumn = f.Table.Columns[1].ColumnName;
-                ll.Style.CollisionDetection = false;
-                ll.Style.IgnoreLength = true;
-                
-                m.Layers.Add(ll);
+                if (provider.GetFeatureCount() < 50000)
+                {
+                    var ll = new LabelLayer("Label " + provider.ConnectionID);
+                    ll.DataSource = provider;
+
+                    provider.Open();
+                    var f = provider.GetFeature(1);
+                    provider.Close();
+
+                    ll.LabelColumn = f.Table.Columns[1].ColumnName;
+                    ll.Style.CollisionDetection = false;
+                    ll.Style.IgnoreLength = true;
+
+                    m.Layers.Add(ll);
+                }
             }
             m.ZoomToExtents();
             return m;
