@@ -1,0 +1,32 @@
+﻿<Window x:Class="WPFSamples.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:smh="clr-namespace:SharpMap.UI.WPF;assembly=SharpMap.UI.WPF"
+        Title="MainWindow" Height="541" Width="679">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+        </Grid.RowDefinitions>
+        <Menu Grid.Row="0" Name="Menu">
+            <MenuItem Header="_File">
+                <MenuItem Header="_Exit" Click="MenuItem_OnClick"/>
+            </MenuItem>
+            <MenuItem Header="_Add Layer">
+                <MenuItem Header="_ShapeFile" Name="AddShapeLayer" Click="AddShapeLayer_OnClick"/>
+            </MenuItem>
+            <MenuItem Header="_BackgroundMap">
+                <MenuItem Header="_OpenStreetMap" Name="BgOsm" Click="BgOSM_OnClick" IsCheckable="True"/>
+            </MenuItem>
+        </Menu>
+
+        <smh:SharpMapHost Name="WpfMap" Grid.Row="1"></smh:SharpMapHost>
+        <StatusBar Grid.Row="2">
+            <StatusBarItem Name="Coordinates" HorizontalAlignment="Right">
+                <Label Content="{Binding CurrentMouseCoordinateString, ElementName=WpfMap, UpdateSourceTrigger=PropertyChanged}"></Label>
+            </StatusBarItem>
+        </StatusBar>
+    </Grid>
+
+</Window>

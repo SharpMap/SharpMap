@@ -1,6 +1,55 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio 2013
+VisualStudioVersion = 12.0.30723.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BuildTools", "BuildTools", "{8E57A35D-CD7B-4EEE-98BF-0E414F1A4E44}"
+	ProjectSection(SolutionItems) = preProject
+		BuildTools\NuGet.exe = BuildTools\NuGet.exe
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Examples", "Examples", "{480154D8-0960-416E-AE45-AF6B06794F77}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PostgisDemoDb", "PostgisDemoDb", "{BCA2C45D-4D40-444B-AE3E-687EB1EC497D}"
+	ProjectSection(SolutionItems) = preProject
+		Examples\PostgisDemoDb\postgisdemodb.backup = Examples\PostgisDemoDb\postgisdemodb.backup
+		Examples\PostgisDemoDb\ReadMe.txt = Examples\PostgisDemoDb\ReadMe.txt
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MsSqlSpatialDemoDb", "MsSqlSpatialDemoDb", "{6BCAB37B-F03A-4998-A6CB-EC8EDB4D203E}"
+	ProjectSection(SolutionItems) = preProject
+		Examples\MsSqlSpatialDemoDb\ReadMe.txt = Examples\MsSqlSpatialDemoDb\ReadMe.txt
+		Examples\MsSqlSpatialDemoDb\SharpMapMsSqlSpatialDemoDb.bak = Examples\MsSqlSpatialDemoDb\SharpMapMsSqlSpatialDemoDb.bak
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docs", "Docs", "{7F47E0CC-DB03-4E1F-B409-C861154D42C5}"
+	ProjectSection(SolutionItems) = preProject
+		Docs\SharpMap-Dependencies.png = Docs\SharpMap-Dependencies.png
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{40C5E4D3-B4E8-4BF2-9580-D0A19BFBF1B5}"
+	ProjectSection(SolutionItems) = preProject
+		.nuget\NuGet.Config = .nuget\NuGet.Config
+		.nuget\NuGet.targets = .nuget\NuGet.targets
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MSBuild", "MSBuild", "{A5E400B4-8360-4259-BDDD-292A134D14CC}"
+	ProjectSection(SolutionItems) = preProject
+		SharpMap.Data.Providers.OracleSpatial.nuspec = SharpMap.Data.Providers.OracleSpatial.nuspec
+		SharpMap.Extensions.nuspec = SharpMap.Extensions.nuspec
+		SharpMap.Layers.HeatLayer.nuspec = SharpMap.Layers.HeatLayer.nuspec
+		SharpMap.nuspec = SharpMap.nuspec
+		SharpMap.proj = SharpMap.proj
+		SharpMap.UI.nuspec = SharpMap.UI.nuspec
+		SharpMap.Web.nuspec = SharpMap.Web.nuspec
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{AEBB513B-1509-439F-BA86-FA9413BF8D8C}"
+	ProjectSection(SolutionItems) = preProject
+		Performance1.psess = Performance1.psess
+		SharpMap.sln.DotSettings = SharpMap.sln.DotSettings
+	EndProjectSection
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpMap", "SharpMap\SharpMap.csproj", "{C83777FC-AABB-47D9-911F-D76255D4D541}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpMap.UI", "SharpMap.UI\SharpMap.UI.csproj", "{DD1CC1DB-4BF9-4C88-A100-733D84795F3A}"
@@ -30,6 +79,7 @@ Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "DemoWebSite", "Examples\Dem
 		Release.AspNetCompiler.FixedNames = "true"
 		Release.AspNetCompiler.Debug = "False"
 		VWDPort = "52193"
+		SlnRelativePath = "Examples\DemoWebSite\"
 		StartServerOnDebug = "true"
 	EndProjectSection
 	ProjectSection(SvnOrigin) = preProject
@@ -48,65 +98,23 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExampleCodeSnippets", "Exam
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpMap.SqlServerSpatialObjects", "SharpMap.SqlServerSpatialObjects\SharpMap.SqlServerSpatialObjects.csproj", "{6D681045-8EF1-44EA-A19D-C7A63A6D0F76}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BuildTools", "BuildTools", "{8E57A35D-CD7B-4EEE-98BF-0E414F1A4E44}"
-	ProjectSection(SolutionItems) = preProject
-		BuildTools\NuGet.exe = BuildTools\NuGet.exe
-	EndProjectSection
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpMap.Demo.Wms", "Examples\SharpMap.Demo.Wms\SharpMap.Demo.Wms.csproj", "{7EF67DF8-D868-4177-8817-4CC2E94ABD66}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Examples", "Examples", "{480154D8-0960-416E-AE45-AF6B06794F77}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpMap.Serialization", "SharpMap.Serialization\SharpMap.Serialization.csproj", "{75E9B9FF-D04E-4F4F-8D06-8CD310F5F2DB}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PostgisDemoDb", "PostgisDemoDb", "{BCA2C45D-4D40-444B-AE3E-687EB1EC497D}"
-	ProjectSection(SolutionItems) = preProject
-		Examples\PostgisDemoDb\postgisdemodb.backup = Examples\PostgisDemoDb\postgisdemodb.backup
-		Examples\PostgisDemoDb\ReadMe.txt = Examples\PostgisDemoDb\ReadMe.txt
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MsSqlSpatialDemoDb", "MsSqlSpatialDemoDb", "{6BCAB37B-F03A-4998-A6CB-EC8EDB4D203E}"
-	ProjectSection(SolutionItems) = preProject
-		Examples\MsSqlSpatialDemoDb\ReadMe.txt = Examples\MsSqlSpatialDemoDb\ReadMe.txt
-		Examples\MsSqlSpatialDemoDb\SharpMapMsSqlSpatialDemoDb.bak = Examples\MsSqlSpatialDemoDb\SharpMapMsSqlSpatialDemoDb.bak
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docs", "Docs", "{7F47E0CC-DB03-4E1F-B409-C861154D42C5}"
-	ProjectSection(SolutionItems) = preProject
-		Docs\SharpMap-Dependencies.png = Docs\SharpMap-Dependencies.png
-	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpMap.Web", "SharpMap.Web\SharpMap.Web.csproj", "{292EF671-4063-4952-8DE0-423DF72A0950}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpMap.Extensions.x86", "SharpMap.Extensions.x86\SharpMap.Extensions.x86.csproj", "{9961698E-4EE0-4A3B-84B7-A23E69E0C13C}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{40C5E4D3-B4E8-4BF2-9580-D0A19BFBF1B5}"
-	ProjectSection(SolutionItems) = preProject
-		.nuget\NuGet.Config = .nuget\NuGet.Config
-		.nuget\NuGet.targets = .nuget\NuGet.targets
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MSBuild", "MSBuild", "{A5E400B4-8360-4259-BDDD-292A134D14CC}"
-	ProjectSection(SolutionItems) = preProject
-		SharpMap.Data.Providers.OracleSpatial.nuspec = SharpMap.Data.Providers.OracleSpatial.nuspec
-		SharpMap.Extensions.nuspec = SharpMap.Extensions.nuspec
-		SharpMap.Layers.HeatLayer.nuspec = SharpMap.Layers.HeatLayer.nuspec
-		SharpMap.nuspec = SharpMap.nuspec
-		SharpMap.proj = SharpMap.proj
-		SharpMap.UI.nuspec = SharpMap.UI.nuspec
-		SharpMap.Web.nuspec = SharpMap.Web.nuspec
-	EndProjectSection
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpMap.Layers.HeatLayer", "SharpMap.Layers.HeatLayer\SharpMap.Layers.HeatLayer.csproj", "{47F790C2-6DC0-4A09-9026-FC81A09FD6A3}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{AEBB513B-1509-439F-BA86-FA9413BF8D8C}"
-	ProjectSection(SolutionItems) = preProject
-		SharpMap.sln.DotSettings = SharpMap.sln.DotSettings
-	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpMap.Data.Providers.OracleSpatial", "SharpMap.Data.Providers.OracleSpatial\SharpMap.Data.Providers.OracleSpatial.csproj", "{9BBED556-40D8-4DDC-AC11-7B03300E2A2E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpMap.Data.Providers.Kml", "SharpMap.Data.Providers.Kml\SharpMap.Data.Providers.Kml.csproj", "{F9DA6934-413F-4744-84CE-923D901F60E6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpMap.UI.WPF", "SharpMap.UI.WPF\SharpMap.UI.WPF.csproj", "{6DDA47A4-CE0C-4880-82CE-6EF6FEEC4912}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WPFSamples", "Examples\WPFSamples\WPFSamples.csproj", "{28AC314E-35C1-484B-9DD3-116BD8AFC4EA}"
 EndProject
 Global
 	GlobalSection(SubversionScc) = preSolution
@@ -528,17 +536,69 @@ Global
 		{F9DA6934-413F-4744-84CE-923D901F60E6}.ReleaseDSProjection|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{F9DA6934-413F-4744-84CE-923D901F60E6}.ReleaseDSProjection|Mixed Platforms.Build.0 = Release|Any CPU
 		{F9DA6934-413F-4744-84CE-923D901F60E6}.ReleaseDSProjection|x86.ActiveCfg = Release|Any CPU
+		{6DDA47A4-CE0C-4880-82CE-6EF6FEEC4912}.Debug|.NET.ActiveCfg = Debug|Any CPU
+		{6DDA47A4-CE0C-4880-82CE-6EF6FEEC4912}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6DDA47A4-CE0C-4880-82CE-6EF6FEEC4912}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6DDA47A4-CE0C-4880-82CE-6EF6FEEC4912}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{6DDA47A4-CE0C-4880-82CE-6EF6FEEC4912}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{6DDA47A4-CE0C-4880-82CE-6EF6FEEC4912}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{6DDA47A4-CE0C-4880-82CE-6EF6FEEC4912}.DebugDSProjection|.NET.ActiveCfg = Debug|Any CPU
+		{6DDA47A4-CE0C-4880-82CE-6EF6FEEC4912}.DebugDSProjection|Any CPU.ActiveCfg = Debug|Any CPU
+		{6DDA47A4-CE0C-4880-82CE-6EF6FEEC4912}.DebugDSProjection|Any CPU.Build.0 = Debug|Any CPU
+		{6DDA47A4-CE0C-4880-82CE-6EF6FEEC4912}.DebugDSProjection|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{6DDA47A4-CE0C-4880-82CE-6EF6FEEC4912}.DebugDSProjection|Mixed Platforms.Build.0 = Debug|Any CPU
+		{6DDA47A4-CE0C-4880-82CE-6EF6FEEC4912}.DebugDSProjection|x86.ActiveCfg = Debug|Any CPU
+		{6DDA47A4-CE0C-4880-82CE-6EF6FEEC4912}.Release|.NET.ActiveCfg = Release|Any CPU
+		{6DDA47A4-CE0C-4880-82CE-6EF6FEEC4912}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6DDA47A4-CE0C-4880-82CE-6EF6FEEC4912}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6DDA47A4-CE0C-4880-82CE-6EF6FEEC4912}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{6DDA47A4-CE0C-4880-82CE-6EF6FEEC4912}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{6DDA47A4-CE0C-4880-82CE-6EF6FEEC4912}.Release|x86.ActiveCfg = Release|Any CPU
+		{6DDA47A4-CE0C-4880-82CE-6EF6FEEC4912}.ReleaseDSProjection|.NET.ActiveCfg = Release|Any CPU
+		{6DDA47A4-CE0C-4880-82CE-6EF6FEEC4912}.ReleaseDSProjection|Any CPU.ActiveCfg = Release|Any CPU
+		{6DDA47A4-CE0C-4880-82CE-6EF6FEEC4912}.ReleaseDSProjection|Any CPU.Build.0 = Release|Any CPU
+		{6DDA47A4-CE0C-4880-82CE-6EF6FEEC4912}.ReleaseDSProjection|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{6DDA47A4-CE0C-4880-82CE-6EF6FEEC4912}.ReleaseDSProjection|Mixed Platforms.Build.0 = Release|Any CPU
+		{6DDA47A4-CE0C-4880-82CE-6EF6FEEC4912}.ReleaseDSProjection|x86.ActiveCfg = Release|Any CPU
+		{28AC314E-35C1-484B-9DD3-116BD8AFC4EA}.Debug|.NET.ActiveCfg = Debug|Any CPU
+		{28AC314E-35C1-484B-9DD3-116BD8AFC4EA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{28AC314E-35C1-484B-9DD3-116BD8AFC4EA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{28AC314E-35C1-484B-9DD3-116BD8AFC4EA}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{28AC314E-35C1-484B-9DD3-116BD8AFC4EA}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{28AC314E-35C1-484B-9DD3-116BD8AFC4EA}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{28AC314E-35C1-484B-9DD3-116BD8AFC4EA}.DebugDSProjection|.NET.ActiveCfg = Debug|Any CPU
+		{28AC314E-35C1-484B-9DD3-116BD8AFC4EA}.DebugDSProjection|Any CPU.ActiveCfg = Debug|Any CPU
+		{28AC314E-35C1-484B-9DD3-116BD8AFC4EA}.DebugDSProjection|Any CPU.Build.0 = Debug|Any CPU
+		{28AC314E-35C1-484B-9DD3-116BD8AFC4EA}.DebugDSProjection|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{28AC314E-35C1-484B-9DD3-116BD8AFC4EA}.DebugDSProjection|Mixed Platforms.Build.0 = Debug|Any CPU
+		{28AC314E-35C1-484B-9DD3-116BD8AFC4EA}.DebugDSProjection|x86.ActiveCfg = Debug|Any CPU
+		{28AC314E-35C1-484B-9DD3-116BD8AFC4EA}.Release|.NET.ActiveCfg = Release|Any CPU
+		{28AC314E-35C1-484B-9DD3-116BD8AFC4EA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{28AC314E-35C1-484B-9DD3-116BD8AFC4EA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{28AC314E-35C1-484B-9DD3-116BD8AFC4EA}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{28AC314E-35C1-484B-9DD3-116BD8AFC4EA}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{28AC314E-35C1-484B-9DD3-116BD8AFC4EA}.Release|x86.ActiveCfg = Release|Any CPU
+		{28AC314E-35C1-484B-9DD3-116BD8AFC4EA}.ReleaseDSProjection|.NET.ActiveCfg = Release|Any CPU
+		{28AC314E-35C1-484B-9DD3-116BD8AFC4EA}.ReleaseDSProjection|Any CPU.ActiveCfg = Release|Any CPU
+		{28AC314E-35C1-484B-9DD3-116BD8AFC4EA}.ReleaseDSProjection|Any CPU.Build.0 = Release|Any CPU
+		{28AC314E-35C1-484B-9DD3-116BD8AFC4EA}.ReleaseDSProjection|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{28AC314E-35C1-484B-9DD3-116BD8AFC4EA}.ReleaseDSProjection|Mixed Platforms.Build.0 = Release|Any CPU
+		{28AC314E-35C1-484B-9DD3-116BD8AFC4EA}.ReleaseDSProjection|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
+		{BCA2C45D-4D40-444B-AE3E-687EB1EC497D} = {480154D8-0960-416E-AE45-AF6B06794F77}
+		{6BCAB37B-F03A-4998-A6CB-EC8EDB4D203E} = {480154D8-0960-416E-AE45-AF6B06794F77}
+		{32ECD993-CB5A-4AD9-8C8F-45C73A088C13} = {480154D8-0960-416E-AE45-AF6B06794F77}
 		{73A45373-6307-4D39-9FE9-E8803F95FAB6} = {480154D8-0960-416E-AE45-AF6B06794F77}
 		{F81C1843-3B2A-4D72-81AA-A658DB11FA85} = {480154D8-0960-416E-AE45-AF6B06794F77}
 		{A4184D38-C5A6-4E01-9D1C-8C63791AF825} = {480154D8-0960-416E-AE45-AF6B06794F77}
 		{7EF67DF8-D868-4177-8817-4CC2E94ABD66} = {480154D8-0960-416E-AE45-AF6B06794F77}
-		{32ECD993-CB5A-4AD9-8C8F-45C73A088C13} = {480154D8-0960-416E-AE45-AF6B06794F77}
-		{BCA2C45D-4D40-444B-AE3E-687EB1EC497D} = {480154D8-0960-416E-AE45-AF6B06794F77}
-		{6BCAB37B-F03A-4998-A6CB-EC8EDB4D203E} = {480154D8-0960-416E-AE45-AF6B06794F77}
+		{28AC314E-35C1-484B-9DD3-116BD8AFC4EA} = {480154D8-0960-416E-AE45-AF6B06794F77}
+	EndGlobalSection
+	GlobalSection(Performance) = preSolution
+		HasPerformanceSessions = true
 	EndGlobalSection
 EndGlobal
