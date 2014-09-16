@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
@@ -185,21 +186,22 @@ namespace SharpMap.Layers
                     var tileHeight = _source.Schema.GetTileWidth(level);
 
                     IList<WaitHandle> waitHandles = new List<WaitHandle>();
-                    var toRender = new Dictionary<TileIndex, Bitmap>();
+                    var toRender = new System.Collections.Concurrent.ConcurrentDictionary<TileIndex, Bitmap>();
                     var takenFromCache = new System.Collections.Concurrent.ConcurrentDictionary<TileIndex,bool>();
                     foreach (TileInfo info in tiles)
                     {
                         var image = _bitmaps.Find(info.Index);
                         if (image != null)
                         {
-                            toRender.Add(info.Index, image);
+                            toRender.TryAdd(info.Index, image);
                             takenFromCache.TryAdd(info.Index,true);
                             continue;
                         }
                         if (_fileCache != null && _fileCache.Exists(info.Index))
                         {
-                            _bitmaps.Add(info.Index, GetImageFromFileCache(info) as Bitmap);
-                            toRender.Add(info.Index, _bitmaps.Find(info.Index));
+                            var tileBitmap = GetImageFromFileCache(info) as Bitmap;
+                            _bitmaps.Add(info.Index, tileBitmap);
+                            toRender.TryAdd(info.Index, tileBitmap);
                             takenFromCache.TryAdd(info.Index, true);
                             continue;
                         }
@@ -279,7 +281,7 @@ namespace SharpMap.Layers
             ITileProvider tileProvider = (ITileProvider)parameters[0];
             TileInfo tileInfo = (TileInfo)parameters[1];
             //MemoryCache<Bitmap> bitmaps = (MemoryCache<Bitmap>)parameters[2];
-            Dictionary<TileIndex, Bitmap> bitmaps = (Dictionary<TileIndex,Bitmap>)parameters[2];
+            var bitmaps = (ConcurrentDictionary<TileIndex, Bitmap>)parameters[2];
             AutoResetEvent autoResetEvent = (AutoResetEvent)parameters[3];
             bool retry = (bool) parameters[4];
             var takenFromCache = (IDictionary<TileIndex, bool>) parameters[5];
@@ -289,7 +291,7 @@ namespace SharpMap.Layers
             {
                 byte[] bytes = tileProvider.GetTile(tileInfo);
                 Bitmap bitmap = new Bitmap(new MemoryStream(bytes));
-                bitmaps.Add(tileInfo.Index, bitmap);
+                bitmaps.TryAdd(tileInfo.Index, bitmap);
 
                 // this bitmap will later be memory cached
                 takenFromCache.Add(tileInfo.Index, false);
@@ -324,7 +326,7 @@ namespace SharpMap.Layers
                                                 new SolidBrush(Color.Black),
                                                 new RectangleF(0, 0, tileWidth, tileHeight));
                         }
-                        bitmaps.Add(tileInfo.Index, bitmap);
+                        bitmaps.TryAdd(tileInfo.Index, bitmap);
                     }
                     catch (Exception e)
                     {
