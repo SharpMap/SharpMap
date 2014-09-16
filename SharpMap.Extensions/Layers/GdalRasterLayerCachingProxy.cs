@@ -20,6 +20,8 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using GeoAPI.Geometries;
+using SharpMap.Data;
 #if !DotSpatialProjections
 using GeoAPI.CoordinateSystems.Transformations;
 #else
@@ -32,7 +34,7 @@ using Point = System.Drawing.Point;
 namespace SharpMap.Layers
 {
     [Serializable]
-    public class GdalRasterLayerCachingProxy : Layer
+    public class GdalRasterLayerCachingProxy : Layer, ICloneable, ICanQueryLayer
     {
         private readonly GdalRasterLayer _innerLayer;
 
@@ -384,6 +386,28 @@ namespace SharpMap.Layers
             get { return _innerLayer.Transform; }
         }
 
+        public override ICoordinateTransformation CoordinateTransformation
+        {
+            get { return _innerLayer.CoordinateTransformation; }
+            set
+            {
+                CheckUpdate(CoordinateTransformation, value);
+                _innerLayer.CoordinateTransformation = value;
+            }
+        }
+
+#if !DotSpatialProjections
+        public override ICoordinateTransformation ReverseCoordinateTransformation
+        {
+            get { return _innerLayer.ReverseCoordinateTransformation; }
+            set
+            {
+                CheckUpdate(ReverseCoordinateTransformation, value);
+                _innerLayer.ReverseCoordinateTransformation = value;
+            }
+        }
+#endif
+
         public Color TransparentColor
         {
             get { return _innerLayer.TransparentColor; }
@@ -407,6 +431,22 @@ namespace SharpMap.Layers
         public override BoundingBox Envelope
         {
             get { return _innerLayer.Envelope; }
+        }
+
+        public void ExecuteIntersectionQuery(Envelope box, FeatureDataSet ds)
+        {
+            ((ICanQueryLayer)_innerLayer).ExecuteIntersectionQuery(box, ds);
+        }
+
+        public void ExecuteIntersectionQuery(Geometry geometry, FeatureDataSet ds)
+        {
+            ((ICanQueryLayer)_innerLayer).ExecuteIntersectionQuery(geometry, ds);
+        }
+
+        public bool IsQueryEnabled
+        {
+            get { return _innerLayer.IsQueryEnabled; }
+            set { _innerLayer.IsQueryEnabled = value; }
         }
 
         protected internal bool RequiresRedraw { get; set; }
@@ -462,6 +502,24 @@ namespace SharpMap.Layers
             RequiresRedraw = false;
             g.DrawImageUnscaled(CachedBitmap, 0, 0);
             base.Render(g, map);
+        }
+
+        protected virtual GdalRasterLayerCachingProxy CreateInstance()
+        {
+            var cloneableInnerLayer = _innerLayer as ICloneable;
+            if (cloneableInnerLayer != null)
+                return new GdalRasterLayerCachingProxy((GdalRasterLayer)cloneableInnerLayer.Clone());
+
+            return new GdalRasterLayerCachingProxy(_innerLayer);
+        }
+        object ICloneable.Clone()
+        {
+            var cloned = CreateInstance();
+            cloned.CachedBitmap = CachedBitmap != null ? (Bitmap) CachedBitmap.Clone() : null;
+            cloned.LastRenderedExtents = LastRenderedExtents;
+            cloned.LastRenderedSize = LastRenderedSize;
+
+            return cloned;
         }
     }
 }
