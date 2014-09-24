@@ -537,11 +537,11 @@ namespace SharpMap.Data.Providers
         }
 #endif
 
-		/// <summary>
-		/// Closes the datasource
-		/// </summary>
-		public void Close()
-		{ }
+        /// <summary>
+        /// Closes the datasource
+        /// </summary>
+        public void Close()
+        { }
 
 		/// <summary>
 		/// Returns true if the datasource is currently open
@@ -906,11 +906,11 @@ namespace SharpMap.Data.Providers
 	    /// </summary>
 	    private void ParseHeader()
 	    {
-            _header = new ShapeFileHeader(_filename);
+            _header = ShapeFileHeader.Read(_filename);
 	        var shxPath = Path.ChangeExtension(_filename, ".shx");
             if (!File.Exists(shxPath))
                 ShapeFileIndex.Create(_filename);
-            _index = new ShapeFileIndex(shxPath);
+            _index = ShapeFileIndex.Read(shxPath);
 
 		}
 

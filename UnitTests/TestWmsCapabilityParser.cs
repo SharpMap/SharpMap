@@ -40,10 +40,10 @@ namespace UnitTests
         [Test]
         public void TestDemisv111()
         {
-            Client c = new Client("http://www2.demis.nl/worldmap/wms.asp");
+            Client c = new Client("http://www3.demis.nl/worldmap/wms.asp");
             Assert.AreEqual("World Map", c.ServiceDescription.Title);
             Assert.AreEqual("1.1.1", c.Version);
-            Assert.AreEqual("http://www2.demis.nl/WMS/wms.ashx?wms=WorldMap&", c.GetMapRequests[0].OnlineResource);
+            Assert.AreEqual("http://www3.demis.nl/wms/wms.asp?wms=WorldMap&", c.GetMapRequests[0].OnlineResource);
             Assert.AreEqual("image/png", c.GetMapOutputFormats[0]);
             Assert.AreEqual(20, c.Layer.ChildLayers.Length);
         }

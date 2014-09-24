@@ -544,7 +544,7 @@ namespace SharpMap.Layers
                             if (label.Style.IsTextOnPath == false || label.TextOnPathLabel==null)
                             {
                                 VectorRenderer.DrawLabel(g, label.Location, label.Style.Offset,
-                                                            label.Style.Font, label.Style.ForeColor,
+                                                            label.Style.GetFontForGraphics(g), label.Style.ForeColor,
                                                             label.Style.BackColor, label.Style.Halo, label.Rotation,
                                                             label.Text, map, label.Style.HorizontalAlignment,
                                                             label.LabelPoint);
@@ -588,8 +588,9 @@ namespace SharpMap.Layers
             if (feature == null) return null;
 
             BaseLabel lbl = null;
+            var font = style.GetFontForGraphics(g);
 
-            SizeF size = VectorRenderer.SizeOfString(g, text, style.Font);
+            SizeF size = VectorRenderer.SizeOfString(g, text, font);
 
             if (feature is ILineal)
             {
@@ -653,10 +654,10 @@ namespace SharpMap.Layers
             {
                 //Collision detection is enabled so we need to measure the size of the string
                 lbl = new Label(text, location, rotation, priority,
-                                new LabelBox(location.X - size.Width*0.5f - style.CollisionBuffer.Width,
-                                             location.Y + size.Height*0.5f + style.CollisionBuffer.Height,
+                                new LabelBox(location.X - style.CollisionBuffer.Width,
+                                             location.Y - style.CollisionBuffer.Height,
                                              size.Width + 2f*style.CollisionBuffer.Width,
-                                             size.Height + style.CollisionBuffer.Height*2f), style) 
+                                             size.Height + 2f*style.CollisionBuffer.Height), style) 
                                 { LabelPoint = position }; 
             }
 
@@ -923,6 +924,7 @@ namespace SharpMap.Layers
                         count++;
                     }
                 }
+                /*
                 //get text size in page units ie pixels
                 float textheight = label.Style.Font.Size;
                 switch (label.Style.Font.Unit)
@@ -946,7 +948,9 @@ namespace SharpMap.Layers
                         textheight = textheight * g.DpiY / 72;
                         break;
                 }
-                var topFont = new Font(label.Style.Font.FontFamily, textheight, label.Style.Font.Style);
+                var topFont = new Font(label.Style.Font.FontFamily, textheight, label.Style.Font.Style, GraphicsUnit.Pixel);
+                 */
+                var topFont = label.Style.GetFontForGraphics(g);
                 //
                 var path = new GraphicsPath();
                 path.AddLines(points);

@@ -2,6 +2,7 @@ using System;
 using System.Collections.ObjectModel;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.Runtime.CompilerServices;
 using GeoAPI.Geometries;
 using SharpMap.Data;
 using SharpMap.Data.Providers;
@@ -77,6 +78,7 @@ namespace SharpMap.Layers.Symbolizer
         /// </summary>
         /// <param name="g">The graphics object</param>
         /// <param name="map">The map</param>
+        [MethodImpl(MethodImplOptions.Synchronized)]
         public override void Render(Graphics g, Map map)
         {
             // Map setup correctly
@@ -181,6 +183,7 @@ namespace SharpMap.Layers.Symbolizer
         protected virtual void OnRendered(Graphics graphics, Map map)
         {
             Symbolizer.End(graphics, map);
+            _geometries = null;
         }
 
         /// <summary>

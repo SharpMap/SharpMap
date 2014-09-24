@@ -7,6 +7,7 @@ using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Net;
 using GeoAPI.Geometries;
+using SharpMap.CoordinateSystems;
 using SharpMap.Utilities.Wfs;
 
 namespace SharpMap.Data.Providers
@@ -189,6 +190,7 @@ namespace SharpMap.Data.Providers
         private IXPathQueryManager _featureTypeInfoQueryManager;
         private bool _isOpen;
         private FeatureDataTable _labelInfo;
+        private int[] _axisOrder;
 
         private string _nsPrefix;
 
@@ -221,6 +223,31 @@ namespace SharpMap.Data.Providers
         public WfsFeatureTypeInfo FeatureTypeInfo
         {
             get { return _featureTypeInfo; }
+        }
+
+        /// <summary>
+        /// Gets or sets a value indicating the axis order
+        /// </summary>
+        /// <remarks>
+        /// The axis order is an array of array offsets. It can be einter {0, 1} or {1, 0}.
+        /// <para/>If not set explictly, <see cref="AxisOrderRegistry"/> is asked for a value based on <see cref="SRID"/>.</remarks>
+        public int[] AxisOrder
+        {
+            get { return _axisOrder ?? new AxisOrderRegistry()[SRID.ToString(NumberFormatInfo.InvariantInfo)]; }
+            set
+            {
+                if (value != null)
+                {
+                    if (value.Length != 2)
+                        throw new ArgumentException("Axis order array must have 2 elements");
+                    if (!((value[0] == 0 && value[1] == 1)||
+                          (value[0] == 1 && value[1] == 0)))
+                        throw new ArgumentException("Axis order array values must be 0 or 1");
+                    if (value[0] + value[1] != 1)
+                        throw new ArgumentException("Sum of values in axis order array must 1");
+                }
+                _axisOrder = value;
+            }
         }
 
         /// <summary>
@@ -438,7 +465,8 @@ namespace SharpMap.Data.Providers
 
             if (wfsVersion == WFSVersionEnum.WFS1_0_0)
                 _textResources = new WFS_1_0_0_TextResources();
-            else _textResources = new WFS_1_1_0_TextResources();
+            else 
+                _textResources = new WFS_1_1_0_TextResources();
 
             _wfsVersion = wfsVersion;
 
@@ -484,11 +512,10 @@ namespace SharpMap.Data.Providers
         /// <returns>Features within the specified <see cref="GeoAPI.Geometries.Envelope"/></returns>
         public Collection<IGeometry> GetGeometriesInView(Envelope bbox)
         {
-            if (_featureTypeInfo == null) return null;
+            if (_featureTypeInfo == null) 
+                return null;
 
-            var geoms = new Collection<IGeometry>();
-
-            string geometryTypeString = _featureTypeInfo.Geometry._GeometryType;
+            var geometryTypeString = _featureTypeInfo.Geometry._GeometryType;
 
             GeometryFactory geomFactory = null;
 
@@ -507,6 +534,7 @@ namespace SharpMap.Data.Providers
 
             try
             {
+                Collection<IGeometry> geoms;
                 switch (geometryTypeString)
                 {
                         /* Primitive geometry elements */
@@ -584,14 +612,17 @@ namespace SharpMap.Data.Providers
                         geomFactory = new UnspecifiedGeometryFactory_WFS1_0_0_GML2(_httpClientUtil, _featureTypeInfo,
                                                                                    _multiGeometries, _quickGeometries,
                                                                                    _labelInfo);
+                        
+                        geomFactory.AxisOrder = AxisOrder;
                         geoms = geomFactory.createGeometries();
+                        
                         return geoms;
                 }
 
+                geomFactory.AxisOrder = AxisOrder;
                 geoms = _quickGeometries
                             ? geomFactory.createQuickGeometries(geometryTypeString)
                             : geomFactory.createGeometries();
-                geomFactory.Dispose();
 
                 return geoms;
             }

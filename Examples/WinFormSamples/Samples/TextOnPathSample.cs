@@ -41,7 +41,7 @@ namespace WinFormSamples.Samples
             layLabel.LabelFilter = SharpMap.Rendering.LabelCollisionDetection.ThoroughCollisionDetection;
             layLabel.Style = new LabelStyle();
             layLabel.Style.ForeColor = Color.White;
-            layLabel.Style.Font = new Font("Times New Roman", 9, FontStyle.Bold);
+            layLabel.Style.Font = new Font(FontFamily.GenericSerif, 9f, FontStyle.Bold);
             layLabel.Style.Halo = new Pen(Color.Black, 2f);
             layLabel.Style.IsTextOnPath = true;
             layLabel.Style.CollisionDetection = true;

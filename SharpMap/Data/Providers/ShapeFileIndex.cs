@@ -160,9 +160,11 @@ namespace SharpMap.Data.Providers
 
         private readonly byte[] _shxBuffer;
 
-        public ShapeFileIndex(string shxPath) 
-            : this (new FileStream(shxPath, FileMode.Open, FileAccess.Read, FileShare.Read))
-        {}
+        public static ShapeFileIndex Read(string shxPath)
+        {
+            using (var s = new FileStream(shxPath, FileMode.Open, FileAccess.Read, FileShare.Read))
+                return new ShapeFileIndex(s);
+        }
 
         public ShapeFileIndex(Stream stream)
         {

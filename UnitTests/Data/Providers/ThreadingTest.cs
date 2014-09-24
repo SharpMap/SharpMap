@@ -7,6 +7,7 @@ using NUnit.Framework;
 using NetTopologySuite.Geometries;
 using SharpMap.Data;
 using SharpMap.Data.Providers;
+using SharpMap.Utilities.Indexing;
 
 namespace UnitTests.Data.Providers
 {
@@ -71,8 +72,14 @@ namespace UnitTests.Data.Providers
             }
         }
 
+        public override void OnFixtureSetUp()
+        {
+            base.OnFixtureSetUp();
+            ShapeFile.SpatialIndexFactory = new SharpSbnIndexFactory();
+        }
+
         public ShapeFileThreadingTest()
-            : base(new ShapeFile(TestDataPath, false, false))
+            : base(new ShapeFile(TestDataPath, true, false))
         {
         }
 
@@ -80,7 +87,7 @@ namespace UnitTests.Data.Providers
         public void TestTwoOpenClose()
         {
             ///Simulates two threads using the same provider at the same time..
-            var provider = new ShapeFile(TestDataPath, false, false);
+            var provider = new ShapeFile(TestDataPath, true, false);
             provider.Open();
             provider.Open();
             provider.GetGeometriesInView(GetRandomEnvelope());
@@ -92,8 +99,8 @@ namespace UnitTests.Data.Providers
         [Test, Description("Simulates two threads using the datasource with different providers at the same time.")]
         public void TestTwoThreadsUsingDifferentProviders()
         {
-            var provider1 = new ShapeFile(TestDataPath, false, false);
-            var provider2 = new ShapeFile(TestDataPath, false, false);
+            var provider1 = new ShapeFile(TestDataPath, true, false);
+            var provider2 = new ShapeFile(TestDataPath, true, false);
             provider1.Open();
             provider2.Open();
             provider1.GetGeometriesInView(GetRandomEnvelope());
@@ -157,6 +164,11 @@ namespace UnitTests.Data.Providers
             _extents = provider.GetExtents();
             _provider.Close();
         }
+
+        [TestFixtureSetUp]
+        public virtual void OnFixtureSetUp()
+        {}
+
 
         protected Envelope GetRandomEnvelope()
         {

@@ -20,7 +20,7 @@ namespace SharpMap.Layers
         Variable,
 
         /// <summary>
-        /// Layer collection for layers are completely opaque and use as Background (e.g. WMS, OSM)
+        /// Layer collection for layers are completely opaque and serve as Background (e.g. WMS, OSM)
         /// </summary>
         Background,
     }
@@ -83,7 +83,7 @@ namespace SharpMap.Layers
         {
             touchTest = false;
             OnRequery(null);
-            if (touchTest == false)
+            if (!touchTest)
             {
                 _timer.Stop();
                 touchTest = true;

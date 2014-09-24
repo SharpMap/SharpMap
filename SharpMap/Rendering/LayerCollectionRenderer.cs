@@ -36,13 +36,14 @@ namespace SharpMap.Rendering
         /// </summary>
         /// <param name="g">The graphics object</param>
         /// <param name="map">The map</param>
+        /// <param name="allowParallel"></param>
         [MethodImpl(MethodImplOptions.Synchronized)]
-        public void Render(Graphics g, Map map)
+        public void Render(Graphics g, Map map, bool allowParallel)
         {
             _map = map;
             _transform = _map.MapTransform;
             g.PageUnit = GraphicsUnit.Pixel;
-            if (AllowParallel && ParallelHeuristic(map.Size, g.DpiX, _layers.Length))
+            if (AllowParallel && allowParallel && ParallelHeuristic(map.Size, g.DpiX, _layers.Length))
             {
                 RenderParellel(g);
             }

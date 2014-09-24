@@ -221,5 +221,29 @@
 
             #endregion
         }
+
+        [NUnit.Framework.Test]
+        public void TestTransformation()
+        {
+            var m = new SharpMap.Map(new System.Drawing.Size(640, 320));
+
+            var l = new SharpMap.Layers.Symbolizer.PuntalVectorLayer("l",
+            new SharpMap.Data.Providers.GeometryProvider(m.Factory.CreatePoint(new GeoAPI.Geometries.Coordinate(0, 51.478885))),
+            SharpMap.Rendering.Symbolizer.PathPointSymbolizer.CreateCircle(System.Drawing.Pens.Aquamarine, System.Drawing.Brushes.BurlyWood, 24));
+
+            var ctFact = new ProjNet.CoordinateSystems.Transformations.CoordinateTransformationFactory();
+            l.CoordinateTransformation = ctFact.CreateFromCoordinateSystems(ProjNet.CoordinateSystems.GeographicCoordinateSystem.WGS84, ProjNet.CoordinateSystems.ProjectedCoordinateSystem.WebMercator);
+            l.ReverseCoordinateTransformation = ctFact.CreateFromCoordinateSystems(ProjNet.CoordinateSystems.ProjectedCoordinateSystem.WebMercator, ProjNet.CoordinateSystems.GeographicCoordinateSystem.WGS84);
+
+            m.Layers.Add(new SharpMap.Layers.TileLayer(BruTile.Web.OsmTileSource.Create(),"b"));
+            m.Layers.Add(l);
+
+            var e = new GeoAPI.Geometries.Envelope(-0.02, 0.02, 51.478885 - 0.01, 51.478885 + 0.01);
+            e = GeoAPI.CoordinateSystems.Transformations.GeometryTransform.TransformBox(e,
+                l.CoordinateTransformation.MathTransform);
+            m.ZoomToBox(e);
+            m.GetMap().Save("Greenwich.png", System.Drawing.Imaging.ImageFormat.Png);
+
+        }
     }
 }

@@ -24,6 +24,7 @@ using System.Collections.ObjectModel;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Globalization;
+using BruTile.Web.Wms;
 using GeoAPI.Geometries;
 
   
@@ -332,9 +333,12 @@ namespace SharpMap.Data.Providers
                        {   
                            if (dr[0] != DBNull.Value)   
                            {   
-                               var geom = Converters.WellKnownBinary.GeometryFromWKB.Parse((byte[])dr[0], Factory);   
-                               if(geom!=null)   
-                                   features.Add(geom);   
+                               var geom = Converters.WellKnownBinary.GeometryFromWKB.Parse((byte[])dr[0], Factory);
+                               if (geom != null)
+                               {
+                                   if (_spatialObjectType == SqlServerSpatialObjectType.Geography) FlipXY(geom);
+                                   features.Add(geom);
+                               }
                            }   
                        }   
                    }   
@@ -361,17 +365,33 @@ namespace SharpMap.Data.Providers
                    using (SqlDataReader dr = command.ExecuteReader())   
                    {   
                        while (dr.Read())   
-                       {   
-                           if (dr[0] != DBNull.Value)   
-                               geom = Converters.WellKnownBinary.GeometryFromWKB.Parse((byte[])dr[0], Factory);   
+                       {
+                           if (dr[0] != DBNull.Value)
+                           {
+                               geom = Converters.WellKnownBinary.GeometryFromWKB.Parse((byte[])dr[0], Factory);
+                               if (_spatialObjectType == SqlServerSpatialObjectType.Geography) FlipXY(geom);
+                           }   
                        }   
                    }   
                }   
                conn.Close();   
            }   
            return geom;   
-       }   
-       /// <summary>   
+       }
+
+        private static void FlipXY(IGeometry geom)
+        {
+            var coords = geom.Coordinates;
+            for (var i = 0; i < coords.Length; i++)
+            {
+                var x = coords[i].X;
+                coords[i].X = coords[i].Y;
+                coords[i].Y = x;
+            }
+            geom.GeometryChanged();
+        }
+
+        /// <summary>   
        /// Returns geometry Object IDs whose bounding box intersects 'bbox'   
        /// </summary>   
        /// <param name="bbox"></param>   
@@ -424,6 +444,8 @@ namespace SharpMap.Data.Providers
        /// <returns></returns>   
        protected string GetBoxFilterStr(Envelope bbox) {   
            //geography::STGeomFromText('LINESTRING(47.656 -122.360, 47.656 -122.343)', 4326);   
+           if (_spatialObjectType == SqlServerSpatialObjectType.Geography)
+               bbox = new Envelope(bbox.MinY, bbox.MaxY, bbox.MinX, bbox.MaxY);
            var bboxText = Converters.WellKnownText.GeometryToWKT.Write(Factory.ToGeometry(bbox)); // "";   
            //string whereClause = GeometryColumn + ".STIntersects(geometry::STGeomFromText('" + bboxText + "', " + SRID + ")" + MakeValidString + ") = 1";   
            string whereClause = String.Format("{0}{1}.STIntersects({4}::STGeomFromText('{2}', {3})) = 1", 
@@ -474,7 +496,13 @@ namespace SharpMap.Data.Providers
                            foreach (System.Data.DataColumn col in ds.Tables[0].Columns)   
                                if (col.ColumnName != GeometryColumn && col.ColumnName != "sharpmap_tempgeometry")   
                                    fdr[col.ColumnName] = dr[col];
-                           fdr.Geometry = Converters.WellKnownBinary.GeometryFromWKB.Parse((byte[])dr["sharpmap_tempgeometry"], Factory);   
+                           var tmpGeom = Converters.WellKnownBinary.GeometryFromWKB.Parse((byte[])dr["sharpmap_tempgeometry"], Factory);
+                           if (tmpGeom != null && _spatialObjectType == SqlServerSpatialObjectType.Geography)
+                           {
+                               FlipXY(tmpGeom);
+                               tmpGeom.GeometryChanged();
+                           }
+                           fdr.Geometry = tmpGeom;
                            fdt.AddRow(fdr);   
                        }   
                        ds.Tables.Add(fdt);   
@@ -577,7 +605,13 @@ namespace SharpMap.Data.Providers
                            foreach (System.Data.DataColumn col in ds.Tables[0].Columns)   
                                if (col.ColumnName != GeometryColumn && col.ColumnName != "sharpmap_tempgeometry")   
                                    fdr[col.ColumnName] = dr[col];
-                           fdr.Geometry = Converters.WellKnownBinary.GeometryFromWKB.Parse((byte[])dr["sharpmap_tempgeometry"], Factory);   
+                           var tmpGeom = Converters.WellKnownBinary.GeometryFromWKB.Parse((byte[])dr["sharpmap_tempgeometry"], Factory);
+                           if (tmpGeom != null && _spatialObjectType == SqlServerSpatialObjectType.Geography)
+                           {
+                               FlipXY(tmpGeom);
+                               tmpGeom.GeometryChanged();
+                           }
+                           fdr.Geometry = tmpGeom;
                            return fdr;   
                        }
                        return null;
@@ -663,6 +697,11 @@ namespace SharpMap.Data.Providers
                                 {
                                     var wkt = dr.GetString(0);
                                     var g = Converters.WellKnownText.GeometryFromWKT.Parse(wkt);
+                                    if (_spatialObjectType == SqlServerSpatialObjectType.Geography)
+                                    {
+                                        FlipXY(g);
+                                        g.GeometryChanged();
+                                    }
                                     return g.EnvelopeInternal;
                                 }
                             }

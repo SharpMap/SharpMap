@@ -32,7 +32,7 @@ namespace SharpMap.Rendering.Decoration
                     g.DrawPolygon(p, pts);
 
                     b = new SolidBrush(Color.White);
-                    g.DrawString("N", new Font("Arial", 20, FontStyle.Bold, GraphicsUnit.Pixel), b, new RectangleF(50, 25, 20, 20),
+                    g.DrawString("N", new Font(FontFamily.GenericSansSerif, 20, FontStyle.Bold, GraphicsUnit.Pixel), b, new RectangleF(50, 25, 20, 20),
                                  new StringFormat
                                      {LineAlignment = StringAlignment.Center, Alignment = StringAlignment.Center});
                 }

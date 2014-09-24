@@ -1,3 +1,9 @@
+#if OPENGLSAMPLE
+using VectorLayer = SharpMap.Layers.OpenGLVectorLayer;
+#else
+using VectorLayer = SharpMap.Layers.VectorLayer;
+#endif
+
 namespace WinFormSamples.Samples
 {
     public static class SpatiaLiteSample
@@ -14,7 +20,7 @@ namespace WinFormSamples.Samples
             SharpMap.Map map = new SharpMap.Map();
 
             //Set up the countries layer
-            SharpMap.Layers.VectorLayer layCountries = new SharpMap.Layers.VectorLayer("Countries");
+            var layCountries = new VectorLayer("Countries");
 
             //Set the datasource to a shapefile in the App_data folder
             layCountries.DataSource = new SharpMap.Data.Providers.SpatiaLite(
@@ -27,7 +33,7 @@ namespace WinFormSamples.Samples
             layCountries.Style.EnableOutline = true;
 
             //Set up a river layer
-            SharpMap.Layers.VectorLayer layRivers = new SharpMap.Layers.VectorLayer("Rivers");
+            var layRivers = new SharpMap.Layers.VectorLayer("Rivers");
             //Set the datasource to a shapefile in the App_data folder
             layRivers.DataSource = new SharpMap.Data.Providers.SpatiaLite(
                 DataSource, "rivers", "geom", "PK_UID");
@@ -38,7 +44,7 @@ namespace WinFormSamples.Samples
             layRivers.Style.EnableOutline = true;
 
             //Set up a cities layer
-            SharpMap.Layers.VectorLayer layCities = new SharpMap.Layers.VectorLayer("Cities");
+            var layCities = new SharpMap.Layers.VectorLayer("Cities");
             //Set the datasource to the spatialite table
             layCities.DataSource = new SharpMap.Data.Providers.SpatiaLite(
                 DataSource, "cities", "geom", "PK_UID");
@@ -101,7 +107,7 @@ namespace WinFormSamples.Samples
                                            Font = new System.Drawing.Font("Arial", 10, System.Drawing.FontStyle.Bold),
                                            Halo = new System.Drawing.Pen(System.Drawing.Color.Azure, 2),
                                            ForeColor = System.Drawing.Color.DarkCyan,
-                                           IgnoreLength = true,
+                                           IgnoreLength = false,
                                            Enabled = true,
                                            CollisionDetection = true,
                                           
@@ -129,7 +135,7 @@ namespace WinFormSamples.Samples
             return map;
 
         }
-
+#if !OPENGLSAMPLE
         internal static SharpMap.Map InitializeMap(float angle, string[] filenames)
         {
             if (filenames == null)
@@ -165,6 +171,7 @@ namespace WinFormSamples.Samples
             }
             return null;
         }
+#endif
 
         internal static int GetRiverLength(SharpMap.Data.FeatureDataRow row)
         {

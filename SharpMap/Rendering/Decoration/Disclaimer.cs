@@ -21,7 +21,7 @@ namespace SharpMap.Rendering.Decoration
             Format = StringFormat.GenericTypographic;
             Text = "Powered by SharpMap";
             Anchor = MapDecorationAnchor.CenterBottom;
-            Font = new Font("Arial", 8f, FontStyle.Italic);
+            Font = new Font(FontFamily.GenericSansSerif, 8f, FontStyle.Italic);
             BorderMargin = new Size(3, 3);
             BorderColor = Color.Black;
             BorderWidth = 1;

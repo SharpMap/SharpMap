@@ -18,6 +18,9 @@
 using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.Net.Mime;
+using System.Runtime.CompilerServices;
+using Common.Logging;
 using SharpMap.Rendering.Thematics;
 
 namespace SharpMap.Styles
@@ -101,7 +104,7 @@ namespace SharpMap.Styles
         /// </summary>
         public LabelStyle()
         {
-            _Font = new Font("Times New Roman", 12f);
+            _Font = new Font(FontFamily.GenericSerif, 12f);
             _Offset = new PointF(0, 0);
             _CollisionDetection = false;
             _CollisionBuffer = new Size(0, 0);
@@ -192,9 +195,64 @@ namespace SharpMap.Styles
         /// </summary>
         public Font Font
         {
-            get { return _Font; }
-            set { _Font = value; }
+            get
+            {
+                return _Font;
+            }
+            set
+            {
+                if (value.Unit != GraphicsUnit.Point)
+                    LogManager.GetCurrentClassLogger().Error( fmh => fmh("Only assign fonts with size in Points"));
+                _Font = value;
+            }
         }
+
+[NonSerialized] 
+private float _cachedDpiY = 0f;
+[NonSerialized]
+private Font _cachedFontForGraphics = null;
+
+/// <summary>
+/// Method to create a font that ca
+/// </summary>
+/// <param name="g"></param>
+/// <returns></returns>
+[MethodImpl(MethodImplOptions.Synchronized)]
+public Font GetFontForGraphics(Graphics g)
+{
+    if (g.DpiY != _cachedDpiY)
+    {
+        _cachedDpiY = g.DpiY;
+        if (_cachedFontForGraphics != null) _cachedFontForGraphics.Dispose();
+        _cachedFontForGraphics = new Font(_Font.FontFamily, _Font.GetHeight(g), _Font.Style, GraphicsUnit.Pixel);
+        /*
+        var textHeight = _Font.Size;
+        switch (_Font.Unit)
+        {
+            case GraphicsUnit.Display:
+                textHeight *= g.DpiY / 75;
+                break;
+            case GraphicsUnit.Document:
+                textHeight *= g.DpiY / 300;
+                break;
+            case GraphicsUnit.Inch:
+                textHeight *= g.DpiY;
+                break;
+            case GraphicsUnit.Millimeter:
+                textHeight /= 25.4f * g.DpiY;
+                break;
+            case GraphicsUnit.Pixel:
+                //do nothing
+                break;
+            case GraphicsUnit.Point:
+                textHeight *= g.DpiY / 72;
+                break;
+        }                
+        _cachedFontForGraphics = new Font(_Font.FontFamily, textHeight, _Font.Style, GraphicsUnit.Pixel);
+         */
+    }
+    return _cachedFontForGraphics;
+}
 
         /// <summary>
         /// Font color

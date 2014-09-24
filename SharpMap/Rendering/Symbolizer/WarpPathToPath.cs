@@ -86,10 +86,12 @@ namespace SharpMap.Rendering.Symbolizer
             SortedList<float, GraphSegment> edges;
             pathToWarpTo.Flatten();
             Double pathLength = GetPathLength(pathToWarpTo, out edges);
+            if (pathLength == 0)
+                return pathToWarp;
 
             //Prepare path to warp
             pathToWarp = PreparePathToWarp(pathToWarp, isPattern, pathLength, interval);
-            if (pathToWarp.PointCount == 0) return null;
+            if (pathToWarp == null || pathToWarp.PointCount == 0) return null;
             GraphicsPath warpedPath = new GraphicsPath(pathToWarp.FillMode);
             using (GraphicsPathIterator iter = new GraphicsPathIterator(pathToWarp))
             {
@@ -262,7 +264,18 @@ namespace SharpMap.Rendering.Symbolizer
         /// <returns></returns>
         internal static GraphicsPath PreparePathToWarp(GraphicsPath path, bool isPattern, Double totalPathLength, Double interval)
         {
-            var rect = path.GetBounds();
+            var rect = path.GetBounds(new Matrix());
+            /*
+            var rect = //System.Drawing.RectangleF.Empty;
+            try
+            {
+                rect = GetPathBounds(path);
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+            */
 
             double maxX = rect.Right;
             double minX = rect.Left;
@@ -305,6 +318,17 @@ namespace SharpMap.Rendering.Symbolizer
                 return patternPath;
             }
             return path;
+        }
+
+        private static RectangleF GetPathBounds(GraphicsPath path)
+        {
+            var pts = path.PathPoints;
+            if (pts.Length == 0) return RectangleF.Empty;
+
+            var r = new RectangleF(pts[0], Size.Empty);
+            for (var i = 1; i < pts.Length; i++)
+                r = RectangleF.Union(r, new RectangleF(pts[i], Size.Empty));
+            return r;
         }
 
         /// <summary>
@@ -419,7 +443,7 @@ namespace SharpMap.Rendering.Symbolizer
         {
             if (path == null || path.PointCount == 0)
                 return;
-            
+
             var gp = new GraphicsPath();
             gp.AddString(text, fontFamily, style, emSize, new Point(0, 0), format);
 
@@ -427,18 +451,21 @@ namespace SharpMap.Rendering.Symbolizer
             var totalLength = GetPathLength(path, out edges);
 
             var warpedPath = PrepareTextPathToWarp(gp, totalLength, ignoreLength, format);
-            
-            if (warpedPath == null)
-                return;
 
-            var wp = Warp(path, warpedPath, false, 0f);
-            if (wp != null)
+            if (warpedPath != null)
             {
-                if (halo != null)
-                    self.DrawPath(halo, wp);
-                if (fill != null)
-                    self.FillPath(fill, wp);
+                var wp = Warp(path, warpedPath, false, 0f);
+                if (wp != null)
+                {
+                    if (halo != null)
+                        self.DrawPath(halo, wp);
+                    if (fill != null)
+                        self.FillPath(fill, wp);
+                    wp.Dispose();
+                }
+                warpedPath.Dispose();
             }
+            gp.Dispose();
         }
 
     }

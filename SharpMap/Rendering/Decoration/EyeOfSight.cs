@@ -22,7 +22,7 @@ namespace SharpMap.Rendering.Decoration
                 var t = new Matrix(1f, 0f, 0f, 1f, 60, 60);
                 g.Transform = t;
 
-                var f = new Font("Arial", 20, FontStyle.Bold);
+                var f = new Font(FontFamily.GenericSansSerif, 20, FontStyle.Bold);
                 var b = new SolidBrush(Color.Black);
                 var p = new Pen(Color.Black, 5);
                 var sf = new StringFormat(StringFormat.GenericTypographic) {Alignment = StringAlignment.Center};

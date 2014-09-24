@@ -60,10 +60,10 @@ namespace SharpMap.Data.Providers
         /// Creates a shapefile header using the provided <see cref="shpPath"/>
         /// </summary>
         /// <param name="shpPath">The path to the shapefile</param>
-        public ShapeFileHeader(string shpPath)
-            : this(new FileStream(shpPath, FileMode.Open, FileAccess.Read, FileShare.Read))
+        public static ShapeFileHeader Read(string shpPath)
         {
-
+            using (var s = new FileStream(shpPath, FileMode.Open, FileAccess.Read, FileShare.Read))
+                return new ShapeFileHeader(s);
         }
 
         /// <summary>
@@ -102,6 +102,7 @@ namespace SharpMap.Data.Providers
             // Get the Z-range
             MRange = Interval.Create(ParseNoDataValue(headerReader.ReadDouble()),
                                      ParseNoDataValue(headerReader.ReadDouble()));
+
         }
 
         /// <summary>

@@ -130,7 +130,7 @@ namespace WinFormSamples.Samples
                                            new LabelStyle
                                                {
                                                    ForeColor = Color.DarkBlue,
-                                                   Font = new Font("Arial", 11),
+                                                   Font = new Font(FontFamily.GenericSansSerif, 11),
                                                    HorizontalAlignment = LabelStyle.HorizontalAlignmentEnum.Center,
                                                    VerticalAlignment = LabelStyle.VerticalAlignmentEnum.Middle,
                                                    //CollisionDetection = true,
@@ -231,7 +231,7 @@ namespace WinFormSamples.Samples
 
             //Add the layers to the map object.
             //The order we add them in are the order they are drawn, so we add the rivers last to put them on top
-            map.Layers.Add(layCountries);
+            map.BackgroundLayer.Add(AsyncLayerProxyLayer.Create(layCountries));
             map.Layers.Add(layRivers);
             map.Layers.Add(layCities);
             map.Layers.Add(layLabel);
@@ -260,7 +260,7 @@ namespace WinFormSamples.Samples
             var providers = new SharpMap.Data.Providers.ShapeFile[filenames.Length];
             for (int i = 0; i < filenames.Length; i++)
             {
-                providers[i] = new ShapeFile(filenames[i], true);
+                providers[i] = new ShapeFile(filenames[i], true, false);
                 providers[i].Open();
             }
 

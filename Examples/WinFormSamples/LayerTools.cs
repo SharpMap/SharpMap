@@ -264,23 +264,23 @@ namespace WinFormSamples
                 if (provider.GetFeatureCount() > 50000)
                     m.BackgroundLayer.Add(AsyncLayerProxyLayer.Create(l, new Size(256, 128)));
                 else    
-                    m.Layers.Add(l);
+                m.Layers.Add(l);
 
                 if (provider.GetFeatureCount() < 50000)
                 {
-                    var ll = new LabelLayer("Label " + provider.ConnectionID);
-                    ll.DataSource = provider;
+                var ll = new LabelLayer("Label " + provider.ConnectionID);
+                ll.DataSource = provider;
+                
+                provider.Open();
+                var f = provider.GetFeature(1);
+                provider.Close();
 
-                    provider.Open();
-                    var f = provider.GetFeature(1);
-                    provider.Close();
-
-                    ll.LabelColumn = f.Table.Columns[1].ColumnName;
-                    ll.Style.CollisionDetection = false;
-                    ll.Style.IgnoreLength = true;
-
-                    m.Layers.Add(ll);
-                }
+                    ll.LabelColumn = f.Table.Columns[0].ColumnName;
+                ll.Style.CollisionDetection = false;
+                ll.Style.IgnoreLength = true;
+                
+                m.Layers.Add(ll);
+            }
             }
             m.ZoomToExtents();
             return m;

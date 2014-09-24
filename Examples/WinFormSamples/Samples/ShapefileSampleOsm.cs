@@ -328,7 +328,7 @@ namespace WinFormSamples.Samples
 
             var disclaimer = new Disclaimer
                 {
-                    Font = new Font("Arial", 7f, FontStyle.Italic),
+                    Font = new Font(FontFamily.GenericSansSerif, 7f, FontStyle.Italic),
                     Text = "Geodata from OpenStreetMap (CC-by-SA)\nTransformed to Shapefile by geofabrik.de",
                     Anchor = MapDecorationAnchor.CenterBottom
                 };

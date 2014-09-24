@@ -39,7 +39,7 @@ namespace SharpMap.Rendering
 
         static VectorRenderer()
         {
-            SizeOfString = SizeOfString74;
+            SizeOfString = SizeOfStringCeiling;
         }
 
         private static readonly Bitmap Defaultsymbol =
@@ -272,7 +272,7 @@ namespace SharpMap.Rendering
         /// </summary>
         public static SizeOfStringDelegate SizeOfString
         {
-            get { return _sizeOfString ?? (_sizeOfString = SizeOfString74); }
+            get { return _sizeOfString ?? (_sizeOfString = SizeOfStringCeiling); }
             set 
             { 
                 if (value != null )
@@ -299,6 +299,7 @@ namespace SharpMap.Rendering
         /// <param name="text">the text to render</param>
         /// <param name="font">the font to use</param>
         /// <returns>the size</returns>
+        [Obsolete]
         public static SizeF SizeOfString74(Graphics g, string text, Font font)
         {
             var s = g.MeasureString(text, font);

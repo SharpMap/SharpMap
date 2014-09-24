@@ -785,10 +785,10 @@ namespace SharpMap
 
             g.PageUnit = GraphicsUnit.Pixel;
 
-            LayerCollectionRenderer.AllowParallel = true;
+            //LayerCollectionRenderer.AllowParallel = layerCollectionType == LayerCollectionType.Static;
             using (var lcr = new LayerCollectionRenderer(lc))
             {
-                lcr.Render(g, this);
+                lcr.Render(g, this, layerCollectionType == LayerCollectionType.Static);
             }
 
             /*

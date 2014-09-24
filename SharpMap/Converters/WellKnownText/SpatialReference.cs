@@ -68,7 +68,8 @@ namespace SharpMap.Converters.WellKnownText
 
             var xmldoc = new XmlDocument();
 
-            var file = Path.GetDirectoryName(Assembly.GetExecutingAssembly().CodeBase) + "\\SpatialRefSys.xml";
+            var uri = new Uri(Assembly.GetExecutingAssembly().CodeBase);
+            var file = Path.GetDirectoryName(uri.LocalPath) + "\\SpatialRefSys.xml";
             try
             {
                 xmldoc.Load(file);

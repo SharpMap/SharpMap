@@ -94,7 +94,7 @@ namespace SharpMap.Rendering.Decoration
         public GoogleMapsDisclaimer()
         {
             _mathTransform = null; //Assuming WGS84
-            _font = new Font("Arial", (float)Math.Floor((11.0 * 72 / 96)));
+            _font = new Font(FontFamily.GenericSansSerif, (float)Math.Floor((11.0 * 72 / 96)));
             //_language = Thread.CurrentThread.CurrentCulture.Name;
             _tileSource = new BruTile.Web.GoogleTileSource(BruTile.Web.GoogleMapType.GoogleMap);
         }
@@ -102,7 +102,7 @@ namespace SharpMap.Rendering.Decoration
         //Regex rex = new Regex("resp && resp\\( \\[\"(?<text>.*?)\",");
         readonly Regex _rex = new Regex("GAddCopyright\\(\"(?<type>.*?)\",\".*?\",(?<miny>[0-9\\.-]+),(?<minx>[0-9\\.-]+),(?<maxy>[0-9\\.-]+),(?<maxx>[0-9\\.-]+),(?<minlevel>\\d+),\"(?<txt>.*?)\",(?<maxlevel>\\d+),.*?\\);", RegexOptions.Singleline);
         string _disclaimerText = "";
-        readonly Font _font = new Font("Arial",12f);
+        private readonly Font _font;// = new Font(FontFamily.GenericSansSerif, 12f);
 
         /// <summary>
         /// Function to compute the required size for rendering the map decoration object

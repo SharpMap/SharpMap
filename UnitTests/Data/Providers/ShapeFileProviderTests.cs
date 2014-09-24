@@ -1,4 +1,5 @@
-﻿namespace UnitTests.Data.Providers
+﻿
+namespace UnitTests.Data.Providers
 {
 
     [NUnit.Framework.TestFixture]
@@ -17,7 +18,55 @@
                                                    ((double)_msLineal / _msVector * 100)));
         }
 
+        [NUnit.Framework.Test]
+        public void UsingTest()
+        {
+            using (var s = System.IO.File.Open(GetTestDataFilePath("SPATIAL_F_SKARVMUFF.shp"), System.IO.FileMode.Open))
+            {
+                using (var reader = new System.IO.BinaryReader(s))
+                {
+                    System.Console.WriteLine(reader.ReadInt32());
+                }
+                NUnit.Framework.Assert.Throws<System.ObjectDisposedException>(() => System.Console.WriteLine(s.Position));
+            } 
+        }
 
+        private static void CopyShapeFile(string path, out string tmp)
+        {
+            tmp = System.IO.Path.ChangeExtension(System.IO.Path.GetTempFileName(),".shp");
+            if (!System.IO.File.Exists(path)) throw new NUnit.Framework.IgnoreException("File not found");
+            foreach (var file in System.IO.Directory.GetFiles(System.IO.Path.GetDirectoryName(path), System.IO.Path.GetFileNameWithoutExtension(path) + ".*"))
+            {
+                var copyFile = System.IO.Path.ChangeExtension(tmp, System.IO.Path.GetExtension(file));
+                if (System.IO.File.Exists(copyFile)) System.IO.File.Delete(copyFile);
+                System.IO.File.Copy(file, copyFile);
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public void TestDeleteAfterClose()
+        {
+            string test;
+            CopyShapeFile(GetTestDataFilePath("SPATIAL_F_SKARVMUFF.shp"), out test);
+
+            var shp = new SharpMap.Data.Providers.ShapeFile(test);
+            shp.Open();
+            shp.Close();
+            var succeeded = true;
+            foreach (var file in System.IO.Directory.GetFiles(System.IO.Path.GetDirectoryName(test), System.IO.Path.GetFileNameWithoutExtension(test) + ".*"))
+            {
+                try
+                {
+                    System.IO.File.Delete(file);
+                }
+                catch (System.Exception)
+                {
+                    System.Console.WriteLine("Failed to delete '{0}'", file);
+                    succeeded = false;
+                }
+            }
+            NUnit.Framework.Assert.IsTrue(succeeded);
+        }
         //private string GetTestFile()
         //{
         //    return System.IO.Path.Combine(GetPathToTestDataDir(), "roads_ugl.shp");
@@ -33,10 +82,10 @@
         {
             var file = GetTestDataFilePath("SPATIAL_F_SKARVMUFF.shp");
             var sh = new SharpMap.Data.Providers.ShapeFile(file, true);
+            sh.Open();
             var fc = sh.GetFeatureCount();
             NUnit.Framework.Assert.AreEqual(4342, fc);
-
-            sh.Open();
+            NUnit.Framework.Assert.AreEqual(0, sh.GetObjectIDsInView(sh.GetExtents())[0]);
             var featsInView = sh.GetGeometriesInView(new GeoAPI.Geometries.Envelope(sh.GetExtents()));
             NUnit.Framework.Assert.AreEqual(4342, featsInView.Count);
             sh.Close();
