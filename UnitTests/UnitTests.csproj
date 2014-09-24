@@ -266,6 +266,10 @@
       <Project>{6D681045-8EF1-44EA-A19D-C7A63A6D0F76}</Project>
       <Name>SharpMap.SqlServerSpatialObjects</Name>
     </ProjectReference>
+    <ProjectReference Include="..\SharpMap.Utilities.Indexing.SbnTree\SharpMap.Utilities.Indexing.SbnTree.csproj">
+      <Project>{723f9fd5-8424-4eee-ba92-57ecee0f395d}</Project>
+      <Name>SharpMap.Utilities.Indexing.SbnTree</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SharpMap\SharpMap.csproj">
       <Project>{C83777FC-AABB-47D9-911F-D76255D4D541}</Project>
       <Name>SharpMap</Name>

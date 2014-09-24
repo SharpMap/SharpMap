@@ -12,7 +12,19 @@ namespace SharpMap.UI.WPF
         {
             return coord.X;
         }
-
-        
+        public static double Get_Y(this Coordinate coord)
+        {
+            return coord.Y;
+        }
+        public static double Get_Z(this Coordinate coord)
+        {
+            return coord.Z;
+        }
+#pragma warning disable 618
+        public static double Get_M(this ICoordinate coord)
+#pragma warning restore 618
+        {
+            return coord.M;
+        }
     }
 }

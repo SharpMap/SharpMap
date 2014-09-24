@@ -151,6 +151,7 @@
     <Compile Include="Converters\WellKnownText\StreamTokenizer.cs" />
     <Compile Include="Converters\WellKnownText\TokenType.cs" />
     <Compile Include="Converters\WellKnownText\WKTStreamTokenizer.cs" />
+    <Compile Include="CoordinateSystems\AxisOrderRegistry.cs" />
     <Compile Include="CoordinateSystems\CoordinateSystemExtensions.cs" />
     <Compile Include="CoordinateSystems\Transformations\GeometryTransform.cs" />
     <Compile Include="CoordinateSystems\Transformations\GeometryTransformDotSpatial.cs" />
