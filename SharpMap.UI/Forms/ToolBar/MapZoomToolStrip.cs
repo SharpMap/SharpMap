@@ -165,6 +165,7 @@ namespace SharpMap.Forms.ToolBar
             // 
             this._predefinedScales.Name = "_predefinedScales";
             this._predefinedScales.Size = new System.Drawing.Size(121, 23);
+            this._predefinedScales.SelectedIndexChanged += OnScaleSelected;
             // 
             // _sep4
             // 
