@@ -1503,11 +1503,11 @@ namespace SharpMap.Forms
             if (Math.Abs(delta.Width) > SystemInformation.MouseHoverSize.Width ||
                 Math.Abs(delta.Height) > SystemInformation.MouseHoverSize.Height)
             {
-                Logger.Debug(fmh => fmh("Reenabling MouseHover event neccessary: {0}", delta));
+                //Logger.Debug(fmh => fmh("Reenabling MouseHover event neccessary: {0}", delta));
                 ResetMouseEventArgs();
                 return;
             }
-            Logger.Debug(fmh => fmh("Reenabling MouseHover NOT event neccessary: {0}", delta));
+            //Logger.Debug(fmh => fmh("Reenabling MouseHover NOT event neccessary: {0}", delta));
 
         }
 

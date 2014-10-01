@@ -42,7 +42,7 @@ namespace SharpMap.Layers
     [Serializable]
     public class VectorLayer : Layer, ICanQueryLayer
     {
-        static ILog logger = LogManager.GetLogger(typeof(VectorLayer));
+        static readonly ILog _logger = LogManager.GetLogger(typeof(VectorLayer));
 
         private bool _clippingEnabled;
         private bool _isQueryEnabled = true;
@@ -231,7 +231,8 @@ namespace SharpMap.Layers
                 DataSource.Close();
             }
 
-
+            double scale = map.MapScale;
+            double zoom = map.Zoom;
 
             foreach (FeatureDataTable features in ds.Tables)
             {
@@ -254,7 +255,10 @@ namespace SharpMap.Layers
                         var outlineStyle = theme.GetStyle(feature) as VectorStyle;
                         if (outlineStyle == null) continue;
                         if (!(outlineStyle.Enabled && outlineStyle.EnableOutline)) continue;
-                        if (!(outlineStyle.MinVisible <= map.Zoom && map.Zoom <= outlineStyle.MaxVisible)) continue;
+
+                        double compare = outlineStyle.VisibilityUnits == VisibilityUnits.ZoomLevel ? zoom : scale;
+
+                        if (!(outlineStyle.MinVisible <= compare && compare <= outlineStyle.MaxVisible)) continue;
 
                         using (outlineStyle = outlineStyle.Clone())
                         {
@@ -283,10 +287,13 @@ namespace SharpMap.Layers
                     var style = theme.GetStyle(feature);
                     if (style == null) continue;
                     if (!style.Enabled) continue;
-                    if (!(style.MinVisible <= map.Zoom && map.Zoom <= style.MaxVisible)) continue;
+
+                    double compare = style.VisibilityUnits == VisibilityUnits.ZoomLevel ? zoom : scale;
+
+                    if (!(style.MinVisible <= compare && compare <= style.MaxVisible)) continue;
 
 
-                    IStyle[] stylesToRender = GetStylesToRender(style);
+                    IEnumerable<IStyle> stylesToRender = GetStylesToRender(style);
 
                     if (stylesToRender == null)
                         return;
@@ -319,7 +326,7 @@ namespace SharpMap.Layers
             //if style is not enabled, we don't need to render anything
             if (!Style.Enabled) return;
 
-            IStyle[] stylesToRender = GetStylesToRender(Style);
+            IEnumerable<IStyle> stylesToRender = GetStylesToRender(Style);
             
             if (stylesToRender== null)
                 return;
@@ -344,9 +351,9 @@ namespace SharpMap.Layers
                             // Read data
                             geoms = DataSource.GetGeometriesInView(envelope);
 
-                            if (logger.IsDebugEnabled)
+                            if (_logger.IsDebugEnabled)
                             {
-                                logger.DebugFormat("Layer {0}, NumGeometries {1}", LayerName, geoms.Count);
+                                _logger.DebugFormat("Layer {0}, NumGeometries {1}", LayerName, geoms.Count);
                             }
 
                             // If was not open, close it
@@ -386,10 +393,10 @@ namespace SharpMap.Layers
                             }
                         }
 
-                        for (var i = 0; i < geoms.Count; i++)
+                        foreach (IGeometry geom in geoms)
                         {
-                            if (geoms[i] != null)
-                                RenderGeometry(g, map, geoms[i], vStyle);
+                            if (geom != null)
+                                RenderGeometry(g, map, geom, vStyle);
                         }
 
                         if (vStyle.LineSymbolizer != null)
@@ -407,7 +414,7 @@ namespace SharpMap.Layers
         /// </summary>
         /// <param name="style"></param>
         /// <returns></returns>
-        private static IStyle[] GetStylesToRender(IStyle style)
+        private static IEnumerable<IStyle> GetStylesToRender(IStyle style)
         {
             IStyle[] stylesToRender = null;
             if (style is GroupStyle)
@@ -506,7 +513,7 @@ namespace SharpMap.Layers
                     }
                     break;
                 case OgcGeometryType.GeometryCollection:                    
-                    IGeometryCollection coll = (IGeometryCollection)feature;
+                    var coll = (IGeometryCollection)feature;
                     for (var i = 0; i < coll.NumGeometries; i++)
                     {
                         IGeometry geom = coll[i];

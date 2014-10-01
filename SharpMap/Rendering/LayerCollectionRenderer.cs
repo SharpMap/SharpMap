@@ -6,6 +6,7 @@ using System.Drawing.Imaging;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using SharpMap.Layers;
+using SharpMap.Styles;
 
 namespace SharpMap.Rendering
 {
@@ -86,7 +87,8 @@ namespace SharpMap.Rendering
                 var layer = _layers[layerIndex];
                 if (layer.Enabled)
                 {
-                    if (layer.MaxVisible >= _map.Zoom && layer.MinVisible < _map.Zoom)
+                    double compare = layer.VisibilityUnits == VisibilityUnits.ZoomLevel ? _map.Zoom : _map.MapScale;
+                    if (layer.MaxVisible >= compare && layer.MinVisible < compare)
                     {
                         layer.Render(g, _map);
                     }
@@ -122,9 +124,11 @@ namespace SharpMap.Rendering
                 return;
 
             var layer = _layers[layerIndex];
+            
             if (layer.Enabled)
             {
-                if (layer.MaxVisible >= _map.Zoom && layer.MinVisible < _map.Zoom)
+                double compare = layer.VisibilityUnits == VisibilityUnits.ZoomLevel ? _map.Zoom : _map.MapScale;
+                if (layer.MaxVisible >= compare && layer.MinVisible < compare)
                 {
                     var image = _images[layerIndex] = new Bitmap(_map.Size.Width, _map.Size.Height, PixelFormat.Format32bppArgb);
                     using (var g = Graphics.FromImage(image))

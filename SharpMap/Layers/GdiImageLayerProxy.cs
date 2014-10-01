@@ -21,6 +21,7 @@ using System.Drawing.Imaging;
 using Common.Logging;
 using GeoAPI.Geometries;
 using SharpMap.Data;
+using SharpMap.Styles;
 
 namespace SharpMap.Layers
 {
@@ -85,6 +86,7 @@ namespace SharpMap.Layers
             }
             _baseLayer = layer;
             _colorMatrix = colorMatrix;
+            VisibilityUnits = VisibilityUnits.ZoomLevel;
         }
 
         /// <summary>
@@ -100,6 +102,7 @@ namespace SharpMap.Layers
             }
             _baseLayer = layer;
             _colorMap = colorMap;
+            VisibilityUnits = VisibilityUnits.ZoomLevel;
         }
 
         /// <summary>
@@ -118,6 +121,8 @@ namespace SharpMap.Layers
             get { return _baseLayer.MaxVisible; }
             set { _baseLayer.MaxVisible = value; }
         }
+
+        public VisibilityUnits VisibilityUnits { get; set; }
 
         bool ILayer.Enabled
         {

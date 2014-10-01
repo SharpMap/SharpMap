@@ -21,6 +21,7 @@ using System.Drawing;
 using System.Linq;
 using SharpMap.Data;
 using GeoAPI.Geometries;
+using SharpMap.Styles;
 #if DotSpatialProjections
 using ICoordinateTransformation = DotSpatial.Projections.ICoordinateTransformation;
 #else
@@ -225,11 +226,11 @@ namespace SharpMap.Layers
         public override void Render(Graphics g, Map map)
         {
             var layers = Layers.ToArray();
-
+            var compare = VisibilityUnits == VisibilityUnits.ZoomLevel ? map.Zoom : map.MapScale;
             foreach (var layer in layers)
             {
-                if (layer.Enabled && layer.MaxVisible >= map.Zoom &&
-                    layer.MinVisible < map.Zoom)
+                if (layer.Enabled && layer.MaxVisible >= compare &&
+                    layer.MinVisible < compare)
                     layer.Render(g, map);
             }
         }
@@ -292,6 +293,7 @@ namespace SharpMap.Layers
             clonedGroup.Enabled = Enabled;
             clonedGroup.IsQueryEnabled = IsQueryEnabled;
             clonedGroup.MaxVisible = MaxVisible;
+            clonedGroup.VisibilityUnits = VisibilityUnits;
             clonedGroup.MinVisible = MinVisible;
             clonedGroup.Proj4Projection = Proj4Projection;
             clonedGroup.SRID = SRID;

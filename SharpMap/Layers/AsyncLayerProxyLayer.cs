@@ -22,6 +22,7 @@ using System.Drawing.Imaging;
 using System.Runtime.Serialization;
 using GeoAPI.Geometries;
 using SharpMap.Data;
+using SharpMap.Styles;
 
 namespace SharpMap.Layers
 {
@@ -94,6 +95,7 @@ namespace SharpMap.Layers
         {
             _baseLayer = baseLayer;
             _cellSize = cellSize;
+            VisibilityUnits = VisibilityUnits.ZoomLevel;
         }
 
         double ILayer.MinVisible
@@ -107,6 +109,8 @@ namespace SharpMap.Layers
             get { return _baseLayer.MaxVisible; }
             set { _baseLayer.MaxVisible = value; }
         }
+
+        public VisibilityUnits VisibilityUnits { get; set; }
 
         bool ILayer.Enabled
         {

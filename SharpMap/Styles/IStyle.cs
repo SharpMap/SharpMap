@@ -35,6 +35,11 @@ namespace SharpMap.Styles
         double MaxVisible { get; set; }
 
         /// <summary>
+        /// Gets or Sets what level-reference the Min/Max values are defined in
+        /// </summary>
+        VisibilityUnits VisibilityUnits { get; set; }
+
+        /// <summary>
         /// Gets or sets whether objects in this style is rendered or not
         /// </summary>
         bool Enabled { get; set; }

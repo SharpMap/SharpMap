@@ -16,6 +16,7 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
 
 using System.Drawing;
+using System.Security.Cryptography.X509Certificates;
 using GeoAPI.Geometries;
 
 namespace SharpMap.Layers
@@ -35,6 +36,12 @@ namespace SharpMap.Layers
         /// </summary>
         double MaxVisible { get; set; }
 
+
+        /// <summary>
+        /// Gets or Sets what level-reference the Min/Max values are defined in
+        /// </summary>
+        Styles.VisibilityUnits VisibilityUnits { get; set; }
+
         /// <summary>
         /// Specifies whether this layer should be rendered or not
         /// </summary>
@@ -49,8 +56,6 @@ namespace SharpMap.Layers
         /// Gets the boundingbox of the entire layer
         /// </summary>
         Envelope Envelope { get; }
-
-        //System.Collections.Generic.List<T> Features { get; }
 
         /// <summary>
         /// The spatial reference ID (CRS)

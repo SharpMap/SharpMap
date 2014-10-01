@@ -33,6 +33,7 @@ using NetTopologySuite;
 using SharpMap.Layers;
 using SharpMap.Rendering;
 using SharpMap.Rendering.Decoration;
+using SharpMap.Styles;
 using SharpMap.Utilities;
 using Point = GeoAPI.Geometries.Coordinate;
 using System.Drawing.Imaging;
@@ -606,8 +607,9 @@ namespace SharpMap
             g.Clear(BackColor);
             g.PageUnit = GraphicsUnit.Pixel;
 
+            double zoom = Zoom;
+            double scale = double.NaN; //will be resolved if needed
 
-            //int srid = (Layers.Count > 0 ? Layers[0].SRID : -1); //Get the SRID of the first layer
             ILayer[] layerList;
             if (_backgroundLayers != null && _backgroundLayers.Count > 0)
             {
@@ -615,9 +617,20 @@ namespace SharpMap
                 _backgroundLayers.CopyTo(layerList, 0);
                 foreach (ILayer layer in layerList)
                 {
+                    if (layer.VisibilityUnits == VisibilityUnits.Scale && double.IsNaN(scale))
+                    {
+                        scale = MapScale;
+                    }
+                    double visibleLevel = layer.VisibilityUnits == VisibilityUnits.ZoomLevel ? zoom : scale;
+
                     OnLayerRendering(layer, LayerCollectionType.Background);
-                    if (layer.Enabled && layer.MaxVisible >= Zoom && layer.MinVisible < Zoom)
-                        layer.Render(g, this);
+                    if (layer.Enabled)
+                    {
+                        if (layer.MaxVisible >= visibleLevel && layer.MinVisible < visibleLevel)
+                        {
+                            layer.Render(g, this);
+                        }
+                    }
                     OnLayerRendered(layer, LayerCollectionType.Background);
                 }
             }
@@ -630,8 +643,13 @@ namespace SharpMap
                 //int srid = (Layers.Count > 0 ? Layers[0].SRID : -1); //Get the SRID of the first layer
                 foreach (ILayer layer in layerList)
                 {
+                    if (layer.VisibilityUnits == VisibilityUnits.Scale && double.IsNaN(scale))
+                    {
+                        scale = MapScale;
+                    }
+                    double visibleLevel = layer.VisibilityUnits == VisibilityUnits.ZoomLevel ? zoom : scale;
                     OnLayerRendering(layer, LayerCollectionType.Static);
-                    if (layer.Enabled && layer.MaxVisible >= Zoom && layer.MinVisible < Zoom)
+                    if (layer.Enabled && layer.MaxVisible >= visibleLevel && layer.MinVisible < visibleLevel)
                         layer.Render(g, this);
                     OnLayerRendered(layer, LayerCollectionType.Static);
                 }
@@ -643,7 +661,12 @@ namespace SharpMap
                 _variableLayers.CopyTo(layerList, 0);
                 foreach (ILayer layer in layerList)
                 {
-                    if (layer.Enabled && layer.MaxVisible >= Zoom && layer.MinVisible < Zoom)
+                    if (layer.VisibilityUnits == VisibilityUnits.Scale && double.IsNaN(scale))
+                    {
+                        scale = MapScale;
+                    }
+                    double visibleLevel = layer.VisibilityUnits == VisibilityUnits.ZoomLevel ? zoom : scale;
+                    if (layer.Enabled && layer.MaxVisible >= visibleLevel && layer.MinVisible < visibleLevel)
                         layer.Render(g, this);
                 }
             }
@@ -1224,6 +1247,8 @@ namespace SharpMap
             }
         }
 
+        private static int? _dpiX;
+
         /// <summary>
         /// Gets or Sets the Scale of the map (related to current DPI-settings of rendering)
         /// </summary>
@@ -1231,17 +1256,27 @@ namespace SharpMap
         {
             get
             {
-                using (var g = Graphics.FromHwnd(IntPtr.Zero))
+                if (!_dpiX.HasValue)
                 {
-                    return GetMapScale((int) g.DpiX);
+                    using (var g = Graphics.FromHwnd(IntPtr.Zero))
+                    {
+                        _dpiX = (int) g.DpiX;
+                    }
                 }
+
+                return GetMapScale(_dpiX.Value);
             }
             set
             {
-                using (var g = Graphics.FromHwnd(IntPtr.Zero))
+                if (!_dpiX.HasValue)
                 {
-                    Zoom = GetMapZoomFromScale(value, (int) g.DpiX);
+                    using (var g = Graphics.FromHwnd(IntPtr.Zero))
+                    {
+                        _dpiX = (int) g.DpiX;
+                    }
                 }
+                Zoom = GetMapZoomFromScale(value, _dpiX.Value);
+
             }
         }
 

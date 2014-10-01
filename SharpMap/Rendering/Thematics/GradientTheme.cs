@@ -129,6 +129,7 @@ namespace SharpMap.Rendering.Thematics
             float fFrac = Convert.ToSingle(dFrac);
             style.Enabled = (dFrac > 0.5 ? min.Enabled : max.Enabled);
             style.EnableOutline = (dFrac > 0.5 ? min.EnableOutline : max.EnableOutline);
+            style.VisibilityUnits = min.VisibilityUnits;
             if (_fillColorBlend != null)
                 style.Fill = new SolidBrush(_fillColorBlend.GetColor(fFrac));
             else if (min.Fill != null && max.Fill != null)
@@ -174,6 +175,7 @@ namespace SharpMap.Rendering.Thematics
             if (min.Halo != null && max.Halo != null)
                 style.Halo = InterpolatePen(min.Halo, max.Halo, value);
 
+            style.VisibilityUnits = min.VisibilityUnits;
             style.MinVisible = InterpolateDouble(min.MinVisible, max.MinVisible, value);
             style.MaxVisible = InterpolateDouble(min.MaxVisible, max.MaxVisible, value);
             style.Offset = new PointF(InterpolateFloat(min.Offset.X, max.Offset.X, value),

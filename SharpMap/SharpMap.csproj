@@ -203,6 +203,7 @@
     <Compile Include="Layers\TileLayer.cs" />
     <Compile Include="Layers\VariableLayerCollection.cs" />
     <Compile Include="Layers\VectorLayer.cs" />
+    <Compile Include="Styles\VisibilityUnits.cs" />
     <Compile Include="Layers\WmsLayer.cs" />
     <Compile Include="Map\MapViewportGuard.cs" />
     <Compile Include="Rendering\Decoration\Disclaimer.cs" />

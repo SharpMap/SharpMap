@@ -329,6 +329,20 @@ namespace SharpMap.Layers
         }
 
         /// <summary>
+        /// Gets or Sets what kind of units the Min/Max visible properties are defined in
+        /// </summary>
+        public VisibilityUnits VisibilityUnits {
+            get
+            {
+                return _style.VisibilityUnits;
+            }
+            set
+            {
+                _style.VisibilityUnits = value;
+            }
+        }
+
+        /// <summary>
         /// Specified whether the layer is rendered or not
         /// </summary>
         public bool Enabled
