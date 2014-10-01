@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?><ItemProperties xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"><Properties><Property><Name>svn:ignore</Name><Value>_ReSharper.*
+﻿<?xml version="1.0" encoding="utf-8"?><ItemProperties xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><Properties><Property><Name>svn:ignore</Name><Value>_ReSharper.*
 *.suo
 *.user
 *.vssscc
@@ -14,6 +14,19 @@ Release
 *.vssscc
 _ReSharper.*
 [Pp]ackages
+</Value></Property><Property><Name>ignore</Name><Value>bin
+obj
+Debug
+Release
+*.user
+*.aps
+*.eto
+</Value></Property><Property><Name>svn:ignore</Name><Value>*.suo
+*.user
+*.vssscc
+_ReSharper.*
+[Pp]ackages
+*.psess
 </Value></Property><Property><Name>ignore</Name><Value>bin
 obj
 Debug

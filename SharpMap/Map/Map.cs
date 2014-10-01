@@ -178,7 +178,7 @@ namespace SharpMap
         {
             _mapViewportGuard = new MapViewPortGuard(size, 0d, Double.MaxValue);
 
-            if (System.ComponentModel.LicenseManager.UsageMode != System.ComponentModel.LicenseUsageMode.Designtime)
+            if (LicenseManager.UsageMode != LicenseUsageMode.Designtime)
             {
                 Factory = GeoAPI.GeometryServiceProvider.Instance.CreateGeometryFactory(_srid);
             }
@@ -1231,25 +1231,17 @@ namespace SharpMap
         {
             get
             {
-                using (var img = new Bitmap(1, 1))
+                using (var g = Graphics.FromHwnd(IntPtr.Zero))
                 {
-                    using (var g = Graphics.FromImage(img))
-                    {
-                        return GetMapScale((int) g.DpiX);
-                    }
+                    return GetMapScale((int) g.DpiX);
                 }
             }
             set
             {
-
-                using (var img = new Bitmap(1, 1))
+                using (var g = Graphics.FromHwnd(IntPtr.Zero))
                 {
-                    using (var g = Graphics.FromImage(img))
-                    {
-                        Zoom = GetMapZoomFromScale(value, (int) g.DpiX);
-                    }
+                    Zoom = GetMapZoomFromScale(value, (int) g.DpiX);
                 }
-            
             }
         }
 
