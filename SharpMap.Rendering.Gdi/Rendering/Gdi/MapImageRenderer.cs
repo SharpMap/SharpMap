@@ -85,5 +85,15 @@ namespace SharpMap.Rendering.Gdi
             }
             OnRenderedMapDecorations(EventArgs.Empty);
         }
+
+        private void OnRenderedLayerCollection(EventArgs empty)
+        {
+            // TODO: ???
+        }
+
+        private void OnRenderingLayerCollection(EventArgs empty)
+        {
+            // TODO: ???
+        }
     }
 }

@@ -2,10 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Drawing;
+using System.Linq;
 using GeoAPI;
 using GeoAPI.CoordinateSystems.Transformations;
+using GeoAPI.Features;
 using GeoAPI.Geometries;
 using SharpMap.Data;
+using SharpMap.Data.Providers;
 using SharpMap.Layers;
 using SharpMap.Rendering.Gdi.Decoration;
 using SharpMap.Rendering.Thematics;
@@ -76,14 +79,17 @@ namespace SharpMap.Rendering.Gdi
             foreach (FeatureDataTable features in ds.Tables)
             {
 
-
+                IFeatureCollection collection = features;
                 if (vl.CoordinateTransformation != null)
                     for (int i = 0; i < features.Count; i++)
 #if !DotSpatialProjections
-                        features[i].Geometry = GeometryTransform.TransformGeometry(features[i].Geometry,
+                    {
+                        
+                        collection[i].Geometry = GeometryTransform.TransformGeometry(collection[i].Geometry,
                             vl.CoordinateTransformation.
                                 MathTransform,
                             GeometryServiceProvider.Instance.CreateGeometryFactory((int)vl.CoordinateTransformation.TargetCS.AuthorityCode));
+                    }
 #else
                     features[i].Geometry = GeometryTransform.TransformGeometry(features[i].Geometry,
                                                                                 CoordinateTransformation.Source,
@@ -98,7 +104,7 @@ namespace SharpMap.Rendering.Gdi
                 {
                     for (int i = 0; i < features.Count; i++)
                     {
-                        var feature = features[i];
+                        var feature = collection[i];
                         var outlineStyle = theme.GetStyle(feature) as VectorStyle;
                         if (outlineStyle == null) continue;
                         if (!(outlineStyle.Enabled && outlineStyle.EnableOutline)) continue;
@@ -127,7 +133,7 @@ namespace SharpMap.Rendering.Gdi
 
                 for (int i = 0; i < features.Count; i++)
                 {
-                    var feature = features[i];
+                    var feature = collection[i];
                     var style = theme.GetStyle(feature);
                     if (style == null) continue;
                     if (!style.Enabled) continue;
@@ -180,31 +186,29 @@ namespace SharpMap.Rendering.Gdi
                 {
                     if (vStyle != null)
                     {
-                        Collection<IGeometry> geoms;
-                        // Is datasource already open?
-                        lock (_dataSource)
+                        IList<IGeometry> geoms;
+                        // Is datasource already open?                        
+                        IProvider ds = vl.DataSource;
+                        lock (ds)
                         {
-                            bool alreadyOpen = DataSource.IsOpen;
+                            bool alreadyOpen = ds.IsOpen;
 
                             // If not open yet, open it
-                            if (!alreadyOpen) { DataSource.Open(); }
+                            if (!alreadyOpen) { ds.Open(); }
 
                             // Read data
-                            geoms = DataSource.GetGeometriesInView(envelope);
+                            var temp = ds.GetGeometriesInView(envelope);
+                            geoms = (temp ?? new IGeometry[0]).ToList();
 
-                            if (logger.IsDebugEnabled)
-                            {
-                                logger.DebugFormat("Layer {0}, NumGeometries {1}", vl.LayerName, geoms.Count);
-                            }
 
                             // If was not open, close it
-                            if (!alreadyOpen) { DataSource.Close(); }
+                            if (!alreadyOpen) { ds.Close(); }
                         }
-                        if (CoordinateTransformation != null)
+                        if (vl.CoordinateTransformation != null)
                             for (int i = 0; i < geoms.Count; i++)
 #if !DotSpatialProjections
-                                geoms[i] = GeometryTransform.TransformGeometry(geoms[i], CoordinateTransformation.MathTransform,
-                                    GeometryServiceProvider.Instance.CreateGeometryFactory((int)CoordinateTransformation.TargetCS.AuthorityCode));
+                                geoms[i] = GeometryTransform.TransformGeometry(geoms[i], vl.CoordinateTransformation.MathTransform,
+                                    GeometryServiceProvider.Instance.CreateGeometryFactory((int)vl.CoordinateTransformation.TargetCS.AuthorityCode));
 #else
                     geoms[i] = GeometryTransform.TransformGeometry(geoms[i], 
                         CoordinateTransformation.Source, 
