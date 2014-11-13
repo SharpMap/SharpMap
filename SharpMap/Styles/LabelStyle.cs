@@ -204,55 +204,58 @@ namespace SharpMap.Styles
                 if (value.Unit != GraphicsUnit.Point)
                     LogManager.GetCurrentClassLogger().Error( fmh => fmh("Only assign fonts with size in Points"));
                 _Font = value;
+
+                // we can't dispose the previous font because it could still be used by the rendering engine, so we just let it be GC.
+                _cachedFontForGraphics = null;
             }
         }
 
-[NonSerialized] 
-private float _cachedDpiY = 0f;
-[NonSerialized]
-private Font _cachedFontForGraphics = null;
+        [NonSerialized] 
+        private float _cachedDpiY = 0f;
+        [NonSerialized]
+        private Font _cachedFontForGraphics = null;
 
-/// <summary>
-/// Method to create a font that ca
-/// </summary>
-/// <param name="g"></param>
-/// <returns></returns>
-[MethodImpl(MethodImplOptions.Synchronized)]
-public Font GetFontForGraphics(Graphics g)
-{
-    if (g.DpiY != _cachedDpiY)
-    {
-        _cachedDpiY = g.DpiY;
-        if (_cachedFontForGraphics != null) _cachedFontForGraphics.Dispose();
-        _cachedFontForGraphics = new Font(_Font.FontFamily, _Font.GetHeight(g), _Font.Style, GraphicsUnit.Pixel);
-        /*
-        var textHeight = _Font.Size;
-        switch (_Font.Unit)
+        /// <summary>
+        /// Method to create a font that ca
+        /// </summary>
+        /// <param name="g"></param>
+        /// <returns></returns>
+        [MethodImpl(MethodImplOptions.Synchronized)]
+        public Font GetFontForGraphics(Graphics g)
         {
-            case GraphicsUnit.Display:
-                textHeight *= g.DpiY / 75;
-                break;
-            case GraphicsUnit.Document:
-                textHeight *= g.DpiY / 300;
-                break;
-            case GraphicsUnit.Inch:
-                textHeight *= g.DpiY;
-                break;
-            case GraphicsUnit.Millimeter:
-                textHeight /= 25.4f * g.DpiY;
-                break;
-            case GraphicsUnit.Pixel:
-                //do nothing
-                break;
-            case GraphicsUnit.Point:
-                textHeight *= g.DpiY / 72;
-                break;
-        }                
-        _cachedFontForGraphics = new Font(_Font.FontFamily, textHeight, _Font.Style, GraphicsUnit.Pixel);
-         */
-    }
-    return _cachedFontForGraphics;
-}
+            if (_cachedFontForGraphics == null || g.DpiY != _cachedDpiY)
+            {
+                _cachedDpiY = g.DpiY;
+                if (_cachedFontForGraphics != null) _cachedFontForGraphics.Dispose();
+                _cachedFontForGraphics = new Font(_Font.FontFamily, _Font.GetHeight(g), _Font.Style, GraphicsUnit.Pixel);
+                /*
+                var textHeight = _Font.Size;
+                switch (_Font.Unit)
+                {
+                    case GraphicsUnit.Display:
+                        textHeight *= g.DpiY / 75;
+                        break;
+                    case GraphicsUnit.Document:
+                        textHeight *= g.DpiY / 300;
+                        break;
+                    case GraphicsUnit.Inch:
+                        textHeight *= g.DpiY;
+                        break;
+                    case GraphicsUnit.Millimeter:
+                        textHeight /= 25.4f * g.DpiY;
+                        break;
+                    case GraphicsUnit.Pixel:
+                        //do nothing
+                        break;
+                    case GraphicsUnit.Point:
+                        textHeight *= g.DpiY / 72;
+                        break;
+                }                
+                _cachedFontForGraphics = new Font(_Font.FontFamily, textHeight, _Font.Style, GraphicsUnit.Pixel);
+                 */
+            }
+            return _cachedFontForGraphics;
+        }
 
         /// <summary>
         /// Font color
