@@ -65,6 +65,7 @@ namespace SharpMap.Forms
     public partial class MapBox : Control
     {
         private static readonly ILog Logger = LogManager.GetLogger(typeof (MapBox));
+        private const double PrecisionTolerance = 0.00000001;
 
         static MapBox() { Map.Configure(); }
 
@@ -392,7 +393,7 @@ namespace SharpMap.Forms
         private Image _imageVariable = new Bitmap(1, 1);
         private Envelope _imageEnvelope = new Envelope(0, 1, 0, 1);
         private int _imageGeneration;
-
+        private int _needToRefreshAfterWheel;
         private PreviewModes _previewMode;
         private bool _isRefreshing;
         private List<Coordinate> _pointArray = new List<Coordinate>();
@@ -1372,13 +1373,16 @@ namespace SharpMap.Forms
                 //If zoomToPointer is set, we first need to center the map around the mouse-location
                 //Then Zoom in the map
                 //Then pan the map back to it's original shift to have it still centered simultanously
+                var oldCenter = _map.Center;
+
                 if (_zoomToPointer)
                     _map.Center = _map.ImageToWorld(new PointF(e.X, e.Y), true);
 
                 var scale = (e.Delta / 120.0);
                 var scaleBase = 1 + (_wheelZoomMagnitude/(10*(IsControlPressed ? _fineZoomFactor : 1)));
 
-                _map.Zoom *= Math.Pow(scaleBase, scale);
+                var oldZoom = _map.Zoom;
+                _map.Zoom = oldZoom * Math.Pow(scaleBase, scale);
 
                 //If zoomtoPointer, move the map back to MousePointer is over same place
                 if (_zoomToPointer)
@@ -1386,17 +1390,19 @@ namespace SharpMap.Forms
                     var newCenterX = (Width/2f) + (Width/2f - e.X);
                     var newCenterY = (Height/2f) + (Height/2f - e.Y);
 
-                    var newCenter = _map.ImageToWorld(new PointF(newCenterX, newCenterY), true);
-                    var centerChanged = !newCenter.Equals(_map.Center);
-                    _map.Center = newCenter;
-                    if (centerChanged && MapCenterChanged != null)
+                    _map.Center = _map.ImageToWorld(new PointF(newCenterX, newCenterY), true);
+                    if (!_map.Center.Equals2D(oldCenter, PrecisionTolerance))
                     {
-                        MapCenterChanged(_map.Center);
+                        Interlocked.Exchange(ref _needToRefreshAfterWheel, 1);
+                        OnMapCenterChanged(_map.Center);
                     }
                 }
 
-                if (MapZoomChanged != null)
-                    MapZoomChanged(_map.Zoom);
+                if (Math.Abs(_map.Zoom - oldZoom) > PrecisionTolerance)
+                {
+                    Interlocked.Exchange(ref _needToRefreshAfterWheel, 1);
+                    OnMapZoomChanged(_map.Zoom);
+                }
 
                 Invalidate();
 
@@ -1419,9 +1425,12 @@ namespace SharpMap.Forms
         private void TimerUpdate(object state, System.Timers.ElapsedEventArgs args)
         {
             Logger.Debug("TimerRefresh");
-            if (MapZoomChanged != null)
-                MapZoomChanged(_map.Zoom);
-            Refresh();
+            if (Interlocked.CompareExchange(ref _needToRefreshAfterWheel, 0, 1)==1)
+            {
+                OnMapZoomChanged(_map.Zoom);
+
+                Refresh();
+            }
         }
 
         private Coordinate _dragStartCoord;
@@ -1598,13 +1607,17 @@ namespace SharpMap.Forms
                     _dragEndPoint = ClipPoint(e.Location);
                     if (_dragStartCoord != null)
                     {
+                        var oldCenter = _map.Center;
+                        
                         _map.Center =
                             new Coordinate(_dragStartCoord.X - _map.PixelSize*(_dragEndPoint.X - _dragStartPoint.X),
                                 _dragStartCoord.Y - _map.PixelSize*(_dragStartPoint.Y - _dragEndPoint.Y));
-                        if (MapCenterChanged != null)
-                            MapCenterChanged(_map.Center);
+                        if (!_map.Center.Equals2D(oldCenter, PrecisionTolerance))
+                        {
+                            OnMapCenterChanged(_map.Center);
 
-                        Invalidate(ClientRectangle);
+                            Invalidate(ClientRectangle);
+                        }
                     }
                 }
                 else if (isZoomOperation)
@@ -1706,6 +1719,28 @@ namespace SharpMap.Forms
 
             var handler = MapChanged;
             if (handler != null) handler(this, e);
+        }
+
+        /// <summary>
+        /// Invokes the <see cref="E:SharpMap.Forms.MapBox.MapZoomChanged"/> event.
+        /// </summary>
+        /// <param name="zoom"></param>
+        protected virtual void OnMapZoomChanged(double zoom)
+        {
+            var handler = MapZoomChanged;
+            if (handler != null)
+                handler(zoom);
+        }
+
+        /// <summary>
+        /// Invokes the <see cref="E:SharpMap.Forms.MapBox.MapCenterChanged"/> event.
+        /// </summary>
+        /// <param name="center"></param>
+        protected virtual void OnMapCenterChanged(Coordinate center)
+        {
+            var handler = MapCenterChanged;
+            if (handler != null)
+                handler(center);
         }
 
         void HandleRefreshNeeded(object sender, EventArgs e)
@@ -1998,6 +2033,8 @@ namespace SharpMap.Forms
             if (_activeTool == Tools.None)
                 return;
 
+            bool needToRefresh = false;
+
             if (e.Button == MouseButtons.Left || e.Button == MouseButtons.Middle)
             {
                 if (_activeTool == Tools.ZoomOut)
@@ -2012,16 +2049,27 @@ namespace SharpMap.Forms
                     }
                     else
                     {
+                        var oldCenter = _map.Center;
+
                         _map.Center = _map.ImageToWorld(new Point(e.X, e.Y));
 
-                        if (MapCenterChanged != null)
-                            MapCenterChanged(_map.Center);
+                        if (!_map.Center.Equals2D(oldCenter, PrecisionTolerance))
+                        {
+                            needToRefresh = true;
+                            OnMapCenterChanged(_map.Center);
+                        }
                     }
+
+                    var oldZoom = _map.Zoom;
 
                     _map.Zoom /= scale;
 
-                    if (MapZoomChanged != null)
-                        MapZoomChanged(_map.Zoom);
+                    if (Math.Abs(oldZoom - _map.Zoom) > PrecisionTolerance)
+                    {
+                        needToRefresh = true;
+                        OnMapZoomChanged(_map.Zoom);
+                    }
+                        
                 }
                 else if (_activeTool == Tools.ZoomIn)
                 {
@@ -2035,17 +2083,26 @@ namespace SharpMap.Forms
                     }
                     else
                     {
+                        var oldCenter = _map.Center;
                         _map.Center = _map.ImageToWorld(new Point(e.X, e.Y));
 
-                        if (MapCenterChanged != null)
-                            MapCenterChanged(_map.Center);
+                        if (!_map.Center.Equals2D(oldCenter, PrecisionTolerance))
+                        {
+                            needToRefresh = true;
+                            OnMapCenterChanged(_map.Center);
+                        }
+                            
                     }
 
-                    _map.Zoom *= 1/scale;
+                    var oldZoom = _map.Zoom;
+                    _map.Zoom =oldZoom * 1/scale;
 
-                    if (MapZoomChanged != null)
-                        MapZoomChanged(_map.Zoom);
-
+                    if (Math.Abs(_map.Zoom - oldZoom) > PrecisionTolerance)
+                    {
+                        needToRefresh = true;
+                        OnMapZoomChanged(_map.Zoom);
+                    }
+                        
                 }
                 else if ((_activeTool == Tools.Pan &&
                           !(_shiftButtonDragRectangleZoom && (Control.ModifierKeys & Keys.Shift) != Keys.None)) ||
@@ -2054,17 +2111,25 @@ namespace SharpMap.Forms
                 {
                     if (_dragging)
                     {
-                        if (MapCenterChanged != null)
-                            MapCenterChanged(_map.Center);
+                        if (!_dragStartCoord.Equals2D(_map.Center, PrecisionTolerance))
+                        {
+                            needToRefresh = true;
+                            OnMapCenterChanged(_map.Center);
+                        }
+                            
                     }
                     else
                     {
                         if (_panOnClick)
                         {
+                            var oldValue = _map.Center;
                             _map.Center = _map.ImageToWorld(new Point(e.X, e.Y));
 
-                            if (MapCenterChanged != null)
-                                MapCenterChanged(_map.Center);
+                            if (!_map.Center.Equals2D(oldValue, PrecisionTolerance))
+                            {
+                                needToRefresh = true;
+                                OnMapCenterChanged(_map.Center);
+                            }
                         }
                     }
                 }
@@ -2163,11 +2228,22 @@ namespace SharpMap.Forms
                         _dragEndPoint.X = 0;
                         _dragEndPoint.Y = 0;
 
+                        var oldCenter = _map.Center;
+                        var oldZoom = _map.Zoom;
+
                         _map.ZoomToBox(new Envelope(lowerLeft, upperRight));
 
-                        if (MapZoomChanged != null)
-                            MapZoomChanged(_map.Zoom);
-
+                        if (!_map.Center.Equals2D(oldCenter, PrecisionTolerance) ||
+                            Math.Abs(oldZoom - _map.Zoom) > PrecisionTolerance)
+                        {
+                            needToRefresh = true;
+                            OnMapZoomChanged(_map.Zoom);
+                        }
+                        else
+                        {
+                            // we must to cancel the selected area anyway
+                            Invalidate();
+                        }
                     }
                 }
                 else if (_activeTool == Tools.DrawPoint)
@@ -2204,9 +2280,10 @@ namespace SharpMap.Forms
                     /*|| _activeTool == Tools.QueryPolygon*/)
                     _rectangle = Rectangle.Empty;
 
-                Refresh();
+                if (!_dragStartCoord.Equals2D(_map.Center, PrecisionTolerance))
+                    Refresh();
             }
-            else if (_activeTool == Tools.ZoomIn || _activeTool == Tools.ZoomOut || _activeTool == Tools.Pan)
+            else if (needToRefresh && (_activeTool == Tools.ZoomIn || _activeTool == Tools.ZoomOut || _activeTool == Tools.Pan))
             {
                 Refresh();
             }
