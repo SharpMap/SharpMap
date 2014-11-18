@@ -870,6 +870,8 @@ namespace SharpMap
 #pragma warning restore 612,618
                     MaximumZoom = MaximumZoom,
                     MinimumZoom = MinimumZoom,
+                    MaximumExtents = MaximumExtents,
+                    EnforceMaximumExtents = EnforceMaximumExtents,
                     PixelAspectRatio = PixelAspectRatio,
                     Zoom = Zoom,
                     DisposeLayersOnDispose = false,

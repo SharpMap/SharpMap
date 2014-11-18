@@ -653,6 +653,10 @@ namespace SharpMap.Forms
         {
             var clonedMap = _mapBoxControl.Map.Clone();
             clonedMap.Decorations.Clear();
+            clonedMap.EnforceMaximumExtents = false;
+            clonedMap.MaximumExtents = null;
+            clonedMap.MinimumZoom = Double.Epsilon;
+            clonedMap.MaximumZoom = Double.MaxValue;
 
             var tsk = Task.Factory.StartNew(new Func<object, Tuple<Image, int, Rectangle>>(GenerateMap), new object[] { ++_generation, clonedMap });
             tsk.ContinueWith(t =>
