@@ -38,6 +38,7 @@
  */
 using System;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
@@ -45,8 +46,6 @@ using GeoAPI.Geometries;
 using SharpMap.Forms.Tools;
 using SharpMap.Layers;
 using System.Drawing.Imaging;
-using System.Diagnostics;
-
 using IGeometry = GeoAPI.Geometries.IGeometry;
 using System.Threading;
 using Common.Logging;
@@ -64,7 +63,7 @@ namespace SharpMap.Forms
 // ReSharper disable once PartialTypeWithSinglePart
     public partial class MapBox : Control
     {
-        private static readonly ILog Logger = LogManager.GetLogger(typeof (MapBox));
+        private static readonly ILog _logger = LogManager.GetLogger(typeof (MapBox));
         private const double PrecisionTolerance = 0.00000001;
 
         static MapBox() { Map.Configure(); }
@@ -344,22 +343,20 @@ namespace SharpMap.Forms
 
         #endregion
 
-        private static int _defaultColorIndex;
+        private static int m_defaultColorIndex;
 
-        private static readonly Color[] DefaultColors =
-            new[]
-                {
-                    Color.DarkRed,
-                    Color.DarkGreen,
-                    Color.DarkBlue,
-                    Color.Orange,
-                    Color.Cyan,
-                    Color.Black,
-                    Color.Purple,
-                    Color.Yellow,
-                    Color.LightBlue,
-                    Color.Fuchsia
-                };
+        private static readonly Color[] _defaultColors ={
+            Color.DarkRed,
+            Color.DarkGreen,
+            Color.DarkBlue,
+            Color.Orange,
+            Color.Cyan,
+            Color.Black,
+            Color.Purple,
+            Color.Yellow,
+            Color.LightBlue,
+            Color.Fuchsia
+        };
 
         /*
         private const float MinDragScalingBeforeRegen = 0.3333f;
@@ -415,14 +412,14 @@ namespace SharpMap.Forms
         public static void RandomizeLayerColors(VectorLayer layer)
         {
             layer.Style.EnableOutline = true;
-            layer.Style.Fill = new SolidBrush(Color.FromArgb(80, DefaultColors[_defaultColorIndex%DefaultColors.Length]));
+            layer.Style.Fill = new SolidBrush(Color.FromArgb(80, _defaultColors[m_defaultColorIndex%_defaultColors.Length]));
             layer.Style.Outline =
                 new Pen(
                     Color.FromArgb(100,
-                                   DefaultColors[
-                                       (_defaultColorIndex + ((int) (DefaultColors.Length*0.5)))%DefaultColors.Length]),
+                                   _defaultColors[
+                                       (m_defaultColorIndex + ((int) (_defaultColors.Length*0.5)))%_defaultColors.Length]),
                     1f);
-            _defaultColorIndex++;
+            m_defaultColorIndex++;
         }
 
         /// <summary>
@@ -668,8 +665,6 @@ namespace SharpMap.Forms
             get { return _activeTool; }
             set
             {
-                var check = (value != _activeTool);
-
                 _activeTool = value;
 
                 SetCursor();
@@ -911,7 +906,7 @@ namespace SharpMap.Forms
                 }
                 catch (Exception ex)
                 {
-                    Logger.Warn(ex.Message, ex);
+                    _logger.Warn(ex.Message, ex);
                     //this can be a GDI+ Hell Exception...
                 }
 
@@ -952,7 +947,7 @@ namespace SharpMap.Forms
             }
             catch (Exception ee)
             {
-                Logger.Error("Error while rendering map", ee);
+                _logger.Error("Error while rendering map", ee);
 
                 if (layerCollectionType == LayerCollectionType.Background)
                     return new Bitmap(1, 1);
@@ -1007,23 +1002,20 @@ namespace SharpMap.Forms
                 return;
 
 
-            if (Logger.IsDebugEnabled)
-                Logger.DebugFormat("{2}: {0} - {1}", res.generation, res.bbox, DateTime.Now);
+            if (_logger.IsDebugEnabled)
+                _logger.DebugFormat("{2}: {0} - {1}", res.generation, res.bbox, DateTime.Now);
 
 
             if ((_setActiveToolNoneDuringRedraw || ShowProgressUpdate) && InvokeRequired)
             {
                 try
                 {
-                    BeginInvoke(new MethodInvoker(delegate
-                        {
-                            GetImagesAsyncEnd(res);
-                        }));
+                    BeginInvoke(new MethodInvoker(() => GetImagesAsyncEnd(res)));
 
                 }
                 catch (Exception ex)
                 {
-                    Logger.Warn(ex.Message, ex);
+                    _logger.Warn(ex.Message, ex);
                 }
             }
             else
@@ -1051,7 +1043,7 @@ namespace SharpMap.Forms
                                     }
                                     catch (Exception ex)
                                     {
-                                        Logger.Warn(ex.Message, ex);
+                                        _logger.Warn(ex.Message, ex);
                                     }
                                 }
                             }
@@ -1068,7 +1060,7 @@ namespace SharpMap.Forms
                                 }
                                 catch (Exception ex)
                                 {
-                                    Logger.Warn(ex.Message, ex);
+                                    _logger.Warn(ex.Message, ex);
                                 }
 
                             }
@@ -1082,7 +1074,7 @@ namespace SharpMap.Forms
                                 }
                                 catch (Exception ex)
                                 {
-                                    Logger.Warn(ex.Message, ex);
+                                    _logger.Warn(ex.Message, ex);
                                 }
                             }
 
@@ -1125,7 +1117,7 @@ namespace SharpMap.Forms
                 }
                 catch (Exception ex)
                 {
-                    Logger.Warn(ex.Message, ex);
+                    _logger.Warn(ex.Message, ex);
                 }
 
 #if DEBUG
@@ -1143,7 +1135,7 @@ namespace SharpMap.Forms
                 catch (Exception ee)
                 {
                     //Trap errors that occured when calling the eventhandlers
-                    Logger.Warn("Exception while calling eventhandler", ee);
+                    _logger.Warn("Exception while calling eventhandler", ee);
                 }
             }
         }
@@ -1278,7 +1270,7 @@ namespace SharpMap.Forms
             }
             catch (Exception ex)
             {
-                Logger.Warn(ex.Message, ex);
+                _logger.Warn(ex.Message, ex);
             }
         }
 
@@ -1321,7 +1313,7 @@ namespace SharpMap.Forms
             if (!Focused)
             {
                 var isFocused = Focus();
-                Logger.Debug("Focused: " + isFocused);
+                _logger.Debug("Focused: " + isFocused);
             }
         }
 
@@ -1424,7 +1416,7 @@ namespace SharpMap.Forms
 
         private void TimerUpdate(object state, System.Timers.ElapsedEventArgs args)
         {
-            Logger.Debug("TimerRefresh");
+            _logger.Debug("TimerRefresh");
             if (Interlocked.CompareExchange(ref _needToRefreshAfterWheel, 0, 1)==1)
             {
                 OnMapZoomChanged(_map.Zoom);
@@ -1512,11 +1504,8 @@ namespace SharpMap.Forms
             if (Math.Abs(delta.Width) > SystemInformation.MouseHoverSize.Width ||
                 Math.Abs(delta.Height) > SystemInformation.MouseHoverSize.Height)
             {
-                //Logger.Debug(fmh => fmh("Reenabling MouseHover event neccessary: {0}", delta));
                 ResetMouseEventArgs();
-                return;
             }
-            //Logger.Debug(fmh => fmh("Reenabling MouseHover NOT event neccessary: {0}", delta));
 
         }
 
@@ -1581,7 +1570,7 @@ namespace SharpMap.Forms
                 //Pan can be if we have ActiveTool Pan and not doing a ShiftButtonZoom-Operation
                 bool isPanOperation = _activeTool == Tools.Pan &&
                                       !(_shiftButtonDragRectangleZoom &&
-                                        (Control.ModifierKeys & Keys.Shift) != Keys.None);
+                                        (ModifierKeys & Keys.Shift) != Keys.None);
 
                 //Pan can also be if we are in a drawline/drawpoint/drawpoly operation and pressed left mousebutton while dragging..
                 //If we not are setting tool non while redrawing..
@@ -1860,7 +1849,7 @@ namespace SharpMap.Forms
                 if (_dragging)
                 {
                     if (_activeTool == Tools.ZoomWindow || _activeTool == Tools.QueryBox ||
-                        (_shiftButtonDragRectangleZoom && (Control.ModifierKeys & Keys.Shift) != Keys.None))
+                        (_shiftButtonDragRectangleZoom && (ModifierKeys & Keys.Shift) != Keys.None))
                     {
                         //Reset image to normal view
                         lock (_paintImageLocker)
@@ -1893,23 +1882,15 @@ namespace SharpMap.Forms
                         }
                         else
                         {
-                            PointF ul;
-
                             lock (_imageEnvelope)
                             {
                                 lock (_paintImageLocker)
                                 {
-                                    ul = _map.WorldToImage(_imageEnvelope.TopLeft());
+                                    PointF ul = _map.WorldToImage(_imageEnvelope.TopLeft());
                                     var lr = _map.WorldToImage(_imageEnvelope.BottomRight());
 
                                     pe.Graphics.DrawImage(_image, RectangleF.FromLTRB(ul.X, ul.Y, lr.X, lr.Y));
                                 }
-                            }
-                            if ((Math.Abs(ul.X) > 50 || Math.Abs(ul.Y) > 50) && !_isRefreshing)
-                            {
-                                //update the image we're dragging
-                                int generation = ++_imageGeneration;
-                                var bbox = _map.Envelope;
                             }
                         }
                     }
@@ -1963,7 +1944,7 @@ namespace SharpMap.Forms
                     }
                     else
                     {
-                        PointF[] pts = new PointF[_pointArray.Count];
+                        var pts = new PointF[_pointArray.Count];
                         for (int i = 0; i < pts.Length; i++)
                             pts[i] = Map.WorldToImage(_pointArray[i]);
 
@@ -1998,7 +1979,7 @@ namespace SharpMap.Forms
             }
             catch (Exception ee)
             {
-                Logger.Error(ee);
+                _logger.Error(ee);
             }
         }
 
@@ -2105,8 +2086,8 @@ namespace SharpMap.Forms
                         
                 }
                 else if ((_activeTool == Tools.Pan &&
-                          !(_shiftButtonDragRectangleZoom && (Control.ModifierKeys & Keys.Shift) != Keys.None)) ||
-                         (e.Button == System.Windows.Forms.MouseButtons.Left && _dragging &&
+                          !(_shiftButtonDragRectangleZoom && (ModifierKeys & Keys.Shift) != Keys.None)) ||
+                         (e.Button == MouseButtons.Left && _dragging &&
                           (_activeTool == Tools.DrawLine || _activeTool == Tools.DrawPolygon)))
                 {
                     if (_dragging)
@@ -2217,7 +2198,7 @@ namespace SharpMap.Forms
                 }
 
                 else if (_activeTool == Tools.ZoomWindow ||
-                         (_shiftButtonDragRectangleZoom && (Control.ModifierKeys & Keys.Shift) != Keys.None))
+                         (_shiftButtonDragRectangleZoom && (ModifierKeys & Keys.Shift) != Keys.None))
                 {
                     if (_rectangle.Width > 0 && _rectangle.Height > 0)
                     {
@@ -2378,12 +2359,12 @@ namespace SharpMap.Forms
             lowerLeft = new Coordinate(Math.Min(p1.X, p2.X), Math.Min(p1.Y, p2.Y));
             upperRight = new Coordinate(Math.Max(p1.X, p2.X), Math.Max(p1.Y, p2.Y));
 
-            if (Logger.IsDebugEnabled)
+            if (_logger.IsDebugEnabled)
             {
-                Logger.Debug("p1: " + p1);
-                Logger.Debug("p2: " + p2);
-                Logger.Debug("lowerLeft: " + lowerLeft);
-                Logger.Debug("upperRight: " + upperRight);
+                _logger.Debug("p1: " + p1);
+                _logger.Debug("p2: " + p2);
+                _logger.Debug("lowerLeft: " + lowerLeft);
+                _logger.Debug("upperRight: " + upperRight);
             }
         }
 
