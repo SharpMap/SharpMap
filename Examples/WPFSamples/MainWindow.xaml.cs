@@ -1,6 +1,9 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Windows;
 using System.Windows.Forms;
+using BruTile.Predefined;
+using BruTile.Web;
 using GeoAPI.Geometries;
 using Application = System.Windows.Application;
 using MenuItem = System.Windows.Controls.MenuItem;
@@ -15,6 +18,7 @@ namespace WPFSamples
         public MainWindow()
         {
             InitializeComponent();
+
         }
 
         private void MenuItem_OnClick(object sender, RoutedEventArgs e)
@@ -32,6 +36,21 @@ namespace WPFSamples
                 menuItem.IsChecked = false;
             }
             BgOsm.IsChecked = true;
+
+            WpfMap.ZoomToExtents();
+            e.Handled = true;
+        }
+
+        private void BgMapQuest_Click(object sender, RoutedEventArgs e)
+        {
+            WpfMap.BackgroundLayer = new SharpMap.Layers.TileAsyncLayer(
+              BruTile.TileSource.Create(KnownTileServers.MapQuest), "MapQuest");
+
+            foreach (var menuItem in Menu.Items.OfType<MenuItem>())
+            {
+                menuItem.IsChecked = false;
+            }
+            BgMapQuest.IsChecked = true;
 
             WpfMap.ZoomToExtents();
             e.Handled = true;

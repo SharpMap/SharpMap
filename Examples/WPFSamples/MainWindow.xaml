@@ -17,7 +17,8 @@
                 <MenuItem Header="_ShapeFile" Name="AddShapeLayer" Click="AddShapeLayer_OnClick"/>
             </MenuItem>
             <MenuItem Header="_BackgroundMap">
-                <MenuItem Header="_OpenStreetMap" Name="BgOsm" Click="BgOSM_OnClick" IsCheckable="True"/>
+                <MenuItem Header="_OpenStreetMap" Name="BgOsm" Click="BgOSM_OnClick" IsCheckable="False"/>
+                <MenuItem Header="_MapQuest" Name="BgMapQuest" Click="BgMapQuest_Click" IsCheckable="False"/>
             </MenuItem>
         </Menu>
 
