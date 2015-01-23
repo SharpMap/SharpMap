@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.IO;
+using BruTile.Predefined;
 using BruTile.Web;
 using GeoAPI.CoordinateSystems.Transformations;
 using GeoAPI.Geometries;
@@ -73,7 +74,7 @@ namespace UnitTests.Serialization
         public void TestMap2()
         {
             var m = new Map(_mapSize);
-            m.BackgroundLayer.Add(new TileLayer(new OsmTileSource(new OsmRequest(KnownTileServers.MapQuest)), "MapQuest"));
+            m.BackgroundLayer.Add(new TileLayer(new OsmTileSource(new OsmRequest(KnownTileSource.MapQuest)), "MapQuest"));
             
             var codeBase = Path.GetDirectoryName(GetType().Assembly.CodeBase);
             var cn = string.Format("Data Source={0};",

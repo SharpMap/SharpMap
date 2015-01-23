@@ -133,8 +133,8 @@ namespace SharpMap.Layers
             var bbox = map.Envelope;
             var extent = new Extent(bbox.MinX, bbox.MinY, bbox.MaxX, bbox.MaxY);
             var level = BruTile.Utilities.GetNearestLevel(_source.Schema.Resolutions, map.PixelSize);
-            var tiles = _source.Schema.GetTilesInView(extent, level);
-
+            var tiles = _source.Schema.GetTileInfos(extent, level);
+            
             //Abort previous running Threads
             Cancel();
 
@@ -186,7 +186,7 @@ namespace SharpMap.Layers
                             if (Logger.IsDebugEnabled)
                                 Logger.DebugFormat("Task started for download of tile {0},{1},{2}", info.Index.Level, info.Index.Col, info.Index.Row);
 
-                            var res = GetTileOnThread(token, _source.Provider, l_info, _bitmaps, true);
+                            var res = GetTileOnThread(token, _source, l_info, _bitmaps, true);
                             if (res)
                             {
                                 Interlocked.Decrement(ref _numPendingDownloads);

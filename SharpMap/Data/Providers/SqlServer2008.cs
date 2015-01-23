@@ -24,7 +24,6 @@ using System.Collections.ObjectModel;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Globalization;
-using BruTile.Web.Wms;
 using GeoAPI.Geometries;
 
   

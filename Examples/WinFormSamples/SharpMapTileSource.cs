@@ -41,9 +41,16 @@ namespace WinFormSamples
             get { return this.provider.Schema; }
         }
 
+        public string Name { get; private set; }
+
         public Extent Extent
         {
             get { throw new NotImplementedException(); }
+        }
+
+        public byte[] GetTile(TileInfo tileInfo)
+        {
+            return provider.GetTile(tileInfo);
         }
     }
 

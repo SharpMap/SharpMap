@@ -2,6 +2,7 @@
 using System.Data;
 using System.Drawing;
 using System.Drawing.Imaging;
+using BruTile.Predefined;
 using BruTile.Web;
 using DotSpatial.Projections;
 using GeoAPI.Geometries;
@@ -51,7 +52,7 @@ namespace ExampleCodeSnippets
 
             var m = new SharpMap.Map(new Size(640, 640));
             m.Layers.Add(new TileLayer(
-                new OsmTileSource(new OsmRequest(KnownTileServers.Mapnik) /*, 
+                new OsmTileSource(new OsmRequest(KnownTileSource.OpenStreetMap) /*, 
                                   new FileCache(@"d:\temp\OSM", "png")*/), "OSM"));
 
             var l = new HeatLayer(p, "Data", 0.001f);

@@ -181,7 +181,7 @@ namespace SharpMap.Layers
                     var extent = new Extent(map.Envelope.MinX, map.Envelope.MinY, 
                                             map.Envelope.MaxX, map.Envelope.MaxY);
                     var level = BruTile.Utilities.GetNearestLevel(_source.Schema.Resolutions, map.PixelSize);
-                    var tiles = new List<TileInfo>(_source.Schema.GetTilesInView(extent, level));
+                    var tiles = new List<TileInfo>(_source.Schema.GetTileInfos(extent, level));
                     var tileWidth = _source.Schema.GetTileWidth(level);
                     var tileHeight = _source.Schema.GetTileWidth(level);
 
@@ -209,7 +209,7 @@ namespace SharpMap.Layers
                         var waitHandle = new AutoResetEvent(false);
                         waitHandles.Add(waitHandle);
                         ThreadPool.QueueUserWorkItem(GetTileOnThread,
-                                                     new object[] { _source.Provider, info, toRender, waitHandle, true, takenFromCache });
+                                                     new object[] { _source, info, toRender, waitHandle, true, takenFromCache });
                     }
 
                     foreach (var handle in waitHandles)
