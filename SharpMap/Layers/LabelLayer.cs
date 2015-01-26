@@ -384,13 +384,14 @@ namespace SharpMap.Layers
             g.TextRenderingHint = TextRenderingHint;
             g.SmoothingMode = SmoothingMode;
 
-            var envelope = ToSource(map.Envelope); //View to render
-            var lineClipping = new CohenSutherlandLineClipping(envelope.MinX, envelope.MinY,
-                envelope.MaxX, envelope.MaxY);
+            var mapEnvelope = map.Envelope;
+            var layerEnvelope = ToSource(mapEnvelope); //View to render
+            var lineClipping = new CohenSutherlandLineClipping(mapEnvelope.MinX, mapEnvelope.MinY,
+                mapEnvelope.MaxX, mapEnvelope.MaxY);
 
             var ds = new FeatureDataSet();
             DataSource.Open();
-            DataSource.ExecuteIntersectionQuery(envelope, ds);
+            DataSource.ExecuteIntersectionQuery(layerEnvelope, ds);
             DataSource.Close();
             if (ds.Tables.Count == 0)
             {
