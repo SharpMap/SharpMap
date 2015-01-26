@@ -72,6 +72,9 @@ namespace SharpMap.Forms
         private Cursor _oldCursor;
         private HitResult _hitResult;
 
+        [ThreadStatic]
+        private static bool _isRenderingThread;
+
         #endregion
 
         #region ctor
@@ -92,6 +95,15 @@ namespace SharpMap.Forms
         #endregion
 
         #region properties
+
+        /// <summary>
+        /// Gets a value indicating if the current thread is rendering the map.
+        /// </summary>
+        /// <remarks>A layer could use this value to customize the rendering into the minimap.</remarks>
+        public static bool IsRenderingThread
+        {
+            get { return _isRenderingThread; }
+        }
 
         //public event EventHandler ResizeIntervalChanged;
 
@@ -718,10 +730,12 @@ namespace SharpMap.Forms
         {
             try
             {
-                var args = (object[])state;
+                _isRenderingThread = true;
 
-                var currentGeneration = (int)args[0];
-                var map = (Map)args[1];
+                var args = (object[]) state;
+
+                var currentGeneration = (int) args[0];
+                var map = (Map) args[1];
 
                 Rectangle frame;
 
@@ -732,11 +746,11 @@ namespace SharpMap.Forms
                     var originalWidth = map.Zoom;
                     var originalHeight = map.MapHeight;
 
-                    var wx1 = originalCenter.X - originalWidth * 0.5;
-                    var wy1 = originalCenter.Y - originalHeight * 0.5;
+                    var wx1 = originalCenter.X - originalWidth*0.5;
+                    var wy1 = originalCenter.Y - originalHeight*0.5;
 
-                    var wx2 = originalCenter.X + originalWidth * 0.5;
-                    var wy2 = originalCenter.Y + originalHeight * 0.5;
+                    var wx2 = originalCenter.X + originalWidth*0.5;
+                    var wy2 = originalCenter.Y + originalHeight*0.5;
 
                     map.Size = Size;
                     map.ZoomToExtents();
@@ -763,7 +777,10 @@ namespace SharpMap.Forms
             {
                 return null;
             }
-
+            finally
+            {
+                _isRenderingThread = false;
+            }
         }
 
         private void HandleResizeTimerTick(object sender, EventArgs e)
