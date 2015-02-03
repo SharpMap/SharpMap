@@ -9,9 +9,9 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>SharpMap.UI.WPF</RootNamespace>
     <AssemblyName>SharpMap.UI.WPF</AssemblyName>
-    <TargetFrameworkVersion>v4.0.3</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
+    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
   </PropertyGroup>
@@ -36,7 +36,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="GeoAPI">
-      <HintPath>..\packages\GeoAPI.1.7.2\lib\net403-client\GeoAPI.dll</HintPath>
+      <HintPath>..\packages\GeoAPI.1.7.2\lib\net40-client\GeoAPI.dll</HintPath>
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />

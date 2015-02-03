@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>SharpMap.Data.Providers</RootNamespace>
     <AssemblyName>SharpMap.Data.Providers.Kml</AssemblyName>
-    <TargetFrameworkVersion>v4.0.3</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
@@ -38,16 +38,16 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="GeoAPI">
-      <HintPath>..\packages\GeoAPI.1.7.2\lib\net403-client\GeoAPI.dll</HintPath>
+      <HintPath>..\packages\GeoAPI.1.7.2\lib\net40-client\GeoAPI.dll</HintPath>
     </Reference>
     <Reference Include="Ionic.Zip.Reduced">
       <HintPath>..\packages\DotNetZip.Reduced.1.9.1.8\lib\net20\Ionic.Zip.Reduced.dll</HintPath>
     </Reference>
     <Reference Include="NetTopologySuite">
-      <HintPath>..\packages\NetTopologySuite.1.13.2\lib\net403-client\NetTopologySuite.dll</HintPath>
+      <HintPath>..\packages\NetTopologySuite.1.13.2\lib\net40-client\NetTopologySuite.dll</HintPath>
     </Reference>
     <Reference Include="PowerCollections">
-      <HintPath>..\packages\NetTopologySuite.1.13.2\lib\net403-client\PowerCollections.dll</HintPath>
+      <HintPath>..\packages\NetTopologySuite.1.13.2\lib\net40-client\PowerCollections.dll</HintPath>
     </Reference>
     <Reference Include="SharpKml">
       <HintPath>..\packages\SharpKml.Core.2.0.0\lib\portable-net4+sl5+wp8+win8\SharpKml.dll</HintPath>

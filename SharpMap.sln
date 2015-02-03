@@ -115,6 +115,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WPFSamples", "Examples\WPFS
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpMap.Utilities.Indexing.SbnTree", "SharpMap.Utilities.Indexing.SbnTree\SharpMap.Utilities.Indexing.SbnTree.csproj", "{723F9FD5-8424-4EEE-BA92-57ECEE0F395D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpMap.Data.Providers.FileGdb", "SharpMap.Data.Providers.FileGdb\SharpMap.Data.Providers.FileGdb.csproj", "{42AD06D5-ACDF-4991-B052-232235F002BA}"
+EndProject
 Global
 	GlobalSection(SubversionScc) = preSolution
 		Svn-Managed = True
@@ -607,6 +609,30 @@ Global
 		{723F9FD5-8424-4EEE-BA92-57ECEE0F395D}.ReleaseDSProjection|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{723F9FD5-8424-4EEE-BA92-57ECEE0F395D}.ReleaseDSProjection|Mixed Platforms.Build.0 = Release|Any CPU
 		{723F9FD5-8424-4EEE-BA92-57ECEE0F395D}.ReleaseDSProjection|x86.ActiveCfg = Release|Any CPU
+		{42AD06D5-ACDF-4991-B052-232235F002BA}.Debug|.NET.ActiveCfg = Debug|Any CPU
+		{42AD06D5-ACDF-4991-B052-232235F002BA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{42AD06D5-ACDF-4991-B052-232235F002BA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{42AD06D5-ACDF-4991-B052-232235F002BA}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{42AD06D5-ACDF-4991-B052-232235F002BA}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{42AD06D5-ACDF-4991-B052-232235F002BA}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{42AD06D5-ACDF-4991-B052-232235F002BA}.DebugDSProjection|.NET.ActiveCfg = Debug|Any CPU
+		{42AD06D5-ACDF-4991-B052-232235F002BA}.DebugDSProjection|Any CPU.ActiveCfg = Debug|Any CPU
+		{42AD06D5-ACDF-4991-B052-232235F002BA}.DebugDSProjection|Any CPU.Build.0 = Debug|Any CPU
+		{42AD06D5-ACDF-4991-B052-232235F002BA}.DebugDSProjection|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{42AD06D5-ACDF-4991-B052-232235F002BA}.DebugDSProjection|Mixed Platforms.Build.0 = Debug|Any CPU
+		{42AD06D5-ACDF-4991-B052-232235F002BA}.DebugDSProjection|x86.ActiveCfg = Debug|Any CPU
+		{42AD06D5-ACDF-4991-B052-232235F002BA}.Release|.NET.ActiveCfg = Release|Any CPU
+		{42AD06D5-ACDF-4991-B052-232235F002BA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{42AD06D5-ACDF-4991-B052-232235F002BA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{42AD06D5-ACDF-4991-B052-232235F002BA}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{42AD06D5-ACDF-4991-B052-232235F002BA}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{42AD06D5-ACDF-4991-B052-232235F002BA}.Release|x86.ActiveCfg = Release|Any CPU
+		{42AD06D5-ACDF-4991-B052-232235F002BA}.ReleaseDSProjection|.NET.ActiveCfg = Release|Any CPU
+		{42AD06D5-ACDF-4991-B052-232235F002BA}.ReleaseDSProjection|Any CPU.ActiveCfg = Release|Any CPU
+		{42AD06D5-ACDF-4991-B052-232235F002BA}.ReleaseDSProjection|Any CPU.Build.0 = Release|Any CPU
+		{42AD06D5-ACDF-4991-B052-232235F002BA}.ReleaseDSProjection|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{42AD06D5-ACDF-4991-B052-232235F002BA}.ReleaseDSProjection|Mixed Platforms.Build.0 = Release|Any CPU
+		{42AD06D5-ACDF-4991-B052-232235F002BA}.ReleaseDSProjection|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -620,5 +646,8 @@ Global
 		{A4184D38-C5A6-4E01-9D1C-8C63791AF825} = {480154D8-0960-416E-AE45-AF6B06794F77}
 		{7EF67DF8-D868-4177-8817-4CC2E94ABD66} = {480154D8-0960-416E-AE45-AF6B06794F77}
 		{28AC314E-35C1-484B-9DD3-116BD8AFC4EA} = {480154D8-0960-416E-AE45-AF6B06794F77}
+	EndGlobalSection
+	GlobalSection(Performance) = preSolution
+		HasPerformanceSessions = true
 	EndGlobalSection
 EndGlobal
