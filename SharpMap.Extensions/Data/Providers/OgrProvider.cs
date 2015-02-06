@@ -18,6 +18,8 @@
 using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using GeoAPI.Geometries;
+using OSGeo.OSR;
 //using OSGeo.OGR;
 using SharpMap.Converters.WellKnownBinary;
 using SharpMap.Extensions.Data;
@@ -709,5 +711,223 @@ namespace SharpMap.Data.Providers
         {
             ExecuteIntersectionQuery(bbox, ds);
         }
+
+        #region CreateFromFeatureDataTable
+        /// <summary>
+        /// Creates an OGR data source from a FeatureDataTable
+        /// </summary>
+        /// <param name="table">The name of the table</param>
+        /// <param name="geometryType">The geometry type</param>
+        /// <param name="driver">The driver</param>
+        /// <param name="connection">The connection string</param>
+        /// <param name="driverOptions">The options for the driver</param>
+        /// <param name="layerOptions">The options for the layer</param>
+        public static void CreateFromFeatureDataTable(FeatureDataTable table, 
+            OgcGeometryType geometryType, int srid, string driver, string connection, string[] driverOptions = null, string[] layerOptions = null)
+        {
+            if (table == null)
+                throw new ArgumentNullException("table");
+
+            if (table.Rows.Count == 0)
+                throw new ArgumentException("The table contains no rows", "table");
+
+            if (geometryType < OgcGeometryType.Point || geometryType > OgcGeometryType.MultiPolygon)
+                throw new ArgumentException("Invalid geometry type", "geometryType");
+
+            if (string.IsNullOrWhiteSpace(driver))
+                throw new ArgumentException("No driver specified", "driver");
+
+            var dr = OSGeo.OGR.Ogr.GetDriverByName(driver);
+            if (dr == null)
+                throw new Exception(string.Format("Cannot load driver '{0}'!", driver));
+
+            //if (!dr.TestCapability("ODrCCreateDataSource"))
+            //    throw new Exception(string.Format("Driver '{0}' cannot create a data source!", driver));
+
+            // Create the data source
+            var ds = dr.CreateDataSource(connection, driverOptions);
+            //if (!ds.TestCapability("ODsCCreateLayer"))
+            //    throw new Exception(string.Format("Driver '{0}' cannot create a layer!", driver));
+
+            // Create the spatial reference
+            var sr = new OSGeo.OSR.SpatialReference(string.Empty);
+            sr.ImportFromEPSG(srid);
+
+            // Create the layer
+            var lyr = ds.CreateLayer(table.TableName, sr, (OgrGeometryType)geometryType, layerOptions);
+            sr.Dispose();
+
+            //lyr.GetSpatialRef();
+            foreach (System.Data.DataColumn dc in table.Columns)
+            {
+                using (var fldDef = GetFieldDefinition(dc))
+                    lyr.CreateField(fldDef, 0);
+            }
+
+            using (var ld = lyr.GetLayerDefn())
+            {
+                foreach (FeatureDataRow fdr in table.Rows)
+                {
+                    if ((int)fdr.Geometry.OgcGeometryType != (int)geometryType)
+                        continue;
+
+                    using (var feature = new OgrFeature(ld))
+                    {
+                        feature.SetGeometry(OgrGeometry.CreateFromWkb(fdr.Geometry.AsBinary()));
+                        var idx = -1;
+                        foreach (System.Data.DataColumn dc in table.Columns)
+                        {
+                            idx++;
+                            var fd = ld.GetFieldDefn(idx);
+                            DateTime dt;
+                            switch (fd.GetFieldType())
+                            {
+                                case OgrFieldType.OFTBinary:
+                                    //Nothing
+                                    break;
+                                case OgrFieldType.OFTDate:
+                                    dt = ((DateTime)fdr[dc]).Date;
+                                    feature.SetField(idx, dt.Year, dt.Month, dt.Day, dt.Hour, dt.Minute, dt.Second, 0);
+                                    break;
+                                case OgrFieldType.OFTDateTime:
+                                    dt = (DateTime)fdr[dc];
+                                    feature.SetField(idx, dt.Year, dt.Month, dt.Day, dt.Hour, dt.Minute, dt.Second, 0);
+                                    break;
+                                case OgrFieldType.OFTTime:
+                                    var tod = ((DateTime)fdr[dc]).TimeOfDay;
+                                    feature.SetField(idx, 0, 0, 0, tod.Hours, tod.Minutes, tod.Seconds, 0);
+                                    break;
+                                case OgrFieldType.OFTInteger:
+                                    feature.SetField(idx, Convert.ToInt32(fdr[dc]));
+                                    break;
+                                case OgrFieldType.OFTIntegerList:
+                                    var il = GetIntegerList(fdr[dc], dc.DataType);
+                                    feature.SetFieldIntegerList(idx, il.Length, il);
+                                    break;
+                                case OgrFieldType.OFTReal:
+                                    feature.SetField(idx, Convert.ToDouble(fdr[dc]));
+                                    break;
+                                case OgrFieldType.OFTRealList:
+                                    var dl = GetDoubleList(fdr[dc], dc.DataType);
+                                    feature.SetFieldDoubleList(idx, dl.Length, dl);
+                                    break;
+                                case OgrFieldType.OFTString:
+                                    feature.SetField(idx, Convert.ToString(fdr[dc]));
+                                    break;
+                                case OgrFieldType.OFTStringList:
+                                    var sl = (string[])fdr[dc];
+                                    feature.SetFieldStringList(idx, sl);
+                                    break;
+
+                            }
+                            fd.Dispose();
+                        }
+                        lyr.CreateFeature(feature);
+                        feature.Dispose();
+                    }
+                    //ld.Dispose();
+                }
+            }
+
+            lyr.Dispose();
+            ds.Dispose();
+            dr.Dispose();
+        }
+
+        private static double[] GetDoubleList(object o, System.Type type)
+        {
+            double[] res;
+            if (type == typeof(float[]))
+            {
+                var fa = (float[])o;
+                res = new double[fa.Length];
+                for (var i = 0; i < fa.Length; i++) res[i] = fa[i];
+                return res;
+            }
+            if (type == typeof(double[]))
+            {
+                res = (double[])o;
+                return res;
+            }
+            if (type == typeof(long[]))
+            {
+                var la = (long[])o;
+                res = new double[la.Length];
+                for (var i = 0; i < la.Length; i++) res[i] = la[i];
+                return res;
+            }
+            throw new InvalidOperationException("Cannot transform {0} to a list of doubles");
+        }
+
+        private static int[] GetIntegerList(object o, System.Type type)
+        {
+            int[] res;
+            if (type == typeof(Int16[]))
+            {
+                var sa = (short[])o;
+                res = new int[sa.Length];
+                for (var i = 0; i < sa.Length; i++) res[i] = sa[i];
+                return res;
+            }
+            if (type == typeof(int[]))
+            {
+                res = (int[])o;
+                return res;
+            }
+            throw new InvalidOperationException("Cannot transform {0} to a list of integers");
+        }
+
+        private static OgrFieldDefn GetFieldDefinition(System.Data.DataColumn dc)
+        {
+            var tmp = new OgrFieldDefn(dc.ColumnName, GetFieldType(dc.DataType));
+            if (dc.MaxLength > 0)
+                tmp.SetWidth(dc.MaxLength);
+            return tmp;
+        }
+
+        private static OgrFieldType GetFieldType(Type dataType)
+        {
+            switch (dataType.FullName)
+            {
+                case "System.String":
+                    return OgrFieldType.OFTString;
+
+                case "System.DateTime":
+                    return OgrFieldType.OFTDateTime;
+                    return OgrFieldType.OFTDate;
+                    return OgrFieldType.OFTTime;
+
+                case "System.Byte[]":
+                    return OgrFieldType.OFTBinary;
+
+                case "System.Byte":
+                case "System.Int16":
+                case "System.Int32":
+                    return OgrFieldType.OFTInteger;
+
+                case "System.Int16[]":
+                case "System.Int32[]":
+                    return OgrFieldType.OFTIntegerList;
+
+                case "System.Single":
+                case "System.Double":
+                case "System.Int64":
+                    return OgrFieldType.OFTReal;
+
+                //This should not happen
+                case "System.Single[]":
+                case "System.Double[]":
+                case "System.Int64[]":
+                    return OgrFieldType.OFTRealList;
+
+                //don't know when this is supposed to happen
+                case "xxx":
+                    return OgrFieldType.OFTWideString;
+                    return OgrFieldType.OFTWideStringList;
+            }
+            throw new NotSupportedException();
+        }
+        #endregion
+
     }
 }

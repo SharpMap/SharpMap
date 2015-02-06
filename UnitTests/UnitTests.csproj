@@ -189,6 +189,7 @@
     <Compile Include="Data\Providers\KmlProviderTests.cs" />
     <Compile Include="Data\Providers\ManagedSQLiteTests.cs" />
     <Compile Include="Data\Providers\MsSqlServerSpatialTests.cs" />
+    <Compile Include="Data\Providers\OgrProviderTest.cs" />
     <Compile Include="Data\Providers\OleDbPointProviderTest.cs" />
     <Compile Include="Data\Providers\PostGisGeographyTests.cs" />
     <Compile Include="Data\Providers\PostGisTests.cs" />
