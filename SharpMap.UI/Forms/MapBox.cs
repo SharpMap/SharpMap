@@ -2374,27 +2374,40 @@ namespace SharpMap.Forms
         /// </summary>
         private class MouseWheelGrabber : IMessageFilter
         {
-            [DllImport("user32.dll")]
-            private static extern IntPtr WindowFromPoint(Point lpPoint);
+            //[DllImport("user32.dll")]
+            //private static extern IntPtr WindowFromPoint(Point lpPoint);
 
-            [DllImport("user32.dll")]
-            private static extern bool GetCursorPos(out Point lpPoint);
+            //[DllImport("user32.dll")]
+            //private static extern bool GetCursorPos(out Point lpPoint);
 
-            private static IntPtr GetWindowUnderCursor()
-            {
-                Point ptCursor;
+            //private static IntPtr GetWindowUnderCursor()
+            //{
+            //    Point ptCursor;
 
-                if (!(GetCursorPos(out ptCursor)))
-                    return IntPtr.Zero;
+            //    if (!(GetCursorPos(out ptCursor)))
+            //        return IntPtr.Zero;
 
-                return WindowFromPoint(ptCursor);
-            }
+            //    return WindowFromPoint(ptCursor);
+            //}
 
+            private bool _mouseIn = false;
             private readonly MapBox _redirectHandle;
 
             public MouseWheelGrabber(MapBox redirectHandle)
             {
                 _redirectHandle = redirectHandle;
+                _redirectHandle.MouseEnter += HandleMouseEnter;
+                _redirectHandle.MouseLeave += HandleMouseLeave;
+            }
+
+            private void HandleMouseLeave(object sender, EventArgs e)
+            {
+                _mouseIn = false;
+            }
+
+            private void HandleMouseEnter(object sender, EventArgs e)
+            {
+                _mouseIn = true;
             }
 
             public bool PreFilterMessage(ref Message m)
@@ -2405,13 +2418,17 @@ namespace SharpMap.Forms
                     var pt = _redirectHandle.PointToClient(new Point(m.LParam.ToInt32()));
                     if (_redirectHandle.ClientRectangle.Contains(pt))
                     {
-                        var hWnd = GetWindowUnderCursor();
-                        if (hWnd == _redirectHandle.Handle)
-                        {
+                        if (_mouseIn)
                             _redirectHandle.OnMouseWheel(
                                 new MouseEventArgs(MouseButtons.Middle, 0, pt.X, pt.Y, delta));
-                            return true;
-                        }
+                        return true;
+                        //var hWnd = GetWindowUnderCursor();
+                        //if (hWnd == _redirectHandle.Handle)
+                        //{
+                        //    _redirectHandle.OnMouseWheel(
+                        //        new MouseEventArgs(MouseButtons.Middle, 0, pt.X, pt.Y, delta));
+                        //    return true;
+                        //}
                     }
 
                 }
