@@ -44,7 +44,7 @@ namespace WPFSamples
         private void BgMapQuest_Click(object sender, RoutedEventArgs e)
         {
             WpfMap.BackgroundLayer = new SharpMap.Layers.TileAsyncLayer(
-              BruTile.TileSource.Create(KnownTileServers.MapQuest), "MapQuest");
+              KnownTileSources.Create(KnownTileSource.MapQuestAerial), "MapQuest");
 
             foreach (var menuItem in Menu.Items.OfType<MenuItem>())
             {

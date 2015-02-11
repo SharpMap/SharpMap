@@ -45,7 +45,7 @@ namespace UnitTests.Serialization
                                                             "HighWays", "Geometry", "PK_UID");
 
             if (typeof(T) == typeof(SpatiaLite))
-                return (T)(IProvider)new ManagedSpatiaLite("Data Source=TestData\\test-2.3.sqlite;",
+                return (T)(IProvider)new SpatiaLite("Data Source=TestData\\test-2.3.sqlite;",
                                                             "HighWays", "Geometry", "PK_UID");
 
             if (typeof(T) == typeof(ShapeFile))

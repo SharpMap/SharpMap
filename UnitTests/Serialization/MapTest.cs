@@ -76,7 +76,7 @@ namespace UnitTests.Serialization
             var m = new Map(_mapSize);
             m.BackgroundLayer.Add(new TileLayer(new OsmTileSource(new OsmRequest(KnownTileSource.MapQuest)), "MapQuest"));
             
-            var codeBase = Path.GetDirectoryName(GetType().Assembly.CodeBase);
+            var codeBase = Path.GetDirectoryName(new Uri(GetType().Assembly.CodeBase).LocalPath);
             var cn = string.Format("Data Source={0};",
                                    Path.Combine(new Uri(codeBase).LocalPath, "TestData", "osm_aurich.sqlite"));
             
