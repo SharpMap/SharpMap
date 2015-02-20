@@ -53,6 +53,16 @@ namespace SharpMap.Forms.ToolBar
             this.Visible = true;
         }
 
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                _timer.Stop();
+                _timer = null;
+            }
+            base.Dispose(disposing);
+        }
+
         protected override void OnMapControlChangingInternal(System.ComponentModel.CancelEventArgs e)
         {
             base.OnMapControlChangingInternal(e);

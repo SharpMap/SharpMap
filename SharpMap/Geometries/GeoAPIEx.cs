@@ -3,6 +3,8 @@ using SharpMap.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Reflection;
+using NetTopologySuite.Geometries;
 
 namespace GeoAPI.Geometries
 {
@@ -360,5 +362,26 @@ namespace GeoAPI.Geometries
             var reader = new NetTopologySuite.IO.WKTReader(factory);
             return reader.Read(wkt);
         }
+
+
+        private static readonly FieldInfo _envFi;
+        static GeoAPIEx()
+        {
+            try
+            {
+                _envFi = typeof(Geometry).GetField("_envelope", BindingFlags.Instance | BindingFlags.NonPublic);
+            }
+            catch{}
+        }
+
+        public static void SetExtent(Geometry geom, Envelope envelope)
+        {
+            if (geom == null)
+                return;
+
+            if (_envFi != null)
+                _envFi.SetValue(geom, envelope);
+        }
+
     }
 }
