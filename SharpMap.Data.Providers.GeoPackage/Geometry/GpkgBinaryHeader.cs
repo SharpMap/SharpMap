@@ -34,10 +34,10 @@ namespace SharpMap.Data.Providers.Geometry
 
             switch (res.Endianess)
             {
-                case 0:
+                case 1:
                     ReadSridExtent(reader, res);
                     break;
-                case 1:
+                case 2:
                     ReadBESridExtent(reader, res);
                     break;
             }

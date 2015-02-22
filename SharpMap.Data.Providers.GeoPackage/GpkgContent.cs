@@ -41,11 +41,12 @@ namespace SharpMap.Data.Providers
         /// <param name="connectionString">The connection string</param>
         public GpkgContent(IDataRecord rdr, string connectionString)
         {
-            _tableName = rdr.GetString(rdr.GetOrdinal("table_name"));
-            _dataType = rdr.GetString(rdr.GetOrdinal("data_type"));
-            _identifier = rdr.GetString(rdr.GetOrdinal("identifier"));
-            _description = rdr.GetString(rdr.GetOrdinal("description"));
-            _lastChange = rdr.GetDateTime(rdr.GetOrdinal("last_change"));
+            int index;
+            _tableName = rdr.IsDBNull(index=rdr.GetOrdinal("table_name")) ? string.Empty : rdr.GetString(index);
+            _dataType = rdr.IsDBNull(index=rdr.GetOrdinal("data_type")) ? string.Empty : rdr.GetString(index);
+            _identifier = rdr.IsDBNull(index = rdr.GetOrdinal("identifier")) ? string.Empty : rdr.GetString(index);
+            _description = rdr.IsDBNull(index = rdr.GetOrdinal("description")) ? string.Empty : rdr.GetString(index);
+            _lastChange = rdr.IsDBNull(index = rdr.GetOrdinal("last_change")) ? DateTime.MinValue : rdr.GetDateTime(index);
             _extent = new Envelope(
                 rdr.GetDouble(rdr.GetOrdinal("min_x")), rdr.GetDouble(rdr.GetOrdinal("max_x")), 
                 rdr.GetDouble(rdr.GetOrdinal("min_y")), rdr.GetDouble(rdr.GetOrdinal("max_y")));
@@ -170,6 +171,8 @@ namespace SharpMap.Data.Providers
         {
             const string sqlPragmaTableInfo ="PRAGMA table_info('{0}');";
 
+            const string sqlSelectHasColumnData =
+                "SELECT COUNT(*) FROM \"sqlite_master\" WHERE \"type\"='table' AND \"name\"='gpkg_column_data';";
             const string sqlSelectColumnData =
                 "SELECT * FROM \"gpkg_column_data\" WHERE \"table_name\"=? AND \"column_name\"=?;";
 
@@ -190,8 +193,12 @@ namespace SharpMap.Data.Providers
                 if (!rdrCI.HasRows)
                     throw new GeoPackageException("The table '{0}' does not exist in database!");
 
+                // has additional column data?
+                var cmdCD = new SQLiteCommand(sqlSelectHasColumnData, cnCD);
+                var hasCD = Convert.ToInt32(cmdCD.ExecuteScalar()) == 1;
+
                 // additional column data
-                var cmdCD = new SQLiteCommand(sqlSelectColumnData, cnCD);
+                cmdCD = new SQLiteCommand(sqlSelectColumnData, cnCD);
                 var parCD0 = cmdCD.Parameters.Add("table_name", DbType.String);
                 parCD0.Value = TableName;
                 var parCD1 = cmdCD.Parameters.Add("column_name", DbType.String);
@@ -221,32 +228,39 @@ namespace SharpMap.Data.Providers
                     // Add the column
                     fdt.Columns.Add(dc);
 
-                    parCD1.Value = columnName;
-                    var rdrCD = cmdCD.ExecuteReader(CommandBehavior.SingleRow);
-                    if (rdrCD.HasRows)
+                    // Get additional information
+                    if (hasCD)
                     {
-                        rdrCD.Read();
-                        if (!rdrCD.IsDBNull(2)) dc.Caption = rdrCD.GetString(2);
-
-                        if (!rdrCD.IsDBNull(3)) 
-                            dc.ExtendedProperties.Add("Title", rdrCD.GetString(3));
-                        if (!rdrCD.IsDBNull(4)) 
-                            dc.ExtendedProperties.Add("Description", rdrCD.GetString(4));
-                        if (!rdrCD.IsDBNull(5)) 
-                            dc.ExtendedProperties.Add("MimeType", rdrCD.GetString(5));
-
-                        if (!rdrCD.IsDBNull(rdrCD.GetOrdinal("constraint_name")))
+                        parCD1.Value = columnName;
+                        var rdrCD = cmdCD.ExecuteReader(CommandBehavior.SingleRow);
+                        if (rdrCD.HasRows)
                         {
-                            parCC0.Value = rdrCD.GetString(rdrCD.GetOrdinal("constraint_name"));
-                            var rdrCC = cmdCC.ExecuteReader();
-                            while (rdrCC.Read())
+                            rdrCD.Read();
+                            if (!rdrCD.IsDBNull(2)) dc.Caption = rdrCD.GetString(2);
+
+                            if (!rdrCD.IsDBNull(3))
+                                dc.ExtendedProperties.Add("Title", rdrCD.GetString(3));
+                            if (!rdrCD.IsDBNull(4))
+                                dc.ExtendedProperties.Add("Description", rdrCD.GetString(4));
+                            if (!rdrCD.IsDBNull(5))
+                                dc.ExtendedProperties.Add("MimeType", rdrCD.GetString(5));
+
+                            if (!rdrCD.IsDBNull(rdrCD.GetOrdinal("constraint_name")))
                             {
+                                parCC0.Value = rdrCD.GetString(rdrCD.GetOrdinal("constraint_name"));
+                                var rdrCC = cmdCC.ExecuteReader();
+                                while (rdrCC.Read())
+                                {
+                                }
                             }
                         }
                     }
 
                     if (rdrCI.GetInt32(5) == 1)
+                    {
                         fdt.PrimaryKey = new[] {dc};
+                        OidColumn = dc.ColumnName;
+                    }
                 }
             }
             return fdt;

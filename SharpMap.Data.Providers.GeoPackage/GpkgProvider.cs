@@ -31,8 +31,8 @@ namespace SharpMap.Data.Providers
             ConnectionID = content.ConnectionString;
             _reader = new GpkgStandardBinaryReader(GeoAPI.GeometryServiceProvider.Instance);
             _extent = content.Extent;
-            _rtreeConstraint = BuildRtreeConstraint(content);
             _baseTable = content.GetBaseTable();
+            _rtreeConstraint = BuildRtreeConstraint(content);
         }
 
         private string BuildRtreeConstraint(GpkgContent content)
@@ -74,7 +74,7 @@ namespace SharpMap.Data.Providers
 
             if ((i & 4) == 4)
             {
-                for (var j = 1; i < _baseTable.Columns.Count; i++)
+                for (var j = 1; j < _baseTable.Columns.Count; j++)
                     columns.Add(string.Format("\"{0}\"", _baseTable.Columns[j].ColumnName));
             }
 
@@ -91,17 +91,20 @@ namespace SharpMap.Data.Providers
             definitionQuery = definitionQuery ?? DefinitionQuery;
             if (!string.IsNullOrEmpty(definitionQuery))
             {
-                sql.AppendFormat(" WHERE {0}", DefinitionQuery);
+                sql.AppendFormat(" WHERE {0}", definitionQuery);
                 whereAdded = true;
             }
 
             // spatial Constraint
             if ((i & 8) == 0 && extent != null)
             {
-                if (string.IsNullOrEmpty(_rtreeConstraint))
+                if (!string.IsNullOrEmpty(_rtreeConstraint))
                 {
                     sql.AppendFormat(" {0} {1}", whereAdded ? "AND" : "WHERE", _rtreeConstraint);
-                    cmd.Parameters.AddRange(new[] { extent.MinX, extent.MaxX, extent.MinY, extent.MaxY });
+                    cmd.Parameters.AddWithValue(null, extent.MinX); 
+                    cmd.Parameters.AddWithValue(null, extent.MaxX);
+                    cmd.Parameters.AddWithValue(null, extent.MinY);
+                    cmd.Parameters.AddWithValue(null, extent.MaxY);
                 }
             }
 
@@ -132,6 +135,10 @@ namespace SharpMap.Data.Providers
                     var gpkg = _reader.Read((byte[]) reader.GetValue(0));
                     if (bbox.Intersects(gpkg.Header.Extent))
                         res.Add(gpkg.GetGeometry());
+                    //else
+                    //{
+                    //    System.Threading.Thread.Sleep(1);
+                    //}
                 }
             }
             return res;
@@ -236,6 +243,7 @@ namespace SharpMap.Data.Providers
                 if (rdr.HasRows)
                 {
                     var data = new object[rdr.FieldCount - 1];
+                    rdr.Read();
                     rdr.GetValues(data);
                     var row = _baseTable.NewRow();
                     row.ItemArray = data;

@@ -1,6 +1,9 @@
-﻿using System.IO;
+﻿using System.Collections.ObjectModel;
+using System.IO;
+using GeoAPI.Geometries;
 using NetTopologySuite;
 using NUnit.Framework;
+using SharpMap.Data;
 using SharpMap.Data.Providers;
 using SharpMap.Layers;
 
@@ -31,10 +34,45 @@ namespace UnitTests.Data.Providers
             {
                 IProvider p = null;
                 Assert.DoesNotThrow(() => p = gpkg.GetFeatureProvider(feature.TableName));
+
+                TestProvider(p);
+                
                 ILayer l = null;
                 Assert.DoesNotThrow(() => l = gpkg.GetFeatureLayer(feature));
 
             }
+        }
+
+        private static void TestProvider(IProvider provider)
+        {
+            int numFeatures = 0;
+            Assert.DoesNotThrow(() => numFeatures = provider.GetFeatureCount());
+
+            Collection<uint> oids = null;
+            Assert.DoesNotThrow(() => oids = provider.GetObjectIDsInView(provider.GetExtents()));
+            Assert.AreEqual(numFeatures, oids.Count);
+
+            foreach (var oid in oids)
+            {
+                IGeometry geom = null;
+                Assert.DoesNotThrow(() => geom = provider.GetGeometryByID(oid));
+                FeatureDataRow feat = null;
+                Assert.DoesNotThrow(() => feat = provider.GetFeature(oid));
+
+                Assert.IsTrue(geom.EqualsExact(feat.Geometry));
+
+            }
+
+            Collection<IGeometry> geoms = null;
+            Assert.DoesNotThrow(() => geoms = provider.GetGeometriesInView(provider.GetExtents()));
+
+            Assert.AreEqual(numFeatures, geoms.Count);
+            
+            var fds = new FeatureDataSet();
+            Assert.DoesNotThrow(() => provider.ExecuteIntersectionQuery(provider.GetExtents(), fds));
+            Assert.AreEqual(numFeatures, fds.Tables[0].Rows.Count);
+
+
         }
     }
 }
