@@ -39,7 +39,7 @@ namespace SharpMap.Data.Providers
                 bytes = new byte[4];
                 fs.Seek(68, SeekOrigin.Begin);
                 fs.Read(bytes, 0, 4);
-                if (BitConverter.ToInt32(bytes, 0) != 0x47503130)
+                if (BitConverter.ToInt32(bytes, 0) != 808538183) //0x47503130)
                     throw new GeoPackageException(
                         "Violation of requirement 2:\nA GeoPackage SHALL contain 0x47503130 ('GP10' in ASCII) in the application id field of the SQLite database header to indicate a GeoPackage version 1.0 file.");
             }
@@ -51,7 +51,7 @@ namespace SharpMap.Data.Providers
             using (var cn = new SQLiteConnection(connectionString))
             {
                 cn.Open();
-                var applicationId = (int)new SQLiteCommand("PRAGMA application_id;", cn).ExecuteScalar();
+                var applicationId = Convert.ToInt32(new SQLiteCommand("PRAGMA application_id;", cn).ExecuteScalar());
                 if (applicationId != 1196437808)
                     throw new GeoPackageException(
                         "Violation of requirement 2:\nA GeoPackage SHALL contain 0x47503130 ('GP10' in ASCII) in the application id field of the SQLite database header to indicate a GeoPackage version 1.0 file.");
@@ -62,7 +62,7 @@ namespace SharpMap.Data.Providers
             //A GeoPackage SHALL have the file extension name '.gpkg'
             //It is RECOMMENDED that Extended GeoPackages use the file extension '.gpkx', but this is NOT a GeoPackage requirement
             var extension = Path.GetExtension(filename);
-            if (string.IsNullOrEmpty(extension) || (extension = extension.ToLowerInvariant()) != ".gpkg" || extension != ".gpkx")
+            if (string.IsNullOrEmpty(extension) || (extension = extension.ToLowerInvariant()) != ".gpkg" && extension != ".gpkx")
             {
                 throw new GeoPackageException(
                     "Violation of requirement 3:\nA GeoPackage SHALL have the file extension name '.gpkg'.\nIt is RECOMMENDED that Extended GeoPackages use the file extension '.gpkx', but this is NOT a GeoPackage requirement");

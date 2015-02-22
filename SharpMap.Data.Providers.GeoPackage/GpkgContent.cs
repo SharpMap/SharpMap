@@ -1,6 +1,7 @@
 using System;
 using System.Data;
 using System.Data.SQLite;
+using System.Diagnostics;
 #if DotSpatialProjections
 using ICoordinateSystem = GeoAPI.CoordinateSystems.ICoordinateSystem;
 #else
@@ -37,7 +38,8 @@ namespace SharpMap.Data.Providers
         /// Creates an instance of this class
         /// </summary>
         /// <param name="rdr">The data record</param>
-        public GpkgContent(IDataRecord rdr)
+        /// <param name="connectionString">The connection string</param>
+        public GpkgContent(IDataRecord rdr, string connectionString)
         {
             _tableName = rdr.GetString(rdr.GetOrdinal("table_name"));
             _dataType = rdr.GetString(rdr.GetOrdinal("data_type"));
@@ -48,6 +50,7 @@ namespace SharpMap.Data.Providers
                 rdr.GetDouble(rdr.GetOrdinal("min_x")), rdr.GetDouble(rdr.GetOrdinal("max_x")), 
                 rdr.GetDouble(rdr.GetOrdinal("min_y")), rdr.GetDouble(rdr.GetOrdinal("max_y")));
             _srid = rdr.GetInt32(rdr.GetOrdinal("srs_id"));
+            _connectionString = connectionString;
         }
 
         /// <summary>
@@ -126,16 +129,17 @@ namespace SharpMap.Data.Providers
                     throw new GeoPackageException(
                         string.Format("No geometry column defined for '{0}'", TableName));
                 rdr.Read();
-                GeometryColumn = rdr.GetString(1);
-                GeometryType = GetGeometryType(rdr.GetString(2));
-                ZOption = (GpkgOrdinateOption)(rdr.GetByte(4) + 1);
-                MOption = (GpkgOrdinateOption)(rdr.GetByte(5) + 1);
+                GeometryColumn = rdr.GetString(rdr.GetOrdinal("column_name"));
+                GeometryType = GetGeometryType(rdr.GetString(rdr.GetOrdinal("geometry_type_name")));
+                Debug.Assert(rdr.GetInt32(rdr.GetOrdinal("srs_id")) == SRID);
+                ZOption = (GpkgOrdinateOption)(rdr.GetByte(rdr.GetOrdinal("z")) + 1);
+                MOption = (GpkgOrdinateOption)(rdr.GetByte(rdr.GetOrdinal("m")) + 1);
             }
         }
 
         private static int GetGeometryType(string geometryTypeName)
         {
-            switch (geometryTypeName)
+            switch (geometryTypeName.ToUpperInvariant())
             {
                 case "GEOMETRY":
                     return 0; //OgcGeometryType.Geometry;
@@ -212,8 +216,7 @@ namespace SharpMap.Data.Providers
                     if (rdrCI.GetInt32(3) == 0) dc.AllowDBNull = true;
 
                     // Assign default value
-                    var @default = rdrCI.GetString(4);
-                    if (@default != "NULL") dc.DefaultValue = Convert.ChangeType(rdrCI.GetValue(4), dc.DataType);
+                    if (!rdrCI.IsDBNull(4)) dc.DefaultValue = rdrCI.GetValue(4);
 
                     // Add the column
                     fdt.Columns.Add(dc);

@@ -186,6 +186,7 @@
     <Compile Include="Data\Providers\DbaseReaderTests.cs" />
     <Compile Include="Data\Providers\DbTests.cs" />
     <Compile Include="Data\Providers\GeometryFeatureProviderTest.cs" />
+    <Compile Include="Data\Providers\GeoPackageTest.cs" />
     <Compile Include="Data\Providers\KmlProviderTests.cs" />
     <Compile Include="Data\Providers\ManagedSQLiteTests.cs" />
     <Compile Include="Data\Providers\MsSqlServerSpatialTests.cs" />
@@ -246,6 +247,10 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\SharpMap.Data.Providers.GeoPackage\SharpMap.Data.Providers.GeoPackage.csproj">
+      <Project>{af0594ab-fc1d-47e4-8cdd-361cdc621a36}</Project>
+      <Name>SharpMap.Data.Providers.GeoPackage</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SharpMap.Data.Providers.Kml\SharpMap.Data.Providers.Kml.csproj">
       <Project>{f9da6934-413f-4744-84ce-923d901f60e6}</Project>
       <Name>SharpMap.Data.Providers.Kml</Name>

@@ -77,10 +77,10 @@ namespace SharpMap.Data.Providers
             using (var cn = new SQLiteConnection(_connectionString))
             {
                 cn.Open();
-                var cmd = new SQLiteCommand("SELECT * FROM \"gpkg_contents\" WHERE \"data_type\"='" + kind + "';");
+                var cmd = new SQLiteCommand("SELECT * FROM \"gpkg_contents\" WHERE \"data_type\"='" + kind + "';", cn);
                 var rdr = cmd.ExecuteReader();
                 while (rdr.Read())
-                    res.Add(new GpkgContent(rdr));
+                    res.Add(new GpkgContent(rdr, _connectionString));
             }
             return res;
         }
