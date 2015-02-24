@@ -90,6 +90,7 @@ namespace SharpMap.Layers
             : this()
         {
             BaseLayer = vectorLayer;
+            LayerName = "heat_" + vectorLayer.LayerName;
             DataSource = vectorLayer.DataSource;
             HeatValueComputer = GetHeatValueFromColumn;
             HeatValueColumn = heatValueColumn;
@@ -106,6 +107,7 @@ namespace SharpMap.Layers
             :this()
         {
             DataSource = provider;
+            LayerName = "heat_" + provider.ConnectionID + heatValueColumn;
             HeatValueComputer = GetHeatValueFromColumn;
             HeatValueColumn = heatValueColumn;
             HeatValueScale = heatValueScale;
@@ -120,6 +122,7 @@ namespace SharpMap.Layers
             : this()
         {
             BaseLayer = vectorLayer;
+            LayerName = "heat_" + vectorLayer.LayerName;
             DataSource = vectorLayer.DataSource;
             HeatValueComputer = heatComputer;
         }
@@ -133,6 +136,7 @@ namespace SharpMap.Layers
             : this()
         {
             DataSource = provider;
+            LayerName = "heat_" + provider.ConnectionID;
             HeatValueComputer = heatComputer;
         }
 

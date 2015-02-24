@@ -68,13 +68,14 @@
             p.ExecuteIntersectionQuery(extents, fds);
             NUnit.Framework.Assert.AreEqual(1, fds.Tables.Count);
             NUnit.Framework.Assert.AreEqual(4, fds.Tables[0].Rows.Count);
+            fds.Tables.Clear();
 
             p.ExecuteIntersectionQuery(poly, fds);
-            NUnit.Framework.Assert.AreEqual(2, fds.Tables.Count);
-            NUnit.Framework.Assert.AreEqual(3, fds.Tables[1].Rows.Count);
+            NUnit.Framework.Assert.AreEqual(1, fds.Tables.Count);
+            NUnit.Framework.Assert.AreEqual(3, fds.Tables[0].Rows.Count);
 
             var inside = new System.Collections.Generic.List<bool>(new[] { false, true, true, true });
-            NUnit.Framework.Assert.AreEqual(System.Linq.Enumerable.Count(inside, (b) => b == true), fds.Tables[1].Rows.Count);
+            NUnit.Framework.Assert.AreEqual(System.Linq.Enumerable.Count(inside, (b) => b == true), fds.Tables[0].Rows.Count);
 
             var ext = p.GetExtents();
             var oids = p.GetObjectIDsInView(ext);
