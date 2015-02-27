@@ -115,23 +115,32 @@ namespace SharpMap.Data.Providers
             return new TileAsyncLayer(new GpkgTileSource(content, schema), content.TableName);
         }
 
-        public IProvider GetFeatureProvider(string name)
+        public IProvider GetFeatureProvider(GpkgContent content)
         {
-            var content = FindContent(Features, name);
             if (content == null)
-                throw new ArgumentException(string.Format("No feature layer named '{0}'", name));
+                throw new ArgumentNullException("content");
 
             var p = new GpkgProvider(content);
             return p;
         }
 
+        /// <summary>
+        /// Method to get a feature layer for the given content
+        /// </summary>
+        /// <param name="content">The content</param>
+        /// <param name="createLayer">A delegate function to create the layer</param>
+        /// <returns>A layer</returns>
         public ILayer GetFeatureLayer(GpkgContent content, Func<GpkgContent, IProvider, ILayer> createLayer = null)
         {
+            if (content == null)
+                throw new ArgumentNullException("content");
+
             createLayer = createLayer ?? CreateVectorLayer;
-            return createLayer(content, GetFeatureProvider(content.TableName));
+            return createLayer(content, GetFeatureProvider(content));
         }
 
         #region private helper methods
+
         private static ILayer CreateVectorLayer(GpkgContent content, IProvider provider)
         {
             return new VectorLayer(content.TableName, provider) { Style = VectorStyle.CreateRandomStyle() };

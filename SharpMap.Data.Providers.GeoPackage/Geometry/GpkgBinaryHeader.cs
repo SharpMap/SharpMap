@@ -151,7 +151,7 @@ namespace SharpMap.Data.Providers.Geometry
         /// <summary>
         /// Gets a value indicating that this geometry is empty
         /// </summary>
-        public bool IsEmpty { get { return (_flags & IsEmptyFlag) == 0; }}
+        public bool IsEmpty { get { return (_flags & IsEmptyFlag) == IsEmptyFlag; }}
 
         /// <summary>
         /// Gets a value indicating that this geometry is empty
