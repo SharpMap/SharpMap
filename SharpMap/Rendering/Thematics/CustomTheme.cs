@@ -26,7 +26,7 @@ namespace SharpMap.Rendering.Thematics
     /// The CustomTheme class is used for defining your own thematic rendering by using a custom get-style-delegate.
     /// </summary>
     [Serializable]
-    public class CustomTheme : ITheme, ISerializable
+    public class CustomTheme : ITheme, ISerializable, ICloneable
     {
         #region Delegates
 
@@ -148,5 +148,15 @@ namespace SharpMap.Rendering.Thematics
         }
 
         #endregion
+
+        public object Clone()
+        {
+            var res = (CustomTheme)MemberwiseClone();
+            res._defaultStyle = _defaultStyle is ICloneable
+                ? (IStyle) ((ICloneable) _defaultStyle).Clone()
+                : _defaultStyle;
+
+            return res;
+        }
     }
 }

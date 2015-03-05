@@ -32,6 +32,7 @@ using SharpMap.Rendering;
 using SharpMap.Rendering.Thematics;
 using SharpMap.Styles;
 using System.Collections.Generic;
+using System.Runtime.Remoting.Services;
 using Common.Logging;
 
 namespace SharpMap.Layers
@@ -40,7 +41,7 @@ namespace SharpMap.Layers
     /// Class for vector layer properties
     /// </summary>
     [Serializable]
-    public class VectorLayer : Layer, ICanQueryLayer
+    public class VectorLayer : Layer, ICanQueryLayer, ICloneable
     {
         static readonly ILog _logger = LogManager.GetLogger(typeof(VectorLayer));
 
@@ -622,5 +623,14 @@ namespace SharpMap.Layers
         }
 
         #endregion
+
+        public object Clone()
+        {
+            var res = (VectorLayer)MemberwiseClone();
+            res.Style = Style.Clone();
+            if (Theme is ICloneable)
+                res.Theme = (ITheme) ((ICloneable) Theme).Clone();
+            return res;
+        }
     }
 }

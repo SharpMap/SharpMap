@@ -22,6 +22,13 @@ namespace SharpMap.Styles
     /// <summary>
     /// Defines an interface for defining layer styles
     /// </summary>
+    /// <remarks>
+    /// Implementation should 
+    /// <list type="Bullet">
+    /// <item>be treated as immutable once assigned to a <see cref="SharpMap.Layers.Layer"/>.</item>
+    /// <item>consider also implementing <see cref="T:System.ICloneable"/> and clone all graphic objects.</item>
+    /// </list>
+    /// </remarks>
     public interface IStyle : IDisposable
     {
         /// <summary>

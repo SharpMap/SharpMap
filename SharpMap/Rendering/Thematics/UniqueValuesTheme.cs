@@ -23,12 +23,16 @@ namespace SharpMap.Rendering.Thematics
     /// </summary>
     /// <typeparam name="T">Type of the featureattribute to match</typeparam>
     [Serializable]
-    public class UniqueValuesTheme<T>  : ITheme
+    public class UniqueValuesTheme<T>  : ITheme, ICloneable
     {
         readonly IStyle _default;
 
         //Internally we use strings to compare everything since we don't know what we might get from the datasource...
         readonly Dictionary<string, IStyle> _styleMap;
+
+        // For cloning purposes we need the original value, too
+        readonly Dictionary<string, T> _originalValue;
+
         readonly string _attributeName;
 
         /// <summary>
@@ -41,8 +45,13 @@ namespace SharpMap.Rendering.Thematics
         {
             _attributeName = attributeName;
             _styleMap = new Dictionary<string, IStyle>();
+            _originalValue = new Dictionary<string, T>();
             foreach (var kvp in styleMap)
-                _styleMap.Add(kvp.Key.ToString(), kvp.Value);
+            {
+                var key = kvp.Key.ToString();
+                _styleMap.Add(key, kvp.Value);
+                _originalValue.Add(key, kvp.Key);
+            }
 
             _default = defaultStyle;
         }
@@ -98,6 +107,16 @@ namespace SharpMap.Rendering.Thematics
             if (_styleMap.TryGetValue(value, out result))
                 return result;
             return _default;
+        }
+
+        public object Clone()
+        {
+            var defStyle = (_default is ICloneable) ? (IStyle) ((ICloneable) _default).Clone() : _default;
+            var styleMap = new Dictionary<T, IStyle>(_styleMap.Count);
+            foreach (var style in _styleMap)
+                styleMap.Add(_originalValue[style.Key], style.Value is ICloneable ? (IStyle) ((ICloneable) style.Value).Clone() : style.Value);
+
+            return new UniqueValuesTheme<T>(_attributeName, styleMap, defStyle);
         }
     }
 }

@@ -350,7 +350,7 @@ namespace SharpMap.Rendering.Thematics
     /// The GradientTheme class defines a gradient color thematic rendering of features based by a numeric attribute.
     /// </summary>
     [Serializable]
-    public class GradientTheme : GradientThemeBase
+    public class GradientTheme : GradientThemeBase, ICloneable
     {
         private string _columnName;
 
@@ -421,6 +421,17 @@ namespace SharpMap.Rendering.Thematics
         protected override double GetAttributeValue(FeatureDataRow row)
         {
             return Convert.ToDouble(row[_columnName]);
+        }
+
+        public object Clone()
+        {
+            var res = (GradientTheme) MemberwiseClone();
+            if (res.MinStyle is ICloneable)
+                res.MinStyle = (IStyle) ((ICloneable) MinStyle).Clone();
+            if (res.MaxStyle is ICloneable)
+                res.MaxStyle = (IStyle) ((ICloneable) MaxStyle).Clone();
+
+            return res;
         }
     }
 }

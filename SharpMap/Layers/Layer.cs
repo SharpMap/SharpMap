@@ -66,8 +66,8 @@ namespace SharpMap.Layers
         {
             _sourceFactory = GeoAPI.GeometryServiceProvider.Instance.CreateGeometryFactory(SRID);
 
-            if (SRIDChanged != null)
-                SRIDChanged(this, eventArgs);
+            var handler = SRIDChanged;
+            if (handler!= null) handler(this, eventArgs);
         }
 
         /// <summary>
@@ -81,8 +81,8 @@ namespace SharpMap.Layers
         /// <param name="eventArgs">The arguments associated with the event</param>
         protected virtual void OnStyleChanged(EventArgs eventArgs)
         {
-            if (StyleChanged != null)
-                StyleChanged(this, eventArgs);
+            var handler = StyleChanged;
+            if (handler != null) handler(this, eventArgs);
         }
 
         /// <summary>
@@ -96,8 +96,8 @@ namespace SharpMap.Layers
         /// <param name="eventArgs">The arguments associated with the event</param>
         protected virtual void OnLayerNameChanged(EventArgs eventArgs)
         {
-            if (LayerNameChanged != null)
-                LayerNameChanged(this, eventArgs);
+            var handler = LayerNameChanged;
+            if (handler != null) handler(this, eventArgs);
         }
 
         #endregion
