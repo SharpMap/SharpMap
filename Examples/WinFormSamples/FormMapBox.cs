@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Windows.Forms;
 using SharpMap.Forms;
+using SharpMap.Forms.Tools;
 using SharpMap.Layers;
 
 namespace WinFormSamples
@@ -84,13 +85,31 @@ namespace WinFormSamples
 
         private void btnTool_Click(object sender, EventArgs e)
         {
-            if (mapBox1.CustomTool == null)
-                mapBox1.CustomTool = new SampleTool(mapBox1);
-            else
+            var btn = (Button) sender;
+            IMapTool tool = null;
+
+            switch (btn.Name)
             {
-                mapBox1.CustomTool = null;
-                mapBox1.ActiveTool = MapBox.Tools.Pan;
+                case "btnTool":
+                    tool = new SampleTool(mapBox1);
+                    break;
+                case ("btnTool2"):
+                    tool = new MagnifierTool(mapBox1);
+                    break;
             }
+
+            var oldCustomTool = mapBox1.CustomTool;
+            if (oldCustomTool != null && oldCustomTool is IDisposable) ((IDisposable) oldCustomTool).Dispose();
+
+            mapBox1.CustomTool = tool;
+
+            //if (mapBox1.CustomTool == null)
+            //    mapBox1.CustomTool = new SampleTool(mapBox1);
+            //else
+            //{
+            //    mapBox1.CustomTool = null;
+            //    mapBox1.ActiveTool = MapBox.Tools.Pan;
+            //}
         }
     }
 }

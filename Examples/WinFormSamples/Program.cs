@@ -2,6 +2,7 @@
 using System.Windows.Forms;
 using System.Threading;
 using System.Net;
+using NetTopologySuite;
 
 namespace WinFormSamples
 {
@@ -13,6 +14,7 @@ namespace WinFormSamples
         [STAThread]
         private static void Main()
         {
+            GeoAPI.GeometryServiceProvider.Instance = new NtsGeometryServices();
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new DlgSamplesMenu());

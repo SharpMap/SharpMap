@@ -66,6 +66,7 @@ namespace WinFormSamples
             this.lvwDecorations = new System.Windows.Forms.ListView();
             this.pgMapDecoration = new System.Windows.Forms.PropertyGrid();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.btnTool2 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.scMain)).BeginInit();
             this.scMain.Panel2.SuspendLayout();
             this.scMain.SuspendLayout();
@@ -144,6 +145,7 @@ namespace WinFormSamples
             // 
             // toolStripContainer1.ContentPanel
             // 
+            this.toolStripContainer1.ContentPanel.Controls.Add(this.btnTool2);
             this.toolStripContainer1.ContentPanel.Controls.Add(this.btnTool);
             this.toolStripContainer1.ContentPanel.Controls.Add(this.mapBox1);
             this.toolStripContainer1.ContentPanel.Size = new System.Drawing.Size(651, 374);
@@ -164,11 +166,11 @@ namespace WinFormSamples
             // btnTool
             // 
             this.btnTool.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnTool.Location = new System.Drawing.Point(601, 3);
+            this.btnTool.Location = new System.Drawing.Point(595, 3);
             this.btnTool.Name = "btnTool";
-            this.btnTool.Size = new System.Drawing.Size(47, 23);
+            this.btnTool.Size = new System.Drawing.Size(53, 23);
             this.btnTool.TabIndex = 8;
-            this.btnTool.Text = "TOOL";
+            this.btnTool.Text = "Hover";
             this.btnTool.UseVisualStyleBackColor = true;
             this.btnTool.Click += new System.EventHandler(this.btnTool_Click);
             // 
@@ -444,6 +446,17 @@ namespace WinFormSamples
             this.pgMapDecoration.SelectedObject = this.lvwDecorations;
             this.pgMapDecoration.Size = new System.Drawing.Size(143, 262);
             this.pgMapDecoration.TabIndex = 9;
+            // 
+            // btnTool2
+            // 
+            this.btnTool2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnTool2.Location = new System.Drawing.Point(595, 32);
+            this.btnTool2.Name = "btnTool2";
+            this.btnTool2.Size = new System.Drawing.Size(53, 23);
+            this.btnTool2.TabIndex = 9;
+            this.btnTool2.Text = "Magnify";
+            this.btnTool2.UseVisualStyleBackColor = true;
+            this.btnTool2.Click += new System.EventHandler(this.btnTool_Click);
             // 
             // FormMapBox
             // 
@@ -788,6 +801,7 @@ namespace WinFormSamples
         private TrackBar tbAngle;
         private Button btnTool;
         private ToolTip toolTip1;
+        private Button btnTool2;
   }
 }
 

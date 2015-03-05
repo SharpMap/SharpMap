@@ -197,6 +197,7 @@
       <DependentUpon>FormMovingObjectOverTileLayer.cs</DependentUpon>
     </Compile>
     <Compile Include="LayerTools.cs" />
+    <Compile Include="MagnifierTool.cs" />
     <Compile Include="Samples\CreateTilesSample.cs" />
     <Compile Include="Samples\GdalSample.cs" />
     <Compile Include="Samples\GdiImageLayerSample.cs" />
@@ -206,6 +207,7 @@
     <Compile Include="Samples\OracleSample.cs" />
     <Compile Include="SampleTool.cs" />
     <Compile Include="SharpMapTileSource.cs" />
+    <EmbeddedResource Include="Magnifier.cur" />
     <None Include="GeoData\World\shp_textonpath\DeMo_Quan5.dbf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -555,7 +557,7 @@
       <Name>SharpMap.Extensions</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\SharpMap.Layers.HeatLayer\SharpMap.Layers.HeatLayer.csproj">
-      <Project>{47F790C2-6DC0-4A09-9026-FC81A09FD6A3}</Project>
+      <Project>{47f790c2-6dc0-4a09-9026-fc81a09fd6a3}</Project>
       <Name>SharpMap.Layers.HeatLayer</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\SharpMap.UI\SharpMap.UI.csproj">
