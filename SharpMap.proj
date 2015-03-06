@@ -7,7 +7,7 @@
     <EnableNuGetPackageRestore>true</EnableNuGetPackageRestore>
     <MSBuildCommunityTasksPath>$(SolutionDir)</MSBuildCommunityTasksPath>
     <!--- pass version in command line: MSBuild /t:NuGetPack SharpMap.proj /p:NuGetVersion=1.0.0  -->
-    <NuGetVersion>1.1.0</NuGetVersion>
+    <NuGetVersion>1.2.0</NuGetVersion>
   </PropertyGroup>
 
   <Target Name="EnableNPR">
@@ -35,15 +35,25 @@
   <Target Name="UnitTests">
     <MSBuild Projects="$(SolutionFile)" Targets="UnitTests" Properties="Configuration=Release" />
   </Target>
- 
+
+   <Target Name="JustNugetPack">
+    <!--<Exec Command="IF NOT EXIST (""$(SolutionDir)\Release"") MKDIR ""$(SolutionDir)\Release""" />-->
+    <Exec Command="$(SolutionDir).nuget\NuGet pack SharpMap.nuspec -version $(NuGetVersion) -outputdirectory $(SolutionDir)Release"/>
+    <Exec Command="$(SolutionDir).nuget\NuGet pack SharpMap.Extensions.nuspec -version $(NuGetVersion) -outputdirectory $(SolutionDir)Release"/>
+    <Exec Command="$(SolutionDir).nuget\NuGet pack SharpMap.UI.nuspec -version $(NuGetVersion) -outputdirectory $(SolutionDir)Release"/>
+    <Exec Command="$(SolutionDir).nuget\NuGet pack SharpMap.Web.nuspec -version $(NuGetVersion) -outputdirectory $(SolutionDir)Release"/>
+    <Exec Command="$(SolutionDir).nuget\NuGet pack SharpMap.Layers.HeatLayer.nuspec -version $(NuGetVersion) -outputdirectory $(SolutionDir)Release"/>
+    <Exec Command="$(SolutionDir).nuget\NuGet pack SharpMap.Data.Providers.OracleSpatial.nuspec -version $(NuGetVersion) -outputdirectory $(SolutionDir)Release"/>
+  </Target>
+
   <Target Name="NugetPack" DependsOnTargets="BuildRelease">
     <!--<Exec Command="IF NOT EXIST (""$(SolutionDir)\Release"") MKDIR ""$(SolutionDir)\Release""" />-->
-    <Exec Command="$(SolutionDir)\.nuget\NuGet pack SharpMap.nuspec -version $(NuGetVersion) -outputdirectory $(SolutionDir)\Release"/>
-    <Exec Command="$(SolutionDir)\.nuget\NuGet pack SharpMap.Extensions.nuspec -version $(NuGetVersion) -outputdirectory $(SolutionDir)\Release"/>
-    <Exec Command="$(SolutionDir)\.nuget\NuGet pack SharpMap.UI.nuspec -version $(NuGetVersion) -outputdirectory $(SolutionDir)\Release"/>
-    <Exec Command="$(SolutionDir)\.nuget\NuGet pack SharpMap.Web.nuspec -version $(NuGetVersion) -outputdirectory $(SolutionDir)\Release"/>
-    <Exec Command="$(SolutionDir)\.nuget\NuGet pack SharpMap.Layers.HeatLayer.nuspec -version $(NuGetVersion) -outputdirectory $(SolutionDir)\Release"/>
-    <Exec Command="$(SolutionDir)\.nuget\NuGet pack SharpMap.Data.Providers.OracleSpatial.nuspec -version $(NuGetVersion) -outputdirectory $(SolutionDir)\Release"/>
+    <Exec Command="$(SolutionDir).nuget\NuGet pack SharpMap.nuspec -version $(NuGetVersion) -outputdirectory $(SolutionDir)Release"/>
+    <Exec Command="$(SolutionDir).nuget\NuGet pack SharpMap.Extensions.nuspec -version $(NuGetVersion) -outputdirectory $(SolutionDir)Release"/>
+    <Exec Command="$(SolutionDir).nuget\NuGet pack SharpMap.UI.nuspec -version $(NuGetVersion) -outputdirectory $(SolutionDir)Release"/>
+    <Exec Command="$(SolutionDir).nuget\NuGet pack SharpMap.Web.nuspec -version $(NuGetVersion) -outputdirectory $(SolutionDir)Release"/>
+    <Exec Command="$(SolutionDir).nuget\NuGet pack SharpMap.Layers.HeatLayer.nuspec -version $(NuGetVersion) -outputdirectory $(SolutionDir)Release"/>
+    <Exec Command="$(SolutionDir).nuget\NuGet pack SharpMap.Data.Providers.OracleSpatial.nuspec -version $(NuGetVersion) -outputdirectory $(SolutionDir)Release"/>
   </Target>
 
   <Target Name="ZipSharpMap" DependsOnTargets="NugetPack">

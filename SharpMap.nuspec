@@ -51,13 +51,14 @@ Bug fixes
       <frameworkAssembly assemblyName="System.Xml" targetFramework="net40-client" />
     </frameworkAssemblies>
 	<dependencies>
-		<dependency id="BruTile" version="[0.7.4.4]"/>
-		<dependency id="Common.Logging" version="[2.0.0]"/>
-		<dependency id="GeoAPI" version="[1.7.2]"/>
-		<dependency id="NetTopologySuite" version="[1.13.2]"/>
-		<dependency id="NetTopologySuite.IO" version="[1.13.2]"/>
-		<dependency id="NewtonSoft.Json" version="[4.5.11]"/>
-		<dependency id="ProjNET4GeoAPI" version="[1.3.0.3]"/>
+		<dependency id="BruTile" version="[0.12]"/>
+    <dependency id="BruTile.Desktop" version="[0.12]"/>
+    <dependency id="Common.Logging" version="[2.0.0]"/>
+		<dependency id="GeoAPI" version="[1.7.3]"/>
+		<dependency id="NetTopologySuite" version="[1.13.3]"/>
+		<dependency id="NetTopologySuite.IO" version="[1.13.3]"/>
+		<dependency id="NewtonSoft.Json" version="[6.0.3]"/>
+		<dependency id="ProjNET4GeoAPI" version="[1.3.0.4]"/>
 	</dependencies>
   </metadata>
   <files>

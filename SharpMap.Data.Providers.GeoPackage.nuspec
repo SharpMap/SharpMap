@@ -14,22 +14,16 @@ It provides access to many types of GIS data, enables spatial querying of that d
 The engine is written in C# and based on the .Net 4.0 framework.
     </summary>
     <description>
-      This package contains additional providers and layers for SharpMap.
+      This package contains a SharpMap provider for OGC's GeoPackage.
     </description>
-    <tags>SharpMap GIS Map GeoSpatial</tags>
-    <frameworkAssemblies>
-      <frameworkAssembly assemblyName="System.Configuration" targetFramework="net40-client" />
-    </frameworkAssemblies>
+    <tags>SharpMap GIS Map OGC GeoPackage</tags>
 	<dependencies>
 		<dependency id="SharpMap" version="[$version$]"/>
-		<dependency id="GDAL" version="[1.9.2,1.10)" />
-		<dependency id="Npgsql" version="[2.2.4.3]"/>
 		<dependency id="System.Data.SQLite.Core" version="[1.0.94.0]"/>
-    <dependency id="NetTopologySuite.IO.SpatiaLite" version="[1.13.3]"/>
 	</dependencies>
   </metadata>
   <files>
-	<file src="SharpMap.Extensions\bin\Release\SharpMap.Extensions.dll" target="lib\net40-client"/>
-	<file src="SharpMap.Extensions\bin\Release\SharpMap.Extensions.xml" target="lib\net40-client"/>
+	<file src="SharpMap.Data.Providers.GeoPackage\bin\Release\SharpMap.Data.Providers.GeoPackage.dll" target="lib\net40-client"/>
+	<file src="SharpMap.Data.Providers.GeoPackage\bin\Release\SharpMap.Data.Providers.GeoPackage.xml" target="lib\net40-client"/>
   </files>
 </package>
