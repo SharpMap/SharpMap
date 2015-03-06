@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
-    <id>SharpMap.Extensions</id>
+    <id>SharpMap.Data.Providers.Kml</id>
     <version>$version$</version>
     <authors>SharpMap-Team</authors>
     <licenseUrl>http://sharpmap.codeplex.com/license</licenseUrl>
