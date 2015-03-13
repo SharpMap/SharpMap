@@ -36,6 +36,7 @@ namespace WinFormSamples
             _magnified = new PictureBox();
             _magnified.Size = new Size(75, 75);
             _magnified.BorderStyle = BorderStyle.FixedSingle;
+            _magnified.Visible = false;
 
             _parentMapBox.Controls.Add(_magnified);
 

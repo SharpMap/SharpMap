@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Drawing;
 using System.Windows.Forms;
 using SharpMap.Forms;
 using SharpMap.Forms.Tools;
@@ -91,17 +92,23 @@ namespace WinFormSamples
             switch (btn.Name)
             {
                 case "btnTool":
-                    tool = new SampleTool(mapBox1);
+                    tool = (mapBox1.CustomTool is SampleTool) ? null : new SampleTool(mapBox1);
                     break;
                 case ("btnTool2"):
-                    tool = new MagnifierTool(mapBox1);
+                    tool = (mapBox1.CustomTool is MagnifierTool) ? null : new MagnifierTool(mapBox1);
                     break;
             }
 
             var oldCustomTool = mapBox1.CustomTool;
-            if (oldCustomTool != null && oldCustomTool is IDisposable) ((IDisposable) oldCustomTool).Dispose();
+            if (oldCustomTool is SampleTool) btnTool.Font = new Font(btn.Font, FontStyle.Regular);
+            if (oldCustomTool is MagnifierTool) btnTool2.Font = new Font(btn.Font, FontStyle.Regular);
+
+            if (oldCustomTool is IDisposable) ((IDisposable) oldCustomTool).Dispose();
 
             mapBox1.CustomTool = tool;
+            btn.Font = new Font(btn.Font, tool == null ? FontStyle.Regular : FontStyle.Bold);
+            if (tool == null)
+                mapBox1.ActiveTool = MapBox.Tools.Pan;
 
             //if (mapBox1.CustomTool == null)
             //    mapBox1.CustomTool = new SampleTool(mapBox1);

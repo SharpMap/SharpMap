@@ -278,17 +278,17 @@ namespace WinFormSamples.Samples
                         returnStyle.Symbol = new Bitmap("Images/Bank.gif");
                         break;
                     case "hospital":
-                        returnStyle.Symbol = new Bitmap("Images/medical-facility.gif");
+                        returnStyle.Symbol = new Bitmap("Images/Medical-Facility.gif");
                         break;
                     case "hotel":
-                        returnStyle.Symbol = new Bitmap("Images/hotel.gif");
+                        returnStyle.Symbol = new Bitmap("Images/Hotel.gif");
                         break;
                     case "restaurant":
                     case "fast-food":
-                        returnStyle.Symbol = new Bitmap("Images/restaurant.gif");
+                        returnStyle.Symbol = new Bitmap("Images/Restaurant.gif");
                         break;
                     case "parking":
-                        returnStyle.Symbol = new Bitmap("Images/car.gif");
+                        returnStyle.Symbol = new Bitmap("Images/Car.gif");
                         break;
                     default:
                         Bitmap tmp = new Bitmap(1,1);
@@ -316,7 +316,9 @@ namespace WinFormSamples.Samples
             ShapeProvider sp = new ShapeProvider(string.Format("{0}/obepath.shp", PathOsm)) { Encoding = encoding };
             VectorLayer vl = new VectorLayer("obepath", sp);
             vl.SRID = 31466;
-            vl.Style.Symbol = new Bitmap("Images/car.gif");
+            var bmp = new Bitmap("Images/Car.gif");
+            bmp.MakeTransparent(bmp.GetPixel(0,0));
+            vl.Style.Symbol = bmp;
 
             VariableLayerCollection.Interval = 500;
             map.VariableLayers.Add(vl);

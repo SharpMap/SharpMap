@@ -17,27 +17,32 @@ namespace WinFormSamples
 
         private void button2_Click(object sender, EventArgs e)
         {
-            new FormMapBox().ShowDialog();
+            using(var f = new FormMapBox())
+                f.ShowDialog();
         }
 
         private void button4_Click(object sender, EventArgs e)
         {
-            new DockAreaForm().ShowDialog();
+            using(var f = new  DockAreaForm())
+                f.ShowDialog();
         }
 
         private void button5_Click(object sender, EventArgs e)
         {
-            new FormDemoDrawGeometries().ShowDialog();
+            using(var f = new FormDemoDrawGeometries())
+                f.ShowDialog();
         }
 
         private void button6_Click(object sender, EventArgs e)
         {
-            new FormAnimation().ShowDialog();
+            using(var f = new FormAnimation())
+                f.ShowDialog();
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
-            new FormMovingObjectOverTileLayer().ShowDialog();
+            using(var f = new FormMovingObjectOverTileLayer())
+                f.ShowDialog();
         }
 
     }

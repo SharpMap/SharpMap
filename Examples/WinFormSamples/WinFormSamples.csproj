@@ -208,6 +208,15 @@
     <Compile Include="SampleTool.cs" />
     <Compile Include="SharpMapTileSource.cs" />
     <EmbeddedResource Include="Magnifier.cur" />
+    <None Include="GeoData\World\cities.dbf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="GeoData\World\cities.shp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="GeoData\World\cities.shx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="GeoData\World\shp_textonpath\DeMo_Quan5.dbf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -445,19 +454,10 @@
     <None Include="GeoData\S57\US5TX51M.000">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="GeoData\World\cities.DBF">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Include="GeoData\World\cities.prj">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="GeoData\World\cities.SHP">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Include="GeoData\World\cities.shp.sidx">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="GeoData\World\cities.SHX">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="GeoData\World\countries.dbf">
