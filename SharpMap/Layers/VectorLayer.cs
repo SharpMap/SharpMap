@@ -415,7 +415,7 @@ namespace SharpMap.Layers
         /// </summary>
         /// <param name="style"></param>
         /// <returns></returns>
-        private static IEnumerable<IStyle> GetStylesToRender(IStyle style)
+        protected static IEnumerable<IStyle> GetStylesToRender(IStyle style)
         {
             IStyle[] stylesToRender = null;
             if (style is GroupStyle)
