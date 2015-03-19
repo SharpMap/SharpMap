@@ -404,19 +404,29 @@ namespace SharpMap.Layers
             //Initialize label collection
             var labels = new List<BaseLabel>();
 
-            //List<System.Drawing.Rectangle> LabelBoxes; //Used for collision detection
-            //Render labels
+            // Get the compare value for min/max visible. We assume the theme has the same visibility units as the main style
+            var compareValue = Style.VisibilityUnits == VisibilityUnits.ZoomLevel ? map.Zoom : map.MapScale;
 
+            // Set the style to use
+            var style = Style;
+
+            //Render labels
             for (int i = 0; i < features.Count; i++)
             {
                 var feature = features[i];
-                feature.Geometry = ToTarget(feature.Geometry);
 
-                LabelStyle style;
-                if (Theme != null) //If thematics is enabled, lets override the style
+                // Thematics?
+                if (Theme != null)
+                {
+                    //If thematics is enabled, lets override the style
                     style = Theme.GetStyle(feature) as LabelStyle;
-                else
-                    style = Style;
+                    // Check if this style is to be rendered at all
+                    if (style == null) { continue; }
+                    if (!(style.Enabled && style.MaxVisible >= compareValue && Style.MinVisible < compareValue)) continue;
+                }
+
+                // Transform the geometry for the target
+                feature.Geometry = ToTarget(feature.Geometry);
 
                 float rotationStyle = style != null ? style.Rotation : 0f;
                 float rotationColumn = 0f;
@@ -570,6 +580,7 @@ namespace SharpMap.Layers
                             lblStyle.GetStringFormat(), lblStyle.IgnoreLength, plbl.Location);
                     }
                 }
+
             }
             base.Render(g, map);
         }
@@ -653,9 +664,12 @@ namespace SharpMap.Layers
                 lbl = new Label(text, location, rotation, priority,
                                 new LabelBox(location.X - style.CollisionBuffer.Width,
                                              location.Y - style.CollisionBuffer.Height,
-                                             size.Width + 2f*style.CollisionBuffer.Width,
-                                             size.Height + 2f*style.CollisionBuffer.Height), style) 
-                                { LabelPoint = position }; 
+                                             size.Width + 2f * style.CollisionBuffer.Width,
+                                             size.Height + 2f * style.CollisionBuffer.Height), style)
+                                {
+                                    LabelPoint = position,
+                                    Priority = priority,
+                                }; 
             }
 
             /*
