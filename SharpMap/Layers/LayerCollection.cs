@@ -17,7 +17,6 @@
 
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Collections.Specialized;
 
 namespace SharpMap.Layers
@@ -180,14 +179,17 @@ namespace SharpMap.Layers
         /// </summary>
         protected override void ClearItems()
         {
-            foreach (var layer in Items)
+            lock (this)
             {
-                var asyncLayer = layer as ITileAsyncLayer;
-                if (asyncLayer != null) asyncLayer.Cancel();
-            }
-            base.ClearItems();
+                foreach (var layer in Items)
+                {
+                    var asyncLayer = layer as ITileAsyncLayer;
+                    if (asyncLayer != null) asyncLayer.Cancel();
+                }
+                base.ClearItems();
 
-            OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
+                OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
+            }
         }
 
         public event NotifyCollectionChangedEventHandler CollectionChanged;
@@ -204,26 +206,35 @@ namespace SharpMap.Layers
 
         protected override void InsertItem(int index, ILayer item)
         {
-            base.InsertItem(index, item);
+            lock (this)
+            {
+                base.InsertItem(index, item);
 
-            OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, item, index));
+                OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, item, index));
+            }
         }
 
         protected override void RemoveItem(int index)
         {
-            var removedItem = this[index];
-            base.RemoveItem(index);
+            lock (this)
+            {
+                var removedItem = this[index];
+                base.RemoveItem(index);
 
-            OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, removedItem, index));
+                OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, removedItem, index));
+            }
         }
 
         protected override void SetItem(int index, ILayer item)
         {
-            var oldItem = this[index];
+            lock (this)
+            {
+                var oldItem = this[index];
 
-            base.SetItem(index, item);
+                base.SetItem(index, item);
 
-            OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Replace, item, oldItem, index));
+                OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Replace, item, oldItem, index));
+            }
         }
     }
 }
