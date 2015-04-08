@@ -1,19 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Drawing;
+using GDI = System.Drawing;
 using System.Runtime.CompilerServices;
 using Common.Logging;
 using GeoAPI.Geometries;
 using SharpDX;
-using SharpDX.Direct2D1;
 using SharpMap.Data;
 using SharpMap.Data.Providers;
 using SharpMap.Layers.Styles;
 using SharpMap.Rendering;
 using SharpMap.Styles;
-using D2D1Factory = SharpDX.Direct2D1.Factory;
-using D2D1Bitmap = SharpDX.Direct2D1.Bitmap;
+using D2D1 = SharpDX.Direct2D1;
 
 namespace SharpMap.Layers
 {
@@ -23,7 +21,7 @@ namespace SharpMap.Layers
     public class SharpDXVectorLayer : VectorLayer
     {
         private static readonly ILog _logger = LogManager.GetCurrentClassLogger();
-        private readonly D2D1Factory _d2d1Factory;
+        private readonly D2D1.Factory _d2d1Factory;
 
         private readonly object _syncRoot;
         private IRenderTargetFactory _renderTargetFactory;
@@ -31,7 +29,7 @@ namespace SharpMap.Layers
         /// <summary>
         /// Gets or sets a value indicating the anti-alias mode.
         /// </summary>
-        public AntialiasMode AntialiasMode { get; set; } 
+        public D2D1.AntialiasMode AntialiasMode { get; set; } 
 
         /// <summary>
         /// Creates an instance of this class
@@ -53,8 +51,8 @@ namespace SharpMap.Layers
         {
             _syncRoot = new object();
 
-            _d2d1Factory = new D2D1Factory(FactoryType.SingleThreaded);
-            AntialiasMode = AntialiasMode.PerPrimitive;
+            _d2d1Factory = new D2D1.Factory(D2D1.FactoryType.SingleThreaded);
+            AntialiasMode = D2D1.AntialiasMode.PerPrimitive;
         }
 
         protected override void ReleaseManagedResources()
@@ -75,7 +73,7 @@ namespace SharpMap.Layers
         {
             get
             {
-                return _renderTargetFactory ?? (_renderTargetFactory = new WICRenderTargetFactory());
+                return _renderTargetFactory ?? (_renderTargetFactory = new Texture2DRenderTargetFactory());
             }
             set
             {
@@ -84,7 +82,7 @@ namespace SharpMap.Layers
         }
 
         [MethodImpl(MethodImplOptions.Synchronized)]
-        public override void Render(Graphics g, Map map)
+        public override void Render(GDI.Graphics g, Map map)
         {
             if (map.Center == null)
                 throw (new ApplicationException("Cannot render map. View center not specified"));
@@ -124,7 +122,7 @@ namespace SharpMap.Layers
         }
 
 
-        private void RenderInternal(D2D1Factory factory, RenderTarget rt, Map map, Envelope envelope)
+        private void RenderInternal(D2D1.Factory factory, D2D1.RenderTarget rt, Map map, Envelope envelope)
         {
             //if style is not enabled, we don't need to render anything
             if (!Style.Enabled)
@@ -175,7 +173,7 @@ namespace SharpMap.Layers
             }
         }
 
-        private void RenderGeometry(D2D1Factory factory, RenderTarget g, Map map, IGeometry feature, SharpDXVectorStyle style)
+        private void RenderGeometry(D2D1.Factory factory, D2D1.RenderTarget g, Map map, IGeometry feature, SharpDXVectorStyle style)
         {
             if (feature == null)
                 return;
@@ -239,7 +237,7 @@ namespace SharpMap.Layers
             }
         }
 
-        private void RenderInternal(D2D1Factory factory, RenderTarget rt, Map map, 
+        private void RenderInternal(D2D1.Factory factory, D2D1.RenderTarget rt, Map map, 
             Envelope envelope, Rendering.Thematics.ITheme theme)
         {
             var ds = new FeatureDataSet();

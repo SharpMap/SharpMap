@@ -1,4 +1,5 @@
 ﻿// Copyright 2005, 2006 - Morten Nielsen (www.iter.dk)
+// Copyright 2015 - Felix Obermaier (www.ivv-aachen.de)
 //
 // This file is part of SharpMap.
 // SharpMap is free software; you can redistribute it and/or modify
@@ -17,23 +18,14 @@
 
 using System;
 using System.Collections.Generic;
-using System.Drawing;
-//using System.Drawing;
-//using System.Drawing.Drawing2D;
+using System.Runtime.CompilerServices;
 using System.Reflection;
 using GeoAPI.Geometries;
-using SharpMap.Rendering.Symbolizer;
-using SharpMap.Styles;
-using SharpMap.Utilities;
 using Point = GeoAPI.Geometries.Coordinate;
-using System.Runtime.CompilerServices;
-using SharpDX;
-using SharpDX.Direct2D1;
-using SharpDX.WIC;
 using SharpMap.Layers.Styles;
-using Bitmap = SharpDX.Direct2D1.Bitmap;
-using Brush = SharpDX.Direct2D1.Brush;
-using GdiBitmap = System.Drawing.Bitmap;
+using SharpDX;
+using D2D1 = SharpDX.Direct2D1;
+using GDI = System.Drawing;
 
 namespace SharpMap.Rendering
 {
@@ -45,27 +37,28 @@ namespace SharpMap.Rendering
         internal const float ExtremeValueLimit = 1E+8f;
         internal const float NearZero = 1E-30f; // 1/Infinity
 
-        internal static readonly GdiBitmap DefaultSymbol =
-            (GdiBitmap)
-                GdiBitmap.FromStream(
+        internal static readonly GDI.Bitmap DefaultSymbol =
+            (GDI.Bitmap)
+                GDI.Image.FromStream(
                     Assembly.GetAssembly(typeof (Map))
                         .GetManifestResourceStream("SharpMap.Styles.DefaultSymbol.png"));
 
         /// <summary>
         /// Renders a MultiLineString to the map.
         /// </summary>
-        /// <param name="g">Graphics reference</param>
+        /// <param name="renderTarget">The render target</param>
+        /// <param name="factory">The factory to create shapes</param>
         /// <param name="lines">MultiLineString to be rendered</param>
         /// <param name="pen">Pen style used for rendering</param>
         /// <param name="map">Map reference</param>
         /// <param name="offset">Offset by which line will be moved to right</param>
         [MethodImpl(MethodImplOptions.Synchronized)]
-        public static void DrawMultiLineString(RenderTarget g, Factory factory, IMultiLineString lines, Brush pen, float penWidth, StrokeStyle penStrokeStyle, Map map, float offset)
+        public static void DrawMultiLineString(D2D1.RenderTarget renderTarget, D2D1.Factory factory, IMultiLineString lines, D2D1.Brush pen, float penWidth, D2D1.StrokeStyle penStrokeStyle, Map map, float offset)
         {
             for (var i = 0; i < lines.NumGeometries; i++)
             {
                 var line = (ILineString)lines[i];
-                DrawLineString(g, factory, line, pen, penWidth, penStrokeStyle, map, offset);
+                DrawLineString(renderTarget, factory, line, pen, penWidth, penStrokeStyle, map, offset);
             }
         }
 
@@ -123,41 +116,43 @@ namespace SharpMap.Rendering
         /// <summary>
         /// Renders a LineString to the map.
         /// </summary>
-        /// <param name="g">Graphics reference</param>
+        /// <param name="renderTarget">The render target</param>
+        /// <param name="factory">The factory to create shapes</param>
         /// <param name="line">LineString to render</param>
         /// <param name="pen">Pen style used for rendering</param>
         /// <param name="map">Map reference</param>
         [MethodImpl(MethodImplOptions.Synchronized)]
-        public static void DrawLineString(RenderTarget g, Factory factory, ILineString line, Brush pen, float penWidth, StrokeStyle penStrokeStyle, Map map)
+        public static void DrawLineString(D2D1.RenderTarget renderTarget, D2D1.Factory factory, ILineString line, D2D1.Brush pen, float penWidth, D2D1.StrokeStyle penStrokeStyle, Map map)
         {
-            DrawLineString(g, factory, line, pen, penWidth, penStrokeStyle, map, 0);
+            DrawLineString(renderTarget, factory, line, pen, penWidth, penStrokeStyle, map, 0);
         }
         /// <summary>
         /// Renders a LineString to the map.
         /// </summary>
-        /// <param name="g">Graphics reference</param>
+        /// <param name="renderTarget">The render target</param>
+        /// <param name="factory">The factory to create shapes</param>
         /// <param name="line">LineString to render</param>
         /// <param name="pen">Pen style used for rendering</param>
         /// <param name="map">Map reference</param>
         /// <param name="offset">Offset by which line will be moved to right</param>
-        public static void DrawLineString(RenderTarget g, Factory factory, ILineString line, Brush pen, float penWidth, StrokeStyle penStrokeStyle, Map map, float offset)
+        public static void DrawLineString(D2D1.RenderTarget renderTarget, D2D1.Factory factory, ILineString line, D2D1.Brush pen, float penWidth, D2D1.StrokeStyle penStrokeStyle, Map map, float offset)
         {
             var points = TransformToImage(line, map);
             if (points.Length > 1)
             {
-                using (var geom = new PathGeometry(factory))
+                using (var geom = new D2D1.PathGeometry(factory))
                 {
                     
                     using (var gs = geom.Open())
                     {
-                        gs.BeginFigure(points[0], FigureBegin.Filled);
+                        gs.BeginFigure(points[0], D2D1.FigureBegin.Filled);
                         gs.AddLines(points);
-                        gs.EndFigure(FigureEnd.Open);
+                        gs.EndFigure(D2D1.FigureEnd.Open);
 
                         gs.Close();
                     }
 
-                    g.DrawGeometry(geom, pen, penWidth, penStrokeStyle);
+                    renderTarget.DrawGeometry(geom, pen, penWidth, penStrokeStyle);
                 }
             }
         }
@@ -233,33 +228,35 @@ namespace SharpMap.Rendering
         /// <summary>
         /// Renders a multipolygon byt rendering each polygon in the collection by calling DrawPolygon.
         /// </summary>
-        /// <param name="g">Graphics reference</param>
+        /// <param name="renderTarget">The render target</param>
+        /// <param name="factory">The factory to create shapes</param>
         /// <param name="pols">MultiPolygon to render</param>
         /// <param name="brush">Brush used for filling (null or transparent for no filling)</param>
         /// <param name="pen">Outline pen style (null if no outline)</param>
         /// <param name="clip">Specifies whether polygon clipping should be applied</param>
         /// <param name="map">Map reference</param>
         [MethodImpl(MethodImplOptions.Synchronized)]
-        public static void DrawMultiPolygon(RenderTarget g, Factory factory, IMultiPolygon pols, Brush brush, Brush pen, float penWidth, StrokeStyle penStrokeStyle, bool clip, Map map)
+        public static void DrawMultiPolygon(D2D1.RenderTarget renderTarget, D2D1.Factory factory, IMultiPolygon pols, D2D1.Brush brush, D2D1.Brush pen, float penWidth, D2D1.StrokeStyle penStrokeStyle, bool clip, Map map)
         {
             for (var i = 0; i < pols.NumGeometries; i++)
             {
                 var p = (IPolygon)pols[i];
-                DrawPolygon(g, factory, p, brush, pen, penWidth, penStrokeStyle, clip, map);
+                DrawPolygon(renderTarget, factory, p, brush, pen, penWidth, penStrokeStyle, clip, map);
             }
         }
 
         /// <summary>
         /// Renders a polygon to the map.
         /// </summary>
-        /// <param name="g">Graphics reference</param>
+        /// <param name="renderTarget">The render target</param>
+        /// <param name="factory">The factory to create shapes</param>
         /// <param name="pol">Polygon to render</param>
         /// <param name="brush">Brush used for filling (null or transparent for no filling)</param>
         /// <param name="pen">Outline pen style (null if no outline)</param>
         /// <param name="clip">Specifies whether polygon clipping should be applied</param>
         /// <param name="map">Map reference</param>
         [MethodImpl(MethodImplOptions.Synchronized)]
-        public static void DrawPolygon(RenderTarget g, Factory factory, IPolygon pol, Brush brush, Brush pen, float penWidth, StrokeStyle penStrokeStyle, bool clip, Map map)
+        public static void DrawPolygon(D2D1.RenderTarget renderTarget, D2D1.Factory factory, IPolygon pol, D2D1.Brush brush, D2D1.Brush pen, float penWidth, D2D1.StrokeStyle penStrokeStyle, bool clip, Map map)
         {
             if (pol.ExteriorRing == null)
                 return;
@@ -268,24 +265,24 @@ namespace SharpMap.Rendering
             var startPoint = TransformToImage(pol.ExteriorRing, map, out points);
             if (points.Length > 1)
             {
-                using (var geom = new PathGeometry(factory))
+                using (var geom = new D2D1.PathGeometry(factory))
                 {
                     using (var gs = geom.Open())
                     {
-                        gs.SetFillMode(FillMode.Alternate);
+                        gs.SetFillMode(D2D1.FillMode.Alternate);
 
-                        gs.BeginFigure(startPoint, FigureBegin.Filled);
+                        gs.BeginFigure(startPoint, D2D1.FigureBegin.Filled);
                         gs.AddLines(points);
-                        gs.EndFigure(FigureEnd.Closed);
+                        gs.EndFigure(D2D1.FigureEnd.Closed);
 
                         for (var i = 0; i < pol.NumInteriorRings; i++)
                         {
                             startPoint = TransformToImage(pol.GetInteriorRingN(i), map, out points);
                             if (points.Length > 1)
                             {
-                                gs.BeginFigure(startPoint, FigureBegin.Filled);
+                                gs.BeginFigure(startPoint, D2D1.FigureBegin.Filled);
                                 gs.AddLines(points);
-                                gs.EndFigure(FigureEnd.Closed);
+                                gs.EndFigure(D2D1.FigureEnd.Closed);
                             }
                         }
 
@@ -293,12 +290,205 @@ namespace SharpMap.Rendering
                     }
 
                     if (brush != null)
-                        g.FillGeometry(geom, brush);
+                        renderTarget.FillGeometry(geom, brush);
                     if (pen != null)
-                        g.DrawGeometry(geom, pen, penWidth, penStrokeStyle);
+                        renderTarget.DrawGeometry(geom, pen, penWidth, penStrokeStyle);
                 }
             }
         }
+
+        /// <summary>
+        /// Renders a point to the map.
+        /// </summary>
+        /// <param name="renderTarget">The render target</param>
+        /// <param name="factory">The factory to create shapes</param>
+        /// <param name="point">Point to render</param>
+        /// <param name="b">Brush reference</param>
+        /// <param name="size">Size of drawn Point</param>
+        /// <param name="offset">Symbol offset af scale=1</param>
+        /// <param name="map">Map reference</param>
+        [MethodImpl(MethodImplOptions.Synchronized)]
+        public static void DrawPoint(D2D1.RenderTarget renderTarget, D2D1.Factory factory, IPoint point, D2D1.Brush b, float size, Vector2 offset, Map map)
+        {
+            if (point == null)
+                return;
+
+            var pp = TransformToImage(point.Coordinate, map);
+            if (double.IsNaN(point.X)) return;
+
+            pp += offset;
+
+            var e = new D2D1.Ellipse(pp, size, size);
+            renderTarget.FillEllipse(e, b);
+            renderTarget.DrawEllipse(e, b);
+        }
+
+        /// <summary>
+        /// Renders a point to the map.
+        /// </summary>
+        /// <param name="renderTarget">The render target</param>
+        /// <param name="factory">The factory to create shapes</param>
+        /// <param name="point">Point to render</param>
+        /// <param name="symbol">Symbol to place over point</param>
+        /// <param name="offset">Symbol offset af scale=1</param>
+        /// <param name="rotation">Symbol rotation in degrees</param>
+        /// <param name="map">Map reference</param>
+        [MethodImpl(MethodImplOptions.Synchronized)]
+        public static void DrawPoint(D2D1.RenderTarget renderTarget, D2D1.Factory factory, IPoint point, D2D1.Bitmap symbol, Vector2 offset,
+                                     float rotation, Map map)
+        {
+            if (point == null)
+                return;
+
+            var pp = TransformToImage(point.Coordinate, map);
+            if (double.IsNaN(pp.X)) return;
+            pp += offset;
+
+            bool symbolCreated = false;
+            if (symbol == null) //We have no point style - Use a default symbol
+            {
+                symbol = CreateDefaultsymbol(renderTarget);
+                symbolCreated = true;
+            }
+
+
+            lock (symbol)
+            {
+                if (rotation != 0 && !Single.IsNaN(rotation))
+                {
+                    var startingTransform = new Matrix3x2(renderTarget.Transform.ToArray());
+
+                    var transform = renderTarget.Transform;
+                    var rotationCenter = pp;
+                    Matrix3x2.Rotation(rotation, rotationCenter);
+                    transform *= Matrix3x2.Rotation(rotation, rotationCenter);
+                    renderTarget.Transform = transform;
+
+                    //if (symbolscale == 1f)
+                    //{
+                    //    g.DrawImage(symbol,  (pp.X - symbol.Width/2f + offset.X),
+                    //                                (pp.Y - symbol.Height/2f + offset.Y));
+                    //}
+                    //else
+                    //{
+                    //    var width = symbol.Width*symbolscale;
+                    //    var height = symbol.Height*symbolscale;
+                    //    g.DrawImage(symbol, (int) pp.X - width/2 + offset.X*symbolscale,
+                    //                        (int) pp.Y - height/2 + offset.Y*symbolscale, width, height);
+                    //}
+                    var dx = 0.5d*symbol.PixelSize.Width;
+                    var dy = 0.5d*symbol.PixelSize.Height;
+                    renderTarget.DrawBitmap(symbol, new SharpDX.RectangleF(Convert.ToSingle(pp.X - dx), Convert.ToSingle(pp.Y + dy),
+                                                                symbol.PixelSize.Width, symbol.PixelSize.Height),
+                                                                1f, SharpDX.Direct2D1.BitmapInterpolationMode.Linear);
+                    renderTarget.Transform = startingTransform;
+                }
+                else
+                {
+                    //if (symbolscale == 1f)
+                    //{
+                    //    g.DrawImageUnscaled(symbol, (int) (pp.X - symbol.Width/2f + offset.X),
+                    //                                (int) (pp.Y - symbol.Height/2f + offset.Y));
+                    //}
+                    //else
+                    //{
+                    //    var width = symbol.Width*symbolscale;
+                    //    var height = symbol.Height*symbolscale;
+                    //    g.DrawImage(symbol, (int) pp.X - width/2 + offset.X*symbolscale,
+                    //                        (int) pp.Y - height/2 + offset.Y*symbolscale, width, height);
+                    //}
+                    var dx = 0.5d * symbol.PixelSize.Width;
+                    var dy = 0.5d * symbol.PixelSize.Height;
+                    renderTarget.DrawBitmap(symbol, new SharpDX.RectangleF(Convert.ToSingle(pp.X - dx), Convert.ToSingle(pp.Y + dy),
+                                                                symbol.PixelSize.Width, symbol.PixelSize.Height),
+                                                                1f, D2D1.BitmapInterpolationMode.Linear);
+                }
+            }
+            if (symbolCreated)
+                symbol.Dispose();
+        }
+
+        private static D2D1.Bitmap CreateDefaultsymbol(D2D1.RenderTarget renderTarget)
+        {
+            return Converter.ToSharpDXBitmap(renderTarget, DefaultSymbol, 1f);
+        }
+
+        /// <summary>
+        /// Renders a <see cref="GeoAPI.Geometries.IMultiPoint"/> to the map.
+        /// </summary>
+        /// <param name="renderTarget">The render target</param>
+        /// <param name="factory">The factory to create shapes</param>
+        /// <param name="points">MultiPoint to render</param>
+        /// <param name="symbol">Symbol to place over point</param>
+        /// <param name="offset">Symbol offset af scale=1</param>
+        /// <param name="rotation">Symbol rotation in degrees</param>
+        /// <param name="map">Map reference</param>
+        [MethodImpl(MethodImplOptions.Synchronized)]
+        public static void DrawMultiPoint(D2D1.RenderTarget renderTarget, D2D1.Factory factory, IMultiPoint points, D2D1.Bitmap symbol, Vector2 offset,
+                                          float rotation, Map map)
+        {
+            for (var i = 0; i < points.NumGeometries; i++)
+            {
+                var point = (IPoint)points[i];
+                DrawPoint(renderTarget, factory, point, symbol, offset, rotation, map);
+            }
+        }
+
+        /// <summary>
+        /// Renders a <see cref="GeoAPI.Geometries.IMultiPoint"/> to the map.
+        /// </summary>
+        /// <param name="renderTarget">The render target</param>
+        /// <param name="factory">The factory to create shapes</param>
+        /// <param name="points">MultiPoint to render</param>
+        /// <param name="brush">Brush reference</param>
+        /// <param name="size">Size of drawn Point</param>
+        /// <param name="offset">Symbol offset af scale=1</param>
+        /// <param name="map">Map reference</param>
+        [MethodImpl(MethodImplOptions.Synchronized)]
+        public static void DrawMultiPoint(D2D1.RenderTarget renderTarget, D2D1.Factory factory,
+            IMultiPoint points, D2D1.Brush brush, float size, Vector2 offset, Map map)
+        {
+            for (var i = 0; i < points.NumGeometries; i++)
+            {
+                var point = (IPoint)points[i];
+                DrawPoint(renderTarget, factory, point, brush, size, offset, map);
+            }
+        }
+
+        #region Nested type: ClipState
+
+        private enum ClipState
+        {
+            Within,
+            Outside,
+            Intersecting
+        } ;
+
+        private static ClipState DetermineClipState(Vector2[] vertices, int width, int height)
+        {
+            float minX = float.MaxValue;
+            float minY = float.MaxValue;
+            float maxX = float.MinValue;
+            float maxY = float.MinValue;
+
+            for (int i = 0; i < vertices.Length; i++)
+            {
+                minX = Math.Min(minX, vertices[i].X);
+                minY = Math.Min(minY, vertices[i].Y);
+                maxX = Math.Max(maxX, vertices[i].X);
+                maxY = Math.Max(maxY, vertices[i].Y);
+            }
+
+            if (maxX < 0) return ClipState.Outside;
+            if (maxY < 0) return ClipState.Outside;
+            if (minX > width) return ClipState.Outside;
+            if (minY > height) return ClipState.Outside;
+            if (minX > 0 && maxX < width && minY > 0 && maxY < height) return ClipState.Within;
+            return ClipState.Intersecting;
+        }
+
+
+        #endregion
 
         /*
         private static void DrawPolygonClipped(GraphicsPath gp, PointF[] polygon, int width, int height)
@@ -338,29 +528,6 @@ namespace SharpMap.Rendering
         }
 
 
-        private static ClipState DetermineClipState(Vector2[] vertices, int width, int height)
-        {
-            float minX = float.MaxValue;
-            float minY = float.MaxValue;
-            float maxX = float.MinValue;
-            float maxY = float.MinValue;
-
-            for (int i = 0; i < vertices.Length; i++)
-            {
-                minX = Math.Min(minX, vertices[i].X);
-                minY = Math.Min(minY, vertices[i].Y);
-                maxX = Math.Max(maxX, vertices[i].X);
-                maxY = Math.Max(maxY, vertices[i].Y);
-            }
-
-            if (maxX < 0) return ClipState.Outside;
-            if (maxY < 0) return ClipState.Outside;
-            if (minX > width) return ClipState.Outside;
-            if (minY > height) return ClipState.Outside;
-            if (minX > 0 && maxX < width && minY > 0 && maxY < height) return ClipState.Within;
-            return ClipState.Intersecting;
-        }
-
         /// <summary>
         /// Clips a polygon to the view.
         /// Based on UMN Mapserver renderer 
@@ -369,7 +536,7 @@ namespace SharpMap.Rendering
         /// <param name="width">Width of map in image coordinates</param>
         /// <param name="height">Height of map in image coordinates</param>
         /// <returns>Clipped polygon</returns>
-        internal static Vector2[] ClipPolygon(Vector2[] vertices, int width, int height)
+        private static Vector2[] ClipPolygon(Vector2[] vertices, int width, int height)
         {
             var line = new List<Vector2>();
             if (vertices.Length <= 1) /* nothing to clip */
@@ -487,170 +654,5 @@ namespace SharpMap.Rendering
             return line.ToArray();
         }
 
-        /// <summary>
-        /// Renders a point to the map.
-        /// </summary>
-        /// <param name="g">Graphics reference</param>
-        /// <param name="point">Point to render</param>
-        /// <param name="b">Brush reference</param>
-        /// <param name="size">Size of drawn Point</param>
-        /// <param name="offset">Symbol offset af scale=1</param>
-        /// <param name="map">Map reference</param>
-        [MethodImpl(MethodImplOptions.Synchronized)]
-        public static void DrawPoint(RenderTarget g, Factory factory, IPoint point, Brush b, float size, Vector2 offset, Map map)
-        {
-            if (point == null)
-                return;
-
-            var pp = TransformToImage(point.Coordinate, map);
-            if (double.IsNaN(point.X)) return;
-
-            pp += offset;
-
-            var e = new Ellipse(pp, size, size);
-            g.FillEllipse(e, b);
-            g.DrawEllipse(e, b);
-        }
-
-        /// <summary>
-        /// Renders a point to the map.
-        /// </summary>
-        /// <param name="g">Graphics reference</param>
-        /// <param name="point">Point to render</param>
-        /// <param name="symbol">Symbol to place over point</param>
-        /// <param name="symbolscale">The amount that the symbol should be scaled. A scale of '1' equals to no scaling</param>
-        /// <param name="offset">Symbol offset af scale=1</param>
-        /// <param name="rotation">Symbol rotation in degrees</param>
-        /// <param name="map">Map reference</param>
-        [MethodImpl(MethodImplOptions.Synchronized)]
-        public static void DrawPoint(RenderTarget g, Factory factory, IPoint point, Bitmap symbol, Vector2 offset,
-                                     float rotation, Map map)
-        {
-            if (point == null)
-                return;
-
-            var pp = TransformToImage(point.Coordinate, map);
-            if (double.IsNaN(pp.X)) return;
-            pp += offset;
-
-            bool symbolCreated = false;
-            if (symbol == null) //We have no point style - Use a default symbol
-            {
-                symbol = CreateDefaultsymbol(g);
-                symbolCreated = true;
-            }
-
-
-            lock (symbol)
-            {
-                if (rotation != 0 && !Single.IsNaN(rotation))
-                {
-                    var startingTransform = new Matrix3x2(g.Transform.ToArray());
-
-                    var transform = g.Transform;
-                    var rotationCenter = pp;
-                    Matrix3x2.Rotation(rotation, rotationCenter);
-                    transform *= Matrix3x2.Rotation(rotation, rotationCenter);
-                    g.Transform = transform;
-
-                    //if (symbolscale == 1f)
-                    //{
-                    //    g.DrawImage(symbol,  (pp.X - symbol.Width/2f + offset.X),
-                    //                                (pp.Y - symbol.Height/2f + offset.Y));
-                    //}
-                    //else
-                    //{
-                    //    var width = symbol.Width*symbolscale;
-                    //    var height = symbol.Height*symbolscale;
-                    //    g.DrawImage(symbol, (int) pp.X - width/2 + offset.X*symbolscale,
-                    //                        (int) pp.Y - height/2 + offset.Y*symbolscale, width, height);
-                    //}
-                    var dx = 0.5d*symbol.PixelSize.Width;
-                    var dy = 0.5d*symbol.PixelSize.Height;
-                    g.DrawBitmap(symbol, new SharpDX.RectangleF(Convert.ToSingle(pp.X-dx), Convert.ToSingle(pp.Y+dy),
-                                                                symbol.PixelSize.Width, symbol.PixelSize.Height),
-                                                                1f, SharpDX.Direct2D1.BitmapInterpolationMode.Linear);
-                    g.Transform = startingTransform;
-                }
-                else
-                {
-                    //if (symbolscale == 1f)
-                    //{
-                    //    g.DrawImageUnscaled(symbol, (int) (pp.X - symbol.Width/2f + offset.X),
-                    //                                (int) (pp.Y - symbol.Height/2f + offset.Y));
-                    //}
-                    //else
-                    //{
-                    //    var width = symbol.Width*symbolscale;
-                    //    var height = symbol.Height*symbolscale;
-                    //    g.DrawImage(symbol, (int) pp.X - width/2 + offset.X*symbolscale,
-                    //                        (int) pp.Y - height/2 + offset.Y*symbolscale, width, height);
-                    //}
-                    var dx = 0.5d * symbol.PixelSize.Width;
-                    var dy = 0.5d * symbol.PixelSize.Height;
-                    g.DrawBitmap(symbol, new SharpDX.RectangleF(Convert.ToSingle(pp.X - dx), Convert.ToSingle(pp.Y + dy),
-                                                                symbol.PixelSize.Width, symbol.PixelSize.Height),
-                                                                1f, SharpDX.Direct2D1.BitmapInterpolationMode.Linear);
-                }
-            }
-            if (symbolCreated)
-                symbol.Dispose();
-        }
-
-        private static Bitmap CreateDefaultsymbol(RenderTarget renderTarget)
-        {
-            return Converter.ToSharpDXBitmap(renderTarget, DefaultSymbol, 1f);
-        }
-
-        /// <summary>
-        /// Renders a <see cref="GeoAPI.Geometries.IMultiPoint"/> to the map.
-        /// </summary>
-        /// <param name="g">Graphics reference</param>
-        /// <param name="points">MultiPoint to render</param>
-        /// <param name="symbol">Symbol to place over point</param>
-        /// <param name="offset">Symbol offset af scale=1</param>
-        /// <param name="rotation">Symbol rotation in degrees</param>
-        /// <param name="map">Map reference</param>
-        [MethodImpl(MethodImplOptions.Synchronized)]
-        public static void DrawMultiPoint(RenderTarget  g, Factory factory, IMultiPoint points, Bitmap symbol, Vector2 offset,
-                                          float rotation, Map map)
-        {
-            for (var i = 0; i < points.NumGeometries; i++)
-            {
-                var point = (IPoint)points[i];
-                DrawPoint(g, factory, point, symbol, offset, rotation, map);
-            }
-        }
-
-        /// <summary>
-        /// Renders a <see cref="GeoAPI.Geometries.IMultiPoint"/> to the map.
-        /// </summary>
-        /// <param name="g">Graphics reference</param>
-        /// <param name="points">MultiPoint to render</param>
-        /// <param name="brush">Brush reference</param>
-        /// <param name="size">Size of drawn Point</param>
-        /// <param name="offset">Symbol offset af scale=1</param>
-        /// <param name="map">Map reference</param>
-        [MethodImpl(MethodImplOptions.Synchronized)]
-        public static void DrawMultiPoint(RenderTarget g,Factory f, 
-            IMultiPoint points, Brush brush, float size, Vector2 offset, Map map)
-        {
-            for (var i = 0; i < points.NumGeometries; i++)
-            {
-                var point = (IPoint)points[i];
-                DrawPoint(g, f, point, brush, size, offset, map);
-            }
-        }
-
-        #region Nested type: ClipState
-
-        private enum ClipState
-        {
-            Within,
-            Outside,
-            Intersecting
-        } ;
-
-        #endregion
     }
 }
