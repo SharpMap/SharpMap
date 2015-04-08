@@ -51,9 +51,11 @@ namespace SharpMap.Rendering
                     if (labels[i].Priority == labels[i - 1].Priority) continue;
 
                     if (labels[i].Priority > labels[i - 1].Priority)
-                        labels.RemoveAt(i - 1);
+                        //labels.RemoveAt(i - 1);
+                        labels[i - 1].Show = false;
                     else
-                        labels.RemoveAt(i);
+                        //labels.RemoveAt(i)
+                        labels[i].Show = false;
                 }
         }
 

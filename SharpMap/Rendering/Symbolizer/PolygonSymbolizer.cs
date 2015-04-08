@@ -62,7 +62,7 @@ namespace SharpMap.Rendering.Symbolizer
             {
                 for (var i = 0; i < mp.NumGeometries;i++)
                 {
-                    var poly = (IPolygon) mp[0];
+                    var poly = (IPolygon) mp[i];
                     OnRenderInternal(map, poly, graphics);
                 }
                 return;
@@ -112,9 +112,7 @@ namespace SharpMap.Rendering.Symbolizer
         /// <returns>A graphics path</returns>
         protected static GraphicsPath PolygonToGraphicsPath(Map map, IPolygon polygon)
         {
-            var gp = new GraphicsPath(FillMode.Alternate);
-            gp.AddPolygon(polygon.TransformToImage(map));
-            return gp;
+            return polygon.TransformToImage(map);
         }
     }
 }

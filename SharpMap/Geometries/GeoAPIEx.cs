@@ -3,8 +3,11 @@ using SharpMap.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Reflection;
+using System.Runtime.ExceptionServices;
 using NetTopologySuite.Geometries;
+using SharpMap.Rendering;
 
 namespace GeoAPI.Geometries
 {
@@ -332,10 +335,28 @@ namespace GeoAPI.Geometries
         /// </summary>
         /// <param name="self">The polygon</param>
         /// <param name="map">The map that defines the affine coordinate transformation.</param>
+        /// <param name="useClipping">Use clipping for the polygon</param>
         /// <returns>An array of PointFs</returns>
-        public static PointF[] TransformToImage(this IPolygon self, Map map)
+        public static GraphicsPath TransformToImage(this IPolygon self, Map map, bool useClipping = false)
         {
-            return TransformToImage(self.Coordinates, map);
+            var res = new GraphicsPath(FillMode.Alternate);
+            if (useClipping)
+            {
+                res.AddPolygon(VectorRenderer.ClipPolygon(
+                    self.ExteriorRing.TransformToImage(map), 
+                    map.Size.Width, map.Size.Height));
+                for (var i = 0; i < self.NumInteriorRings; i++)
+                    res.AddPolygon(VectorRenderer.ClipPolygon(
+                        self.GetInteriorRingN(i).TransformToImage(map),
+                        map.Size.Width, map.Size.Height));
+            }
+            else
+            {
+                res.AddPolygon(self.ExteriorRing.TransformToImage(map));
+                for (var i = 0; i < self.NumInteriorRings; i++)
+                    res.AddPolygon(self.GetInteriorRingN(i).TransformToImage(map));
+            }
+            return res;
         }
 
         /// <summary>

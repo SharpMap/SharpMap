@@ -66,19 +66,19 @@ namespace SharpMap.Rendering.Symbolizer
         protected override void OnRenderInternal(Map map, IPolygon polygon, Graphics g)
         {
             // convert points
-            var pts = /*LimitValues(*/polygon.TransformToImage(map)/*)*/;
+            var pts = /*LimitValues(*/polygon.TransformToImage(map, UseClipping)/*)*/;
 
-            // clip
-            if (UseClipping)
-                pts = VectorRenderer.ClipPolygon(pts, map.Size.Width, map.Size.Height);
+            //// clip
+            //if (UseClipping)
+            //    pts = VectorRenderer.ClipPolygon(pts, map.Size.Width, map.Size.Height);
             
             // fill the polygon
             if (Fill != null)
-                g.FillPolygon(Fill, pts);
+                g.FillPath(Fill, pts);
             
             // outline the polygon
             if (Outline != null)
-                g.DrawPolygon(Outline, pts);
+                g.DrawPath(Outline, pts);
         }
     }
 
@@ -145,13 +145,13 @@ namespace SharpMap.Rendering.Symbolizer
             // convert points
             var pts = /*LimitValues(*/polygon.TransformToImage(map)/*)*/;
             
-            // clip
-            if (UseClipping)
-                pts = VectorRenderer.ClipPolygon(pts, map.Size.Width, map.Size.Height);
+            //// clip
+            //if (UseClipping)
+            //    pts = VectorRenderer.ClipPolygon(pts, map.Size.Width, map.Size.Height);
 
             // fill the polygon
             if (Fill != null)
-                g.FillPolygon(Fill, pts);
+                g.FillPath(Fill, pts);
 
             // outline the polygon
             if (Outline != null)
