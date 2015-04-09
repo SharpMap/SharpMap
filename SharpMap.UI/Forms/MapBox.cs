@@ -1586,7 +1586,7 @@ namespace SharpMap.Forms
 
                 //Tool ZoomWindow or ShiftButtonDragRectangle
                 bool isZoomWindowOperation = _activeTool == Tools.ZoomWindow || _activeTool == Tools.QueryBox ||
-                                             _activeTool == Tools.QueryPoint ||
+                                             //_activeTool == Tools.QueryPoint ||
                                              /*_activeTool == Tools.QueryPolygon || */
                                              (_shiftButtonDragRectangleZoom &&
                                               (Control.ModifierKeys & Keys.Shift) != Keys.None);
