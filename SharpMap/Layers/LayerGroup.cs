@@ -16,6 +16,7 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
 
 using System;
+using System.Collections;
 using System.Collections.ObjectModel;
 using System.Drawing;
 using System.Linq;
@@ -96,6 +97,9 @@ namespace SharpMap.Layers
             get { return _layers; }
             set
             {
+                if (value == null)
+                    throw new ArgumentNullException("value");
+
                 if (!Equals(value, _layers))
                 {
                     OnLayersChanging();
@@ -114,9 +118,11 @@ namespace SharpMap.Layers
             get
             {
                 Envelope bbox = null;
-                for (int i = 0; i < Layers.Count; i++)
+                var layers = GetSnapshot();
+
+                for (int i = 0; i < layers.Length; i++)
                 {
-                    var layerEnvelope = Layers[i].Envelope;
+                    var layerEnvelope = layers[i].Envelope;
                     if (layerEnvelope != null)
                     {
                         if(bbox == null)
@@ -158,7 +164,7 @@ namespace SharpMap.Layers
 
                 if (!SkipTransformationPropagation)
                 {
-                    var layers = Layers.ToArray();
+                    var layers = GetSnapshot();
 
                     foreach (var layer in layers.OfType<Layer>())
                         layer.CoordinateTransformation = value;
@@ -181,7 +187,7 @@ namespace SharpMap.Layers
 
                 if (!SkipTransformationPropagation)
                 {
-                    var layers = Layers.ToArray();
+                    var layers = GetSnapshot();
 
                     foreach (var layer in layers.OfType<Layer>())
                         layer.ReverseCoordinateTransformation = value;
@@ -196,7 +202,8 @@ namespace SharpMap.Layers
         /// </summary>
         protected override void ReleaseManagedResources()
         {
-            foreach (var layer in Layers.OfType<IDisposable>().Where(layer => layer != null))
+            var layers = GetSnapshot();
+            foreach (var layer in layers.OfType<IDisposable>().Where(layer => layer != null))
                 layer.Dispose();
             
             Layers.Clear();
@@ -212,8 +219,7 @@ namespace SharpMap.Layers
         /// <returns>Layer</returns>
         public virtual ILayer GetLayerByName(string name)
         {
-            //return _Layers.Find( delegate(SharpMap.Layers.Layer layer) { return layer.LayerName.Equals(name); });
-            var layers = Layers.ToArray();
+            var layers = GetSnapshot();
 
             return layers.FirstOrDefault(t => String.Equals(t.LayerName, name, StringComparison.InvariantCultureIgnoreCase));
         }
@@ -225,7 +231,7 @@ namespace SharpMap.Layers
         /// <param name="map">Map which is rendered</param>
         public override void Render(Graphics g, Map map)
         {
-            var layers = Layers.ToArray();
+            var layers = GetSnapshot();
             var compare = VisibilityUnits == VisibilityUnits.ZoomLevel ? map.Zoom : map.MapScale;
             foreach (var layer in layers)
             {
@@ -244,7 +250,7 @@ namespace SharpMap.Layers
         /// <param name="ds">FeatureDataSet to fill data into</param>
         public virtual void ExecuteIntersectionQuery(Envelope box, FeatureDataSet ds)
         {
-            var layers = Layers.ToArray();
+            var layers = GetSnapshot();
 
             foreach (var layer in layers.OfType<ICanQueryLayer>())
             {
@@ -259,7 +265,7 @@ namespace SharpMap.Layers
         /// <param name="ds">FeatureDataSet to fill data into</param>
         public virtual void ExecuteIntersectionQuery(IGeometry geometry, FeatureDataSet ds)
         {
-            var layers = Layers.ToArray();
+            var layers = GetSnapshot();
 
             foreach (var layer in layers.OfType<ICanQueryLayer>())
             {
@@ -301,17 +307,28 @@ namespace SharpMap.Layers
             clonedGroup.Style = Style;
             clonedGroup.TargetSRID = TargetSRID;
 
-            if (Layers != null)
-                foreach (var layer in Layers)
-                {
-                    var cloneable = layer as ICloneable;
-                    if (cloneable != null)
-                        clonedGroup.Layers.Add((ILayer) cloneable.Clone());
-                    else
-                        clonedGroup.Layers.Add(layer);
-                }
+            var layers = GetSnapshot();
+            foreach (var layer in layers)
+            {
+                var cloneable = layer as ICloneable;
+                if (cloneable != null)
+                    clonedGroup.Layers.Add((ILayer) cloneable.Clone());
+                else
+                    clonedGroup.Layers.Add(layer);
+            }
 
             return clonedGroup;
+        }
+
+        private ILayer[] GetSnapshot()
+        {
+            ILayer[] layers;
+            lock (((ICollection)Layers).SyncRoot)
+            {
+                layers = Layers.ToArray();
+            }
+
+            return layers;
         }
     }
 }
