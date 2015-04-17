@@ -189,6 +189,7 @@
     <Compile Include="Layers\IAsyncLayer.cs" />
     <Compile Include="Layers\ILayer.cs" />
     <Compile Include="Layers\ICanQueryLayer.cs" />
+    <Compile Include="Layers\ILayersContainer.cs" />
     <Compile Include="Layers\LabelLayer.cs" />
     <Compile Include="Layers\Layer.cs" />
     <Compile Include="Layers\LayerCollection.cs" />

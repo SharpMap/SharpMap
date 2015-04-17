@@ -152,6 +152,8 @@ namespace SharpMap
         private readonly MapViewPortGuard _mapViewportGuard;
         private readonly Dictionary<object, List<ILayer>> _layersPerGroup = new Dictionary<object, List<ILayer>>();
         private ObservableCollection<ILayer> _replacingCollection;
+        private Guid _id = Guid.NewGuid();
+
         #endregion
 
 
@@ -875,7 +877,8 @@ namespace SharpMap
                     PixelAspectRatio = PixelAspectRatio,
                     Zoom = Zoom,
                     DisposeLayersOnDispose = false,
-                    SRID = SRID
+                    SRID = SRID,
+                    _id = ID
                 };
 
 #pragma warning disable 612,618
@@ -1094,6 +1097,15 @@ namespace SharpMap
         #endregion
 
         #region Properties
+
+        /// <summary>
+        /// Gets or sets the unique identifier of the map.
+        /// </summary>
+        public Guid ID
+        {
+            get { return _id; }
+            set { _id = value; }
+        }
 
         /// <summary>
         /// Gets or sets the SRID of the map

@@ -25,7 +25,7 @@ namespace SharpMap.Layers
     /// A collection of <see cref="ILayer"/> instances.
     /// </summary>
     [Serializable]
-    public class LayerCollection : System.ComponentModel.BindingList<ILayer>, INotifyCollectionChanged
+    public class LayerCollection : System.ComponentModel.BindingList<ILayer>, INotifyCollectionChanged, ILayersContainer
     {
         /// <summary>
         /// Gets or sets the layer with the given <paramref name="layerName"/>.
@@ -235,6 +235,11 @@ namespace SharpMap.Layers
 
                 OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Replace, item, oldItem, index));
             }
+        }
+
+        System.Collections.Generic.IList<ILayer> ILayersContainer.Layers
+        {
+            get { return this; }
         }
     }
 }

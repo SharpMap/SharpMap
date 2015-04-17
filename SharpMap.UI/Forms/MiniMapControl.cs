@@ -71,6 +71,7 @@ namespace SharpMap.Forms
         private Point _translate;
         private Cursor _oldCursor;
         private HitResult _hitResult;
+        private Guid _mapId = Guid.NewGuid();
 
         [ThreadStatic]
         private static bool _isRenderingThread;
@@ -664,6 +665,7 @@ namespace SharpMap.Forms
         private void CreateMiniMap()
         {
             var clonedMap = _mapBoxControl.Map.Clone();
+            clonedMap.ID = _mapId;
             clonedMap.Decorations.Clear();
             clonedMap.EnforceMaximumExtents = false;
             clonedMap.MaximumExtents = null;

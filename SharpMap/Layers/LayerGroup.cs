@@ -39,7 +39,7 @@ namespace SharpMap.Layers
     /// for instance a set of image tiles, and expose them as a single layer
     /// </remarks>
     [Serializable]
-    public partial class LayerGroup : Layer, ICanQueryLayer, ICloneable
+    public partial class LayerGroup : Layer, ICanQueryLayer, ICloneable, ILayersContainer
     {
         private ObservableCollection<ILayer> _layers;
         private bool _isQueryEnabled = true;
@@ -329,6 +329,11 @@ namespace SharpMap.Layers
             }
 
             return layers;
+        }
+
+        System.Collections.Generic.IList<ILayer> ILayersContainer.Layers
+        {
+            get { return Layers; }
         }
     }
 }

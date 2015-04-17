@@ -18,10 +18,13 @@
  */
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Runtime.CompilerServices;
 using GeoAPI.Geometries;
 using SharpMap.Data;
+using SharpMap.Utilities.Wfs;
 #if !DotSpatialProjections
 using GeoAPI.CoordinateSystems.Transformations;
 #else
@@ -34,10 +37,24 @@ using Point = System.Drawing.Point;
 namespace SharpMap.Layers
 {
     [Serializable]
-    public class GdalRasterLayerCachingProxy : Layer, ICloneable, ICanQueryLayer
+    public class GdalRasterLayerCachingProxy : Layer, ICanQueryLayer
     {
-        private readonly GdalRasterLayer _innerLayer;
+        private class ViewPort
+        {
+            public Envelope BoundingBox { get; set; }
 
+            public Size? Size { get; set; }
+
+            public Bitmap CachedBitmap { get; set; }
+
+            public bool RequiresRedraw { get; set; }
+        }
+
+        private readonly GdalRasterLayer _innerLayer;
+        private readonly Dictionary<Guid, ViewPort> _maps = new Dictionary<Guid, ViewPort>();
+        private ViewPort _viewPort = new ViewPort();
+
+        #region ctor
         public GdalRasterLayerCachingProxy(GdalRasterLayer innerLayer)
         {
             _innerLayer = innerLayer;
@@ -48,7 +65,8 @@ namespace SharpMap.Layers
         {
             LayerName = strLayerName;
             _innerLayer = new GdalRasterLayer(strLayerName, imageFilename);
-        }
+        } 
+        #endregion
 
         public string Filename
         {
@@ -449,35 +467,42 @@ namespace SharpMap.Layers
             set { _innerLayer.IsQueryEnabled = value; }
         }
 
-        protected internal bool RequiresRedraw { get; set; }
+        protected internal bool RequiresRedraw
+        {
+            get
+            {
+                return _viewPort.RequiresRedraw;
+            }
+            set
+            {
+                _viewPort.RequiresRedraw = value;
+            }
+        }
 
-        private Size? _lastRenderedSize;
         protected Size? LastRenderedSize
         {
-            get { return _lastRenderedSize; }
+            get { return _viewPort.Size; }
             set
             {
                 CheckUpdate(LastRenderedSize, value);
-                _lastRenderedSize = value;
+                _viewPort.Size = value;
             }
         }
 
-        private BoundingBox _lastRenderedExtents;
         protected BoundingBox LastRenderedExtents
         {
-            get { return _lastRenderedExtents; }
+            get { return _viewPort.BoundingBox; }
             set
             {
                 CheckUpdate(LastRenderedExtents, value);
-                _lastRenderedExtents = value;
+                _viewPort.BoundingBox = value;
             }
         }
 
-        private Bitmap _cachedBitmap;
         protected Bitmap CachedBitmap
         {
-            get { return _cachedBitmap; }
-            set { _cachedBitmap = value; }
+            get { return _viewPort.CachedBitmap; }
+            set { _viewPort.CachedBitmap = value; }
         }
 
         private void CheckUpdate<T>(T currentValue, T newValue)
@@ -486,8 +511,20 @@ namespace SharpMap.Layers
                 RequiresRedraw = true;
         }
 
+        [MethodImpl(MethodImplOptions.Synchronized)]
         public override void Render(Graphics g, Map map)
         {
+            ViewPort viewport;
+
+            if (!_maps.TryGetValue(map.ID, out viewport))
+            {
+                viewport = new ViewPort();
+
+                _maps.Add(map.ID, viewport);
+            }
+
+            _viewPort = viewport;
+
             LastRenderedSize = map.Size;
             LastRenderedExtents = map.Envelope;
             if (RequiresRedraw || CachedBitmap == null)
@@ -502,24 +539,6 @@ namespace SharpMap.Layers
             RequiresRedraw = false;
             g.DrawImageUnscaled(CachedBitmap, 0, 0);
             base.Render(g, map);
-        }
-
-        protected virtual GdalRasterLayerCachingProxy CreateInstance()
-        {
-            var cloneableInnerLayer = _innerLayer as ICloneable;
-            if (cloneableInnerLayer != null)
-                return new GdalRasterLayerCachingProxy((GdalRasterLayer)cloneableInnerLayer.Clone());
-
-            return new GdalRasterLayerCachingProxy(_innerLayer);
-        }
-        object ICloneable.Clone()
-        {
-            var cloned = CreateInstance();
-            cloned.CachedBitmap = CachedBitmap != null ? (Bitmap) CachedBitmap.Clone() : null;
-            cloned.LastRenderedExtents = LastRenderedExtents;
-            cloned.LastRenderedSize = LastRenderedSize;
-
-            return cloned;
         }
     }
 }
