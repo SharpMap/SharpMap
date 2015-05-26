@@ -453,5 +453,35 @@ namespace ExampleCodeSnippets
                 img.Save("ecw.png");
             }
         }
+
+public static void ReprojectFeatureDataSet(SharpMap.Data.FeatureDataSet fds,
+    GeoAPI.CoordinateSystems.ICoordinateSystem target)
+{
+    for (var i = 0; i < fds.Tables.Count; i ++)
+    {
+        var fdt = fds.Tables[i];
+        ReprojectFeatureDataTable(fdt, target);
+    }
+
+}
+
+public static void ReprojectFeatureDataTable(SharpMap.Data.FeatureDataTable fdt,
+    GeoAPI.CoordinateSystems.ICoordinateSystem target)
+{
+    var source = SharpMap.CoordinateSystems.CoordinateSystemExtensions.GetCoordinateSystem(fdt[0].Geometry);
+
+    var ctFactory = new ProjNet.CoordinateSystems.Transformations.CoordinateTransformationFactory();
+    var ct = ctFactory.CreateFromCoordinateSystems(source, target);
+            
+    var geomFactory = GeoAPI.GeometryServiceProvider.Instance.CreateGeometryFactory((int)target.AuthorityCode);
+
+    for (var i = 0; i < fdt.Rows.Count; i++)
+    {
+        var fdr = fdt[i];
+        fdr.Geometry =
+            GeoAPI.CoordinateSystems.Transformations.GeometryTransform.TransformGeometry(fdr.Geometry,
+                ct.MathTransform, geomFactory);
+    }
+}
     }
 }
