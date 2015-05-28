@@ -630,7 +630,7 @@ namespace SharpMap
                     {
                         if (layer.MaxVisible >= visibleLevel && layer.MinVisible < visibleLevel)
                         {
-                            layer.Render(g, this);
+                            LayerCollectionRenderer.RenderLayer(layer, g, this);
                         }
                     }
                     OnLayerRendered(layer, LayerCollectionType.Background);
@@ -652,7 +652,8 @@ namespace SharpMap
                     double visibleLevel = layer.VisibilityUnits == VisibilityUnits.ZoomLevel ? zoom : scale;
                     OnLayerRendering(layer, LayerCollectionType.Static);
                     if (layer.Enabled && layer.MaxVisible >= visibleLevel && layer.MinVisible < visibleLevel)
-                        layer.Render(g, this);
+                        LayerCollectionRenderer.RenderLayer(layer, g, this);
+                        
                     OnLayerRendered(layer, LayerCollectionType.Static);
                 }
             }
@@ -669,7 +670,8 @@ namespace SharpMap
                     }
                     double visibleLevel = layer.VisibilityUnits == VisibilityUnits.ZoomLevel ? zoom : scale;
                     if (layer.Enabled && layer.MaxVisible >= visibleLevel && layer.MinVisible < visibleLevel)
-                        layer.Render(g, this);
+                        LayerCollectionRenderer.RenderLayer(layer, g, this);
+                        
                 }
             }
 
