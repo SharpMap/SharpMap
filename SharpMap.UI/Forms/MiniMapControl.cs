@@ -605,24 +605,31 @@ namespace SharpMap.Forms
         {
             base.OnPaint(e);
 
-            if (DesignMode)
+            try
             {
-                var width = Convert.ToInt32(ClientSize.Width * 0.5);
-                var height = width * (MapControl != null
-                    ? (double)MapControl.ClientSize.Height / MapControl.ClientSize.Width
-                    : (double)ClientSize.Height / ClientSize.Width);
+                if (DesignMode)
+                {
+                    var width = Convert.ToInt32(ClientSize.Width * 0.5);
+                    var height = width * (MapControl != null
+                        ? (double)MapControl.ClientSize.Height / MapControl.ClientSize.Width
+                        : (double)ClientSize.Height / ClientSize.Width);
 
-                DrawFrame(e.Graphics, new Rectangle(
-                    Convert.ToInt32(ClientSize.Width * 0.2), Convert.ToInt32(ClientSize.Height * 0.3),
-                    width, Convert.ToInt32(height)));
+                    DrawFrame(e.Graphics, new Rectangle(
+                        Convert.ToInt32(ClientSize.Width * 0.2), Convert.ToInt32(ClientSize.Height * 0.3),
+                        width, Convert.ToInt32(height)));
 
-                //DrawFrame(e.Graphics, new Rectangle(
-                //    Convert.ToInt32(ClientSize.Width * 0.2), Convert.ToInt32(ClientSize.Height * 0.3),
-                //    Convert.ToInt32(ClientSize.Width * 0.5), Convert.ToInt32(ClientSize.Height * 0.7)));
+                    //DrawFrame(e.Graphics, new Rectangle(
+                    //    Convert.ToInt32(ClientSize.Width * 0.2), Convert.ToInt32(ClientSize.Height * 0.3),
+                    //    Convert.ToInt32(ClientSize.Width * 0.5), Convert.ToInt32(ClientSize.Height * 0.7)));
+                }
+                else
+                {
+                    DrawFrame(e.Graphics, _frame);
+                }
             }
-            else
+            catch (OverflowException)
             {
-                DrawFrame(e.Graphics, _frame);
+                // sometimes can happen this exception if the frame rectangle is too big, we can simply skip it
             }
         }
 
