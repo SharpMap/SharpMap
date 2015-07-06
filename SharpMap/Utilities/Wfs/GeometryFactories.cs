@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Globalization;
+using System.Linq;
 using System.Xml;
 using SharpMap.Data;
 using GeoAPI.Geometries;
@@ -193,23 +194,38 @@ namespace SharpMap.Utilities.Wfs
             string name = reader.LocalName;
             string coordinateString = reader.ReadElementString();
             var vertices = new List<Coordinate>();
-            string[] coordinateValues;
+            string[][] coordinateValues;
             int i = 0, length = 0;
 
             if (name.Equals("coordinates"))
-                coordinateValues = coordinateString.Split(_Cs[0], _Ts[0]);
+            {
+                var coords = coordinateString.Split(_Ts[0]);
+                coordinateValues = coords.Select(s => s.Split(_Cs[0])).ToArray();
+            }
             else
-                coordinateValues = coordinateString.Split(' ');
-
+            {
+                // we assume there are only x,y pairs
+                var coords = coordinateString.Split(' ');
+                var odds = coords.Where((s, idx) => idx%2 == 0);
+                var evens = coords.Where((s, idx) => idx%2 != 0);
+                coordinateValues = (from o in odds
+                    from e in evens
+                    select new [] {o, e}).ToArray();
+            }
             length = coordinateValues.Length;
 
-            while (i < length - 1)
+            while (i < length)
             {
                 var c = new double[2];
-                c[_axisOrder[0]] = Convert.ToDouble(coordinateValues[i++], _formatInfo);
-                c[_axisOrder[1]] = Convert.ToDouble(coordinateValues[i++], _formatInfo);
+                var values = coordinateValues[i++];
+                c[_axisOrder[0]] = Convert.ToDouble(values[0], _formatInfo);
+                c[_axisOrder[1]] = Convert.ToDouble(values[1], _formatInfo);
 
-                vertices.Add(new Coordinate(c[0], c[1]));
+                var coordinate = values.Length > 2
+                    ? new Coordinate(c[0], c[1], Convert.ToDouble(values[2]))
+                    : new Coordinate(c[0], c[1]);
+                    
+                vertices.Add(coordinate);
             }
 
             return vertices.ToArray();
@@ -837,18 +853,30 @@ namespace SharpMap.Utilities.Wfs
                 {
                     while (
                         (_GeomReader =
-                         GetSubReaderOf(_FeatureReader, labelValue, multiPolygonNodeAlt, polygonMemberNodeAlt)) != null)
+                         GetSubReaderOf(_FeatureReader, labelValue, multiPolygonNodeAlt)) != null)
                     {
-                        GeometryFactory geomFactory = new PolygonFactory(_GeomReader, _FeatureTypeInfo) { AxisOrder = AxisOrder };
-                        var polygons = geomFactory.createGeometries();
+                        XmlReader memberReader;
+                        var polygons = new List<IGeometry>();
+                        while ((memberReader = GetSubReaderOf(_GeomReader, labelValue, polygonMemberNodeAlt)) != null)
+                        {
+                            GeometryFactory geomFactory = new PolygonFactory(memberReader, _FeatureTypeInfo) { AxisOrder = AxisOrder };
+                            var polygon = geomFactory.createGeometries()[0]; // polygon element has a maxOccurs=1
+                            
+                            polygons.Add(polygon);
 
-                        var polygonArray = new IPolygon[polygons.Count];
-                        var i = 0;
-                        foreach (IPolygon polygon in polygons)
-                            polygonArray[i++] = polygon;
+                            geomFound = true;
+                        }
 
-                        _Geoms.Add(Factory.CreateMultiPolygon(polygonArray));
-                        geomFound = true;
+                        if (geomFound)
+                        {
+                            var polygonArray = new IPolygon[polygons.Count];
+                            var i = 0;
+                            foreach (IPolygon polygon in polygons)
+                                polygonArray[i++] = polygon;
+
+                            _Geoms.Add(Factory.CreateMultiPolygon(polygonArray));
+                        }
+                        
                     }
                     if (geomFound) AddLabel(labelValue[0], _Geoms[_Geoms.Count - 1]);
                     geomFound = false;

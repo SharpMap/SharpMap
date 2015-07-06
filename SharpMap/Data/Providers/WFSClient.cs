@@ -6,7 +6,9 @@ using System.Collections;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Net;
+using GeoAPI.CoordinateSystems.Transformations;
 using GeoAPI.Geometries;
+using ProjNet.CoordinateSystems.Transformations;
 using SharpMap.CoordinateSystems;
 using SharpMap.Utilities.Wfs;
 
@@ -152,7 +154,7 @@ namespace SharpMap.Data.Providers
     ///this.mapImage1.Image = demoMap.GetMap();
     /// </code> 
     ///</example>
-    public class WFS : IProvider
+    public partial class WFS : IProvider
     {
         #region Enumerations
 
@@ -312,6 +314,15 @@ namespace SharpMap.Data.Providers
             set { _httpClientUtil.Credentials = value; }
         }
 
+        /// <summary>
+        /// Gets and sets the proxy Url of the request. 
+        /// </summary>
+        public string ProxyUrl
+        {
+            get { return _httpClientUtil.ProxyUrl; }
+            set { _httpClientUtil.ProxyUrl = value; }
+        }
+
         #endregion
 
         #region Constructors
@@ -329,9 +340,10 @@ namespace SharpMap.Data.Providers
         /// Specifying the geometry type helps to accelerate the rendering process, 
         /// if the geometry type in 'DescribeFeatureType is unprecise.   
         /// </param>
+        /// <param name="proxyUrl">Optional Proxy url</param>
         /// <param name="wfsVersion">The desired WFS Server version.</param>
         public WFS(string getCapabilitiesURI, string nsPrefix, string featureType, GeometryTypeEnum geometryType,
-                   WFSVersionEnum wfsVersion)
+                   WFSVersionEnum wfsVersion, string proxyUrl = null)
         {
             _getCapabilitiesUri = getCapabilitiesURI;
 
@@ -351,6 +363,7 @@ namespace SharpMap.Data.Providers
             }
 
             _geometryType = geometryType;
+            ProxyUrl = proxyUrl;
             GetFeatureTypeInfo();
         }
 
@@ -458,8 +471,9 @@ namespace SharpMap.Data.Providers
         /// </param>
         /// <param name="featureType">The name of the feature type</param>
         /// <param name="wfsVersion">The desired WFS Server version.</param>
+        /// <param name="proxyUrl">Optional proxy url</param>
         public WFS(IXPathQueryManager getCapabilitiesCache, string nsPrefix, string featureType,
-                   GeometryTypeEnum geometryType, WFSVersionEnum wfsVersion)
+                   GeometryTypeEnum geometryType, WFSVersionEnum wfsVersion, string proxyUrl = null)
         {
             _featureTypeInfoQueryManager = getCapabilitiesCache;
 
@@ -479,6 +493,7 @@ namespace SharpMap.Data.Providers
             }
 
             _geometryType = geometryType;
+            ProxyUrl = proxyUrl;
             GetFeatureTypeInfo();
         }
 
@@ -510,7 +525,7 @@ namespace SharpMap.Data.Providers
         /// </summary>
         /// <param name="bbox"></param>
         /// <returns>Features within the specified <see cref="GeoAPI.Geometries.Envelope"/></returns>
-        public Collection<IGeometry> GetGeometriesInView(Envelope bbox)
+        public virtual Collection<IGeometry> GetGeometriesInView(Envelope bbox)
         {
             if (_featureTypeInfo == null) 
                 return null;
@@ -646,7 +661,7 @@ namespace SharpMap.Data.Providers
         /// <param name="bbox">Box that objects should intersect</param>
         /// <returns></returns>
         /// <exception cref="Exception">Thrown in any case</exception>
-        public Collection<uint> GetObjectIDsInView(Envelope bbox)
+        public virtual Collection<uint> GetObjectIDsInView(Envelope bbox)
         {
             throw new Exception("The method or operation is not implemented.");
         }
@@ -657,7 +672,7 @@ namespace SharpMap.Data.Providers
         /// <param name="oid">Object ID</param>
         /// <returns>geometry</returns>
         /// <exception cref="Exception">Thrown in any case</exception>
-        public IGeometry GetGeometryByID(uint oid)
+        public virtual IGeometry GetGeometryByID(uint oid)
         {
             throw new Exception("The method or operation is not implemented.");
         }
@@ -667,7 +682,7 @@ namespace SharpMap.Data.Providers
         /// </summary>
         /// <param name="geom">Geometry to intersect with</param>
         /// <param name="ds">FeatureDataSet to fill data into</param>
-        public void ExecuteIntersectionQuery(IGeometry geom, FeatureDataSet ds)
+        public virtual void ExecuteIntersectionQuery(IGeometry geom, FeatureDataSet ds)
         {
             if (_labelInfo == null) return;
             ds.Tables.Add(_labelInfo);
@@ -681,7 +696,7 @@ namespace SharpMap.Data.Providers
         /// </summary>
         /// <param name="box">Geometry to intersect with</param>
         /// <param name="ds">FeatureDataSet to fill data into</param>
-        public void ExecuteIntersectionQuery(Envelope box, FeatureDataSet ds)
+        public virtual void ExecuteIntersectionQuery(Envelope box, FeatureDataSet ds)
         {
             if (_labelInfo == null) return;
             ds.Tables.Add(_labelInfo);
@@ -694,7 +709,7 @@ namespace SharpMap.Data.Providers
         /// </summary>
         /// <returns>number of features</returns>
         /// <exception cref="Exception">Thrown in any case</exception>
-        public int GetFeatureCount()
+        public virtual int GetFeatureCount()
         {
             throw new Exception("The method or operation is not implemented.");
         }
@@ -705,7 +720,7 @@ namespace SharpMap.Data.Providers
         /// <param name="rowId">The id of the row.</param>
         /// <returns>datarow</returns>
         /// <exception cref="Exception">Thrown in any case</exception>
-        public FeatureDataRow GetFeature(uint rowId)
+        public virtual FeatureDataRow GetFeature(uint rowId)
         {
             throw new Exception("The method or operation is not implemented.");
         }
@@ -714,7 +729,7 @@ namespace SharpMap.Data.Providers
         /// The <see cref="Envelope"/> of dataset
         /// </summary>
         /// <returns>The 2d extent of the layer</returns>
-        public Envelope GetExtents()
+        public virtual Envelope GetExtents()
         {
             return new Envelope(new Coordinate(_featureTypeInfo.BBox._MinLong, _featureTypeInfo.BBox._MinLat),
                                 new Coordinate(_featureTypeInfo.BBox._MaxLong, _featureTypeInfo.BBox._MaxLat));
@@ -734,7 +749,7 @@ namespace SharpMap.Data.Providers
         /// <summary>
         /// Opens the datasource
         /// </summary>
-        public void Open()
+        public virtual void Open()
         {
             _isOpen = true;
         }
@@ -742,7 +757,7 @@ namespace SharpMap.Data.Providers
         /// <summary>
         /// Closes the datasource
         /// </summary>
-        public void Close()
+        public virtual void Close()
         {
             _isOpen = false;
             _httpClientUtil.Close();
@@ -759,7 +774,7 @@ namespace SharpMap.Data.Providers
         /// <summary>
         /// The spatial reference ID (CRS)
         /// </summary>
-        public int SRID
+        public virtual int SRID
         {
             get { return Convert.ToInt32(_featureTypeInfo.SRID); }
             set { _featureTypeInfo.SRID = value.ToString(); }
@@ -777,7 +792,7 @@ namespace SharpMap.Data.Providers
             Dispose(true);
         }
 
-        internal void Dispose(bool disposing)
+        protected virtual void Dispose(bool disposing)
         {
             if (!_disposed)
             {
@@ -848,14 +863,14 @@ namespace SharpMap.Data.Providers
                         describeFeatureTypeUri.Remove(describeFeatureTypeUri.Length - 1);
 
                 /* Spatial reference ID */
-                _featureTypeInfo.SRID = _featureTypeInfoQueryManager.GetValueFromNode(
+                var crs = _featureTypeInfoQueryManager.GetValueFromNode(
                     _featureTypeInfoQueryManager.Compile(_textResources.XPATH_SRS),
                     new[] {new DictionaryEntry("_param1", featureQueryName)});
                 /* If no SRID could be found, try '4326' by default */
-                if (_featureTypeInfo.SRID == null) _featureTypeInfo.SRID = "4326";
+                if (crs == null) _featureTypeInfo.SRID = "4326";
                 else
                     /* Extract number */
-                    _featureTypeInfo.SRID = _featureTypeInfo.SRID.Substring(_featureTypeInfo.SRID.LastIndexOf(":") + 1);
+                    _featureTypeInfo.SRID = crs.Substring(crs.LastIndexOf(":") + 1);
 
                 /* Bounding Box */
                 IXPathQueryManager bboxQuery = _featureTypeInfoQueryManager.GetXPathQueryManagerInContext(
@@ -937,6 +952,10 @@ namespace SharpMap.Data.Providers
                                     ? bboxVal.Substring(0, bboxVal.IndexOf(' ') + 1)
                                     : "0.0", formatInfo);
 
+                    if (SRID != 4326)
+                    {
+                        // TODO: we must to transform the bbox coordinates into the SRS projection
+                    }
                     _featureTypeInfo.BBox = bbox;
                 }
 
