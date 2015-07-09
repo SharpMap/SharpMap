@@ -274,7 +274,8 @@ namespace SharpMap.CoordinateSystems
                         var byteIndex = code / 8;
                         var bitIndex = code % 8;
                         var flag = 1 << bitIndex;//1 << (7 - bitIndex);
-                        Buffer.BlockCopy((_epsgAxisOrderBitField[byteIndex] & flag) == flag ? _unusual : _usual, 0, res, 0, 2);
+                        // BlockCopy copies the bytes so length is 8 (2 ints)
+                        Buffer.BlockCopy((_epsgAxisOrderBitField[byteIndex] & flag) == flag ? _unusual : _usual, 0, res, 0, 8);
                         return res;
 
                 }
