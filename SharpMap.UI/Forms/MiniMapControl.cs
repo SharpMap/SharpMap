@@ -737,18 +737,18 @@ namespace SharpMap.Forms
 
         private Tuple<Image, int, Rectangle> GenerateMap(object state)
         {
+            var args = (object[])state;
+            var currentGeneration = (int)args[0];
+
             try
             {
                 _isRenderingThread = true;
-
-                var args = (object[]) state;
-
-                var currentGeneration = (int) args[0];
+                
                 var map = (Map) args[1];
 
+                Image img = null;
                 Rectangle frame;
 
-                Image img = null;
                 if (map.Layers.Count > 0)
                 {
                     var originalCenter = map.Center;
@@ -784,7 +784,7 @@ namespace SharpMap.Forms
             }
             catch (Exception)
             {
-                return null;
+                return new Tuple<Image, int, Rectangle>(new Bitmap(1, 1), currentGeneration, Rectangle.Empty);
             }
             finally
             {
