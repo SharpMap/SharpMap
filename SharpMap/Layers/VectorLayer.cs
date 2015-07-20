@@ -50,6 +50,7 @@ namespace SharpMap.Layers
         private IProvider _dataSource;
         private SmoothingMode _smoothingMode;
         private ITheme _theme;
+        private Envelope _envelope;
 
         /// <summary>
         /// Initializes a new layer
@@ -122,7 +123,11 @@ namespace SharpMap.Layers
         public IProvider DataSource
         {
             get { return _dataSource; }
-            set { _dataSource = value; }
+            set
+            {
+                _dataSource = value;
+                _envelope = null;
+            }
         }
 
         /// <summary>
@@ -144,6 +149,10 @@ namespace SharpMap.Layers
             {
                 if (DataSource == null)
                     throw (new ApplicationException("DataSource property not set on layer '" + LayerName + "'"));
+                
+                if (_envelope != null && CacheExtent)
+                    return ToTarget(_envelope.Clone());
+
                 Envelope box;
                 lock (_dataSource)
                 {
@@ -153,11 +162,24 @@ namespace SharpMap.Layers
                     box = DataSource.GetExtents();
                     if (!wasOpen) //Restore state
                         DataSource.Close();
+
+                    if (CacheExtent)
+                        _envelope = box;
                 }
 
                 return ToTarget(box);
             }
         }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the layer envelope should be treated as static or not.
+        /// </summary>
+        /// <remarks>
+        /// When CacheExtent is enabled the layer Envelope will be calculated only once from DataSource, this 
+        /// helps to speed up the Envelope calculation with some DataProviders. Default is false for backward
+        /// compatibility.
+        /// </remarks>
+        public virtual bool CacheExtent { get; set; }
 
         /// <summary>
         /// Gets or sets the SRID of this VectorLayer's data source
@@ -415,7 +437,7 @@ namespace SharpMap.Layers
         /// </summary>
         /// <param name="style"></param>
         /// <returns></returns>
-        protected static IEnumerable<IStyle> GetStylesToRender(IStyle style)
+        private static IEnumerable<IStyle> GetStylesToRender(IStyle style)
         {
             IStyle[] stylesToRender = null;
             if (style is GroupStyle)
