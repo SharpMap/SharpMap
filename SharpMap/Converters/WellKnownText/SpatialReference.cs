@@ -63,6 +63,36 @@ namespace SharpMap.Converters.WellKnownText
             return SridToDefinition(srid, _proj4s, "PROJ4");
         }
 
+        /// <summary>
+        /// Returns an IEnumerable with all the SRID/WKT pairs known. 
+        /// </summary>
+        /// <returns></returns>
+        public static IEnumerable<KeyValuePair<int, string>> GetAllReferenceSystems()
+        {
+            var xmldoc = new XmlDocument();
+
+            var uri = new Uri(Assembly.GetExecutingAssembly().CodeBase);
+            var file = Path.GetDirectoryName(uri.LocalPath) + "\\SpatialRefSys.xml";
+            try
+            {
+                xmldoc.Load(file);
+            }
+            catch
+            {
+                yield break;
+            }
+
+            var nodes = xmldoc.DocumentElement.SelectNodes("/SpatialReference/*");
+            foreach (XmlNode referenceNode in nodes)
+            {
+                var srid = int.Parse(referenceNode.SelectSingleNode("SRID").InnerText);
+
+                var wkt = referenceNode.LastChild.InnerText;
+
+                yield return new KeyValuePair<int, string>(srid, wkt);
+            }
+        }
+
         private static string SridToDefinition(int srid, IDictionary<int, string> cache, string nodeName = null)
         {
 

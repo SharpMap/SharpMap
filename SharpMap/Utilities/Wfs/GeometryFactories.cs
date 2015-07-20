@@ -63,8 +63,12 @@ namespace SharpMap.Utilities.Wfs
                 if (labelInfo != null)
                 {
                     _LabelInfo = labelInfo;
-                    _LabelNode = new PathNode(_FeatureTypeInfo.FeatureTypeNamespace, _LabelInfo.Columns[0].ColumnName,
-                                              (NameTable) _XmlReader.NameTable);
+                    var pathNodes = new IPathNode[labelInfo.Columns.Count];
+                    for (var i = 0; i < pathNodes.Length; i++)
+                    {
+                        pathNodes[i] = new PathNode(_FeatureTypeInfo.FeatureTypeNamespace, _LabelInfo.Columns[i].ColumnName, (NameTable)_XmlReader.NameTable);
+                    }
+                    _LabelNode = new AlternativePathNodesCollection(pathNodes);
                 }
             }
             catch (Exception ex)
@@ -235,14 +239,14 @@ namespace SharpMap.Utilities.Wfs
         /// This method retrieves an XmlReader within a specified context.
         /// </summary>
         /// <param name="reader">An XmlReader instance that is the origin of a created sub-reader</param>
-        /// <param name="labelValue">A string array for recording a found label value. Pass 'null' to ignore searching for label values</param>
+        /// <param name="labels">A dictionary for recording label values. Pass 'null' to ignore searching for label values</param>
         /// <param name="pathNodes">A list of <see cref="IPathNode"/> instances defining the context of the retrieved reader</param>
         /// <returns>A sub-reader of the XmlReader given as argument</returns>
-        protected XmlReader GetSubReaderOf(XmlReader reader, string[] labelValue, params IPathNode[] pathNodes)
+        protected XmlReader GetSubReaderOf(XmlReader reader, Dictionary<string, string> labels, params IPathNode[] pathNodes)
         {
             _pathNodes.Clear();
             _pathNodes.AddRange(pathNodes);
-            return GetSubReaderOf(reader, labelValue, _pathNodes);
+            return GetSubReaderOf(reader, labels, _pathNodes);
         }
 
         /// <summary>
@@ -250,10 +254,10 @@ namespace SharpMap.Utilities.Wfs
         /// Moreover it collects label values before or after a geometry could be found.
         /// </summary>
         /// <param name="reader">An XmlReader instance that is the origin of a created sub-reader</param>
-        /// <param name="labelValue">A string array for recording a found label value. Pass 'null' to ignore searching for label values</param>
+        /// <param name="labels">A dictionary for recording label values. Pass 'null' to ignore searching for label values</param>
         /// <param name="pathNodes">A list of <see cref="IPathNode"/> instances defining the context of the retrieved reader</param>
         /// <returns>A sub-reader of the XmlReader given as argument</returns>
-        protected XmlReader GetSubReaderOf(XmlReader reader, string[] labelValue, List<IPathNode> pathNodes)
+        protected XmlReader GetSubReaderOf(XmlReader reader, Dictionary<string, string> labels, List<IPathNode> pathNodes)
         {
             string errorMessage = null;
 
@@ -271,10 +275,19 @@ namespace SharpMap.Utilities.Wfs
                         return reader.ReadSubtree();
                     }
 
-                    if (labelValue != null)
+                    if (labels != null)
                         if (_LabelNode != null)
                             if (_LabelNode.Matches(reader))
-                                labelValue[0] = reader.ReadElementString();
+                            {
+                                var labelName = reader.Name;
+                                var labelValue = reader.ReadString();
+
+                                // remove the namespace
+                                if (labelName.Contains(":"))
+                                    labelName = labelName.Split(':')[1];
+
+                                labels.Add(labelName, labelValue);
+                            }
 
 
                     if (_ServiceExceptionNode.Matches(reader))
@@ -290,18 +303,27 @@ namespace SharpMap.Utilities.Wfs
         }
 
         /// <summary>
-        /// This method adds a label to the collection.
+        /// This method adds labels to the collection.
         /// </summary>
-        protected void AddLabel(string labelValue, IGeometry geom)
+        protected void AddLabel(Dictionary<string, string> labelValues, IGeometry geom)
         {
-            if (_LabelInfo == null || geom == null || string.IsNullOrEmpty(labelValue)) return;
+            if (_LabelInfo == null || geom == null || labelValues == null) return;
 
             try
             {
                 FeatureDataRow row = _LabelInfo.NewRow();
-                row[0] = labelValue;
+                foreach (var keyPair in labelValues)
+                {
+                    var labelName = keyPair.Key;
+                    var labelValue = keyPair.Value;
+
+                    row[labelName] = labelValue;
+                }
+                
                 row.Geometry = geom;
                 _LabelInfo.AddRow(row);
+
+                labelValues.Clear();
             }
             catch (Exception ex)
             {
@@ -429,7 +451,7 @@ namespace SharpMap.Utilities.Wfs
         internal override Collection<IGeometry> createGeometries()
         {
             IPathNode pointNode = new PathNode(_GMLNS, "Point", (NameTable) _XmlReader.NameTable);
-            string[] labelValue = new string[1];
+            var labelValues = new Dictionary<string, string>();
             bool geomFound = false;
 
             try
@@ -437,13 +459,13 @@ namespace SharpMap.Utilities.Wfs
                 // Reading the entire feature's node makes it possible to collect label values that may appear before or after the geometry property
                 while ((_FeatureReader = GetSubReaderOf(_XmlReader, null, _FeatureNode)) != null)
                 {
-                    while ((_GeomReader = GetSubReaderOf(_FeatureReader, labelValue, pointNode, _CoordinatesNode)) !=
+                    while ((_GeomReader = GetSubReaderOf(_FeatureReader, labelValues, pointNode, _CoordinatesNode)) !=
                            null)
                     {
                         _Geoms.Add(Factory.CreatePoint(ParseCoordinates(_GeomReader)[0]));
                         geomFound = true;
                     }
-                    if (geomFound) AddLabel(labelValue[0], _Geoms[_Geoms.Count - 1]);
+                    if (geomFound) AddLabel(labelValues, _Geoms[_Geoms.Count - 1]);
                     geomFound = false;
                 }
             }
@@ -501,7 +523,7 @@ namespace SharpMap.Utilities.Wfs
         internal override Collection<IGeometry> createGeometries()
         {
             IPathNode lineStringNode = new PathNode(_GMLNS, "LineString", (NameTable) _XmlReader.NameTable);
-            string[] labelValue = new string[1];
+            var labelValues = new Dictionary<string, string>();
             bool geomFound = false;
 
             try
@@ -510,13 +532,13 @@ namespace SharpMap.Utilities.Wfs
                 while ((_FeatureReader = GetSubReaderOf(_XmlReader, null, _FeatureNode)) != null)
                 {
                     while (
-                        (_GeomReader = GetSubReaderOf(_FeatureReader, labelValue, lineStringNode, _CoordinatesNode)) !=
+                        (_GeomReader = GetSubReaderOf(_FeatureReader, labelValues, lineStringNode, _CoordinatesNode)) !=
                         null)
                     {
                         _Geoms.Add(Factory.CreateLineString(ParseCoordinates(_GeomReader)));
                         geomFound = true;
                     }
-                    if (geomFound) AddLabel(labelValue[0], _Geoms[_Geoms.Count - 1]);
+                    if (geomFound) AddLabel(labelValues, _Geoms[_Geoms.Count - 1]);
                     geomFound = false;
                 }
             }
@@ -584,7 +606,7 @@ namespace SharpMap.Utilities.Wfs
             IPathNode interiorNode = new PathNode(_GMLNS, "interior", (NameTable) _XmlReader.NameTable);
             IPathNode innerBoundaryNodeAlt = new AlternativePathNodesCollection(innerBoundaryNode, interiorNode);
             IPathNode linearRingNode = new PathNode(_GMLNS, "LinearRing", (NameTable) _XmlReader.NameTable);
-            string[] labelValue = new string[1];
+            var labelValues = new Dictionary<string, string>();
             bool geomFound = false;
 
             try
@@ -594,7 +616,7 @@ namespace SharpMap.Utilities.Wfs
                 {
                     ILinearRing shell = null;
                     var holes = new List<ILinearRing>();
-                    while ((_GeomReader = GetSubReaderOf(_FeatureReader, labelValue, polygonNode)) != null)
+                    while ((_GeomReader = GetSubReaderOf(_FeatureReader, labelValues, polygonNode)) != null)
                     {
                         //polygon = new Polygon();
 
@@ -613,7 +635,7 @@ namespace SharpMap.Utilities.Wfs
                         _Geoms.Add(Factory.CreatePolygon(shell, holes.ToArray()));
                         geomFound = true;
                     }
-                    if (geomFound) AddLabel(labelValue[0], _Geoms[_Geoms.Count - 1]);
+                    if (geomFound) AddLabel(labelValues, _Geoms[_Geoms.Count - 1]);
                     geomFound = false;
                 }
             }
@@ -670,7 +692,7 @@ namespace SharpMap.Utilities.Wfs
         {
             IPathNode multiPointNode = new PathNode(_GMLNS, "MultiPoint", (NameTable) _XmlReader.NameTable);
             IPathNode pointMemberNode = new PathNode(_GMLNS, "pointMember", (NameTable) _XmlReader.NameTable);
-            string[] labelValue = new string[1];
+            var labelValues = new Dictionary<string, string>();
             bool geomFound = false;
 
             try
@@ -679,7 +701,7 @@ namespace SharpMap.Utilities.Wfs
                 while ((_FeatureReader = GetSubReaderOf(_XmlReader, null, _FeatureNode)) != null)
                 {
                     while (
-                        (_GeomReader = GetSubReaderOf(_FeatureReader, labelValue, multiPointNode, pointMemberNode)) !=
+                        (_GeomReader = GetSubReaderOf(_FeatureReader, labelValues, multiPointNode, pointMemberNode)) !=
                         null)
                     {
                         GeometryFactory geomFactory = new PointFactory(_GeomReader, _FeatureTypeInfo) { AxisOrder = AxisOrder};
@@ -693,7 +715,7 @@ namespace SharpMap.Utilities.Wfs
                         _Geoms.Add(Factory.CreateMultiPoint(pointArray));
                         geomFound = true;
                     }
-                    if (geomFound) AddLabel(labelValue[0], _Geoms[_Geoms.Count - 1]);
+                    if (geomFound) AddLabel(labelValues, _Geoms[_Geoms.Count - 1]);
                     geomFound = false;
                 }
             }
@@ -755,7 +777,7 @@ namespace SharpMap.Utilities.Wfs
             IPathNode lineStringMemberNode = new PathNode(_GMLNS, "lineStringMember", (NameTable) _XmlReader.NameTable);
             IPathNode curveMemberNode = new PathNode(_GMLNS, "curveMember", (NameTable) _XmlReader.NameTable);
             IPathNode lineStringMemberNodeAlt = new AlternativePathNodesCollection(lineStringMemberNode, curveMemberNode);
-            string[] labelValue = new string[1];
+            var labelValues = new Dictionary<string, string>();
             bool geomFound = false;
 
             try
@@ -765,7 +787,7 @@ namespace SharpMap.Utilities.Wfs
                 {
                     while (
                         (_GeomReader =
-                         GetSubReaderOf(_FeatureReader, labelValue, multiLineStringNodeAlt, lineStringMemberNodeAlt)) !=
+                         GetSubReaderOf(_FeatureReader, labelValues, multiLineStringNodeAlt, lineStringMemberNodeAlt)) !=
                         null)
                     {
                         GeometryFactory geomFactory = new LineStringFactory(_GeomReader, _FeatureTypeInfo) { AxisOrder = AxisOrder };
@@ -779,7 +801,7 @@ namespace SharpMap.Utilities.Wfs
                         _Geoms.Add(Factory.CreateMultiLineString(lineStringArray));
                         geomFound = true;
                     }
-                    if (geomFound) AddLabel(labelValue[0], _Geoms[_Geoms.Count - 1]);
+                    if (geomFound) AddLabel(labelValues, _Geoms[_Geoms.Count - 1]);
                     geomFound = false;
                 }
             }
@@ -843,7 +865,7 @@ namespace SharpMap.Utilities.Wfs
             IPathNode surfaceMemberNode = new PathNode(_GMLNS, "surfaceMember", (NameTable) _XmlReader.NameTable);
             IPathNode polygonMemberNodeAlt = new AlternativePathNodesCollection(polygonMemberNode, surfaceMemberNode);
             IPathNode linearRingNode = new PathNode(_GMLNS, "LinearRing", (NameTable) _XmlReader.NameTable);
-            string[] labelValue = new string[1];
+            var labelValues = new Dictionary<string, string>();
             bool geomFound = false;
 
             try
@@ -853,11 +875,11 @@ namespace SharpMap.Utilities.Wfs
                 {
                     while (
                         (_GeomReader =
-                         GetSubReaderOf(_FeatureReader, labelValue, multiPolygonNodeAlt)) != null)
+                         GetSubReaderOf(_FeatureReader, labelValues, multiPolygonNodeAlt)) != null)
                     {
                         XmlReader memberReader;
                         var polygons = new List<IGeometry>();
-                        while ((memberReader = GetSubReaderOf(_GeomReader, labelValue, polygonMemberNodeAlt)) != null)
+                        while ((memberReader = GetSubReaderOf(_GeomReader, labelValues, polygonMemberNodeAlt)) != null)
                         {
                             GeometryFactory geomFactory = new PolygonFactory(memberReader, _FeatureTypeInfo) { AxisOrder = AxisOrder };
                             var polygon = geomFactory.createGeometries()[0]; // polygon element has a maxOccurs=1
@@ -878,7 +900,7 @@ namespace SharpMap.Utilities.Wfs
                         }
                         
                     }
-                    if (geomFound) AddLabel(labelValue[0], _Geoms[_Geoms.Count - 1]);
+                    if (geomFound) AddLabel(labelValues, _Geoms[_Geoms.Count - 1]);
                     geomFound = false;
                 }
             }

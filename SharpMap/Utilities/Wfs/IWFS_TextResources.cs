@@ -169,8 +169,9 @@ namespace SharpMap.Utilities.Wfs
         /// <param name="featureTypeInfo">A <see cref="Wfs.WfsFeatureTypeInfo"/> instance providing metadata of the featuretype to query</param>
         /// <param name="boundingBox">The bounding box of the query</param>
         /// <param name="filter">An instance implementing <see cref="IFilter"/></param>
+        /// <param name="loadAllElements">True to get all feature elements, false to get only geometry element</param>
         /// <returns>An URI for a 'GetFeature' - <b>GET</b> request.</returns>
-        string GetFeatureGETRequest(WfsFeatureTypeInfo featureTypeInfo, Envelope boundingBox, IFilter filter);
+        string GetFeatureGETRequest(WfsFeatureTypeInfo featureTypeInfo, Envelope boundingBox, IFilter filter, bool loadAllElements);
 
         /// <summary>
         /// Method to return the query string for a 'GetFeature - <b>POST</b> request'.
@@ -179,8 +180,9 @@ namespace SharpMap.Utilities.Wfs
         /// <param name="labelProperty">A property necessary for label rendering</param>
         /// <param name="boundingBox">The bounding box of the query</param>
         /// <param name="filter">An instance implementing <see cref="IFilter"/></param>
+        /// <param name="loadAllElements">True to get all feature elements, false to get only geometry element and eventually label</param>
         /// <returns>An URI for a 'GetFeature' - <b>POST</b> request.</returns>
         byte[] GetFeaturePOSTRequest(WfsFeatureTypeInfo featureTypeInfo, string labelProperty, Envelope boundingBox,
-                                     IFilter filter);
+                                     IFilter filter, bool loadAllElements);
     }
 }

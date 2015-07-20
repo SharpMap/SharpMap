@@ -5,11 +5,15 @@ using System;
 using System.Collections;
 using System.Collections.ObjectModel;
 using System.Globalization;
+using System.Linq;
 using System.Net;
+using System.Xml.XPath;
 using GeoAPI.CoordinateSystems.Transformations;
 using GeoAPI.Geometries;
 using ProjNet.CoordinateSystems.Transformations;
 using SharpMap.CoordinateSystems;
+using SharpMap.Utilities.Indexing;
+using SharpMap.Utilities.SpatialIndexing;
 using SharpMap.Utilities.Wfs;
 
 namespace SharpMap.Data.Providers
@@ -194,6 +198,11 @@ namespace SharpMap.Data.Providers
         private FeatureDataTable _labelInfo;
         private int[] _axisOrder;
 
+        /// <summary>
+        /// Tree used for fast query of data
+        /// </summary>
+        private ISpatialIndex<uint> _tree;
+
         private string _nsPrefix;
 
         // The type of geometry can be specified in case of unprecise information (e.g. 'GeometryAssociationType').
@@ -251,6 +260,11 @@ namespace SharpMap.Data.Providers
                 _axisOrder = value;
             }
         }
+
+        /// <summary>
+        /// Gets or sets a value indicating the spatial index factory
+        /// </summary>
+        public static ISpatialIndexFactory<uint> SpatialIndexFactory = new QuadTreeFactory();
 
         /// <summary>
         /// Gets or sets a value indicating whether extracting geometry information 
@@ -530,125 +544,38 @@ namespace SharpMap.Data.Providers
             if (_featureTypeInfo == null) 
                 return null;
 
-            var geometryTypeString = _featureTypeInfo.Geometry._GeometryType;
-
-            GeometryFactory geomFactory = null;
-
-            if (!string.IsNullOrEmpty(_label))
+            // if cache is not enabled make a call to server with the provided bounding box
+            if (!UseCache || Label == null)
             {
-                _labelInfo = new FeatureDataTable();
-                _labelInfo.Columns.Add(_label);
-                // Turn off quick geometries, if a label is applied...
-                _quickGeometries = false;
+                _tree = null;
+                return LoadGeometries(bbox);
             }
 
-            // Configuration for GetFeature request */
-            WFSClientHTTPConfigurator config = new WFSClientHTTPConfigurator(_textResources);
-            config.configureForWfsGetFeatureRequest(_httpClientUtil, _featureTypeInfo, _label, bbox, _ogcFilter,
-                                                    _getFeatureGETRequest);
-
-            try
+            // if cache is enabled but data is not downloaded then make a server call with an infinite envelope to download all the geometries
+            if (_labelInfo == null)
             {
-                Collection<IGeometry> geoms;
-                switch (geometryTypeString)
-                {
-                        /* Primitive geometry elements */
+                LoadGeometries(new Envelope(double.MinValue, double.MaxValue, double.MinValue, double.MaxValue));
 
-                        // GML2
-                    case "PointPropertyType":
-                        geomFactory = new PointFactory(_httpClientUtil, _featureTypeInfo, _labelInfo);
-                        break;
+                // creates the spatial index
+                var extent = GetExtents();
 
-                        // GML2
-                    case "LineStringPropertyType":
-                        geomFactory = new LineStringFactory(_httpClientUtil, _featureTypeInfo, _labelInfo);
-                        break;
-
-                        // GML2
-                    case "PolygonPropertyType":
-                        geomFactory = new PolygonFactory(_httpClientUtil, _featureTypeInfo, _labelInfo);
-                        break;
-
-                        // GML3
-                    case "CurvePropertyType":
-                        geomFactory = new LineStringFactory(_httpClientUtil, _featureTypeInfo, _labelInfo);
-                        break;
-
-                        // GML3
-                    case "SurfacePropertyType":
-                        geomFactory = new PolygonFactory(_httpClientUtil, _featureTypeInfo, _labelInfo);
-                        break;
-
-                        /* Aggregate geometry elements */
-
-                        // GML2
-                    case "MultiPointPropertyType":
-                        if (_multiGeometries)
-                            geomFactory = new MultiPointFactory(_httpClientUtil, _featureTypeInfo, _labelInfo);
-                        else
-                            geomFactory = new PointFactory(_httpClientUtil, _featureTypeInfo, _labelInfo);
-                        break;
-
-                        // GML2
-                    case "MultiLineStringPropertyType":
-                        if (_multiGeometries)
-                            geomFactory = new MultiLineStringFactory(_httpClientUtil, _featureTypeInfo, _labelInfo);
-                        else
-                            geomFactory = new LineStringFactory(_httpClientUtil, _featureTypeInfo, _labelInfo);
-                        break;
-
-                        // GML2
-                    case "MultiPolygonPropertyType":
-                        if (_multiGeometries)
-                            geomFactory = new MultiPolygonFactory(_httpClientUtil, _featureTypeInfo, _labelInfo);
-                        else
-                            geomFactory = new PolygonFactory(_httpClientUtil, _featureTypeInfo, _labelInfo);
-                        break;
-
-                        // GML3
-                    case "MultiCurvePropertyType":
-                        if (_multiGeometries)
-                            geomFactory = new MultiLineStringFactory(_httpClientUtil, _featureTypeInfo, _labelInfo);
-                        else
-                            geomFactory = new LineStringFactory(_httpClientUtil, _featureTypeInfo, _labelInfo);
-                        break;
-
-                        // GML3
-                    case "MultiSurfacePropertyType":
-                        if (_multiGeometries)
-                            geomFactory = new MultiPolygonFactory(_httpClientUtil, _featureTypeInfo, _labelInfo);
-                        else
-                            geomFactory = new PolygonFactory(_httpClientUtil, _featureTypeInfo, _labelInfo);
-                        break;
-
-                        // .e.g. 'gml:GeometryAssociationType' or 'GeometryPropertyType'
-                        //It's better to set the geometry type manually, if it is known...
-                    default:
-                        geomFactory = new UnspecifiedGeometryFactory_WFS1_0_0_GML2(_httpClientUtil, _featureTypeInfo,
-                                                                                   _multiGeometries, _quickGeometries,
-                                                                                   _labelInfo);
-                        
-                        geomFactory.AxisOrder = AxisOrder;
-                        geoms = geomFactory.createGeometries();
-                        
-                        return geoms;
-                }
-
-                geomFactory.AxisOrder = AxisOrder;
-                geoms = _quickGeometries
-                            ? geomFactory.createQuickGeometries(geometryTypeString)
-                            : geomFactory.createGeometries();
-
-                return geoms;
+                _tree = SpatialIndexFactory.Create(extent, _labelInfo.Count,
+                    _labelInfo.Rows
+                        .Cast<FeatureDataRow>()
+                        .Select((row, idx) => SpatialIndexFactory.Create((uint) idx, row.Geometry.EnvelopeInternal)));
             }
-                // Free resources (net connection of geometry factory)
-            finally
+
+            // we then must filter the geometries locally
+            var ids = _tree.Search(bbox);
+
+            var coll = new Collection<IGeometry>();
+            for (var i = 0; i < ids.Count; i++)
             {
-                if (geomFactory != null)
-                {
-                    geomFactory.Dispose();
-                }
+                var featureRow = (FeatureDataRow) _labelInfo.Rows[(int)ids[i]];
+                coll.Add(featureRow.Geometry);
             }
+
+            return coll;
         }
 
         /// <summary>
@@ -685,9 +612,41 @@ namespace SharpMap.Data.Providers
         public virtual void ExecuteIntersectionQuery(IGeometry geom, FeatureDataSet ds)
         {
             if (_labelInfo == null) return;
-            ds.Tables.Add(_labelInfo);
-            // Destroy internal reference
-            _labelInfo = null;
+
+            var table = _labelInfo.Clone();
+
+            if (_tree != null)
+            {
+                // use the index for fast query
+                var ids = _tree.Search(geom.EnvelopeInternal);
+                for (var i = 0; i < ids.Count; i++)
+                {
+                    var featureRow = (FeatureDataRow)_labelInfo.Rows[(int)ids[i]];
+                    var featureGeometry = featureRow.Geometry;
+                    if (featureGeometry.Intersects(geom))
+                    {
+                        var newRow = (FeatureDataRow) table.Rows.Add(featureRow.ItemArray);
+                        newRow.Geometry = featureGeometry;
+                    }
+                }
+            }
+            else
+            {
+                for (var i = 0; i < _labelInfo.Rows.Count; i++)
+                {
+                    var featureRow = (FeatureDataRow) _labelInfo.Rows[i];
+                    var featureGeometry = featureRow.Geometry;
+                    if (featureGeometry.Intersects(geom))
+                    {
+                        var newRow = (FeatureDataRow) table.Rows.Add(featureRow.ItemArray);
+                        newRow.Geometry = featureGeometry;
+                    }
+                }
+            }
+            ds.Tables.Add(table);
+            // Destroy internal reference if cache is disabled
+            if (!UseCache)
+                _labelInfo = null;
         }
 
 
@@ -699,9 +658,40 @@ namespace SharpMap.Data.Providers
         public virtual void ExecuteIntersectionQuery(Envelope box, FeatureDataSet ds)
         {
             if (_labelInfo == null) return;
-            ds.Tables.Add(_labelInfo);
+
+            var table = _labelInfo.Clone();
+
+            if (_tree != null)
+            {
+                // use the index for fast query
+                
+                var ids = _tree.Search(box);
+                for (var i = 0; i < ids.Count; i++)
+                {
+                    var featureRow = (FeatureDataRow)_labelInfo.Rows[(int)ids[i]];
+                    var featureGeometry = featureRow.Geometry;
+                    var newRow = (FeatureDataRow)table.Rows.Add(featureRow.ItemArray);
+                    newRow.Geometry = featureGeometry;
+                }
+            }
+            else
+            {
+                // we must filter the geometries locally
+                for (var i = 0; i < _labelInfo.Rows.Count; i++)
+                {
+                    var featureRow = (FeatureDataRow) _labelInfo.Rows[i];
+                    var featureGeometry = featureRow.Geometry;
+                    if (box.Intersects(featureGeometry.EnvelopeInternal))
+                    {
+                        var newRow = (FeatureDataRow) table.Rows.Add(featureRow.ItemArray);
+                        newRow.Geometry = featureGeometry;
+                    }
+                }
+            }
+            ds.Tables.Add(table);
             // Destroy internal reference
-            _labelInfo = null;
+            if (!UseCache)
+                _labelInfo = null;
         }
 
         /// <summary>
@@ -731,8 +721,25 @@ namespace SharpMap.Data.Providers
         /// <returns>The 2d extent of the layer</returns>
         public virtual Envelope GetExtents()
         {
-            return new Envelope(new Coordinate(_featureTypeInfo.BBox._MinLong, _featureTypeInfo.BBox._MinLat),
-                                new Coordinate(_featureTypeInfo.BBox._MaxLong, _featureTypeInfo.BBox._MaxLat));
+            if (!UseCache || _labelInfo == null || _labelInfo.Rows.Count == 0)
+            {
+                return new Envelope(new Coordinate(_featureTypeInfo.BBox._MinLong, _featureTypeInfo.BBox._MinLat),
+                    new Coordinate(_featureTypeInfo.BBox._MaxLong, _featureTypeInfo.BBox._MaxLat));
+            }
+
+            // here we try to fix a problem that happens when the server provides an incorrect bounding box for the data
+            // we simply calculate the extent from all the geometries we got.
+
+            Envelope env = null;
+
+            for (var i = 0; i < _labelInfo.Rows.Count; i++)
+            {
+                var featureRow = (FeatureDataRow)_labelInfo.Rows[i];
+                var geom = featureRow.Geometry;
+
+                env = env == null ? geom.EnvelopeInternal : env.ExpandedBy(geom.EnvelopeInternal);
+            }
+            return env;
         }
 
         /// <summary>
@@ -780,6 +787,15 @@ namespace SharpMap.Data.Providers
             set { _featureTypeInfo.SRID = value.ToString(); }
         }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether caching is enabled.
+        /// </summary>
+        /// <remarks>
+        /// When cache is enabled all geometries are downloaded from server depending on the OGC filter set, 
+        /// and then cached on client to fullfill next requests.
+        /// </remarks>
+        public bool UseCache { get; set; }
+
         #endregion
 
         #region IDisposable Member
@@ -810,6 +826,137 @@ namespace SharpMap.Data.Providers
 
         #region Private Member
 
+        private Collection<IGeometry> LoadGeometries(Envelope bbox)
+        {
+            var geometryTypeString = _featureTypeInfo.Geometry._GeometryType;
+
+            GeometryFactory geomFactory = null;
+
+            if (UseCache)
+            {
+                // we want to download all the elements of the feature
+                _labelInfo = new FeatureDataTable();
+                foreach (var element in FeatureTypeInfo.Elements)
+                    _labelInfo.Columns.Add(element.Name);
+
+                _quickGeometries = false;
+            }
+            else if (!string.IsNullOrEmpty(_label))
+            {
+                _labelInfo = new FeatureDataTable();
+                _labelInfo.Columns.Add(_label);
+                // Turn off quick geometries, if a label is applied...
+                _quickGeometries = false;
+            }
+
+            // Configuration for GetFeature request */
+            WFSClientHTTPConfigurator config = new WFSClientHTTPConfigurator(_textResources);
+            config.configureForWfsGetFeatureRequest(_httpClientUtil, _featureTypeInfo, _label, bbox, _ogcFilter,
+                                                    _getFeatureGETRequest, UseCache);
+
+            try
+            {
+                Collection<IGeometry> geoms;
+                switch (geometryTypeString)
+                {
+                    /* Primitive geometry elements */
+
+                    // GML2
+                    case "PointPropertyType":
+                        geomFactory = new PointFactory(_httpClientUtil, _featureTypeInfo, _labelInfo);
+                        break;
+
+                    // GML2
+                    case "LineStringPropertyType":
+                        geomFactory = new LineStringFactory(_httpClientUtil, _featureTypeInfo, _labelInfo);
+                        break;
+
+                    // GML2
+                    case "PolygonPropertyType":
+                        geomFactory = new PolygonFactory(_httpClientUtil, _featureTypeInfo, _labelInfo);
+                        break;
+
+                    // GML3
+                    case "CurvePropertyType":
+                        geomFactory = new LineStringFactory(_httpClientUtil, _featureTypeInfo, _labelInfo);
+                        break;
+
+                    // GML3
+                    case "SurfacePropertyType":
+                        geomFactory = new PolygonFactory(_httpClientUtil, _featureTypeInfo, _labelInfo);
+                        break;
+
+                    /* Aggregate geometry elements */
+
+                    // GML2
+                    case "MultiPointPropertyType":
+                        if (_multiGeometries)
+                            geomFactory = new MultiPointFactory(_httpClientUtil, _featureTypeInfo, _labelInfo);
+                        else
+                            geomFactory = new PointFactory(_httpClientUtil, _featureTypeInfo, _labelInfo);
+                        break;
+
+                    // GML2
+                    case "MultiLineStringPropertyType":
+                        if (_multiGeometries)
+                            geomFactory = new MultiLineStringFactory(_httpClientUtil, _featureTypeInfo, _labelInfo);
+                        else
+                            geomFactory = new LineStringFactory(_httpClientUtil, _featureTypeInfo, _labelInfo);
+                        break;
+
+                    // GML2
+                    case "MultiPolygonPropertyType":
+                        if (_multiGeometries)
+                            geomFactory = new MultiPolygonFactory(_httpClientUtil, _featureTypeInfo, _labelInfo);
+                        else
+                            geomFactory = new PolygonFactory(_httpClientUtil, _featureTypeInfo, _labelInfo);
+                        break;
+
+                    // GML3
+                    case "MultiCurvePropertyType":
+                        if (_multiGeometries)
+                            geomFactory = new MultiLineStringFactory(_httpClientUtil, _featureTypeInfo, _labelInfo);
+                        else
+                            geomFactory = new LineStringFactory(_httpClientUtil, _featureTypeInfo, _labelInfo);
+                        break;
+
+                    // GML3
+                    case "MultiSurfacePropertyType":
+                        if (_multiGeometries)
+                            geomFactory = new MultiPolygonFactory(_httpClientUtil, _featureTypeInfo, _labelInfo);
+                        else
+                            geomFactory = new PolygonFactory(_httpClientUtil, _featureTypeInfo, _labelInfo);
+                        break;
+
+                    // .e.g. 'gml:GeometryAssociationType' or 'GeometryPropertyType'
+                    //It's better to set the geometry type manually, if it is known...
+                    default:
+                        geomFactory = new UnspecifiedGeometryFactory_WFS1_0_0_GML2(_httpClientUtil, _featureTypeInfo,
+                                                                                   _multiGeometries, _quickGeometries,
+                                                                                   _labelInfo);
+
+                        geomFactory.AxisOrder = AxisOrder;
+                        geoms = geomFactory.createGeometries();
+
+                        return geoms;
+                }
+
+                geomFactory.AxisOrder = AxisOrder;
+                geoms = _quickGeometries
+                            ? geomFactory.createQuickGeometries(geometryTypeString)
+                            : geomFactory.createGeometries();
+
+                return geoms;
+            }
+            // Free resources (net connection of geometry factory)
+            finally
+            {
+                if (geomFactory != null)
+                {
+                    geomFactory.Dispose();
+                }
+            }
+        }
         /// <summary>
         /// This method gets metadata about the featuretype to query from 'GetCapabilities' and 'DescribeFeatureType'.
         /// </summary>
@@ -954,7 +1101,18 @@ namespace SharpMap.Data.Providers
 
                     if (SRID != 4326)
                     {
-                        // TODO: we must to transform the bbox coordinates into the SRS projection
+                        // we must to transform the bbox coordinates into the SRS projection
+                        var transformation = CoordinateSystemServicesProvider.Instance.CreateTransformation(4326, SRID);
+                        if (transformation == null)
+                            throw new InvalidOperationException("Can't transform geometries to layer SRID");
+
+                        var maxPoint = transformation.MathTransform.Transform(new[] { bbox._MaxLong, bbox._MaxLat });
+                        var minPoint = transformation.MathTransform.Transform(new[] { bbox._MinLong, bbox._MinLat });
+
+                        bbox._MaxLong = maxPoint[0];
+                        bbox._MaxLat = maxPoint[1];
+                        bbox._MinLong = minPoint[0];
+                        bbox._MinLat = minPoint[1];
                     }
                     _featureTypeInfo.BBox = bbox;
                 }
@@ -1000,6 +1158,24 @@ namespace SharpMap.Data.Providers
                     /* Just, if not set manually... */
                     if (geomType == null)
                         geomType = geomQuery.GetValueFromNode(geomQuery.Compile(_textResources.XPATH_TYPEATTRIBUTEQUERY));
+
+                    /* read all the elements */
+                    var iterator = geomQuery.GetIterator(geomQuery.Compile("//ancestor::xs:sequence/xs:element"));
+                    foreach (XPathNavigator node in iterator)
+                    {
+                        node.MoveToAttribute("type", string.Empty);
+                        var type = node.Value;
+
+                        if (type.StartsWith("gml:")) // we skip geometry element cause we already found it
+                            continue;
+
+                        node.MoveToParent();
+
+                        node.MoveToAttribute("name", string.Empty);
+                        var name = node.Value;
+
+                        _featureTypeInfo.Elements.Add(new WfsFeatureTypeInfo.ElementInfo(name, type));
+                    }
                 }
                 else
                 {
@@ -1210,7 +1386,7 @@ namespace SharpMap.Data.Providers
             internal HttpClientUtil configureForWfsGetFeatureRequest(HttpClientUtil httpClientUtil,
                                                                      WfsFeatureTypeInfo featureTypeInfo,
                                                                      string labelProperty, Envelope boundingBox,
-                                                                     IFilter filter, bool GET)
+                                                                     IFilter filter, bool GET, bool loadAllElements)
             {
                 httpClientUtil.Reset();
                 httpClientUtil.Url = featureTypeInfo.ServiceURI;
@@ -1218,13 +1394,13 @@ namespace SharpMap.Data.Providers
                 if (GET)
                 {
                     /* HTTP-GET */
-                    httpClientUtil.Url += _WfsTextResources.GetFeatureGETRequest(featureTypeInfo, boundingBox, filter);
+                    httpClientUtil.Url += _WfsTextResources.GetFeatureGETRequest(featureTypeInfo, boundingBox, filter, loadAllElements);
                     return httpClientUtil;
                 }
 
                 /* HTTP-POST */
                 httpClientUtil.PostData = _WfsTextResources.GetFeaturePOSTRequest(featureTypeInfo, labelProperty,
-                                                                                  boundingBox, filter);
+                                                                                  boundingBox, filter, loadAllElements);
                 httpClientUtil.AddHeader(HttpRequestHeader.ContentType.ToString(), "text/xml");
                 return httpClientUtil;
             }

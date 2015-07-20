@@ -2,6 +2,7 @@
 // This file can be redistributed and/or modified under the terms of the GNU Lesser General Public License.
 
 using System;
+using System.Collections.Generic;
 using GeoAPI;
 using GeoAPI.Geometries;
 
@@ -79,6 +80,15 @@ namespace SharpMap.Utilities.Wfs
         private string _ServiceURI = string.Empty;
         private string _SRID;
         private string _Ts = " ";
+        private readonly List<ElementInfo> _elements = new List<ElementInfo>();
+
+        /// <summary>
+        /// Gets the elements associated to the feature.
+        /// </summary>
+        public List<ElementInfo> Elements
+        {
+            get { return _elements; }
+        }
 
         /// <summary>
         /// Gets or sets the name of the featuretype.
@@ -323,6 +333,38 @@ namespace SharpMap.Utilities.Wfs
             public string _GeometryType = string.Empty;
         }
 
+        #endregion
+
+        #region ElementInfo
+
+        /// <summary>
+        /// The element info associated to the feature.
+        /// </summary>
+        [Serializable]
+        public class ElementInfo
+        {
+            public ElementInfo(string name, string dataType)
+            {
+                if (name == null)
+                    throw new ArgumentNullException("name");
+
+                if (dataType == null)
+                    throw new ArgumentNullException("dataType");
+
+                Name = name;
+                DataType = dataType;
+            }
+
+            /// <summary>
+            /// Gets the name of the element
+            /// </summary>
+            public string Name { get; private set; }
+
+            /// <summary>
+            /// Gets the type of the element
+            /// </summary>
+            public string DataType { get; private set; }
+        } 
         #endregion
 
         #endregion

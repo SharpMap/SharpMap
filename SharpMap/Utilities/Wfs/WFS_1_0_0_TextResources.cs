@@ -48,7 +48,8 @@ namespace SharpMap.Utilities.Wfs
         /// <param name="featureTypeInfo">A <see cref="Wfs.WfsFeatureTypeInfo"/> instance providing metadata of the featuretype to query</param>
         /// <param name="boundingBox">The bounding box of the query</param>
         /// <param name="filter">An instance implementing <see cref="IFilter"/></param>
-        public string GetFeatureGETRequest(WfsFeatureTypeInfo featureTypeInfo, Envelope boundingBox, IFilter filter)
+        /// <param name="loadAllElements">True to get all feature elements, false to get only geometry element</param>
+        public string GetFeatureGETRequest(WfsFeatureTypeInfo featureTypeInfo, Envelope boundingBox, IFilter filter, bool loadAllElements)
         {
             string qualification = string.IsNullOrEmpty(featureTypeInfo.Prefix)
                                        ? string.Empty
@@ -67,22 +68,35 @@ namespace SharpMap.Utilities.Wfs
             }
 
             StringBuilder filterBuilder = new StringBuilder();
+            // &filter=<Filter xmlns="http://www.opengis.net/ogc" xmlns:gml="http://www.opengis.net/gml">
             filterBuilder.Append("&filter=%3CFilter%20xmlns=%22" + NSOGC + "%22%20xmlns:gml=%22" + NSGML +
-                                 "%22%3E%3CBBOX%3E%3CPropertyName%3E");
-            filterBuilder.Append(qualification);
-            filterBuilder.Append(featureTypeInfo.Geometry._GeometryName);
-            filterBuilder.Append("%3C/PropertyName%3E%3Cgml:Box%20srsName=%22EPSG:" + featureTypeInfo.SRID + "%22%3E");
+                                 "%22%3E");
+            // <BBOX>
+            filterBuilder.Append("%3CBBOX%3E");
+            if (!loadAllElements)
+            {
+                // <PropertyName>
+                filterBuilder.Append("%3CPropertyName%3E");
+                filterBuilder.Append(qualification);
+                filterBuilder.Append(featureTypeInfo.Geometry._GeometryName);
+                // </PropertyName>
+                filterBuilder.Append("%3C/PropertyName%3E");
+            }
+            // <gml:Box srsName="EPSG:....">
+            filterBuilder.Append("%3Cgml:Box%20srsName=%22EPSG:" + featureTypeInfo.SRID + "%22%3E");
+            // <gml:coordinates>
             filterBuilder.Append("%3Cgml:coordinates%3E");
             filterBuilder.Append(XmlConvert.ToString(boundingBox.MinX) + ",");
             filterBuilder.Append(XmlConvert.ToString(boundingBox.MinY) + "%20");
             filterBuilder.Append(XmlConvert.ToString(boundingBox.MaxX) + ",");
             filterBuilder.Append(XmlConvert.ToString(boundingBox.MaxY));
+            // </gml:coordinates></gml:Box></BBOX>
             filterBuilder.Append("%3C/gml:coordinates%3E%3C/gml:Box%3E%3C/BBOX%3E");
             filterBuilder.Append(filterString);
             filterBuilder.Append("%3C/Filter%3E");
 
             return "?SERVICE=WFS&Version=1.0.0&REQUEST=GetFeature&TYPENAME=" + qualification + featureTypeInfo.Name +
-                   "&PROPERTYNAME=" + qualification + featureTypeInfo.Geometry._GeometryName +
+                   (loadAllElements ? "" : "&PROPERTYNAME=" + qualification + featureTypeInfo.Geometry._GeometryName) +
                    "&SRS=" + featureTypeInfo.SRID + filterBuilder;
         }
 
@@ -93,8 +107,9 @@ namespace SharpMap.Utilities.Wfs
         /// <param name="labelProperty">A property necessary for label rendering</param>
         /// <param name="boundingBox">The bounding box of the query</param>
         /// <param name="filter">An instance implementing <see cref="IFilter"/></param>
+        /// <param name="loadAllElements">True to get all feature elements, false to get only geometry element</param>
         public byte[] GetFeaturePOSTRequest(WfsFeatureTypeInfo featureTypeInfo, string labelProperty,
-                                            Envelope boundingBox, IFilter filter)
+                                            Envelope boundingBox, IFilter filter, bool loadAllElements)
         {
             string qualification = string.IsNullOrEmpty(featureTypeInfo.Prefix)
                                        ? string.Empty
@@ -110,12 +125,17 @@ namespace SharpMap.Utilities.Wfs
                     xWriter.WriteAttributeString("version", "1.0.0");
                     xWriter.WriteStartElement("Query", NSWFS);
                     xWriter.WriteAttributeString("typeName", qualification + featureTypeInfo.Name);
-                    xWriter.WriteElementString("PropertyName", qualification + featureTypeInfo.Geometry._GeometryName);
-                    if (!string.IsNullOrEmpty(labelProperty))
-                        xWriter.WriteElementString("PropertyName", qualification + labelProperty);
+                    if (!loadAllElements)
+                    {
+                        xWriter.WriteElementString("PropertyName",
+                            qualification + featureTypeInfo.Geometry._GeometryName);
+                        if (!string.IsNullOrEmpty(labelProperty))
+                            xWriter.WriteElementString("PropertyName", qualification + labelProperty);
+                    }
                     xWriter.WriteStartElement("Filter", NSOGC);
                     xWriter.WriteStartElement("BBOX");
-                    xWriter.WriteElementString("PropertyName", featureTypeInfo.Geometry._GeometryName);
+                    if (!loadAllElements)
+                        xWriter.WriteElementString("PropertyName", featureTypeInfo.Geometry._GeometryName);
                     xWriter.WriteStartElement("gml", "Box", NSGML);
                     xWriter.WriteAttributeString("srsName",
                                                  "http://www.opengis.net/gml/srs/epsg.xml#" + featureTypeInfo.SRID);
