@@ -120,10 +120,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpMap.Data.Providers.GeoPackage", "SharpMap.Data.Providers.GeoPackage\SharpMap.Data.Providers.GeoPackage.csproj", "{AF0594AB-FC1D-47E4-8CDD-361CDC621A36}"
 EndProject
 Global
-	GlobalSection(SubversionScc) = preSolution
-		Svn-Managed = True
-		Manager = AnkhSVN - Subversion Support for Visual Studio
-	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|.NET = Debug|.NET
 		Debug|Any CPU = Debug|Any CPU
@@ -672,8 +668,5 @@ Global
 		{A4184D38-C5A6-4E01-9D1C-8C63791AF825} = {480154D8-0960-416E-AE45-AF6B06794F77}
 		{7EF67DF8-D868-4177-8817-4CC2E94ABD66} = {480154D8-0960-416E-AE45-AF6B06794F77}
 		{28AC314E-35C1-484B-9DD3-116BD8AFC4EA} = {480154D8-0960-416E-AE45-AF6B06794F77}
-	EndGlobalSection
-	GlobalSection(Performance) = preSolution
-		HasPerformanceSessions = true
 	EndGlobalSection
 EndGlobal
