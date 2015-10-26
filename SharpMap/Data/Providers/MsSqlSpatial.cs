@@ -283,10 +283,10 @@ namespace SharpMap.Data.Providers
                     var strSQL = string.Format("SELECT _sm_.{4} FROM ST.FilterQueryWhere('{0}','{1}',{3},'{2}') AS _sm_;",
                                 Table, GeometryColumn, @where, BuildEnvelope(bbox, command), ObjectIdColumn);
 
-#pragma warning disable 612,618
+#pragma warning disable 612, 618
                     if (!String.IsNullOrEmpty(OrderQuery))
                         strSQL += " ORDER BY " + OrderQuery;
-#pragma restore 612,618
+#pragma warning restore 612, 618
 
                     command.CommandText = strSQL;
 

@@ -3,8 +3,6 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>8.0.30703</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{75E9B9FF-D04E-4F4F-8D06-8CD310F5F2DB}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
@@ -70,13 +68,13 @@
     <Compile Include="SharpMapSerializationClasses.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SharpMap.Extensions\SharpMap.Extensions.csproj">
-      <Project>{A4140C12-53F5-438C-8D24-9E48C504FECF}</Project>
-      <Name>SharpMap.Extensions</Name>
-    </ProjectReference>
     <ProjectReference Include="..\SharpMap\SharpMap.csproj">
       <Project>{C83777FC-AABB-47D9-911F-D76255D4D541}</Project>
       <Name>SharpMap</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SharpMap.Extensions\SharpMap.Extensions.csproj">
+      <Project>{A4140C12-53F5-438C-8D24-9E48C504FECF}</Project>
+      <Name>SharpMap.Extensions</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
@@ -86,7 +84,7 @@
     </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
+  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

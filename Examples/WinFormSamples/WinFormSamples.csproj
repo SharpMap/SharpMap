@@ -3,8 +3,6 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.30729</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{F81C1843-3B2A-4D72-81AA-A658DB11FA85}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
@@ -70,6 +68,8 @@
     <CodeAnalysisIgnoreBuiltInRuleSets>true</CodeAnalysisIgnoreBuiltInRuleSets>
     <CodeAnalysisIgnoreBuiltInRules>true</CodeAnalysisIgnoreBuiltInRules>
     <Prefer32Bit>false</Prefer32Bit>
+    <WarningLevel>4</WarningLevel>
+    <Optimize>false</Optimize>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'ReleaseDSProjection|AnyCPU'">
     <OutputPath>bin\ReleaseDSProjection\</OutputPath>
@@ -80,6 +80,7 @@
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
     <Prefer32Bit>false</Prefer32Bit>
+    <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="BruTile">
@@ -157,14 +158,8 @@
     <Compile Include="DockAreaForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="DockAreaForm.designer.cs">
-      <DependentUpon>DockAreaForm.cs</DependentUpon>
-    </Compile>
     <Compile Include="Form2.cs">
       <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Form2.designer.cs">
-      <DependentUpon>Form2.cs</DependentUpon>
     </Compile>
     <Compile Include="FormAnimation.cs">
       <SubType>Form</SubType>
@@ -208,15 +203,6 @@
     <Compile Include="SampleTool.cs" />
     <Compile Include="SharpMapTileSource.cs" />
     <EmbeddedResource Include="Magnifier.cur" />
-    <None Include="GeoData\World\cities.dbf">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="GeoData\World\cities.shp">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="GeoData\World\cities.shx">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Include="GeoData\World\shp_textonpath\DeMo_Quan5.dbf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -506,6 +492,21 @@
     <Compile Include="Samples\WfsSample.cs" />
     <Compile Include="Samples\WmsSample.cs" />
     <Compile Include="Samples\TileLayerSample.cs" />
+    <Compile Include="DockAreaForm.Designer.cs">
+      <DependentUpon>DockAreaForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Form2.Designer.cs">
+      <DependentUpon>Form2.cs</DependentUpon>
+    </Compile>
+    <None Include="GeoData\World\cities.DBF">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="GeoData\World\cities.SHP">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="GeoData\World\cities.SHX">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Content Include="GeoData\GeoTiff\format01-image_a.tif">
@@ -552,21 +553,21 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\SharpMap.Extensions\SharpMap.Extensions.csproj">
-      <Project>{A4140C12-53F5-438C-8D24-9E48C504FECF}</Project>
-      <Name>SharpMap.Extensions</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\SharpMap.Layers.HeatLayer\SharpMap.Layers.HeatLayer.csproj">
-      <Project>{47f790c2-6dc0-4a09-9026-fc81a09fd6a3}</Project>
+      <Project>{47F790C2-6DC0-4A09-9026-FC81A09FD6A3}</Project>
       <Name>SharpMap.Layers.HeatLayer</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\SharpMap.UI\SharpMap.UI.csproj">
-      <Project>{DD1CC1DB-4BF9-4C88-A100-733D84795F3A}</Project>
-      <Name>SharpMap.UI</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\SharpMap\SharpMap.csproj">
       <Project>{C83777FC-AABB-47D9-911F-D76255D4D541}</Project>
       <Name>SharpMap</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\SharpMap.Extensions\SharpMap.Extensions.csproj">
+      <Project>{A4140C12-53F5-438C-8D24-9E48C504FECF}</Project>
+      <Name>SharpMap.Extensions</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\SharpMap.UI\SharpMap.UI.csproj">
+      <Project>{DD1CC1DB-4BF9-4C88-A100-733D84795F3A}</Project>
+      <Name>SharpMap.UI</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
@@ -594,7 +595,7 @@
     xcopy /s /y "$(SolutionDir)packages\GDAL.Native.1.9.2\gdal\*.*" "$(TargetDir)gdal"
     </PostBuildEvent>
   </PropertyGroup>
-  <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
+  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" />
   <Import Project="..\..\packages\System.Data.SQLite.Core.1.0.94.0\build\net40\System.Data.SQLite.Core.targets" Condition="Exists('..\..\packages\System.Data.SQLite.Core.1.0.94.0\build\net40\System.Data.SQLite.Core.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

@@ -3,15 +3,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.30729</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{0C76DD99-AC5D-47C0-B76F-CE70092A9AC7}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>UnitTests</RootNamespace>
     <AssemblyName>UnitTests</AssemblyName>
-    <StartupObject>
-    </StartupObject>
     <SccProjectName>Svn</SccProjectName>
     <SccLocalPath>Svn</SccLocalPath>
     <SccAuxPath>Svn</SccAuxPath>
@@ -61,6 +57,8 @@
     <CodeAnalysisIgnoreBuiltInRuleSets>true</CodeAnalysisIgnoreBuiltInRuleSets>
     <CodeAnalysisIgnoreBuiltInRules>true</CodeAnalysisIgnoreBuiltInRules>
     <Prefer32Bit>false</Prefer32Bit>
+    <WarningLevel>4</WarningLevel>
+    <Optimize>false</Optimize>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'ReleaseDSProjection|AnyCPU'">
     <OutputPath>bin\ReleaseDSProjection\</OutputPath>
@@ -71,6 +69,7 @@
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
     <Prefer32Bit>false</Prefer32Bit>
+    <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
@@ -105,10 +104,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>C:\Programme\Microsoft SQL Server\100\SDK\Assemblies\Microsoft.SqlServer.Types.dll</HintPath>
     </Reference>
-    <Reference Include="Mono.Security, Version=4.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Npgsql.2.2.4.3\lib\net40\Mono.Security.dll</HintPath>
-    </Reference>
     <Reference Include="Moq">
       <HintPath>..\packages\Moq.4.2.1402.2112\lib\net40\Moq.dll</HintPath>
     </Reference>
@@ -130,10 +125,6 @@
     <Reference Include="NetTopologySuite.IO.ShapeFile">
       <HintPath>..\packages\NetTopologySuite.IO.1.13.3.2\lib\net40-client\NetTopologySuite.IO.ShapeFile.dll</HintPath>
       <Private>True</Private>
-    </Reference>
-    <Reference Include="Npgsql, Version=2.2.4.3, Culture=neutral, PublicKeyToken=5d8b90d52f46fda7, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Npgsql.2.2.4.3\lib\net40\Npgsql.dll</HintPath>
     </Reference>
     <Reference Include="nunit.framework, Version=2.6.3.13283, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -172,6 +163,12 @@
     <Reference Include="System.Web" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
+    <Reference Include="Mono.Security">
+      <HintPath>..\packages\Npgsql.2.2.4.3\lib\net40\Mono.Security.dll</HintPath>
+    </Reference>
+    <Reference Include="Npgsql">
+      <HintPath>..\packages\Npgsql.2.2.4.3\lib\net40\Npgsql.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Converters\SqlServer2008.cs" />
@@ -248,20 +245,16 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SharpMap.Data.Providers.GeoPackage\SharpMap.Data.Providers.GeoPackage.csproj">
-      <Project>{af0594ab-fc1d-47e4-8cdd-361cdc621a36}</Project>
+      <Project>{AF0594AB-FC1D-47E4-8CDD-361CDC621A36}</Project>
       <Name>SharpMap.Data.Providers.GeoPackage</Name>
     </ProjectReference>
     <ProjectReference Include="..\SharpMap.Data.Providers.Kml\SharpMap.Data.Providers.Kml.csproj">
-      <Project>{f9da6934-413f-4744-84ce-923d901f60e6}</Project>
+      <Project>{F9DA6934-413F-4744-84CE-923D901F60E6}</Project>
       <Name>SharpMap.Data.Providers.Kml</Name>
     </ProjectReference>
     <ProjectReference Include="..\SharpMap.Data.Providers.OracleSpatial\SharpMap.Data.Providers.OracleSpatial.csproj">
-      <Project>{9bbed556-40d8-4ddc-ac11-7b03300e2a2e}</Project>
+      <Project>{9BBED556-40D8-4DDC-AC11-7B03300E2A2E}</Project>
       <Name>SharpMap.Data.Providers.OracleSpatial</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\SharpMap.Extensions\SharpMap.Extensions.csproj">
-      <Project>{A4140C12-53F5-438C-8D24-9E48C504FECF}</Project>
-      <Name>SharpMap.Extensions</Name>
     </ProjectReference>
     <ProjectReference Include="..\SharpMap.Serialization\SharpMap.Serialization.csproj">
       <Project>{75E9B9FF-D04E-4F4F-8D06-8CD310F5F2DB}</Project>
@@ -272,12 +265,16 @@
       <Name>SharpMap.SqlServerSpatialObjects</Name>
     </ProjectReference>
     <ProjectReference Include="..\SharpMap.Utilities.Indexing.SbnTree\SharpMap.Utilities.Indexing.SbnTree.csproj">
-      <Project>{723f9fd5-8424-4eee-ba92-57ecee0f395d}</Project>
+      <Project>{723F9FD5-8424-4EEE-BA92-57ECEE0F395D}</Project>
       <Name>SharpMap.Utilities.Indexing.SbnTree</Name>
     </ProjectReference>
     <ProjectReference Include="..\SharpMap\SharpMap.csproj">
       <Project>{C83777FC-AABB-47D9-911F-D76255D4D541}</Project>
       <Name>SharpMap</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SharpMap.Extensions\SharpMap.Extensions.csproj">
+      <Project>{A4140C12-53F5-438C-8D24-9E48C504FECF}</Project>
+      <Name>SharpMap.Extensions</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
@@ -344,7 +341,7 @@
     xcopy /s /y "$(SolutionDir)packages\GDAL.Native.1.9.2\gdal\*.*" "$(TargetDir)gdal"
     </PostBuildEvent>
   </PropertyGroup>
-  <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
+  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" />
   <Import Project="..\packages\System.Data.SQLite.Core.1.0.94.0\build\net40\System.Data.SQLite.Core.targets" Condition="Exists('..\packages\System.Data.SQLite.Core.1.0.94.0\build\net40\System.Data.SQLite.Core.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
