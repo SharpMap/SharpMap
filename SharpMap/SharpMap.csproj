@@ -207,6 +207,7 @@
     <Compile Include="Layers\TileLayer.cs" />
     <Compile Include="Layers\VariableLayerCollection.cs" />
     <Compile Include="Layers\VectorLayer.cs" />
+    <Compile Include="Rendering\Thematics\FontSizeTheme.cs" />
     <Compile Include="Styles\VisibilityUnits.cs" />
     <Compile Include="Layers\WmsLayer.cs" />
     <Compile Include="Map\MapViewportGuard.cs" />

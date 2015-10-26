@@ -28,7 +28,8 @@ namespace WinFormSamples.Samples
                     return InitializeMapOsm(angle);
                 case 2:
                     _mapId++;
-                    return InitializeMapSharpDX(angle);
+                    return InitializeMapOsm(angle);
+                    //return InitializeMapSharpDX(angle);
                 case 3:
                     _mapId -= 3;
                     return InitializeMapWithSymbolizerLayers(angle);
@@ -280,6 +281,7 @@ namespace WinFormSamples.Samples
             return map;
         }
 
+        /*
         private static Map InitializeMapSharpDX(float angle)
         {
             //Initialize a new map of size 'imagesize'
@@ -369,7 +371,7 @@ namespace WinFormSamples.Samples
 
             return map;
         }
-
+        */
         internal static Map InitializeMap(float angle, string[] filenames)
         {
             if (filenames == null)

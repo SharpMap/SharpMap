@@ -443,6 +443,10 @@ namespace SharpMap.Layers
                 else
                     style = Style;
 
+                // Do we need to render at all?
+                if (!style.Enabled) continue;
+
+                // Rotation
                 float rotationStyle = style != null ? style.Rotation : 0f;
                 float rotationColumn = 0f;
                 if (!String.IsNullOrEmpty(RotationColumn))
@@ -450,6 +454,7 @@ namespace SharpMap.Layers
                         out rotationColumn);
                 float rotation = rotationStyle + rotationColumn;
 
+                // Priority
                 int priority = Priority;
                 if (_getPriorityMethod != null)
                     priority = _getPriorityMethod(feature);
@@ -457,6 +462,7 @@ namespace SharpMap.Layers
                     Int32.TryParse(feature[PriorityColumn].ToString(), NumberStyles.Any, Map.NumberFormatEnUs,
                         out priority);
 
+                // Text
                 string text;
                 if (_getLabelMethod != null)
                     text = _getLabelMethod(feature);

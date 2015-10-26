@@ -101,10 +101,10 @@ namespace WinFormSamples.Samples
             ThemeViaDelegate theme = new ThemeViaDelegate(layNatural.Style, "type");
             theme.GetStyleFunction = delegate(FeatureDataRow row)
                                          {
-                                             string caseVal = (String) row["type"];
+                                             string caseVal = (String)row["type"];
                                              caseVal = caseVal.ToLowerInvariant();
                                              VectorStyle returnStyle = new VectorStyle();
-                                             
+
                                              switch (caseVal)
                                              {
                                                  case "forest":
@@ -224,7 +224,7 @@ namespace WinFormSamples.Samples
             VectorLayer layRail = new VectorLayer("Railways");
             layRail.DataSource = new ShapeFile(string.Format("{0}/railways.shp", PathOsm)) { Encoding = encoding };
             layRail.Style.Line.Brush = Brushes.White;
-            layRail.Style.Line.DashPattern = new float[] {4f, 4f};//;System.Drawing.Drawing2D.DashStyle.Dash;
+            layRail.Style.Line.DashPattern = new float[] { 4f, 4f };//;System.Drawing.Drawing2D.DashStyle.Dash;
             layRail.Style.Line.Width = 4;
             layRail.Style.EnableOutline = true;
             layRail.Style.Outline.Brush = Brushes.Black;
@@ -291,8 +291,8 @@ namespace WinFormSamples.Samples
                         returnStyle.Symbol = new Bitmap("Images/Car.gif");
                         break;
                     default:
-                        Bitmap tmp = new Bitmap(1,1);
-                        tmp.SetPixel(0,0, Color.Transparent);
+                        Bitmap tmp = new Bitmap(1, 1);
+                        tmp.SetPixel(0, 0, Color.Transparent);
                         returnStyle.Symbol = tmp;
                         break;
                 }
@@ -304,6 +304,19 @@ namespace WinFormSamples.Samples
             var layLabel = new LabelLayer("Road Labels");
             layLabel.DataSource = layRoads.DataSource;
             layLabel.LabelColumn = "Name";
+            layLabel.Theme = new SharpMap.Rendering.Thematics.FontSizeTheme(layLabel, map)
+            {
+                MinFontSize = 4,
+                FontSizeScale = 1
+            };
+            var layLabelN = new LabelLayer("Natural Labels");
+            layLabelN.DataSource = layNatural.DataSource;
+            layLabelN.LabelColumn = "type";
+            layLabelN.Theme = new FontSizeTheme(layLabelN, map)
+            {
+                MinFontSize = 4,
+                FontSizeScale = 5
+            };
 
             //Add layers to Map
             map.Layers.Add(layNatural);
@@ -312,12 +325,13 @@ namespace WinFormSamples.Samples
             map.Layers.Add(layRoads);
             map.Layers.Add(layPoints);
             map.Layers.Add(layLabel);
+            map.Layers.Add(layLabelN);
 
             ShapeProvider sp = new ShapeProvider(string.Format("{0}/obepath.shp", PathOsm)) { Encoding = encoding };
             VectorLayer vl = new VectorLayer("obepath", sp);
             vl.SRID = 31466;
             var bmp = new Bitmap("Images/Car.gif");
-            bmp.MakeTransparent(bmp.GetPixel(0,0));
+            bmp.MakeTransparent(bmp.GetPixel(0, 0));
             vl.Style.Symbol = bmp;
 
             VariableLayerCollection.Interval = 500;
@@ -335,7 +349,7 @@ namespace WinFormSamples.Samples
                     Anchor = MapDecorationAnchor.CenterBottom
                 };
             map.Decorations.Add(disclaimer);
-            transparentStyle2.MaxVisible = map.MaximumZoom*0.3;
+            transparentStyle2.MaxVisible = map.MaximumZoom * 0.3;
 
             Matrix mat = new Matrix();
             mat.RotateAt(angle, map.WorldToImage(map.Center));
