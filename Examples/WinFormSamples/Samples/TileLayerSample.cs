@@ -132,6 +132,8 @@ namespace WinFormSamples.Samples
                                         LabelFilter =
                                             SharpMap.Rendering.LabelCollisionDetection.ThoroughCollisionDetection
                                     };
+            xlsLabelLayer.Theme = new SharpMap.Rendering.Thematics.FontSizeTheme(xlsLabelLayer, map) { FontSizeScale = 1000f };
+
             map.Layers.Add(xlsLabelLayer);
 
             map.ZoomToBox(tileLayer.Envelope);
