@@ -6,6 +6,7 @@ using NetTopologySuite;
 using SharpMap.Layers;
 using SharpMap.Rendering.Symbolizer;
 using UnitTests.Properties;
+using BruTile.Predefined;
 
 namespace UnitTests.Serialization
 {
@@ -91,11 +92,8 @@ namespace UnitTests.Serialization
         public void TestTileLayer()
         {
             var tlS =
-                new TileLayer(
-                    new BruTile.Web.BingTileSource(new BruTile.Web.BingRequest(BruTile.Web.BingRequest.UrlBingStaging,
-                                                                               string.Empty,
-                                                                               BruTile.Web.BingMapType.Hybrid)), "Name",
-                    System.Drawing.Color.MediumTurquoise, true, "D:\\temp\\Bing\\Hybrid");
+                new TileLayer(KnownTileSources.Create(KnownTileSource.BingHybridStaging, string.Empty), 
+                    "Name", System.Drawing.Color.MediumTurquoise, true, "D:\\temp\\Bing\\Hybrid");
 
             TileLayer tlD = null;
             Assert.DoesNotThrow(() => tlD = SandD(tlS, GetFormatter()));

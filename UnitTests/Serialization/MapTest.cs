@@ -74,7 +74,7 @@ namespace UnitTests.Serialization
         public void TestMap2()
         {
             var m = new Map(_mapSize);
-            m.BackgroundLayer.Add(new TileLayer(new OsmTileSource(new OsmRequest(KnownTileSource.MapQuest)), "MapQuest"));
+            m.BackgroundLayer.Add(new TileLayer(KnownTileSources.Create(KnownTileSource.MapQuest), "MapQuest"));
             
             var codeBase = Path.GetDirectoryName(new Uri(GetType().Assembly.CodeBase).LocalPath);
             var cn = string.Format("Data Source={0};",
@@ -111,7 +111,7 @@ namespace UnitTests.Serialization
             }
 
             var f = GetFormatter();
-            BruTile.Utility.AddBruTileSurrogates(GetFormatter());
+            //BruTile.Utility.AddBruTileSurrogates(GetFormatter());
 
             Map mD = null;
             Assert.DoesNotThrow(() => mD = SandD(m, f));

@@ -186,17 +186,11 @@ namespace SharpMap.Data.Providers.Tiles
                 var res = new Dictionary<string, Resolution>(TileMatrices.Count);
                 foreach (var tileMatrix in TileMatrices)
                 {
-                    var tmp = new Resolution
-                    {
-                        Id = tileMatrix.ZoomLevel.ToString(),
-                        Left = MinX,
-                        Top = MaxY,
-                        MatrixHeight = tileMatrix.MatrixHeight,
-                        MatrixWidth = tileMatrix.MatrixWidth,
-                        TileHeight = tileMatrix.TileHeight,
-                        TileWidth = tileMatrix.TileWidth,
-                        UnitsPerPixel = tileMatrix.PixelXSize
-                    };
+                    var tmp = new Resolution(
+                        tileMatrix.ZoomLevel.ToString(), tileMatrix.PixelXSize,
+                        tileMatrix.TileWidth, tileMatrix.TileHeight,
+                        MinX, MaxY,
+                        tileMatrix.MatrixWidth, tileMatrix.MatrixHeight);
                     res.Add(tmp.Id, tmp);
                 }
                 return res;

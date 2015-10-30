@@ -4,6 +4,7 @@ using BruTile.Web;
 using GeoAPI.Geometries;
 using NUnit.Framework;
 using SharpMap.Layers;
+using BruTile.Predefined;
 
 namespace UnitTests.Layers
 {
@@ -24,10 +25,10 @@ namespace UnitTests.Layers
             using (var map = new SharpMap.Map(new Size(2500, 2500)))
             {
                 map.BackColor = Color.Magenta;
-                var br = new BingRequest(BingRequest.UrlBing, "", BingMapType.Hybrid);
-                var bts = new BingTileSource(br);
-                var tl = new TileLayer(bts, "TileLayer - " + BingMapType.Hybrid.ToString(), Color.Transparent, true,
-                                       System.IO.Path.Combine(_fileCacheRoot, "BingStaging"));
+                var fc = new BruTile.Cache.FileCache(System.IO.Path.Combine(_fileCacheRoot, "BingStaging"), "png"); 
+                var bts = KnownTileSources.Create(KnownTileSource.BingHybridStaging,null, fc);
+                var tl = new TileLayer(bts, "TileLayer - " + BingMapType.Hybrid.ToString(), Color.Transparent, true);
+                                       
                 map.Layers.Add(tl);
                 
                 map.ZoomToBox(new Envelope(829384.331338522, 837200.785470394, 7068020.31417922, 7072526.73926545)
