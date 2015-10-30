@@ -107,6 +107,10 @@
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\SharpMap.Layers.BruTile\SharpMap.Layers.BruTile.csproj">
+      <Project>{d84f31ed-3d81-42f2-9190-3d021d6038a0}</Project>
+      <Name>SharpMap.Layers.BruTile</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\SharpMap.UI.WPF\SharpMap.UI.WPF.csproj">
       <Project>{6dda47a4-ce0c-4880-82ce-6ef6feec4912}</Project>
       <Name>SharpMap.UI.WPF</Name>

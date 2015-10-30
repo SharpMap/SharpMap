@@ -79,11 +79,6 @@ Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "DemoWebSite", "Examples\Dem
 		VWDPort = "52193"
 		StartServerOnDebug = "true"
 	EndProjectSection
-	ProjectSection(SvnOrigin) = preProject
-		@Keys = Enlist,Svn.Uri
-		Enlist = Required
-		Svn.Uri = Examples/DemoWebSite/
-	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpMap.Extensions", "SharpMap.Extensions\SharpMap.Extensions.csproj", "{A4140C12-53F5-438C-8D24-9E48C504FECF}"
 EndProject
@@ -118,6 +113,10 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpMap.Data.Providers.FileGdb", "SharpMap.Data.Providers.FileGdb\SharpMap.Data.Providers.FileGdb.csproj", "{42AD06D5-ACDF-4991-B052-232235F002BA}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpMap.Data.Providers.GeoPackage", "SharpMap.Data.Providers.GeoPackage\SharpMap.Data.Providers.GeoPackage.csproj", "{AF0594AB-FC1D-47E4-8CDD-361CDC621A36}"
+EndProject
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "ExampleCodeSnipplets.VB", "Examples\ExampleCodeSnipplets.VB\ExampleCodeSnipplets.VB.vbproj", "{E9AC999C-5C90-4851-ABFE-8A9CA899FAEF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpMap.Layers.BruTile", "SharpMap.Layers.BruTile\SharpMap.Layers.BruTile.csproj", "{D84F31ED-3D81-42F2-9190-3D021D6038A0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -655,6 +654,54 @@ Global
 		{AF0594AB-FC1D-47E4-8CDD-361CDC621A36}.ReleaseDSProjection|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{AF0594AB-FC1D-47E4-8CDD-361CDC621A36}.ReleaseDSProjection|Mixed Platforms.Build.0 = Release|Any CPU
 		{AF0594AB-FC1D-47E4-8CDD-361CDC621A36}.ReleaseDSProjection|x86.ActiveCfg = Release|Any CPU
+		{E9AC999C-5C90-4851-ABFE-8A9CA899FAEF}.Debug|.NET.ActiveCfg = Debug|Any CPU
+		{E9AC999C-5C90-4851-ABFE-8A9CA899FAEF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E9AC999C-5C90-4851-ABFE-8A9CA899FAEF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E9AC999C-5C90-4851-ABFE-8A9CA899FAEF}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{E9AC999C-5C90-4851-ABFE-8A9CA899FAEF}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{E9AC999C-5C90-4851-ABFE-8A9CA899FAEF}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{E9AC999C-5C90-4851-ABFE-8A9CA899FAEF}.DebugDSProjection|.NET.ActiveCfg = Debug|Any CPU
+		{E9AC999C-5C90-4851-ABFE-8A9CA899FAEF}.DebugDSProjection|Any CPU.ActiveCfg = Debug|Any CPU
+		{E9AC999C-5C90-4851-ABFE-8A9CA899FAEF}.DebugDSProjection|Any CPU.Build.0 = Debug|Any CPU
+		{E9AC999C-5C90-4851-ABFE-8A9CA899FAEF}.DebugDSProjection|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{E9AC999C-5C90-4851-ABFE-8A9CA899FAEF}.DebugDSProjection|Mixed Platforms.Build.0 = Debug|Any CPU
+		{E9AC999C-5C90-4851-ABFE-8A9CA899FAEF}.DebugDSProjection|x86.ActiveCfg = Debug|Any CPU
+		{E9AC999C-5C90-4851-ABFE-8A9CA899FAEF}.Release|.NET.ActiveCfg = Release|Any CPU
+		{E9AC999C-5C90-4851-ABFE-8A9CA899FAEF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E9AC999C-5C90-4851-ABFE-8A9CA899FAEF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E9AC999C-5C90-4851-ABFE-8A9CA899FAEF}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{E9AC999C-5C90-4851-ABFE-8A9CA899FAEF}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{E9AC999C-5C90-4851-ABFE-8A9CA899FAEF}.Release|x86.ActiveCfg = Release|Any CPU
+		{E9AC999C-5C90-4851-ABFE-8A9CA899FAEF}.ReleaseDSProjection|.NET.ActiveCfg = Release|Any CPU
+		{E9AC999C-5C90-4851-ABFE-8A9CA899FAEF}.ReleaseDSProjection|Any CPU.ActiveCfg = Release|Any CPU
+		{E9AC999C-5C90-4851-ABFE-8A9CA899FAEF}.ReleaseDSProjection|Any CPU.Build.0 = Release|Any CPU
+		{E9AC999C-5C90-4851-ABFE-8A9CA899FAEF}.ReleaseDSProjection|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{E9AC999C-5C90-4851-ABFE-8A9CA899FAEF}.ReleaseDSProjection|Mixed Platforms.Build.0 = Release|Any CPU
+		{E9AC999C-5C90-4851-ABFE-8A9CA899FAEF}.ReleaseDSProjection|x86.ActiveCfg = Release|Any CPU
+		{D84F31ED-3D81-42F2-9190-3D021D6038A0}.Debug|.NET.ActiveCfg = Debug|Any CPU
+		{D84F31ED-3D81-42F2-9190-3D021D6038A0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D84F31ED-3D81-42F2-9190-3D021D6038A0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D84F31ED-3D81-42F2-9190-3D021D6038A0}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{D84F31ED-3D81-42F2-9190-3D021D6038A0}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{D84F31ED-3D81-42F2-9190-3D021D6038A0}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{D84F31ED-3D81-42F2-9190-3D021D6038A0}.DebugDSProjection|.NET.ActiveCfg = Debug|Any CPU
+		{D84F31ED-3D81-42F2-9190-3D021D6038A0}.DebugDSProjection|Any CPU.ActiveCfg = Debug|Any CPU
+		{D84F31ED-3D81-42F2-9190-3D021D6038A0}.DebugDSProjection|Any CPU.Build.0 = Debug|Any CPU
+		{D84F31ED-3D81-42F2-9190-3D021D6038A0}.DebugDSProjection|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{D84F31ED-3D81-42F2-9190-3D021D6038A0}.DebugDSProjection|Mixed Platforms.Build.0 = Debug|Any CPU
+		{D84F31ED-3D81-42F2-9190-3D021D6038A0}.DebugDSProjection|x86.ActiveCfg = Debug|Any CPU
+		{D84F31ED-3D81-42F2-9190-3D021D6038A0}.Release|.NET.ActiveCfg = Release|Any CPU
+		{D84F31ED-3D81-42F2-9190-3D021D6038A0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D84F31ED-3D81-42F2-9190-3D021D6038A0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D84F31ED-3D81-42F2-9190-3D021D6038A0}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{D84F31ED-3D81-42F2-9190-3D021D6038A0}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{D84F31ED-3D81-42F2-9190-3D021D6038A0}.Release|x86.ActiveCfg = Release|Any CPU
+		{D84F31ED-3D81-42F2-9190-3D021D6038A0}.ReleaseDSProjection|.NET.ActiveCfg = Release|Any CPU
+		{D84F31ED-3D81-42F2-9190-3D021D6038A0}.ReleaseDSProjection|Any CPU.ActiveCfg = Release|Any CPU
+		{D84F31ED-3D81-42F2-9190-3D021D6038A0}.ReleaseDSProjection|Any CPU.Build.0 = Release|Any CPU
+		{D84F31ED-3D81-42F2-9190-3D021D6038A0}.ReleaseDSProjection|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{D84F31ED-3D81-42F2-9190-3D021D6038A0}.ReleaseDSProjection|Mixed Platforms.Build.0 = Release|Any CPU
+		{D84F31ED-3D81-42F2-9190-3D021D6038A0}.ReleaseDSProjection|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -668,5 +715,6 @@ Global
 		{A4184D38-C5A6-4E01-9D1C-8C63791AF825} = {480154D8-0960-416E-AE45-AF6B06794F77}
 		{7EF67DF8-D868-4177-8817-4CC2E94ABD66} = {480154D8-0960-416E-AE45-AF6B06794F77}
 		{28AC314E-35C1-484B-9DD3-116BD8AFC4EA} = {480154D8-0960-416E-AE45-AF6B06794F77}
+		{E9AC999C-5C90-4851-ABFE-8A9CA899FAEF} = {480154D8-0960-416E-AE45-AF6B06794F77}
 	EndGlobalSection
 EndGlobal

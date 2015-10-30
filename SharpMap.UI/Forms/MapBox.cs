@@ -876,7 +876,7 @@ namespace SharpMap.Forms
             Application.DoEvents();
         }
 
-        private void HandleMapNewTileAvaliable(TileLayer sender, Envelope box, Bitmap bm, int sourceWidth,
+        private void HandleMapNewTileAvaliable(ITileAsyncLayer sender, Envelope box, Bitmap bm, int sourceWidth,
                                                int sourceHeight, ImageAttributes imageAttributes)
         {
             lock (_backgroundImagesLocker)

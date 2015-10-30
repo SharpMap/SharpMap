@@ -13,7 +13,7 @@ namespace SharpMap.Layers
     /// <param name="sourceWidth">The tiles width</param>
     /// <param name="sourceHeight">The tiles height</param>
     /// <param name="imageAttributes">The <see cref="ImageAttributes"/> to use when rendering the tile</param>
-    public delegate void MapNewTileAvaliabledHandler(TileLayer sender, Envelope bbox, Bitmap bm, int sourceWidth, int sourceHeight, ImageAttributes imageAttributes);
+    public delegate void MapNewTileAvaliabledHandler(ITileAsyncLayer sender, Envelope bbox, Bitmap bm, int sourceWidth, int sourceHeight, ImageAttributes imageAttributes);
 
     /// <summary>
     /// Delegate for notifying download of tiles

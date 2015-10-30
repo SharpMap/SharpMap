@@ -84,18 +84,6 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Xml" />
-    <Reference Include="BruTile">
-      <HintPath>..\packages\BruTile.0.12.0\lib\net40\BruTile.dll</HintPath>
-    </Reference>
-    <Reference Include="BruTile.Desktop">
-      <HintPath>..\packages\BruTile.Desktop.0.12.0\lib\net40\BruTile.Desktop.dll</HintPath>
-    </Reference>
-    <Reference Include="BruTile.MbTiles">
-      <HintPath>..\packages\BruTile.Desktop.0.12.0\lib\net40\BruTile.MbTiles.dll</HintPath>
-    </Reference>
-    <Reference Include="BruTile.Serialization">
-      <HintPath>..\packages\BruTile.Desktop.0.12.0\lib\net40\BruTile.Serialization.dll</HintPath>
-    </Reference>
     <Reference Include="Common.Logging, Version=2.0.0.0, Culture=neutral, PublicKeyToken=af08829b84f0328e">
       <HintPath>..\packages\Common.Logging.2.0.0\lib\2.0\Common.Logging.dll</HintPath>
     </Reference>
@@ -119,9 +107,6 @@
     </Reference>
     <Reference Include="PowerCollections">
       <HintPath>..\packages\NetTopologySuite.1.13.3.2\lib\net40-client\PowerCollections.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Data.SQLite">
-      <HintPath>..\packages\System.Data.SQLite.Core.1.0.94.0\lib\net40\System.Data.SQLite.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -189,9 +174,7 @@
     <Compile Include="Layers\Symbolizer\LinealVectorLayer.cs" />
     <Compile Include="Layers\Symbolizer\PolygonalVectorLayer.cs" />
     <Compile Include="Layers\Symbolizer\PuntalVectorLayer.cs" />
-    <Compile Include="Layers\TileAsyncLayer.cs" />
     <Compile Include="Layers\TiledWmsLayer.cs" />
-    <Compile Include="Layers\TileLayer.cs" />
     <Compile Include="Layers\VariableLayerCollection.cs" />
     <Compile Include="Layers\VectorLayer.cs" />
     <Compile Include="Rendering\Thematics\FontSizeTheme.cs" />
@@ -423,12 +406,10 @@
     <PostBuildEvent>
     </PostBuildEvent>
   </PropertyGroup>
-  <Import Project="..\packages\System.Data.SQLite.Core.1.0.94.0\build\net40\System.Data.SQLite.Core.targets" Condition="Exists('..\packages\System.Data.SQLite.Core.1.0.94.0\build\net40\System.Data.SQLite.Core.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>Dieses Projekt verweist auf mindestens ein NuGet-Paket, das auf diesem Computer fehlt. Aktivieren Sie die Wiederherstellung von NuGet-Paketen, um die fehlende Datei herunterzuladen. Weitere Informationen finden Sie unter "http://go.microsoft.com/fwlink/?LinkID=322105". Die fehlende Datei ist "{0}".</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('..\packages\System.Data.SQLite.Core.1.0.94.0\build\net40\System.Data.SQLite.Core.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\System.Data.SQLite.Core.1.0.94.0\build\net40\System.Data.SQLite.Core.targets'))" />
     <Error Condition="!Exists('$(SolutionDir)\.nuget\NuGet.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(SolutionDir)\.nuget\NuGet.targets'))" />
   </Target>
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
