@@ -43,10 +43,9 @@ namespace WinFormSamples
 
         private void Form2_Load(object sender, EventArgs e)
         {
-            //TileAsyncLayer osmLayer= new TileAsyncLayer(new OsmTileSource(), "TileLayer - OSM");
-            TileAsyncLayer bingLayer = new TileAsyncLayer(new BingTileSource(BingRequest.UrlBing, "", BingMapType.Roads), "TileLayer - Bing");
+            var tileLayer = new TileAsyncLayer(KnownTileSources.Create(KnownTileSource.BingRoadsStaging), "TileLayer");
 
-            this.mapBox1.Map.BackgroundLayer.Add(bingLayer);
+            this.mapBox1.Map.BackgroundLayer.Add(tileLayer);
             GeometryFactory gf = new GeometryFactory(new PrecisionModel(), 3857);
 
 #if DotSpatialProjections
@@ -96,7 +95,7 @@ namespace WinFormSamples
 
         private void button1_Click(object sender, EventArgs e)
         {
-            TileLayer googleLayer = new TileAsyncLayer(new BingTileSource(new BingRequest(BingRequest.UrlBingStaging, string.Empty, BingMapType.Hybrid )), "TileLayer - Bing");
+            var googleLayer = new TileAsyncLayer(KnownTileSources.Create(KnownTileSource.BingHybridStaging), "TileLayer - Bing");
             this.mapBox1.Map.BackgroundLayer.Clear();
             this.mapBox1.Map.BackgroundLayer.Add(googleLayer);
             this.mapBox1.Refresh();
@@ -105,7 +104,7 @@ namespace WinFormSamples
         private void button5_Click(object sender, EventArgs e)
         {
 
-            TileAsyncLayer bingLayer = new TileAsyncLayer(new BingTileSource(BingRequest.UrlBing, "", BingMapType.Roads), "TileLayer - Bing");
+            TileAsyncLayer bingLayer = new TileAsyncLayer(KnownTileSources.Create(KnownTileSource.BingRoadsStaging), "TileLayer - Bing");
             this.mapBox1.Map.BackgroundLayer.Clear();
             this.mapBox1.Map.BackgroundLayer.Add(bingLayer);
             this.mapBox1.Refresh();
@@ -113,7 +112,7 @@ namespace WinFormSamples
 
         private void button6_Click(object sender, EventArgs e)
         {
-            TileAsyncLayer osmLayer = new TileAsyncLayer(new OsmTileSource(), "TileLayer - OSM");
+            TileAsyncLayer osmLayer = new TileAsyncLayer(KnownTileSources.Create(KnownTileSource.OpenStreetMap), "TileLayer - OSM");
             this.mapBox1.Map.BackgroundLayer.Clear();
             this.mapBox1.Map.BackgroundLayer.Add(osmLayer);
             this.mapBox1.Refresh();
@@ -121,7 +120,7 @@ namespace WinFormSamples
 
         private void button7_Click(object sender, EventArgs e)
         {
-            ITileSchema schema = new SphericalMercatorInvertedWorldSchema();
+            ITileSchema schema = new GlobalSphericalMercator();
             ILayer[] layers = CreateLayers();
             SharpMapTileSource source = new SharpMapTileSource(schema, layers);
             TileAsyncLayer osmLayer = new TileAsyncLayer(source, "TileLayer - SharpMap");

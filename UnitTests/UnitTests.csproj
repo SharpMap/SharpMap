@@ -224,11 +224,14 @@
     <Compile Include="Rendering\Symbolizer\PolygonSymbolizerTest.cs" />
     <Compile Include="Rendering\Thematics\ColorBlendTest.cs" />
     <Compile Include="Serialization\BaseSerializationTest.cs" />
+    <Compile Include="Serialization\FakePersistentCache.cs" />
     <Compile Include="Serialization\MapTest.cs" />
     <Compile Include="Serialization\DecorationsTest.cs" />
     <Compile Include="Serialization\LayerTest.cs" />
     <Compile Include="Serialization\MapDocSerializationTests.cs" />
     <Compile Include="Serialization\ProviderTest.cs" />
+    <Compile Include="Serialization\ReflectionTests.cs" />
+    <Compile Include="Serialization\SerializationTests.cs" />
     <Compile Include="Serialization\StylesTest.cs" />
     <Compile Include="Serialization\SurrogatesTest.cs" />
     <Compile Include="Serialization\SymbolizerTest.cs" />

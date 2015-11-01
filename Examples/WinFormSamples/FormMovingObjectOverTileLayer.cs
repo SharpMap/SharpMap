@@ -12,6 +12,8 @@ using SharpMap.Data;
 using SharpMap.Styles;
 using SharpMap.Rendering.Thematics;
 using BruTile.Web;
+using BruTile.Predefined;
+
 using WinFormSamples.Properties;
 
 #if DotSpatialProjections
@@ -57,7 +59,7 @@ namespace WinFormSamples
 
 
             //Google Background
-            TileAsyncLayer layer2 = new TileAsyncLayer(new OsmTileSource(), "TileLayer - OSM");
+            TileAsyncLayer layer2 = new TileAsyncLayer(KnownTileSources.Create(KnownTileSource.OpenStreetMap), "TileLayer - OSM");
 
 
             this.mapBox1.Map.BackgroundLayer.Add(layer2);

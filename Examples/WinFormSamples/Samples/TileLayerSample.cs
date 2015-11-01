@@ -1,4 +1,5 @@
 ﻿using System;
+using BruTile.Predefined;
 
 namespace WinFormSamples.Samples
 {
@@ -13,11 +14,11 @@ namespace WinFormSamples.Samples
                 case 3:
                     return InitializeMapOsm();
                 case 4:
-                    return InitializeMapBing(BruTile.Web.BingMapType.Roads);
+                    return InitializeMapBing(KnownTileSource.BingRoadsStaging);
                 case 5:
-                    return InitializeMapBing(BruTile.Web.BingMapType.Aerial);
+                    return InitializeMapBing(KnownTileSource.BingAerialStaging);
                 case 6:
-                    return InitializeMapBing(BruTile.Web.BingMapType.Hybrid);
+                    return InitializeMapBing(KnownTileSource.BingHybridStaging);
                     _num = 0;
                     /*
                 case 7:
@@ -51,7 +52,8 @@ namespace WinFormSamples.Samples
         {
             var map = new SharpMap.Map();
 
-            var tileLayer = new SharpMap.Layers.TileAsyncLayer(new BruTile.Web.OsmTileSource(), "TileLayer - OSM");
+            var tileLayer = new SharpMap.Layers.TileAsyncLayer(
+                KnownTileSources.Create(KnownTileSource.OpenStreetMap), "TileLayer - OSM");
             map.BackgroundLayer.Add(tileLayer);
             map.ZoomToBox(tileLayer.Envelope);
             
@@ -64,7 +66,8 @@ namespace WinFormSamples.Samples
         {
             var map = new SharpMap.Map();
 
-            var tileLayer = new SharpMap.Layers.TileAsyncLayer(new BruTile.Web.OsmTileSource(), "TileLayer - OSM with XLS");
+            var tileLayer = new SharpMap.Layers.TileAsyncLayer(
+                KnownTileSources.Create(KnownTileSource.OpenStreetMap), "TileLayer - OSM with XLS");
             map.BackgroundLayer.Add(tileLayer);
 
             //Get data from excel
@@ -188,11 +191,12 @@ namespace WinFormSamples.Samples
 #endif
         }
 
-        private static SharpMap.Map InitializeMapBing(BruTile.Web.BingMapType mt)
+        private static SharpMap.Map InitializeMapBing(KnownTileSource mt)
         {
             var map = new SharpMap.Map();
 
-            var tileLayer = new SharpMap.Layers.TileLayer(new BruTile.Web.BingTileSource(BruTile.Web.BingRequest.UrlBingStaging, "", mt), "TileLayer - Bing " + mt);
+            var tileLayer = new SharpMap.Layers.TileLayer(
+                KnownTileSources.Create(mt), "TileLayer - Bing " + mt);
             map.BackgroundLayer.Add(tileLayer);
             map.ZoomToBox(tileLayer.Envelope);
             return map;

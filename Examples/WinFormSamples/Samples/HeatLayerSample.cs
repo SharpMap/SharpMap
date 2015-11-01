@@ -13,11 +13,10 @@ namespace WinFormSamples.Samples
 
 
             var m = new SharpMap.Map();
-            m.BackgroundLayer.Add(new SharpMap.Layers.TileAsyncLayer(
-                new BruTile.Web.OsmTileSource(
-                                  new BruTile.Web.OsmRequest(KnownTileSource.OpenStreetMap),
-                                  new BruTile.Cache.FileCache(@"d:\temp\OSM", "png")), "OSM"));
-            m.BackgroundLayer[0].LayerName = "TileLayer with HeatLayer";
+            var tl = new SharpMap.Layers.TileAsyncLayer(KnownTileSources.Create(KnownTileSource.OpenStreetMap),
+                "TileLayer with HeatLayer", System.Drawing.Color.Transparent, false,
+                new BruTile.Cache.FileCache(@"d:\temp\OSM", "png"), System.Drawing.Imaging.ImageFormat.Png);
+            m.BackgroundLayer.Add(tl);
 
             //var l = new SharpMap.Layers.HeatLayer(p, r => 0.02f) { LayerName = "HEAT" };
             var l = new SharpMap.Layers.HeatLayer(p, "Data", 0.00025f) { LayerName = "HEAT" };

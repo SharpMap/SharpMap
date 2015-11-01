@@ -45,8 +45,12 @@
       <HintPath>..\packages\BruTile.Desktop.0.13.0\lib\net40\BruTile.MbTiles.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Common.Logging, Version=2.0.0.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
-      <HintPath>..\packages\Common.Logging.2.0.0\lib\2.0\Common.Logging.dll</HintPath>
+    <Reference Include="Common.Logging, Version=3.3.0.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
+      <HintPath>..\packages\Common.Logging.3.3.0\lib\net40\Common.Logging.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Common.Logging.Core, Version=3.3.0.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
+      <HintPath>..\packages\Common.Logging.Core.3.3.0\lib\net40\Common.Logging.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="GeoAPI, Version=1.7.3.0, Culture=neutral, PublicKeyToken=a1a0da7def465678, processorArchitecture=MSIL">
@@ -73,6 +77,24 @@
     <Compile Include="Layers\TileAsyncLayer.cs" />
     <Compile Include="Layers\TileLayer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utilities\Cache\MemoryCacheSurrogate.cs" />
+    <Compile Include="Utilities\Cache\NullCacheSurrogate.cs" />
+    <Compile Include="Utilities\ExtentSurrogate.cs" />
+    <Compile Include="Utilities\ResolutionSurrogate.cs" />
+    <Compile Include="Utilities\TileSchemaSurrogate.cs" />
+    <Compile Include="Utilities\Utility.cs" />
+    <Compile Include="Utilities\Web\ArcGisTileRequestSurrogate.cs" />
+    <Compile Include="Utilities\Web\ArcGisTileSourceSurrogate.cs" />
+    <Compile Include="Utilities\Web\BasicRequestSurrogate.cs" />
+    <Compile Include="Utilities\Web\BingRequestSurrogate.cs" />
+    <Compile Include="Utilities\Web\HttpTileSourceSurrogate.cs" />
+    <Compile Include="Utilities\Web\OsmRequestSurrogate.cs" />
+    <Compile Include="Utilities\Web\TileSourceSurrogate.cs" />
+    <Compile Include="Utilities\Web\TmsRequestSurrogate.cs" />
+    <Compile Include="Utilities\Web\WebTileProviderSurrogate.cs" />
+    <Compile Include="Utilities\Web\WmscRequestSurrogate.cs" />
+    <Compile Include="Utilities\Wmts\ResourceUrlSurrogate.cs" />
+    <Compile Include="Utilities\Wmts\WmtsRequestSurrogate.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SharpMap\SharpMap.csproj">
@@ -80,9 +102,7 @@
       <Name>SharpMap</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Utilities\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>

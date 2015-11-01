@@ -11,6 +11,7 @@ using SharpMap.Data;
 using SharpMap.Styles;
 using SharpMap.Rendering.Thematics;
 using BruTile.Web;
+using BruTile.Predefined;
 using SharpMap.Data.Providers;
 
 #if DotSpatialProjections
@@ -42,7 +43,7 @@ namespace WinFormSamples
 
             //this.mapBox1.Map = ShapefileSample.InitializeMap(0);
             //Google Background
-            TileAsyncLayer bingLayer = new TileAsyncLayer(new BingTileSource(BingRequest.UrlBing, "", BingMapType.Roads), "TileLayer - Bing");
+            TileAsyncLayer bingLayer = new TileAsyncLayer(KnownTileSources.Create(KnownTileSource.BingRoadsStaging), "TileLayer - Bing");
             this.mapBox1.Map.BackgroundLayer.Add(bingLayer);
 
 
