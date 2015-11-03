@@ -96,7 +96,7 @@ namespace SharpMap.Data.Providers
             }
 
             // spatial Constraint
-            if ((i & 8) == 0 && extent != null)
+            if (extent != null)
             {
                 if (!string.IsNullOrEmpty(_rtreeConstraint))
                 {
@@ -113,6 +113,9 @@ namespace SharpMap.Data.Providers
             // Terminate statment
             sql.Append(";");
             cmd.CommandText = sql.ToString();
+            
+            System.Diagnostics.Debug.WriteLine(
+                string.Format("SQL: '{0}'",cmd.CommandText));
 
             return cmd.ExecuteReader();
         }
@@ -134,15 +137,17 @@ namespace SharpMap.Data.Providers
             {
                 while (reader.Read())
                 {
+                    if (reader.IsDBNull(0)) continue;
+
                     var gpkg = _reader.Read((byte[]) reader.GetValue(0));
                     if (gpkg.Header.IsEmpty) continue;
 
                     if (bbox.Intersects(gpkg.Header.Extent))
                         res.Add(gpkg.GetGeometry());
-                    //else
-                    //{
-                    //    System.Threading.Thread.Sleep(1);
-                    //}
+                    else
+                    {
+                        System.Threading.Thread.Sleep(1);
+                    }
                 }
             }
             return res;
@@ -183,6 +188,9 @@ namespace SharpMap.Data.Providers
                 if (rdr.HasRows)
                 {
                     rdr.Read();
+                    if (rdr.IsDBNull(0))
+                        return null;
+
                     var geom = _reader.Read((byte[]) rdr.GetValue(0));
                     if (!geom.Header.IsEmpty) 
                         return geom.GetGeometry();
@@ -209,6 +217,8 @@ namespace SharpMap.Data.Providers
                     var geometryIndex = rdr.FieldCount - 1;
                     while (rdr.Read())
                     {
+                        if (rdr.IsDBNull(geometryIndex)) continue;
+                        
                         var geom = _reader.Read((byte[])rdr.GetValue(geometryIndex));
                         if (geom.Header.IsEmpty) continue;
                         if (!box.Intersects(geom.Header.Extent)) continue;
@@ -256,7 +266,9 @@ namespace SharpMap.Data.Providers
                     rdr.GetValues(data);
                     var row = _baseTable.NewRow();
                     row.ItemArray = data;
-                    row.Geometry = _reader.Read((byte[]) rdr.GetValue(rdr.FieldCount - 1)).GetGeometry();
+                    row.Geometry = rdr.IsDBNull(rdr.FieldCount-1)
+                        ? null 
+                        : _reader.Read((byte[]) rdr.GetValue(rdr.FieldCount - 1)).GetGeometry();
                     return row;
                 }
             }
@@ -292,8 +304,12 @@ namespace SharpMap.Data.Providers
                     var geometryIndex = rdr.FieldCount - 1;
                     while (rdr.Read())
                     {
+                        // skip null geometries
+                        if (rdr.IsDBNull(geometryIndex)) continue;
+
                         var gpkggeom = _reader.Read((byte[])rdr.GetValue(geometryIndex));
                         if (gpkggeom.Header.IsEmpty) continue;
+
                         var tmpGeom = gpkggeom.GetGeometry();
                         if (prepGeom.Intersects(tmpGeom))
                         {

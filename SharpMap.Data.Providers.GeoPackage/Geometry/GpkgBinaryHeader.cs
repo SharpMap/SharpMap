@@ -37,7 +37,7 @@ namespace SharpMap.Data.Providers.Geometry
                 case 1:
                     ReadSridExtent(reader, res);
                     break;
-                case 2:
+                case 0:
                     ReadBESridExtent(reader, res);
                     break;
             }
@@ -51,9 +51,9 @@ namespace SharpMap.Data.Providers.Geometry
             var ordinates = header.Ordinates;
             if (ordinates == Ordinates.None)
             {
-                header._extent = new Envelope();
-                header._zrange = Interval.Create();
-                header._mrange = Interval.Create();
+                header._extent = new Envelope(double.MinValue, double.MaxValue, double.MinValue, double.MaxValue);
+                header._zrange = Interval.Create(double.MinValue, double.MaxValue);
+                header._mrange = Interval.Create(double.MinValue, double.MaxValue);
                 return;
             }
             header._extent = new Envelope(reader.ReadDouble(), reader.ReadDouble(),
@@ -71,9 +71,9 @@ namespace SharpMap.Data.Providers.Geometry
             var ordinates = header.Ordinates;
             if (ordinates == Ordinates.None)
             {
-                header._extent = new Envelope();
-                header._zrange = Interval.Create();
-                header._mrange = Interval.Create();
+                header._extent = new Envelope(double.MinValue, double.MaxValue, double.MinValue, double.MaxValue);
+                header._zrange = Interval.Create(double.MinValue, double.MaxValue);
+                header._mrange = Interval.Create(double.MinValue, double.MaxValue);
                 return;
             }
             header._extent = new Envelope(SwapByteOrder(reader.ReadDouble()), SwapByteOrder(reader.ReadDouble()),
@@ -176,6 +176,7 @@ namespace SharpMap.Data.Providers.Geometry
         public Envelope Extent
         {
             get { return _extent; }
+            internal set { _extent = value; }
         }
 
         public Interval ZRange { get { return _zrange; }}
