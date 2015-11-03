@@ -6,6 +6,7 @@ using NUnit.Framework;
 using NetTopologySuite.Geometries;
 using SharpMap.Converters.WellKnownBinary;
 using SharpMap.Converters.WellKnownText;
+
 namespace UnitTests.Converters.WKB
 {
     [TestFixture]

@@ -8,18 +8,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BuildTools", "BuildTools", 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Examples", "Examples", "{480154D8-0960-416E-AE45-AF6B06794F77}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PostgisDemoDb", "PostgisDemoDb", "{BCA2C45D-4D40-444B-AE3E-687EB1EC497D}"
-	ProjectSection(SolutionItems) = preProject
-		Examples\PostgisDemoDb\postgisdemodb.backup = Examples\PostgisDemoDb\postgisdemodb.backup
-		Examples\PostgisDemoDb\ReadMe.txt = Examples\PostgisDemoDb\ReadMe.txt
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MsSqlSpatialDemoDb", "MsSqlSpatialDemoDb", "{6BCAB37B-F03A-4998-A6CB-EC8EDB4D203E}"
-	ProjectSection(SolutionItems) = preProject
-		Examples\MsSqlSpatialDemoDb\ReadMe.txt = Examples\MsSqlSpatialDemoDb\ReadMe.txt
-		Examples\MsSqlSpatialDemoDb\SharpMapMsSqlSpatialDemoDb.bak = Examples\MsSqlSpatialDemoDb\SharpMapMsSqlSpatialDemoDb.bak
-	EndProjectSection
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docs", "Docs", "{7F47E0CC-DB03-4E1F-B409-C861154D42C5}"
 	ProjectSection(SolutionItems) = preProject
 		Docs\SharpMap-Dependencies.png = Docs\SharpMap-Dependencies.png
@@ -77,7 +65,7 @@ Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "DemoWebSite", "Examples\Dem
 		Release.AspNetCompiler.FixedNames = "true"
 		Release.AspNetCompiler.Debug = "False"
 		VWDPort = "52193"
-		StartServerOnDebug = "true"
+		StartServerOnDebug = "false"
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpMap.Extensions", "SharpMap.Extensions\SharpMap.Extensions.csproj", "{A4140C12-53F5-438C-8D24-9E48C504FECF}"
@@ -707,8 +695,6 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{BCA2C45D-4D40-444B-AE3E-687EB1EC497D} = {480154D8-0960-416E-AE45-AF6B06794F77}
-		{6BCAB37B-F03A-4998-A6CB-EC8EDB4D203E} = {480154D8-0960-416E-AE45-AF6B06794F77}
 		{32ECD993-CB5A-4AD9-8C8F-45C73A088C13} = {480154D8-0960-416E-AE45-AF6B06794F77}
 		{73A45373-6307-4D39-9FE9-E8803F95FAB6} = {480154D8-0960-416E-AE45-AF6B06794F77}
 		{F81C1843-3B2A-4D72-81AA-A658DB11FA85} = {480154D8-0960-416E-AE45-AF6B06794F77}

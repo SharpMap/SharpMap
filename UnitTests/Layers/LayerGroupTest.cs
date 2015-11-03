@@ -7,7 +7,7 @@ using SharpMap.Styles;
 namespace UnitTests.Layers
 {
     [TestFixture]
-    public class LayerGroupTest : UnitTestsFixture
+    public class LayerGroupTest //: UnitTestsFixture
     {
         #region DummyLayer class
         private class DummyLayer : Layer
