@@ -4,6 +4,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Reflection;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using BruTile.Cache;
@@ -11,6 +12,7 @@ using BruTile.Predefined;
 using BruTile.Web;
 using BruTile.Wmts;
 using NUnit.Framework;
+using UnitTests.Serialization;
 
 namespace BruTile.Serialization.Tests
 {
@@ -41,36 +43,6 @@ namespace BruTile.Serialization.Tests
             Assert.AreEqual(r1.Top, r2.Top);
             Assert.AreEqual(r1.Left, r2.Left);
             Assert.AreEqual(r1.ScaleDenominator, r2.ScaleDenominator);
-        }
-
-        [Test,Obsolete]
-        public void TestBingSchema()
-        {
-            string message;
-            var s1 = new BingSchema();
-            var s2 = SandD(s1);
-            var equal = EqualTileSchemas(s1, s2, out message);
-            Assert.IsTrue(equal, message);
-        }
-
-        [Test, Obsolete]
-        public void TestSphericalMercatorWorldSchema()
-        {
-            string message;
-            var s1 = new SphericalMercatorWorldSchema();
-            var s2 = SandD(s1);
-            var equal = EqualTileSchemas(s1, s2, out message);
-            Assert.IsTrue(equal, message);
-        }
-
-        [Test, Obsolete]
-        public void TestSphericalMercatorInvertedWorldSchema()
-        {
-            string message;
-            var s1 = new SphericalMercatorInvertedWorldSchema();
-            var s2 = SandD(s1);
-            var equal = EqualTileSchemas(s1, s2, out message);
-            Assert.IsTrue(equal, message);
         }
 
         [Test]
@@ -142,6 +114,14 @@ namespace BruTile.Serialization.Tests
             var c2 = SandD(c1);
             Assert.NotNull(c2);
 #if DEBUG
+            Assert.AreEqual(ReflectionTests.GetFieldValue(c1, "_cacheExpireTime"),
+                            ReflectionTests.GetFieldValue(c2, "_cacheExpireTime"), "CacheExpireTimes not equal");
+            Assert.AreEqual(ReflectionTests.GetFieldValue(c1, "_directory"),
+                            ReflectionTests.GetFieldValue(c2, "_directory"), "Directories not equal");
+            Assert.AreEqual(ReflectionTests.GetFieldValue(c1, "_format"),
+                            ReflectionTests.GetFieldValue(c2, "_format"), "Formats not equal");
+
+
             //ToDo: Test by reflection
             //Assert.IsTrue(c1.EqualSetup(c2));
 #endif
@@ -200,20 +180,6 @@ namespace BruTile.Serialization.Tests
             string message;
             var equal = EqualTileSources(ts1, ts2, out message);
             Assert.IsTrue(equal, message);
-        }
-
-        [Test]
-        public void TestOsmTileServerConfig()
-        {
-            var tsc1 = OsmTileServerConfig.Create(KnownTileSource.OpenStreetMap, string.Empty);
-            var tsc2 = SandD(tsc1);
-            Assert.NotNull(tsc1);
-
-            Assert.AreEqual(tsc1.UrlFormat, tsc2.UrlFormat, "UrlFormats don't match");
-            Assert.AreEqual(tsc1.ServerIdentifier, tsc2.ServerIdentifier, "ServerIdentifiers don't match");
-            Assert.AreEqual(tsc1.NumberOfServers, tsc2.NumberOfServers, "Number of servers differ");
-            Assert.AreEqual(tsc1.MinResolution, tsc2.MinResolution, "Min resolution levels don't match");
-            Assert.AreEqual(tsc1.MaxResolution, tsc2.MaxResolution, "Max resolution levels don't match");
         }
 
         [TestCase(@"C:\Users\obe.IVV-AACHEN\Downloads\geography-class.mbtiles")]

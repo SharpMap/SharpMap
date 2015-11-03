@@ -152,24 +152,19 @@ namespace BruTile
                             new ArcGisTileSourceSurrogate());
             ss.AddSurrogate(typeof (BasicRequest), new StreamingContext(StreamingContextStates.All),
                             new BasicRequestSurrogate());
-            //ss.AddSurrogate(typeof(BingRequest), new StreamingContext(StreamingContextStates.All),
-            //                new BingRequestSurrogate());
-            //ss.AddSurrogate(typeof (OsmRequest), new StreamingContext(StreamingContextStates.All),
-            //                new OsmRequestSurrogate());
-            //ss.AddSurrogate(typeof (OsmTileServerConfig), new StreamingContext(StreamingContextStates.All),
-            //                new OsmTileServerConfigSurrogate());
-            //ss.AddSurrogate(typeof (OsmTileSource), new StreamingContext(StreamingContextStates.All), tss2 );
             
             ss.AddSurrogate(typeof(TmsRequest), new StreamingContext(StreamingContextStates.All),
                             new TmsRequestSurrogate());
             ss.AddSurrogate(typeof (TmsTileSource), new StreamingContext(StreamingContextStates.All), tss2);
+
             ss.AddSurrogate(typeof (HttpTileProvider), new StreamingContext(StreamingContextStates.All),
                             new HttpTileProviderSurrogate());
             ss.AddSurrogate(typeof(WmscTileSource), new StreamingContext(StreamingContextStates.All), tss2);
             ss.AddSurrogate(typeof(WmscRequest), new StreamingContext(StreamingContextStates.All),
                             new WmscRequestSurrogate());
 
-            ss.AddSurrogate(typeof(HttpTileSource), new StreamingContext(StreamingContextStates.All), new HttpTileSourceSurrogate());
+            ss.AddSurrogate(typeof(HttpTileSource), new StreamingContext(StreamingContextStates.All), 
+                            new HttpTileSourceSurrogate());
 
             //Wmts
             ss.AddSurrogate(typeof(ResourceUrl), new StreamingContext(StreamingContextStates.All), new ResourceUrlSurrogate());

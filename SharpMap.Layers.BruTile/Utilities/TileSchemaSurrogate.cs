@@ -54,7 +54,9 @@ namespace BruTile
             for (var i = 0; i < count; i++)
             {
                 var key = info.GetString(string.Format("rk{0}", i));
-                var value = (Resolution)info.GetValue(string.Format("rv{0}", i), typeof(Resolution));
+                var valueRef = (IObjectReference)
+                        info.GetValue(string.Format("rv{0}", i), typeof(ResolutionSurrogate.ResolutionRef));
+                var value = (Resolution) valueRef.GetRealObject(context);
                 list.Add(key, value);
             }
             Utility.SetFieldValue(ref obj, "_resolutions", BindingFlags.NonPublic | BindingFlags.Instance, list);
@@ -111,7 +113,9 @@ namespace BruTile
                 for (var i = 0; i < count; i++)
                 {
                     var key = info.GetString(string.Format("rk{0}", i));
-                    var value = (Resolution) info.GetValue(string.Format("rv{0}", i), typeof (Resolution));
+                    var valueRef = (IObjectReference)
+                        info.GetValue(string.Format("rv{0}", i), typeof(ResolutionSurrogate.ResolutionRef));
+                    var value = (Resolution) valueRef.GetRealObject(context);
                     list.Add(key,value);
                 }
                 Utility.SetPropertyValue(ref obj, "Resolutions", BindingFlags.Public | BindingFlags.Instance, list);
@@ -133,7 +137,6 @@ namespace BruTile
             }
         }
         
-        /*
         internal class BingSchemaSurrogate : TileSchemaSurrogate
         {
         }
@@ -157,6 +160,5 @@ namespace BruTile
         internal class SphericalMercatorWorldInvertedSchemaSurrogate : TileSchemaSurrogate
         {
         }
-    */
     }
 }

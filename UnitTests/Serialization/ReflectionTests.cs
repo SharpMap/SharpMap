@@ -2,7 +2,7 @@
 using System.Reflection;
 using NUnit.Framework;
 
-namespace BruTile.Tests.Serialization
+namespace UnitTests.Serialization
 {
     public class ReflectionTests
     {
@@ -71,5 +71,46 @@ namespace BruTile.Tests.Serialization
                     Console.WriteLine("The property type is {0}.", myPropInfo.PropertyType);
                 }
             }
+
+        public static object GetFieldValue(object item, string fieldName, 
+            BindingFlags flags = BindingFlags.NonPublic | BindingFlags.Instance)
+        {
+            var type = item.GetType();
+            return GetFieldValue(type, item, fieldName, flags);
+        }
+
+        private static object GetFieldValue(Type type, object item, string fieldName, 
+            BindingFlags flags)
+        {
+            var fld = type.GetField(fieldName, flags);
+            if (fld == null)
+            {
+                if (type.BaseType != null)
+                    return GetFieldValue(type.BaseType, fieldName, flags);
+                throw new ArgumentException("Unknown field or improper flags");
+            }
+            return fld.GetValue(item);
+        }
+
+        public static object GetPropertyValue(object item, string propertyName, 
+            BindingFlags flags = BindingFlags.NonPublic | BindingFlags.Instance)
+        {
+            var type = item.GetType();
+            return GetPropertyValue(type, item, propertyName, flags);
+        }
+
+        public static object GetPropertyValue(Type type, object item, string propertyName,
+            BindingFlags flags = BindingFlags.NonPublic | BindingFlags.Instance)
+        {
+            var prp = type.GetProperty(propertyName, flags);
+            if (prp == null)
+            {
+                if (type.BaseType != null)
+                    GetPropertyValue(type.BaseType, item, propertyName, flags);
+                throw new ArgumentException("Unknown field or improper flags");
+            }
+
+            return prp.GetValue(item, null);
+        }
     }
 }

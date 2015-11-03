@@ -8,7 +8,7 @@ namespace BruTile
         [System.Serializable]
         internal class ResolutionRef : IObjectReference, ISerializable
         {
-            private Resolution _resolution;
+            private readonly Resolution _resolution;
                 /// <summary>
                 /// Serialization constructor
                 /// </summary>
