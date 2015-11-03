@@ -281,8 +281,8 @@
     <Compile Include="Web\Wms\Tiling\TileExtents.cs" />
     <Compile Include="Web\Wms\Tiling\TileSet.cs" />
     <Compile Include="Web\Wms\Capabilities.cs" />
-    <Compile Include="Data\Providers\iProvider.cs" />
-    <Compile Include="Layers\iLayer.cs" />
+    <Compile Include="Data\Providers\IProvider.cs" />
+    <Compile Include="Layers\ILayer.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">
