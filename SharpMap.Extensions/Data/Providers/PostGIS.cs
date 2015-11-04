@@ -68,7 +68,7 @@ namespace SharpMap.Data.Providers
     [Serializable]
     public class PostGIS : BaseProvider
     {
-        private static readonly ILog Logger = LogManager.GetCurrentClassLogger();
+        private static readonly ILog Logger = LogManager.GetLogger<PostGIS>();
         
         private string _definitionQuery;
         private string _geometryColumn;

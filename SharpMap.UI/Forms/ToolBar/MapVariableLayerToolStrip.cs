@@ -7,7 +7,7 @@ namespace SharpMap.Forms.ToolBar
     [System.ComponentModel.DesignTimeVisible(true)]
     public class MapVariableLayerToolStrip : MapToolStrip
     {
-        private static readonly ILog Logger = LogManager.GetCurrentClassLogger();
+        private static readonly ILog Logger = LogManager.GetLogger(typeof(MapVariableLayerToolStrip));
 
         private System.Windows.Forms.ToolStripButton _enableVariableLayers;
         private System.Windows.Forms.ToolStripTextBox _interval;

@@ -19,7 +19,7 @@ namespace WinFormSamples
 {
     public class SampleTool : MapTool, IDisposable
     {
-        private ILog Logger = LogManager.GetCurrentClassLogger();
+        private ILog Logger = LogManager.GetLogger(typeof(SampleTool));
 
         public SampleTool() : base("Sample", "A sample tool that does nothing really useful")
         {

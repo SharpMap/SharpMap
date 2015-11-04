@@ -695,8 +695,9 @@ namespace SharpMap.Utilities.SpatialIndexing
     /// </summary>
     public class QuadTreeFactory : ISpatialIndexFactory<uint>
     {
+        private static readonly ILog _logger = LogManager.GetLogger(typeof (QuadTreeFactory));
+
         private static ShapeFile.SpatialIndexCreation _spatialIndexSpatialIndexCreationOption;
-        private string _extension;
 
         /// <summary>
         /// Gets or sets the default spatial index creation option
@@ -756,15 +757,14 @@ namespace SharpMap.Utilities.SpatialIndexing
             if (!File.Exists(sidxFileName))
                 return null;
 
-            var logger = LogManager.GetCurrentClassLogger();
             try
             {
                 var sw = new Stopwatch();
                 sw.Start();
                 var tree = QuadTree.FromFile(sidxFileName);
                 sw.Stop();
-                if (logger.IsDebugEnabled)
-                    logger.DebugFormat("Loading QuadTree took {0}ms", sw.ElapsedMilliseconds);
+                if (_logger.IsDebugEnabled)
+                    _logger.DebugFormat("Loading QuadTree took {0}ms", sw.ElapsedMilliseconds);
                 return tree;
             }
             catch (QuadTree.ObsoleteFileFormatException)
@@ -774,7 +774,7 @@ namespace SharpMap.Utilities.SpatialIndexing
             }
             catch (Exception ex)
             {
-                logger.Error(ex);
+                _logger.Error(ex);
                 throw ex;
             }
         }
@@ -813,9 +813,8 @@ namespace SharpMap.Utilities.SpatialIndexing
             }
 
             sw.Stop();
-            var logger = LogManager.GetCurrentClassLogger();
-            if (logger.IsDebugEnabled)
-                logger.DebugFormat("Linear creation of QuadTree took {0}ms", sw.ElapsedMilliseconds);
+            if (_logger.IsDebugEnabled)
+                _logger.DebugFormat("Linear creation of QuadTree took {0}ms", sw.ElapsedMilliseconds);
 
             return root;
 
@@ -849,9 +848,8 @@ namespace SharpMap.Utilities.SpatialIndexing
 
             sw.Stop();
 
-            var logger = LogManager.GetCurrentClassLogger();
-            if (logger.IsDebugEnabled)
-                logger.DebugFormat("Recursive creation of QuadTree took {0}ms", sw.ElapsedMilliseconds);
+            if (_logger.IsDebugEnabled)
+                _logger.DebugFormat("Recursive creation of QuadTree took {0}ms", sw.ElapsedMilliseconds);
 
             return root;
         }

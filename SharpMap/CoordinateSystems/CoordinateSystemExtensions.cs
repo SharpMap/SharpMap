@@ -21,7 +21,7 @@ namespace SharpMap.CoordinateSystems
     /// </summary>
     public static class CoordinateSystemExtensions
     {
-        private static readonly ILog Logger = LogManager.GetCurrentClassLogger();
+        private static readonly ILog Logger = LogManager.GetLogger(typeof(CoordinateSystemExtensions));
 
         private static Dictionary<int, string> _sridDefinition;
 
@@ -38,6 +38,7 @@ namespace SharpMap.CoordinateSystems
         {
             Logger.Debug( fmh => fmh("Getting coordinate system for map"));
             return GetCoordinateSystemForSrid(self.SRID);
+            typeof(string).dec
         }
 
         /// <summary>

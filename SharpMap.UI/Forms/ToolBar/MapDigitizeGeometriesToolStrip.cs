@@ -14,7 +14,7 @@ namespace SharpMap.Forms.ToolBar
     [System.ComponentModel.DesignTimeVisible(true)]
     public class MapDigitizeGeometriesToolStrip : MapToolStrip
     {
-        private static readonly Common.Logging.ILog Logger = Common.Logging.LogManager.GetCurrentClassLogger();
+        private static readonly Common.Logging.ILog Logger = Common.Logging.LogManager.GetLogger(typeof(MapDigitizeGeometriesToolStrip));
 
         public MapDigitizeGeometriesToolStrip()
             :base()

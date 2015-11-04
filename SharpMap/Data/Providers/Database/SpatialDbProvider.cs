@@ -14,7 +14,7 @@ namespace SharpMap.Data.Providers
     [Serializable]
     public abstract class SpatialDbProvider : BaseProvider
     {
-        private static readonly Common.Logging.ILog Logger = Common.Logging.LogManager.GetCurrentClassLogger();
+        private static readonly Common.Logging.ILog Logger = Common.Logging.LogManager.GetLogger(typeof(SpatialDbProvider));
         
         private bool Initialized { get; set; }
 

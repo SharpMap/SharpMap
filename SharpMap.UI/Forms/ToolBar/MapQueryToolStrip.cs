@@ -21,7 +21,7 @@ namespace SharpMap.Forms.ToolBar
             InitializeComponent();
         }
 
-        private static readonly Common.Logging.ILog Logger = Common.Logging.LogManager.GetCurrentClassLogger();
+        private static readonly Common.Logging.ILog Logger = Common.Logging.LogManager.GetLogger(typeof(MapQueryToolStrip));
 
         private ToolStripButton _clear;
         private ToolStripSeparator _sep1;

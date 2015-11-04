@@ -31,6 +31,8 @@ namespace SharpMap.Styles
     [Serializable]
     public class LabelStyle : Style, ICloneable
     {
+        private static readonly ILog _logger = LogManager.GetLogger(typeof (LabelStyle));
+        
         #region HorizontalAlignmentEnum enum
 
         /// <summary>
@@ -202,10 +204,12 @@ namespace SharpMap.Styles
             set
             {
                 if (value.Unit != GraphicsUnit.Point)
-                    LogManager.GetCurrentClassLogger().Error( fmh => fmh("Only assign fonts with size in Points"));
+                    _logger.Error( fmh => fmh("Only assign fonts with size in Points"));
                 _Font = value;
 
-                // we can't dispose the previous font because it could still be used by the rendering engine, so we just let it be GC.
+                // we can't dispose the previous font 
+                // because it could still be used by 
+                // the rendering engine, so we just let it be GC'ed.
                 _cachedFontForGraphics = null;
             }
         }

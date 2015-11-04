@@ -141,7 +141,7 @@ namespace UnitTests.Data.Providers
     [TestFixture]
     public abstract class ThreadingTest
     {
-        //private static readonly ILog Logger = LogManager.GetCurrentClassLogger();
+        //private static readonly ILog Logger = LogManager.GetLogger(typeof(ThreadingTest));
         
         static ThreadingTest ()
         {

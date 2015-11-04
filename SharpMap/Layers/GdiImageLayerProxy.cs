@@ -57,7 +57,7 @@ namespace SharpMap.Layers
             return new GdiImageLayerProxy<T>(baseLayer, colorMatrix);
         }
 
-        private static readonly ILog Logger = LogManager.GetCurrentClassLogger();
+        private static readonly ILog Logger = LogManager.GetLogger(typeof(GdiImageLayerProxy<T>));
 
         private readonly ColorMatrix _colorMatrix;
         private readonly ColorMap[] _colorMap;
