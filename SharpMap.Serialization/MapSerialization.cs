@@ -66,7 +66,10 @@ namespace SharpMap.Serialization
                     BruTile.Predefined.KnownTileSource kts;
                     if (!Enum.TryParse(ol.KnownTileSource, out kts))
                         kts = BruTile.Predefined.KnownTileSource.OpenStreetMap;
-                    lay = new Layers.TileLayer(BruTile.Predefined.KnownTileSources.Create(kts, ol.ApiKey), l.Name);
+                    if (ol.Async)
+                        lay = new Layers.TileAsyncLayer(BruTile.Predefined.KnownTileSources.Create(kts, ol.ApiKey), l.Name);
+                    else
+                        lay = new Layers.TileLayer(BruTile.Predefined.KnownTileSources.Create(kts, ol.ApiKey), l.Name);
                 }
                     /*
                 else if (l is GoogleLayer)

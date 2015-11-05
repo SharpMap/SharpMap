@@ -391,7 +391,7 @@ public class StreetDirectionSymbolizer : SharpMap.Rendering.Symbolizer.BaseSymbo
             l.CoordinateTransformation = ctFact.CreateFromCoordinateSystems(ProjNet.CoordinateSystems.GeographicCoordinateSystem.WGS84, ProjNet.CoordinateSystems.ProjectedCoordinateSystem.WebMercator);
             l.ReverseCoordinateTransformation = ctFact.CreateFromCoordinateSystems(ProjNet.CoordinateSystems.ProjectedCoordinateSystem.WebMercator, ProjNet.CoordinateSystems.GeographicCoordinateSystem.WGS84);
 
-            m.Layers.Add(new SharpMap.Layers.TileLayer(new BruTile.Web.OsmTileSource(),"b"));
+            m.Layers.Add(new SharpMap.Layers.TileLayer(BruTile.Predefined.KnownTileSources.Create(),"b"));
             m.Layers.Add(l);
 
             var e = new GeoAPI.Geometries.Envelope(-0.02, 0.02, 51.478885 - 0.01, 51.478885 + 0.01);

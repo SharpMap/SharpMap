@@ -51,9 +51,7 @@ namespace ExampleCodeSnippets
 
 
             var m = new SharpMap.Map(new Size(640, 640));
-            m.Layers.Add(new TileLayer(
-                new OsmTileSource(new OsmRequest(KnownTileSource.OpenStreetMap) /*, 
-                                  new FileCache(@"d:\temp\OSM", "png")*/), "OSM"));
+            m.Layers.Add(new TileLayer(BruTile.Predefined.KnownTileSources.Create(), "OSM"));
 
             var l = new HeatLayer(p, "Data", 0.001f);
             l.LayerName = "HEAT";

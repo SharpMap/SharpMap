@@ -2,8 +2,6 @@
 using System.Linq;
 using System.Windows;
 using System.Windows.Forms;
-using BruTile.Predefined;
-using BruTile.Web;
 using GeoAPI.Geometries;
 using Application = System.Windows.Application;
 using MenuItem = System.Windows.Controls.MenuItem;
@@ -28,8 +26,7 @@ namespace WPFSamples
 
         private void BgOSM_OnClick(object sender, RoutedEventArgs e)
         {
-            WpfMap.BackgroundLayer = new SharpMap.Layers.TileAsyncLayer(
-                new BruTile.Web.OsmTileSource(), "OSM");
+            WpfMap.BackgroundLayer = new SharpMap.Layers.TileAsyncLayer(BruTile.Predefined.KnownTileSources.Create(), "OSM");
 
             foreach (var menuItem in Menu.Items.OfType<MenuItem>())
             {
@@ -44,7 +41,8 @@ namespace WPFSamples
         private void BgMapQuest_Click(object sender, RoutedEventArgs e)
         {
             WpfMap.BackgroundLayer = new SharpMap.Layers.TileAsyncLayer(
-              KnownTileSources.Create(KnownTileSource.MapQuestAerial), "MapQuest");
+              BruTile.Predefined.KnownTileSources.Create(
+                BruTile.Predefined.KnownTileSource.MapQuestAerial), "MapQuest");
 
             foreach (var menuItem in Menu.Items.OfType<MenuItem>())
             {
@@ -59,7 +57,7 @@ namespace WPFSamples
         private void AddShapeLayer_OnClick(object sender, RoutedEventArgs e)
         {
             var ofd = new OpenFileDialog();
-            ofd.Filter = "Shapefiles (*.shp)|*.shp";
+            ofd.Filter = @"Shapefiles (*.shp)|*.shp";
             if (ofd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
                 var ds = new SharpMap.Data.Providers.ShapeFile(ofd.FileName);

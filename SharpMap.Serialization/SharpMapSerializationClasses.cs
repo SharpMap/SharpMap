@@ -103,6 +103,8 @@ namespace SharpMap.Serialization.Model
         public string KnownTileSource { get; set; }
 
         public string ApiKey { get; set; }
+
+        public bool Async { get; set; }
     }
 
     /*
