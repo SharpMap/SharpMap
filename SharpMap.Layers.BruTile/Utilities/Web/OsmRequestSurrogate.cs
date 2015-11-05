@@ -5,6 +5,7 @@ using System.Runtime.Serialization;
 
 namespace BruTile.Web
 {
+    [Obsolete]
     internal class OsmRequestSurrogate : ISerializationSurrogate
     {
         #region Implementation of ISerializationSurrogate
@@ -24,6 +25,7 @@ namespace BruTile.Web
         #endregion
     }
 
+    [Obsolete]
     public class OsmTileServerConfigSurrogate : ISerializationSurrogate
     {
         #region Implementation of ISerializationSurrogate

@@ -26,8 +26,8 @@ namespace UnitTests.Layers
             {
                 map.BackColor = Color.Magenta;
                 var fc = new BruTile.Cache.FileCache(System.IO.Path.Combine(_fileCacheRoot, "BingStaging"), "png"); 
-                var bts = KnownTileSources.Create(KnownTileSource.BingHybridStaging,null, fc);
-                var tl = new TileLayer(bts, "TileLayer - " + BingMapType.Hybrid.ToString(), Color.Transparent, true);
+                var bts = KnownTileSources.Create(KnownTileSource.BingHybridStaging, null, fc);
+                var tl = new TileLayer(bts, "TileLayer - " + KnownTileSource.BingHybridStaging, Color.Transparent, true);
                                        
                 map.Layers.Add(tl);
                 

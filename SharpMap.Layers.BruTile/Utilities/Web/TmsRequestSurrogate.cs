@@ -10,9 +10,9 @@ namespace BruTile.Web
 
         public void GetObjectData(object obj, SerializationInfo info, StreamingContext context)
         {
-            info.AddValue("baseUrl", Utility.GetFieldValue(obj, "_baseUrl", Utility.PrivateInstance, BingRequest.UrlBingStaging));
+            info.AddValue("baseUrl", Utility.GetFieldValue<string>(obj, "_baseUrl"));
             Utility.GetDictionary(Utility.GetFieldValue(obj, "_baseUrls", Utility.PrivateInstance, (IDictionary<string, System.Uri>)null), info, context, "baseUrls");
-            info.AddValue("imageFormat", Utility.GetFieldValue(obj, "_imageFormat", Utility.PrivateInstance, BingRequest.UrlBingStaging));
+            info.AddValue("imageFormat", Utility.GetFieldValue(obj, "_imageFormat", Utility.PrivateInstance, "png"));
             Utility.GetDictionary(Utility.GetFieldValue(obj, "_customParameters", Utility.PrivateInstance, (IDictionary<string, string>)null), info, context, "baseUrls");
             Utility.GetList(Utility.GetFieldValue(obj, "_serverNodes", Utility.PrivateInstance, (IList<string>)null), info, context, "baseUrls");
         }
@@ -29,7 +29,7 @@ namespace BruTile.Web
                                   Utility.SetList<string>(info, context,"serverNodes"));
             //Not serialized, but nonethelesss needed.
             Utility.SetFieldValue(ref obj, "_random", Utility.PrivateInstance, new System.Random());
-            return obj;
+            return null;
         }
 
         #endregion
