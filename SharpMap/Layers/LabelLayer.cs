@@ -110,7 +110,7 @@ namespace SharpMap.Layers
 
         #endregion
 
-        private IProvider _dataSource;
+        private IBaseProvider _dataSource;
         private GetLabelMethod _getLabelMethod;
         private GetPriorityMethod _getPriorityMethod;
         private GetLocationMethod _getLocationMethod;
@@ -196,7 +196,7 @@ namespace SharpMap.Layers
         /// <summary>
         /// Gets or sets the datasource
         /// </summary>
-        public IProvider DataSource
+        public IBaseProvider DataSource
         {
             get { return _dataSource; }
             set

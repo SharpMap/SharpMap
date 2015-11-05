@@ -1,6 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio 14
+VisualStudioVersion = 14.0.23107.0
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BuildTools", "BuildTools", "{8E57A35D-CD7B-4EEE-98BF-0E414F1A4E44}"
 	ProjectSection(SolutionItems) = preProject
 		BuildTools\NuGet.exe = BuildTools\NuGet.exe
@@ -65,6 +67,7 @@ Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "DemoWebSite", "Examples\Dem
 		Release.AspNetCompiler.FixedNames = "true"
 		Release.AspNetCompiler.Debug = "False"
 		VWDPort = "52193"
+		SlnRelativePath = "Examples\DemoWebSite\"
 		StartServerOnDebug = "false"
 	EndProjectSection
 EndProject

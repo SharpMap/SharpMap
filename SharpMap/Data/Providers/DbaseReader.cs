@@ -1050,7 +1050,7 @@ namespace SharpMap.Data.Providers
         }
 
         /// <summary>
-        /// Gets all attribute values for data record <paramref name="rowid"/>
+        /// Gets all attribute values for data record <paramref name="oid"/>
         /// </summary>
         /// <returns></returns>
         public object[] GetValues(uint oid)

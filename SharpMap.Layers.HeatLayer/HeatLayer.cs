@@ -158,7 +158,7 @@ namespace SharpMap.Layers
         /// <summary>
         /// Gets the provider that serves the heat value features
         /// </summary>
-        public IProvider DataSource { get; private set; }
+        public IBaseProvider DataSource { get; private set; }
 
         /// <summary>
         /// Renders the layer
