@@ -62,7 +62,11 @@ namespace SharpMap.Serialization
                 //And some simple tiled layers
                 else if (l is OsmLayer)
                 {
-                    lay = new Layers.TileLayer(new BruTile.Web.OsmTileSource(), l.Name);
+                    var ol = (OsmLayer) l;
+                    BruTile.Predefined.KnownTileSource kts;
+                    if (!Enum.TryParse(ol.KnownTileSource, out kts))
+                        kts = BruTile.Predefined.KnownTileSource.OpenStreetMap;
+                    lay = new Layers.TileLayer(BruTile.Predefined.KnownTileSources.Create(kts, ol.ApiKey), l.Name);
                 }
                     /*
                 else if (l is GoogleLayer)

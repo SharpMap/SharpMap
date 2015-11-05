@@ -38,7 +38,6 @@ namespace SharpMap.CoordinateSystems
         {
             Logger.Debug( fmh => fmh("Getting coordinate system for map"));
             return GetCoordinateSystemForSrid(self.SRID);
-            typeof(string).dec
         }
 
         /// <summary>
