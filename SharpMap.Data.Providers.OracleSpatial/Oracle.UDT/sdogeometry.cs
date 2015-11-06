@@ -7,8 +7,11 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
+#pragma warning disable 1591
+
 namespace SharpMap.Data.Providers.OracleUDT
 {
+
     [Serializable]
     public static class SdoGeometryTypes
     {

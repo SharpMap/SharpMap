@@ -1,6 +1,8 @@
 using Oracle.DataAccess.Types;
 using System;
 
+#pragma warning disable 1591
+
 namespace SharpMap.Data.Providers.OracleUDT
 {
     [Serializable]
