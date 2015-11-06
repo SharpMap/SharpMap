@@ -1,10 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.23107.0
-MinimumVisualStudioVersion = 10.0.40219.1
+# Visual Studio 2012
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BuildTools", "BuildTools", "{8E57A35D-CD7B-4EEE-98BF-0E414F1A4E44}"
 	ProjectSection(SolutionItems) = preProject
+		BuildTools\MSBuild.Community.Tasks.targets = BuildTools\MSBuild.Community.Tasks.targets
 		BuildTools\NuGet.exe = BuildTools\NuGet.exe
 	EndProjectSection
 EndProject
@@ -28,6 +27,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MSBuild", "MSBuild", "{A5E4
 		SharpMap.Layers.HeatLayer.nuspec = SharpMap.Layers.HeatLayer.nuspec
 		SharpMap.nuspec = SharpMap.nuspec
 		SharpMap.proj = SharpMap.proj
+		SharpMap.targets = SharpMap.targets
 		SharpMap.UI.nuspec = SharpMap.UI.nuspec
 		SharpMap.Web.nuspec = SharpMap.Web.nuspec
 	EndProjectSection
@@ -44,7 +44,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpMap.UI", "SharpMap.UI\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "UnitTests\UnitTests.csproj", "{0C76DD99-AC5D-47C0-B76F-CE70092A9AC7}"
 EndProject
-Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "DemoWebSite", "Examples\DemoWebSite\", "{32ECD993-CB5A-4AD9-8C8F-45C73A088C13}"
+Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "DemoWebSite", "Examples\DemoWebSite", "{32ECD993-CB5A-4AD9-8C8F-45C73A088C13}"
 	ProjectSection(WebsiteProperties) = preProject
 		SccProjectName = "Svn"
 		SccAuxPath = "Svn"
@@ -67,7 +67,6 @@ Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "DemoWebSite", "Examples\Dem
 		Release.AspNetCompiler.FixedNames = "true"
 		Release.AspNetCompiler.Debug = "False"
 		VWDPort = "52193"
-		SlnRelativePath = "Examples\DemoWebSite\"
 		StartServerOnDebug = "false"
 	EndProjectSection
 EndProject

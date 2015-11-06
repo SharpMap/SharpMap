@@ -1,0 +1,27 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+
+  <PropertyGroup>
+    <MSBuildCommunityTasksPath>$(SolutionDir)\BuildTools</MSBuildCommunityTasksPath>
+
+    <!-- SharpMap version -->
+    <Major>1</Major>
+    <Minor>2</Minor>
+    <Build>0</Build>
+    <Revision>0</Revision>
+  </PropertyGroup>
+
+  <Import Project="$(SolutionDir)\BuildTools\MSBuild.Community.Tasks.Targets"/>
+  
+  <Target Name="Version">
+    <GitVersion LocalPath="$(MSBuildProjectDirectory)">
+      <Output TaskParameter="CommitHash" PropertyName="Revision" />
+    </GitVersion>
+    <AssemblyInfo
+        CodeLanguage="CS"
+        OutputFile="$(SolutionDir)\SharedAssemblyVersion.cs"
+        AssemblyInformationalVersion="$(Major).$(Minor).$(Build).$(Revision)"
+        AssemblyVersion="$(Major).$(Minor).$(Build)"
+        AssemblyFileVersion="$(Major).$(Minor).$(Build)" />
+  </Target>
+
+</Project>
