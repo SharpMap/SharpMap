@@ -808,7 +808,7 @@ namespace SharpMap.Web.Wms
             }
         }
 
-        private static void PrepareDataSourceForCql(IProvider provider, string cqlFilterString)
+        private static void PrepareDataSourceForCql(IBaseProvider provider, string cqlFilterString)
         {
             //for layers with a filterprovider
             var filterProvider = provider as FilterProvider;
