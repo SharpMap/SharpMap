@@ -13,7 +13,7 @@
   <Import Project="$(SolutionDir)\BuildTools\MSBuild.Community.Tasks.Targets"/>
   
   <Target Name="Version">
-    <GitVersion LocalPath="$(MSBuildProjectDirectory)" ContinueOnError="ErrorAndContiue">
+    <GitVersion LocalPath="$(MSBuildProjectDirectory)" ContinueOnError="ErrorAndContinue">
       <Output TaskParameter="CommitHash" PropertyName="Revision" />
     </GitVersion>
     <AssemblyInfo
