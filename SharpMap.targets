@@ -13,7 +13,7 @@
   <Import Project="$(SolutionDir)\BuildTools\MSBuild.Community.Tasks.Targets"/>
   
   <Target Name="Version">
-    <GitVersion LocalPath="$(MSBuildProjectDirectory)">
+    <GitVersion LocalPath="$(MSBuildProjectDirectory)" ContinueOnError="ErrorAndContiue">
       <Output TaskParameter="CommitHash" PropertyName="Revision" />
     </GitVersion>
     <AssemblyInfo
@@ -22,6 +22,16 @@
         AssemblyInformationalVersion="$(Major).$(Minor).$(Build).$(Revision)"
         AssemblyVersion="$(Major).$(Minor).$(Build)"
         AssemblyFileVersion="$(Major).$(Minor).$(Build)" />
+    <OnError ExecuteTargets="Version2"></OnError>
   </Target>
-
+  <Target Name="Version2">
+    <Message Text="Building revision from git commit hash failed!" />
+    <AssemblyInfo
+        CodeLanguage="CS"
+        OutputFile="$(SolutionDir)\SharedAssemblyVersion.cs"
+        AssemblyInformationalVersion="$(Major).$(Minor).$(Build).9999999"
+        AssemblyVersion="$(Major).$(Minor).$(Build)"
+        AssemblyFileVersion="$(Major).$(Minor).$(Build)" />
+    <OnError ExecuteTargets="Version2"></OnError>
+  </Target>
 </Project>
