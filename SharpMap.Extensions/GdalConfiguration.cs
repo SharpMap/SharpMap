@@ -37,8 +37,8 @@ namespace SharpMap
 {
     public static partial class GdalConfiguration
     {
-        private static bool _configuredOgr;
-        private static bool _configuredGdal;
+        private static volatile bool _configuredOgr;
+        private static volatile bool _configuredGdal;
 
         /// <summary>
         /// Function to determine which platform we're on
