@@ -4,5 +4,5 @@ install:
   - nuget restore SharpMap.sln
   - nuget install NUnit.Runners -Version 2.6.4 -OutputDirectory testrunner
 script:
-  - xbuild /p:Configuration=Release SharpMap.sln
+  - xbuild /p:Configuration=Release;Version=1.2 /t:BuildRelease;UnitTests SharpMap.proj
   - mono ./testrunner/NUnit.Runners.2.6.4/tools/nunit-console.exe ./UnitTests/bin/UnitTests.dll
