@@ -132,7 +132,7 @@
   
   <!-- TODO: add targets here to build zip, NuGet, ... -->
   <!--<Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />-->
-  <Import Project="$(SolutionDir)\BuildTools\MSBuild.Community.Tasks.Targets"/>
-  <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
+  <Import Project="$(SolutionDir)BuildTools\MSBuild.Community.Tasks.targets"/>
+  <Import Project="$(SolutionDir).nuget\NuGet.targets" />
   
 </Project>
