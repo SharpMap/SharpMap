@@ -33,10 +33,21 @@ namespace SharpMap.Forms
     [Serializable]
     public partial class MiniMapControl : Control
     {
+        /// <summary>
+        /// Enumeration of possible hit results
+        /// </summary>
         protected enum HitResult
         {
+            /// <summary>
+            /// Not hit anything at all
+            /// </summary>
             None,
+
+            /// <summary>
+            /// Hit inside the frame
+            /// </summary>
             InsideFrame,
+
             SizeNW,
             SizeNE,
             SizeSW,

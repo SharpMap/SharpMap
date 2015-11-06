@@ -47,7 +47,7 @@ namespace SharpMap.Layers
 
         private bool _clippingEnabled;
         private bool _isQueryEnabled = true;
-        private IProvider _dataSource;
+        private IBaseProvider _dataSource;
         private SmoothingMode _smoothingMode;
         private ITheme _theme;
         private Envelope _envelope;
@@ -68,7 +68,7 @@ namespace SharpMap.Layers
         /// </summary>
         /// <param name="layername">Name of layer</param>
         /// <param name="dataSource">Data source</param>
-        public VectorLayer(string layername, IProvider dataSource) : this(layername)
+        public VectorLayer(string layername, IBaseProvider dataSource) : this(layername)
         {
             _dataSource = dataSource;
         }
@@ -120,7 +120,7 @@ namespace SharpMap.Layers
         /// <summary>
         /// Gets or sets the datasource
         /// </summary>
-        public IProvider DataSource
+        public IBaseProvider DataSource
         {
             get { return _dataSource; }
             set

@@ -71,7 +71,7 @@ namespace UnitTests.Data.Providers
             }
             var layer = new SharpMap.Layers.VectorLayer("TMP", new SharpMap.Data.Providers.GeometryFeatureProvider(fdt));
 
-            var res = layer.DataSource.GetFeature(0);
+            var res = ((SharpMap.Data.Providers.IProvider)layer.DataSource).GetFeature(0);
             NUnit.Framework.Assert.IsNotNull(res);
         }
 

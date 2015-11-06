@@ -1,0 +1,8 @@
+language: csharp
+solution: SharpMap.sln
+install:
+  - nuget restore SharpMap.sln
+  - nuget install NUnit.Runners -Version 2.6.4 -OutputDirectory testrunner
+script:
+  - xbuild /p:Configuration=Release SharpMap.sln
+  - mono ./testrunner/NUnit.Runners.2.6.4/tools/nunit-console.exe ./UnitTests/bin/UnitTests.dll
