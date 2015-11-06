@@ -12,8 +12,8 @@
 
   <Import Project="$(SolutionDir)BuildTools\MSBuild.Community.Tasks.Targets"/>
   
-  <Target Name="Version" ContinueOnError="true">
-    <GitVersion LocalPath="$(MSBuildProjectDirectory)" ContinueOnError="ErrorAndContinue">
+  <Target Name="Version">
+    <GitVersion LocalPath="$(MSBuildProjectDirectory)" ContinueOnError="ErrorAndStop">
       <Output TaskParameter="CommitHash" PropertyName="Revision" />
     </GitVersion>
     <AssemblyInfo
@@ -32,6 +32,5 @@
         AssemblyInformationalVersion="$(Major).$(Minor).$(Build).9999999"
         AssemblyVersion="$(Major).$(Minor).$(Build)"
         AssemblyFileVersion="$(Major).$(Minor).$(Build)" />
-    <OnError ExecuteTargets="Version2"></OnError>
   </Target>
 </Project>

@@ -24,11 +24,17 @@
   </Target>
 
   <Target Name="BuildDebug" DependsOnTargets="EnableNPR">
-    <MSBuild Projects="$(SolutionFile)" Targets="SharpMap;SharpMap_UI;SharpMap_Extensions;SharpMap_Extensions_x86;SharpMap_Web;SharpMap_Layers_HeatLayer;SharpMap_Data_Providers_OracleSpatial" Properties="Configuration=Debug" />
+    <MSBuild Projects="$(SolutionFile)" 
+             Targets="SharpMap;SharpMap_UI;SharpMap_Extensions;SharpMap_Extensions_x86;SharpMap_Web;SharpMap_Layers_HeatLayer;SharpMap_Layers_BruTile;SharpMap_Data_Providers_OracleSpatial;SharpMap_Data_Providers_GeoPackage;SharpMap_Data_Providers_Kml" 
+             Properties="Configuration=Debug" 
+             ContinueOnError="true"/>
   </Target>
 
   <Target Name="BuildRelease" DependsOnTargets="EnableNPR">
-    <MSBuild Projects="$(SolutionFile)" Targets="SharpMap;SharpMap_UI;SharpMap_Extensions;SharpMap_Extensions_x86;SharpMap_Web;SharpMap_Layers_HeatLayer;SharpMap_Data_Providers_OracleSpatial" Properties="Configuration=Release" />
+    <MSBuild Projects="$(SolutionFile)" 
+             Targets="SharpMap;SharpMap_UI;SharpMap_Extensions;SharpMap_Extensions_x86;SharpMap_Web;SharpMap_Layers_HeatLayer;SharpMap_Layers_BruTile;SharpMap_Data_Providers_OracleSpatial;SharpMap_Data_Providers_GeoPackage;SharpMap_Data_Providers_Kml" 
+             Properties="Configuration=Release" 
+             ContinueOnError="true"/>
   </Target>
 
   <!-- build only for now, test on build server -->
