@@ -10,9 +10,9 @@
     <Revision>0</Revision>
   </PropertyGroup>
 
-  <Import Project="$(SolutionDir)\BuildTools\MSBuild.Community.Tasks.Targets"/>
+  <Import Project="$(SolutionDir)BuildTools\MSBuild.Community.Tasks.Targets"/>
   
-  <Target Name="Version">
+  <Target Name="Version" ContinueOnError="true">
     <GitVersion LocalPath="$(MSBuildProjectDirectory)" ContinueOnError="ErrorAndContinue">
       <Output TaskParameter="CommitHash" PropertyName="Revision" />
     </GitVersion>
