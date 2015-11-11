@@ -14,7 +14,8 @@ It provides access to many types of GIS data, enables spatial querying of that d
 The engine is written in C# and based on the .Net 4.0 framework.
       </summary>
     <releaseNotes>
-Combination of SharpMap.Core and SharpMap.Layers.BruTile
+New Features
+Bug fixes
     </releaseNotes>
     <description>
       This package contains the core components of SharpMap.
@@ -27,9 +28,16 @@ Combination of SharpMap.Core and SharpMap.Layers.BruTile
       <frameworkAssembly assemblyName="System.Xml" targetFramework="net40-client" />
     </frameworkAssemblies>
 	<dependencies>
-    <dependency id="SharpMap.Core" version="[1.2.0)"/>
-    <dependency id="SharpMap.Layers.BruTile" version="[1.2.0)"/>
+    <dependency id="Common.Logging" version="[3.3.0]"/>
+		<dependency id="GeoAPI" version="[1.7.3]"/>
+		<dependency id="NetTopologySuite" version="[1.13.3]"/>
+		<dependency id="NetTopologySuite.IO" version="[1.13.3]"/>
+		<dependency id="NewtonSoft.Json" version="[6.0.3]"/>
+		<dependency id="ProjNET4GeoAPI" version="[1.3.0.4]"/>
 	</dependencies>
   </metadata>
+  <files>
+	  <file src="SharpMap\bin\Release\SharpMap.dll" target="lib\net40-client"/>
+    <file src="SharpMap\bin\Release\SharpMap.xml" target="lib\net40-client"/>
   </files>
 </package>

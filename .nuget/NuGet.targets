@@ -2,7 +2,8 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
     <PropertyGroup>
         <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">$(MSBuildProjectDirectory)\..\</SolutionDir>
-        
+        <PRDirectory>$(MSBuildThisFileDirectory)..</PRDirectory>
+
         <!-- Enable the restore command to run before builds -->
         <RestorePackages Condition="  '$(RestorePackages)' == '' ">false</RestorePackages>
 
@@ -49,7 +50,7 @@
         
         <RequireConsentSwitch Condition=" $(RequireRestoreConsent) == 'true' ">-RequireConsent</RequireConsentSwitch>
         <!-- Commands -->
-        <RestoreCommand>$(NuGetCommand) install "$(PackagesConfig)" -source "$(PackageSources)"  $(RequireConsentSwitch) -solutionDir "$(SolutionDir). "</RestoreCommand>
+        <RestoreCommand>$(NuGetCommand) install "$(PackagesConfig)" -source "$(PackageSources)"  $(RequireConsentSwitch) -solutionDir "$(PRDirectory) "</RestoreCommand>
         <BuildCommand>$(NuGetCommand) pack "$(ProjectPath)" -p Configuration=$(Configuration) -o "$(PackageOutputDir)" -symbols</BuildCommand>
 
         <!-- We need to ensure packages are restored prior to assembly resolve -->
