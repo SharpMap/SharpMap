@@ -80,19 +80,19 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\Packages\odac.client.x86.1.112.3.20\instantclient\oci.dll">
+    <None Include="..\packages\odac.client.x86.1.112.3.20\instantclient\oci.dll">
       <Link>oci.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="..\Packages\odac.client.x86.1.112.3.20\instantclient\orannzsbb11.dll">
+    <None Include="..\packages\odac.client.x86.1.112.3.20\instantclient\orannzsbb11.dll">
       <Link>orannzsbb11.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="..\Packages\odac.client.x86.1.112.3.20\instantclient\oraociicus11.dll">
+    <None Include="..\packages\odac.client.x86.1.112.3.20\instantclient\oraociicus11.dll">
       <Link>oraociicus11.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="..\Packages\odac.client.x86.1.112.3.20\odp\net40\OraOps11w.dll">
+    <None Include="..\packages\odac.client.x86.1.112.3.20\odp\net40\OraOps11w.dll">
       <Link>OraOps11w.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
