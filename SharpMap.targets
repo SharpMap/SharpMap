@@ -1,7 +1,7 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
 
   <PropertyGroup>
-    <MSBuildCommunityTasksPath>$(SolutionDir)\BuildTools</MSBuildCommunityTasksPath>
+    <MSBuildCommunityTasksPath>$(MSBuildThisFileDirectory)BuildTools</MSBuildCommunityTasksPath>
 
     <!-- SharpMap version -->
     <Major>1</Major>
@@ -10,27 +10,41 @@
     <Revision>0</Revision>
   </PropertyGroup>
 
-  <Import Project="$(SolutionDir)BuildTools\MSBuild.Community.Tasks.targets"/>
-  
+  <Import Project="$(MSBuildThisFileDirectory)BuildTools\MSBuild.Community.Tasks.targets"/>
+
   <Target Name="Version">
-    <GitVersion LocalPath="$(MSBuildProjectDirectory)" ContinueOnError="ErrorAndStop">
+    <GitVersion LocalPath="$(MSBuildThisFileDirectory)" ContinueOnError="ErrorAndStop">
       <Output TaskParameter="CommitHash" PropertyName="Revision" />
     </GitVersion>
     <AssemblyInfo
         CodeLanguage="CS"
-        OutputFile="$(SolutionDir)\SharedAssemblyVersion.cs"
+        OutputFile="$(MSBuildThisFileDirectory)SharedAssemblyVersion.cs"
         AssemblyInformationalVersion="$(Major).$(Minor).$(Build).$(Revision)"
         AssemblyVersion="$(Major).$(Minor).$(Build)"
         AssemblyFileVersion="$(Major).$(Minor).$(Build)" />
-    <OnError ExecuteTargets="Version2"></OnError>
+    <OnError ExecuteTargets="Version2"/>
   </Target>
   <Target Name="Version2">
-    <Message Text="Building revision from git commit hash failed!" />
+    <Message Text="Building revision from git commit hash failed, or Microsoft.Build.Utilities.v3.5 could not be found." />
+    <ItemGroup>
+      <AssemblyAttributes Include="AssemblyVersion">
+        <_Parameter1>$(Major).$(Minor).$(Build)</_Parameter1>
+      </AssemblyAttributes>
+      <AssemblyAttributes Include="AssemblyFileVersion">
+        <_Parameter1>$(Major).$(Minor).$(Build)</_Parameter1>
+      </AssemblyAttributes>
+      <AssemblyAttributes Include="AssemblyInformationalVersion">
+        <_Parameter1>$(Major).$(Minor).$(Build).9999999</_Parameter1>
+      </AssemblyAttributes>
+    </ItemGroup>
+    <WriteCodeFragment Language="C#" OutputFile="$(MSBuildThisFileDirectory)SharedAssemblyVersion.cs" AssemblyAttributes="@(AssemblyAttributes)" />
+    <!--
     <AssemblyInfo
         CodeLanguage="CS"
-        OutputFile="$(SolutionDir)\SharedAssemblyVersion.cs"
+        OutputFile="$(MSBuildThisFileDirectory)SharedAssemblyVersion.cs"
         AssemblyInformationalVersion="$(Major).$(Minor).$(Build).9999999"
         AssemblyVersion="$(Major).$(Minor).$(Build)"
         AssemblyFileVersion="$(Major).$(Minor).$(Build)" />
-  </Target>
-</Project>
+  -->
+      </Target>
+    </Project>
