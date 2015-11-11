@@ -8,11 +8,19 @@
     <Minor>2</Minor>
     <Build>0</Build>
     <Revision>0</Revision>
+    <UseTools35 Condition=" '$(UseTools35)' == '' ">true</UseTools35>
+    <VersionTargetName Condition=" '$(UseTools35)' == 'true' ">VersionGit</VersionTargetName>
+    <VersionTargetName Condition=" '$(UseTools35)' == 'true' ">VersionNoTools35</VersionTargetName>
   </PropertyGroup>
 
   <Import Project="$(MSBuildThisFileDirectory)BuildTools\MSBuild.Community.Tasks.targets"/>
 
   <Target Name="Version">
+		<Message Text="Running $(VersionNoTools35)"/>
+		<CallTarget Targets="$(VersionTargetName)"/>
+  </Target>
+	
+  <Target Name="VersionGit">
     <GitVersion LocalPath="$(MSBuildThisFileDirectory)" ContinueOnError="ErrorAndStop">
       <Output TaskParameter="CommitHash" PropertyName="Revision" />
     </GitVersion>
@@ -22,9 +30,9 @@
         AssemblyInformationalVersion="$(Major).$(Minor).$(Build).$(Revision)"
         AssemblyVersion="$(Major).$(Minor).$(Build)"
         AssemblyFileVersion="$(Major).$(Minor).$(Build)" />
-    <OnError ExecuteTargets="Version2"/>
+    <OnError ExecuteTargets="VersionNoTools35"/>
   </Target>
-  <Target Name="Version2">
+  <Target Name="VersionNoTools35">
     <Message Text="Building revision from git commit hash failed, or Microsoft.Build.Utilities.v3.5 could not be found." />
     <ItemGroup>
       <AssemblyAttributes Include="AssemblyVersion">
