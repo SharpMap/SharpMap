@@ -5,7 +5,6 @@
     <RequireRestoreConsent>false</RequireRestoreConsent>
     <RestorePackages>true</RestorePackages>
     <EnableNuGetPackageRestore>true</EnableNuGetPackageRestore>
-    <MSBuildCommunityTasksPath>$(SolutionDir)</MSBuildCommunityTasksPath>
     <!--- pass version in command line: MSBuild /t:NuGetPack SharpMap.proj /p:NuGetVersion=1.0.0  -->
     <NuGetVersion>1.2.0</NuGetVersion>
   </PropertyGroup>

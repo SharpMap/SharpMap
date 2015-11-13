@@ -926,7 +926,7 @@ namespace SharpMap.Data.Providers
                 {
                     var wkt = File.ReadAllText(projfile);
 #if !DotSpatialProjections
-                    _coordinateSystem = (ICoordinateSystem)CoordinateSystemWktReader.Parse(wkt);
+                    _coordinateSystem = (ICoordinateSystem)CoordinateSystemWktReader.Parse(wkt, Encoding.ASCII);
                     SRID = (int)_coordinateSystem.AuthorityCode;
 #else
 					_coordinateSystem = ProjectionInfo.FromEsriString(wkt);
