@@ -1,4 +1,6 @@
-﻿// Copyright 2015 - Spartaco Giubbolini (spartaco@sgsoftware.it)
+﻿#pragma warning disable 1591
+
+// Copyright 2015 - Spartaco Giubbolini (spartaco@sgsoftware.it)
 //
 // This file is part of SharpMap.Data.Providers.Kml.
 // SharpMap.Data.Providers.Kml is free software; you can redistribute it and/or modify
@@ -21,6 +23,7 @@ namespace SharpMap.Data.Providers
 {
     public static class Pushpins
     {
+
         public static readonly Uri YellowPushpin = new Uri("http://maps.google.com/mapfiles/kml/pushpin/ylw-pushpin.png");
         public static readonly Uri BluePushpin = new Uri("http://maps.google.com/mapfiles/kml/pushpin/blue-pushpin.png");
         public static readonly Uri GreenPushpin = new Uri("http://maps.google.com/mapfiles/kml/pushpin/grn-pushpin.png");

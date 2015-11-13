@@ -79,6 +79,10 @@ namespace SharpMap.Data.Providers
 
                 strSql += strBbox;
 
+                string extraOptions = GetExtraOptions();
+                if (!string.IsNullOrEmpty(extraOptions))
+                    strSql += " " + extraOptions;
+
                 using (var command = new SqlCommand(strSql, conn))
                 {
                     conn.Open();
@@ -148,6 +152,10 @@ namespace SharpMap.Data.Providers
                     strSql += DefinitionQuery + " AND ";
 
                 strSql += strGeom;
+
+                string extraOptions = GetExtraOptions();
+                if (!string.IsNullOrEmpty(extraOptions))
+                    strSql += " " + extraOptions;
 
                 using (var adapter = new SqlDataAdapter(strSql, conn))
                 {
@@ -244,6 +252,10 @@ namespace SharpMap.Data.Providers
                     strSql += DefinitionQuery + " AND ";
 
                 strSql += strBbox;
+
+                string extraOptions = GetExtraOptions();
+                if (!string.IsNullOrEmpty(extraOptions))
+                    strSql += " " + extraOptions;
 
                 using (var adapter = new SqlDataAdapter(strSql, conn))
                 {
