@@ -10,7 +10,7 @@
     <Revision>0</Revision>
     <UseTools35 Condition=" '$(UseTools35)' == '' ">true</UseTools35>
     <VersionTargetName Condition=" '$(UseTools35)' == 'true' ">VersionGit</VersionTargetName>
-    <VersionTargetName Condition=" '$(UseTools35)' == 'true' ">VersionNoTools35</VersionTargetName>
+    <VersionTargetName Condition=" '$(UseTools35)' == 'false' ">VersionNoTools35</VersionTargetName>
   </PropertyGroup>
 
   <Import Project="$(MSBuildThisFileDirectory)BuildTools\MSBuild.Community.Tasks.targets"/>
@@ -21,6 +21,7 @@
   </Target>
 	
   <Target Name="VersionGit">
+    <Message Text="Building revision from git..." />
     <GitVersion LocalPath="$(MSBuildThisFileDirectory)" ContinueOnError="ErrorAndStop">
       <Output TaskParameter="CommitHash" PropertyName="Revision" />
     </GitVersion>
