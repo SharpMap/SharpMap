@@ -1102,7 +1102,7 @@ namespace SharpMap.Data.Providers
                     if (SRID != 4326)
                     {
                         // we must to transform the bbox coordinates into the SRS projection
-                        var transformation = CoordinateSystemServicesProvider.Instance.CreateTransformation(4326, SRID);
+                        var transformation = Session.Instance.CoordinateSystemServices.CreateTransformation(4326, SRID);
                         if (transformation == null)
                             throw new InvalidOperationException("Can't transform geometries to layer SRID");
 

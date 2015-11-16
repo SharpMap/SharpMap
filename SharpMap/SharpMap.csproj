@@ -137,8 +137,9 @@
     <Compile Include="CoordinateSystems\AxisOrderRegistry.cs" />
     <Compile Include="CoordinateSystems\CoordinateSystemExtensions.cs" />
     <Compile Include="CoordinateSystems\CoordinateSystemServices.cs" />
-    <Compile Include="CoordinateSystems\CoordinateSystemServicesProvider.cs" />
-    <Compile Include="CoordinateSystems\ICoordinateSystemServices.cs" />
+    <Compile Include="CoordinateSystems\ICoordinateSystemRepository.cs" />
+    <Compile Include="CoordinateSystems\ISession.cs" />
+    <Compile Include="CoordinateSystems\Session.cs" />
     <Compile Include="CoordinateSystems\Transformations\GeometryTransform.cs" />
     <Compile Include="CoordinateSystems\Transformations\GeometryTransformDotSpatial.cs" />
     <Compile Include="Data\FeatureDataSet.cs">
@@ -297,7 +298,9 @@
     <EmbeddedResource Include="Styles\DefaultSymbol.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="SRID.csv" />
     <EmbeddedResource Include="Web\Wms\Schemas\1.3.0\capabilities_1_3_0.xsd">
       <SubType>
