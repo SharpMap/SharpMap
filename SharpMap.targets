@@ -16,7 +16,7 @@
   <Import Project="$(MSBuildThisFileDirectory)BuildTools\MSBuild.Community.Tasks.targets"/>
 
   <Target Name="Version">
-		<Message Text="Running $(VersionNoTools35)"/>
+		<Message Text="Running $(VersionTargetName)"/>
 		<CallTarget Targets="$(VersionTargetName)"/>
   </Target>
 	
