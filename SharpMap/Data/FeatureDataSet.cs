@@ -28,7 +28,6 @@ using System.Linq;
 using System.Runtime.Serialization;
 using GeoAPI;
 using GeoAPI.Geometries;
-using NetTopologySuite.Features;
 using NetTopologySuite.IO;
 
 namespace SharpMap.Data
@@ -582,6 +581,10 @@ namespace SharpMap.Data
             Rows.Remove(row);
         }
 
+        /// <summary>
+        /// Populates a serialization information object with the data needed to serialize the <see cref="T:System.Data.DataTable"/>.
+        /// </summary>
+        /// <param name="info">A <see cref="T:System.Runtime.Serialization.SerializationInfo"/> object that holds the serialized data associated with the <see cref="T:System.Data.DataTable"/>.</param><param name="context">A <see cref="T:System.Runtime.Serialization.StreamingContext"/> object that contains the source and destination of the serialized stream associated with the <see cref="T:System.Data.DataTable"/>.</param><exception cref="T:System.ArgumentNullException">The <paramref name="info"/> parameter is a null reference (Nothing in Visual Basic).</exception>
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             base.GetObjectData(info, context);
@@ -645,11 +648,26 @@ namespace SharpMap.Data
 
         }
 
+        /// <summary>
+        /// Returns an enumerator that iterates through a collection.
+        /// </summary>
+        /// <returns>
+        /// An <see cref="T:System.Collections.IEnumerator"/> object that can be used to iterate through the collection.
+        /// </returns>
+        /// <filterpriority>2</filterpriority>
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
         }
 
+        /// <summary>
+        /// Method to add a <see cref="FeatureDataTable"/> to this set.
+        /// </summary>
+        /// <remarks>If <paramref name="item"/> belongs to a different <see cref="FeatureDataSet"/>,
+        /// this method attempts to remove it from that. If that is not possible, <paramref name="item"/> 
+        /// is copied (<see cref="DataTable.Copy"/>) and the copy is then added.
+        /// </remarks>
+        /// <param name="item">The feature data table to add</param>
         public void Add(FeatureDataTable item)
         {
             var itemDataSet = item.DataSet;
@@ -675,16 +693,31 @@ namespace SharpMap.Data
             }
         }
 
+        /// <summary>
+        /// Removes all items from the <see cref="T:System.Collections.Generic.ICollection`1"/>.
+        /// </summary>
+        /// <exception cref="T:System.NotSupportedException">The <see cref="T:System.Collections.Generic.ICollection`1"/> is read-only. </exception>
         public void Clear()
         {
             _dataTables.Clear();
         }
 
+        /// <summary>
+        /// Determines whether the <see cref="T:System.Collections.Generic.ICollection`1"/> contains a specific value.
+        /// </summary>
+        /// <returns>
+        /// true if <paramref name="item"/> is found in the <see cref="T:System.Collections.Generic.ICollection`1"/>; otherwise, false.
+        /// </returns>
+        /// <param name="item">The object to locate in the <see cref="T:System.Collections.Generic.ICollection`1"/>.</param>
         public bool Contains(FeatureDataTable item)
         {
             return _dataTables.Contains(item.TableName, item.Namespace);
         }
 
+        /// <summary>
+        /// Copies the elements of the <see cref="T:System.Collections.Generic.ICollection`1"/> to an <see cref="T:System.Array"/>, starting at a particular <see cref="T:System.Array"/> index.
+        /// </summary>
+        /// <param name="array">The one-dimensional <see cref="T:System.Array"/> that is the destination of the elements copied from <see cref="T:System.Collections.Generic.ICollection`1"/>. The <see cref="T:System.Array"/> must have zero-based indexing.</param><param name="arrayIndex">The zero-based index in <paramref name="array"/> at which copying begins.</param><exception cref="T:System.ArgumentNullException"><paramref name="array"/> is null.</exception><exception cref="T:System.ArgumentOutOfRangeException"><paramref name="arrayIndex"/> is less than 0.</exception><exception cref="T:System.ArgumentException">The number of elements in the source <see cref="T:System.Collections.Generic.ICollection`1"/> is greater than the available space from <paramref name="arrayIndex"/> to the end of the destination <paramref name="array"/>.</exception>
         public void CopyTo(FeatureDataTable[] array, int arrayIndex)
         {
             if (array == null)
@@ -704,6 +737,13 @@ namespace SharpMap.Data
             }
         }
 
+        /// <summary>
+        /// Removes the first occurrence of a specific object from the <see cref="T:System.Collections.Generic.ICollection`1"/>.
+        /// </summary>
+        /// <returns>
+        /// true if <paramref name="item"/> was successfully removed from the <see cref="T:System.Collections.Generic.ICollection`1"/>; otherwise, false. This method also returns false if <paramref name="item"/> is not found in the original <see cref="T:System.Collections.Generic.ICollection`1"/>.
+        /// </returns>
+        /// <param name="item">The object to remove from the <see cref="T:System.Collections.Generic.ICollection`1"/>.</param><exception cref="T:System.NotSupportedException">The <see cref="T:System.Collections.Generic.ICollection`1"/> is read-only.</exception>
         public bool Remove(FeatureDataTable item)
         {
             if (_dataTables.CanRemove(item))
@@ -746,6 +786,12 @@ namespace SharpMap.Data
             return false;
         }
 
+        /// <summary>
+        /// Gets the number of elements contained in the <see cref="T:System.Collections.Generic.ICollection`1"/>.
+        /// </summary>
+        /// <returns>
+        /// The number of elements contained in the <see cref="T:System.Collections.Generic.ICollection`1"/>.
+        /// </returns>
         public int Count
         {
             get
@@ -760,17 +806,23 @@ namespace SharpMap.Data
             }
         }
 
+        /// <summary>
+        /// Gets a value indicating whether the <see cref="T:System.Collections.Generic.ICollection`1"/> is read-only.
+        /// </summary>
+        /// <returns>
+        /// true if the <see cref="T:System.Collections.Generic.ICollection`1"/> is read-only; otherwise, false.
+        /// </returns>
         public bool IsReadOnly
         {
             get { return false; }
         }
 
         /// <summary>
-        /// 
+        /// An indexer to the feature data tables in this set
         /// </summary>
-        /// <param name="index"></param>
-        /// <returns></returns>
-        /// <exception cref="ArgumentOutOfRangeException"></exception>
+        /// <param name="index">The index of the feature data table to get</param>
+        /// <returns>The feature data table at index <paramref name="index"/>.</returns>
+        /// <exception cref="ArgumentOutOfRangeException">Thrown, if the index is not in the valid range.</exception>
         public FeatureDataTable this[int index]
         {
             get
@@ -801,6 +853,10 @@ namespace SharpMap.Data
 
         private IGeometry _geometry;
 
+        /// <summary>
+        /// Creates an instance of this class
+        /// </summary>
+        /// <param name="rb">The row builder</param>
         public FeatureDataRow(DataRowBuilder rb)
             : base(rb)
         {

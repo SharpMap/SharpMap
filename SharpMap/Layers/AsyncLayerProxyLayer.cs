@@ -95,7 +95,7 @@ namespace SharpMap.Layers
         {
             _baseLayer = baseLayer;
             _cellSize = cellSize;
-            VisibilityUnits = VisibilityUnits.ZoomLevel;
+            ((ILayer)this).VisibilityUnits = VisibilityUnits.ZoomLevel;
         }
 
         double ILayer.MinVisible
@@ -110,42 +110,71 @@ namespace SharpMap.Layers
             set { _baseLayer.MaxVisible = value; }
         }
 
-        public VisibilityUnits VisibilityUnits { get; set; }
+        /// <summary>
+        /// Gets or Sets what level-reference the Min/Max values are defined in
+        /// </summary>
+        VisibilityUnits ILayer.VisibilityUnits { get; set; }
 
+        /// <summary>
+        /// Specifies whether this layer should be rendered or not
+        /// </summary>
         bool ILayer.Enabled
         {
             get { return _baseLayer.Enabled; }
             set { _baseLayer.Enabled = value; }
         }
 
+        /// <summary>
+        /// Name of layer
+        /// </summary>
         string ILayer.LayerName
         {
             get { return _baseLayer.LayerName; }
             set { _baseLayer.LayerName = value; }
         }
 
+        /// <summary>
+        /// Gets the boundingbox of the entire layer
+        /// </summary>
         Envelope ILayer.Envelope
         {
             get { return _baseLayer.Envelope; }
         }
 
+        /// <summary>
+        /// The spatial reference ID (CRS)
+        /// </summary>
         int ILayer.SRID
         {
             get { return _baseLayer.SRID; }
             set { _baseLayer.SRID = value; }
         }
 
+        /// <summary>
+        /// The spatial reference ID (CRS) that can be exposed externally.
+        /// </summary>
+        /// <remarks>
+        /// TODO: explain better why I need this property
+        /// </remarks>
         int ILayer.TargetSRID
         {
             get { return _baseLayer.TargetSRID; }
         }
 
+        /// <summary>
+        /// Proj4 String Projection
+        /// </summary>
         string ILayer.Proj4Projection
         {
             get { return _baseLayer.Proj4Projection; }
             set { _baseLayer.Proj4Projection = value; }
         }
 
+        /// <summary>
+        /// Renders the layer
+        /// </summary>
+        /// <param name="g">Graphics object reference</param>
+        /// <param name="map">Map which is rendered</param>
         void ILayer.Render(Graphics g, Map map)
         {
             // We don't need to regenerate the tiles
@@ -327,6 +356,10 @@ namespace SharpMap.Layers
             }
         }
 
+        /// <summary>
+        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+        /// </summary>
+        /// <filterpriority>2</filterpriority>
         public void Dispose()
         {
             ((ITileAsyncLayer)this).Cancel();

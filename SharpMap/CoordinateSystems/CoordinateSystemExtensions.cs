@@ -1,5 +1,4 @@
 using System;
-using System.IO;
 using System.Runtime.CompilerServices;
 using Common.Logging;
 using System.Collections.Generic;
@@ -21,7 +20,7 @@ namespace SharpMap.CoordinateSystems
     /// </summary>
     public static class CoordinateSystemExtensions
     {
-        private static readonly ILog Logger = LogManager.GetLogger(typeof(CoordinateSystemExtensions));
+        private static readonly ILog _logger = LogManager.GetLogger(typeof(CoordinateSystemExtensions));
 
         private static Dictionary<int, string> _sridDefinition;
 
@@ -36,7 +35,7 @@ namespace SharpMap.CoordinateSystems
         /// <returns>A coordinate system</returns>
         public static ICoordinateSystem GetCoordinateSystem(this Map self)
         {
-            Logger.Debug( fmh => fmh("Getting coordinate system for map"));
+            _logger.Debug( fmh => fmh("Getting coordinate system for map"));
             return GetCoordinateSystemForSrid(self.SRID);
         }
 
@@ -47,18 +46,18 @@ namespace SharpMap.CoordinateSystems
         /// <returns>A coordinate system</returns>
         public static ICoordinateSystem GetCoordinateSystem(this ILayer self)
         {
-            Logger.Debug(fmh => fmh("Getting coordinate system for {0} '{1}'", self.GetType().Name, self.LayerName));
+            _logger.Debug(fmh => fmh("Getting coordinate system for {0} '{1}'", self.GetType().Name, self.LayerName));
             return GetCoordinateSystemForSrid(self.SRID);
         }
 
         /// <summary>
-        /// Gets a coordinate system for the map based on the <see cref="IProvider.SRID"/> property
+        /// Gets a coordinate system for the map based on the <see cref="IBaseProvider.SRID"/> property
         /// </summary>
         /// <param name="self">The provider</param>
         /// <returns>A coordinate system</returns>
         public static ICoordinateSystem GetCoordinateSystem(this IProvider self)
         {
-            Logger.Debug(fmh => fmh("Getting coordinate system for {0} '{1}'", self.GetType().Name, self.ConnectionID));
+            _logger.Debug(fmh => fmh("Getting coordinate system for {0} '{1}'", self.GetType().Name, self.ConnectionID));
             return GetCoordinateSystemForSrid(self.SRID);
         }
 
@@ -86,7 +85,7 @@ namespace SharpMap.CoordinateSystems
             var wkt = Converters.WellKnownText.SpatialReference.SridToWkt(srid);
             if (string.IsNullOrEmpty(wkt))            
             {
-                Logger.Error( fmh => fmh("No definition for SRID {0}!", srid));
+                _logger.Error( fmh => fmh("No definition for SRID {0}!", srid));
                 return null;
             }
 
@@ -97,7 +96,7 @@ namespace SharpMap.CoordinateSystems
             }
             catch (Exception)
             {
-                Logger.Error( fmh => fmh("Could not parse definition for SRID {0}:\n{1}", srid, wkt));
+                _logger.Error( fmh => fmh("Could not parse definition for SRID {0}:\n{1}", srid, wkt));
                 return null;
             }
             _sridCoordinateSystem.Add(srid, res);

@@ -33,28 +33,97 @@ namespace SharpMap.Layers
     /// </summary>
     public enum BlendOperation
     {
+        /// <summary>
+        /// Soure copy
+        /// </summary>
         SourceCopy = 1,
+        /// <summary>
+        /// Raster operation merge paint
+        /// </summary>
         RopMergePaint,
+        /// <summary>
+        /// Raster operation not source erase
+        /// </summary>
         RopNotSourceErase,
+        /// <summary>
+        /// Raster operation source and
+        /// </summary>
         RopSourceAnd,
+        /// <summary>
+        /// Raster operation source erase
+        /// </summary>
         RopSourceErase,
+        /// <summary>
+        /// Raster operation source invert
+        /// </summary>
         RopSourceInvert,
+        /// <summary>
+        /// Raster operation source paint
+        /// </summary>
         RopSourcePaint,
+        /// <summary>
+        /// Blend darken
+        /// </summary>
         BlendDarken,
+        /// <summary>
+        /// Blend multiply
+        /// </summary>
         BlendMultiply,
+        /// <summary>
+        /// Blend color burn
+        /// </summary>
         BlendColorBurn,
+        /// <summary>
+        /// Blend lighten
+        /// </summary>
         BlendLighten,
+        /// <summary>
+        /// Blend screen
+        /// </summary>
         BlendScreen,
+        /// <summary>
+        /// Blend color dodge
+        /// </summary>
         BlendColorDodge,
+        /// <summary>
+        /// Blend overlay
+        /// </summary>
         BlendOverlay,
+        /// <summary>
+        /// Blend soft light
+        /// </summary>
         BlendSoftLight,
+        /// <summary>
+        /// Blend hard light
+        /// </summary>
         BlendHardLight,
+        /// <summary>
+        /// Blend pin light
+        /// </summary>
         BlendPinLight,
+        /// <summary>
+        /// Blend difference
+        /// </summary>
         BlendDifference,
+        /// <summary>
+        /// Blend exclusion
+        /// </summary>
         BlendExclusion,
+        /// <summary>
+        /// Blend hue
+        /// </summary>
         BlendHue,
+        /// <summary>
+        /// Blend saturation
+        /// </summary>
         BlendSaturation,
+        /// <summary>
+        /// Blend color
+        /// </summary>
         BlendColor,
+        /// <summary>
+        /// Blend luminosity
+        /// </summary>
         BlendLuminosity
     }
 }
