@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using NUnit.Framework;
 using SharpMap.Rendering.Decoration;
@@ -179,7 +180,8 @@ namespace UnitTests.Serialization
             {
                 var result = base.Equals(lhs, rhs);
                 
-                if (!lhs.Font.Equals(rhs.Font))
+                var feq = new FontEqualityComparer();
+                if (!feq.Equals(lhs.Font,rhs.Font))
                 {
                     DifferAt.Add("Font");
                     result = false;

@@ -1,4 +1,6 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Collections.Generic;
+using System.Drawing;
 using NUnit.Framework;
 using SharpMap.Styles;
 
@@ -76,7 +78,7 @@ namespace UnitTests.Serialization
         {
             Assert.AreEqual(lhs.CollisionBuffer, rhs.CollisionBuffer, "CollisionBuffer differs");
             Assert.AreEqual(lhs.CollisionDetection, rhs.CollisionDetection, "CollisionDetection differs");
-            Assert.AreEqual(lhs.Font, rhs.Font, "Font differs");
+            Assert.IsTrue(new FontEqualityComparer().Equals(lhs.Font, rhs.Font), "Font differs");
             Assert.AreEqual(lhs.ForeColor, rhs.ForeColor, "ForeColor differs");
             Assert.AreEqual(((SolidBrush)lhs.BackColor).Color, ((SolidBrush)rhs.BackColor).Color, "BackColor differs");
             SurrogatesTest.ComparePens(lhs.Halo, rhs.Halo);
@@ -86,4 +88,67 @@ namespace UnitTests.Serialization
         }
 
     }
+
+    internal class FontEqualityComparer : EqualityComparer<Font>
+    {
+        public override bool Equals(Font x, Font y)
+        {
+            if (x == null && y == null)
+                return true;
+
+            if (x == null) return false;
+            if (y == null) return false;
+
+            if (x.Bold != y.Bold)
+                return false;
+
+            if (x.IsSystemFont != y.IsSystemFont)
+                return false;
+
+            if (x.Italic != y.Italic)
+                return false;
+
+            if (x.Strikeout != y.Strikeout)
+                return false;
+
+            if (x.Style != y.Style)
+                return false;
+
+            if (x.Underline != y.Underline)
+                return false;
+
+            if (x.FontFamily.Name != y.FontFamily.Name)
+                return false;
+
+            if (x.GdiCharSet != y.GdiCharSet)
+                return false;
+
+            if (x.Height != y.Height)
+                return false;
+            if (x.Unit != y.Unit)
+                return false;
+            if (x.Name != y.Name)
+                return false;
+            if (!string.IsNullOrEmpty(x.OriginalFontName))
+                if (x.OriginalFontName != y.OriginalFontName)
+                    return false;
+            if (x.SystemFontName != y.SystemFontName)
+                return false;
+            if (x.Size != y.Size)
+                return false;
+            if (x.SizeInPoints != y.SizeInPoints)
+                return false;
+
+            return true;
+        }
+
+        public override int GetHashCode(Font obj)
+        {
+            if (obj == null)
+                throw new ArgumentNullException("obj");
+            return obj.GetHashCode();
+        }
+    }
+
+
 }
