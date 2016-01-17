@@ -1,5 +1,6 @@
 ﻿
 using System.Windows.Forms;
+using NUnit.Framework;
 
 namespace ExampleCodeSnippets
 {
@@ -134,7 +135,10 @@ public class StreetDirectionSymbolizer : SharpMap.Rendering.Symbolizer.BaseSymbo
         [NUnit.Framework.Test] 
         public void TestBasicLineSymbolizer()
         {
-            var p = new SharpMap.Data.Providers.ShapeFile(@"d:\\daten\GeoFabrik\\roads.shp", false);
+            if (!System.IO.File.Exists("d:\\daten\\GeoFabrik\\roads.shp"))
+                throw new IgnoreException("");
+
+            var p = new SharpMap.Data.Providers.ShapeFile(@"d:\\daten\\GeoFabrik\\roads.shp", false);
             var l = new SharpMap.Layers.VectorLayer("roads", p);
             //l.Style.Outline = new System.Drawing.Pen(System.Drawing.Color.Firebrick, 5);
             l.Style.Line = new System.Drawing.Pen(System.Drawing.Color.Gold, 1);
@@ -174,7 +178,10 @@ public class StreetDirectionSymbolizer : SharpMap.Rendering.Symbolizer.BaseSymbo
         [NUnit.Framework.Test]
         public void TestStreetDirectionSymbolizer()
         {
-            var p = new SharpMap.Data.Providers.ShapeFile(@"d:\\daten\GeoFabrik\\Aurich\\roads.shp", false);
+            if (!System.IO.File.Exists("d:\\daten\\GeoFabrik\\Aurich\\roads.shp"))
+                throw new IgnoreException("");
+
+            var p = new SharpMap.Data.Providers.ShapeFile(@"d:\\daten\\GeoFabrik\\Aurich\\roads.shp", false);
             var l = new SharpMap.Layers.VectorLayer("roads", p);
             l.Style.Outline = new System.Drawing.Pen(System.Drawing.Color.Firebrick, 7);
             l.Style.Line = new System.Drawing.Pen(System.Drawing.Color.Gold, 3);
@@ -201,7 +208,10 @@ public class StreetDirectionSymbolizer : SharpMap.Rendering.Symbolizer.BaseSymbo
         [NUnit.Framework.Test]
         public void TestWarpedLineSymbolizer()
         {
-            var p = new SharpMap.Data.Providers.ShapeFile(@"d:\\daten\GeoFabrik\\Aurich\\roads.shp", false);
+            if (!System.IO.File.Exists("d:\\daten\\GeoFabrik\\Aurich\\roads.shp"))
+                throw new IgnoreException("");
+
+            var p = new SharpMap.Data.Providers.ShapeFile(@"d:\\daten\\GeoFabrik\\Aurich\\roads.shp", false);
 
             var l = new SharpMap.Layers.VectorLayer("roads", p);
             
@@ -314,7 +324,9 @@ public class StreetDirectionSymbolizer : SharpMap.Rendering.Symbolizer.BaseSymbo
         [NUnit.Framework.Test]
         public void TestCachedLineSymbolizerInTheme()
         {
-            var p = new SharpMap.Data.Providers.ShapeFile(@"d:\\daten\GeoFabrik\\Aurich\\roads.shp", false);
+            if (!System.IO.File.Exists("d:\\daten\\GeoFabrik\\Aurich\\roads.shp"))
+                throw new IgnoreException("");
+            var p = new SharpMap.Data.Providers.ShapeFile(@"d:\\daten\\GeoFabrik\\Aurich\\roads.shp", false);
 
             var l = new SharpMap.Layers.VectorLayer("roads", p);
             var theme = new ClsTheme(l.Style);
