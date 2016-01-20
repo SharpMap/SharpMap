@@ -19,8 +19,6 @@ using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using GeoAPI.Geometries;
-using OSGeo.OSR;
-//using OSGeo.OGR;
 using SharpMap.Converters.WellKnownBinary;
 using SharpMap.Extensions.Data;
 //using SharpMap.Geometries;
@@ -532,7 +530,8 @@ namespace SharpMap.Data.Providers
                                 break;
                             case OgrFieldType.OFTWideString:
                             case OgrFieldType.OFTString:
-                                fdt.Columns.Add(ogrFldDef.GetName(), typeof(String));
+                                var c = fdt.Columns.Add(ogrFldDef.GetName(), typeof(String));
+                                c.MaxLength = ogrFldDef.GetWidth();
                                 break;
                             case OgrFieldType.OFTStringList:
                             case OgrFieldType.OFTWideStringList:
