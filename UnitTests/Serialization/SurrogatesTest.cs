@@ -134,7 +134,7 @@ namespace UnitTests.Serialization
         {
             var formatter = GetFormatter();
             var brushS = new LinearGradientBrush(new RectangleF(10, 10, 15, 15),
-                                                 Color.Blue, Color.LightBlue, -30, true);
+                                                 Color.Blue, Color.LightBlue, 330, true);
 
             var brushD = SandD(brushS, formatter);
             CompareLgb(brushS, brushD);

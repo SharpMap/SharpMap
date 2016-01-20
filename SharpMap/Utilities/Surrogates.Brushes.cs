@@ -287,8 +287,8 @@ namespace SharpMap.Utilities
             [Serializable]
             public class LinearGradientBrushRef : IObjectReference, ISerializable
             {
-                private readonly LinearGradientBrush _lgBrush;
-
+                private /*readonly*/ LinearGradientBrush _lgBrush;
+                
                 /// <summary>
                 /// Serialization constructor
                 /// </summary>
@@ -296,22 +296,27 @@ namespace SharpMap.Utilities
                 /// <param name="context"></param>
                 public LinearGradientBrushRef(SerializationInfo info, StreamingContext context)
                 {
+                    var hasIC = info.GetBoolean("HasIC");
                     var rectangle = (RectangleF)info.GetValue("Rectangle", typeof(RectangleF));
                     var linearColors = (Color[])info.GetValue("LinearColors", typeof(Color[]));
-                    _lgBrush = new LinearGradientBrush(rectangle, linearColors[0], linearColors[linearColors.Length - 1], 0f);
-                    var blend = (Blend)(info.GetValue("Blend", typeof(Blend)));
-                    if (blend == null)
+                    var lgBrush = new LinearGradientBrush(rectangle, linearColors[0], linearColors[linearColors.Length - 1], 0f, true);
+                    lgBrush.GammaCorrection = info.GetBoolean("GammaCorrection");
+                    lgBrush.WrapMode = (WrapMode)info.GetInt32("WrapMode");
+                    lgBrush.Transform = (Matrix)info.GetValue("Transform", typeof(Matrix));
+                    if (hasIC)
                     {
-                        _lgBrush.InterpolationColors = (ColorBlend)info.GetValue("InterpolationColors", typeof(ColorBlend));
+                        lgBrush.InterpolationColors =
+                            (ColorBlend) info.GetValue("InterpolationColors", typeof (ColorBlend));
                     }
                     else
                     {
-                        _lgBrush.Blend = blend;
+                        var tmpBlend = (Blend)(info.GetValue("Blend", typeof(Blend)));
+                        lgBrush.Blend = new Blend(tmpBlend.Factors.Length) { 
+                            Factors = tmpBlend.Factors, 
+                            Positions = tmpBlend.Positions };
                     }
-                    _lgBrush.GammaCorrection = info.GetBoolean("GammaCorrection");
-                    _lgBrush.WrapMode = (WrapMode)info.GetInt32("WrapMode");
-                    _lgBrush.Transform = (Matrix)info.GetValue("Transform", typeof(Matrix));
 
+                    _lgBrush = lgBrush;
                 }
 
                 object IObjectReference.GetRealObject(StreamingContext context)
@@ -338,14 +343,16 @@ namespace SharpMap.Utilities
                 var brush = (LinearGradientBrush)obj;
                 info.SetType(typeof(LinearGradientBrushRef));
                 info.AddValue("Rectangle", brush.Rectangle);
-
                 info.AddValue("Blend", brush.Blend);
-                if (brush.Blend == null)
-                    info.AddValue("InterpolationColors", brush.InterpolationColors);
                 info.AddValue("GammaCorrection", brush.GammaCorrection);
                 info.AddValue("LinearColors", brush.LinearColors);
                 info.AddValue("WrapMode", (int)brush.WrapMode);
                 info.AddValue("Transform", brush.Transform);
+                ColorBlend cb = null;
+                try { cb = brush.InterpolationColors; } catch { }
+                info.AddValue("HasIC", cb!= null);
+                if (cb != null)
+                    info.AddValue("InterpolationColors", brush.InterpolationColors);
             }
 
             /// <summary>
