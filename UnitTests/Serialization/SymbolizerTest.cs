@@ -72,7 +72,8 @@ namespace UnitTests.Serialization
             if (lhs.CharacterIndex != rhs.CharacterIndex)
                 return false;
 
-            if (!lhs.Font.Equals(rhs.Font))
+
+            if (!new FontEqualityComparer().Equals(lhs.Font, rhs.Font))
                 return false;
 
             if (((SolidBrush)lhs.Foreground).Color != ((SolidBrush)rhs.Foreground).Color)

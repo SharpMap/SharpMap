@@ -1317,6 +1317,10 @@ namespace SharpMap.Forms
             }
         }
 
+        /// <summary>
+        /// Raises the <see cref="E:System.Windows.Forms.Control.MouseEnter"/> event.
+        /// </summary>
+        /// <param name="e">An <see cref="T:System.EventArgs"/> that contains the event data. </param>
         protected override void OnMouseEnter(EventArgs e)
         {
             base.OnMouseEnter(e);
@@ -1327,6 +1331,10 @@ namespace SharpMap.Forms
             }
         }
 
+        /// <summary>
+        /// Raises the <see cref="E:System.Windows.Forms.Control.MouseLeave"/> event.
+        /// </summary>
+        /// <param name="e">An <see cref="T:System.EventArgs"/> that contains the event data. </param>
         protected override void OnMouseLeave(EventArgs e)
         {
             base.OnMouseLeave(e);
