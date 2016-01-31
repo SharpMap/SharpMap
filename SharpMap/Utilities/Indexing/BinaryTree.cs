@@ -74,16 +74,16 @@ namespace SharpMap.Utilities.Indexing
     [Serializable]
     public class BinaryTree<T, U> where T : IComparable<T>
     {
-        static ILog logger = LogManager.GetLogger(typeof(BinaryTree<T,U>));
+        static readonly ILog _logger = LogManager.GetLogger(typeof(BinaryTree<T,U>));
 
-        private readonly Node<T, U> root;
+        private readonly Node<T, U> _root;
 
         /// <summary>
         /// Initializes a new instance of the generic binary tree.
         /// </summary>
         public BinaryTree()
         {
-            root = new Node<T, U>();
+            _root = new Node<T, U>();
         }
 
         #region Read/Write index to/from a file
@@ -122,7 +122,7 @@ namespace SharpMap.Utilities.Indexing
         /// <param name="item"></param>
         public void Add(ItemValue item)
         {
-            Add(new Node<T, U>(item.Value, item.Id), root);
+            Add(new Node<T, U>(item.Value, item.Id), _root);
         }
 
         /// <summary>
@@ -158,7 +158,7 @@ namespace SharpMap.Utilities.Indexing
         /// </summary>
         public void TraceTree()
         {
-            TraceInOrder(root.RightNode);
+            TraceInOrder(_root.RightNode);
         }
 
         private void TraceInOrder(Node<T, U> root)
@@ -166,8 +166,8 @@ namespace SharpMap.Utilities.Indexing
             if (root.LeftNode != null)
                 TraceInOrder(root.LeftNode);
 
-            if (logger.IsInfoEnabled)
-                logger.Info(root.Item.ToString());
+            if (_logger.IsInfoEnabled)
+                _logger.Info(root.Item.ToString());
 
             if (root.RightNode != null)
                 TraceInOrder(root.RightNode);
@@ -180,7 +180,7 @@ namespace SharpMap.Utilities.Indexing
         /// </summary>
         public IEnumerable<ItemValue> InOrder
         {
-            get { return ScanInOrder(root.RightNode); }
+            get { return ScanInOrder(_root.RightNode); }
         }
 
         /// <summary>
@@ -191,7 +191,7 @@ namespace SharpMap.Utilities.Indexing
         /// <returns>Enumerator</returns>
         public IEnumerable<ItemValue> Between(T min, T max)
         {
-            return ScanBetween(min, max, root.RightNode);
+            return ScanBetween(min, max, _root.RightNode);
         }
 
         /// <summary>
@@ -201,7 +201,7 @@ namespace SharpMap.Utilities.Indexing
         /// <returns>Enumerator</returns>
         public IEnumerable<ItemValue> StartsWith(string str)
         {
-            return ScanString(str.ToUpper(), root.RightNode);
+            return ScanString(str.ToUpper(), _root.RightNode);
         }
 
         /// <summary>
@@ -211,7 +211,7 @@ namespace SharpMap.Utilities.Indexing
         /// <returns>Enumerator</returns>
         public IEnumerable<ItemValue> Find(T value)
         {
-            return ScanFind(value, root.RightNode);
+            return ScanFind(value, _root.RightNode);
         }
 
         private IEnumerable<ItemValue> ScanFind(T value, Node<T, U> root)

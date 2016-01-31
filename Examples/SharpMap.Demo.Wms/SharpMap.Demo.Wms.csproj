@@ -58,9 +58,9 @@
       <HintPath>..\..\packages\NetTopologySuite.1.14\lib\net40-Client\NetTopologySuite.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\Newtonsoft.Json.6.0.3\lib\net40\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=7.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Newtonsoft.Json.7.0.1\lib\net40\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="PowerCollections, Version=1.0.0.0, Culture=neutral, PublicKeyToken=2573bf8a1bdddcd5, processorArchitecture=MSIL">
       <HintPath>..\..\packages\NetTopologySuite.1.14\lib\net40-Client\PowerCollections.dll</HintPath>
@@ -701,6 +701,10 @@
     <Content Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\SharpMap.Converters.GeoJSON\SharpMap.Converters.GeoJSON.csproj">
+      <Project>{721412e1-5589-4a18-a095-f8e0427bb163}</Project>
+      <Name>SharpMap.Converters.GeoJSON</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\SharpMap.Web\SharpMap.Web.csproj">
       <Project>{292EF671-4063-4952-8DE0-423DF72A0950}</Project>
       <Name>SharpMap.Web</Name>

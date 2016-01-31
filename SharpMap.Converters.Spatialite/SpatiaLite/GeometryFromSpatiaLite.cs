@@ -17,12 +17,8 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.IO;
-using GeoAPI.Geometries;
 
-namespace SharpMap.Converters.SpatiaLite
+namespace SharpMap.Converters
 {
     /// <summary>
     /// Converter of SpatiaLite geometries to NTS
@@ -38,7 +34,7 @@ namespace SharpMap.Converters.SpatiaLite
         /// <param name="spatialliteGeom">The geometry blob</param>
         /// <param name="factory">The factory to create the result geometry</param>
         /// <returns>A geometry</returns>
-        public static IGeometry Parse(byte[] spatialliteGeom, IGeometryFactory factory)
+        public static GeoAPI.Geometries.IGeometry Parse(byte[] spatialliteGeom, GeoAPI.Geometries.IGeometryFactory factory)
         {
             var nBytes = spatialliteGeom.Length;
             if (spatialliteGeom.Length < 44
@@ -143,13 +139,9 @@ namespace SharpMap.Converters.SpatiaLite
             return null;
         }
 
-        private static GeoAPI.Geometries.IPolygon ReadPolygon(byte[] geom, ref int idx, bool isLittleEndian, IGeometryFactory factory)
+        private static GeoAPI.Geometries.IPolygon ReadPolygon(byte[] geom, ref int idx, bool isLittleEndian, GeoAPI.Geometries.IGeometryFactory factory)
         {
-            double[] adfTuple = new double[2];
-            int nRings;
-
-
-            nRings = ReadUInt32(geom,ref idx, isLittleEndian);
+            var nRings = ReadUInt32(geom,ref idx, isLittleEndian);
 
             if (nRings < 1 || nRings > Int32.MaxValue / (2 * 8))
                 throw new ApplicationException("Currupt SpatialLite geom");
@@ -165,18 +157,16 @@ namespace SharpMap.Converters.SpatiaLite
                 holes = new List<GeoAPI.Geometries.ILinearRing>();
                 for (int i = 1; i < lineStrings.Count; i++)
                 {
-                    holes.Add(new NetTopologySuite.Geometries.LinearRing(lineStrings[i].Coordinates));
+                    holes.Add(factory.CreateLinearRing(lineStrings[i].Coordinates));
                 }
             }
             return factory.CreatePolygon(shell, holes == null ? null : holes.ToArray());
         }
 
-        private static GeoAPI.Geometries.ILineString ReadLineString(byte[] geom, ref int idx, bool isLittleEndian, IGeometryFactory factory)
+        private static GeoAPI.Geometries.ILineString ReadLineString(byte[] geom, ref int idx, bool isLittleEndian, GeoAPI.Geometries.IGeometryFactory factory)
         {
-            double[] adfTuple = new double[2];
-            int nPointCount;
             int iPoint;
-            nPointCount = ReadUInt32(geom, ref idx, isLittleEndian);
+            var nPointCount = ReadUInt32(geom, ref idx, isLittleEndian);
 
             if (nPointCount < 0 || nPointCount > Int32.MaxValue / (2 * 8))
                 throw new ApplicationException("Currupt SpatialLite geom");

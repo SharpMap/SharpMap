@@ -2,7 +2,12 @@
 using System.Windows.Forms;
 using System.Threading;
 using System.Net;
+using System.Text;
 using NetTopologySuite;
+using ProjNet;
+using ProjNet.CoordinateSystems;
+using ProjNet.CoordinateSystems.Transformations;
+using SharpMap.CoordinateSystems;
 
 namespace WinFormSamples
 {
@@ -14,7 +19,16 @@ namespace WinFormSamples
         [STAThread]
         private static void Main()
         {
-            GeoAPI.GeometryServiceProvider.Instance = new NtsGeometryServices();
+            var gss = new NtsGeometryServices();
+            var css = new SharpMap.CoordinateSystems.CoordinateSystemServices(
+                new CoordinateSystemFactory(Encoding.ASCII), 
+                new CoordinateTransformationFactory());
+
+            GeoAPI.GeometryServiceProvider.Instance = gss;
+            Session.Instance.SetGeometryServices(gss)
+                .SetCoordinateSystemServices(css)
+                .SetCoordinateSystemRepository(css);
+
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new DlgSamplesMenu());

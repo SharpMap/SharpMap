@@ -28,7 +28,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("SharpMap - Team")]
 [assembly: AssemblyProduct("SharpMap Engine")]
-[assembly: AssemblyCopyright("Copyright © 2006 Morten Nielsen\nCopyright © 2008-2013 SharpMap - Team")]
+[assembly: AssemblyCopyright("Copyright © 2006 Morten Nielsen\nCopyright © 2008-2016 SharpMap - Team")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -39,6 +39,6 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-
 [assembly: Guid("2f1dbd34-6f6b-4b0b-bfb4-b24a3894de6d")]
+
 [assembly: InternalsVisibleTo("SharpMap.Layers.BruTile")]

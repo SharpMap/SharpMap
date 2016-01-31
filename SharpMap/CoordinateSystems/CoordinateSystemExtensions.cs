@@ -2,13 +2,7 @@ using System;
 using System.Runtime.CompilerServices;
 using Common.Logging;
 using System.Collections.Generic;
-#if !DotSpatialProjections
 using GeoAPI.CoordinateSystems;
-using ProjNet.CoordinateSystems;
-#else
-using DotSpatial.Projections.Transforms;
-using ICoordinateSystem = DotSpatial.Projections.ProjectionInfo;
-#endif
 using GeoAPI.Geometries;
 using SharpMap.Data.Providers;
 using SharpMap.Layers;
@@ -77,50 +71,7 @@ namespace SharpMap.CoordinateSystems
             if (srid <= 0)
                 return null;
 
-            ICoordinateSystem res = null;
-#if !DotSpatialProjections
-            if (_sridCoordinateSystem.TryGetValue(srid, out res))
-                return res;
-
-            var wkt = Converters.WellKnownText.SpatialReference.SridToWkt(srid);
-            if (string.IsNullOrEmpty(wkt))            
-            {
-                _logger.Error( fmh => fmh("No definition for SRID {0}!", srid));
-                return null;
-            }
-
-            var csFactory = new CoordinateSystemFactory();
-            try
-            {
-                res = csFactory.CreateFromWkt(wkt);
-            }
-            catch (Exception)
-            {
-                _logger.Error( fmh => fmh("Could not parse definition for SRID {0}:\n{1}", srid, wkt));
-                return null;
-            }
-            _sridCoordinateSystem.Add(srid, res);
-#else
-            try
-            {
-                if (_sridDefinition != null)
-                {
-                    string proj4;
-                    if (_sridDefinition.TryGetValue(srid, out proj4))
-                        res = ICoordinateSystem.FromProj4String(proj4);
-                }
-
-                if (res == null)
-                    res = DotSpatial.Projections.ProjectionInfo.FromEpsgCode(srid);
-            }
-            catch (Exception)
-            {
-                Logger.Error( fmh => fmh("Could not get coordinate system for SRID {0}!", srid) );
-                return null;
-            }
-#endif
-            return res;
-
+            return Session.Instance.CoordinateSystemServices.GetCoordinateSystem(srid);
         }
 
         /// <summary>

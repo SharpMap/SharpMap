@@ -21,11 +21,10 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Text;
 using GeoAPI.Geometries;
-using ProjNet.CoordinateSystems;
-using ProjNet.CoordinateSystems.Transformations;
 using SharpMap.CoordinateSystems;
 using SharpMap.Rendering.Exceptions;
 using SharpMap.Web.Wms;
@@ -844,22 +843,10 @@ namespace SharpMap.Layers
                     Logger.Warn("WmsLayer envelope is null because there is no Coordinate System found for SRID " + SRID);
                     return null;
                 }
-                    
 
-#if !DotSpatialProjections
-                var wgs84 = GeographicCoordinateSystem.WGS84;
+                var wgs84 = Session.Instance.CoordinateSystemServices.GetCoordinateSystem(4326);
+                var transformation = Session.Instance.CoordinateSystemServices.CreateTransformation(wgs84, projection);
 
-                var ctf = new CoordinateTransformationFactory();
-                var transformation = ctf.CreateFromCoordinateSystems(wgs84, projection);
-#else
-                var wgs84 = DotSpatial.Projections.KnownCoordinateSystems.Geographic.World.WGS1984;
-
-                var transformation = new DotSpatial.Projections.CoordinateTransformation
-                {
-                    Source = wgs84,
-                    Target = projection
-                };
-#endif
                 return ToTarget(RootLayer.LatLonBoundingBox, transformation);
             }
             catch (Exception e)

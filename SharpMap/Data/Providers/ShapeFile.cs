@@ -21,17 +21,13 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Text;
-#if !DotSpatialProjections
-using ProjNet.Converters.WellKnownText;
-using GeoAPI.CoordinateSystems;
-#else
-using DotSpatial.Projections;
-#endif
 using GeoAPI;
 using GeoAPI.Geometries;
 using SharpMap.Utilities.Indexing;
 using SharpMap.Utilities.SpatialIndexing;
 using Common.Logging;
+using GeoAPI.CoordinateSystems;
+using SharpMap.CoordinateSystems;
 using Exception = System.Exception;
 
 namespace SharpMap.Data.Providers
@@ -275,11 +271,7 @@ namespace SharpMap.Data.Providers
 		/// If this is not the case, the coordinate system will default to null.
 		/// </summary>
 		/// <exception cref="ApplicationException">An exception is thrown if the coordinate system is read from file.</exception>
-#if !DotSpatialProjections
 		public ICoordinateSystem CoordinateSystem
-#else
-		public ProjectionInfo CoordinateSystem
-#endif
 		{
 			get { return _coordinateSystem; }
 			set
@@ -925,12 +917,9 @@ namespace SharpMap.Data.Providers
                 try
                 {
                     var wkt = File.ReadAllText(projfile);
-#if !DotSpatialProjections
-                    _coordinateSystem = (ICoordinateSystem)CoordinateSystemWktReader.Parse(wkt, Encoding.ASCII);
+                    var css = (CoordinateSystemServices) Session.Instance.CoordinateSystemServices;
+                    _coordinateSystem = css.CreateCoordinateSystem(wkt);
                     SRID = (int)_coordinateSystem.AuthorityCode;
-#else
-					_coordinateSystem = ProjectionInfo.FromEsriString(wkt);
-#endif
                     _coordsysReadFromFile = true;
                 }
                 catch (Exception ex)
