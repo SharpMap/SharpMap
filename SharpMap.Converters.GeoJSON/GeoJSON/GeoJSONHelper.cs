@@ -2,7 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
-    using Data;
+    using SharpMap.Data;
 
     /// <summary>
     /// GeoJSON helper class
