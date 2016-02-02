@@ -1,6 +1,6 @@
 ﻿using GeoAPI;
 
-namespace SharpMap.CoordinateSystems
+namespace SharpMap
 {
     /// <summary>
     /// A SharpMap session
@@ -11,6 +11,7 @@ namespace SharpMap.CoordinateSystems
         /// The geometry services instance
         /// </summary>
         IGeometryServices GeometryServices { get; }
+
         /// <summary>
         /// Gets the coordinate system services instance
         /// </summary>
@@ -21,10 +22,11 @@ namespace SharpMap.CoordinateSystems
         /// </summary>
         ICoordinateSystemRepository CoordinateSystemRepository { get; }
 
-
+#region Fluent configuration
         ISession SetGeometryServices(IGeometryServices geometryServices);
         ISession SetCoordinateSystemServices(ICoordinateSystemServices geometryServices);
         ISession SetCoordinateSystemRepository(ICoordinateSystemRepository geometryServices);
-        ISession ReadConfiguration();
+#endregion
+
     }
 }

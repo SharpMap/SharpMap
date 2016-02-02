@@ -16,7 +16,6 @@
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <TargetFrameworkProfile>Client</TargetFrameworkProfile>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">../</SolutionDir>
-    
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -111,8 +110,6 @@
     <Compile Include="CoordinateSystems\CoordinateSystemExtensions.cs" />
     <Compile Include="CoordinateSystems\CoordinateSystemServices.cs" />
     <Compile Include="CoordinateSystems\ICoordinateSystemRepository.cs" />
-    <Compile Include="CoordinateSystems\ISession.cs" />
-    <Compile Include="CoordinateSystems\Session.cs" />
     <Compile Include="CoordinateSystems\Transformations\GeometryTransform.cs" />
     <Compile Include="CoordinateSystems\Transformations\GeometryTransformDotSpatial.cs" />
     <Compile Include="Data\FeatureDataSet.cs">
@@ -142,6 +139,7 @@
     <Compile Include="Data\Providers\SqlServer2008.cs" />
     <Compile Include="Data\Providers\WFSClient.cs" />
     <Compile Include="Geometries\GeoAPIEx.cs" />
+    <Compile Include="ISession.cs" />
     <Compile Include="Layers\AsyncLayerProxyLayer.cs" />
     <Compile Include="Layers\DuplicateLayerException.cs" />
     <Compile Include="Layers\GdiImageLayer.cs" />
@@ -162,6 +160,7 @@
     <Compile Include="Layers\VariableLayerCollection.cs" />
     <Compile Include="Layers\VectorLayer.cs" />
     <Compile Include="Rendering\Thematics\FontSizeTheme.cs" />
+    <Compile Include="Session.cs" />
     <Compile Include="Styles\VisibilityUnits.cs" />
     <Compile Include="Layers\WmsLayer.cs" />
     <Compile Include="Map\MapViewportGuard.cs" />
