@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Windows.Forms;
 using System.Threading;
 using System.Net;
@@ -22,10 +23,12 @@ namespace WinFormSamples
             var gss = new NtsGeometryServices();
             var css = new SharpMap.CoordinateSystems.CoordinateSystemServices(
                 new CoordinateSystemFactory(Encoding.ASCII), 
-                new CoordinateTransformationFactory());
+                new CoordinateTransformationFactory(), 
+                SharpMap.Converters.WellKnownText.SpatialReference.GetAllReferenceSystems());
 
             GeoAPI.GeometryServiceProvider.Instance = gss;
-            Session.Instance.SetGeometryServices(gss)
+            SharpMap.Session.Instance
+                .SetGeometryServices(gss)
                 .SetCoordinateSystemServices(css)
                 .SetCoordinateSystemRepository(css);
 
@@ -33,5 +36,10 @@ namespace WinFormSamples
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new DlgSamplesMenu());
         }
+
+        private static IEnumerable<KeyValuePair<int, string>> ReadCoordinateSystemDefinitions(string element = "")
+        {
+        }
     }
+
 }

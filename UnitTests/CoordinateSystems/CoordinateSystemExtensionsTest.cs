@@ -1,8 +1,12 @@
 ﻿using System.Drawing;
 using System.Globalization;
+using System.Text;
 using GeoAPI.CoordinateSystems;
 using GeoAPI.Geometries;
+using NetTopologySuite;
 using NUnit.Framework;
+using ProjNet.CoordinateSystems;
+using ProjNet.CoordinateSystems.Transformations;
 using SharpMap;
 using SharpMap.CoordinateSystems;
 using SharpMap.Data;
@@ -14,8 +18,25 @@ using ICoordinateSystem = DotSpatial.Projections.ProjectionInfo;
 
 namespace UnitTests.CoordinateSystems
 {
+    [TestFixture]
     public class CoordinateSystemExtensionsTest
     {
+        [TestFixtureSetUp]
+        public void FixtureSetUp()
+        {
+            var gss = new NtsGeometryServices();
+            var css = new CoordinateSystemServices(
+                new CoordinateSystemFactory(Encoding.ASCII),
+                new CoordinateTransformationFactory(),
+                SharpMap.Converters.WellKnownText.SpatialReference.GetAllReferenceSystems());
+
+            GeoAPI.GeometryServiceProvider.Instance = gss;
+            Session.Instance
+                .SetGeometryServices(gss)
+                .SetCoordinateSystemServices(css)
+                .SetCoordinateSystemRepository(css);
+        }
+        
         [TestCase(4326)]
         [TestCase(25832)]
         [TestCase(31467)]

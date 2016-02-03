@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using NUnit.Framework;
@@ -177,18 +178,35 @@ namespace UnitTests.Serialization
         private static void CompareLgb(LinearGradientBrush brushS, LinearGradientBrush brushD)
         {
             Assert.IsNotNull(brushD);
-            if (brushS.Blend != null)
-                for (var i = 0; i < brushS.Blend.Factors.Length; i++)
+            bool hasIC = false;
+            try
+            {
+                var ic = brushS.InterpolationColors;
+                hasIC = true;
+            }
+            catch { }
+
+            if (!hasIC)
+            {
+                var sBlend = brushS.Blend;
+                var dBlend = brushD.Blend;
+                for (var i = 0; i < sBlend.Factors.Length; i++)
                 {
-                    Assert.AreEqual(brushS.Blend.Factors[i], brushD.Blend.Factors[i]);
-                    Assert.AreEqual(brushS.Blend.Positions[i], brushD.Blend.Positions[i]);
+                    Assert.AreEqual((double)sBlend.Factors[i], (double)dBlend.Factors[i], 1e-6, "Blend factors don't match");
+                    Assert.AreEqual((double)sBlend.Positions[i], (double)dBlend.Positions[i], 1e-6, "Blend positions don't match");
                 }
+            }
             else
-                for (var i = 0; i < brushS.InterpolationColors.Colors.Length; i++)
+            {
+                var sIC = brushS.InterpolationColors;
+                var dIC = brushD.InterpolationColors;
+                for (var i = 0; i < sIC.Colors.Length; i++)
                 {
-                    Assert.AreEqual(brushS.InterpolationColors.Colors[i], brushD.InterpolationColors.Colors[i]);
-                    Assert.AreEqual(brushS.InterpolationColors.Positions[i], brushD.InterpolationColors.Positions[i]);
+                    Assert.AreEqual(sIC.Colors[i], dIC.Colors[i]);
+                    Assert.AreEqual(sIC.Positions[i], dIC.Positions[i], 1e-6, "Blend positions don't match");
                 }
+            }
+
             Assert.AreEqual(brushS.Rectangle, brushD.Rectangle);
             Assert.AreEqual(brushS.GammaCorrection, brushD.GammaCorrection);
             for (var i = 0; i < brushS.LinearColors.Length; i++)
