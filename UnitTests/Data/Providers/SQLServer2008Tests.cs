@@ -18,12 +18,14 @@ namespace UnitTests.Data.Providers
             GeoAPI.GeometryServiceProvider.Instance = new NetTopologySuite.NtsGeometryServices();
         }
 
-        [NUnit.Framework.Test()]
-        public void VerifySchemaDetection()
+        [NUnit.Framework.TestCase("[sde].[gisadmin.di]", "sde", "gisadmin.di")]
+        [NUnit.Framework.TestCase("[sde.gisadmin].[di]", "sde.gisadmin", "di")]
+        [NUnit.Framework.TestCase("sde.gisadmin.di", "sde.gisadmin", "di")]
+        public void VerifySchemaDetection(string schemaTable, string tableSchema, string table)
         {
-            SharpMap.Data.Providers.SqlServer2008 sq = new SharpMap.Data.Providers.SqlServer2008("", "schema.TableName", "oidcolumn");
-            Assert.AreEqual("schema", sq.TableSchema);
-            Assert.AreEqual("TableName", sq.Table);
+            SharpMap.Data.Providers.SqlServer2008 sq = new SharpMap.Data.Providers.SqlServer2008("", schemaTable, "oidcolumn");
+            Assert.AreEqual(tableSchema, sq.TableSchema);
+            Assert.AreEqual(table, sq.Table);
             Assert.AreEqual("oidcolumn", sq.ObjectIdColumn);
         }
     }

@@ -72,7 +72,7 @@ namespace SharpMap.Data.Providers
                 string strBbox = GetBoxFilterStr(bbox);
 
                 string strSql = "SELECT g." + GeometryColumn;
-                strSql += " FROM " + Table + " g " + BuildTableHints() + " WHERE ";
+                strSql += " FROM " + QualifiedTable + " g " + BuildTableHints() + " WHERE ";
 
                 if (!String.IsNullOrEmpty(DefinitionQuery))
                     strSql += DefinitionQuery + " AND ";
@@ -114,7 +114,7 @@ namespace SharpMap.Data.Providers
             Geometry geom = null;
             using (var conn = new SqlConnection(ConnectionString))
             {
-                string strSql = "SELECT g." + GeometryColumn + " FROM " + Table + " g WHERE " + ObjectIdColumn + "='" + oid + "'";
+                string strSql = "SELECT g." + GeometryColumn + " FROM " + QualifiedTable + " g WHERE " + ObjectIdColumn + "='" + oid + "'";
                 conn.Open();
                 using (var command = new SqlCommand(strSql, conn))
                 {
@@ -146,7 +146,7 @@ namespace SharpMap.Data.Providers
                 strGeom = strGeom.Replace("#SRID#", SRID > 0 ? SRID.ToString(CultureInfo.InvariantCulture) : "0");
                 strGeom = GeometryColumn + ".STIntersects(" + strGeom + ") = 1";
 
-                string strSql = "SELECT g.* FROM " + Table + " g " + BuildTableHints() + " WHERE ";
+                string strSql = "SELECT g.* FROM " + QualifiedTable + " g " + BuildTableHints() + " WHERE ";
 
                 if (!String.IsNullOrEmpty(DefinitionQuery))
                     strSql += DefinitionQuery + " AND ";
@@ -197,7 +197,7 @@ namespace SharpMap.Data.Providers
         {
             using (var conn = new SqlConnection(ConnectionString))
             {
-                string strSql = "select g.* from " + Table + " g WHERE " + ObjectIdColumn + "=" + rowId + "";
+                string strSql = "select g.* from " + QualifiedTable + " g WHERE " + ObjectIdColumn + "=" + rowId + "";
                 using (var adapter = new SqlDataAdapter(strSql, conn))
                 {
                     var ds = new System.Data.DataSet();
@@ -246,7 +246,7 @@ namespace SharpMap.Data.Providers
 
                 string strSql = String.Format(
                     "SELECT g.* FROM {0} g {1} WHERE ",
-                    Table, BuildTableHints());
+                    QualifiedTable, BuildTableHints());
 
                 if (!String.IsNullOrEmpty(DefinitionQuery))
                     strSql += DefinitionQuery + " AND ";
