@@ -69,7 +69,7 @@ namespace SharpMap.Rendering.Symbolizer
         /// <param name="map">The map object</param>
         /// <param name="points">Location where to render the Symbol</param>
         /// <param name="g">The graphics object to use.</param>
-        public void Render(Map map, IPuntal points, Graphics g)
+        public void Render(MapViewport map, IPuntal points, Graphics g)
         {
             foreach (var pointSymbolizer in Items)
                 pointSymbolizer.Render(map, points, g);
@@ -148,7 +148,7 @@ namespace SharpMap.Rendering.Symbolizer
         /// <param name="g">The graphics object</param>
         /// <param name="map">The map</param>
         /// <param name="aproximateNumberOfGeometries">The approximate number of geometries</param>
-        public void Begin(Graphics g, Map map, int aproximateNumberOfGeometries)
+        public void Begin(Graphics g, MapViewport map, int aproximateNumberOfGeometries)
         {
         }
 
@@ -157,7 +157,7 @@ namespace SharpMap.Rendering.Symbolizer
         /// </summary>
         /// <param name="g">The graphics object</param>
         /// <param name="map">The map</param>
-        public void Symbolize(Graphics g, Map map)
+        public void Symbolize(Graphics g, MapViewport map)
         {
         }
 
@@ -166,7 +166,7 @@ namespace SharpMap.Rendering.Symbolizer
         /// </summary>
         /// <param name="g">The graphics object</param>
         /// <param name="map">The map</param>
-        public void End(Graphics g, Map map)
+        public void End(Graphics g, MapViewport map)
         {
         }
 

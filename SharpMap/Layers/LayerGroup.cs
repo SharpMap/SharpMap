@@ -229,10 +229,13 @@ namespace SharpMap.Layers
         /// </summary>
         /// <param name="g">Graphics object reference</param>
         /// <param name="map">Map which is rendered</param>
-        public override void Render(Graphics g, Map map)
+        public override void Render(Graphics g, MapViewport map)
         {
             var layers = GetSnapshot();
-            var compare = VisibilityUnits == VisibilityUnits.ZoomLevel ? map.Zoom : map.MapScale;
+            var compare = VisibilityUnits == VisibilityUnits.ZoomLevel 
+                ? map.Zoom 
+                : map.GetMapScale((int)g.DpiX);
+
             foreach (var layer in layers)
             {
                 if (layer.Enabled && layer.MaxVisible >= compare &&

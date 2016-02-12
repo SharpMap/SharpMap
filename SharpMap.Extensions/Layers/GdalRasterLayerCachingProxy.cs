@@ -512,7 +512,7 @@ namespace SharpMap.Layers
         }
 
         [MethodImpl(MethodImplOptions.Synchronized)]
-        public override void Render(Graphics g, Map map)
+        public override void Render(Graphics g, MapViewport map)
         {
             ViewPort viewport;
 

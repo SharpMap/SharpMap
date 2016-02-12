@@ -268,7 +268,7 @@ namespace GeoAPI.Geometries
         /// <param name="self">The linestring</param>
         /// <param name="map">The map that defines the affine coordinate transformation</param>
         /// <returns>The array of <see cref="PointF"/>s</returns>
-        public static PointF[] TransformToImage(this ILineString self, Map map)
+        public static PointF[] TransformToImage(this ILineString self, MapViewport map)
         {
             return TransformToImage(self.Coordinates, map);
         }
@@ -279,7 +279,7 @@ namespace GeoAPI.Geometries
         /// <param name="vertices">The array of coordinates</param>
         /// <param name="map">The map that defines the affine coordinate transformation</param>
         /// <returns>The array of <see cref="PointF"/>s</returns>
-        private static PointF[] TransformToImage(Coordinate[] vertices, Map map)
+        private static PointF[] TransformToImage(Coordinate[] vertices, MapViewport map)
         {
             var v = new PointF[vertices.Length];
             for (var i = 0; i < vertices.Length; i++)
@@ -337,7 +337,7 @@ namespace GeoAPI.Geometries
         /// <param name="map">The map that defines the affine coordinate transformation.</param>
         /// <param name="useClipping">Use clipping for the polygon</param>
         /// <returns>An array of PointFs</returns>
-        public static GraphicsPath TransformToImage(this IPolygon self, Map map, bool useClipping = false)
+        public static GraphicsPath TransformToImage(this IPolygon self, MapViewport map, bool useClipping = false)
         {
             var res = new GraphicsPath(FillMode.Alternate);
             if (useClipping)

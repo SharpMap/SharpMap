@@ -177,6 +177,11 @@ namespace SharpMap.Layers
         /// <param name="map">Map which is rendered</param>
         void ILayer.Render(Graphics g, Map map)
         {
+            ((ILayer)this).Render(g, (MapViewport)map);
+        }
+
+        void ILayer.Render(Graphics g, MapViewport map)
+        {
             // We don't need to regenerate the tiles
             if (map.Envelope.Equals(_lastViewport) && _numPendingDownloads == 0)
             {

@@ -79,7 +79,7 @@ namespace SharpMap.Layers.Symbolizer
         /// <param name="g">The graphics object</param>
         /// <param name="map">The map</param>
         [MethodImpl(MethodImplOptions.Synchronized)]
-        public override void Render(Graphics g, Map map)
+        public override void Render(Graphics g, MapViewport map)
         {
             // Map setup correctly
             if (map.Center == null)
@@ -134,7 +134,7 @@ namespace SharpMap.Layers.Symbolizer
         /// </summary>
         /// <param name="graphics">The graphics object to render upon</param>
         /// <param name="map">The map</param>
-        protected virtual void OnRender(Graphics graphics, Map map)
+        protected virtual void OnRender(Graphics graphics, MapViewport map)
         {
             // Get query envelope
             var envelope = ToSource(map.Envelope);
@@ -162,7 +162,7 @@ namespace SharpMap.Layers.Symbolizer
         /// </summary>
         /// <param name="graphics">The graphics object to render upon</param>
         /// <param name="map">The map</param>
-        protected virtual void OnRendering(Graphics graphics, Map map)
+        protected virtual void OnRendering(Graphics graphics, MapViewport map)
         {
             foreach (var geometry in _geometries)
             {
@@ -180,7 +180,7 @@ namespace SharpMap.Layers.Symbolizer
         /// </summary>
         /// <param name="graphics">The graphics object to render upon</param>
         /// <param name="map">The map</param>
-        protected virtual void OnRendered(Graphics graphics, Map map)
+        protected virtual void OnRendered(Graphics graphics, MapViewport map)
         {
             Symbolizer.End(graphics, map);
             _geometries = null;

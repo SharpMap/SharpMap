@@ -36,7 +36,7 @@ namespace SharpMap.Rendering.Symbolizer
         /// <param name="map">The map object</param>
         /// <param name="lineal">Linestring to symbolize</param>
         /// <param name="g">The graphics object to use.</param>
-        public void Render(Map map, ILineal lineal, Graphics g)
+        public void Render(MapViewport map, ILineal lineal, Graphics g)
         {
             var ms = lineal as IMultiLineString;
             if (ms != null)
@@ -57,7 +57,7 @@ namespace SharpMap.Rendering.Symbolizer
         /// <param name="map">The map</param>
         /// <param name="lineString">The line string to symbolize.</param>
         /// <param name="graphics">The graphics</param>
-        protected abstract void OnRenderInternal(Map map, ILineString lineString, Graphics graphics);
+        protected abstract void OnRenderInternal(MapViewport map, ILineString lineString, Graphics graphics);
 
         /// <summary>
         /// Function to transform a linestring to a graphics path for further processing
@@ -66,7 +66,7 @@ namespace SharpMap.Rendering.Symbolizer
         /// <param name="map">The map</param>
         /// <!--<param name="useClipping">A value indicating whether clipping should be applied or not</param>-->
         /// <returns>A GraphicsPath</returns>
-        public static GraphicsPath LineStringToPath(ILineString lineString, Map map)
+        public static GraphicsPath LineStringToPath(ILineString lineString, MapViewport map)
         {
             var gp = new GraphicsPath(FillMode.Alternate);
             gp.AddLines(lineString.TransformToImage(map));
@@ -85,7 +85,7 @@ namespace SharpMap.Rendering.Symbolizer
         /// </summary>
         /// <param name="g">The graphics object to symbolize upon</param>
         /// <param name="map">The map</param>
-        public override void Symbolize(Graphics g, Map map)
+        public override void Symbolize(Graphics g, MapViewport map)
         {
         }
 

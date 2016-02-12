@@ -1,29 +1,34 @@
 namespace ExampleCodeSnippets
 {
+    [NUnit.Framework.TestFixture]
     public class PolygonSymbolizerTest
     {
         private class ModifiedBasicPolygonSymbolizer : SharpMap.Rendering.Symbolizer.BasicPolygonSymbolizer
         {
             private System.Drawing.Point _oldRenderOrigin;
 
-            public override void Begin(System.Drawing.Graphics g, SharpMap.Map map, int aproximateNumberOfGeometries)
+            public override void Begin(System.Drawing.Graphics g, SharpMap.MapViewport map, int aproximateNumberOfGeometries)
             {
                 base.Begin(g, map, aproximateNumberOfGeometries);
                 _oldRenderOrigin = g.RenderingOrigin;
             }
-            protected override void OnRenderInternal(SharpMap.Map map, GeoAPI.Geometries.IPolygon polygon, System.Drawing.Graphics g)
+            protected override void OnRenderInternal(SharpMap.MapViewport map, GeoAPI.Geometries.IPolygon polygon, System.Drawing.Graphics g)
             {
                 var pt = polygon.Centroid;
                 g.RenderingOrigin = 
                     System.Drawing.Point.Truncate(SharpMap.Utilities.Transform.WorldtoMap(pt.Coordinate, map));
                 base.OnRenderInternal(map, polygon, g);
             }
-            public override void End(System.Drawing.Graphics g, SharpMap.Map map)
+            public override void End(System.Drawing.Graphics g, SharpMap.MapViewport map)
             {
                 g.RenderingOrigin = _oldRenderOrigin;
             }
 
         }
+
+        [NUnit.Framework.TestFixtureSetUp]
+        public void FixtureSetUp()
+        { }
 
         [NUnit.Framework.Test]
         public void TestPlainPolygonSymbolizer()

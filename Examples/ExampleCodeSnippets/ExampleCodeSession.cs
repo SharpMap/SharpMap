@@ -1,12 +1,10 @@
-﻿namespace UnitTests
+﻿namespace ExampleCodeSnippets
 {
     [NUnit.Framework.SetUpFixture]
-    public class UnitTestsFixture
+    public class ExampleCodeSession
     {
-        private System.Diagnostics.Stopwatch _stopWatch;
-
         [NUnit.Framework.SetUp]
-        public void RunBeforeAnyTests()
+        public void SetUp()
         {
             var gss = new NetTopologySuite.NtsGeometryServices();
             var css = new SharpMap.CoordinateSystems.CoordinateSystemServices(
@@ -19,18 +17,6 @@
                 .SetGeometryServices(gss)
                 .SetCoordinateSystemServices(css)
                 .SetCoordinateSystemRepository(css);
-
-            _stopWatch = new System.Diagnostics.Stopwatch();
-            System.Diagnostics.Trace.WriteLine("Starting tests");
-            _stopWatch.Start();
-        }
-
-        [NUnit.Framework.TearDown]
-        public void RunAfterAllTests()
-        {
-            _stopWatch.Stop();
-            System.Diagnostics.Trace.WriteLine(
-                string.Format("All tests accomplished in {0}ms", _stopWatch.ElapsedMilliseconds));
         }
     }
 }

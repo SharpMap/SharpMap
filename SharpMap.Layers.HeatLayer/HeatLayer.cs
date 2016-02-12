@@ -165,7 +165,7 @@ namespace SharpMap.Layers
         /// </summary>
         /// <param name="g">Graphics object reference</param>
         /// <param name="map">Map which is rendered</param>
-        public override void Render(Graphics g, Map map)
+        public override void Render(Graphics g, MapViewport map)
         {
             if (BaseLayer != null)
             {
@@ -514,7 +514,7 @@ namespace SharpMap.Layers
             image.UnlockBits(imageData);
         }
 
-        private void DrawPoints(Map map, IEnumerable<DataRow> features, Bitmap dot, Bitmap image)
+        private void DrawPoints(MapViewport map, IEnumerable<DataRow> features, Bitmap dot, Bitmap image)
         {
             var size = new Size(dot.Width, dot.Height);
 

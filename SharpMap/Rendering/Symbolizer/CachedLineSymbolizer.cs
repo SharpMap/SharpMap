@@ -200,7 +200,7 @@ namespace SharpMap.Rendering.Symbolizer
         /// <param name="map"></param>
         /// <param name="lineString"></param>
         /// <param name="graphics"></param>
-        protected override void OnRenderInternal(Map map, ILineString lineString, Graphics graphics)
+        protected override void OnRenderInternal(MapViewport map, ILineString lineString, Graphics graphics)
         {
             var gp = new GraphicsPath();
             gp.AddLines(/*LimitValues(*/lineString.TransformToImage(map)/*)*/);
@@ -221,7 +221,7 @@ namespace SharpMap.Rendering.Symbolizer
         /// <summary>
         /// Method to indicate that the symbolizer has to be prepared.
         /// </summary>
-        public override void Begin(Graphics g, Map map, int aproximateNumberOfGeometries)
+        public override void Begin(Graphics g, MapViewport map, int aproximateNumberOfGeometries)
         {
             _graphicsPaths = new List<GraphicsPath>(aproximateNumberOfGeometries);
             base.Begin(g, map, aproximateNumberOfGeometries);
@@ -231,12 +231,12 @@ namespace SharpMap.Rendering.Symbolizer
         /// <summary>
         /// Method to indicate that the symbolizer should do its symbolizer work.
         /// </summary>
-        public override void Symbolize(Graphics g, Map map)
+        public override void Symbolize(Graphics g, MapViewport map)
         {
             Symbolize(g, map, Paths);
         }
 
-        private void Symbolize(Graphics graphics, Map map, List<GraphicsPath> paths)
+        private void Symbolize(Graphics graphics, MapViewport map, List<GraphicsPath> paths)
         {
             if (_lineSymbolizeHandlers.Count == 0)
                 _fallback.SymbolizePaths(graphics, paths);
@@ -250,7 +250,7 @@ namespace SharpMap.Rendering.Symbolizer
         /// <summary>
         /// Method to indicate that the symbolizers work is done and it can clean up.
         /// </summary>
-        public override void End(Graphics g, Map map)
+        public override void End(Graphics g, MapViewport map)
         {
             if (_graphicsPaths.Count > 0)
                 _graphicsPaths.Clear();

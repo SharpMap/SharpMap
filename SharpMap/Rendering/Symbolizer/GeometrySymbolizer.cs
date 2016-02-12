@@ -74,7 +74,7 @@ namespace SharpMap.Rendering.Symbolizer
         /// <param name="map">The map object, mainly needed for transformation purposes.</param>
         /// <param name="geometry">The geometry to symbolize.</param>
         /// <param name="graphics">The graphics object to use.</param>
-        public void Render(Map map, IGeometry geometry, Graphics graphics)
+        public void Render(MapViewport map, IGeometry geometry, Graphics graphics)
         {
             switch (geometry.OgcGeometryType)
             {
@@ -111,7 +111,7 @@ namespace SharpMap.Rendering.Symbolizer
         /// <param name="g">The graphics object</param>
         /// <param name="map">The map</param>
         /// <param name="aproximateNumberOfGeometries">The approximate number of geometries</param>
-        public void Begin(Graphics g, Map map, int aproximateNumberOfGeometries)
+        public void Begin(Graphics g, MapViewport map, int aproximateNumberOfGeometries)
         {
             _lineSymbolizer.Begin(g, map, aproximateNumberOfGeometries);
             _pointSymbolizer.Begin(g, map, aproximateNumberOfGeometries);
@@ -123,7 +123,7 @@ namespace SharpMap.Rendering.Symbolizer
         /// </summary>
         /// <param name="g">The graphics object</param>
         /// <param name="map">The map</param>
-        public void Symbolize(Graphics g, Map map)
+        public void Symbolize(Graphics g, MapViewport map)
         {
             _polygonSymbolizer.Symbolize(g, map);
             _lineSymbolizer.Symbolize(g, map);
@@ -135,7 +135,7 @@ namespace SharpMap.Rendering.Symbolizer
         /// </summary>
         /// <param name="g">The graphics object</param>
         /// <param name="map">The map</param>
-        public void End(Graphics g, Map map)
+        public void End(Graphics g, MapViewport map)
         {
             _polygonSymbolizer.End(g, map);
             _lineSymbolizer.End(g, map);

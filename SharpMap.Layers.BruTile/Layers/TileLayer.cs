@@ -167,7 +167,7 @@ namespace SharpMap.Layers
         /// </summary>
         /// <param name="graphics">Graphics object reference</param>
         /// <param name="map">Map which is rendered</param>
-        public override void Render(Graphics graphics, Map map)
+        public override void Render(Graphics graphics, MapViewport map)
         {
             if (!map.Size.IsEmpty && map.Size.Width > 0 && map.Size.Height > 0)
             {

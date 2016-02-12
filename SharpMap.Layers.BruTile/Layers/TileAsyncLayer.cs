@@ -128,7 +128,7 @@ namespace SharpMap.Layers
         /// </summary>
         /// <param name="graphics">Graphics object reference</param>
         /// <param name="map">Map which is rendered</param>
-        public override void Render(Graphics graphics, Map map)
+        public override void Render(Graphics graphics, MapViewport map)
         {
             var bbox = map.Envelope;
             var extent = new Extent(bbox.MinX, bbox.MinY, bbox.MaxX, bbox.MaxY);
@@ -209,7 +209,7 @@ namespace SharpMap.Layers
 
         }
 
-        static void HandleMapNewTileAvaliable(Map map, Graphics g, Envelope box, Bitmap bm, int sourceWidth, int sourceHeight, ImageAttributes imageAttributes)
+        static void HandleMapNewTileAvaliable(MapViewport map, Graphics g, Envelope box, Bitmap bm, int sourceWidth, int sourceHeight, ImageAttributes imageAttributes)
         {
 
             try

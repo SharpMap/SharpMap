@@ -36,10 +36,6 @@ namespace WinFormSamples
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new DlgSamplesMenu());
         }
-
-        private static IEnumerable<KeyValuePair<int, string>> ReadCoordinateSystemDefinitions(string element = "")
-        {
-        }
     }
 
 }

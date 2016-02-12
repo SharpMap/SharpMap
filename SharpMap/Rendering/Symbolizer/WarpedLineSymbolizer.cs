@@ -184,7 +184,7 @@ namespace SharpMap.Rendering.Symbolizer
         /// <param name="map">The map</param>
         /// <param name="lineString">The line string to symbolize.</param>
         /// <param name="graphics">The graphics</param>
-        protected override void OnRenderInternal(Map map, ILineString lineString, Graphics graphics)
+        protected override void OnRenderInternal(MapViewport map, ILineString lineString, Graphics graphics)
         {
             var clonedPattern = (GraphicsPath) Pattern.Clone();
             var graphicsPath = WarpPathToPath.Warp(LineStringToPath(lineString, map), clonedPattern, true, Interval);

@@ -1,8 +1,4 @@
-﻿
-using System.Windows.Forms;
-using NUnit.Framework;
-
-namespace ExampleCodeSnippets
+﻿namespace ExampleCodeSnippets
 {
 
 /// <summary>
@@ -30,7 +26,7 @@ public class StreetDirectionSymbolizer : SharpMap.Rendering.Symbolizer.BaseSymbo
     /// <param name="map"></param>
     /// <param name="lineString"></param>
     /// <param name="graphics"></param>
-    private void OnRenderInternal(SharpMap.Map map, GeoAPI.Geometries.ILineString lineString,
+    private void OnRenderInternal(SharpMap.MapViewport map, GeoAPI.Geometries.ILineString lineString,
         System.Drawing.Graphics graphics)
     {
 
@@ -65,7 +61,7 @@ public class StreetDirectionSymbolizer : SharpMap.Rendering.Symbolizer.BaseSymbo
     /// <param name="map">The map</param>
     /// <param name="graphics">The graphics object</param>
     /// <param name="arrow">The arrow</param>
-    private void RenderArrow(SharpMap.Map map, System.Drawing.Graphics graphics, GeoAPI.Geometries.ILineString arrow)
+    private void RenderArrow(SharpMap.MapViewport map, System.Drawing.Graphics graphics, GeoAPI.Geometries.ILineString arrow)
     {
         var pts = new System.Drawing.PointF[arrow.Coordinates.Length];
         for (var i = 0; i < pts.Length; i++)
@@ -88,7 +84,7 @@ public class StreetDirectionSymbolizer : SharpMap.Rendering.Symbolizer.BaseSymbo
     /// </summary>
     public System.Drawing.Pen ArrowPen { get; set; }
 
-    public override void Begin(System.Drawing.Graphics g, SharpMap.Map map, int aproximateNumberOfGeometries)
+    public override void Begin(System.Drawing.Graphics g, SharpMap.MapViewport map, int aproximateNumberOfGeometries)
     {
         base.Begin(g, map, aproximateNumberOfGeometries);
 
@@ -97,7 +93,7 @@ public class StreetDirectionSymbolizer : SharpMap.Rendering.Symbolizer.BaseSymbo
         ArrowPen.CustomEndCap = new System.Drawing.Drawing2D.AdjustableArrowCap(size, size);
     }
 
-    public void Render(SharpMap.Map map, GeoAPI.Geometries.ILineal geometry, System.Drawing.Graphics graphics)
+    public void Render(SharpMap.MapViewport map, GeoAPI.Geometries.ILineal geometry, System.Drawing.Graphics graphics)
     {
         if (geometry is GeoAPI.Geometries.IMultiLineString)
         {
@@ -136,7 +132,7 @@ public class StreetDirectionSymbolizer : SharpMap.Rendering.Symbolizer.BaseSymbo
         public void TestBasicLineSymbolizer()
         {
             if (!System.IO.File.Exists("d:\\daten\\GeoFabrik\\roads.shp"))
-                throw new IgnoreException("");
+                throw new NUnit.Framework.IgnoreException("");
 
             var p = new SharpMap.Data.Providers.ShapeFile(@"d:\\daten\\GeoFabrik\\roads.shp", false);
             var l = new SharpMap.Layers.VectorLayer("roads", p);
@@ -179,7 +175,7 @@ public class StreetDirectionSymbolizer : SharpMap.Rendering.Symbolizer.BaseSymbo
         public void TestStreetDirectionSymbolizer()
         {
             if (!System.IO.File.Exists("d:\\daten\\GeoFabrik\\Aurich\\roads.shp"))
-                throw new IgnoreException("");
+                throw new NUnit.Framework.IgnoreException("");
 
             var p = new SharpMap.Data.Providers.ShapeFile(@"d:\\daten\\GeoFabrik\\Aurich\\roads.shp", false);
             var l = new SharpMap.Layers.VectorLayer("roads", p);
@@ -209,7 +205,7 @@ public class StreetDirectionSymbolizer : SharpMap.Rendering.Symbolizer.BaseSymbo
         public void TestWarpedLineSymbolizer()
         {
             if (!System.IO.File.Exists("d:\\daten\\GeoFabrik\\Aurich\\roads.shp"))
-                throw new IgnoreException("");
+                throw new NUnit.Framework.IgnoreException("");
 
             var p = new SharpMap.Data.Providers.ShapeFile(@"d:\\daten\\GeoFabrik\\Aurich\\roads.shp", false);
 
@@ -325,7 +321,7 @@ public class StreetDirectionSymbolizer : SharpMap.Rendering.Symbolizer.BaseSymbo
         public void TestCachedLineSymbolizerInTheme()
         {
             if (!System.IO.File.Exists("d:\\daten\\GeoFabrik\\Aurich\\roads.shp"))
-                throw new IgnoreException("");
+                throw new NUnit.Framework.IgnoreException("");
             var p = new SharpMap.Data.Providers.ShapeFile(@"d:\\daten\\GeoFabrik\\Aurich\\roads.shp", false);
 
             var l = new SharpMap.Layers.VectorLayer("roads", p);

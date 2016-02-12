@@ -63,7 +63,7 @@ namespace SharpMap.Rendering.Symbolizer
         /// <param name="map">The map</param>
         /// <param name="polygon">The feature</param>
         /// <param name="g">The graphics object</param>
-        protected override void OnRenderInternal(Map map, IPolygon polygon, Graphics g)
+        protected override void OnRenderInternal(MapViewport map, IPolygon polygon, Graphics g)
         {
             // convert points
             var pts = /*LimitValues(*/polygon.TransformToImage(map, UseClipping)/*)*/;
@@ -140,7 +140,7 @@ namespace SharpMap.Rendering.Symbolizer
         /// <param name="map">The map</param>
         /// <param name="polygon">The polygon to render</param>
         /// <param name="g">The graphics object to use</param>
-        protected override void OnRenderInternal(Map map, IPolygon polygon, Graphics g)
+        protected override void OnRenderInternal(MapViewport map, IPolygon polygon, Graphics g)
         {
             // convert points
             var pts = /*LimitValues(*/polygon.TransformToImage(map)/*)*/;
@@ -168,7 +168,7 @@ namespace SharpMap.Rendering.Symbolizer
         /// <param name="g">The graphics object to symbolize upon</param>
         /// <param name="map">The map</param>
         /// <param name="aproximateNumberOfGeometries">An approximate number of geometries to symbolize</param>
-        public override void Begin(Graphics g, Map map, int aproximateNumberOfGeometries)
+        public override void Begin(Graphics g, MapViewport map, int aproximateNumberOfGeometries)
         {
             Outline.Begin(g, map, aproximateNumberOfGeometries);
             base.Begin(g, map, aproximateNumberOfGeometries);
@@ -179,7 +179,7 @@ namespace SharpMap.Rendering.Symbolizer
         /// </summary>
         /// <param name="g">The graphics object to symbolize upon</param>
         /// <param name="map">The map</param>
-        public override void Symbolize(Graphics g, Map map)
+        public override void Symbolize(Graphics g, MapViewport map)
         {
             Outline.Symbolize(g, map);
             base.Symbolize(g, map);
@@ -190,7 +190,7 @@ namespace SharpMap.Rendering.Symbolizer
         /// </summary>
         /// <param name="g">The graphics object to symbolize upon</param>
         /// <param name="map">The map</param>
-        public override void End(Graphics g, Map map)
+        public override void End(Graphics g, MapViewport map)
         {
             Outline.End(g, map);
             base.End(g, map);

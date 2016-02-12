@@ -414,7 +414,7 @@ namespace SharpMap.Layers
         /// </summary>
         /// <param name="g">Graphics object reference</param>
         /// <param name="map">Map which is rendered</param>
-        public override void Render(Graphics g, Map map)
+        public override void Render(Graphics g, MapViewport map)
         {
             CheckDisposed();
             if (TilingSize.IsEmpty || (TilingSize.Width > map.Size.Width && TilingSize.Height > map.Size.Height))
@@ -431,7 +431,7 @@ namespace SharpMap.Layers
             base.Render(g, map);
         }
 
-        private IEnumerable<Envelope> Tile(Map map)
+        private IEnumerable<Envelope> Tile(MapViewport map)
         {
             var lt = Point.Truncate(map.WorldToImage(map.Envelope.TopLeft()));
             var rb = Point.Ceiling(map.WorldToImage(map.Envelope.BottomRight()));
@@ -820,10 +820,10 @@ namespace SharpMap.Layers
         
 #if !DotSpatialProjections
         protected virtual void GetPreview(Dataset dataset, Size size, Graphics g,
-                                          Envelope displayBbox, ICoordinateSystem mapProjection, Map map)
+                                          Envelope displayBbox, ICoordinateSystem mapProjection, MapViewport map)
 #else
         protected virtual void GetPreview(Dataset dataset, Size size, Graphics g,
-                                          Envelope displayBbox, ProjectionInfo mapProjection, Map map)
+                                          Envelope displayBbox, ProjectionInfo mapProjection, MapViewport map)
 #endif
         {
             DateTime drawStart = DateTime.Now;

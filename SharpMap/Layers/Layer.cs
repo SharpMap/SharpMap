@@ -262,7 +262,18 @@ namespace SharpMap.Layers
         /// </summary>
         /// <param name="g">Graphics object reference</param>
         /// <param name="map">Map which is rendered</param>
+        [Obsolete("Use Render(Graphics, MapViewport)")]
         public virtual void Render(Graphics g, Map map)
+        {
+            Render(g, (MapViewport)map);
+        }
+
+        /// <summary>
+        /// Renders the layer
+        /// </summary>
+        /// <param name="g">Graphics object reference</param>
+        /// <param name="map">Map which is rendered</param>
+        public virtual void Render(Graphics g, MapViewport map)
         {
             OnLayerRendered(g);
         }

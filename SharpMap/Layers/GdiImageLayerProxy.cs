@@ -160,6 +160,11 @@ namespace SharpMap.Layers
 
         void ILayer.Render(Graphics g, Map map)
         {
+            ((ILayer)this).Render(g, (MapViewport)map);
+        }
+
+        void ILayer.Render(Graphics g, MapViewport map)
+        {
             if (_baseLayer is ITileAsyncLayer)
             {
                 Logger.Warn("ITileAsyncLayer is not a valid layer for GdiImageLayerProxy<T>. -> Skipping");
