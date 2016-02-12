@@ -18,6 +18,21 @@ using Point=GeoAPI.Geometries.Coordinate;
 /// </summary>
 public class MapHelper
 {
+    static MapHelper()
+    {
+
+        var gss = GeoAPI.GeometryServiceProvider.Instance;
+        var css = new SharpMap.CoordinateSystems.CoordinateSystemServices(
+            new ProjNet.CoordinateSystems.CoordinateSystemFactory(System.Text.Encoding.ASCII),
+            new ProjNet.CoordinateSystems.Transformations.CoordinateTransformationFactory(),
+            SharpMap.Converters.WellKnownText.SpatialReference.GetAllReferenceSystems());
+
+        GeoAPI.GeometryServiceProvider.Instance = gss;
+        SharpMap.Session.Instance
+            .SetGeometryServices(gss)
+            .SetCoordinateSystemServices(css)
+            .SetCoordinateSystemRepository(css);
+    }
     public static Map InitializeMap(Size size)
     {
 			HttpContext.Current.Trace.Write("Initializing map...");
