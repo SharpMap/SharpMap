@@ -320,6 +320,18 @@ namespace SharpMap.Forms
         public event MapCenterChangedHandler MapCenterChanged;
 
         /// <summary>
+        /// Eventtype fired befor the active map tool change
+        /// </summary>
+        /// <param name="toolPre">pre-tool</param>
+        /// <param name="toolNew">new tool</param>
+        public delegate void BeforActiveToolChangeHandler(Tools toolPre, Tools toolNew);
+
+        /// <summary>
+        /// Fired befor the active map tool change
+        /// </summary>
+        public event BeforActiveToolChangeHandler BeforActiveToolChange;
+
+        /// <summary>
         /// Eventtype fired when the map tool is changed
         /// </summary>
         /// <param name="tool"></param>
@@ -665,6 +677,8 @@ namespace SharpMap.Forms
             get { return _activeTool; }
             set
             {
+                OnBeforActiveToolChange(ActiveTool, value);
+
                 _activeTool = value;
 
                 SetCursor();
@@ -673,6 +687,19 @@ namespace SharpMap.Forms
 
                 OnActiveToolChanged(value);
             }
+        }
+        /// <summary>
+        /// Event invoker for the <see cref="BeforActiveToolChange">
+        /// </summary>
+        /// <param name="toolPre">pre-tool</param>
+        /// <param name="toolNew">new tool</param>
+        protected virtual void OnBeforActiveToolChange(Tools toolPre, Tools toolNew)
+        {
+            if (CustomTool != null)
+                CustomTool.Enabled = false;
+            var handler = BeforActiveToolChange;
+            if (handler != null)
+                handler(toolPre, toolNew);
         }
 
         /// <summary>
