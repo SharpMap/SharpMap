@@ -320,6 +320,19 @@ namespace SharpMap.Forms
         public event MapCenterChangedHandler MapCenterChanged;
 
         /// <summary>
+        /// Eventtype fired befor the active map tool change
+        /// </summary>
+        /// <param name="toolPre">pre-tool</param>
+        /// <param name="toolNew">new tool</param>
+        /// <param name="cea">a cancel indicator</param>
+        public delegate void ActiveToolChangingHandler(Tools toolPre, Tools toolNew, CancelEventArgs cea);
+
+        /// <summary>
+        /// Fired befor the active map tool change
+        /// </summary>
+        public event ActiveToolChangingHandler ActiveToolChanging;
+
+        /// <summary>
         /// Eventtype fired when the map tool is changed
         /// </summary>
         /// <param name="tool"></param>
@@ -665,6 +678,15 @@ namespace SharpMap.Forms
             get { return _activeTool; }
             set
             {
+                var cea = new CancelEventArgs(false);
+                OnActiveToolChanging(ActiveTool, value, cea);
+                if (cea.Cancel)
+                {
+                    if (CustomTool != null)
+                        CustomTool.Enabled = true;
+                    return;
+                }
+
                 _activeTool = value;
 
                 SetCursor();
@@ -673,6 +695,21 @@ namespace SharpMap.Forms
 
                 OnActiveToolChanged(value);
             }
+        }
+
+        /// <summary>
+        /// Event invoker for the <see cref="ActiveToolChanging"/>
+        /// </summary>
+        /// <param name="toolPre">pre-tool</param>
+        /// <param name="toolNew">new tool</param>
+        /// <param name="cea">a cancel indicator</param>
+        protected virtual void OnActiveToolChanging(Tools toolPre, Tools toolNew, CancelEventArgs cea)
+        {
+            if (CustomTool != null)
+                CustomTool.Enabled = false;
+            var handler = ActiveToolChanging;
+            if (handler != null)
+                handler(toolPre, toolNew, cea);
         }
 
         /// <summary>
