@@ -996,7 +996,8 @@ namespace SharpMap.Data.Providers
             throw new NotSupportedException();
         }
         #endregion
-        #region nested class
+
+        #region Nested OgrGeometryReader class
 
         private class OgrGeometryReader
         {
@@ -1060,14 +1061,14 @@ namespace SharpMap.Data.Providers
                     for (var i = 0; i < cs.Count; i++)
                     {
                         cs.SetOrdinate(i, Ordinate.X, geom.GetX(i));
-                        cs.SetOrdinate(i, Ordinate.Z, geom.GetY(i));
-                        cs.SetOrdinate(i, Ordinate.Y, geom.GetZ(i));
+                        cs.SetOrdinate(i, Ordinate.Y, geom.GetY(i));
+                        cs.SetOrdinate(i, Ordinate.Z, geom.GetZ(i));
                     }
                 else
                     for (var i = 0; i < cs.Count; i++)
                     {
                         cs.SetOrdinate(i, Ordinate.X, geom.GetX(i));
-                        cs.SetOrdinate(i, Ordinate.Z, geom.GetY(i));
+                        cs.SetOrdinate(i, Ordinate.Y, geom.GetY(i));
                     }
 
                 return _factory.CreateLinearRing(cs);
