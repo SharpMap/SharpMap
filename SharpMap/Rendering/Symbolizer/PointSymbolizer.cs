@@ -92,7 +92,7 @@ namespace SharpMap.Rendering.Symbolizer
                 return;
 
 
-            PointF pp = Transform.WorldtoMap(point, map);
+            PointF pp = map.WorldToImage(point);
             pp = PointF.Add(pp, GetOffset());
 
             if (Rotation != 0f && !Single.IsNaN(Rotation))

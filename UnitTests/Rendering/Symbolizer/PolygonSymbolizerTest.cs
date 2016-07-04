@@ -15,7 +15,7 @@ namespace UnitTests.Rendering.Symbolizer
             {
                 var pt = polygon.Centroid;
                 g.RenderingOrigin = 
-                    System.Drawing.Point.Truncate(SharpMap.Utilities.Transform.WorldtoMap(pt.Coordinate, map));
+                    System.Drawing.Point.Truncate(map.WorldToImage(pt.Coordinate));
                 base.OnRenderInternal(map, polygon, g);
             }
             public override void End(System.Drawing.Graphics g, SharpMap.MapViewport map)

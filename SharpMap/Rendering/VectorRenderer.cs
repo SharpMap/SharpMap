@@ -573,7 +573,7 @@ namespace SharpMap.Rendering
             if (point == null)
                 return;
 
-            var pp = Transform.WorldtoMap(point.Coordinate, map);
+            var pp = map.WorldToImage(point.Coordinate);
             //var startingTransform = g.Transform;
 
             var width = size;
@@ -620,7 +620,7 @@ namespace SharpMap.Rendering
                 symbol = Defaultsymbol;
 
 
-            var pp = Transform.WorldtoMap(point.Coordinate, map);
+            var pp = map.WorldToImage(point.Coordinate);
 
             lock (symbol)
             {

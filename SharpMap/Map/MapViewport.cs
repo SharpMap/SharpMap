@@ -15,6 +15,8 @@ namespace SharpMap
         private readonly Envelope _envelope;
         private readonly Matrix _mapTransform;
         private readonly Matrix _mapTransformInverted;
+        private double _left;
+        private double _top;
 
         /// <summary>
         /// Creates an instance of this class
@@ -43,6 +45,10 @@ namespace SharpMap
 
             _mapTransform = mapTransform.Clone();
             _mapTransformInverted = mapTransformInverted.Clone();
+
+            var height = (Zoom * Size.Height) / Size.Width;
+            _left = Center.X - Zoom * 0.5;
+            _top = Center.Y + height * 0.5 * PixelAspectRatio;
         }
 
         /// <summary>
@@ -111,10 +117,13 @@ namespace SharpMap
         /// <returns>Point in image coordinates</returns>
         public PointF WorldToImage(Coordinate p, bool careAboutMapTransform)
         {
-            var pTmp = Transform.WorldtoMap(p, this);
+            var pTmp = WorldToImage(p);
+            if (!careAboutMapTransform)
+                return pTmp;
+
             lock (_mapTransform)
             {
-                if (careAboutMapTransform && !_mapTransform.IsIdentity)
+                if (!_mapTransform.IsIdentity)
                 {
                     var pts = new[] { pTmp };
                     _mapTransform.TransformPoints(pts);
@@ -132,7 +141,18 @@ namespace SharpMap
         /// <returns>Point in image coordinates</returns>
         public PointF WorldToImage(Coordinate p)
         {
-            return WorldToImage(p, false);
+            if (p.IsEmpty())
+                return PointF.Empty;
+
+            var x = (p.X - _left) / PixelWidth;
+            if (double.IsNaN(x))
+                return PointF.Empty;
+
+            var y = (_top - p.Y) / PixelHeight;
+            if (double.IsNaN(y))
+                return PointF.Empty;
+
+            return new PointF((float)x, (float)y);
         }
 
         /// <summary>

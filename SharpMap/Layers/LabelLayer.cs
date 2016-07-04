@@ -665,7 +665,7 @@ namespace SharpMap.Layers
 
             if (worldPosition == null) return null;
 
-            var position = Transform.WorldtoMap(worldPosition, map);
+            var position = map.WorldToImage(worldPosition);
 
             var location = new PointF(
                 position.X - size.Width*(short) style.HorizontalAlignment*0.5f,

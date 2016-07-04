@@ -255,8 +255,8 @@ namespace SharpMap.Layers
 
                         if (bitmap != null)
                         {
-                            PointF destMin = Transform.WorldtoMap(tileExtent.Min(), map);
-                            PointF destMax = Transform.WorldtoMap(tileExtent.Max(), map);
+                            PointF destMin = map.WorldToImage(tileExtent.Min());
+                            PointF destMax = map.WorldToImage(tileExtent.Max());
 
                             double minX = (int) Math.Round(destMin.X);
                             double minY = (int) Math.Round(destMax.Y);

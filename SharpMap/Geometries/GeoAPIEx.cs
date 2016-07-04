@@ -283,7 +283,7 @@ namespace GeoAPI.Geometries
         {
             var v = new PointF[vertices.Length];
             for (var i = 0; i < vertices.Length; i++)
-                v[i] = Transform.WorldtoMap(vertices[i], map);
+                v[i] = map.WorldToImage(vertices[i]);
             return v;
         }
 
