@@ -151,8 +151,7 @@ namespace SharpMap.Data.Providers
                     _earthSrid = value;
                     _earthGeometryFactory = GeoAPI.GeometryServiceProvider.Instance.CreateGeometryFactory(value);
 
-                    var wkt = SharpMap.Converters.WellKnownText.SpatialReference.SridToWkt(value);
-                    _earthCs = CoordinateSystemFactory.CreateFromWkt(wkt);
+                    _earthCs = SharpMap.Session.Instance.CoordinateSystemServices.GetCoordinateSystem(value);
                 }
 
             }
@@ -320,20 +319,6 @@ namespace SharpMap.Data.Providers
             return ++_sequence;
         }
 
-        protected virtual ICoordinateTransformationFactory CoordinateTransformationFactory
-        {
-            get
-            {
-                return _coordinateTransformationFactory ??
-                       (_coordinateTransformationFactory = new CoordinateTransformationFactory());
-            }
-        }
-
-        protected virtual ICoordinateSystemFactory CoordinateSystemFactory
-        {
-            get { return _coordinateSystemFactory ?? (_coordinateSystemFactory = new CoordinateSystemFactory()); }
-        }
-
         protected virtual IGeometry ToTarget(IGeometry geometry)
         {
             if (geometry.SRID == EarthSrid || (geometry.SRID <= 0 && CoordinateTransformation == null))
@@ -341,10 +326,9 @@ namespace SharpMap.Data.Providers
 
             if (CoordinateTransformation == null || geometry.SRID != CoordinateTransformation.SourceCS.AuthorityCode)
             {
-                var sourceWkt = SharpMap.Converters.WellKnownText.SpatialReference.SridToWkt(geometry.SRID);
-                var sourceCs = CoordinateSystemFactory.CreateFromWkt(sourceWkt);
+                var sourceCs = SharpMap.Session.Instance.CoordinateSystemServices.GetCoordinateSystem(geometry.SRID);
 
-                CoordinateTransformation = CoordinateTransformationFactory.CreateFromCoordinateSystems(
+                CoordinateTransformation = SharpMap.Session.Instance.CoordinateSystemServices.CreateTransformation(
                     sourceCs,
                     _earthCs);
             }
