@@ -242,6 +242,8 @@ namespace SharpMap.Data.Providers
             _kmlStyles.Add(DefaultStyleId, DefaultVectorStyle());
             _kmlStyles.Add(DefaultPointStyleId, DefaultPointStyle());
 
+            var symbolDict = new Dictionary<string, Image>();
+
             foreach (var style in kml.Flatten().OfType<Style>())
             {
                 if (string.IsNullOrEmpty(style.Id))
@@ -270,7 +272,7 @@ namespace SharpMap.Data.Providers
                             vectorStyle.PointColor = color;
                         }
                     }
-                    else
+                    else if (style.Polygon.Color.HasValue)
                     {
                         var color = new SolidBrush(Color.FromArgb(style.Polygon.Color.Value.Argb));
                         //fill the polygon
@@ -297,7 +299,6 @@ namespace SharpMap.Data.Providers
 
                 try
                 {
-                    var symbolDict = new Dictionary<string, Image>();
 
                     if (style.Icon != null && style.Icon.Icon != null && style.Icon.Icon.Href != null)
                     {
@@ -321,9 +322,14 @@ namespace SharpMap.Data.Providers
                     Trace.WriteLine(ex.Message);
                 }
 
-
-                _kmlStyles.Add(style.Id, vectorStyle);
-
+                try
+                {
+                    _kmlStyles.Add(style.Id, vectorStyle);
+                }
+                catch (ArgumentException)
+                {
+                    // we ignore duplicates -> bad kml
+                }
             }
         }
 
@@ -471,8 +477,19 @@ namespace SharpMap.Data.Providers
 
         private void ProcessLineStringGeometry(LineString f)
         {
-            var pGeom =_geometryFactory.CreateLineString(
-                    f.Coordinates.Select(crd => new Coordinate(crd.Longitude, crd.Latitude)).ToArray());
+            IGeometry pGeom;
+            if (f.Coordinates.Count == 1)
+            {
+                var coord = f.Coordinates.First();
+                var coords = new Coordinate(coord.Longitude, coord.Latitude);
+
+                pGeom = _geometryFactory.CreatePoint(coords);
+            }
+            else
+            {
+                pGeom = _geometryFactory.CreateLineString(
+                        f.Coordinates.Select(crd => new Coordinate(crd.Longitude, crd.Latitude)).ToArray());
+            }
             AddGeometryToCollection(f.GetParent<Placemark>(), pGeom);
         }
 
