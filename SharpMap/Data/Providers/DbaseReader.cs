@@ -320,7 +320,11 @@ namespace SharpMap.Data.Providers
             //Get and parse the language driver code
             _fileEncoding = GetDbaseLanguageDriver(buffer32[29], filename);
 
-            var numberOfColumns = (_headerLength - 31) / 32; // calculate the number of DataColumns in the header
+            // calculate the number of DataColumns in the header:
+            // (   headerlength 
+            //   - 32 bytes for the base header
+            //   - 1 byte for the header terminator ) / 32 bytes for each field
+            var numberOfColumns = (_headerLength - 32 - 1) / 32; 
             _dbaseColumns = new DbaseField[numberOfColumns];
             for (var i = 0; i < numberOfColumns; i++)
             {
