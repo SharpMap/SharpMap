@@ -433,6 +433,11 @@ namespace SharpMap.Forms
             return HitResult.None;
         }
 
+        public override void Refresh()
+        {
+            CreateMiniMap();
+            base.Refresh();
+        }
         protected override CreateParams CreateParams
         {
             [SecurityPermission(SecurityAction.LinkDemand, Flags = SecurityPermissionFlag.UnmanagedCode)]
@@ -682,6 +687,9 @@ namespace SharpMap.Forms
 
         private void CreateMiniMap()
         {
+            if (_mapBoxControl == null)
+                return;
+
             var clonedMap = _mapBoxControl.Map.Clone();
             clonedMap.ID = _mapId;
             clonedMap.Decorations.Clear();
