@@ -95,7 +95,7 @@ namespace SharpMap.Layers
         {
             _baseLayer = baseLayer;
             _cellSize = cellSize;
-            ((ILayer)this).VisibilityUnits = VisibilityUnits.ZoomLevel;
+            ((ILayer)this).VisibilityUnits = baseLayer.VisibilityUnits;
         }
 
         double ILayer.MinVisible
