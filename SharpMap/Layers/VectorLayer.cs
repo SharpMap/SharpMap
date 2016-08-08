@@ -19,12 +19,6 @@ using System;
 using System.Collections.ObjectModel;
 using System.Drawing;
 using System.Drawing.Drawing2D;
-//#if !DotSpatialProjections
-//using GeoAPI;
-//using GeoAPI.CoordinateSystems.Transformations;
-//#else
-//using DotSpatial.Projections;
-//#endif
 using SharpMap.Data;
 using SharpMap.Data.Providers;
 using GeoAPI.Geometries;
@@ -557,23 +551,6 @@ namespace SharpMap.Layers
         public void ExecuteIntersectionQuery(Envelope box, FeatureDataSet ds)
         {
             box = ToSource(box);
-//            if (CoordinateTransformation != null)
-//            {
-//#if !DotSpatialProjections
-//                if (ReverseCoordinateTransformation != null)
-//                {
-//                    box = GeometryTransform.TransformBox(box, ReverseCoordinateTransformation.MathTransform);
-//                }
-//                else
-//                {
-//                    CoordinateTransformation.MathTransform.Invert();
-//                    box = GeometryTransform.TransformBox(box, CoordinateTransformation.MathTransform);
-//                    CoordinateTransformation.MathTransform.Invert();
-//                }
-//#else
-//                box = GeometryTransform.TransformBox(box, CoordinateTransformation.Target, CoordinateTransformation.Source);
-//#endif
-//            }
 
             lock (_dataSource)
             {
@@ -597,28 +574,6 @@ namespace SharpMap.Layers
         public void ExecuteIntersectionQuery(IGeometry geometry, FeatureDataSet ds)
         {
             geometry = ToSource(geometry);
-//            if (CoordinateTransformation != null)
-//            {
-//#if !DotSpatialProjections
-//                if (ReverseCoordinateTransformation != null)
-//                {
-//                    geometry = GeometryTransform.TransformGeometry(geometry, ReverseCoordinateTransformation.MathTransform,
-//                            GeometryServiceProvider.Instance.CreateGeometryFactory((int)CoordinateTransformation.TargetCS.AuthorityCode));
-//                }
-//                else
-//                {
-//                    CoordinateTransformation.MathTransform.Invert();
-//                    geometry = GeometryTransform.TransformGeometry(geometry, CoordinateTransformation.MathTransform,
-//                            GeometryServiceProvider.Instance.CreateGeometryFactory((int)CoordinateTransformation.SourceCS.AuthorityCode));
-//                    CoordinateTransformation.MathTransform.Invert();
-//                }
-//#else
-//                geometry = GeometryTransform.TransformGeometry(geometry, 
-//                    CoordinateTransformation.Target,
-//                    CoordinateTransformation.Source,
-//                    CoordinateTransformation.SourceFactory);
-//#endif
-//            }
 
             lock (_dataSource)
             {

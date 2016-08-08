@@ -2,27 +2,21 @@
 using System.Collections.Generic;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
-using System.Text;
 using SharpMap.Layers;
 using System.Drawing;
-using SharpMap.Styles;
-#if DotSpatialProjections
-using DotSpatial.Projections;
-#else
 using GeoAPI.CoordinateSystems.Transformations;
 using ProjNet.CoordinateSystems.Transformations;
 using GeoAPI.CoordinateSystems;
 using ProjNet.CoordinateSystems;
-#endif
 
 namespace WinFormSamples
 {
     static class LayerTools
     {
 
-        private static ICoordinateTransformation dhdn2towgs84;
-        private static ICoordinateTransformation wgs84toGoogle;
-        private static ICoordinateTransformation googletowgs84;
+        private static ICoordinateTransformation _dhdn2Towgs84;
+        private static ICoordinateTransformation _wgs84ToGoogle;
+        private static ICoordinateTransformation _googletowgs84;
 
         /// <summary>
         /// Wgs84 to Google Mercator Coordinate Transformation
@@ -32,15 +26,8 @@ namespace WinFormSamples
             get
             {
 
-                if (wgs84toGoogle == null)
+                if (_wgs84ToGoogle == null)
                 {
-#if DotSpatialProjections
-                    wgs84toGoogle = new CoordinateTransformation()
-                                        {
-                                            Source = KnownCoordinateSystems.Geographic.World.WGS1984,
-                                            Target = KnownCoordinateSystems.Projected.World.WebMercator
-                                        };
-#else
                     CoordinateSystemFactory csFac = new ProjNet.CoordinateSystems.CoordinateSystemFactory();
                     CoordinateTransformationFactory ctFac = new CoordinateTransformationFactory();
 
@@ -64,11 +51,10 @@ namespace WinFormSamples
 
                     ((CoordinateSystem)epsg900913).DefaultEnvelope = new [] { -20037508.342789, -20037508.342789, 20037508.342789, 20037508.342789 };
 
-                    wgs84toGoogle = ctFac.CreateFromCoordinateSystems(wgs84, epsg900913);
-#endif
+                    _wgs84ToGoogle = ctFac.CreateFromCoordinateSystems(wgs84, epsg900913);
                 }
 
-                return wgs84toGoogle;
+                return _wgs84ToGoogle;
 
             }
         }
@@ -82,17 +68,8 @@ namespace WinFormSamples
             get
             {
 
-                if (dhdn2towgs84 == null)
+                if (_dhdn2Towgs84 == null)
                 {
-#if DotSpatialProjections
-                    var piSource = ProjectionInfo.FromEpsgCode(31466);
-
-                    wgs84toGoogle = new CoordinateTransformation()
-                    {
-                        Target = KnownCoordinateSystems.Geographic.World.WGS1984,
-                        Source = piSource
-                    };
-#else
                     CoordinateSystemFactory csFac = new ProjNet.CoordinateSystems.CoordinateSystemFactory();
                     CoordinateTransformationFactory ctFac = new CoordinateTransformationFactory();
 
@@ -114,11 +91,10 @@ namespace WinFormSamples
                       "Google Mercator", wgs84, projection, LinearUnit.Metre, new AxisInfo("East", AxisOrientationEnum.East),
                       new AxisInfo("North", AxisOrientationEnum.North));
 
-                    dhdn2towgs84 = ctFac.CreateFromCoordinateSystems(wgs84, epsg900913);
-#endif
+                    _dhdn2Towgs84 = ctFac.CreateFromCoordinateSystems(wgs84, epsg900913);
                 }
 
-                return dhdn2towgs84;
+                return _dhdn2Towgs84;
 
             }
         }
@@ -129,16 +105,8 @@ namespace WinFormSamples
             {
 
 
-                if (dhdn2towgs84 == null)
+                if (_dhdn2Towgs84 == null)
                 {
-#if DotSpatialProjections
-                    googletowgs84 = new CoordinateTransformation()
-                                        {
-                                            Source = KnownCoordinateSystems.Projected.World.WebMercator,
-                                            Target = KnownCoordinateSystems.Geographic.World.WGS1984
-                                        };
-#else
-
                     CoordinateSystemFactory csFac = new ProjNet.CoordinateSystems.CoordinateSystemFactory();
                     CoordinateTransformationFactory ctFac = new CoordinateTransformationFactory();
 
@@ -160,11 +128,10 @@ namespace WinFormSamples
                       "Google Mercator", wgs84, projection, LinearUnit.Metre, new AxisInfo("East", AxisOrientationEnum.East),
                       new AxisInfo("North", AxisOrientationEnum.North));
 
-                    googletowgs84 = ctFac.CreateFromCoordinateSystems(epsg900913, wgs84);
-#endif
+                    _googletowgs84 = ctFac.CreateFromCoordinateSystems(epsg900913, wgs84);
                 }
 
-                return googletowgs84;
+                return _googletowgs84;
 
             }
         }

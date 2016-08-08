@@ -111,7 +111,6 @@
     <Compile Include="CoordinateSystems\CoordinateSystemServices.cs" />
     <Compile Include="CoordinateSystems\ICoordinateSystemRepository.cs" />
     <Compile Include="CoordinateSystems\Transformations\GeometryTransform.cs" />
-    <Compile Include="CoordinateSystems\Transformations\GeometryTransformDotSpatial.cs" />
     <Compile Include="Data\FeatureDataSet.cs">
       <SubType>Component</SubType>
     </Compile>

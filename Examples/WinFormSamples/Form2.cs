@@ -1,9 +1,4 @@
-﻿#if DotSpatialProjections
-using GeometryTransform = DotSpatial.Projections.GeometryTransform;
-#else
-
-#endif
-using BruTile.Predefined;
+﻿using BruTile.Predefined;
 
 namespace WinFormSamples
 {
@@ -23,9 +18,7 @@ namespace WinFormSamples
 
     using NetTopologySuite.Geometries;
 
-#if !DotSpatialProjections
     using GeoAPI.CoordinateSystems.Transformations;
-#endif
 
     using SharpMap.Data.Providers;
     using SharpMap.Forms;
@@ -48,17 +41,10 @@ namespace WinFormSamples
             this.mapBox1.Map.BackgroundLayer.Add(tileLayer);
             GeometryFactory gf = new GeometryFactory(new PrecisionModel(), 3857);
 
-#if DotSpatialProjections
-            var mathTransform = LayerTools.Wgs84toGoogleMercator;
-            var geom = GeometryTransform.TransformBox(
-                new Envelope(-9.205626, -9.123736, 38.690993, 38.740837), 
-                mathTransform.Source, mathTransform.Target);
-#else
             IMathTransform mathTransform = LayerTools.Wgs84toGoogleMercator.MathTransform;
             Envelope geom = GeometryTransform.TransformBox(
                 new Envelope(-9.205626, -9.123736, 38.690993, 38.740837),
                 mathTransform);
-#endif
 
             //Adds a pushpin layer
             VectorLayer pushPinLayer = new VectorLayer("PushPins");

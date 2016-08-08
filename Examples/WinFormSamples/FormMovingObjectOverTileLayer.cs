@@ -1,26 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
 using GeoAPI.Geometries;
 using NetTopologySuite.Geometries;
 using SharpMap.Layers;
-using SharpMap.Data;
-using SharpMap.Styles;
-using SharpMap.Rendering.Thematics;
-using BruTile.Web;
 using BruTile.Predefined;
 
 using WinFormSamples.Properties;
 
-#if DotSpatialProjections
-using GeometryTransform = DotSpatial.Projections.GeometryTransform;
-#else
 using GeometryTransform = GeoAPI.CoordinateSystems.Transformations.GeometryTransform;
-#endif
 
 namespace WinFormSamples
 {
@@ -45,18 +33,10 @@ namespace WinFormSamples
         {
 
             //Lisbon...
-#if DotSpatialProjections
-            var mathTransform = LayerTools.Wgs84toGoogleMercator;
-            var geom = GeometryTransform.TransformBox(
-                new Envelope(-9.205626, -9.123736, 38.690993, 38.740837),
-                mathTransform.Source, mathTransform.Target);
-#else
             var mathTransform = LayerTools.Wgs84toGoogleMercator.MathTransform;
             GeoAPI.Geometries.Envelope geom = GeometryTransform.TransformBox(
                 new Envelope(-9.205626, -9.123736, 38.690993, 38.740837),
                 mathTransform);
-#endif
-
 
             //Google Background
             TileAsyncLayer layer2 = new TileAsyncLayer(KnownTileSources.Create(KnownTileSource.OpenStreetMap), "TileLayer - OSM");

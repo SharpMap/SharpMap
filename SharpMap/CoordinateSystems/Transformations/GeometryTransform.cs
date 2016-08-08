@@ -15,11 +15,10 @@
 // along with SharpMap; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-#if !DotSpatialProjections
-
 using System;
 using GeoAPI.Geometries;
 
+// ReSharper disable once CheckNamespace
 namespace GeoAPI.CoordinateSystems.Transformations
 {
     /// <summary>
@@ -252,5 +251,3 @@ namespace GeoAPI.CoordinateSystems.Transformations
         }
     }
 }
-
-#endif

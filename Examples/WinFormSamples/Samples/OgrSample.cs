@@ -240,6 +240,9 @@ namespace WinFormSamples.Samples
 
         internal static Map InitializeMap(float angle, string[] filenames)
         {
+            if (filenames == null)
+                return null;
+
             var providers = new SharpMap.Data.Providers.Ogr[filenames.Length];
             for (int i = 0; i < filenames.Length; i++)
             {

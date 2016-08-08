@@ -14,7 +14,8 @@
     <UpgradeBackupLocation>
     </UpgradeBackupLocation>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -78,11 +79,11 @@
       <HintPath>..\packages\Common.Logging.Core.3.3.1\lib\net40\Common.Logging.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="gdalconst_csharp, Version=1.0.5387.28601, Culture=neutral, PublicKeyToken=db5a52b08dc5b321, processorArchitecture=MSIL">
+    <Reference Include="gdalconst_csharp, Version=1.0.6061.14581, Culture=neutral, PublicKeyToken=db5a52b08dc5b321, processorArchitecture=x86">
       <HintPath>..\packages\GDAL.1.11.1\lib\net40\gdalconst_csharp.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="gdal_csharp, Version=1.0.5387.28601, Culture=neutral, PublicKeyToken=db5a52b08dc5b321, processorArchitecture=MSIL">
+    <Reference Include="gdal_csharp, Version=1.0.6061.14581, Culture=neutral, PublicKeyToken=db5a52b08dc5b321, processorArchitecture=x86">
       <HintPath>..\packages\GDAL.1.11.1\lib\net40\gdal_csharp.dll</HintPath>
       <Private>True</Private>
     </Reference>
@@ -122,11 +123,11 @@
       <HintPath>..\packages\NetTopologySuite.IO.SpatiaLite.1.14\lib\net40-client\NetTopologySuite.IO.SpatiaLite.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="ogr_csharp, Version=1.0.5387.28600, Culture=neutral, PublicKeyToken=db5a52b08dc5b321, processorArchitecture=MSIL">
+    <Reference Include="ogr_csharp, Version=1.0.6061.14581, Culture=neutral, PublicKeyToken=db5a52b08dc5b321, processorArchitecture=x86">
       <HintPath>..\packages\GDAL.1.11.1\lib\net40\ogr_csharp.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="osr_csharp, Version=1.0.5387.28600, Culture=neutral, PublicKeyToken=db5a52b08dc5b321, processorArchitecture=MSIL">
+    <Reference Include="osr_csharp, Version=1.0.6061.14581, Culture=neutral, PublicKeyToken=db5a52b08dc5b321, processorArchitecture=x86">
       <HintPath>..\packages\GDAL.1.11.1\lib\net40\osr_csharp.dll</HintPath>
       <Private>True</Private>
     </Reference>
@@ -152,9 +153,6 @@
     <Reference Include="Npgsql">
       <HintPath>..\packages\Npgsql.2.2.4.3\lib\net40\Npgsql.dll</HintPath>
     </Reference>
-    <Reference Include="DotSpatial.Projections">
-      <HintPath>..\packages\DotSpatial.Projections.1.7\lib\net40-Client\DotSpatial.Projections.dll</HintPath>
-    </Reference>
     <Reference Include="Oracle.ManagedDataAccess, Version=4.121.2.0, Culture=neutral, PublicKeyToken=89b483f429c47342">
       <HintPath>..\packages\Oracle.ManagedDataAccess.12.1.2400\lib\net40\Oracle.ManagedDataAccess.dll</HintPath>
     </Reference>
@@ -170,9 +168,7 @@
     <Compile Include="Data\Providers\SpatiaLite.cs" />
     <Compile Include="Data\Providers\SpatiaLiteIndex.cs" />
     <Compile Include="Data\Providers\SqlLite.cs" />
-    <Compile Include="GdalConfiguration.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="GdalConfiguration.cs" />
     <Compile Include="Layers\GdalTileIndexRasterLayer.cs" />
     <Compile Include="Layers\GdalRasterLayer.cs">
       <SubType>Code</SubType>
@@ -211,5 +207,8 @@
       <Project>{C83777FC-AABB-47D9-911F-D76255D4D541}</Project>
       <Name>SharpMap</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="GdalConfiguration.vb" />
   </ItemGroup>
 </Project>

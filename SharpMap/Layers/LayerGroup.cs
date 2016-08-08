@@ -23,11 +23,7 @@ using System.Linq;
 using SharpMap.Data;
 using GeoAPI.Geometries;
 using SharpMap.Styles;
-#if DotSpatialProjections
-using ICoordinateTransformation = DotSpatial.Projections.ICoordinateTransformation;
-#else
 using GeoAPI.CoordinateSystems.Transformations;
-#endif
 
 namespace SharpMap.Layers
 {
@@ -144,17 +140,11 @@ namespace SharpMap.Layers
         /// </remarks>
         public virtual bool SkipTransformationPropagation { get; set; }
 
-#if !DotSpatialProjections
         /// <summary>
         /// Gets or sets the <see cref="GeoAPI.CoordinateSystems.Transformations.ICoordinateTransformation"/> applied 
         /// to this vectorlayer prior to rendering
         /// </summary>
-#else
-        /// <summary>
-        /// Gets or sets the <see cref="DotSpatial.Projections.ICoordinateTransformation"/> applied 
-        /// to this vectorlayer prior to rendering
-        /// </summary>
-#endif
+
         public override ICoordinateTransformation CoordinateTransformation
         {
             get { return base.CoordinateTransformation; }
@@ -172,7 +162,6 @@ namespace SharpMap.Layers
             }
         }
 
-#if !DotSpatialProjections
         /// <summary>
         /// Certain Transformations cannot be inverted in ProjNet, in those cases use this property to set the reverse <see cref="GeoAPI.CoordinateSystems.Transformations.ICoordinateTransformation"/> (of CoordinateTransformation) to fetch data from Datasource
         /// 
@@ -194,7 +183,7 @@ namespace SharpMap.Layers
                 }
             }
         }
-#endif
+
         #region IDisposable Members
 
         /// <summary>
@@ -304,9 +293,7 @@ namespace SharpMap.Layers
             clonedGroup.MinVisible = MinVisible;
             clonedGroup.Proj4Projection = Proj4Projection;
             clonedGroup.SRID = SRID;
-#if !DotSpatialProjections
             clonedGroup.ReverseCoordinateTransformation = ReverseCoordinateTransformation;
-#endif
             clonedGroup.Style = Style;
             clonedGroup.TargetSRID = TargetSRID;
 

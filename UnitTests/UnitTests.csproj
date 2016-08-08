@@ -199,7 +199,6 @@
     <Compile Include="Converters\WKT\SpatialReferenceTests.cs" />
     <Compile Include="Converters\WKT\WktGeometryTests.cs" />
     <Compile Include="CoordinateSystems\CoordinateSystemExtensionsTest.cs" />
-    <Compile Include="CoordinateSystems\Transformations\GeometryTransformDotSpatialTest.cs" />
     <Compile Include="CoordinateSystems\Transformations\GeometryTransformTest.cs" />
     <Compile Include="Data\FeatureDataSetTests.cs" />
     <Compile Include="Data\Providers\DataTablePointTests.cs" />

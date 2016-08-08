@@ -22,18 +22,10 @@ namespace WinFormSamples.Samples
             var l = new SharpMap.Layers.HeatLayer(p, "Data", 0.00025f) { LayerName = "HEAT" };
             m.Layers.Add(l);
 
-#if DotSpatialProjections
-            l.CoordinateTransformation = new DotSpatial.Projections.CoordinateTransformation
-            {
-                Source = DotSpatial.Projections.ProjectionInfo.FromEpsgCode(4326),
-                Target = DotSpatial.Projections.ProjectionInfo.FromEpsgCode(3857)
-            };
-#else
             var ctfac = new ProjNet.CoordinateSystems.Transformations.CoordinateTransformationFactory();
             l.CoordinateTransformation =
                 ctfac.CreateFromCoordinateSystems(ProjNet.CoordinateSystems.GeographicCoordinateSystem.WGS84,
                                                   ProjNet.CoordinateSystems.ProjectedCoordinateSystem.WebMercator);
-#endif
 
             l.ZoomMin = 0;// 0.01 * m.GetExtents().Width;
             l.ZoomMax = /*0.9 * */m.GetExtents().Width;

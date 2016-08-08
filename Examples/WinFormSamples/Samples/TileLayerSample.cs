@@ -80,8 +80,6 @@ namespace WinFormSamples.Samples
                     da.Fill(ds);
             }
 
-#if !DotSpatialProjections
-
             //The SRS for this datasource is EPSG:4326, therefore we need to transfrom it to OSM projection
             var ctf = new ProjNet.CoordinateSystems.Transformations.CoordinateTransformationFactory();
             var cf = new ProjNet.CoordinateSystems.CoordinateSystemFactory();
@@ -97,19 +95,6 @@ namespace WinFormSamples.Samples
                 row["Y"] = coords[1];
             }
 
-#else
-            var epsg4326 = DotSpatial.Projections.KnownCoordinateSystems.Geographic.World.WGS1984;
-            var epsg3857 = DotSpatial.Projections.ProjectionInfo.FromEsriString("PROJCS[\"Popular Visualisation CRS / Mercator\", GEOGCS[\"Popular Visualisation CRS\", DATUM[\"Popular Visualisation Datum\", SPHEROID[\"Popular Visualisation Sphere\", 6378137, 0, AUTHORITY[\"EPSG\",\"7059\"]], TOWGS84[0, 0, 0, 0, 0, 0, 0], AUTHORITY[\"EPSG\",\"6055\"]],PRIMEM[\"Greenwich\", 0, AUTHORITY[\"EPSG\", \"8901\"]], UNIT[\"degree\", 0.0174532925199433, AUTHORITY[\"EPSG\", \"9102\"]], AXIS[\"E\", EAST], AXIS[\"N\", NORTH], AUTHORITY[\"EPSG\",\"4055\"]], PROJECTION[\"Mercator\"], PARAMETER[\"False_Easting\", 0], PARAMETER[\"False_Northing\", 0], PARAMETER[\"Central_Meridian\", 0], PARAMETER[\"Latitude_of_origin\", 0], UNIT[\"metre\", 1, AUTHORITY[\"EPSG\", \"9001\"]], AXIS[\"East\", EAST], AXIS[\"North\", NORTH], AUTHORITY[\"EPSG\",\"3857\"]]");
-            foreach (System.Data.DataRow row in ds.Tables[0].Rows)
-            {
-                if (row["X"] == DBNull.Value || row["Y"] == DBNull.Value) continue;
-                var coords = new[] { Convert.ToDouble(row["X"]), Convert.ToDouble(row["Y"])};
-                DotSpatial.Projections.Reproject.ReprojectPoints(coords, null, epsg4326, epsg3857, 0, 1);
-                row["X"] = coords[0];
-                row["Y"] = coords[1];
-            }
-
-#endif
             //Add Rotation Column
             ds.Tables[0].Columns.Add("Rotation", typeof (float));
             foreach (System.Data.DataRow row in ds.Tables[0].Rows)
@@ -171,8 +156,6 @@ namespace WinFormSamples.Samples
             return map;
         }
 
-#if !DotSpatialProjections
-
         private static GeoAPI.CoordinateSystems.Transformations.ICoordinateTransformation GetCoordinateTransformation()
         {
 
@@ -182,13 +165,6 @@ namespace WinFormSamples.Samples
             var epsg4326 = cf.CreateFromWkt("GEOGCS[\"WGS 84\",DATUM[\"WGS_1984\",SPHEROID[\"WGS 84\",6378137,298.257223563,AUTHORITY[\"EPSG\",\"7030\"]],AUTHORITY[\"EPSG\",\"6326\"]],PRIMEM[\"Greenwich\",0,AUTHORITY[\"EPSG\",\"8901\"]],UNIT[\"degree\",0.01745329251994328,AUTHORITY[\"EPSG\",\"9122\"]],AUTHORITY[\"EPSG\",\"4326\"]]");
             var epsg3857 = cf.CreateFromWkt("PROJCS[\"Popular Visualisation CRS / Mercator\", GEOGCS[\"Popular Visualisation CRS\", DATUM[\"Popular Visualisation Datum\", SPHEROID[\"Popular Visualisation Sphere\", 6378137, 0, AUTHORITY[\"EPSG\",\"7059\"]], TOWGS84[0, 0, 0, 0, 0, 0, 0], AUTHORITY[\"EPSG\",\"6055\"]],PRIMEM[\"Greenwich\", 0, AUTHORITY[\"EPSG\", \"8901\"]], UNIT[\"degree\", 0.0174532925199433, AUTHORITY[\"EPSG\", \"9102\"]], AXIS[\"E\", EAST], AXIS[\"N\", NORTH], AUTHORITY[\"EPSG\",\"4055\"]], PROJECTION[\"Mercator\"], PARAMETER[\"False_Easting\", 0], PARAMETER[\"False_Northing\", 0], PARAMETER[\"Central_Meridian\", 0], PARAMETER[\"Latitude_of_origin\", 0], UNIT[\"metre\", 1, AUTHORITY[\"EPSG\", \"9001\"]], AXIS[\"East\", EAST], AXIS[\"North\", NORTH], AUTHORITY[\"EPSG\",\"3857\"]]");
             return ctf.CreateFromCoordinateSystems(epsg4326, epsg3857);
-#else
-        private static DotSpatial.Projections.ICoordinateTransformation GetCoordinateTransformation()
-        {
-            var epsg4326 = DotSpatial.Projections.KnownCoordinateSystems.Geographic.World.WGS1984;
-            var epsg3857 = DotSpatial.Projections.ProjectionInfo.FromEsriString("PROJCS[\"Popular Visualisation CRS / Mercator\", GEOGCS[\"Popular Visualisation CRS\", DATUM[\"Popular Visualisation Datum\", SPHEROID[\"Popular Visualisation Sphere\", 6378137, 0, AUTHORITY[\"EPSG\",\"7059\"]], TOWGS84[0, 0, 0, 0, 0, 0, 0], AUTHORITY[\"EPSG\",\"6055\"]],PRIMEM[\"Greenwich\", 0, AUTHORITY[\"EPSG\", \"8901\"]], UNIT[\"degree\", 0.0174532925199433, AUTHORITY[\"EPSG\", \"9102\"]], AXIS[\"E\", EAST], AXIS[\"N\", NORTH], AUTHORITY[\"EPSG\",\"4055\"]], PROJECTION[\"Mercator\"], PARAMETER[\"False_Easting\", 0], PARAMETER[\"False_Northing\", 0], PARAMETER[\"Central_Meridian\", 0], PARAMETER[\"Latitude_of_origin\", 0], UNIT[\"metre\", 1, AUTHORITY[\"EPSG\", \"9001\"]], AXIS[\"East\", EAST], AXIS[\"North\", NORTH], AUTHORITY[\"EPSG\",\"3857\"]]");
-            return new DotSpatial.Projections.CoordinateTransformation { Source = epsg4326, Target = epsg3857 };
-#endif
         }
 
         private static SharpMap.Map InitializeMapBing(KnownTileSource mt)

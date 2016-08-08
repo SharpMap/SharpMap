@@ -78,12 +78,9 @@ namespace SharpMap.Data.Providers
         private ShapeFileHeader _header;
         private ShapeFileIndex _index;
         
-#if !DotSpatialProjections
 		private ICoordinateSystem _coordinateSystem;
-#else
-		private ProjectionInfo _coordinateSystem;
-#endif
-		private bool _coordsysReadFromFile;
+
+        private bool _coordsysReadFromFile;
 		private bool _fileBasedIndex;
 		private string _filename;
         private string _dbfFile;
@@ -935,11 +932,7 @@ namespace SharpMap.Data.Providers
                     SRID = 0;
                 else
                 {
-#if !DotSpatialProjections
                     SRID = (int) _coordinateSystem.AuthorityCode;
-#else
-			        SRID = _coordinateSystem.EpsgCode;
-#endif
                 }
             }
 		}

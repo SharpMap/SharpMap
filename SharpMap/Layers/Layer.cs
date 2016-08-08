@@ -17,11 +17,7 @@
 
 using System;
 using System.Drawing;
-#if !DotSpatialProjections
 using GeoAPI.CoordinateSystems.Transformations;
-#else
-using DotSpatial.Projections;
-#endif
 using GeoAPI.Geometries;
 using SharpMap.Base;
 using SharpMap.Styles;
@@ -143,17 +139,10 @@ namespace SharpMap.Layers
             base.ReleaseManagedResources();
         }
 
-#if !DotSpatialProjections
         /// <summary>
         /// Gets or sets the <see cref="GeoAPI.CoordinateSystems.Transformations.ICoordinateTransformation"/> applied 
         /// to this vectorlayer prior to rendering
         /// </summary>
-#else
-        /// <summary>
-        /// Gets or sets the <see cref="DotSpatial.Projections.ICoordinateTransformation"/> applied 
-        /// to this vectorlayer prior to rendering
-        /// </summary>
-#endif
         public virtual ICoordinateTransformation CoordinateTransformation
         {
             get { return _coordinateTransform; }
@@ -180,13 +169,12 @@ namespace SharpMap.Layers
             _sourceFactory = _targetFactory = GeoAPI.GeometryServiceProvider.Instance
                 .CreateGeometryFactory(SRID);
 
-#if !DotSpatialProjections
             if (CoordinateTransformation != null)
             {
                 SRID = Convert.ToInt32(CoordinateTransformation.SourceCS.AuthorityCode);
                 TargetSRID = Convert.ToInt32(CoordinateTransformation.TargetCS.AuthorityCode);
             }
-#endif
+
             if (CoordinateTransformationChanged != null)
                 CoordinateTransformationChanged(this, e);
         }
@@ -201,7 +189,6 @@ namespace SharpMap.Layers
         /// </summary>
         protected internal IGeometryFactory TargetFactory { get { return _targetFactory ?? _sourceFactory; } }
 
-#if !DotSpatialProjections
         /// <summary>
         /// Certain Transformations cannot be inverted in ProjNet, in those cases use this property to set the reverse <see cref="GeoAPI.CoordinateSystems.Transformations.ICoordinateTransformation"/> (of CoordinateTransformation) to fetch data from Datasource
         /// 
@@ -212,7 +199,6 @@ namespace SharpMap.Layers
             get { return _reverseCoordinateTransform; }
             set { _reverseCoordinateTransform= value; }
         }
-#endif
 
         #region ILayer Members
 
@@ -410,11 +396,7 @@ namespace SharpMap.Layers
             if (coordinateTransformation == null)
                 return envelope;
 
-#if !DotSpatialProjections
             return GeometryTransform.TransformBox(envelope, coordinateTransformation.MathTransform);
-#else
-            return GeometryTransform.TransformBox(envelope, coordinateTransformation.Source, coordinateTransformation.Target);
-#endif
         }
 
         /// <summary>
@@ -434,23 +416,18 @@ namespace SharpMap.Layers
         /// <returns>The source envelope</returns>
         protected virtual Envelope ToSource(Envelope envelope)
         {
-#if !DotSpatialProjections
             if (ReverseCoordinateTransformation != null)
             {
                 return GeometryTransform.TransformBox(envelope, ReverseCoordinateTransformation.MathTransform);
             }
-#endif
+
             if (CoordinateTransformation != null)
             {
-#if !DotSpatialProjections
                 var mt = CoordinateTransformation.MathTransform;
                 mt.Invert();
                 var res = GeometryTransform.TransformBox(envelope, mt);
                 mt.Invert();
                 return res;
-#else
-                return GeometryTransform.TransformBox(envelope, CoordinateTransformation.Target, CoordinateTransformation.Source);
-#endif
             }
 
             // no transformation
@@ -464,11 +441,7 @@ namespace SharpMap.Layers
 
             if (CoordinateTransformation != null)
             {
-#if !DotSpatialProjections
                 return GeometryTransform.TransformGeometry(geometry, CoordinateTransformation.MathTransform, TargetFactory);
-#else
-                return GeometryTransform.TransformGeometry(geometry, CoordinateTransformation.Source, CoordinateTransformation.Target, TargetFactory);
-#endif
             }
 
             return geometry;
@@ -479,24 +452,18 @@ namespace SharpMap.Layers
             if (geometry.SRID == SRID)
                 return geometry;
 
-#if !DotSpatialProjections
             if (ReverseCoordinateTransformation != null)
             {
                 return GeometryTransform.TransformGeometry(geometry,
                     ReverseCoordinateTransformation.MathTransform, SourceFactory);
             }
-#endif
             if (CoordinateTransformation != null)
             {
-#if !DotSpatialProjections
                 var mt = CoordinateTransformation.MathTransform;
                 mt.Invert();
                 var res = GeometryTransform.TransformGeometry(geometry, mt, SourceFactory);
                 mt.Invert();
                 return res;
-#else
-                return GeometryTransform.TransformGeometry(geometry, CoordinateTransformation.Target, CoordinateTransformation.Source, SourceFactory);
-#endif
             }
 
             return geometry;
