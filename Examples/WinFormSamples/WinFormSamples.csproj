@@ -81,15 +81,11 @@
       <HintPath>..\..\packages\Common.Logging.Log4Net1213.3.3.1\lib\net40\Common.Logging.Log4Net1213.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="DotSpatial.Projections, Version=1.7.0.0, Culture=neutral, PublicKeyToken=272632bddd08a38b, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\DotSpatial.Projections.1.7\lib\net40-Client\DotSpatial.Projections.dll</HintPath>
-    </Reference>
-    <Reference Include="gdalconst_csharp, Version=1.0.6061.14581, Culture=neutral, PublicKeyToken=db5a52b08dc5b321, processorArchitecture=x86">
+    <Reference Include="gdalconst_csharp, Version=1.0.5387.28601, Culture=neutral, PublicKeyToken=db5a52b08dc5b321, processorArchitecture=MSIL">
       <HintPath>..\..\packages\GDAL.1.11.1\lib\net40\gdalconst_csharp.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="gdal_csharp, Version=1.0.6061.14581, Culture=neutral, PublicKeyToken=db5a52b08dc5b321, processorArchitecture=x86">
+    <Reference Include="gdal_csharp, Version=1.0.5387.28601, Culture=neutral, PublicKeyToken=db5a52b08dc5b321, processorArchitecture=MSIL">
       <HintPath>..\..\packages\GDAL.1.11.1\lib\net40\gdal_csharp.dll</HintPath>
       <Private>True</Private>
     </Reference>
@@ -129,11 +125,11 @@
       <HintPath>..\..\packages\NetTopologySuite.IO.1.14.0.1\lib\net40-client\NetTopologySuite.IO.ShapeFile.Extended.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="ogr_csharp, Version=1.0.6061.14581, Culture=neutral, PublicKeyToken=db5a52b08dc5b321, processorArchitecture=x86">
+    <Reference Include="ogr_csharp, Version=1.0.5387.28600, Culture=neutral, PublicKeyToken=db5a52b08dc5b321, processorArchitecture=MSIL">
       <HintPath>..\..\packages\GDAL.1.11.1\lib\net40\ogr_csharp.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="osr_csharp, Version=1.0.6061.14581, Culture=neutral, PublicKeyToken=db5a52b08dc5b321, processorArchitecture=x86">
+    <Reference Include="osr_csharp, Version=1.0.5387.28600, Culture=neutral, PublicKeyToken=db5a52b08dc5b321, processorArchitecture=MSIL">
       <HintPath>..\..\packages\GDAL.1.11.1\lib\net40\osr_csharp.dll</HintPath>
       <Private>True</Private>
     </Reference>
@@ -201,7 +197,6 @@
     <Compile Include="FormMovingObjectOverTileLayer.Designer.cs">
       <DependentUpon>FormMovingObjectOverTileLayer.cs</DependentUpon>
     </Compile>
-    <Compile Include="GdalConfiguration.cs" />
     <Compile Include="LayerTools.cs" />
     <Compile Include="MagnifierTool.cs" />
     <Compile Include="Samples\CreateTilesSample.cs" />
@@ -385,7 +380,6 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
-    <Content Include="GdalConfiguration.vb" />
     <Content Include="GeoData\GeoTiff\world_raster_mod.tif">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -565,6 +559,10 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\SharpMap.CoordinateSystems.DotSpatial\SharpMap.CoordinateSystems.DotSpatial.csproj">
+      <Project>{a019b82e-3766-44a3-907a-0487ff9eba49}</Project>
+      <Name>SharpMap.CoordinateSystems.DotSpatial</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\SharpMap.Layers.BruTile\SharpMap.Layers.BruTile.csproj">
       <Project>{d84f31ed-3d81-42f2-9190-3d021d6038a0}</Project>
       <Name>SharpMap.Layers.BruTile</Name>

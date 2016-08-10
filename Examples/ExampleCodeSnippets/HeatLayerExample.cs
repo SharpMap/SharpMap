@@ -2,9 +2,6 @@
 using System.Data;
 using System.Drawing;
 using System.Drawing.Imaging;
-using BruTile.Predefined;
-using BruTile.Web;
-using DotSpatial.Projections;
 using GeoAPI.Geometries;
 using NUnit.Framework;
 using NetTopologySuite;

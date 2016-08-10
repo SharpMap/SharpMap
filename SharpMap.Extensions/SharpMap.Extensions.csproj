@@ -52,11 +52,11 @@
       <HintPath>..\packages\Common.Logging.Core.3.3.1\lib\net40\Common.Logging.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="gdalconst_csharp, Version=1.0.6061.14581, Culture=neutral, PublicKeyToken=db5a52b08dc5b321, processorArchitecture=x86">
+    <Reference Include="gdalconst_csharp, Version=1.0.5387.28601, Culture=neutral, PublicKeyToken=db5a52b08dc5b321, processorArchitecture=MSIL">
       <HintPath>..\packages\GDAL.1.11.1\lib\net40\gdalconst_csharp.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="gdal_csharp, Version=1.0.6061.14581, Culture=neutral, PublicKeyToken=db5a52b08dc5b321, processorArchitecture=x86">
+    <Reference Include="gdal_csharp, Version=1.0.5387.28601, Culture=neutral, PublicKeyToken=db5a52b08dc5b321, processorArchitecture=MSIL">
       <HintPath>..\packages\GDAL.1.11.1\lib\net40\gdal_csharp.dll</HintPath>
       <Private>True</Private>
     </Reference>
@@ -96,11 +96,11 @@
       <HintPath>..\packages\NetTopologySuite.IO.SpatiaLite.1.14\lib\net40-client\NetTopologySuite.IO.SpatiaLite.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="ogr_csharp, Version=1.0.6061.14581, Culture=neutral, PublicKeyToken=db5a52b08dc5b321, processorArchitecture=x86">
+    <Reference Include="ogr_csharp, Version=1.0.5387.28600, Culture=neutral, PublicKeyToken=db5a52b08dc5b321, processorArchitecture=MSIL">
       <HintPath>..\packages\GDAL.1.11.1\lib\net40\ogr_csharp.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="osr_csharp, Version=1.0.6061.14581, Culture=neutral, PublicKeyToken=db5a52b08dc5b321, processorArchitecture=x86">
+    <Reference Include="osr_csharp, Version=1.0.5387.28600, Culture=neutral, PublicKeyToken=db5a52b08dc5b321, processorArchitecture=MSIL">
       <HintPath>..\packages\GDAL.1.11.1\lib\net40\osr_csharp.dll</HintPath>
       <Private>True</Private>
     </Reference>
@@ -180,8 +180,5 @@
       <Project>{C83777FC-AABB-47D9-911F-D76255D4D541}</Project>
       <Name>SharpMap</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="GdalConfiguration.vb" />
   </ItemGroup>
 </Project>
