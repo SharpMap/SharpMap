@@ -16,5 +16,8 @@
 &lt;/SerializableConnectionString&gt;</DesignTimeValue>
       <Value Profile="(Default)">Data Source=GeoData\SpatiaLite\sample.sqlite;</Value>
     </Setting>
+    <Setting Name="OleDbProvider" Type="System.String" Scope="Application">
+      <Value Profile="(Default)" />
+    </Setting>
   </Settings>
 </SettingsFile>

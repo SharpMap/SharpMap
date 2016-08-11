@@ -60,7 +60,7 @@ namespace WinFormSamples.Samples
             return map;
         }
 
-        private const string XlsConnectionString = @"Provider=Microsoft.Jet.OLEDB.4.0;Data Source={0}\{1};Extended Properties=""Excel 8.0;HDR=Yes;IMEX=1""";
+        private const string XlsConnectionString = "Provider={2};Data Source={0}\\{1};Extended Properties=\"Excel 8.0;HDR=Yes;IMEX=1\"";
 
         private static SharpMap.Map InitializeMapOsmWithXls(float angle)
         {
@@ -71,7 +71,7 @@ namespace WinFormSamples.Samples
             map.BackgroundLayer.Add(tileLayer);
 
             //Get data from excel
-            var xlsPath = string.Format(XlsConnectionString, System.IO.Directory.GetCurrentDirectory(), "GeoData\\Cities.xls");
+            var xlsPath = string.Format(XlsConnectionString, System.IO.Directory.GetCurrentDirectory(), "GeoData\\Cities.xls", Properties.Settings.Default.OleDbProvider);
             var ds = new System.Data.DataSet("XLS");
             using (var cn = new System.Data.OleDb.OleDbConnection(xlsPath))
             {

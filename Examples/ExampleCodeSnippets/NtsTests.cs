@@ -53,7 +53,7 @@
             var table = WriteCsv();
 
             var p = new SharpMap.Data.Providers.OleDbPoint(
-                "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=\"" + System.IO.Path.GetTempPath() + "\";" +
+                "Provider=" + Properties.Settings.Default.OleDbProvider + ";Data Source=\"" + System.IO.Path.GetTempPath() + "\";" +
                 "Extended Properties=\"text;HDR=Yes;FMT=Delimited\"", table, "ID", "X", "Y");
 
             var extents = p.GetExtents();
