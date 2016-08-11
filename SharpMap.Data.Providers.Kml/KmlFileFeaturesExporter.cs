@@ -28,8 +28,6 @@ using System.Linq;
 using GeoAPI.CoordinateSystems;
 using GeoAPI.CoordinateSystems.Transformations;
 using GeoAPI.Geometries;
-using ProjNet.CoordinateSystems;
-using ProjNet.CoordinateSystems.Transformations;
 using SharpKml.Base;
 using SharpKml.Dom;
 using SharpKml.Engine;
