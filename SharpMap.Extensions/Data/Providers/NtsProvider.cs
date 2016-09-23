@@ -30,14 +30,14 @@ using NetTopologySuite.Geometries;
 using NtsGeometry = NetTopologySuite.Geometries.Geometry;
 #endif
 
-using Geometry=GeoAPI.Geometries.IGeometry;
+using Geometry = GeoAPI.Geometries.IGeometry;
 using BoundingBox = GeoAPI.Geometries.Envelope;
 
 
 namespace SharpMap.Data.Providers
 {
     /// <summary>
-    /// The NtsProvider enables you to feed any SharpMap datasource through the <a href="http://sourceforge.net/projects/nts">NetTopologySuite</a>
+    /// The NtsProvider enables you to feed any SharpMap datasource through the <a href="http://github.com/nettopologysuite/nettopologysuite">NetTopologySuite</a>
     /// geometry using any NTS operation.
     /// </summary>
     /// <remarks>
@@ -77,9 +77,6 @@ namespace SharpMap.Data.Providers
 
         #region Fields
 
-        // Factory for NTS features
-        private readonly GeometryFactory _geometryFactory;
-
         // NTS features
         private List<Feature> _features;
 
@@ -106,9 +103,9 @@ namespace SharpMap.Data.Providers
         /// </param>
         /// <seealso cref="NetTopologySuite.Geometries.PrecisionModel"/>
         /// <seealso cref="NetTopologySuite.Geometries.GeometryFactory"/>
-        protected internal NtsProvider(PrecisionModel precisionModel)
+        protected internal NtsProvider(IPrecisionModel precisionModel)
         {
-            _geometryFactory = new GeometryFactory(precisionModel);
+            Factory = new GeometryFactory(precisionModel);
         }
 
         /// <summary>
@@ -122,6 +119,24 @@ namespace SharpMap.Data.Providers
         public NtsProvider(IProvider provider) : this()
         {
             BuildFromProvider(provider);
+        }
+        
+        /// <summary>
+        /// Initializes a new instance of the <see cref="NtsProvider"/> class 
+        /// from another <see cref="SharpMap.Data.Providers.IProvider" />.
+        /// </summary>
+        /// <param name="features">
+        /// A list of <see cref="NetTopologySuite.Features.Feature"/> 
+        /// from witch initialize the <see cref="NtsProvider"/> instance.
+        /// </param>
+        public NtsProvider(IList<Feature> features) : this()
+        {
+            if (features == null)
+                throw new ArgumentNullException();
+
+            Factory = features[0].Geometry.Factory;
+            SRID = Factory.SRID;
+            _features = new List<Feature>(features);
         }
 
         /// <summary>
@@ -139,7 +154,7 @@ namespace SharpMap.Data.Providers
         /// <seealso cref="NetTopologySuite.Geometries.PrecisionModel"/>     
         /// <seealso cref="NetTopologySuite.Geometries.GeometryFactory"/>
         public NtsProvider(IProvider provider,
-                           PrecisionModel precisionModel) : this(precisionModel)
+            PrecisionModel precisionModel) : this(precisionModel)
         {
             BuildFromProvider(provider);
         }
@@ -180,7 +195,7 @@ namespace SharpMap.Data.Providers
         /// <seealso cref="NetTopologySuite.Geometries.PrecisionModel"/> 
         /// <seealso cref="NetTopologySuite.Geometries.GeometryFactory"/>
         public NtsProvider(IProvider provider, GeometryOperationDelegate operation,
-                           PrecisionModel precisionModel) : this(provider, precisionModel)
+            PrecisionModel precisionModel) : this(provider, precisionModel)
         {
             operation(_features);
         }
@@ -209,9 +224,11 @@ namespace SharpMap.Data.Providers
                     AttributesTable attributes = new AttributesTable();
                     foreach (DataColumn column in dataRow.Table.Columns)
                     {
-                        if (dataRow[column] == null || dataRow[column] is DBNull)
-                            throw new ApplicationException("Null values not supported");
-                        attributes.AddAttribute(column.ColumnName, dataRow[column]);
+                        //if (dataRow[column] == null || dataRow[column] is DBNull)
+                        //    throw new ApplicationException("Null values not supported");
+                        var value = dataRow[column];
+                        if (value is DBNull) value = null;
+                        attributes.AddAttribute(column.ColumnName, value);
                     }
                     _features.Add(new Feature(geometry, attributes));
                 }
@@ -247,13 +264,13 @@ namespace SharpMap.Data.Providers
         public override FeatureDataRow GetFeature(uint rowId)
         {
             var feature = _features[Convert.ToInt32(rowId)];
-            
+
             var dataTable = new FeatureDataTable();
             foreach (var columnName in feature.Attributes.GetNames())
                 dataTable.Columns.Add(new DataColumn(columnName, feature.Attributes.GetType(columnName)));
 
             var dataRow = dataTable.NewRow();
-            dataRow.Geometry = (Geometry)feature.Geometry.Clone();
+            dataRow.Geometry = (Geometry) feature.Geometry.Clone();
             foreach (var columnName in feature.Attributes.GetNames())
                 dataRow[columnName] = feature.Attributes[columnName];
             return dataRow;
@@ -385,9 +402,20 @@ namespace SharpMap.Data.Providers
         /// <returns><see cref="SharpMap.Data.FeatureDataTable"/></returns>
         private FeatureDataTable CreateFeatureDataTable()
         {
+            if (_features.Count == 0)
+                throw new InvalidOperationException();
+
             var dataTable = new FeatureDataTable();
-            foreach (var columnName in _features[0].Attributes.GetNames())
-                dataTable.Columns.Add(new DataColumn(columnName, _features[0].Attributes.GetType(columnName)));
+            var ff = _features[0];
+            //foreach (var columnName in ff.Attributes.GetNames())
+            //    dataTable.Columns.Add(new DataColumn(columnName, _features[0].Attributes.GetType(columnName)));
+            foreach (var columnName in ff.Attributes.GetNames())
+            {
+                var value = ff.Attributes[columnName];
+                dataTable.Columns.Add(value == null
+                    ? new DataColumn(columnName, typeof(object))
+                    : new DataColumn(columnName, _features[0].Attributes.GetType(columnName)));
+            }
             return dataTable;
         }
 
