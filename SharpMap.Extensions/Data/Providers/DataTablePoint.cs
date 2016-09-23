@@ -18,6 +18,7 @@
 using System;
 using System.Collections.ObjectModel;
 using System.Data;
+using System.Runtime.InteropServices;
 using GeoAPI.Geometries;
 using Geometry = GeoAPI.Geometries.IGeometry;
 using BoundingBox = GeoAPI.Geometries.Envelope;
@@ -37,12 +38,14 @@ namespace SharpMap.Data.Providers
     /// </remarks>
     public class DataTablePoint : PreparedGeometryProvider, IDisposable
     {
-        private string _ConnectionString;
+        private string _connectionString;
         private string _definitionQuery;
-        private string _ObjectIdColumn;
-        private DataTable _Table;
-        private string _XColumn;
-        private string _YColumn;
+        private string _objectIdColumn;
+        private DataTable _table;
+        private string _xColumn;
+        private string _yColumn;
+
+        private FeatureDataTable _featureDataTable;
 
         /// <summary>
         /// Initializes a new instance of the DataTablePoint provider
@@ -65,7 +68,8 @@ namespace SharpMap.Data.Providers
             Table = dataTable;
             XColumn = xColumn;
             YColumn = yColumn;
-            ObjectIdColumn = oidColumnName;
+            _objectIdColumn = oidColumnName;
+
         }
 
         /// <summary>
@@ -73,27 +77,39 @@ namespace SharpMap.Data.Providers
         /// </summary>
         public DataTable Table
         {
-            get { return _Table; }
-            set { _Table = value; }
+            get { return _table; }
+            set
+            {
+                _table = value;
+                _featureDataTable = null;
+            }
         }
 
-
-        /// <summary>
-        /// Name of column that contains the Object ID
-        /// </summary>
-        public string ObjectIdColumn
+        private static FeatureDataTable CreateFeatureDataTable(DataTable table)
         {
-            get { return _ObjectIdColumn; }
-            set { _ObjectIdColumn = value; }
+            var res = new FeatureDataTable(table);
+            foreach (DataColumn c in table.Columns)
+            {
+                var resc = new DataColumn(c.ColumnName, c.DataType);
+                resc.AllowDBNull = c.AllowDBNull;
+                resc.Caption = c.Caption;
+                resc.ColumnMapping = c.ColumnMapping;
+                resc.Expression = c.Expression;
+                
+                res.Columns.Add(resc);
+            }
+            return res;
         }
+
+        
 
         /// <summary>
         /// Name of column that contains X coordinate
         /// </summary>
         public string XColumn
         {
-            get { return _XColumn; }
-            set { _XColumn = value; }
+            get { return _xColumn; }
+            set { _xColumn = value; }
         }
 
         /// <summary>
@@ -101,17 +117,26 @@ namespace SharpMap.Data.Providers
         /// </summary>
         public string YColumn
         {
-            get { return _YColumn; }
-            set { _YColumn = value; }
+            get { return _yColumn; }
+            set { _yColumn = value; }
         }
 
         /// <summary>
-        /// Connectionstring
+        /// Gets or sets a value indicating the name of the object id column
+        /// </summary>
+        public string ObjectIdColumn
+        {
+            get { return _objectIdColumn; }
+            set { _objectIdColumn = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets a value indicating the connection string
         /// </summary>
         public string ConnectionString
         {
-            get { return _ConnectionString; }
-            set { _ConnectionString = value; }
+            get { return _connectionString; }
+            set { _connectionString = value; }
         }
 
         /// <summary>
@@ -121,6 +146,14 @@ namespace SharpMap.Data.Providers
         {
             get { return _definitionQuery; }
             set { _definitionQuery = value; }
+        }
+
+        /// <summary>
+        /// Gets a value 
+        /// </summary>
+        protected FeatureDataTable FeatureDataTable
+        {
+            get { return _featureDataTable ?? (_featureDataTable = CreateFeatureDataTable(_table)); }
         }
 
         #region IProvider Members
@@ -170,16 +203,16 @@ namespace SharpMap.Data.Providers
                 return null;
             }
 
-            string strSQL = XColumn + " > " + bbox.Left().ToString(Map.NumberFormatEnUs) + " AND " +
-                            XColumn + " < " + bbox.Right().ToString(Map.NumberFormatEnUs) + " AND " +
-                            YColumn + " > " + bbox.Bottom().ToString(Map.NumberFormatEnUs) + " AND " +
-                            YColumn + " < " + bbox.Top().ToString(Map.NumberFormatEnUs);
+            string strSQL = XColumn + " >= " + bbox.MinX.ToString("R", Map.NumberFormatEnUs) + " AND " +
+                            XColumn + " <= " + bbox.MaxX.ToString("R", Map.NumberFormatEnUs) + " AND " +
+                            YColumn + " >= " + bbox.MinY.ToString("R", Map.NumberFormatEnUs) + " AND " +
+                            YColumn + " <= " + bbox.MaxY.ToString("R", Map.NumberFormatEnUs);
 
             drow = Table.Select(strSQL);
 
             foreach (DataRow dr in drow)
             {
-                objectlist.Add((uint) (int) dr[0]);
+                objectlist.Add(Convert.ToUInt32(dr[0]));
             }
 
             return objectlist;
@@ -226,10 +259,10 @@ namespace SharpMap.Data.Providers
                 return;
             }
 
-            string statement = XColumn + " > " + bbox.Left().ToString(Map.NumberFormatEnUs) + " AND " +
-                               XColumn + " < " + bbox.Right().ToString(Map.NumberFormatEnUs) + " AND " +
-                               YColumn + " > " + bbox.Bottom().ToString(Map.NumberFormatEnUs) + " AND " +
-                               YColumn + " < " + bbox.Top().ToString(Map.NumberFormatEnUs);
+            string statement = XColumn + " >= " + bbox.MaxX.ToString("R", Map.NumberFormatEnUs) + " AND " +
+                               XColumn + " =< " + bbox.MaxX.ToString("R", Map.NumberFormatEnUs) + " AND " +
+                               YColumn + " >= " + bbox.MinY.ToString("R", Map.NumberFormatEnUs) + " AND " +
+                               YColumn + " =< " + bbox.MaxY.ToString("R", Map.NumberFormatEnUs);
 
             rows = Table.Select(statement);
 
@@ -264,9 +297,37 @@ namespace SharpMap.Data.Providers
         /// </summary>
         /// <param name="rowId"></param>
         /// <returns>datarow</returns>
+        /// <exception cref="InvalidOperationException">If <see cref="Table"/> does not have a primary key set to <see cref="ObjectIdColumn"/></exception>
         public override FeatureDataRow GetFeature(uint rowId)
         {
-            throw new NotSupportedException();
+            if (_table.PrimaryKey.Length != 1)
+                throw new InvalidOperationException("No primary key defined");
+
+            if (_table.PrimaryKey[0] != Table.Columns[ObjectIdColumn])
+                throw new InvalidOperationException("Primary key not set to object id column");
+
+            var row = _table.Rows.Find(rowId);
+        
+            if (row == null) return null;
+
+            var fdr = FeatureDataTable.NewRow();
+            fdr.ItemArray = row.ItemArray;
+            fdr.Geometry = CreateGeometry(row);
+
+            return fdr;
+        }
+
+        /// <summary>
+        /// Method to create a geometry off the <paramref name="row"/>.
+        /// </summary>
+        /// <param name="row">The data row</param>
+        /// <returns>A geometry</returns>
+        protected virtual IGeometry CreateGeometry(DataRow row)
+        {
+            return Factory.CreatePoint(
+                new Coordinate(
+                    Convert.ToDouble(row[XColumn]), 
+                    Convert.ToDouble(row[YColumn])));
         }
 
         /// <summary>
