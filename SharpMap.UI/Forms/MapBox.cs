@@ -1326,6 +1326,8 @@ namespace SharpMap.Forms
         /// <param name="e">A <see cref="T:System.EventArgs"/> that contains the event arguments.</param>
         protected override void OnMouseHover(EventArgs e)
         {
+            _logger.DebugFormat("Hover at {0}", MousePosition);
+
             // update the last hover position
             _lastHoverPostiton = PointToClient(MousePosition);
 
@@ -1374,6 +1376,8 @@ namespace SharpMap.Forms
         /// <param name="e">An <see cref="T:System.EventArgs"/> that contains the event data. </param>
         protected override void OnMouseLeave(EventArgs e)
         {
+            _logger.DebugFormat( "MouseLeave {0}", Name);
+
             base.OnMouseLeave(e);
             if (UseCurrentTool)
             {
@@ -1391,6 +1395,7 @@ namespace SharpMap.Forms
         /// <param name="e">A <see cref="T:System.Windows.Forms.MouseEventArgs"/> that contains the event arguments.</param>
         protected override void OnMouseWheel(MouseEventArgs e)
         {
+            _logger.DebugFormat("MouseWheel {0} ({1})", e.Location, e.Delta);
             base.OnMouseWheel(e);
 
             if (_map != null)
@@ -1479,6 +1484,8 @@ namespace SharpMap.Forms
         /// <param name="e">A <see cref="T:System.Windows.Forms.MouseEventArgs"/> that contains the event arguments.</param>
         protected override void OnMouseDown(MouseEventArgs e)
         {
+            _logger.DebugFormat("MouseDown {0} ({1}, {2})", Name, e.Location, e.Button);
+
             // call base function
             base.OnMouseDown(e);
 
@@ -2034,6 +2041,8 @@ namespace SharpMap.Forms
         /// <param name="e">A <see cref="T:System.Windows.Forms.MouseEventArgs"/> that contains the event arguments.</param>
         protected override void OnMouseUp(MouseEventArgs e)
         {
+            _logger.DebugFormat("MouseUp {0} ({1}, {2})", Name, e.Location, e.Button);
+
             // call base function
             base.OnMouseUp(e);
 
@@ -2464,9 +2473,11 @@ namespace SharpMap.Forms
                     if (_redirectHandle.ClientRectangle.Contains(pt))
                     {
                         if (_mouseIn)
+                        {
                             _redirectHandle.OnMouseWheel(
                                 new MouseEventArgs(MouseButtons.Middle, 0, pt.X, pt.Y, delta));
-                        return true;
+                            return true;
+                        }
                         //var hWnd = GetWindowUnderCursor();
                         //if (hWnd == _redirectHandle.Handle)
                         //{
