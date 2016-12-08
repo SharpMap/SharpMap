@@ -1,20 +1,20 @@
-﻿using System;
+﻿using BruTile.Web;
+using GeoAPI.Geometries;
+using SharpMap.Data;
+using SharpMap.Data.Providers;
+using SharpMap.Layers;
+using SharpMap.Rendering.Thematics;
+using SharpMap.Styles;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
-using System.Text;
-using System.Windows.Forms;
-using GeoAPI.Geometries;
-using SharpMap.Layers;
-using SharpMap.Data;
-using SharpMap.Styles;
-using SharpMap.Rendering.Thematics;
-using BruTile.Web;
-using System.IO;
 using System.Drawing.Drawing2D;
-using SharpMap.Data.Providers;
+using System.IO;
+using System.Text;
 using System.Threading;
+using System.Windows.Forms;
 
 namespace WinFormSamples
 {

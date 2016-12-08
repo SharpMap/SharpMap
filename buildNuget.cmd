@@ -1,0 +1,10 @@
+BuildTools\nuget pack SharpMap.Core.nuspec 								-version 1.2.0
+BuildTools\nuget pack SharpMap.UI.nuspec                                -version 1.2.0
+BuildTools\nuget pack SharpMap.Extensions.nuspec                        -version 1.2.0
+BuildTools\nuget pack SharpMap.Layers.BruTile.nuspec                    -version 1.2.0
+BuildTools\nuget pack SharpMap.Web.nuspec                               -version 1.2.0
+BuildTools\nuget pack SharpMap.Layers.HeatLayer.nuspec                  -version 1.2.0
+BuildTools\nuget pack SharpMap.Data.Providers.OracleSpatial.nuspec      -version 1.2.0
+BuildTools\nuget pack SharpMap.Data.Providers.Kml.nuspec                -version 1.2.0
+BuildTools\nuget pack SharpMap.Data.Providers.GeoPackage.nuspec         -version 1.2.0
+BuildTools\nuget pack SharpMap.nuspec                                   -version 1.2.0

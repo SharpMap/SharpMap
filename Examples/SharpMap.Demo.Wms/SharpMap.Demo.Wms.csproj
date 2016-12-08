@@ -670,7 +670,6 @@
     <None Include="App_Data\berlin\osmbuildings.shx" />
     <None Include="App_Data\berlin\osmbuildings_complete.dbf" />
     <None Include="App_Data\berlin\osmbuildings_complete.prj" />
-    <None Include="App_Data\berlin\osmbuildings_complete.shp" />
     <None Include="App_Data\berlin\osmbuildings_complete.shx" />
     <None Include="App_Data\nyc\poi.dbf" />
     <None Include="App_Data\nyc\poi.prj" />

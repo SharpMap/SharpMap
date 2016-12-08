@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="RIDER_MODULE" version="4">
+  <component name="NewModuleRootManager">
+    <content url="file://$MODULE_DIR$/../..">
+      <sourceFolder url="file://$MODULE_DIR$/../../.travis.yml" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../../BuildTools/MSBuild.Community.Tasks.targets" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../../BuildTools/NuGet.exe" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../../Docs/SharpMap-Dependencies.png" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../../Examples/DemoMap" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../../Examples/DemoWebSite" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../../Examples/DemoWinForm" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../../Examples/ExampleCodeSnippets" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../../Examples/ExampleCodeSnipplets.VB" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../../Examples/SharpMap.Demo.Wms" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../../Examples/WinFormSamples" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../../Examples/WPFSamples" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../../packages/odac.client.x86.1.112.3.20/instantclient/oci.dll" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../../packages/odac.client.x86.1.112.3.20/instantclient/orannzsbb11.dll" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../../packages/odac.client.x86.1.112.3.20/instantclient/oraociicus11.dll" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../../packages/odac.client.x86.1.112.3.20/odp/net40/OraOps11w.dll" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../../Performance1.psess" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../../SharedAssemblyVersion.cs" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../../SharpMap" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../../SharpMap.Converters.GeoJSON" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../../SharpMap.Converters.Spatialite" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../../SharpMap.CoordinateSystems.DotSpatial" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../../SharpMap.Data.Providers.FileGdb" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../../SharpMap.Data.Providers.GeoPackage" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../../SharpMap.Data.Providers.Kml" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../../SharpMap.Data.Providers.OracleSpatial" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../../SharpMap.Data.Providers.OracleSpatial.nuspec" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../../SharpMap.Extensions" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../../SharpMap.Extensions.nuspec" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../../SharpMap.Extensions.x86" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../../SharpMap.Layers.BruTile" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../../SharpMap.Layers.HeatLayer" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../../SharpMap.Layers.HeatLayer.nuspec" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../../SharpMap.nuspec" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../../SharpMap.proj" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../../SharpMap.Serialization" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../../SharpMap.sln.DotSettings" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../../SharpMap.SqlServerSpatialObjects" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../../SharpMap.targets" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../../SharpMap.UI" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../../SharpMap.UI.nuspec" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../../SharpMap.UI.WPF" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../../SharpMap.Utilities.Indexing.SbnTree" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../../SharpMap.Web" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../../SharpMap.Web.nuspec" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../../UnitTests" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../../XYZMap" isTestSource="false" />
+      <excludeFolder url="file://$MODULE_DIR$/../../Examples/DemoMap/bin" />
+      <excludeFolder url="file://$MODULE_DIR$/../../Examples/DemoMap/obj" />
+      <excludeFolder url="file://$MODULE_DIR$/../../Examples/DemoWinForm/bin" />
+      <excludeFolder url="file://$MODULE_DIR$/../../Examples/DemoWinForm/obj" />
+      <excludeFolder url="file://$MODULE_DIR$/../../Examples/ExampleCodeSnippets/bin" />
+      <excludeFolder url="file://$MODULE_DIR$/../../Examples/ExampleCodeSnippets/obj" />
+      <excludeFolder url="file://$MODULE_DIR$/../../Examples/ExampleCodeSnipplets.VB/bin" />
+      <excludeFolder url="file://$MODULE_DIR$/../../Examples/ExampleCodeSnipplets.VB/obj" />
+      <excludeFolder url="file://$MODULE_DIR$/../../Examples/SharpMap.Demo.Wms/bin" />
+      <excludeFolder url="file://$MODULE_DIR$/../../Examples/SharpMap.Demo.Wms/obj" />
+      <excludeFolder url="file://$MODULE_DIR$/../../Examples/WPFSamples/bin" />
+      <excludeFolder url="file://$MODULE_DIR$/../../Examples/WPFSamples/obj" />
+      <excludeFolder url="file://$MODULE_DIR$/../../Examples/WinFormSamples/bin" />
+      <excludeFolder url="file://$MODULE_DIR$/../../Examples/WinFormSamples/obj" />
+      <excludeFolder url="file://$MODULE_DIR$/../../SharpMap.Converters.GeoJSON/bin" />
+      <excludeFolder url="file://$MODULE_DIR$/../../SharpMap.Converters.GeoJSON/obj" />
+      <excludeFolder url="file://$MODULE_DIR$/../../SharpMap.Converters.Spatialite/bin" />
+      <excludeFolder url="file://$MODULE_DIR$/../../SharpMap.Converters.Spatialite/obj" />
+      <excludeFolder url="file://$MODULE_DIR$/../../SharpMap.CoordinateSystems.DotSpatial/bin" />
+      <excludeFolder url="file://$MODULE_DIR$/../../SharpMap.CoordinateSystems.DotSpatial/obj" />
+      <excludeFolder url="file://$MODULE_DIR$/../../SharpMap.Data.Providers.FileGdb/bin" />
+      <excludeFolder url="file://$MODULE_DIR$/../../SharpMap.Data.Providers.FileGdb/obj" />
+      <excludeFolder url="file://$MODULE_DIR$/../../SharpMap.Data.Providers.GeoPackage/bin" />
+      <excludeFolder url="file://$MODULE_DIR$/../../SharpMap.Data.Providers.GeoPackage/obj" />
+      <excludeFolder url="file://$MODULE_DIR$/../../SharpMap.Data.Providers.Kml/bin" />
+      <excludeFolder url="file://$MODULE_DIR$/../../SharpMap.Data.Providers.Kml/obj" />
+      <excludeFolder url="file://$MODULE_DIR$/../../SharpMap.Data.Providers.OracleSpatial/bin" />
+      <excludeFolder url="file://$MODULE_DIR$/../../SharpMap.Data.Providers.OracleSpatial/obj" />
+      <excludeFolder url="file://$MODULE_DIR$/../../SharpMap.Extensions.x86/bin" />
+      <excludeFolder url="file://$MODULE_DIR$/../../SharpMap.Extensions.x86/obj" />
+      <excludeFolder url="file://$MODULE_DIR$/../../SharpMap.Extensions/bin" />
+      <excludeFolder url="file://$MODULE_DIR$/../../SharpMap.Extensions/obj" />
+      <excludeFolder url="file://$MODULE_DIR$/../../SharpMap.Layers.BruTile/bin" />
+      <excludeFolder url="file://$MODULE_DIR$/../../SharpMap.Layers.BruTile/obj" />
+      <excludeFolder url="file://$MODULE_DIR$/../../SharpMap.Layers.HeatLayer/bin" />
+      <excludeFolder url="file://$MODULE_DIR$/../../SharpMap.Layers.HeatLayer/obj" />
+      <excludeFolder url="file://$MODULE_DIR$/../../SharpMap.Serialization/bin" />
+      <excludeFolder url="file://$MODULE_DIR$/../../SharpMap.Serialization/obj" />
+      <excludeFolder url="file://$MODULE_DIR$/../../SharpMap.SqlServerSpatialObjects/bin" />
+      <excludeFolder url="file://$MODULE_DIR$/../../SharpMap.SqlServerSpatialObjects/obj" />
+      <excludeFolder url="file://$MODULE_DIR$/../../SharpMap.UI.WPF/bin" />
+      <excludeFolder url="file://$MODULE_DIR$/../../SharpMap.UI.WPF/obj" />
+      <excludeFolder url="file://$MODULE_DIR$/../../SharpMap.UI/bin" />
+      <excludeFolder url="file://$MODULE_DIR$/../../SharpMap.UI/obj" />
+      <excludeFolder url="file://$MODULE_DIR$/../../SharpMap.Utilities.Indexing.SbnTree/bin" />
+      <excludeFolder url="file://$MODULE_DIR$/../../SharpMap.Utilities.Indexing.SbnTree/obj" />
+      <excludeFolder url="file://$MODULE_DIR$/../../SharpMap.Web/bin" />
+      <excludeFolder url="file://$MODULE_DIR$/../../SharpMap.Web/obj" />
+      <excludeFolder url="file://$MODULE_DIR$/../../SharpMap/bin" />
+      <excludeFolder url="file://$MODULE_DIR$/../../SharpMap/obj" />
+      <excludeFolder url="file://$MODULE_DIR$/../../UnitTests/bin" />
+      <excludeFolder url="file://$MODULE_DIR$/../../UnitTests/obj" />
+      <excludeFolder url="file://$MODULE_DIR$/../../XYZMap/bin" />
+      <excludeFolder url="file://$MODULE_DIR$/../../XYZMap/obj" />
+      <excludeFolder url="file://$MODULE_DIR$/../../packages" />
+    </content>
+    <orderEntry type="sourceFolder" forTests="false" />
+  </component>
+</module>

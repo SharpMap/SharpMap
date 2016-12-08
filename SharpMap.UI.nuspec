@@ -18,10 +18,18 @@ The engine is written in C# and based on the .Net 4.0 framework.
     </description>
     <tags>SharpMap GIS Map GeoSpatial</tags>
     <frameworkAssemblies>
-      <frameworkAssembly assemblyName="System.Windows.Forms" targetFramework="net40-client" />
+	 <frameworkAssembly assemblyName="System" targetFramework="net40-client" />
+	 <frameworkAssembly assemblyName="System.Data" targetFramework="net40-client" />
+	 <frameworkAssembly assemblyName="System.Drawing" targetFramework="net40-client" />
+	 <frameworkAssembly assemblyName="System.Windows.Forms" targetFramework="net40-client" />
+     <frameworkAssembly assemblyName="System.Xml" targetFramework="net40-client" />
     </frameworkAssemblies>
 	<dependencies>
-		<dependency id="SharpMap" version="[$version$]"/>
+		<dependency id="SharpMap.Core" version="[$version$]"/>
+		<dependency id="Common.Logging" version="3.3.1"/>
+		<dependency id="Common.Logging.Core" version="3.3.1"/>
+		<dependency id="GeoAPI" version="1.7.4"/>
+		<dependency id="NetTopologySuite" version="1.14"/>
 	</dependencies>
   </metadata>
   <files>

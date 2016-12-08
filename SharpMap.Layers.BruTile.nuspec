@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
-    <id>SharpMap</id>
+    <id>SharpMap.Layers.BruTile</id>
     <version>$version$</version>
     <authors>SharpMap-Team</authors>
 	<licenseUrl>http://sharpmap.codeplex.com/license</licenseUrl>
@@ -23,13 +23,22 @@ Bug fixes
 	<tags>SharpMap GIS Map GeoSpatial</tags>
     <frameworkAssemblies>
       <frameworkAssembly assemblyName="System" targetFramework="net40-client" />
+	  <frameworkAssembly assemblyName="System.Core" targetFramework="net40-client" />
       <frameworkAssembly assemblyName="System.Data" targetFramework="net40-client" />
+	  <frameworkAssembly assemblyName="System.Data.DataSetExtensions" targetFramework="net40-client" />
       <frameworkAssembly assemblyName="System.Drawing" targetFramework="net40-client" />
       <frameworkAssembly assemblyName="System.Xml" targetFramework="net40-client" />
+	  <frameworkAssembly assemblyName="System.Xml.Linq" targetFramework="net40-client" />
     </frameworkAssemblies>
 	<dependencies>
-		<dependency id="BruTile" version="[0.13]"/>
-    <dependency id="BruTile.Desktop" version="[0.13]"/>
+		<dependency id="SharpMap.Core" version="[$version$]"/>
+		<dependency id="BruTile" version="0.18.1"/>
+		<dependency id="BruTile.Desktop" version="0.18.1"/>
+		<dependency id="Common.Logging" version="3.3.1"/>
+		<dependency id="Common.Logging.Core" version="3.3.1"/>
+		<dependency id="GeoAPI" version="1.7.4"/>
+		<dependency id="NetTopologySuite" version="1.14"/>
+		<dependency id="System.Data.SQLite.Core" version="1.0.94.0"/>
 	</dependencies>
   </metadata>
   <files>
