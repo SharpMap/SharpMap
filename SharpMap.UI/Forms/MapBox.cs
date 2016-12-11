@@ -2344,8 +2344,9 @@ namespace SharpMap.Forms
                     foreach (var layer in _map.Layers)
                     {
                         var cqLayer = layer as ICanQueryLayer;
-                        if (cqLayer != null && layer.Enabled && layer.MinVisible < _map.Zoom &&
-                            layer.MaxVisible >= _map.Zoom && cqLayer.IsQueryEnabled)
+                        double visibleLevel = layer.VisibilityUnits == Styles.VisibilityUnits.ZoomLevel ? _map.Zoom  : _map.MapScale;
+                        if (cqLayer != null && layer.Enabled && layer.MinVisible < visibleLevel &&
+                            layer.MaxVisible >= visibleLevel && cqLayer.IsQueryEnabled)
                             layersToQuery.Add(cqLayer);
                     }
                     if (_mapQueryMode == MapQueryType.TopMostLayer)
