@@ -123,7 +123,7 @@ namespace WinFormSamples
                 case "btnTool":
                     tool = (mapBox1.CustomTool is SampleTool) ? null : new SampleTool(mapBox1);
                     break;
-                case ("btnTool2"):
+                case "btnTool2":
                     tool = (mapBox1.CustomTool is MagnifierTool) ? null : new MagnifierTool(mapBox1);
                     break;
             }

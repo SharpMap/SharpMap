@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Text;
 using SharpMap;
+using SharpMap.Data;
 using SharpMap.Data.Providers;
 using SharpMap.Layers;
 using SharpMap.Rendering;
@@ -216,6 +217,7 @@ namespace WinFormSamples.Samples
             layLabel.MultipartGeometryBehaviour = LabelLayer.MultipartGeometryBehaviourEnum.Largest;
             layLabel.LabelFilter = LabelCollisionDetection.ThoroughCollisionDetection;
             layLabel.Style.CollisionDetection = true;
+            layLabel.LabelPositionDelegate = fdr => fdr.Geometry.InteriorPoint.Coordinate;
             layLabel.PriorityColumn = "POPDENS";
 
             //Set up a city label layer
