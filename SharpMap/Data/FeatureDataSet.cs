@@ -868,7 +868,19 @@ namespace SharpMap.Data
         public IGeometry Geometry
         {
             get { return _geometry; }
-            set { _geometry = value; }
+            set
+            {
+                if (_geometry == null) {
+                    _geometry = value;
+                } else {
+                    if (ReferenceEquals(_geometry, value))
+                        return;
+                    if (_geometry != null && _geometry.EqualsTopologically(value))
+                        return;
+                    _geometry = value;
+                    if (RowState == DataRowState.Unchanged) SetModified();
+                }
+            }
         }
 
         /// <summary>

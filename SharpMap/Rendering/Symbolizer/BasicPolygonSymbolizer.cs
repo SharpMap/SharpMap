@@ -143,7 +143,7 @@ namespace SharpMap.Rendering.Symbolizer
         protected override void OnRenderInternal(MapViewport map, IPolygon polygon, Graphics g)
         {
             // convert points
-            var pts = /*LimitValues(*/polygon.TransformToImage(map)/*)*/;
+            var pts = /*VectorRenderer.LimitValues*(*/polygon.TransformToImage(map)/*, VectorRenderer.ExtremeValueLimit))*/;
             
             //// clip
             //if (UseClipping)

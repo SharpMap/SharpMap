@@ -203,7 +203,7 @@ namespace SharpMap.Rendering.Symbolizer
         protected override void OnRenderInternal(MapViewport map, ILineString lineString, Graphics graphics)
         {
             var gp = new GraphicsPath();
-            gp.AddLines(/*LimitValues(*/lineString.TransformToImage(map)/*)*/);
+            gp.AddLines(VectorRenderer.LimitValues(lineString.TransformToImage(map), VectorRenderer.ExtremeValueLimit));
             if (ImmediateMode)
             {
                 var tmp = new List<GraphicsPath>(new[] {gp});

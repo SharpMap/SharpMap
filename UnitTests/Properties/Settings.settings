@@ -17,10 +17,20 @@
 &lt;/SerializableConnectionString&gt;</DesignTimeValue>
       <Value Profile="(Default)">Data Source=;Initial Catalog=;Integrated Security=True</Value>
     </Setting>
-    <Setting Name="PostGis" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">Host=127.0.0.1;Port=5432;User Id=postgres;Password=1.Kennwort;database=postgis_sample</Value>
+    <Setting Name="PostGis" Type="(Connection string)" Scope="Application">
+      <DesignTimeValue Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;SerializableConnectionString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;ConnectionString&gt;Host=ivv-sqlt3;Port=5433;database=postgis_sample;SSPI=true&lt;/ConnectionString&gt;
+  &lt;ProviderName /&gt;
+&lt;/SerializableConnectionString&gt;</DesignTimeValue>
+      <Value Profile="(Default)">Host=ivv-sqlt3;Port=5433;database=postgis_sample;SSPI=true</Value>
     </Setting>
-    <Setting Name="SpatiaLite" Type="System.String" Scope="Application">
+    <Setting Name="SpatiaLite" Type="(Connection string)" Scope="Application">
+      <DesignTimeValue Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;SerializableConnectionString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;ConnectionString&gt;Data Source=:memory:&lt;/ConnectionString&gt;
+  &lt;ProviderName /&gt;
+&lt;/SerializableConnectionString&gt;</DesignTimeValue>
       <Value Profile="(Default)">Data Source=:memory:</Value>
     </Setting>
     <Setting Name="OleDbProvider" Type="System.String" Scope="Application">

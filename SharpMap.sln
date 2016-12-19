@@ -116,6 +116,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpMap.Converters.Spatial
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpMap.CoordinateSystems.DotSpatial", "SharpMap.CoordinateSystems.DotSpatial\SharpMap.CoordinateSystems.DotSpatial.csproj", "{A019B82E-3766-44A3-907A-0487FF9EBA49}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpMap.Data.Providers.IVV", "SharpMap.Data.Providers.IVV\SharpMap.Data.Providers.IVV.csproj", "{12672EAE-C40B-4E6C-9645-E59E15A01E67}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|.NET = Debug|.NET
@@ -617,6 +619,30 @@ Global
 		{A019B82E-3766-44A3-907A-0487FF9EBA49}.ReleaseLinux|Mixed Platforms.Build.0 = Release|Any CPU
 		{A019B82E-3766-44A3-907A-0487FF9EBA49}.ReleaseLinux|x86.ActiveCfg = Release|Any CPU
 		{A019B82E-3766-44A3-907A-0487FF9EBA49}.ReleaseLinux|x86.Build.0 = Release|Any CPU
+		{12672EAE-C40B-4E6C-9645-E59E15A01E67}.Debug|.NET.ActiveCfg = Debug|Any CPU
+		{12672EAE-C40B-4E6C-9645-E59E15A01E67}.Debug|.NET.Build.0 = Debug|Any CPU
+		{12672EAE-C40B-4E6C-9645-E59E15A01E67}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{12672EAE-C40B-4E6C-9645-E59E15A01E67}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{12672EAE-C40B-4E6C-9645-E59E15A01E67}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{12672EAE-C40B-4E6C-9645-E59E15A01E67}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{12672EAE-C40B-4E6C-9645-E59E15A01E67}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{12672EAE-C40B-4E6C-9645-E59E15A01E67}.Debug|x86.Build.0 = Debug|Any CPU
+		{12672EAE-C40B-4E6C-9645-E59E15A01E67}.Release|.NET.ActiveCfg = Release|Any CPU
+		{12672EAE-C40B-4E6C-9645-E59E15A01E67}.Release|.NET.Build.0 = Release|Any CPU
+		{12672EAE-C40B-4E6C-9645-E59E15A01E67}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{12672EAE-C40B-4E6C-9645-E59E15A01E67}.Release|Any CPU.Build.0 = Release|Any CPU
+		{12672EAE-C40B-4E6C-9645-E59E15A01E67}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{12672EAE-C40B-4E6C-9645-E59E15A01E67}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{12672EAE-C40B-4E6C-9645-E59E15A01E67}.Release|x86.ActiveCfg = Release|Any CPU
+		{12672EAE-C40B-4E6C-9645-E59E15A01E67}.Release|x86.Build.0 = Release|Any CPU
+		{12672EAE-C40B-4E6C-9645-E59E15A01E67}.ReleaseLinux|.NET.ActiveCfg = Release|Any CPU
+		{12672EAE-C40B-4E6C-9645-E59E15A01E67}.ReleaseLinux|.NET.Build.0 = Release|Any CPU
+		{12672EAE-C40B-4E6C-9645-E59E15A01E67}.ReleaseLinux|Any CPU.ActiveCfg = Release|Any CPU
+		{12672EAE-C40B-4E6C-9645-E59E15A01E67}.ReleaseLinux|Any CPU.Build.0 = Release|Any CPU
+		{12672EAE-C40B-4E6C-9645-E59E15A01E67}.ReleaseLinux|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{12672EAE-C40B-4E6C-9645-E59E15A01E67}.ReleaseLinux|Mixed Platforms.Build.0 = Release|Any CPU
+		{12672EAE-C40B-4E6C-9645-E59E15A01E67}.ReleaseLinux|x86.ActiveCfg = Release|Any CPU
+		{12672EAE-C40B-4E6C-9645-E59E15A01E67}.ReleaseLinux|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

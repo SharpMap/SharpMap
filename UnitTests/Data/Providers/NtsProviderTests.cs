@@ -23,16 +23,19 @@ namespace UnitTests.Data.Providers
             var row = ds.LoadDataRow(new object[]{1001, null, 1, 1}, LoadOption.OverwriteChanges);
             ds.EndLoadData();
 
+            var dsp = new DataTablePoint(ds, "oid", "x", "y");
             /*
              * act
              */
             // Create provider
-            IProvider p = null;
-            Assert.DoesNotThrow(() => p = new NtsProvider(new DataTablePoint(ds, "oid", "x", "y")));
+            NtsProvider p = null;
+            Assert.DoesNotThrow(() => p = new NtsProvider(dsp));
 
             /*
              * assert
              */
+            Assert.That(p.SRID, Is.EqualTo(dsp.SRID));
+            Assert.That(p.Factory, Is.EqualTo(dsp.Factory));
             Assert.That(p.GetFeatureCount(), Is.EqualTo(101));
 
         }

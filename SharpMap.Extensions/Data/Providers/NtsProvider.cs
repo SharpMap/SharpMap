@@ -238,6 +238,10 @@ namespace SharpMap.Data.Providers
                 if (provider.IsOpen)
                     provider.Close();
             }
+
+            // Setting factory and spatial reference id;
+            Factory = _features[0].Geometry.Factory;
+            SRID = Factory.SRID;
         }
 
         #endregion

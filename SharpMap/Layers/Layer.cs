@@ -61,7 +61,7 @@ namespace SharpMap.Layers
         protected virtual void OnSridChanged(EventArgs eventArgs)
         {
             _sourceFactory = GeoAPI.GeometryServiceProvider.Instance.CreateGeometryFactory(SRID);
-
+            _coordinateTransform = _reverseCoordinateTransform = null;
             var handler = SRIDChanged;
             if (handler!= null) handler(this, eventArgs);
         }
@@ -145,7 +145,16 @@ namespace SharpMap.Layers
         /// </summary>
         public virtual ICoordinateTransformation CoordinateTransformation
         {
-            get { return _coordinateTransform; }
+            get
+            {
+                if (_coordinateTransform == null && NeedsTransformation)
+                {
+                    var css = Session.Instance.CoordinateSystemServices;
+                    _coordinateTransform = css.CreateTransformation(
+                        css.GetCoordinateSystem(SRID), css.GetCoordinateSystem(TargetSRID));
+                }
+                return _coordinateTransform;
+            }
             set
             {
                 if (value == _coordinateTransform)
@@ -196,8 +205,22 @@ namespace SharpMap.Layers
         /// </summary>
         public virtual ICoordinateTransformation ReverseCoordinateTransformation
         {
-            get { return _reverseCoordinateTransform; }
+            get
+            {
+                if (_reverseCoordinateTransform == null && NeedsTransformation)
+                {
+                    var css = Session.Instance.CoordinateSystemServices;
+                    _reverseCoordinateTransform = css.CreateTransformation(
+                        css.GetCoordinateSystem(TargetSRID), css.GetCoordinateSystem(SRID));
+                }
+                return _reverseCoordinateTransform;
+            }
             set { _reverseCoordinateTransform= value; }
+        }
+
+        protected bool NeedsTransformation
+        {
+            get { return SRID != 0 && TargetSRID != 0 && SRID != TargetSRID; }
         }
 
         #region ILayer Members

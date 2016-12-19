@@ -128,7 +128,7 @@ namespace SharpMap.Rendering.Thematics
                 var oldFont = labelStyle.Font;
 
                 // Build a new font
-                labelStyle.Font = new Font(oldFont.FontFamily, newSize, oldFont.Style, GraphicsUnit.Pixel);
+                labelStyle.Font = new Font(oldFont.FontFamily, newSize, oldFont.Style, oldFont.Unit);
 
                 // Dispose the old font
                 if (oldFont != null) oldFont.Dispose();

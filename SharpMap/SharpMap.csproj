@@ -110,6 +110,8 @@
     <Compile Include="Data\Providers\ShapeType.cs" />
     <Compile Include="Data\Providers\SqlServer2008.cs" />
     <Compile Include="Data\Providers\WFSClient.cs" />
+    <Compile Include="Drawing\Matrix.cs" />
+    <Compile Include="Drawing\Point.cs" />
     <Compile Include="Geometries\GeoAPIEx.cs" />
     <Compile Include="ISession.cs" />
     <Compile Include="Layers\AsyncLayerProxyLayer.cs" />

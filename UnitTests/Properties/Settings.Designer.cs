@@ -45,8 +45,8 @@ namespace UnitTests.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Host=127.0.0.1;Port=5432;User Id=postgres;Password=1.Kennwort;database=postgis_sa" +
-            "mple")]
+        [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
+        [global::System.Configuration.DefaultSettingValueAttribute("Host=ivv-sqlt3;Port=5433;database=postgis_sample;SSPI=true")]
         public string PostGis {
             get {
                 return ((string)(this["PostGis"]));
@@ -55,6 +55,7 @@ namespace UnitTests.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
         [global::System.Configuration.DefaultSettingValueAttribute("Data Source=:memory:")]
         public string SpatiaLite {
             get {
