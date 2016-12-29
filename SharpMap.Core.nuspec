@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
-    <id>SharpMap</id>
+    <id>SharpMap.Core</id>
     <version>$version$</version>
     <authors>SharpMap-Team</authors>
 	<licenseUrl>http://sharpmap.codeplex.com/license</licenseUrl>
@@ -28,16 +28,15 @@ Bug fixes
       <frameworkAssembly assemblyName="System.Xml" targetFramework="net40-client" />
     </frameworkAssemblies>
 	<dependencies>
-    <dependency id="Common.Logging" version="[3.3.0]"/>
-		<dependency id="GeoAPI" version="[1.7.3]"/>
-		<dependency id="NetTopologySuite" version="[1.13.3]"/>
-		<dependency id="NetTopologySuite.IO" version="[1.13.3]"/>
-		<dependency id="NewtonSoft.Json" version="[6.0.3]"/>
-		<dependency id="ProjNET4GeoAPI" version="[1.3.0.4]"/>
+		<dependency id="Common.Logging" version="3.3.1"/>
+		<dependency id="Common.Logging.Core" version="3.3.1"/>
+		<dependency id="GeoAPI" version="1.7.4"/>
+		<dependency id="NetTopologySuite" version="1.14"/>		
 	</dependencies>
   </metadata>
   <files>
 	  <file src="SharpMap\bin\Release\SharpMap.dll" target="lib\net40-client"/>
-    <file src="SharpMap\bin\Release\SharpMap.xml" target="lib\net40-client"/>
+      <file src="SharpMap\bin\Release\SharpMap.xml" target="lib\net40-client"/>
+	  <file src="SharpMap\bin\Release\SpatialRefSys.xml" target="lib\net40-client"/>
   </files>
 </package>

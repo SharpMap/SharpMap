@@ -27,9 +27,10 @@ Combination of SharpMap.Core and SharpMap.Layers.BruTile
       <frameworkAssembly assemblyName="System.Xml" targetFramework="net40-client" />
     </frameworkAssemblies>
 	<dependencies>
-    <dependency id="SharpMap.Core" version="[1.2.0)"/>
-    <dependency id="SharpMap.Layers.BruTile" version="[1.2.0)"/>
+    <dependency id="SharpMap.Core" version="[$version$]"/>
+    <dependency id="SharpMap.Layers.BruTile" version="[$version$]"/>
 	</dependencies>
   </metadata>
+  <files>
   </files>
-</package>
+  </package>

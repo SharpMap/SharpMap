@@ -21,11 +21,18 @@ The engine is written in C# and based on the .Net 4.0 framework.
       <frameworkAssembly assemblyName="System.Configuration" targetFramework="net40-client" />
     </frameworkAssemblies>
 	<dependencies>
-		<dependency id="SharpMap" version="[$version$]"/>
-		<dependency id="GDAL" version="[1.9.2,1.10)" />
-		<dependency id="Npgsql" version="[2.2.4.3]"/>
-		<dependency id="System.Data.SQLite.Core" version="[1.0.94.0]"/>
-    <dependency id="NetTopologySuite.IO.SpatiaLite" version="[1.13.3]"/>
+		<dependency id="SharpMap.Core" version="[$version$]"/>
+		<dependency id="Common.Logging" version="3.3.1" />
+		<dependency id="Common.Logging.Core" version="3.3.1" />
+		<dependency id="GDAL" version="1.11.1" />
+		<dependency id="GeoAPI" version="1.7.4" />
+		<dependency id="NetTopologySuite" version="1.14.0" />
+		<dependency id="NetTopologySuite.IO" version="1.14.0.1" />
+		<dependency id="NetTopologySuite.IO.SpatiaLite" version="1.14.0" />
+		<dependency id="Npgsql" version="2.2.4.3"/>
+		<dependency id="Oracle.ManagedDataAccess" version="12.1.2400"/>
+		<dependency id="ProjNET4GeoAPI" version="1.3.2-pre1"/>
+		<dependency id="System.Data.SQLite.Core" version="1.0.94.0"/>
 	</dependencies>
   </metadata>
   <files>

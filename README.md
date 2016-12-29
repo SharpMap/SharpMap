@@ -8,3 +8,15 @@ TeamCity build status: [![Build Status](https://img.shields.io/teamcity/codebett
 
 Teamcity coverage status: [![Coverage Status](https://img.shields.io/teamcity/coverage/bt976.svg)](http://teamcity.codebetter.com/viewType.html?buildTypeId=bt976)
 
+-- Notes --
+
+This Fork includes changes to nuget files in order to update your current sharpmap libraries.
+Adding buildNuget.cmd command file in order to build the nupkg files and change all the nuspec files in order to make a successfull build.
+
+Forms :
+DemoMap :
+
+Adding Configurator.cs
+and  Program.cs   
+SharpMap.Config.Configurator(SharpMap.Configuration.Proj4Net);
+

@@ -14,9 +14,11 @@
     <copyright>Copyright © Triona AB 2014</copyright>
     <tags>SharpMap Oracle</tags>
     <dependencies>
-      <dependency id="SharpMap" version="[$version$]"/>
-      <dependency id="odac.client.x86" version="[1.112.3.20]"/>
-      <dependency id="odp.net.x86" version="[112.3.20]"/>
+      <dependency id="SharpMap.Core" version="[$version$]"/>
+	  <dependency id="GeoAPI" version="1.7.4"/>
+	  <dependency id="NetTopologySuite" version="1.14.0"/>
+      <dependency id="odac.client.x86" version="1.112.3.20"/>
+      <dependency id="odp.net.x86" version="112.3.20"/>
     </dependencies>
   </metadata>
   <files>

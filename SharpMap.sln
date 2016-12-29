@@ -116,6 +116,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpMap.Converters.Spatial
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpMap.CoordinateSystems.DotSpatial", "SharpMap.CoordinateSystems.DotSpatial\SharpMap.CoordinateSystems.DotSpatial.csproj", "{A019B82E-3766-44A3-907A-0487FF9EBA49}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DemoMap", "Examples\DemoMap\DemoMap.csproj", "{14254259-203B-4572-A5F4-A143C328B07E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|.NET = Debug|.NET
@@ -617,6 +619,30 @@ Global
 		{A019B82E-3766-44A3-907A-0487FF9EBA49}.ReleaseLinux|Mixed Platforms.Build.0 = Release|Any CPU
 		{A019B82E-3766-44A3-907A-0487FF9EBA49}.ReleaseLinux|x86.ActiveCfg = Release|Any CPU
 		{A019B82E-3766-44A3-907A-0487FF9EBA49}.ReleaseLinux|x86.Build.0 = Release|Any CPU
+		{14254259-203B-4572-A5F4-A143C328B07E}.Debug|.NET.ActiveCfg = Debug|Any CPU
+		{14254259-203B-4572-A5F4-A143C328B07E}.Debug|.NET.Build.0 = Debug|Any CPU
+		{14254259-203B-4572-A5F4-A143C328B07E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{14254259-203B-4572-A5F4-A143C328B07E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{14254259-203B-4572-A5F4-A143C328B07E}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{14254259-203B-4572-A5F4-A143C328B07E}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{14254259-203B-4572-A5F4-A143C328B07E}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{14254259-203B-4572-A5F4-A143C328B07E}.Debug|x86.Build.0 = Debug|Any CPU
+		{14254259-203B-4572-A5F4-A143C328B07E}.Release|.NET.ActiveCfg = Release|Any CPU
+		{14254259-203B-4572-A5F4-A143C328B07E}.Release|.NET.Build.0 = Release|Any CPU
+		{14254259-203B-4572-A5F4-A143C328B07E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{14254259-203B-4572-A5F4-A143C328B07E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{14254259-203B-4572-A5F4-A143C328B07E}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{14254259-203B-4572-A5F4-A143C328B07E}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{14254259-203B-4572-A5F4-A143C328B07E}.Release|x86.ActiveCfg = Release|Any CPU
+		{14254259-203B-4572-A5F4-A143C328B07E}.Release|x86.Build.0 = Release|Any CPU
+		{14254259-203B-4572-A5F4-A143C328B07E}.ReleaseLinux|.NET.ActiveCfg = Release|Any CPU
+		{14254259-203B-4572-A5F4-A143C328B07E}.ReleaseLinux|.NET.Build.0 = Release|Any CPU
+		{14254259-203B-4572-A5F4-A143C328B07E}.ReleaseLinux|Any CPU.ActiveCfg = Release|Any CPU
+		{14254259-203B-4572-A5F4-A143C328B07E}.ReleaseLinux|Any CPU.Build.0 = Release|Any CPU
+		{14254259-203B-4572-A5F4-A143C328B07E}.ReleaseLinux|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{14254259-203B-4572-A5F4-A143C328B07E}.ReleaseLinux|Mixed Platforms.Build.0 = Release|Any CPU
+		{14254259-203B-4572-A5F4-A143C328B07E}.ReleaseLinux|x86.ActiveCfg = Release|Any CPU
+		{14254259-203B-4572-A5F4-A143C328B07E}.ReleaseLinux|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -630,5 +656,6 @@ Global
 		{7EF67DF8-D868-4177-8817-4CC2E94ABD66} = {480154D8-0960-416E-AE45-AF6B06794F77}
 		{28AC314E-35C1-484B-9DD3-116BD8AFC4EA} = {480154D8-0960-416E-AE45-AF6B06794F77}
 		{E9AC999C-5C90-4851-ABFE-8A9CA899FAEF} = {480154D8-0960-416E-AE45-AF6B06794F77}
+		{14254259-203B-4572-A5F4-A143C328B07E} = {480154D8-0960-416E-AE45-AF6B06794F77}
 	EndGlobalSection
 EndGlobal

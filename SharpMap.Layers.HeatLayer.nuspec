@@ -14,7 +14,9 @@
     <copyright>Copyright © 2013</copyright>
     <tags>SharpMap Heat</tags>
     <dependencies>
-      <dependency id="SharpMap" version="[$version$]"/>
+      <dependency id="SharpMap.Core" version="[$version$]"/>
+	  <dependency id="GeoAPI" version="1.7.4"/>
+	  <dependency id="NetTopologySuite" version="1.14.0"/>
     </dependencies>
   </metadata>
   <files>

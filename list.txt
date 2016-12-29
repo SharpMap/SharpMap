@@ -1,0 +1,10 @@
+01 SharpMap.Core.nuspec
+02 SharpMap.UI.nuspec
+03 SharpMap.Extensions.nuspec
+04 SharpMap.Layers.BruTile.nuspec
+05 SharpMap.Web.nuspec
+06 SharpMap.Layers.HeatLayer.nuspec
+07 SharpMap.Data.Providers.OracleSpatial.nuspec
+08 SharpMap.Data.Providers.Kml.nuspec
+09 SharpMap.Data.Providers.GeoPackage.nuspec
+10 SharpMap.nuspec

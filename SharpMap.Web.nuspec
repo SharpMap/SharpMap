@@ -23,7 +23,9 @@ The engine is written in C# and based on the .Net 4.0 framework.
       <frameworkAssembly assemblyName="System.Web"/>
     </frameworkAssemblies>
 	<dependencies>
-		<dependency id="SharpMap" version="[$version$]"/>
+		<dependency id="SharpMap.Core" version="[$version$]"/>
+		<dependency id="GeoAPI" version="1.7.4"/>
+		<dependency id="Newtonsoft.Json" version="7.0.1"/>
 	</dependencies>
   </metadata>
   <files>
