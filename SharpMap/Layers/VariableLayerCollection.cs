@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Timers;
 
 namespace SharpMap.Layers
@@ -50,12 +51,14 @@ namespace SharpMap.Layers
         {
             if (touchTest == true)
             {
-                System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(OnRequery));
+                //commented out 2017-02-13
+                //System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(OnRequery));
                 _timer.Start();
             }
             else
             {
                 touchTest = true;
+                TimerElapsed(null, null); //added 2017-02-13
             }
         }
         
@@ -83,11 +86,13 @@ namespace SharpMap.Layers
         {
             touchTest = false;
             OnRequery(null);
-            if (!touchTest)
-            {
-                _timer.Stop();
-                touchTest = true;
-            }
+            _timer.Stop(); //added 2017-02-13
+            //commented out 2017-02-13
+            //if (!touchTest)
+            //{
+            //    _timer.Stop();
+            //    touchTest = true;
+            //}
         }
 
         /// <inheritdoc/>
@@ -129,7 +134,10 @@ namespace SharpMap.Layers
         {
             if (Pause) return;
             if (VariableLayerCollectionRequery != null)
+            {
+                //Debug.Print(System.DateTime.UtcNow.ToString("HH:mm:ss.fff"));
                 VariableLayerCollectionRequery(null, EventArgs.Empty);
+            }
         }
 
         /// <summary>
