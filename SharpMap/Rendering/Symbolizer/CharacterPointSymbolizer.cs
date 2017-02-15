@@ -199,9 +199,10 @@ namespace SharpMap.Rendering.Symbolizer
             {
                 //need to look it up
                 using (var path = new GraphicsPath(FillMode.Winding))
+                using (var haloPen = new Pen(HaloBrush, 2 * Halo) { MiterLimit = 1.0f })
                 {
-                    path.AddString(_text, Font.FontFamily, (int) Font.Style, Font.Size, pt, StringFormat);
-                    g.DrawPath(new Pen(HaloBrush, 2*Halo), path);
+                    path.AddString(_text, Font.FontFamily, (int)Font.Style, Font.Size, pt, StringFormat);
+                    g.DrawPath(haloPen, path);
                     g.FillPath(Foreground, path);
                 }
             }
