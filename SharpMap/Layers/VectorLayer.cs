@@ -26,7 +26,6 @@ using SharpMap.Rendering;
 using SharpMap.Rendering.Thematics;
 using SharpMap.Styles;
 using System.Collections.Generic;
-using System.Runtime.Remoting.Services;
 using Common.Logging;
 
 namespace SharpMap.Layers
@@ -272,7 +271,7 @@ namespace SharpMap.Layers
                         if (outlineStyle == null) continue;
                         if (!(outlineStyle.Enabled && outlineStyle.EnableOutline)) continue;
 
-                        double compare = outlineStyle.VisibilityUnits == VisibilityUnits.ZoomLevel ? zoom : scale;
+                        var compare = outlineStyle.VisibilityUnits == VisibilityUnits.ZoomLevel ? zoom : scale;
 
                         if (!(outlineStyle.MinVisible <= compare && compare <= outlineStyle.MaxVisible)) continue;
 

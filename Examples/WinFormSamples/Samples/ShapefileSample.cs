@@ -259,6 +259,33 @@ namespace WinFormSamples.Samples
                     Font = new Font(GenericFontFamilies.SansSerif.ToString(), 16f, FontStyle.Bold)
                 });
 
+            bool ignoreLength = false;
+
+            var layRiverLabel = new LabelLayer("River labels")
+            {
+                DataSource = layRivers.DataSource,
+                Enabled = true,
+                LabelColumn = "Name",
+                TextRenderingHint = TextRenderingHint.AntiAlias,
+                SmoothingMode = SmoothingMode.AntiAlias,
+                SRID = 4326,
+                LabelFilter = LabelCollisionDetection.ThoroughCollisionDetection,
+                MultipartGeometryBehaviour = LabelLayer.MultipartGeometryBehaviourEnum.CommonCenter,
+                Style =
+                                           new LabelStyle
+                                           {
+                                               ForeColor = Color.DarkBlue,
+                                               Font = new Font(FontFamily.GenericSansSerif, 11),
+                                               HorizontalAlignment = LabelStyle.HorizontalAlignmentEnum.Center,
+                                               VerticalAlignment = LabelStyle.VerticalAlignmentEnum.Middle,
+                                               //CollisionDetection = true,
+                                               Halo = new Pen(Color.Azure, 2),
+                                               IgnoreLength = ignoreLength,
+                                               Offset = new PointF(0, -10)
+
+                                           },
+            };
+
             //Add the layers to the map object.
             //The order we add them in are the order they are drawn, so we add the rivers last to put them on top
             //map.BackgroundLayer.Add(AsyncLayerProxyLayer.Create(layCountries));
@@ -267,6 +294,7 @@ namespace WinFormSamples.Samples
             map.Layers.Add(layCities);
             map.Layers.Add(layLabel);
             map.Layers.Add(layCityLabel);
+            map.Layers.Add(layRiverLabel);
 
 
             //limit the zoom to 360 degrees width
