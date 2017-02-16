@@ -2256,10 +2256,17 @@ namespace SharpMap.Forms
                 {
                     if (_rectangle.Width > 0 && _rectangle.Height > 0)
                     {
+                        var zoomWindowStartPoint = _dragStartPoint;
+                        var zoomWindowEndPoint = new PointF(e.X, e.Y); 
+                    
                         Coordinate lowerLeft;
                         Coordinate upperRight;
-                        GetBounds(_map.ImageToWorld(_dragStartPoint), _map.ImageToWorld(_dragEndPoint),
-                            out lowerLeft, out upperRight);
+                        GetBounds(
+                            _map.ImageToWorld(zoomWindowStartPoint), 
+                            _map.ImageToWorld(zoomWindowEndPoint),
+                            out lowerLeft, 
+                            out upperRight);
+                            
                         _dragEndPoint.X = 0;
                         _dragEndPoint.Y = 0;
 
