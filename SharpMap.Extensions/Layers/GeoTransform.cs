@@ -31,7 +31,7 @@ namespace SharpMap.Layers
     [Serializable]
     internal class GeoTransform
     {
-        private const double Epsilon = 1e-12;
+        private const double Epsilon = double.Epsilon;
         
         private readonly double[] _inverseTransform = new double[6];
         private readonly double[] _transform = new double[6];
