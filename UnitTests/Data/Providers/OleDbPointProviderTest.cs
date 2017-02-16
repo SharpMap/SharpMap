@@ -43,7 +43,7 @@ namespace UnitTests.Data.Providers
         private OleDbPoint CreateProvider()
         {
             var p = new OleDbPoint(
-                "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=\"" + System.IO.Path.GetTempPath() + "\";" +
+                "Provider=" + Properties.Settings.Default.OleDbProvider + ";Data Source=\"" + System.IO.Path.GetTempPath() + "\";" +
                 "Extended Properties=\"text;HDR=Yes;FMT=Delimited\"", _tableName, "ID", "X", "Y");
 
             return p;

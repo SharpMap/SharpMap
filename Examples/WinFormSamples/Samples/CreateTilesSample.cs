@@ -2,12 +2,8 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
-#if !DotSpatialProjections
 using GeoAPI.CoordinateSystems.Transformations;
 
-#else
-using DotSpatial.Projections;
-#endif
 /*------------------------------------------------------------------------------ 
 Create Date : 2011-09-25
 Author     : TrieuVy ( goldmelodyvn )

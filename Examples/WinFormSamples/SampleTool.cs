@@ -75,7 +75,9 @@ namespace WinFormSamples
         {
             base.OnEnabledChanged(e);
             if (!Enabled)
-                _toolTip.RemoveAll();
+            {
+                if (_toolTip != null) _toolTip.RemoveAll();
+            }
         }
 
         private CancellationTokenSource _cts = new CancellationTokenSource();

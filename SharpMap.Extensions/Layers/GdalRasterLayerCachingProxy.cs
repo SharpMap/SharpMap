@@ -18,18 +18,12 @@
  */
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Runtime.CompilerServices;
 using GeoAPI.Geometries;
 using SharpMap.Data;
-using SharpMap.Utilities.Wfs;
-#if !DotSpatialProjections
 using GeoAPI.CoordinateSystems.Transformations;
-#else
-using DotSpatial.Projections;
-#endif
 using BoundingBox = GeoAPI.Geometries.Envelope;
 using Geometry = GeoAPI.Geometries.IGeometry;
 using Point = System.Drawing.Point;
@@ -414,7 +408,6 @@ namespace SharpMap.Layers
             }
         }
 
-#if !DotSpatialProjections
         public override ICoordinateTransformation ReverseCoordinateTransformation
         {
             get { return _innerLayer.ReverseCoordinateTransformation; }
@@ -424,7 +417,6 @@ namespace SharpMap.Layers
                 _innerLayer.ReverseCoordinateTransformation = value;
             }
         }
-#endif
 
         public Color TransparentColor
         {

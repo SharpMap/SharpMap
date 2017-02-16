@@ -16,7 +16,11 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
 
 using System;
+using System.Text;
 using System.Windows.Forms;
+using NetTopologySuite;
+using ProjNet.CoordinateSystems;
+using ProjNet.CoordinateSystems.Transformations;
 
 namespace DemoWinForm
 {
@@ -28,6 +32,18 @@ namespace DemoWinForm
         [STAThread]
         private static void Main()
         {
+            var gss = new NtsGeometryServices();
+            var css = new SharpMap.CoordinateSystems.CoordinateSystemServices(
+                new CoordinateSystemFactory(),
+                new CoordinateTransformationFactory(),
+                SharpMap.Converters.WellKnownText.SpatialReference.GetAllReferenceSystems());
+
+            GeoAPI.GeometryServiceProvider.Instance = gss;
+            SharpMap.Session.Instance
+                .SetGeometryServices(gss)
+                .SetCoordinateSystemServices(css)
+                .SetCoordinateSystemRepository(css);
+
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new MainForm());

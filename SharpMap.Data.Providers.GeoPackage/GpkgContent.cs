@@ -2,11 +2,7 @@ using System;
 using System.Data;
 using System.Data.SQLite;
 using System.Diagnostics;
-#if DotSpatialProjections
 using ICoordinateSystem = GeoAPI.CoordinateSystems.ICoordinateSystem;
-#else
-using ICoordinateSystem = GeoAPI.CoordinateSystems.ICoordinateSystem;
-#endif
 using GeoAPI.Geometries;
 
 namespace SharpMap.Data.Providers

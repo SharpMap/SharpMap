@@ -757,8 +757,8 @@ namespace SharpMap.Layers
 
             strReq.AppendFormat(Map.NumberFormatEnUs, "REQUEST=GetMap&BBOX={0},{1},{2},{3}",
                                 box.MinX, box.MinY, box.MaxX, box.MaxY);
-            strReq.AppendFormat("&WIDTH={0}&Height={1}", size.Width, size.Height);
-            strReq.Append("&Layers=");
+            strReq.AppendFormat("&WIDTH={0}&HEIGHT={1}", size.Width, size.Height);
+            strReq.Append("&LAYERS=");
             if (_layerList != null && _layerList.Count > 0)
             {
                 foreach (string layer in _layerList)
@@ -769,9 +769,9 @@ namespace SharpMap.Layers
             if (SRID < 0)
                 throw new ApplicationException("Spatial reference system not set");
             if (Version == "1.3.0")
-                strReq.AppendFormat("&CRS=EPSG:{0}", SRID);
+                strReq.AppendFormat("&CRS={0}:{1}", Authority, SRID);
             else
-                strReq.AppendFormat("&SRS=EPSG:{0}", SRID);
+                strReq.AppendFormat("&SRS={0}:{1}", Authority, SRID);
             strReq.AppendFormat("&VERSION={0}", Version);
             strReq.Append("&Styles=");
             if (_stylesList != null && _stylesList.Count > 0)
@@ -788,6 +788,12 @@ namespace SharpMap.Layers
             }
             return strReq.ToString();
         }
+
+        /// <summary>
+        /// Gets or sets a value indicating the authority of the spatial reference system.
+        /// </summary>
+        /// <remarks>Must not be <value>null</value></remarks>
+        public string Authority { get; set; } = "EPSG";
 
         private static string ToHexValue(Color color)
         {

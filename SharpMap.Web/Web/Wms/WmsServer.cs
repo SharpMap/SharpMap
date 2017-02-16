@@ -30,11 +30,7 @@ using SharpMap.Data.Providers;
 using SharpMap.Layers;
 using System.Collections.Generic;
 using System.Text;
-#if !DotSpatialProjections
 using GeoAPI.CoordinateSystems.Transformations;
-#else
-using ICoordinateTransformation = DotSpatial.Projections.ICoordinateTransformation;
-#endif
 
 namespace SharpMap.Web.Wms
 {    
@@ -1046,9 +1042,6 @@ namespace SharpMap.Web.Wms
                         }
                         var data = Converters.GeoJSON.GeoJSONHelper.GetData(fds);
 
-#if DotSpatialProjections
-                        throw new NotImplementedException();
-#else
                         // Reproject geometries if needed
                         IMathTransform transform = null;
                         if (queryLayer is VectorLayer)
@@ -1066,7 +1059,6 @@ namespace SharpMap.Web.Wms
                                 return d;
                             });
                         }
-#endif
                         items.AddRange(data);
                         
                     }

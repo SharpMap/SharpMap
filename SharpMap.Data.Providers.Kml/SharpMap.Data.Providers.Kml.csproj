@@ -48,12 +48,12 @@
       <HintPath>..\packages\NetTopologySuite.1.14\lib\net40-client\PowerCollections.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="ProjNet, Version=1.3.2.0, Culture=neutral, PublicKeyToken=a1f5bdcd9c6f5740, processorArchitecture=MSIL">
-      <HintPath>..\packages\ProjNET4GeoAPI.1.3.2-pre1\lib\net40-client\ProjNet.dll</HintPath>
+    <Reference Include="ProjNet, Version=1.3.0.3, Culture=neutral, PublicKeyToken=a1f5bdcd9c6f5740, processorArchitecture=MSIL">
+      <HintPath>..\packages\ProjNET4GeoAPI.1.3.2\lib\net40-client\ProjNet.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="SharpKml, Version=2.1.0.0, Culture=neutral, PublicKeyToken=9bb853c026a5c0ac, processorArchitecture=MSIL">
-      <HintPath>..\packages\SharpKml.Core.2.1.0\lib\portable-net4+sl5+wp8+win8\SharpKml.dll</HintPath>
+    <Reference Include="SharpKml, Version=2.1.3.0, Culture=neutral, PublicKeyToken=9bb853c026a5c0ac, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpKml.Core.2.1.3\lib\portable-net4+sl5+wp8+win8\SharpKml.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="SharpKml.Kmz, Version=2.0.2.0, Culture=neutral, PublicKeyToken=9bb853c026a5c0ac, processorArchitecture=MSIL">

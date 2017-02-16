@@ -14,7 +14,6 @@ using Point=GeoAPI.Geometries.Coordinate;
 using ProjNet.CoordinateSystems;
 using ProjNet.CoordinateSystems.Transformations;
 
-#if !DotSpatialProjections
 public partial class Transformation : Page
 {
     private ICoordinateSystem datacoordsys;
@@ -263,4 +262,3 @@ public partial class Transformation : Page
         return new CoordinateTransformationFactory().CreateFromCoordinateSystems(source, coordsys);
     }
 }
-#endif

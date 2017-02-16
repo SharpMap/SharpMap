@@ -15,7 +15,8 @@ namespace WinFormSamples.Samples
 
 
             //string url = "http://labs.metacarta.com/wms-c/tilecache.py?version=1.1.1&amp;request=GetCapabilities&amp;service=wms-c";
-            string url = "http://dev:8080/geoserver/gwc/service/wms?SERVICE=WMS&VERSION=1.1.1&REQUEST=getcapabilities&TILED=true";
+            string url = "http://resource.sgu.se/service/wms/130/brunnar?SERVICE=WMS&VERSION=1.3&REQUEST=getcapabilities&TILED=true";
+            //string url = "http://dev:8080/geoserver/gwc/service/wms?SERVICE=WMS&VERSION=1.1.1&REQUEST=getcapabilities&TILED=true";
             //string url = "http://dev:8080/geoserver/ows?service=wms&version=1.3.0&request=GetCapabilities&tiled=true";
             //TiledWmsLayer tiledWmsLayer = new TiledWmsLayer("Metacarta", url);
             //tiledWmsLayer.TileSetsActive.Add(tiledWmsLayer.TileSets["avalon"].Name);

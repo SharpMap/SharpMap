@@ -88,15 +88,7 @@ namespace SharpMap.Converters.SqlServer2008SpatialObjects
         public static SqlGeometry ToSqlGeometry(SMGeometry smGeometry)
         {
             SqlGeometryBuilder builder = new SqlGeometryBuilder();
-//#if !DotSpatialProjections
-//            if (smGeometry.SpatialReference != null)
-//                builder.SetSrid((int) smGeometry.SpatialReference.AuthorityCode);
-//#else
-//            if (smGeometry.SpatialReference != null)
-//                builder.SetSrid((int) smGeometry.SpatialReference.EpsgCode);
-//#endif
-//            else
-                builder.SetSrid(smGeometry.SRID);
+            builder.SetSrid(smGeometry.SRID);
 
             SharpMapGeometryToSqlGeometry(builder, smGeometry);
 

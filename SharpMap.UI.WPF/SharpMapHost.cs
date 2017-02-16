@@ -403,29 +403,33 @@ namespace SharpMap.UI.WPF
             switch (e.Action)
             {
                 case NotifyCollectionChangedAction.Add:
-                {
-                    var layers = sender as ObservableCollection<ILayer>;
-                    if (layers != null)
                     {
-                        foreach (var layer in layers.Where(layer => !_mapBox.Map.Layers.Contains(layer)))
+                        var layers = e.NewItems;
+                        if (layers != null)
                         {
-                            _mapBox.Map.Layers.Add(layer);
+                            foreach (var layer in layers)
+                            {
+                                var castedLayer = layer as ILayer;
+                                if (castedLayer != null && MapBox.Map.Layers.All(l => l.LayerName != castedLayer.LayerName))
+                                    MapBox.Map.Layers.Add(castedLayer);
+                            }
                         }
                     }
-                }
 
                     break;
                 case NotifyCollectionChangedAction.Remove:
-                {
-                    var layers = sender as ObservableCollection<ILayer>;
-                    if (layers != null)
                     {
-                        foreach (var layer in layers.Where(layer => _mapBox.Map.Layers.Contains(layer)))
+                        var layers = e.OldItems;
+                        if (layers != null)
                         {
-                            _mapBox.Map.Layers.Remove(layer);
+                            foreach (var layer in layers)
+                            {
+                                var castedLayer = layer as ILayer;
+                                if (castedLayer != null && MapBox.Map.Layers.Any(l => l.LayerName == castedLayer.LayerName))
+                                    MapBox.Map.Layers.Remove(castedLayer);
+                            }
                         }
                     }
-                }
 
                     break;
                 case NotifyCollectionChangedAction.Reset:

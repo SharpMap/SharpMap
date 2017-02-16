@@ -17,7 +17,9 @@ namespace WinFormSamples
 
         private void button2_Click(object sender, EventArgs e)
         {
-            using(var f = new FormMapBox())
+            var ds = sender == button3;
+            FormMapBox.UseDotSpatial = ds;
+            using (var f = new FormMapBox())
                 f.ShowDialog();
         }
 

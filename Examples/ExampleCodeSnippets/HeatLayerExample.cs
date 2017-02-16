@@ -2,9 +2,6 @@
 using System.Data;
 using System.Drawing;
 using System.Drawing.Imaging;
-using BruTile.Predefined;
-using BruTile.Web;
-using DotSpatial.Projections;
 using GeoAPI.Geometries;
 using NUnit.Framework;
 using NetTopologySuite;
@@ -56,18 +53,10 @@ namespace ExampleCodeSnippets
             var l = new HeatLayer(p, "Data", 0.001f);
             l.LayerName = "HEAT";
             m.Layers.Add(l);
-#if DotSpatialProjections
-            l.CoordinateTransformation = new DotSpatial.Projections.CoordinateTransformation
-            {
-                Source = ProjectionInfo.FromEpsgCode(4326), 
-                Target = ProjectionInfo.FromEpsgCode(3857)
-            };
-#else
             var ctfac = new ProjNet.CoordinateSystems.Transformations.CoordinateTransformationFactory();
             l.CoordinateTransformation =
                 ctfac.CreateFromCoordinateSystems(ProjNet.CoordinateSystems.GeographicCoordinateSystem.WGS84,
                                                   ProjNet.CoordinateSystems.ProjectedCoordinateSystem.WebMercator);
-#endif
             l.ZoomMin = 0;// 0.01 * m.GetExtents().Width;
             l.ZoomMax = /*0.9 * */m.GetExtents().Width;
             l.OpacityMax = 1;

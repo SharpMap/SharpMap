@@ -10,36 +10,39 @@ namespace WinFormSamples.Samples
     {
         public static Map InitializeMap(float angle)
         {
-            string wmsUrl = "http://dev:8080/geoserver/ows?service=wms&version=1.1.1&request=GetCapabilities";
+            string wmsUrl = "http://resource.sgu.se/service/wms/130/brunnar";
 
             Map map = new Map();
+            
 
+            WmsLayer layWms = new WmsLayer("Brunnar", wmsUrl);
 
-            WmsLayer layWms = new WmsLayer("Demis Map", wmsUrl);
-
-            layWms.AddLayer("sf:roads");
+            layWms.AddLayer("grundvatten:SE.GOV.SGU.BRUNNAR.250K");
             //layWms.AddLayer("Topography");
             //layWms.AddLayer("Hillshading");
 
             layWms.SetImageFormat(layWms.OutputFormats[0]);
             layWms.ContinueOnError = true;
                 //Skip rendering the WMS Map if the server couldn't be requested (if set to false such an event would crash the app)
-            layWms.TimeOut = 5000; //Set timeout to 5 seconds
-            layWms.SRID = 4326;
-            map.Layers.Add(layWms);
+            layWms.TimeOut = 20000; //Set timeout to 5 seconds
+            layWms.SRID = 3006;
 
+            map.BackgroundLayer.Add(AsyncLayerProxyLayer.Create(layWms, new Size(256, 256)));
+            map.MaximumExtents = layWms.Envelope;
+            
             //limit the zoom to 360 degrees width
-            map.MaximumZoom = 360;
+            map.ZoomToExtents();
             map.BackColor = Color.LightBlue;
 
-            map.Zoom = 360;
-            map.Center = new Point(0, 0);
+            //map.Zoom = 360;
+            //map.Center = new Point(0, 0);
 
             Matrix mat = new Matrix();
             mat.RotateAt(angle, map.WorldToImage(map.Center));
             map.MapTransform = mat;
 
             map.ZoomToExtents();
+            map.Zoom = map.Envelope.Width/3;
             return map;
         }
     }

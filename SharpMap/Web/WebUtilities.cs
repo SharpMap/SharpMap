@@ -28,6 +28,8 @@ namespace SharpMap.Web
 
             lock (LockContext)
             {
+                if (_systemWebTested) return;
+
                 foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
                 {
                     if (assembly.GetName().Name != "System.Web") continue;
@@ -67,9 +69,9 @@ namespace SharpMap.Web
                     {
                     }
                 }
+                _systemWebTested = true;
             }
 
-            _systemWebTested = true;
         }
 
         private static object GetCurrentHttpContext()

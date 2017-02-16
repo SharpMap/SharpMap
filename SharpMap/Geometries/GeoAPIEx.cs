@@ -343,11 +343,11 @@ namespace GeoAPI.Geometries
             if (useClipping)
             {
                 res.AddPolygon(VectorRenderer.ClipPolygon(
-                    self.ExteriorRing.TransformToImage(map), 
+                    VectorRenderer.LimitValues(self.ExteriorRing.TransformToImage(map), VectorRenderer.ExtremeValueLimit),
                     map.Size.Width, map.Size.Height));
                 for (var i = 0; i < self.NumInteriorRings; i++)
                     res.AddPolygon(VectorRenderer.ClipPolygon(
-                        self.GetInteriorRingN(i).TransformToImage(map),
+                        VectorRenderer.LimitValues(self.GetInteriorRingN(i).TransformToImage(map),VectorRenderer.ExtremeValueLimit),
                         map.Size.Width, map.Size.Height));
             }
             else

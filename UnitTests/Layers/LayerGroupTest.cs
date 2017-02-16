@@ -29,7 +29,6 @@ namespace UnitTests.Layers
         } 
         #endregion
 
-#if !DotSpatialProjections
         private GeoAPI.CoordinateSystems.Transformations.ICoordinateTransformation CreateTransformation()
         {
             var ctf = new ProjNet.CoordinateSystems.Transformations.CoordinateTransformationFactory();
@@ -37,12 +36,7 @@ namespace UnitTests.Layers
                 ProjNet.CoordinateSystems.GeocentricCoordinateSystem.WGS84,
                 ProjNet.CoordinateSystems.GeographicCoordinateSystem.WGS84);
         }
-#else
-        private DotSpatial.Projections.ICoordinateTransformation CreateTransformation()
-        {
-            return new DotSpatial.Projections.CoordinateTransformation();
-        }
-#endif
+
         [Test(Description = "Setting a CoordinateTransformation to LayerGroup propagates to inner layers")]
         public void CoordinateTransformation_SettingValue_PropagatesTransformation()
         {
@@ -72,7 +66,6 @@ namespace UnitTests.Layers
                 "LayerGroup.CoordinateTransformation should NOT propagate to inner layers because SkipTransformationPropagation was true");
         }
 
-#if !DotSpatialProjections
         [Test(Description = "Setting a ReverseCoordinateTransformation to LayerGroup propagates to inner layers")]
         public void ReverseCoordinateTransformation_SettingValue_PropagatesTransformation()
         {
@@ -101,7 +94,6 @@ namespace UnitTests.Layers
             Assert.That(((Layer)group.Layers[0]).ReverseCoordinateTransformation, Is.Not.EqualTo(transf),
                 "LayerGroup.ReverseCoordinateTransformation should NOT propagate to inner layers because SkipTransformationPropagation was true");
         }
-#endif
 
         [Test(Description = "Envelope returns null when the inner layer Envelope is null")]
         public void Envelope_WhenInnerLayerEnvelopeIsNull_ReturnsNull()

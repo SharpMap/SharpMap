@@ -559,11 +559,16 @@ namespace SharpMap.Data.Providers
             //    fdt.Columns.Add("Label", typeof(string));
         }
 
-        public void Dispose()
+        void IDisposable.Dispose()
         {
             // throw new System.NotImplementedException();
         }
 
+        /// <summary>
+        /// Gets the features within the specified <see cref="GeoAPI.Geometries.Envelope"/>
+        /// </summary>
+        /// <param name="bbox"></param>
+        /// <returns>Features within the specified <see cref="GeoAPI.Geometries.Envelope"/></returns>
         public Collection<IGeometry> GetGeometriesInView(Envelope bbox)
         {
             var box = _geometryFactory.ToGeometry(bbox);
@@ -578,6 +583,15 @@ namespace SharpMap.Data.Providers
 
         }
 
+        /// <summary>
+        /// Returns all objects whose <see cref="GeoAPI.Geometries.Envelope"/> intersects 'bbox'.
+        /// </summary>
+        /// <remarks>
+        /// This method is usually much faster than the QueryFeatures method, because intersection tests
+        /// are performed on objects simplified by their <see cref="GeoAPI.Geometries.Envelope"/>, and using the Spatial Index
+        /// </remarks>
+        /// <param name="bbox">Box that objects should intersect</param>
+        /// <returns></returns>
         public Collection<uint> GetObjectIDsInView(Envelope bbox)
         {
             var box = _geometryFactory.ToGeometry(bbox);
@@ -593,6 +607,11 @@ namespace SharpMap.Data.Providers
             return res;
         }
 
+        /// <summary>
+        /// Returns the geometry corresponding to the Object ID
+        /// </summary>
+        /// <param name="oid">Object ID</param>
+        /// <returns>geometry</returns>
         public IGeometry GetGeometryByID(uint oid)
         {
             var sid = oid.ToString(NumberFormatInfo.InvariantInfo);
@@ -602,6 +621,11 @@ namespace SharpMap.Data.Providers
                 _geometryFactory.BuildGeometry(tmp.Value) : null;
         }
 
+        /// <summary>
+        /// Returns the data associated with all the geometries that are intersected by 'geom'
+        /// </summary>
+        /// <param name="geom">Geometry to intersect with</param>
+        /// <param name="ds">FeatureDataSet to fill data into</param>
         public void ExecuteIntersectionQuery(IGeometry geom, FeatureDataSet ds)
         {
             var fdt = (FeatureDataTable)_schemaTable.Copy();
@@ -634,16 +658,30 @@ namespace SharpMap.Data.Providers
             ds.Tables.Add(fdt);
         }
 
+        /// <summary>
+        /// Returns the data associated with all the geometries that are intersected by 'geom'
+        /// </summary>
+        /// <param name="box">Geometry to intersect with</param>
+        /// <param name="ds">FeatureDataSet to fill data into</param>
         public void ExecuteIntersectionQuery(Envelope box, FeatureDataSet ds)
         {
             ExecuteIntersectionQuery(_geometryFactory.ToGeometry(box), ds);
         }
 
+        /// <summary>
+        /// Returns the number of features in the dataset
+        /// </summary>
+        /// <returns>number of features</returns>
         public int GetFeatureCount()
         {
             return _geometrys.Count;
         }
 
+        /// <summary>
+        /// Returns a <see cref="SharpMap.Data.FeatureDataRow"/> based on a RowID
+        /// </summary>
+        /// <param name="oid">The id of the row.</param>
+        /// <returns>datarow</returns>
         public FeatureDataRow GetFeature(uint oid)
         {
             var sid = oid.ToString(NumberFormatInfo.InvariantInfo);
@@ -660,6 +698,10 @@ namespace SharpMap.Data.Providers
             return null;
         }
 
+        /// <summary>
+        /// <see cref="Envelope"/> of dataset
+        /// </summary>
+        /// <returns>The 2d extent of the layer</returns>
         public Envelope GetExtents()
         {
             var retEnv = new Envelope();
@@ -668,20 +710,40 @@ namespace SharpMap.Data.Providers
             return retEnv;
         }
 
+        /// <summary>
+        /// Opens the datasource
+        /// </summary>
         public void Open()
         {
             IsOpen = true;
         }
 
+        /// <summary>
+        /// Closes the datasource
+        /// </summary>
         public void Close()
         {
             IsOpen = false;
         }
 
+        /// <summary>
+        /// Gets the connection ID of the datasource
+        /// </summary>
+        /// <remarks>
+        /// <para>The ConnectionID should be unique to the datasource (for instance the filename or the
+        /// connectionstring), and is meant to be used for connection pooling.</para>
+        /// <para>If connection pooling doesn't apply to this datasource, the ConnectionID should return String.Empty</para>
+        /// </remarks>
         public string ConnectionID { get; private set; }
 
+        /// <summary>
+        /// Returns true if the datasource is currently open
+        /// </summary>
         public bool IsOpen { get; private set; }
 
+        /// <summary>
+        /// The spatial reference ID (CRS)
+        /// </summary>
         public int SRID { get { return 4326; } set { }}
 
         #region private helper methods

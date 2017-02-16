@@ -14,12 +14,7 @@ using BruTile.Web;
 using BruTile.Predefined;
 using SharpMap.Data.Providers;
 
-#if DotSpatialProjections
-using GeometryTransform = DotSpatial.Projections.GeometryTransform;
-using WinFormSamples.Samples;
-#else
 using GeometryTransform = GeoAPI.CoordinateSystems.Transformations.GeometryTransform;
-#endif
 
 namespace WinFormSamples
 {
@@ -52,17 +47,10 @@ namespace WinFormSamples
             vl.DataSource = geoProvider;
             this.mapBox1.Map.Layers.Add(vl);
 
-#if DotSpatialProjections
-            var mathTransform = LayerTools.Wgs84toGoogleMercator;
-            var geom = GeometryTransform.TransformBox(
-                new Envelope(-9.205626, -9.123736, 38.690993, 38.740837),
-                mathTransform.Source, mathTransform.Target);
-#else
             var mathTransform = LayerTools.Wgs84toGoogleMercator.MathTransform;
             var geom = GeometryTransform.TransformBox(
                 new Envelope(-9.205626, -9.123736, 38.690993, 38.740837),
                 mathTransform);
-#endif
 
             this.mapBox1.Map.ZoomToExtents(); //(geom);
             this.mapBox1.Refresh();

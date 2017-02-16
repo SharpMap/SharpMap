@@ -18,9 +18,7 @@ namespace SharpMap.CoordinateSystems
 
         private static Dictionary<int, string> _sridDefinition;
 
-#if !DotSpatialProjections
         private static readonly Dictionary<int, ICoordinateSystem> _sridCoordinateSystem = new Dictionary<int, ICoordinateSystem>();
-#endif
 
         /// <summary>
         /// Gets a coordinate system for the map based on the <see cref="Map.SRID"/> property

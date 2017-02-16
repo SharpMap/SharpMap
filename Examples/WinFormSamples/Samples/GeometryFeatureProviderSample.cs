@@ -1,4 +1,3 @@
-#if DotSpatialProjections
 namespace WinFormSamples.Samples
 {
     public static class GeometryFeatureProviderSample
@@ -39,4 +38,3 @@ namespace WinFormSamples.Samples
         }
     }
 }
-#endif

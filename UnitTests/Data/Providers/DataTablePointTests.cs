@@ -27,12 +27,13 @@ namespace UnitTests.Data.Providers
 {
     public class DataTablePointTests : ProviderTest
     {
-        private static DataTable CreateDataTableSource()
+        internal static DataTable CreateDataTableSource()
         {
             var source = new DataTable("PointSource", "http://www.codeplex.com/SharpMap/v1/UnitTests");
+            DataColumn pk;
             source.Columns.AddRange(new[]
                                         {
-                                            new DataColumn("oid", typeof (uint)),
+                                            pk = new DataColumn("oid", typeof (uint)),
                                             new DataColumn("name", typeof (string)),
                                             new DataColumn("x", typeof (double)),
                                             new DataColumn("y", typeof (double))
@@ -48,6 +49,7 @@ namespace UnitTests.Data.Providers
                 row["y"] = rnd.NextDouble()*1000;
                 source.Rows.Add(row);
             }
+            source.PrimaryKey = new[] {pk};
 
             return source;
         }
@@ -147,6 +149,27 @@ namespace UnitTests.Data.Providers
             Assert.IsNotNull(actual);
             Assert.IsTrue(actual is Point);
             Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void GetFeatureReturnsExpectedFeature()
+        {
+            DataTable source = CreateDataTableSource();
+            DataTablePoint provider = new DataTablePoint(source, "oid", "x", "y");
+
+            DataRow row = source.Select("oid = 43")[0];
+            Point expected = new Point((double)row["x"], (double)row["y"]);
+
+            var actual = provider.GetFeature(43);
+
+            Assert.That(actual, Is.Not.Null, "actual != null");
+            Assert.That(actual.ItemArray.Length, Is.EqualTo(4), "actual.ItemArray.Length == 4");
+            Assert.That(actual[0], Is.EqualTo(row[0]));
+            Assert.That(actual[1], Is.EqualTo(row[1]));
+            Assert.That(actual[2], Is.EqualTo(row[2]));
+            Assert.That(actual[3], Is.EqualTo(row[3]));
+            Assert.That(actual.Geometry, Is.EqualTo(expected));
+
         }
 
         [Test]

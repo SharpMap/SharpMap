@@ -144,7 +144,7 @@ namespace SharpMap.Rendering
                 var gp = new GraphicsPath();
                 if (offset != 0d)
                     points = OffsetRight(points, offset);
-                gp.AddLines(/*LimitValues(*/points/*, ExtremeValueLimit)*/);
+                gp.AddLines(LimitValues(points, ExtremeValueLimit));
 
                 g.DrawPath(pen, gp);
             }
@@ -192,9 +192,9 @@ namespace SharpMap.Rendering
 
                 //Add the exterior polygon
                 if (!clip)
-                    gp.AddPolygon(/*LimitValues(*/points/*, ExtremeValueLimit)*/);
+                    gp.AddPolygon(LimitValues(points, ExtremeValueLimit));
                 else
-                    DrawPolygonClipped(gp, /*LimitValues(*/points/*, ExtremeValueLimit)*/, map.Size.Width, map.Size.Height);
+                    DrawPolygonClipped(gp, LimitValues(points, ExtremeValueLimit), map.Size.Width, map.Size.Height);
 
                 //Add the interior polygons (holes)
                 if (pol.NumInteriorRings > 0)
@@ -203,9 +203,9 @@ namespace SharpMap.Rendering
                     {
                         points = ring.TransformToImage(map);
                         if (!clip)
-                            gp.AddPolygon(/*LimitValues(*/points/*, ExtremeValueLimit)*/);
+                            gp.AddPolygon(LimitValues(points, ExtremeValueLimit));
                         else
-                            DrawPolygonClipped(gp, /*LimitValues(*/points/*, ExtremeValueLimit)*/, map.Size.Width,
+                            DrawPolygonClipped(gp, LimitValues(points, ExtremeValueLimit), map.Size.Width,
                                                map.Size.Height);
                     }
                 }
@@ -246,7 +246,7 @@ namespace SharpMap.Rendering
         /// <param name="vertices">The vertices that need to be limited</param>
         /// <param name="limit">The limit at which coordinate values will be cutoff</param>
         /// <returns>The limited vertices</returns>
-        private static PointF[] LimitValues(PointF[] vertices, float limit)
+        public static PointF[] LimitValues(PointF[] vertices, float limit)
         {
             for (var i = 0; i < vertices.Length; i++)
             {

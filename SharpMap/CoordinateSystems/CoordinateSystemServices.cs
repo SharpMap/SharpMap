@@ -122,7 +122,8 @@ namespace SharpMap.CoordinateSystems
                 var wellKnownText = keyPair.Value;
 
                 var coordinateSystem = CreateCoordinateSystem(wellKnownText);
-
+                if (coordinateSystem == null) continue;
+                
                 if (_csBySrid.ContainsKey(srid))
                 {
                     if (ReferenceEquals(coordinateSystem, _csBySrid[srid]))

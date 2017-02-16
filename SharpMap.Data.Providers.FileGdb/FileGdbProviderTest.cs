@@ -17,7 +17,7 @@
 #if DEBUG
 
 using System;
-using System.Configuration;
+//using System.Configuration;
 using System.Data;
 using System.Drawing;
 using System.Drawing.Drawing2D;
@@ -32,6 +32,7 @@ namespace SharpMap.Data.Providers
     [TestFixture]
     public class FileGdbProviderTest
     {
+        /*
         [Test]
         public void TestEnsureNativePathSet()
         {
@@ -44,6 +45,7 @@ namespace SharpMap.Data.Providers
             Assert.IsFalse(string.IsNullOrEmpty(path));
             Assert.IsTrue(path.Contains(fileGdbPath));
         }
+        */
 
         [Test]
         public void TestSampleSources()
