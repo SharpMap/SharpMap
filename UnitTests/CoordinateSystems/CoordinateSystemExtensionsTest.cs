@@ -23,7 +23,7 @@ namespace UnitTests.CoordinateSystems
         {
             var gss = new NtsGeometryServices();
             var css = new CoordinateSystemServices(
-                new CoordinateSystemFactory(Encoding.ASCII),
+                new CoordinateSystemFactory(),
                 new CoordinateTransformationFactory(),
                 SharpMap.Converters.WellKnownText.SpatialReference.GetAllReferenceSystems());
 
