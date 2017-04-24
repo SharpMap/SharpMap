@@ -301,7 +301,7 @@ namespace SharpMap.Web.Wms
         {
             XmlNode LayerNode = doc.CreateNode(XmlNodeType.Element, "Layer", wmsNamespaceURI);
             LayerNode.AppendChild(CreateElement("Name", layer.LayerName, doc, false, wmsNamespaceURI));
-            LayerNode.AppendChild(CreateElement("Title", layer.LayerName, doc, false, wmsNamespaceURI));
+            LayerNode.AppendChild(CreateElement("Title", layer.LayerTitle ?? layer.LayerName, doc, false, wmsNamespaceURI));
 			//if this is a vector layer with themes property set, add the Styles
             if (layer.GetType() == typeof(VectorLayer))
                 if ((layer as VectorLayer).Themes != null)

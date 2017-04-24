@@ -124,6 +124,12 @@ namespace SharpMap.Layers
             set { _baseLayer.Enabled = value; }
         }
 
+        public string LayerTitle
+        {
+            get { return _baseLayer.LayerTitle; }
+            set { _baseLayer.LayerTitle = value; }
+        }
+
         /// <summary>
         /// Name of layer
         /// </summary>
