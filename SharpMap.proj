@@ -17,14 +17,14 @@
 
   <Target Name="BuildDebug">
     <MSBuild Projects="$(SolutionFile)" 
-             Targets="SharpMap;SharpMap_UI;SharpMap_Extensions;SharpMap_Extensions_x86;SharpMap_Web;SharpMap_Layers_HeatLayer;SharpMap_Layers_BruTile;SharpMap_Data_Providers_OracleSpatial;SharpMap_Data_Providers_GeoPackage;SharpMap_Data_Providers_Kml;SharpMap_CoordinateSystems_DotSpatial;SharpMap_Converters_GeoJSON;SharpMap_Converters_SpatiaLite;SharpMap_Utilities_Indexing_SbnTree" 
+             Targets="SharpMap;SharpMap_UI;SharpMap_UI_WPF;SharpMap_Extensions;SharpMap_Extensions_x86;SharpMap_Web;SharpMap_Layers_HeatLayer;SharpMap_Layers_BruTile;SharpMap_Data_Providers_OracleSpatial;SharpMap_Data_Providers_GeoPackage;SharpMap_Data_Providers_Kml;SharpMap_CoordinateSystems_DotSpatial;SharpMap_Converters_GeoJSON;SharpMap_Converters_SpatiaLite;SharpMap_Utilities_Indexing_SbnTree" 
              Properties="Configuration=Debug" 
              ContinueOnError="true"/>
   </Target>
 
   <Target Name="BuildRelease">
     <MSBuild Projects="$(SolutionFile)" 
-             Targets="SharpMap;SharpMap_UI;SharpMap_Extensions;SharpMap_Extensions_x86;SharpMap_Web;SharpMap_Layers_HeatLayer;SharpMap_Layers_BruTile;SharpMap_Data_Providers_OracleSpatial;SharpMap_Data_Providers_GeoPackage;SharpMap_Data_Providers_Kml;SharpMap_CoordinateSystems_DotSpatial;SharpMap_Converters_GeoJSON;SharpMap_Converters_SpatiaLite;SharpMap_Utilities_Indexing_SbnTree" 
+             Targets="SharpMap;SharpMap_UI;SharpMap_UI_WPF;SharpMap_Extensions;SharpMap_Extensions_x86;SharpMap_Web;SharpMap_Layers_HeatLayer;SharpMap_Layers_BruTile;SharpMap_Data_Providers_OracleSpatial;SharpMap_Data_Providers_GeoPackage;SharpMap_Data_Providers_Kml;SharpMap_CoordinateSystems_DotSpatial;SharpMap_Converters_GeoJSON;SharpMap_Converters_SpatiaLite;SharpMap_Utilities_Indexing_SbnTree" 
              Properties="Configuration=Release" 
              ContinueOnError="true"/>
   </Target>
