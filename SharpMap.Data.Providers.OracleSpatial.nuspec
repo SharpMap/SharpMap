@@ -6,9 +6,9 @@
     <title>SharpMap.Data.Providers.OracleSpatial</title>
     <authors>Triona AB, Peter Lofas</authors>
     <owners>SharpMap-Team</owners>
-    <licenseUrl>http://sharpmap.codeplex.com/license</licenseUrl>
-    <projectUrl>http://sharpmap.codeplex.com</projectUrl>
-    <!--<iconUrl>"http://download-codeplex.sec.s-msft.com/Download?ProjectName=sharpmap&DownloadId=668183"</iconUrl>-->
+    <licenseUrl>https://github.com/SharpMap/SharpMap/blob/Branches/1.0/license.txt</licenseUrl>
+    <projectUrl>https://github.com/SharpMap/SharpMap</projectUrl>
+    <iconUrl>https://avatars1.githubusercontent.com/u/8349804??v=3&amp;s=120</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>SharpMap data provider for Oracle</description>
     <copyright>Copyright © Triona AB 2014</copyright>

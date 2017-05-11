@@ -4,9 +4,9 @@
     <id>SharpMap</id>
     <version>$version$</version>
     <authors>SharpMap-Team</authors>
-	<licenseUrl>http://sharpmap.codeplex.com/license</licenseUrl>
-    <projectUrl>http://sharpmap.codeplex.com</projectUrl>
-    <!--<iconUrl>"http://download-codeplex.sec.s-msft.com/Download?ProjectName=sharpmap&DownloadId=668183"</iconUrl>-->
+	<licenseUrl>https://github.com/SharpMap/SharpMap/blob/Branches/1.0/license.txt</licenseUrl>
+    <projectUrl>https://github.com/SharpMap/SharpMap</projectUrl>
+    <iconUrl>https://avatars1.githubusercontent.com/u/8349804??v=3&amp;s=120</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <summary>
       SharpMap is an easy-to-use mapping library for use in web and desktop applications.
@@ -27,9 +27,9 @@ Combination of SharpMap.Core and SharpMap.Layers.BruTile
       <frameworkAssembly assemblyName="System.Xml" targetFramework="net40-client" />
     </frameworkAssemblies>
 	<dependencies>
-    <dependency id="SharpMap.Core" version="[1.2.0)"/>
-    <dependency id="SharpMap.Layers.BruTile" version="[1.2.0)"/>
+    <dependency id="SharpMap.Core" version="[$version$]"/>
+    <dependency id="SharpMap.Layers.BruTile" version="[$version$]"/>
 	</dependencies>
   </metadata>
-  </files>
+  <files/>
 </package>

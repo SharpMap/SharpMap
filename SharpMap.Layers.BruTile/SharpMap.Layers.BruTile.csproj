@@ -30,6 +30,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Release\SharpMap.Layers.BruTile.XML</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="BruTile, Version=0.18.1.0, Culture=neutral, processorArchitecture=MSIL">
