@@ -37,25 +37,16 @@
   <ItemGroup>
     <nuspecFiles Include="$(SolutionDir)*.nuspec"/>
   </ItemGroup>
+  <PropertyGroup>
+    <nugetPackages>Release</nugetPackages>
+  </PropertyGroup>
 
   <Target Name="JustNuGetPack" Outputs="%(nuspecFiles.Identity)">
+    <MakeDir Condition=" !Exists($(nugetPackages)) " Directories="$(nugetPackages)"/>
     <Exec Command="$(SolutionDir)BuildTools\NuGet pack %(nuspecFiles.Identity) -version $(NuGetVersion) -outputdirectory $(SolutionDir)Release"/>
-  </Target>
-  
-   <Target Name="JustNugetPack_alt">
-    <!--<Exec Command="IF NOT EXIST (""$(SolutionDir)\Release"") MKDIR ""$(SolutionDir)\Release""" />-->
-    <Exec Command="$(SolutionDir)BuildTools\NuGet pack SharpMap.Core.nuspec -version $(NuGetVersion) -outputdirectory $(SolutionDir)Release"/>
-    <Exec Command="$(SolutionDir)BuildTools\NuGet pack SharpMap.Layers.BruTile.nuspec -version $(NuGetVersion) -outputdirectory $(SolutionDir)Release"/>
-    <Exec Command="$(SolutionDir)BuildTools\NuGet pack SharpMap.nuspec -version $(NuGetVersion) -outputdirectory $(SolutionDir)Release"/>
-    <Exec Command="$(SolutionDir)BuildTools\NuGet pack SharpMap.Extensions.nuspec -version $(NuGetVersion) -outputdirectory $(SolutionDir)Release"/>
-    <Exec Command="$(SolutionDir)BuildTools\NuGet pack SharpMap.UI.nuspec -version $(NuGetVersion) -outputdirectory $(SolutionDir)Release"/>
-    <Exec Command="$(SolutionDir)BuildTools\NuGet pack SharpMap.Web.nuspec -version $(NuGetVersion) -outputdirectory $(SolutionDir)Release"/>
-    <Exec Command="$(SolutionDir)BuildTools\NuGet pack SharpMap.Layers.HeatLayer.nuspec -version $(NuGetVersion) -outputdirectory $(SolutionDir)Release"/>
-    <Exec Command="$(SolutionDir)BuildTools\NuGet pack SharpMap.Data.Providers.OracleSpatial.nuspec -version $(NuGetVersion) -outputdirectory $(SolutionDir)Release"/>
   </Target>
 
   <Target Name="NugetPack" DependsOnTargets="BuildRelease;JustNuGetPack"/>
-
   <Target Name="ZipSharpMap" DependsOnTargets="NugetPack">
     <ItemGroup>
       <SharpMapCore Include="SharpMap.dll;SharpMap.pdb;SharpMap.xml;SharpMap.UI.dll;SharpMap.UI.pdb;SharpMap.UI.xml;BruTile.dll;BruTile.Desktop.dll;BruTile.Serialization.dll;BruTile.MbTiles.dll;Common.Logging.dll;GeoAPI.dll;NewtonSoft.Json.dll;NewtonSoft.Json.xml;PowerCollections.dll;ProjNet.dll;NetTopologySuite.dll" />
