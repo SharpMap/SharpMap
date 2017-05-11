@@ -104,6 +104,7 @@ namespace SharpMap.Layers
         private IGeometryFactory _targetFactory;
 
         private string _layerName;
+        private string _layerTitle;
         private IStyle _style;
         private int _srid = -1;
         private int? _targetSrid;
@@ -232,6 +233,15 @@ namespace SharpMap.Layers
         {
             get { return _layerName; }
             set { _layerName = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets the title of the layer
+        /// </summary>
+        public string LayerTitle
+        {
+            get { return _layerTitle; }
+            set { _layerTitle = value; }
         }
 
         /// <summary>

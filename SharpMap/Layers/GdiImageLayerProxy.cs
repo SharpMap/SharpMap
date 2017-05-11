@@ -130,6 +130,12 @@ namespace SharpMap.Layers
             set { _baseLayer.Enabled = value; }
         }
 
+        public string LayerTitle
+        {
+            get { return _baseLayer.LayerTitle; }
+            set { _baseLayer.LayerTitle = value; }
+        }
+
         string ILayer.LayerName
         {
             get { return _baseLayer.LayerName; }
