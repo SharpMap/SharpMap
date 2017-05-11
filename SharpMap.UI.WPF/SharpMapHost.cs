@@ -410,8 +410,8 @@ namespace SharpMap.UI.WPF
                             foreach (var layer in layers)
                             {
                                 var castedLayer = layer as ILayer;
-                                if (castedLayer != null && MapBox.Map.Layers.All(l => l.LayerName != castedLayer.LayerName))
-                                    MapBox.Map.Layers.Add(castedLayer);
+                                if (castedLayer != null && _mapBox.Map.Layers.All(l => l.LayerName != castedLayer.LayerName))
+                                    _mapBox.Map.Layers.Add(castedLayer);
                             }
                         }
                     }
@@ -425,8 +425,8 @@ namespace SharpMap.UI.WPF
                             foreach (var layer in layers)
                             {
                                 var castedLayer = layer as ILayer;
-                                if (castedLayer != null && MapBox.Map.Layers.Any(l => l.LayerName == castedLayer.LayerName))
-                                    MapBox.Map.Layers.Remove(castedLayer);
+                                if (castedLayer != null && _mapBox.Map.Layers.Any(l => l.LayerName == castedLayer.LayerName))
+                                    _mapBox.Map.Layers.Remove(castedLayer);
                             }
                         }
                     }

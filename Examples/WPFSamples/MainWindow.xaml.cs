@@ -19,7 +19,7 @@ namespace WPFSamples
 
             var gss = GeoAPI.GeometryServiceProvider.Instance;
             var css = new SharpMap.CoordinateSystems.CoordinateSystemServices(
-                new ProjNet.CoordinateSystems.CoordinateSystemFactory(System.Text.Encoding.ASCII),
+                new ProjNet.CoordinateSystems.CoordinateSystemFactory(),
                 new ProjNet.CoordinateSystems.Transformations.CoordinateTransformationFactory(),
                 SharpMap.Converters.WellKnownText.SpatialReference.GetAllReferenceSystems());
 

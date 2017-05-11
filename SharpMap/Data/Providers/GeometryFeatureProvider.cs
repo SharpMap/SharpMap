@@ -322,7 +322,7 @@ namespace SharpMap.Data.Providers
         /// The ConnectionID is meant for Connection Pooling which doesn't apply to this datasource. Instead
         /// <c>String.Empty</c> is returned.
         /// </remarks>
-        public string ConnectionID
+        public virtual string ConnectionID
         {
             get { return String.Empty; }
         }
