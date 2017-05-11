@@ -237,7 +237,11 @@ namespace SharpMap.CoordinateSystems
             }
 
 
-            public double RadiansPerUnit { get; set; }
+            public double RadiansPerUnit
+            {
+                get { return Unit.Radians; }
+                set { Unit.Radians = value; }
+            }
         }
 
         private class LinearUnitWrapper : UnitWrapper, ILinearUnit
@@ -265,7 +269,11 @@ namespace SharpMap.CoordinateSystems
             }
 
 
-            public double MetersPerUnit { get; set; }
+            public double MetersPerUnit
+            {
+                get { return Unit.Meters; }
+                set { Unit.Meters = value; }
+            }
         }
 
 
