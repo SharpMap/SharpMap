@@ -21,6 +21,7 @@ using System.Collections.ObjectModel;
 using SharpMap.Converters.WellKnownBinary;
 using SharpMap.Converters.WellKnownText;
 using GeoAPI.Geometries;
+using System.Collections;
 
 namespace SharpMap.Data.Providers
 {
@@ -60,7 +61,7 @@ namespace SharpMap.Data.Providers
     [Serializable]
     public class GeometryProvider : PreparedGeometryProvider
     {
-        static GeometryProvider() { Map.Configure();}
+        static GeometryProvider() { Map.Configure(); }
         private List<IGeometry> _geometries;
 
         /// <summary>
@@ -99,7 +100,7 @@ namespace SharpMap.Data.Providers
         /// <param name="feature">Feature to be in this datasource</param>
         public GeometryProvider(FeatureDataRow feature)
         {
-            Geometries = new List<IGeometry> {feature.Geometry};
+            Geometries = new List<IGeometry> { feature.Geometry };
         }
 
         /// <summary>
@@ -127,7 +128,7 @@ namespace SharpMap.Data.Providers
         /// Initializes a new instance of the <see cref="GeometryProvider"/>
         /// </summary>
         /// <param name="wellKnownBinaryGeometry"><see cref="GeoAPI.Geometries.IGeometry"/> as Well-known Binary to be included in this datasource</param>
-        public GeometryProvider(byte[] wellKnownBinaryGeometry) 
+        public GeometryProvider(byte[] wellKnownBinaryGeometry)
             : this(GeometryFromWKB.Parse(wellKnownBinaryGeometry, GeoAPI.GeometryServiceProvider.Instance.CreateGeometryFactory()))
         {
         }
@@ -152,10 +153,13 @@ namespace SharpMap.Data.Providers
         public override Collection<IGeometry> GetGeometriesInView(Envelope bbox)
         {
             var list = new Collection<IGeometry>();
-            for (var i = 0; i < _geometries.Count; i++)
-                if (!_geometries[i].IsEmpty)
-                    if (bbox.Intersects(_geometries[i].EnvelopeInternal))
-                        list.Add(_geometries[i]);
+            lock (((ICollection)_geometries).SyncRoot)
+            {
+                for (var i = 0; i < _geometries.Count; i++)
+                    if (!_geometries[i].IsEmpty)
+                        if (bbox.Intersects(_geometries[i].EnvelopeInternal))
+                            list.Add(_geometries[i]);
+            }
             return list;
         }
 
@@ -167,9 +171,12 @@ namespace SharpMap.Data.Providers
         public override Collection<uint> GetObjectIDsInView(Envelope bbox)
         {
             var list = new Collection<uint>();
-            for (int i = 0; i < _geometries.Count; i++)
-                if (bbox.Intersects(_geometries[i].EnvelopeInternal))
-                    list.Add((uint) i);
+            lock (((ICollection)_geometries).SyncRoot)
+            {
+                for (int i = 0; i < _geometries.Count; i++)
+                    if (bbox.Intersects(_geometries[i].EnvelopeInternal))
+                        list.Add((uint)i);
+            }
             return list;
         }
 
@@ -180,7 +187,8 @@ namespace SharpMap.Data.Providers
         /// <returns>geometry</returns>
         public override IGeometry GetGeometryByID(uint oid)
         {
-            return _geometries[(int) oid];
+            lock (((ICollection)_geometries).SyncRoot)
+                return _geometries[(int)oid];
         }
 
         /// <summary>
@@ -209,7 +217,8 @@ namespace SharpMap.Data.Providers
         /// <returns>number of features</returns>
         public override int GetFeatureCount()
         {
-            return _geometries.Count;
+            lock (((ICollection)_geometries).SyncRoot)
+                return _geometries.Count;
         }
 
         /// <summary>
@@ -228,16 +237,19 @@ namespace SharpMap.Data.Providers
         /// <returns>boundingbox</returns>
         public override Envelope GetExtents()
         {
-            if (_geometries.Count == 0)
-                return null;
-            var box = new Envelope(_geometries[0].EnvelopeInternal);
-
-            for (var i = 0; i < _geometries.Count; i++)
+            lock (((ICollection)_geometries).SyncRoot)
             {
-                if (!_geometries[i].IsEmpty)
-                    box.ExpandToInclude(_geometries[i].EnvelopeInternal);
+                if (_geometries.Count == 0)
+                    return null;
+
+                var box = new Envelope(_geometries[0].EnvelopeInternal);
+                for (var i = 0; i < _geometries.Count; i++)
+                {
+                    if (!_geometries[i].IsEmpty)
+                        box.ExpandToInclude(_geometries[i].EnvelopeInternal);
+                }
+                return box;
             }
-            return box;
         }
 
         /// <summary>
@@ -247,7 +259,9 @@ namespace SharpMap.Data.Providers
         {
             if (_geometries != null)
             {
-                _geometries.Clear();
+                lock (((ICollection)_geometries).SyncRoot)
+                    _geometries.Clear();
+
                 _geometries = null;
             }
         }

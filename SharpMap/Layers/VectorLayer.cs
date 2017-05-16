@@ -50,7 +50,7 @@ namespace SharpMap.Layers
         /// </summary>
         /// <param name="layername">Name of layer</param>
         public VectorLayer(string layername)
-            :base(new VectorStyle())
+            : base(new VectorStyle())
         {
             LayerName = layername;
             SmoothingMode = SmoothingMode.AntiAlias;
@@ -65,7 +65,7 @@ namespace SharpMap.Layers
         {
             _dataSource = dataSource;
         }
-		/// <summary>
+        /// <summary>
         /// Gets or sets a Dictionary with themes suitable for this layer. A theme in the dictionary can be used for rendering be setting the Theme Property using a delegate function
         /// </summary>
         public Dictionary<string, ITheme> Themes
@@ -142,28 +142,28 @@ namespace SharpMap.Layers
             {
                 if (DataSource == null)
                     throw (new ApplicationException("DataSource property not set on layer '" + LayerName + "'"));
-                
+
                 if (_envelope != null && CacheExtent)
                     return ToTarget(_envelope.Clone());
 
                 Envelope box;
                 lock (_dataSource)
                 {
+                    // Is datasource already open?
                     bool wasOpen = DataSource.IsOpen;
-                    if (!wasOpen)
-                        DataSource.Open();
-                    box = DataSource.GetExtents();
-                    if (!wasOpen) //Restore state
-                        DataSource.Close();
+                    if (!wasOpen) { DataSource.Open(); }
 
-                    if (CacheExtent)
-                        _envelope = box;
+                    box = DataSource.GetExtents();
+
+                    if (!wasOpen) { DataSource.Close(); }
                 }
+
+                if (CacheExtent)
+                    _envelope = box;
 
                 return ToTarget(box);
             }
         }
-
         /// <summary>
         /// Gets or sets a value indicating whether the layer envelope should be treated as static or not.
         /// </summary>
@@ -187,7 +187,7 @@ namespace SharpMap.Layers
                 return DataSource.SRID;
             }
             set { DataSource.SRID = value; }
-        }       
+        }
 
         #region IDisposable Members
 
@@ -195,10 +195,10 @@ namespace SharpMap.Layers
         /// Disposes the object
         /// </summary>
         protected override void ReleaseManagedResources()
-        {   
+        {
             if (DataSource != null)
                 DataSource.Dispose();
- 	        base.ReleaseManagedResources();
+            base.ReleaseManagedResources();
         }
 
         #endregion
@@ -241,9 +241,13 @@ namespace SharpMap.Layers
             var ds = new FeatureDataSet();
             lock (_dataSource)
             {
-                DataSource.Open();
+                // Is datasource already open?
+                bool wasOpen = DataSource.IsOpen;
+                if (!wasOpen) { DataSource.Open(); }
+
                 DataSource.ExecuteIntersectionQuery(envelope, ds);
-                DataSource.Close();
+
+                if (!wasOpen) { DataSource.Close(); }
             }
 
             double scale = map.GetMapScale((int)g.DpiX);
@@ -342,9 +346,11 @@ namespace SharpMap.Layers
             if (!Style.Enabled) return;
 
             IEnumerable<IStyle> stylesToRender = GetStylesToRender(Style);
-            
-            if (stylesToRender== null)
+
+            if (stylesToRender == null)
                 return;
+
+            Collection<IGeometry> geoms = null;
 
             foreach (var style in stylesToRender)
             {
@@ -354,33 +360,32 @@ namespace SharpMap.Layers
                 {
                     if (vStyle != null)
                     {
-                        Collection<IGeometry> geoms;
-                        // Is datasource already open?
-                        lock (_dataSource)
+                        if (geoms == null)
                         {
-                            bool alreadyOpen = DataSource.IsOpen;
+                            lock (_dataSource)
+                            {
+                                // Is datasource already open?
+                                bool wasOpen = DataSource.IsOpen;
+                                if (!wasOpen) { DataSource.Open(); }
 
-                            // If not open yet, open it
-                            if (!alreadyOpen) { DataSource.Open(); }
+                                // Read data
+                                geoms = DataSource.GetGeometriesInView(envelope);
 
-                            // Read data
-                            geoms = DataSource.GetGeometriesInView(envelope);
+                                if (!wasOpen) { DataSource.Close(); }
+                            }
 
                             if (_logger.IsDebugEnabled)
                             {
                                 _logger.DebugFormat("Layer {0}, NumGeometries {1}", LayerName, geoms.Count);
                             }
 
-                            // If was not open, close it
-                            if (!alreadyOpen) { DataSource.Close(); }
-                        }
-
-                        // Transform geometries if necessary
-                        if (CoordinateTransformation != null)
-                        {
-                            for (int i = 0; i < geoms.Count; i++)
+                            // Transform geometries if necessary
+                            if (CoordinateTransformation != null)
                             {
-                                geoms[i] = ToTarget(geoms[i]);
+                                for (int i = 0; i < geoms.Count; i++)
+                                {
+                                    geoms[i] = ToTarget(geoms[i]);
+                                }
                             }
                         }
 
@@ -467,34 +472,34 @@ namespace SharpMap.Layers
             {
                 case OgcGeometryType.Polygon:
                     if (style.EnableOutline)
-                        VectorRenderer.DrawPolygon(g, (IPolygon) feature, style.Fill, style.Outline, _clippingEnabled,
+                        VectorRenderer.DrawPolygon(g, (IPolygon)feature, style.Fill, style.Outline, _clippingEnabled,
                                                    map);
                     else
-                        VectorRenderer.DrawPolygon(g, (IPolygon) feature, style.Fill, null, _clippingEnabled, map);
+                        VectorRenderer.DrawPolygon(g, (IPolygon)feature, style.Fill, null, _clippingEnabled, map);
                     break;
                 case OgcGeometryType.MultiPolygon:
                     if (style.EnableOutline)
-                        VectorRenderer.DrawMultiPolygon(g, (IMultiPolygon) feature, style.Fill, style.Outline,
+                        VectorRenderer.DrawMultiPolygon(g, (IMultiPolygon)feature, style.Fill, style.Outline,
                                                         _clippingEnabled, map);
                     else
-                        VectorRenderer.DrawMultiPolygon(g, (IMultiPolygon) feature, style.Fill, null, _clippingEnabled,
+                        VectorRenderer.DrawMultiPolygon(g, (IMultiPolygon)feature, style.Fill, null, _clippingEnabled,
                                                         map);
                     break;
                 case OgcGeometryType.LineString:
                     if (style.LineSymbolizer != null)
                     {
-                        style.LineSymbolizer.Render(map, (ILineString)feature, g);    
+                        style.LineSymbolizer.Render(map, (ILineString)feature, g);
                         return;
                     }
-                    VectorRenderer.DrawLineString(g, (ILineString) feature, style.Line, map, style.LineOffset);
+                    VectorRenderer.DrawLineString(g, (ILineString)feature, style.Line, map, style.LineOffset);
                     return;
                 case OgcGeometryType.MultiLineString:
                     if (style.LineSymbolizer != null)
                     {
-                        style.LineSymbolizer.Render(map, (IMultiLineString)feature, g);    
+                        style.LineSymbolizer.Render(map, (IMultiLineString)feature, g);
                         return;
                     }
-                    VectorRenderer.DrawMultiLineString(g, (IMultiLineString) feature, style.Line, map, style.LineOffset);
+                    VectorRenderer.DrawMultiLineString(g, (IMultiLineString)feature, style.Line, map, style.LineOffset);
                     break;
                 case OgcGeometryType.Point:
                     if (style.PointSymbolizer != null)
@@ -519,7 +524,7 @@ namespace SharpMap.Layers
                     }
                     if (style.Symbol != null || style.PointColor == null)
                     {
-                        VectorRenderer.DrawMultiPoint(g, (IMultiPoint) feature, style.Symbol, style.SymbolScale,
+                        VectorRenderer.DrawMultiPoint(g, (IMultiPoint)feature, style.Symbol, style.SymbolScale,
                                                   style.SymbolOffset, style.SymbolRotation, map);
                     }
                     else
@@ -527,7 +532,7 @@ namespace SharpMap.Layers
                         VectorRenderer.DrawMultiPoint(g, (IMultiPoint)feature, style.PointColor, style.PointSize, style.SymbolOffset, map);
                     }
                     break;
-                case OgcGeometryType.GeometryCollection:                    
+                case OgcGeometryType.GeometryCollection:
                     var coll = (IGeometryCollection)feature;
                     for (var i = 0; i < coll.NumGeometries; i++)
                     {
@@ -551,17 +556,23 @@ namespace SharpMap.Layers
         {
             box = ToSource(box);
 
+            int tableCount = ds.Tables.Count;
+
             lock (_dataSource)
             {
-                _dataSource.Open();
-                int tableCount = ds.Tables.Count;
+                // Is datasource already open?
+                bool wasOpen = _dataSource.IsOpen;
+                if (!wasOpen) { _dataSource.Open(); }
+
                 _dataSource.ExecuteIntersectionQuery(box, ds);
-                if (ds.Tables.Count > tableCount)
-                {
-                    //We added a table, name it according to layer
-                    ds.Tables[ds.Tables.Count - 1].TableName = LayerName;
-                }
-                _dataSource.Close();
+
+                if (!wasOpen) { DataSource.Close(); }
+            }
+
+            if (ds.Tables.Count > tableCount)
+            {
+                //We added a table, name it according to layer
+                ds.Tables[ds.Tables.Count - 1].TableName = LayerName;
             }
         }
 
@@ -574,17 +585,23 @@ namespace SharpMap.Layers
         {
             geometry = ToSource(geometry);
 
+            int tableCount = ds.Tables.Count;
+
             lock (_dataSource)
             {
-                _dataSource.Open();
-                int tableCount = ds.Tables.Count;
+                // Is datasource already open?
+                bool wasOpen = DataSource.IsOpen;
+                if (!wasOpen) { DataSource.Open(); }
+
                 _dataSource.ExecuteIntersectionQuery(geometry, ds);
-                if (ds.Tables.Count > tableCount)
-                {
-                    //We added a table, name it according to layer
-                    ds.Tables[ds.Tables.Count - 1].TableName = LayerName;
-                }
-                _dataSource.Close();
+
+                if (!wasOpen) { DataSource.Close(); }
+            }
+
+            if (ds.Tables.Count > tableCount)
+            {
+                //We added a table, name it according to layer
+                ds.Tables[ds.Tables.Count - 1].TableName = LayerName;
             }
         }
 
@@ -604,7 +621,7 @@ namespace SharpMap.Layers
             var res = (VectorLayer)MemberwiseClone();
             res.Style = Style.Clone();
             if (Theme is ICloneable)
-                res.Theme = (ITheme) ((ICloneable) Theme).Clone();
+                res.Theme = (ITheme)((ICloneable)Theme).Clone();
             return res;
         }
     }

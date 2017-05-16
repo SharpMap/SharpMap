@@ -21,6 +21,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data;
 using GeoAPI.Geometries;
+using System.ComponentModel;
 
 namespace SharpMap.Data.Providers
 {
@@ -59,9 +60,9 @@ namespace SharpMap.Data.Providers
     /// </remarks>
     public class GeometryFeatureProvider : FilterProvider, IProvider
     {
-        private readonly object _featuresLock = new object();
         private readonly FeatureDataTable _features;
         private int _srid = -1;
+        private int _oid = -1; // primary key index from fdt schema or subsequently added unique constraint
 
         #region constructors
 
@@ -72,13 +73,21 @@ namespace SharpMap.Data.Providers
         public GeometryFeatureProvider(IEnumerable<IGeometry> geometries)
         {
             _features = new FeatureDataTable();
+            _features.BeginLoadData();
             foreach (var geom in geometries)
             {
                 var fdr = _features.NewRow();
                 fdr.Geometry = geom;
                 _features.AddRow(fdr);
             }
+            _features.AcceptChanges();
+            _features.EndLoadData();
+
             _features.TableCleared += HandleFeaturesCleared;
+            _features.Constraints.CollectionChanged += HandleConstraintsCollectionChanged;
+
+            if (_features.Count > 0 && _features[0].Geometry != null)
+                SRID = _features[0].Geometry.SRID;
         }
 
         /// <summary>
@@ -89,6 +98,15 @@ namespace SharpMap.Data.Providers
         {
             _features = features;
             _features.TableCleared += HandleFeaturesCleared;
+            _features.Constraints.CollectionChanged += HandleConstraintsCollectionChanged;
+
+            if (_features != null && _features.Count > 0)
+                if (_features[0].Geometry != null)
+                    SRID = _features[0].Geometry.SRID;
+
+            // eg ShapeFile datasource with IncludeOid = true
+            if (features.PrimaryKey.Length == 1)
+                _oid = ValidateOidDataType(features.PrimaryKey[0]);
         }
 
         /// <summary>
@@ -100,16 +118,60 @@ namespace SharpMap.Data.Providers
             _features = new FeatureDataTable();
             var fdr = _features.NewRow();
             fdr.Geometry = geometry;
+            if (geometry != null)
+                SRID = geometry.SRID;
             _features.AddRow(fdr);
+            _features.AcceptChanges();
+
             _features.TableCleared += HandleFeaturesCleared;
+            _features.Constraints.CollectionChanged += HandleConstraintsCollectionChanged;
         }
 
         #endregion
 
         private void HandleFeaturesCleared(object sender, DataTableClearEventArgs e)
         {
-            //maybe clear extents
+            //maybe clear extents, reset SRID
             //ok, maybe not
+        }
+
+        private void HandleConstraintsCollectionChanged(object sender, CollectionChangeEventArgs e)
+        {
+            // rare cases when PK is explicitly added/removed subsequent to constructor
+            if (e.Element is UniqueConstraint)
+            {
+                UniqueConstraint uc;
+                uc = (UniqueConstraint)e.Element;
+                // Ensure we are dealing with PK....
+                // IsPrimaryKey only True for REMOVE or REFRESH. When ADDing new PK constraint 
+                // IsPrimaryKey is False until after constraint applied, so for this case confirm 
+                // no existing PK and check constraint for single col, !AllowDBNull and Unique
+                if ((uc.IsPrimaryKey && _features.PrimaryKey.Length == 1) ||
+                    (_features.PrimaryKey.Length == 0 && uc.Columns.Length == 1 &&
+                    !uc.Columns[0].AllowDBNull && uc.Columns[0].Unique))
+                {
+                    if (e.Action == CollectionChangeAction.Remove)
+                        _oid = -1;
+                    else
+                        _oid = ValidateOidDataType(uc.Columns[0]);
+                }
+            }
+        }
+
+        private int ValidateOidDataType(DataColumn pk)
+        {
+            switch (Type.GetTypeCode(pk.DataType))
+            {
+                case TypeCode.UInt16:
+                case TypeCode.UInt32:
+                case TypeCode.UInt64:
+                case TypeCode.Int16:
+                case TypeCode.Int32:
+                case TypeCode.Int64:
+                    return pk.Ordinal;
+                default:
+                    return -1;
+            }
         }
 
         /// <summary>
@@ -119,7 +181,7 @@ namespace SharpMap.Data.Providers
         {
             get
             {
-                lock (_features)
+                lock (_features.Rows.SyncRoot)
                 {
                     return _features;
                 }
@@ -137,7 +199,7 @@ namespace SharpMap.Data.Providers
         {
             var list = new Collection<IGeometry>();
 
-            lock (_features)
+            lock (_features.Rows.SyncRoot)
             {
                 foreach (FeatureDataRow fdr in _features.Rows)
                     if (!fdr.Geometry.IsEmpty)
@@ -152,7 +214,7 @@ namespace SharpMap.Data.Providers
 
         private IEnumerable<KeyValuePair<uint, FeatureDataRow>> EnumerateFeatures(Envelope bbox)
         {
-            lock (_featuresLock)
+            lock (_features.Rows.SyncRoot)
             {
                 uint id = 0;
                 if (FilterDelegate == null)
@@ -161,7 +223,12 @@ namespace SharpMap.Data.Providers
                         var geom = feature.Geometry;
                         var testBox = geom != null ? geom.EnvelopeInternal : new Envelope(bbox);
                         if (bbox.Intersects(testBox))
-                            yield return new KeyValuePair<uint, FeatureDataRow>(id, feature);
+                        {
+                            if (_oid == -1)
+                                yield return new KeyValuePair<uint, FeatureDataRow>(id, feature);
+                            else
+                                yield return new KeyValuePair<uint, FeatureDataRow>((uint)feature[_oid], feature);
+                        }
                         id++;
                     }
                 else
@@ -170,7 +237,12 @@ namespace SharpMap.Data.Providers
                         var geom = feature.Geometry;
                         var testBox = geom != null ? geom.EnvelopeInternal : new Envelope(bbox);
                         if (bbox.Intersects(testBox) && FilterDelegate(feature))
-                            yield return new KeyValuePair<uint, FeatureDataRow>(id, feature);
+                        {
+                            if (_oid == -1)
+                                yield return new KeyValuePair<uint, FeatureDataRow>(id, feature);
+                            else
+                                yield return new KeyValuePair<uint, FeatureDataRow>((uint)feature[_oid], feature);
+                        }
                         id++;
                     }
             }
@@ -198,21 +270,32 @@ namespace SharpMap.Data.Providers
         /// <returns>geometry</returns>
         public IGeometry GetGeometryByID(uint oid)
         {
-            lock (_featuresLock)
+            lock (_features.Rows.SyncRoot)
             {
-                return ((FeatureDataRow)_features.Rows[(int)oid]).Geometry;
+                if (_oid == -1)
+                    return ((FeatureDataRow)_features.Rows[(int)oid]).Geometry;
+                else
+                {
+                    DataRow dr;
+                    dr = _features.Rows.Find(_oid);
+                    if (dr != null)
+                        return ((FeatureDataRow)dr).Geometry;
+                    else
+                        return null;
+                }
+
             }
         }
 
         /// <summary>
-        /// Throws an NotSupportedException. Attribute data is not supported by this datasource
+        /// Add datatable to dataset and populate with intersecting features (perform bounding box intersect followed by geom intersect)
         /// </summary>
         /// <param name="geom"></param>
         /// <param name="ds">FeatureDataSet to fill data into</param>
         public void ExecuteIntersectionQuery(IGeometry geom, FeatureDataSet ds)
         {
             FeatureDataTable fdt;
-            lock (_featuresLock)
+            lock (_features.Columns.SyncRoot)
                 fdt = _features.Clone();
 
             fdt.BeginLoadData();
@@ -234,14 +317,14 @@ namespace SharpMap.Data.Providers
         }
 
         /// <summary>
-        /// Throws an NotSupportedException. Attribute data is not supported by this datasource
+        /// Add datatable to dataset and populate with interesecting features
         /// </summary>
         /// <param name="box"></param>
         /// <param name="ds">FeatureDataSet to fill data into</param>
         public void ExecuteIntersectionQuery(Envelope box, FeatureDataSet ds)
         {
             FeatureDataTable fdt;
-            lock (_featuresLock)
+            lock (_features.Columns.SyncRoot)
                 fdt = _features.Clone();
 
             fdt.BeginLoadData();
@@ -249,10 +332,11 @@ namespace SharpMap.Data.Providers
             {
                 var fdr = idFeature.Value;
                 fdt.LoadDataRow(fdr.ItemArray, false);
-                var geom =  fdr.Geometry;
+                var geom = fdr.Geometry;
                 if (geom != null)
                     ((FeatureDataRow)fdt.Rows[fdt.Rows.Count - 1]).Geometry = (IGeometry)geom.Clone();
             }
+            fdt.AcceptChanges();
             fdt.EndLoadData();
 
             ds.Tables.Add(fdt);
@@ -264,7 +348,7 @@ namespace SharpMap.Data.Providers
         /// <returns>number of features</returns>
         public int GetFeatureCount()
         {
-            lock(_featuresLock)
+            lock (_features.Rows.SyncRoot)
                 return _features.Rows.Count;
         }
 
@@ -275,7 +359,7 @@ namespace SharpMap.Data.Providers
         /// <returns>A feature data row</returns>
         public FeatureDataRow GetFeature(uint rowId)
         {
-            lock (_featuresLock)
+            lock (_features.Rows.SyncRoot)
             {
                 if (rowId >= _features.Rows.Count)
                 {
@@ -300,10 +384,11 @@ namespace SharpMap.Data.Providers
         /// <returns>boundingbox</returns>
         public Envelope GetExtents()
         {
-            lock (_featuresLock)
+            lock (_features.Rows.SyncRoot)
             {
                 if (_features.Rows.Count == 0)
                     return null;
+
                 var box = new Envelope();
 
                 foreach (FeatureDataRow fdr in _features.Rows)
@@ -365,6 +450,9 @@ namespace SharpMap.Data.Providers
         /// </summary>
         public void Dispose()
         {
+            _features.TableCleared -= HandleFeaturesCleared;
+            _features.Constraints.CollectionChanged -= HandleConstraintsCollectionChanged;
+
             _features.Dispose();
         }
 
