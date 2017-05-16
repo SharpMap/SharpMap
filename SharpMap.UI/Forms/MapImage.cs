@@ -107,12 +107,24 @@ namespace SharpMap.Forms
             base.MouseDown += new System.Windows.Forms.MouseEventHandler(MapImage_MouseDown);
             base.MouseWheel += new System.Windows.Forms.MouseEventHandler(MapImage_Wheel);
             base.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(MapImage_DblClick);
-            VariableLayerCollection.VariableLayerCollectionRequery += this.VariableLayersRequery;
+            _map.VariableLayers.VariableLayerCollectionRequery += this.VariableLayersRequery;
             Cursor = Cursors.Cross;
             DoubleBuffered = true;
         }
 
-        protected override void Dispose(bool disposing)        {            VariableLayerCollection.VariableLayerCollectionRequery -= this.VariableLayersRequery;            base.Dispose(disposing);        }        [Description("The amount which a single movement of the mouse wheel zooms by.")]
+        protected override void Dispose(bool disposing)
+        {
+            if (_map != null)
+            {
+                // special handling to prevent spurious VariableLayers events
+                _map.VariableLayers.Interval = 0;
+                _map.VariableLayers.VariableLayerCollectionRequery -= this.VariableLayersRequery;
+            }
+            
+            base.Dispose(disposing);
+        }
+
+        [Description("The amount which a single movement of the mouse wheel zooms by.")]
         [DefaultValue(-2)]
         [Category("Behavior")]
         public double WheelZoomMagnitude
@@ -156,7 +168,7 @@ namespace SharpMap.Forms
                 _map = value;
                 if (_map != null)
                 {
-                    VariableLayerCollection.VariableLayerCollectionRequery += new VariableLayerCollectionRequeryHandler(VariableLayersRequery);
+                    _map.VariableLayers.VariableLayerCollectionRequery += new VariableLayerCollectionRequeryHandler(VariableLayersRequery);
                     Refresh();
                 }
             }

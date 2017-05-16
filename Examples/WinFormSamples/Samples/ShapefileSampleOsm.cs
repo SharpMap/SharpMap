@@ -334,7 +334,7 @@ namespace WinFormSamples.Samples
             bmp.MakeTransparent(bmp.GetPixel(0, 0));
             vl.Style.Symbol = bmp;
 
-            VariableLayerCollection.Interval = 500;
+            map.VariableLayers.Interval = 500;
             map.VariableLayers.Add(vl);
 
             //Restrict zoom

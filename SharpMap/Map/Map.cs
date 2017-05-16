@@ -597,7 +597,7 @@ namespace SharpMap
                 throw new ArgumentNullException("g", "Cannot render map with null graphics object!");
 
             //Pauses the timer for VariableLayer
-            VariableLayerCollection.Pause = true;
+            _variableLayers.Pause = true;
 
             if ((Layers == null || Layers.Count == 0) && (BackgroundLayer == null || BackgroundLayer.Count == 0) && (_variableLayers == null || _variableLayers.Count == 0))
                 throw new InvalidOperationException("No layers to render");
@@ -685,7 +685,7 @@ namespace SharpMap
                 mapDecoration.Render(g, this);
             }
             //Resets the timer for VariableLayer
-            VariableLayerCollection.Pause = false;
+            _variableLayers.Pause = false;
 
             OnMapRendered(g);
         }
@@ -783,7 +783,7 @@ namespace SharpMap
             if (g == null)
                 throw new ArgumentNullException("g", "Cannot render map with null graphics object!");
 
-            VariableLayerCollection.Pause = true;
+            _variableLayers.Pause = true;
 
             LayerCollection lc = null;
             switch (layerCollectionType)
@@ -850,7 +850,7 @@ namespace SharpMap
 
 
 
-            VariableLayerCollection.Pause = false;
+            _variableLayers.Pause = false;
 
         }
 

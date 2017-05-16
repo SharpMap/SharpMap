@@ -149,7 +149,7 @@ namespace WinFormSamples.Samples
             vl.Theme = new SharpMap.Rendering.Thematics.CustomTheme(pttTrolley.GetStyle);
             vl.CoordinateTransformation = GetCoordinateTransformation();
             map.VariableLayers.Add(vl);
-            SharpMap.Layers.VariableLayerCollection.Interval = 5000;
+            map.VariableLayers.Interval = 5000;
 
             map.ZoomToBox(vl.Envelope);
 

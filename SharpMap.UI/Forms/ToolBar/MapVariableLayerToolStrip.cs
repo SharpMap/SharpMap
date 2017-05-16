@@ -14,7 +14,7 @@ namespace SharpMap.Forms.ToolBar
         private System.Timers.Timer _timer;
 
         public MapVariableLayerToolStrip()
-            :base()
+            : base()
         {
             InitializeComponent();
         }
@@ -74,7 +74,7 @@ namespace SharpMap.Forms.ToolBar
         private void OnTextChanged(object sender, EventArgs e)
         {
             int val;
-            if (int.TryParse(_interval.Text, System.Globalization.NumberStyles.Integer, 
+            if (int.TryParse(_interval.Text, System.Globalization.NumberStyles.Integer,
                 System.Globalization.NumberFormatInfo.InvariantInfo, out val))
             {
                 if (val < 500) val = 500;
@@ -103,7 +103,8 @@ namespace SharpMap.Forms.ToolBar
         {
             if (Logger.IsDebugEnabled)
                 Logger.DebugFormat("Touching timer at {0}", e.SignalTime);
-            SharpMap.Layers.VariableLayerCollection.TouchTimer();
+
+            base.MapControl.Map.VariableLayers.TouchTimer();
         }
     }
 }
