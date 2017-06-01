@@ -61,7 +61,8 @@ namespace SharpMap.Layers
         protected virtual void OnSridChanged(EventArgs eventArgs)
         {
             _sourceFactory = GeoAPI.GeometryServiceProvider.Instance.CreateGeometryFactory(SRID);
-            _coordinateTransform = _reverseCoordinateTransform = null;
+            if (!_shouldNotResetCt)
+                _coordinateTransform = _reverseCoordinateTransform = null;
             var handler = SRIDChanged;
             if (handler!= null) handler(this, eventArgs);
         }
@@ -108,7 +109,8 @@ namespace SharpMap.Layers
         private IStyle _style;
         private int _srid = -1;
         private int? _targetSrid;
-
+        [field:NonSerialized]
+        private bool _shouldNotResetCt;
 // ReSharper disable PublicConstructorInAbstractClass
         ///<summary>
         /// Creates an instance of this class using the given Style
@@ -181,8 +183,18 @@ namespace SharpMap.Layers
 
             if (CoordinateTransformation != null)
             {
-                SRID = Convert.ToInt32(CoordinateTransformation.SourceCS.AuthorityCode);
-                TargetSRID = Convert.ToInt32(CoordinateTransformation.TargetCS.AuthorityCode);
+                // we don't want that by setting SRID we get the CoordinateTransformation resetted
+                _shouldNotResetCt = true;
+                try
+                {
+                    SRID = Convert.ToInt32(CoordinateTransformation.SourceCS.AuthorityCode);
+                    TargetSRID = Convert.ToInt32(CoordinateTransformation.TargetCS.AuthorityCode);
+                }
+                finally
+                {
+                    _shouldNotResetCt = false;
+                }
+                
             }
 
             if (CoordinateTransformationChanged != null)
