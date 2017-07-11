@@ -1,6 +1,7 @@
 // WFS provider by Peter Robineau (peter.robineau@gmx.at)
 // This file can be redistributed and/or modified under the terms of the GNU Lesser General Public License.
 
+using System;
 using System.IO;
 using System.Text;
 using System.Xml;
@@ -69,7 +70,7 @@ namespace SharpMap.Utilities.Wfs
 
             StringBuilder filterBuilder = new StringBuilder();
             // &filter=<Filter xmlns="http://www.opengis.net/ogc" xmlns:gml="http://www.opengis.net/gml">
-            filterBuilder.Append("&filter=%3CFilter%20xmlns=%22" + NSOGC + "%22%20xmlns:gml=%22" + NSGML +
+            filterBuilder.Append("&filter=%3CFilter%20xmlns=%22" + Uri.EscapeDataString(NSOGC) + "%22%20xmlns:gml=%22" + Uri.EscapeDataString(NSGML) +
                                  "%22%3E");
             // <BBOX>
             filterBuilder.Append("%3CBBOX%3E");
