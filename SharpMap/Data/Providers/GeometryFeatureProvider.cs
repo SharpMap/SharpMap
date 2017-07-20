@@ -227,7 +227,7 @@ namespace SharpMap.Data.Providers
                             if (_oid == -1)
                                 yield return new KeyValuePair<uint, FeatureDataRow>(id, feature);
                             else
-                                yield return new KeyValuePair<uint, FeatureDataRow>((uint)feature[_oid], feature);
+                                yield return new KeyValuePair<uint, FeatureDataRow>((uint)(int)feature[_oid], feature);
                         }
                         id++;
                     }
@@ -241,7 +241,7 @@ namespace SharpMap.Data.Providers
                             if (_oid == -1)
                                 yield return new KeyValuePair<uint, FeatureDataRow>(id, feature);
                             else
-                                yield return new KeyValuePair<uint, FeatureDataRow>((uint)feature[_oid], feature);
+                                yield return new KeyValuePair<uint, FeatureDataRow>((uint)(int)feature[_oid], feature);
                         }
                         id++;
                     }
@@ -277,7 +277,7 @@ namespace SharpMap.Data.Providers
                 else
                 {
                     DataRow dr;
-                    dr = _features.Rows.Find(_oid);
+                    dr = _features.Rows.Find(oid);
                     if (dr != null)
                         return ((FeatureDataRow)dr).Geometry;
                     else
