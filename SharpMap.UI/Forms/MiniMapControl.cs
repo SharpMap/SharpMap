@@ -768,7 +768,7 @@ namespace SharpMap.Forms
                 Image img = null;
                 Rectangle frame;
 
-                if (map.Layers.Count > 0)
+                if (map.Layers.Count > 0 && Height > 0 && Width > 0)
                 {
                     var originalCenter = map.Center;
                     var originalWidth = map.Zoom;
