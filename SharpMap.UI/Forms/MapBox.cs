@@ -718,6 +718,8 @@ namespace SharpMap.Forms
         /// <param name="activeTool">The tool</param>
         protected virtual void OnActiveToolChanged(Tools activeTool)
         {
+            if (CustomTool != null)
+                CustomTool.Enabled = true;
             var handler = ActiveToolChanged;
             if (handler != null)
                 handler(activeTool);
