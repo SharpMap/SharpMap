@@ -202,7 +202,7 @@ namespace SharpMap.Data.Providers
             lock (_features.Rows.SyncRoot)
             {
                 foreach (FeatureDataRow fdr in _features.Rows)
-                    if (!fdr.Geometry.IsEmpty)
+                    if (fdr.Geometry != null && !fdr.Geometry.IsEmpty)
                         if (FilterDelegate == null || FilterDelegate(fdr))
                         {
                             if (bbox.Intersects(fdr.Geometry.EnvelopeInternal))
@@ -217,34 +217,26 @@ namespace SharpMap.Data.Providers
             lock (_features.Rows.SyncRoot)
             {
                 uint id = 0;
-                if (FilterDelegate == null)
-                    foreach (FeatureDataRow feature in _features.Rows)
+                foreach (FeatureDataRow feature in _features.Rows)
+                {
+                    var geom = feature.Geometry;
+                    if (geom != null && !geom.IsEmpty)
                     {
-                        var geom = feature.Geometry;
-                        var testBox = geom != null ? geom.EnvelopeInternal : new Envelope(bbox);
-                        if (bbox.Intersects(testBox))
+                        if (bbox.Intersects(geom.EnvelopeInternal) && (FilterDelegate == null || FilterDelegate(feature)))
                         {
                             if (_oid == -1)
+                            {
                                 yield return new KeyValuePair<uint, FeatureDataRow>(id, feature);
+                                id++;
+                            }
                             else
-                                yield return new KeyValuePair<uint, FeatureDataRow>((uint)(int)feature[_oid], feature);
+                            {
+                                yield return new KeyValuePair<uint, FeatureDataRow>(Convert.ToUInt32(feature[_oid]), feature);
+                            }
+                               
                         }
-                        id++;
                     }
-                else
-                    foreach (FeatureDataRow feature in _features.Rows)
-                    {
-                        var geom = feature.Geometry;
-                        var testBox = geom != null ? geom.EnvelopeInternal : new Envelope(bbox);
-                        if (bbox.Intersects(testBox) && FilterDelegate(feature))
-                        {
-                            if (_oid == -1)
-                                yield return new KeyValuePair<uint, FeatureDataRow>(id, feature);
-                            else
-                                yield return new KeyValuePair<uint, FeatureDataRow>((uint)(int)feature[_oid], feature);
-                        }
-                        id++;
-                    }
+                }
             }
         }
 
@@ -355,23 +347,45 @@ namespace SharpMap.Data.Providers
         /// <summary>
         /// Gets a specific feature from the data source by its <paramref name="rowId"/>
         /// </summary>
-        /// <param name="rowId">The id of the row</param>
+        /// <param name="rowId">The row index or OID (if primary key enabled) of the feature</param>
         /// <returns>A feature data row</returns>
         public FeatureDataRow GetFeature(uint rowId)
         {
             lock (_features.Rows.SyncRoot)
             {
-                if (rowId >= _features.Rows.Count)
+                if (_oid == -1)
                 {
-                    return null;
+                    // find by row number
+                    if (rowId >= _features.Rows.Count)
+                    {
+                        return null;
+                    }
+                    else if (FilterDelegate != null && FilterDelegate(_features[(int)rowId]))
+                    {
+                        return _features[(int)rowId];
+                    }
+                    else if (rowId < _features.Rows.Count)
+                    {
+                        return _features[(int)rowId];
+                    }
                 }
-                else if (FilterDelegate != null && FilterDelegate(_features[(int)rowId]))
+                else
                 {
-                    return _features[(int)rowId];
-                }
-                else if (rowId < _features.Rows.Count)
-                {
-                    return _features[(int)rowId];
+                    // find by primary key
+                    DataRow dr;
+                    dr = _features.Rows.Find(rowId);
+                    if (dr == null)
+                    {
+                        return null;
+                    }
+                    else if (FilterDelegate != null && FilterDelegate((FeatureDataRow)dr))
+                    {
+                        return (FeatureDataRow)dr;
+                    }
+                    else
+                    {
+                        return (FeatureDataRow)dr;
+                    }
                 }
             }
 
