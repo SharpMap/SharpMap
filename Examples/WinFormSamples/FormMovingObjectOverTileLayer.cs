@@ -23,7 +23,7 @@ namespace WinFormSamples
 
         public FormMovingObjectOverTileLayer()
         {
-   
+
             InitializeComponent();
             this.SetStyle(ControlStyles.DoubleBuffer | ControlStyles.UserPaint | ControlStyles.AllPaintingInWmPaint, true);
             this.UpdateStyles();
@@ -55,7 +55,7 @@ namespace WinFormSamples
             staticLayer.DataSource = geoProviderFixed;
             this.mapBox1.Map.Layers.Add(staticLayer);
 
-            
+
             //Adds a moving variable layer
             VectorLayer pushPinLayer = new VectorLayer("PushPins");
             position = geom.Centre;
@@ -96,8 +96,9 @@ namespace WinFormSamples
             else if (position.Y > this.mapBox1.Map.Envelope.MaxY)
                 movingUp = false;
 
-            VariableLayerCollection.TouchTimer();
-            //this.mapBox1.Refresh();
+            //static method replaced by instance method
+            //VariableLayerCollection.TouchTimer();
+            this.mapBox1.Map.VariableLayers.TouchTimer();
 
         }
 

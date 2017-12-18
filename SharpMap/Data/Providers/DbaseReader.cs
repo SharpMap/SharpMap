@@ -765,8 +765,11 @@ namespace SharpMap.Data.Providers
         {
             _baseTable = new FeatureDataTable();
             if (IncludeOid)
+            {
                 _baseTable.Columns.Add("Oid", typeof(UInt32));
-
+                _baseTable.PrimaryKey = new DataColumn[] { _baseTable.Columns[0] };
+            }
+              
             foreach (var dbf in _dbaseColumns)
             {
                 //_baseTable.Columns.Add(dbf.ColumnName, dbf.DataType);

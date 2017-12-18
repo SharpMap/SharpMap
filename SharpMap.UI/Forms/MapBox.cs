@@ -772,7 +772,7 @@ namespace SharpMap.Forms
                 ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.UserPaint, true);
             base.DoubleBuffered = true;
             _map = new Map(ClientSize);
-            VariableLayerCollection.VariableLayerCollectionRequery += HandleVariableLayersRequery;
+            _map.VariableLayers.VariableLayerCollectionRequery += HandleVariableLayersRequery;
             _map.RefreshNeeded += HandleRefreshNeeded;
             _map.MapNewTileAvaliable += HandleMapNewTileAvaliable;
 
@@ -818,9 +818,12 @@ namespace SharpMap.Forms
             if (_isDisposed || IsDisposed)
                 return;
 
-            VariableLayerCollection.VariableLayerCollectionRequery -= HandleVariableLayersRequery;
+            
             if (_map != null)
             {
+                // special handling to prevent spurious VariableLayers events
+                _map.VariableLayers.Interval = 0;
+                _map.VariableLayers.VariableLayerCollectionRequery -= HandleVariableLayersRequery;
                 _map.MapNewTileAvaliable -= HandleMapNewTileAvaliable;
                 _map.RefreshNeeded -= HandleRefreshNeeded;
             }
@@ -1737,7 +1740,7 @@ namespace SharpMap.Forms
 
             if (_map != null)
             {
-                VariableLayerCollection.VariableLayerCollectionRequery -= HandleVariableLayersRequery;
+                _map.VariableLayers.VariableLayerCollectionRequery -= HandleVariableLayersRequery;
                 _map.MapNewTileAvaliable -= HandleMapNewTileAvaliable;
                 _map.RefreshNeeded -= HandleRefreshNeeded;
             }
@@ -1751,7 +1754,7 @@ namespace SharpMap.Forms
         {
             if (_map != null)
             {
-                VariableLayerCollection.VariableLayerCollectionRequery += HandleVariableLayersRequery;
+                _map.VariableLayers.VariableLayerCollectionRequery += HandleVariableLayersRequery;
                 _map.MapNewTileAvaliable += HandleMapNewTileAvaliable;
                 _map.RefreshNeeded += HandleRefreshNeeded;
                 Refresh();

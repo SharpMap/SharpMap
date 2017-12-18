@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Timers;
 
@@ -30,7 +31,7 @@ namespace SharpMap.Layers
     /// <param name="sender">The sender of the event</param>
     /// <param name="e">The arguments, <c>EventArgs.Empty</c> in all cases</param>
     public delegate void VariableLayerCollectionRequeryHandler(object sender, EventArgs e);
-    
+
     /// <summary>
     /// Layer collection 
     /// </summary>
@@ -38,39 +39,33 @@ namespace SharpMap.Layers
     [Serializable]
     public class VariableLayerCollection : LayerCollection
     {
-        private readonly LayerCollection _staticLayers;
-        private static Timer _timer = null;
+        private readonly LayerCollection _variableLayers;
+        private Timer _timer = null;
 
-        private static bool touchTest = false;
-        
         /// <summary>
         /// Method to restart the internal Timer
         /// </summary>
-        public static void TouchTimer()
+        public void TouchTimer()
         {
-            if (touchTest == true)
-            {
-                System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(OnRequery));
-                _timer.Start();
-            }
-            else
-            {
-                touchTest = true;
-            }
+            // check for pending re-draw (eg after map pan/zoom completed)
+            if (_timer.Enabled) return;
+
+            _timer.Start();
+            System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(OnRequery));
         }
-        
+
         /// <summary>
         /// Event fired every <see cref="Interval"/> to force requery;
         /// </summary>
-        public static event VariableLayerCollectionRequeryHandler VariableLayerCollectionRequery;
+        public event VariableLayerCollectionRequeryHandler VariableLayerCollectionRequery;
 
         /// <summary>
         /// Creates an instance of this class
         /// </summary>
-        /// <param name="staticLayers">Layer collection that holds static layers</param>
-        public VariableLayerCollection(LayerCollection staticLayers)
+        /// <param name="variableLayers">Layer collection that holds layers with data sources updating frequently</param>
+        public VariableLayerCollection(LayerCollection variableLayers)
         {
-            _staticLayers = staticLayers;
+            _variableLayers = variableLayers;
             if (_timer == null)
             {
                 _timer = new Timer();
@@ -79,25 +74,22 @@ namespace SharpMap.Layers
             }
         }
 
-        static void TimerElapsed(object sender, ElapsedEventArgs e)
+        private void TimerElapsed(object sender, ElapsedEventArgs e)
         {
-            touchTest = false;
             OnRequery(null);
-            if (!touchTest)
-            {
-                _timer.Stop();
-                touchTest = true;
-            }
         }
 
         /// <inheritdoc/>
         protected override void InsertItem(int index, ILayer layer)
         {
-            if (layer == null) 
+            if (layer == null)
                 throw new ArgumentNullException("layer", "The passed argument is null or not an ILayer");
 
-            TestLayerPresent(_staticLayers, layer);
-            base.InsertItem(index, layer);
+            lock (((ICollection)_variableLayers).SyncRoot)
+            {
+                TestLayerPresent(_variableLayers, layer);
+                base.InsertItem(index, layer);
+            }
         }
 
         /*
@@ -106,7 +98,7 @@ namespace SharpMap.Layers
             ILayer newLayer = (e.NewObject as ILayer);
             if (newLayer == null) throw new ArgumentNullException("value", "The passed argument is null or not an ILayer");
 
-            TestLayerPresent(_staticLayers, newLayer);
+            TestLayerPresent(_variableLayers, newLayer);
 
             base.OnAddingNew(e);
         }
@@ -122,30 +114,45 @@ namespace SharpMap.Layers
 
                 if (comparison == 0) throw new DuplicateLayerException(newLayer.LayerName);
             }
-            
+
         }
 
-        private static void OnRequery(object obj)
+        private void OnRequery(object obj)
         {
+            // if pan/zoom operation in progress then retry on next _timer.Elapsed
             if (Pause) return;
+
+            // check for race condition when timer has been stopped while event has just been submitted on threadpool.QueueUserWorkItem
+            if (!_timer.Enabled) return;
+
+            _timer.Stop();
+
             if (VariableLayerCollectionRequery != null)
                 VariableLayerCollectionRequery(null, EventArgs.Empty);
+
         }
 
         /// <summary>
         /// Gets/sets the interval in which to update layers
         /// </summary>
-        public static double Interval
+        public double Interval
         {
             get { return _timer.Interval; }
-            set { _timer.Interval = value; }
+            set
+            {
+                // map sets Interval == 0 when disposing, to prevent race condition
+                if (value <= 0)
+                    _timer.Stop();
+                else
+                    _timer.Interval = value;
+            }
         }
 
-        private static bool _pause;
+        private bool _pause;
         /// <summary>
         /// Gets/Sets whether this collection should currently be updated or not
         /// </summary>
-        public static bool Pause
+        public bool Pause
         {
             get { return _pause; }
             set { _pause = value; }

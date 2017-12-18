@@ -31,8 +31,8 @@
             this.components = new System.ComponentModel.Container();
             this.button4 = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
-            this.mapBox1 = new SharpMap.Forms.MapBox();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.mapBox1 = new SharpMap.Forms.MapBox();
             this.SuspendLayout();
             // 
             // button4
@@ -55,13 +55,20 @@
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
+            // timer1
+            // 
+            this.timer1.Interval = 50;
+            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
+            // 
             // mapBox1
             // 
             this.mapBox1.ActiveTool = SharpMap.Forms.MapBox.Tools.Pan;
             this.mapBox1.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.mapBox1.CustomTool = null;
             this.mapBox1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.mapBox1.FineZoomFactor = 10D;
             this.mapBox1.Location = new System.Drawing.Point(0, 0);
+            this.mapBox1.MapQueryMode = SharpMap.Forms.MapBox.MapQueryType.LayerByIndex;
             this.mapBox1.Name = "mapBox1";
             this.mapBox1.PreviewMode = SharpMap.Forms.MapBox.PreviewModes.Fast;
             this.mapBox1.QueryGrowFactor = 5F;
@@ -73,11 +80,6 @@
             this.mapBox1.TabIndex = 2;
             this.mapBox1.Text = "mapBox1";
             this.mapBox1.WheelZoomMagnitude = 2D;
-            // 
-            // timer1
-            // 
-            this.timer1.Interval = 20;
-            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
             // FormMovingObjectOverTileLayer
             // 
