@@ -84,6 +84,8 @@
     <Compile Include="Forms\MiniMapControl.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Forms\ImageGenerator\IMapBoxImageGenerator.cs" />
+    <Compile Include="Forms\ImageGenerator\LegacyMapImageRenderer.cs" />
     <Compile Include="Forms\ToolBar\MapDigitizeGeometriesToolStrip.cs">
       <SubType>Component</SubType>
     </Compile>
