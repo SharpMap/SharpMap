@@ -27,6 +27,11 @@ namespace UnitTests.Data.Providers
             Assert.AreEqual(tableSchema, sq.TableSchema);
             Assert.AreEqual(table, sq.Table);
             Assert.AreEqual("oidcolumn", sq.ObjectIdColumn);
+
+            System.Reflection.PropertyInfo pi = sq.GetType().GetProperty("QualifiedTable", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.GetProperty);
+            string qualifiedTable = (string)pi.GetValue(sq, null);
+            Assert.IsTrue(qualifiedTable.Contains(tableSchema));
+            Assert.IsTrue(qualifiedTable.Contains(table));
         }
     }
 
