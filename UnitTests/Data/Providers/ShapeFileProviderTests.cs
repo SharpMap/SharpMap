@@ -19,6 +19,61 @@ namespace UnitTests.Data.Providers
         }
 
         [NUnit.Framework.Test]
+        public void TestReadValueZFromPointZShapeFile()
+        {
+            var file = GetTestDataFilePath("Point_With_Z.shp");
+            var sh = new SharpMap.Data.Providers.ShapeFile(file, true);
+            sh.Open();
+            var fc = sh.GetFeatureCount();
+            NUnit.Framework.Assert.AreEqual(1149, fc);
+            NUnit.Framework.Assert.AreEqual(0, sh.GetObjectIDsInView(sh.GetExtents())[0]);
+            var featsInView = sh.GetGeometriesInView(new GeoAPI.Geometries.Envelope(sh.GetExtents()));
+            NUnit.Framework.Assert.AreEqual(1149, featsInView.Count);
+            foreach (var item in featsInView)
+            {
+                NUnit.Framework.Assert.IsNotNull(item.Coordinate.Z);
+            }
+            NUnit.Framework.Assert.AreEqual(featsInView[0].Coordinate.Z, 146.473);
+            NUnit.Framework.Assert.AreEqual(featsInView[1].Coordinate.Z, 181.374);
+            NUnit.Framework.Assert.AreEqual(featsInView[2].Coordinate.Z, 146.676);
+            NUnit.Framework.Assert.AreEqual(featsInView[3].Coordinate.Z, 181.087);
+            NUnit.Framework.Assert.AreEqual(featsInView[4].Coordinate.Z, 169.948);
+            NUnit.Framework.Assert.AreEqual(featsInView[5].Coordinate.Z, 169.916);
+
+            sh.Close();
+        }
+
+        [NUnit.Framework.Test]
+        public void TestReadValueZFromLineStringZShapeFile()
+        {
+            var file = GetTestDataFilePath("LineString_With_Z.shp");
+            var sh = new SharpMap.Data.Providers.ShapeFile(file, true);
+            sh.Open();
+            var fc = sh.GetFeatureCount();
+            NUnit.Framework.Assert.AreEqual(1221, fc);
+            NUnit.Framework.Assert.AreEqual(0, sh.GetObjectIDsInView(sh.GetExtents())[0]);
+            var featsInView = sh.GetGeometriesInView(new GeoAPI.Geometries.Envelope(sh.GetExtents()));
+            NUnit.Framework.Assert.AreEqual(1221, featsInView.Count);
+            foreach (var item in featsInView)
+            {
+                NUnit.Framework.Assert.IsNotNull(item.Coordinate.Z);
+            }
+            NUnit.Framework.Assert.AreEqual(featsInView[0].Coordinates[0].Z, 35.865);
+            NUnit.Framework.Assert.AreEqual(featsInView[0].Coordinates[1].Z, 35.743);
+            
+            NUnit.Framework.Assert.AreEqual(featsInView[1].Coordinates[0].Z, 35.518);
+            NUnit.Framework.Assert.AreEqual(featsInView[1].Coordinates[1].Z, 35.518);
+            
+            NUnit.Framework.Assert.AreEqual(featsInView[2].Coordinates[0].Z, 37.438);
+            NUnit.Framework.Assert.AreEqual(featsInView[2].Coordinates[1].Z, 37.441);
+            
+            NUnit.Framework.Assert.AreEqual(featsInView[3].Coordinates[0].Z, 37.441);
+            NUnit.Framework.Assert.AreEqual(featsInView[3].Coordinates[1].Z, 37.441);
+
+            sh.Close();
+        }
+
+        [NUnit.Framework.Test]
         public void UsingTest()
         {
             using (var s = System.IO.File.Open(GetTestDataFilePath("SPATIAL_F_SKARVMUFF.shp"), System.IO.FileMode.Open))
