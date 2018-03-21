@@ -12,7 +12,9 @@ using SharpMap.Layers;
 
 namespace SharpMap.Forms.ImageGenerator
 {
-    
+    /// <summary>
+    /// 
+    /// </summary>
     public class LegacyMapBoxImageGenerator : IMapBoxImageGenerator
     {
         private static readonly ILog _logger = LogManager.GetLogger<LegacyMapBoxImageGenerator>();
@@ -184,7 +186,7 @@ namespace SharpMap.Forms.ImageGenerator
                 oldRef.Dispose();
 
             _mapBox.Invalidate(rect);
-            _mapBox.Update();
+            _mapBox.Invoke(new MethodInvoker(_mapBox.Update));
 
             //// TODO Why?
             //Application.DoEvents();
@@ -522,11 +524,9 @@ namespace SharpMap.Forms.ImageGenerator
         /// 
         /// </summary>
         /// <returns></returns>
-        public Task Generate()
+        public void Generate()
         {
-            var res = new Task(() => UpdateImage(true, new Rectangle(Point.Empty, MapBox.Size)));
-            res.Start();
-            return res; 
+            UpdateImage(true, new Rectangle(Point.Empty, MapBox.Size));
         }
 
         private void UpdateImage(bool forceRefresh, Rectangle updateArea)

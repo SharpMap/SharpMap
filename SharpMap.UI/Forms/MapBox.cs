@@ -64,6 +64,13 @@ namespace SharpMap.Forms
 // ReSharper disable once PartialTypeWithSinglePart
     public partial class MapBox : Control
     {
+        protected override void OnInvalidated(InvalidateEventArgs e)
+        {
+            base.OnInvalidated(e);
+            _logger.Debug(t => t("Rectangle {0} invalidate", e.InvalidRect));
+        }
+
+
         private static readonly ILog _logger = LogManager.GetLogger(typeof (MapBox));
         private const double PrecisionTolerance = 0.00000001;
 
@@ -357,7 +364,7 @@ namespace SharpMap.Forms
 
         #endregion
 
-        private LegacyMapBoxImageGenerator _miRenderer;
+        private readonly IMapBoxImageGenerator _miRenderer;
 
         private static int m_defaultColorIndex;
 

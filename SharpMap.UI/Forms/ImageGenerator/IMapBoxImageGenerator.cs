@@ -51,8 +51,9 @@ namespace SharpMap.Forms.ImageGenerator
         /// </summary>
         bool IsDisposed { get; }
 
-        // ToDo: Think of better name
-        // Note this is only called with forceRefresh = true, so we could expose only UpdateImage without any parameters
-        Task Generate();
+        /// <summary>
+        /// Method to generate a new set of images
+        /// </summary>
+        void Generate();
     }
 }

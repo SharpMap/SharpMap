@@ -75,6 +75,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Forms\ImageGenerator\LayerListImageGenerator.cs" />
     <Compile Include="Forms\MapBox.cs">
       <SubType>Component</SubType>
     </Compile>
