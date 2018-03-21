@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 using System.Timers;
 
 namespace SharpMap.Layers
@@ -40,6 +41,7 @@ namespace SharpMap.Layers
     public class VariableLayerCollection : LayerCollection
     {
         private readonly LayerCollection _variableLayers;
+        [NonSerialized]
         private Timer _timer = null;
 
         /// <summary>
@@ -52,6 +54,12 @@ namespace SharpMap.Layers
 
             _timer.Start();
             System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(OnRequery));
+        }
+
+        [OnDeserializing]
+        public void OnDeserializing(StreamingContext context)
+        {
+            _timer = new Timer();
         }
 
         /// <summary>
