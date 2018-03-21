@@ -98,7 +98,9 @@ namespace SharpMap.Utilities
             {
                 var blend = (Blend)obj;
                 blend.Factors = (float[])info.GetValue("Factors", typeof(float[]));
-                blend.Positions = (float[])info.GetValue("Positions", typeof(float[]));
+                blend.Positions = new float[blend.Factors.Length];
+                var positions = (float[])info.GetValue("Positions", typeof(float[]));
+                Array.Copy(positions, 0, blend.Positions, 0, blend.Positions.Length);
                 return null;
             }
         }

@@ -311,9 +311,7 @@ namespace SharpMap.Utilities
                     else
                     {
                         var tmpBlend = (Blend)(info.GetValue("Blend", typeof(Blend)));
-                        lgBrush.Blend = new Blend(tmpBlend.Factors.Length) { 
-                            Factors = tmpBlend.Factors, 
-                            Positions = tmpBlend.Positions };
+                        lgBrush.Blend = tmpBlend;
                     }
 
                     _lgBrush = lgBrush;
