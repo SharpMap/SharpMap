@@ -361,6 +361,26 @@ namespace SharpMap.Layers
                         File.ReadAllText(imageFilename.Substring(0, imageFilename.LastIndexOf(".", StringComparison.CurrentCultureIgnoreCase)) + ".prj");
                 }
 
+                if (!String.IsNullOrEmpty(Projection))
+                {
+                    using (var p = new OSGeo.OSR.SpatialReference(null))
+                    {
+                        var wkt = Projection;
+                        var res = p.ImportFromWkt(ref wkt);
+                        var srid = 0;
+                        if (res == 0)
+                        {
+                            if (Projection.StartsWith("PROJCS"))
+                                int.TryParse(p.GetAuthorityCode("PROJCS"), out srid);
+                            else if (Projection.StartsWith("GEOGCS"))
+                                int.TryParse(p.GetAuthorityCode("GEOGCS"), out srid);
+                            else
+                                srid = p.AutoIdentifyEPSG();
+                        }
+                        SRID = srid;
+                    }
+                }
+
                 if (_logger.IsDebugEnabled)
                     _logger.Debug("Read sizes" + imageFilename);
 
@@ -781,9 +801,9 @@ namespace SharpMap.Layers
                     return;
 
                 // init histo
-                Histogram = new List<int[]>();
+                var histogram = new List<int[]>();
                 for (int i = 0; i < Bands + 1; i++)
-                    Histogram.Add(new int[256]);
+                    histogram.Add(new int[256]);
 
                 var trueImageBbox = displayBbox.Intersection(_envelope);
 
@@ -820,8 +840,10 @@ namespace SharpMap.Layers
                     displayImageSize.Height = bitmapSize.Height;
                 }
 
+                /*
                 // scale
                 var bitScalar = GetBitScalar();
+                */
 
                 // 0 pixels in length or height, nothing to display
                 if (bitmapSize.Width < 1 || bitmapSize.Height < 1)
@@ -850,6 +872,7 @@ namespace SharpMap.Layers
                         }
 
                         var ch = new int[Bands];
+                        var bitScales = new double[Bands];
 
                         var noDataValues = new Double[Bands];
                         var scales = new Double[Bands];
@@ -876,6 +899,8 @@ namespace SharpMap.Layers
                                 band.GetScale(out scales[i], out hasVal);
                                 if (hasVal == 0) scales[i] = 1.0;
 
+                                //
+                                bitScales[i] = GetBitScale(band.DataType);
                                 switch (band.GetRasterColorInterpretation())
                                 {
                                     case ColorInterp.GCI_BlueBand:
@@ -1035,7 +1060,7 @@ namespace SharpMap.Layers
                                         intermediateValue[i] *= scales[i];
 
                                         double spotVal;
-                                        var imageVal = spotVal = intermediateValue[i] = intermediateValue[i]/bitScalar;
+                                        var imageVal = spotVal = intermediateValue[i] = intermediateValue[i] * bitScales[i];
 
                                         if (ch[i] == 4)
                                         {
@@ -1087,7 +1112,7 @@ namespace SharpMap.Layers
                                                     HistoBounds.Top <= (int) gndY &&
                                                     HistoBounds.Left <= (int) gndX && HistoBounds.Right >= (int) gndX)
                                                 {
-                                                    Histogram[ch[i]][(int) intermediateValue[i]]++;
+                                                    histogram[ch[i]][(int) intermediateValue[i]]++;
                                                 }
                                             }
 
@@ -1098,7 +1123,7 @@ namespace SharpMap.Layers
 
                                     // luminosity
                                     if (Bands >= 3)
-                                        Histogram[Bands][
+                                        histogram[Bands][
                                             (int)
                                             (intermediateValue[2]*0.2126 + intermediateValue[1]*0.7152 +
                                              intermediateValue[0]*0.0722)]
@@ -1128,9 +1153,12 @@ namespace SharpMap.Layers
                 {
                     bitmap.UnlockBits(bitmapData);
                 }
+
+                // Update the histogram
+                Histogram = histogram;
             }
 
-            
+
             DateTime drawGdiStart = DateTime.Now;
                 bitmap.MakeTransparent(_noDataInitColor);
                 if (TransparentColor != Color.Empty)
@@ -1324,7 +1352,7 @@ namespace SharpMap.Layers
                         dblLocY = size.Height - dblImginMapH;
                 }
 
-                double bitScalar = GetBitScalar();
+                //double bitScalar = GetBitScalar();
 
                 try
                 {
@@ -1349,6 +1377,8 @@ namespace SharpMap.Layers
                         var buffer = new double[Bands][];
                         var band = new Band[Bands];
                         var ch = new int[Bands];
+                        var bitScales = new double[Bands];
+
                         // get data from image
                         for (int i = 0; i < Bands; i++)
                         {
@@ -1361,6 +1391,8 @@ namespace SharpMap.Layers
                             if (hasVal == 0) noDataValues[i] = Double.NaN;
                             band[i].GetScale(out scales[i], out hasVal);
                             if (hasVal == 0) scales[i] = 1.0;
+
+                            bitScales[i] = GetBitScale(band[i].DataType);
 
                             band[i].ReadRaster((int)Math.Round(x1), (int)Math.Round(y1), (int)Math.Round(imgPixWidth),
                                                (int)Math.Round(imgPixHeight),
@@ -1431,8 +1463,8 @@ namespace SharpMap.Layers
                             {
                                 for (int i = 0; i < Bands; i++)
                                 {
-                                    intVal[i] = buffer[i][pIndx]/bitScalar;
-                                    Double imageVal = intVal[i] = intVal[i]/bitScalar;
+                                    var imageVal = intVal[i] = buffer[i][pIndx]*bitScales[i];
+                                    //Double imageVal = intVal[i] = intVal[i]*bitScales[i];
                                     if (ch[i] == 4)
                                     {
                                         if (!DoublesAreEqual(imageVal, noDataValues[i]))
@@ -1522,6 +1554,21 @@ namespace SharpMap.Layers
             return 1;
         }
 
+        private static double GetBitScale(DataType dataType)
+        {
+            switch (dataType)
+            {
+                //case DataType.GDT_Byte:
+                //    return 1d;
+                case DataType.GDT_UInt16:
+                case DataType.GDT_Int16:
+                    return 1d/256d;
+                case DataType.GDT_Int32:
+                case DataType.GDT_UInt32:
+                    return 1d/16777216d;
+            }
+            return 1d;
+        }
         protected unsafe void WritePixel(double x, double[] intVal, int iPixelSize, int[] ch, byte* row)
         {
             // write out pixels
