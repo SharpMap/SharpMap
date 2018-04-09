@@ -259,10 +259,10 @@ namespace SharpMap.Data.Providers
                 return;
             }
 
-            string statement = XColumn + " >= " + bbox.MaxX.ToString("R", Map.NumberFormatEnUs) + " AND " +
-                               XColumn + " =< " + bbox.MaxX.ToString("R", Map.NumberFormatEnUs) + " AND " +
+            string statement = XColumn + " >= " + bbox.MinX.ToString("R", Map.NumberFormatEnUs) + " AND " +
+                               XColumn + " <= " + bbox.MaxX.ToString("R", Map.NumberFormatEnUs) + " AND " +
                                YColumn + " >= " + bbox.MinY.ToString("R", Map.NumberFormatEnUs) + " AND " +
-                               YColumn + " =< " + bbox.MaxY.ToString("R", Map.NumberFormatEnUs);
+                               YColumn + " <= " + bbox.MaxY.ToString("R", Map.NumberFormatEnUs);
 
             rows = Table.Select(statement);
 

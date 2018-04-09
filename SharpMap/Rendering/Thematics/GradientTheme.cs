@@ -256,6 +256,11 @@ namespace SharpMap.Rendering.Thematics
         /// <returns>An interpolated <see cref="Pen"/>.</returns>
         protected Pen InterpolatePen(Pen min, Pen max, double attr)
         {
+            var oldMin = min;
+            min = (Pen) oldMin.Clone();
+            var oldMax = max;
+            max = (Pen) oldMax.Clone();
+
             if (min.PenType != PenType.SolidColor || max.PenType != PenType.SolidColor)
                 throw (new ArgumentException("Only SolidColor pens are supported in GradientTheme"));
             Pen pen = new Pen(InterpolateColor(min.Color, max.Color, attr), InterpolateFloat(min.Width, max.Width, attr));
@@ -274,6 +279,9 @@ namespace SharpMap.Rendering.Thematics
             pen.Alignment = (frac > 0.5 ? max.Alignment : min.Alignment);
             //pen.CustomStartCap = (frac > 0.5 ? max.CustomStartCap : min.CustomStartCap);  //Throws ArgumentException
             //pen.CustomEndCap = (frac > 0.5 ? max.CustomEndCap : min.CustomEndCap);  //Throws ArgumentException
+
+            min.Dispose();
+            max.Dispose();
             return pen;
         }
 

@@ -292,7 +292,7 @@ namespace SharpMap.Data.Providers
             get
             {
                 var sb = new StringBuilder();
-                if (string.IsNullOrEmpty(TableSchema))
+                if (!string.IsNullOrEmpty(TableSchema))
                     sb.AppendFormat("[{0}].", TableSchema);
                 sb.AppendFormat("[{0}]", Table);
                 return sb.ToString();

@@ -44,7 +44,7 @@ namespace SharpMap.Data.Providers
 	/// be cached to memory for faster access, so to reload the index, you will need to restart the web application
 	/// as well.</para>
 	/// <para>
-	/// M and Z values in a shapefile is ignored by SharpMap.
+	/// M values in a shapefile are ignored by SharpMap.
 	/// </para>
 	/// </remarks>
 	/// <example>
@@ -1223,7 +1223,12 @@ namespace SharpMap.Data.Providers
 
                 if (shapeType == ShapeType.Point || shapeType == ShapeType.PointM || shapeType == ShapeType.PointZ)
                 {
-                    return factory.CreatePoint(new Coordinate(brGeometryStream.ReadDouble(), brGeometryStream.ReadDouble()));
+                    var point = factory.CreatePoint(new Coordinate(brGeometryStream.ReadDouble(), brGeometryStream.ReadDouble()));
+                    if (shapeType == ShapeType.PointZ)
+                    {
+                        point.Z = brGeometryStream.ReadDouble();
+                    }
+                    return point;
                 }
 
                 if (shapeType == ShapeType.Multipoint || shapeType == ShapeType.MultiPointM ||
@@ -1237,6 +1242,13 @@ namespace SharpMap.Data.Providers
                     for (var i = 0; i < nPoints; i++)
                         feature[i] = new Coordinate(brGeometryStream.ReadDouble(), brGeometryStream.ReadDouble());
 
+                    if (shapeType == ShapeType.MultiPointZ)
+                    {
+                        brGeometryStream.ReadDouble();
+                        brGeometryStream.ReadDouble();
+                        for (var i = 0; i < nPoints; i++)
+                            feature[i].Z = brGeometryStream.ReadDouble();
+                    }
                     return factory.CreateMultiPoint(feature);
                 }
 
@@ -1267,6 +1279,14 @@ namespace SharpMap.Data.Providers
                             var offset = segments[lineID];
                             for (var i = segments[lineID]; i < segments[lineID + 1]; i++)
                                 line[i - offset] = new Coordinate(brGeometryStream.ReadDouble(), brGeometryStream.ReadDouble());
+
+                            if (shapeType == ShapeType.PolyLineZ)
+                            {
+                                brGeometryStream.ReadDouble();
+                                brGeometryStream.ReadDouble();
+                                for (var i = segments[lineID]; i < segments[lineID + 1]; i++)
+                                    line[i - offset].Z = brGeometryStream.ReadDouble();
+                            }
                             lineStrings[lineID] = factory.CreateLineString(line);
                         }
 
@@ -1284,6 +1304,13 @@ namespace SharpMap.Data.Providers
                         var offset = segments[ringID];
                         for (var i = segments[ringID]; i < segments[ringID + 1]; i++)
                             ring[i - offset] = new Coordinate(brGeometryStream.ReadDouble(), brGeometryStream.ReadDouble());
+                        if (shapeType == ShapeType.PolygonZ)
+                        {
+                            brGeometryStream.ReadDouble();
+                            brGeometryStream.ReadDouble();
+                            for (var i = segments[ringID]; i < segments[ringID + 1]; i++)
+                                ring[i - offset].Z = brGeometryStream.ReadDouble();
+                        }
                         rings[ringID] = factory.CreateLinearRing(ring);
                     }
 

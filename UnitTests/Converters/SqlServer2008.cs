@@ -44,12 +44,14 @@ namespace UnitTests.Converters
             Geometry gPl = GeometryFromWKT.Parse(Polygon);
             Geometry gMPol = GeometryFromWKT.Parse(MultiPolygon);
 
-            Assert.AreEqual(gPn, ToSqlServerAndBack(gPn));
-            Assert.AreEqual(gMp, ToSqlServerAndBack(gMp));
-            Assert.AreEqual(gLi, ToSqlServerAndBack(gLi));
-            Assert.AreEqual(gML, ToSqlServerAndBack(gML));
-            Assert.AreEqual(gPl, ToSqlServerAndBack(gPl));
-            Assert.AreEqual(gMPol, ToSqlServerAndBack(gMPol));
+            var comparison = new Comparison<Geometry>((u, v) => u.EqualsExact(v) ? 0 : 1);
+
+            Assert.That(ToSqlServerAndBack(gPn), Is.EqualTo(gPn).Using(comparison));
+            Assert.That(ToSqlServerAndBack(gMp), Is.EqualTo(gMp).Using(comparison));
+            Assert.That(ToSqlServerAndBack(gLi), Is.EqualTo(gLi).Using(comparison));
+            Assert.That(ToSqlServerAndBack(gML), Is.EqualTo(gML).Using(comparison));
+            Assert.That(ToSqlServerAndBack(gPl), Is.EqualTo(gPl).Using(comparison));
+            Assert.That(ToSqlServerAndBack(gMPol), Is.EqualTo(gMPol).Using(comparison));
         }
 
         [Test]
@@ -88,11 +90,20 @@ namespace UnitTests.Converters
             Assert.AreEqual(gMP, ToSqlServerAndBack(gMP));
         }
 
+        private string GetTestFile()
+        {
+            return System.IO.Path.Combine(GetPathToTestDataDir(), "SPATIAL_F_SKARVMUFF.shp");
+        }
+
+        private string GetPathToTestDataDir()
+        {
+            return System.IO.Path.Combine(System.IO.Path.GetDirectoryName(GetType().Assembly.CodeBase.Replace("file:///", "")), @"TestData\");
+        }
+
         [Test]
-        [Ignore("Remove ignore flag if you have a shapefile to test!")]
         public void TestShapeFile()
         {
-            using (var p = new SharpMap.Data.Providers.ShapeFile(@"D:\Daten\kowg\shapefile\Police Authorities_region.shp", true))
+            using (var p = new SharpMap.Data.Providers.ShapeFile(GetTestFile(), true))
             {
                 p.Open();
 
@@ -101,6 +112,7 @@ namespace UnitTests.Converters
                     var fdr = p.GetFeature(i);
                     try
                     {
+                        fdr.Geometry.SRID = -1;
                         var res = ToSqlServerAndBack(fdr.Geometry);
                         Assert.AreEqual(fdr.Geometry, res);
                         Console.WriteLine(string.Format("Feature {0} ({1}) converted!", i, fdr[0]));

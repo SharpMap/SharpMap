@@ -178,7 +178,7 @@ namespace SharpMap.Layers
             }
 
             var zoomIndex = GetZoomIndex(map.Zoom);
-            var dot = _bitmaps[zoomIndex];
+            var dot = (Bitmap)_bitmaps[zoomIndex].Clone();
             var opacity = _opacity[zoomIndex];
 
             using (var image = new Bitmap(map.Size.Width + dot.Width, map.Size.Height + dot.Height, PixelFormat.Format32bppArgb))
@@ -193,6 +193,7 @@ namespace SharpMap.Layers
                 
                 g.DrawImage(image, -dot.Width/2, -dot.Height/2);
             }
+            dot.Dispose();
 
             // Invoke the LayerRendered event.
             OnLayerRendered(g);

@@ -1,6 +1,7 @@
 // WFS provider by Peter Robineau (peter.robineau@gmx.at)
 // This file can be redistributed and/or modified under the terms of the GNU Lesser General Public License.
 
+using System;
 using System.IO;
 using System.Text;
 using System.Xml;
@@ -37,7 +38,7 @@ namespace SharpMap.Utilities.Wfs
         public string DescribeFeatureTypeRequest(string featureTypeName)
         {
             return "?SERVICE=WFS&Version=1.1.0&REQUEST=DescribeFeatureType&TYPENAME=" + featureTypeName +
-                   "&NAMESPACE=xmlns(app=http://www.deegree.org/app)";
+                   "&NAMESPACE=xmlns(app=http://www.deegree.org/app)"; // TODO Hardcoded WFS feature type namespace
         }
 
         #endregion
@@ -70,11 +71,11 @@ namespace SharpMap.Utilities.Wfs
             }
 
             StringBuilder filterBuilder = new StringBuilder();
-            filterBuilder.Append("&FILTER=%3CFilter%20xmlns=%22" + NSOGC + "%22%20xmlns:gml=%22" + NSGML + "%22");
+            filterBuilder.Append("&FILTER=%3CFilter%20xmlns=%22" + Uri.EscapeDataString(NSOGC) + "%22%20xmlns:gml=%22" + Uri.EscapeDataString(NSGML) + "%22");
             if (!string.IsNullOrEmpty(featureTypeInfo.Prefix))
             {
                 filterBuilder.Append("%20xmlns:" + featureTypeInfo.Prefix + "=%22" +
-                                     featureTypeInfo.FeatureTypeNamespace + "%22");
+                                     Uri.EscapeDataString(featureTypeInfo.FeatureTypeNamespace) + "%22");
                     //added by PDD to get it to work for deegree default sample
             }
             filterBuilder.Append("%3E");
@@ -112,12 +113,12 @@ namespace SharpMap.Utilities.Wfs
             {
                 //TODO: reorganize: this is not a part of the filter and should be somewhere else. PDD.
                 filterBuilder.Append("&NAMESPACE=xmlns(" + featureTypeInfo.Prefix + "=" +
-                                     featureTypeInfo.FeatureTypeNamespace + ")");
+                                     Uri.EscapeDataString(featureTypeInfo.FeatureTypeNamespace) + ")");
             }
 
             return "?SERVICE=WFS&Version=1.1.0&REQUEST=GetFeature&TYPENAME=" + qualification + featureTypeInfo.Name +
                    (loadAllElements ? "" : "&PROPERTYNAME=" + qualification + featureTypeInfo.Geometry._GeometryName) +
-                   "&SRS=" + featureTypeInfo.SRID + filterBuilder;
+                   "&SRSNAME=EPSG:" + featureTypeInfo.SRID + filterBuilder;
         }
 
         /// <summary>

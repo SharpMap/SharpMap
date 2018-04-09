@@ -134,7 +134,7 @@ namespace UnitTests.Layers
             group.MaxVisible = 100;
             group.SRID = 4326;
             group.Proj4Projection = "dummy";
-            group.TargetSRID = 4327;
+            group.TargetSRID = 4318;
             group.Style = new LabelStyle();
 
             var clonedGroup = (LayerGroup)group.Clone();

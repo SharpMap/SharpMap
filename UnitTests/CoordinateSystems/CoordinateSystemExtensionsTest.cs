@@ -59,7 +59,7 @@ namespace UnitTests.CoordinateSystems
             Assert.DoesNotThrow( () => cs = map.GetCoordinateSystem());
             Assert.NotNull(cs);
             Assert.AreEqual("EPSG", cs.Authority);
-            Assert.AreEqual((long)srid, cs.Authority);
+            Assert.AreEqual((long)srid, cs.AuthorityCode);
         }
 
         [TestCase(4326)]
@@ -73,7 +73,7 @@ namespace UnitTests.CoordinateSystems
             Assert.DoesNotThrow(() => cs = map.GetCoordinateSystem());
             Assert.NotNull(cs);
             Assert.AreEqual("EPSG", cs.Authority);
-            Assert.AreEqual((long)srid, cs.Authority);
+            Assert.AreEqual((long)srid, cs.AuthorityCode);
         }
 
         [TestCase(4326)]
@@ -88,7 +88,7 @@ namespace UnitTests.CoordinateSystems
             Assert.DoesNotThrow(() => cs = g.GetCoordinateSystem());
             Assert.NotNull(cs);
             Assert.AreEqual("EPSG", cs.Authority);
-            Assert.AreEqual((long)srid, cs.Authority);
+            Assert.AreEqual((long)srid, cs.AuthorityCode);
         }
     }
 }
