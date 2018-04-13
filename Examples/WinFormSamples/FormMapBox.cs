@@ -65,31 +65,9 @@ namespace WinFormSamples
 
         }
 
-
-    //    Public Shared Sub RegisterIdpMessages(assembly As Assembly)
-    //    For Each subclass In assembly.DefinedTypes.Where(Function(t) t.IsSubclassOf(GetType(IdpMessage)) And t.IsAbstract = False)
-    //        RegisterIdpMessage(subclass)
-    //    Next
-    //End Sub
-
         private void HandleAssemblyLoad(object sender, AssemblyLoadEventArgs args)
         {
             LoadMapDecorationTypes(args.LoadedAssembly);
-            //var mdtype = typeof (SharpMap.Rendering.Decoration.IMapDecoration);
-            //foreach (Type type in args.LoadedAssembly.GetTypes())
-            //{
-            //    if (type.FullName.StartsWith("SharpMap"))
-            //        Console.WriteLine(type.FullName);
-            //    if (mdtype.IsAssignableFrom(type))
-            //    {
-            //        if (!type.IsAbstract)
-            //        {
-            //            if (AddToListView)
-            //                lvwDecorations.Items.Add(new ListViewItem(type.Name));
-            //            MapDecorationTypes.Add(type.Name, type);
-            //        }
-            //    }
-            //}
         }
 
         private void LoadMapDecorationTypes(System.Reflection.Assembly a)
