@@ -55,6 +55,7 @@ namespace SharpMap.Rendering.Decoration.ScaleBar
             Units.Add((int)Unit.Mile_US, new UnitInfo((int)Unit.Custom, 1609.347219, "Miles", "mi"));
             Units.Add((int)Unit.Kilometer, new UnitInfo((int)Unit.Custom, 1000.0, "Kilometers", "km"));
             Units.Add((int)Unit.Degree, new UnitInfo((int)Unit.Custom, 0.0175, "Degree", "d"));
+            Units.Add((int)Unit.Nautical_Mile , new UnitInfo((int)Unit.Custom, 1852, "Nautical Mile", "NM"));
         }
 
         /// <summary>
@@ -74,7 +75,7 @@ namespace SharpMap.Rendering.Decoration.ScaleBar
         //unit
         private int _mapUnit = (int)Unit.Meter; //defaultMapUnit;
         private int _barUnit = (int)Unit.Meter; //defaultScaleBarUnit;
-        
+
         //scale
         private double _scale; //Initial scale.  
         private double _mapWidth;
@@ -126,6 +127,9 @@ namespace SharpMap.Rendering.Decoration.ScaleBar
         /// <param name="map"></param>
         protected override void OnRender(Graphics g, Map map)
         {
+            if (!this.Enabled)
+                return;
+
             var rectF = g.ClipBounds;
             
             if (MapUnit == (int)Unit.Degree)
@@ -174,6 +178,7 @@ namespace SharpMap.Rendering.Decoration.ScaleBar
             RenderSegmentText(g, rc.Left + nOffsetX, rc.Top + nOffsetY + _barWidth + GapBarToSegmentText, _numTics, pixelsPerTic,
                               scaleBarUnitsPerTick,
                               _barUnitShortName);
+            Dirty = false;
         }
 
         /// <summary>
@@ -638,7 +643,10 @@ namespace SharpMap.Rendering.Decoration.ScaleBar
         private double _mapUnitFactor;
         private string _mapUnitName, _mapUnitShortName;
 
-        private double _barUnitFactor;
+        /// <summary>
+        /// Factor derived internally from BarUnit
+        /// </summary>
+        protected double _barUnitFactor;
         private string _barUnitName, _barUnitShortName;
 
         /// <summary>
@@ -660,7 +668,7 @@ namespace SharpMap.Rendering.Decoration.ScaleBar
         /// <summary>
         /// Bar unit
         /// </summary>
-        public int BarUnit
+        public virtual int BarUnit
         {
             get { return _barUnit; }
             set
@@ -673,7 +681,10 @@ namespace SharpMap.Rendering.Decoration.ScaleBar
             }
         }
 
-        private static void GetUnitInformation(int mapUnit, out double mapUnitFactor, out string mapUnitName,
+        /// <summary>
+        /// Extract parameters for specified scale bar unit
+        /// </summary>
+        protected static void GetUnitInformation(int mapUnit, out double mapUnitFactor, out string mapUnitName,
                                                out string mapUnitShortName)
         {
             UnitInfo unitInfo;
@@ -850,7 +861,7 @@ namespace SharpMap.Rendering.Decoration.ScaleBar
                             precision = 0;
 
                     }
-                    var format = string.Format("F{0}", precision);
+                    var format = string.Format("N{0}", precision);
 
                     scale = FormatRealScale(scale);
                     return "1:" + scale.ToString(format, System.Globalization.CultureInfo.CurrentCulture);
@@ -901,14 +912,17 @@ namespace SharpMap.Rendering.Decoration.ScaleBar
 
         #region EventInvokers
 
-        private void OnViewChanged()
+        /// <summary>
+        /// Is this required?
+        /// </summary>
+        protected virtual void OnViewChanged()
         {
         }
 
         /// <summary>
         /// Gets or (private) sets whether the display settings for the scale bar have been changed
         /// </summary>
-        public bool Dirty { get; private set; }
+        public bool Dirty { get; protected set; }
 
         #endregion
 
@@ -954,7 +968,10 @@ namespace SharpMap.Rendering.Decoration.ScaleBar
             return candidate; //return the maximum
         }
 
-        private void CalcBarScale(int dpi, int widthOnDevice, int numTics, double mapScale, double fBarUnitFactor,
+        /// <summary>
+        /// Calculate scale bar tic size based upon current BarUnit
+        /// </summary>
+        protected virtual void CalcBarScale(int dpi, int widthOnDevice, int numTics, double mapScale, double fBarUnitFactor,
                                   out int pixelsPerTic, out double scaleBarUnitsPerTic)
         {
             int minPixelsPerTic = widthOnDevice / (numTics * 2);

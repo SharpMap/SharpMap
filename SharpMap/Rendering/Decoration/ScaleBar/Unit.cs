@@ -41,5 +41,9 @@ namespace SharpMap.Rendering.Decoration.ScaleBar
         /// </summary>
         Degree,
 
+        /// <summary>
+        /// Nautical Mile
+        /// </summary>
+        Nautical_Mile,
     }
 }
