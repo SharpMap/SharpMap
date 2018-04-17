@@ -18,7 +18,16 @@ namespace SharpMap.Rendering.Decoration.ScaleBar
         private Boolean _forceIt = false;
 
         /// <summary>
-        /// ScaleBar unit. Changing BarUnit will reset BarUnitAlt1 and BarUnitAlt2 accordingly.
+        /// Creates an instance of this class
+        /// </summary>
+        public ScaleBarAltUnit()
+        {
+            BarUnitAlt1 = (int)Unit.Meter;
+            BarUnitAlt2 = (int)Unit.Kilometer;
+        }
+
+        /// <summary>
+        /// Pseudo-internal ScaleBar unit for rendering, not intended to be set directly. Instead, use BarUnitAlt1 and BarUnitAlt2.
         /// </summary>
         public override int BarUnit
         {
