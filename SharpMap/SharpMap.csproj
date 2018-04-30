@@ -136,7 +136,6 @@
     <Compile Include="Map\MapViewport.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Rendering\Decoration\ScaleBar\ScaleBarAltUnit.cs" />
     <Compile Include="Rendering\Thematics\FontSizeTheme.cs" />
     <Compile Include="Session.cs" />
     <Compile Include="Styles\VisibilityUnits.cs" />

@@ -24,7 +24,7 @@ namespace SharpMap.Rendering.Decoration.ScaleBar
         private const int PowerRangeMax = 10;
         private const int NiceNumber = 4;
         private const int DefaultBarWidth = 9;
-        private static readonly double[] NiceNumberArray = {1, 2, 2.5, 5};
+        private static readonly double[] NiceNumberArray = { 1, 2, 2.5, 5 };
         private const int ScalePrecisionDigits = 5;
         private const int GapScaleTextToBar = 3;
         private const int GapBarToSegmentText = 1;
@@ -44,7 +44,7 @@ namespace SharpMap.Rendering.Decoration.ScaleBar
         #endregion
 
         private static readonly Dictionary<int, UnitInfo> Units = new Dictionary<int, UnitInfo>();
-        
+
         static ScaleBar()
         {
             Units.Add((int)Unit.Custom, new UnitInfo((int)Unit.Custom, 1.0, "Unknown", "Unknown"));
@@ -55,7 +55,7 @@ namespace SharpMap.Rendering.Decoration.ScaleBar
             Units.Add((int)Unit.Mile_US, new UnitInfo((int)Unit.Custom, 1609.347219, "Miles", "mi"));
             Units.Add((int)Unit.Kilometer, new UnitInfo((int)Unit.Custom, 1000.0, "Kilometers", "km"));
             Units.Add((int)Unit.Degree, new UnitInfo((int)Unit.Custom, 0.0175, "Degree", "d"));
-            Units.Add((int)Unit.Nautical_Mile , new UnitInfo((int)Unit.Custom, 1852, "Nautical Mile", "NM"));
+            Units.Add((int)Unit.Nautical_Mile, new UnitInfo((int)Unit.Custom, 1852, "Nautical Mile", "NM"));
         }
 
         /// <summary>
@@ -64,7 +64,8 @@ namespace SharpMap.Rendering.Decoration.ScaleBar
         public ScaleBar()
         {
             MapUnit = (int)Unit.Meter;
-            BarUnit = (int)Unit.Meter;
+            BarUnitLargeScale = (int)Unit.Meter;
+            BarUnitSmallScale = (int)Unit.Kilometer;
             Scale = 1;
             Width = DefaultWidth;
         }
@@ -74,15 +75,19 @@ namespace SharpMap.Rendering.Decoration.ScaleBar
 
         //unit
         private int _mapUnit = (int)Unit.Meter; //defaultMapUnit;
+        private int _obsBarUnit = (int)Unit.Meter;
         private int _barUnit = (int)Unit.Meter; //defaultScaleBarUnit;
+        private int _barUnitLargeScale = (int)Unit.Meter; //defaultScaleBarUnit;
+        private int _barUnitSmallScale = (int)Unit.Kilometer; //defaultScaleBarUnit;
 
         //scale
         private double _scale; //Initial scale.  
         private double _mapWidth;
         private int _pageWidth;
-        private double _lon1 ;
+        private double _lon1;
         private double _lon2;
         private double _lat;
+        private bool _forceRecalc;
 
         //bar
         private int _numTics = DefaultNumTics;
@@ -129,13 +134,12 @@ namespace SharpMap.Rendering.Decoration.ScaleBar
         {
             if (!this.Enabled)
                 return;
-
             var rectF = g.ClipBounds;
-            
+
             if (MapUnit == (int)Unit.Degree)
             {
-                var p1 = map.ImageToWorld(new PointF(0, map.Size.Height*0.5f));
-                var p2 = map.ImageToWorld(new PointF(map.Size.Width, map.Size.Height*0.5f));
+                var p1 = map.ImageToWorld(new PointF(0, map.Size.Height * 0.5f));
+                var p2 = map.ImageToWorld(new PointF(map.Size.Width, map.Size.Height * 0.5f));
                 SetScaleD((int)g.DpiX, p1.X, p2.X, p1.Y, map.Size.Width);
             }
             else
@@ -148,7 +152,7 @@ namespace SharpMap.Rendering.Decoration.ScaleBar
         #endregion
 
         #region Private render methods
-        
+
         private void RenderScaleBar(Graphics g, Rectangle rc)
         {
             int width = rc.Right - rc.Left;
@@ -168,12 +172,12 @@ namespace SharpMap.Rendering.Decoration.ScaleBar
             //m_locale.Init();
 
             //Draw the bar.
-            CalcBarScale((int) g.DpiX, width, _numTics, _scale, _barUnitFactor, out pixelsPerTic,
+            CalcLargeOrSmallUnit((int)g.DpiX, width, _numTics, _scale, _barUnitFactor, out pixelsPerTic,
                          out scaleBarUnitsPerTick);
-            int nOffsetX = (width - _numTics*pixelsPerTic - _marginLeft - _marginRight)/2 + _marginLeft;
-                //left margin 
-            int nOffsetY = (height - _barWidth)/2;
-            RenderBar(g, pixelsPerTic, rc.Left+nOffsetX, rc.Top + nOffsetY);
+            int nOffsetX = (width - _numTics * pixelsPerTic - _marginLeft - _marginRight) / 2 + _marginLeft;
+            //left margin 
+            int nOffsetY = (height - _barWidth) / 2;
+            RenderBar(g, pixelsPerTic, rc.Left + nOffsetX, rc.Top + nOffsetY);
             RenderVerbalScale(g, rc.Left + width / 2, rc.Top + nOffsetY - GapScaleTextToBar);
             RenderSegmentText(g, rc.Left + nOffsetX, rc.Top + nOffsetY + _barWidth + GapBarToSegmentText, _numTics, pixelsPerTic,
                               scaleBarUnitsPerTick,
@@ -458,13 +462,14 @@ namespace SharpMap.Rendering.Decoration.ScaleBar
             //Draw the text.
             RenderTextWithFormat(g, sbText, x, y,
                                  new StringFormat
-                                     {Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Far}, ref lastX);
+                                 { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Far }, ref lastX);
         }
 
-        private static readonly StringFormat TopCenter = 
-            new StringFormat { 
+        private static readonly StringFormat TopCenter =
+            new StringFormat
+            {
                 LineAlignment = StringAlignment.Near,
-                Alignment = StringAlignment.Center 
+                Alignment = StringAlignment.Center
             };
 
         /// <summary>
@@ -481,23 +486,36 @@ namespace SharpMap.Rendering.Decoration.ScaleBar
                                        string strUnit)
         {
             int lastX = int.MinValue;
-            RenderTextWithFormat(g, _barLabelText == ScaleBarLabelText.JustUnits ? "0" : strUnit, x, y, TopCenter, ref lastX);
+            string text;
+            int size;
+            int endX;
+            int offsetX;
+
+            //Make sure this text is not overdrawn... (previously km could be partially truncated)
+            text = (_barLabelText == ScaleBarLabelText.JustUnits ? "0" : strUnit);
+            size = MeasureDisplayStringWidthExact(g, text, _font);
+            offsetX = 0;
+            if (x - size / 2f < _boundingRectangle.Left)
+            {
+                offsetX = _boundingRectangle.Left + (int)Math.Ceiling(size / 2f) - x;
+            }
+            RenderTextWithFormat(g, text, x + offsetX, y, TopCenter, ref lastX);
 
             lastX = int.MinValue;
             //Set the output format.
-            int precision = PrecitionOfSegmentText(scaleBarUnitsPerTic);
+            int precision = PrecisionOfSegmentText(scaleBarUnitsPerTic);
             string format = String.Format("F{0}", precision);
 
             for (int i = 1; i <= tics; i++)
             {
-                double value = scaleBarUnitsPerTic*i;
-                string text = value.ToString(format, System.Globalization.CultureInfo.CurrentUICulture);
-                int offsetX = 0;
+                double value = scaleBarUnitsPerTic * i;
+                text = value.ToString(format, System.Globalization.CultureInfo.CurrentUICulture);
+                offsetX = 0;
                 if (i == tics)
                 {
                     //Make sure this text is not overdrawn... (should be aligned with ticmark)
-                    var size = MeasureDisplayStringWidthExact(g, text, _font);
-                    int endX = x + ticWidth * i + size;
+                    size = MeasureDisplayStringWidthExact(g, text, _font);
+                    endX = x + ticWidth * i + (int)Math.Ceiling(size / 2f);
                     if (endX > _boundingRectangle.Right)
                     {
                         offsetX = _boundingRectangle.Right - endX;
@@ -531,7 +549,7 @@ namespace SharpMap.Rendering.Decoration.ScaleBar
                     if (x - size.Width / 2 < lastX) return;
                     break;
                 case StringAlignment.Near:
-                    if (x  < lastX) return;
+                    if (x < lastX) return;
                     break;
             }
 
@@ -542,10 +560,10 @@ namespace SharpMap.Rendering.Decoration.ScaleBar
             switch (format.Alignment)
             {
                 case StringAlignment.Far:
-                    lastX = x + (int) size.Width;
+                    lastX = x + (int)size.Width;
                     break;
                 case StringAlignment.Center:
-                    lastX = x + (int) (size.Width/2);
+                    lastX = x + (int)(size.Width / 2);
                     break;
                 case StringAlignment.Near:
                     lastX = x;
@@ -586,7 +604,9 @@ namespace SharpMap.Rendering.Decoration.ScaleBar
         /// <summary>
         /// Gets or sets the font to label the bar
         /// </summary>
-        public Font Font { get { return _font; }
+        public Font Font
+        {
+            get { return _font; }
             set
             {
                 if (value == null)
@@ -644,10 +664,15 @@ namespace SharpMap.Rendering.Decoration.ScaleBar
         private string _mapUnitName, _mapUnitShortName;
 
         /// <summary>
-        /// Factor derived internally from BarUnit
+        /// Factors derived internally from BarUnit(s)
         /// </summary>
-        protected double _barUnitFactor;
+        private double _barUnitFactor;
+        private double _barUnitFactorLargeScale;
+        private double _barUnitFactorSmallScale;
+
         private string _barUnitName, _barUnitShortName;
+        private string _barUnitNameLargeScale, _barUnitShortNameLargeScale;
+        private string _barUnitNameSmallScale, _barUnitShortNameSmallScale;
 
         /// <summary>
         /// Map unit
@@ -668,13 +693,89 @@ namespace SharpMap.Rendering.Decoration.ScaleBar
         /// <summary>
         /// Bar unit
         /// </summary>
-        public virtual int BarUnit
+        [Obsolete("Use BarUnitLargeScale and BarUnitSmallScale")]
+        public int BarUnit
         {
-            get { return _barUnit; }
+            get { return _obsBarUnit; }
             set
             {
-                _barUnit = value;
-                GetUnitInformation(_barUnit, out _barUnitFactor, out _barUnitName, out _barUnitShortName);
+                //_barUnit = value;
+                //GetUnitInformation(_barUnit, out _barUnitFactor, out _barUnitName, out _barUnitShortName);
+                //CalcScale(96);
+                //OnViewChanged();
+                //Dirty = true;
+
+                _obsBarUnit = value;
+
+                if (Units.TryGetValue(value, out UnitInfo unitInfo))
+                {
+                    switch ((Unit)value)
+                    {
+                        case Unit.Meter:
+                        case Unit.Kilometer:
+                        case Unit.Nautical_Mile:
+                            {
+                                BarUnitLargeScale = (int)Unit.Meter;
+                                BarUnitSmallScale = (int)Unit.Kilometer;
+                                return;
+                            }
+
+                        case Unit.Foot_US:
+                        case Unit.Yard_Indian:
+                        case Unit.Yard_Sears:
+                            {
+                                BarUnitLargeScale = value;
+                                BarUnitSmallScale = (int)Unit.Mile_US;
+                                return;
+                            }
+
+                        case Unit.Mile_US:
+                            {
+                                BarUnitLargeScale = (int)Unit.Yard_Sears;
+                                BarUnitSmallScale = (int)Unit.Mile_US;
+                                return;
+                            }
+
+                        case Unit.Degree:
+                            {
+                                BarUnitLargeScale = (int)Unit.Degree;
+                                BarUnitSmallScale = (int)Unit.Degree;
+                                return;
+                            }
+
+                        default:
+                            {
+                                BarUnitLargeScale = (int)Unit.Custom;
+                                BarUnitSmallScale = (int)Unit.Custom;
+                                return;
+                            }
+                    }
+                }
+                else
+                {
+                    BarUnitLargeScale = (int)Unit.Custom;
+                    BarUnitSmallScale = (int)Unit.Custom;
+                    return;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Bar Unit for use at large scales (small area) such as ft, m, or yd
+        /// </summary>
+        public int BarUnitLargeScale
+        {
+            get { return _barUnitLargeScale; }
+            set
+            {
+                GetUnitInformation(value, out double d, out _barUnitNameLargeScale, out _barUnitShortNameLargeScale);
+
+                if (d > 1 || value == (int)Unit.Degree)
+                    throw new ArgumentOutOfRangeException("BarUnitLargeScale must be the smaller unit such as ft, m, or yd");
+
+                _barUnitLargeScale = value;
+                _barUnitFactorLargeScale = d;
+                _forceRecalc = true;
                 CalcScale(96);
                 OnViewChanged();
                 Dirty = true;
@@ -682,9 +783,27 @@ namespace SharpMap.Rendering.Decoration.ScaleBar
         }
 
         /// <summary>
-        /// Extract parameters for specified scale bar unit
+        /// Bar Unit for use at small scales (large area) such as km, mile, NM
         /// </summary>
-        protected static void GetUnitInformation(int mapUnit, out double mapUnitFactor, out string mapUnitName,
+        public int BarUnitSmallScale
+        {
+            get { return _barUnitSmallScale; }
+            set
+            {
+                GetUnitInformation(value, out double d, out _barUnitNameSmallScale, out _barUnitShortNameSmallScale);
+
+                if (d < 1 && value != (int)Unit.Degree)
+                    throw new ArgumentOutOfRangeException("BarUnitSmallScale must be larger unit such as such as km, mi, nm, or deg");
+
+                _barUnitSmallScale = value;
+                _barUnitFactorSmallScale = d;
+                _forceRecalc = true;
+                CalcScale(96);
+                OnViewChanged();
+                Dirty = true;
+            }
+        }
+        private static void GetUnitInformation(int mapUnit, out double mapUnitFactor, out string mapUnitName,
                                                out string mapUnitShortName)
         {
             UnitInfo unitInfo;
@@ -852,7 +971,7 @@ namespace SharpMap.Rendering.Decoration.ScaleBar
                     //set the precision. Keep the first 5 (ScalePrecisionDigits) digits. 
                     if (scale > 0)
                     {
-                        var magnitude = (int) (Math.Log10(scale));
+                        var magnitude = (int)(Math.Log10(scale));
                         precision = ScalePrecisionDigits - magnitude;
                         if (precision < 0)
                             precision = 0;
@@ -864,7 +983,7 @@ namespace SharpMap.Rendering.Decoration.ScaleBar
                     var format = string.Format("N{0}", precision);
 
                     scale = FormatRealScale(scale);
-                    return "1:" + scale.ToString(format, System.Globalization.CultureInfo.CurrentCulture);
+                    return "1 : " + scale.ToString(format, System.Globalization.CultureInfo.CurrentCulture);
             }
         }
 
@@ -915,14 +1034,14 @@ namespace SharpMap.Rendering.Decoration.ScaleBar
         /// <summary>
         /// Is this required?
         /// </summary>
-        protected virtual void OnViewChanged()
+        private void OnViewChanged()
         {
         }
 
         /// <summary>
         /// Gets or (private) sets whether the display settings for the scale bar have been changed
         /// </summary>
-        public bool Dirty { get; protected set; }
+        public bool Dirty { get; private set; }
 
         #endregion
 
@@ -932,7 +1051,7 @@ namespace SharpMap.Rendering.Decoration.ScaleBar
         private class UnitInfo
         {
             public readonly int Unit;
-            
+
             public readonly double ToMeter;
             public readonly string Name;
             public readonly string Abbreviation;
@@ -960,7 +1079,7 @@ namespace SharpMap.Rendering.Decoration.ScaleBar
                 double multiplier = Math.Pow(10, nPower); //Mulitiplier, =10^exp, to apply to nice numbers.
                 for (int i = 0; i < NiceNumber; i++)
                 {
-                    candidate = NiceNumberArray[i]*multiplier;
+                    candidate = NiceNumberArray[i] * multiplier;
                     if (candidate > startValue)
                         return candidate;
                 }
@@ -968,21 +1087,75 @@ namespace SharpMap.Rendering.Decoration.ScaleBar
             return candidate; //return the maximum
         }
 
-        /// <summary>
-        /// Calculate scale bar tic size based upon current BarUnit
-        /// </summary>
-        protected virtual void CalcBarScale(int dpi, int widthOnDevice, int numTics, double mapScale, double fBarUnitFactor,
+        private void CalcLargeOrSmallUnit(int dpi, int widthOnDevice, int numTics, double mapScale, double fBarUnitFactor,
+                                  out int pixelsPerTic, out double scaleBarUnitsPerTic)
+        {
+            if (_forceRecalc)
+            {
+                // revert to large scale unit
+                _barUnit = BarUnitLargeScale;
+                _barUnitFactor = _barUnitFactorLargeScale;
+                _barUnitName = _barUnitNameLargeScale;
+                _barUnitShortName = _barUnitShortNameLargeScale;
+                _forceRecalc = false;
+            }
+
+            CalcBarScale(dpi, widthOnDevice, numTics, mapScale, _barUnitFactor, out pixelsPerTic, out scaleBarUnitsPerTic);
+
+            if (BarUnitLargeScale != BarUnitSmallScale)
+            {
+                if (_barUnitFactor == _barUnitFactorSmallScale)
+                {
+                    // currently on SmallScale units...
+                    // check how many scale bar units if using LargeScale unit
+                    CalcBarScale(dpi, widthOnDevice, numTics, mapScale, _barUnitFactorLargeScale,
+                                            out int chkPixelsPerTick, out double chkScaleBarUnitsPerTic);
+
+                    // check if LargeScale bar length < 1 SmallScale unit
+                    if (NumTicks * chkScaleBarUnitsPerTic * _barUnitFactorLargeScale < _barUnitFactorSmallScale)
+                    {
+                        // switch to LargeScale units
+                        _barUnit = _barUnitLargeScale;
+                        _barUnitFactor = _barUnitFactorLargeScale;
+                        _barUnitName = _barUnitNameLargeScale;
+                        _barUnitShortName = _barUnitShortNameLargeScale;
+
+                        pixelsPerTic = chkPixelsPerTick;
+                        scaleBarUnitsPerTic = chkScaleBarUnitsPerTic;
+                    }
+                }
+                else
+                {
+                    // currently on LargeScale units...
+                    // check if LargeScale bar length >= 1 SmallScale unit (ie LargeScale units never exceed 1 SmallScale unit)
+                    if (NumTicks * scaleBarUnitsPerTic * _barUnitFactorLargeScale >= _barUnitFactorSmallScale)
+                    {
+                        // recalc for SmallScale unit
+                        CalcBarScale(dpi, widthOnDevice, numTics, mapScale, _barUnitFactorSmallScale,
+                                            out pixelsPerTic, out scaleBarUnitsPerTic);
+
+                        // switch to SmallScale units
+                        _barUnit = _barUnitSmallScale;
+                        _barUnitFactor = _barUnitFactorSmallScale;
+                        _barUnitName = _barUnitNameSmallScale;
+                        _barUnitShortName = _barUnitShortNameSmallScale;
+                    }
+                }
+            }
+        }
+
+        private void CalcBarScale(int dpi, int widthOnDevice, int numTics, double mapScale, double fBarUnitFactor,
                                   out int pixelsPerTic, out double scaleBarUnitsPerTic)
         {
             int minPixelsPerTic = widthOnDevice / (numTics * 2);
-            double barScale = mapScale/fBarUnitFactor;
+            double barScale = mapScale / fBarUnitFactor;
             int pixelsPerInch = dpi;
-            double barUnitsPerPixel = barScale*GeoSpatialMath.MetersPerInch/pixelsPerInch;
+            double barUnitsPerPixel = barScale * GeoSpatialMath.MetersPerInch / pixelsPerInch;
 
             //calculate the result
-            scaleBarUnitsPerTic = minPixelsPerTic*barUnitsPerPixel;
+            scaleBarUnitsPerTic = minPixelsPerTic * barUnitsPerPixel;
             scaleBarUnitsPerTic = GetRoundIncrement(scaleBarUnitsPerTic);
-            pixelsPerTic = (int) (scaleBarUnitsPerTic/barUnitsPerPixel);
+            pixelsPerTic = (int)(scaleBarUnitsPerTic / barUnitsPerPixel);
         }
 
         ///<summary>
@@ -992,26 +1165,27 @@ namespace SharpMap.Rendering.Decoration.ScaleBar
         {
             double roundedScale;
 
-            var rfMagnitude = (int) (Math.Log10(scale));
+            var rfMagnitude = (int)(Math.Log10(scale));
             var factor = Math.Pow(10, rfMagnitude - ScalePrecisionDigits);
             if (Math.Abs(factor - 0) > 1e6)
-                roundedScale = (int) ((scale/factor) + 0.5)*factor;
+                roundedScale = (int)((scale / factor) + 0.5) * factor;
             else
-                roundedScale = (int) (scale + 0.5);
+                roundedScale = (int)(scale + 0.5);
             return roundedScale;
         }
 
         ///<summary>
         /// Return the precision for the segment text of the scale bar.
         ///</summary>
-        private static int PrecitionOfSegmentText(double value)
+        private static int PrecisionOfSegmentText(double value)
         {
             int precision = 0;
-            if (value < 1 && value > 0)
+            // handle values where Log10 is < 1 (ensure precision=0 when value=2.0, and precision=1 when value=2.5)
+            if (value < 10 && value > 0 && value - (int)value > 0.01)
             {
-                precision = (int) Math.Ceiling(Math.Abs(Math.Log10(value)));
-                double f = value*Math.Pow(10, precision);
-                if (f - (int) f > 0.01)
+                precision = (int)Math.Ceiling(Math.Abs(Math.Log10(value)));
+                double f = value * Math.Pow(10, precision);
+                if (f - (int)f > 0.01)
                     precision++;
             }
             return precision;
