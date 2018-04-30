@@ -10,6 +10,11 @@ namespace SharpMap.Rendering.Decoration.ScaleBar
   Developer    : Simen
   Contact      : SimenWu@hotmail.com
   Last Modified: 03/03/2003
+
+  April 2018   : Add support for large and small units with auto switching depending on map scale
+               : Change unit factor for Degrees; add new unit Nautical Mile
+               : Tweak label text placement
+               : Tweak calcs when MapUnits = degrees
 */
 
     /// <summary>
@@ -49,13 +54,13 @@ namespace SharpMap.Rendering.Decoration.ScaleBar
         {
             Units.Add((int)Unit.Custom, new UnitInfo((int)Unit.Custom, 1.0, "Unknown", "Unknown"));
             Units.Add((int)Unit.Meter, new UnitInfo((int)Unit.Meter, 1, "Meter", "m"));
-            Units.Add((int)Unit.Foot_US, new UnitInfo((int)Unit.Custom, 0.30480061, "Foot_US", "ft"));
-            Units.Add((int)Unit.Yard_Sears, new UnitInfo((int)Unit.Custom, 0.914398415, "Yards", "yard"));
-            Units.Add((int)Unit.Yard_Indian, new UnitInfo((int)Unit.Custom, 0.914398531, "Yards", "Unknown"));
-            Units.Add((int)Unit.Mile_US, new UnitInfo((int)Unit.Custom, 1609.347219, "Miles", "mi"));
-            Units.Add((int)Unit.Kilometer, new UnitInfo((int)Unit.Custom, 1000.0, "Kilometers", "km"));
-            Units.Add((int)Unit.Degree, new UnitInfo((int)Unit.Custom, 0.0175, "Degree", "d"));
-            Units.Add((int)Unit.Nautical_Mile, new UnitInfo((int)Unit.Custom, 1852, "Nautical Mile", "NM"));
+            Units.Add((int)Unit.Foot_US, new UnitInfo((int)Unit.Foot_US, 0.30480061, "Foot_US", "ft"));
+            Units.Add((int)Unit.Yard_Sears, new UnitInfo((int)Unit.Yard_Sears, 0.914398415, "Yards", "yard"));
+            Units.Add((int)Unit.Yard_Indian, new UnitInfo((int)Unit.Yard_Indian, 0.914398531, "Yards", "Unknown"));
+            Units.Add((int)Unit.Mile_US, new UnitInfo((int)Unit.Mile_US, 1609.347219, "Miles", "mi"));
+            Units.Add((int)Unit.Kilometer, new UnitInfo((int)Unit.Kilometer, 1000.0, "Kilometers", "km"));
+            Units.Add((int)Unit.Degree, new UnitInfo((int)Unit.Degree, GeoSpatialMath.MetersPerDegreeAtEquator, "Degree", "d"));
+            Units.Add((int)Unit.Nautical_Mile, new UnitInfo((int)Unit.Nautical_Mile, 1852, "Nautical Mile", "NM"));
         }
 
         /// <summary>
@@ -64,8 +69,9 @@ namespace SharpMap.Rendering.Decoration.ScaleBar
         public ScaleBar()
         {
             MapUnit = (int)Unit.Meter;
-            BarUnitLargeScale = (int)Unit.Meter;
+            // set bigger unit first
             BarUnitSmallScale = (int)Unit.Kilometer;
+            BarUnitLargeScale = (int)Unit.Meter;
             Scale = 1;
             Width = DefaultWidth;
         }
@@ -715,8 +721,9 @@ namespace SharpMap.Rendering.Decoration.ScaleBar
                         case Unit.Kilometer:
                         case Unit.Nautical_Mile:
                             {
-                                BarUnitLargeScale = (int)Unit.Meter;
+                                // set bigger unit of measure first
                                 BarUnitSmallScale = (int)Unit.Kilometer;
+                                BarUnitLargeScale = (int)Unit.Meter;
                                 return;
                             }
 
@@ -724,44 +731,47 @@ namespace SharpMap.Rendering.Decoration.ScaleBar
                         case Unit.Yard_Indian:
                         case Unit.Yard_Sears:
                             {
-                                BarUnitLargeScale = value;
+                                // set bigger unit of measure first
                                 BarUnitSmallScale = (int)Unit.Mile_US;
+                                BarUnitLargeScale = value;
                                 return;
                             }
 
                         case Unit.Mile_US:
                             {
-                                BarUnitLargeScale = (int)Unit.Yard_Sears;
+                                // set bigger unit of measure first
                                 BarUnitSmallScale = (int)Unit.Mile_US;
+                                BarUnitLargeScale = (int)Unit.Yard_Sears;
                                 return;
                             }
 
                         case Unit.Degree:
                             {
-                                BarUnitLargeScale = (int)Unit.Degree;
+                                // set bigger unit of measure first
                                 BarUnitSmallScale = (int)Unit.Degree;
+                                BarUnitLargeScale = (int)Unit.Degree;
                                 return;
                             }
 
                         default:
                             {
-                                BarUnitLargeScale = (int)Unit.Custom;
                                 BarUnitSmallScale = (int)Unit.Custom;
+                                BarUnitLargeScale = (int)Unit.Custom;
                                 return;
                             }
                     }
                 }
                 else
                 {
-                    BarUnitLargeScale = (int)Unit.Custom;
                     BarUnitSmallScale = (int)Unit.Custom;
+                    BarUnitLargeScale = (int)Unit.Custom;
                     return;
                 }
             }
         }
 
         /// <summary>
-        /// Bar Unit for use at large scales (small area) such as ft, m, or yd
+        /// Bar Unit for use at large scales (small area) such as ft, m, or yd.
         /// </summary>
         public int BarUnitLargeScale
         {
@@ -770,8 +780,8 @@ namespace SharpMap.Rendering.Decoration.ScaleBar
             {
                 GetUnitInformation(value, out double d, out _barUnitNameLargeScale, out _barUnitShortNameLargeScale);
 
-                if (d > 1 || value == (int)Unit.Degree)
-                    throw new ArgumentOutOfRangeException("BarUnitLargeScale must be the smaller unit such as ft, m, or yd");
+                if (d > _barUnitFactorSmallScale) //d > 1 && value != (int)Unit.Degree
+                    throw new ArgumentOutOfRangeException("typically ft, m, or yd (unit of measure must be <= unit specified for BarUnitSmallScale");
 
                 _barUnitLargeScale = value;
                 _barUnitFactorLargeScale = d;
@@ -783,7 +793,7 @@ namespace SharpMap.Rendering.Decoration.ScaleBar
         }
 
         /// <summary>
-        /// Bar Unit for use at small scales (large area) such as km, mile, NM
+        /// Bar Unit for use at small scales (large area) such as km, mile, NM, Deg.
         /// </summary>
         public int BarUnitSmallScale
         {
@@ -792,8 +802,8 @@ namespace SharpMap.Rendering.Decoration.ScaleBar
             {
                 GetUnitInformation(value, out double d, out _barUnitNameSmallScale, out _barUnitShortNameSmallScale);
 
-                if (d < 1 && value != (int)Unit.Degree)
-                    throw new ArgumentOutOfRangeException("BarUnitSmallScale must be larger unit such as such as km, mi, nm, or deg");
+                if (d < _barUnitFactorLargeScale) //d < 1 && 
+                    throw new ArgumentOutOfRangeException("typically km, mi, nm, or deg (unit of measure must be >= unit specified for BarUnitLargeScale");
 
                 _barUnitSmallScale = value;
                 _barUnitFactorSmallScale = d;
@@ -816,7 +826,7 @@ namespace SharpMap.Rendering.Decoration.ScaleBar
             else
             {
                 mapUnitFactor = 1;
-                mapUnitName = "Cusom";
+                mapUnitName = "Custom";
                 mapUnitShortName = string.Empty;
             }
         }
@@ -881,10 +891,21 @@ namespace SharpMap.Rendering.Decoration.ScaleBar
             _mapUnitShortName = shortName;
 
             //Bar Unit   
-            _barUnitFactor = factor;
-            _barUnitName = name;
-            _barUnitShortName = shortName;
+            //_barUnitFactor = factor;
+            //_barUnitName = name;
+            //_barUnitShortName = shortName;
 
+            _barUnitLargeScale = (int)Unit.Custom;
+            _barUnitFactorLargeScale = factor;
+            _barUnitNameLargeScale = name;
+            _barUnitShortNameLargeScale = shortName;
+
+            _barUnitSmallScale = (int)Unit.Custom;
+            _barUnitFactorSmallScale = factor;
+            _barUnitNameSmallScale = name;
+            _barUnitShortNameSmallScale = shortName;
+
+            _forceRecalc = true;
             CalcScale(96);
             OnViewChanged();
         }
@@ -1132,7 +1153,7 @@ namespace SharpMap.Rendering.Decoration.ScaleBar
                     {
                         // recalc for SmallScale unit
                         CalcBarScale(dpi, widthOnDevice, numTics, mapScale, _barUnitFactorSmallScale,
-                                            out pixelsPerTic, out scaleBarUnitsPerTic);
+                                                out pixelsPerTic, out scaleBarUnitsPerTic);
 
                         // switch to SmallScale units
                         _barUnit = _barUnitSmallScale;
@@ -1180,14 +1201,15 @@ namespace SharpMap.Rendering.Decoration.ScaleBar
         private static int PrecisionOfSegmentText(double value)
         {
             int precision = 0;
-            // handle values where Log10 is < 1 (ensure precision=0 when value=2.0, and precision=1 when value=2.5)
-            if (value < 10 && value > 0 && value - (int)value > 0.01)
-            {
-                precision = (int)Math.Ceiling(Math.Abs(Math.Log10(value)));
-                double f = value * Math.Pow(10, precision);
-                if (f - (int)f > 0.01)
-                    precision++;
-            }
+            // handle values where Log10 is < 1 (eg ensure precision=0 when value=2.0, and precision=1 when value=2.5)
+            if (value < 10 && value > 0)
+                if (value < 1 || value - (int)value > 0.01)
+                {
+                    precision = (int)Math.Ceiling(Math.Abs(Math.Log10(value)));
+                    double f = value * Math.Pow(10, precision);
+                    if (f - (int)f > 0.01)
+                        precision++;
+                }
             return precision;
         }
 
