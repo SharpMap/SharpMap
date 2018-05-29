@@ -220,6 +220,7 @@
     <Compile Include="Rendering\Symbolizer\LineSymbolizerTest.cs" />
     <Compile Include="Rendering\Symbolizer\PointSymbolizerTest.cs" />
     <Compile Include="Rendering\Symbolizer\PolygonSymbolizerTest.cs" />
+    <Compile Include="Rendering\Symbolizer\RasterPointSymbolizerTest.cs" />
     <Compile Include="Rendering\Thematics\ColorBlendTest.cs" />
     <Compile Include="Serialization\BaseSerializationTest.cs" />
     <Compile Include="Serialization\FakePersistentCache.cs" />

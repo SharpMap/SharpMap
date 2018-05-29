@@ -64,7 +64,7 @@ namespace SharpMap.Rendering.Symbolizer
             set
             {
                 _transparency = value;
-                
+
                 if (_imageAttributes != null)
                     _imageAttributes.Dispose();
 
@@ -83,7 +83,7 @@ namespace SharpMap.Rendering.Symbolizer
         {
             var res = (RasterPointSymbolizer)MemberwiseClone();
             res.Transparency = Transparency;
-            res.Symbol= (Image)Symbol.Clone();
+            res.Symbol = (Image)Symbol.Clone();
 
             return res;
         }
@@ -115,9 +115,10 @@ namespace SharpMap.Rendering.Symbolizer
         {
             get
             {
-                
+                //return native size. Any required scaling is applied during render - see
+                //PointSymbolizer::GetOffset and RasterPointSymbolizer::OnRenderInternal
                 var size = Symbol == null ? DefaultSymbol.Size : Symbol.Size;
-                return new Size((int)(Scale * size.Width), (int)(Scale * size.Height));
+                return new Size((int)(size.Width), (int)(size.Height));
             }
             set
             {

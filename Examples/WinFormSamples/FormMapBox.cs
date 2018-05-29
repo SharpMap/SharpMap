@@ -46,12 +46,17 @@ namespace WinFormSamples
         public FormMapBox()
         {
             AddToListView = false;
-            AppDomain.CurrentDomain.AssemblyLoad += HandleAssemblyLoad;
 
             InitializeComponent();
             mapBox1.ActiveTool = MapBox.Tools.Pan;
 
+            var loadedAssemblies = AppDomain.CurrentDomain.GetAssemblies();
+            foreach (System.Reflection.Assembly a in loadedAssemblies)
+                LoadMapDecorationTypes(a);
+
             AddToListView = true;
+            AppDomain.CurrentDomain.AssemblyLoad += HandleAssemblyLoad;
+
             foreach (var name in MapDecorationTypes.Keys)
             {
                 lvwDecorations.Items.Add(name);
@@ -62,11 +67,16 @@ namespace WinFormSamples
 
         private void HandleAssemblyLoad(object sender, AssemblyLoadEventArgs args)
         {
-            var mdtype = typeof (SharpMap.Rendering.Decoration.IMapDecoration);
-            foreach (Type type in args.LoadedAssembly.GetTypes())
+            LoadMapDecorationTypes(args.LoadedAssembly);
+        }
+
+        private void LoadMapDecorationTypes(System.Reflection.Assembly a)
+        {
+            var mdtype = typeof(SharpMap.Rendering.Decoration.IMapDecoration);
+            foreach (Type type in a.GetTypes())
             {
-                //if (type.FullName.StartsWith("SharpMap.Decoration"))
-                //    Console.WriteLine(type.FullName);
+                if (type.FullName.StartsWith("SharpMap"))
+                    Console.WriteLine(type.FullName);
                 if (mdtype.IsAssignableFrom(type))
                 {
                     if (!type.IsAbstract)

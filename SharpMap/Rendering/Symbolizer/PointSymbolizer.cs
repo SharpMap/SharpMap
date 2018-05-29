@@ -53,7 +53,7 @@ namespace SharpMap.Rendering.Symbolizer
             get; set;
         }
 
- 
+
         /// <summary>
         /// Gets or sets the scale 
         /// </summary>
@@ -93,24 +93,27 @@ namespace SharpMap.Rendering.Symbolizer
 
 
             PointF pp = map.WorldToImage(point);
-            pp = PointF.Add(pp, GetOffset());
 
             if (Rotation != 0f && !Single.IsNaN(Rotation))
             {
+                SizeF offset = GetOffset();
+
                 Matrix startingTransform = g.Transform.Clone();
 
                 Matrix transform = g.Transform;
+                transform.Translate(offset.Width + 1, offset.Height + 1);
                 PointF rotationCenter = pp;
-                transform.RotateAt(Rotation, rotationCenter);
+                transform.RotateAt(Rotation, rotationCenter, MatrixOrder.Append);
 
                 g.Transform = transform;
-                
+
                 OnRenderInternal(pp, g);
 
                 g.Transform = startingTransform;
             }
             else
             {
+                pp = PointF.Add(pp, GetOffset());
                 OnRenderInternal(pp, g);
             }
         }
@@ -136,13 +139,13 @@ namespace SharpMap.Rendering.Symbolizer
             }
 
             return new RasterPointSymbolizer
-                       {
-                           Offset = Offset,
-                           Rotation = Rotation,
-                           Scale = Scale,
-                           //ImageAttributes = new ImageAttributes(),
-                           Symbol = bitmap
-                       };
+            {
+                Offset = Offset,
+                Rotation = Rotation,
+                Scale = Scale,
+                //ImageAttributes = new ImageAttributes(),
+                Symbol = bitmap
+            };
         }
 
         /// <summary>

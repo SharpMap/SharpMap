@@ -58,7 +58,7 @@ namespace SharpMap.Utilities
         /// <returns>The distance in meters</returns>
         public static double GreatCircleDistance(double lon1, double lon2, double lat)
         {
-            var lonDistance = DiffLongitude(lon1, lon2);
+            var lonDistance = Math.Abs(lon2 - lon1);//DiffLongitude(lon1, lon2);
             lat = Math.Abs(lat);
             if (lat >= 90.0)
                 lat = 89.999;
