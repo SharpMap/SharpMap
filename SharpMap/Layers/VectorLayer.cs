@@ -42,7 +42,7 @@ namespace SharpMap.Layers
         private bool _isQueryEnabled = true;
         private IBaseProvider _dataSource;
         private SmoothingMode _smoothingMode;
-        private ITheme _theme;
+        private IThemeEx _theme;
         private Envelope _envelope;
 
         /// <summary>
@@ -79,7 +79,7 @@ namespace SharpMap.Layers
         /// <summary>
         /// Gets or sets thematic settings for the layer. Set to null to ignore thematics
         /// </summary>
-        public ITheme Theme
+        public IThemeEx Theme
         {
             get { return _theme; }
             set { _theme = value; }
@@ -236,7 +236,7 @@ namespace SharpMap.Layers
         /// <param name="map">The map object</param>
         /// <param name="envelope">The envelope to render</param>
         /// <param name="theme">The theme to apply</param>
-        protected void RenderInternal(Graphics g, MapViewport map, Envelope envelope, ITheme theme)
+        protected void RenderInternal(Graphics g, MapViewport map, Envelope envelope, IThemeEx theme)
         {
             var ds = new FeatureDataSet();
             lock (_dataSource)
@@ -252,9 +252,6 @@ namespace SharpMap.Layers
 
             double scale = map.GetMapScale((int)g.DpiX);
             double zoom = map.Zoom;
-
-            if (theme is CustomTheme)
-                ((CustomTheme)theme).SetZoomAndScale(zoom, scale);
 
             foreach (FeatureDataTable features in ds.Tables)
             {
@@ -274,7 +271,7 @@ namespace SharpMap.Layers
                     for (int i = 0; i < features.Count; i++)
                     {
                         var feature = features[i];
-                        var outlineStyle = theme.GetStyle(feature) as VectorStyle;
+                        var outlineStyle = theme.GetStyle(map, feature) as VectorStyle;
                         if (outlineStyle == null) continue;
                         if (!(outlineStyle.Enabled && outlineStyle.EnableOutline)) continue;
 
@@ -306,7 +303,7 @@ namespace SharpMap.Layers
                 for (int i = 0; i < features.Count; i++)
                 {
                     var feature = features[i];
-                    var style = theme.GetStyle(feature);
+                    var style = theme.GetStyle(map, feature);
                     if (style == null) continue;
                     if (!style.Enabled) continue;
 
@@ -624,7 +621,7 @@ namespace SharpMap.Layers
             var res = (VectorLayer)MemberwiseClone();
             res.Style = Style.Clone();
             if (Theme is ICloneable)
-                res.Theme = (ITheme)((ICloneable)Theme).Clone();
+                res.Theme = (IThemeEx)((ICloneable)Theme).Clone();
             return res;
         }
     }
