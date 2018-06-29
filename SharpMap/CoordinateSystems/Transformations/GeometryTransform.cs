@@ -37,6 +37,9 @@ namespace GeoAPI.CoordinateSystems.Transformations
             if (box == null)
                 return null;
 
+            if (box.IsNull)
+                return null;
+
             var corners = new[] {
                 transform.Transform(new Coordinate(box.MinX, box.MinY)),
                 transform.Transform(new Coordinate(box.MinX, box.MaxY)),

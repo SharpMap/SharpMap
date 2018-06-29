@@ -60,9 +60,6 @@ namespace SharpMap.Layers
         /// <param name="eventArgs">The arguments associated with the event</param>
         protected virtual void OnSridChanged(EventArgs eventArgs)
         {
-            _sourceFactory = GeoAPI.GeometryServiceProvider.Instance.CreateGeometryFactory(SRID);
-            if (!_shouldNotResetCt)
-                _coordinateTransform = _reverseCoordinateTransform = null;
             var handler = SRIDChanged;
             if (handler != null) handler(this, eventArgs);
         }
@@ -178,15 +175,13 @@ namespace SharpMap.Layers
         /// <param name="e">The event's arguments</param>
         protected virtual void OnCoordinateTransformationChanged(EventArgs e)
         {
-            _sourceFactory = _targetFactory = GeoAPI.GeometryServiceProvider.Instance
-                .CreateGeometryFactory(SRID);
-
             if (CoordinateTransformation != null)
             {
                 // we don't want that by setting SRID we get the CoordinateTransformation resetted
                 _shouldNotResetCt = true;
                 try
                 {
+                    // causes sourceFactory/targetFactory to reset to new SRID/TargetSRID
                     SRID = Convert.ToInt32(CoordinateTransformation.SourceCS.AuthorityCode);
                     TargetSRID = Convert.ToInt32(CoordinateTransformation.TargetCS.AuthorityCode);
                 }
@@ -195,6 +190,11 @@ namespace SharpMap.Layers
                     _shouldNotResetCt = false;
                 }
 
+            }
+            else
+            {
+                _sourceFactory = GeoAPI.GeometryServiceProvider.Instance.CreateGeometryFactory(SRID);
+                _targetFactory = null;
             }
 
             if (CoordinateTransformationChanged != null)
@@ -267,6 +267,11 @@ namespace SharpMap.Layers
                 if (value != _srid)
                 {
                     _srid = value;
+
+                    _sourceFactory = GeoAPI.GeometryServiceProvider.Instance.CreateGeometryFactory(value);
+                    if (!_shouldNotResetCt)
+                        _coordinateTransform = _reverseCoordinateTransform = null;
+
                     OnSridChanged(EventArgs.Empty);
                 }
             }
@@ -280,8 +285,14 @@ namespace SharpMap.Layers
             get { return _targetSrid.HasValue ? _targetSrid.Value : SRID; }
             set
             {
-                _targetSrid = value;
-                _targetFactory = GeoAPI.GeometryServiceProvider.Instance.CreateGeometryFactory(value);
+                if (value != _targetSrid)
+                {
+                    _targetSrid = value;
+
+                    _targetFactory = GeoAPI.GeometryServiceProvider.Instance.CreateGeometryFactory(value);
+                    if (!_shouldNotResetCt)
+                        _coordinateTransform = _reverseCoordinateTransform = null;
+                }
             }
         }
 

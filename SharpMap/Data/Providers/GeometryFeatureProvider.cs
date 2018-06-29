@@ -265,11 +265,15 @@ namespace SharpMap.Data.Providers
             lock (_features.Rows.SyncRoot)
             {
                 if (_oid == -1)
-                    return ((FeatureDataRow)_features.Rows[(int)oid]).Geometry;
+                {
+                    if (oid >= _features.Rows.Count)
+                        return null;
+                    else
+                        return ((FeatureDataRow)_features.Rows[(int)oid]).Geometry;
+                }
                 else
                 {
-                    DataRow dr;
-                    dr = _features.Rows.Find(oid);
+                    var dr = _features.Rows.Find(oid);
                     if (dr != null)
                         return ((FeatureDataRow)dr).Geometry;
                     else
