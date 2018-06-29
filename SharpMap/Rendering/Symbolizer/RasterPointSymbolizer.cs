@@ -39,6 +39,7 @@ namespace SharpMap.Rendering.Symbolizer
         private float _transparency = 0f;
 
         private Color _symbolColor = Color.Empty;
+        private Color _remapColor = Color.Empty;
 
         /// <summary>
         /// Releases managed resources
@@ -71,12 +72,12 @@ namespace SharpMap.Rendering.Symbolizer
                 if (value < 0 || value > 1)
                     throw new ArgumentOutOfRangeException("Require value from 0 (opaque) to 1 (fully transparent)");
                 _transparency = value;
-                ConstructImgAttributes();
+                ConstructImageAttributes();
             }
         }
 
         /// <summary>
-        /// Optional colour to re-map any Color.White pixels in Symbol. 
+        /// Optional colour to replace the RemapColor pixels in Symbol. 
         /// If Transparency is also specified, transparency will replace SymbolColor.Alpha.
         /// </summary>
         public Color SymbolColor
@@ -85,7 +86,21 @@ namespace SharpMap.Rendering.Symbolizer
             set
             {
                 _symbolColor = value;
-                ConstructImgAttributes();
+                ConstructImageAttributes();
+            }
+        }
+
+        /// <summary>
+        /// Optional colour to be replaced by SymbolColor during re-map.
+        /// Pixels must have an exact match (including RemapColor.Alpha) to be re-mapped.
+        /// </summary>
+        public Color RemapColor
+        {
+            get { return _remapColor; }
+            set
+            {
+                _remapColor = value;
+                ConstructImageAttributes();
             }
         }
 
@@ -96,6 +111,7 @@ namespace SharpMap.Rendering.Symbolizer
             res.Transparency = Transparency;
             res.Symbol = (Image)Symbol.Clone();
             res.SymbolColor = SymbolColor;
+            res.RemapColor = RemapColor;
 
             return res;
         }
@@ -119,17 +135,17 @@ namespace SharpMap.Rendering.Symbolizer
         /// <summary>
         /// Construct imageattribute based upon Transparency and/or Color Re-map
         /// </summary>
-        private void ConstructImgAttributes()
+        private void ConstructImageAttributes()
         {
             if (_imageAttributes != null)
                 _imageAttributes.Dispose();
 
-            if (SymbolColor == Color.Empty && Transparency <= 0)
+            if (Transparency == 0 && (SymbolColor.ToArgb() == RemapColor.ToArgb()))
                 return;
 
             _imageAttributes = new ImageAttributes();
 
-            if (SymbolColor != Color.Empty)
+            if (SymbolColor.ToArgb() != RemapColor.ToArgb())
             {
                 var cm = new ColorMap[1];
 
@@ -140,7 +156,7 @@ namespace SharpMap.Rendering.Symbolizer
 
                 var nc = Color.FromArgb(a, SymbolColor);
                 cm[0] = new ColorMap();
-                cm[0].OldColor = Color.White;
+                cm[0].OldColor = RemapColor;
                 cm[0].NewColor = nc;
                 ImageAttributes.SetRemapTable(cm);
             }
