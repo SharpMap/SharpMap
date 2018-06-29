@@ -76,6 +76,9 @@ namespace SharpMap.Rendering.Thematics
 
         private GetStyleMethod _getStyleDelegate;
 
+        [NonSerialized]
+        private CurrentZoomScale _currentZoomScale = new CurrentZoomScale(0, 0);
+
         /// <summary>
         /// Initializes a new instance of the <see cref="CustomTheme"/> class
         /// </summary>
@@ -141,6 +144,31 @@ namespace SharpMap.Rendering.Thematics
 
         #endregion
 
+        /// <summary>
+        /// Method for VectorLayer to set current zoom and scale immediately prior to rendering geometry
+        /// </summary>
+        public void SetZoomAndScale(double zoom, double scale)
+        {
+            _currentZoomScale.Zoom = zoom;
+            _currentZoomScale.Scale = scale;
+        }
+
+        /// <summary>
+        /// Current map scale for optional use in StyleDelegate to support scale-dependent rendering
+        /// </summary>
+        public double Scale
+        {
+            get { return _currentZoomScale.Scale; }
+        }
+
+        /// <summary>
+        /// Current map scale for optional use in StyleDelegate to support scale-dependent rendering
+        /// </summary>
+        public double Zoom
+        {
+            get { return _currentZoomScale.Zoom; }
+        }
+
         #region ISerializable Members
         void ISerializable.GetObjectData(SerializationInfo info, StreamingContext context)
         {
@@ -153,10 +181,25 @@ namespace SharpMap.Rendering.Thematics
         {
             var res = (CustomTheme)MemberwiseClone();
             res._defaultStyle = _defaultStyle is ICloneable
-                ? (IStyle) ((ICloneable) _defaultStyle).Clone()
+                ? (IStyle)((ICloneable)_defaultStyle).Clone()
                 : _defaultStyle;
 
             return res;
+        }
+
+        /// <summary>
+        /// Nested type required to make Zoom/Scale on CustomTheme instance accessbile to delegate function
+        /// </summary>
+        private class CurrentZoomScale
+        {
+            public double Zoom { get; internal set; }
+            public double Scale { get; internal set; }
+
+            public CurrentZoomScale(double z, double s)
+            {
+                Zoom = z;
+                Scale = s;
+            }
         }
     }
 }
