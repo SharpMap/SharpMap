@@ -253,6 +253,9 @@ namespace SharpMap.Layers
             double scale = map.GetMapScale((int)g.DpiX);
             double zoom = map.Zoom;
 
+            if (theme is CustomTheme)
+                ((CustomTheme)theme).SetZoomAndScale(zoom, scale);
+
             foreach (FeatureDataTable features in ds.Tables)
             {
                 // Transform geometries if necessary
