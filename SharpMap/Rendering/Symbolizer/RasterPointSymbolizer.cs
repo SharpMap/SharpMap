@@ -38,6 +38,8 @@ namespace SharpMap.Rendering.Symbolizer
 
         private float _transparency = 0f;
 
+        private Color _symbolColor = Color.Empty;
+
         /// <summary>
         /// Releases managed resources
         /// </summary>
@@ -58,23 +60,32 @@ namespace SharpMap.Rendering.Symbolizer
             base.ReleaseManagedResources();
         }
 
+        /// <summary>
+        /// Optional transparency in range 0 (opaque) to 1 (fully transparent).
+        /// </summary>
         public float Transparency
         {
             get { return _transparency; }
             set
             {
+                if (value < 0 || value > 1)
+                    throw new ArgumentOutOfRangeException("Require value from 0 (opaque) to 1 (fully transparent)");
                 _transparency = value;
+                ConstructImgAttributes();
+            }
+        }
 
-                if (_imageAttributes != null)
-                    _imageAttributes.Dispose();
-
-                if (_transparency == 0)
-                    return;
-
-                _imageAttributes = new ImageAttributes();
-                var cm = new ColorMatrix();
-                cm.Matrix33 = 1f - _transparency;
-                _imageAttributes.SetColorMatrix(cm);
+        /// <summary>
+        /// Optional colour to re-map any Color.White pixels in Symbol. 
+        /// If Transparency is also specified, transparency will replace SymbolColor.Alpha.
+        /// </summary>
+        public Color SymbolColor
+        {
+            get { return _symbolColor; }
+            set
+            {
+                _symbolColor = value;
+                ConstructImgAttributes();
             }
         }
 
@@ -84,6 +95,7 @@ namespace SharpMap.Rendering.Symbolizer
             var res = (RasterPointSymbolizer)MemberwiseClone();
             res.Transparency = Transparency;
             res.Symbol = (Image)Symbol.Clone();
+            res.SymbolColor = SymbolColor;
 
             return res;
         }
@@ -104,6 +116,41 @@ namespace SharpMap.Rendering.Symbolizer
             }
         }
 
+        /// <summary>
+        /// Construct imageattribute based upon Transparency and/or Color Re-map
+        /// </summary>
+        private void ConstructImgAttributes()
+        {
+            if (_imageAttributes != null)
+                _imageAttributes.Dispose();
+
+            if (SymbolColor == Color.Empty && Transparency <= 0)
+                return;
+
+            _imageAttributes = new ImageAttributes();
+
+            if (SymbolColor != Color.Empty)
+            {
+                var cm = new ColorMap[1];
+
+                var a = SymbolColor.A;
+
+                if (Transparency > 0)
+                    a = (byte)(Math.Ceiling(255 * (1F - Transparency)));
+
+                var nc = Color.FromArgb(a, SymbolColor);
+                cm[0] = new ColorMap();
+                cm[0].OldColor = Color.White;
+                cm[0].NewColor = nc;
+                ImageAttributes.SetRemapTable(cm);
+            }
+            else
+            {
+                var cm = new ColorMatrix();
+                cm.Matrix33 = 1F - _transparency;
+                ImageAttributes.SetColorMatrix(cm);
+            }
+        }
 
         /// <summary>
         /// Gets or sets the Size of the symbol
