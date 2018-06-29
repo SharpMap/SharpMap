@@ -64,7 +64,7 @@ namespace SharpMap.Layers
             if (!_shouldNotResetCt)
                 _coordinateTransform = _reverseCoordinateTransform = null;
             var handler = SRIDChanged;
-            if (handler!= null) handler(this, eventArgs);
+            if (handler != null) handler(this, eventArgs);
         }
 
         /// <summary>
@@ -109,15 +109,15 @@ namespace SharpMap.Layers
         private IStyle _style;
         private int _srid = -1;
         private int? _targetSrid;
-        [field:NonSerialized]
+        [field: NonSerialized]
         private bool _shouldNotResetCt;
-// ReSharper disable PublicConstructorInAbstractClass
+        // ReSharper disable PublicConstructorInAbstractClass
         ///<summary>
         /// Creates an instance of this class using the given Style
         ///</summary>
         ///<param name="style"></param>
         public Layer(Style style)
-// ReSharper restore PublicConstructorInAbstractClass
+        // ReSharper restore PublicConstructorInAbstractClass
         {
             _style = style;
         }
@@ -138,7 +138,7 @@ namespace SharpMap.Layers
             _coordinateTransform = null;
             _reverseCoordinateTransform = null;
             _style = null;
-            
+
             base.ReleaseManagedResources();
         }
 
@@ -194,7 +194,7 @@ namespace SharpMap.Layers
                 {
                     _shouldNotResetCt = false;
                 }
-                
+
             }
 
             if (CoordinateTransformationChanged != null)
@@ -228,7 +228,7 @@ namespace SharpMap.Layers
                 }
                 return _reverseCoordinateTransform;
             }
-            set { _reverseCoordinateTransform= value; }
+            set { _reverseCoordinateTransform = value; }
         }
 
         protected bool NeedsTransformation
@@ -373,7 +373,8 @@ namespace SharpMap.Layers
         /// <summary>
         /// Gets or Sets what kind of units the Min/Max visible properties are defined in
         /// </summary>
-        public VisibilityUnits VisibilityUnits {
+        public VisibilityUnits VisibilityUnits
+        {
             get
             {
                 return _style.VisibilityUnits;

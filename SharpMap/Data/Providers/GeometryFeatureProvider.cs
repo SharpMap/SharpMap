@@ -233,7 +233,7 @@ namespace SharpMap.Data.Providers
                             {
                                 yield return new KeyValuePair<uint, FeatureDataRow>(Convert.ToUInt32(feature[_oid]), feature);
                             }
-                               
+
                         }
                     }
                 }
