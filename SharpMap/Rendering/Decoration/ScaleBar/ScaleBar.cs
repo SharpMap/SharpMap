@@ -69,9 +69,8 @@ namespace SharpMap.Rendering.Decoration.ScaleBar
         public ScaleBar()
         {
             MapUnit = (int)Unit.Meter;
-            // set bigger unit first
-            BarUnitSmallScale = (int)Unit.Kilometer;
             BarUnitLargeScale = (int)Unit.Meter;
+            BarUnitSmallScale = (int)Unit.Kilometer;
             Scale = 1;
             Width = DefaultWidth;
         }
@@ -721,9 +720,8 @@ namespace SharpMap.Rendering.Decoration.ScaleBar
                         case Unit.Kilometer:
                         case Unit.Nautical_Mile:
                             {
-                                // set bigger unit of measure first
-                                BarUnitSmallScale = (int)Unit.Kilometer;
                                 BarUnitLargeScale = (int)Unit.Meter;
+                                BarUnitSmallScale = (int)Unit.Kilometer;
                                 return;
                             }
 
@@ -731,40 +729,37 @@ namespace SharpMap.Rendering.Decoration.ScaleBar
                         case Unit.Yard_Indian:
                         case Unit.Yard_Sears:
                             {
-                                // set bigger unit of measure first
-                                BarUnitSmallScale = (int)Unit.Mile_US;
                                 BarUnitLargeScale = value;
+                                BarUnitSmallScale = (int)Unit.Mile_US;
                                 return;
                             }
 
                         case Unit.Mile_US:
                             {
-                                // set bigger unit of measure first
-                                BarUnitSmallScale = (int)Unit.Mile_US;
                                 BarUnitLargeScale = (int)Unit.Yard_Sears;
+                                BarUnitSmallScale = (int)Unit.Mile_US;
                                 return;
                             }
 
                         case Unit.Degree:
                             {
-                                // set bigger unit of measure first
-                                BarUnitSmallScale = (int)Unit.Degree;
                                 BarUnitLargeScale = (int)Unit.Degree;
+                                BarUnitSmallScale = (int)Unit.Degree;
                                 return;
                             }
 
                         default:
                             {
-                                BarUnitSmallScale = (int)Unit.Custom;
                                 BarUnitLargeScale = (int)Unit.Custom;
+                                BarUnitSmallScale = (int)Unit.Custom;
                                 return;
                             }
                     }
                 }
                 else
                 {
-                    BarUnitSmallScale = (int)Unit.Custom;
                     BarUnitLargeScale = (int)Unit.Custom;
+                    BarUnitSmallScale = (int)Unit.Custom;
                     return;
                 }
             }
@@ -779,9 +774,6 @@ namespace SharpMap.Rendering.Decoration.ScaleBar
             set
             {
                 GetUnitInformation(value, out double d, out _barUnitNameLargeScale, out _barUnitShortNameLargeScale);
-
-                if (d > _barUnitFactorSmallScale) //d > 1 && value != (int)Unit.Degree
-                    throw new ArgumentOutOfRangeException("typically ft, m, or yd (unit of measure must be <= unit specified for BarUnitSmallScale");
 
                 _barUnitLargeScale = value;
                 _barUnitFactorLargeScale = d;
@@ -801,9 +793,6 @@ namespace SharpMap.Rendering.Decoration.ScaleBar
             set
             {
                 GetUnitInformation(value, out double d, out _barUnitNameSmallScale, out _barUnitShortNameSmallScale);
-
-                if (d < _barUnitFactorLargeScale) //d < 1 && 
-                    throw new ArgumentOutOfRangeException("typically km, mi, nm, or deg (unit of measure must be >= unit specified for BarUnitLargeScale");
 
                 _barUnitSmallScale = value;
                 _barUnitFactorSmallScale = d;
