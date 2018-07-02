@@ -19,12 +19,13 @@ namespace SharpMap.Rendering
         private static readonly ILog Logger = LogManager.GetLogger<LayerCollectionRenderer>();
 
         private readonly ILayer[] _layers;
-        private Map _map;
+        private MapViewport _mapViewPort;
+        private double _mapScale;
 
         private Image[] _images;
         private static Func<Size, float, int, bool> _parallelHeuristic;
-        private Matrix _transform;
-
+        //private Matrix _transform;
+        
         /// <summary>
         /// Creates an instance of this class
         /// </summary>
@@ -41,13 +42,27 @@ namespace SharpMap.Rendering
         /// <param name="g">The graphics object</param>
         /// <param name="map">The map</param>
         /// <param name="allowParallel"></param>
+        [Obsolete("Use Render(Graphics, MapViewport, allowParallel)")]
         [MethodImpl(MethodImplOptions.Synchronized)]
         public void Render(Graphics g, Map map, bool allowParallel)
         {
-            _map = map;
-            _transform = _map.MapTransform;
+            Render(g, (MapViewport)map, allowParallel);
+        }
+
+        /// <summary>
+        /// Method to render the layer collection
+        /// </summary>
+        /// <param name="g">The graphics object</param>
+        /// <param name="mapViewPort">Rendering parameters snapshot of current map</param>
+        /// <param name="allowParallel"></param>
+        [MethodImpl(MethodImplOptions.Synchronized)]
+        public void Render(Graphics g, MapViewport mapViewPort, bool allowParallel)
+        {
+            _mapViewPort = mapViewPort;
+            _mapScale = _mapViewPort.GetMapScale((int)g.DpiX);
+            //_transform = _map.MapTransform;
             g.PageUnit = GraphicsUnit.Pixel;
-            if (AllowParallel && allowParallel && ParallelHeuristic(map.Size, g.DpiX, _layers.Length))
+            if (AllowParallel && allowParallel && ParallelHeuristic(mapViewPort.Size, g.DpiX, _layers.Length))
             {
                 RenderParellel(g);
             }
@@ -90,10 +105,10 @@ namespace SharpMap.Rendering
                 var layer = _layers[layerIndex];
                 if (layer.Enabled)
                 {
-                    double compare = layer.VisibilityUnits == VisibilityUnits.ZoomLevel ? _map.Zoom : _map.MapScale;
+                    double compare = layer.VisibilityUnits == VisibilityUnits.ZoomLevel ? _mapViewPort.Zoom : _mapScale;
                     if (layer.MaxVisible >= compare && layer.MinVisible < compare)
                     {
-                        RenderLayer(layer, g, _map);
+                        RenderLayer(layer, g, _mapViewPort);
                     }
                 }
             }
@@ -130,17 +145,17 @@ namespace SharpMap.Rendering
             
             if (layer.Enabled)
             {
-                double compare = layer.VisibilityUnits == VisibilityUnits.ZoomLevel ? _map.Zoom : _map.MapScale;
+                double compare = layer.VisibilityUnits == VisibilityUnits.ZoomLevel ? _mapViewPort.Zoom : _mapScale;
                 if (layer.MaxVisible >= compare && layer.MinVisible < compare)
                 {
-                    var image = _images[layerIndex] = new Bitmap(_map.Size.Width, _map.Size.Height, PixelFormat.Format32bppArgb);
+                    var image = _images[layerIndex] = new Bitmap(_mapViewPort.Size.Width, _mapViewPort.Size.Height, PixelFormat.Format32bppArgb);
                     using (var g = Graphics.FromImage(image))
                     {
                         g.PageUnit = GraphicsUnit.Pixel;
-                        ApplyTransform(_transform, g);
+                        ApplyTransform(_mapViewPort.MapTransform , g);
 
                         g.Clear(Color.Transparent);
-                        RenderLayer(layer, g, _map);
+                        RenderLayer(layer, g, _mapViewPort );
                     }
                 }
             }
@@ -151,12 +166,12 @@ namespace SharpMap.Rendering
         /// </summary>
         /// <param name="layer"></param>
         /// <param name="g"></param>
-        /// <param name="map"></param>
-        public static void RenderLayer(ILayer layer, Graphics g, Map map)
+        /// <param name="mapViewPort"></param>
+        public static void RenderLayer(ILayer layer, Graphics g, MapViewport mapViewPort)
         {
             try
             {
-                layer.Render(g, map);
+                layer.Render(g, mapViewPort);
             }
             catch (Exception e)
             {
@@ -164,7 +179,7 @@ namespace SharpMap.Rendering
 
                 using (var pen = new Pen(Color.Red, 4f))
                 {
-                    var size = map.Size;
+                    var size = mapViewPort.Size;
 
                     g.DrawLine(pen, 0, 0, size.Width, size.Height);
                     g.DrawLine(pen, size.Width,0, 0, size.Height);

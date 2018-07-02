@@ -17,6 +17,9 @@ namespace SharpMap
         private readonly Matrix _mapTransformInverted;
         private double _left;
         private double _top;
+        private int _lastDpi;
+        private double _mapScale;
+        private object _lockMapScale = new object();
 
         /// <summary>
         /// Creates an instance of this class
@@ -27,7 +30,7 @@ namespace SharpMap
         /// <param name="size">The size of the viewport</param>
         /// <param name="pixelAspectRatio">A ratio between width and height</param>
         /// <param name="mapTransform">An affine map transform matrix</param>
-        public MapViewport(Guid mapId, int srid, Envelope env, Size size, double pixelAspectRatio, Matrix mapTransform, Matrix mapTransformInverted)
+        public MapViewport(Guid mapId, int srid, Envelope env, Size size, double pixelAspectRatio, Matrix mapTransform)
         {
             ID = mapId;
             SRID = srid;
@@ -37,14 +40,21 @@ namespace SharpMap
             Center = env.Centre;
 
             PixelAspectRatio = pixelAspectRatio;
-            PixelWidth = PixelSize = env.Width/size.Width;
-            PixelHeight = PixelWidth*pixelAspectRatio;
+            PixelWidth = PixelSize = env.Width / size.Width;
+            PixelHeight = PixelWidth * pixelAspectRatio;
 
             Zoom = env.Width;
-            MapHeight = Zoom*pixelAspectRatio;
+            MapHeight = Zoom * pixelAspectRatio;
 
-            _mapTransform = mapTransform.Clone();
-            _mapTransformInverted = mapTransformInverted.Clone();
+            // already cloned
+            _mapTransform = mapTransform;
+            if (_mapTransform.IsInvertible)
+            {
+                _mapTransformInverted = _mapTransform.Clone();
+                _mapTransformInverted.Invert();
+            }
+            else
+                _mapTransformInverted = new Matrix();
 
             var height = (Zoom * Size.Height) / Size.Width;
             _left = Center.X - Zoom * 0.5;
@@ -73,7 +83,7 @@ namespace SharpMap
         public Coordinate Center { get; private set; }
 
 
-        public double Zoom { get; set; }
+        public double Zoom { get; private set; }
         public double MapHeight { get; private set; }
         public double MapWidth { get { return Zoom; } }
 
@@ -105,7 +115,15 @@ namespace SharpMap
 
         public double GetMapScale(int dpi)
         {
-            return ScaleCalculations.CalculateScaleNonLatLong(Envelope.Width, Size.Width, 1, dpi);
+            lock (_lockMapScale)
+            {
+                if (_lastDpi != dpi)
+                {
+                    _mapScale = ScaleCalculations.CalculateScaleNonLatLong(Envelope.Width, Size.Width, 1, dpi);
+                    _lastDpi = dpi;
+                }
+                return _mapScale;
+            }
         }
 
         /// <summary>
@@ -121,15 +139,16 @@ namespace SharpMap
             if (!careAboutMapTransform)
                 return pTmp;
 
-            lock (_mapTransform)
+            using (var transform = MapTransform)
             {
-                if (!_mapTransform.IsIdentity)
+                if (!transform.IsIdentity)
                 {
                     var pts = new[] { pTmp };
-                    _mapTransform.TransformPoints(pts);
+                    transform.TransformPoints(pts);
                     pTmp = pts[0];
                 }
             }
+
             return pTmp;
         }
 
@@ -174,15 +193,17 @@ namespace SharpMap
         /// <returns>Point in world coordinates</returns>
         public Coordinate ImageToWorld(PointF p, bool careAboutMapTransform)
         {
-            lock (_mapTransform)
-            {
-                if (careAboutMapTransform && !_mapTransformInverted.IsIdentity)
+            if (careAboutMapTransform)
+                using (var transformInv = _mapTransformInverted.Clone())
                 {
-                    var pts = new[] { p };
-                    _mapTransformInverted.TransformPoints(pts);
-                    p = pts[0];
+                    if (!transformInv.IsIdentity)
+                    {
+                        var pts = new[] { p };
+                        transformInv.TransformPoints(pts);
+                        p = pts[0];
+                    }
                 }
-            }
+
             return Transform.MapToWorld(p, this);
         }
         /// <summary>
@@ -192,8 +213,8 @@ namespace SharpMap
         /// <returns></returns>
         public static implicit operator MapViewport(Map map)
         {
-            return new MapViewport(map.ID, map.SRID, map.Envelope, map.Size, map.PixelAspectRatio, 
-                                   map.MapTransform, map.MapTransformInverted);
+            return new MapViewport(map.ID, map.SRID, map.Envelope, map.Size, map.PixelAspectRatio,
+                                   map.MapTransform);
         }
 
     }
