@@ -16,6 +16,9 @@ namespace SharpMap
     {
         private readonly Envelope _envelope;
         private readonly Coordinate _center;
+        private int _lastDpi;
+        private double _mapScale;
+        private object _lockMapScale = new object();
 
         //private readonly Matrix _mapTransform;
         //private readonly Matrix _mapTransformInverted;
@@ -55,7 +58,7 @@ namespace SharpMap
             PixelHeight = PixelWidth*pixelAspectRatio;
 
             Zoom = env.Width;
-            MapHeight = Zoom*pixelAspectRatio;
+            MapHeight = Zoom * pixelAspectRatio;
 
             // already cloned
             //_mapTransform = mapTransform;
@@ -286,7 +289,7 @@ namespace SharpMap
                 {
                     mapTransformInverted.TransformPoints(pts);
                 }
-            }
+
             //Monitor.Exit(_mapTransformInverted);
 
             return Transform.MapToWorld(pts[0], this);
