@@ -42,7 +42,7 @@ namespace SharpMap.Layers
         private bool _isQueryEnabled = true;
         private IBaseProvider _dataSource;
         private SmoothingMode _smoothingMode;
-        private IThemeEx _theme;
+        private ITheme _theme;
         private Envelope _envelope;
 
         /// <summary>
@@ -79,7 +79,7 @@ namespace SharpMap.Layers
         /// <summary>
         /// Gets or sets thematic settings for the layer. Set to null to ignore thematics
         /// </summary>
-        public IThemeEx Theme
+        public ITheme Theme
         {
             get { return _theme; }
             set { _theme = value; }
@@ -236,7 +236,7 @@ namespace SharpMap.Layers
         /// <param name="map">The map object</param>
         /// <param name="envelope">The envelope to render</param>
         /// <param name="theme">The theme to apply</param>
-        protected void RenderInternal(Graphics g, MapViewport map, Envelope envelope, IThemeEx theme)
+        protected void RenderInternal(Graphics g, MapViewport map, Envelope envelope, ITheme theme)
         {
             var ds = new FeatureDataSet();
             lock (_dataSource)
@@ -253,6 +253,13 @@ namespace SharpMap.Layers
             double scale = map.GetMapScale((int)g.DpiX);
             double zoom = map.Zoom;
 
+            Func<MapViewport, FeatureDataRow, IStyle> evalStyle;
+
+            if (theme is IThemeEx)
+                evalStyle = new ThemeExEvaluator((IThemeEx)theme).GetStyle;
+            else
+                evalStyle = new ThemeEvaluator(theme).GetStyle;
+            
             foreach (FeatureDataTable features in ds.Tables)
             {
                 // Transform geometries if necessary
@@ -271,7 +278,7 @@ namespace SharpMap.Layers
                     for (int i = 0; i < features.Count; i++)
                     {
                         var feature = features[i];
-                        var outlineStyle = theme.GetStyle(map, feature) as VectorStyle;
+                        var outlineStyle = evalStyle(map, feature) as VectorStyle;
                         if (outlineStyle == null) continue;
                         if (!(outlineStyle.Enabled && outlineStyle.EnableOutline)) continue;
 
@@ -303,7 +310,7 @@ namespace SharpMap.Layers
                 for (int i = 0; i < features.Count; i++)
                 {
                     var feature = features[i];
-                    var style = theme.GetStyle(map, feature);
+                    var style = evalStyle(map, feature);
                     if (style == null) continue;
                     if (!style.Enabled) continue;
 
@@ -624,5 +631,40 @@ namespace SharpMap.Layers
                 res.Theme = (IThemeEx)((ICloneable)Theme).Clone();
             return res;
         }
+
+        #region Theme evaluators
+        private abstract class ThemeEvaluatorBase
+        {
+            public abstract IStyle GetStyle(MapViewport mvp, FeatureDataRow feature);
+        }
+
+        private class ThemeEvaluator : ThemeEvaluatorBase
+        {
+            private readonly ITheme _theme;
+
+            public ThemeEvaluator(ITheme theme)
+            {
+                _theme = theme;
+            }
+            public sealed override IStyle GetStyle(MapViewport mvp, FeatureDataRow feature)
+            {
+                return _theme.GetStyle(feature);
+            }
+        }
+
+        private class ThemeExEvaluator : ThemeEvaluatorBase
+        {
+            private readonly IThemeEx _theme;
+
+            public ThemeExEvaluator(IThemeEx theme)
+            {
+                _theme = theme;
+            }
+            public sealed override IStyle GetStyle(MapViewport mvp, FeatureDataRow feature)
+            {
+                return _theme.GetStyle(mvp, feature);
+            }
+        }
+        #endregion
     }
 }
