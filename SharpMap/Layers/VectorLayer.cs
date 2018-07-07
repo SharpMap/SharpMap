@@ -253,6 +253,13 @@ namespace SharpMap.Layers
             double scale = map.GetMapScale((int)g.DpiX);
             double zoom = map.Zoom;
 
+            Func<MapViewport, FeatureDataRow, IStyle> evalStyle;
+
+            if (theme is IThemeEx)
+                evalStyle = new ThemeExEvaluator((IThemeEx)theme).GetStyle;
+            else
+                evalStyle = new ThemeEvaluator(theme).GetStyle;
+            
             foreach (FeatureDataTable features in ds.Tables)
             {
                 // Transform geometries if necessary
@@ -271,7 +278,7 @@ namespace SharpMap.Layers
                     for (int i = 0; i < features.Count; i++)
                     {
                         var feature = features[i];
-                        var outlineStyle = theme.GetStyle(feature) as VectorStyle;
+                        var outlineStyle = evalStyle(map, feature) as VectorStyle;
                         if (outlineStyle == null) continue;
                         if (!(outlineStyle.Enabled && outlineStyle.EnableOutline)) continue;
 
@@ -303,7 +310,7 @@ namespace SharpMap.Layers
                 for (int i = 0; i < features.Count; i++)
                 {
                     var feature = features[i];
-                    var style = theme.GetStyle(feature);
+                    var style = evalStyle(map, feature);
                     if (style == null) continue;
                     if (!style.Enabled) continue;
 
@@ -621,8 +628,43 @@ namespace SharpMap.Layers
             var res = (VectorLayer)MemberwiseClone();
             res.Style = Style.Clone();
             if (Theme is ICloneable)
-                res.Theme = (ITheme)((ICloneable)Theme).Clone();
+                res.Theme = (IThemeEx)((ICloneable)Theme).Clone();
             return res;
         }
+
+        #region Theme evaluators
+        private abstract class ThemeEvaluatorBase
+        {
+            public abstract IStyle GetStyle(MapViewport mvp, FeatureDataRow feature);
+        }
+
+        private class ThemeEvaluator : ThemeEvaluatorBase
+        {
+            private readonly ITheme _theme;
+
+            public ThemeEvaluator(ITheme theme)
+            {
+                _theme = theme;
+            }
+            public sealed override IStyle GetStyle(MapViewport mvp, FeatureDataRow feature)
+            {
+                return _theme.GetStyle(feature);
+            }
+        }
+
+        private class ThemeExEvaluator : ThemeEvaluatorBase
+        {
+            private readonly IThemeEx _theme;
+
+            public ThemeExEvaluator(IThemeEx theme)
+            {
+                _theme = theme;
+            }
+            public sealed override IStyle GetStyle(MapViewport mvp, FeatureDataRow feature)
+            {
+                return _theme.GetStyle(mvp, feature);
+            }
+        }
+        #endregion
     }
 }

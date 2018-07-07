@@ -33,8 +33,27 @@ namespace SharpMap.Rendering.Thematics
         /// <summary>
         /// Returns the style based on a feature
         /// </summary>
-        /// <param name="attribute">Set of attribute values to calculate the <see cref="IStyle"/> from</param>
+        /// <param name="feature">Set of attribute values to calculate the <see cref="IStyle"/> from</param>
         /// <returns>The style</returns>
-        IStyle GetStyle(FeatureDataRow attribute);
+        IStyle GetStyle(FeatureDataRow feature);
+    }
+
+    /// <summary>
+    /// Extended interface for rendering a thematic layer based upon current scale or zoom and/or feature attributes
+    /// </summary>
+    /// <remarks>
+    /// Implementations of this interface should consider implementing <see cref="T:System.ICloneable"/> 
+    /// when they make use of <see cref="T:System.Drawing.Pen"/>, <see cref="T:System.Drawing.Brush"/> or likewise 
+    /// objects of the <see cref="N:System.Drawing"/> namespace. Otherwise they are prone to GDI+ rendering exceptions.
+    /// </remarks>
+    public interface IThemeEx: ITheme
+    {
+        /// <summary>
+        /// Calculates a style for a given <paramref name="feature"/> based on a given <paramref name="mapViewPort"/>. 
+        /// </summary>
+        /// <param name="mapViewPort">The viewport</param>
+        /// <param name="feature">The feature</param>
+        /// <returns>A style</returns>
+        IStyle GetStyle(MapViewport mapViewPort, FeatureDataRow feature);
     }
 }
