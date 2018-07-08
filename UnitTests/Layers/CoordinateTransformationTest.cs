@@ -18,8 +18,8 @@ namespace UnitTests.Layers
 
         private string _path = "C:\\temp\\";
         private string _baseFileName = "CoordTransTest";
-        private double _gcsTolerance = 0.00000002; // 7dp dec degree = approx 0.1m
-        private double _pcsTolerance = 0.002; // 0.1m
+        private double _gcsTolerance = 0.00000002; // 2mm (8dp dec degree = approx 1mm)
+        private double _pcsTolerance = 0.002; // 2mm
 
         [Test]
         public void CoordinateTransformation_ChangingTargetSrid_PR101()
@@ -80,10 +80,10 @@ namespace UnitTests.Layers
             ValidateCoordTransDef(m);
             // centroids of Map Extents and all layers envelopes should be the same
             ValidateCentroids(m, tolerance);
-            // and appropriate env dimensions should also compare
+            // and appropriate env dimensions should also compare... need to increase tolerances here, remembering looking for gross errors only
             if (targetSrid == 24047 || targetSrid == 3857)
-                // projected coord systems - allow for distortions (this test is looking for gross errors only)
-                ValidateEnvSizes(m, 2);//2 metres
+                // projected coord systems - allow for distortions
+                ValidateEnvSizes(m, 2); // 2 metres
             else
                 ValidateEnvSizes(m, tolerance * 5); 
 
