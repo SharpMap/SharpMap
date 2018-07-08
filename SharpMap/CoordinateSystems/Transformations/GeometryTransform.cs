@@ -38,7 +38,7 @@ namespace GeoAPI.CoordinateSystems.Transformations
                 return null;
 
             if (box.IsNull)
-                return null;
+                return new Envelope(box);
 
             var corners = new[] {
                 transform.Transform(new Coordinate(box.MinX, box.MinY)),
