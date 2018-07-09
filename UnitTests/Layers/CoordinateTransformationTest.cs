@@ -24,11 +24,52 @@ namespace UnitTests.Layers
         [Test]
         public void CoordinateTransformation_ChangingTargetSrid_PR101()
         {
+            var m = InitialiseMapAndLayers();
+
+            // force calc/cache of extents
+            m.ZoomToExtents();
+
+            TestNoCoordTrans(m);
+
+            // visual proof - zoom to extents of Wgs84 and Ind75. Diagonal cross will not intersect North-South line (ie incorrect datum trans)
+            var box = m.Layers[0].Envelope;
+            box.ExpandToInclude(m.Layers[1].Envelope);
+            m.ZoomToBox(box);
+
+            using (var img = m.GetMap())
+                img.Save(System.IO.Path.Combine(_path, _baseFileName + "NoTargetSrid.bmp"));
+
+            // Test setting TargetSRID (should cause CoordinateTransformation to be updated) and generate maps with symmetrical 8-pointed star
+            TestSrid(m, 4326, _gcsTolerance);
+            TestSrid(m, 4240, _gcsTolerance);
+            TestSrid(m, 24047, _pcsTolerance);
+            TestSrid(m, 3857, _pcsTolerance);
+        }
+
+        [Test]
+        public void CoordinateTransformation_ChangingCoordTrans_PR101()
+        {
+            var m = InitialiseMapAndLayers();
+
+            // force calc/cache of extents
+            m.ZoomToExtents();
+
+            TestNoCoordTrans(m);
+
+            // Test setting CoordinateTransformations (should cause TargetSRID to be updated) and generate maps with symmetrical 8-pointed star
+            TestTrans(m, 4326, _gcsTolerance);
+            TestTrans(m, 4240, _gcsTolerance);
+            TestTrans(m, 24047, _pcsTolerance);
+            TestTrans(m, 3857, _pcsTolerance);
+        }
+
+        private Map InitialiseMapAndLayers()
+        {
             // plug in Web Mercator
             var pcs = ProjNet.CoordinateSystems.ProjectedCoordinateSystem.WebMercator;
             SharpMap.Session.Instance.CoordinateSystemRepository.AddCoordinateSystem(3857, pcs);
 
-            var m = new SharpMap.Map(new System.Drawing.Size(1440, 1080)) { BackColor = System.Drawing.Color.LightSkyBlue };
+            Map m = new SharpMap.Map(new System.Drawing.Size(1440, 1080)) { BackColor = System.Drawing.Color.LightSkyBlue };
             m.SRID = 3857;
 
             // add 3 layers: WGS84 with 2 diagonal lines, Ind75 with North-South line, and Ind75Utm47N with East-West Line
@@ -47,29 +88,17 @@ namespace UnitTests.Layers
             m.Layers.Add(vlInd75);
             m.Layers.Add(vlInd75Utm47N);
 
-            // force calc/cache of extents
-            m.ZoomToExtents();
+            return m;
+        }
 
-            // prove that nothing is set
-            Assert.IsNull(vlWgs84.CoordinateTransformation);
-            Assert.IsNull(vlInd75.CoordinateTransformation);
-            Assert.IsNull(vlInd75Utm47N.CoordinateTransformation);
-
-            // visual proof - zoom to extents of Wgs84 and Ind75. Diagonal cross will not intersect North-South line (ie incorrect datum trans)
-            var box = vlWgs84.Envelope;
-            box.ExpandToInclude(vlInd75.Envelope);
-            m.ZoomToBox(box);
-            using (var img = m.GetMap())
-                img.Save(System.IO.Path.Combine(_path, _baseFileName + "NoTargetSrid.bmp"));
-
-            // validate differnt SRIDs and generate maps with symmetrical 8-pointed star
-            TestSrid(m, 4326, _gcsTolerance);
-            TestSrid(m, 4240, _gcsTolerance);
-            TestSrid(m, 24047, _pcsTolerance);
-
-            // finally
-            TestSrid(m, 3857, _pcsTolerance);
-
+        private void TestNoCoordTrans(Map m)
+        {
+            for (int i = 0; i < m.Layers.Count(); i++)
+            {
+                var vl = (VectorLayer)m.Layers[i];
+                Assert.IsNull(vl.CoordinateTransformation);
+                Assert.IsNull(vl.ReverseCoordinateTransformation);
+            }
         }
 
         private void TestSrid(Map m, int targetSrid, double tolerance)
@@ -85,11 +114,31 @@ namespace UnitTests.Layers
                 // projected coord systems - allow for distortions
                 ValidateEnvSizes(m, 2); // 2 metres
             else
-                ValidateEnvSizes(m, tolerance * 5); 
+                ValidateEnvSizes(m, tolerance * 5);
 
             // visual check: symmetrical 8-pointed star
             using (var img = m.GetMap())
-                img.Save(System.IO.Path.Combine(_path, _baseFileName + targetSrid + ".bmp"));
+                img.Save(System.IO.Path.Combine(_path, _baseFileName + "_SRID_" + targetSrid + ".bmp"));
+        }
+
+        private void TestTrans(Map m, int targetSrid, double tolerance)
+        {
+            // set Map SRID and TartgetSRID
+            SetCoordTransAndZoomExtents(m, targetSrid);
+            // check CoordTrans Source/Target Ids make sense
+            ValidateCoordTransDef(m);
+            // centroids of Map Extents and all layers envelopes should be the same
+            ValidateCentroids(m, tolerance);
+            // and appropriate env dimensions should also compare... need to increase tolerances here, remembering looking for gross errors only
+            if (targetSrid == 24047 || targetSrid == 3857)
+                // projected coord systems - allow for distortions
+                ValidateEnvSizes(m, 2); // 2 metres
+            else
+                ValidateEnvSizes(m, tolerance * 5);
+
+            // visual check: symmetrical 8-pointed star
+            using (var img = m.GetMap())
+                img.Save(System.IO.Path.Combine(_path, _baseFileName + "_Trans_" + targetSrid + ".bmp"));
         }
 
         private void SetTargetSridAndZoomExtents(Map m, int targetSrid)
@@ -98,13 +147,33 @@ namespace UnitTests.Layers
             for (int i = 0; i < m.Layers.Count(); i++)
             {
                 var srid = ((VectorLayer)m.Layers[i]).SRID;
-                ((VectorLayer)m.Layers[i]).SRID= srid;
+                ((VectorLayer)m.Layers[i]).SRID = srid;
                 ((VectorLayer)m.Layers[i]).TargetSRID = targetSrid;
             }
-                
+
             m.ZoomToExtents();
         }
 
+        private void SetCoordTransAndZoomExtents(Map m, int targetSrid)
+        {
+            m.SRID = targetSrid;
+
+            var css = Session.Instance.CoordinateSystemServices;
+            var ctf = new ProjNet.CoordinateSystems.Transformations.CoordinateTransformationFactory();
+
+            for (int i = 0; i < m.Layers.Count(); i++)
+            {
+                var vl = (VectorLayer)m.Layers[i];
+                if (vl.SRID == targetSrid)
+                    vl.CoordinateTransformation = null;
+                else
+                    vl.CoordinateTransformation = ctf.CreateFromCoordinateSystems(
+                            css.GetCoordinateSystem(vl.SRID),
+                            css.GetCoordinateSystem(targetSrid));
+            }
+
+            m.ZoomToExtents();
+        }
         private void ValidateCoordTransDef(Map m)
         {
             for (int i = 0; i < m.Layers.Count(); i++)
@@ -113,15 +182,16 @@ namespace UnitTests.Layers
                 if (m.SRID == vl.SRID)
                 {
                     Assert.AreEqual(m.SRID, vl.SRID);
+                    Assert.AreEqual(vl.SRID, vl.TargetSRID);
                     Assert.IsNull(vl.CoordinateTransformation);
-                    Assert.AreEqual (vl.TargetSRID,0);
+                    Assert.IsNull(vl.ReverseCoordinateTransformation);
                 }
                 else
                 {
                     Assert.AreEqual(m.SRID, vl.TargetSRID);
                     Assert.IsNotNull(vl.CoordinateTransformation);
                     Assert.AreEqual(vl.SRID, vl.CoordinateTransformation.SourceCS.AuthorityCode);
-                    Assert.AreEqual(vl.TargetSRID , vl.CoordinateTransformation.TargetCS.AuthorityCode);
+                    Assert.AreEqual(vl.TargetSRID, vl.CoordinateTransformation.TargetCS.AuthorityCode);
                 }
             }
         }
@@ -141,11 +211,11 @@ namespace UnitTests.Layers
             for (int i = 0; i < m.Layers.Count(); i++)
             {
                 var vl = (VectorLayer)m.Layers[i];
-                switch(vl.LayerName )
+                switch (vl.LayerName)
                 {
                     case "Wgs84":
                         // map env Width and Height = lyr env Width and Height
-                        Assert.AreEqual(envMap.Width, vl.Envelope.Width , tolerance);
+                        Assert.AreEqual(envMap.Width, vl.Envelope.Width, tolerance);
                         Assert.AreEqual(envMap.Height, vl.Envelope.Height, tolerance);
                         break;
 

@@ -131,7 +131,7 @@ namespace UnitTests.Layers
         }
 
         [Test(Description = "Clone clones all the properties")]
-        public void Clone_ClonesTheProperties()
+        public void LayerGroup_CloneProp()
         {
             var group = new LayerGroup("group");
 

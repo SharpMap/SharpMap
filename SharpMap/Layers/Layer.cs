@@ -157,9 +157,47 @@ namespace SharpMap.Layers
             }
             set
             {
-                if (value == _coordinateTransform)
+                if (value == _coordinateTransform && value != null)
                     return;
+
                 _coordinateTransform = value;
+
+                try
+                {
+                    // we don't want that by setting SRID we get the CoordinateTransformation resetted
+                    _shouldNotResetCt = true;
+
+                    if (_coordinateTransform != null)
+                    {
+                        // causes sourceFactory/targetFactory to reset to new SRID/TargetSRID
+                        SRID = Convert.ToInt32(CoordinateTransformation.SourceCS.AuthorityCode);
+                        TargetSRID = Convert.ToInt32(CoordinateTransformation.TargetCS.AuthorityCode);
+                    }
+                    else
+                    {
+                        _sourceFactory = GeoAPI.GeometryServiceProvider.Instance.CreateGeometryFactory(SRID);
+                        // causes targetFactory to be cleared
+                        TargetSRID = 0;
+                    }
+                }
+                finally
+                {
+                    _shouldNotResetCt = false;
+                }
+
+                // check if ReverseTransform is required
+                if (_coordinateTransform == null || !NeedsTransformation)
+                    _reverseCoordinateTransform = null;
+
+                // check if existing ReverseTransform is compatible with CoordinateTransform
+                if (_reverseCoordinateTransform != null)
+                {
+                    //clear if not compatible with CoordinateTransformation
+                    if (_coordinateTransform.SourceCS.AuthorityCode != _coordinateTransform.TargetCS.AuthorityCode ||
+                        _coordinateTransform.TargetCS.AuthorityCode != _coordinateTransform.SourceCS.AuthorityCode)
+                        _reverseCoordinateTransform = null;
+                }
+
                 OnCoordinateTransformationChanged(EventArgs.Empty);
             }
         }
@@ -175,29 +213,6 @@ namespace SharpMap.Layers
         /// <param name="e">The event's arguments</param>
         protected virtual void OnCoordinateTransformationChanged(EventArgs e)
         {
-            try
-            {
-                // we don't want that by setting SRID we get the CoordinateTransformation resetted
-                _shouldNotResetCt = true;
-
-                if (CoordinateTransformation != null)
-                {
-                    // causes sourceFactory/targetFactory to reset to new SRID/TargetSRID
-                    SRID = Convert.ToInt32(CoordinateTransformation.SourceCS.AuthorityCode);
-                    TargetSRID = Convert.ToInt32(CoordinateTransformation.TargetCS.AuthorityCode);
-                }
-                else
-                {
-                    _sourceFactory = GeoAPI.GeometryServiceProvider.Instance.CreateGeometryFactory(SRID);
-                    // reset TargetSRID and TargetFactory
-                    TargetSRID = 0;
-                }
-            }
-            finally
-            {
-                _shouldNotResetCt = false;
-            }
-            
             if (CoordinateTransformationChanged != null)
                 CoordinateTransformationChanged(this, e);
         }
@@ -233,7 +248,7 @@ namespace SharpMap.Layers
             {
                 if (value == _reverseCoordinateTransform)
                     return;
-                _reverseCoordinateTransform= value;
+                _reverseCoordinateTransform = value;
             }
         }
 
@@ -271,7 +286,7 @@ namespace SharpMap.Layers
             set
             {
                 if (value != _srid)
-                 {
+                {
                     _srid = value;
 
                     _sourceFactory = GeoAPI.GeometryServiceProvider.Instance.CreateGeometryFactory(value);
@@ -291,9 +306,9 @@ namespace SharpMap.Layers
             get { return _targetSrid.HasValue ? _targetSrid.Value : SRID; }
             set
             {
-                if (value == SRID)
+                if (value == SRID || value == 0)
                 {
-                    _targetSrid = 0;
+                    _targetSrid = null;
                     _targetFactory = null;
                 }
                 else if (_targetSrid != value)
