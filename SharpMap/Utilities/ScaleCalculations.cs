@@ -74,7 +74,7 @@ namespace SharpMap.Utilities
         /// <returns></returns>
         public static double CalculateScaleLatLong(double lon1, double lon2, double lat, double widthPage, int dpi)
         {
-            double distance = GeoSpatialMath.GreatCircleDistance(lon1, lon2, lat);
+            double distance = GeoSpatialMath.GreatCircleDistanceReflex(lon1, lon2, lat);
             double r = CalculateScaleNonLatLong(distance, widthPage, 1, dpi);
             return r;
         }

@@ -50,7 +50,7 @@ namespace SharpMap.Utilities
         }
 
         /// <summary>
-        /// Calculate the distance between 2 points on the great circle
+        /// Calculate the great circle distance between 2 points (ie the shortest distance on the sphere)
         /// </summary>
         /// <param name="lon1">The first longitue value</param>
         /// <param name="lon2">The second longitue value</param>
@@ -58,7 +58,7 @@ namespace SharpMap.Utilities
         /// <returns>The distance in meters</returns>
         public static double GreatCircleDistance(double lon1, double lon2, double lat)
         {
-            var lonDistance = Math.Abs(lon2 - lon1);//DiffLongitude(lon1, lon2);
+            var lonDistance = DiffLongitude(lon1, lon2);
             lat = Math.Abs(lat);
             if (lat >= 90.0)
                 lat = 89.999;
@@ -67,7 +67,27 @@ namespace SharpMap.Utilities
         }
 
         /// <summary>
-        /// Calculate the difference between two longitudal values
+        /// Calculate the great circle distance between 2 points without constraining longitudinal REFLEX angle 0-180deg (ie supports angles > 180 deg).
+        /// Typically used to support scale calculations on a global projection from longitude -180 to +180 (or even greater when zoomed out), 
+        /// this will NOT be the shortest distance on the sphere when longitudinal angle > 180 degrees.
+        /// </summary>
+        /// <param name="lon1">The first longitude value</param>
+        /// <param name="lon2">The second longitude value</param>
+        /// <param name="lat">The common latitude value for <paramref name="lon1"/> and <paramref name="lon2"/></param>
+        /// <returns>The distance in meters from LHS to RHS of a global projection. 
+        /// This will NOT the shortest distance on sphere for longitudinal REFLEX (> 180deg) angles</returns>
+        public static double GreatCircleDistanceReflex(double lon1, double lon2, double lat)
+        {
+            var lonDistance = Math.Abs(lon2 - lon1);
+            lat = Math.Abs(lat);
+            if (lat >= 90.0)
+                lat = 89.999;
+            var distance = Math.Cos(lat * DegToRad) * MetersPerDegreeAtEquator * lonDistance;
+            return distance;
+        }
+
+        /// <summary>
+        /// Calculate the difference between two longitudal values constrained 0 - 180 deg
         /// </summary>
         /// <param name="lon1">The first longitue value in degrees</param>
         /// <param name="lon2">The second longitue value in degrees</param>
