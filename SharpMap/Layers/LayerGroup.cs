@@ -184,6 +184,48 @@ namespace SharpMap.Layers
             }
         }
 
+        /// <summary>
+        /// The spatial reference ID (CRS)
+        /// Propogation to child layers is dependent on <see cref="LayerGroup.SkipTransformationPropagation"/>
+        /// Changes to SRID with propogation enabled will cause both <see cref="CoordinateTransformation"/> and <see cref="ReverseCoordinateTransformation"/> to be reset
+        /// </summary>
+        public override int SRID
+        {
+            get { return base.SRID; }
+            set
+            {
+                base.SRID = value;
+                if (!SkipTransformationPropagation)
+                {
+                    var layers = GetSnapshot();
+
+                    foreach (var layer in layers.OfType<Layer>())
+                        layer.SRID = value;
+                }
+            }
+        }
+
+        /// <summary>
+        /// The target spatial reference id
+        /// Propogation to child layers is dependent on <see cref="LayerGroup.SkipTransformationPropagation"/>
+        /// Changes to TargetSRID with propogation enabled will cause both <see cref="CoordinateTransformation"/> and <see cref="ReverseCoordinateTransformation"/> to be reset
+        /// </summary>
+        public override int TargetSRID
+        {
+            get { return base.TargetSRID; }
+            set
+            {
+                base.TargetSRID = value;
+                if (!SkipTransformationPropagation)
+                {
+                    var layers = GetSnapshot();
+
+                    foreach (var layer in layers.OfType<Layer>())
+                        layer.TargetSRID = value;
+                }
+            }
+        }
+
         #region IDisposable Members
 
         /// <summary>
@@ -285,17 +327,23 @@ namespace SharpMap.Layers
         {
             var clonedGroup = CreateUninitializedInstance();
 
-            clonedGroup.CoordinateTransformation = CoordinateTransformation;
             clonedGroup.Enabled = Enabled;
             clonedGroup.IsQueryEnabled = IsQueryEnabled;
             clonedGroup.MaxVisible = MaxVisible;
             clonedGroup.VisibilityUnits = VisibilityUnits;
             clonedGroup.MinVisible = MinVisible;
             clonedGroup.Proj4Projection = Proj4Projection;
-            clonedGroup.SRID = SRID;
-            clonedGroup.ReverseCoordinateTransformation = ReverseCoordinateTransformation;
             clonedGroup.Style = Style;
+            // setting SRIDs resets Transformations
+            clonedGroup.SRID = SRID;
             clonedGroup.TargetSRID = TargetSRID;
+            // do NOT set NULL CoordinateTransformation, as this will cause SRID, SourceFactory, TargetSRID, and TargetFactory to be reset 
+            if (CoordinateTransformation != null)
+            {
+                // restore defined CoordinateTransformation and associated ReverseCoordinateTransformation (causes SRID / TargetSRID to reset appropriately)
+                clonedGroup.CoordinateTransformation = CoordinateTransformation;
+                clonedGroup.ReverseCoordinateTransformation = ReverseCoordinateTransformation;
+            }
 
             var layers = GetSnapshot();
             foreach (var layer in layers)

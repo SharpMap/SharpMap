@@ -37,6 +37,14 @@ namespace UnitTests.Layers
                 ProjNet.CoordinateSystems.GeographicCoordinateSystem.WGS84);
         }
 
+        private GeoAPI.CoordinateSystems.Transformations.ICoordinateTransformation CreateReverseTransformation()
+        {
+            var ctf = new ProjNet.CoordinateSystems.Transformations.CoordinateTransformationFactory();
+            return ctf.CreateFromCoordinateSystems(
+                ProjNet.CoordinateSystems.GeographicCoordinateSystem.WGS84,
+                ProjNet.CoordinateSystems.GeocentricCoordinateSystem.WGS84);
+        }
+
         [Test(Description = "Setting a CoordinateTransformation to LayerGroup propagates to inner layers")]
         public void CoordinateTransformation_SettingValue_PropagatesTransformation()
         {
@@ -123,23 +131,29 @@ namespace UnitTests.Layers
         }
 
         [Test(Description = "Clone clones all the properties")]
-        public void Clone_ClonesTheProperties()
+        public void LayerGroup_CloneProp()
         {
             var group = new LayerGroup("group");
 
+            // This is a transformation that cannot be "inverted" in ProjNet
+            // Directly setting CoordinateTransformation will update SRID and TargetSRID
             group.CoordinateTransformation = CreateTransformation();
+            group.ReverseCoordinateTransformation = CreateReverseTransformation();
             group.Enabled = true;
             group.IsQueryEnabled = true;
             group.MinVisible = 10;
             group.MaxVisible = 100;
-            group.SRID = 4326;
+            //group.SRID = 4326; // different to CoordinateTransformation above!!!
+            //group.TargetSRID = 4318; // different to CoordinateTransformation above!!!
             group.Proj4Projection = "dummy";
-            group.TargetSRID = 4318;
             group.Style = new LabelStyle();
-
+            
             var clonedGroup = (LayerGroup)group.Clone();
 
-            Assert.That(clonedGroup.CoordinateTransformation, Is.EqualTo(group.CoordinateTransformation), "CoordinateTransformation mismatch");
+            Assert.That(clonedGroup.CoordinateTransformation.SourceCS.WKT, Is.EqualTo(group.CoordinateTransformation.SourceCS.WKT), "CoordinateTransformation mismatch");
+            Assert.That(clonedGroup.CoordinateTransformation.TargetCS.WKT, Is.EqualTo(group.CoordinateTransformation.TargetCS.WKT), "CoordinateTransformation mismatch");
+            Assert.That(clonedGroup.ReverseCoordinateTransformation.SourceCS.WKT, Is.EqualTo(group.ReverseCoordinateTransformation.SourceCS.WKT), "CoordinateTransformation mismatch");
+            Assert.That(clonedGroup.ReverseCoordinateTransformation.TargetCS.WKT, Is.EqualTo(group.ReverseCoordinateTransformation.TargetCS.WKT), "CoordinateTransformation mismatch");
             Assert.That(clonedGroup.Enabled, Is.EqualTo(group.Enabled), "Enabled mismatch");
             Assert.That(clonedGroup.IsQueryEnabled, Is.EqualTo(group.IsQueryEnabled), "IsQueryEnabled mismatch");
             Assert.That(clonedGroup.MinVisible, Is.EqualTo(group.MinVisible), "MinVisible mismatch");

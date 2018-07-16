@@ -380,7 +380,11 @@ namespace SharpMap.Layers
                     throw (new ApplicationException("DataSource property not set on layer '" + LayerName + "'"));
                 return DataSource.SRID;
             }
-            set { DataSource.SRID = value; }
+            set
+            {
+                DataSource.SRID = value;
+                base.SRID = value;
+            }
         }
 
         #region IDisposable Members

@@ -169,6 +169,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Data\Providers\NtsProviderTests.cs" />
+    <Compile Include="Layers\CoordinateTransformationTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Converters\SqlServer2008.cs" />
     <Compile Include="Converters\WKB\WKBTests.cs" />
