@@ -1061,7 +1061,6 @@ namespace SharpMap
                         transform.TransformPoints(pts);
                     pTmp = pts[0];
                 }
-            }
 
             return pTmp;
         }
