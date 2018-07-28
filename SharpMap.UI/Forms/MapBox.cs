@@ -1494,7 +1494,7 @@ namespace SharpMap.Forms
             }
         }
 
-        private Coordinate _dragStartCoord;
+        private Coordinate _dragStartCenter;
         private double _orgScale;
 
         /// <summary>
@@ -1535,7 +1535,7 @@ namespace SharpMap.Forms
             {
                 _dragStartPoint = e.Location;
                 _dragEndPoint = e.Location;
-                _dragStartCoord = _map.Center;
+                _dragStartCenter = _map.Center;
                 _orgScale = _map.Zoom;
             }
         }
@@ -1666,13 +1666,13 @@ namespace SharpMap.Forms
                 if (isPanOperation)
                 {
                     _dragEndPoint = ClipPoint(e.Location);
-                    if (_dragStartCoord != null)
+                    if (_dragStartCenter != null)
                     {
                         var oldCenter = _map.Center;
                         
                         _map.Center =
-                            new Coordinate(_dragStartCoord.X - _map.PixelSize*(_dragEndPoint.X - _dragStartPoint.X),
-                                _dragStartCoord.Y - _map.PixelSize*(_dragStartPoint.Y - _dragEndPoint.Y));
+                            new Coordinate(_dragStartCenter.X - _map.PixelSize * (_dragEndPoint.X - _dragStartPoint.X),
+                                _dragStartCenter.Y - _map.PixelSize * (_dragStartPoint.Y - _dragEndPoint.Y));
                         if (!_map.Center.Equals2D(oldCenter, PrecisionTolerance))
                         {
                             OnMapCenterChanged(_map.Center);
@@ -2171,7 +2171,7 @@ namespace SharpMap.Forms
                 {
                     if (_dragging)
                     {
-                        if (_dragStartCoord == null || !_dragStartCoord.Equals2D(_map.Center, PrecisionTolerance))
+                        if (_dragStartCenter == null || !_dragStartCenter.Equals2D(_map.Center, PrecisionTolerance))
                         {
                             needToRefresh = true;
                             OnMapCenterChanged(_map.Center);
@@ -2347,7 +2347,7 @@ namespace SharpMap.Forms
                     /*|| _activeTool == Tools.QueryPolygon*/)
                     _rectangle = Rectangle.Empty;
 
-                if (_dragStartCoord == null || !_dragStartCoord.Equals2D(_map.Center, PrecisionTolerance))
+                if (_dragStartCenter == null || !_dragStartCenter.Equals2D(_map.Center, PrecisionTolerance))
                     Refresh();
             }
             else if (needToRefresh && (_activeTool == Tools.ZoomIn || _activeTool == Tools.ZoomOut || _activeTool == Tools.Pan))
