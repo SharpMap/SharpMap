@@ -1052,15 +1052,16 @@ namespace SharpMap
                 return pTmp;
 
             // working with MapTransform clone
-            using (var transform = MapTransform)
-            {
-                if (!transform.IsIdentity )
+             if ( MapTransformRotation != 0)
+                using (var transform = MapTransform)
                 {
-                    var pts = new[] { pTmp };
-                    transform.TransformPoints(pts);
-                    pTmp = pts[0];
+                    if (!transform.IsIdentity )
+                    {
+                        var pts = new[] { pTmp };
+                        transform.TransformPoints(pts);
+                        pTmp = pts[0];
+                    }
                 }
-            }
 
             return pTmp;
         }
@@ -1095,7 +1096,7 @@ namespace SharpMap
         /// <returns>Point in world coordinates</returns>
         public Point ImageToWorld(PointF p, bool careAboutMapTransform)
         {
-            if (careAboutMapTransform)
+            if (careAboutMapTransform && MapTransformRotation != 0)
             {
                 Matrix transformInv;
                 lock (_lockMapTransform)
@@ -1211,9 +1212,20 @@ namespace SharpMap
                     }
                     else
                         _mapTransformInverted.Reset();
+
+                    if (_mapTransform.IsIdentity)
+                        MapTransformRotation = 0;
+                    else
+                        MapTransformRotation = Convert.ToSingle(Math.Acos(_mapTransform.Elements[0]) * 180.0 / Math.PI);
+
                 }
             }
         }
+
+        /// <summary>
+        /// MapTransform Rotation in degrees. Facilitates determining if map is rotated without locking MapTransform.
+        /// </summary>
+        public float MapTransformRotation { get; private set; }
 
         /// <summary>
         /// A collection of layers. The first layer in the list is drawn first, the last one on top.
