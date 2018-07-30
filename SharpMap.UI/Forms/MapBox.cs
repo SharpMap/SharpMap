@@ -1495,6 +1495,7 @@ namespace SharpMap.Forms
         }
 
         private Coordinate _dragStartCenter;
+        private System.Drawing.Drawing2D.Matrix _dragTransform;
         private double _orgScale;
 
         /// <summary>
@@ -1513,8 +1514,8 @@ namespace SharpMap.Forms
                 return;
 
             // Position in world coordinates
-            var p = _map.ImageToWorld(new Point(e.X, e.Y));
-
+            var p = _map.ImageToWorld(new Point(e.X, e.Y), true);
+            
             // Raise event
             if (MouseDown != null)
                 MouseDown(p, e);
@@ -1536,6 +1537,21 @@ namespace SharpMap.Forms
                 _dragStartPoint = e.Location;
                 _dragEndPoint = e.Location;
                 _dragStartCenter = _map.Center;
+
+                _dragTransform = new System.Drawing.Drawing2D.Matrix();
+                _dragTransform.Translate(-e.X, -e.Y);
+                _dragTransform.Scale(1f, -1f, System.Drawing.Drawing2D.MatrixOrder.Append);  // reflect in X axis
+                if (_map.MapTransformRotation == 0)
+                    _dragTransform.Scale((float)_map.PixelWidth, (float)_map.PixelHeight, System.Drawing.Drawing2D.MatrixOrder.Append);
+                else
+                {
+                    _dragTransform.Rotate(_map.MapTransformRotation, System.Drawing.Drawing2D.MatrixOrder.Append);
+                    // must derive scale for rotated maps, as "Zoom" is based upon non-rotated width
+                    var env = _map.Envelope;
+                    _dragTransform.Scale((float)(env.Width / Width), (float)(env.Width / Width / _map.PixelAspectRatio), System.Drawing.Drawing2D.MatrixOrder.Append);
+                }
+                _dragTransform.Translate((float)p.X, (float)p.Y, System.Drawing.Drawing2D.MatrixOrder.Append);
+
                 _orgScale = _map.Zoom;
             }
         }
@@ -1597,7 +1613,7 @@ namespace SharpMap.Forms
             }
 
             // Position in world coordinates
-            var p = _map.ImageToWorld(new Point(e.X, e.Y));
+            var p = _map.ImageToWorld(new Point(e.X, e.Y), true);
 
             // Raise event
             if (MouseMove != null)
@@ -1670,9 +1686,18 @@ namespace SharpMap.Forms
                     {
                         var oldCenter = _map.Center;
                         
-                        _map.Center =
-                            new Coordinate(_dragStartCenter.X - _map.PixelSize * (_dragEndPoint.X - _dragStartPoint.X),
-                                _dragStartCenter.Y - _map.PixelSize * (_dragStartPoint.Y - _dragEndPoint.Y));
+                        var pts = new[] { new System.Drawing.PointF(_dragStartPoint.X, _dragStartPoint.Y),
+                                          new System.Drawing.PointF(_dragEndPoint.X, _dragEndPoint.Y) //,
+                                         //new System.Drawing.PointF(Width/2f, Height/2f)
+                                        };
+
+                        _dragTransform.TransformPoints(pts);
+
+                        var dX = (pts[1].X - pts[0].X);
+                        var dY = (pts[1].Y - pts[0].Y);
+
+                        _map.Center = new Coordinate(_dragStartCenter.X - dX, _dragStartCenter.Y - dY);
+
                         if (!_map.Center.Equals2D(oldCenter, PrecisionTolerance))
                         {
                             OnMapCenterChanged(_map.Center);
@@ -1964,7 +1989,14 @@ namespace SharpMap.Forms
                         var imageEnvelope = _miRenderer.ImageEnvelope;
                         if (_map.Envelope.Equals(imageEnvelope))
                             pe.Graphics.DrawImageUnscaled(image, 0, 0);
-                        else {
+                        else if (_activeTool == Tools.Pan)
+                        {
+                            var dX = (_dragEndPoint.X - _dragStartPoint.X);
+                            var dY = (_dragEndPoint.Y - _dragStartPoint.Y);
+                            pe.Graphics.DrawImageUnscaled(image, dX, dY);
+                        }
+                        else
+                        {
                             var ul = _map.WorldToImage(imageEnvelope.TopLeft());
                             var lr = _map.WorldToImage(imageEnvelope.BottomRight());
                             pe.Graphics.DrawImage(image, RectangleF.FromLTRB(ul.X, ul.Y, lr.X, lr.Y));
@@ -2076,7 +2108,7 @@ namespace SharpMap.Forms
                 return;
 
             // Position in world coordinates
-            var p = _map.ImageToWorld(new Point(e.X, e.Y));
+            var p = _map.ImageToWorld(new Point(e.X, e.Y), true);
 
             // Raise event
             if (MouseUp != null)
@@ -2183,8 +2215,8 @@ namespace SharpMap.Forms
                         if (_panOnClick)
                         {
                             var oldValue = _map.Center;
-                            _map.Center = _map.ImageToWorld(new Point(e.X, e.Y));
-
+                            _map.Center = p;
+                            
                             if (!_map.Center.Equals2D(oldValue, PrecisionTolerance))
                             {
                                 needToRefresh = true;
@@ -2349,6 +2381,9 @@ namespace SharpMap.Forms
 
                 if (_dragStartCenter == null || !_dragStartCenter.Equals2D(_map.Center, PrecisionTolerance))
                     Refresh();
+
+                if (_dragTransform != null)
+                    _dragTransform.Dispose();
             }
             else if (needToRefresh && (_activeTool == Tools.ZoomIn || _activeTool == Tools.ZoomOut || _activeTool == Tools.Pan))
             {

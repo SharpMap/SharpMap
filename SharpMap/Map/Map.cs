@@ -1167,16 +1167,25 @@ namespace SharpMap
                 var ll = new Coordinate(Center.X - Zoom * .5, Center.Y - MapHeight * .5);
                 var ur = new Coordinate(Center.X + Zoom * .5, Center.Y + MapHeight * .5);
 
-                var ptfll = WorldToImage(ll, true);
-                ptfll = new PointF(Math.Abs(ptfll.X), Math.Abs(Size.Height - ptfll.Y));
-                if (!ptfll.IsEmpty)
+               if (MapTransformRotation == 0)
+                    return new Envelope(ll, ur);
+                else
                 {
-                    ll.X = ll.X - ptfll.X * PixelWidth;
-                    ll.Y = ll.Y - ptfll.Y * PixelHeight;
-                    ur.X = ur.X + ptfll.X * PixelWidth;
-                    ur.Y = ur.Y + ptfll.Y * PixelHeight;
+                    var pts = new[] { new PointF((float)ll.X, (float)ll.Y),
+                                      new PointF((float)ll.X, (float)ur.Y),
+                                      new PointF((float)ur.X, (float)ur.Y),
+                                      new PointF((float)ur.X, (float)ll.Y)};
+
+                    Matrix matrix = new Matrix();
+                    matrix.RotateAt(-MapTransformRotation, new PointF((float)Center.X, (float)Center.Y));
+                    matrix.TransformPoints(pts);
+
+                    return new Envelope(Math.Min(Math.Min(Math.Min(pts[0].X, pts[1].X), pts[2].X), pts[3].X),
+                                        Math.Max(Math.Max(Math.Max(pts[0].X, pts[1].X), pts[2].X), pts[3].X),
+                                        Math.Min(Math.Min(Math.Min(pts[0].Y, pts[1].Y), pts[2].Y), pts[3].Y),
+                                        Math.Max(Math.Max(Math.Max(pts[0].Y, pts[1].Y), pts[2].Y), pts[3].Y));
                 }
-                return new Envelope(ll, ur);
+
             }
         }
 
@@ -1204,6 +1213,15 @@ namespace SharpMap
                 if (value == null)
                     value = new Matrix();
 
+                    if (value.IsIdentity)
+                        MapTransformRotation = 0;
+                    else
+                    {
+                        var rad = value.Elements[1] >= 0 ? Math.Acos(value.Elements[0]) : -Math.Acos(value.Elements[0]);
+                        if (rad < 0)
+                            rad += 2 * Math.PI;
+                        MapTransformRotation = (float)(rad * 180.0 / Math.PI);
+                    }
                 if (!value.IsInvertible)
                     throw new ArgumentException("Matrix not invertible", nameof(value));
 
