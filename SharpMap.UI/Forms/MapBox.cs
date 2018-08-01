@@ -1426,37 +1426,58 @@ namespace SharpMap.Forms
                         return;
                 }
 
-                /* TODO: 
-                 * Think of logic that does not change center to rescale as this leads to
-                 * three (3) Map.ZoomChanged events
-                 */
-
-                //If zoomToPointer is set, we first need to center the map around the mouse-location
-                //Then Zoom in the map
-                //Then pan the map back to it's original shift to have it still centered simultanously
                 var oldCenter = _map.Center;
-
-                if (_zoomToPointer)
-                    _map.Center = _map.ImageToWorld(new PointF(e.X, e.Y), true);
+                var oldZoom = _map.Zoom;
+                var oldHeight = _map.MapHeight;
 
                 var scale = (e.Delta / 120.0);
                 var scaleBase = 1 + (_wheelZoomMagnitude/(10*(IsControlPressed ? _fineZoomFactor : 1)));
 
-                var oldZoom = _map.Zoom;
-                _map.Zoom = oldZoom * Math.Pow(scaleBase, scale);
-
-                //If zoomtoPointer, move the map back to MousePointer is over same place
-                if (_zoomToPointer)
+                if (!ZoomToPointer)
+                    // zoom in/out maintaining existing centre
+                    _map.Zoom = oldZoom * Math.Pow(scaleBase, scale);
+                else
                 {
-                    var newCenterX = (Width/2f) + (Width/2f - e.X);
-                    var newCenterY = (Height/2f) + (Height/2f - e.Y);
+                    // preserve MAP cursor posn
+                    var p = _map.ImageToWorld(new Point(e.X, e.Y), true);
 
-                    _map.Center = _map.ImageToWorld(new PointF(newCenterX, newCenterY), true);
-                    if (!_map.Center.Equals2D(oldCenter, PrecisionTolerance))
-                    {
-                        Interlocked.Exchange(ref _needToRefreshAfterWheel, 1);
-                        OnMapCenterChanged(_map.Center);
-                    }
+                    System.Drawing.Drawing2D.Matrix transform = new System.Drawing.Drawing2D.Matrix();
+                    transform.Translate((float)-p.X, (float)-p.Y, System.Drawing.Drawing2D.MatrixOrder.Append);
+                    transform.Scale((float)Math.Pow(scaleBase, scale), (float)Math.Pow(scaleBase, scale), System.Drawing.Drawing2D.MatrixOrder.Append);
+                    transform.Translate((float)p.X, (float)p.Y, System.Drawing.Drawing2D.MatrixOrder.Append);
+
+                    // NB zoom is independent of MapTransform. 
+                    var pts = new[] { new PointF((float)oldCenter.X, (float)oldCenter.Y),
+                                      new PointF((float)(oldCenter.X - 0.5 * oldZoom), (float)(oldCenter.Y - 0.5 * oldHeight)),
+                                      new PointF((float)(oldCenter.X + 0.5 * oldZoom), (float)(oldCenter.Y + 0.5 * oldHeight))
+                                    };
+                    transform.TransformPoints(pts);
+                    transform.Dispose();
+
+                    // Subject to creep when map is rotated, but significant improvement over previous implementation
+                    var newCenter = new Coordinate(pts[0].X, pts[0].Y);
+                    var newZoom = pts[2].X - pts[1].X;
+                    var box = new Envelope(pts[1].X, pts[2].X, pts[1].Y, pts[2].Y);
+
+                    //pre-checks to prevent mapViewPortGuard from adjusting centre upon reaching max extents
+                    if (newZoom < _map.MinimumZoom || newZoom > _map.MaximumZoom)
+                        return;
+
+                    if (_map.EnforceMaximumExtents && !_map.MaximumExtents.IsNull && !_map.MaximumExtents.Contains(box))
+                        return;
+
+                    //_map.Center = newCenter;
+                    //_map.Zoom = newZoom;
+
+                    // more efficient that Center + Zoom 
+                    _map.ZoomToBox(box);
+
+                }
+
+                if (!_map.Center.Equals2D(oldCenter, PrecisionTolerance))
+                {
+                    Interlocked.Exchange(ref _needToRefreshAfterWheel, 1);
+                    OnMapCenterChanged(_map.Center);
                 }
 
                 if (Math.Abs(_map.Zoom - oldZoom) > PrecisionTolerance)
@@ -1515,7 +1536,7 @@ namespace SharpMap.Forms
 
             // Position in world coordinates
             var p = _map.ImageToWorld(new Point(e.X, e.Y), true);
-            
+
             // Raise event
             if (MouseDown != null)
                 MouseDown(p, e);
@@ -2216,7 +2237,7 @@ namespace SharpMap.Forms
                         {
                             var oldValue = _map.Center;
                             _map.Center = p;
-                            
+
                             if (!_map.Center.Equals2D(oldValue, PrecisionTolerance))
                             {
                                 needToRefresh = true;
