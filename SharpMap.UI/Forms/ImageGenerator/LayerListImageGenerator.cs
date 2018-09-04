@@ -138,17 +138,13 @@ namespace SharpMap.Forms.ImageGenerator
 
             //  map.DisposeLayersOnDispose = false;
 
-                var t1 = map.MapTransform.Clone();
-                var t2 = map.MapTransform.Clone();
-                t2.Invert();
-
-                var mvp = new MapViewport(map.ID, map.SRID, new Envelope(map.Envelope),
-                    map.Size, map.PixelAspectRatio, t1, t2);
-                foreach (var lyr in Map.VariableLayers)
-                {
-                    //new Task<Rectangle>(RenderLayerImage, new object[] {lyr, mvp, _cts.Token }).Start();
-                    ThreadPool.QueueUserWorkItem(delegate { RenderLayerImage(new object[] { lyr, mvp, _cts.Token }); });
-                }
+            var mvp = new MapViewport(map.ID, map.SRID, new Envelope(map.Envelope),
+                  map.Size, map.PixelAspectRatio, map.MapTransform);
+            foreach (var lyr in Map.VariableLayers)
+            {
+                //new Task<Rectangle>(RenderLayerImage, new object[] {lyr, mvp, _cts.Token }).Start();
+                ThreadPool.QueueUserWorkItem(delegate { RenderLayerImage(new object[] { lyr, mvp, _cts.Token }); });
+            }
             //}
 
         }
@@ -304,12 +300,9 @@ namespace SharpMap.Forms.ImageGenerator
             //using (var map = MapBox.Map)
             //{
             //    map.DisposeLayersOnDispose = false;
-                var t1 = map.MapTransform.Clone();
-                var t2 = map.MapTransform.Clone();
-                t2.Invert();
 
                 var mvp = new MapViewport(map.ID, map.SRID, new Envelope(map.Envelope),
-                    map.Size, map.PixelAspectRatio, t1, t2);
+                    map.Size, map.PixelAspectRatio, map.MapTransform);
 
                 //var tasks = new List<Task>();
                 var tf = new TaskFactory();

@@ -87,7 +87,7 @@ namespace SharpMap
                     throw new InvalidOperationException();
                 }
             }
-            
+
             // The following code did not seem to work in all cases.
             /*            
             if (System.ComponentModel.LicenseManager.UsageMode != System.ComponentModel.LicenseUsageMode.Designtime)
@@ -146,9 +146,10 @@ namespace SharpMap
         private readonly LayerCollection _layers;
         private readonly LayerCollection _backgroundLayers;
         private readonly VariableLayerCollection _variableLayers;
+        private object _lockMapTransform = new object();
         private Matrix _mapTransform;
-        internal Matrix MapTransformInverted;
-        
+        private Matrix _mapTransformInverted;
+
         private readonly MapViewPortGuard _mapViewportGuard;
         private readonly Dictionary<object, List<ILayer>> _layersPerGroup = new Dictionary<object, List<ILayer>>();
         private ObservableCollection<ILayer> _replacingCollection;
@@ -193,7 +194,7 @@ namespace SharpMap
             _layersPerGroup.Add(_variableLayers, new List<ILayer>());
             BackColor = Color.Transparent;
             _mapTransform = new Matrix();
-            MapTransformInverted = new Matrix();
+            _mapTransformInverted = new Matrix();
             _center = new Point(0, 0);
             _zoom = 1;
 
@@ -230,12 +231,12 @@ namespace SharpMap
             {
                 IterWireEvents(sender, e.NewItems.Cast<ILayer>());
             }
-            
+
         }
 
         private void IterWireEvents(object owner, IEnumerable<ILayer> layers)
         {
-            foreach(var layer in layers)
+            foreach (var layer in layers)
             {
                 _layersPerGroup[owner].Add(layer);
 
@@ -303,7 +304,7 @@ namespace SharpMap
             var clonedList = _layersPerGroup[owner];
             toBeRemoved.ForEach(layer => clonedList.Remove(layer));
         }
-        
+
         private void OnLayerGroupCollectionReplached(object sender, EventArgs eventArgs)
         {
             var layerGroup = (LayerGroup)sender;
@@ -326,7 +327,7 @@ namespace SharpMap
 
         private void OnLayerGroupCollectionReplaching(object sender, EventArgs eventArgs)
         {
-            var layerGroup = (LayerGroup) sender;
+            var layerGroup = (LayerGroup)sender;
 
             _replacingCollection = layerGroup.Layers;
         }
@@ -542,28 +543,28 @@ namespace SharpMap
             var bm = new Bitmap(1, 1);
             using (var g = Graphics.FromImage(bm))
             {
-                 var hdc = g.GetHdc();
-                 using (var stream = new MemoryStream())
-                 {
-                     metafile = new Metafile(stream, hdc, new RectangleF(0, 0, Size.Width, Size.Height),
-                                             MetafileFrameUnit.Pixel, EmfType.EmfPlusDual);
+                var hdc = g.GetHdc();
+                using (var stream = new MemoryStream())
+                {
+                    metafile = new Metafile(stream, hdc, new RectangleF(0, 0, Size.Width, Size.Height),
+                                            MetafileFrameUnit.Pixel, EmfType.EmfPlusDual);
 
-                     using (var metafileGraphics = Graphics.FromImage(metafile))
-                     {
-                         metafileGraphics.PageUnit = GraphicsUnit.Pixel;
-                         metafileGraphics.TransformPoints(CoordinateSpace.Page, CoordinateSpace.Device,
-                                                          new[] {new PointF(Size.Width, Size.Height)});
+                    using (var metafileGraphics = Graphics.FromImage(metafile))
+                    {
+                        metafileGraphics.PageUnit = GraphicsUnit.Pixel;
+                        metafileGraphics.TransformPoints(CoordinateSpace.Page, CoordinateSpace.Device,
+                                                         new[] { new PointF(Size.Width, Size.Height) });
 
-                         //Render map to metafile
-                         RenderMap(metafileGraphics);
-                     }
+                        //Render map to metafile
+                        RenderMap(metafileGraphics);
+                    }
 
-                     //Save metafile if desired
-                     if (!String.IsNullOrEmpty(metafileName))
-                         File.WriteAllBytes(metafileName, stream.ToArray());
-                 }
+                    //Save metafile if desired
+                    if (!String.IsNullOrEmpty(metafileName))
+                        File.WriteAllBytes(metafileName, stream.ToArray());
+                }
                 g.ReleaseHdc(hdc);
-             }
+            }
             return metafile;
         }
 
@@ -580,7 +581,7 @@ namespace SharpMap
         {
             var e = MapNewTileAvaliable;
             if (e != null)
-                e(sender, bbox, bm,sourceWidth,sourceHeight,imageAttributes);
+                e(sender, bbox, bm, sourceWidth, sourceHeight, imageAttributes);
         }
 
         /// <summary>
@@ -602,14 +603,17 @@ namespace SharpMap
             if ((Layers == null || Layers.Count == 0) && (BackgroundLayer == null || BackgroundLayer.Count == 0) && (_variableLayers == null || _variableLayers.Count == 0))
                 throw new InvalidOperationException("No layers to render");
 
-            lock (MapTransform)
+            MapViewport mvp = null;
+            lock (_lockMapTransform)
             {
-                g.Transform = MapTransform.Clone();
+                // working with MapTransform CLONE
+                g.Transform = MapTransform;
+                mvp = (MapViewport)this;
             }
             g.Clear(BackColor);
             g.PageUnit = GraphicsUnit.Pixel;
 
-            double zoom = Zoom;
+            double zoom = mvp.Zoom;
             double scale = double.NaN; //will be resolved if needed
 
             ILayer[] layerList;
@@ -621,7 +625,7 @@ namespace SharpMap
                 {
                     if (layer.VisibilityUnits == VisibilityUnits.Scale && double.IsNaN(scale))
                     {
-                        scale = MapScale;
+                        scale = mvp.GetMapScale((int)g.DpiX);
                     }
                     double visibleLevel = layer.VisibilityUnits == VisibilityUnits.ZoomLevel ? zoom : scale;
 
@@ -630,7 +634,7 @@ namespace SharpMap
                     {
                         if (layer.MaxVisible >= visibleLevel && layer.MinVisible < visibleLevel)
                         {
-                            LayerCollectionRenderer.RenderLayer(layer, g, this);
+                            LayerCollectionRenderer.RenderLayer(layer, g, mvp);
                         }
                     }
                     OnLayerRendered(layer, LayerCollectionType.Background);
@@ -647,13 +651,13 @@ namespace SharpMap
                 {
                     if (layer.VisibilityUnits == VisibilityUnits.Scale && double.IsNaN(scale))
                     {
-                        scale = MapScale;
+                        scale = mvp.GetMapScale((int)g.DpiX);
                     }
                     double visibleLevel = layer.VisibilityUnits == VisibilityUnits.ZoomLevel ? zoom : scale;
                     OnLayerRendering(layer, LayerCollectionType.Static);
                     if (layer.Enabled && layer.MaxVisible >= visibleLevel && layer.MinVisible < visibleLevel)
-                        LayerCollectionRenderer.RenderLayer(layer, g, this);
-                        
+                        LayerCollectionRenderer.RenderLayer(layer, g, mvp);
+
                     OnLayerRendered(layer, LayerCollectionType.Static);
                 }
             }
@@ -666,12 +670,12 @@ namespace SharpMap
                 {
                     if (layer.VisibilityUnits == VisibilityUnits.Scale && double.IsNaN(scale))
                     {
-                        scale = MapScale;
+                        scale = mvp.GetMapScale((int)g.DpiX);
                     }
                     double visibleLevel = layer.VisibilityUnits == VisibilityUnits.ZoomLevel ? zoom : scale;
                     if (layer.Enabled && layer.MaxVisible >= visibleLevel && layer.MinVisible < visibleLevel)
-                        LayerCollectionRenderer.RenderLayer(layer, g, this);
-                        
+                        LayerCollectionRenderer.RenderLayer(layer, g, mvp);
+
                 }
             }
 
@@ -799,13 +803,16 @@ namespace SharpMap
                     break;
             }
 
-            if (lc== null || lc.Count == 0)
+            if (lc == null || lc.Count == 0)
                 throw new InvalidOperationException("No layers to render");
 
             Matrix transform = g.Transform;
-            lock (MapTransform)
+            MapViewport mvp = null;
+            lock (_lockMapTransform)
             {
-                g.Transform = MapTransform.Clone();
+                // working with MapTransform CLONE
+                g.Transform = MapTransform;
+                mvp = (MapViewport)this;
             }
             if (!drawTransparent)
                 g.Clear(BackColor);
@@ -815,7 +822,7 @@ namespace SharpMap
             //LayerCollectionRenderer.AllowParallel = layerCollectionType == LayerCollectionType.Static;
             using (var lcr = new LayerCollectionRenderer(lc))
             {
-                lcr.Render(g, this, layerCollectionType == LayerCollectionType.Static);
+                lcr.Render(g, mvp, layerCollectionType == LayerCollectionType.Static);
             }
 
             /*
@@ -831,9 +838,8 @@ namespace SharpMap
              */
 
             if (drawTransparent)
-                
+                g.Transform = transform;
 
-            g.Transform = transform;
             if (layerCollectionType == LayerCollectionType.Static)
             {
 #pragma warning disable 612,618
@@ -863,7 +869,7 @@ namespace SharpMap
         public Map Clone()
         {
             Map clone;
-            lock (MapTransform)
+            lock (_lockMapTransform)
             {
                 clone = new Map
                 {
@@ -888,7 +894,7 @@ namespace SharpMap
                     clone.DisclaimerFont = (Font)DisclaimerFont.Clone();
 #pragma warning restore 612,618
                 if (MapTransform != null)
-                    clone.MapTransform = MapTransform.Clone();
+                    clone.MapTransform = MapTransform;
                 if (!Size.IsEmpty)
                     clone.Size = new Size(Size.Width, Size.Height);
                 if (Center != null)
@@ -964,7 +970,7 @@ namespace SharpMap
         /// <returns>Layer</returns>
         public ILayer GetLayerByName(string name)
         {
-            ILayer lay  = null;
+            ILayer lay = null;
             if (Layers != null)
             {
                 lay = Layers.GetLayerByName(name);
@@ -1042,15 +1048,21 @@ namespace SharpMap
         public PointF WorldToImage(Coordinate p, bool careAboutMapTransform)
         {
             var pTmp = Transform.WorldtoMap(p, this);
-            lock (MapTransform)
-            {
-                if (careAboutMapTransform && !MapTransform.IsIdentity)
+            if (!careAboutMapTransform)
+                return pTmp;
+
+            // working with MapTransform clone
+             if ( MapTransformRotation != 0)
+                using (var transform = MapTransform)
                 {
-                    var pts = new[] { pTmp };
-                    MapTransform.TransformPoints(pts);
-                    pTmp = pts[0];
+                    if (!transform.IsIdentity )
+                    {
+                        var pts = new[] { pTmp };
+                        transform.TransformPoints(pts);
+                        pTmp = pts[0];
+                    }
                 }
-            }
+
             return pTmp;
         }
 
@@ -1084,15 +1096,21 @@ namespace SharpMap
         /// <returns>Point in world coordinates</returns>
         public Point ImageToWorld(PointF p, bool careAboutMapTransform)
         {
-            lock (MapTransform)
+            if (careAboutMapTransform && MapTransformRotation != 0)
             {
-                if (careAboutMapTransform && !MapTransform.IsIdentity)
+                Matrix transformInv;
+                lock (_lockMapTransform)
+                    transformInv = _mapTransformInverted.Clone();
+
+                if (!transformInv.IsIdentity)
                 {
                     var pts = new[] { p };
-                    MapTransformInverted.TransformPoints(pts);
+                    transformInv.TransformPoints(pts);
                     p = pts[0];
                 }
+                transformInv.Dispose();
             }
+
             return Transform.MapToWorld(p, this);
         }
 
@@ -1149,7 +1167,7 @@ namespace SharpMap
 
                 var ll = new Coordinate(Center.X - Zoom * .5, Center.Y - MapHeight * .5);
                 var ur = new Coordinate(Center.X + Zoom * .5, Center.Y + MapHeight * .5);
-                
+
                 var ptfll = WorldToImage(ll, true);
                 ptfll = new PointF(Math.Abs(ptfll.X), Math.Abs(Size.Height - ptfll.Y));
                 if (!ptfll.IsEmpty)
@@ -1159,12 +1177,12 @@ namespace SharpMap
                     ur.X = ur.X + ptfll.X * PixelWidth;
                     ur.Y = ur.Y + ptfll.Y * PixelHeight;
                 }
-                return new Envelope(ll, ur);    
+                return new Envelope(ll, ur);
             }
         }
 
         /// <summary>
-        /// Using the <see cref="MapTransform"/> you can alter the coordinate system of the map rendering.
+        /// Getter returns a CLONE. Using the <see cref="MapTransform"/> you can alter the coordinate system of the map rendering.
         /// This makes it possible to rotate or rescale the image, for instance to have another direction than north upwards.
         /// </summary>
         /// <example>
@@ -1177,19 +1195,37 @@ namespace SharpMap
         /// </example>
         public Matrix MapTransform
         {
-            get { return _mapTransform; }
+            get
+            {
+                lock (_lockMapTransform)
+                    return _mapTransform.Clone();
+            }
             set
             {
-                _mapTransform = value;
-                if (_mapTransform.IsInvertible)
+                lock (_lockMapTransform)
                 {
-                    MapTransformInverted = value.Clone();
-                    MapTransformInverted.Invert();
+                    _mapTransform = value;
+                    if (_mapTransform.IsInvertible)
+                    {
+                        _mapTransformInverted = value.Clone();
+                        _mapTransformInverted.Invert();
+                    }
+                    else
+                        _mapTransformInverted.Reset();
+
+                    if (_mapTransform.IsIdentity)
+                        MapTransformRotation = 0;
+                    else
+                        MapTransformRotation = Convert.ToSingle(Math.Acos(_mapTransform.Elements[0]) * 180.0 / Math.PI);
+
                 }
-                else
-                    MapTransformInverted.Reset();
             }
         }
+
+        /// <summary>
+        /// MapTransform Rotation in degrees. Facilitates determining if map is rotated without locking MapTransform.
+        /// </summary>
+        public float MapTransformRotation { get; private set; }
 
         /// <summary>
         /// A collection of layers. The first layer in the list is drawn first, the last one on top.
@@ -1257,7 +1293,7 @@ namespace SharpMap
                     _center = newCenter;
                     changed = true;
                 }
-                
+
                 if (changed && MapViewOnChange != null)
                     MapViewOnChange();
             }
@@ -1276,7 +1312,7 @@ namespace SharpMap
                 {
                     using (var g = Graphics.FromHwnd(IntPtr.Zero))
                     {
-                        _dpiX = (int) g.DpiX;
+                        _dpiX = (int)g.DpiX;
                     }
                 }
 
@@ -1288,7 +1324,7 @@ namespace SharpMap
                 {
                     using (var g = Graphics.FromHwnd(IntPtr.Zero))
                     {
-                        _dpiX = (int) g.DpiX;
+                        _dpiX = (int)g.DpiX;
                     }
                 }
                 Zoom = GetMapZoomFromScale(value, _dpiX.Value);
@@ -1349,7 +1385,7 @@ namespace SharpMap
         /// </summary>
         public double PixelSize
         {
-            get { return Zoom/Size.Width; }
+            get { return Zoom / Size.Width; }
         }
 
         /// <summary>
@@ -1390,7 +1426,7 @@ namespace SharpMap
         /// <returns></returns>
         public double MapHeight
         {
-            get { return (Zoom*Size.Height)/Size.Width*PixelAspectRatio; }
+            get { return (Zoom * Size.Height) / Size.Width * PixelAspectRatio; }
         }
 
         /// <summary>
@@ -1471,7 +1507,7 @@ namespace SharpMap
         {
             foreach (var l in layersCollection)
             {
-                
+
                 //Tries to get bb. Fails on some specific shapes and Mercator projects (World.shp)
                 Envelope bb;
                 try
@@ -1507,7 +1543,8 @@ namespace SharpMap
         public String Disclaimer
         {
             get { return _disclaimer; }
-            set {
+            set
+            {
                 //only set disclaimer if not already done
                 if (String.IsNullOrEmpty(_disclaimer))
                 {
@@ -1517,7 +1554,7 @@ namespace SharpMap
                         _disclaimerFont = new Font(FontFamily.GenericSansSerif, 8f);
                 }
             }
-        }        
+        }
 
         private Font _disclaimerFont;
         /// <summary>
@@ -1546,7 +1583,7 @@ namespace SharpMap
         public Int32 DisclaimerLocation
         {
             get { return _disclaimerLocation; }
-            set { _disclaimerLocation = value%4; }
+            set { _disclaimerLocation = value % 4; }
         }
 
 
