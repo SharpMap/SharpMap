@@ -103,16 +103,20 @@ namespace SharpMap.Data.Providers
             _memMappedFiles = new Dictionary<string, System.IO.MemoryMappedFiles.MemoryMappedFile>();
             _memMappedFilesRefConter = new Dictionary<string, int>();
             SpatialIndexFactory = new QuadTreeFactory();
+#pragma warning disable 618
             SpatialIndexCreationOption = SpatialIndexCreation.Recursive;
+#pragma warning restore 618
         }
 #else
         static ShapeFile()
         {
             SpatialIndexFactory = new QuadTreeFactory();
+#pragma warning disable 618
             SpatialIndexCreationOption = SpatialIndexCreation.Recursive;
+#pragma warning restore 618
         }
 #endif
-		private readonly bool _useMemoryCache;
+        private readonly bool _useMemoryCache;
 		private DateTime _lastCleanTimestamp = DateTime.Now;
 		private readonly TimeSpan _cacheExpireTimeout = TimeSpan.FromMinutes(1);
         private readonly object _cacheLock = new object();
@@ -180,7 +184,8 @@ namespace SharpMap.Data.Providers
 	    /// <param name="filename">Path to shape file</param>
 	    /// <param name="fileBasedIndex">Use file-based spatial index</param>
 	    /// <param name="useMemoryCache">Use the memory cache. BEWARE in case of large shapefiles</param>
-	    public ShapeFile(string filename, bool fileBasedIndex, bool useMemoryCache) : this(filename, fileBasedIndex,useMemoryCache,0)
+	    public ShapeFile(string filename, bool fileBasedIndex, bool useMemoryCache) 
+	        : this(filename, fileBasedIndex,useMemoryCache,0)
 		{
 		}
 
@@ -1034,7 +1039,6 @@ namespace SharpMap.Data.Providers
         /// <summary>
         /// Options to create the <see cref="QuadTree"/> spatial index
         /// </summary>
-        [Obsolete("Use SpatialIndexFactory")]
         public enum SpatialIndexCreation
         {
             /// <summary>
@@ -1249,7 +1253,7 @@ namespace SharpMap.Data.Providers
                         for (var i = 0; i < nPoints; i++)
                             feature[i].Z = brGeometryStream.ReadDouble();
                     }
-                    return factory.CreateMultiPoint(feature);
+                    return factory.CreateMultiPointFromCoords(feature);
                 }
 
                 if (shapeType == ShapeType.PolyLine || shapeType == ShapeType.Polygon ||

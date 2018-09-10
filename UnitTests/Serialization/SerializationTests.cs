@@ -131,7 +131,7 @@ namespace BruTile.Serialization.Tests
 
         #region Tile sources
 
-        //[Ignore("Needs internet connection")]
+        [Ignore("Needs internet connection")]
         [TestCase("http://tiles.geoservice.dlr.de/service/wmts?SERVICE=WMTS&REQUEST=GetCapabilities")]
         public void TestWmtsTileSource(string url)
         {
@@ -275,12 +275,12 @@ namespace BruTile.Serialization.Tests
                 var minkey = GetIndex(keys[0]);
                 var maxKey = GetIndex(keys[keys.Length - 1]);
                 var prefix = GetPrefix(keys[0]);
-                for (var i = 0; i < 8; i++)
+                for (var i = 0; i < 3; i++)
                 {
                     TileInfo ti = null;
                     try
                     {
-                        ti = RandomTileInfo(prefix + "{0}", minkey, maxKey);
+                        ti = RandomTileInfo(prefix + "{0}", minkey, Math.Min(maxKey, 12));
                         var req1 = tp1 as IRequest;
                         var req2 = tp2 as IRequest;
                         if (req1 != null && req2 != null)

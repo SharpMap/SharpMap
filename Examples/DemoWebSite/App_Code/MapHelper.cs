@@ -561,9 +561,8 @@ public class MapHelper
             }
             catch (TypeInitializationException ex)
             {
-                if (ex.GetType() == typeof(TypeInitializationException))
-                    throw new Exception(
-                        "Please copy the umanaged dll's into your bin folder from javascript:window.location.href='http://www.codeplex.com/SharpMap/Wiki/View.aspx?title=Extensions';.");
+                throw new Exception(
+                    "Please copy the umanaged dll's into your bin folder from javascript:window.location.href='http://www.codeplex.com/SharpMap/Wiki/View.aspx?title=Extensions';.");
             }
         }
         map.Layers.Add(g);

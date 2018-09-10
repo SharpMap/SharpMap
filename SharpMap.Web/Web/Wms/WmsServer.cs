@@ -354,7 +354,10 @@ namespace SharpMap.Web.Wms
                 XmlWriter writer = XmlWriter.Create(context.Response.OutputStream);
                 capabilities.WriteTo(writer);
                 writer.Close();
-                context.Response.End();
+                context.Response.Flush();
+                context.Response.SuppressContent = true;
+                context.ApplicationInstance.CompleteRequest();
+                //context.Response.End();
             }
             else if (String.Compare(context.Request.Params["REQUEST"], "GetFeatureInfo", ignoreCase) == 0) //FeatureInfo Requested
             {
@@ -531,7 +534,9 @@ namespace SharpMap.Web.Wms
                 }
                 context.Response.Write(vstr);
                 context.Response.Flush();
-                context.Response.End();
+                context.Response.SuppressContent = true;
+                context.ApplicationInstance.CompleteRequest();
+                //context.Response.End();
             }
             else if (String.Compare(context.Request.Params["REQUEST"], "GetMap", ignoreCase) == 0) //Map requested
             {
@@ -795,6 +800,9 @@ namespace SharpMap.Web.Wms
                 context.Response.Clear();
                 context.Response.ContentType = imageEncoder.MimeType;
                 context.Response.OutputStream.Write(buffer, 0, buffer.Length);
+                context.Response.Flush();
+                context.Response.SuppressContent = true;
+                context.ApplicationInstance.CompleteRequest();
                 //context.Response.End();
             }
             else

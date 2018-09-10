@@ -59,7 +59,10 @@ namespace SharpMap.Demo.Wms.Handlers
                 context.Response.ContentType = "text/json";
                 context.Response.BufferOutput = true;
                 context.Response.Write(buffer);
-                context.Response.End();
+                context.Response.Flush();
+                context.Response.SuppressContent = true;
+                context.ApplicationInstance.CompleteRequest();
+                //context.Response.End();
             }
             catch (Exception ex)
             {

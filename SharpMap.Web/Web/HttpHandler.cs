@@ -51,7 +51,8 @@ namespace SharpMap.Web
                 context.Response.Clear();
                 context.Response.ContentType = "text/plain";
                 context.Response.Write("Invalid Image requested");
-                context.Response.End();
+                context.Response.Flush();
+                context.ApplicationInstance.CompleteRequest();
                 return;
             }
 
@@ -63,6 +64,7 @@ namespace SharpMap.Web
                 context.Response.OutputStream.Write(buffer, 0, buffer.Length);
                  */
                 WriteResponseInChunks((byte[])cached, context.Response);
+                context.ApplicationInstance.CompleteRequest();
                 return;
             }
 
@@ -85,6 +87,7 @@ namespace SharpMap.Web
                     //b.Dispose();
 
                     WriteResponseInChunks(ms.ToArray(), context.Response);
+                    context.ApplicationInstance.CompleteRequest();
                     return;
                     //var buffer = ms.ToArray();
                     //context.Response.OutputStream.Write(buffer, 0, buffer.Length);
@@ -148,7 +151,8 @@ namespace SharpMap.Web
             }
             finally
             {
-                response.End();
+                response.Flush();
+                response.SuppressContent = true;
             }
         }
     }

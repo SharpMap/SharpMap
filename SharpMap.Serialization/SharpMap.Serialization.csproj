@@ -47,9 +47,11 @@
       <HintPath>..\packages\Common.Logging.Core.3.3.1\lib\net40\Common.Logging.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="GeoAPI, Version=1.7.4.0, Culture=neutral, PublicKeyToken=a1a0da7def465678, processorArchitecture=MSIL">
-      <HintPath>..\packages\GeoAPI.1.7.4\lib\net40-client\GeoAPI.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="GeoAPI, Version=1.7.5.0, Culture=neutral, PublicKeyToken=a1a0da7def465678, processorArchitecture=MSIL">
+      <HintPath>..\packages\GeoAPI.Core.1.7.5\lib\net40-client\GeoAPI.dll</HintPath>
+    </Reference>
+    <Reference Include="GeoAPI.CoordinateSystems, Version=1.7.5.0, Culture=neutral, PublicKeyToken=a1a0da7def465678, processorArchitecture=MSIL">
+      <HintPath>..\packages\GeoAPI.CoordinateSystems.1.7.5\lib\net40-client\GeoAPI.CoordinateSystems.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />

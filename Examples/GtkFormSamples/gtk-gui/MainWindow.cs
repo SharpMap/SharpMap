@@ -24,7 +24,7 @@ namespace TestGtk
             global::Stetic.Gui.Initialize(this);
             // Widget MainWindow
             this.Name = "MainWindow";
-            this.Title = global::Mono.Unix.Catalog.GetString("MainWindow");
+            this.Title = "MainWindow";
             this.WindowPosition = ((global::Gtk.WindowPosition) (4));
             // Container child MainWindow.Gtk.Container+ContainerChild
             this.fixed1 = new global::Gtk.Fixed();
@@ -47,24 +47,24 @@ namespace TestGtk
             // Container child fixed1.Gtk.Fixed+FixedChild
             this.label1 = new global::Gtk.Label();
             this.label1.Name = "label1";
-            this.label1.LabelProp = global::Mono.Unix.Catalog.GetString("Map x,y");
+            this.label1.LabelProp = "Map x,y";
             this.fixed1.Add(this.label1);
             global::Gtk.Fixed.FixedChild w3 = ((global::Gtk.Fixed.FixedChild) (this.fixed1[this.label1]));
             w3.X = 695;
             w3.Y = 19;
             // Container child fixed1.Gtk.Fixed+FixedChild
-            this.radZoomIn = new global::Gtk.RadioButton(global::Mono.Unix.Catalog.GetString("Zoom In"));
+            this.radZoomIn = new global::Gtk.RadioButton("Zoom In");
             this.radZoomIn.CanFocus = true;
             this.radZoomIn.Name = "radZoomIn";
             this.radZoomIn.DrawIndicator = true;
             this.radZoomIn.UseUnderline = true;
-            this.radZoomIn.Group = new global::GLib.SList(global::System.IntPtr.Zero);
+            this.radZoomIn.Group = null;;
             this.fixed1.Add(this.radZoomIn);
             global::Gtk.Fixed.FixedChild w4 = ((global::Gtk.Fixed.FixedChild) (this.fixed1[this.radZoomIn]));
             w4.X = 306;
             w4.Y = 13;
             // Container child fixed1.Gtk.Fixed+FixedChild
-            this.radPan = new global::Gtk.RadioButton(global::Mono.Unix.Catalog.GetString("Pan"));
+            this.radPan = new global::Gtk.RadioButton("Pan");
             this.radPan.CanFocus = true;
             this.radPan.Name = "radPan";
             this.radPan.DrawIndicator = true;
@@ -75,7 +75,7 @@ namespace TestGtk
             w5.X = 242;
             w5.Y = 13;
             // Container child fixed1.Gtk.Fixed+FixedChild
-            this.radZoomOut = new global::Gtk.RadioButton(global::Mono.Unix.Catalog.GetString("Zoom Out"));
+            this.radZoomOut = new global::Gtk.RadioButton("Zoom Out");
             this.radZoomOut.CanFocus = true;
             this.radZoomOut.Name = "radZoomOut";
             this.radZoomOut.DrawIndicator = true;

@@ -56,6 +56,6 @@ public partial class Simple : Page
         //Render map
         Image img = myMap.GetMap();
         string imgID = Caching.InsertIntoCache(1, img);
-        imgMap.ImageUrl = "getmap.aspx?ID=" + HttpUtility.UrlEncode(imgID);
+        imgMap.ImageUrl = "GetMap.aspx?ID=" + HttpUtility.UrlEncode(imgID);
     }
 }

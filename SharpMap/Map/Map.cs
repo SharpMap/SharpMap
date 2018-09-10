@@ -898,7 +898,7 @@ namespace SharpMap
                 if (!Size.IsEmpty)
                     clone.Size = new Size(Size.Width, Size.Height);
                 if (Center != null)
-                    clone.Center = (Coordinate)Center.Clone();
+                    clone.Center = Center.Copy();
 
             }
 

@@ -25,7 +25,7 @@ namespace SharpMap.Rendering
         private Image[] _images;
         private static Func<Size, float, int, bool> _parallelHeuristic;
         //private Matrix _transform;
-        
+
         /// <summary>
         /// Creates an instance of this class
         /// </summary>

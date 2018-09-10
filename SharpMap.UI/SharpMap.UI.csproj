@@ -49,21 +49,20 @@
       <HintPath>..\packages\Common.Logging.Core.3.3.1\lib\net40\Common.Logging.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="GeoAPI, Version=1.7.4.0, Culture=neutral, PublicKeyToken=a1a0da7def465678, processorArchitecture=MSIL">
-      <HintPath>..\packages\GeoAPI.1.7.4\lib\net40-client\GeoAPI.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="GeoAPI, Version=1.7.5.0, Culture=neutral, PublicKeyToken=a1a0da7def465678, processorArchitecture=MSIL">
+      <HintPath>..\packages\GeoAPI.Core.1.7.5\lib\net40-client\GeoAPI.dll</HintPath>
     </Reference>
-    <Reference Include="NetTopologySuite, Version=1.14.0.0, Culture=neutral, PublicKeyToken=f580a05016ebada1, processorArchitecture=MSIL">
-      <HintPath>..\packages\NetTopologySuite.1.14\lib\net40-client\NetTopologySuite.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="GeoAPI.CoordinateSystems, Version=1.7.5.0, Culture=neutral, PublicKeyToken=a1a0da7def465678, processorArchitecture=MSIL">
+      <HintPath>..\packages\GeoAPI.CoordinateSystems.1.7.5\lib\net40-client\GeoAPI.CoordinateSystems.dll</HintPath>
     </Reference>
-    <Reference Include="PowerCollections, Version=1.0.0.0, Culture=neutral, PublicKeyToken=2573bf8a1bdddcd5, processorArchitecture=MSIL">
-      <HintPath>..\packages\NetTopologySuite.1.14\lib\net40-client\PowerCollections.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="NetTopologySuite, Version=1.15.1.0, Culture=neutral, PublicKeyToken=f580a05016ebada1, processorArchitecture=MSIL">
+      <HintPath>..\packages\NetTopologySuite.Core.1.15.1\lib\net40-client\NetTopologySuite.dll</HintPath>
     </Reference>
-    <Reference Include="ProjNet, Version=1.3.2.0, Culture=neutral, PublicKeyToken=a1f5bdcd9c6f5740, processorArchitecture=MSIL">
-      <HintPath>..\packages\ProjNET4GeoAPI.1.3.2-pre1\lib\net40-client\ProjNet.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="NetTopologySuite.CoordinateSystems, Version=1.15.1.0, Culture=neutral, PublicKeyToken=f580a05016ebada1, processorArchitecture=MSIL">
+      <HintPath>..\packages\NetTopologySuite.CoordinateSystems.1.15.1\lib\net40-client\NetTopologySuite.CoordinateSystems.dll</HintPath>
+    </Reference>
+    <Reference Include="ProjNET, Version=1.4.0.0, Culture=neutral, PublicKeyToken=a1f5bdcd9c6f5740, processorArchitecture=MSIL">
+      <HintPath>..\packages\ProjNET4GeoAPI.1.4.1\lib\net40-client\ProjNET.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />

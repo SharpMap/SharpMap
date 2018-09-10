@@ -132,7 +132,7 @@ namespace SharpMap.Layers
         {
             var bbox = map.Envelope;
             var extent = new Extent(bbox.MinX, bbox.MinY, bbox.MaxX, bbox.MaxY);
-            var level = BruTile.Utilities.GetNearestLevel(_source.Schema.Resolutions, map.PixelSize);
+            var level = BruTile.Utilities.GetNearestLevel(_source.Schema.Resolutions, Math.Max(map.PixelWidth, map.PixelHeight));
             var tiles = _source.Schema.GetTileInfos(extent, level);
             
             //Abort previous running Threads

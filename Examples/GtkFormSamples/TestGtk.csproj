@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="3.5" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
@@ -9,7 +9,28 @@
     <OutputType>WinExe</OutputType>
     <RootNamespace>TestGtk</RootNamespace>
     <AssemblyName>TestGtk</AssemblyName>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <TargetFrameworkProfile />
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <DebugSymbols>true</DebugSymbols>
@@ -21,6 +42,7 @@
     <WarningLevel>4</WarningLevel>
     <PlatformTarget>x86</PlatformTarget>
     <ConsolePause>false</ConsolePause>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <DebugType>none</DebugType>
@@ -30,46 +52,64 @@
     <WarningLevel>4</WarningLevel>
     <PlatformTarget>x86</PlatformTarget>
     <ConsolePause>false</ConsolePause>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
+    <OutputPath>bin\Release\</OutputPath>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="GeoAPI, Version=1.6.4448.22541, Culture=neutral, PublicKeyToken=a1a0da7def465678, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Packages\GeoAPI.1.6.0\lib\net35\GeoAPI.dll</HintPath>
+    <Reference Include="AtkSharp, Version=3.22.24.36, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\AtkSharp.3.22.24.36\lib\netstandard2.0\AtkSharp.dll</HintPath>
     </Reference>
-    <Reference Include="NetTopologySuite, Version=1.12.4448.22555, Culture=neutral, PublicKeyToken=f580a05016ebada1, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Packages\NetTopologySuite.1.12.0\lib\net35\NetTopologySuite.dll</HintPath>
+    <Reference Include="CairoSharp, Version=3.22.24.36, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\CairoSharp.3.22.24.36\lib\netstandard2.0\CairoSharp.dll</HintPath>
     </Reference>
-    <Reference Include="PowerCollections, Version=1.0.4448.22540, Culture=neutral, PublicKeyToken=2573bf8a1bdddcd5, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Packages\NetTopologySuite.1.12.0\lib\net35\PowerCollections.dll</HintPath>
+    <Reference Include="Common.Logging">
+      <HintPath>..\..\SharpMap\bin\$(Configuration)\Common.Logging.dll</HintPath>
+    </Reference>
+    <Reference Include="Common.Logging.Core">
+      <HintPath>..\..\SharpMap\bin\$(Configuration)\Common.Logging.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="GdkSharp, Version=3.22.24.36, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\GdkSharp.3.22.24.36\lib\netstandard2.0\GdkSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="GeoAPI, Version=1.7.5.0, Culture=neutral, PublicKeyToken=a1a0da7def465678, processorArchitecture=MSIL">
+      <HintPath>packages\GeoAPI.Core.1.7.5\lib\net45\GeoAPI.dll</HintPath>
+    </Reference>
+    <Reference Include="GeoAPI.CoordinateSystems, Version=1.7.5.0, Culture=neutral, PublicKeyToken=a1a0da7def465678, processorArchitecture=MSIL">
+      <HintPath>packages\GeoAPI.CoordinateSystems.1.7.5\lib\net45\GeoAPI.CoordinateSystems.dll</HintPath>
+    </Reference>
+    <Reference Include="GioSharp, Version=3.22.24.36, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\GioSharp.3.22.24.36\lib\netstandard2.0\GioSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="GLibSharp, Version=3.22.24.36, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\GLibSharp.3.22.24.36\lib\netstandard2.0\GLibSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="GtkSharp, Version=3.22.24.36, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\GtkSharp.3.22.24.36\lib\netstandard2.0\GtkSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="NetTopologySuite, Version=1.15.1.0, Culture=neutral, PublicKeyToken=f580a05016ebada1, processorArchitecture=MSIL">
+      <HintPath>packages\NetTopologySuite.Core.1.15.1\lib\net45\NetTopologySuite.dll</HintPath>
+    </Reference>
+    <Reference Include="PangoSharp, Version=3.22.24.36, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\PangoSharp.3.22.24.36\lib\netstandard2.0\PangoSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpMap">
+      <HintPath>..\..\SharpMap\bin\$(Configuration)\SharpMap.dll</HintPath>
     </Reference>
     <Reference Include="System" />
-    <Reference Include="gtk-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f">
-      <SpecificVersion>False</SpecificVersion>
-      <Package>gtk-sharp-2.0</Package>
-    </Reference>
-    <Reference Include="gdk-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f">
-      <SpecificVersion>False</SpecificVersion>
-      <Package>gtk-sharp-2.0</Package>
-    </Reference>
-    <Reference Include="glib-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f">
-      <SpecificVersion>False</SpecificVersion>
-      <Package>glib-sharp-2.0</Package>
-    </Reference>
-    <Reference Include="glade-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f">
-      <SpecificVersion>False</SpecificVersion>
-      <Package>glade-sharp-2.0</Package>
-    </Reference>
-    <Reference Include="pango-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f">
-      <SpecificVersion>False</SpecificVersion>
-      <Package>gtk-sharp-2.0</Package>
-    </Reference>
-    <Reference Include="atk-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f">
-      <SpecificVersion>False</SpecificVersion>
-      <Package>gtk-sharp-2.0</Package>
-    </Reference>
-    <Reference Include="Mono.Posix" />
     <Reference Include="System.Drawing" />
   </ItemGroup>
   <ItemGroup>
@@ -85,6 +125,7 @@
     <Compile Include="AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
     <None Include="data\states.dbf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -108,13 +149,15 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <None Include="packages.config" />
     <None Include="Readme.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SharpMap\SharpMap.VS2008.csproj">
-      <Project>{C83777FC-AABB-47D9-911F-D76255D4D541}</Project>
-      <Name>SharpMap.VS2008</Name>
-    </ProjectReference>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

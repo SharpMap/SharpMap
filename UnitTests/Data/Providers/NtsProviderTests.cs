@@ -67,8 +67,8 @@ namespace UnitTests.Data.Providers
         private static AttributesTable CreateAttributes(int id, string label)
         {
             var res = new AttributesTable();
-            res.AddAttribute("id", id);
-            res.AddAttribute("label", label);
+            res.Add("id", id);
+            res.Add("label", label);
 
             return res;
         }

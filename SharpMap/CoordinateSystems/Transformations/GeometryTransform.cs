@@ -197,7 +197,7 @@ namespace GeoAPI.CoordinateSystems.Transformations
         /// <returns>Transformed MultiPoint</returns>
         public static IMultiPoint TransformMultiPoint(IMultiPoint points, IMathTransform transform, IGeometryFactory targetFactory)
         {
-            return targetFactory.CreateMultiPoint(TransformCoordinates(points.Coordinates, transform));
+            return targetFactory.CreateMultiPointFromCoords(TransformCoordinates(points.Coordinates, transform));
         }
 
         /// <summary>

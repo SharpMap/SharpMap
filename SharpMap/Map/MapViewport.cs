@@ -30,7 +30,8 @@ namespace SharpMap
         /// <param name="size">The size of the viewport</param>
         /// <param name="pixelAspectRatio">A ratio between width and height</param>
         /// <param name="mapTransform">An affine map transform matrix</param>
-        public MapViewport(Guid mapId, int srid, Envelope env, Size size, double pixelAspectRatio, Matrix mapTransform)
+        /// <param name="mapTransformInverted">The affine map transformation that inverts <paramref name="mapTransform"/></param>
+        public MapViewport(Guid mapId, int srid, Envelope env, Size size, double pixelAspectRatio, Matrix mapTransform, Matrix mapTransformInverted)
         {
             ID = mapId;
             SRID = srid;
@@ -40,11 +41,11 @@ namespace SharpMap
             Center = env.Centre;
 
             PixelAspectRatio = pixelAspectRatio;
-            PixelWidth = PixelSize = env.Width / size.Width;
-            PixelHeight = PixelWidth * pixelAspectRatio;
+            PixelWidth = /*PixelSize = */env.Width/size.Width;
+            PixelHeight = PixelWidth*pixelAspectRatio;
 
             Zoom = env.Width;
-            MapHeight = Zoom * pixelAspectRatio;
+            MapHeight = Zoom*pixelAspectRatio;
 
             // already cloned
             _mapTransform = mapTransform;
@@ -59,6 +60,15 @@ namespace SharpMap
             var height = (Zoom * Size.Height) / Size.Width;
             _left = Center.X - Zoom * 0.5;
             _top = Center.Y + height * 0.5 * PixelAspectRatio;
+        }
+
+        /// <summary>
+        /// Creates an instance of this class based on the provided map
+        /// </summary>
+        /// <param name="map">The id of the map</param>
+        public MapViewport(Map map)
+            :this(map.ID, map.SRID, map.Envelope, map.Size, map.PixelAspectRatio, map.MapTransform, map.MapTransformInverted)
+        {
         }
 
         /// <summary>
@@ -100,8 +110,8 @@ namespace SharpMap
         /// <summary>
         /// Get Returns the size of a pixel in world coordinate units
         /// </summary>
-        [Obsolete("Use PixelWidth or PixelHeight")]
-        public double PixelSize { get; private set; }
+        //[Obsolete("Use PixelWidth or PixelHeight")]
+        //public double PixelSize { get; private set; }
 
         /// <summary>
         /// Returns the width of a pixel in world coordinate units.
@@ -121,7 +131,7 @@ namespace SharpMap
                 {
                     _mapScale = ScaleCalculations.CalculateScaleNonLatLong(Envelope.Width, Size.Width, 1, dpi);
                     _lastDpi = dpi;
-                }
+        }
                 return _mapScale;
             }
         }
@@ -195,14 +205,14 @@ namespace SharpMap
         {
             if (careAboutMapTransform)
                 using (var transformInv = _mapTransformInverted.Clone())
-                {
+            {
                     if (!transformInv.IsIdentity)
-                    {
-                        var pts = new[] { p };
+                {
+                    var pts = new[] { p };
                         transformInv.TransformPoints(pts);
-                        p = pts[0];
-                    }
+                    p = pts[0];
                 }
+            }
 
             return Transform.MapToWorld(p, this);
         }
@@ -213,7 +223,7 @@ namespace SharpMap
         /// <returns></returns>
         public static implicit operator MapViewport(Map map)
         {
-            return new MapViewport(map.ID, map.SRID, map.Envelope, map.Size, map.PixelAspectRatio,
+            return new MapViewport(map.ID, map.SRID, map.Envelope, map.Size, map.PixelAspectRatio, 
                                    map.MapTransform);
         }
 

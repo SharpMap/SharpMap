@@ -46,7 +46,9 @@ namespace SharpMap.Data.Providers
         /// <returns></returns>
         public IProvider Create()
         {
+#pragma warning disable 618
             ShapeFile.SpatialIndexCreationOption = SpatialIndexCreationOption;
+#pragma warning restore 618
             return new ShapeFile(Filename, UseFilebasedIndex, UseMemoryCache);
         }
     }

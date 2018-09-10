@@ -304,7 +304,7 @@ namespace GeoAPI.Geometries
         /// <returns><c>true</c> if the ring is oriented counter clockwise</returns>
         public static bool IsCCW(this ILinearRing self)
         {
-            return NetTopologySuite.Algorithm.CGAlgorithms.IsCCW(self.Coordinates);
+            return NetTopologySuite.Algorithm.Orientation.IsCCW(self.Coordinates);
         }
 
         /// <summary>

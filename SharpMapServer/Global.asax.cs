@@ -9,12 +9,28 @@ using SharpMap.Layers;
 using System.IO;
 using System.Reflection;
 using System.Xml.Serialization;
+using NetTopologySuite;
+using ProjNet.CoordinateSystems;
+using ProjNet.CoordinateSystems.Transformations;
+
 namespace SharpMapServer
 {
     public class Global : System.Web.HttpApplication
     {
         protected void Application_Start(object sender, EventArgs e)
         {
+            var gss = new NtsGeometryServices();
+            var css = new SharpMap.CoordinateSystems.CoordinateSystemServices(
+                new CoordinateSystemFactory(),
+                new CoordinateTransformationFactory(),
+                SharpMap.Converters.WellKnownText.SpatialReference.GetAllReferenceSystems());
+
+            GeoAPI.GeometryServiceProvider.Instance = gss;
+            SharpMap.Session.Instance
+                .SetGeometryServices(gss)
+                .SetCoordinateSystemServices(css)
+                .SetCoordinateSystemRepository(css);
+
             string settingsfile = Server.MapPath("~/App_Data/settings.xml");
             XmlSerializer serializer = new XmlSerializer(typeof(SharpMapContext));
             if (!System.IO.File.Exists(settingsfile))

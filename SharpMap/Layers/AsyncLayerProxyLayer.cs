@@ -322,10 +322,11 @@ namespace SharpMap.Layers
         private bool RenderCellOnThread(System.Threading.CancellationToken token, Point ptInsert, Map map)
         {
             var tile = new Bitmap(map.Size.Width, map.Size.Height, PixelFormat.Format32bppArgb);
+            var mvp = new MapViewport(map);
             using (var g = Graphics.FromImage(tile))
             {
                 g.Clear(Color.Transparent);
-                _baseLayer.Render(g, map);
+                _baseLayer.Render(g, mvp);
                 map.Layers.Clear();
             }
 
