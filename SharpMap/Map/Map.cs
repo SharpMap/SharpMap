@@ -1211,19 +1211,20 @@ namespace SharpMap
                 _mapTransform = value;
                 _mapTransformInverted = value.Clone();
                 _mapTransformInverted.Invert();
-            }
-                    if (_mapTransform.IsIdentity)
-                        MapTransformRotation = 0;
-                    else
-                        MapTransformRotation = Convert.ToSingle(Math.Acos(_mapTransform.Elements[0]) * 180.0 / Math.PI);
 
-                }
+                if (_mapTransform.IsIdentity)
+                    MapTransformRotation = 0;
+                else
+                    MapTransformRotation = Convert.ToSingle(Math.Acos(_mapTransform.Elements[0]) * 180.0 / Math.PI);
+
+            }
+        }
+
         internal Matrix MapTransformInverted
         {
             get { return _mapTransformInverted; }
         }
-        }
-
+        
         /// <summary>
         /// MapTransform Rotation in degrees. Facilitates determining if map is rotated without locking MapTransform.
         /// </summary>

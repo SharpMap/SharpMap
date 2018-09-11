@@ -9,17 +9,25 @@ using SharpMap.Utilities;
 namespace SharpMap
 {
     /// <summary>
-    /// A <see cref="SharpMap.Map"/> utility class, that encapuslates all data required for rendering.
+    /// A <see cref="SharpMap.Map"/> utility class, that encapsulates all data required for rendering.
     /// </summary>
     /// <remarks>This is a value class</remarks>
     public class MapViewport
     {
         private readonly Envelope _envelope;
+        private readonly Coordinate _center;
+
         private readonly Matrix _mapTransform;
         private readonly Matrix _mapTransformInverted;
-        private double _left;
-        private double _top;
-        private readonly object _mapTransformLock = new object();
+
+        private readonly double _left;
+        private readonly double _top;
+        private double _mapScale;
+        private int _lastDpi;
+
+        // TODO: Reconsider computing map scale
+        private readonly object _lockMapScale = new object();
+
         /// <summary>
         /// Creates an instance of this class
         /// </summary>
@@ -37,7 +45,7 @@ namespace SharpMap
 
             _envelope = env.Copy();
             Size = size;
-            Center = env.Centre;
+            _center = env.Centre;
 
             PixelAspectRatio = pixelAspectRatio;
             PixelWidth = /*PixelSize = */env.Width/size.Width;
@@ -48,13 +56,7 @@ namespace SharpMap
 
             // already cloned
             _mapTransform = mapTransform;
-            if (_mapTransform.IsInvertible)
-            {
-                _mapTransformInverted = _mapTransform.Clone();
-                _mapTransformInverted.Invert();
-            }
-            else
-                _mapTransformInverted = new Matrix();
+            _mapTransformInverted = mapTransformInverted;
 
             double height = (Zoom * Size.Height) / Size.Width;
             _left = Center.X - Zoom * 0.5;
@@ -73,24 +75,24 @@ namespace SharpMap
         /// <summary>
         /// Gets a value indicating the which <see cref="Map"/> this viewport belongs to.
         /// </summary>
-        public Guid ID { get; private set; }
+        public Guid ID { get; }
 
         /// <summary>
         /// Gets a value indicating the spatial reference id of the map
         /// </summary>
-        public int SRID { get; set; }
+        public int SRID { get; /*set;*/ }
 
         /// <summary>
         /// Gets a value indicating the size of the map
         /// </summary>
-        public Size Size { get; private set; }
+        public Size Size { get; }
 
         /// <summary>
         /// Gets a value indicating the area covered by the map (in world units)
         /// </summary>
         public Envelope Envelope
         {
-            get { return new Envelope(_envelope); }
+            get { return _envelope.Copy(); }
         }
 
         /// <summary>
@@ -105,13 +107,16 @@ namespace SharpMap
         /// <summary>
         /// Gets a value indicating the center of the map viewport
         /// </summary>
-        public Coordinate Center { get; }
+        public Coordinate Center
+        {
+            get { return _center.Copy(); }
+        }
 
         /// <summary>
         /// Gets a value indicating the zoom of the map viewport
         /// </summary>
         /// <remarks>This value is identical to <see cref="MapWidth"/></remarks>
-        public double Zoom { get; set; }
+        public double Zoom { get; /*set;*/ }
 
         /// <summary>
         /// Gets a value indicating the height of the map viewport in world units
@@ -129,10 +134,7 @@ namespace SharpMap
         /// 1 will make the map stretch upwards, and larger than 1 will make it smaller.
         /// </summary>
         /// <exception cref="ArgumentException">Throws an argument exception when value is 0 or less.</exception>
-        public double PixelAspectRatio
-        {
-            get; private set;
-        }
+        public double PixelAspectRatio { get; }
 
         ///// <summary>
         ///// Get Returns the size of a pixel in world coordinate units
@@ -143,12 +145,12 @@ namespace SharpMap
         /// <summary>
         /// Returns the width of a pixel in world coordinate units.
         /// </summary>
-        public double PixelWidth { get; private set; }
+        public double PixelWidth { get; }
 
         /// <summary>
         /// Returns the height of a pixel in world coordinate units.
         /// </summary>
-        public double PixelHeight { get; private set; }
+        public double PixelHeight { get; }
 
         /// <summary>
         /// Function to compute the denominator of the viewport's scale when using a given <paramref name="dpi"/> resolution.
@@ -157,6 +159,7 @@ namespace SharpMap
         /// <returns>The scale's denominator</returns>
         public double GetMapScale(int dpi)
         {
+            // Why lock?
             lock (_lockMapScale)
             {
                 if (_lastDpi != dpi)
@@ -181,14 +184,14 @@ namespace SharpMap
             if (!careAboutMapTransform)
                 return pTmp;
 
-            Monitor.Enter(_mapTransformLock);
+            Monitor.Enter(_mapTransform);
             if (_mapTransform.IsIdentity)
             {
                 var pts = new[] {pTmp};
-                    transform.TransformPoints(pts);
+                _mapTransform.TransformPoints(pts);
                 pTmp = pts[0];
             }
-            Monitor.Exit(_mapTransformLock);
+            Monitor.Exit(_mapTransform);
 
 
             return pTmp;
@@ -205,11 +208,11 @@ namespace SharpMap
             if (p.IsEmpty())
                 return PointF.Empty;
 
-            var x = (p.X - _left) / PixelWidth;
+            double x = (p.X - _left) / PixelWidth;
             if (double.IsNaN(x))
                 return PointF.Empty;
 
-            var y = (_top - p.Y) / PixelHeight;
+            double y = (_top - p.Y) / PixelHeight;
             if (double.IsNaN(y))
                 return PointF.Empty;
 
@@ -233,15 +236,16 @@ namespace SharpMap
         /// <param name="p">Point in image coordinates</param>
         /// <param name="careAboutMapTransform">Indicates whether MapTransform should be taken into account</param>
         /// <returns>Point in world coordinates</returns>
-        [MethodImpl(MethodImplOptions.Synchronized)]
         public Coordinate ImageToWorld(PointF p, bool careAboutMapTransform)
         {
-                    if (!transformInv.IsIdentity)
+            Monitor.Enter(_mapTransformInverted);
+            if (_mapTransformInverted.IsIdentity)
             {
                 var pts = new[] { p };
-                        transformInv.TransformPoints(pts);
+                _mapTransformInverted.TransformPoints(pts);
                 p = pts[0];
             }
+            Monitor.Exit(_mapTransformInverted);
 
             return Transform.MapToWorld(p, this);
         }
