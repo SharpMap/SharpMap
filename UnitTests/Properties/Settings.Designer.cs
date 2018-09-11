@@ -45,7 +45,7 @@ namespace UnitTests.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Microsoft.ACE.OLEDB.15.0")]
+        [global::System.Configuration.DefaultSettingValueAttribute("Microsoft.ACE.OLEDB.12.0")]
         public string OleDbProvider {
             get {
                 return ((string)(this["OleDbProvider"]));
@@ -55,7 +55,7 @@ namespace UnitTests.Properties {
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
-        [global::System.Configuration.DefaultSettingValueAttribute("Host=ivv-sqlt3;Port=5433;database=postgis_sample;SSPI=true")]
+        [global::System.Configuration.DefaultSettingValueAttribute("Server=ivv-t3s;Port=5432;database=postgis_sample;Integrated Security=true;")]
         public string PostGis {
             get {
                 return ((string)(this["PostGis"]));
