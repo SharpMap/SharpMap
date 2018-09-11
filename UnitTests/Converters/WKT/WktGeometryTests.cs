@@ -92,7 +92,7 @@ namespace UnitTests.Converters.WKT
             Assert.AreEqual(54, ((IPoint)geom[2]).Y);
             Assert.AreEqual(multipoint, geom.AsText());
             Assert.IsTrue(GeomFromText("MULTIPOINT EMPTY").IsEmpty);
-            Assert.AreEqual("MULTIPOINT EMPTY", Factory.CreateMultiPoint((Coordinate[])null).AsText());
+            Assert.AreEqual("MULTIPOINT EMPTY", Factory.CreateMultiPointFromCoords((Coordinate[])null).AsText());
         }
 
         [Test]

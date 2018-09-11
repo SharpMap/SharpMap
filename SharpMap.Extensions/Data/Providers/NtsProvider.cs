@@ -228,7 +228,7 @@ namespace SharpMap.Data.Providers
                         //    throw new ApplicationException("Null values not supported");
                         var value = dataRow[column];
                         if (value is DBNull) value = null;
-                        attributes.AddAttribute(column.ColumnName, value);
+                        attributes.Add(column.ColumnName, value);
                     }
                     _features.Add(new Feature(geometry, attributes));
                 }

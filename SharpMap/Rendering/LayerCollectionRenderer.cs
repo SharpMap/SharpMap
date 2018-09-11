@@ -25,7 +25,7 @@ namespace SharpMap.Rendering
         private Image[] _images;
         private static Func<Size, float, int, bool> _parallelHeuristic;
         //private Matrix _transform;
-        
+
         /// <summary>
         /// Creates an instance of this class
         /// </summary>
@@ -164,14 +164,14 @@ namespace SharpMap.Rendering
         /// <summary>
         /// Invokes the rendering of the layer, a red X is drawn if it fails.
         /// </summary>
-        /// <param name="layer"></param>
-        /// <param name="g"></param>
-        /// <param name="mapViewPort"></param>
-        public static void RenderLayer(ILayer layer, Graphics g, MapViewport mapViewPort)
+        /// <param name="layer">The layer to render</param>
+        /// <param name="g">The graphics object to use</param>
+        /// <param name="mapViewport">The viewport</param>
+        public static void RenderLayer(ILayer layer, Graphics g, MapViewport mapViewport)
         {
             try
             {
-                layer.Render(g, mapViewPort);
+                layer.Render(g, mapViewport);
             }
             catch (Exception e)
             {
@@ -179,7 +179,7 @@ namespace SharpMap.Rendering
 
                 using (var pen = new Pen(Color.Red, 4f))
                 {
-                    var size = mapViewPort.Size;
+                    var size = mapViewport.Size;
 
                     g.DrawLine(pen, 0, 0, size.Width, size.Height);
                     g.DrawLine(pen, size.Width,0, 0, size.Height);

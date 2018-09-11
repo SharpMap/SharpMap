@@ -375,7 +375,7 @@ namespace SharpMap.Converters.WellKnownText
         {
             string nextToken = GetNextEmptyOrOpener(tokenizer);
             if (nextToken == "EMPTY")
-                return factory.CreateMultiPoint((Coordinate[])null);
+                return factory.CreateMultiPointFromCoords((Coordinate[])null);
 
             var points = new List<Coordinate>();
             points.Add(new Coordinate(GetNextNumber(tokenizer), GetNextNumber(tokenizer)));
@@ -385,7 +385,7 @@ namespace SharpMap.Converters.WellKnownText
                 points.Add(new Coordinate(GetNextNumber(tokenizer), GetNextNumber(tokenizer)));
                 nextToken = GetNextCloserOrComma(tokenizer);
             }
-            return factory.CreateMultiPoint(points.ToArray());
+            return factory.CreateMultiPointFromCoords(points.ToArray());
         }
 
         /// <summary>

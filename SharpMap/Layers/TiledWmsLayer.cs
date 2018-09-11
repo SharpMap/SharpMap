@@ -227,7 +227,7 @@ namespace SharpMap.Layers
 
                     tileSet.Verify();
 
-                    List<Envelope> tileExtents = TileExtents.GetTileExtents(tileSet, map.Envelope, map.PixelSize);
+                    List<Envelope> tileExtents = TileExtents.GetTileExtents(tileSet, map.Envelope, Math.Max(map.PixelWidth, map.PixelHeight));
 
                     if (logger.IsDebugEnabled)
                         logger.DebugFormat("TileCount: {0}", tileExtents.Count);

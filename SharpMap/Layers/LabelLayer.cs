@@ -343,7 +343,7 @@ namespace SharpMap.Layers
                     throw (new ApplicationException("DataSource property not set on layer '" + LayerName + "'"));
 
                 if (_envelope != null && CacheExtent)
-                    return ToTarget(_envelope.Clone());
+                    return ToTarget(_envelope.Copy());
 
                 var wasOpen = DataSource.IsOpen;
                 if (!wasOpen)

@@ -88,7 +88,10 @@ namespace SharpMap.Web.Wms
                 response.Write(" code=\"" + code + "\"");
             response.Write(">" + message + "</ServiceException>\n");
             response.Write("</ServiceExceptionReport>");
-            response.End();
+            response.Flush();
+            response.SuppressContent = true;
+
+            context.ApplicationInstance.CompleteRequest();
         }
 
         #region Nested type: WmsExceptionCode

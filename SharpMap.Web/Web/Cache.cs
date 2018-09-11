@@ -37,7 +37,7 @@ namespace SharpMap.Web
         /// This requires you to add the following to web.config:
         /// <code escaped="true">
         /// <httpHandlers>
-        ///	   <add verb="*" path="GetMap.aspx" type="SharpMap.Web.HttpHandler,SharpMap"/>
+        ///	   <add verb="*" path="GetMap.aspx" type="SharpMap.Web.HttpHandler,SharpMap.Web"/>
         /// </httpHandlers>
         /// </code>
         /// <example>

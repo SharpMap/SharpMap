@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<SharpMapContext xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Users>
+    <User>
+      <ID>0</ID>
+      <UserName>admin</UserName>
+      <Password>sharpmap</Password>
+    </User>
+  </Users>
+  <Layers>
+    <WmsLayer>
+      <Name>States</Name>
+      <Description>Demo data over US States</Description>
+      <DataSource>states.shp</DataSource>
+      <Provider>Shapefile</Provider>
+    </WmsLayer>
+  </Layers>
+  <Capabilities>
+    <ID>0</ID>
+    <Abstract>This is an example SharpMap server</Abstract>
+    <LayerLimit>0</LayerLimit>
+    <MaxWidth>0</MaxWidth>
+    <MaxHeight>0</MaxHeight>
+    <Title>SharpMap Demo Server</Title>
+    <Keywords>SharpMap,WMS</Keywords>
+  </Capabilities>
+</SharpMapContext>

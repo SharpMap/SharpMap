@@ -1054,7 +1054,7 @@ namespace SharpMap.Data.Providers
             private IGeometry ReadLineString(OgrGeometryType type, OgrGeometry geom)
             {
                 var count = geom.GetPointCount();
-                var dimension = geom.GetDimension();
+                var dimension = geom.GetCoordinateDimension();
 
                 var cs = _factory.CoordinateSequenceFactory.Create(count, dimension);
                 if (dimension > 2)
@@ -1071,7 +1071,7 @@ namespace SharpMap.Data.Providers
                         cs.SetOrdinate(i, Ordinate.Y, geom.GetY(i));
                     }
 
-                return _factory.CreateLinearRing(cs);
+                return _factory.CreateLineString(cs);
             }
 
             private IGeometry ReadPoint(OgrGeometryType type, OgrGeometry geom)

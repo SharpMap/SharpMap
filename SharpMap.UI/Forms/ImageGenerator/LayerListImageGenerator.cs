@@ -138,8 +138,7 @@ namespace SharpMap.Forms.ImageGenerator
 
             //  map.DisposeLayersOnDispose = false;
 
-            var mvp = new MapViewport(map.ID, map.SRID, new Envelope(map.Envelope),
-                  map.Size, map.PixelAspectRatio, map.MapTransform);
+            var mvp = new MapViewport(map);
             foreach (var lyr in Map.VariableLayers)
             {
                 //new Task<Rectangle>(RenderLayerImage, new object[] {lyr, mvp, _cts.Token }).Start();
@@ -301,8 +300,7 @@ namespace SharpMap.Forms.ImageGenerator
             //{
             //    map.DisposeLayersOnDispose = false;
 
-                var mvp = new MapViewport(map.ID, map.SRID, new Envelope(map.Envelope),
-                    map.Size, map.PixelAspectRatio, map.MapTransform);
+                var mvp = new MapViewport(map);
 
                 //var tasks = new List<Task>();
                 var tf = new TaskFactory();

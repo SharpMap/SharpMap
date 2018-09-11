@@ -37,7 +37,7 @@ namespace UnitTests
             Assert.AreEqual(4, c.Layer.ChildLayers.Length);
         }
 
-        [Test]
+        [Test, Ignore]
         public void TestDemisv111()
         {
             Client c = new Client("http://www3.demis.nl/worldmap/wms.asp");

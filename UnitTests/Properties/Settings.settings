@@ -17,24 +17,22 @@
 &lt;/SerializableConnectionString&gt;</DesignTimeValue>
       <Value Profile="(Default)">Data Source=;Initial Catalog=;Integrated Security=True</Value>
     </Setting>
+    <Setting Name="OleDbProvider" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Microsoft.ACE.OLEDB.12.0</Value>
+    </Setting>
     <Setting Name="PostGis" Type="(Connection string)" Scope="Application">
       <DesignTimeValue Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
 &lt;SerializableConnectionString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;ConnectionString&gt;Host=ivv-sqlt3;Port=5433;database=postgis_sample;SSPI=true&lt;/ConnectionString&gt;
-  &lt;ProviderName /&gt;
+  &lt;ConnectionString&gt;Server=ivv-t3s;Port=5432;database=postgis_sample;Integrated Security=true;&lt;/ConnectionString&gt;
 &lt;/SerializableConnectionString&gt;</DesignTimeValue>
-      <Value Profile="(Default)">Host=ivv-sqlt3;Port=5433;database=postgis_sample;SSPI=true</Value>
+      <Value Profile="(Default)">Server=ivv-t3s;Port=5432;database=postgis_sample;Integrated Security=true;</Value>
     </Setting>
     <Setting Name="SpatiaLite" Type="(Connection string)" Scope="Application">
       <DesignTimeValue Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
 &lt;SerializableConnectionString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
   &lt;ConnectionString&gt;Data Source=:memory:&lt;/ConnectionString&gt;
-  &lt;ProviderName /&gt;
 &lt;/SerializableConnectionString&gt;</DesignTimeValue>
       <Value Profile="(Default)">Data Source=:memory:</Value>
-    </Setting>
-    <Setting Name="OleDbProvider" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">Microsoft.ACE.OLEDB.15.0</Value>
     </Setting>
   </Settings>
 </SettingsFile>
