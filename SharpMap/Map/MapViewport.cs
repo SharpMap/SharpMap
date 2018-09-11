@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.Runtime.CompilerServices;
+using System.Threading;
 using GeoAPI.Geometries;
 using SharpMap.Utilities;
 
@@ -17,10 +19,7 @@ namespace SharpMap
         private readonly Matrix _mapTransformInverted;
         private double _left;
         private double _top;
-        private int _lastDpi;
-        private double _mapScale;
-        private object _lockMapScale = new object();
-
+        private readonly object _mapTransformLock = new object();
         /// <summary>
         /// Creates an instance of this class
         /// </summary>
@@ -36,7 +35,7 @@ namespace SharpMap
             ID = mapId;
             SRID = srid;
 
-            _envelope = new Envelope(env);
+            _envelope = env.Copy();
             Size = size;
             Center = env.Centre;
 
@@ -57,7 +56,7 @@ namespace SharpMap
             else
                 _mapTransformInverted = new Matrix();
 
-            var height = (Zoom * Size.Height) / Size.Width;
+            double height = (Zoom * Size.Height) / Size.Width;
             _left = Center.X - Zoom * 0.5;
             _top = Center.Y + height * 0.5 * PixelAspectRatio;
         }
@@ -65,7 +64,7 @@ namespace SharpMap
         /// <summary>
         /// Creates an instance of this class based on the provided map
         /// </summary>
-        /// <param name="map">The id of the map</param>
+        /// <param name="map">The Map</param>
         public MapViewport(Map map)
             :this(map.ID, map.SRID, map.Envelope, map.Size, map.PixelAspectRatio, map.MapTransform, map.MapTransformInverted)
         {
@@ -76,30 +75,58 @@ namespace SharpMap
         /// </summary>
         public Guid ID { get; private set; }
 
+        /// <summary>
+        /// Gets a value indicating the spatial reference id of the map
+        /// </summary>
         public int SRID { get; set; }
 
+        /// <summary>
+        /// Gets a value indicating the size of the map
+        /// </summary>
         public Size Size { get; private set; }
 
+        /// <summary>
+        /// Gets a value indicating the area covered by the map (in world units)
+        /// </summary>
         public Envelope Envelope
         {
             get { return new Envelope(_envelope); }
         }
 
+        /// <summary>
+        /// Gets a value indicating the transformation that has to be applied when
+        /// rendering the map
+        /// </summary>
         public Matrix MapTransform
         {
             get { return _mapTransform.Clone(); }
         }
 
-        public Coordinate Center { get; private set; }
+        /// <summary>
+        /// Gets a value indicating the center of the map viewport
+        /// </summary>
+        public Coordinate Center { get; }
 
+        /// <summary>
+        /// Gets a value indicating the zoom of the map viewport
+        /// </summary>
+        /// <remarks>This value is identical to <see cref="MapWidth"/></remarks>
+        public double Zoom { get; set; }
 
-        public double Zoom { get; private set; }
-        public double MapHeight { get; private set; }
+        /// <summary>
+        /// Gets a value indicating the height of the map viewport in world units
+        /// </summary>
+        public double MapHeight { get; }
+
+        /// <summary>
+        /// Gets a value indicating the width of the map viewport in world units
+        /// </summary>
+        /// <remarks>This value is equal to <see cref="Zoom"/></remarks>
         public double MapWidth { get { return Zoom; } }
 
         /// <summary>
         /// Gets or sets the aspect-ratio of the pixel scales. A value less than 
-        /// 1 will make the map streach upwards, and larger than 1 will make it smaller.
+        /// 1 will make the map stretch upwards, and larger than 1 will make it smaller.
         /// </summary>
         /// <exception cref="ArgumentException">Throws an argument exception when value is 0 or less.</exception>
         public double PixelAspectRatio
@@ -107,9 +134,9 @@ namespace SharpMap
             get; private set;
         }
 
-        /// <summary>
-        /// Get Returns the size of a pixel in world coordinate units
-        /// </summary>
+        ///// <summary>
+        ///// Get Returns the size of a pixel in world coordinate units
+        ///// </summary>
         //[Obsolete("Use PixelWidth or PixelHeight")]
         //public double PixelSize { get; private set; }
 
@@ -123,6 +150,11 @@ namespace SharpMap
         /// </summary>
         public double PixelHeight { get; private set; }
 
+        /// <summary>
+        /// Function to compute the denominator of the viewport's scale when using a given <paramref name="dpi"/> resolution.
+        /// </summary>
+        /// <param name="dpi">The resolution</param>
+        /// <returns>The scale's denominator</returns>
         public double GetMapScale(int dpi)
         {
             lock (_lockMapScale)
@@ -138,7 +170,7 @@ namespace SharpMap
 
         /// <summary>
         /// Converts a point from world coordinates to image coordinates based on the current
-        /// zoom, center and mapsize.
+        /// <see cref="Zoom"/>, <see cref="Center"/> and <see cref="Size"/>.
         /// </summary>
         /// <param name="p">Point in world coordinates</param>
         /// <param name="careAboutMapTransform">Indicates whether MapTransform should be taken into account</param>
@@ -149,22 +181,22 @@ namespace SharpMap
             if (!careAboutMapTransform)
                 return pTmp;
 
-            using (var transform = MapTransform)
+            Monitor.Enter(_mapTransformLock);
+            if (_mapTransform.IsIdentity)
             {
-                if (!transform.IsIdentity)
-                {
-                    var pts = new[] { pTmp };
+                var pts = new[] {pTmp};
                     transform.TransformPoints(pts);
-                    pTmp = pts[0];
-                }
+                pTmp = pts[0];
             }
+            Monitor.Exit(_mapTransformLock);
+
 
             return pTmp;
         }
 
         /// <summary>
         /// Converts a point from world coordinates to image coordinates based on the current
-        /// zoom, center and mapsize.
+        /// <see cref="Zoom"/>, <see cref="Center"/> and <see cref="Size"/>.
         /// </summary>
         /// <param name="p">Point in world coordinates</param>
         /// <returns>Point in image coordinates</returns>
@@ -186,7 +218,7 @@ namespace SharpMap
 
         /// <summary>
         /// Converts a point from image coordinates to world coordinates based on the current
-        /// zoom, center and mapsize.
+        /// <see cref="Zoom"/>, <see cref="Center"/> and <see cref="Size"/>.
         /// </summary>
         /// <param name="p">Point in image coordinates</param>
         /// <returns>Point in world coordinates</returns>
@@ -196,26 +228,24 @@ namespace SharpMap
         }
         /// <summary>
         /// Converts a point from image coordinates to world coordinates based on the current
-        /// zoom, center and mapsize.
+        /// <see cref="Zoom"/>, <see cref="Center"/> and <see cref="Size"/>.
         /// </summary>
         /// <param name="p">Point in image coordinates</param>
         /// <param name="careAboutMapTransform">Indicates whether MapTransform should be taken into account</param>
         /// <returns>Point in world coordinates</returns>
+        [MethodImpl(MethodImplOptions.Synchronized)]
         public Coordinate ImageToWorld(PointF p, bool careAboutMapTransform)
         {
-            if (careAboutMapTransform)
-                using (var transformInv = _mapTransformInverted.Clone())
-            {
                     if (!transformInv.IsIdentity)
-                {
-                    var pts = new[] { p };
+            {
+                var pts = new[] { p };
                         transformInv.TransformPoints(pts);
-                    p = pts[0];
-                }
+                p = pts[0];
             }
 
             return Transform.MapToWorld(p, this);
         }
+
         /// <summary>
         /// Creates a map viewport from a given map
         /// </summary>
@@ -223,8 +253,9 @@ namespace SharpMap
         /// <returns></returns>
         public static implicit operator MapViewport(Map map)
         {
-            return new MapViewport(map.ID, map.SRID, map.Envelope, map.Size, map.PixelAspectRatio, 
-                                   map.MapTransform);
+            return new MapViewport(map);
+            //return new MapViewport(map.ID, map.SRID, map.Envelope, map.Size, map.PixelAspectRatio, 
+            //                       map.MapTransform, map.MapTransformInverted);
         }
 
     }
