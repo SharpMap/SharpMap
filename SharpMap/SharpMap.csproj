@@ -21,6 +21,7 @@
     <FileVersion>1.2.0.0</FileVersion>
     <PackageTags>SharpMap GIS Map GeoSpatial</PackageTags>
     <Description>This package contains the core components of SharpMap.</Description>
+    <Version>1.2.0-pre1</Version>
   </PropertyGroup>
 
   <ItemGroup>
@@ -45,5 +46,9 @@
       <Version>4.3.0</Version>
     </PackageReference>
   </ItemGroup>
+
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="cd &quot;$(SolutionDir)&quot;&#xD;&#xA;&quot;$(MSBuildBinPath)\msbuild&quot; SharpMap.targets /t:Version&#xD;&#xA;cd &quot;$(ProjectDir)&quot;" />
+  </Target>
 
 </Project>
