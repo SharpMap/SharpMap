@@ -22,7 +22,13 @@ using System.Reflection;
 using GeoAPI.Geometries;
 using SharpMap.Rendering.Symbolizer;
 using Common.Logging;
-
+#if NETSTANDARD
+using SmColor = SharpMap.Drawing.Color;
+using Color = System.Drawing.Color;
+using KnownColor = SharpMap.Drawing.KnownColor;
+#else
+using SmColor = System.Drawing.Color;
+#endif
 namespace SharpMap.Styles
 {
     /// <summary>
@@ -96,7 +102,7 @@ namespace SharpMap.Styles
             return Clone();
         }
 
-        #region Privates
+#region Privates
 
         private Brush _fillStyle;
         private Pen _lineStyle;
@@ -105,7 +111,7 @@ namespace SharpMap.Styles
         private Image _symbol;
         private float _lineOffset;
 
-        #endregion
+#endregion
 
         /// <summary>
         /// Initializes a new VectorStyle and sets the default values
@@ -129,7 +135,7 @@ namespace SharpMap.Styles
             LineOffset = 0;
         }
 
-        #region Properties
+#region Properties
 
         private PointF _symbolOffset;
         private float _symbolRotation;
@@ -265,7 +271,7 @@ namespace SharpMap.Styles
         /// <remarks>Setting this property will lead to ignorance towards all <see cref="IPolygonal"/> related style settings</remarks>
         public IPolygonSymbolizer PolygonSymbolizer { get; set; }
 
-        #endregion
+#endregion
 
         /// <summary>
         /// Releases managed resources
@@ -460,8 +466,8 @@ namespace SharpMap.Styles
         {
             var kc = (KnownColor)_rnd.Next(28, 168);
             return alpha == 255 
-                ? Color.FromKnownColor(kc) 
-                : Color.FromArgb(alpha, Color.FromKnownColor(kc));
+                ? SmColor.FromKnownColor(kc) 
+                : Color.FromArgb(alpha, SmColor.FromKnownColor(kc));
         }
     }
 }

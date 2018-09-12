@@ -1,7 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-
+#if NETSTANDARD
+using KnownColor = SharpMap.Drawing.KnownColor;
+using SmColor = SharpMap.Drawing.Color;
+#else
+using KnownColor = System.Drawing.KnownColor;
+using SmColor = System.Drawing.Color;
+#endif
 namespace SharpMap.Rendering.Symbolizer
 {
     /// <summary>
@@ -9,17 +15,16 @@ namespace SharpMap.Rendering.Symbolizer
     /// </summary>
     public static class Utility
     {
-        private static readonly Random RNG = new Random(998762);
+        private static readonly Random RND = new Random(998762);
         private static readonly List<KnownColor> _knownColors;
 
         static Utility()
         {
             //Get all known colors
             _knownColors = new List<KnownColor>();
-            _knownColors.AddRange((KnownColor[])Enum.GetValues(typeof(KnownColor)));
-            
+            _knownColors.AddRange((KnownColor[]) Enum.GetValues(typeof(KnownColor)));
             //We remove the system colors
-            _knownColors.RemoveAll(x => (int)x < 27);
+            _knownColors.RemoveAll(x => (int) x < 27 || (int)x > 167);
         }
 
         /// <summary>
@@ -28,7 +33,11 @@ namespace SharpMap.Rendering.Symbolizer
         /// <returns>A random color form the <see cref="KnownColor"/> enumeration</returns>
         public static Color RandomKnownColor()
         {
-            return Color.FromKnownColor(_knownColors[RNG.Next(0, _knownColors.Count - 1)]);
+#if !NETSTANDARD
+            return Color.FromKnownColor(_knownColors[RND.Next(0, _knownColors.Count - 1)]);
+#else
+            return SmColor.FromKnownColor(_knownColors[RND.Next(0, _knownColors.Count - 1)]);
+#endif
         }
 
         /// <summary>
@@ -50,7 +59,7 @@ namespace SharpMap.Rendering.Symbolizer
                     break;
                 case GraphicsUnit.Display:
                     //Heuristic for printer or display needed!
-                    size *= g.DpiY / (g.DpiY < 100 ? 72f : 100f) ;
+                    size *= g.DpiY / (g.DpiY < 100 ? 72f : 100f);
                     break;
                 case GraphicsUnit.Document:
                     size *= g.DpiY / 300;
@@ -64,15 +73,15 @@ namespace SharpMap.Rendering.Symbolizer
                 case GraphicsUnit.World:
                     size *= g.DpiY / g.PageScale;
                     break;
-                    /*
-                case GraphicsUnit.Pixel:
-                default:
-                    //do nothing
-                    break;
-                 */
+                /*
+            case GraphicsUnit.Pixel:
+            default:
+                //do nothing
+                break;
+             */
             }
+
             return (float) Math.Round(size, MidpointRounding.AwayFromZero);
-            
         }
     }
 }

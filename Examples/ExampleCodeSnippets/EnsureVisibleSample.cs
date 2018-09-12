@@ -1,5 +1,8 @@
 
+using System;
+using System.Drawing;
 using GeoAPI.Geometries;
+using NUnit.Framework;
 
 namespace ExampleCodeSnippets
 {
@@ -94,9 +97,43 @@ public static void EnsureVisible(SharpMap.Map map, GeoAPI.Geometries.Coordinate 
             EnsureVisible(map, new GeoAPI.Geometries.Coordinate(15, -20));
             System.Console.WriteLine(map.Center);
         }
+
+        [Test, Ignore]
+        public void CreateKnownColors()
+        {
+            Console.WriteLine("/// <summary>");
+            Console.WriteLine("/// Attribute class to associate ARGB value with <see cref=\"KnownColor\" enum member");
+            Console.WriteLine("/// </summary>");
+            Console.WriteLine("[System.AttributeUsage(System.AttributeTargets.Field)]");
+            Console.WriteLine("internal class ArgbValueAttribute : System.Attribute\n{");
+            Console.WriteLine("    /// <summary>");
+            Console.WriteLine("    /// Creates an instance of this class");
+            Console.WriteLine("    /// </summary>");
+            Console.WriteLine("    /// <param name=\"argb\">The ARBB value</param>");
+            Console.WriteLine("    public ArgbValueAttribute(int argb)\n    {");
+            Console.WriteLine("            Argb = argb;\n    }");
+            Console.WriteLine("    /// <summary>");
+            Console.WriteLine("    /// Gets a value indicating the ARGB value");
+            Console.WriteLine("    /// </summary>");
+            Console.WriteLine("    public int Argb { get; }");
+            Console.WriteLine("}");
+
+            Console.WriteLine("/// <summary>");
+            Console.WriteLine("/// Straight copy of <see cref=\"System.Drawing.KnownColor\"/> names");
+            Console.WriteLine("/// </summary>");
+            Console.WriteLine("internal enum KnownColor\n{");
+            foreach (System.Drawing.KnownColor knownColor in System.Enum.GetValues(typeof(System.Drawing.KnownColor)))
+            {
+                string knownColorName = Enum.GetName(typeof(System.Drawing.KnownColor), knownColor);
+                Console.WriteLine("\t/// <summary>");
+                Console.WriteLine("\t/// Color {0} (#{1:X})", knownColorName, 0x00FFFFFF & Color.FromKnownColor(knownColor).ToArgb());
+                Console.WriteLine("\t/// </summary>");
+                Console.WriteLine("\t[ArgbValue({0})]", Color.FromKnownColor(knownColor).ToArgb());
+                Console.WriteLine("\t{0} = {1},", knownColorName, (int)knownColor);
+            }
+            Console.WriteLine("}");
+        }
+
     }
-
-
-
 
 }
