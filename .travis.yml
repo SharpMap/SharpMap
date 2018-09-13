@@ -1,6 +1,6 @@
 language: csharp
 mono: latest
-dotnet: 2.1.4
+dotnet: 2.1.402
 install:
 - nuget install NUnit.Runners -Version 2.6.4 -OutputDirectory testrunner
 script:
