@@ -12,6 +12,19 @@ namespace UnitTests.Data.Providers
         public override void TestFixtureSetup()
         {
             base.TestFixtureSetup();
+
+            // Check if the OLE DB provider is available
+            Microsoft.Win32.RegistryKey registryKey = 
+                Microsoft.Win32.Registry.ClassesRoot.OpenSubKey(Properties.Settings.Default.OleDbProvider);
+            if (registryKey != null)
+            {
+                registryKey.Close();
+            }
+            else
+            {
+                Assert.Ignore("OLE DB provider " + Properties.Settings.Default.OleDbProvider + " is not found.");
+            }
+
             _tableName = WriteCsv();
         }
 
