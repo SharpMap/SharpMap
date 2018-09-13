@@ -65,8 +65,7 @@ namespace UnitTests.Data.Providers
                 conn.Open();
                 using(SqlCommand cmd = conn.CreateCommand())
                 {
-                    // The ID column cannot simply be int, because that would cause GetObjectIDsInView to fail. The provider internally works with uint
-                    cmd.CommandText = "CREATE TABLE roads_ugl(ID decimal(10,0) identity(1,1) PRIMARY KEY, NAME nvarchar(100), GEOM geometry)";
+                    cmd.CommandText = "CREATE TABLE roads_ugl(ID int identity(1,1) PRIMARY KEY, NAME nvarchar(100), GEOM geometry)";
                     cmd.ExecuteNonQuery();
                 }
                 
@@ -279,6 +278,48 @@ namespace UnitTests.Data.Providers
 
             Assert.IsNotNull(geometries);
             Assert.AreEqual(100, geometries.Count);
+        }
+
+        [NUnit.Framework.Test()]
+        [Ignore("Do not run performance test by default, because it might fail because of external factors (busy CPU).")]
+        public void TestPerformanceSqlServer2008ExProvider()
+        {
+            // Note:
+            // This test may fail with an InvalidCastException. This is caused by multiple versions of the 
+            // Microsoft.SqlServer.Types assembly being available (e.g. SQL 2008 and 2012).
+            // This can be solved with a <bindingRedirect> in the .config file.
+
+            SharpMap.Data.Providers.SqlServer2008 sq = GetTestProvider();
+            SharpMap.Data.Providers.SqlServer2008 sqex = GetTestProviderEx();
+            GeoAPI.Geometries.Envelope envelope = GetTestEnvelope();
+            List<TimeSpan> measurements = new List<TimeSpan>(200);
+            List<TimeSpan> measurementsex = new List<TimeSpan>(200);
+            System.Diagnostics.Stopwatch timer;
+
+            // 10 "startup" runs, followed by 200 measured runs
+            for (int i = -10; i < 200; i++)
+            {
+                timer = System.Diagnostics.Stopwatch.StartNew();
+                sq.GetGeometriesInView(envelope);
+                timer.Stop();
+                if (i >= 0) measurements.Add(timer.Elapsed);
+
+                timer = System.Diagnostics.Stopwatch.StartNew();
+                sqex.GetGeometriesInView(envelope);
+                timer.Stop();
+                if (i >= 0) measurementsex.Add(timer.Elapsed);
+            }
+
+            // Remove 10 slowest and 10 fastest times:
+            measurements = measurements.OrderBy(x => x).Skip(10).Take(measurements.Count - 20).ToList();
+            measurementsex = measurementsex.OrderBy(x => x).Skip(10).Take(measurementsex.Count - 20).ToList();
+
+            // Average time:
+            TimeSpan avg = TimeSpan.FromTicks((long)measurements.Average(x => x.Ticks));
+            TimeSpan avgex = TimeSpan.FromTicks((long)measurementsex.Average(x => x.Ticks));
+
+            // The SqlServer2008Ex provider should be faster:
+            Assert.Less(avgex, avg);
         }
 
         [NUnit.Framework.Test()]

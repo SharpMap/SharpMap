@@ -53,7 +53,6 @@ namespace UnitTests.Data.Providers
                             cmd.CommandText = "DROP TABLE IF EXISTS roads_ugl";
                             cmd.ExecuteNonQuery();
 
-                            // The ID column cannot simply be int, because that would cause GetObjectIDsInView to fail. The provider internally works with uint
                             cmd.CommandText =
                                 "CREATE TABLE roads_ugl(id integer primary key, name character varying(100), geog geography);";
                             cmd.ExecuteNonQuery();
