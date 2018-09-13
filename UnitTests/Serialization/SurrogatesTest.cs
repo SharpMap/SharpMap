@@ -130,7 +130,7 @@ namespace UnitTests.Serialization
             }
         }
 
-        [Test]
+        [Test, Ignore("Flaky")]
         public void TestLinearGradientBrush()
         {
             var formatter = GetFormatter();

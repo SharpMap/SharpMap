@@ -26,9 +26,9 @@ namespace SharpMap.Layers
         #region Fields
         
         //string layerName;
-        /// <summary>
-        /// The <see cref="ImageAttributes"/> used when rendering the tiles
-        /// </summary>
+        ///// <summary>
+        ///// The <see cref="ImageAttributes"/> used when rendering the tiles
+        ///// </summary>
         //protected readonly ImageAttributes _imageAttributes = new ImageAttributes();
 
         /// <summary>

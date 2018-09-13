@@ -18,6 +18,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Net;
 using System.Reflection;
 using System.Xml;
 
@@ -69,25 +70,24 @@ namespace SharpMap.Converters.WellKnownText
         /// <returns></returns>
         public static IEnumerable<KeyValuePair<int, string>> GetAllReferenceSystems()
         {
-            var xmldoc = new XmlDocument();
-
-            var uri = new Uri(Assembly.GetExecutingAssembly().CodeBase);
-            var file = Path.GetDirectoryName(uri.LocalPath) + "\\SpatialRefSys.xml";
+            XmlNodeList nodes = null;
             try
             {
-                xmldoc.Load(file);
+                var xml = EnsureSpatialRefSysXml();
+                nodes = xml.DocumentElement.SelectNodes("/SpatialReference/*");
             }
-            catch
+            catch (Exception e)
             {
-                yield break;
+                nodes = null;
             }
 
-            var nodes = xmldoc.DocumentElement.SelectNodes("/SpatialReference/*");
+            if (nodes == null) 
+                yield break;
+
             foreach (XmlNode referenceNode in nodes)
             {
-                var srid = int.Parse(referenceNode.SelectSingleNode("SRID").InnerText);
-
-                var wkt = referenceNode.LastChild.InnerText;
+                int srid = int.Parse(referenceNode.SelectSingleNode("SRID").InnerText);
+                string wkt = referenceNode.LastChild.InnerText;
 
                 yield return new KeyValuePair<int, string>(srid, wkt);
             }
@@ -95,14 +95,9 @@ namespace SharpMap.Converters.WellKnownText
 
         private static string SridToDefinition(int srid, IDictionary<int, string> cache, string nodeName = null)
         {
-
-            var xmldoc = new XmlDocument();
-
-            var uri = new Uri(Assembly.GetExecutingAssembly().CodeBase);
-            var file = Path.GetDirectoryName(uri.LocalPath) + "\\SpatialRefSys.xml";
             try
             {
-                xmldoc.Load(file);
+                var xmldoc = EnsureSpatialRefSysXml();
                 var node = xmldoc.DocumentElement.SelectSingleNode("/SpatialReference/ReferenceSystem[SRID='" + srid + "']");
                 if (node != null)
                 {
@@ -120,6 +115,29 @@ namespace SharpMap.Converters.WellKnownText
 
             }
             return "";
+        }
+
+        private static XmlDocument EnsureSpatialRefSysXml()
+        {
+            var res = new XmlDocument();
+
+            var uri = new Uri(Assembly.GetExecutingAssembly().CodeBase);
+            string file = Path.Combine(Path.GetDirectoryName(uri.LocalPath), "SpatialRefSys.xml");
+
+            if (!File.Exists(file))
+                DownloadSrs(file);
+
+            res.Load(file);
+            return res;
+        }
+
+        private static void DownloadSrs(string path)
+        {
+            using (var wc = new WebClient())
+                wc.DownloadFile(
+                    new Uri("https://raw.githubusercontent.com/SharpMap/SharpMap/Branches/1.0/SharpMap/SpatialRefSys.xml"), 
+                    path);
+            
         }
     }
 }
