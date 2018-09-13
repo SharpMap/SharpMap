@@ -1,8 +1,9 @@
 language: csharp
-solution: SharpMap.sln
+mono: latest
+dotnet: latest
 install:
-  - nuget restore SharpMap.sln
-  - nuget install NUnit.Runners -Version 2.6.4 -OutputDirectory testrunner
+- nuget install NUnit.Runners -Version 2.6.4 -OutputDirectory testrunner
 script:
-  - dotnet msbuild SharpMap.targets /t:Version
-  - dotnet msbuild SharpMap.sln /p:Configuration=ReleaseLinux "/p:Platform=Any CPU" /p:UseTools35=false "/p:FrameworkPathOverride=$(dirname $(which mono))/../lib/mono/4.5/" /v:minimal /p:WarningLevel=3
+- dotnet msbuild SharpMap.targets /t:Version /p:UseTools35=false /v:minimal
+- dotnet msbuild SharpMap.sln /m /p:Configuration=ReleaseLinux "/p:Platform=Any CPU" /p:UseTools35=false "/p:FrameworkPathOverride=$(dirname $(which mono))/../lib/mono/4.5/" /v:minimal /p:WarningLevel=3
+- mono testrunner/NUnit.Runners.2.6.4/tools/nunit-console.exe UnitTests/bin/UnitTests.dll
