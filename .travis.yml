@@ -4,4 +4,5 @@ install:
   - nuget restore SharpMap.sln
   - nuget install NUnit.Runners -Version 2.6.4 -OutputDirectory testrunner
 script:
-  - xbuild SharpMap.sln /p:Configuration=ReleaseLinux;UseTools35=false
+  - dotnet msbuild SharpMap.targets /t:Version
+  - dotnet msbuild SharpMap.sln /p:Configuration=ReleaseLinux "/p:Platform=Any CPU" /p:UseTools35=false "/p:FrameworkPathOverride=$(dirname $(which mono))/../lib/mono/4.5/" /v:minimal /p:WarningLevel=3

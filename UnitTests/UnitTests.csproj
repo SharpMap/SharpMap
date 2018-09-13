@@ -29,7 +29,6 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <UseVSHostingProcess>false</UseVSHostingProcess>
-    <PlatformTarget>x86</PlatformTarget>
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
@@ -40,7 +39,16 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <UseVSHostingProcess>true</UseVSHostingProcess>
-    <PlatformTarget>x86</PlatformTarget>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'ReleaseLinux|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE;LINUX</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <UseVSHostingProcess>true</UseVSHostingProcess>
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
@@ -149,11 +157,15 @@
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
+  <ItemGroup Condition=" '$(Configuration)' != 'ReleaseLinux' ">
+    <Compile Include="Converters\SqlServer2008.cs" />
+    <Compile Include="Data\Providers\MsSqlServerSpatialTests.cs" />
+    <Compile Include="Data\Providers\SQLServer2008Tests.cs" />
+  </ItemGroup>
   <ItemGroup>
     <Compile Include="Data\Providers\NtsProviderTests.cs" />
     <Compile Include="Layers\CoordinateTransformationTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Converters\SqlServer2008.cs" />
     <Compile Include="Converters\WKB\WKBTests.cs" />
     <Compile Include="Converters\WKT\SpatialReferenceTests.cs" />
     <Compile Include="Converters\WKT\WktGeometryTests.cs" />
@@ -167,14 +179,12 @@
     <Compile Include="Data\Providers\GeoPackageTest.cs" />
     <Compile Include="Data\Providers\KmlProviderTests.cs" />
     <Compile Include="Data\Providers\ManagedSQLiteTests.cs" />
-    <Compile Include="Data\Providers\MsSqlServerSpatialTests.cs" />
     <Compile Include="Data\Providers\OgrProviderTest.cs" />
     <Compile Include="Data\Providers\OleDbPointProviderTest.cs" />
     <Compile Include="Data\Providers\PostGisGeographyTests.cs" />
     <Compile Include="Data\Providers\PostGisTests.cs" />
     <Compile Include="Data\Providers\ProviderTest.cs" />
     <Compile Include="Data\Providers\ShapeFileProviderTests.cs" />
-    <Compile Include="Data\Providers\SQLServer2008Tests.cs" />
     <Compile Include="Data\Providers\ThreadingTest.cs" />
     <Compile Include="DictionaryExtender.cs" />
     <Compile Include="EventListener.cs" />
@@ -228,6 +238,12 @@
       <Link>Properties\SharedAssemblyVersion.cs</Link>
     </Compile>
   </ItemGroup>
+  <ItemGroup Condition=" '$(Configuration)' != 'ReleaseLinux' ">
+    <ProjectReference Include="..\SharpMap.SqlServerSpatialObjects\SharpMap.SqlServerSpatialObjects.csproj">
+      <Project>{6D681045-8EF1-44EA-A19D-C7A63A6D0F76}</Project>
+      <Name>SharpMap.SqlServerSpatialObjects</Name>
+    </ProjectReference>
+  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SharpMap.Data.Providers.GeoPackage\SharpMap.Data.Providers.GeoPackage.csproj">
       <Project>{AF0594AB-FC1D-47E4-8CDD-361CDC621A36}</Project>
@@ -248,10 +264,6 @@
     <ProjectReference Include="..\SharpMap.Serialization\SharpMap.Serialization.csproj">
       <Project>{75E9B9FF-D04E-4F4F-8D06-8CD310F5F2DB}</Project>
       <Name>SharpMap.Serialization</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\SharpMap.SqlServerSpatialObjects\SharpMap.SqlServerSpatialObjects.csproj">
-      <Project>{6D681045-8EF1-44EA-A19D-C7A63A6D0F76}</Project>
-      <Name>SharpMap.SqlServerSpatialObjects</Name>
     </ProjectReference>
     <ProjectReference Include="..\SharpMap.Utilities.Indexing.SbnTree\SharpMap.Utilities.Indexing.SbnTree.csproj">
       <Project>{723F9FD5-8424-4EEE-BA92-57ECEE0F395D}</Project>
