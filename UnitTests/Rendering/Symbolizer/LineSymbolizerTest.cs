@@ -9,7 +9,7 @@
 
         private string GetTestFile()
         {
-            return System.IO.Path.Combine(System.IO.Path.GetDirectoryName(this.GetType().Assembly.CodeBase.Replace("file:///", "")), @"TestData\roads_ugl.shp");
+            return System.IO.Path.Combine("TestData", "roads_ugl.shp");
         }
 
         [NUnit.Framework.Test] 

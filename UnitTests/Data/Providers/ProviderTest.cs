@@ -18,8 +18,7 @@ namespace UnitTests.Data.Providers
         {
             get
             {
-                var codeBase = Path.GetDirectoryName(GetType().Assembly.CodeBase);
-                return Path.Combine(new Uri(codeBase).LocalPath, "TestData");
+                return "TestData";
             }
         }
 

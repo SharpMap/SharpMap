@@ -60,15 +60,11 @@ namespace UnitTests.Data.Providers
 
     public class ShapeFileThreadingTest : ThreadingTest
     {
-        private struct tmp { }
-
         internal static string TestDataPath
         {
             get
             {
-                var t = new tmp();
-                var codeBase = Path.GetDirectoryName(t.GetType().Assembly.CodeBase);
-                return Path.Combine(new Uri(codeBase).LocalPath, "TestData", "roads_ugl.shp");
+                return Path.Combine("TestData", "roads_ugl.shp");
             }
         }
 
