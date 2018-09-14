@@ -7,4 +7,4 @@ script:
 - nuget restore SharpMap.sln
 - dotnet msbuild SharpMap.targets /t:Version /p:UseTools35=false /v:minimal
 - dotnet msbuild SharpMap.sln /m /p:Configuration=ReleaseLinux "/p:Platform=Any CPU" /p:UseTools35=false "/p:FrameworkPathOverride=$(dirname $(which mono))/../lib/mono/4.5/" /v:minimal /p:WarningLevel=3
-- mono testrunner/NUnit.Runners.2.6.4/tools/nunit-console.exe --nothread --cleanup UnitTests/bin/UnitTests.dll
+- mono testrunner/NUnit.Runners.2.6.4/tools/nunit-console.exe --nothread UnitTests/bin/UnitTests.dll
