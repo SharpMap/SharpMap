@@ -106,8 +106,13 @@ namespace UnitTests.Rendering.Symbolizer
                 TestData.CreatingData.GetRandomOrdinates(50, -180, 180), TestData.CreatingData.GetRandomOrdinates(50, -90, 90), null);
             var geometryFeatureProvider = new SharpMap.Data.Providers.GeometryFeatureProvider(fdt);
             var layer = new SharpMap.Layers.VectorLayer("randompoints", geometryFeatureProvider);
+
+            
+            var wmnStream = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("UnitTests.Resources.Women.png");
+            var wmnBmp = new System.Drawing.Bitmap(wmnStream);
+
             var rps =
-                new SharpMap.Rendering.Symbolizer.RasterPointSymbolizer {Symbol = Properties.Resources.Women};
+                new SharpMap.Rendering.Symbolizer.RasterPointSymbolizer {Symbol = wmnBmp};
 
             layer.Style.PointSymbolizer = rps;
             var map = new SharpMap.Map(new System.Drawing.Size(720, 360));

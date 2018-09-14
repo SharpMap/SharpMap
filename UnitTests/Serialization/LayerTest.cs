@@ -7,6 +7,7 @@ using SharpMap.Layers;
 using SharpMap.Rendering.Symbolizer;
 using UnitTests.Properties;
 using BruTile.Predefined;
+using Assembly = System.Reflection.Assembly;
 
 namespace UnitTests.Serialization
 {
@@ -45,7 +46,9 @@ namespace UnitTests.Serialization
         public void TestGdiImageLayer()
         {
             var tmp = Path.ChangeExtension(Path.GetTempFileName(), "png");
-            Resources.Women.Save(tmp, ImageFormat.Png);
+            var wmnStream = Assembly.GetExecutingAssembly().GetManifestResourceStream("UnitTests.Resources.Women.png");
+            var wmnBmp = new System.Drawing.Bitmap(wmnStream);
+            wmnBmp.Save(tmp, ImageFormat.Png);
 
             var gdiS = new GdiImageLayer("Frau", tmp);
             GdiImageLayer gdiD = null;

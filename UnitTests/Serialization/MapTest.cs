@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if !LINUX
+using System;
 using System.Drawing;
 using System.IO;
 using BruTile.Predefined;
@@ -126,3 +127,4 @@ namespace UnitTests.Serialization
         }
     }
 }
+#endif

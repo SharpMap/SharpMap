@@ -13,15 +13,11 @@ namespace UnitTests.Data.Providers
 {
     public class ShapeFileWithMemoryCacheThreadingTest : ThreadingTest
     {
-        private struct TMP {}
-
         private static string TestDataPath 
         {
             get
             {
-                var t = new TMP();
-                var codeBase = Path.GetDirectoryName(t.GetType().Assembly.CodeBase);
-                return Path.Combine(new Uri(codeBase).LocalPath, "TestData", "roads_ugl.shp");
+                return Path.Combine("TestData", "roads_ugl.shp");
             }
         }
 
