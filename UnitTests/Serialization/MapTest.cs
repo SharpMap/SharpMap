@@ -74,9 +74,7 @@ namespace UnitTests.Serialization
             var m = new Map(_mapSize);
             m.BackgroundLayer.Add(new TileLayer(KnownTileSources.Create(KnownTileSource.MapQuest), "MapQuest"));
             
-            var codeBase = Path.GetDirectoryName(new Uri(GetType().Assembly.CodeBase).LocalPath);
-            var cn = string.Format("Data Source={0};",
-                                   Path.Combine(new Uri(codeBase).LocalPath, "TestData", "osm_aurich.sqlite"));
+            string cn = $"Data Source={Path.Combine("TestData", "osm_aurich.sqlite")};";
             
             var ct = Wgs84ToWebMercator;
             //Env[7,45731445821406 : 7,53454260528903, 53,4342695512313 : 53,478793942147]

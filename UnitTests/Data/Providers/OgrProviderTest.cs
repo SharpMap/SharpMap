@@ -9,14 +9,18 @@ namespace UnitTests.Data.Providers
     [TestFixture]
     public class OgrProviderTest
     {
-        [Test]
-        public void TestCreateFromFeatureDataTable()
+        [TestCase("C:\\Users\\obe.IVV - AACHEN\\Downloads\\SharpMap Codeplex\\SHPFiles\\RxLevel - Idle.shp")]
+        public void TestCreateFromFeatureDataTable(string filePath)
         {
             var fds = new SharpMap.Data.FeatureDataSet();
+            filePath = filePath.Replace("\\", new string(System.IO.Path.DirectorySeparatorChar, 1));
+            if (!System.IO.File.Exists(filePath))
+                throw new IgnoreException($"'{filePath}' not found.");
+
             FeatureDataTable fdt = null;
             try
             {
-                var p = new Ogr("C:\\Users\\obe.IVV-AACHEN\\Downloads\\SharpMap Codeplex\\SHPFiles\\RxLevel-Idle.shp");
+                var p = new Ogr(filePath);
                 p.SRID = 4326;
                 var layer = string.Empty;
                 if (!string.IsNullOrEmpty(layer)) p.LayerName = layer;
@@ -34,7 +38,7 @@ namespace UnitTests.Data.Providers
             Assert.DoesNotThrow(() => Ogr.CreateFromFeatureDataTable(fdt, 
                 ((FeatureDataRow)fdt.Rows[0]).Geometry.OgcGeometryType, 4326, 
                 "Mapinfo File", 
-                "C:\\Users\\obe.IVV-AACHEN\\Downloads\\SharpMap Codeplex\\SHPFiles\\RxLevel-Idle.tab"));
+                filePath));
         }
     }
 }

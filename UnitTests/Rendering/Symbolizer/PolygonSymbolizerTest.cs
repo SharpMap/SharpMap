@@ -25,11 +25,14 @@ namespace UnitTests.Rendering.Symbolizer
 
         }
 
-        [NUnit.Framework.Test, NUnit.Framework.Ignore("Fix path to a valid file")]
-        public void TestPlainPolygonSymbolizer()
+        [NUnit.Framework.TestCase("..\\..\\..\\Examples\\WinFormSamples\\GeoData\\World\\countries.shp")]
+        public void TestPlainPolygonSymbolizer(string filePath)
         {
-            var provider = new SharpMap.Data.Providers.ShapeFile(
-                "..\\..\\..\\WinFormSamples\\GeoData\\World\\countries.shp", true);
+            filePath = filePath.Replace("\\", new string(System.IO.Path.DirectorySeparatorChar, 1));
+            if (!System.IO.File.Exists(filePath))
+                throw new NUnit.Framework.IgnoreException($"'{filePath}' not found");
+
+            var provider = new SharpMap.Data.Providers.ShapeFile(filePath, true);
             var l = new SharpMap.Layers.Symbolizer.PolygonalVectorLayer("Countries", provider);
             l.Symbolizer = new ModifiedBasicPolygonSymbolizer
                 {

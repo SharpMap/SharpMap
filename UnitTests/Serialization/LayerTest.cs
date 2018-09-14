@@ -93,7 +93,7 @@ namespace UnitTests.Serialization
         {
             var tlS =
                 new TileLayer(KnownTileSources.Create(KnownTileSource.BingHybridStaging, string.Empty), 
-                    "Name", System.Drawing.Color.MediumTurquoise, true, "D:\\temp\\Bing\\Hybrid");
+                    "Name", System.Drawing.Color.MediumTurquoise, true, Path.Combine(Path.GetTempPath(), "Bing", "Hybrid"));
 
             TileLayer tlD = null;
             Assert.DoesNotThrow(() => tlD = SandD(tlS, GetFormatter()));

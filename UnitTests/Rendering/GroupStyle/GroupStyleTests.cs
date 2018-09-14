@@ -80,6 +80,8 @@ namespace UnitTests.Rendering.GroupStyle
              c1 = bmp.GetPixel(5, 7);
              Assert.AreEqual(Color.Red.ToArgb(), c1.ToArgb());
          
+             img.Dispose();
+             m.Dispose();
          }
     }
 }

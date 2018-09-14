@@ -161,6 +161,8 @@
     <Compile Include="Converters\SqlServer2008.cs" />
     <Compile Include="Data\Providers\MsSqlServerSpatialTests.cs" />
     <Compile Include="Data\Providers\SQLServer2008Tests.cs" />
+    <Compile Include="Data\Providers\OgrProviderTest.cs" />
+    <Compile Include="Data\Providers\OleDbPointProviderTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Data\Providers\NtsProviderTests.cs" />
@@ -179,8 +181,6 @@
     <Compile Include="Data\Providers\GeoPackageTest.cs" />
     <Compile Include="Data\Providers\KmlProviderTests.cs" />
     <Compile Include="Data\Providers\ManagedSQLiteTests.cs" />
-    <Compile Include="Data\Providers\OgrProviderTest.cs" />
-    <Compile Include="Data\Providers\OleDbPointProviderTest.cs" />
     <Compile Include="Data\Providers\PostGisGeographyTests.cs" />
     <Compile Include="Data\Providers\PostGisTests.cs" />
     <Compile Include="Data\Providers\ProviderTest.cs" />
@@ -288,6 +288,9 @@
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="TestData\gdal_sample.gpkg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="TestData\KML_Samples.kml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
