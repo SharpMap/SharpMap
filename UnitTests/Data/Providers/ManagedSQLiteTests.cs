@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if !LINUX
+using System;
 using System.IO;
 using GeoAPI.Geometries;
 using NetTopologySuite.Operation.Distance;
@@ -133,3 +134,4 @@ namespace UnitTests.Data.Providers
         }
     }
 }
+#endif

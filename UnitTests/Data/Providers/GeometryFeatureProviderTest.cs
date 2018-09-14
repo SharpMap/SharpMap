@@ -31,7 +31,8 @@ namespace UnitTests.Data.Providers
             Parallel.For(0, count, DoExecuteIntersectionQuery);
             sw.Stop();
 
-            Console.WriteLine("\n{0} ExecuteIntersectionQuery(Envelope, FeatureDataSet) performed in {1}ms", count, sw.ElapsedMilliseconds);
+            System.Diagnostics.Trace.WriteLine(String.Format(
+                "\n{0} ExecuteIntersectionQuery(Envelope, FeatureDataSet) performed in {1}ms", count, sw.ElapsedMilliseconds));
 
         }
 
@@ -45,12 +46,16 @@ namespace UnitTests.Data.Providers
             var maxY = _rnd.Next((int)minY, (int)ext.MaxY);
             var box = new GeoAPI.Geometries.Envelope(minX, maxX, minY, maxY);
 
-            Console.WriteLine(@"{0:000}/{2:00}: Executing intersection query agains {1}", obj, box, Thread.CurrentThread.ManagedThreadId);
+            System.Diagnostics.Trace.WriteLine(string.Format(
+                @"{0:000}/{2:00}: Executing intersection query agains {1}", 
+                obj, box, Thread.CurrentThread.ManagedThreadId));
             var fds = new SharpMap.Data.FeatureDataSet();
             _provider.ExecuteIntersectionQuery(box, fds);
             var table = fds.Tables[0];
             var count = table != null ? table.Rows.Count : 0;
-            Console.WriteLine(@"{0:000}/{3:00}: Executed intersection query agains {1} returned {2} features", obj, box, count, Thread.CurrentThread.ManagedThreadId);
+            System.Diagnostics.Trace.WriteLine(string.Format(
+                @"{0:000}/{3:00}: Executed intersection query agains {1} returned {2} features", 
+                obj, box, count, Thread.CurrentThread.ManagedThreadId));
             
         }
 

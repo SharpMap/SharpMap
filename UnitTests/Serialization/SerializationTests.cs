@@ -153,12 +153,12 @@ namespace BruTile.Serialization.Tests
 
             var equal = true;
             var messages = new List<string>();
-            Console.WriteLine("Testing {0}", url);
+            System.Diagnostics.Trace.WriteLine($"Testing {url}");
             foreach (var srcS in sources)
             {
                 var srcD = SandD(srcS);
                 Assert.NotNull(srcD);
-                Console.WriteLine("{0}", srcS);
+                System.Diagnostics.Trace.WriteLine($"{srcS}");
 
                 string message;
                 if (!EqualTileSources(srcS, srcD, out message))
@@ -304,16 +304,19 @@ namespace BruTile.Serialization.Tests
                     }
                     catch (TimeoutException ex)
                     {
-                        Console.WriteLine("TileInfo({4}): {0}, {1}, {2}\n{3}", ti.Index.Level, ti.Index.Col, ti.Index.Row,
-                                          ex.Message, i);
+                        System.Diagnostics.Trace.WriteLine(string.Format(
+                            "TileInfo({4}): {0}, {1}, {2}\n{3}", 
+                            ti.Index.Level, ti.Index.Col, ti.Index.Row, ex.Message, i));
                     }
                     catch(WebException ex)
                     {
                         if (ti == null)
-                            Console.WriteLine("No tile info!");
+                            System.Diagnostics.Trace.WriteLine("No tile info!");
                         else
-                            Console.WriteLine("TileInfo({5}): {0}, {1}, {2}\n{3}\n{4}", ti.Index.Level, ti.Index.Col, ti.Index.Row,
-                                              ex.Message, ex.Response.ResponseUri, i);
+                            System.Diagnostics.Trace.WriteLine(string.Format(
+                                "TileInfo({5}): {0}, {1}, {2}\n{3}\n{4}", 
+                                ti.Index.Level, ti.Index.Col, ti.Index.Row,
+                                ex.Message, ex.Response.ResponseUri, i));
                     }
                 }
             }

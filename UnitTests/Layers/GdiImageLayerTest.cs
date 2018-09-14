@@ -63,8 +63,8 @@ namespace UnitTests.Layers
                     }
                     catch (Exception ex)
                     {
-                        Console.Write(ex);
-                        Console.WriteLine();
+                        System.Diagnostics.Trace.Write(ex);
+                        System.Diagnostics.Trace.WriteLine("");
                         //throw;
                     }
                 }

@@ -30,12 +30,12 @@
             m.GetMap();
 
             sw.Stop();
-            System.Console.WriteLine(string.Format("Rendering old method: {0}ms", sw.ElapsedMilliseconds));
+            System.Diagnostics.Trace.WriteLine(string.Format("Rendering old method: {0}ms", sw.ElapsedMilliseconds));
             sw.Reset();
             sw.Start();
             var bmp = m.GetMap();
             sw.Stop();
-            System.Console.WriteLine(string.Format("Rendering old method: {0}ms", sw.ElapsedMilliseconds));
+            System.Diagnostics.Trace.WriteLine(string.Format("Rendering old method: {0}ms", sw.ElapsedMilliseconds));
             bmp.Save("NDSRoads1.bmp");
 
 
@@ -47,7 +47,7 @@
             sw.Reset(); sw.Start();
             bmp = m.GetMap();
             sw.Stop();
-            System.Console.WriteLine(string.Format("Rendering new method: {0}ms", sw.ElapsedMilliseconds));
+            System.Diagnostics.Trace.WriteLine(string.Format("Rendering new method: {0}ms", sw.ElapsedMilliseconds));
             bmp.Save("NDSRoads2.bmp");
 
         }
@@ -84,7 +84,7 @@
             sw.Start();
             var bmp = m.GetMap();
             sw.Stop();
-            System.Console.WriteLine(string.Format("Rendering new method: {0}ms", sw.ElapsedMilliseconds));
+            System.Diagnostics.Trace.WriteLine(string.Format("Rendering new method: {0}ms", sw.ElapsedMilliseconds));
             bmp.Save("AurichRoads1.bmp");
 
             cls.LineSymbolizeHandlers[1] = new SharpMap.Rendering.Symbolizer.WarpedLineSymbolizeHander
@@ -99,7 +99,7 @@
             sw.Reset(); sw.Start();
             bmp = m.GetMap();
             sw.Stop();
-            System.Console.WriteLine(string.Format("Rendering new method: {0}ms", sw.ElapsedMilliseconds));
+            System.Diagnostics.Trace.WriteLine(string.Format("Rendering new method: {0}ms", sw.ElapsedMilliseconds));
             bmp.Save("AurichRoads2-0.bmp");
 
             cls.LineSymbolizeHandlers[1] = new SharpMap.Rendering.Symbolizer.WarpedLineSymbolizeHander
@@ -115,7 +115,7 @@
             sw.Reset(); sw.Start();
             bmp = m.GetMap();
             sw.Stop();
-            System.Console.WriteLine(string.Format("Rendering new method: {0}ms", sw.ElapsedMilliseconds));
+            System.Diagnostics.Trace.WriteLine(string.Format("Rendering new method: {0}ms", sw.ElapsedMilliseconds));
             bmp.Save("AurichRoads2-1.bmp");
             cls.LineSymbolizeHandlers[1] = new SharpMap.Rendering.Symbolizer.WarpedLineSymbolizeHander
             {
@@ -130,7 +130,7 @@
             sw.Reset(); sw.Start();
             bmp = m.GetMap();
             sw.Stop();
-            System.Console.WriteLine(string.Format("Rendering new method: {0}ms", sw.ElapsedMilliseconds));
+            System.Diagnostics.Trace.WriteLine(string.Format("Rendering new method: {0}ms", sw.ElapsedMilliseconds));
             bmp.Save("AurichRoads2-2.bmp");
 
             cls.LineSymbolizeHandlers[1] = new SharpMap.Rendering.Symbolizer.WarpedLineSymbolizeHander
@@ -146,7 +146,7 @@
             sw.Reset(); sw.Start();
             bmp = m.GetMap();
             sw.Stop();
-            System.Console.WriteLine(string.Format("Rendering new method: {0}ms", sw.ElapsedMilliseconds));
+            System.Diagnostics.Trace.WriteLine(string.Format("Rendering new method: {0}ms", sw.ElapsedMilliseconds));
             bmp.Save("AurichRoads2-3.bmp");
 
 
@@ -161,7 +161,7 @@
             sw.Reset(); sw.Start();
             bmp = m.GetMap();
             sw.Stop();
-            System.Console.WriteLine(string.Format("Rendering new method: {0}ms", sw.ElapsedMilliseconds));
+            System.Diagnostics.Trace.WriteLine(string.Format("Rendering new method: {0}ms", sw.ElapsedMilliseconds));
             bmp.Save("AurichRoads3.bmp");
         }
 
@@ -184,7 +184,7 @@
             sw.Start();
             var bmp = m.GetMap();
             sw.Stop();
-            System.Console.WriteLine(string.Format("Rendering new method: {0}ms", sw.ElapsedMilliseconds));
+            System.Diagnostics.Trace.WriteLine(string.Format("Rendering new method: {0}ms", sw.ElapsedMilliseconds));
             bmp.Save("AurichRoads1Theme.bmp");
         }
 

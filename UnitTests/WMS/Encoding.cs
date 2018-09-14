@@ -26,14 +26,14 @@ namespace UnitTests.WMS
 
         private static void TestUrlColorEncoding(Color color)
         {
-            Console.WriteLine("Color           : {0}", color);
+            System.Diagnostics.Trace.WriteLine($"Color           : {color}");
             var htmlColor = ColorTranslator.ToHtml(Color.FromArgb(color.ToArgb()));
-            Console.WriteLine("htmlColor       : {0}", htmlColor);
+            System.Diagnostics.Trace.WriteLine($"htmlColor       : {htmlColor}");
             var urlEncode = System.Web.HttpUtility.UrlEncode(htmlColor);
-            Console.WriteLine("urlEncode       : {0}", urlEncode);
+            System.Diagnostics.Trace.WriteLine($"urlEncode       : {urlEncode}");
             var escapeDataString = Uri.EscapeDataString(htmlColor);
-            Console.WriteLine("escapeDataString: {0}", escapeDataString);
-            Console.WriteLine();
+            System.Diagnostics.Trace.WriteLine($"escapeDataString: {escapeDataString}");
+            System.Diagnostics.Trace.WriteLine("");
 
             Assert.IsTrue(string.Compare(urlEncode, escapeDataString, StringComparison.InvariantCultureIgnoreCase) == 0);
         }

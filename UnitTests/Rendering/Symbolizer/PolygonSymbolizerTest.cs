@@ -25,7 +25,7 @@ namespace UnitTests.Rendering.Symbolizer
 
         }
 
-        [NUnit.Framework.TestCase("..\\..\\..\\Examples\\WinFormSamples\\GeoData\\World\\countries.shp")]
+        [NUnit.Framework.TestCase("..\\..\\Examples\\WinFormSamples\\GeoData\\World\\countries.shp")]
         public void TestPlainPolygonSymbolizer(string filePath)
         {
             filePath = filePath.Replace("\\", new string(System.IO.Path.DirectorySeparatorChar, 1));
@@ -56,7 +56,7 @@ namespace UnitTests.Rendering.Symbolizer
             img = m.GetMap();
             img.Save("PolygonSymbolizer-1.bmp", System.Drawing.Imaging.ImageFormat.Bmp);
             sw.Stop();
-            System.Console.WriteLine(string.Format("Rendering new method:{0}ms", sw.ElapsedMilliseconds));
+            System.Diagnostics.Trace.WriteLine(string.Format("Rendering new method:{0}ms", sw.ElapsedMilliseconds));
 
             l.Symbolizer = new SharpMap.Rendering.Symbolizer.BasicPolygonSymbolizer()
             {
@@ -72,7 +72,7 @@ namespace UnitTests.Rendering.Symbolizer
             img = m.GetMap();
             img.Save("PolygonSymbolizer-2.bmp", System.Drawing.Imaging.ImageFormat.Bmp);
             sw.Stop();
-            System.Console.WriteLine(string.Format("Rendering new method:{0}ms", sw.ElapsedMilliseconds));
+            System.Diagnostics.Trace.WriteLine(string.Format("Rendering new method:{0}ms", sw.ElapsedMilliseconds));
         
         }
     }

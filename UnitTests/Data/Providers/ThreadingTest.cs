@@ -261,7 +261,7 @@ namespace UnitTests.Data.Providers
                     throw exception;
             }
             sw.Stop();
-            Console.WriteLine("\nTest performed in {0}ms", sw.ElapsedMilliseconds);
+            System.Diagnostics.Trace.WriteLine($"\nTest performed in {sw.ElapsedMilliseconds}ms");
         }
 
         private readonly object _runLock = new object();
@@ -298,15 +298,18 @@ namespace UnitTests.Data.Providers
         private void ExecuteGetGeometriesInView(object arguments)
         {
             var env = GetRandomEnvelope();
-            Console.WriteLine("Thread {0}: {2}. GetGeometriesInView({1})", Thread.CurrentThread.ManagedThreadId, env, arguments);
+            System.Diagnostics.Trace.WriteLine(string.Format(
+                "Thread {0}: {2}. GetGeometriesInView({1})", Thread.CurrentThread.ManagedThreadId, env, arguments));
             try
             {
                 var geoms = _provider.GetGeometriesInView(env);
-                Console.WriteLine("Thread {0}: {2}.  {1} geometries", Thread.CurrentThread.ManagedThreadId, geoms.Count, arguments);
+                System.Diagnostics.Trace.WriteLine(string.Format(
+                    "Thread {0}: {2}.  {1} geometries", Thread.CurrentThread.ManagedThreadId, geoms.Count, arguments));
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Thread {0}: {1}. failed:\n{2}", Thread.CurrentThread.ManagedThreadId, arguments, ex.Message);
+                System.Diagnostics.Trace.WriteLine(string.Format(
+                    "Thread {0}: {1}. failed:\n{2}", Thread.CurrentThread.ManagedThreadId, arguments, ex.Message));
                 _testsFailed[(int)arguments] = ex;
             }
             
@@ -315,16 +318,19 @@ namespace UnitTests.Data.Providers
         private void ExecuteExecuteFeatureQueryEnvelope(object arguments)
         {
             var env = GetRandomEnvelope();
-            Console.WriteLine("Thread {0}:  {2}. ExecuteFeatureQuery with ({1})", Thread.CurrentThread.ManagedThreadId, env, arguments);
+            System.Diagnostics.Trace.WriteLine(string.Format(
+                "Thread {0}:  {2}. ExecuteFeatureQuery with ({1})", Thread.CurrentThread.ManagedThreadId, env, arguments));
             try
             {
                 var fds = new FeatureDataSet();
                 _provider.ExecuteIntersectionQuery(env, fds);
-                Console.WriteLine("Thread {0}:  {2}. {1} features", Thread.CurrentThread.ManagedThreadId, fds.Tables[0].Count, arguments);
+                System.Diagnostics.Trace.WriteLine(string.Format(
+                    "Thread {0}:  {2}. {1} features", Thread.CurrentThread.ManagedThreadId, fds.Tables[0].Count, arguments));
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Thread {0}: {1}. failed:\n{2}", Thread.CurrentThread.ManagedThreadId, arguments, ex.Message);
+                System.Diagnostics.Trace.WriteLine(string.Format(
+                    "Thread {0}: {1}. failed:\n{2}", Thread.CurrentThread.ManagedThreadId, arguments, ex.Message));
                 _testsFailed[(int)arguments] = ex;
             }
 
@@ -334,16 +340,19 @@ namespace UnitTests.Data.Providers
         {
             var env = GetRandomEnvelope();
             var geom = GeometryFactory.Default.ToGeometry(env);
-            Console.WriteLine("Thread {0}:  {2}. ExecuteFeatureQuery with ({1})", Thread.CurrentThread.ManagedThreadId, geom, arguments);
+            System.Diagnostics.Trace.WriteLine(string.Format(
+                "Thread {0}:  {2}. ExecuteFeatureQuery with ({1})", Thread.CurrentThread.ManagedThreadId, geom, arguments));
             try
             {
                 var fds = new FeatureDataSet();
                 _provider.ExecuteIntersectionQuery(geom, fds);
-                Console.WriteLine("Thread {0}:  {2}. {1} features", Thread.CurrentThread.ManagedThreadId, fds.Tables[0].Count, arguments);
+                System.Diagnostics.Trace.WriteLine(string.Format(
+                    "Thread {0}:  {2}. {1} features", Thread.CurrentThread.ManagedThreadId, fds.Tables[0].Count, arguments));
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Thread {0}: {1}. failed:\n{2}", Thread.CurrentThread.ManagedThreadId, arguments, ex.Message);
+                System.Diagnostics.Trace.WriteLine(string.Format(
+                    "Thread {0}: {1}. failed:\n{2}", Thread.CurrentThread.ManagedThreadId, arguments, ex.Message));
                 _testsFailed[(int)arguments] = ex;
             }
 

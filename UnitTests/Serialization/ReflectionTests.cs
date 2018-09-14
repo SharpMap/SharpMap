@@ -37,12 +37,12 @@ namespace UnitTests.Serialization
                 Type myType = (typeof(MyTypeClass));
                 // Get the public properties.
                 PropertyInfo[] myPropertyInfo = myType.GetProperties(BindingFlags.Public | BindingFlags.Instance);
-                Console.WriteLine("The number of public properties is {0}.", myPropertyInfo.Length);
+                System.Diagnostics.Trace.WriteLine($"The number of public properties is {myPropertyInfo.Length}.");
                 // Display the public properties.
                 DisplayPropertyInfo(myPropertyInfo);
                 // Get the nonpublic properties.
                 PropertyInfo[] myPropertyInfo1 = myType.GetProperties(BindingFlags.NonPublic | BindingFlags.Instance);
-                Console.WriteLine("The number of protected properties is {0}.", myPropertyInfo1.Length);
+                System.Diagnostics.Trace.WriteLine($"The number of protected properties is {myPropertyInfo1.Length}.");
                 // Display all the nonpublic properties.
                 DisplayPropertyInfo(myPropertyInfo1);
 
@@ -52,12 +52,12 @@ namespace UnitTests.Serialization
                     myType = typeof(MyTypeClass);
                     // Get the PropertyInfo by passing the property name and specifying the BindingFlags.
                     PropertyInfo myPropInfo = myType.GetProperty("MyProperty1", BindingFlags.Public | BindingFlags.Instance);
-                    // Display Name propety to console.
-                    Console.WriteLine("{0} is a property of MyClass.", myPropInfo.Name);
+                    // Display Name propety to System.Diagnostics.Trace.
+                    System.Diagnostics.Trace.WriteLine("{0} is a property of MyClass.", myPropInfo.Name);
                 }
                 catch (NullReferenceException e)
                 {
-                    Console.WriteLine("MyProperty does not exist in MyClass." + e.Message);
+                    System.Diagnostics.Trace.WriteLine("MyProperty does not exist in MyClass." + e.Message);
                 }
 
             }
@@ -67,8 +67,8 @@ namespace UnitTests.Serialization
                 for (int i = 0; i < myPropertyInfo.Length; i++)
                 {
                     PropertyInfo myPropInfo = (PropertyInfo)myPropertyInfo[i];
-                    Console.WriteLine("The property name is {0}.", myPropInfo.Name);
-                    Console.WriteLine("The property type is {0}.", myPropInfo.PropertyType);
+                    System.Diagnostics.Trace.WriteLine($"The property name is {myPropInfo.Name}." );
+                    System.Diagnostics.Trace.WriteLine($"The property type is {myPropInfo.PropertyType}.");
                 }
             }
 

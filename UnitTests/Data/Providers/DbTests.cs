@@ -173,7 +173,7 @@
                 System.IO.Directory.GetCurrentDirectory(),
                 string.Format("SpatialDbProvider_{0}.png", ImplementationName));
             i.Save(path, System.Drawing.Imaging.ImageFormat.Png);
-            System.Console.WriteLine(new System.Uri(path).LocalPath);
+            System.Diagnostics.Trace.WriteLine(new System.Uri(path).LocalPath);
         }
 
         /// <summary>
