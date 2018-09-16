@@ -53,8 +53,11 @@
     <PackageReference Include="System.Drawing.Primitives" Version="4.3.0" />
   </ItemGroup>
 
-  <Target Name="PostBuild" AfterTargets="PostBuildEvent" Condition=" '$(Configuration)' != 'ReleaseLinux' ">
-    <Exec Command="cd &quot;$(SolutionDir)&quot;&#xD;&#xA;&quot;$(MSBuildBinPath)msbuild&quot; SharpMap.targets /t:Version&#xD;&#xA;cd &quot;$(ProjectDir)&quot;" />
+  <PropertyGroup>
+      <DriveSeperator>$(SolutionDir.SubString(1,1))</DriveSeperator>
+  </PropertyGroup>
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent" Condition=" '$(DriveSeperator)' == ':' ">
+    <Exec Command="$(SolutionDir.SubString(0, 2))&#xD;&#xA;cd &quot;$(SolutionDir)&quot;&#xD;&#xA;&quot;$(MSBuildBinPath)\msbuild&quot; SharpMap.targets /t:Version&#xD;&#xA;cd &quot;$(ProjectDir)&quot;" />
   </Target>
 
 </Project>

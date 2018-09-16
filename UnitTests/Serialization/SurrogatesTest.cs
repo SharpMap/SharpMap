@@ -134,7 +134,7 @@ namespace UnitTests.Serialization
                         }
                     }
 #if !LINUX
-                Assert.IsTrue(allEqual, "pixels equal";
+                Assert.IsTrue(allEqual, "pixels equal");
 #endif
             }
         }
