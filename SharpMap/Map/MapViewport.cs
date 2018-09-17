@@ -101,7 +101,13 @@ namespace SharpMap
         /// </summary>
         public Matrix MapTransform
         {
-            get { return _mapTransform.Clone(); }
+            get
+            {
+                lock (_mapTransform)
+                {
+                    return _mapTransform.Clone();
+                }
+            }
         }
 
         /// <summary>
