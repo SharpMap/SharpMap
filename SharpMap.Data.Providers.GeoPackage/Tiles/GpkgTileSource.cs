@@ -41,5 +41,9 @@ namespace SharpMap.Data.Providers.Tiles
         {
             get { return string.Format("{0} ({1})", _content.Identifier, _content.TableName); }
         }
+
+#if !NET40
+        public Attribution Attribution { get; set; }
+#endif
     }
 }
