@@ -1,35 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'net40-client' ">
-    <TargetFrameworkIdentifier>.NETFramework</TargetFrameworkIdentifier>
-    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-  </PropertyGroup>
-
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'net40-client' Or '$(TargetFramework)' == 'net452'">
-    <RequiresFrameworkAssemblyReferences>true</RequiresFrameworkAssemblyReferences>
-  </PropertyGroup>
-
-  <PropertyGroup Condition=" '$(Configuration)' == 'ReleaseLinux' ">
-    <AssetTargetFallback Condition=" '$(TargetFramework)' == 'net40-client' ">net452</AssetTargetFallback>
-  </PropertyGroup>
+    <Import Project="$(SolutionDir)SharpMap.Common.props" />
 
   <PropertyGroup>
     <TargetFrameworks>net40-client;net452;netstandard2.0</TargetFrameworks>
-    <Authors>SharpMap - Team</Authors>
     <Product>SharpMap Engine</Product>
     <Copyright>Copyright 2006 Morten Nielsen, Copyright 2008-2018 SharpMap - Team</Copyright>
-    <RepositoryType>git</RepositoryType>
-    <PackageProjectUrl>https://github.com/SharpMap/SharpMap</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/SharpMap/SharpMap.git</RepositoryUrl>
-    <PackageIconUrl>https://avatars1.githubusercontent.com/u/8349804??v=3&amp;amp;s=120</PackageIconUrl>
-    <PackageLicenseUrl>https://raw.githubusercontent.com/SharpMap/SharpMap/Branches/1.0/license.txt</PackageLicenseUrl>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <AssemblyVersion>1.2.0.0</AssemblyVersion>
-    <FileVersion>1.2.0.0</FileVersion>
     <PackageTags>SharpMap GIS Map GeoSpatial</PackageTags>
     <Description>This package contains the core components of SharpMap.</Description>
-    <Version>1.2.0-pre1</Version>
   </PropertyGroup>
 
   <ItemGroup>
@@ -47,7 +25,7 @@
     <PackageReference Include="NetTopologySuite.Core" Version="1.15.1" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
+  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
     <PackageReference Include="System.Drawing.Common" Version="4.5.0" />
     <PackageReference Include="System.Data.SqlClient" Version="4.5.1" />
     <PackageReference Include="System.Drawing.Primitives" Version="4.3.0" />
@@ -56,7 +34,9 @@
   <PropertyGroup>
       <DriveSeperator>$(SolutionDir.SubString(1,1))</DriveSeperator>
   </PropertyGroup>
-  <Target Name="PostBuild" AfterTargets="PostBuildEvent" Condition=" '$(DriveSeperator)' == ':' ">
+
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent" 
+          Condition=" '$(Configuration)' == 'ReleaseLinux' AND '$(TargetFramework)' == 'netstandard2.0' AND '$(DriveSeperator)' == ':' ">
     <Exec Command="$(SolutionDir.SubString(0, 2))&#xD;&#xA;cd &quot;$(SolutionDir)&quot;&#xD;&#xA;&quot;$(MSBuildBinPath)\msbuild&quot; SharpMap.targets /t:Version&#xD;&#xA;cd &quot;$(ProjectDir)&quot;" />
   </Target>
 

@@ -1,25 +1,17 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-    <PropertyGroup Condition=" '$(TargetFramework)' == 'net40-client' ">
-        <TargetFrameworkIdentifier>.NETFramework</TargetFrameworkIdentifier>
-        <TargetFrameworkProfile>Client</TargetFrameworkProfile>
-        <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    </PropertyGroup>
+    <Import Project="$(SolutionDir)SharpMap.Common.props" />
 
     <PropertyGroup>
-        <TargetFrameworks>net40-client;net452;netstandard20</TargetFrameworks>
-        <!--<TargetFramework>net40-client</TargetFramework>-->
-        <Version>1.2.0-pre1</Version>
-        <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+        <TargetFrameworks>net40-client;net452;netstandard2.0</TargetFrameworks>
         <RootNamespace>SharpMap</RootNamespace>
-    </PropertyGroup>
-
-    <PropertyGroup Condition=" '$(TargetFramework)' == 'net40-client' Or '$(TargetFramework)' == 'net452'">
-        <RequiresFrameworkAssemblyReferences>true</RequiresFrameworkAssemblyReferences>
+        <Copyright>Copyright (c) 2011 - 2018 SharpMap - Team</Copyright>
+        <PackageTags>brutile basemap</PackageTags>
+        <Description>The package contains a base map layer solution based on BruTile.</Description>
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\SharpMap\SharpMap.csproj" />
+        <ProjectReference Include="..\SharpMap\SharpMap.csproj" />
     </ItemGroup>
 
     <ItemGroup Condition=" '$(TargetFramework)' != 'net40-client' ">

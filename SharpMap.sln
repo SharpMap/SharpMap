@@ -19,6 +19,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{A5E400B4-8360-4259-BDDD-292A134D14CC}"
 	ProjectSection(SolutionItems) = preProject
 		.travis.yml = .travis.yml
+		SharpMap.Common.props = SharpMap.Common.props
 		SharpMap.proj = SharpMap.proj
 		SharpMap.targets = SharpMap.targets
 	EndProjectSection
@@ -93,8 +94,14 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpMap.Converters.GeoJSON", "SharpMap.Converters.GeoJSON\SharpMap.Converters.GeoJSON.csproj", "{721412E1-5589-4A18-A095-F8E0427BB163}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpMap.Converters.Spatialite", "SharpMap.Converters.Spatialite\SharpMap.Converters.Spatialite.csproj", "{E4182B07-6955-434B-904C-15ABEA5F7409}"
+	ProjectSection(ProjectDependencies) = postProject
+		{C83777FC-AABB-47D9-911F-D76255D4D541} = {C83777FC-AABB-47D9-911F-D76255D4D541}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpMap.CoordinateSystems.DotSpatial", "SharpMap.CoordinateSystems.DotSpatial\SharpMap.CoordinateSystems.DotSpatial.csproj", "{A019B82E-3766-44A3-907A-0487FF9EBA49}"
+	ProjectSection(ProjectDependencies) = postProject
+		{C83777FC-AABB-47D9-911F-D76255D4D541} = {C83777FC-AABB-47D9-911F-D76255D4D541}
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpMap.Layers.BruTile", "SharpMap.Layers.BruTile\SharpMap.Layers.BruTile.csproj", "{D84F31ED-3D81-42F2-9190-3D021D6038A0}"
 EndProject
