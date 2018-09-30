@@ -17,8 +17,11 @@ namespace SharpMap
         private readonly Envelope _envelope;
         private readonly Coordinate _center;
 
-        private readonly Matrix _mapTransform;
-        private readonly Matrix _mapTransformInverted;
+        //private readonly Matrix _mapTransform;
+        //private readonly Matrix _mapTransformInverted;
+
+        private readonly float[] _mapTransformElements;
+        private readonly float[] _mapTransformInvertedElements;
 
         private readonly double _left;
         private readonly double _top;
@@ -55,8 +58,11 @@ namespace SharpMap
             MapHeight = Zoom*pixelAspectRatio;
 
             // already cloned
-            _mapTransform = mapTransform;
-            _mapTransformInverted = mapTransformInverted;
+            //_mapTransform = mapTransform;
+            //_mapTransformInverted = mapTransformInverted;
+
+            _mapTransformElements = mapTransform.Elements;
+            _mapTransformInvertedElements = mapTransformInverted.Elements;
 
             double height = (Zoom * Size.Height) / Size.Width;
             _left = Center.X - Zoom * 0.5;
@@ -101,7 +107,40 @@ namespace SharpMap
         /// </summary>
         public Matrix MapTransform
         {
-            get { return _mapTransform.Clone(); }
+            get
+            {
+                //lock (_mapTransform)
+                //{
+                //    return _mapTransform.Clone();
+                //}
+                return new Matrix(
+                    _mapTransformElements[0],
+                    _mapTransformElements[1],
+                    _mapTransformElements[2],
+                    _mapTransformElements[3],
+                    _mapTransformElements[4],
+                    _mapTransformElements[5]
+                    );
+            }
+        }
+
+        /// <summary>
+        /// Gets a value indicating the inverse transformation that is applied when
+        /// rendering the map
+        /// </summary>
+        public Matrix MapTransformInverted
+        {
+            get
+            {
+                return new Matrix(
+                    _mapTransformInvertedElements[0],
+                    _mapTransformInvertedElements[1],
+                    _mapTransformInvertedElements[2],
+                    _mapTransformInvertedElements[3],
+                    _mapTransformInvertedElements[4],
+                    _mapTransformInvertedElements[5]
+                    );
+            }
         }
 
         /// <summary>
@@ -166,7 +205,7 @@ namespace SharpMap
                 {
                     _mapScale = ScaleCalculations.CalculateScaleNonLatLong(Envelope.Width, Size.Width, 1, dpi);
                     _lastDpi = dpi;
-        }
+                }
                 return _mapScale;
             }
         }
@@ -184,17 +223,18 @@ namespace SharpMap
             if (!careAboutMapTransform)
                 return pTmp;
 
-            Monitor.Enter(_mapTransform);
-            if (_mapTransform.IsIdentity)
+            var pts = new[] { pTmp };
+            //Monitor.Enter(_mapTransform);
+            using (var mapTransform = MapTransform)
             {
-                var pts = new[] {pTmp};
-                _mapTransform.TransformPoints(pts);
-                pTmp = pts[0];
+                if (mapTransform.IsIdentity == false)
+                {
+                    mapTransform.TransformPoints(pts);
+                }
             }
-            Monitor.Exit(_mapTransform);
+            //Monitor.Exit(_mapTransform);
 
-
-            return pTmp;
+            return pts[0];
         }
 
         /// <summary>
@@ -238,16 +278,18 @@ namespace SharpMap
         /// <returns>Point in world coordinates</returns>
         public Coordinate ImageToWorld(PointF p, bool careAboutMapTransform)
         {
-            Monitor.Enter(_mapTransformInverted);
-            if (_mapTransformInverted.IsIdentity)
+            var pts = new[] { p };
+            //Monitor.Enter(_mapTransformInverted);
+            using (var mapTransformInverted = MapTransformInverted)
             {
-                var pts = new[] { p };
-                _mapTransformInverted.TransformPoints(pts);
-                p = pts[0];
+                if (mapTransformInverted.IsIdentity == false)
+                {
+                    mapTransformInverted.TransformPoints(pts);
+                }
             }
-            Monitor.Exit(_mapTransformInverted);
+            //Monitor.Exit(_mapTransformInverted);
 
-            return Transform.MapToWorld(p, this);
+            return Transform.MapToWorld(pts[0], this);
         }
 
         /// <summary>
