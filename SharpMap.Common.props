@@ -6,6 +6,14 @@
         <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     </PropertyGroup>
 
+    <PropertyGroup>
+        <!-- SharpMap version -->
+        <Major>1</Major>
+        <Minor>2</Minor>
+        <Build>1</Build>
+        <Revision>0</Revision>
+    </PropertyGroup>
+
     <PropertyGroup Condition=" '$(TargetFramework)' == 'net40-client' Or '$(TargetFramework)' == 'net452'">
         <RequiresFrameworkAssemblyReferences>true</RequiresFrameworkAssemblyReferences>
     </PropertyGroup>
@@ -22,9 +30,9 @@
         <PackageIconUrl>https://avatars1.githubusercontent.com/u/8349804??v=3&amp;amp;s=120</PackageIconUrl>
         <PackageLicenseUrl>https://raw.githubusercontent.com/SharpMap/SharpMap/Branches/1.0/license.txt</PackageLicenseUrl>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-        <AssemblyVersion>1.2.0.0</AssemblyVersion>
-        <FileVersion>1.2.0.0</FileVersion>
-        <Version>1.2.0-pre1</Version>
+        <AssemblyVersion>$(Major).$(Minor).$(Build)</AssemblyVersion>
+        <FileVersion>$(Major).$(Minor).$(Build).$(Revision)</FileVersion>
+        <Version>$(Major).$(Minor).$(Build)-pre1</Version>
     </PropertyGroup>
 
 </Project>

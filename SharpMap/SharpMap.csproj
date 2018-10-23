@@ -35,9 +35,17 @@
       <DriveSeperator>$(SolutionDir.SubString(1,1))</DriveSeperator>
   </PropertyGroup>
 
-  <Target Name="PostBuild" AfterTargets="PostBuildEvent" 
-          Condition=" '$(Configuration)' == 'ReleaseLinux' AND '$(TargetFramework)' == 'netstandard2.0' AND '$(DriveSeperator)' == ':' ">
-    <Exec Command="$(SolutionDir.SubString(0, 2))&#xD;&#xA;cd &quot;$(SolutionDir)&quot;&#xD;&#xA;&quot;$(MSBuildBinPath)\msbuild&quot; SharpMap.targets /t:Version&#xD;&#xA;cd &quot;$(ProjectDir)&quot;" />
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent" Condition=" '$(Configuration)' != 'ReleaseLinux' ">
+    <Message Text="$(SolutionDir)SharedAssemblyVersion.cs exists: $([System.IO.File]::Exists('$(SolutionDir)SharedAssemblyVersion.cs')) " />
+    <Message Text="$(SolutionDir)SharedAssemblyVersion.cs: $([System.IO.File]::GetLastWriteTime('$(SolutionDir)SharedAssemblyVersion.cs').Ticks) " 
+             Condition=" $([System.IO.File]::Exists('$(SolutionDir)SharedAssemblyVersion.cs')) "/>
+    <Message Text="$(SolutionDir)SharpMap.Common.props   : $([System.IO.File]::GetLastWriteTime('$(SolutionDir)SharpMap.Common.props').Ticks)" />
+    <Message Text="Condition: $([System.IO.File]::GetLastWriteTime('$(SolutionDir)SharedAssemblyVersion.cs').Ticks) &lt; $([System.IO.File]::GetLastWriteTime('$(SolutionDir)SharpMap.Common.props').Ticks)" 
+             Condition=" $([System.IO.File]::Exists('$(SolutionDir)SharedAssemblyVersion.cs')) "/>
+
+    <Exec Condition=" !$([System.IO.File]::Exists('$(SolutionDir)SharedAssemblyVersion.cs')) OR 
+          $([System.IO.File]::GetLastWriteTime('$(SolutionDir)SharedAssemblyVersion.cs').Ticks) &lt; $([System.IO.File]::GetLastWriteTime('$(SolutionDir)SharpMap.Common.props').Ticks) "
+        Command="$(SolutionDir.SubString(0, 2))&#xD;&#xA;cd &quot;$(SolutionDir)&quot;&#xD;&#xA;&quot;$(MSBuildBinPath)\msbuild&quot; SharpMap.targets /t:Version&#xD;&#xA;cd &quot;$(ProjectDir)&quot;" />
   </Target>
 
 </Project>
