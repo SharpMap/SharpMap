@@ -24,12 +24,12 @@ using GeoAPI.Geometries;
 namespace SharpMap.Data.Providers
 {
     /// <summary>
-    /// The XYColumnTwoPointLine provider is used for rendering line data from an ADO.NET compatible datasource.
+    /// The XYColumnTwoPointLine provider is used for rendering line data from an ADO.NET compatible data source.
     /// </summary>
     /// <remarks>
     /// <para>The data source will need to have two double-type columns, xColumn and yColumn that contains the coordinates of the point,
     /// and an integer-type column containing a unique identifier for each row.</para>
-    /// <para>To get good performance, make sure you have applied indexes on ID, xColumn and yColumns in your datasource table.</para>
+    /// <para>To get good performance, make sure you have applied indexes on ID, xColumn and yColumns in your data source table.</para>
     /// </remarks>
     [Serializable]
     public class XYColumnTwoPointLine : PreparedGeometryProvider
@@ -40,23 +40,23 @@ namespace SharpMap.Data.Providers
         /// Initializes a new instance of the XYColumnTwoPointLine provider
         /// </summary>
         /// <param name="provider">The ADO.NET database provider factory</param>
-        /// <param name="connectionStr">The connection string</param>
-        /// <param name="tablename">The name of the table</param>
+        /// <param name="connectionString">The connection string</param>
+        /// <param name="tableName">The name of the table</param>
         /// <param name="oidColumnName">The name of the object id column</param>
         /// <param name="xColumnBegin">The name of the x-ordinates column of the beginning of the line</param>
         /// <param name="yColumnBegin">The name of the y-ordinates column of the beginning of the line</param>
         /// <param name="xColumnEnd">The name of the x-ordinates column of the end of the line</param>
         /// <param name="yColumnEnd">The name of the y-ordinates column of the end of the line</param>
-        public XYColumnTwoPointLine(DbProviderFactory provider, string connectionStr, string tablename, string oidColumnName, string xColumnBegin, string yColumnBegin, string xColumnEnd, string yColumnEnd)
+        public XYColumnTwoPointLine(DbProviderFactory provider, string connectionString, string tableName, string oidColumnName, string xColumnBegin, string yColumnBegin, string xColumnEnd, string yColumnEnd)
         {
-            Table = tablename;
+            Table = tableName;
             XColumnBegin = xColumnBegin;
             YColumnBegin = yColumnBegin;
             XColumnEnd = xColumnEnd;
             YColumnEnd = yColumnEnd;
             ObjectIdColumn = oidColumnName;
             DbProvider = provider;
-            ConnectionString = connectionStr;
+            ConnectionString = connectionString;
         }
 
         /// <summary>
@@ -91,7 +91,7 @@ namespace SharpMap.Data.Providers
         public string YColumnEnd { get; set; }
 
         /// <summary>
-        /// Connectionstring
+        /// Gets or sets a value indicating the connection string
         /// </summary>
         public string ConnectionString
         {
@@ -100,12 +100,12 @@ namespace SharpMap.Data.Providers
         }
 
         /// <summary>
-        /// DbProviderFactory
+        /// The <see cref="DbProviderFactory"/> used to create connections, commands etc.
         /// </summary>
-        public DbProviderFactory DbProvider { get; set; }
+        private DbProviderFactory DbProvider { get; }
 
         /// <summary>
-        /// Definition query used for limiting dataset
+        /// Definition query used for limiting data set
         /// </summary>
         public string DefinitionQuery
         {
@@ -129,7 +129,7 @@ namespace SharpMap.Data.Providers
 
                 var strSQL = "SELECT " + XColumnBegin + ", " + YColumnBegin + ", " + XColumnEnd + ", " + YColumnEnd + " FROM " + Table + " WHERE ";
                 strSQL += GetDefinitionQueryConstraint(true);
-                //Limit to the points within the boundingbox
+                //Limit to the points within the bounding box
                 strSQL += GetSpatialConstraint(bbox);
 
                 var factory = Factory;
