@@ -632,7 +632,7 @@ namespace SharpMap.Layers
             var res = (VectorLayer)MemberwiseClone();
             res.Style = Style.Clone();
             if (Theme is ICloneable)
-                res.Theme = (IThemeEx)((ICloneable)Theme).Clone();
+                res.Theme = (ITheme)((ICloneable)Theme).Clone();
             return res;
         }
 
