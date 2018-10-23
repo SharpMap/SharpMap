@@ -1,4 +1,5 @@
-﻿using System;
+﻿//#if !LINUX
+using System;
 using System.IO;
 using GeoAPI.Geometries;
 using NetTopologySuite.Operation.Distance;
@@ -10,6 +11,15 @@ namespace UnitTests.Data.Providers
     [NUnit.Framework.TestFixture, NUnit.Framework.Category("KnownToFailOnTeamCityAtCodebetter")]
     public class ManagedSQLiteTests : ProviderTest
     {
+#if LINUX
+        [TestFixtureSetUp]
+        public void FixtureSetUp()
+        {
+            if (!File.Exists("libSQLite.Interop.so"))
+                throw new IgnoreException($"'libSQLite.Interop.so' not present");
+        }
+#endif
+
         private string GetTestDBPath()
         {
             return "Data Source=" + GetTestDataFilePath("test-2.3.sqlite") + ";";
@@ -133,3 +143,4 @@ namespace UnitTests.Data.Providers
         }
     }
 }
+//#endif

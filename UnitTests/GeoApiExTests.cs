@@ -11,7 +11,7 @@ namespace UnitTests
     public class GeoApiExTests
     {
         [Test]
-        public void TestCloseRIng()
+        public void TestCloseRing()
         {
             var coords = new List<Coordinate>(new Coordinate[] {
                 new Coordinate(0,0,5),
@@ -28,7 +28,7 @@ namespace UnitTests
         }
 
         [Test]
-        public void TestCloseRIng2()
+        public void TestCloseRing2()
         {
             var coords = new List<Coordinate>(new Coordinate[] {
                 new Coordinate(0,0),

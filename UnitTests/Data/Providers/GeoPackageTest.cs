@@ -15,20 +15,25 @@ namespace UnitTests.Data.Providers
         public void Setup()
         {
             GeoAPI.GeometryServiceProvider.Instance = new NtsGeometryServices();
+#if LINUX
+            if (!File.Exists("libSQLite.Interop.so"))
+                throw new IgnoreException($"'libSQLite.Interop.so' not present");
+#endif
         }
 
-        [TestCase(@"C:\Downloads\geonames_belgium.gpkg")]
-        [TestCase(@"C:\Downloads\gdal_sample.gpkg")]
-        [TestCase(@"C:\Downloads\haiti-vectors-split.gpkg")]
-        [TestCase(@"C:\Downloads\simple_sewer_features.gpkg")]
+        [TestCase(@"TestData\geonames_belgium.gpkg")]
+        [TestCase(@"TestData\gdal_sample.gpkg")]
+        [TestCase(@"TestData\haiti-vectors-split.gpkg")]
+        [TestCase(@"TestData\simple_sewer_features.gpkg")]
 
-        public void TestGeoPackage(string file)
+        public void TestGeoPackage(string filePath)
         {
-            if (!File.Exists(file))
-                throw new IgnoreException(string.Format("Test data not present: '{0}'!", file));
+            filePath = filePath.Replace("\\", new string(Path.DirectorySeparatorChar, 1));
+            if (!File.Exists(filePath))
+                throw new IgnoreException(string.Format("Test data not present: '{0}'!", filePath));
             
             GeoPackage gpkg = null;
-            Assert.DoesNotThrow(() => gpkg = GeoPackage.Open(file), "Opened did not prove to be a valid geo package");
+            Assert.DoesNotThrow(() => gpkg = GeoPackage.Open(filePath), "Opened did not prove to be a valid geo package");
 
             Assert.Greater(gpkg.Features.Count + gpkg.Tiles.Count, 0);
 

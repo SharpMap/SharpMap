@@ -70,13 +70,13 @@ namespace UnitTests.Converters
             gPl.SRID = 0;
 
             Geometry gPnBuffer30 = SpatialOperationsEx.Buffer(gPn, 30);
-            Console.WriteLine(gPnBuffer30.ToString());
+            System.Diagnostics.Trace.WriteLine(gPnBuffer30.ToString());
 
             Geometry gPnBuffer30IntersectiongPl = SpatialOperationsEx.Intersection(gPnBuffer30, gPl);
-            Console.WriteLine(gPnBuffer30IntersectiongPl.ToString());
+            System.Diagnostics.Trace.WriteLine(gPnBuffer30IntersectiongPl.ToString());
 
             Geometry gUnion = SpatialOperationsEx.Union(gPn, gMp, gML, gLi, gPl);
-            Console.WriteLine(gUnion.ToString());
+            System.Diagnostics.Trace.WriteLine(gUnion.ToString());
 
         }
 
@@ -115,11 +115,11 @@ namespace UnitTests.Converters
                         fdr.Geometry.SRID = -1;
                         var res = ToSqlServerAndBack(fdr.Geometry);
                         Assert.AreEqual(fdr.Geometry, res);
-                        Console.WriteLine(string.Format("Feature {0} ({1}) converted!", i, fdr[0]));
+                        System.Diagnostics.Trace.WriteLine(string.Format("Feature {0} ({1}) converted!", i, fdr[0]));
                     }
                     catch (SqlGeometryConverterException)
                     {
-                        Console.WriteLine(string.Format("Feature {0} ({1}) conversion failed!", i, fdr[0]));
+                        System.Diagnostics.Trace.WriteLine(string.Format("Feature {0} ({1}) conversion failed!", i, fdr[0]));
                     }
                 }
             }

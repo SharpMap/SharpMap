@@ -1,3 +1,4 @@
+#if !NETSTANDARD
 // Copyright 2006 - Morten Nielsen (www.iter.dk)
 //
 // This file is part of SharpMap.
@@ -402,3 +403,4 @@ namespace SharpMap.Data.Providers
         #endregion
     }
 }
+#endif

@@ -17,7 +17,7 @@ namespace UnitTests.Data.Providers
         }
         private string GetPathToTestDataDir()
         {
-            return Path.Combine(Path.GetDirectoryName(this.GetType().Assembly.CodeBase.Replace("file:///", "")), @"TestData\");
+            return "TestData";
         }
 
         [TestFixtureSetUp]

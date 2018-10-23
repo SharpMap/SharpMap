@@ -1,4 +1,5 @@
-﻿// Copyright 2013 - Lothar Otto (www.sodako.de)
+﻿#if !NETSTANDARD
+// Copyright 2013 - Lothar Otto (www.sodako.de)
 //
 // This file is part of SharpMap.
 // SharpMap is free software; you can redistribute it and/or modify
@@ -451,3 +452,4 @@ namespace SharpMap.Data.Providers
         #endregion
     }
 }
+#endif

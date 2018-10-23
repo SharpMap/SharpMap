@@ -5,6 +5,7 @@ namespace UnitTests.Data.Providers
     [NUnit.Framework.TestFixture]
     public class ShapeFileProviderTests : ProviderTest
     {
+        
         private long _msLineal;
         private long _msVector;
         private const int NumberOfRenderCycles = 1;
@@ -12,10 +13,10 @@ namespace UnitTests.Data.Providers
         [NUnit.Framework.TestFixtureTearDown]
         public void TestFixtureTearDown()
         {
-            System.Console.WriteLine("Speed comparison:");
-            System.Console.WriteLine("VectorLayer\tLinealLayer\tRatio");
-            System.Console.WriteLine(string.Format("{0}\t{1}\t{2:N}", _msVector, _msLineal,
-                                                   ((double)_msLineal / _msVector * 100)));
+            System.Diagnostics.Trace.WriteLine("Speed comparison:");
+            System.Diagnostics.Trace.WriteLine("VectorLayer\tLinealLayer\tRatio");
+            System.Diagnostics.Trace.WriteLine(string.Format("{0}\t{1}\t{2:N}", _msVector, _msLineal,
+                                              ((double)_msLineal / _msVector * 100)));
         }
 
         [NUnit.Framework.Test]
@@ -80,9 +81,9 @@ namespace UnitTests.Data.Providers
             {
                 using (var reader = new System.IO.BinaryReader(s))
                 {
-                    System.Console.WriteLine(reader.ReadInt32());
+                    System.Diagnostics.Trace.WriteLine(reader.ReadInt32());
                 }
-                NUnit.Framework.Assert.Throws<System.ObjectDisposedException>(() => System.Console.WriteLine(s.Position));
+                NUnit.Framework.Assert.Throws<System.ObjectDisposedException>(() => System.Diagnostics.Trace.WriteLine(s.Position));
             } 
         }
 
@@ -116,7 +117,7 @@ namespace UnitTests.Data.Providers
                 }
                 catch (System.Exception)
                 {
-                    System.Console.WriteLine("Failed to delete '{0}'", file);
+                    System.Diagnostics.Trace.WriteLine("Failed to delete '{0}'", file);
                     succeeded = false;
                 }
             }
@@ -165,7 +166,7 @@ namespace UnitTests.Data.Providers
             var res = map.GetMap();
             var path = System.IO.Path.ChangeExtension(GetTestDataFilePath("SPATIAL_F_SKARVMUFF.shp"), ".vector.png");
             res.Save(path, System.Drawing.Imaging.ImageFormat.Png);
-            System.Console.WriteLine("\nResult saved at file://" + path.Replace('\\', '/'));
+            System.Diagnostics.Trace.WriteLine("\nResult saved at file://" + path.Replace('\\', '/'));
         }
 
         [NUnit.Framework.Test]
@@ -187,7 +188,7 @@ namespace UnitTests.Data.Providers
             map.ZoomToExtents();
 
             RepeatedRendering(map, shp.GetFeatureCount(), NumberOfRenderCycles, out _msLineal);
-            System.Console.WriteLine("\nWith testing if record is deleted ");
+            System.Diagnostics.Trace.WriteLine("\nWith testing if record is deleted ");
             
             shp.CheckIfRecordIsDeleted = true;
             long tmp;
@@ -196,21 +197,21 @@ namespace UnitTests.Data.Providers
             var res = map.GetMap();
             var path = System.IO.Path.ChangeExtension(GetTestDataFilePath("SPATIAL_F_SKARVMUFF.shp"), "lineal.png");
             res.Save(path, System.Drawing.Imaging.ImageFormat.Png);
-            System.Console.WriteLine("\nResult saved at file://" + path.Replace('\\', '/'));
+            System.Diagnostics.Trace.WriteLine("\nResult saved at file://" + path.Replace('\\', '/'));
         }
 
         private static void RepeatedRendering(SharpMap.Map map, int numberOfFeatures, int numberOfTimes, out long avgRenderTime)
         {
-            System.Console.WriteLine("Rendering Map with " + numberOfFeatures + " features");
+            System.Diagnostics.Trace.WriteLine("Rendering Map with " + numberOfFeatures + " features");
             var totalRenderTime = 0L;
             var sw = new System.Diagnostics.Stopwatch();
             for (var i = 1; i <= numberOfTimes; i++)
             {
-                System.Console.Write(string.Format("Rendering {0}x time(s)", i));
+                System.Diagnostics.Trace.Write(string.Format("Rendering {0}x time(s)", i));
                 sw.Start();
                 map.GetMap();
                 sw.Stop();
-                System.Console.WriteLine(" in " +
+                System.Diagnostics.Trace.WriteLine(" in " +
                                          sw.ElapsedMilliseconds.ToString(
                                              System.Globalization.NumberFormatInfo.CurrentInfo) + "ms.");
                 totalRenderTime += sw.ElapsedMilliseconds;
@@ -218,7 +219,7 @@ namespace UnitTests.Data.Providers
             }
 
             avgRenderTime = totalRenderTime/numberOfTimes;
-            System.Console.WriteLine("\n Average rendering time:" + avgRenderTime.ToString(
+            System.Diagnostics.Trace.WriteLine("\n Average rendering time:" + avgRenderTime.ToString(
                                          System.Globalization.NumberFormatInfo.CurrentInfo) + "ms.");
         }
 
@@ -259,7 +260,7 @@ namespace UnitTests.Data.Providers
             sw.Start();
             shp.ExecuteIntersectionQuery(bbox, fds);
             sw.Stop();
-            System.Console.WriteLine("Queried using just envelopes:\n" + fds.Tables[0].Rows.Count + " in " +
+            System.Diagnostics.Trace.WriteLine("Queried using just envelopes:\n" + fds.Tables[0].Rows.Count + " in " +
                                      sw.ElapsedMilliseconds + "ms.");
             fds.Tables.RemoveAt(0);
             
@@ -268,7 +269,7 @@ namespace UnitTests.Data.Providers
             sw.Start();
             shp.ExecuteIntersectionQuery(bbox, fds);
             sw.Stop();
-            System.Console.WriteLine("Queried using prepared geometries:\n" + fds.Tables[0].Rows.Count + " in " +
+            System.Diagnostics.Trace.WriteLine("Queried using prepared geometries:\n" + fds.Tables[0].Rows.Count + " in " +
                                      sw.ElapsedMilliseconds + "ms.");
         }
 
@@ -298,7 +299,7 @@ namespace UnitTests.Data.Providers
             sw.Start();
             shp.ExecuteIntersectionQuery(bbox, fds);
             sw.Stop();
-            System.Console.WriteLine("Queried using just envelopes:\n" + fds.Tables[0].Rows.Count + " in " +
+            System.Diagnostics.Trace.WriteLine("Queried using just envelopes:\n" + fds.Tables[0].Rows.Count + " in " +
                                      sw.ElapsedMilliseconds + "ms.");
             fds.Tables.RemoveAt(0);
             
@@ -307,13 +308,13 @@ namespace UnitTests.Data.Providers
             sw.Start();
             shp.ExecuteIntersectionQuery(bbox, fds);
             sw.Stop();
-            System.Console.WriteLine("Queried using prepared geometries:\n" + fds.Tables[0].Rows.Count + " in " +
+            System.Diagnostics.Trace.WriteLine("Queried using prepared geometries:\n" + fds.Tables[0].Rows.Count + " in " +
                                      sw.ElapsedMilliseconds + "ms.");
         }
 
         public static bool JustTracks(SharpMap.Data.FeatureDataRow fdr)
         {
-            //System.Console.WriteLine(fdr [0] + ";"+ fdr[4]);
+            //System.Diagnostics.Trace.WriteLine(fdr [0] + ";"+ fdr[4]);
             var s = fdr[4] as string;
             if (s != null)
                 return s == "track";

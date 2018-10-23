@@ -24,7 +24,6 @@ using System.Collections.ObjectModel;
 using System.Data;
 using System.Data.Common;
 using System.Data.SqlClient;
-using NetTopologySuite.IO;
 using SharpMap.Converters.WellKnownBinary;
 using GeoAPI.Geometries;
 

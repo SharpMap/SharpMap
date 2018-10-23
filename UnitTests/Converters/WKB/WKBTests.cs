@@ -85,10 +85,12 @@ namespace UnitTests.Converters.WKB
         public void TestHugeGeometryCollection()
         {
             IGeometry geom = null;
-            if (!File.Exists("TestData\\Base 64.txt"))
-                throw new IgnoreException("Test file not present!", new FileNotFoundException("TestData\\Base 64.txt"));
+            string filePath = Path.Combine("TestData", "Base 64.txt");
 
-            using (var sr = new StreamReader("TestData\\Base 64.txt"))
+            if (!File.Exists(filePath))
+                throw new IgnoreException("Test file not present!", new FileNotFoundException(filePath));
+
+            using (var sr = new StreamReader(filePath))
             {
                 var sb = new StringBuilder(sr.ReadLine());
                 while (!sr.EndOfStream)

@@ -21,7 +21,7 @@ namespace UnitTests.Rendering.Symbolizer
             var m = CreateMap();
             m.ZoomToExtents();
             var img = m.GetMap();
-            img.Save("C:\\Temp\\RasterPointSymbolizer.bmp", System.Drawing.Imaging.ImageFormat.Bmp);
+            img.Save("RasterPointSymbolizer.bmp", System.Drawing.Imaging.ImageFormat.Bmp);
         }
 
         private SharpMap.Map CreateMap()

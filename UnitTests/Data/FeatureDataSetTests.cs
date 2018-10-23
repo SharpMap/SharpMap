@@ -65,6 +65,11 @@ namespace UnitTests.Data
         [Test]
         public void TestSerializationOfDataset()
         {
+            #if LINUX
+            if (!System.IO.File.Exists("libSQLite.Interop.so"))
+                throw new IgnoreException($"'libSQLite.Interop.so' not present");
+            #endif
+
             var fds = new FeatureDataSet { DataSetName = "Serialization", Namespace = "ns" };
             using (var p = Serialization.ProviderTest.CreateProvider("managedspatialite"))
             {
@@ -117,6 +122,10 @@ namespace UnitTests.Data
         [Test]
         public void TestSerialization()
         {
+#if LINUX
+            if (!System.IO.File.Exists("libSQLite.Interop.so"))
+                throw new IgnoreException($"'libSQLite.Interop.so' not present");
+#endif
             var fds = new FeatureDataSet { DataSetName = "Serialization", Namespace = "ns"};
             using (var p = Serialization.ProviderTest.CreateProvider("managedspatialite"))
             {

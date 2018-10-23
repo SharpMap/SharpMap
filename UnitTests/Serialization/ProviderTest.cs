@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using GeoAPI.Geometries;
 using NUnit.Framework;
 using SharpMap.Data.Providers;
@@ -41,20 +42,21 @@ namespace UnitTests.Serialization
                 return (T)(IProvider)new GeometryProvider(gf.CreatePoint(new Coordinate(1, 1)));
 
             if (typeof(T) == typeof(ManagedSpatiaLite))
-                return (T)(IProvider)new ManagedSpatiaLite("Data Source=TestData\\test-2.3.sqlite;",
+                return (T)(IProvider)new ManagedSpatiaLite($"Data Source={Path.Combine("TestData", "test-2.3.sqlite")};",
                                                             "HighWays", "Geometry", "PK_UID");
 
             if (typeof(T) == typeof(SpatiaLite))
-                return (T)(IProvider)new SpatiaLite("Data Source=TestData\\test-2.3.sqlite;",
+                return (T)(IProvider)new SpatiaLite($"Data Source={Path.Combine("TestData", "test-2.3.sqlite")};",
                                                             "HighWays", "Geometry", "PK_UID");
 
             if (typeof(T) == typeof(ShapeFile))
-                return (T)(IProvider)new ShapeFile("TestData\\roads_ugl.shp");
+                return (T)(IProvider)new ShapeFile(Path.Combine("TestData", "roads_ugl.shp"));
 
+#if !LINUX
             if (typeof(T) == typeof(SqlServer2008))
                 return (T)(IProvider)new SqlServer2008("Data Source=IVV-SQLD; Database=OBE;Integrated Security=SSPI;",
                                                        "Roads", "wkb_geometry", "ogc_fid", SqlServerSpatialObjectType.Geometry);
-
+#endif
             if (typeof(T) == typeof(PostGIS))
                 return (T)(IProvider)new PostGIS("Host=127.0.0.1;Port=5432;User Id=postgres;Password=1.Kennwort;database=postgis_sample;",
                                                     "rivers", "wkb_geometry", "ogc_fid");
@@ -77,7 +79,7 @@ namespace UnitTests.Serialization
         [Test]
         public void TestSpatiaLite2()
         {
-            var spatiaLite2S = new ManagedSpatiaLite("Data Source=test-2.3.sqlite;Database=Regions;",
+            var spatiaLite2S = new ManagedSpatiaLite($"Data Source={Path.Combine("TestData", "test-2.3.sqlite")};Database=Regions;",
                                                      "Roads", "Geometry", "PK_UID");
 
             var spatiaLite2 = SandD(spatiaLite2S, GetFormatter());
@@ -105,6 +107,7 @@ namespace UnitTests.Serialization
             Assert.AreEqual(pS.SRID, pD.SRID);
         }
 
+#if !LINUX
         [Test]
         public void TestSqlServer2008()
         {
@@ -121,6 +124,7 @@ namespace UnitTests.Serialization
             Assert.AreEqual(sql2008S.SpatialObjectType, sql2008D.SpatialObjectType);
             Assert.AreEqual(sql2008S.SRID, sql2008D.SRID);
         }
+#endif
     
     }
 }

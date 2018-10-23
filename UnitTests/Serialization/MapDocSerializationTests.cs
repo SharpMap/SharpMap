@@ -8,12 +8,29 @@ using System.Xml.Serialization;
 using SharpMap.Serialization;
 using System.IO;
 using System.Net;
+using SharpMap.Layers;
 
 namespace UnitTests.Serialization
 {
     [TestFixture]
     class MapDocSerializationTests
     {
+        [TestFixtureSetUp]
+        public void OneTimeSetUp()
+        {
+            try
+            {
+                var l = new SharpMap.Layers.WmsLayer("testwms",
+                    "http://sampleserver1.arcgisonline.com/ArcGIS/services/Specialty/ESRI_StatesCitiesRivers_USA/MapServer/WMSServer");
+                l.Dispose();
+            }
+            catch (Exception e)
+            {
+                throw new IgnoreException("Creation of WMS Layer failed", e);
+
+            }
+        }
+
         [Test]
         public void TestSerializeWmsLayer()
         {
@@ -24,7 +41,7 @@ namespace UnitTests.Serialization
             MemoryStream ms = new MemoryStream();
             SharpMap.Serialization.MapSerialization.SaveMapToStream(m, ms);
             string txt = System.Text.ASCIIEncoding.ASCII.GetString(ms.ToArray());
-            Console.WriteLine(txt);
+            System.Diagnostics.Trace.WriteLine(txt);
             Assert.IsTrue(txt.Contains(@"<Layers>
     <MapLayer xsi:type=""WmsLayer"">
       <Name>testwms</Name>
@@ -154,7 +171,7 @@ namespace UnitTests.Serialization
             MemoryStream ms = new MemoryStream();
             SharpMap.Serialization.MapSerialization.SaveMapToStream(m, ms);
             string txt = System.Text.ASCIIEncoding.ASCII.GetString(ms.ToArray());
-            Console.WriteLine(txt);
+            System.Diagnostics.Trace.WriteLine(txt);
             Assert.IsTrue(txt.Contains(@"<Layers>
     <MapLayer xsi:type=""WmsLayer"">
       <Name>testwms</Name>

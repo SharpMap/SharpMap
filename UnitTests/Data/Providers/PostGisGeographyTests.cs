@@ -102,7 +102,7 @@ namespace UnitTests.Data.Providers
 
                 }
             }
-            catch (Exception ee)
+            catch (Exception)
             {
                 Assert.Ignore("Failed to connect to PostgreSQL/PostGIS Server");
             }

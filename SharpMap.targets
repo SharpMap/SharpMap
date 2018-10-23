@@ -3,19 +3,15 @@
   <PropertyGroup>
     <MSBuildCommunityTasksPath>$(MSBuildThisFileDirectory)BuildTools</MSBuildCommunityTasksPath>
 
-    <!-- SharpMap version -->
-    <Major>1</Major>
-    <Minor>2</Minor>
-    <Build>0</Build>
-    <Revision>0</Revision>
     <UseTools35 Condition=" '$(UseTools35)' == '' ">true</UseTools35>
     <VersionTargetName Condition=" '$(UseTools35)' == 'true' ">VersionGit</VersionTargetName>
     <VersionTargetName Condition=" '$(UseTools35)' == 'false' ">VersionNoTools35</VersionTargetName>
   </PropertyGroup>
 
   <Import Project="$(MSBuildThisFileDirectory)BuildTools\MSBuild.Community.Tasks.targets"/>
+  <Import Project="$(MSBuildThisFileDirectory)SharpMap.Common.props"/>
 
-  <Target Name="Version">
+    <Target Name="Version">
 		<Message Text="Running $(VersionTargetName)"/>
 		<CallTarget Targets="$(VersionTargetName)"/>
   </Target>
@@ -40,7 +36,7 @@
         <_Parameter1>$(Major).$(Minor).$(Build)</_Parameter1>
       </AssemblyAttributes>
       <AssemblyAttributes Include="AssemblyFileVersion">
-        <_Parameter1>$(Major).$(Minor).$(Build)</_Parameter1>
+        <_Parameter1>$(Major).$(Minor).$(Build).$(Revision)</_Parameter1>
       </AssemblyAttributes>
       <AssemblyAttributes Include="AssemblyInformationalVersion">
         <_Parameter1>$(Major).$(Minor).$(Build).9999999</_Parameter1>

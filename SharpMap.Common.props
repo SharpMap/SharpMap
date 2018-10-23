@@ -1,0 +1,38 @@
+<Project>
+    <!-- Common properties for SDK Projects -->
+    <PropertyGroup Condition=" '$(TargetFramework)' == 'net40-client' ">
+        <TargetFrameworkIdentifier>.NETFramework</TargetFrameworkIdentifier>
+        <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+        <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    </PropertyGroup>
+
+    <!-- SharpMap version -->
+    <PropertyGroup>
+        <Major>1</Major>
+        <Minor>2</Minor>
+        <Build>0</Build>
+        <Revision>0</Revision>
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(TargetFramework)' == 'net40-client' Or '$(TargetFramework)' == 'net452'">
+        <RequiresFrameworkAssemblyReferences>true</RequiresFrameworkAssemblyReferences>
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(Configuration)' == 'ReleaseLinux' ">
+        <AssetTargetFallback Condition=" '$(TargetFramework)' == 'net40-client' ">net452</AssetTargetFallback>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <Authors>SharpMap - Team</Authors>
+        <RepositoryType>git</RepositoryType>
+        <PackageProjectUrl>https://github.com/SharpMap/SharpMap</PackageProjectUrl>
+        <RepositoryUrl>https://github.com/SharpMap/SharpMap.git</RepositoryUrl>
+        <PackageIconUrl>https://avatars1.githubusercontent.com/u/8349804??v=3&amp;amp;s=120</PackageIconUrl>
+        <PackageLicenseUrl>https://raw.githubusercontent.com/SharpMap/SharpMap/Branches/1.0/license.txt</PackageLicenseUrl>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <AssemblyVersion>$(Major).$(Minor).$(Build)</AssemblyVersion>
+        <FileVersion>$(Major).$(Minor).$(Build).$(Revision)</FileVersion>
+        <Version>$(Major).$(Minor).$(Build)-pre1</Version>
+    </PropertyGroup>
+
+</Project>

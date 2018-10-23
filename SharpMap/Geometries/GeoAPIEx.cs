@@ -1,11 +1,9 @@
 ﻿using SharpMap;
-using SharpMap.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Reflection;
-using System.Runtime.ExceptionServices;
 using NetTopologySuite.Geometries;
 using SharpMap.Rendering;
 
