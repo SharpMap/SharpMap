@@ -1051,16 +1051,19 @@ namespace SharpMap
             if (!careAboutMapTransform)
                 return pTmp;
 
-            // working with MapTransform clone
-             if ( MapTransformRotation != 0)
-                using (var transform = MapTransform)
+            if (!MapTransformRotation.Equals(0f))
             {
-                    if (!transform.IsIdentity )
+                // working with MapTransform clone
+                using (var transform = MapTransform)
                 {
-                    var pts = new[] { pTmp };
+                    if (!transform.IsIdentity)
+                    {
+                        var pts = new[] {pTmp};
                         transform.TransformPoints(pts);
-                    pTmp = pts[0];
+                        pTmp = pts[0];
+                    }
                 }
+            }
 
             return pTmp;
         }
