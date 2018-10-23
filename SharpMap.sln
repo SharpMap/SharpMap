@@ -26,7 +26,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{A5E400B4
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{AEBB513B-1509-439F-BA86-FA9413BF8D8C}"
 	ProjectSection(SolutionItems) = preProject
-		Performance1.psess = Performance1.psess
 		SharpMap.sln.DotSettings = SharpMap.sln.DotSettings
 	EndProjectSection
 EndProject
@@ -83,11 +82,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpMap.UI.WPF", "SharpMap
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WPFSamples", "Examples\WPFSamples\WPFSamples.csproj", "{28AC314E-35C1-484B-9DD3-116BD8AFC4EA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpMap.Utilities.Indexing.SbnTree", "SharpMap.Utilities.Indexing.SbnTree\SharpMap.Utilities.Indexing.SbnTree.csproj", "{723F9FD5-8424-4EEE-BA92-57ECEE0F395D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpMap.Utilities.Indexing.SbnTree", "SharpMap.Utilities.Indexing.SbnTree\SharpMap.Utilities.Indexing.SbnTree.csproj", "{723F9FD5-8424-4EEE-BA92-57ECEE0F395D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpMap.Data.Providers.FileGdb", "SharpMap.Data.Providers.FileGdb\SharpMap.Data.Providers.FileGdb.csproj", "{42AD06D5-ACDF-4991-B052-232235F002BA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpMap.Data.Providers.GeoPackage", "SharpMap.Data.Providers.GeoPackage\SharpMap.Data.Providers.GeoPackage.csproj", "{AF0594AB-FC1D-47E4-8CDD-361CDC621A36}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpMap.Data.Providers.GeoPackage", "SharpMap.Data.Providers.GeoPackage\SharpMap.Data.Providers.GeoPackage.csproj", "{AF0594AB-FC1D-47E4-8CDD-361CDC621A36}"
 EndProject
 Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "ExampleCodeSnipplets.VB", "Examples\ExampleCodeSnipplets.VB\ExampleCodeSnipplets.VB.vbproj", "{E9AC999C-5C90-4851-ABFE-8A9CA899FAEF}"
 EndProject

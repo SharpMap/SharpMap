@@ -134,6 +134,6 @@
     <NativeLibs>bin64</NativeLibs>
   </PropertyGroup>
   <PropertyGroup>
-    <PostBuildEvent>XCOPY /d /q $(ProjectDir)Libraries\$(NativeLibs)\FileGDB*.* $(OutDir)</PostBuildEvent>
+    <PostBuildEvent>XCOPY /d /q "$(ProjectDir)Libraries\$(NativeLibs)\FileGDB*.*" $(OutDir)</PostBuildEvent>
   </PropertyGroup>
 </Project>
