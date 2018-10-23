@@ -6,11 +6,11 @@
         <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     </PropertyGroup>
 
+    <!-- SharpMap version -->
     <PropertyGroup>
-        <!-- SharpMap version -->
         <Major>1</Major>
         <Minor>2</Minor>
-        <Build>1</Build>
+        <Build>0</Build>
         <Revision>0</Revision>
     </PropertyGroup>
 
