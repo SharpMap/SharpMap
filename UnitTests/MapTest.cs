@@ -1,16 +1,9 @@
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Drawing;
 using System.Drawing.Imaging;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Reactive;
 using System.Reactive.Linq;
-using System.Reflection;
-using System.Reflection.Emit;
 using GeoAPI.Geometries;
-using Microsoft.SqlServer.Server;
 using Moq;
 using NUnit.Framework;
 using NetTopologySuite.Geometries;
@@ -322,18 +315,17 @@ namespace UnitTests
 
         private void ImageToWorld_Rotation(float deg)
         {
-            Map map = new Map(new Size(1000, 500)) { BackColor = System.Drawing.Color.LightSkyBlue };
+            var map = new Map(new Size(1000, 500)) { BackColor = System.Drawing.Color.LightSkyBlue };
             map.Zoom = 1000;
             map.Center = new Point(25000, 75000);
-
-            var mapScale = map.MapScale;
+            double mapScale = map.GetMapScale(96);
 
             double scaleX = 1;
             double scaleY = 1;
 
-            System.Drawing.Drawing2D.Matrix maptransform = new System.Drawing.Drawing2D.Matrix();
-            maptransform.RotateAt(deg, new PointF(map.Size.Width / 2f, map.Size.Height / 2f));
-            map.MapTransform = maptransform;
+            System.Drawing.Drawing2D.Matrix mapTransform = new System.Drawing.Drawing2D.Matrix();
+            mapTransform.RotateAt(deg, new PointF(map.Size.Width / 2f, map.Size.Height / 2f));
+            map.MapTransform = mapTransform;
 
             var env = map.Envelope;
 
@@ -361,10 +353,10 @@ namespace UnitTests
               new ProjNet.CoordinateSystems.Transformations.AffineTransform(
                   scaleX * Math.Cos(rad),
                   scaleX * Math.Sin(rad),
-                  -scaleX * Math.Cos(rad) * map.Size.Width / 2f - scaleX * Math.Sin(rad) * map.Size.Height / 2f + map.Center.X,
+                  -scaleX * Math.Cos(rad) * map.Size.Width / 2d - scaleX * Math.Sin(rad) * map.Size.Height / 2d + map.Center.X,
                   scaleY * Math.Sin(rad),
                   -scaleY * Math.Cos(rad),
-                  -scaleY * Math.Sin(rad) * map.Size.Width / 2f + scaleY * Math.Cos(rad) * map.Size.Height / 2f + map.Center.Y);
+                  -scaleY * Math.Sin(rad) * map.Size.Width / 2d + scaleY * Math.Cos(rad) * map.Size.Height / 2d + map.Center.Y);
 
             // image coordindates
             var pts = new[] { new Point(map.Size.Width / 2f, map.Size.Height / 2f), // centre
@@ -414,8 +406,8 @@ namespace UnitTests
             Assert.IsTrue(env.BottomRight().Equals2D(lineString.EnvelopeInternal.BottomRight(), 0.1));
 
             // visual checks
-            VectorLayer vl = new VectorLayer("Test Points");
-            GeometryProvider gp = new GeometryProvider(lineString);
+            var vl = new VectorLayer("Test Points");
+            var gp = new GeometryProvider(lineString);
             gp.Geometries.Add(new NetTopologySuite.Geometries.Point(25000, 75000));
             vl.DataSource = gp;
             var cps = new SharpMap.Rendering.Symbolizer.CharacterPointSymbolizer();
@@ -426,9 +418,11 @@ namespace UnitTests
 
             map.ZoomToBox(lineString.EnvelopeInternal);
 
-            var img = map.GetMap();
-            string fn = string.Format("C:\\Temp\\MapRotation_{0}_{1}_{2}.bmp",deg.ToString ("000"), map.Zoom.ToString("0"), map.MapScale.ToString ("0"));
-            img.Save(fn,System.Drawing.Imaging.ImageFormat.Bmp);
+            string fn = $"MapRotation_{deg:000}_{map.Zoom:0}_{map.MapScale:0}.bmp";
+            using (var img = map.GetMap(96))
+                img.Save(fn,System.Drawing.Imaging.ImageFormat.Bmp);
+
+            map.Dispose();
         }
 
         [Test]
