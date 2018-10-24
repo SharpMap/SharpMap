@@ -205,6 +205,7 @@ namespace UnitTests.Data.Providers
                 Assert.AreEqual(1, fds.Tables.Count);
                 var table = fds.Tables[0];
                 Assert.AreEqual(1, table.Rows.Count);
+                Assert.AreEqual("T2", table.Rows[0][1].ToString());
             }
         }
     }

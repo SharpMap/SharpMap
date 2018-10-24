@@ -19,6 +19,7 @@ using System;
 using System.Collections.ObjectModel;
 using System.Data;
 using System.Data.Common;
+using System.Xml;
 using GeoAPI.Geometries;
 
 namespace SharpMap.Data.Providers
@@ -98,6 +99,14 @@ namespace SharpMap.Data.Providers
             get { return ConnectionID; }
             set { ConnectionID = value; }
         }
+
+        /// <summary>
+        /// Gets or sets an entity decorator.
+        /// </summary>
+        /// <remarks>
+        /// For Access this would e.g. be &quot;[{0}]&quot;, for SQLite, Postgres or SqlServer &quot;\&quot;{0}\&quot;&quot;
+        /// </remarks>
+        public string EntityDecorator { get; set; } = "{0}";
 
         /// <summary>
         /// The <see cref="DbProviderFactory"/> used to create connections, commands etc.
@@ -252,13 +261,46 @@ namespace SharpMap.Data.Providers
         /// Function to limit the points to the <paramref name="bbox"/>.
         /// </summary>
         /// <param name="bbox">The spatial predicate bounding box</param>
-        /// <returns>A SQL string limiting the resultset based on an Envelope constraint.</returns>
+        /// <returns>A SQL string limiting the result set based on an Envelope constraint.</returns>
         private string GetSpatialConstraint(Envelope bbox)
         {
-            return string.Format(Map.NumberFormatEnUs, "({0} BETWEEN {1} AND {2}) AND ({3} BETWEEN {4} AND {5}) AND ({6} BETWEEN {1} AND {2}) AND ({7} BETWEEN {4} AND {5})",
-                                 XColumnBegin, bbox.MinX, bbox.MaxX,
-                                 YColumnBegin, bbox.MinY, bbox.MaxY,
-                                 XColumnEnd, YColumnEnd);
+            return string.Format(Map.NumberFormatEnUs, "NOT ({0} > {1} OR {2} < {3} OR {4} > {5} OR {6} < {7})",
+                bbox.MinX, GetMaxSql(ToEntity(XColumnBegin), ToEntity(XColumnEnd)),
+                bbox.MaxX, GetMinSql(ToEntity(XColumnBegin), ToEntity(XColumnEnd)),
+                bbox.MinY, GetMaxSql(ToEntity(YColumnBegin), ToEntity(YColumnEnd)),
+                bbox.MaxY, GetMinSql(ToEntity(YColumnBegin), ToEntity(YColumnEnd)));
+        }
+
+        /// <summary>
+        /// Function to build a Max function to return the maximum value of two column entities
+        /// </summary>
+        /// <param name="entity1">The first column entity</param>
+        /// <param name="entity2">The second column entity</param>
+        /// <returns>An SQL CASE string to mimic <see cref="System.Math.Max(double, double)"/></returns>
+        private string GetMaxSql(string entity1, string entity2)
+        {
+            return $"(CASE WHEN {entity1} >= {entity2} THEN {entity1} ELSE {entity2} END)";
+        }
+
+        /// <summary>
+        /// Function to build a Min function to return the maximum value of two column entities
+        /// </summary>
+        /// <param name="entity1">The first column entity</param>
+        /// <param name="entity2">The second column entity</param>
+        /// <returns>An SQL CASE string to mimic <see cref="System.Math.Min(double, double)"/></returns>
+        private string GetMinSql(string entity1, string entity2)
+        {
+            return $"(CASE WHEN {entity1} <= {entity2} THEN {entity1} ELSE {entity2} END)";
+        }
+
+        /// <summary>
+        /// Function to properly decorate a database entity e.g. (table-, query- or column name)
+        /// </summary>
+        /// <param name="name">The name or the database entity</param>
+        /// <returns>The decorated entity</returns>
+        private string ToEntity(string name)
+        {
+            return string.Format(EntityDecorator, name);
         }
 
         /// <summary>
