@@ -30,13 +30,13 @@ namespace SharpMap.Data.Providers
     /// <para>To get good performance, make sure you have applied indexes on ID, xColumn and yColumns in your data source table.</para>
     /// </remarks>
     [Serializable]
-    public class OleDbPoint : XYColumnPoint
+    public class OleDbPoint : DbPoint
     {
         /// <summary>
         /// Initializes a new instance of the OleDbPoint provider
         /// </summary>
         /// <param name="connectionString">The connection string</param>
-        /// <param name="tablename">The name of the table</param>
+        /// <param name="tableName">The name of the table</param>
         /// <param name="oidColumnName">The name of the object id column</param>
         /// <param name="xColumn">The name of the x-ordinates column</param>
         /// <param name="yColumn">The name of the y-ordinates column</param>
@@ -44,10 +44,6 @@ namespace SharpMap.Data.Providers
             : base(OleDbFactory.Instance, connectionString, tableName, oidColumnName, xColumn, yColumn)
         {
         }
-
-        #region Disposers and finalizers
-
-        #endregion
     }
 }
 #endif

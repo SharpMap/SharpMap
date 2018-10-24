@@ -7,7 +7,7 @@ using SharpMap.Data.Providers;
 namespace UnitTests.Data.Providers
 {
     [Category("RequiresWindows")]
-    public class XYColumnPointProviderTest : ProviderTest
+    public class DbTwoPointLineProviderTest : ProviderTest
     {
         private System.Data.Common.DbConnection _connection; // Keep connection active; when closed, the in-memory database is dropped
 
@@ -27,18 +27,27 @@ namespace UnitTests.Data.Providers
             using (var cmd = conn.CreateCommand())
             {
                 cmd.CommandText =
-                    "CREATE TABLE XYColumnPointProviderTest(ID integer primary key, Name text, X real, Y real);";
+                    "CREATE TABLE XYColumnTwoPointLineProviderTest(ID integer primary key, Name text, X1 real, Y1 real, X2 real, Y2 real);";
                 cmd.ExecuteNonQuery();
             }
 
             using (var cmd = conn.CreateCommand())
             {
                 cmd.CommandText =
-                    "INSERT INTO XYColumnPointProviderTest(ID, Name, X, Y) VALUES" +
-                    "   (1, 'One', 429012.5, 360443.18)," +
-                    "   (2, 'Two', 429001.59, 360446.98)," +
-                    "   (3, 'Three', 429003.31, 360425.45)," +
-                    "   (4, 'Four', 429016.9, 360413.04)";
+                    "INSERT INTO XYColumnTwoPointLineProviderTest(ID, Name, X1, Y1, X2, Y2) VALUES" +
+                    "   (1, 'T1', 100, 100, 170, 100)," +
+                    "   (2, 'T2', 135, 100, 135, 170)," +
+                    "   (3, 'e1', 180, 130, 180, 170)," +
+                    "   (4, 'e2', 180, 130, 210, 130)," +
+                    "   (5, 'e3', 180, 150, 200, 150)," +
+                    "   (6, 'e4', 180, 170, 210, 170)," +
+                    "   (7, 's1', 220, 130, 250, 130)," +
+                    "   (8, 's2', 220, 130, 220, 150)," +
+                    "   (9, 's3', 220, 150, 250, 150)," +
+                    "   (10, 's4', 250, 150, 250, 170)," +
+                    "   (11, 's5', 250, 170, 220, 170)," +
+                    "   (12, 't1', 260, 130, 290, 130)," +
+                    "   (13, 't2', 275, 130, 275, 170)";
                 cmd.ExecuteNonQuery();
             }
 
@@ -51,10 +60,10 @@ namespace UnitTests.Data.Providers
             _connection.Close();
         }
 
-        private XYColumnPoint CreateProvider()
+        private XYColumnTwoPointLine CreateProvider()
         {
-            var p = new XYColumnPoint(System.Data.SQLite.SQLiteFactory.Instance,
-                "FullUri=file::memory:?cache=shared;ToFullPath=false", "XYColumnPointProviderTest", "ID", "X", "Y");
+            var p = new XYColumnTwoPointLine(System.Data.SQLite.SQLiteFactory.Instance,
+                "FullUri=file::memory:?cache=shared;ToFullPath=false", "XYColumnTwoPointLineProviderTest", "ID", "X1", "Y1", "X2", "Y2");
 
             return p;
 
@@ -79,8 +88,8 @@ namespace UnitTests.Data.Providers
             {
                 var numFeatures = 0;
                 Assert.DoesNotThrow(() => numFeatures = p.GetFeatureCount());
-                Assert.AreEqual(4, numFeatures);
-                p.DefinitionQuery = "Name='Two'";
+                Assert.AreEqual(13, numFeatures);
+                p.DefinitionQuery = "Name='e1'";
                 Assert.DoesNotThrow(() => numFeatures = p.GetFeatureCount());
                 Assert.AreEqual(1, numFeatures);
             }
@@ -96,7 +105,7 @@ namespace UnitTests.Data.Providers
                 Assert.IsNotNull(feature);
                 Assert.AreEqual(3, Convert.ToInt32(feature[p.ObjectIdColumn]));
                 Assert.AreEqual(feature.Geometry.Centroid.Coordinate,
-                    new Coordinate(429003.31, 360425.45));
+                    new Coordinate(180, 150));
             }
         }
 
@@ -109,7 +118,7 @@ namespace UnitTests.Data.Providers
                 Assert.DoesNotThrow(() => feature = p.GetGeometryByID(3));
                 Assert.IsNotNull(feature);
                 Assert.AreEqual(feature.Centroid.Coordinate,
-                    new Coordinate(429003.31, 360425.45));
+                    new Coordinate(180, 150));
             }
         }
 
@@ -122,7 +131,7 @@ namespace UnitTests.Data.Providers
                 Assert.DoesNotThrow(() => p.ExecuteIntersectionQuery(p.GetExtents(), fds));
                 Assert.AreEqual(1, fds.Tables.Count);
                 var table = fds.Tables[0];
-                Assert.AreEqual(4, table.Rows.Count);
+                Assert.AreEqual(13, table.Rows.Count);
             }
         }
 
@@ -136,7 +145,7 @@ namespace UnitTests.Data.Providers
                 Assert.DoesNotThrow(() => p.ExecuteIntersectionQuery(ext, fds));
                 Assert.AreEqual(1, fds.Tables.Count);
                 var table = fds.Tables[0];
-                Assert.AreEqual(4, table.Rows.Count);
+                Assert.AreEqual(13, table.Rows.Count);
 
                 var oids = p.GetObjectIDsInView(ext);
 
@@ -156,7 +165,7 @@ namespace UnitTests.Data.Providers
                 Assert.DoesNotThrow(() => p.ExecuteIntersectionQuery(ext, fds));
                 Assert.AreEqual(1, fds.Tables.Count);
                 var table = fds.Tables[0];
-                Assert.AreEqual(4, table.Rows.Count);
+                Assert.AreEqual(13, table.Rows.Count);
 
                 var geoms = p.GetGeometriesInView(ext);
 
@@ -173,15 +182,31 @@ namespace UnitTests.Data.Providers
             {
                 var reader = new NetTopologySuite.IO.WKTReader();
                 var poly = reader.Read(
-                    @"POLYGON ((428999.76819468878 360451.93329044303, 428998.25517286535 360420.80827007542,
-429023.1119599645 360406.75878171506, 429004.52340613387 360451.71714446822, 
-429004.52340613387 360451.71714446822, 428999.76819468878 360451.93329044303))");
+                    @"POLYGON ((100 100, 170 100, 170 170, 100 170, 100 100))");
 
                 var fds = new FeatureDataSet();
                 Assert.DoesNotThrow(() => p.ExecuteIntersectionQuery(poly, fds));
                 Assert.AreEqual(1, fds.Tables.Count);
                 var table = fds.Tables[0];
-                Assert.AreEqual(3, table.Rows.Count);
+                Assert.AreEqual(2, table.Rows.Count);
+            }
+        }
+
+        [Test]
+        public void TestExecuteIntersectionQueryAgainstGeometryIntersectionButNoPointsWithin()
+        {
+            using (var p = CreateProvider())
+            {
+                var reader = new NetTopologySuite.IO.WKTReader();
+                var poly = reader.Read(
+                    @"POLYGON ((101 101, 169 101, 169 169, 101 169, 101 101))");
+
+                var fds = new FeatureDataSet();
+                Assert.DoesNotThrow(() => p.ExecuteIntersectionQuery(poly, fds));
+                Assert.AreEqual(1, fds.Tables.Count);
+                var table = fds.Tables[0];
+                Assert.AreEqual(1, table.Rows.Count);
+                Assert.AreEqual("T2", table.Rows[0][1].ToString());
             }
         }
     }

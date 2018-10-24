@@ -48,7 +48,7 @@ namespace SharpMap.Data.Providers
     /// </example>
     /// </remarks>
     [Serializable]
-    public class XYColumnPoint : PreparedGeometryProvider
+    public class DbPoint : PreparedGeometryProvider
     {
         private string _definitionQuery;
 
@@ -61,7 +61,7 @@ namespace SharpMap.Data.Providers
         /// <param name="oidColumnName">The name of the object id column</param>
         /// <param name="xColumn">The name of the x-ordinates column</param>
         /// <param name="yColumn">The name of the y-ordinates column</param>
-        public XYColumnPoint(DbProviderFactory provider, string connectionString, string tableName, string oidColumnName, string xColumn, string yColumn)
+        public DbPoint(DbProviderFactory provider, string connectionString, string tableName, string oidColumnName, string xColumn, string yColumn)
         {
             Table = tableName;
             XColumn = xColumn;
