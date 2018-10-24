@@ -19,7 +19,6 @@ using System;
 using System.Collections.ObjectModel;
 using System.Data;
 using System.Data.Common;
-using System.Xml;
 using GeoAPI.Geometries;
 
 namespace SharpMap.Data.Providers

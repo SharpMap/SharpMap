@@ -6,6 +6,7 @@ using SharpMap.Data.Providers;
 
 namespace UnitTests.Data.Providers
 {
+    [Category("RequiresWindows")]
     public class XYColumnTwoPointLineProviderTest : ProviderTest
     {
         private System.Data.Common.DbConnection _connection; // Keep connection active; when closed, the in-memory database is dropped
