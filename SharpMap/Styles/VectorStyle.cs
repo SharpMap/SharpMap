@@ -22,7 +22,7 @@ using System.Reflection;
 using GeoAPI.Geometries;
 using SharpMap.Rendering.Symbolizer;
 using Common.Logging;
-#if NETSTANDARD
+#if NETSTANDARD2_0
 using SmColor = SharpMap.Drawing.Color;
 using Color = System.Drawing.Color;
 using KnownColor = SharpMap.Drawing.KnownColor;

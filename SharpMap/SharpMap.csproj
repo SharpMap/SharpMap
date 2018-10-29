@@ -35,7 +35,7 @@
       <DriveSeperator>$(SolutionDir.SubString(1,1))</DriveSeperator>
   </PropertyGroup>
 
-  <Target Name="PostBuild" AfterTargets="PostBuildEvent" Condition=" '$(Configuration)' != 'ReleaseLinux' ">
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent" Condition=" '$(Configuration)' != 'ReleaseLinux' AND '$(TargetFramework)' == 'net40-client' ">
     <Message Text="$(SolutionDir)SharedAssemblyVersion.cs exists: $([System.IO.File]::Exists('$(SolutionDir)SharedAssemblyVersion.cs')) " />
     <Message Text="$(SolutionDir)SharedAssemblyVersion.cs: $([System.IO.File]::GetLastWriteTime('$(SolutionDir)SharedAssemblyVersion.cs').Ticks) " 
              Condition=" $([System.IO.File]::Exists('$(SolutionDir)SharedAssemblyVersion.cs')) "/>

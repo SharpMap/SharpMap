@@ -1,4 +1,4 @@
-#if !NETSTANDARD
+#if !NETSTANDARD2_0
 // Copyright 2006 - Morten Nielsen (www.iter.dk)
 //
 // This file is part of SharpMap.

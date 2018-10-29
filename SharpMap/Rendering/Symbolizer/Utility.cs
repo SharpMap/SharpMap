@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-#if NETSTANDARD
+#if NETSTANDARD2_0
 using KnownColor = SharpMap.Drawing.KnownColor;
 using SmColor = SharpMap.Drawing.Color;
 #else
@@ -33,7 +33,7 @@ namespace SharpMap.Rendering.Symbolizer
         /// <returns>A random color form the <see cref="KnownColor"/> enumeration</returns>
         public static Color RandomKnownColor()
         {
-#if !NETSTANDARD
+#if !NETSTANDARD2_0
             return Color.FromKnownColor(_knownColors[RND.Next(0, _knownColors.Count - 1)]);
 #else
             return SmColor.FromKnownColor(_knownColors[RND.Next(0, _knownColors.Count - 1)]);
