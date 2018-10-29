@@ -1170,7 +1170,7 @@ namespace SharpMap
                 var ll = new Coordinate(Center.X - Zoom * .5, Center.Y - MapHeight * .5);
                 var ur = new Coordinate(Center.X + Zoom * .5, Center.Y + MapHeight * .5);
 
-               if (MapTransformRotation == 0)
+               if (MapTransformRotation.Equals(0f))
                     return new Envelope(ll, ur);
                 else
                 {
@@ -1216,15 +1216,6 @@ namespace SharpMap
                 if (value == null)
                     value = new Matrix();
 
-                    if (value.IsIdentity)
-                        MapTransformRotation = 0;
-                    else
-                    {
-                        var rad = value.Elements[1] >= 0 ? Math.Acos(value.Elements[0]) : -Math.Acos(value.Elements[0]);
-                        if (rad < 0)
-                            rad += 2 * Math.PI;
-                        MapTransformRotation = (float)(rad * 180.0 / Math.PI);
-                    }
                 if (!value.IsInvertible)
                     throw new ArgumentException("Matrix not invertible", nameof(value));
 
@@ -1232,10 +1223,15 @@ namespace SharpMap
                 _mapTransformInverted = value.Clone();
                 _mapTransformInverted.Invert();
 
-                if (_mapTransform.IsIdentity)
+                if (value.IsIdentity)
                     MapTransformRotation = 0;
                 else
-                    MapTransformRotation = Convert.ToSingle(Math.Acos(_mapTransform.Elements[0]) * 180.0 / Math.PI);
+                {
+                    var rad = value.Elements[1] >= 0 ? Math.Acos(value.Elements[0]) : -Math.Acos(value.Elements[0]);
+                    if (rad < 0)
+                        rad += 2 * Math.PI;
+                    MapTransformRotation = (float)(rad * 180.0 / Math.PI);
+                }
 
             }
         }
