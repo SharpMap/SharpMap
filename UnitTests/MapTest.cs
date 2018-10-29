@@ -1,16 +1,9 @@
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Drawing;
 using System.Drawing.Imaging;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Reactive;
 using System.Reactive.Linq;
-using System.Reflection;
-using System.Reflection.Emit;
 using GeoAPI.Geometries;
-using Microsoft.SqlServer.Server;
 using Moq;
 using NUnit.Framework;
 using NetTopologySuite.Geometries;
@@ -19,7 +12,7 @@ using SharpMap;
 using SharpMap.Data.Providers;
 using Geometry = GeoAPI.Geometries.IGeometry;
 using SharpMap.Layers;
-using Point=GeoAPI.Geometries.Coordinate;
+using Point = GeoAPI.Geometries.Coordinate;
 using BoundingBox = GeoAPI.Geometries.Envelope;
 
 namespace UnitTests
@@ -104,7 +97,7 @@ namespace UnitTests
         }
 
         [Test]
-        [ExpectedException(typeof (InvalidOperationException))]
+        [ExpectedException(typeof(InvalidOperationException))]
         public void GetExtents_EmptyMap_ThrowInvalidOperationException()
         {
             Map map = new Map(new Size(2, 1));
@@ -145,7 +138,7 @@ namespace UnitTests
 
             var lay = m.GetLayerByName("1");
             Assert.IsNotNull(lay);
-            Assert.AreEqual("1",lay.LayerName);
+            Assert.AreEqual("1", lay.LayerName);
             lay = m.GetLayerByName("2");
             Assert.IsNotNull(lay);
             Assert.AreEqual("2", lay.LayerName);
@@ -155,7 +148,7 @@ namespace UnitTests
             lay = m.GetLayerByName("Group");
             Assert.IsNotNull(lay);
             Assert.AreEqual("Group", lay.LayerName);
-            
+
         }
 
         [Test]
@@ -231,7 +224,7 @@ namespace UnitTests
         }
 
         [Test]
-        [ExpectedException(typeof (InvalidOperationException))]
+        [ExpectedException(typeof(InvalidOperationException))]
         public void GetMap_RenderEmptyMap_ThrowInvalidOperationException()
         {
             Map map = new Map(new Size(2, 1));
@@ -284,6 +277,152 @@ namespace UnitTests
             map.Zoom = 1000;
             Point p = map.ImageToWorld(new PointF(242.5f, 92));
             Assert.AreEqual(new Point(8, 50), p);
+        }
+
+        [Test]
+        public void ImageToWorld_Rotations()
+        {
+            // Test applying map transform at 30 degree increments, comparing Image>>World calcs
+            // with independent Affine Transformation, map Envelope checks, and generate image
+            ImageToWorld_Rotation(0);
+            ImageToWorld_Rotation(30);
+            ImageToWorld_Rotation(60);
+            ImageToWorld_Rotation(90);
+            ImageToWorld_Rotation(120);
+            ImageToWorld_Rotation(150);
+            ImageToWorld_Rotation(180);
+            ImageToWorld_Rotation(210);
+            ImageToWorld_Rotation(240);
+            ImageToWorld_Rotation(270);
+            ImageToWorld_Rotation(300);
+            ImageToWorld_Rotation(330);
+            //ImageToWorld_Rotation(360);
+
+            ImageToWorld_Rotation(0);
+            ImageToWorld_Rotation(-30);
+            ImageToWorld_Rotation(-60);
+            ImageToWorld_Rotation(-90);
+            ImageToWorld_Rotation(-120);
+            ImageToWorld_Rotation(-150);
+            ImageToWorld_Rotation(-180);
+            ImageToWorld_Rotation(-210);
+            ImageToWorld_Rotation(-240);
+            ImageToWorld_Rotation(-270);
+            ImageToWorld_Rotation(-300);
+            ImageToWorld_Rotation(-330);
+            //ImageToWorld_Rotation(-360);
+        }
+
+        private void ImageToWorld_Rotation(float deg)
+        {
+            var map = new Map(new Size(1000, 500)) { BackColor = System.Drawing.Color.LightSkyBlue };
+            map.Zoom = 1000;
+            map.Center = new Point(25000, 75000);
+            double mapScale = map.GetMapScale(96);
+
+            double scaleX = 1;
+            double scaleY = 1;
+
+            System.Drawing.Drawing2D.Matrix mapTransform = new System.Drawing.Drawing2D.Matrix();
+            mapTransform.RotateAt(deg, new PointF(map.Size.Width / 2f, map.Size.Height / 2f));
+            map.MapTransform = mapTransform;
+
+            var env = map.Envelope;
+
+            // Affine Transformation: 
+            // 1: Translate to mapViewPort centre
+            // 2: Reflect in X-Axis
+            // 3: Rotation about mapViewPort centre
+            // 4: Scale to map units
+            // 5: Translate to map centre
+
+            //CLOCKWISE affine transform (negate degrees)
+            //double rad = -1 * deg * Math.PI / 180.0;
+            //GeoAPI.CoordinateSystems.Transformations.IMathTransform trans =
+            //    new ProjNet.CoordinateSystems.Transformations.AffineTransform(
+            //        scaleX * Math.Cos(rad),
+            //        -scaleX * Math.Sin(rad),
+            //        -scaleX * Math.Cos(rad) * map.Size.Width / 2f + scaleX * Math.Sin(rad) * map.Size.Height / 2f + map.Center.X,
+            //        -scaleY * Math.Sin(rad),
+            //        -scaleY * Math.Cos(rad),
+            //        scaleY * Math.Sin(rad) * map.Size.Width / 2f + scaleY * Math.Cos(rad) * map.Size.Height / 2f + map.Center.Y);
+
+            //ANTICLCOCKWISE affine transform
+            double rad = deg * Math.PI / 180.0;
+            GeoAPI.CoordinateSystems.Transformations.IMathTransform trans =
+              new ProjNet.CoordinateSystems.Transformations.AffineTransform(
+                  scaleX * Math.Cos(rad),
+                  scaleX * Math.Sin(rad),
+                  -scaleX * Math.Cos(rad) * map.Size.Width / 2d - scaleX * Math.Sin(rad) * map.Size.Height / 2d + map.Center.X,
+                  scaleY * Math.Sin(rad),
+                  -scaleY * Math.Cos(rad),
+                  -scaleY * Math.Sin(rad) * map.Size.Width / 2d + scaleY * Math.Cos(rad) * map.Size.Height / 2d + map.Center.Y);
+
+            // image coordindates
+            var pts = new[] { new Point(map.Size.Width / 2f, map.Size.Height / 2f), // centre
+                            new Point(0, 0),                                        // UL
+                            new Point(map.Size.Width, 0),                           // UR 
+                            new Point(map.Size.Width, map.Size.Height),             // LR
+                            new Point(0, map.Size.Height),                          // LL 
+                            new Point(map.Size.Width * 0.05, map.Size.Height * 0.95),  // LL inset 5%
+                            new Point(map.Size.Width * 0.95, map.Size.Height * 0.95), // LR inset 5%
+                            new Point(map.Size.Width * 0.95, map.Size.Height * 0.05), // UR inset 5%
+                            new Point(map.Size.Width * 0.05, map.Size.Height * 0.05) // UL inset 5%
+                            };
+
+            LineString lineString = new LineString(pts);
+
+            NetTopologySuite.CoordinateSystems.Transformations.GeometryTransform.TransformLineString(new GeometryFactory(new PrecisionModel()), lineString, trans);
+
+            // .Net Matrix
+             //System.Drawing.Drawing2D.Matrix matrix;
+            //matrix = new System.Drawing.Drawing2D.Matrix();
+            //matrix.Translate(-map.Size.Width / 2f, -map.Size.Height / 2f);      // shift origin to viewport centre
+            //matrix.Scale(1, -1, System.Drawing.Drawing2D.MatrixOrder.Append);   // reflect in X axis
+            //matrix.Rotate(deg, System.Drawing.Drawing2D.MatrixOrder.Append);    // rotate about viewport centre
+            //matrix.Scale((float)scaleX, (float)scaleY, System.Drawing.Drawing2D.MatrixOrder.Append); // scale
+            //matrix.Translate((float)map.Center.X, (float)map.Center.Y, System.Drawing.Drawing2D.MatrixOrder.Append); // translate to map centre
+
+            //var ptsF = new[] { new PointF(map.Size.Width / 2f, map.Size.Height / 2f), // centre
+            //                new PointF(0, 0),                            // UL
+            //                new PointF(map.Size.Width, 0),               // UR 
+            //                new PointF(map.Size.Width, map.Size.Height), // LR
+            //                new PointF(0, map.Size.Height) };            // LL
+
+            //matrix.TransformPoints(ptsF);
+
+            // validate ImageToWorld calcs with independent affine transformation
+            Assert.IsTrue(lineString.GetPointN(0).Coordinate.Equals2D(map.ImageToWorld(new PointF(map.Size.Width / 2f, map.Size.Height / 2f), true), 0.001), "Centre: " + deg + " deg");
+            Assert.IsTrue(lineString.GetPointN(1).Coordinate.Equals2D(map.ImageToWorld(new PointF(0, 0), true), 0.001), "Upper Left: " + deg + " deg");
+            Assert.IsTrue(lineString.GetPointN(2).Coordinate.Equals2D(map.ImageToWorld(new PointF(map.Size.Width, 0), true), 0.001), "Upper Right: " + deg + " deg");
+            Assert.IsTrue(lineString.GetPointN(3).Coordinate.Equals2D(map.ImageToWorld(new PointF(map.Size.Width, map.Size.Height), true), 0.001), "Lower Right: " + deg + " deg"); 
+            Assert.IsTrue(lineString.GetPointN(4).Coordinate.Equals2D(map.ImageToWorld(new PointF(0, map.Size.Height), true), 0.001), "Lower Left: " + deg + " deg");
+
+            // validate map envelope: lineString outline = image extents, so lineString.EnvelopeInternal should equal map.Envelope
+            // this test found long-standing bug in Map.Envelope calcs
+            Assert.IsTrue(env.BottomLeft().Equals2D(lineString.EnvelopeInternal.BottomLeft(), 0.1));
+            Assert.IsTrue(env.TopLeft().Equals2D(lineString.EnvelopeInternal.TopLeft(), 0.1));
+            Assert.IsTrue(env.TopRight().Equals2D(lineString.EnvelopeInternal.TopRight(), 0.1));
+            Assert.IsTrue(env.BottomRight().Equals2D(lineString.EnvelopeInternal.BottomRight(), 0.1));
+
+            // visual checks
+            var vl = new VectorLayer("Test Points");
+            var gp = new GeometryProvider(lineString);
+            gp.Geometries.Add(new NetTopologySuite.Geometries.Point(25000, 75000));
+            vl.DataSource = gp;
+            var cps = new SharpMap.Rendering.Symbolizer.CharacterPointSymbolizer();
+            cps.CharacterIndex = 221;
+            cps.Font = new Font("Wingdings", 30);
+            vl.Style.PointSymbolizer = cps; 
+            map.Layers.Add(vl);
+
+            map.ZoomToBox(lineString.EnvelopeInternal);
+
+            string fn = $"MapRotation_{deg:000}_{map.Zoom:0}_{map.MapScale:0}.bmp";
+            using (var img = map.GetMap(96))
+                img.Save(fn,System.Drawing.Imaging.ImageFormat.Bmp);
+
+            map.Dispose();
         }
 
         [Test]
@@ -414,7 +553,7 @@ namespace UnitTests
             var raised = false;
             var map = new Map(new Size(400, 200));
             map.MapViewOnChange += () => raised = true;
-            
+
             // ZoomToBox
             map.ZoomToBox(new BoundingBox(20, 100, 10, 180));
             Assert.IsTrue(raised, "MapViewOnChange not fired when calling Map.ZoomToBox(...).");
@@ -444,10 +583,10 @@ namespace UnitTests
             raised = false;
             map.Center = map.Center;
             Assert.IsFalse(raised, "MapViewOnChange fired when setting Map.Center = Map.Center.");
-        
+
         }
-    
-        
+
+
         [TestCase(LayerCollectionType.Background, Description = "The map fires MapNewTileAvailable event when an ITileAsyncLayer added to background collection, fires the MapNewTileAvailable event")]
         [TestCase(LayerCollectionType.Static, Description = "The map fires MapNewTileAvailable event when an ITileAsyncLayer added to static collection, fires the MapNewTileAvailable event")]
         public void AddingTileAsyncLayers_HookItsMapNewTileAvaliableEvent(LayerCollectionType collectionType)
@@ -457,11 +596,11 @@ namespace UnitTests
             var layer = CreateTileAsyncLayer();
 
             AddTileLayerToMap(layer, map, collectionType);
-            
+
             var eventSource = map.GetMapNewTileAvailableAsObservable();
 
             RaiseMapNewtileAvailableOn(layer);
-            
+
             Assert.That(eventSource.Count().First(), Is.EqualTo(1), TestContext.CurrentContext.Test.GetDescription());
         }
 
@@ -477,7 +616,7 @@ namespace UnitTests
 
             var eventSource = map.GetMapNewTileAvailableAsObservable();
 
-            map.GetCollection(collectionType).RemoveAt(0); 
+            map.GetCollection(collectionType).RemoveAt(0);
 
             RaiseMapNewtileAvailableOn(tileAsyncLayer);
 
@@ -752,10 +891,10 @@ namespace UnitTests
         public void MapLayers_AfterRemovingNotEmptyGroup_IsEmpty()
         {
             var map = new Map();
-            
+
             var group = CreateLayerGroup();
             group.Layers.Add(new LabelLayer("labels"));
-            
+
             map.Layers.Add(group);
 
             map.Layers.Remove(group);
@@ -815,8 +954,8 @@ namespace UnitTests
         }
         private void RaiseMapNewtileAvailableOn(Tuple<Mock<ILayer>, Mock<ITileAsyncLayer>> tileAsync)
         {
-            tileAsync.Item2.Raise(tal => tal.MapNewTileAvaliable += null, (TileLayer) null, (Envelope) null, (Bitmap) null, 0,
-                0, (ImageAttributes) null);
+            tileAsync.Item2.Raise(tal => tal.MapNewTileAvaliable += null, (TileLayer)null, (Envelope)null, (Bitmap)null, 0,
+                0, (ImageAttributes)null);
         }
     }
 }

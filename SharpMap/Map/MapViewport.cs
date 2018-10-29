@@ -55,7 +55,7 @@ namespace SharpMap
             PixelHeight = PixelWidth*pixelAspectRatio;
 
             Zoom = env.Width;
-            MapHeight = Zoom*pixelAspectRatio;
+            MapHeight = Zoom * pixelAspectRatio;
 
             // already cloned
             //_mapTransform = mapTransform;
