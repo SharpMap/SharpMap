@@ -279,7 +279,7 @@ namespace UnitTests
             Assert.AreEqual(new Point(8, 50), p);
         }
 
-        [Test]
+        [Test, Category("RequiresWindows")]
         public void ImageToWorld_Rotations()
         {
             // Test applying map transform at 30 degree increments, comparing Image>>World calcs
