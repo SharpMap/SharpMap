@@ -395,6 +395,13 @@
     <None Include="app.config">
       <SubType>Designer</SubType>
     </None>
+    <Content Include="GeoData\SqlServer\SqlServerSample.mdf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="GeoData\SqlServer\SqlServerSample_log.ldf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <DependentUpon>SqlServerSample.mdf</DependentUpon>
+    </Content>
     <Content Include="GeoData\VRT\contours_sample_polyline_play2_polyline.vrt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
