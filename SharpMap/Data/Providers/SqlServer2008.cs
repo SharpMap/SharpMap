@@ -379,10 +379,7 @@ namespace SharpMap.Data.Providers
                             {
                                 var geom = Converters.WellKnownBinary.GeometryFromWKB.Parse((byte[])dr[0], Factory);
                                 if (geom != null)
-                                {
-                                    if (SpatialObjectType == SqlServerSpatialObjectType.Geography) FlipXY(geom);
                                     features.Add(geom);
-                                }
                             }
                         }
                     }
@@ -412,10 +409,7 @@ namespace SharpMap.Data.Providers
                         while (dr.Read())
                         {
                             if (dr[0] != DBNull.Value)
-                            {
                                 geom = Converters.WellKnownBinary.GeometryFromWKB.Parse((byte[])dr[0], Factory);
-                                if (SpatialObjectType == SqlServerSpatialObjectType.Geography) FlipXY(geom);
-                            }
                         }
                     }
                 }
@@ -423,19 +417,7 @@ namespace SharpMap.Data.Providers
             }
             return geom;
         }
-
-        private static void FlipXY(IGeometry geom)
-        {
-            var coords = geom.Coordinates;
-            for (var i = 0; i < coords.Length; i++)
-            {
-                var x = coords[i].X;
-                coords[i].X = coords[i].Y;
-                coords[i].Y = x;
-            }
-            geom.GeometryChanged();
-        }
-
+             
         /// <summary>   
         /// Returns geometry Object IDs whose bounding box intersects 'bbox'   
         /// </summary>   
@@ -502,8 +484,8 @@ namespace SharpMap.Data.Providers
                 // GeometryToWKT returns clockwise ring
                 bboxText = Converters.WellKnownText.GeometryToWKT.Write(Factory.ToGeometry(bbox)); // "";      
             }
-            
-            // STGeomFromText applicable to both Geometry AND Geography. 
+
+            // STGeomFromText applicable to both Geometry AND Geography (ie x,y) 
             // STGeomFromText values are converted from nvarchar to binary(8) - it is possible that truncation or rounding may occur
 
             //string whereClause = GeometryColumn + ".STIntersects(geometry::STGeomFromText('" + bboxText + "', " + SRID + ")" + MakeValidString + ") = 1";   
@@ -557,15 +539,7 @@ namespace SharpMap.Data.Providers
                             foreach (System.Data.DataColumn col in ds.Tables[0].Columns)
                                 if (col.ColumnName != GeometryColumn && col.ColumnName != "sharpmap_tempgeometry")
                                     fdr[col.ColumnName] = dr[col];
-                            var tmpGeom =
-                                Converters.WellKnownBinary.GeometryFromWKB.Parse((byte[])dr["sharpmap_tempgeometry"],
-                                    Factory);
-                            if (tmpGeom != null && SpatialObjectType == SqlServerSpatialObjectType.Geography)
-                            {
-                                FlipXY(tmpGeom);
-                                tmpGeom.GeometryChanged();
-                            }
-                            fdr.Geometry = tmpGeom;
+                            fdr.Geometry = Converters.WellKnownBinary.GeometryFromWKB.Parse((byte[])dr["sharpmap_tempgeometry"], Factory);
                             fdt.AddRow(fdr);
                         }
                         ds.Tables.Add(fdt);
@@ -661,15 +635,9 @@ namespace SharpMap.Data.Providers
                             foreach (System.Data.DataColumn col in ds.Tables[0].Columns)
                                 if (col.ColumnName != GeometryColumn && col.ColumnName != "sharpmap_tempgeometry")
                                     fdr[col.ColumnName] = dr[col];
-                            var tmpGeom =
-                                Converters.WellKnownBinary.GeometryFromWKB.Parse((byte[])dr["sharpmap_tempgeometry"],
-                                    Factory);
-                            if (tmpGeom != null && SpatialObjectType == SqlServerSpatialObjectType.Geography)
-                            {
-                                FlipXY(tmpGeom);
-                                tmpGeom.GeometryChanged();
-                            }
-                            fdr.Geometry = tmpGeom;
+
+                            fdr.Geometry = Converters.WellKnownBinary.GeometryFromWKB.Parse((byte[])dr["sharpmap_tempgeometry"], Factory);
+
                             return fdr;
                         }
                         return null;
@@ -685,6 +653,8 @@ namespace SharpMap.Data.Providers
         /// <returns>boundingbox</returns>   
         public override Envelope GetExtents()
         {
+            // STAsText applicable to both Geometry AND Geography (ie x,y)
+
             using (var conn = new SqlConnection(ConnectionString))
             {
                 conn.Open();
@@ -744,11 +714,15 @@ namespace SharpMap.Data.Providers
                         }
 
                     case SqlServer2008ExtentsMode.EnvelopeAggregate:
+
+                        // SqlGeometry returns a rectilinear polygon
+                        // SqlGeography returns a CURVED polygon
                         sql = String.Format("SELECT {3}::EnvelopeAggregate(g.{0}{1}).STAsText() FROM {2} g ",
-                            GeometryColumn, MakeValidString, QualifiedTable, _spatialTypeString);
+                                        GeometryColumn, MakeValidString, QualifiedTable, _spatialTypeString);
 
                         if (!String.IsNullOrEmpty(DefinitionQuery))
                             sql += " WHERE " + DefinitionQuery;
+
                         using (var command = new SqlCommand(sql, conn))
                         {
                             using (var dr = command.ExecuteReader())
@@ -757,11 +731,6 @@ namespace SharpMap.Data.Providers
                                 {
                                     var wkt = dr.GetString(0);
                                     var g = Converters.WellKnownText.GeometryFromWKT.Parse(wkt);
-                                    if (SpatialObjectType == SqlServerSpatialObjectType.Geography)
-                                    {
-                                        FlipXY(g);
-                                        g.GeometryChanged();
-                                    }
                                     return g.EnvelopeInternal;
                                 }
                             }
