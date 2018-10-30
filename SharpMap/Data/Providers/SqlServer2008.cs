@@ -179,7 +179,7 @@ namespace SharpMap.Data.Providers
 
             GeometryColumn = spatialColumnName;
             ObjectIdColumn = oidColumnName;
-            _spatialObjectType = spatialObjectType;
+            SpatialObjectType = spatialObjectType;
             switch (spatialObjectType)
             {
                 case SqlServerSpatialObjectType.Geometry:
@@ -250,16 +250,10 @@ namespace SharpMap.Data.Providers
             Table = sb.ToString();
         }
 
-        private SqlServer2008ExtentsMode _extentsMode;
-
         /// <summary>
         /// Gets or sets the method used in the <see cref="GetExtents"/> method.
         /// </summary>
-        public SqlServer2008ExtentsMode ExtentsMode
-        {
-            get { return _extentsMode; }
-            set { _extentsMode = value; }
-        }
+        public SqlServer2008ExtentsMode ExtentsMode { get; set; }
 
         /// <summary>   
         /// Connectionstring   
@@ -270,27 +264,15 @@ namespace SharpMap.Data.Providers
             set { ConnectionID = value; }
         }
 
-        private string _table;
-
         /// <summary>   
         /// Data table name   
         /// </summary>   
-        public string Table
-        {
-            get { return _table; }
-            set { _table = value; }
-        }
-
-        private string _schema;
+        public string Table { get; private set; }
 
         /// <summary>   
         /// Data table schema   
         /// </summary>   
-        public string TableSchema
-        {
-            get { return _schema; }
-            set { _schema = value; }
-        }
+        public string TableSchema { get; private set; }
 
         /// <summary>
         /// Gets a value indicating the qualified schema table name in square brackets
@@ -307,57 +289,32 @@ namespace SharpMap.Data.Providers
             }
         }
 
-        private string _geometryColumn;
-
         /// <summary>   
         /// Name of geometry column   
         /// </summary>   
-        public string GeometryColumn
-        {
-            get { return _geometryColumn; }
-            set { _geometryColumn = value; }
-        }
-
-        private string _objectIdColumn;
+        public string GeometryColumn { get; private set; }
 
         /// <summary>   
         /// Name of column that contains the Object ID   
         /// </summary>   
-        public string ObjectIdColumn
-        {
-            get { return _objectIdColumn; }
-            set { _objectIdColumn = value; }
-        }
-
-        private bool _makeValid;
+        public string ObjectIdColumn { get; private set; }
 
         /// <summary>
         /// Gets/Sets whether all <see cref="GeoAPI.Geometries"/> passed to SqlServer2008 should be made valid using this function.
         /// </summary>
-        public Boolean ValidateGeometries
-        {
-            get { return _makeValid; }
-            set { _makeValid = value; }
-        }
+        public Boolean ValidateGeometries { get; set; }
 
         private String MakeValidString
         {
-            get { return _makeValid ? ".MakeValid()" : String.Empty; }
+            get { return ValidateGeometries ? ".MakeValid()" : String.Empty; }
         }
 
-        private readonly SqlServerSpatialObjectType _spatialObjectType;
         private readonly string _spatialObject;
 
         /// <summary>
         /// Spatial object type for  
         /// </summary>
-        public SqlServerSpatialObjectType SpatialObjectType
-        {
-            get { return _spatialObjectType; }
-        }
-
-
-        private int _maxDop;
+        public SqlServerSpatialObjectType SpatialObjectType { get; private set; }
 
         /// <summary>
         /// If set, sends an Option MaxDop to the SQL-Server to override the Parallel Execution of indexes
@@ -367,11 +324,7 @@ namespace SharpMap.Data.Providers
         /// MaxDop = 1 // Suppress Parallel execution of Queryplan
         /// MaxDop = [2..n] // Use X cores in in execution plan
         /// </summary>
-        public int MaxDop
-        {
-            get { return _maxDop; }
-            set { _maxDop = value; }
-        }
+        public int MaxDop { get; set; }
 
         /// <summary>
         /// Function to transform <see cref="MaxDop"/> to sql for the query
@@ -379,9 +332,9 @@ namespace SharpMap.Data.Providers
         /// <returns>MAXDOP option striong</returns>
         protected string GetExtraOptions()
         {
-            if (_maxDop != 0)
+            if (MaxDop != 0)
             {
-                return "OPTION (MAXDOP " + _maxDop + ")";
+                return "OPTION (MAXDOP " + MaxDop + ")";
             }
             else
             {
@@ -406,7 +359,7 @@ namespace SharpMap.Data.Providers
                 string strSql = "SELECT g." + GeometryColumn + ".STAsBinary() ";
                 strSql += " FROM " + QualifiedTable + " g " + BuildTableHints() + " WHERE ";
 
-                if (!String.IsNullOrEmpty(_definitionQuery))
+                if (!String.IsNullOrEmpty(DefinitionQuery))
                     strSql += DefinitionQuery + " AND ";
 
                 strSql += strBbox;
@@ -427,7 +380,7 @@ namespace SharpMap.Data.Providers
                                 var geom = Converters.WellKnownBinary.GeometryFromWKB.Parse((byte[])dr[0], Factory);
                                 if (geom != null)
                                 {
-                                    if (_spatialObjectType == SqlServerSpatialObjectType.Geography) FlipXY(geom);
+                                    if (SpatialObjectType == SqlServerSpatialObjectType.Geography) FlipXY(geom);
                                     features.Add(geom);
                                 }
                             }
@@ -461,7 +414,7 @@ namespace SharpMap.Data.Providers
                             if (dr[0] != DBNull.Value)
                             {
                                 geom = Converters.WellKnownBinary.GeometryFromWKB.Parse((byte[])dr[0], Factory);
-                                if (_spatialObjectType == SqlServerSpatialObjectType.Geography) FlipXY(geom);
+                                if (SpatialObjectType == SqlServerSpatialObjectType.Geography) FlipXY(geom);
                             }
                         }
                     }
@@ -499,7 +452,7 @@ namespace SharpMap.Data.Providers
                 string strSql = "SELECT g." + ObjectIdColumn + " ";
                 strSql += "FROM " + QualifiedTable + " g " + BuildTableHints() + " WHERE ";
 
-                if (!String.IsNullOrEmpty(_definitionQuery))
+                if (!String.IsNullOrEmpty(DefinitionQuery))
                     strSql += DefinitionQuery + " AND ";
 
                 strSql += strBbox;
@@ -537,7 +490,7 @@ namespace SharpMap.Data.Providers
         protected string GetBoxFilterStr(Envelope bbox)
         {
             //geography::STGeomFromText('LINESTRING(47.656 -122.360, 47.656 -122.343)', 4326);   
-            if (_spatialObjectType == SqlServerSpatialObjectType.Geography)
+            if (SpatialObjectType == SqlServerSpatialObjectType.Geography)
                 bbox = new Envelope(bbox.MinY, bbox.MaxY, bbox.MinX, bbox.MaxY);
             var bboxText = Converters.WellKnownText.GeometryToWKT.Write(Factory.ToGeometry(bbox)); // "";   
             //string whereClause = GeometryColumn + ".STIntersects(geometry::STGeomFromText('" + bboxText + "', " + SRID + ")" + MakeValidString + ") = 1";   
@@ -563,7 +516,7 @@ namespace SharpMap.Data.Providers
                 string strSql = "SELECT g.* , g." + GeometryColumn + ".STAsBinary() As sharpmap_tempgeometry FROM " +
                                 QualifiedTable + " g " + BuildTableHints() + " WHERE ";
 
-                if (!String.IsNullOrEmpty(_definitionQuery))
+                if (!String.IsNullOrEmpty(DefinitionQuery))
                     strSql += DefinitionQuery + " AND ";
 
                 strSql += strGeom;
@@ -593,7 +546,7 @@ namespace SharpMap.Data.Providers
                             var tmpGeom =
                                 Converters.WellKnownBinary.GeometryFromWKB.Parse((byte[])dr["sharpmap_tempgeometry"],
                                     Factory);
-                            if (tmpGeom != null && _spatialObjectType == SqlServerSpatialObjectType.Geography)
+                            if (tmpGeom != null && SpatialObjectType == SqlServerSpatialObjectType.Geography)
                             {
                                 FlipXY(tmpGeom);
                                 tmpGeom.GeometryChanged();
@@ -637,7 +590,7 @@ namespace SharpMap.Data.Providers
             using (var conn = new SqlConnection(ConnectionString))
             {
                 var strSql = "SELECT COUNT(*) FROM " + QualifiedTable;
-                if (!String.IsNullOrEmpty(_definitionQuery))
+                if (!String.IsNullOrEmpty(DefinitionQuery))
                     strSql += " WHERE " + DefinitionQuery;
                 using (var command = new SqlCommand(strSql, conn))
                 {
@@ -651,16 +604,10 @@ namespace SharpMap.Data.Providers
 
         #region IProvider Members   
 
-        private string _definitionQuery;
-
         /// <summary>   
         /// Definition query used for limiting dataset   
         /// </summary>   
-        public string DefinitionQuery
-        {
-            get { return _definitionQuery; }
-            set { _definitionQuery = value; }
-        }
+        public string DefinitionQuery { get; set; }
 
         /// <summary>   
         /// Gets a collection of columns in the dataset   
@@ -703,7 +650,7 @@ namespace SharpMap.Data.Providers
                             var tmpGeom =
                                 Converters.WellKnownBinary.GeometryFromWKB.Parse((byte[])dr["sharpmap_tempgeometry"],
                                     Factory);
-                            if (tmpGeom != null && _spatialObjectType == SqlServerSpatialObjectType.Geography)
+                            if (tmpGeom != null && SpatialObjectType == SqlServerSpatialObjectType.Geography)
                             {
                                 FlipXY(tmpGeom);
                                 tmpGeom.GeometryChanged();
@@ -728,12 +675,12 @@ namespace SharpMap.Data.Providers
             {
                 conn.Open();
                 string sql;
-                switch (_extentsMode)
+                switch (ExtentsMode)
                 {
                     case SqlServer2008ExtentsMode.SpatialIndex:
                         sql =
                             "select bounding_box_xmin,bounding_box_xmax,bounding_box_ymin,bounding_box_ymax from sys.spatial_index_tessellations where object_id  = (select object_id from sys.tables where name = '" +
-                            _table + "' and type_desc = 'USER_TABLE')";
+                            Table + "' and type_desc = 'USER_TABLE')";
 
                         using (var command = new SqlCommand(sql, conn))
                         {
@@ -754,7 +701,7 @@ namespace SharpMap.Data.Providers
 
                     case SqlServer2008ExtentsMode.QueryIndividualFeatures:
 
-                        if (_spatialObjectType == SqlServerSpatialObjectType.Geography)
+                        if (SpatialObjectType == SqlServerSpatialObjectType.Geography)
                         {
                             // The geography datatype does not have the STEnvelope method. If using SQL2012, EnvelopeAggregate provides an alternative
                             throw new NotSupportedException("STEnvelope does not work with geography!");
@@ -764,7 +711,7 @@ namespace SharpMap.Data.Providers
                         sql = String.Format("SELECT g.{0}{1}.STEnvelope().STAsText() FROM {2} g ",
                             GeometryColumn, MakeValidString, QualifiedTable);
 
-                        if (!String.IsNullOrEmpty(_definitionQuery))
+                        if (!String.IsNullOrEmpty(DefinitionQuery))
                             sql += " WHERE " + DefinitionQuery;
 
                         using (var command = new SqlCommand(sql, conn))
@@ -786,7 +733,7 @@ namespace SharpMap.Data.Providers
                         sql = String.Format("SELECT {3}::EnvelopeAggregate(g.{0}{1}).STAsText() FROM {2} g ",
                             GeometryColumn, MakeValidString, QualifiedTable, _spatialObject);
 
-                        if (!String.IsNullOrEmpty(_definitionQuery))
+                        if (!String.IsNullOrEmpty(DefinitionQuery))
                             sql += " WHERE " + DefinitionQuery;
                         using (var command = new SqlCommand(sql, conn))
                         {
@@ -796,7 +743,7 @@ namespace SharpMap.Data.Providers
                                 {
                                     var wkt = dr.GetString(0);
                                     var g = Converters.WellKnownText.GeometryFromWKT.Parse(wkt);
-                                    if (_spatialObjectType == SqlServerSpatialObjectType.Geography)
+                                    if (SpatialObjectType == SqlServerSpatialObjectType.Geography)
                                     {
                                         FlipXY(g);
                                         g.GeometryChanged();
@@ -833,7 +780,7 @@ namespace SharpMap.Data.Providers
                     "SELECT g.*, g.{0}{1}.STAsBinary() AS sharpmap_tempgeometry FROM {2} g {3} WHERE ",
                     GeometryColumn, MakeValidString, QualifiedTable, BuildTableHints());
 
-                if (!String.IsNullOrEmpty(_definitionQuery))
+                if (!String.IsNullOrEmpty(DefinitionQuery))
                     strSql += DefinitionQuery + " AND ";
 
                 strSql += strBbox;
@@ -874,38 +821,20 @@ namespace SharpMap.Data.Providers
 
         #endregion
 
-        private bool _forceSeekHint;
-
         /// <summary>
         /// When <code>true</code>, uses the FORCESEEK table hint.
         /// </summary>   
-        public bool ForceSeekHint
-        {
-            get { return _forceSeekHint; }
-            set { _forceSeekHint = value; }
-        }
-
-        private bool _noLockHint;
+        public bool ForceSeekHint { get; set; }
 
         /// <summary>
         /// When <code>true</code>, uses the NOLOCK table hint.
         /// </summary>   
-        public bool NoLockHint
-        {
-            get { return _noLockHint; }
-            set { _noLockHint = value; }
-        }
-
-        private string _forceIndex;
+        public bool NoLockHint { get; set; }
 
         /// <summary>
         /// When set, forces use of the specified index
         /// </summary>   
-        public string ForceIndex
-        {
-            get { return _forceIndex; }
-            set { _forceIndex = value; }
-        }
+        public string ForceIndex { get; set; }
 
         /// <summary>
         /// Builds the WITH clause containing all specified table hints
