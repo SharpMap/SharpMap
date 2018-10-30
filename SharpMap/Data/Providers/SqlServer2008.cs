@@ -183,11 +183,11 @@ namespace SharpMap.Data.Providers
             switch (spatialObjectType)
             {
                 case SqlServerSpatialObjectType.Geometry:
-                    _spatialObject = "geometry";
+                    _spatialTypeString = "geometry";
                     break;
                 //case SqlServerSpatialObjectType.Geography:
                 default:
-                    _spatialObject = "geography";
+                    _spatialTypeString = "geography";
                     break;
             }
 
@@ -309,7 +309,7 @@ namespace SharpMap.Data.Providers
             get { return ValidateGeometries ? ".MakeValid()" : String.Empty; }
         }
 
-        private readonly string _spatialObject;
+        private readonly string _spatialTypeString;
 
         /// <summary>
         /// Spatial object type for  
@@ -489,14 +489,28 @@ namespace SharpMap.Data.Providers
         /// <returns></returns>   
         protected string GetBoxFilterStr(Envelope bbox)
         {
-            //geography::STGeomFromText('LINESTRING(47.656 -122.360, 47.656 -122.343)', 4326);   
+            string bboxText;
             if (SpatialObjectType == SqlServerSpatialObjectType.Geography)
-                bbox = new Envelope(bbox.MinY, bbox.MaxY, bbox.MinX, bbox.MaxY);
-            var bboxText = Converters.WellKnownText.GeometryToWKT.Write(Factory.ToGeometry(bbox)); // "";   
+            {
+                // SqlServer geography : polygon interior defined by left hand/foot rule (anti-clockwise orientation)
+                // For reference: MakeValid() is another way to ensure Geography polygon is correctly oriented
+                // Note: default numeric rounding of Min/Max X/Y
+                bboxText = $"POLYGON (({bbox.MinX} {bbox.MinY}, {bbox.MaxX} {bbox.MinY}, {bbox.MaxX} {bbox.MaxY}, {bbox.MinX} {bbox.MaxY}, {bbox.MinX} {bbox.MinY}))";
+            }
+            else
+            {
+                // GeometryToWKT returns clockwise ring
+                bboxText = Converters.WellKnownText.GeometryToWKT.Write(Factory.ToGeometry(bbox)); // "";      
+            }
+            
+            // STGeomFromText applicable to both Geometry AND Geography. 
+            // STGeomFromText values are converted from nvarchar to binary(8) - it is possible that truncation or rounding may occur
+
             //string whereClause = GeometryColumn + ".STIntersects(geometry::STGeomFromText('" + bboxText + "', " + SRID + ")" + MakeValidString + ") = 1";   
             string whereClause = String.Format("{0}{1}.STIntersects({4}::STGeomFromText('{2}', {3})) = 1",
-                GeometryColumn, MakeValidString, bboxText, SRID, _spatialObject);
-            return whereClause; // strBbox;   
+                                                GeometryColumn, MakeValidString, bboxText, SRID, _spatialTypeString);
+
+            return whereClause;
         }
 
         /// <summary>   
@@ -508,7 +522,7 @@ namespace SharpMap.Data.Providers
         {
             using (var conn = new SqlConnection(ConnectionString))
             {
-                string strGeom = _spatialObject + "::STGeomFromText('" + geom.AsText() + "', #SRID#)";
+                string strGeom = _spatialTypeString + "::STGeomFromText('" + geom.AsText() + "', #SRID#)";
 
                 strGeom = strGeom.Replace("#SRID#", SRID > 0 ? SRID.ToString(CultureInfo.InvariantCulture) : "0");
                 strGeom = GeometryColumn + ".STIntersects(" + strGeom + ") = 1";
@@ -731,7 +745,7 @@ namespace SharpMap.Data.Providers
 
                     case SqlServer2008ExtentsMode.EnvelopeAggregate:
                         sql = String.Format("SELECT {3}::EnvelopeAggregate(g.{0}{1}).STAsText() FROM {2} g ",
-                            GeometryColumn, MakeValidString, QualifiedTable, _spatialObject);
+                            GeometryColumn, MakeValidString, QualifiedTable, _spatialTypeString);
 
                         if (!String.IsNullOrEmpty(DefinitionQuery))
                             sql += " WHERE " + DefinitionQuery;
