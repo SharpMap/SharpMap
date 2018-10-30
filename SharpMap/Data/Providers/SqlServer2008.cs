@@ -14,11 +14,19 @@
 // but WITHOUT ANY WARRANTY; without even the implied warranty of   
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the   
 // GNU Lesser General Public License for more details.   
-  
+
 // You should have received a copy of the GNU Lesser General Public License   
 // along with  if not, write to the Free Software   
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA    
-  
+
+// Note - Supports both Geometry AND Geography types for SQL Server 2008 onwards. 
+// The '2008' suffix in the class name is to distinguish from MsSqlSpatial provider (Sql Server 2005).
+// SqlServer2008 requests WKB from the database (hence will work with Sql Server 2008, 2012, 2016 etc), 
+// and WKB is then parsed to an IGeometry instance using SharpMap.Converters.WellKnownBinary.GeometryFromWKB
+//
+// Alternatively, to work with native Sql Spatial types, see SharpMap.SqlServerSpatialObjects which requests
+// raw spatial bytes from the database and uses Microsoft.SqlServer.Types to convert Sql bytes on the client.
+
 using System;
 using System.Collections.ObjectModel;
 using System.Collections.Generic;
@@ -86,7 +94,31 @@ namespace SharpMap.Data.Providers
     public class SqlServer2008 : BaseProvider
     {
         /// <summary>   
-        /// Initializes a new connection to SQL Server   
+        /// Initializes a new connection to SQL Server for Geometry spatial type in column named SHAPE
+        /// </summary>   
+        /// <param name="connectionStr">Connectionstring</param>   
+        /// <param name="tablename">Name of data table</param>   
+        /// <param name="oidColumnName">Name of column with unique identifier</param>   
+        public SqlServer2008(string connectionStr, string tablename, string oidColumnName)
+            : this(connectionStr, tablename, "shape", oidColumnName, SqlServerSpatialObjectType.Geometry)
+        {
+        }
+
+        /// <summary>   
+        /// Initializes a new connection to SQL Server for spatial column named SHAPE  
+        /// </summary>   
+        /// <param name="connectionStr">Connectionstring</param>   
+        /// <param name="tablename">Name of data table</param>   
+        /// <param name="oidColumnName">Name of column with unique identifier</param>
+        /// <param name="spatialObjectType">The type of the spatial object to use for spatial queries</param>
+        public SqlServer2008(string connectionStr, string tablename, string oidColumnName,
+            SqlServerSpatialObjectType spatialObjectType)
+            : this(connectionStr, tablename, "shape", oidColumnName, spatialObjectType)
+        {
+        }
+
+        /// <summary>   
+        /// Initializes a new connection to SQL Server for Geometry spatial type with default Extents mode
         /// </summary>   
         /// <param name="connectionStr">Connectionstring</param>   
         /// <param name="tablename">Name of data table</param>   
@@ -98,16 +130,16 @@ namespace SharpMap.Data.Providers
         }
 
         /// <summary>   
-        /// Initializes a new connection to SQL Server   
+        /// Initializes a new connection to SQL Server with default Extents mode  
         /// </summary>   
         /// <param name="connectionStr">Connectionstring</param>   
         /// <param name="tablename">Name of data table</param>   
-        /// <param name="geometryColumnName">Name of geometry column</param>   
+        /// <param name="spatialColumnName">Name of spatial column</param>   
         /// <param name="oidColumnName">Name of column with unique identifier</param>   
-        /// <param name="spatialObjectType">The type of the spatial object to use for spatial queries</param>
-        public SqlServer2008(string connectionStr, string tablename, string geometryColumnName, string oidColumnName,
+        /// <param name="spatialObjectType">spatial type (Geometry or Geography)</param>
+        public SqlServer2008(string connectionStr, string tablename, string spatialColumnName, string oidColumnName,
             SqlServerSpatialObjectType spatialObjectType)
-            : this(connectionStr, tablename, geometryColumnName, oidColumnName, spatialObjectType, false)
+            : this(connectionStr, tablename, spatialColumnName, oidColumnName, spatialObjectType, false)
         {
         }
 
@@ -116,14 +148,14 @@ namespace SharpMap.Data.Providers
         /// </summary>   
         /// <param name="connectionStr">Connectionstring</param>   
         /// <param name="tablename">Name of data table</param>   
-        /// <param name="geometryColumnName">Name of geometry column</param>   
+        /// <param name="spatialColumnName">Name of spatial column</param>   
         /// <param name="oidColumnName">Name of column with unique identifier</param>   
-        /// <param name="spatialObjectType">The type of the spatial object to use for spatial queries</param>
-        /// <param name="useSpatialIndexExtentAsExtent">If true, the bounds of the spatial index is used for the GetExtents() method which heavily increases performance instead of reading through all features in the table</param>
-        public SqlServer2008(string connectionStr, string tablename, string geometryColumnName, string oidColumnName,
+        /// <param name="spatialObjectType">spatial type (Geometry or Geography)</param>
+        /// <param name="useSpatialIndexExtentAsExtent">If true, the bounds of the spatial index is used for the GetExtents() method which significantly improves performance instead of reading through all features in the table</param>
+        public SqlServer2008(string connectionStr, string tablename, string spatialColumnName, string oidColumnName,
             SqlServerSpatialObjectType spatialObjectType, bool useSpatialIndexExtentAsExtent)
             : this(
-                connectionStr, tablename, geometryColumnName, oidColumnName, spatialObjectType,
+                connectionStr, tablename, spatialColumnName, oidColumnName, spatialObjectType,
                 useSpatialIndexExtentAsExtent, 0)
         {
         }
@@ -133,19 +165,19 @@ namespace SharpMap.Data.Providers
         /// </summary>   
         /// <param name="connectionStr">Connectionstring</param>   
         /// <param name="tablename">Name of data table</param>   
-        /// <param name="geometryColumnName">Name of geometry column</param>   
+        /// <param name="spatialColumnName">Name of spatial column</param>   
         /// <param name="oidColumnName">Name of column with unique identifier</param>   
-        /// <param name="spatialObjectType">The type of the spatial object to use for spatial queries</param>
+        /// <param name="spatialObjectType">spatial type (Geometry or Geography)</param>
         /// <param name="useSpatialIndexExtentAsExtent">If true, the bounds of the spatial index is used for the GetExtents() method which heavily increases performance instead of reading through all features in the table</param>
         /// <param name="srid">The spatial reference id</param>
-        public SqlServer2008(string connectionStr, string tablename, string geometryColumnName, string oidColumnName,
+        public SqlServer2008(string connectionStr, string tablename, string spatialColumnName, string oidColumnName,
             SqlServerSpatialObjectType spatialObjectType, bool useSpatialIndexExtentAsExtent, int srid)
         {
             ConnectionString = connectionStr;
 
             ParseTablename(tablename);
 
-            GeometryColumn = geometryColumnName;
+            GeometryColumn = spatialColumnName;
             ObjectIdColumn = oidColumnName;
             _spatialObjectType = spatialObjectType;
             switch (spatialObjectType)
@@ -159,7 +191,7 @@ namespace SharpMap.Data.Providers
                     break;
             }
 
-            _extentsMode = (useSpatialIndexExtentAsExtent
+            ExtentsMode = (useSpatialIndexExtentAsExtent
                 ? SqlServer2008ExtentsMode.SpatialIndex
                 : SqlServer2008ExtentsMode.QueryIndividualFeatures);
 
@@ -174,7 +206,7 @@ namespace SharpMap.Data.Providers
         {
             bool open = false;
             var sb = new StringBuilder(tablename.Length);
-            var lc = char.MinValue;
+            var lastChar = char.MinValue;
 
             foreach (var c in tablename)
             {
@@ -191,7 +223,7 @@ namespace SharpMap.Data.Providers
                         open = false;
                         break;
                     case '.':
-                        if (lc == char.MinValue)
+                        if (lastChar == char.MinValue)
                             throw new ArgumentException("tablename");
                         if (open)
                             sb.Append(c);
@@ -200,46 +232,22 @@ namespace SharpMap.Data.Providers
                             if (string.IsNullOrEmpty(TableSchema))
                                 TableSchema = sb.ToString();
                             else
-                                TableSchema += "." + sb;
-                            sb.Clear();
+                                TableSchema += "." + sb.ToString();
 
+                            sb.Clear();
                         }
                         break;
                     default:
                         sb.Append(c);
                         break;
                 }
-                lc = c;
+                lastChar = c;
             }
 
             if (open)
                 throw new ArgumentException("tablename");
 
             Table = sb.ToString();
-        }
-
-        /// <summary>   
-        /// Initializes a new connection to SQL Server   
-        /// </summary>   
-        /// <param name="connectionStr">Connectionstring</param>   
-        /// <param name="tablename">Name of data table</param>   
-        /// <param name="oidColumnName">Name of column with unique identifier</param>   
-        public SqlServer2008(string connectionStr, string tablename, string oidColumnName)
-            : this(connectionStr, tablename, "shape", oidColumnName, SqlServerSpatialObjectType.Geometry)
-        {
-        }
-
-        /// <summary>   
-        /// Initializes a new connection to SQL Server   
-        /// </summary>   
-        /// <param name="connectionStr">Connectionstring</param>   
-        /// <param name="tablename">Name of data table</param>   
-        /// <param name="oidColumnName">Name of column with unique identifier</param>
-        /// <param name="spatialObjectType">The type of the spatial object to use for spatial queries</param>
-        public SqlServer2008(string connectionStr, string tablename, string oidColumnName,
-            SqlServerSpatialObjectType spatialObjectType)
-            : this(connectionStr, tablename, "shape", oidColumnName, spatialObjectType)
-        {
         }
 
         private SqlServer2008ExtentsMode _extentsMode;
@@ -416,7 +424,7 @@ namespace SharpMap.Data.Providers
                         {
                             if (dr[0] != DBNull.Value)
                             {
-                                var geom = Converters.WellKnownBinary.GeometryFromWKB.Parse((byte[]) dr[0], Factory);
+                                var geom = Converters.WellKnownBinary.GeometryFromWKB.Parse((byte[])dr[0], Factory);
                                 if (geom != null)
                                 {
                                     if (_spatialObjectType == SqlServerSpatialObjectType.Geography) FlipXY(geom);
@@ -452,7 +460,7 @@ namespace SharpMap.Data.Providers
                         {
                             if (dr[0] != DBNull.Value)
                             {
-                                geom = Converters.WellKnownBinary.GeometryFromWKB.Parse((byte[]) dr[0], Factory);
+                                geom = Converters.WellKnownBinary.GeometryFromWKB.Parse((byte[])dr[0], Factory);
                                 if (_spatialObjectType == SqlServerSpatialObjectType.Geography) FlipXY(geom);
                             }
                         }
@@ -583,7 +591,7 @@ namespace SharpMap.Data.Providers
                                 if (col.ColumnName != GeometryColumn && col.ColumnName != "sharpmap_tempgeometry")
                                     fdr[col.ColumnName] = dr[col];
                             var tmpGeom =
-                                Converters.WellKnownBinary.GeometryFromWKB.Parse((byte[]) dr["sharpmap_tempgeometry"],
+                                Converters.WellKnownBinary.GeometryFromWKB.Parse((byte[])dr["sharpmap_tempgeometry"],
                                     Factory);
                             if (tmpGeom != null && _spatialObjectType == SqlServerSpatialObjectType.Geography)
                             {
@@ -634,7 +642,7 @@ namespace SharpMap.Data.Providers
                 using (var command = new SqlCommand(strSql, conn))
                 {
                     conn.Open();
-                    count = (int) command.ExecuteScalar();
+                    count = (int)command.ExecuteScalar();
                     conn.Close();
                 }
             }
@@ -693,7 +701,7 @@ namespace SharpMap.Data.Providers
                                 if (col.ColumnName != GeometryColumn && col.ColumnName != "sharpmap_tempgeometry")
                                     fdr[col.ColumnName] = dr[col];
                             var tmpGeom =
-                                Converters.WellKnownBinary.GeometryFromWKB.Parse((byte[]) dr["sharpmap_tempgeometry"],
+                                Converters.WellKnownBinary.GeometryFromWKB.Parse((byte[])dr["sharpmap_tempgeometry"],
                                     Factory);
                             if (tmpGeom != null && _spatialObjectType == SqlServerSpatialObjectType.Geography)
                             {
@@ -854,7 +862,7 @@ namespace SharpMap.Data.Providers
                                 if (col.ColumnName != GeometryColumn && col.ColumnName != "sharpmap_tempgeometry")
                                     fdr[col.ColumnName] = dr[col];
                             fdr.Geometry =
-                                Converters.WellKnownBinary.GeometryFromWKB.Parse((byte[]) dr["sharpmap_tempgeometry"],
+                                Converters.WellKnownBinary.GeometryFromWKB.Parse((byte[])dr["sharpmap_tempgeometry"],
                                     Factory);
                             fdt.AddRow(fdr);
                         }
