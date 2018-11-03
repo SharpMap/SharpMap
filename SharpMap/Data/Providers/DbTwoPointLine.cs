@@ -24,7 +24,7 @@ using GeoAPI.Geometries;
 namespace SharpMap.Data.Providers
 {
     /// <summary>
-    /// The XYColumnTwoPointLine provider is used for rendering line data from an ADO.NET compatible data source.
+    /// The DbTwoPointLine provider is used for rendering line data from an ADO.NET compatible data source.
     /// </summary>
     /// <remarks>
     /// <para>The data source will need to have two double-type columns, xColumn and yColumn that contains the coordinates of the point,
@@ -32,12 +32,12 @@ namespace SharpMap.Data.Providers
     /// <para>To get good performance, make sure you have applied indexes on ID, xColumn and yColumns in your data source table.</para>
     /// </remarks>
     [Serializable]
-    public class XYColumnTwoPointLine : PreparedGeometryProvider
+    public class DbTwoPointLine : PreparedGeometryProvider
     {
         private string _definitionQuery;
 
         /// <summary>
-        /// Initializes a new instance of the XYColumnTwoPointLine provider
+        /// Initializes a new instance of the DbTwoPointLine provider
         /// </summary>
         /// <param name="provider">The ADO.NET database provider factory</param>
         /// <param name="connectionString">The connection string</param>
@@ -47,7 +47,7 @@ namespace SharpMap.Data.Providers
         /// <param name="yColumnBegin">The name of the y-ordinates column of the beginning of the line</param>
         /// <param name="xColumnEnd">The name of the x-ordinates column of the end of the line</param>
         /// <param name="yColumnEnd">The name of the y-ordinates column of the end of the line</param>
-        public XYColumnTwoPointLine(DbProviderFactory provider, string connectionString, string tableName, string oidColumnName, string xColumnBegin, string yColumnBegin, string xColumnEnd, string yColumnEnd)
+        public DbTwoPointLine(DbProviderFactory provider, string connectionString, string tableName, string oidColumnName, string xColumnBegin, string yColumnBegin, string xColumnEnd, string yColumnEnd)
         {
             Table = tableName;
             XColumnBegin = xColumnBegin;
