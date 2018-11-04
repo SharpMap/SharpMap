@@ -21,11 +21,18 @@ namespace WinFormSamples
                 new CoordinateTransformationFactory(), 
                 SharpMap.Converters.WellKnownText.SpatialReference.GetAllReferenceSystems());
 
+            // plug-in WebMercator so that correct spherical definition is directly available to Layer Transformations using SRID
+            var pcs = (ProjectedCoordinateSystem)ProjectedCoordinateSystem.WebMercator;
+            css.AddCoordinateSystem((int)pcs.AuthorityCode, pcs);
+
             GeoAPI.GeometryServiceProvider.Instance = gss;
             SharpMap.Session.Instance
                 .SetGeometryServices(gss)
                 .SetCoordinateSystemServices(css)
                 .SetCoordinateSystemRepository(css);
+           
+            // for SqlServerSample referencing SharpMap.SqlServerSpatialObjects
+            //SqlServerTypes.Utilities.LoadNativeAssemblies(AppDomain.CurrentDomain.BaseDirectory);
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);

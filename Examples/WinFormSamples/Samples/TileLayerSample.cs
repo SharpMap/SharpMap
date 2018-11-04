@@ -134,7 +134,10 @@ namespace WinFormSamples.Samples
         {
             var map = new SharpMap.Map();
 
-            var tileLayer = new SharpMap.Layers.TileAsyncLayer(new BruTile.Web.OsmTileSource(), "TileLayer - OSM with VLC");
+            var tileSources = KnownTileSources.Create();
+            var tileSource = KnownTileSources.Create(KnownTileSource.OpenStreetMap);
+
+            var tileLayer = new SharpMap.Layers.TileAsyncLayer(tileSource, "TileLayer - OSM with VLC");
             map.BackgroundLayer.Add(tileLayer);
 
             var vl = new SharpMap.Layers.VectorLayer("Vilnius Transport Data - Bus", 
