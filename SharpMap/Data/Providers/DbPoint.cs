@@ -24,7 +24,7 @@ using GeoAPI.Geometries;
 namespace SharpMap.Data.Providers
 {
     /// <summary>
-    /// The XYColumnPoint provider is used for rendering point data from an ADO.NET compatible data source.
+    /// The DbPoint provider is used for rendering point data from an ADO.NET compatible data source.
     /// </summary>
     /// <remarks>
     /// <para>The data source will need to have two double-type columns, xColumn and yColumn that contains the coordinates of the point,
@@ -35,7 +35,7 @@ namespace SharpMap.Data.Providers
     /// <code lang="C#">
     /// Layers.VectorLayer myLayer = new Layers.VectorLayer("My layer");
     /// string connStr = @"Data Source=MyDatabaseFile.sqlite";
-    /// myLayer.DataSource = new Data.Providers.XYColumnPoint(System.Data.SQLite.SQLiteFactory.Instance, connStr, "myTable", "OidColumn", "X", "Y");
+    /// myLayer.DataSource = new Data.Providers.DbPoint(System.Data.SQLite.SQLiteFactory.Instance, connStr, "myTable", "OidColumn", "X", "Y");
     /// </code>
     /// </example>
     /// <example>
@@ -43,7 +43,7 @@ namespace SharpMap.Data.Providers
     /// <code lang="C#">
     /// Layers.VectorLayer myLayer = new Layers.VectorLayer("My layer");
     /// string connStr = @"Data Source=(local);Initial Catalog=MyDatabase;Integrated Security=True;";
-    /// myLayer.DataSource = new Data.Providers.XYColumnPoint(System.Data.SqlClient.SqlClientFactory.Instance, connStr, "myTable", "OidColumn", "X", "Y");
+    /// myLayer.DataSource = new Data.Providers.DbPoint(System.Data.SqlClient.SqlClientFactory.Instance, connStr, "myTable", "OidColumn", "X", "Y");
     /// </code>
     /// </example>
     /// </remarks>
@@ -53,7 +53,7 @@ namespace SharpMap.Data.Providers
         private string _definitionQuery;
 
         /// <summary>
-        /// Initializes a new instance of the XYColumnPoint provider
+        /// Initializes a new instance of the DbPoint provider
         /// </summary>
         /// <param name="provider">The ADO.NET database provider factory</param>
         /// <param name="connectionString">The connection string</param>

@@ -27,14 +27,14 @@ namespace UnitTests.Data.Providers
             using (var cmd = conn.CreateCommand())
             {
                 cmd.CommandText =
-                    "CREATE TABLE XYColumnTwoPointLineProviderTest(ID integer primary key, Name text, X1 real, Y1 real, X2 real, Y2 real);";
+                    "CREATE TABLE DbTwoPointLineProviderTest(ID integer primary key, Name text, X1 real, Y1 real, X2 real, Y2 real);";
                 cmd.ExecuteNonQuery();
             }
 
             using (var cmd = conn.CreateCommand())
             {
                 cmd.CommandText =
-                    "INSERT INTO XYColumnTwoPointLineProviderTest(ID, Name, X1, Y1, X2, Y2) VALUES" +
+                    "INSERT INTO DbTwoPointLineProviderTest(ID, Name, X1, Y1, X2, Y2) VALUES" +
                     "   (1, 'T1', 100, 100, 170, 100)," +
                     "   (2, 'T2', 135, 100, 135, 170)," +
                     "   (3, 'e1', 180, 130, 180, 170)," +
@@ -60,10 +60,10 @@ namespace UnitTests.Data.Providers
             _connection.Close();
         }
 
-        private XYColumnTwoPointLine CreateProvider()
+        private DbTwoPointLine CreateProvider()
         {
-            var p = new XYColumnTwoPointLine(System.Data.SQLite.SQLiteFactory.Instance,
-                "FullUri=file::memory:?cache=shared;ToFullPath=false", "XYColumnTwoPointLineProviderTest", "ID", "X1", "Y1", "X2", "Y2");
+            var p = new DbTwoPointLine(System.Data.SQLite.SQLiteFactory.Instance,
+                "FullUri=file::memory:?cache=shared;ToFullPath=false", "DbTwoPointLineProviderTest", "ID", "X1", "Y1", "X2", "Y2");
 
             return p;
 

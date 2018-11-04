@@ -7,7 +7,7 @@ using SharpMap.Data.Providers;
 namespace UnitTests.Data.Providers
 {
     [Category("RequiresWindows")]
-    public class XYColumnPointProviderTest : ProviderTest
+    public class DbPointProviderTest : ProviderTest
     {
         private System.Data.Common.DbConnection _connection; // Keep connection active; when closed, the in-memory database is dropped
 
@@ -27,14 +27,14 @@ namespace UnitTests.Data.Providers
             using (var cmd = conn.CreateCommand())
             {
                 cmd.CommandText =
-                    "CREATE TABLE XYColumnPointProviderTest(ID integer primary key, Name text, X real, Y real);";
+                    "CREATE TABLE DbPointProviderTest(ID integer primary key, Name text, X real, Y real);";
                 cmd.ExecuteNonQuery();
             }
 
             using (var cmd = conn.CreateCommand())
             {
                 cmd.CommandText =
-                    "INSERT INTO XYColumnPointProviderTest(ID, Name, X, Y) VALUES" +
+                    "INSERT INTO DbPointProviderTest(ID, Name, X, Y) VALUES" +
                     "   (1, 'One', 429012.5, 360443.18)," +
                     "   (2, 'Two', 429001.59, 360446.98)," +
                     "   (3, 'Three', 429003.31, 360425.45)," +
@@ -54,7 +54,7 @@ namespace UnitTests.Data.Providers
         private DbPoint CreateProvider()
         {
             var p = new DbPoint(System.Data.SQLite.SQLiteFactory.Instance,
-                "FullUri=file::memory:?cache=shared;ToFullPath=false", "XYColumnPointProviderTest", "ID", "X", "Y");
+                "FullUri=file::memory:?cache=shared;ToFullPath=false", "DbPointProviderTest", "ID", "X", "Y");
 
             return p;
 
