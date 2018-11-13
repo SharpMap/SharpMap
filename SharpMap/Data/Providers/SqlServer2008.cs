@@ -99,7 +99,7 @@ namespace SharpMap.Data.Providers
         private const string SharpMapWkb = "sharpmapwkb";
 
         // required for restricting extents of WKT (eg bbox) used to query SqlGeography
-        private static readonly Envelope GeogMaxExtents = new Envelope(-179.999999999, 179.999999999, -89.999999999, 89.999999999);
+        protected static readonly Envelope GeogMaxExtents = new Envelope(-179.999999999, 179.999999999, -89.999999999, 89.999999999);
 
         // List of columns EXCLUDING the spatial column eg: [Id], [Name], [Geom4326] >> [Id], [Name]
         // _attributeColumnNames is used when  feature "attributes" should be returned (eg OnExecuteIntersectionQuery, GetFeature). 
@@ -110,10 +110,10 @@ namespace SharpMap.Data.Providers
         // SqlGeography : polygon interior defined by left hand/foot rule (anti-clockwise orientation)
         // SqlGeometry  : orientation is irrelevant
         // GeometryToWKT returns Envelope with clockwise ring, so need to call .ReorientObject() for WKT used to query SqlGeography
-        private readonly string _reorientObject;
+        protected readonly string _reorientObject;
 
         // used for static spatial methods in SQL string
-        private readonly string _spatialTypeString;
+        protected readonly string _spatialTypeString;
 
         private SqlServer2008ExtentsMode _extentsMode;
 
