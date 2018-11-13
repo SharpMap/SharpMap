@@ -21,6 +21,7 @@
 using System;
 using Microsoft.SqlServer.Types;
 using SharpMap.Converters.SqlServer2008SpatialObjects;
+using SharpMap.Data.Providers;
 using Geometry = GeoAPI.Geometries.IGeometry;
 
 namespace SharpMap.Geometries
@@ -30,59 +31,169 @@ namespace SharpMap.Geometries
     /// </summary>
     public static class SpatialOperationsEx
     {
+        [Obsolete]
         public static Geometry Buffer(Geometry g, Double distance)
         {
-            SqlGeometry sg = SqlGeometryConverter.ToSqlGeometry(g);
-            SqlGeometry sgBuffer = sg.STBuffer(distance);
-            return SqlGeometryConverter.ToSharpMapGeometry(sgBuffer);
+            return Buffer(g, distance, SqlServerSpatialObjectType.Geometry);
         }
 
+        public static Geometry Buffer(Geometry g, Double distance, SqlServerSpatialObjectType spatialMode)
+        {
+            if (spatialMode == SqlServerSpatialObjectType.Geometry)
+            {
+                SqlGeometry sg = SqlGeometryConverter.ToSqlGeometry(g);
+                SqlGeometry sgBuffer = sg.STBuffer(distance);
+                return SqlGeometryConverter.ToSharpMapGeometry(sgBuffer);
+            }
+            else
+            {
+                SqlGeography sg = SqlGeographyConverter.ToSqlGeography(g);
+                SqlGeography sgBuffer = sg.STBuffer(distance);
+                return SqlGeographyConverter.ToSharpMapGeometry(sgBuffer);
+            }
+        }
+
+        [Obsolete]
         public static Geometry Union(Geometry g, params Geometry[] geometries)
         {
-            SqlGeometry sg = SqlGeometryConverter.ToSqlGeometry(g);
-            foreach (SqlGeometry sgUnion in SqlGeometryConverter.ToSqlGeometries(geometries))
-            {
-                sg = sg.STUnion(sgUnion);
-            }
-            return SqlGeometryConverter.ToSharpMapGeometry(sg);
+            return Union(g, SqlServerSpatialObjectType.Geometry, geometries);
         }
 
+        public static Geometry Union(Geometry g, SqlServerSpatialObjectType spatialMode, params Geometry[] geometries)
+        {
+            if (spatialMode == SqlServerSpatialObjectType.Geometry)
+            {
+                SqlGeometry sg = SqlGeometryConverter.ToSqlGeometry(g);
+                foreach (SqlGeometry sgUnion in SqlGeometryConverter.ToSqlGeometries(geometries))
+                {
+                    sg = sg.STUnion(sgUnion);
+                }
+                return SqlGeometryConverter.ToSharpMapGeometry(sg);
+            }
+            else
+            {
+                SqlGeography sg = SqlGeographyConverter.ToSqlGeography(g);
+                foreach (SqlGeography sgUnion in SqlGeographyConverter.ToSqlGeographies(geometries))
+                {
+                    sg = sg.STUnion(sgUnion);
+                }
+                return SqlGeographyConverter.ToSharpMapGeometry(sg);
+            }
+
+        }
+
+        [Obsolete]
         public static Geometry Difference(Geometry g1, Geometry g2)
         {
-            SqlGeometry sg1 = SqlGeometryConverter.ToSqlGeometry(g1);
-            SqlGeometry sg2 = SqlGeometryConverter.ToSqlGeometry(g2);
-            SqlGeometry sgDifference = sg1.STDifference(sg2);
-            return SqlGeometryConverter.ToSharpMapGeometry(sgDifference);
+            return Difference(g1, g2, SqlServerSpatialObjectType.Geometry);
         }
 
+        public static Geometry Difference(Geometry g1, Geometry g2, SqlServerSpatialObjectType spatialMode)
+        {
+            if (spatialMode == SqlServerSpatialObjectType.Geometry)
+            {
+                SqlGeometry sg1 = SqlGeometryConverter.ToSqlGeometry(g1);
+                SqlGeometry sg2 = SqlGeometryConverter.ToSqlGeometry(g2);
+                SqlGeometry sgDifference = sg1.STDifference(sg2);
+                return SqlGeometryConverter.ToSharpMapGeometry(sgDifference);
+            }
+            else
+            {
+                SqlGeography sg1 = SqlGeographyConverter.ToSqlGeography(g1);
+                SqlGeography sg2 = SqlGeographyConverter.ToSqlGeography(g2);
+                SqlGeography sgDifference = sg1.STDifference(sg2);
+                return SqlGeographyConverter.ToSharpMapGeometry(sgDifference);
+            }
+        }
+
+        [Obsolete]
         public static Geometry SymDifference(Geometry g1, Geometry g2)
         {
-            SqlGeometry sg1 = SqlGeometryConverter.ToSqlGeometry(g1);
-            SqlGeometry sg2 = SqlGeometryConverter.ToSqlGeometry(g2);
-            SqlGeometry sgSymDifference = sg1.STSymDifference(sg2);
-            return SqlGeometryConverter.ToSharpMapGeometry(sgSymDifference);
+            return SymDifference(g1, g2, SqlServerSpatialObjectType.Geometry);
         }
 
+        public static Geometry SymDifference(Geometry g1, Geometry g2, SqlServerSpatialObjectType spatialMode)
+        {
+            if (spatialMode == SqlServerSpatialObjectType.Geometry)
+            {
+                SqlGeometry sg1 = SqlGeometryConverter.ToSqlGeometry(g1);
+                SqlGeometry sg2 = SqlGeometryConverter.ToSqlGeometry(g2);
+                SqlGeometry sgSymDifference = sg1.STSymDifference(sg2);
+                return SqlGeometryConverter.ToSharpMapGeometry(sgSymDifference);
+            }
+            else
+            {
+                SqlGeography sg1 = SqlGeographyConverter.ToSqlGeography(g1);
+                SqlGeography sg2 = SqlGeographyConverter.ToSqlGeography(g2);
+                SqlGeography sgSymDifference = sg1.STSymDifference(sg2);
+                return SqlGeographyConverter.ToSharpMapGeometry(sgSymDifference);
+            }
+        }
+
+        [Obsolete]
         public static Geometry Intersection(Geometry g1, Geometry g2)
         {
-            SqlGeometry sg1 = SqlGeometryConverter.ToSqlGeometry(g1);
-            SqlGeometry sg2 = SqlGeometryConverter.ToSqlGeometry(g2);
-            SqlGeometry sgIntersection = sg1.STIntersection(sg2);
-            return SqlGeometryConverter.ToSharpMapGeometry(sgIntersection);
+            return Intersection(g1, g2, SqlServerSpatialObjectType.Geometry);
         }
 
+        public static Geometry Intersection(Geometry g1, Geometry g2, SqlServerSpatialObjectType spatialMode)
+        {
+            if (spatialMode == SqlServerSpatialObjectType.Geometry)
+            {
+                SqlGeometry sg1 = SqlGeometryConverter.ToSqlGeometry(g1);
+                SqlGeometry sg2 = SqlGeometryConverter.ToSqlGeometry(g2);
+                SqlGeometry sgIntersection = sg1.STIntersection(sg2);
+                return SqlGeometryConverter.ToSharpMapGeometry(sgIntersection);
+            }
+            else
+            {
+                SqlGeography sg1 = SqlGeographyConverter.ToSqlGeography(g1);
+                SqlGeography sg2 = SqlGeographyConverter.ToSqlGeography(g2);
+                SqlGeography sgIntersection = sg1.STIntersection(sg2);
+                return SqlGeographyConverter.ToSharpMapGeometry(sgIntersection);
+            }
+        }
+
+        [Obsolete]
         public static Geometry ConvexHull(Geometry g)
         {
-            SqlGeometry sg = SqlGeometryConverter.ToSqlGeometry(g);
-            SqlGeometry sgConvexHull = sg.STConvexHull();
-            return SqlGeometryConverter.ToSharpMapGeometry(sgConvexHull);
+            return ConvexHull(g, SqlServerSpatialObjectType.Geometry);
         }
 
+        public static Geometry ConvexHull(Geometry g, SqlServerSpatialObjectType spatialMode)
+        {
+            if (spatialMode == SqlServerSpatialObjectType.Geometry)
+            {
+                SqlGeometry sg = SqlGeometryConverter.ToSqlGeometry(g);
+                SqlGeometry sgConvexHull = sg.STConvexHull();
+                return SqlGeometryConverter.ToSharpMapGeometry(sgConvexHull);
+            }
+            else
+            {
+                SqlGeography sg = SqlGeographyConverter.ToSqlGeography(g);
+                SqlGeography sgConvexHull = sg.STConvexHull();
+                return SqlGeographyConverter.ToSharpMapGeometry(sgConvexHull);
+            }
+        }
+
+        [Obsolete]
         public static Geometry Boundary(Geometry g)
         {
-            SqlGeometry sg = SqlGeometryConverter.ToSqlGeometry(g);
-            SqlGeometry sgBoundary = sg.STBoundary();
-            return SqlGeometryConverter.ToSharpMapGeometry(sgBoundary);
+            return Boundary(g, SqlServerSpatialObjectType.Geometry);
+        }
+
+        public static Geometry Boundary(Geometry g, SqlServerSpatialObjectType spatialMode)
+        {
+            if (spatialMode == SqlServerSpatialObjectType.Geometry)
+            {
+                SqlGeometry sg = SqlGeometryConverter.ToSqlGeometry(g);
+                SqlGeometry sgBoundary = sg.STBoundary();
+                return SqlGeometryConverter.ToSharpMapGeometry(sgBoundary);
+            }
+            else
+            {
+                throw new ArgumentOutOfRangeException ("Geography does not support STBoundary");
+            }
         }
 
     }

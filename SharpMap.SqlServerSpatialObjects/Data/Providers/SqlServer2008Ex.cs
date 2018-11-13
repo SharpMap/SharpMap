@@ -10,16 +10,19 @@
 // but WITHOUT ANY WARRANTY; without even the implied warranty of   
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the   
 // GNU Lesser General Public License for more details.   
-  
+
 // You should have received a copy of the GNU Lesser General Public License   
 // along with SharpMap; if not, write to the Free Software   
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA    
 
+using Common.Logging;
+using GeoAPI.Geometries;
 using SharpMap.Converters.SqlServer2008SpatialObjects;
 using System;
 using System.Collections.ObjectModel;
 using System.Data.SqlClient;
 using System.Globalization;
+using System.Text;
 using BoundingBox = GeoAPI.Geometries.Envelope;
 using Geometry = GeoAPI.Geometries.IGeometry;
 
@@ -31,7 +34,6 @@ namespace SharpMap.Data.Providers
     /// <remarks>   
     /// <para>This is a modified version of the <see cref="SqlServer2008"/> provider. It might provide better performance 
     /// because it directly uses the SQL server spatial types, instead of using the STAsBinary method.</para>   
-    /// <para>It currently does not support the geography sql server data type.</para>   
     /// <example>   
     /// Adding a datasource to a layer:   
     /// <code lang="C#">   
@@ -44,6 +46,8 @@ namespace SharpMap.Data.Providers
     [Serializable]
     public class SqlServer2008Ex : SqlServer2008
     {
+        static readonly ILog _logger = LogManager.GetLogger(typeof(SqlServer2008Ex));
+
         /// <summary>   
         /// Initializes a new connection to SQL Server   
         /// </summary>   
@@ -51,12 +55,25 @@ namespace SharpMap.Data.Providers
         /// <param name="tablename">Name of data table</param>   
         /// <param name="geometryColumnName">Name of geometry column</param>   
         /// <param name="oidColumnName">Name of column with unique identifier</param>   
+        [Obsolete]
         public SqlServer2008Ex(string connectionStr, string tablename, string geometryColumnName, string oidColumnName)
-            : base(connectionStr, tablename, geometryColumnName, oidColumnName)
+            : base(connectionStr, tablename, geometryColumnName, oidColumnName, SqlServerSpatialObjectType.Geometry)
         {
         }
 
-        private const string SpatialObject = "geometry";
+        /// <summary>   
+        /// Initializes a new connection to SQL Server with default Extents mode  
+        /// </summary>   
+        /// <param name="connectionStr">Connectionstring</param>   
+        /// <param name="tablename">Name of data table</param>   
+        /// <param name="spatialColumnName">Name of spatial column</param>   
+        /// <param name="oidColumnName">Name of column with unique identifier</param>   
+        /// <param name="spatialObjectType">spatial type (Geometry or Geography)</param>
+        public SqlServer2008Ex(string connectionStr, string tablename, string spatialColumnName, string oidColumnName,
+            SqlServerSpatialObjectType spatialObjectType)
+            : base(connectionStr, tablename, spatialColumnName, oidColumnName, spatialObjectType)
+        {
+        }
 
         /// <summary>   
         /// Returns geometries within the specified bounding box   
@@ -68,22 +85,16 @@ namespace SharpMap.Data.Providers
             var features = new Collection<Geometry>();
             using (var conn = new SqlConnection(ConnectionString))
             {
-                //Get bounding box string   
-                string strBbox = GetBoxFilterStr(bbox);
-
-                string strSql = "SELECT g." + GeometryColumn;
-                strSql += " FROM " + QualifiedTable + " g " + BuildTableHints() + " WHERE ";
+                var sb = new StringBuilder($"SELECT g.{GeometryColumn} FROM {QualifiedTable} {BuildTableHints()} WHERE ");
 
                 if (!String.IsNullOrEmpty(DefinitionQuery))
-                    strSql += DefinitionQuery + " AND ";
+                    sb.Append($"{DefinitionQuery} AND ");
 
-                strSql += strBbox;
+                sb.Append($"{GetBoxFilterStr(bbox)} {GetExtraOptions()}");
 
-                string extraOptions = GetExtraOptions();
-                if (!string.IsNullOrEmpty(extraOptions))
-                    strSql += " " + extraOptions;
+                if (_logger.IsDebugEnabled) _logger.DebugFormat("GetGeometriesInView {0}", sb.ToString());
 
-                using (var command = new SqlCommand(strSql, conn))
+                using (var command = new SqlCommand(sb.ToString(), conn))
                 {
                     conn.Open();
                     using (SqlDataReader dr = command.ExecuteReader())
@@ -92,13 +103,12 @@ namespace SharpMap.Data.Providers
                         {
                             if (dr[0] != null && dr[0] != DBNull.Value)
                             {
-                                Geometry geom = SqlGeometryConverter.ToSharpMapGeometry((Microsoft.SqlServer.Types.SqlGeometry) dr[0]);
+                                var geom = SqlBytesToGeometry(dr[0]);
                                 if (geom != null)
                                     features.Add(geom);
                             }
                         }
                     }
-                    conn.Close();
                 }
             }
             return features;
@@ -114,20 +124,23 @@ namespace SharpMap.Data.Providers
             Geometry geom = null;
             using (var conn = new SqlConnection(ConnectionString))
             {
-                string strSql = "SELECT g." + GeometryColumn + " FROM " + QualifiedTable + " g WHERE " + ObjectIdColumn + "='" + oid + "'";
-                conn.Open();
+                string strSql = $"SELECT {GeometryColumn} FROM {QualifiedTable} " +
+                                $"WHERE {ObjectIdColumn}={oid}";
+
+                if (_logger.IsDebugEnabled) _logger.DebugFormat("GetGeometryByID {0}", strSql);
+
                 using (var command = new SqlCommand(strSql, conn))
                 {
+                    conn.Open();
                     using (SqlDataReader dr = command.ExecuteReader())
                     {
                         while (dr.Read())
                         {
                             if (dr[0] != null && dr[0] != DBNull.Value)
-                                geom = SqlGeometryConverter.ToSharpMapGeometry((Microsoft.SqlServer.Types.SqlGeometry)dr[0]);
+                                geom = SqlBytesToGeometry(dr[0]);
                         }
                     }
                 }
-                conn.Close();
             }
             return geom;
         }
@@ -141,23 +154,26 @@ namespace SharpMap.Data.Providers
         {
             using (var conn = new SqlConnection(ConnectionString))
             {
-                string strGeom = SpatialObject + "::STGeomFromText('" + geom.AsText() + "', #SRID#)";
+                if (SpatialObjectType == SqlServerSpatialObjectType.Geography)
+                {
+                    // Define Ring with Clockwise orientation, to be reoriented in query
+                    var maxExentsPoly = Factory.CreatePolygon(new Coordinate[] {
+                            GeogMaxExtents.BottomLeft(), GeogMaxExtents.TopLeft(),
+                            GeogMaxExtents.TopRight(), GeogMaxExtents.BottomRight(),
+                            GeogMaxExtents.BottomLeft()});
+                    geom = geom.Intersection(maxExentsPoly);
+                }
 
-                strGeom = strGeom.Replace("#SRID#", SRID > 0 ? SRID.ToString(CultureInfo.InvariantCulture) : "0");
-                strGeom = GeometryColumn + ".STIntersects(" + strGeom + ") = 1";
-
-                string strSql = "SELECT g.* FROM " + QualifiedTable + " g " + BuildTableHints() + " WHERE ";
+                var sb = new StringBuilder($"SELECT * FROM {QualifiedTable} {BuildTableHints()} WHERE ");
 
                 if (!String.IsNullOrEmpty(DefinitionQuery))
-                    strSql += DefinitionQuery + " AND ";
+                    sb.Append($"{DefinitionQuery} AND ");
 
-                strSql += strGeom;
+                sb.Append($"{GeometryColumn}.STIntersects({_spatialTypeString}::STGeomFromText('{geom.AsText()}', {SRID}){_reorientObject})=1 {GetExtraOptions()}");
 
-                string extraOptions = GetExtraOptions();
-                if (!string.IsNullOrEmpty(extraOptions))
-                    strSql += " " + extraOptions;
+                if (_logger.IsDebugEnabled) _logger.DebugFormat("OnExecuteIntersectionQuery {0}", sb.ToString());
 
-                using (var adapter = new SqlDataAdapter(strSql, conn))
+                using (var adapter = new SqlDataAdapter(sb.ToString(), conn))
                 {
                     conn.Open();
                     adapter.Fill(ds);
@@ -175,11 +191,7 @@ namespace SharpMap.Data.Providers
                                 if (col.ColumnName != GeometryColumn)
                                     fdr[col.ColumnName] = dr[col];
 
-                            var ogeom = dr[GeometryColumn];
-                            Geometry sqlGeometry = null;
-                            if (ogeom != null && ogeom != DBNull.Value)
-                                sqlGeometry = SqlGeometryConverter.ToSharpMapGeometry((Microsoft.SqlServer.Types.SqlGeometry)ogeom);
-                            fdr.Geometry = sqlGeometry;
+                            fdr.Geometry = SqlBytesToGeometry(dr[GeometryColumn]);
                             fdt.AddRow(fdr);
                         }
                         ds.Tables.Add(fdt);
@@ -197,7 +209,10 @@ namespace SharpMap.Data.Providers
         {
             using (var conn = new SqlConnection(ConnectionString))
             {
-                string strSql = "select g.* from " + QualifiedTable + " g WHERE " + ObjectIdColumn + "=" + rowId + "";
+                var strSql = $"SELECT * FROM {QualifiedTable} WHERE {ObjectIdColumn}={rowId}";
+
+                if (_logger.IsDebugEnabled) _logger.DebugFormat("GetFeature {0}", strSql);
+
                 using (var adapter = new SqlDataAdapter(strSql, conn))
                 {
                     var ds = new System.Data.DataSet();
@@ -217,12 +232,7 @@ namespace SharpMap.Data.Providers
                             foreach (System.Data.DataColumn col in ds.Tables[0].Columns)
                                 if (col.ColumnName != GeometryColumn)
                                     fdr[col.ColumnName] = dr[col];
-
-                            var geom = dr[GeometryColumn];
-                            Geometry sqlGeometry = null;
-                            if (geom != null && geom != DBNull.Value)
-                                sqlGeometry = SqlGeometryConverter.ToSharpMapGeometry((Microsoft.SqlServer.Types.SqlGeometry)geom);
-                            fdr.Geometry = sqlGeometry;
+                            fdr.Geometry = SqlBytesToGeometry(dr[GeometryColumn]);
                             return fdr;
                         }
                         return null;
@@ -241,23 +251,16 @@ namespace SharpMap.Data.Providers
         {
             using (var conn = new SqlConnection(ConnectionString))
             {
-                //Get bounding box string
-                string strBbox = GetBoxFilterStr(bbox);
-
-                string strSql = String.Format(
-                    "SELECT g.* FROM {0} g {1} WHERE ",
-                    QualifiedTable, BuildTableHints());
+                var sb = new StringBuilder($"SELECT * FROM {QualifiedTable} {BuildTableHints()} WHERE ");
 
                 if (!String.IsNullOrEmpty(DefinitionQuery))
-                    strSql += DefinitionQuery + " AND ";
+                    sb.Append($"{DefinitionQuery} AND ");
 
-                strSql += strBbox;
+                sb.Append($"{GetBoxFilterStr(bbox)} {GetExtraOptions()}");
 
-                string extraOptions = GetExtraOptions();
-                if (!string.IsNullOrEmpty(extraOptions))
-                    strSql += " " + extraOptions;
+                if (_logger.IsDebugEnabled) _logger.DebugFormat("ExecuteIntersectionQuery {0}", sb.ToString());
 
-                using (var adapter = new SqlDataAdapter(strSql, conn))
+                using (var adapter = new SqlDataAdapter(sb.ToString(), conn))
                 {
                     conn.Open();
                     var ds2 = new System.Data.DataSet();
@@ -276,18 +279,24 @@ namespace SharpMap.Data.Providers
                             foreach (System.Data.DataColumn col in ds2.Tables[0].Columns)
                                 if (col.ColumnName != GeometryColumn)
                                     fdr[col.ColumnName] = dr[col];
-
-                            var geom = dr[GeometryColumn];
-                            Geometry sqlGeometry = null;
-                            if (geom != null && geom != DBNull.Value)
-                                sqlGeometry = SqlGeometryConverter.ToSharpMapGeometry((Microsoft.SqlServer.Types.SqlGeometry) geom);
-                            fdr.Geometry = sqlGeometry;
+                            fdr.Geometry = SqlBytesToGeometry(dr[GeometryColumn]);
                             fdt.AddRow(fdr);
                         }
                         ds.Tables.Add(fdt);
                     }
                 }
             }
+        }
+
+        private Geometry SqlBytesToGeometry(Object sqlBytes)
+        {
+            Geometry geom = null;
+            if (sqlBytes != null && sqlBytes != DBNull.Value)
+                if (SpatialObjectType == SqlServerSpatialObjectType.Geometry)
+                    geom = SqlGeometryConverter.ToSharpMapGeometry((Microsoft.SqlServer.Types.SqlGeometry)sqlBytes);
+                else
+                    geom = SqlGeographyConverter.ToSharpMapGeometry((Microsoft.SqlServer.Types.SqlGeography)sqlBytes);
+            return geom;
         }
 
     }
