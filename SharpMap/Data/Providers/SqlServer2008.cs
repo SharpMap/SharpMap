@@ -101,12 +101,6 @@ namespace SharpMap.Data.Providers
         // required for restricting extents of WKT (eg bbox) used to query SqlGeography
         protected static readonly Envelope GeogMaxExtents = new Envelope(-179.999999999, 179.999999999, -89.999999999, 89.999999999);
 
-        // List of columns EXCLUDING the spatial column eg: [Id], [Name], [Geom4326] >> [Id], [Name]
-        // _attributeColumnNames is used when  feature "attributes" should be returned (eg OnExecuteIntersectionQuery, GetFeature). 
-        // The Spatial column should NOT be retrieved directly without reference to Microsoft.SqlServerTypes,
-        // as it will cause DataAdaptor.Fill() to throw an error when attempting to determine type for spatial column.
-        private readonly string _attributeColumnNames;
-
         // SqlGeography : polygon interior defined by left hand/foot rule (anti-clockwise orientation)
         // SqlGeometry  : orientation is irrelevant
         // GeometryToWKT returns Envelope with clockwise ring, so need to call .ReorientObject() for WKT used to query SqlGeography
@@ -116,6 +110,12 @@ namespace SharpMap.Data.Providers
         protected readonly string _spatialTypeString;
 
         private SqlServer2008ExtentsMode _extentsMode;
+
+        // List of columns EXCLUDING the spatial column eg: [Id], [Name], [Geom4326] >> [Id], [Name]
+        // _attributeColumnNames is used when  feature "attributes" should be returned (eg OnExecuteIntersectionQuery, GetFeature). 
+        // The Spatial column should NOT be retrieved directly without reference to Microsoft.SqlServerTypes,
+        // as it will cause DataAdaptor.Fill() to throw an error when attempting to determine type for spatial column.
+        private string _attributeColumnNames;
 
         /// <summary>   
         /// Data table schema   
@@ -183,6 +183,7 @@ namespace SharpMap.Data.Providers
         /// <param name="connectionStr">Connectionstring</param>   
         /// <param name="tablename">Name of data table</param>   
         /// <param name="oidColumnName">Name of column with unique identifier</param>   
+        [Obsolete]
         public SqlServer2008(string connectionStr, string tablename, string oidColumnName)
             : this(connectionStr, tablename, "shape", oidColumnName, SqlServerSpatialObjectType.Geometry)
         {
@@ -195,6 +196,7 @@ namespace SharpMap.Data.Providers
         /// <param name="tablename">Name of data table</param>   
         /// <param name="oidColumnName">Name of column with unique identifier</param>
         /// <param name="spatialObjectType">The type of the spatial object to use for spatial queries</param>
+        [Obsolete]
         public SqlServer2008(string connectionStr, string tablename, string oidColumnName,
             SqlServerSpatialObjectType spatialObjectType)
             : this(connectionStr, tablename, "shape", oidColumnName, spatialObjectType)
@@ -208,6 +210,7 @@ namespace SharpMap.Data.Providers
         /// <param name="tablename">Name of data table</param>   
         /// <param name="geometryColumnName">Name of geometry column</param>   
         /// <param name="oidColumnName">Name of column with unique identifier</param>   
+        [Obsolete]
         public SqlServer2008(string connectionStr, string tablename, string geometryColumnName, string oidColumnName)
             : this(connectionStr, tablename, geometryColumnName, oidColumnName, SqlServerSpatialObjectType.Geometry)
         {
@@ -221,6 +224,7 @@ namespace SharpMap.Data.Providers
         /// <param name="spatialColumnName">Name of spatial column</param>   
         /// <param name="oidColumnName">Name of column with unique identifier</param>   
         /// <param name="spatialObjectType">spatial type (Geometry or Geography)</param>
+        [Obsolete]
         public SqlServer2008(string connectionStr, string tablename, string spatialColumnName, string oidColumnName,
             SqlServerSpatialObjectType spatialObjectType)
             : this(connectionStr, tablename, spatialColumnName, oidColumnName, spatialObjectType, false)
@@ -236,6 +240,7 @@ namespace SharpMap.Data.Providers
         /// <param name="oidColumnName">Name of column with unique identifier</param>   
         /// <param name="spatialObjectType">spatial type (Geometry or Geography)</param>
         /// <param name="useSpatialIndexExtentAsExtent">If true, the bounds of the spatial index is used for the GetExtents() method which significantly improves performance instead of reading through all features in the table</param>
+        [Obsolete]
         public SqlServer2008(string connectionStr, string tablename, string spatialColumnName, string oidColumnName,
             SqlServerSpatialObjectType spatialObjectType, bool useSpatialIndexExtentAsExtent)
             : this(
@@ -254,8 +259,29 @@ namespace SharpMap.Data.Providers
         /// <param name="spatialObjectType">spatial type (Geometry or Geography)</param>
         /// <param name="useSpatialIndexExtentAsExtent">If true, the bounds of the spatial index is used for the GetExtents() method which heavily increases performance instead of reading through all features in the table</param>
         /// <param name="srid">The spatial reference id</param>
+        [Obsolete]
         public SqlServer2008(string connectionStr, string tablename, string spatialColumnName, string oidColumnName,
             SqlServerSpatialObjectType spatialObjectType, bool useSpatialIndexExtentAsExtent, int srid)
+             : this(
+                connectionStr, tablename, spatialColumnName, oidColumnName, spatialObjectType, srid,
+                (useSpatialIndexExtentAsExtent ?
+                   SqlServer2008ExtentsMode.SpatialIndex :
+                   SqlServer2008ExtentsMode.QueryIndividualFeatures))
+        {
+        }
+
+        /// <summary>   
+        /// Initializes a new connection to SQL Server   
+        /// </summary>   
+        /// <param name="connectionStr">Connectionstring</param>   
+        /// <param name="tablename">Name of data table</param>   
+        /// <param name="spatialColumnName">Name of spatial column</param>   
+        /// <param name="oidColumnName">Name of column with unique identifier</param>   
+        /// <param name="spatialObjectType">spatial type (Geometry or Geography)</param>
+        /// <param name="srid">The spatial reference id</param>
+        /// <param name="extentsMode">Mode for calculating full extents of the data</param>
+        public SqlServer2008(string connectionStr, string tablename, string spatialColumnName, string oidColumnName,
+            SqlServerSpatialObjectType spatialObjectType, int srid, SqlServer2008ExtentsMode extentsMode)
         {
             ConnectionString = connectionStr;
 
@@ -278,19 +304,15 @@ namespace SharpMap.Data.Providers
                     break;
             }
 
-            ExtentsMode = (useSpatialIndexExtentAsExtent
-                ? SqlServer2008ExtentsMode.SpatialIndex
-                : SqlServer2008ExtentsMode.QueryIndividualFeatures);
-
             SRID = srid;
+
+            ExtentsMode = extentsMode;
 
             if (!string.IsNullOrEmpty(TableSchema))
                 QualifiedTable = $"[{TableSchema}].[{Table}]";
             else
                 QualifiedTable = $"[{Table}]";
 
-            // queries database
-            _attributeColumnNames = GetAttributeColumnNames();
         }
 
         /// <summary>
@@ -307,7 +329,6 @@ namespace SharpMap.Data.Providers
                 _extentsMode = value;
             }
         }
-
 
         /// <summary>   
         /// Connectionstring   
@@ -375,22 +396,27 @@ namespace SharpMap.Data.Providers
 
         private string GetAttributeColumnNames()
         {
-            // returns csv list of OID + attribute columns (each column in square brackets)
-            var strSql = "SELECT STUFF (" +
-                         $"(SELECT DISTINCT '], [' + name FROM sys.columns WHERE object_id = OBJECT_ID('{QualifiedTable}') " +
-                         $"AND name NOT IN ('{GeometryColumn}') " +
-                         "FOR XML PATH('')), 1, 2, '') + ']';";
-
-            if (_logger.IsDebugEnabled) _logger.DebugFormat("GetAttributeColumnNames {0}", strSql);
-
-            using (var conn = new System.Data.SqlClient.SqlConnection(ConnectionString))
+            if (string.IsNullOrEmpty(_attributeColumnNames))
             {
-                conn.Open();
-                using (var cmd = new SqlCommand(strSql, conn))
+                // select csv list of OID + attribute columns (each column in square brackets)
+                var strSql = "SELECT STUFF (" +
+                     $"(SELECT DISTINCT '], [' + name FROM sys.columns WHERE object_id = OBJECT_ID('{QualifiedTable}') " +
+                     $"AND name NOT IN ('{GeometryColumn}') " +
+                     "FOR XML PATH('')), 1, 2, '') + ']';";
+
+                if (_logger.IsDebugEnabled) _logger.DebugFormat("GetAttributeColumnNames {0}", strSql);
+
+                using (var conn = new System.Data.SqlClient.SqlConnection(ConnectionString))
                 {
-                    return (string)cmd.ExecuteScalar();
+                    conn.Open();
+                    using (var cmd = new SqlCommand(strSql, conn))
+                    {
+                        _attributeColumnNames = (string)cmd.ExecuteScalar();
+                    }
                 }
             }
+
+            return _attributeColumnNames;
         }
 
         /// <summary>
@@ -581,7 +607,7 @@ namespace SharpMap.Data.Providers
                     geom = geom.Intersection(maxExentsPoly);
                 }
 
-                var sb = new StringBuilder($"SELECT {_attributeColumnNames}, {GeometryColumn}.STAsBinary() As {SharpMapWkb} " +
+                var sb = new StringBuilder($"SELECT {GetAttributeColumnNames()}, {GeometryColumn}.STAsBinary() As {SharpMapWkb} " +
                                            $"FROM {QualifiedTable} {BuildTableHints()} WHERE ");
 
                 if (!String.IsNullOrEmpty(DefinitionQuery))
@@ -664,7 +690,7 @@ namespace SharpMap.Data.Providers
         {
             using (var conn = new SqlConnection(ConnectionString))
             {
-                var strSql = $"SELECT {_attributeColumnNames}, {GeometryColumn}.STAsBinary() As {SharpMapWkb} " +
+                var strSql = $"SELECT {GetAttributeColumnNames()}, {GeometryColumn}.STAsBinary() As {SharpMapWkb} " +
                              $"FROM {QualifiedTable} WHERE {ObjectIdColumn}={rowId}";
 
                 if (_logger.IsDebugEnabled) _logger.DebugFormat("GetFeature {0}", strSql);
@@ -810,7 +836,7 @@ namespace SharpMap.Data.Providers
         {
             using (var conn = new SqlConnection(ConnectionString))
             {
-                var sb = new StringBuilder($"SELECT {_attributeColumnNames}, {GeometryColumn}{GetMakeValidString()}.STAsBinary() AS {SharpMapWkb} " +
+                var sb = new StringBuilder($"SELECT {GetAttributeColumnNames()}, {GeometryColumn}{GetMakeValidString()}.STAsBinary() AS {SharpMapWkb} " +
                                            $"FROM {QualifiedTable} {BuildTableHints()} WHERE ");
 
                 if (!String.IsNullOrEmpty(DefinitionQuery))

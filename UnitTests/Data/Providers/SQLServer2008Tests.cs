@@ -6,6 +6,7 @@ using NUnit.Framework;
 using System.Data.SqlClient;
 using System.Collections.ObjectModel;
 using System.IO;
+using SharpMap.Data.Providers;
 
 namespace UnitTests.Data.Providers
 {
@@ -16,6 +17,7 @@ namespace UnitTests.Data.Providers
         public void SetupFixture()
         {
             GeoAPI.GeometryServiceProvider.Instance = new NetTopologySuite.NtsGeometryServices();
+            SqlServerTypes.Utilities.LoadNativeAssemblies(AppDomain.CurrentDomain.BaseDirectory);
         }
 
         [NUnit.Framework.TestCase("[sde].[gisadmin.di]", "sde", "gisadmin.di")]
@@ -55,20 +57,27 @@ namespace UnitTests.Data.Providers
             {
                 Assert.Ignore("Requires SQL Server connectionstring");
             }
-            
 
             GeoAPI.GeometryServiceProvider.Instance = new NetTopologySuite.NtsGeometryServices();
+            SqlServerTypes.Utilities.LoadNativeAssemblies(AppDomain.CurrentDomain.BaseDirectory);
 
-            // Set up sample table
+            // Set up sample tables (Geometry + Geography)
             using (SqlConnection conn = new SqlConnection(UnitTests.Properties.Settings.Default.SqlServer2008))
             {
                 conn.Open();
-                using(SqlCommand cmd = conn.CreateCommand())
+                using (SqlCommand cmd = conn.CreateCommand())
                 {
-                    cmd.CommandText = "CREATE TABLE roads_ugl(ID int identity(1,1) PRIMARY KEY, NAME nvarchar(100), GEOM geometry)";
+                    cmd.CommandText = "CREATE TABLE roads_ugl_geom(ID int identity(1,1) PRIMARY KEY, NAME nvarchar(100), GEOM geometry)";
                     cmd.ExecuteNonQuery();
                 }
-                
+
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = "CREATE TABLE roads_ugl_geog(ID int identity(1,1) PRIMARY KEY, NAME nvarchar(100), GEOG geography)";
+                    cmd.ExecuteNonQuery();
+                }
+
+
                 // Load data
                 using (SharpMap.Data.Providers.ShapeFile shapeFile = new SharpMap.Data.Providers.ShapeFile(GetTestFile()))
                 {
@@ -78,26 +87,62 @@ namespace UnitTests.Data.Providers
 
                     indexes = indexes.Take(100);
 
+                    var cmdGeom = new SqlCommand("INSERT INTO roads_ugl_geom(NAME, GEOM) VALUES (@Name, geometry::STGeomFromText(@Geom, @Srid))", conn);
+                    var cmdGeog = new SqlCommand("INSERT INTO roads_ugl_geog(NAME, GEOG) VALUES (@Name, geography::STGeomFromText(@Geog, @Srid))", conn);
+
                     foreach (uint idx in indexes)
                     {
                         SharpMap.Data.FeatureDataRow feature = shapeFile.GetFeature(idx);
 
-                        using (SqlCommand cmd = conn.CreateCommand())
-                        {
-                            cmd.CommandText = "INSERT INTO roads_ugl(NAME, GEOM) VALUES (@Name, geometry::STGeomFromText(@Geom, @Srid))";
+                        //using (SqlCommand cmd = conn.CreateCommand())
+                        //{
+                        //    cmd.CommandText = "INSERT INTO roads_ugl(NAME, GEOM) VALUES (@Name, geometry::STGeomFromText(@Geom, @Srid))";
 
-                            cmd.Parameters.AddWithValue("@Geom", feature.Geometry.AsText());
-                            cmd.Parameters.AddWithValue("@Name", feature["NAME"]);
-                            cmd.Parameters.AddWithValue("@Srid", shapeFile.SRID);
-                            cmd.ExecuteNonQuery();
+                        //    cmd.Parameters.AddWithValue("@Geom", feature.Geometry.AsText());
+                        //    cmd.Parameters.AddWithValue("@Name", feature["NAME"]);
+                        //    cmd.Parameters.AddWithValue("@Srid", shapeFile.SRID);
+                        //    cmd.ExecuteNonQuery();
+                        //}
+                        if (cmdGeom.Parameters.Count == 0)
+                        {
+                            cmdGeom.Parameters.AddWithValue("@Geom", feature.Geometry.AsText());
+                            cmdGeom.Parameters.AddWithValue("@Name", feature["NAME"]);
+                            cmdGeom.Parameters.AddWithValue("@Srid", shapeFile.SRID);
                         }
+                        else
+                        {
+                            cmdGeom.Parameters[0].Value = feature.Geometry.AsText();
+                            cmdGeom.Parameters[1].Value = feature["NAME"];
+                            cmdGeom.Parameters[2].Value= shapeFile.SRID;
+                        }
+                        cmdGeom.ExecuteNonQuery();
+
+                        if (cmdGeog.Parameters.Count == 0)
+                        {
+                            cmdGeog.Parameters.AddWithValue("@Geog", feature.Geometry.AsText());
+                            cmdGeog.Parameters.AddWithValue("@Name", feature["NAME"]);
+                            cmdGeog.Parameters.AddWithValue("@Srid", 4326);
+                        }
+                        else
+                        {
+                            cmdGeog.Parameters[0].Value = feature.Geometry.AsText();
+                            cmdGeog.Parameters[1].Value = feature["NAME"];
+                            //cmdGeog.Parameters[2].Value = 4326;
+                        }
+                        cmdGeog.ExecuteNonQuery();
                     }
+
+                    cmdGeom.Dispose();
+                    cmdGeog.Dispose();
                 }
 
-                // Create spatial index
-                using(SqlCommand cmd = conn.CreateCommand())
+                // Create spatial indexes
+                using (SqlCommand cmd = conn.CreateCommand())
                 {
-                    cmd.CommandText = "CREATE SPATIAL INDEX [IX_roads_ugl_GEOM] ON [dbo].[roads_ugl](GEOM)USING  GEOMETRY_GRID WITH (BOUNDING_BOX =(-98, 40, -82, 50), GRIDS =(LEVEL_1 = MEDIUM,LEVEL_2 = MEDIUM,LEVEL_3 = MEDIUM,LEVEL_4 = MEDIUM))";
+                    cmd.CommandText = "CREATE SPATIAL INDEX [IX_roads_ugl_GEOM] ON [dbo].[roads_ugl_geom](GEOM) USING GEOMETRY_GRID WITH (BOUNDING_BOX =(-98, 40, -82, 50), GRIDS =(LEVEL_1 = MEDIUM,LEVEL_2 = MEDIUM,LEVEL_3 = MEDIUM,LEVEL_4 = MEDIUM))";
+                    cmd.ExecuteNonQuery();
+
+                    cmd.CommandText = "CREATE SPATIAL INDEX [IX_roads_ugl_GEOG] ON [dbo].[roads_ugl_geog](GEOG)";
                     cmd.ExecuteNonQuery();
                 }
             }
@@ -118,20 +163,36 @@ namespace UnitTests.Data.Providers
                 conn.Open();
                 using (SqlCommand cmd = conn.CreateCommand())
                 {
-                    cmd.CommandText = "DROP TABLE roads_ugl";
+                    cmd.CommandText = "DROP TABLE roads_ugl_geom";
+                    cmd.ExecuteNonQuery();
+                    cmd.CommandText = "DROP TABLE roads_ugl_geog";
                     cmd.ExecuteNonQuery();
                 }
             }
         }
 
-        private SharpMap.Data.Providers.SqlServer2008 GetTestProvider()
+        //private SharpMap.Data.Providers.SqlServer2008 GetTestProvider()
+        //{
+        //    return GetTestProvider(SqlServerSpatialObjectType.Geometry);
+        //}
+
+        private SharpMap.Data.Providers.SqlServer2008 GetTestProvider(SqlServerSpatialObjectType spatialType)
         {
-            return new SharpMap.Data.Providers.SqlServer2008(UnitTests.Properties.Settings.Default.SqlServer2008, "roads_ugl", "GEOM", "ID");
+            switch (spatialType)
+            {
+                case SqlServerSpatialObjectType.Geography:
+                    // NB note forcing WGS84
+                    return new SharpMap.Data.Providers.SqlServer2008(UnitTests.Properties.Settings.Default.SqlServer2008, 
+                        "roads_ugl_geog", "GEOG", "ID", spatialType, 4326, SqlServer2008ExtentsMode.QueryIndividualFeatures);
+                default:
+                    return new SharpMap.Data.Providers.SqlServer2008(UnitTests.Properties.Settings.Default.SqlServer2008, 
+                        "roads_ugl_geom", "GEOM", "ID", spatialType);
+            }
         }
 
         private SharpMap.Data.Providers.SqlServer2008Ex GetTestProviderEx()
         {
-            return new SharpMap.Data.Providers.SqlServer2008Ex(UnitTests.Properties.Settings.Default.SqlServer2008, "roads_ugl", "GEOM", "ID");
+            return new SharpMap.Data.Providers.SqlServer2008Ex(UnitTests.Properties.Settings.Default.SqlServer2008, "roads_ugl_geom", "GEOM", "ID");
         }
 
         /// <summary>
@@ -142,10 +203,11 @@ namespace UnitTests.Data.Providers
             return SharpMap.Converters.WellKnownText.GeometryFromWKT.Parse("POLYGON ((-97.23724071609665 41.698023105763589, -82.424263624596563 41.698023105763589, -82.424263624596563 49.000629000758515, -97.23724071609665 49.000629000758515, -97.23724071609665 41.698023105763589))").EnvelopeInternal;
         }
 
-        [NUnit.Framework.Test()]
-        public void TestGetExtentsQueryIndividualFeatures()
+        [NUnit.Framework.TestCase(SqlServerSpatialObjectType.Geometry)]
+        [NUnit.Framework.TestCase(SqlServerSpatialObjectType.Geography)]
+        public void TestGetExtentsQueryIndividualFeatures(SqlServerSpatialObjectType spatialType)
         {
-            SharpMap.Data.Providers.SqlServer2008 sq = GetTestProvider();
+            SharpMap.Data.Providers.SqlServer2008 sq = GetTestProvider(spatialType);
 
             sq.ExtentsMode = SharpMap.Data.Providers.SqlServer2008ExtentsMode.QueryIndividualFeatures;
             GeoAPI.Geometries.Envelope extents = sq.GetExtents();
@@ -153,19 +215,31 @@ namespace UnitTests.Data.Providers
             Assert.IsNotNull(extents);
         }
 
-        [NUnit.Framework.Test()]
-        public void TestGetExtentsSpatialIndex()
+        [NUnit.Framework.TestCase(SqlServerSpatialObjectType.Geometry)]
+        [NUnit.Framework.TestCase(SqlServerSpatialObjectType.Geography)]
+        public void TestGetExtentsSpatialIndex(SqlServerSpatialObjectType spatialType)
         {
-            SharpMap.Data.Providers.SqlServer2008 sq = GetTestProvider();
+            SharpMap.Data.Providers.SqlServer2008 sq = GetTestProvider(spatialType);
 
-            sq.ExtentsMode = SharpMap.Data.Providers.SqlServer2008ExtentsMode.SpatialIndex;
-            GeoAPI.Geometries.Envelope extents = sq.GetExtents();
+            if (spatialType == SqlServerSpatialObjectType.Geography)
+            {
+                var ex = Assert.Throws<ArgumentOutOfRangeException>(() =>
+                {
+                    sq.ExtentsMode = SharpMap.Data.Providers.SqlServer2008ExtentsMode.SpatialIndex;
+                });
+            }
+            else
+            {
+                sq.ExtentsMode = SharpMap.Data.Providers.SqlServer2008ExtentsMode.SpatialIndex;
+                GeoAPI.Geometries.Envelope extents = sq.GetExtents();
 
-            Assert.IsNotNull(extents);
+                Assert.IsNotNull(extents);
+            }
         }
 
-        [NUnit.Framework.Test()]
-        public void TestGetExtentsEnvelopeAggregate()
+        [NUnit.Framework.TestCase(SqlServerSpatialObjectType.Geometry)]
+        [NUnit.Framework.TestCase(SqlServerSpatialObjectType.Geography)]
+        public void TestGetExtentsEnvelopeAggregate(SqlServerSpatialObjectType spatialType)
         {
             using (SqlConnection conn = new SqlConnection(UnitTests.Properties.Settings.Default.SqlServer2008))
             {
@@ -181,7 +255,7 @@ namespace UnitTests.Data.Providers
                 }
             }
 
-            SharpMap.Data.Providers.SqlServer2008 sq = GetTestProvider();
+            SharpMap.Data.Providers.SqlServer2008 sq = GetTestProvider(spatialType);
 
             sq.ExtentsMode = SharpMap.Data.Providers.SqlServer2008ExtentsMode.EnvelopeAggregate;
             GeoAPI.Geometries.Envelope extents = sq.GetExtents();
@@ -189,10 +263,11 @@ namespace UnitTests.Data.Providers
             Assert.IsNotNull(extents);
         }
 
-        [NUnit.Framework.Test()]
-        public void TestGetGeometriesInView()
+        [NUnit.Framework.TestCase(SqlServerSpatialObjectType.Geometry)]
+        [NUnit.Framework.TestCase(SqlServerSpatialObjectType.Geography)]
+        public void TestGetGeometriesInView(SqlServerSpatialObjectType spatialType)
         {
-            SharpMap.Data.Providers.SqlServer2008 sq = GetTestProvider();
+            SharpMap.Data.Providers.SqlServer2008 sq = GetTestProvider(spatialType);
 
             var geometries = sq.GetGeometriesInView(GetTestEnvelope());
 
@@ -200,10 +275,11 @@ namespace UnitTests.Data.Providers
             Assert.AreEqual(100, geometries.Count);
         }
 
-        [NUnit.Framework.Test()]
-        public void TestGetGeometriesInViewDefinitionQuery()
+        [NUnit.Framework.TestCase(SqlServerSpatialObjectType.Geometry)]
+        [NUnit.Framework.TestCase(SqlServerSpatialObjectType.Geography)]
+        public void TestGetGeometriesInViewDefinitionQuery(SqlServerSpatialObjectType spatialType)
         {
-            SharpMap.Data.Providers.SqlServer2008 sq = GetTestProvider();
+            SharpMap.Data.Providers.SqlServer2008 sq = GetTestProvider(spatialType);
 
             sq.DefinitionQuery = "NAME LIKE 'A%'";
 
@@ -213,10 +289,11 @@ namespace UnitTests.Data.Providers
             Assert.LessOrEqual(geometries.Count, 100);
         }
 
-        [NUnit.Framework.Test()]
-        public void TestGetGeometriesInViewNOLOCK()
+        [NUnit.Framework.TestCase(SqlServerSpatialObjectType.Geometry)]
+        [NUnit.Framework.TestCase(SqlServerSpatialObjectType.Geography)]
+        public void TestGetGeometriesInViewNOLOCK(SqlServerSpatialObjectType spatialType)
         {
-            SharpMap.Data.Providers.SqlServer2008 sq = GetTestProvider();
+            SharpMap.Data.Providers.SqlServer2008 sq = GetTestProvider(spatialType);
 
             sq.NoLockHint = true;
             var geometries = sq.GetGeometriesInView(GetTestEnvelope());
@@ -225,10 +302,11 @@ namespace UnitTests.Data.Providers
             Assert.AreEqual(100, geometries.Count);
         }
 
-        [NUnit.Framework.Test()]
-        public void TestGetGeometriesInViewFORCESEEK()
+        [NUnit.Framework.TestCase(SqlServerSpatialObjectType.Geometry)]
+        [NUnit.Framework.TestCase(SqlServerSpatialObjectType.Geography)]
+        public void TestGetGeometriesInViewFORCESEEK(SqlServerSpatialObjectType spatialType)
         {
-            SharpMap.Data.Providers.SqlServer2008 sq = GetTestProvider();
+            SharpMap.Data.Providers.SqlServer2008 sq = GetTestProvider(spatialType);
 
             sq.ForceSeekHint = true;
             var geometries = sq.GetGeometriesInView(GetTestEnvelope());
@@ -237,26 +315,28 @@ namespace UnitTests.Data.Providers
             Assert.AreEqual(100, geometries.Count);
         }
 
-        [NUnit.Framework.Test()]
-        public void TestGetGeometriesInViewFORCEINDEX()
+        [NUnit.Framework.TestCase(SqlServerSpatialObjectType.Geometry, "IX_roads_ugl_GEOM")]
+        [NUnit.Framework.TestCase(SqlServerSpatialObjectType.Geography, "IX_roads_ugl_GEOG")]
+        public void TestGetGeometriesInViewFORCEINDEX(SqlServerSpatialObjectType spatialType, string indexName)
         {
-            SharpMap.Data.Providers.SqlServer2008 sq = GetTestProvider();
+            SharpMap.Data.Providers.SqlServer2008 sq = GetTestProvider(spatialType);
 
-            sq.ForceIndex = "IX_roads_ugl_GEOM";
+            sq.ForceIndex = indexName;
             var geometries = sq.GetGeometriesInView(GetTestEnvelope());
 
             Assert.IsNotNull(geometries);
             Assert.AreEqual(100, geometries.Count);
         }
 
-        [NUnit.Framework.Test()]
-        public void TestGetGeometriesInViewAllHints()
+        [NUnit.Framework.TestCase(SqlServerSpatialObjectType.Geometry, "IX_roads_ugl_GEOM")]
+        [NUnit.Framework.TestCase(SqlServerSpatialObjectType.Geography, "IX_roads_ugl_GEOG")]
+        public void TestGetGeometriesInViewAllHints(SqlServerSpatialObjectType spatialType, string indexName)
         {
-            SharpMap.Data.Providers.SqlServer2008 sq = GetTestProvider();
+            SharpMap.Data.Providers.SqlServer2008 sq = GetTestProvider(spatialType);
 
             sq.NoLockHint = true;
             sq.ForceSeekHint = true;
-            sq.ForceIndex = "IX_roads_ugl_GEOM";
+            sq.ForceIndex = indexName;
             var geometries = sq.GetGeometriesInView(GetTestEnvelope());
 
             Assert.IsNotNull(geometries);
@@ -264,6 +344,8 @@ namespace UnitTests.Data.Providers
         }
 
         [NUnit.Framework.Test()]
+        //[NUnit.Framework.TestCase(SqlServerSpatialObjectType.Geometry)]
+        //[NUnit.Framework.TestCase(SqlServerSpatialObjectType.Geography)]
         public void TestGetGeometriesInViewEx()
         {
             // Note:
@@ -289,7 +371,7 @@ namespace UnitTests.Data.Providers
             // Microsoft.SqlServer.Types assembly being available (e.g. SQL 2008 and 2012).
             // This can be solved with a <bindingRedirect> in the .config file.
 
-            SharpMap.Data.Providers.SqlServer2008 sq = GetTestProvider();
+            SharpMap.Data.Providers.SqlServer2008 sq = GetTestProvider(SqlServerSpatialObjectType.Geometry);
             SharpMap.Data.Providers.SqlServer2008 sqex = GetTestProviderEx();
             GeoAPI.Geometries.Envelope envelope = GetTestEnvelope();
             List<TimeSpan> measurements = new List<TimeSpan>(200);
@@ -322,10 +404,11 @@ namespace UnitTests.Data.Providers
             Assert.Less(avgex, avg);
         }
 
-        [NUnit.Framework.Test()]
-        public void TestGetObjectIDsInView()
+        [NUnit.Framework.TestCase(SqlServerSpatialObjectType.Geometry)]
+        [NUnit.Framework.TestCase(SqlServerSpatialObjectType.Geography)]
+        public void TestGetObjectIDsInView(SqlServerSpatialObjectType spatialType)
         {
-            SharpMap.Data.Providers.SqlServer2008 sq = GetTestProvider();
+            SharpMap.Data.Providers.SqlServer2008 sq = GetTestProvider(spatialType);
 
             var objectIds = sq.GetObjectIDsInView(GetTestEnvelope());
 
@@ -333,10 +416,11 @@ namespace UnitTests.Data.Providers
             Assert.AreEqual(100, objectIds.Count);
         }
 
-        [NUnit.Framework.Test()]
-        public void TestExecuteIntersectionQuery()
+        [NUnit.Framework.TestCase(SqlServerSpatialObjectType.Geometry)]
+        [NUnit.Framework.TestCase(SqlServerSpatialObjectType.Geography)]
+        public void TestExecuteIntersectionQuery(SqlServerSpatialObjectType spatialType)
         {
-            SharpMap.Data.Providers.SqlServer2008 sq = GetTestProvider();
+            SharpMap.Data.Providers.SqlServer2008 sq = GetTestProvider(spatialType);
 
             SharpMap.Data.FeatureDataSet ds = new SharpMap.Data.FeatureDataSet();
 
@@ -345,14 +429,15 @@ namespace UnitTests.Data.Providers
             Assert.AreEqual(100, ds.Tables[0].Rows.Count);
         }
 
-        [NUnit.Framework.Test()]
-        public void TestExecuteIntersectionQueryAllHints()
+        [NUnit.Framework.TestCase(SqlServerSpatialObjectType.Geometry, "IX_roads_ugl_GEOM")]
+        [NUnit.Framework.TestCase(SqlServerSpatialObjectType.Geography, "IX_roads_ugl_GEOG")]
+        public void TestExecuteIntersectionQueryAllHints(SqlServerSpatialObjectType spatialType, string indexName)
         {
-            SharpMap.Data.Providers.SqlServer2008 sq = GetTestProvider();
+            SharpMap.Data.Providers.SqlServer2008 sq = GetTestProvider(spatialType);
 
             sq.NoLockHint = true;
             sq.ForceSeekHint = true;
-            sq.ForceIndex = "IX_roads_ugl_GEOM";
+            sq.ForceIndex = indexName;
 
             SharpMap.Data.FeatureDataSet ds = new SharpMap.Data.FeatureDataSet();
 
@@ -361,20 +446,22 @@ namespace UnitTests.Data.Providers
             Assert.AreEqual(100, ds.Tables[0].Rows.Count);
         }
 
-        [NUnit.Framework.Test()]
-        public void TestGetFeatureCount()
+        [NUnit.Framework.TestCase(SqlServerSpatialObjectType.Geometry)]
+        [NUnit.Framework.TestCase(SqlServerSpatialObjectType.Geography)]
+        public void TestGetFeatureCount(SqlServerSpatialObjectType spatialType)
         {
-            SharpMap.Data.Providers.SqlServer2008 sq = GetTestProvider();
+            SharpMap.Data.Providers.SqlServer2008 sq = GetTestProvider(spatialType);
 
             int count = sq.GetFeatureCount();
 
             Assert.AreEqual(100, count);
         }
 
-        [NUnit.Framework.Test()]
-        public void TestGetFeatureCountWithDefinitionQuery()
+        [NUnit.Framework.TestCase(SqlServerSpatialObjectType.Geometry)]
+        [NUnit.Framework.TestCase(SqlServerSpatialObjectType.Geography)]
+        public void TestGetFeatureCountWithDefinitionQuery(SqlServerSpatialObjectType spatialType)
         {
-            SharpMap.Data.Providers.SqlServer2008 sq = GetTestProvider();
+            SharpMap.Data.Providers.SqlServer2008 sq = GetTestProvider(spatialType);
 
             sq.DefinitionQuery = "NAME LIKE 'A%'";
 
@@ -383,20 +470,22 @@ namespace UnitTests.Data.Providers
             Assert.LessOrEqual(count, 100);
         }
 
-        [NUnit.Framework.Test()]
-        public void TestGetFeature()
+        [NUnit.Framework.TestCase(SqlServerSpatialObjectType.Geometry)]
+        [NUnit.Framework.TestCase(SqlServerSpatialObjectType.Geography)]
+        public void TestGetFeature(SqlServerSpatialObjectType spatialType)
         {
-            SharpMap.Data.Providers.SqlServer2008 sq = GetTestProvider();
+            SharpMap.Data.Providers.SqlServer2008 sq = GetTestProvider(spatialType);
 
             var feature = sq.GetFeature(1);
 
             Assert.IsNotNull(feature);
         }
 
-        [NUnit.Framework.Test()]
-        public void TestGetFeatureNonExisting()
+        [NUnit.Framework.TestCase(SqlServerSpatialObjectType.Geometry)]
+        [NUnit.Framework.TestCase(SqlServerSpatialObjectType.Geography)]
+        public void TestGetFeatureNonExisting(SqlServerSpatialObjectType spatialType)
         {
-            SharpMap.Data.Providers.SqlServer2008 sq = GetTestProvider();
+            SharpMap.Data.Providers.SqlServer2008 sq = GetTestProvider(spatialType);
 
             var feature = sq.GetFeature(99999999);
 
