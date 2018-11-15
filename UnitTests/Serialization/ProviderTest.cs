@@ -108,11 +108,15 @@ namespace UnitTests.Serialization
         }
 
 #if !LINUX
-        [Test]
-        public void TestSqlServer2008()
+        [NUnit.Framework.TestCase(SqlServerSpatialObjectType.Geometry)]
+        [NUnit.Framework.TestCase(SqlServerSpatialObjectType.Geography)]
+        public void TestSqlServer2008(SqlServerSpatialObjectType spatialType)
         {
             var sql2008S = new SqlServer2008("Data Source=IVV-SQLD; Database=OBE;Integrated Security=SSPI;",
-                                             "roads", "wkb_geometry", "ogc_fid", SqlServerSpatialObjectType.Geometry);
+                                             "roads", "spatialCol", "idCol",
+                                             spatialType, 
+                                             4326, 
+                                             SqlServer2008ExtentsMode.EnvelopeAggregate);
 
             var sql2008D = SandD(sql2008S, GetFormatter());
 
@@ -123,8 +127,10 @@ namespace UnitTests.Serialization
             Assert.AreEqual(sql2008S.ObjectIdColumn, sql2008D.ObjectIdColumn);
             Assert.AreEqual(sql2008S.SpatialObjectType, sql2008D.SpatialObjectType);
             Assert.AreEqual(sql2008S.SRID, sql2008D.SRID);
+            Assert.AreEqual(sql2008S.ExtentsMode, sql2008D.ExtentsMode);
         }
+
 #endif
-    
+
     }
 }
