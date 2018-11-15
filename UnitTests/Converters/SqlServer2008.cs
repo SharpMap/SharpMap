@@ -10,7 +10,7 @@ using Geometry = GeoAPI.Geometries.IGeometry;
 namespace UnitTests.Converters
 {
     [TestFixture]
-    //[Ignore("Requires SqlServerSpatial")]
+    [Ignore("Requires SqlServerSpatial")]
     public class SqlServer2008
     {
         private const string Point = "POINT (20.564 46.3493254)";
@@ -27,8 +27,7 @@ namespace UnitTests.Converters
         public void SetupFixture()
         {
             GeoAPI.GeometryServiceProvider.Instance = new NetTopologySuite.NtsGeometryServices();
-
-            SqlServerTypes.Utilities.LoadNativeAssemblies(AppDomain.CurrentDomain.BaseDirectory);
+            //SqlServerTypes.Utilities.LoadNativeAssemblies(AppDomain.CurrentDomain.BaseDirectory);
         }
 
 

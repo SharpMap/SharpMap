@@ -17,7 +17,6 @@ namespace UnitTests.Data.Providers
         public void SetupFixture()
         {
             GeoAPI.GeometryServiceProvider.Instance = new NetTopologySuite.NtsGeometryServices();
-            SqlServerTypes.Utilities.LoadNativeAssemblies(AppDomain.CurrentDomain.BaseDirectory);
         }
 
         [NUnit.Framework.TestCase("[sde].[gisadmin.di]", "sde", "gisadmin.di")]
@@ -38,6 +37,7 @@ namespace UnitTests.Data.Providers
     }
 
     [NUnit.Framework.TestFixture]
+    [Ignore("Requires SqlServerSpatial")]
     public class SQLServer2008DbTests
     {
         private string GetTestFile()
@@ -59,7 +59,7 @@ namespace UnitTests.Data.Providers
             }
 
             GeoAPI.GeometryServiceProvider.Instance = new NetTopologySuite.NtsGeometryServices();
-            SqlServerTypes.Utilities.LoadNativeAssemblies(AppDomain.CurrentDomain.BaseDirectory);
+            //SqlServerTypes.Utilities.LoadNativeAssemblies(AppDomain.CurrentDomain.BaseDirectory);
 
             // Set up sample tables (Geometry + Geography)
             using (SqlConnection conn = new SqlConnection(UnitTests.Properties.Settings.Default.SqlServer2008))
