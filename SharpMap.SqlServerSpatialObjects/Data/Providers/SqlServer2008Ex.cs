@@ -69,9 +69,26 @@ namespace SharpMap.Data.Providers
         /// <param name="spatialColumnName">Name of spatial column</param>   
         /// <param name="oidColumnName">Name of column with unique identifier</param>   
         /// <param name="spatialObjectType">spatial type (Geometry or Geography)</param>
+        [Obsolete]
         public SqlServer2008Ex(string connectionStr, string tablename, string spatialColumnName, string oidColumnName,
             SqlServerSpatialObjectType spatialObjectType)
             : base(connectionStr, tablename, spatialColumnName, oidColumnName, spatialObjectType)
+        {
+        }
+
+        /// <summary>   
+        /// Initializes a new connection to SQL Server
+        /// </summary>   
+        /// <param name="connectionStr">Connectionstring</param>   
+        /// <param name="tablename">Name of data table</param>   
+        /// <param name="spatialColumnName">Name of spatial column</param>   
+        /// <param name="oidColumnName">Name of column with unique identifier</param>   
+        /// <param name="spatialObjectType">spatial type (Geometry or Geography)</param>
+        /// <param name="srid">Spatial Reference ID</param>
+        /// <param name="extentsMode">method for reading data extents. Geography does not support SqlServer2008ExtentsMode::SpatialIndex</param>
+        public SqlServer2008Ex(string connectionStr, string tablename, string spatialColumnName, string oidColumnName,
+            SqlServerSpatialObjectType spatialObjectType, int srid, SqlServer2008ExtentsMode extentsMode)
+            : base(connectionStr, tablename, spatialColumnName, oidColumnName, spatialObjectType, srid, extentsMode)
         {
         }
 
@@ -85,7 +102,7 @@ namespace SharpMap.Data.Providers
             var features = new Collection<Geometry>();
             using (var conn = new SqlConnection(ConnectionString))
             {
-                var sb = new StringBuilder($"SELECT g.{GeometryColumn} FROM {QualifiedTable} {BuildTableHints()} WHERE ");
+                var sb = new StringBuilder($"SELECT {GeometryColumn} FROM {QualifiedTable} {BuildTableHints()} WHERE ");
 
                 if (!String.IsNullOrEmpty(DefinitionQuery))
                     sb.Append($"{DefinitionQuery} AND ");

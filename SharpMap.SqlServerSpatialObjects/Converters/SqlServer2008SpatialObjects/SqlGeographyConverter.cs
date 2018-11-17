@@ -190,7 +190,8 @@ namespace SharpMap.Converters.SqlServer2008SpatialObjects
         private static void SharpMapPolygonToSqlGeography(SqlGeographyBuilder geogBuilder, SMPolygon polygon)
         {
             geogBuilder.BeginGeography(OpenGisGeographyType.Polygon);
-            AddRing(geogBuilder, (SMLinearRing)polygon.ExteriorRing);
+            //Note: Reverse Exterior ring orientation
+            AddRing(geogBuilder, (SMLinearRing)polygon.ExteriorRing.Reverse());
             for (int i = 0; i < polygon.NumInteriorRings; i++)
                 AddRing(geogBuilder, (SMLinearRing)polygon.GetInteriorRingN(i));
             geogBuilder.EndGeography();
@@ -355,9 +356,11 @@ namespace SharpMap.Converters.SqlServer2008SpatialObjects
             for (var i = 1; i <= geography.NumRings(); i++)
                 rings.Add(fact.CreateLinearRing(GetPoints(geography.RingN(i))));
 
-            var shell = rings.FirstOrDefault(r => r.IsCCW);
+            var shellCCW = rings.FirstOrDefault(r => r.IsCCW);
+            // NB: reverse exterio ring orientation
+            var shellCW = fact.CreateLinearRing(shellCCW.Reverse().Coordinates);
 
-            return fact.CreatePolygon(shell, Enumerable.ToArray(rings.Where(r => r != shell)));
+            return fact.CreatePolygon(shellCW, Enumerable.ToArray(rings.Where(r => r != shellCCW)));
         }
 
     }
