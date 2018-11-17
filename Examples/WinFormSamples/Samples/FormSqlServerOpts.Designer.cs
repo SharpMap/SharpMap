@@ -30,6 +30,7 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormSqlServerOpts));
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.labTable = new System.Windows.Forms.Label();
             this.chkSpatialValidate = new System.Windows.Forms.CheckBox();
             this.optSpatialGeog = new System.Windows.Forms.RadioButton();
             this.optSpatialGeom = new System.Windows.Forms.RadioButton();
@@ -60,6 +61,7 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.labTable);
             this.groupBox1.Controls.Add(this.chkSpatialValidate);
             this.groupBox1.Controls.Add(this.optSpatialGeog);
             this.groupBox1.Controls.Add(this.optSpatialGeom);
@@ -69,6 +71,16 @@
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Spatial Type";
+            // 
+            // labTable
+            // 
+            this.labTable.AutoSize = true;
+            this.labTable.ForeColor = System.Drawing.SystemColors.GrayText;
+            this.labTable.Location = new System.Drawing.Point(21, 91);
+            this.labTable.Name = "labTable";
+            this.labTable.Size = new System.Drawing.Size(37, 13);
+            this.labTable.TabIndex = 3;
+            this.labTable.Text = "Table:";
             // 
             // chkSpatialValidate
             // 
@@ -345,5 +357,6 @@
         private System.Windows.Forms.GroupBox groupBox5;
         private System.Windows.Forms.RadioButton optDataProviderNative;
         private System.Windows.Forms.RadioButton optDataProviderWKB;
+        private System.Windows.Forms.Label labTable;
     }
 }
