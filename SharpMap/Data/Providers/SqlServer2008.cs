@@ -60,17 +60,17 @@ namespace SharpMap.Data.Providers
     public enum SqlServer2008ExtentsMode
     {
         /// <summary>
-        /// Reads through all features in the table to determine extents
+        /// Client retrieves and reads through all features in the table to determine extents
         /// </summary>
         QueryIndividualFeatures,
 
         /// <summary>
-        /// Directly reads the bounds of the spatial index from the system tables (very fast, but does not take actual data extents or <see cref="SqlServer2008.DefinitionQuery"/> into account)
+        /// Supported by <see cref="SqlServerSpatialObjectType" />.Geometry only, reading the bounds of the spatial index directly from the system tables (very fast, but does not take into account actual data extents or <see cref="SqlServer2008.DefinitionQuery"/>)
         /// </summary>
         SpatialIndex,
 
         /// <summary>
-        /// Uses the EnvelopeAggregate aggregate function introduced in SQL Server 2012 (recommended)
+        /// Uses Aggregate functions introduced in SQL Server 2012 (recommended, server aggregates data and returns single record to client)
         /// </summary>
         EnvelopeAggregate
     }
@@ -178,19 +178,19 @@ namespace SharpMap.Data.Providers
         public int MaxDop { get; set; }
 
         /// <summary>   
-        /// Initializes a new connection to SQL Server for Geometry spatial type in column named SHAPE and default Extents mode 
+        /// Initializes a new connection to SQL Server for <see cref="SqlServerSpatialObjectType"/>.Geometry in column named SHAPE with default <see cref="ExtentsMode" /> 
         /// </summary>   
         /// <param name="connectionStr">Connectionstring</param>   
         /// <param name="tablename">Name of data table</param>   
         /// <param name="oidColumnName">Name of column with unique identifier</param>   
         [Obsolete]
         public SqlServer2008(string connectionStr, string tablename, string oidColumnName)
-            : this(connectionStr, tablename, "shape", oidColumnName, SqlServerSpatialObjectType.Geometry)
+            : this(connectionStr, tablename, "SHAPE", oidColumnName, SqlServerSpatialObjectType.Geometry)
         {
         }
 
         /// <summary>   
-        /// Initializes a new connection to SQL Server for spatial column named SHAPE and default Extents mode 
+        /// Initializes a new connection to SQL Server for spatial column named SHAPE with default <see cref="ExtentsMode" /> 
         /// </summary>   
         /// <param name="connectionStr">Connectionstring</param>   
         /// <param name="tablename">Name of data table</param>   
@@ -199,12 +199,12 @@ namespace SharpMap.Data.Providers
         [Obsolete]
         public SqlServer2008(string connectionStr, string tablename, string oidColumnName,
             SqlServerSpatialObjectType spatialObjectType)
-            : this(connectionStr, tablename, "shape", oidColumnName, spatialObjectType)
+            : this(connectionStr, tablename, "SHAPE", oidColumnName, spatialObjectType)
         {
         }
 
         /// <summary>   
-        /// Initializes a new connection to SQL Server for Geometry spatial type with default Extents mode
+        /// Initializes a new connection to SQL Server for <see cref="SqlServerSpatialObjectType"/>.Geometry with default <see cref="ExtentsMode" />
         /// </summary>   
         /// <param name="connectionStr">Connectionstring</param>   
         /// <param name="tablename">Name of data table</param>   
@@ -217,7 +217,7 @@ namespace SharpMap.Data.Providers
         }
 
         /// <summary>   
-        /// Initializes a new connection to SQL Server with default Extents mode  
+        /// Initializes a new connection to SQL Server with default <see cref="ExtentsMode" />
         /// </summary>   
         /// <param name="connectionStr">Connectionstring</param>   
         /// <param name="tablename">Name of data table</param>   
@@ -239,7 +239,7 @@ namespace SharpMap.Data.Providers
         /// <param name="spatialColumnName">Name of spatial column</param>   
         /// <param name="oidColumnName">Name of column with unique identifier</param>   
         /// <param name="spatialObjectType">spatial type (Geometry or Geography)</param>
-        /// <param name="useSpatialIndexExtentAsExtent">If true, the bounds of the spatial index is used for the GetExtents() method which significantly improves performance instead of reading through all features in the table</param>
+        /// <param name="useSpatialIndexExtentAsExtent">True sets ExtentsMode to SqlServer2008ExtentsMode.SpatialIndex</param>
         [Obsolete]
         public SqlServer2008(string connectionStr, string tablename, string spatialColumnName, string oidColumnName,
             SqlServerSpatialObjectType spatialObjectType, bool useSpatialIndexExtentAsExtent)
@@ -257,7 +257,7 @@ namespace SharpMap.Data.Providers
         /// <param name="spatialColumnName">Name of spatial column</param>   
         /// <param name="oidColumnName">Name of column with unique identifier</param>   
         /// <param name="spatialObjectType">spatial type (Geometry or Geography)</param>
-        /// <param name="useSpatialIndexExtentAsExtent">If true, the bounds of the spatial index is used for the GetExtents() method which heavily increases performance instead of reading through all features in the table</param>
+        /// <param name="useSpatialIndexExtentAsExtent">True sets ExtentsMode to SqlServer2008ExtentsMode.SpatialIndex</param>
         /// <param name="srid">The spatial reference id</param>
         [Obsolete]
         public SqlServer2008(string connectionStr, string tablename, string spatialColumnName, string oidColumnName,
@@ -579,10 +579,11 @@ namespace SharpMap.Data.Providers
             if (SpatialObjectType == SqlServerSpatialObjectType.Geography)
                 bbox = bbox.Intersection(GeogMaxExtents);
 
-            var bboxText = Converters.WellKnownText.GeometryToWKT.Write(Factory.ToGeometry(bbox));
+            var bboxText = Factory.ToGeometry(bbox).ToString();
 
             // STGeomFromText applicable to both Geometry AND Geography (ie x,y ordinate order) 
             if (ForceSeekHint || !string.IsNullOrEmpty(ForceIndex) || NoLockHint)
+                // .MakeValid() cannot be used in conjunction with Hints
                 return $"{GeometryColumn}.STIntersects({_spatialTypeString}::STGeomFromText('{bboxText}', {SRID}){_reorientObject})=1";
             else
                 return $"{GeometryColumn}{GetMakeValidString()}.STIntersects({_spatialTypeString}::STGeomFromText('{bboxText}', {SRID}){_reorientObject})=1";
