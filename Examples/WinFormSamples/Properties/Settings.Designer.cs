@@ -47,11 +47,10 @@ namespace WinFormSamples.Properties {
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
-        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=(LocalDb)\\MSSQLLocalDB; Integrated Security=True; AttachDBFilename=.." +
-            "\\GeoData\\SqlServer\\SqlServerSample.mdf;")]
-        public string SqlServerLocalDbConnectionString {
+        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=;Initial Catalog=;Integrated Security=True")]
+        public string SqlServerConnectionString {
             get {
-                return ((string)(this["SqlServerLocalDbConnectionString"]));
+                return ((string)(this["SqlServerConnectionString"]));
             }
         }
         
