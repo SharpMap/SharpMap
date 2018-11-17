@@ -40,6 +40,9 @@ namespace UnitTests.Data.Providers
     [Ignore("Requires SqlServerSpatial")]
     public class SQLServer2008DbTests
     {
+        // Geography requires valid SRID (0 not acceptable)
+        private const int geogSrid = 4326;
+
         private string GetTestFile()
         {
             return Path.Combine(GetPathToTestDataDir(), "roads_ugl.shp");
@@ -94,15 +97,6 @@ namespace UnitTests.Data.Providers
                     {
                         SharpMap.Data.FeatureDataRow feature = shapeFile.GetFeature(idx);
 
-                        //using (SqlCommand cmd = conn.CreateCommand())
-                        //{
-                        //    cmd.CommandText = "INSERT INTO roads_ugl(NAME, GEOM) VALUES (@Name, geometry::STGeomFromText(@Geom, @Srid))";
-
-                        //    cmd.Parameters.AddWithValue("@Geom", feature.Geometry.AsText());
-                        //    cmd.Parameters.AddWithValue("@Name", feature["NAME"]);
-                        //    cmd.Parameters.AddWithValue("@Srid", shapeFile.SRID);
-                        //    cmd.ExecuteNonQuery();
-                        //}
                         if (cmdGeom.Parameters.Count == 0)
                         {
                             cmdGeom.Parameters.AddWithValue("@Geom", feature.Geometry.AsText());
@@ -113,7 +107,6 @@ namespace UnitTests.Data.Providers
                         {
                             cmdGeom.Parameters[0].Value = feature.Geometry.AsText();
                             cmdGeom.Parameters[1].Value = feature["NAME"];
-                            cmdGeom.Parameters[2].Value= shapeFile.SRID;
                         }
                         cmdGeom.ExecuteNonQuery();
 
@@ -121,13 +114,12 @@ namespace UnitTests.Data.Providers
                         {
                             cmdGeog.Parameters.AddWithValue("@Geog", feature.Geometry.AsText());
                             cmdGeog.Parameters.AddWithValue("@Name", feature["NAME"]);
-                            cmdGeog.Parameters.AddWithValue("@Srid", 4326);
+                            cmdGeog.Parameters.AddWithValue("@Srid", geogSrid);
                         }
                         else
                         {
                             cmdGeog.Parameters[0].Value = feature.Geometry.AsText();
                             cmdGeog.Parameters[1].Value = feature["NAME"];
-                            //cmdGeog.Parameters[2].Value = 4326;
                         }
                         cmdGeog.ExecuteNonQuery();
                     }
@@ -182,17 +174,26 @@ namespace UnitTests.Data.Providers
             {
                 case SqlServerSpatialObjectType.Geography:
                     // NB note forcing WGS84
-                    return new SharpMap.Data.Providers.SqlServer2008(UnitTests.Properties.Settings.Default.SqlServer2008, 
-                        "roads_ugl_geog", "GEOG", "ID", spatialType, 4326, SqlServer2008ExtentsMode.QueryIndividualFeatures);
+                    return new SharpMap.Data.Providers.SqlServer2008(UnitTests.Properties.Settings.Default.SqlServer2008,
+                        "roads_ugl_geog", "GEOG", "ID", spatialType, geogSrid, SqlServer2008ExtentsMode.QueryIndividualFeatures);
                 default:
-                    return new SharpMap.Data.Providers.SqlServer2008(UnitTests.Properties.Settings.Default.SqlServer2008, 
-                        "roads_ugl_geom", "GEOM", "ID", spatialType);
+                    return new SharpMap.Data.Providers.SqlServer2008(UnitTests.Properties.Settings.Default.SqlServer2008,
+                        "roads_ugl_geom", "GEOM", "ID", spatialType, 0, SqlServer2008ExtentsMode.QueryIndividualFeatures);
             }
         }
 
-        private SharpMap.Data.Providers.SqlServer2008Ex GetTestProviderEx()
+        private SharpMap.Data.Providers.SqlServer2008Ex GetTestProviderEx(SqlServerSpatialObjectType spatialType)
         {
-            return new SharpMap.Data.Providers.SqlServer2008Ex(UnitTests.Properties.Settings.Default.SqlServer2008, "roads_ugl_geom", "GEOM", "ID");
+            switch (spatialType)
+            {
+                case SqlServerSpatialObjectType.Geography:
+                    // NB note forcing WGS84
+                    return new SharpMap.Data.Providers.SqlServer2008Ex(UnitTests.Properties.Settings.Default.SqlServer2008,
+                        "roads_ugl_geog", "GEOG", "ID", spatialType, geogSrid, SqlServer2008ExtentsMode.EnvelopeAggregate);
+                default:
+                    return new SharpMap.Data.Providers.SqlServer2008Ex(UnitTests.Properties.Settings.Default.SqlServer2008,
+                        "roads_ugl_geom", "GEOM", "ID", spatialType, 0, SqlServer2008ExtentsMode.EnvelopeAggregate);
+            }
         }
 
         /// <summary>
@@ -343,10 +344,9 @@ namespace UnitTests.Data.Providers
             Assert.AreEqual(100, geometries.Count);
         }
 
-        [NUnit.Framework.Test()]
-        //[NUnit.Framework.TestCase(SqlServerSpatialObjectType.Geometry)]
-        //[NUnit.Framework.TestCase(SqlServerSpatialObjectType.Geography)]
-        public void TestGetGeometriesInViewEx()
+        [NUnit.Framework.TestCase(SqlServerSpatialObjectType.Geometry)]
+        [NUnit.Framework.TestCase(SqlServerSpatialObjectType.Geography)]
+        public void TestGetGeometriesInViewEx(SqlServerSpatialObjectType spatialType)
         {
             // Note:
             // This test may fail with an InvalidCastException. This is caused by multiple versions of the 
@@ -354,7 +354,7 @@ namespace UnitTests.Data.Providers
             // This can be solved with a <bindingRedirect> in the .config file.
             // http://connect.microsoft.com/SQLServer/feedback/details/685654/invalidcastexception-retrieving-sqlgeography-column-in-ado-net-data-reader
 
-            SharpMap.Data.Providers.SqlServer2008 sq = GetTestProviderEx();
+            SharpMap.Data.Providers.SqlServer2008 sq = GetTestProviderEx(spatialType);
 
             var geometries = sq.GetGeometriesInView(GetTestEnvelope());
 
@@ -371,8 +371,8 @@ namespace UnitTests.Data.Providers
             // Microsoft.SqlServer.Types assembly being available (e.g. SQL 2008 and 2012).
             // This can be solved with a <bindingRedirect> in the .config file.
 
-            SharpMap.Data.Providers.SqlServer2008 sq = GetTestProvider(SqlServerSpatialObjectType.Geometry);
-            SharpMap.Data.Providers.SqlServer2008 sqex = GetTestProviderEx();
+            SharpMap.Data.Providers.SqlServer2008 sq = GetTestProvider(SqlServerSpatialObjectType.Geography);
+            SharpMap.Data.Providers.SqlServer2008 sqex = GetTestProviderEx(SqlServerSpatialObjectType.Geography);
             GeoAPI.Geometries.Envelope envelope = GetTestEnvelope();
             List<TimeSpan> measurements = new List<TimeSpan>(200);
             List<TimeSpan> measurementsex = new List<TimeSpan>(200);
