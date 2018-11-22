@@ -22,7 +22,7 @@
 // Note - Supports both Geometry AND Geography types for SQL Server 2008 onwards. 
 // The '2008' suffix in the class name is to distinguish from SharpMap.Data.Providers.MsSqlSpatial provider (Sql Server 2005).
 // SqlServer2008 requests WKB from the database (hence will work with Sql Server 2008, 2012, 2016 etc), 
-// and WKB is then parsed to an IGeometry instance using SharpMap.Converters.WellKnownBinary.GeometryFromWKB
+// and WKB is then parsed to an IGeometry instance using NetTopologySuite.IO.WkbReader
 //
 // Alternatively, to work with native Sql Spatial types, see SharpMap.SqlServerSpatialObjects which requests
 // raw spatial bytes from the database and uses Microsoft.SqlServer.Types to convert Sql bytes on the client.
@@ -35,6 +35,7 @@ using System.Globalization;
 using System.Text;
 using GeoAPI.Geometries;
 using Common.Logging;
+using GeoAPI;
 
 namespace SharpMap.Data.Providers
 {
@@ -339,7 +340,7 @@ namespace SharpMap.Data.Providers
             set { ConnectionID = value; }
         }
 
-        private string GetMakeValidString()
+        protected string GetMakeValidString()
         { return ValidateGeometries ? ".MakeValid()" : String.Empty; }
 
         /// <summary>
@@ -460,7 +461,7 @@ namespace SharpMap.Data.Providers
             }
             return string.Empty;
         }
-
+       
         /// <summary>   
         /// Returns geometries within the specified bounding box   
         /// </summary>   
@@ -471,10 +472,13 @@ namespace SharpMap.Data.Providers
             var features = new Collection<IGeometry>();
             using (var conn = new SqlConnection(ConnectionString))
             {
-                var sb = new StringBuilder($"SELECT {GeometryColumn}.STAsBinary() FROM {QualifiedTable} {BuildTableHints()} WHERE ");
+                var sb = new StringBuilder($"SELECT {GeometryColumn}{GetMakeValidString()}.STAsBinary() FROM {QualifiedTable} {BuildTableHints()} WHERE ");
 
                 if (!String.IsNullOrEmpty(DefinitionQuery))
                     sb.Append($"{DefinitionQuery} AND ");
+
+                if (SpatialObjectType == SqlServerSpatialObjectType.Geography && !ValidateGeometries )
+                    sb.Append($"{GeometryColumn}.STIsValid() = 1 AND ");
 
                 sb.Append($"{GetBoxFilterStr(bbox)} {GetExtraOptions()}");
 
@@ -485,11 +489,12 @@ namespace SharpMap.Data.Providers
                     conn.Open();
                     using (SqlDataReader dr = command.ExecuteReader())
                     {
+                        var wkbReader = new NetTopologySuite.IO.WKBReader(GeometryServiceProvider.Instance);
                         while (dr.Read())
                         {
                             if (dr[0] != DBNull.Value)
                             {
-                                var geom = Converters.WellKnownBinary.GeometryFromWKB.Parse((byte[])dr[0], Factory);
+                                var geom = wkbReader.Read((byte[])dr[0]);
                                 if (geom != null)
                                     features.Add(geom);
                             }
@@ -510,7 +515,7 @@ namespace SharpMap.Data.Providers
             IGeometry geom = null;
             using (var conn = new SqlConnection(ConnectionString))
             {
-                string strSql = $"SELECT {GeometryColumn}.STAsBinary() FROM {QualifiedTable} " +
+                string strSql = $"SELECT {GeometryColumn}{GetMakeValidString()}.STAsBinary() FROM {QualifiedTable} " +
                                 $"WHERE {ObjectIdColumn}={oid}";
 
                 if (_logger.IsDebugEnabled) _logger.DebugFormat("GetGeometryByID {0}", strSql);
@@ -520,10 +525,11 @@ namespace SharpMap.Data.Providers
                     conn.Open();
                     using (SqlDataReader dr = command.ExecuteReader())
                     {
+                        var wkbReader = new NetTopologySuite.IO.WKBReader(GeometryServiceProvider.Instance);
                         while (dr.Read())
                         {
                             if (dr[0] != DBNull.Value)
-                                geom = Converters.WellKnownBinary.GeometryFromWKB.Parse((byte[])dr[0], Factory);
+                                geom = wkbReader.Read((byte[])dr[0]);
                         }
                     }
                 }
@@ -545,6 +551,9 @@ namespace SharpMap.Data.Providers
 
                 if (!String.IsNullOrEmpty(DefinitionQuery))
                     sb.Append(DefinitionQuery + " AND ");
+
+                if (SpatialObjectType == SqlServerSpatialObjectType.Geography && !ValidateGeometries)
+                    sb.Append($"{GeometryColumn}.STIsValid() = 1 AND ");
 
                 sb.Append($"{GetBoxFilterStr(bbox)} {GetExtraOptions()}");
 
@@ -581,12 +590,12 @@ namespace SharpMap.Data.Providers
 
             var bboxText = Factory.ToGeometry(bbox).ToString();
 
+            // .MakeValid() in WHERE clause is not compatible certain BuildHints, resulting in error:
+            // The query processor could not produce a query plan for a query with a spatial index hint.  Reason: Could not find required binary spatial method in a condition.  Try removing the index hints or removing SET FORCEPLAN.
+            var makeValid = (ForceSeekHint || !string.IsNullOrEmpty(ForceIndex)) ? "" : GetMakeValidString(); //".MakeValid()"
+
             // STGeomFromText applicable to both Geometry AND Geography (ie x,y ordinate order) 
-            if (ForceSeekHint || !string.IsNullOrEmpty(ForceIndex) || NoLockHint)
-                // .MakeValid() cannot be used in conjunction with Hints
-                return $"{GeometryColumn}.STIntersects({_spatialTypeString}::STGeomFromText('{bboxText}', {SRID}){_reorientObject})=1";
-            else
-                return $"{GeometryColumn}{GetMakeValidString()}.STIntersects({_spatialTypeString}::STGeomFromText('{bboxText}', {SRID}){_reorientObject})=1";
+            return $"{GeometryColumn}{makeValid}.STIntersects({_spatialTypeString}::STGeomFromText('{bboxText}', {SRID}){_reorientObject})=1";
         }
 
         /// <summary>   
@@ -594,54 +603,29 @@ namespace SharpMap.Data.Providers
         /// </summary>   
         /// <param name="geom"></param>   
         /// <param name="ds">FeatureDataSet to fill data into</param>   
-        protected override void OnExecuteIntersectionQuery(IGeometry geom, FeatureDataSet ds)
+        protected override void OnExecuteIntersectionQuery(IGeometry geom, FeatureDataSet fds)
         {
-            using (var conn = new SqlConnection(ConnectionString))
+            if (SpatialObjectType == SqlServerSpatialObjectType.Geography)
             {
-                if (SpatialObjectType == SqlServerSpatialObjectType.Geography)
-                {
-                    // Define Ring with Clockwise orientation, to be reoriented in query
-                    var maxExentsPoly = Factory.CreatePolygon(new Coordinate[] {
+                // Define Ring with Clockwise orientation, to be reoriented in query
+                var maxExentsPoly = Factory.CreatePolygon(new Coordinate[] {
                             GeogMaxExtents.BottomLeft(), GeogMaxExtents.TopLeft(),
                             GeogMaxExtents.TopRight(), GeogMaxExtents.BottomRight(),
                             GeogMaxExtents.BottomLeft()});
-                    geom = geom.Intersection(maxExentsPoly);
-                }
-
-                var sb = new StringBuilder($"SELECT {GetAttributeColumnNames()}, {GeometryColumn}.STAsBinary() As {SharpMapWkb} " +
-                                           $"FROM {QualifiedTable} {BuildTableHints()} WHERE ");
-
-                if (!String.IsNullOrEmpty(DefinitionQuery))
-                    sb.Append($"{DefinitionQuery} AND ");
-
-                sb.Append($"{GeometryColumn}.STIntersects({_spatialTypeString}::STGeomFromText('{geom.AsText()}', {SRID}){_reorientObject})=1 {GetExtraOptions()}");
-
-                if (_logger.IsDebugEnabled) _logger.DebugFormat("OnExecuteIntersectionQuery {0}", sb.ToString());
-
-                using (var adapter = new SqlDataAdapter(sb.ToString(), conn))
-                {
-                    conn.Open();
-                    adapter.Fill(ds);
-                    conn.Close();
-                    if (ds.Tables.Count > 0)
-                    {
-                        var fdt = new FeatureDataTable(ds.Tables[0]);
-                        foreach (System.Data.DataColumn col in ds.Tables[0].Columns)
-                            if (col.ColumnName != GeometryColumn && col.ColumnName != SharpMapWkb)
-                                fdt.Columns.Add(col.ColumnName, col.DataType, col.Expression);
-                        foreach (System.Data.DataRow dr in ds.Tables[0].Rows)
-                        {
-                            FeatureDataRow fdr = fdt.NewRow();
-                            foreach (System.Data.DataColumn col in ds.Tables[0].Columns)
-                                if (col.ColumnName != GeometryColumn && col.ColumnName != SharpMapWkb)
-                                    fdr[col.ColumnName] = dr[col];
-                            fdr.Geometry = Converters.WellKnownBinary.GeometryFromWKB.Parse((byte[])dr[SharpMapWkb], Factory);
-                            fdt.AddRow(fdr);
-                        }
-                        ds.Tables.Add(fdt);
-                    }
-                }
+                geom = geom.Intersection(maxExentsPoly);
             }
+
+            var sb = new StringBuilder($"SELECT {GetAttributeColumnNames()}, {GeometryColumn}{GetMakeValidString()}.STAsBinary() As {SharpMapWkb} " +
+                                       $"FROM {QualifiedTable} {BuildTableHints()} WHERE ");
+
+            if (!String.IsNullOrEmpty(DefinitionQuery))
+                sb.Append($"{DefinitionQuery} AND ");
+
+            sb.Append($"{GeometryColumn}.STIntersects({_spatialTypeString}::STGeomFromText('{geom.AsText()}', {SRID}){_reorientObject})=1 {GetExtraOptions()}");
+
+            if (_logger.IsDebugEnabled) _logger.DebugFormat("OnExecuteIntersectionQuery {0}", sb.ToString());
+
+            ExecuteIntersectionQuery(sb.ToString(), fds);
         }
 
         /// <summary>   
@@ -691,7 +675,7 @@ namespace SharpMap.Data.Providers
         {
             using (var conn = new SqlConnection(ConnectionString))
             {
-                var strSql = $"SELECT {GetAttributeColumnNames()}, {GeometryColumn}.STAsBinary() As {SharpMapWkb} " +
+                var strSql = $"SELECT {GetAttributeColumnNames()}, {GeometryColumn}{GetMakeValidString()}.STAsBinary() As {SharpMapWkb} " +
                              $"FROM {QualifiedTable} WHERE {ObjectIdColumn}={rowId}";
 
                 if (_logger.IsDebugEnabled) _logger.DebugFormat("GetFeature {0}", strSql);
@@ -716,7 +700,8 @@ namespace SharpMap.Data.Providers
                                 if (col.ColumnName != GeometryColumn && col.ColumnName != SharpMapWkb)
                                     fdr[col.ColumnName] = dr[col];
 
-                            fdr.Geometry = Converters.WellKnownBinary.GeometryFromWKB.Parse((byte[])dr[SharpMapWkb], Factory);
+                            var wkbReader = new NetTopologySuite.IO.WKBReader(GeometryServiceProvider.Instance);
+                            fdr.Geometry = wkbReader.Read((byte[])dr[SharpMapWkb]);
 
                             return fdr;
                         }
@@ -736,6 +721,7 @@ namespace SharpMap.Data.Providers
             using (var conn = new SqlConnection(ConnectionString))
             {
                 conn.Open();
+                var wkbReader = new NetTopologySuite.IO.WKBReader(GeometryServiceProvider.Instance);
                 string sql;
                 switch (ExtentsMode)
                 {
@@ -767,14 +753,21 @@ namespace SharpMap.Data.Providers
                     case SqlServer2008ExtentsMode.QueryIndividualFeatures:
 
                         if (SpatialObjectType == SqlServerSpatialObjectType.Geometry)
-                            // GEOMETRY returns 1 row for each feature
-                            sql = $"SELECT {GeometryColumn}{GetMakeValidString()}.STEnvelope().STAsBinary() FROM {QualifiedTable}";
+                            // GEOMETRY returns 1 row for each feature. MUST call MakeValid() here
+                            sql = $"SELECT {GeometryColumn}.MakeValid().STEnvelope().STAsBinary() FROM {QualifiedTable}";
                         else
-                            // GEOGRAPHY returns single row with multi-geometry containing all features
-                            sql = $"SELECT {_spatialTypeString}::CollectionAggregate({GeometryColumn}{GetMakeValidString()}).STAsBinary() FROM {QualifiedTable}";
+                            // GEOGRAPHY returns single row with multi-geometry containing all features. MUST call MakeValid() here
+                            sql = $"SELECT {_spatialTypeString}::CollectionAggregate({GeometryColumn}.MakeValid()).STAsBinary() FROM {QualifiedTable}";
 
                         if (!String.IsNullOrEmpty(DefinitionQuery))
                             sql += $" WHERE {DefinitionQuery}";
+
+                        if (SpatialObjectType == SqlServerSpatialObjectType.Geometry)
+                        {
+                            sql += String.IsNullOrEmpty(DefinitionQuery) ? " WHERE " : " AND ";
+                            // MUST explicitly exlude NULLS for EnvelopeAggregate
+                            sql += "GEOM IS NOT NULL";
+                        }
 
                         if (_logger.IsDebugEnabled) _logger.DebugFormat("GetExtents {0} {1}", ExtentsMode, sql);
 
@@ -785,8 +778,11 @@ namespace SharpMap.Data.Providers
                             {
                                 while (dr.Read())
                                 {
-                                    var g = Converters.WellKnownBinary.GeometryFromWKB.Parse((byte[])dr[0], Factory);
-                                    bx.ExpandToInclude(g.EnvelopeInternal);
+                                    if (dr[0] != DBNull.Value)
+                                    {
+                                        var g = wkbReader.Read((byte[])dr[0]);
+                                        bx.ExpandToInclude(g.EnvelopeInternal);
+                                    }
                                 }
                             }
                             return bx;
@@ -795,15 +791,22 @@ namespace SharpMap.Data.Providers
                     case SqlServer2008ExtentsMode.EnvelopeAggregate:
 
                         if (SpatialObjectType == SqlServerSpatialObjectType.Geometry)
-                            // GEOMETRY EnvelopeAggregate returns RECTILINEAR polygon 
-                            sql = $"SELECT {_spatialTypeString}::EnvelopeAggregate({GeometryColumn}{GetMakeValidString()}).STAsBinary() FROM {QualifiedTable}";
+                            // GEOMETRY EnvelopeAggregate returns RECTILINEAR polygon . Note that {GetMakeValidString()} cannot be used with EnvelopeAggregate
+                            sql = $"SELECT {_spatialTypeString}::EnvelopeAggregate({GeometryColumn}).STAsBinary() FROM {QualifiedTable}";
                         else
                             // GEOGRAPHY EnvelopeAggregate returns CURVED polygon (not supported by SharpMap), 
-                            // so use ConvextHullAggregate to return POLYGON
-                            sql = $"SELECT {_spatialTypeString}::ConvexHullAggregate({GeometryColumn}{GetMakeValidString()}).STAsBinary() FROM {QualifiedTable}";
+                            // so use ConvextHullAggregate to return POLYGON and FORCE .MakeValid
+                            sql = $"SELECT {_spatialTypeString}::ConvexHullAggregate({GeometryColumn}.MakeValid()).STAsBinary() FROM {QualifiedTable}";
 
                         if (!String.IsNullOrEmpty(DefinitionQuery))
                             sql += $" WHERE {DefinitionQuery}";
+
+                        if (SpatialObjectType == SqlServerSpatialObjectType.Geometry)
+                        {
+                            sql += String.IsNullOrEmpty(DefinitionQuery) ? " WHERE " : " AND ";
+                            // MUST explicitly exlude NULLS / Invalids PRIOR to EnvelopeAggregate
+                            sql += "GEOM IS NOT NULL AND GEOM.STIsValid()=1";
+                        }
 
                         if (_logger.IsDebugEnabled) _logger.DebugFormat("GetExtents {0} {1}", ExtentsMode, sql);
 
@@ -813,8 +816,11 @@ namespace SharpMap.Data.Providers
                             {
                                 if (dr.Read())
                                 {
-                                    var g = Converters.WellKnownBinary.GeometryFromWKB.Parse((byte[])dr[0], Factory);
-                                    return g.EnvelopeInternal;
+                                    if (dr[0] != DBNull.Value)
+                                    {
+                                        var g = wkbReader.Read((byte[])dr[0]);
+                                        return g.EnvelopeInternal;
+                                    }
                                 }
                             }
                         }
@@ -833,52 +839,64 @@ namespace SharpMap.Data.Providers
         /// </summary>   
         /// <param name="bbox">view box</param>   
         /// <param name="ds">FeatureDataSet to fill data into</param>   
-        public override void ExecuteIntersectionQuery(Envelope bbox, FeatureDataSet ds)
+        public override void ExecuteIntersectionQuery(Envelope bbox, FeatureDataSet fds)
         {
-            using (var conn = new SqlConnection(ConnectionString))
-            {
-                var sb = new StringBuilder($"SELECT {GetAttributeColumnNames()}, {GeometryColumn}{GetMakeValidString()}.STAsBinary() AS {SharpMapWkb} " +
-                                           $"FROM {QualifiedTable} {BuildTableHints()} WHERE ");
+            var sb = new StringBuilder($"SELECT {GetAttributeColumnNames()}, {GeometryColumn}{GetMakeValidString()}.STAsBinary() AS {SharpMapWkb} " +
+                                       $"FROM {QualifiedTable} {BuildTableHints()} WHERE ");
 
-                if (!String.IsNullOrEmpty(DefinitionQuery))
-                    sb.Append($"{DefinitionQuery} AND ");
+            if (!String.IsNullOrEmpty(DefinitionQuery))
+                sb.Append($"{DefinitionQuery} AND ");
 
-                sb.Append($"{GetBoxFilterStr(bbox)} {GetExtraOptions()}");
+            if (SpatialObjectType == SqlServerSpatialObjectType.Geography && !ValidateGeometries)
+                sb.Append($"{GeometryColumn}.STIsValid() = 1 AND ");
 
-                if (_logger.IsDebugEnabled) _logger.DebugFormat("ExecuteIntersectionQuery {0}", sb.ToString());
+            sb.Append($"{GetBoxFilterStr(bbox)} {GetExtraOptions()}");
 
-                using (var adapter = new SqlDataAdapter(sb.ToString(), conn))
-                {
-                    conn.Open();
-                    var ds2 = new System.Data.DataSet();
-                    adapter.Fill(ds2);
-                    conn.Close();
-                    if (ds2.Tables.Count > 0)
-                    {
-                        var fdt = new FeatureDataTable(ds2.Tables[0]);
-                        foreach (System.Data.DataColumn col in ds2.Tables[0].Columns)
-                            if (col.ColumnName != GeometryColumn && col.ColumnName != SharpMapWkb)
-                                fdt.Columns.Add(col.ColumnName, col.DataType, col.Expression);
+            if (_logger.IsDebugEnabled) _logger.DebugFormat("ExecuteIntersectionQuery {0}", sb.ToString());
 
-                        foreach (System.Data.DataRow dr in ds2.Tables[0].Rows)
-                        {
-                            FeatureDataRow fdr = fdt.NewRow();
-                            foreach (System.Data.DataColumn col in ds2.Tables[0].Columns)
-                                if (col.ColumnName != GeometryColumn && col.ColumnName != SharpMapWkb)
-                                    fdr[col.ColumnName] = dr[col];
-                            fdr.Geometry =
-                                Converters.WellKnownBinary.GeometryFromWKB.Parse((byte[])dr[SharpMapWkb],
-                                    Factory);
-
-                            fdt.AddRow(fdr);
-                        }
-                        ds.Tables.Add(fdt);
-                    }
-                }
-            }
+            ExecuteIntersectionQuery(sb.ToString(), fds);
         }
 
         #endregion
+
+        private void ExecuteIntersectionQuery(string sql, FeatureDataSet fds)
+        {
+            using (var conn = new SqlConnection(ConnectionString))
+            {
+                conn.Open();
+
+                using (var adapter = new SqlDataAdapter(sql, conn))
+                {
+                    var ds = new System.Data.DataSet();
+                    adapter.Fill(ds);
+                    conn.Close();
+
+                    if (ds.Tables.Count > 0)
+                    {
+                        var fdt = new FeatureDataTable(ds.Tables[0]);
+                        foreach (System.Data.DataColumn col in ds.Tables[0].Columns)
+                            if (col.ColumnName != GeometryColumn && col.ColumnName != SharpMapWkb)
+                                fdt.Columns.Add(col.ColumnName, col.DataType, col.Expression);
+
+                        var wkbReader = new NetTopologySuite.IO.WKBReader(GeometryServiceProvider.Instance);
+                        foreach (System.Data.DataRow dr in ds.Tables[0].Rows)
+                        {
+                            FeatureDataRow fdr = fdt.NewRow();
+                            foreach (System.Data.DataColumn col in ds.Tables[0].Columns)
+                                if (col.ColumnName != GeometryColumn && col.ColumnName != SharpMapWkb)
+                                    fdr[col.ColumnName] = dr[col];
+
+                            if (dr[SharpMapWkb] != DBNull.Value)
+                                fdr.Geometry = wkbReader.Read((byte[])dr[SharpMapWkb]);
+
+                            fdt.AddRow(fdr);
+                        }
+                        fds.Tables.Add(fdt);
+                    }
+                }
+            }
+
+        }
 
     }
 }
