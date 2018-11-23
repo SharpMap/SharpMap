@@ -766,7 +766,7 @@ namespace SharpMap.Data.Providers
                         {
                             sql += String.IsNullOrEmpty(DefinitionQuery) ? " WHERE " : " AND ";
                             // MUST explicitly exlude NULLS for EnvelopeAggregate
-                            sql += "GEOM IS NOT NULL";
+                            sql += $"{GeometryColumn} IS NOT NULL";
                         }
 
                         if (_logger.IsDebugEnabled) _logger.DebugFormat("GetExtents {0} {1}", ExtentsMode, sql);
@@ -805,7 +805,7 @@ namespace SharpMap.Data.Providers
                         {
                             sql += String.IsNullOrEmpty(DefinitionQuery) ? " WHERE " : " AND ";
                             // MUST explicitly exlude NULLS / Invalids PRIOR to EnvelopeAggregate
-                            sql += "GEOM IS NOT NULL AND GEOM.STIsValid()=1";
+                            sql += $"{GeometryColumn} IS NOT NULL AND {GeometryColumn}.STIsValid()=1";
                         }
 
                         if (_logger.IsDebugEnabled) _logger.DebugFormat("GetExtents {0} {1}", ExtentsMode, sql);
