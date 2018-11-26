@@ -26,6 +26,9 @@
 //
 // Alternatively, to work with native Sql Spatial types, see SharpMap.SqlServerSpatialObjects which requests
 // raw spatial bytes from the database and uses Microsoft.SqlServer.Types to convert Sql bytes on the client.
+//
+// By default, the provider ignores invalid spatial objects. This behaviour can be changed by setting 
+// SqlServer2008.ValidateGeometries = True BUT take note of comments on this property.
 
 using System;
 using System.Collections.ObjectModel;
@@ -149,12 +152,14 @@ namespace SharpMap.Data.Providers
         public SqlServerSpatialObjectType SpatialObjectType { get; private set; }
 
         /// <summary>
-        /// Gets/Sets whether all <see cref="GeoAPI.Geometries"/> passed to and retreieved from SqlServer should be made valid using this function.
+        /// When <code>true</code>, attempts to repair invalid SqlServer spatial objects by appending .MakeValid() in SQL statements. 
+        /// Ignored for <see cref="SqlServerSpatialObjectType"/>.Geomtry 
+        /// when <see cref="ForceSeekHint"/> or <see cref="ForceIndex"/> is enabled due to SQL Server query execution plan.
         /// </summary>
         public Boolean ValidateGeometries { get; set; }
 
         /// <summary>
-        /// When <code>true</code>, uses the FORCESEEK table hint.
+        /// When <code>true</code>, uses the FORCESEEK table hint, possibly over-riding <see cref="ValidateGeometries"/>. 
         /// </summary>   
         public bool ForceSeekHint { get; set; }
 
@@ -164,7 +169,7 @@ namespace SharpMap.Data.Providers
         public bool NoLockHint { get; set; }
 
         /// <summary>
-        /// When set, forces use of the specified index
+        /// When set, forces use of the specified index, possibly over-riding <see cref="ValidateGeometries"/>. 
         /// </summary>   
         public string ForceIndex { get; set; }
 
@@ -477,7 +482,9 @@ namespace SharpMap.Data.Providers
                 if (!String.IsNullOrEmpty(DefinitionQuery))
                     sb.Append($"{DefinitionQuery} AND ");
 
-                if (SpatialObjectType == SqlServerSpatialObjectType.Geography && !ValidateGeometries )
+                if (!ValidateGeometries ||
+                    (SpatialObjectType == SqlServerSpatialObjectType.Geometry && (ForceSeekHint || !string.IsNullOrEmpty(ForceIndex))))
+                    // Geometry sensitive to invalid geometries, and BuildTableHints (ForceSeekHint, ForceIndex) do not suppport .MakeValid() in GetBoxFilterStr
                     sb.Append($"{GeometryColumn}.STIsValid() = 1 AND ");
 
                 sb.Append($"{GetBoxFilterStr(bbox)} {GetExtraOptions()}");
@@ -552,7 +559,9 @@ namespace SharpMap.Data.Providers
                 if (!String.IsNullOrEmpty(DefinitionQuery))
                     sb.Append(DefinitionQuery + " AND ");
 
-                if (SpatialObjectType == SqlServerSpatialObjectType.Geography && !ValidateGeometries)
+                if (!ValidateGeometries ||
+                    (SpatialObjectType == SqlServerSpatialObjectType.Geometry && (ForceSeekHint || !string.IsNullOrEmpty(ForceIndex))))
+                    // Geometry sensitive to invalid geometries, and BuildTableHints (ForceSeekHint, ForceIndex) do not suppport .MakeValid() in GetBoxFilterStr
                     sb.Append($"{GeometryColumn}.STIsValid() = 1 AND ");
 
                 sb.Append($"{GetBoxFilterStr(bbox)} {GetExtraOptions()}");
@@ -618,6 +627,11 @@ namespace SharpMap.Data.Providers
             var sb = new StringBuilder($"SELECT {GetAttributeColumnNames()}, {GeometryColumn}{GetMakeValidString()}.STAsBinary() As {SharpMapWkb} " +
                                        $"FROM {QualifiedTable} {BuildTableHints()} WHERE ");
 
+            if (!ValidateGeometries ||
+                (SpatialObjectType == SqlServerSpatialObjectType.Geometry && (ForceSeekHint || !string.IsNullOrEmpty(ForceIndex))))
+                // Geometry sensitive to invalid geometries, and BuildTableHints (ForceSeekHint, ForceIndex) do not suppport .MakeValid() in GetBoxFilterStr
+                sb.Append($"{GeometryColumn}.STIsValid() = 1 AND ");
+
             if (!String.IsNullOrEmpty(DefinitionQuery))
                 sb.Append($"{DefinitionQuery} AND ");
 
@@ -629,7 +643,7 @@ namespace SharpMap.Data.Providers
         }
 
         /// <summary>   
-        /// Returns the number of features in the dataset   
+        /// Returns the number of records in the dataset (including NULL, EMPTY, and Invalid geometries)
         /// </summary>   
         /// <returns>number of features</returns>   
         public override int GetFeatureCount()
@@ -752,21 +766,22 @@ namespace SharpMap.Data.Providers
 
                     case SqlServer2008ExtentsMode.QueryIndividualFeatures:
 
+                        // MUST call MakeValid regardless of ValidateGeometries
                         if (SpatialObjectType == SqlServerSpatialObjectType.Geometry)
-                            // GEOMETRY returns 1 row for each feature. MUST call MakeValid() here
+                            // GEOMETRY returns 1 row for each feature
                             sql = $"SELECT {GeometryColumn}.MakeValid().STEnvelope().STAsBinary() FROM {QualifiedTable}";
                         else
-                            // GEOGRAPHY returns single row with multi-geometry containing all features. MUST call MakeValid() here
+                            // GEOGRAPHY returns single row with multi-geometry containing all features
                             sql = $"SELECT {_spatialTypeString}::CollectionAggregate({GeometryColumn}.MakeValid()).STAsBinary() FROM {QualifiedTable}";
 
                         if (!String.IsNullOrEmpty(DefinitionQuery))
                             sql += $" WHERE {DefinitionQuery}";
 
-                        if (SpatialObjectType == SqlServerSpatialObjectType.Geometry)
+                        if (!ValidateGeometries)
                         {
+                            // explicitly exclude any Invalid geoms                             
                             sql += String.IsNullOrEmpty(DefinitionQuery) ? " WHERE " : " AND ";
-                            // MUST explicitly exlude NULLS for EnvelopeAggregate
-                            sql += $"{GeometryColumn} IS NOT NULL";
+                            sql += $"{GeometryColumn}.STIsValid()=1";
                         }
 
                         if (_logger.IsDebugEnabled) _logger.DebugFormat("GetExtents {0} {1}", ExtentsMode, sql);
@@ -791,21 +806,22 @@ namespace SharpMap.Data.Providers
                     case SqlServer2008ExtentsMode.EnvelopeAggregate:
 
                         if (SpatialObjectType == SqlServerSpatialObjectType.Geometry)
-                            // GEOMETRY EnvelopeAggregate returns RECTILINEAR polygon . Note that {GetMakeValidString()} cannot be used with EnvelopeAggregate
-                            sql = $"SELECT {_spatialTypeString}::EnvelopeAggregate({GeometryColumn}).STAsBinary() FROM {QualifiedTable}";
+                            // GEOMETRY EnvelopeAggregate returns RECTILINEAR polygon.
+                            sql = $"SELECT {_spatialTypeString}::EnvelopeAggregate({GeometryColumn}{GetMakeValidString()}).STAsBinary() FROM {QualifiedTable}";
                         else
                             // GEOGRAPHY EnvelopeAggregate returns CURVED polygon (not supported by SharpMap), 
                             // so use ConvextHullAggregate to return POLYGON and FORCE .MakeValid
-                            sql = $"SELECT {_spatialTypeString}::ConvexHullAggregate({GeometryColumn}.MakeValid()).STAsBinary() FROM {QualifiedTable}";
+                            sql = $"SELECT {_spatialTypeString}::ConvexHullAggregate({GeometryColumn}{GetMakeValidString()}).STAsBinary() FROM {QualifiedTable}";
 
                         if (!String.IsNullOrEmpty(DefinitionQuery))
                             sql += $" WHERE {DefinitionQuery}";
 
-                        if (SpatialObjectType == SqlServerSpatialObjectType.Geometry)
+                        // Note Geometry limitiation - ALWAYS have to filter Invalid geometries (otherwise EnvelopeAggregate will return NULL)
+                        if (!ValidateGeometries || SpatialObjectType == SqlServerSpatialObjectType.Geometry)
                         {
+                            // explicitly exclude any Invalid geoms                             
                             sql += String.IsNullOrEmpty(DefinitionQuery) ? " WHERE " : " AND ";
-                            // MUST explicitly exlude NULLS / Invalids PRIOR to EnvelopeAggregate
-                            sql += $"{GeometryColumn} IS NOT NULL AND {GeometryColumn}.STIsValid()=1";
+                            sql += $"{GeometryColumn}.STIsValid()=1";
                         }
 
                         if (_logger.IsDebugEnabled) _logger.DebugFormat("GetExtents {0} {1}", ExtentsMode, sql);
@@ -847,7 +863,9 @@ namespace SharpMap.Data.Providers
             if (!String.IsNullOrEmpty(DefinitionQuery))
                 sb.Append($"{DefinitionQuery} AND ");
 
-            if (SpatialObjectType == SqlServerSpatialObjectType.Geography && !ValidateGeometries)
+            if (!ValidateGeometries ||
+                (SpatialObjectType == SqlServerSpatialObjectType.Geometry && (ForceSeekHint || !string.IsNullOrEmpty(ForceIndex))))
+                // Geometry sensitive to invalid geometries, and BuildTableHints (ForceSeekHint, ForceIndex) do not suppport .MakeValid() in GetBoxFilterStr
                 sb.Append($"{GeometryColumn}.STIsValid() = 1 AND ");
 
             sb.Append($"{GetBoxFilterStr(bbox)} {GetExtraOptions()}");

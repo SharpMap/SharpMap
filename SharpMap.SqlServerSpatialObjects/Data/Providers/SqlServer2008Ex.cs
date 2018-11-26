@@ -10,7 +10,7 @@
 // but WITHOUT ANY WARRANTY; without even the implied warranty of   
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the   
 // GNU Lesser General Public License for more details.   
-  
+
 // You should have received a copy of the GNU Lesser General Public License   
 // along with SharpMap; if not, write to the Free Software   
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA    
@@ -71,11 +71,16 @@ namespace SharpMap.Data.Providers
                 //Get bounding box string   
                 string strBbox = GetBoxFilterStr(bbox);
 
-                string strSql = "SELECT g." + GeometryColumn;
+                string strSql = "SELECT g." + GeometryColumn + GetMakeValidString();
                 strSql += " FROM " + QualifiedTable + " g " + BuildTableHints() + " WHERE ";
 
                 if (!String.IsNullOrEmpty(DefinitionQuery))
                     strSql += DefinitionQuery + " AND ";
+
+                if (!ValidateGeometries ||
+                    (SpatialObjectType == SqlServerSpatialObjectType.Geometry && (ForceSeekHint || !string.IsNullOrEmpty(ForceIndex))))
+                    // Geometry sensitive to invalid geometries, and BuildTableHints (ForceSeekHint, ForceIndex) do not suppport .MakeValid() in GetBoxFilterStr
+                    strSql += $"{GeometryColumn}.STIsValid() = 1 AND ";
 
                 strSql += strBbox;
 
@@ -92,7 +97,7 @@ namespace SharpMap.Data.Providers
                         {
                             if (dr[0] != null && dr[0] != DBNull.Value)
                             {
-                                Geometry geom = SqlGeometryConverter.ToSharpMapGeometry((Microsoft.SqlServer.Types.SqlGeometry) dr[0]);
+                                Geometry geom = SqlGeometryConverter.ToSharpMapGeometry((Microsoft.SqlServer.Types.SqlGeometry)dr[0]);
                                 if (geom != null)
                                     features.Add(geom);
                             }
@@ -150,6 +155,11 @@ namespace SharpMap.Data.Providers
 
                 if (!String.IsNullOrEmpty(DefinitionQuery))
                     strSql += DefinitionQuery + " AND ";
+
+                if (!ValidateGeometries ||
+                    (SpatialObjectType == SqlServerSpatialObjectType.Geometry && (ForceSeekHint || !string.IsNullOrEmpty(ForceIndex))))
+                    // Geometry sensitive to invalid geometries, and BuildTableHints (ForceSeekHint, ForceIndex) do not suppport .MakeValid() in GetBoxFilterStr
+                    strSql += $"{GeometryColumn}.STIsValid() = 1 AND ";
 
                 strSql += strGeom;
 
@@ -251,6 +261,11 @@ namespace SharpMap.Data.Providers
                 if (!String.IsNullOrEmpty(DefinitionQuery))
                     strSql += DefinitionQuery + " AND ";
 
+                if (!ValidateGeometries ||
+                    (SpatialObjectType == SqlServerSpatialObjectType.Geometry && (ForceSeekHint || !string.IsNullOrEmpty(ForceIndex))))
+                    // Geometry sensitive to invalid geometries, and BuildTableHints (ForceSeekHint, ForceIndex) do not suppport .MakeValid() in GetBoxFilterStr
+                    strSql += $"{GeometryColumn}.STIsValid() = 1 AND ";
+
                 strSql += strBbox;
 
                 string extraOptions = GetExtraOptions();
@@ -280,7 +295,7 @@ namespace SharpMap.Data.Providers
                             var geom = dr[GeometryColumn];
                             Geometry sqlGeometry = null;
                             if (geom != null && geom != DBNull.Value)
-                                sqlGeometry = SqlGeometryConverter.ToSharpMapGeometry((Microsoft.SqlServer.Types.SqlGeometry) geom);
+                                sqlGeometry = SqlGeometryConverter.ToSharpMapGeometry((Microsoft.SqlServer.Types.SqlGeometry)geom);
                             fdr.Geometry = sqlGeometry;
                             fdt.AddRow(fdr);
                         }

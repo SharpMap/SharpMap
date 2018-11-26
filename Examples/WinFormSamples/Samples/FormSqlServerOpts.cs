@@ -103,9 +103,9 @@ namespace WinFormSamples.Samples
             if (optDataProviderWKB.Checked)
                 spatialLyr.DataSource = new SqlServer2008(ConnectionString, spatialTable, geomColumn, "Id", geomType, 4326, SqlServer2008ExtentsMode.QueryIndividualFeatures);
             else
-                spatialLyr.DataSource = new SqlServer2008Ex (ConnectionString, spatialTable, geomColumn, "Id", geomType, 4326, SqlServer2008ExtentsMode.QueryIndividualFeatures);
+                //spatialLyr.DataSource = new SqlServer2008Ex (ConnectionString, spatialTable, geomColumn, "Id", geomType, 4326, SqlServer2008ExtentsMode.QueryIndividualFeatures);
 
-            //spatialLyr.SRID = 4326;
+            spatialLyr.SRID = spatialLyr.DataSource.SRID;
             spatialLyr.TargetSRID = 3857;
 
             spatialLyr.Style.PointColor = symBrush;
@@ -114,7 +114,7 @@ namespace WinFormSamples.Samples
             var labelLyr = new SharpMap.Layers.LabelLayer("Labels")
             {
                 DataSource = spatialLyr.DataSource,
-                //SRID=4326,
+                SRID= spatialLyr.DataSource.SRID,
                 TargetSRID = 3857,
                 Enabled = true,
                 LabelColumn = "Name",
