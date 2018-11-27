@@ -16,7 +16,7 @@ namespace WinFormSamples.Samples
     public partial class FormSqlServerOpts : Form
     {
         public SharpMap.Forms.MapBox MapBox { get; set; }
-        public string LocalDbConnectionString { get; set; }
+        public string ConnectionString { get; set; }
 
         public FormSqlServerOpts()
         {
@@ -25,8 +25,10 @@ namespace WinFormSamples.Samples
 
         protected override void OnLoad(EventArgs e)
         {
-            // attach LocalDb and ensure spatial indexes are created for testing
-            SqlServerSample.InitialiseSpatialIndexes(LocalDbConnectionString);
+            // required for NuGet package Microsoft.SqlServer.Types
+            SqlServerTypes.Utilities.LoadNativeAssemblies(AppDomain.CurrentDomain.BaseDirectory);
+
+            SqlServerSample.InitialiseTables(ConnectionString);
 
             WireHandlers();
 
@@ -63,24 +65,6 @@ namespace WinFormSamples.Samples
 
         private void optDataProvider_Click(object sender, EventArgs e)
         {
-            // TODO - remove IF statement once integrated with SharpMap.SqlServerSpatialObjects
-            if (sender == this.optDataProviderNative)
-            {
-                optDataProviderNative.Checked = false;
-                optDataProviderWKB.Checked = true;
-
-                MessageBox.Show("Data Provider", "To be added to sample in near future...");
-                return;
-            }
-
-            if (sender == this.optDataProviderNative && optSpatialGeog.Checked)
-            {
-                optDataProviderNative.Checked = false;
-                optDataProviderWKB.Checked = true;
-
-                MessageBox.Show("Data Provider", "SharpMap.SqlServerSpatialObjects currently only support Geometry");
-            }
-            // re-create layers
             optSpatial_Click(null, null);
         }
 
@@ -98,30 +82,30 @@ namespace WinFormSamples.Samples
 
             if (optSpatialGeog.Checked)
             {
-                spatialTable = "[dbo].[CitiesSqlGeog]";
+                spatialTable =SqlServerSample.GeogTable;
                 geomColumn = "Geog4326";
                 geomType = SqlServerSpatialObjectType.Geography;
-                symBrush = new SolidBrush(Color.DodgerBlue);
+                symBrush = new SolidBrush(optDataProviderWKB.Checked? Color.Orange : Color.DeepSkyBlue);
+                labTable.Text = "Table: " + SqlServerSample.GeogTable;
             }
             else
             {
-                spatialTable = "[dbo].[CitiesSqlGeom]";
+                // ensure checked
+                optSpatialGeom.Checked = true;
+                spatialTable = SqlServerSample.GeomTable;
                 geomColumn = "Geom4326";
                 geomType = SqlServerSpatialObjectType.Geometry;
-                symBrush = new SolidBrush(Color.Red);
+                symBrush = new SolidBrush(optDataProviderWKB.Checked ? Color.Red : Color.DodgerBlue );
+                labTable.Text = "Table: " + SqlServerSample.GeomTable;
             }
 
             spatialLyr = new SharpMap.Layers.VectorLayer("Spatial");
             if (optDataProviderWKB.Checked)
-                spatialLyr.DataSource = new SqlServer2008(LocalDbConnectionString, spatialTable, geomColumn, "Id", geomType);
+                spatialLyr.DataSource = new SqlServer2008(ConnectionString, spatialTable, geomColumn, "Id", geomType, 4326, SqlServer2008ExtentsMode.QueryIndividualFeatures);
             else
-            {
-                //TODO - uncomment when reference is added to SharpMap.SqlServerSpatialObjects
-                //spatialLyr.DataSource = new SqlServer2008Ex (LocalDbConnectionString, spatialTable, geomColumn, "Id");
-            }
+                //spatialLyr.DataSource = new SqlServer2008Ex (ConnectionString, spatialTable, geomColumn, "Id", geomType, 4326, SqlServer2008ExtentsMode.QueryIndividualFeatures);
 
-
-            spatialLyr.SRID = 4326;
+            spatialLyr.SRID = spatialLyr.DataSource.SRID;
             spatialLyr.TargetSRID = 3857;
 
             spatialLyr.Style.PointColor = symBrush;
@@ -130,7 +114,7 @@ namespace WinFormSamples.Samples
             var labelLyr = new SharpMap.Layers.LabelLayer("Labels")
             {
                 DataSource = spatialLyr.DataSource,
-                //SRID=4326,
+                SRID= spatialLyr.DataSource.SRID,
                 TargetSRID = 3857,
                 Enabled = true,
                 LabelColumn = "Name",

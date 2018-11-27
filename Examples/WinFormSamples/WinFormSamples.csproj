@@ -89,6 +89,9 @@
     <Reference Include="log4net, Version=2.0.7.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
       <HintPath>..\..\packages\log4net.2.0.7\lib\net40-full\log4net.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.SqlServer.Types, Version=14.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.SqlServer.Types.14.0.1016.290\lib\net40\Microsoft.SqlServer.Types.dll</HintPath>
+    </Reference>
     <Reference Include="NetTopologySuite, Version=1.15.1.0, Culture=neutral, PublicKeyToken=f580a05016ebada1, processorArchitecture=MSIL">
       <HintPath>..\..\packages\NetTopologySuite.Core.1.15.1\lib\net40-client\NetTopologySuite.dll</HintPath>
     </Reference>
@@ -180,6 +183,20 @@
     <Compile Include="Samples\SqlServerSample.cs" />
     <Compile Include="SampleTool.cs" />
     <Compile Include="SharpMapTileSource.cs" />
+    <Compile Include="SqlServerTypes\Loader.cs" />
+    <Content Include="SqlServerTypes\readme.htm" />
+    <Content Include="SqlServerTypes\x64\msvcr120.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="SqlServerTypes\x64\SqlServerSpatial140.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="SqlServerTypes\x86\msvcr120.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="SqlServerTypes\x86\SqlServerSpatial140.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <EmbeddedResource Include="Magnifier.cur" />
     <EmbeddedResource Include="Samples\FormSqlServerOpts.resx">
       <DependentUpon>FormSqlServerOpts.cs</DependentUpon>
@@ -400,13 +417,6 @@
     <None Include="app.config">
       <SubType>Designer</SubType>
     </None>
-    <Content Include="GeoData\SqlServer\SqlServerSample.mdf">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="GeoData\SqlServer\SqlServerSample_log.ldf">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <DependentUpon>SqlServerSample.mdf</DependentUpon>
-    </Content>
     <Content Include="GeoData\VRT\contours_sample_polyline_play2_polyline.vrt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -552,6 +562,10 @@
     <ProjectReference Include="..\..\SharpMap.Layers.HeatLayer\SharpMap.Layers.HeatLayer.csproj">
       <Project>{47F790C2-6DC0-4A09-9026-FC81A09FD6A3}</Project>
       <Name>SharpMap.Layers.HeatLayer</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\SharpMap.SqlServerSpatialObjects\SharpMap.SqlServerSpatialObjects.csproj">
+      <Project>{6d681045-8ef1-44ea-a19d-c7a63a6d0f76}</Project>
+      <Name>SharpMap.SqlServerSpatialObjects</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\SharpMap\SharpMap.csproj">
       <Project>{C83777FC-AABB-47D9-911F-D76255D4D541}</Project>

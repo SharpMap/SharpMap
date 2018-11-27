@@ -61,13 +61,13 @@ namespace WinFormSamples
             this.radioButton7 = new System.Windows.Forms.RadioButton();
             this.radioButton8 = new System.Windows.Forms.RadioButton();
             this.radioButton9 = new System.Windows.Forms.RadioButton();
+            this.radioButton12 = new System.Windows.Forms.RadioButton();
             this.radioButton10 = new System.Windows.Forms.RadioButton();
             this.radioButton11 = new System.Windows.Forms.RadioButton();
             this.btnCreateTiles = new System.Windows.Forms.Button();
             this.lvwDecorations = new System.Windows.Forms.ListView();
             this.pgMapDecoration = new System.Windows.Forms.PropertyGrid();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.radioButton12 = new System.Windows.Forms.RadioButton();
             ((System.ComponentModel.ISupportInitialize)(this.scMain)).BeginInit();
             this.scMain.Panel2.SuspendLayout();
             this.scMain.SuspendLayout();
@@ -85,8 +85,8 @@ namespace WinFormSamples
             // 
             // scMain
             // 
-            this.scMain.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-            | System.Windows.Forms.AnchorStyles.Left)
+            this.scMain.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.scMain.Location = new System.Drawing.Point(174, 0);
             this.scMain.Name = "scMain";
@@ -110,8 +110,8 @@ namespace WinFormSamples
             // 
             // scMapProp
             // 
-            this.scMapProp.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-            | System.Windows.Forms.AnchorStyles.Left)
+            this.scMapProp.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.scMapProp.Location = new System.Drawing.Point(174, 3);
             this.scMapProp.Name = "scMapProp";
@@ -397,6 +397,17 @@ namespace WinFormSamples
             this.radioButton9.Click += new System.EventHandler(this.radioButton_Click);
             this.radioButton9.MouseUp += new System.Windows.Forms.MouseEventHandler(this.radioButton2_MouseUp);
             // 
+            // radioButton12
+            // 
+            this.radioButton12.AutoSize = true;
+            this.radioButton12.Location = new System.Drawing.Point(13, 214);
+            this.radioButton12.Name = "radioButton12";
+            this.radioButton12.Size = new System.Drawing.Size(71, 17);
+            this.radioButton12.TabIndex = 13;
+            this.radioButton12.Text = "SqlServer";
+            this.radioButton12.UseVisualStyleBackColor = true;
+            this.radioButton12.Click += new System.EventHandler(this.radioButton_Click);
+            // 
             // radioButton10
             // 
             this.radioButton10.AutoSize = true;
@@ -418,17 +429,6 @@ namespace WinFormSamples
             this.radioButton11.Text = "GdiImageLayer";
             this.radioButton11.UseVisualStyleBackColor = true;
             this.radioButton11.Click += new System.EventHandler(this.radioButton_Click);
-            // 
-            // radioButton12
-            // 
-            this.radioButton12.AutoSize = true;
-            this.radioButton12.Location = new System.Drawing.Point(13, 214);
-            this.radioButton12.Name = "radioButton12";
-            this.radioButton12.Size = new System.Drawing.Size(120, 17);
-            this.radioButton12.TabIndex = 13;
-            this.radioButton12.Text = "SqlServer (LocalDb)";
-            this.radioButton12.UseVisualStyleBackColor = true;
-            this.radioButton12.Click += new System.EventHandler(this.radioButton_Click);
             // 
             // btnCreateTiles
             // 
@@ -586,17 +586,27 @@ namespace WinFormSamples
                     case "SpatiaLite":
                         mapBox1.Map = SpatiaLiteSample.InitializeMap(tbAngle.Value);
                         break;
-                    case "SqlServer (LocalDb)":
+                    case "SqlServer":
                         // create empty map with BruTile basemap
                         mapBox1.Map = SqlServerSample.InitializeMap(tbAngle.Value);
-                        // set path for LocalDb copy        
-                        var connStrBuilder = new System.Data.SqlClient.SqlConnectionStringBuilder(Properties.Settings.Default.SqlServerLocalDbConnectionString);
-                        connStrBuilder.AttachDBFilename = connStrBuilder.AttachDBFilename.Replace("..\\", AppDomain.CurrentDomain.BaseDirectory);
+                        // check conn string
+                        var connStrBuilder = new System.Data.SqlClient.SqlConnectionStringBuilder(Properties.Settings.Default.SqlServerConnectionString);
+                        if (string.IsNullOrEmpty(connStrBuilder.DataSource) || string.IsNullOrEmpty(connStrBuilder.InitialCatalog))
+                        {
+                            mapBox1.Refresh();
 
+                            MessageBox.Show("Requires SqlServer connection string to be defined (Project / Settings)\n\n" + 
+                                "Also, if project folder SqlServerTypes\\x64 and \\x86 are empty, then force reinstall of NuGet package:\n\n" +
+                                "PM> Update-Package Microsoft.SqlServer.Types -ProjectName Examples\\WinFormSamples -reinstall -ignoreDependencies","Sql Server",
+                                MessageBoxButtons.OK,MessageBoxIcon.Information);
+
+                            return;
+                        }
+                        // now show SqlServer dialog
                         formSqlServerOpts = new FormSqlServerOpts()
                         {
                             MapBox = mapBox1,
-                            LocalDbConnectionString = connStrBuilder.ToString()
+                            ConnectionString = connStrBuilder.ToString()
                         };
                         formSqlServerOpts.Show(this);
                         break;
