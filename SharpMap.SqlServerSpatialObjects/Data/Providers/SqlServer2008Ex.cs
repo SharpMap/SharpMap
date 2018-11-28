@@ -102,10 +102,15 @@ namespace SharpMap.Data.Providers
             var features = new Collection<Geometry>();
             using (var conn = new SqlConnection(ConnectionString))
             {
-                var sb = new StringBuilder($"SELECT {GeometryColumn} FROM {QualifiedTable} {BuildTableHints()} WHERE ");
+                var sb = new StringBuilder($"SELECT {GeometryColumn}{GetMakeValidString()} FROM {QualifiedTable} {BuildTableHints()} WHERE ");
 
                 if (!String.IsNullOrEmpty(DefinitionQuery))
                     sb.Append($"{DefinitionQuery} AND ");
+
+                if (!ValidateGeometries ||
+                    (SpatialObjectType == SqlServerSpatialObjectType.Geometry && (ForceSeekHint || !string.IsNullOrEmpty(ForceIndex))))
+                    // Geometry sensitive to invalid geometries, and BuildTableHints (ForceSeekHint, ForceIndex) do not suppport .MakeValid() in GetBoxFilterStr
+                    sb.Append($"{GeometryColumn}.STIsValid() = 1 AND ");
 
                 sb.Append($"{GetBoxFilterStr(bbox)} {GetExtraOptions()}");
 
@@ -186,6 +191,11 @@ namespace SharpMap.Data.Providers
                 if (!String.IsNullOrEmpty(DefinitionQuery))
                     sb.Append($"{DefinitionQuery} AND ");
 
+                if (!ValidateGeometries ||
+    (SpatialObjectType == SqlServerSpatialObjectType.Geometry && (ForceSeekHint || !string.IsNullOrEmpty(ForceIndex))))
+                    // Geometry sensitive to invalid geometries, and BuildTableHints (ForceSeekHint, ForceIndex) do not suppport .MakeValid() in GetBoxFilterStr
+                    sb.Append($"{GeometryColumn}.STIsValid() = 1 AND ");
+                
                 sb.Append($"{GeometryColumn}.STIntersects({_spatialTypeString}::STGeomFromText('{geom.AsText()}', {SRID}){_reorientObject})=1 {GetExtraOptions()}");
 
                 if (_logger.IsDebugEnabled) _logger.DebugFormat("OnExecuteIntersectionQuery {0}", sb.ToString());
@@ -272,7 +282,11 @@ namespace SharpMap.Data.Providers
 
                 if (!String.IsNullOrEmpty(DefinitionQuery))
                     sb.Append($"{DefinitionQuery} AND ");
-
+                if (!ValidateGeometries ||
+    (SpatialObjectType == SqlServerSpatialObjectType.Geometry && (ForceSeekHint || !string.IsNullOrEmpty(ForceIndex))))
+                    // Geometry sensitive to invalid geometries, and BuildTableHints (ForceSeekHint, ForceIndex) do not suppport .MakeValid() in GetBoxFilterStr
+                    sb.Append($"{GeometryColumn}.STIsValid() = 1 AND ");
+                
                 sb.Append($"{GetBoxFilterStr(bbox)} {GetExtraOptions()}");
 
                 if (_logger.IsDebugEnabled) _logger.DebugFormat("ExecuteIntersectionQuery {0}", sb.ToString());
