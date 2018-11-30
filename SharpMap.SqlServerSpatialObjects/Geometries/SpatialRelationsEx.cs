@@ -19,6 +19,7 @@
 using System;
 using Microsoft.SqlServer.Types;
 using SharpMap.Converters.SqlServer2008SpatialObjects;
+using SharpMap.Data.Providers;
 using Geometry = GeoAPI.Geometries.IGeometry;
 
 namespace SharpMap.Geometries
@@ -35,11 +36,34 @@ namespace SharpMap.Geometries
         /// <param name="g1">Source geometry</param>
         /// <param name="g2">Other geometry</param>
         /// <returns>True if otherGeometry is wholly contained within the source geometry.</returns>
+        [Obsolete]
         public static bool Contains(Geometry g1, Geometry g2)
         {
-            SqlGeometry sg1 = SqlGeometryConverter.ToSqlGeometry(g1);
-            SqlGeometry sg2 = SqlGeometryConverter.ToSqlGeometry(g2);
-            return (bool)(sg1.STContains(sg2));
+            return Contains(g1, g2, Data.Providers.SqlServerSpatialObjectType.Geometry);
+        }
+
+        /// <summary>
+        /// Returns true if otherGeometry is wholly contained within the source geometry. This is the same as
+        /// reversing the primary and comparison shapes of the Within operation.
+        /// </summary>
+        /// <param name="g1">Source geometry</param>
+        /// <param name="g2">Other geometry</param>
+        /// <param name="spatialMode">calculation library - some methods have different behaviour depending on geometry or geography</param>
+        /// <returns>True if otherGeometry is wholly contained within the source geometry.</returns>
+        public static bool Contains(Geometry g1, Geometry g2, SqlServerSpatialObjectType spatialMode)
+        {
+            if (spatialMode == Data.Providers.SqlServerSpatialObjectType.Geometry)
+            {
+                SqlGeometry sg1 = SqlGeometryConverter.ToSqlGeometry(g1);
+                SqlGeometry sg2 = SqlGeometryConverter.ToSqlGeometry(g2);
+                return (bool)(sg1.STContains(sg2));
+            }
+            else
+            {
+                SqlGeography sg1 = SqlGeographyConverter.ToSqlGeography(g1);
+                SqlGeography sg2 = SqlGeographyConverter.ToSqlGeography(g2);
+                return (bool)(sg1.STContains(sg2));
+            }
         }
 
         /// <summary>
@@ -50,11 +74,33 @@ namespace SharpMap.Geometries
         /// <param name="g1">Source geometry</param>
         /// <param name="g2">Other geometry</param>
         /// <returns></returns>
+        [Obsolete]
         public static bool Crosses(Geometry g1, Geometry g2)
         {
-            SqlGeometry sg1 = SqlGeometryConverter.ToSqlGeometry(g1);
-            SqlGeometry sg2 = SqlGeometryConverter.ToSqlGeometry(g2);
-            return (bool)sg1.STCrosses(sg2);
+            return Crosses(g1, g2, SqlServerSpatialObjectType.Geometry);
+        }
+
+        /// <summary>
+        /// Returns true if the intersection of the two geometries results in a geometry whose dimension is less than
+        /// the maximum dimension of the two geometries and the intersection geometry is not equal to either.
+        /// geometry.
+        /// </summary>
+        /// <param name="g1">Source geometry</param>
+        /// <param name="g2">Other geometry</param>
+        /// <param name="spatialMode">calculation library - some methods have different behaviour depending on geometry or geography</param>
+        /// <returns></returns>
+        public static bool Crosses(Geometry g1, Geometry g2, SqlServerSpatialObjectType spatialMode)
+        {
+            if (spatialMode == Data.Providers.SqlServerSpatialObjectType.Geometry)
+            {
+                SqlGeometry sg1 = SqlGeometryConverter.ToSqlGeometry(g1);
+                SqlGeometry sg2 = SqlGeometryConverter.ToSqlGeometry(g2);
+                return (bool)sg1.STCrosses(sg2);
+            }
+            else
+            {
+               throw new ArgumentOutOfRangeException ("Geography does not support STCrosses. You must first convert Geography to Geometry using WKB");
+            }
         }
 
         /// <summary>
@@ -63,9 +109,29 @@ namespace SharpMap.Geometries
         /// <param name="g1">Source geometry</param>
         /// <param name="g2">Other geometry</param>
         /// <returns></returns>
+        [Obsolete]
         public static bool Disjoint(Geometry g1, Geometry g2)
         {
-            return !g2.Intersects(g1);
+            return Disjoint(g1, g2, SqlServerSpatialObjectType.Geometry);
+        }
+
+        /// <summary>
+        /// Returns true if otherGeometry is disjoint from the source geometry.
+        /// </summary>
+        /// <param name="g1">Source geometry</param>
+        /// <param name="g2">Other geometry</param>
+        /// <param name="spatialMode">calculation library - some methods have different behaviour depending on geometry or geography</param>
+        /// <returns></returns>
+        public static bool Disjoint(Geometry g1, Geometry g2, SqlServerSpatialObjectType spatialMode)
+        {
+            if (spatialMode == SqlServerSpatialObjectType.Geometry)
+                return !g2.Intersects(g1);
+            else
+            {
+                SqlGeography sg1 = SqlGeographyConverter.ToSqlGeography(g1);
+                SqlGeography sg2 = SqlGeographyConverter.ToSqlGeography(g2);
+                return (bool)sg1.STDisjoint(sg2);
+            }
         }
 
         /// <summary>
@@ -74,13 +140,34 @@ namespace SharpMap.Geometries
         /// <param name="g1">Source geometry</param>
         /// <param name="g2">Other Geometry</param>
         /// <returns></returns>
+        [Obsolete]
         public static bool Equals(Geometry g1, Geometry g2)
         {
-            SqlGeometry sg1 = SqlGeometryConverter.ToSqlGeometry(g1);
-            SqlGeometry sg2 = SqlGeometryConverter.ToSqlGeometry(g2);
-            return (bool)sg1.STEquals(sg2);
+            return Equals(g1, g2, SqlServerSpatialObjectType.Geometry);
         }
 
+        /// <summary>
+        /// Returns true if otherGeometry is of the same type and defines the same point set as the source geometry.
+        /// </summary>
+        /// <param name="g1">Source geometry</param>
+        /// <param name="g2">Other Geometry</param>
+        /// <param name="spatialMode">calculation library - some methods have different behaviour depending on geometry or geography</param>
+        /// <returns></returns>
+        public static bool Equals(Geometry g1, Geometry g2, SqlServerSpatialObjectType spatialMode)
+        {
+            if (spatialMode == SqlServerSpatialObjectType.Geometry)
+            {
+                SqlGeometry sg1 = SqlGeometryConverter.ToSqlGeometry(g1);
+                SqlGeometry sg2 = SqlGeometryConverter.ToSqlGeometry(g2);
+                return (bool)sg1.STEquals(sg2);
+            }
+            else
+            {
+                SqlGeography sg1 = SqlGeographyConverter.ToSqlGeography(g1);
+                SqlGeography sg2 = SqlGeographyConverter.ToSqlGeography(g2);
+                return (bool)sg1.STEquals(sg2);
+            }
+        }
 
         /// <summary>
         /// Returns true if there is any intersection between the two geometries.
@@ -88,11 +175,33 @@ namespace SharpMap.Geometries
         /// <param name="g1">Source geometry</param>
         /// <param name="g2">Other geometry</param>
         /// <returns></returns>
+        [Obsolete]
         public static bool Intersects(Geometry g1, Geometry g2)
         {
-            SqlGeometry sg1 = SqlGeometryConverter.ToSqlGeometry(g1);
-            SqlGeometry sg2 = SqlGeometryConverter.ToSqlGeometry(g2);
-            return (bool) sg1.STIntersects(sg2);
+            return Intersects(g1, g2, SqlServerSpatialObjectType.Geometry);
+        }
+
+        /// <summary>
+        /// Returns true if there is any intersection between the two geometries.
+        /// </summary>
+        /// <param name="g1">Source geometry</param>
+        /// <param name="g2">Other geometry</param>
+        /// <param name="spatialMode">calculation library - some methods have different behaviour depending on geometry or geography</param>
+        /// <returns></returns>
+        public static bool Intersects(Geometry g1, Geometry g2, SqlServerSpatialObjectType spatialMode)
+        {
+            if (spatialMode == SqlServerSpatialObjectType.Geometry)
+            {
+                SqlGeometry sg1 = SqlGeometryConverter.ToSqlGeometry(g1);
+                SqlGeometry sg2 = SqlGeometryConverter.ToSqlGeometry(g2);
+                return (bool)sg1.STIntersects(sg2);
+            }
+            else
+            {
+                SqlGeography sg1 = SqlGeographyConverter.ToSqlGeography(g1);
+                SqlGeography sg2 = SqlGeographyConverter.ToSqlGeography(g2);
+                return (bool)sg1.STIntersects(sg2);
+            }
         }
 
         /// <summary>
@@ -102,11 +211,34 @@ namespace SharpMap.Geometries
         /// <param name="g1">Source geometry</param>
         /// <param name="g2">Other geometry</param>
         /// <returns></returns>
+        [Obsolete]
         public static bool Overlaps(Geometry g1, Geometry g2)
         {
-            SqlGeometry sg1 = SqlGeometryConverter.ToSqlGeometry(g1);
-            SqlGeometry sg2 = SqlGeometryConverter.ToSqlGeometry(g2);
-            return (bool)sg1.STOverlaps(sg2);
+            return Overlaps(g1, g2, SqlServerSpatialObjectType.Geometry);
+        }
+
+        /// <summary>
+        /// Returns true if the intersection of the two geometries results in an object of the same dimension as the
+        /// input geometries and the intersection geometry is not equal to either geometry.
+        /// </summary>
+        /// <param name="g1">Source geometry</param>
+        /// <param name="g2">Other geometry</param>
+        /// <param name="spatialMode">calculation library - some methods have different behaviour depending on geometry or geography</param>
+        /// <returns></returns>
+        public static bool Overlaps(Geometry g1, Geometry g2, SqlServerSpatialObjectType spatialMode)
+        {
+            if (spatialMode == SqlServerSpatialObjectType.Geometry)
+            {
+                SqlGeometry sg1 = SqlGeometryConverter.ToSqlGeometry(g1);
+                SqlGeometry sg2 = SqlGeometryConverter.ToSqlGeometry(g2);
+                return (bool)sg1.STOverlaps(sg2);
+            }
+            else
+            {
+                SqlGeography sg1 = SqlGeographyConverter.ToSqlGeography(g1);
+                SqlGeography sg2 = SqlGeographyConverter.ToSqlGeography(g2);
+                return (bool)sg1.STOverlaps(sg2);
+            }
         }
 
         /// <summary>
@@ -115,11 +247,31 @@ namespace SharpMap.Geometries
         /// <param name="g1">Source geometry</param>
         /// <param name="g2">Other geometry</param>
         /// <returns></returns>
+        [Obsolete]
         public static bool Touches(Geometry g1, Geometry g2)
         {
-            SqlGeometry sg1 = SqlGeometryConverter.ToSqlGeometry(g1);
-            SqlGeometry sg2 = SqlGeometryConverter.ToSqlGeometry(g2);
-            return (bool)sg1.STTouches(sg2);
+            return Touches(g1, g2, SqlServerSpatialObjectType.Geometry);
+        }
+
+        /// <summary>
+        /// Returns true if the only points in common between the two geometries lie in the union of their boundaries.
+        /// </summary>
+        /// <param name="g1">Source geometry</param>
+        /// <param name="g2">Other geometry</param>
+        /// <param name="spatialMode">calculation library - some methods have different behaviour depending on geometry or geography</param>
+        /// <returns></returns>
+        public static bool Touches(Geometry g1, Geometry g2, SqlServerSpatialObjectType spatialMode)
+        {
+            if (spatialMode == SqlServerSpatialObjectType.Geometry)
+            {
+                SqlGeometry sg1 = SqlGeometryConverter.ToSqlGeometry(g1);
+                SqlGeometry sg2 = SqlGeometryConverter.ToSqlGeometry(g2);
+                return (bool)sg1.STTouches(sg2);
+            }
+            else
+            {
+                throw new ArgumentOutOfRangeException("Geography does not support STTouches. You must first convert Geography to Geometry using WKB");
+            }
         }
 
         /// <summary>
@@ -128,11 +280,34 @@ namespace SharpMap.Geometries
         /// <param name="g1">Source geometry</param>
         /// <param name="g2">Other geometry</param>
         /// <returns></returns>
+        [Obsolete]
         public static bool Within(Geometry g1, Geometry g2)
         {
-            SqlGeometry sg1 = SqlGeometryConverter.ToSqlGeometry(g1);
-            SqlGeometry sg2 = SqlGeometryConverter.ToSqlGeometry(g2);
-            return (bool)sg1.STWithin(sg2);
+            return Within(g1, g2, SqlServerSpatialObjectType.Geometry);
+        }
+
+        /// <summary>
+        /// Returns true if the primary geometry is wholly contained within the comparison geometry.
+        /// </summary>
+        /// <param name="g1">Source geometry</param>
+        /// <param name="g2">Other geometry</param>
+        /// <param name="spatialMode">calculation library - some methods have different behaviour depending on geometry or geography</param>
+        /// <returns></returns>
+        public static bool Within(Geometry g1, Geometry g2, SqlServerSpatialObjectType spatialMode)
+        {
+        if (spatialMode == SqlServerSpatialObjectType.Geometry)
+            {
+                SqlGeometry sg1 = SqlGeometryConverter.ToSqlGeometry(g1);
+                SqlGeometry sg2 = SqlGeometryConverter.ToSqlGeometry(g2);
+                return (bool)sg1.STWithin(sg2);
+            }
+        else
+            {
+                SqlGeography sg1 = SqlGeographyConverter.ToSqlGeography(g1);
+                SqlGeography sg2 = SqlGeographyConverter.ToSqlGeography(g2);
+                return (bool)sg1.STWithin(sg2);
+            }
+            
         }
 
         /// <summary>
@@ -142,11 +317,32 @@ namespace SharpMap.Geometries
         /// <param name="g2">Other geometry</param>
         /// <param name="intersectionPatternMatrix">Intersection pattern Matrix</param>
         /// <returns></returns>
+        [Obsolete]
         public static Boolean Relate(Geometry g1, Geometry g2, string intersectionPatternMatrix)
         {
-            SqlGeometry sg1 = SqlGeometryConverter.ToSqlGeometry(g1);
-            SqlGeometry sg2 = SqlGeometryConverter.ToSqlGeometry(g2);
-            return (bool)sg1.STRelate(sg2, intersectionPatternMatrix);
+            return Relate(g1, g2, intersectionPatternMatrix, SqlServerSpatialObjectType.Geometry);
+        }
+
+        /// <summary>
+        /// Returns true if the given geometries relate according to the provided intersection pattern Matrix
+        /// </summary>
+        /// <param name="g1">Source geometry</param>
+        /// <param name="g2">Other geometry</param>
+        /// <param name="intersectionPatternMatrix">Intersection pattern Matrix</param>
+        /// <param name="spatialMode">calculation library - some methods have different behaviour depending on geometry or geography</param>
+        /// <returns></returns>
+        public static Boolean Relate(Geometry g1, Geometry g2, string intersectionPatternMatrix, SqlServerSpatialObjectType spatialMode)
+        {
+            if (spatialMode == SqlServerSpatialObjectType.Geometry)
+            {
+                SqlGeometry sg1 = SqlGeometryConverter.ToSqlGeometry(g1);
+                SqlGeometry sg2 = SqlGeometryConverter.ToSqlGeometry(g2);
+                return (bool)sg1.STRelate(sg2, intersectionPatternMatrix);
+            }
+            else
+            {
+                throw new ArgumentOutOfRangeException("Geography does not support STRelate. You must first convert Geography to Geometry using WKB");
+            }
         }
     }
 }

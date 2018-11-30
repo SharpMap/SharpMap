@@ -13,3 +13,23 @@ Look for "Microsoft SQL Server System CLR Types"
 
 Enjoy
 FObermaier
+
+=================================================================================================================================
+
+Update Nov 2018: Added support for SqlGeography
+    SqlServer2008Ex.cs
+    SqlGeographyConverter.cs (new class)
+    SpatialOperationsEx.cs (basic support for Geography)
+    SpatialRelationsEx.cs  (basic support for Geography)
+
+Several more recents approaches were also considered, but would have caused breaking changes:
+1) Drop reference to Microsoft.SqlServer.Types and replace with NuGet Microsoft.SqlServerTypes v14.0.1016.290
+   This package support x86 and x64, and also includes SqlServerSpatialxxx.dll (no need to install any other Sql Server binaries).
+   Also requires binding redirects, and native SQL assemblies must be explicitly loaded at runtime by client (breaking change)
+2) Use NuGet NetTopologySuite.Io.SqlServerBytes (released Oct 2018) instead of SqlGeometryConverter.cs
+   This package provides comprehenisve conversion between NTS geometry and SQL Server geometery/geography types, but targets NetStandard 2.0.
+   Also, SqlGeometryConverter.cs implements custom exception handling.
+
+Regards
+
+Tim

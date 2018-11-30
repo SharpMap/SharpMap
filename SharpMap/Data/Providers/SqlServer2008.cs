@@ -466,7 +466,7 @@ namespace SharpMap.Data.Providers
             }
             return string.Empty;
         }
-       
+
         /// <summary>   
         /// Returns geometries within the specified bounding box   
         /// </summary>   
@@ -563,7 +563,7 @@ namespace SharpMap.Data.Providers
                     (SpatialObjectType == SqlServerSpatialObjectType.Geometry && (ForceSeekHint || !string.IsNullOrEmpty(ForceIndex))))
                     // Geometry sensitive to invalid geometries, and BuildTableHints (ForceSeekHint, ForceIndex) do not suppport .MakeValid() in GetBoxFilterStr
                     sb.Append($"{GeometryColumn}.STIsValid() = 1 AND ");
-
+                
                 sb.Append($"{GetBoxFilterStr(bbox)} {GetExtraOptions()}");
 
                 if (_logger.IsDebugEnabled) _logger.DebugFormat("GetObjectIDsInView {0}", sb.ToString());

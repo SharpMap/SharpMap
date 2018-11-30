@@ -97,8 +97,8 @@ namespace SharpMap.Converters.SqlServer2008SpatialObjects
             {
                 try
                 {
-                    g.Reduce(ReduceTolerance);
-                    g.MakeValid();
+                    g = g.Reduce(ReduceTolerance);
+                    g = g.MakeValid();
                 }
                 catch (Exception ex)
                 {
@@ -238,13 +238,15 @@ namespace SharpMap.Converters.SqlServer2008SpatialObjects
         public static SMGeometry ToSharpMapGeometry(SqlGeometry geometry, Factory factory)
         {
             if (geometry == null) return null;
+            if (geometry.IsNull) return null;
+
             var fact = factory ?? Services.CreateGeometryFactory((int) geometry.STSrid);
             
             if (geometry.STIsEmpty())
                 return fact.CreateGeometryCollection(null);
             
             if (!geometry.STIsValid()) 
-                geometry.MakeValid();
+                geometry = geometry.MakeValid();
             
             OpenGisGeometryType geometryType = (OpenGisGeometryType)Enum.Parse(typeof(OpenGisGeometryType), (string)geometry.STGeometryType());
             switch (geometryType)
