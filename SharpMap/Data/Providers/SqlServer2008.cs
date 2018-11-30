@@ -103,15 +103,15 @@ namespace SharpMap.Data.Providers
         private const string SharpMapWkb = "sharpmapwkb";
 
         // required for restricting extents of WKT (eg bbox) used to query SqlGeography
-        private static readonly Envelope GeogMaxExtents = new Envelope(-179.999999999, 179.999999999, -89.999999999, 89.999999999);
+        protected static readonly Envelope GeogMaxExtents = new Envelope(-179.999999999, 179.999999999, -89.999999999, 89.999999999);
 
         // SqlGeography : polygon interior defined by left hand/foot rule (anti-clockwise orientation)
         // SqlGeometry  : orientation is irrelevant
         // GeometryToWKT returns Envelope with clockwise ring, so need to call .ReorientObject() for WKT used to query SqlGeography
-        private readonly string _reorientObject;
+        protected readonly string _reorientObject;
 
         // used for static spatial methods in SQL string
-        private readonly string _spatialTypeString;
+        protected readonly string _spatialTypeString;
 
         private SqlServer2008ExtentsMode _extentsMode;
 
@@ -156,7 +156,7 @@ namespace SharpMap.Data.Providers
         /// Ignored for <see cref="SqlServerSpatialObjectType"/>.Geomtry 
         /// when <see cref="ForceSeekHint"/> or <see cref="ForceIndex"/> is enabled due to SQL Server query execution plan.
         /// </summary>
-        public Boolean ValidateGeometries { get; set; }
+        public virtual Boolean ValidateGeometries { get; set; }
 
         /// <summary>
         /// When <code>true</code>, uses the FORCESEEK table hint, possibly over-riding <see cref="ValidateGeometries"/>. 
@@ -400,7 +400,7 @@ namespace SharpMap.Data.Providers
             Table = sb.ToString();
         }
 
-        private string GetAttributeColumnNames()
+        protected string GetAttributeColumnNames()
         {
             if (string.IsNullOrEmpty(_attributeColumnNames))
             {
@@ -523,7 +523,7 @@ namespace SharpMap.Data.Providers
             using (var conn = new SqlConnection(ConnectionString))
             {
                 string strSql = $"SELECT {GeometryColumn}{GetMakeValidString()}.STAsBinary() FROM {QualifiedTable} " +
-                                $"WHERE {ObjectIdColumn}={oid}";
+                                $"WHERE {ObjectIdColumn} = {oid}";
 
                 if (_logger.IsDebugEnabled) _logger.DebugFormat("GetGeometryByID {0}", strSql);
 
@@ -635,7 +635,11 @@ namespace SharpMap.Data.Providers
             if (!String.IsNullOrEmpty(DefinitionQuery))
                 sb.Append($"{DefinitionQuery} AND ");
 
-            sb.Append($"{GeometryColumn}.STIntersects({_spatialTypeString}::STGeomFromText('{geom.AsText()}', {SRID}){_reorientObject})=1 {GetExtraOptions()}");
+            // .MakeValid() in WHERE clause is not compatible certain BuildHints, resulting in error:
+            // The query processor could not produce a query plan for a query with a spatial index hint.  Reason: Could not find required binary spatial method in a condition.  Try removing the index hints or removing SET FORCEPLAN.
+            var makeValid = (ForceSeekHint || !string.IsNullOrEmpty(ForceIndex)) ? "" : GetMakeValidString(); //".MakeValid()"
+
+            sb.Append($"{GeometryColumn}{makeValid}.STIntersects({_spatialTypeString}::STGeomFromText('{geom.AsText()}', {SRID}){_reorientObject})=1 {GetExtraOptions()}");
 
             if (_logger.IsDebugEnabled) _logger.DebugFormat("OnExecuteIntersectionQuery {0}", sb.ToString());
 
@@ -714,8 +718,11 @@ namespace SharpMap.Data.Providers
                                 if (col.ColumnName != GeometryColumn && col.ColumnName != SharpMapWkb)
                                     fdr[col.ColumnName] = dr[col];
 
-                            var wkbReader = new NetTopologySuite.IO.WKBReader(GeometryServiceProvider.Instance);
-                            fdr.Geometry = wkbReader.Read((byte[])dr[SharpMapWkb]);
+                            if (dr[SharpMapWkb] != null && dr[SharpMapWkb] != DBNull.Value)
+                            {
+                                var wkbReader = new NetTopologySuite.IO.WKBReader(GeometryServiceProvider.Instance);
+                                fdr.Geometry = wkbReader.Read((byte[])dr[SharpMapWkb]);
+                            }
 
                             return fdr;
                         }
@@ -877,7 +884,7 @@ namespace SharpMap.Data.Providers
 
         #endregion
 
-        private void ExecuteIntersectionQuery(string sql, FeatureDataSet fds)
+        protected virtual void ExecuteIntersectionQuery(string sql, FeatureDataSet fds)
         {
             using (var conn = new SqlConnection(ConnectionString))
             {
