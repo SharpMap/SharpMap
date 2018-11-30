@@ -23,8 +23,17 @@ namespace UnitTests.Converters
         private const string Polygon = "POLYGON ((20 20, 20 30, 30 30, 30 20, 20 20), (21 21, 21 29, 29 29, 29 21, 21 21))";
         private const string MultiPolygon = "MULTIPOLYGON (((20 20, 20 30, 30 30, 30 20, 20 20)), ((41 41, 41 49, 49 49, 49 41, 41 41)))";
 
+        [TestFixtureSetUp]
+        public void SetupFixture()
+        {
+            GeoAPI.GeometryServiceProvider.Instance = new NetTopologySuite.NtsGeometryServices();
+            //SqlServerTypes.Utilities.LoadNativeAssemblies(AppDomain.CurrentDomain.BaseDirectory);
+        }
+
+
         private Geometry ToSqlServerAndBack(Geometry gIn)
         {
+
             Assert.That(gIn, Is.Not.Null);
             Assert.That(gIn.SRID, Is.EqualTo(-1));
             gIn.SRID = 0;

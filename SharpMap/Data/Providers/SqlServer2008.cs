@@ -14,11 +14,22 @@
 // but WITHOUT ANY WARRANTY; without even the implied warranty of   
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the   
 // GNU Lesser General Public License for more details.   
-  
+
 // You should have received a copy of the GNU Lesser General Public License   
 // along with  if not, write to the Free Software   
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA    
-  
+
+// Note - Supports both Geometry AND Geography types for SQL Server 2008 onwards. 
+// The '2008' suffix in the class name is to distinguish from SharpMap.Data.Providers.MsSqlSpatial provider (Sql Server 2005).
+// SqlServer2008 requests WKB from the database (hence will work with Sql Server 2008, 2012, 2016 etc), 
+// and WKB is then parsed to an IGeometry instance using NetTopologySuite.IO.WkbReader
+//
+// Alternatively, to work with native Sql Spatial types, see SharpMap.SqlServerSpatialObjects which requests
+// raw spatial bytes from the database and uses Microsoft.SqlServer.Types to convert Sql bytes on the client.
+//
+// By default, the provider ignores invalid spatial objects. This behaviour can be changed by setting 
+// SqlServer2008.ValidateGeometries = True BUT take note of comments on this property.
+
 using System;
 using System.Collections.ObjectModel;
 using System.Collections.Generic;
@@ -26,7 +37,8 @@ using System.Data.SqlClient;
 using System.Globalization;
 using System.Text;
 using GeoAPI.Geometries;
-
+using Common.Logging;
+using GeoAPI;
 
 namespace SharpMap.Data.Providers
 {
@@ -52,17 +64,17 @@ namespace SharpMap.Data.Providers
     public enum SqlServer2008ExtentsMode
     {
         /// <summary>
-        /// Reads through all features in the table to determine extents
+        /// Client retrieves and reads through all features in the table to determine extents
         /// </summary>
         QueryIndividualFeatures,
 
         /// <summary>
-        /// Directly reads the bounds of the spatial index from the system tables (very fast, but does not take <see cref="SqlServer2008.DefinitionQuery"/> into account)
+        /// Supported by <see cref="SqlServerSpatialObjectType" />.Geometry only, reading the bounds of the spatial index directly from the system tables (very fast, but does not take into account actual data extents or <see cref="SqlServer2008.DefinitionQuery"/>)
         /// </summary>
         SpatialIndex,
 
         /// <summary>
-        /// Uses the EnvelopeAggregate aggregate function introduced in SQL Server 2012
+        /// Uses Aggregate functions introduced in SQL Server 2012 (recommended, server aggregates data and returns single record to client)
         /// </summary>
         EnvelopeAggregate
     }
@@ -85,29 +97,143 @@ namespace SharpMap.Data.Providers
     [Serializable]
     public class SqlServer2008 : BaseProvider
     {
+        static readonly ILog _logger = LogManager.GetLogger(typeof(SqlServer2008));
+
+        // column name used in queries for retrieving spatial column as WKB
+        private const string SharpMapWkb = "sharpmapwkb";
+
+        // required for restricting extents of WKT (eg bbox) used to query SqlGeography
+        protected static readonly Envelope GeogMaxExtents = new Envelope(-179.999999999, 179.999999999, -89.999999999, 89.999999999);
+
+        // SqlGeography : polygon interior defined by left hand/foot rule (anti-clockwise orientation)
+        // SqlGeometry  : orientation is irrelevant
+        // GeometryToWKT returns Envelope with clockwise ring, so need to call .ReorientObject() for WKT used to query SqlGeography
+        protected readonly string _reorientObject;
+
+        // used for static spatial methods in SQL string
+        protected readonly string _spatialTypeString;
+
+        private SqlServer2008ExtentsMode _extentsMode;
+
+        // List of columns EXCLUDING the spatial column eg: [Id], [Name], [Geom4326] >> [Id], [Name]
+        // _attributeColumnNames is used when  feature "attributes" should be returned (eg OnExecuteIntersectionQuery, GetFeature). 
+        // The Spatial column should NOT be retrieved directly without reference to Microsoft.SqlServerTypes,
+        // as it will cause DataAdaptor.Fill() to throw an error when attempting to determine type for spatial column.
+        private string _attributeColumnNames;
+
         /// <summary>   
-        /// Initializes a new connection to SQL Server   
+        /// Data table schema   
+        /// </summary>   
+        public string TableSchema { get; private set; }
+
+        /// <summary>   
+        /// Data table name   
+        /// </summary>   
+        public string Table { get; private set; }
+
+        /// <summary>
+        /// Gets a value indicating the qualified schema table name in square brackets
+        /// </summary>
+        protected string QualifiedTable { get; private set; }
+
+        /// <summary>   
+        /// Name of column that contains the Object ID   
+        /// </summary>   
+        public string ObjectIdColumn { get; private set; }
+
+        /// <summary>   
+        /// Name of geometry column   
+        /// </summary>   
+        public string GeometryColumn { get; private set; }
+
+        /// <summary>
+        /// Spatial object type for  
+        /// </summary>
+        public SqlServerSpatialObjectType SpatialObjectType { get; private set; }
+
+        /// <summary>
+        /// When <code>true</code>, attempts to repair invalid SqlServer spatial objects by appending .MakeValid() in SQL statements. 
+        /// Ignored for <see cref="SqlServerSpatialObjectType"/>.Geomtry 
+        /// when <see cref="ForceSeekHint"/> or <see cref="ForceIndex"/> is enabled due to SQL Server query execution plan.
+        /// </summary>
+        public virtual Boolean ValidateGeometries { get; set; }
+
+        /// <summary>
+        /// When <code>true</code>, uses the FORCESEEK table hint, possibly over-riding <see cref="ValidateGeometries"/>. 
+        /// </summary>   
+        public bool ForceSeekHint { get; set; }
+
+        /// <summary>
+        /// When <code>true</code>, uses the NOLOCK table hint.
+        /// </summary>   
+        public bool NoLockHint { get; set; }
+
+        /// <summary>
+        /// When set, forces use of the specified index, possibly over-riding <see cref="ValidateGeometries"/>. 
+        /// </summary>   
+        public string ForceIndex { get; set; }
+
+        /// <summary>
+        /// If set, sends an Option MaxDop to the SQL-Server to override the Parallel Execution of indexes
+        /// This can be used if Spatial indexes are not used on SQL-Servers with many processors.
+        /// 
+        /// MaxDop = 0 // Default behaviour
+        /// MaxDop = 1 // Suppress Parallel execution of Queryplan
+        /// MaxDop = [2..n] // Use X cores in in execution plan
+        /// </summary>
+        public int MaxDop { get; set; }
+
+        /// <summary>   
+        /// Initializes a new connection to SQL Server for <see cref="SqlServerSpatialObjectType"/>.Geometry in column named SHAPE with default <see cref="ExtentsMode" /> 
+        /// </summary>   
+        /// <param name="connectionStr">Connectionstring</param>   
+        /// <param name="tablename">Name of data table</param>   
+        /// <param name="oidColumnName">Name of column with unique identifier</param>   
+        [Obsolete]
+        public SqlServer2008(string connectionStr, string tablename, string oidColumnName)
+            : this(connectionStr, tablename, "SHAPE", oidColumnName, SqlServerSpatialObjectType.Geometry)
+        {
+        }
+
+        /// <summary>   
+        /// Initializes a new connection to SQL Server for spatial column named SHAPE with default <see cref="ExtentsMode" /> 
+        /// </summary>   
+        /// <param name="connectionStr">Connectionstring</param>   
+        /// <param name="tablename">Name of data table</param>   
+        /// <param name="oidColumnName">Name of column with unique identifier</param>
+        /// <param name="spatialObjectType">The type of the spatial object to use for spatial queries</param>
+        [Obsolete]
+        public SqlServer2008(string connectionStr, string tablename, string oidColumnName,
+            SqlServerSpatialObjectType spatialObjectType)
+            : this(connectionStr, tablename, "SHAPE", oidColumnName, spatialObjectType)
+        {
+        }
+
+        /// <summary>   
+        /// Initializes a new connection to SQL Server for <see cref="SqlServerSpatialObjectType"/>.Geometry with default <see cref="ExtentsMode" />
         /// </summary>   
         /// <param name="connectionStr">Connectionstring</param>   
         /// <param name="tablename">Name of data table</param>   
         /// <param name="geometryColumnName">Name of geometry column</param>   
         /// <param name="oidColumnName">Name of column with unique identifier</param>   
+        [Obsolete]
         public SqlServer2008(string connectionStr, string tablename, string geometryColumnName, string oidColumnName)
             : this(connectionStr, tablename, geometryColumnName, oidColumnName, SqlServerSpatialObjectType.Geometry)
         {
         }
 
         /// <summary>   
-        /// Initializes a new connection to SQL Server   
+        /// Initializes a new connection to SQL Server with default <see cref="ExtentsMode" />
         /// </summary>   
         /// <param name="connectionStr">Connectionstring</param>   
         /// <param name="tablename">Name of data table</param>   
-        /// <param name="geometryColumnName">Name of geometry column</param>   
+        /// <param name="spatialColumnName">Name of spatial column</param>   
         /// <param name="oidColumnName">Name of column with unique identifier</param>   
-        /// <param name="spatialObjectType">The type of the spatial object to use for spatial queries</param>
-        public SqlServer2008(string connectionStr, string tablename, string geometryColumnName, string oidColumnName,
+        /// <param name="spatialObjectType">spatial type (Geometry or Geography)</param>
+        [Obsolete]
+        public SqlServer2008(string connectionStr, string tablename, string spatialColumnName, string oidColumnName,
             SqlServerSpatialObjectType spatialObjectType)
-            : this(connectionStr, tablename, geometryColumnName, oidColumnName, spatialObjectType, false)
+            : this(connectionStr, tablename, spatialColumnName, oidColumnName, spatialObjectType, false)
         {
         }
 
@@ -116,14 +242,15 @@ namespace SharpMap.Data.Providers
         /// </summary>   
         /// <param name="connectionStr">Connectionstring</param>   
         /// <param name="tablename">Name of data table</param>   
-        /// <param name="geometryColumnName">Name of geometry column</param>   
+        /// <param name="spatialColumnName">Name of spatial column</param>   
         /// <param name="oidColumnName">Name of column with unique identifier</param>   
-        /// <param name="spatialObjectType">The type of the spatial object to use for spatial queries</param>
-        /// <param name="useSpatialIndexExtentAsExtent">If true, the bounds of the spatial index is used for the GetExtents() method which heavily increases performance instead of reading through all features in the table</param>
-        public SqlServer2008(string connectionStr, string tablename, string geometryColumnName, string oidColumnName,
+        /// <param name="spatialObjectType">spatial type (Geometry or Geography)</param>
+        /// <param name="useSpatialIndexExtentAsExtent">True sets ExtentsMode to SqlServer2008ExtentsMode.SpatialIndex</param>
+        [Obsolete]
+        public SqlServer2008(string connectionStr, string tablename, string spatialColumnName, string oidColumnName,
             SqlServerSpatialObjectType spatialObjectType, bool useSpatialIndexExtentAsExtent)
             : this(
-                connectionStr, tablename, geometryColumnName, oidColumnName, spatialObjectType,
+                connectionStr, tablename, spatialColumnName, oidColumnName, spatialObjectType,
                 useSpatialIndexExtentAsExtent, 0)
         {
         }
@@ -133,38 +260,93 @@ namespace SharpMap.Data.Providers
         /// </summary>   
         /// <param name="connectionStr">Connectionstring</param>   
         /// <param name="tablename">Name of data table</param>   
-        /// <param name="geometryColumnName">Name of geometry column</param>   
+        /// <param name="spatialColumnName">Name of spatial column</param>   
         /// <param name="oidColumnName">Name of column with unique identifier</param>   
-        /// <param name="spatialObjectType">The type of the spatial object to use for spatial queries</param>
-        /// <param name="useSpatialIndexExtentAsExtent">If true, the bounds of the spatial index is used for the GetExtents() method which heavily increases performance instead of reading through all features in the table</param>
+        /// <param name="spatialObjectType">spatial type (Geometry or Geography)</param>
+        /// <param name="useSpatialIndexExtentAsExtent">True sets ExtentsMode to SqlServer2008ExtentsMode.SpatialIndex</param>
         /// <param name="srid">The spatial reference id</param>
-        public SqlServer2008(string connectionStr, string tablename, string geometryColumnName, string oidColumnName,
+        [Obsolete]
+        public SqlServer2008(string connectionStr, string tablename, string spatialColumnName, string oidColumnName,
             SqlServerSpatialObjectType spatialObjectType, bool useSpatialIndexExtentAsExtent, int srid)
+             : this(
+                connectionStr, tablename, spatialColumnName, oidColumnName, spatialObjectType, srid,
+                (useSpatialIndexExtentAsExtent ?
+                   SqlServer2008ExtentsMode.SpatialIndex :
+                   SqlServer2008ExtentsMode.QueryIndividualFeatures))
+        {
+        }
+
+        /// <summary>   
+        /// Initializes a new connection to SQL Server   
+        /// </summary>   
+        /// <param name="connectionStr">Connectionstring</param>   
+        /// <param name="tablename">Name of data table</param>   
+        /// <param name="spatialColumnName">Name of spatial column</param>   
+        /// <param name="oidColumnName">Name of column with unique identifier</param>   
+        /// <param name="spatialObjectType">spatial type (Geometry or Geography)</param>
+        /// <param name="srid">The spatial reference id</param>
+        /// <param name="extentsMode">Mode for calculating full extents of the data</param>
+        public SqlServer2008(string connectionStr, string tablename, string spatialColumnName, string oidColumnName,
+            SqlServerSpatialObjectType spatialObjectType, int srid, SqlServer2008ExtentsMode extentsMode)
         {
             ConnectionString = connectionStr;
 
             ParseTablename(tablename);
 
-            GeometryColumn = geometryColumnName;
+            GeometryColumn = spatialColumnName;
             ObjectIdColumn = oidColumnName;
-            _spatialObjectType = spatialObjectType;
+            SpatialObjectType = spatialObjectType;
             switch (spatialObjectType)
             {
                 case SqlServerSpatialObjectType.Geometry:
-                    _spatialObject = "geometry";
+                    _spatialTypeString = "geometry";
+                    _reorientObject = string.Empty;
                     break;
+
                 //case SqlServerSpatialObjectType.Geography:
                 default:
-                    _spatialObject = "geography";
+                    _spatialTypeString = "geography";
+                    _reorientObject = ".ReorientObject()";
                     break;
             }
 
-            _extentsMode = (useSpatialIndexExtentAsExtent
-                ? SqlServer2008ExtentsMode.SpatialIndex
-                : SqlServer2008ExtentsMode.QueryIndividualFeatures);
-
             SRID = srid;
+
+            ExtentsMode = extentsMode;
+
+            if (!string.IsNullOrEmpty(TableSchema))
+                QualifiedTable = $"[{TableSchema}].[{Table}]";
+            else
+                QualifiedTable = $"[{Table}]";
+
         }
+
+        /// <summary>
+        /// Gets or sets the method used in the <see cref="GetExtents"/> method.
+        /// </summary>
+        public SqlServer2008ExtentsMode ExtentsMode
+        {
+            get => _extentsMode;
+            set
+            {
+                if (SpatialObjectType == SqlServerSpatialObjectType.Geography && value == SqlServer2008ExtentsMode.SpatialIndex)
+                    throw new ArgumentOutOfRangeException("ExtentsMode", "Geography type does not support extents by Spatial Index");
+
+                _extentsMode = value;
+            }
+        }
+
+        /// <summary>   
+        /// Connectionstring   
+        /// </summary>   
+        public string ConnectionString
+        {
+            get { return ConnectionID; }
+            set { ConnectionID = value; }
+        }
+
+        protected string GetMakeValidString()
+        { return ValidateGeometries ? ".MakeValid()" : String.Empty; }
 
         /// <summary>
         /// Method to parse TableSchema and Table from a (fully qualified) tablename
@@ -174,7 +356,7 @@ namespace SharpMap.Data.Providers
         {
             bool open = false;
             var sb = new StringBuilder(tablename.Length);
-            var lc = char.MinValue;
+            var lastChar = char.MinValue;
 
             foreach (var c in tablename)
             {
@@ -191,7 +373,7 @@ namespace SharpMap.Data.Providers
                         open = false;
                         break;
                     case '.':
-                        if (lc == char.MinValue)
+                        if (lastChar == char.MinValue)
                             throw new ArgumentException("tablename");
                         if (open)
                             sb.Append(c);
@@ -200,16 +382,16 @@ namespace SharpMap.Data.Providers
                             if (string.IsNullOrEmpty(TableSchema))
                                 TableSchema = sb.ToString();
                             else
-                                TableSchema += "." + sb;
-                            sb.Clear();
+                                TableSchema += "." + sb.ToString();
 
+                            sb.Clear();
                         }
                         break;
                     default:
                         sb.Append(c);
                         break;
                 }
-                lc = c;
+                lastChar = c;
             }
 
             if (open)
@@ -218,151 +400,29 @@ namespace SharpMap.Data.Providers
             Table = sb.ToString();
         }
 
-        /// <summary>   
-        /// Initializes a new connection to SQL Server   
-        /// </summary>   
-        /// <param name="connectionStr">Connectionstring</param>   
-        /// <param name="tablename">Name of data table</param>   
-        /// <param name="oidColumnName">Name of column with unique identifier</param>   
-        public SqlServer2008(string connectionStr, string tablename, string oidColumnName)
-            : this(connectionStr, tablename, "shape", oidColumnName, SqlServerSpatialObjectType.Geometry)
+        protected string GetAttributeColumnNames()
         {
-        }
-
-        /// <summary>   
-        /// Initializes a new connection to SQL Server   
-        /// </summary>   
-        /// <param name="connectionStr">Connectionstring</param>   
-        /// <param name="tablename">Name of data table</param>   
-        /// <param name="oidColumnName">Name of column with unique identifier</param>
-        /// <param name="spatialObjectType">The type of the spatial object to use for spatial queries</param>
-        public SqlServer2008(string connectionStr, string tablename, string oidColumnName,
-            SqlServerSpatialObjectType spatialObjectType)
-            : this(connectionStr, tablename, "shape", oidColumnName, spatialObjectType)
-        {
-        }
-
-        private SqlServer2008ExtentsMode _extentsMode;
-
-        /// <summary>
-        /// Gets or sets the method used in the <see cref="GetExtents"/> method.
-        /// </summary>
-        public SqlServer2008ExtentsMode ExtentsMode
-        {
-            get { return _extentsMode; }
-            set { _extentsMode = value; }
-        }
-
-        /// <summary>   
-        /// Connectionstring   
-        /// </summary>   
-        public string ConnectionString
-        {
-            get { return ConnectionID; }
-            set { ConnectionID = value; }
-        }
-
-        private string _table;
-
-        /// <summary>   
-        /// Data table name   
-        /// </summary>   
-        public string Table
-        {
-            get { return _table; }
-            set { _table = value; }
-        }
-
-        private string _schema;
-
-        /// <summary>   
-        /// Data table schema   
-        /// </summary>   
-        public string TableSchema
-        {
-            get { return _schema; }
-            set { _schema = value; }
-        }
-
-        /// <summary>
-        /// Gets a value indicating the qualified schema table name in square brackets
-        /// </summary>
-        protected string QualifiedTable
-        {
-            get
+            if (string.IsNullOrEmpty(_attributeColumnNames))
             {
-                var sb = new StringBuilder();
-                if (!string.IsNullOrEmpty(TableSchema))
-                    sb.AppendFormat("[{0}].", TableSchema);
-                sb.AppendFormat("[{0}]", Table);
-                return sb.ToString();
+                // select csv list of OID + attribute columns (each column in square brackets)
+                var strSql = "SELECT STUFF (" +
+                     $"(SELECT DISTINCT '], [' + name FROM sys.columns WHERE object_id = OBJECT_ID('{QualifiedTable}') " +
+                     $"AND name NOT IN ('{GeometryColumn}') " +
+                     "FOR XML PATH('')), 1, 2, '') + ']';";
+
+                if (_logger.IsDebugEnabled) _logger.DebugFormat("GetAttributeColumnNames {0}", strSql);
+
+                using (var conn = new System.Data.SqlClient.SqlConnection(ConnectionString))
+                {
+                    conn.Open();
+                    using (var cmd = new SqlCommand(strSql, conn))
+                    {
+                        _attributeColumnNames = (string)cmd.ExecuteScalar();
+                    }
+                }
             }
-        }
 
-        private string _geometryColumn;
-
-        /// <summary>   
-        /// Name of geometry column   
-        /// </summary>   
-        public string GeometryColumn
-        {
-            get { return _geometryColumn; }
-            set { _geometryColumn = value; }
-        }
-
-        private string _objectIdColumn;
-
-        /// <summary>   
-        /// Name of column that contains the Object ID   
-        /// </summary>   
-        public string ObjectIdColumn
-        {
-            get { return _objectIdColumn; }
-            set { _objectIdColumn = value; }
-        }
-
-        private bool _makeValid;
-
-        /// <summary>
-        /// Gets/Sets whether all <see cref="GeoAPI.Geometries"/> passed to SqlServer2008 should be made valid using this function.
-        /// </summary>
-        public Boolean ValidateGeometries
-        {
-            get { return _makeValid; }
-            set { _makeValid = value; }
-        }
-
-        private String MakeValidString
-        {
-            get { return _makeValid ? ".MakeValid()" : String.Empty; }
-        }
-
-        private readonly SqlServerSpatialObjectType _spatialObjectType;
-        private readonly string _spatialObject;
-
-        /// <summary>
-        /// Spatial object type for  
-        /// </summary>
-        public SqlServerSpatialObjectType SpatialObjectType
-        {
-            get { return _spatialObjectType; }
-        }
-
-
-        private int _maxDop;
-
-        /// <summary>
-        /// If set, sends an Option MaxDop to the SQL-Server to override the Parallel Execution of indexes
-        /// This can be used if Spatial indexes are not used on SQL-Servers with many processors.
-        /// 
-        /// MaxDop = 0 // Default behaviour
-        /// MaxDop = 1 // Suppress Parallel execution of Queryplan
-        /// MaxDop = [2..n] // Use X cores in in execution plan
-        /// </summary>
-        public int MaxDop
-        {
-            get { return _maxDop; }
-            set { _maxDop = value; }
+            return _attributeColumnNames;
         }
 
         /// <summary>
@@ -371,532 +431,14 @@ namespace SharpMap.Data.Providers
         /// <returns>MAXDOP option striong</returns>
         protected string GetExtraOptions()
         {
-            if (_maxDop != 0)
+            if (MaxDop != 0)
             {
-                return "OPTION (MAXDOP " + _maxDop + ")";
+                return "OPTION (MAXDOP " + MaxDop + ")";
             }
             else
             {
                 return null;
             }
-        }
-
-
-        /// <summary>   
-        /// Returns geometries within the specified bounding box   
-        /// </summary>   
-        /// <param name="bbox"></param>   
-        /// <returns></returns>   
-        public override Collection<IGeometry> GetGeometriesInView(Envelope bbox)
-        {
-            var features = new Collection<IGeometry>();
-            using (var conn = new SqlConnection(ConnectionString))
-            {
-                //Get bounding box string   
-                string strBbox = GetBoxFilterStr(bbox);
-
-                string strSql = "SELECT g." + GeometryColumn + ".STAsBinary() ";
-                strSql += " FROM " + QualifiedTable + " g " + BuildTableHints() + " WHERE ";
-
-                if (!String.IsNullOrEmpty(_definitionQuery))
-                    strSql += DefinitionQuery + " AND ";
-
-                strSql += strBbox;
-
-                string extraOptions = GetExtraOptions();
-                if (!string.IsNullOrEmpty(extraOptions))
-                    strSql += " " + extraOptions;
-
-                using (var command = new SqlCommand(strSql, conn))
-                {
-                    conn.Open();
-                    using (SqlDataReader dr = command.ExecuteReader())
-                    {
-                        while (dr.Read())
-                        {
-                            if (dr[0] != DBNull.Value)
-                            {
-                                var geom = Converters.WellKnownBinary.GeometryFromWKB.Parse((byte[]) dr[0], Factory);
-                                if (geom != null)
-                                {
-                                    if (_spatialObjectType == SqlServerSpatialObjectType.Geography) FlipXY(geom);
-                                    features.Add(geom);
-                                }
-                            }
-                        }
-                    }
-                    conn.Close();
-                }
-            }
-            return features;
-        }
-
-        /// <summary>   
-        /// Returns the geometry corresponding to the Object ID   
-        /// </summary>   
-        /// <param name="oid">Object ID</param>   
-        /// <returns>geometry</returns>   
-        public override IGeometry GetGeometryByID(uint oid)
-        {
-            IGeometry geom = null;
-            using (var conn = new SqlConnection(ConnectionString))
-            {
-                string strSql = "SELECT g." + GeometryColumn + ".STAsBinary() FROM " + QualifiedTable + " g WHERE " +
-                                ObjectIdColumn + "='" + oid + "'";
-                conn.Open();
-                using (var command = new SqlCommand(strSql, conn))
-                {
-                    using (SqlDataReader dr = command.ExecuteReader())
-                    {
-                        while (dr.Read())
-                        {
-                            if (dr[0] != DBNull.Value)
-                            {
-                                geom = Converters.WellKnownBinary.GeometryFromWKB.Parse((byte[]) dr[0], Factory);
-                                if (_spatialObjectType == SqlServerSpatialObjectType.Geography) FlipXY(geom);
-                            }
-                        }
-                    }
-                }
-                conn.Close();
-            }
-            return geom;
-        }
-
-        private static void FlipXY(IGeometry geom)
-        {
-            var coords = geom.Coordinates;
-            for (var i = 0; i < coords.Length; i++)
-            {
-                var x = coords[i].X;
-                coords[i].X = coords[i].Y;
-                coords[i].Y = x;
-            }
-            geom.GeometryChanged();
-        }
-
-        /// <summary>   
-        /// Returns geometry Object IDs whose bounding box intersects 'bbox'   
-        /// </summary>   
-        /// <param name="bbox"></param>   
-        /// <returns></returns>   
-        public override Collection<uint> GetObjectIDsInView(Envelope bbox)
-        {
-            var objectlist = new Collection<uint>();
-            using (var conn = new SqlConnection(ConnectionString))
-            {
-                //Get bounding box string   
-                var strBbox = GetBoxFilterStr(bbox);
-
-                string strSql = "SELECT g." + ObjectIdColumn + " ";
-                strSql += "FROM " + QualifiedTable + " g " + BuildTableHints() + " WHERE ";
-
-                if (!String.IsNullOrEmpty(_definitionQuery))
-                    strSql += DefinitionQuery + " AND ";
-
-                strSql += strBbox;
-
-                string extraOptions = GetExtraOptions();
-                if (!string.IsNullOrEmpty(extraOptions))
-                    strSql += " " + extraOptions;
-
-
-                using (var command = new SqlCommand(strSql, conn))
-                {
-                    conn.Open();
-                    using (var dr = command.ExecuteReader())
-                    {
-                        while (dr.Read())
-                        {
-                            if (dr[0] != DBNull.Value)
-                            {
-                                uint id = Convert.ToUInt32(dr[0]);
-                                objectlist.Add(id);
-                            }
-                        }
-                    }
-                    conn.Close();
-                }
-            }
-            return objectlist;
-        }
-
-        /// <summary>   
-        /// Returns the box filter string needed in SQL query   
-        /// </summary>   
-        /// <param name="bbox"></param>   
-        /// <returns></returns>   
-        protected string GetBoxFilterStr(Envelope bbox)
-        {
-            //geography::STGeomFromText('LINESTRING(47.656 -122.360, 47.656 -122.343)', 4326);   
-            if (_spatialObjectType == SqlServerSpatialObjectType.Geography)
-                bbox = new Envelope(bbox.MinY, bbox.MaxY, bbox.MinX, bbox.MaxY);
-            var bboxText = Converters.WellKnownText.GeometryToWKT.Write(Factory.ToGeometry(bbox)); // "";   
-            //string whereClause = GeometryColumn + ".STIntersects(geometry::STGeomFromText('" + bboxText + "', " + SRID + ")" + MakeValidString + ") = 1";   
-            string whereClause = String.Format("{0}{1}.STIntersects({4}::STGeomFromText('{2}', {3})) = 1",
-                GeometryColumn, MakeValidString, bboxText, SRID, _spatialObject);
-            return whereClause; // strBbox;   
-        }
-
-        /// <summary>   
-        /// Returns the features that intersects with 'geom'   
-        /// </summary>   
-        /// <param name="geom"></param>   
-        /// <param name="ds">FeatureDataSet to fill data into</param>   
-        protected override void OnExecuteIntersectionQuery(IGeometry geom, FeatureDataSet ds)
-        {
-            using (var conn = new SqlConnection(ConnectionString))
-            {
-                string strGeom = _spatialObject + "::STGeomFromText('" + geom.AsText() + "', #SRID#)";
-
-                strGeom = strGeom.Replace("#SRID#", SRID > 0 ? SRID.ToString(CultureInfo.InvariantCulture) : "0");
-                strGeom = GeometryColumn + ".STIntersects(" + strGeom + ") = 1";
-
-                string strSql = "SELECT g.* , g." + GeometryColumn + ".STAsBinary() As sharpmap_tempgeometry FROM " +
-                                QualifiedTable + " g " + BuildTableHints() + " WHERE ";
-
-                if (!String.IsNullOrEmpty(_definitionQuery))
-                    strSql += DefinitionQuery + " AND ";
-
-                strSql += strGeom;
-
-                string extraOptions = GetExtraOptions();
-                if (!string.IsNullOrEmpty(extraOptions))
-                    strSql += " " + extraOptions;
-
-
-                using (var adapter = new SqlDataAdapter(strSql, conn))
-                {
-                    conn.Open();
-                    adapter.Fill(ds);
-                    conn.Close();
-                    if (ds.Tables.Count > 0)
-                    {
-                        var fdt = new FeatureDataTable(ds.Tables[0]);
-                        foreach (System.Data.DataColumn col in ds.Tables[0].Columns)
-                            if (col.ColumnName != GeometryColumn && col.ColumnName != "sharpmap_tempgeometry")
-                                fdt.Columns.Add(col.ColumnName, col.DataType, col.Expression);
-                        foreach (System.Data.DataRow dr in ds.Tables[0].Rows)
-                        {
-                            FeatureDataRow fdr = fdt.NewRow();
-                            foreach (System.Data.DataColumn col in ds.Tables[0].Columns)
-                                if (col.ColumnName != GeometryColumn && col.ColumnName != "sharpmap_tempgeometry")
-                                    fdr[col.ColumnName] = dr[col];
-                            var tmpGeom =
-                                Converters.WellKnownBinary.GeometryFromWKB.Parse((byte[]) dr["sharpmap_tempgeometry"],
-                                    Factory);
-                            if (tmpGeom != null && _spatialObjectType == SqlServerSpatialObjectType.Geography)
-                            {
-                                FlipXY(tmpGeom);
-                                tmpGeom.GeometryChanged();
-                            }
-                            fdr.Geometry = tmpGeom;
-                            fdt.AddRow(fdr);
-                        }
-                        ds.Tables.Add(fdt);
-                    }
-                }
-            }
-        }
-
-        /*
-       /// <summary>   
-       /// Convert WellKnownText to linestrings   
-       /// </summary>   
-       /// <param name="wkt"></param>   
-       /// <returns></returns>   
-       private LineString WktToLineString(string wkt)   
-       {   
-           LineString line = new LineString();   
-           wkt = wkt.Substring(wkt.LastIndexOf('(') + 1).Split(')')[0];   
-           string[] strPoints = wkt.Split(',');   
-           foreach (string strPoint in strPoints)   
-           {   
-               string[] coord = strPoint.Split(' ');   
-               line.Vertices.Add(new Point(double.Parse(coord[0], Map.NumberFormatEnUs), double.Parse(coord[1], Map.NumberFormatEnUs)));   
-           }   
-           return line;   
-       }
-        */
-
-        /// <summary>   
-        /// Returns the number of features in the dataset   
-        /// </summary>   
-        /// <returns>number of features</returns>   
-        public override int GetFeatureCount()
-        {
-            int count;
-            using (var conn = new SqlConnection(ConnectionString))
-            {
-                var strSql = "SELECT COUNT(*) FROM " + QualifiedTable;
-                if (!String.IsNullOrEmpty(_definitionQuery))
-                    strSql += " WHERE " + DefinitionQuery;
-                using (var command = new SqlCommand(strSql, conn))
-                {
-                    conn.Open();
-                    count = (int) command.ExecuteScalar();
-                    conn.Close();
-                }
-            }
-            return count;
-        }
-
-        #region IProvider Members   
-
-        private string _definitionQuery;
-
-        /// <summary>   
-        /// Definition query used for limiting dataset   
-        /// </summary>   
-        public string DefinitionQuery
-        {
-            get { return _definitionQuery; }
-            set { _definitionQuery = value; }
-        }
-
-        /// <summary>   
-        /// Gets a collection of columns in the dataset   
-        /// </summary>   
-        public System.Data.DataColumnCollection Columns
-        {
-            get { throw new NotImplementedException(); }
-        }
-
-        /// <summary>   
-        /// Returns a datarow based on a RowID   
-        /// </summary>   
-        /// <param name="rowId"></param>   
-        /// <returns>datarow</returns>   
-        public override FeatureDataRow GetFeature(uint rowId)
-        {
-            using (var conn = new SqlConnection(ConnectionString))
-            {
-                string strSql = "select g.* , g." + GeometryColumn + ".STAsBinary() As sharpmap_tempgeometry from " +
-                                QualifiedTable + " g WHERE " + ObjectIdColumn + "=" + rowId + "";
-                using (var adapter = new SqlDataAdapter(strSql, conn))
-                {
-                    var ds = new System.Data.DataSet();
-                    conn.Open();
-                    adapter.Fill(ds);
-                    conn.Close();
-                    if (ds.Tables.Count > 0)
-                    {
-                        var fdt = new FeatureDataTable(ds.Tables[0]);
-                        foreach (System.Data.DataColumn col in ds.Tables[0].Columns)
-                            if (col.ColumnName != GeometryColumn && col.ColumnName != "sharpmap_tempgeometry")
-                                fdt.Columns.Add(col.ColumnName, col.DataType, col.Expression);
-                        if (ds.Tables[0].Rows.Count > 0)
-                        {
-                            System.Data.DataRow dr = ds.Tables[0].Rows[0];
-                            FeatureDataRow fdr = fdt.NewRow();
-                            foreach (System.Data.DataColumn col in ds.Tables[0].Columns)
-                                if (col.ColumnName != GeometryColumn && col.ColumnName != "sharpmap_tempgeometry")
-                                    fdr[col.ColumnName] = dr[col];
-                            var tmpGeom =
-                                Converters.WellKnownBinary.GeometryFromWKB.Parse((byte[]) dr["sharpmap_tempgeometry"],
-                                    Factory);
-                            if (tmpGeom != null && _spatialObjectType == SqlServerSpatialObjectType.Geography)
-                            {
-                                FlipXY(tmpGeom);
-                                tmpGeom.GeometryChanged();
-                            }
-                            fdr.Geometry = tmpGeom;
-                            return fdr;
-                        }
-                        return null;
-                    }
-                    return null;
-                }
-            }
-        }
-
-        /// <summary>   
-        /// Boundingbox of dataset   
-        /// </summary>   
-        /// <returns>boundingbox</returns>   
-        public override Envelope GetExtents()
-        {
-            using (var conn = new SqlConnection(ConnectionString))
-            {
-                conn.Open();
-                string sql;
-                switch (_extentsMode)
-                {
-                    case SqlServer2008ExtentsMode.SpatialIndex:
-                        sql =
-                            "select bounding_box_xmin,bounding_box_xmax,bounding_box_ymin,bounding_box_ymax from sys.spatial_index_tessellations where object_id  = (select object_id from sys.tables where name = '" +
-                            _table + "' and type_desc = 'USER_TABLE')";
-
-                        using (var command = new SqlCommand(sql, conn))
-                        {
-                            //Geometry geom = null;   
-                            using (var dr = command.ExecuteReader())
-                            {
-                                if (dr.Read())
-                                {
-                                    return new Envelope(
-                                        Convert.ToDouble(dr["bounding_box_xmin"]),
-                                        Convert.ToDouble(dr["bounding_box_xmax"]),
-                                        Convert.ToDouble(dr["bounding_box_ymin"]),
-                                        Convert.ToDouble(dr["bounding_box_ymax"]));
-                                }
-                            }
-                        }
-                        break;
-
-                    case SqlServer2008ExtentsMode.QueryIndividualFeatures:
-
-                        if (_spatialObjectType == SqlServerSpatialObjectType.Geography)
-                        {
-                            // The geography datatype does not have the STEnvelope method. If using SQL2012, EnvelopeAggregate provides an alternative
-                            throw new NotSupportedException("STEnvelope does not work with geography!");
-                        }
-
-                        //string strSQL = "SELECT g." + GeometryColumn + ".STEnvelope().STAsText() FROM " + Table + " g ";   
-                        sql = String.Format("SELECT g.{0}{1}.STEnvelope().STAsText() FROM {2} g ",
-                            GeometryColumn, MakeValidString, QualifiedTable);
-
-                        if (!String.IsNullOrEmpty(_definitionQuery))
-                            sql += " WHERE " + DefinitionQuery;
-
-                        using (var command = new SqlCommand(sql, conn))
-                        {
-                            var bx = new Envelope();
-                            using (var dr = command.ExecuteReader())
-                            {
-                                while (dr.Read())
-                                {
-                                    var wkt = dr.GetString(0); //[GeometryColumn];   
-                                    var g = Converters.WellKnownText.GeometryFromWKT.Parse(wkt);
-                                    bx.ExpandToInclude(g.EnvelopeInternal);
-                                }
-                            }
-                            return bx;
-                        }
-
-                    case SqlServer2008ExtentsMode.EnvelopeAggregate:
-                        sql = String.Format("SELECT {3}::EnvelopeAggregate(g.{0}{1}).STAsText() FROM {2} g ",
-                            GeometryColumn, MakeValidString, QualifiedTable, _spatialObject);
-
-                        if (!String.IsNullOrEmpty(_definitionQuery))
-                            sql += " WHERE " + DefinitionQuery;
-                        using (var command = new SqlCommand(sql, conn))
-                        {
-                            using (var dr = command.ExecuteReader())
-                            {
-                                if (dr.Read())
-                                {
-                                    var wkt = dr.GetString(0);
-                                    var g = Converters.WellKnownText.GeometryFromWKT.Parse(wkt);
-                                    if (_spatialObjectType == SqlServerSpatialObjectType.Geography)
-                                    {
-                                        FlipXY(g);
-                                        g.GeometryChanged();
-                                    }
-                                    return g.EnvelopeInternal;
-                                }
-                            }
-                        }
-                        break;
-                }
-            }
-            throw new InvalidOperationException();
-        }
-
-        #endregion
-
-        #region IProvider Members   
-
-        /// <summary>   
-        /// Returns all features with the view box   
-        /// </summary>   
-        /// <param name="bbox">view box</param>   
-        /// <param name="ds">FeatureDataSet to fill data into</param>   
-        public override void ExecuteIntersectionQuery(Envelope bbox, FeatureDataSet ds)
-        {
-            //List<Geometry> features = new List<Geometry>();   
-            using (var conn = new SqlConnection(ConnectionString))
-            {
-                //Get bounding box string   
-                string strBbox = GetBoxFilterStr(bbox);
-
-                //string strSQL = "SELECT g.*, g." + GeometryColumn + ".STAsBinary() AS sharpmap_tempgeometry ";   
-                string strSql = String.Format(
-                    "SELECT g.*, g.{0}{1}.STAsBinary() AS sharpmap_tempgeometry FROM {2} g {3} WHERE ",
-                    GeometryColumn, MakeValidString, QualifiedTable, BuildTableHints());
-
-                if (!String.IsNullOrEmpty(_definitionQuery))
-                    strSql += DefinitionQuery + " AND ";
-
-                strSql += strBbox;
-
-                string extraOptions = GetExtraOptions();
-                if (!string.IsNullOrEmpty(extraOptions))
-                    strSql += " " + extraOptions;
-
-
-                using (var adapter = new SqlDataAdapter(strSql, conn))
-                {
-                    conn.Open();
-                    var ds2 = new System.Data.DataSet();
-                    adapter.Fill(ds2);
-                    conn.Close();
-                    if (ds2.Tables.Count > 0)
-                    {
-                        var fdt = new FeatureDataTable(ds2.Tables[0]);
-                        foreach (System.Data.DataColumn col in ds2.Tables[0].Columns)
-                            if (col.ColumnName != GeometryColumn && col.ColumnName != "sharpmap_tempgeometry")
-                                fdt.Columns.Add(col.ColumnName, col.DataType, col.Expression);
-                        foreach (System.Data.DataRow dr in ds2.Tables[0].Rows)
-                        {
-                            FeatureDataRow fdr = fdt.NewRow();
-                            foreach (System.Data.DataColumn col in ds2.Tables[0].Columns)
-                                if (col.ColumnName != GeometryColumn && col.ColumnName != "sharpmap_tempgeometry")
-                                    fdr[col.ColumnName] = dr[col];
-                            fdr.Geometry =
-                                Converters.WellKnownBinary.GeometryFromWKB.Parse((byte[]) dr["sharpmap_tempgeometry"],
-                                    Factory);
-                            fdt.AddRow(fdr);
-                        }
-                        ds.Tables.Add(fdt);
-                    }
-                }
-            }
-        }
-
-        #endregion
-
-        private bool _forceSeekHint;
-
-        /// <summary>
-        /// When <code>true</code>, uses the FORCESEEK table hint.
-        /// </summary>   
-        public bool ForceSeekHint
-        {
-            get { return _forceSeekHint; }
-            set { _forceSeekHint = value; }
-        }
-
-        private bool _noLockHint;
-
-        /// <summary>
-        /// When <code>true</code>, uses the NOLOCK table hint.
-        /// </summary>   
-        public bool NoLockHint
-        {
-            get { return _noLockHint; }
-            set { _noLockHint = value; }
-        }
-
-        private string _forceIndex;
-
-        /// <summary>
-        /// When set, forces use of the specified index
-        /// </summary>   
-        public string ForceIndex
-        {
-            get { return _forceIndex; }
-            set { _forceIndex = value; }
         }
 
         /// <summary>
@@ -924,5 +466,462 @@ namespace SharpMap.Data.Providers
             }
             return string.Empty;
         }
+       
+        /// <summary>   
+        /// Returns geometries within the specified bounding box   
+        /// </summary>   
+        /// <param name="bbox"></param>   
+        /// <returns></returns>   
+        public override Collection<IGeometry> GetGeometriesInView(Envelope bbox)
+        {
+            var features = new Collection<IGeometry>();
+            using (var conn = new SqlConnection(ConnectionString))
+            {
+                var sb = new StringBuilder($"SELECT {GeometryColumn}{GetMakeValidString()}.STAsBinary() FROM {QualifiedTable} {BuildTableHints()} WHERE ");
+
+                if (!String.IsNullOrEmpty(DefinitionQuery))
+                    sb.Append($"{DefinitionQuery} AND ");
+
+                if (!ValidateGeometries ||
+                    (SpatialObjectType == SqlServerSpatialObjectType.Geometry && (ForceSeekHint || !string.IsNullOrEmpty(ForceIndex))))
+                    // Geometry sensitive to invalid geometries, and BuildTableHints (ForceSeekHint, ForceIndex) do not suppport .MakeValid() in GetBoxFilterStr
+                    sb.Append($"{GeometryColumn}.STIsValid() = 1 AND ");
+
+                sb.Append($"{GetBoxFilterStr(bbox)} {GetExtraOptions()}");
+
+                if (_logger.IsDebugEnabled) _logger.DebugFormat("GetGeometriesInView {0}", sb.ToString());
+
+                using (var command = new SqlCommand(sb.ToString(), conn))
+                {
+                    conn.Open();
+                    using (SqlDataReader dr = command.ExecuteReader())
+                    {
+                        var wkbReader = new NetTopologySuite.IO.WKBReader(GeometryServiceProvider.Instance);
+                        while (dr.Read())
+                        {
+                            if (dr[0] != DBNull.Value)
+                            {
+                                var geom = wkbReader.Read((byte[])dr[0]);
+                                if (geom != null)
+                                    features.Add(geom);
+                            }
+                        }
+                    }
+                }
+            }
+            return features;
+        }
+
+        /// <summary>   
+        /// Returns the geometry corresponding to the Object ID   
+        /// </summary>   
+        /// <param name="oid">Object ID</param>   
+        /// <returns>geometry</returns>   
+        public override IGeometry GetGeometryByID(uint oid)
+        {
+            IGeometry geom = null;
+            using (var conn = new SqlConnection(ConnectionString))
+            {
+                string strSql = $"SELECT {GeometryColumn}{GetMakeValidString()}.STAsBinary() FROM {QualifiedTable} " +
+                                $"WHERE {ObjectIdColumn} = {oid}";
+
+                if (_logger.IsDebugEnabled) _logger.DebugFormat("GetGeometryByID {0}", strSql);
+
+                using (var command = new SqlCommand(strSql, conn))
+                {
+                    conn.Open();
+                    using (SqlDataReader dr = command.ExecuteReader())
+                    {
+                        var wkbReader = new NetTopologySuite.IO.WKBReader(GeometryServiceProvider.Instance);
+                        while (dr.Read())
+                        {
+                            if (dr[0] != DBNull.Value)
+                                geom = wkbReader.Read((byte[])dr[0]);
+                        }
+                    }
+                }
+            }
+            return geom;
+        }
+
+        /// <summary>   
+        /// Returns geometry Object IDs whose bounding box intersects 'bbox'   
+        /// </summary>   
+        /// <param name="bbox"></param>   
+        /// <returns></returns>   
+        public override Collection<uint> GetObjectIDsInView(Envelope bbox)
+        {
+            var objectlist = new Collection<uint>();
+            using (var conn = new SqlConnection(ConnectionString))
+            {
+                var sb = new StringBuilder($"SELECT {ObjectIdColumn} FROM {QualifiedTable} {BuildTableHints()} WHERE ");
+
+                if (!String.IsNullOrEmpty(DefinitionQuery))
+                    sb.Append(DefinitionQuery + " AND ");
+
+                if (!ValidateGeometries ||
+                    (SpatialObjectType == SqlServerSpatialObjectType.Geometry && (ForceSeekHint || !string.IsNullOrEmpty(ForceIndex))))
+                    // Geometry sensitive to invalid geometries, and BuildTableHints (ForceSeekHint, ForceIndex) do not suppport .MakeValid() in GetBoxFilterStr
+                    sb.Append($"{GeometryColumn}.STIsValid() = 1 AND ");
+
+                sb.Append($"{GetBoxFilterStr(bbox)} {GetExtraOptions()}");
+
+                if (_logger.IsDebugEnabled) _logger.DebugFormat("GetObjectIDsInView {0}", sb.ToString());
+
+                using (var command = new SqlCommand(sb.ToString(), conn))
+                {
+                    conn.Open();
+                    using (var dr = command.ExecuteReader())
+                    {
+                        while (dr.Read())
+                        {
+                            if (dr[0] != DBNull.Value)
+                            {
+                                uint id = Convert.ToUInt32(dr[0]);
+                                objectlist.Add(id);
+                            }
+                        }
+                    }
+                }
+            }
+            return objectlist;
+        }
+
+        /// <summary>   
+        /// Returns the box filter string needed in SQL query   
+        /// </summary>   
+        /// <param name="bbox"></param>   
+        /// <returns></returns>   
+        protected string GetBoxFilterStr(Envelope bbox)
+        {
+            if (SpatialObjectType == SqlServerSpatialObjectType.Geography)
+                bbox = bbox.Intersection(GeogMaxExtents);
+
+            var bboxText = Factory.ToGeometry(bbox).ToString();
+
+            // .MakeValid() in WHERE clause is not compatible certain BuildHints, resulting in error:
+            // The query processor could not produce a query plan for a query with a spatial index hint.  Reason: Could not find required binary spatial method in a condition.  Try removing the index hints or removing SET FORCEPLAN.
+            var makeValid = (ForceSeekHint || !string.IsNullOrEmpty(ForceIndex)) ? "" : GetMakeValidString(); //".MakeValid()"
+
+            // STGeomFromText applicable to both Geometry AND Geography (ie x,y ordinate order) 
+            return $"{GeometryColumn}{makeValid}.STIntersects({_spatialTypeString}::STGeomFromText('{bboxText}', {SRID}){_reorientObject})=1";
+        }
+
+        /// <summary>   
+        /// Returns the features that intersects with 'geom'   
+        /// </summary>   
+        /// <param name="geom"></param>   
+        /// <param name="ds">FeatureDataSet to fill data into</param>   
+        protected override void OnExecuteIntersectionQuery(IGeometry geom, FeatureDataSet fds)
+        {
+            if (SpatialObjectType == SqlServerSpatialObjectType.Geography)
+            {
+                // Define Ring with Clockwise orientation, to be reoriented in query
+                var maxExentsPoly = Factory.CreatePolygon(new Coordinate[] {
+                            GeogMaxExtents.BottomLeft(), GeogMaxExtents.TopLeft(),
+                            GeogMaxExtents.TopRight(), GeogMaxExtents.BottomRight(),
+                            GeogMaxExtents.BottomLeft()});
+                geom = geom.Intersection(maxExentsPoly);
+            }
+
+            var sb = new StringBuilder($"SELECT {GetAttributeColumnNames()}, {GeometryColumn}{GetMakeValidString()}.STAsBinary() As {SharpMapWkb} " +
+                                       $"FROM {QualifiedTable} {BuildTableHints()} WHERE ");
+
+            if (!ValidateGeometries ||
+                (SpatialObjectType == SqlServerSpatialObjectType.Geometry && (ForceSeekHint || !string.IsNullOrEmpty(ForceIndex))))
+                // Geometry sensitive to invalid geometries, and BuildTableHints (ForceSeekHint, ForceIndex) do not suppport .MakeValid() in GetBoxFilterStr
+                sb.Append($"{GeometryColumn}.STIsValid() = 1 AND ");
+
+            if (!String.IsNullOrEmpty(DefinitionQuery))
+                sb.Append($"{DefinitionQuery} AND ");
+
+            // .MakeValid() in WHERE clause is not compatible certain BuildHints, resulting in error:
+            // The query processor could not produce a query plan for a query with a spatial index hint.  Reason: Could not find required binary spatial method in a condition.  Try removing the index hints or removing SET FORCEPLAN.
+            var makeValid = (ForceSeekHint || !string.IsNullOrEmpty(ForceIndex)) ? "" : GetMakeValidString(); //".MakeValid()"
+
+            sb.Append($"{GeometryColumn}{makeValid}.STIntersects({_spatialTypeString}::STGeomFromText('{geom.AsText()}', {SRID}){_reorientObject})=1 {GetExtraOptions()}");
+
+            if (_logger.IsDebugEnabled) _logger.DebugFormat("OnExecuteIntersectionQuery {0}", sb.ToString());
+
+            ExecuteIntersectionQuery(sb.ToString(), fds);
+        }
+
+        /// <summary>   
+        /// Returns the number of records in the dataset (including NULL, EMPTY, and Invalid geometries)
+        /// </summary>   
+        /// <returns>number of features</returns>   
+        public override int GetFeatureCount()
+        {
+            int count;
+            using (var conn = new SqlConnection(ConnectionString))
+            {
+                var strSql = $"SELECT COUNT({ObjectIdColumn}) FROM {QualifiedTable}";
+
+                if (!String.IsNullOrEmpty(DefinitionQuery))
+                    strSql += $" WHERE {DefinitionQuery}";
+
+                using (var command = new SqlCommand(strSql, conn))
+                {
+                    conn.Open();
+                    count = (int)command.ExecuteScalar();
+                }
+            }
+            return count;
+        }
+
+        #region IProvider Members   
+
+        /// <summary>   
+        /// Definition query used for limiting dataset   
+        /// </summary>   
+        public string DefinitionQuery { get; set; }
+
+        /// <summary>   
+        /// Gets a collection of columns in the dataset   
+        /// </summary>   
+        public System.Data.DataColumnCollection Columns
+        {
+            get { throw new NotImplementedException(); }
+        }
+
+        /// <summary>   
+        /// Returns a datarow based on a RowID   
+        /// </summary>   
+        /// <param name="rowId"></param>   
+        /// <returns>datarow</returns>   
+        public override FeatureDataRow GetFeature(uint rowId)
+        {
+            using (var conn = new SqlConnection(ConnectionString))
+            {
+                var strSql = $"SELECT {GetAttributeColumnNames()}, {GeometryColumn}{GetMakeValidString()}.STAsBinary() As {SharpMapWkb} " +
+                             $"FROM {QualifiedTable} WHERE {ObjectIdColumn}={rowId}";
+
+                if (_logger.IsDebugEnabled) _logger.DebugFormat("GetFeature {0}", strSql);
+
+                using (var adapter = new SqlDataAdapter(strSql, conn))
+                {
+                    var ds = new System.Data.DataSet();
+                    conn.Open();
+                    adapter.Fill(ds);
+                    conn.Close();
+                    if (ds.Tables.Count > 0)
+                    {
+                        var fdt = new FeatureDataTable(ds.Tables[0]);
+                        foreach (System.Data.DataColumn col in ds.Tables[0].Columns)
+                            if (col.ColumnName != GeometryColumn && col.ColumnName != SharpMapWkb)
+                                fdt.Columns.Add(col.ColumnName, col.DataType, col.Expression);
+                        if (ds.Tables[0].Rows.Count > 0)
+                        {
+                            System.Data.DataRow dr = ds.Tables[0].Rows[0];
+                            FeatureDataRow fdr = fdt.NewRow();
+                            foreach (System.Data.DataColumn col in ds.Tables[0].Columns)
+                                if (col.ColumnName != GeometryColumn && col.ColumnName != SharpMapWkb)
+                                    fdr[col.ColumnName] = dr[col];
+
+                            if (dr[SharpMapWkb] != null && dr[SharpMapWkb] != DBNull.Value)
+                            {
+                                var wkbReader = new NetTopologySuite.IO.WKBReader(GeometryServiceProvider.Instance);
+                                fdr.Geometry = wkbReader.Read((byte[])dr[SharpMapWkb]);
+                            }
+
+                            return fdr;
+                        }
+                        return null;
+                    }
+                    return null;
+                }
+            }
+        }
+
+        /// <summary>   
+        /// Boundingbox of dataset   
+        /// </summary>   
+        /// <returns>boundingbox</returns>   
+        public override Envelope GetExtents()
+        {
+            using (var conn = new SqlConnection(ConnectionString))
+            {
+                conn.Open();
+                var wkbReader = new NetTopologySuite.IO.WKBReader(GeometryServiceProvider.Instance);
+                string sql;
+                switch (ExtentsMode)
+                {
+                    case SqlServer2008ExtentsMode.SpatialIndex:
+                        // Applicable to GEOMETRY only. Reads extents of Spatial Index GRID (not feature table) and DefinitionQuery is NOT applied.
+                        sql = "SELECT bounding_box_xmin, bounding_box_xmax, bounding_box_ymin, bounding_box_ymax " +
+                              "FROM sys.spatial_index_tessellations " +
+                              $"WHERE object_id = OBJECT_ID('{QualifiedTable}')";
+
+                        if (_logger.IsDebugEnabled) _logger.DebugFormat("GetExtents {0} {1}", ExtentsMode, sql);
+
+                        using (var command = new SqlCommand(sql, conn))
+                        {
+                            //Geometry geom = null;   
+                            using (var dr = command.ExecuteReader())
+                            {
+                                if (dr.Read())
+                                {
+                                    return new Envelope(
+                                        Convert.ToDouble(dr["bounding_box_xmin"]),
+                                        Convert.ToDouble(dr["bounding_box_xmax"]),
+                                        Convert.ToDouble(dr["bounding_box_ymin"]),
+                                        Convert.ToDouble(dr["bounding_box_ymax"]));
+                                }
+                            }
+                        }
+                        break;
+
+                    case SqlServer2008ExtentsMode.QueryIndividualFeatures:
+
+                        // MUST call MakeValid regardless of ValidateGeometries
+                        if (SpatialObjectType == SqlServerSpatialObjectType.Geometry)
+                            // GEOMETRY returns 1 row for each feature
+                            sql = $"SELECT {GeometryColumn}.MakeValid().STEnvelope().STAsBinary() FROM {QualifiedTable}";
+                        else
+                            // GEOGRAPHY returns single row with multi-geometry containing all features
+                            sql = $"SELECT {_spatialTypeString}::CollectionAggregate({GeometryColumn}.MakeValid()).STAsBinary() FROM {QualifiedTable}";
+
+                        if (!String.IsNullOrEmpty(DefinitionQuery))
+                            sql += $" WHERE {DefinitionQuery}";
+
+                        if (!ValidateGeometries)
+                        {
+                            // explicitly exclude any Invalid geoms                             
+                            sql += String.IsNullOrEmpty(DefinitionQuery) ? " WHERE " : " AND ";
+                            sql += $"{GeometryColumn}.STIsValid()=1";
+                        }
+
+                        if (_logger.IsDebugEnabled) _logger.DebugFormat("GetExtents {0} {1}", ExtentsMode, sql);
+
+                        using (var command = new SqlCommand(sql, conn))
+                        {
+                            var bx = new Envelope();
+                            using (var dr = command.ExecuteReader())
+                            {
+                                while (dr.Read())
+                                {
+                                    if (dr[0] != DBNull.Value)
+                                    {
+                                        var g = wkbReader.Read((byte[])dr[0]);
+                                        bx.ExpandToInclude(g.EnvelopeInternal);
+                                    }
+                                }
+                            }
+                            return bx;
+                        }
+
+                    case SqlServer2008ExtentsMode.EnvelopeAggregate:
+
+                        if (SpatialObjectType == SqlServerSpatialObjectType.Geometry)
+                            // GEOMETRY EnvelopeAggregate returns RECTILINEAR polygon.
+                            sql = $"SELECT {_spatialTypeString}::EnvelopeAggregate({GeometryColumn}{GetMakeValidString()}).STAsBinary() FROM {QualifiedTable}";
+                        else
+                            // GEOGRAPHY EnvelopeAggregate returns CURVED polygon (not supported by SharpMap), 
+                            // so use ConvextHullAggregate to return POLYGON and FORCE .MakeValid
+                            sql = $"SELECT {_spatialTypeString}::ConvexHullAggregate({GeometryColumn}{GetMakeValidString()}).STAsBinary() FROM {QualifiedTable}";
+
+                        if (!String.IsNullOrEmpty(DefinitionQuery))
+                            sql += $" WHERE {DefinitionQuery}";
+
+                        // Note Geometry limitiation - ALWAYS have to filter Invalid geometries (otherwise EnvelopeAggregate will return NULL)
+                        if (!ValidateGeometries || SpatialObjectType == SqlServerSpatialObjectType.Geometry)
+                        {
+                            // explicitly exclude any Invalid geoms                             
+                            sql += String.IsNullOrEmpty(DefinitionQuery) ? " WHERE " : " AND ";
+                            sql += $"{GeometryColumn}.STIsValid()=1";
+                        }
+
+                        if (_logger.IsDebugEnabled) _logger.DebugFormat("GetExtents {0} {1}", ExtentsMode, sql);
+
+                        using (var command = new SqlCommand(sql, conn))
+                        {
+                            using (var dr = command.ExecuteReader())
+                            {
+                                if (dr.Read())
+                                {
+                                    if (dr[0] != DBNull.Value)
+                                    {
+                                        var g = wkbReader.Read((byte[])dr[0]);
+                                        return g.EnvelopeInternal;
+                                    }
+                                }
+                            }
+                        }
+                        break;
+                }
+            }
+            throw new InvalidOperationException();
+        }
+
+        #endregion
+
+        #region IProvider Members   
+
+        /// <summary>   
+        /// Returns all features with the view box   
+        /// </summary>   
+        /// <param name="bbox">view box</param>   
+        /// <param name="ds">FeatureDataSet to fill data into</param>   
+        public override void ExecuteIntersectionQuery(Envelope bbox, FeatureDataSet fds)
+        {
+            var sb = new StringBuilder($"SELECT {GetAttributeColumnNames()}, {GeometryColumn}{GetMakeValidString()}.STAsBinary() AS {SharpMapWkb} " +
+                                       $"FROM {QualifiedTable} {BuildTableHints()} WHERE ");
+
+            if (!String.IsNullOrEmpty(DefinitionQuery))
+                sb.Append($"{DefinitionQuery} AND ");
+
+            if (!ValidateGeometries ||
+                (SpatialObjectType == SqlServerSpatialObjectType.Geometry && (ForceSeekHint || !string.IsNullOrEmpty(ForceIndex))))
+                // Geometry sensitive to invalid geometries, and BuildTableHints (ForceSeekHint, ForceIndex) do not suppport .MakeValid() in GetBoxFilterStr
+                sb.Append($"{GeometryColumn}.STIsValid() = 1 AND ");
+
+            sb.Append($"{GetBoxFilterStr(bbox)} {GetExtraOptions()}");
+
+            if (_logger.IsDebugEnabled) _logger.DebugFormat("ExecuteIntersectionQuery {0}", sb.ToString());
+
+            ExecuteIntersectionQuery(sb.ToString(), fds);
+        }
+
+        #endregion
+
+        protected virtual void ExecuteIntersectionQuery(string sql, FeatureDataSet fds)
+        {
+            using (var conn = new SqlConnection(ConnectionString))
+            {
+                conn.Open();
+
+                using (var adapter = new SqlDataAdapter(sql, conn))
+                {
+                    var ds = new System.Data.DataSet();
+                    adapter.Fill(ds);
+                    conn.Close();
+
+                    if (ds.Tables.Count > 0)
+                    {
+                        var fdt = new FeatureDataTable(ds.Tables[0]);
+                        foreach (System.Data.DataColumn col in ds.Tables[0].Columns)
+                            if (col.ColumnName != GeometryColumn && col.ColumnName != SharpMapWkb)
+                                fdt.Columns.Add(col.ColumnName, col.DataType, col.Expression);
+
+                        var wkbReader = new NetTopologySuite.IO.WKBReader(GeometryServiceProvider.Instance);
+                        foreach (System.Data.DataRow dr in ds.Tables[0].Rows)
+                        {
+                            FeatureDataRow fdr = fdt.NewRow();
+                            foreach (System.Data.DataColumn col in ds.Tables[0].Columns)
+                                if (col.ColumnName != GeometryColumn && col.ColumnName != SharpMapWkb)
+                                    fdr[col.ColumnName] = dr[col];
+
+                            if (dr[SharpMapWkb] != DBNull.Value)
+                                fdr.Geometry = wkbReader.Read((byte[])dr[SharpMapWkb]);
+
+                            fdt.AddRow(fdr);
+                        }
+                        fds.Tables.Add(fdt);
+                    }
+                }
+            }
+
+        }
+
     }
 }

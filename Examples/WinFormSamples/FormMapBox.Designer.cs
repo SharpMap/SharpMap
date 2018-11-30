@@ -10,33 +10,33 @@ using WinFormSamples.Samples;
 namespace WinFormSamples
 {
     partial class FormMapBox
-  {
-    /// <summary>
-    /// Required designer variable.
-    /// </summary>
-    private System.ComponentModel.IContainer components = null;
-
-    /// <summary>
-    /// Clean up any resources being used.
-    /// </summary>
-    /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
-    protected override void Dispose(bool disposing)
     {
-      if (disposing && (components != null))
-      {
-        components.Dispose();
-      }
-      base.Dispose(disposing);
-    }
+        /// <summary>
+        /// Required designer variable.
+        /// </summary>
+        private System.ComponentModel.IContainer components = null;
 
-    #region Windows Form Designer generated code
+        /// <summary>
+        /// Clean up any resources being used.
+        /// </summary>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing && (components != null))
+            {
+                components.Dispose();
+            }
+            base.Dispose(disposing);
+        }
 
-    /// <summary>
-    /// Required method for Designer support - do not modify
-    /// the contents of this method with the code editor.
-    /// </summary>
-    private void InitializeComponent()
-    {
+        #region Windows Form Designer generated code
+
+        /// <summary>
+        /// Required method for Designer support - do not modify
+        /// the contents of this method with the code editor.
+        /// </summary>
+        private void InitializeComponent()
+        {
             this.components = new System.ComponentModel.Container();
             this.scMain = new System.Windows.Forms.SplitContainer();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
@@ -61,6 +61,7 @@ namespace WinFormSamples
             this.radioButton7 = new System.Windows.Forms.RadioButton();
             this.radioButton8 = new System.Windows.Forms.RadioButton();
             this.radioButton9 = new System.Windows.Forms.RadioButton();
+            this.radioButton12 = new System.Windows.Forms.RadioButton();
             this.radioButton10 = new System.Windows.Forms.RadioButton();
             this.radioButton11 = new System.Windows.Forms.RadioButton();
             this.btnCreateTiles = new System.Windows.Forms.Button();
@@ -94,8 +95,8 @@ namespace WinFormSamples
             // scMain.Panel2
             // 
             this.scMain.Panel2.Controls.Add(this.dataGridView1);
-            this.scMain.Size = new System.Drawing.Size(892, 635);
-            this.scMain.SplitterDistance = 449;
+            this.scMain.Size = new System.Drawing.Size(892, 648);
+            this.scMain.SplitterDistance = 458;
             this.scMain.TabIndex = 4;
             // 
             // dataGridView1
@@ -104,7 +105,7 @@ namespace WinFormSamples
             this.dataGridView1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridView1.Location = new System.Drawing.Point(0, 0);
             this.dataGridView1.Name = "dataGridView1";
-            this.dataGridView1.Size = new System.Drawing.Size(892, 182);
+            this.dataGridView1.Size = new System.Drawing.Size(892, 186);
             this.dataGridView1.TabIndex = 4;
             // 
             // scMapProp
@@ -124,14 +125,14 @@ namespace WinFormSamples
             // scMapProp.Panel2
             // 
             this.scMapProp.Panel2.Controls.Add(this.pgMap);
-            this.scMapProp.Size = new System.Drawing.Size(892, 449);
+            this.scMapProp.Size = new System.Drawing.Size(892, 462);
             this.scMapProp.SplitterDistance = 651;
             this.scMapProp.TabIndex = 2;
             // 
             // tbAngle
             // 
             this.tbAngle.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.tbAngle.Location = new System.Drawing.Point(0, 404);
+            this.tbAngle.Location = new System.Drawing.Point(0, 417);
             this.tbAngle.Maximum = 180;
             this.tbAngle.Minimum = -180;
             this.tbAngle.Name = "tbAngle";
@@ -148,11 +149,11 @@ namespace WinFormSamples
             this.toolStripContainer1.ContentPanel.Controls.Add(this.btnTool2);
             this.toolStripContainer1.ContentPanel.Controls.Add(this.btnTool);
             this.toolStripContainer1.ContentPanel.Controls.Add(this.mapBox1);
-            this.toolStripContainer1.ContentPanel.Size = new System.Drawing.Size(651, 374);
+            this.toolStripContainer1.ContentPanel.Size = new System.Drawing.Size(651, 387);
             this.toolStripContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.toolStripContainer1.Location = new System.Drawing.Point(0, 0);
             this.toolStripContainer1.Name = "toolStripContainer1";
-            this.toolStripContainer1.Size = new System.Drawing.Size(651, 449);
+            this.toolStripContainer1.Size = new System.Drawing.Size(651, 462);
             this.toolStripContainer1.TabIndex = 7;
             this.toolStripContainer1.Text = "toolStripContainer1";
             // 
@@ -200,7 +201,7 @@ namespace WinFormSamples
             this.mapBox1.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(210)))), ((int)(((byte)(244)))), ((int)(((byte)(244)))), ((int)(((byte)(244)))));
             this.mapBox1.SelectionForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(244)))), ((int)(((byte)(244)))));
             this.mapBox1.ShowProgressUpdate = true;
-            this.mapBox1.Size = new System.Drawing.Size(651, 374);
+            this.mapBox1.Size = new System.Drawing.Size(651, 387);
             this.mapBox1.TabIndex = 7;
             this.mapBox1.Text = "mapBox1";
             this.mapBox1.WheelZoomMagnitude = 2D;
@@ -262,7 +263,7 @@ namespace WinFormSamples
             this.pgMap.Location = new System.Drawing.Point(0, 0);
             this.pgMap.Name = "pgMap";
             this.pgMap.SelectedObject = this.mapBox1;
-            this.pgMap.Size = new System.Drawing.Size(237, 449);
+            this.pgMap.Size = new System.Drawing.Size(237, 462);
             this.pgMap.TabIndex = 3;
             // 
             // flowLayoutPanel1
@@ -276,6 +277,7 @@ namespace WinFormSamples
             this.flowLayoutPanel1.Controls.Add(this.radioButton7);
             this.flowLayoutPanel1.Controls.Add(this.radioButton8);
             this.flowLayoutPanel1.Controls.Add(this.radioButton9);
+            this.flowLayoutPanel1.Controls.Add(this.radioButton12);
             this.flowLayoutPanel1.Controls.Add(this.radioButton10);
             this.flowLayoutPanel1.Controls.Add(this.radioButton11);
             this.flowLayoutPanel1.Controls.Add(this.btnCreateTiles);
@@ -287,7 +289,7 @@ namespace WinFormSamples
             this.flowLayoutPanel1.Margin = new System.Windows.Forms.Padding(0);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
             this.flowLayoutPanel1.Padding = new System.Windows.Forms.Padding(10, 4, 4, 4);
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(171, 635);
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(171, 648);
             this.flowLayoutPanel1.TabIndex = 5;
             // 
             // radioButton2
@@ -395,10 +397,21 @@ namespace WinFormSamples
             this.radioButton9.Click += new System.EventHandler(this.radioButton_Click);
             this.radioButton9.MouseUp += new System.Windows.Forms.MouseEventHandler(this.radioButton2_MouseUp);
             // 
+            // radioButton12
+            // 
+            this.radioButton12.AutoSize = true;
+            this.radioButton12.Location = new System.Drawing.Point(13, 214);
+            this.radioButton12.Name = "radioButton12";
+            this.radioButton12.Size = new System.Drawing.Size(71, 17);
+            this.radioButton12.TabIndex = 13;
+            this.radioButton12.Text = "SqlServer";
+            this.radioButton12.UseVisualStyleBackColor = true;
+            this.radioButton12.Click += new System.EventHandler(this.radioButton_Click);
+            // 
             // radioButton10
             // 
             this.radioButton10.AutoSize = true;
-            this.radioButton10.Location = new System.Drawing.Point(13, 214);
+            this.radioButton10.Location = new System.Drawing.Point(13, 237);
             this.radioButton10.Name = "radioButton10";
             this.radioButton10.Size = new System.Drawing.Size(105, 17);
             this.radioButton10.TabIndex = 9;
@@ -409,7 +422,7 @@ namespace WinFormSamples
             // radioButton11
             // 
             this.radioButton11.AutoSize = true;
-            this.radioButton11.Location = new System.Drawing.Point(13, 237);
+            this.radioButton11.Location = new System.Drawing.Point(13, 260);
             this.radioButton11.Name = "radioButton11";
             this.radioButton11.Size = new System.Drawing.Size(96, 17);
             this.radioButton11.TabIndex = 12;
@@ -419,7 +432,7 @@ namespace WinFormSamples
             // 
             // btnCreateTiles
             // 
-            this.btnCreateTiles.Location = new System.Drawing.Point(13, 260);
+            this.btnCreateTiles.Location = new System.Drawing.Point(13, 283);
             this.btnCreateTiles.Name = "btnCreateTiles";
             this.btnCreateTiles.Size = new System.Drawing.Size(147, 23);
             this.btnCreateTiles.TabIndex = 11;
@@ -430,7 +443,7 @@ namespace WinFormSamples
             // lvwDecorations
             // 
             this.lvwDecorations.CheckBoxes = true;
-            this.lvwDecorations.Location = new System.Drawing.Point(13, 289);
+            this.lvwDecorations.Location = new System.Drawing.Point(13, 312);
             this.lvwDecorations.MultiSelect = false;
             this.lvwDecorations.Name = "lvwDecorations";
             this.lvwDecorations.Size = new System.Drawing.Size(147, 58);
@@ -443,7 +456,7 @@ namespace WinFormSamples
             // pgMapDecoration
             // 
             this.pgMapDecoration.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.pgMapDecoration.Location = new System.Drawing.Point(15, 353);
+            this.pgMapDecoration.Location = new System.Drawing.Point(15, 376);
             this.pgMapDecoration.Name = "pgMapDecoration";
             this.pgMapDecoration.SelectedObject = this.lvwDecorations;
             this.pgMapDecoration.Size = new System.Drawing.Size(143, 262);
@@ -453,7 +466,7 @@ namespace WinFormSamples
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1066, 635);
+            this.ClientSize = new System.Drawing.Size(1066, 648);
             this.Controls.Add(this.scMapProp);
             this.Controls.Add(this.flowLayoutPanel1);
             this.Controls.Add(this.scMain);
@@ -501,14 +514,22 @@ namespace WinFormSamples
 
         #endregion
 
-    private System.Windows.Forms.SplitContainer scMain;
-    private System.Windows.Forms.DataGridView dataGridView1;
+        private System.Windows.Forms.SplitContainer scMain;
+        private System.Windows.Forms.DataGridView dataGridView1;
+        private FormSqlServerOpts formSqlServerOpts = null;
 
         private void radioButton_Click(object sender, EventArgs e)
         {
             Cursor mic = mapBox1.Cursor;
             mapBox1.Cursor = Cursors.WaitCursor;
             Cursor = Cursors.WaitCursor;
+
+            if (formSqlServerOpts != null)
+            {
+                formSqlServerOpts.Close();
+                formSqlServerOpts = null;
+            }
+
             try
             {
                 //mapImage.ActiveTool = MapImage.Tools.None;
@@ -556,7 +577,7 @@ namespace WinFormSamples
                          */
                         mapBox1.Map = TileLayerSample.InitializeMap(tbAngle.Value);
                         ((RadioButton)sender).Text = (mapBox1.Map.BackgroundLayer.Count > 0)
-                            ?((RadioButton)sender).Text = mapBox1.Map.BackgroundLayer[0].LayerName
+                            ? ((RadioButton)sender).Text = mapBox1.Map.BackgroundLayer[0].LayerName
                             : ((RadioButton)sender).Text = mapBox1.Map.Layers[0].LayerName;
                         break;
                     case "PostGis":
@@ -565,11 +586,35 @@ namespace WinFormSamples
                     case "SpatiaLite":
                         mapBox1.Map = SpatiaLiteSample.InitializeMap(tbAngle.Value);
                         break;
+                    case "SqlServer":
+                        // create empty map with BruTile basemap
+                        mapBox1.Map = SqlServerSample.InitializeMap(tbAngle.Value);
+                        // check conn string
+                        var connStrBuilder = new System.Data.SqlClient.SqlConnectionStringBuilder(Properties.Settings.Default.SqlServerConnectionString);
+                        if (string.IsNullOrEmpty(connStrBuilder.DataSource) || string.IsNullOrEmpty(connStrBuilder.InitialCatalog))
+                        {
+                            mapBox1.Refresh();
+
+                            MessageBox.Show("Requires SqlServer connection string to be defined (Project / Settings)\n\n" + 
+                                "Also, if project folder SqlServerTypes\\x64 and \\x86 are empty, then force reinstall of NuGet package:\n\n" +
+                                "PM> Update-Package Microsoft.SqlServer.Types -ProjectName Examples\\WinFormSamples -reinstall -ignoreDependencies","Sql Server",
+                                MessageBoxButtons.OK,MessageBoxIcon.Information);
+
+                            return;
+                        }
+                        // now show SqlServer dialog
+                        formSqlServerOpts = new FormSqlServerOpts()
+                        {
+                            MapBox = mapBox1,
+                            ConnectionString = connStrBuilder.ToString()
+                        };
+                        formSqlServerOpts.Show(this);
+                        break;
                     case "Oracle":
                         mapBox1.Map = OracleSample.InitializeMap(tbAngle.Value);
                         break;
                     case "shp_TextOnPath":
-                        mapBox1.Map=TextOnPathSample.InitializeMapOrig(tbAngle.Value);
+                        mapBox1.Map = TextOnPathSample.InitializeMapOrig(tbAngle.Value);
                         break;
                     case "GdiImageLayer":
                         mapBox1.Map = GdiImageLayerSample.InitializeMap(tbAngle.Value);
@@ -588,7 +633,7 @@ namespace WinFormSamples
                         mapBox1.Map.Decorations.Add(md);
                     }
                 }
-                
+
                 mapBox1.Map.Size = Size;
                 mapBox1.Refresh();
             }
@@ -633,7 +678,7 @@ namespace WinFormSamples
 
         private void tbAngle_Scroll(object sender, EventArgs e)
         {
-            System.Drawing.Drawing2D.Matrix matrix = new Matrix(); 
+            System.Drawing.Drawing2D.Matrix matrix = new Matrix();
             if (tbAngle.Value != 0f)
                 matrix.RotateAt(tbAngle.Value, new PointF(mapBox1.Width * 0.5f, mapBox1.Height * 0.5f));
 
@@ -647,7 +692,7 @@ namespace WinFormSamples
         private void radioButton2_MouseUp(object sender, MouseEventArgs e)
         {
             var rb = sender as RadioButton;
-            if (rb== null) return;
+            if (rb == null) return;
 
             if (e.Button != MouseButtons.Right) return;
 
@@ -671,7 +716,7 @@ namespace WinFormSamples
             if (map == null)
                 return;
 
-            
+
             //Add checked Map decorations
             foreach (ListViewItem checkedItem in lvwDecorations.CheckedItems)
             {
@@ -697,7 +742,7 @@ namespace WinFormSamples
                 IMapDecoration ins = Activator.CreateInstance(mdType) as IMapDecoration;
                 if (ins != null)
                 {
-                       mapBox1.Map.Decorations.Add(ins);
+                    mapBox1.Map.Decorations.Add(ins);
                 }
             }
             else
@@ -719,12 +764,12 @@ namespace WinFormSamples
         private void lvwDecorations_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (lvwDecorations.SelectedItems.Count == 0)
-            {    
+            {
                 pgMapDecoration.SelectedObject = null;
                 return;
             }
 
-            var lvwi = (ListViewItem) lvwDecorations.SelectedItems[0];
+            var lvwi = (ListViewItem)lvwDecorations.SelectedItems[0];
             if (!lvwi.Checked)
             {
                 pgMapDecoration.SelectedObject = null;
@@ -793,6 +838,7 @@ namespace WinFormSamples
         private Button btnTool;
         private ToolTip toolTip1;
         private Button btnTool2;
-  }
+        private RadioButton radioButton12;
+    }
 }
 

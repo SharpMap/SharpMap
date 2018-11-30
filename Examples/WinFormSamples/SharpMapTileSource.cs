@@ -48,6 +48,8 @@ namespace WinFormSamples
             get { throw new NotImplementedException(); }
         }
 
+        public Attribution Attribution => throw new NotImplementedException();
+
         public byte[] GetTile(TileInfo tileInfo)
         {
             return provider.GetTile(tileInfo);
