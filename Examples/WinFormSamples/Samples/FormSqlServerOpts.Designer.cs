@@ -284,7 +284,6 @@
             // optDataProviderNative
             // 
             this.optDataProviderNative.AutoSize = true;
-            this.optDataProviderNative.Enabled = false;
             this.optDataProviderNative.Location = new System.Drawing.Point(19, 42);
             this.optDataProviderNative.Name = "optDataProviderNative";
             this.optDataProviderNative.Size = new System.Drawing.Size(340, 17);
