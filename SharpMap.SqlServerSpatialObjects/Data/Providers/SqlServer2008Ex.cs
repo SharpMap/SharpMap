@@ -48,8 +48,21 @@ namespace SharpMap.Data.Providers
     {
         static readonly ILog _logger = LogManager.GetLogger(typeof(SqlServer2008Ex));
 
+        /// <summary>
+        /// Always <code>true</code>. Both queries and client-side conversion will always attempt to repair invalid spatial objects 
+        /// </summary>
+        public override bool ValidateGeometries
+        {
+            get => true;
+            set
+            {
+                if (value != true)
+                    throw new ArgumentOutOfRangeException("SqlServer2008Ex converters ALWAYS attempt to repair invalid spatial objects");
+            }
+        }
+
         /// <summary>   
-        /// Initializes a new connection to SQL Server   
+        /// Initializes a new connection to SQL Server for <see cref="SqlServerSpatialObjectType"/>.Geometry with default <see cref="SqlServer2008ExtentsMode" />    
         /// </summary>   
         /// <param name="connectionStr">Connectionstring</param>   
         /// <param name="tablename">Name of data table</param>   
@@ -62,7 +75,7 @@ namespace SharpMap.Data.Providers
         }
 
         /// <summary>   
-        /// Initializes a new connection to SQL Server with default Extents mode  
+        /// Initializes a new connection to SQL Server with default <see cref="SqlServer2008ExtentsMode" /> 
         /// </summary>   
         /// <param name="connectionStr">Connectionstring</param>   
         /// <param name="tablename">Name of data table</param>   
@@ -102,7 +115,8 @@ namespace SharpMap.Data.Providers
             var features = new Collection<Geometry>();
             using (var conn = new SqlConnection(ConnectionString))
             {
-                var sb = new StringBuilder($"SELECT {GeometryColumn}{GetMakeValidString()} FROM {QualifiedTable} {BuildTableHints()} WHERE ");
+                var sb = new StringBuilder($"SELECT {GeometryColumn}{GetMakeValidString()} AS {GeometryColumn} " +
+                                           $"FROM {QualifiedTable} {BuildTableHints()} WHERE ");
 
                 if (!String.IsNullOrEmpty(DefinitionQuery))
                     sb.Append($"{DefinitionQuery} AND ");
@@ -146,8 +160,8 @@ namespace SharpMap.Data.Providers
             Geometry geom = null;
             using (var conn = new SqlConnection(ConnectionString))
             {
-                string strSql = $"SELECT {GeometryColumn} FROM {QualifiedTable} " +
-                                $"WHERE {ObjectIdColumn}={oid}";
+                string strSql = $"SELECT {GeometryColumn}{GetMakeValidString()} AS {GeometryColumn} " +
+                                $"FROM {QualifiedTable} WHERE {ObjectIdColumn} = {oid}";
 
                 if (_logger.IsDebugEnabled) _logger.DebugFormat("GetGeometryByID {0}", strSql);
 
@@ -171,61 +185,42 @@ namespace SharpMap.Data.Providers
         /// Returns the features that intersects with 'geom'   
         /// </summary>   
         /// <param name="geom"></param>   
-        /// <param name="ds">FeatureDataSet to fill data into</param>   
-        protected override void OnExecuteIntersectionQuery(Geometry geom, FeatureDataSet ds)
+        /// <param name="fds">FeatureDataSet to fill data into</param>   
+        protected override void OnExecuteIntersectionQuery(Geometry geom, FeatureDataSet fds)
         {
-            using (var conn = new SqlConnection(ConnectionString))
+            if (SpatialObjectType == SqlServerSpatialObjectType.Geography)
             {
-                if (SpatialObjectType == SqlServerSpatialObjectType.Geography)
-                {
-                    // Define Ring with Clockwise orientation, to be reoriented in query
-                    var maxExentsPoly = Factory.CreatePolygon(new Coordinate[] {
+                // Define Ring with Clockwise orientation, to be reoriented in query
+                var maxExentsPoly = Factory.CreatePolygon(new Coordinate[] {
                             GeogMaxExtents.BottomLeft(), GeogMaxExtents.TopLeft(),
                             GeogMaxExtents.TopRight(), GeogMaxExtents.BottomRight(),
                             GeogMaxExtents.BottomLeft()});
-                    geom = geom.Intersection(maxExentsPoly);
-                }
-
-                var sb = new StringBuilder($"SELECT * FROM {QualifiedTable} {BuildTableHints()} WHERE ");
-
-                if (!String.IsNullOrEmpty(DefinitionQuery))
-                    sb.Append($"{DefinitionQuery} AND ");
-
-                if (!ValidateGeometries ||
-    (SpatialObjectType == SqlServerSpatialObjectType.Geometry && (ForceSeekHint || !string.IsNullOrEmpty(ForceIndex))))
-                    // Geometry sensitive to invalid geometries, and BuildTableHints (ForceSeekHint, ForceIndex) do not suppport .MakeValid() in GetBoxFilterStr
-                    sb.Append($"{GeometryColumn}.STIsValid() = 1 AND ");
-                
-                sb.Append($"{GeometryColumn}.STIntersects({_spatialTypeString}::STGeomFromText('{geom.AsText()}', {SRID}){_reorientObject})=1 {GetExtraOptions()}");
-
-                if (_logger.IsDebugEnabled) _logger.DebugFormat("OnExecuteIntersectionQuery {0}", sb.ToString());
-
-                using (var adapter = new SqlDataAdapter(sb.ToString(), conn))
-                {
-                    conn.Open();
-                    adapter.Fill(ds);
-                    conn.Close();
-                    if (ds.Tables.Count > 0)
-                    {
-                        var fdt = new FeatureDataTable(ds.Tables[0]);
-                        foreach (System.Data.DataColumn col in ds.Tables[0].Columns)
-                            if (col.ColumnName != GeometryColumn)
-                                fdt.Columns.Add(col.ColumnName, col.DataType, col.Expression);
-                        foreach (System.Data.DataRow dr in ds.Tables[0].Rows)
-                        {
-                            FeatureDataRow fdr = fdt.NewRow();
-                            foreach (System.Data.DataColumn col in ds.Tables[0].Columns)
-                                if (col.ColumnName != GeometryColumn)
-                                    fdr[col.ColumnName] = dr[col];
-
-                            fdr.Geometry = SqlBytesToGeometry(dr[GeometryColumn]);
-                            fdt.AddRow(fdr);
-                        }
-                        ds.Tables.Add(fdt);
-                    }
-                }
+                geom = geom.Intersection(maxExentsPoly);
             }
+
+            var sb = new StringBuilder($"SELECT {GetAttributeColumnNames()}, {GeometryColumn}{GetMakeValidString()} AS {GeometryColumn} " +
+                                       $"FROM {QualifiedTable} {BuildTableHints()} WHERE ");
+
+            if (!ValidateGeometries ||
+                (SpatialObjectType == SqlServerSpatialObjectType.Geometry && (ForceSeekHint || !string.IsNullOrEmpty(ForceIndex))))
+                // Geometry sensitive to invalid geometries, and BuildTableHints (ForceSeekHint, ForceIndex) do not suppport .MakeValid() in GetBoxFilterStr
+                sb.Append($"{GeometryColumn}.STIsValid() = 1 AND ");
+
+            if (!String.IsNullOrEmpty(DefinitionQuery))
+                sb.Append($"{DefinitionQuery} AND ");
+
+            // .MakeValid() in WHERE clause is not compatible certain BuildHints, resulting in error:
+            // The query processor could not produce a query plan for a query with a spatial index hint.  Reason: Could not find required binary spatial method in a condition.  Try removing the index hints or removing SET FORCEPLAN.
+            var makeValid = (ForceSeekHint || !string.IsNullOrEmpty(ForceIndex)) ? "" : GetMakeValidString(); //".MakeValid()"
+
+            sb.Append($"{GeometryColumn}{makeValid}.STIntersects({_spatialTypeString}::STGeomFromText('{geom.AsText()}', {SRID}){_reorientObject})=1 {GetExtraOptions()}");
+
+            if (_logger.IsDebugEnabled) _logger.DebugFormat("OnExecuteIntersectionQuery {0}", sb.ToString());
+
+            ExecuteIntersectionQuery(sb.ToString(), fds);
         }
+
+
 
         /// <summary>   
         /// Returns a datarow based on a RowID   
@@ -236,7 +231,8 @@ namespace SharpMap.Data.Providers
         {
             using (var conn = new SqlConnection(ConnectionString))
             {
-                var strSql = $"SELECT * FROM {QualifiedTable} WHERE {ObjectIdColumn}={rowId}";
+                var strSql = $"SELECT {GetAttributeColumnNames()}, {GeometryColumn}{GetMakeValidString()} AS {GeometryColumn} " +
+                             $"FROM {QualifiedTable} WHERE {ObjectIdColumn}={rowId}";
 
                 if (_logger.IsDebugEnabled) _logger.DebugFormat("GetFeature {0}", strSql);
 
@@ -273,47 +269,58 @@ namespace SharpMap.Data.Providers
         /// Returns all features with the view box   
         /// </summary>   
         /// <param name="bbox">view box</param>   
-        /// <param name="ds">FeatureDataSet to fill data into</param>   
-        public override void ExecuteIntersectionQuery(BoundingBox bbox, FeatureDataSet ds)
+        /// <param name="fds">FeatureDataSet to fill data into</param>   
+        public override void ExecuteIntersectionQuery(BoundingBox bbox, FeatureDataSet fds)
+        {
+            var sb = new StringBuilder($"SELECT {GetAttributeColumnNames()}, {GeometryColumn}{GetMakeValidString()} AS {GeometryColumn} " +
+                                       $"FROM {QualifiedTable} {BuildTableHints()} WHERE ");
+
+            if (!String.IsNullOrEmpty(DefinitionQuery))
+                sb.Append($"{DefinitionQuery} AND ");
+
+            if (!ValidateGeometries ||
+                (SpatialObjectType == SqlServerSpatialObjectType.Geometry && (ForceSeekHint || !string.IsNullOrEmpty(ForceIndex))))
+                // Geometry sensitive to invalid geometries, and BuildTableHints (ForceSeekHint, ForceIndex) do not suppport .MakeValid() in GetBoxFilterStr
+                sb.Append($"{GeometryColumn}.STIsValid() = 1 AND ");
+
+            sb.Append($"{GetBoxFilterStr(bbox)} {GetExtraOptions()}");
+
+            if (_logger.IsDebugEnabled) _logger.DebugFormat("ExecuteIntersectionQuery {0}", sb.ToString());
+
+            ExecuteIntersectionQuery(sb.ToString(), fds);
+        }
+
+        /// <summary>
+        /// Select records from database and return FeatureDataSet with SharpMap geometries
+        /// </summary>
+        protected override void ExecuteIntersectionQuery(string sql, FeatureDataSet fds)
         {
             using (var conn = new SqlConnection(ConnectionString))
             {
-                var sb = new StringBuilder($"SELECT * FROM {QualifiedTable} {BuildTableHints()} WHERE ");
-
-                if (!String.IsNullOrEmpty(DefinitionQuery))
-                    sb.Append($"{DefinitionQuery} AND ");
-                if (!ValidateGeometries ||
-    (SpatialObjectType == SqlServerSpatialObjectType.Geometry && (ForceSeekHint || !string.IsNullOrEmpty(ForceIndex))))
-                    // Geometry sensitive to invalid geometries, and BuildTableHints (ForceSeekHint, ForceIndex) do not suppport .MakeValid() in GetBoxFilterStr
-                    sb.Append($"{GeometryColumn}.STIsValid() = 1 AND ");
-                
-                sb.Append($"{GetBoxFilterStr(bbox)} {GetExtraOptions()}");
-
-                if (_logger.IsDebugEnabled) _logger.DebugFormat("ExecuteIntersectionQuery {0}", sb.ToString());
-
-                using (var adapter = new SqlDataAdapter(sb.ToString(), conn))
+                conn.Open();
+                using (var adapter = new SqlDataAdapter(sql, conn))
                 {
-                    conn.Open();
-                    var ds2 = new System.Data.DataSet();
-                    adapter.Fill(ds2);
+                    var ds = new System.Data.DataSet();
+                    adapter.Fill(ds);
                     conn.Close();
-                    if (ds2.Tables.Count > 0)
+                    if (ds.Tables.Count > 0)
                     {
-                        var fdt = new FeatureDataTable(ds2.Tables[0]);
-                        foreach (System.Data.DataColumn col in ds2.Tables[0].Columns)
+                        var fdt = new FeatureDataTable(ds.Tables[0]);
+                        foreach (System.Data.DataColumn col in ds.Tables[0].Columns)
                             if (col.ColumnName != GeometryColumn)
                                 fdt.Columns.Add(col.ColumnName, col.DataType, col.Expression);
-                        foreach (System.Data.DataRow dr in ds2.Tables[0].Rows)
+
+                        foreach (System.Data.DataRow dr in ds.Tables[0].Rows)
                         {
                             FeatureDataRow fdr = fdt.NewRow();
-
-                            foreach (System.Data.DataColumn col in ds2.Tables[0].Columns)
+                            foreach (System.Data.DataColumn col in ds.Tables[0].Columns)
                                 if (col.ColumnName != GeometryColumn)
                                     fdr[col.ColumnName] = dr[col];
+
                             fdr.Geometry = SqlBytesToGeometry(dr[GeometryColumn]);
                             fdt.AddRow(fdr);
                         }
-                        ds.Tables.Add(fdt);
+                        fds.Tables.Add(fdt);
                     }
                 }
             }
@@ -324,9 +331,9 @@ namespace SharpMap.Data.Providers
             Geometry geom = null;
             if (sqlBytes != null && sqlBytes != DBNull.Value)
                 if (SpatialObjectType == SqlServerSpatialObjectType.Geometry)
-                    geom = SqlGeometryConverter.ToSharpMapGeometry((Microsoft.SqlServer.Types.SqlGeometry)sqlBytes);
+                    geom = SqlGeometryConverter.ToSharpMapGeometry((Microsoft.SqlServer.Types.SqlGeometry)sqlBytes, Factory);
                 else
-                    geom = SqlGeographyConverter.ToSharpMapGeometry((Microsoft.SqlServer.Types.SqlGeography)sqlBytes);
+                    geom = SqlGeographyConverter.ToSharpMapGeometry((Microsoft.SqlServer.Types.SqlGeography)sqlBytes, Factory);
             return geom;
         }
 

@@ -37,17 +37,23 @@ namespace UnitTests.Data.Providers
     }
 
     [NUnit.Framework.TestFixture]
-    //[Ignore("Requires SqlServerSpatial")]
     public class SQLServer2008DbTests
     {
-        public enum SqlServerProvider
+        // IGNORE:
+        // 1) see SetupFixture where all SQLServer2008DbTests will be ignored if a valid SqlServer connection string is not supplied
+        // 2) see GetTestProvider(SqlServerProviderMode providerMode, SqlServerSpatialObjectType spatialType) where all 
+        //      tests involving SqlServer2008Ex provider can be skipped
+        // NUM RECORDS:
+        // see SetupFixture: indexes = indexes.Take(100); may be commented out to use all shapefile records
+
+        public enum SqlServerProviderMode
         {
             WellKnownBinary,
             NativeSqlBytes
         }
 
-        private const int GeographySrid = 4326;
-        private int _geometrySrid = 0; // 
+        private const int GeographySrid = 4326; // Geography types MUST have a valid spatial reference
+        private int _geometrySrid = 0;
         private const string GeometrySpatialIndex = "IX_roads_ugl_GEOM";
         private const string GeographySpatialIndex = "IX_roads_ugl_GEOG";
 
@@ -55,6 +61,9 @@ namespace UnitTests.Data.Providers
         private int _numInvalidGeoms; // number of invalid spatial features
         private int _numValidatedGeoms; // number of spatial featuress = _numValidGeoms + Validated(_numInvalidGeoms)
         private int _numFeatures; // number of records
+        private uint _idNullGeom;
+        private uint _idEmptyGeom;
+        private uint _idInvalidGeom;
 
         private string GetTestFile()
         {
@@ -92,7 +101,7 @@ namespace UnitTests.Data.Providers
                     cmd.CommandText = "CREATE TABLE roads_ugl_geog(ID int identity(1,1) PRIMARY KEY, NAME nvarchar(100), GEOG geography)";
                     cmd.ExecuteNonQuery();
                 }
-                
+
                 // Load data
                 using (SharpMap.Data.Providers.ShapeFile shapeFile = new SharpMap.Data.Providers.ShapeFile(GetTestFile()))
                 {
@@ -195,7 +204,7 @@ namespace UnitTests.Data.Providers
 
                 }
 
-                // initialise counts
+                // initialise counts and test IDs
                 using (SqlCommand cmd = conn.CreateCommand())
                 {
                     cmd.CommandText = $"SELECT COUNT(ID) FROM roads_ugl_geom WHERE Geom.STIsEmpty() = 0 AND Geom.STIsValid() = 1";
@@ -208,6 +217,10 @@ namespace UnitTests.Data.Providers
 
                     cmd.CommandText = $"SELECT COUNT(ID) FROM roads_ugl_geom";
                     _numFeatures = (int)cmd.ExecuteScalar();
+
+                    _idNullGeom = (uint)(_numFeatures - 2);
+                    _idEmptyGeom = (uint)(_numFeatures - 1);
+                    _idInvalidGeom = (uint)(_numFeatures);
                 }
 
             }
@@ -236,47 +249,44 @@ namespace UnitTests.Data.Providers
             }
         }
 
-        //private SharpMap.Data.Providers.SqlServer2008 GetTestProvider()
-        //{
-        //    return GetTestProvider(SqlServerSpatialObjectType.Geometry);
-        //}
-
         private SharpMap.Data.Providers.SqlServer2008 GetTestProvider(SqlServerSpatialObjectType spatialType)
         {
-            switch (spatialType)
-            {
-                case SqlServerSpatialObjectType.Geography:
-                    // NB note forcing WGS84
-                    return new SharpMap.Data.Providers.SqlServer2008(UnitTests.Properties.Settings.Default.SqlServer2008,
-                        "roads_ugl_geog", "GEOG", "ID", spatialType, GeographySrid, SqlServer2008ExtentsMode.QueryIndividualFeatures)
-                    {
-                        //ValidateGeometries = true
-                        //,
-                        //DefinitionQuery = "ID NOT IN (103)" // Invalid Geom
-                    };
-                default:
-                    return new SharpMap.Data.Providers.SqlServer2008(UnitTests.Properties.Settings.Default.SqlServer2008,
-                        "roads_ugl_geom", "GEOM", "ID", spatialType)
-                    {
-                        //ValidateGeometries = true
-                        //,
-                        //DefinitionQuery = "ID NOT IN (103)"  // Invalid Geom
-                    };
-            }
+            return GetTestProvider(SqlServerProviderMode.WellKnownBinary, spatialType);
         }
 
-        private SharpMap.Data.Providers.SqlServer2008Ex GetTestProviderEx(SqlServerSpatialObjectType spatialType)
+        private SharpMap.Data.Providers.SqlServer2008 GetTestProvider(SqlServerProviderMode providerMode, SqlServerSpatialObjectType spatialType)
         {
-            switch (spatialType)
+            SqlServer2008 provider;
+
+            switch (providerMode)
             {
-                case SqlServerSpatialObjectType.Geography:
-                    // NB note forcing WGS84
-                    return new SharpMap.Data.Providers.SqlServer2008Ex(UnitTests.Properties.Settings.Default.SqlServer2008,
-                        "roads_ugl_geog", "GEOG", "ID", spatialType, GeographySrid, SqlServer2008ExtentsMode.EnvelopeAggregate);
+                case SqlServerProviderMode.NativeSqlBytes:
+                    //Assert.Ignore("Ignore SharpMap.Data.Providers.SqlSErver2008Ex");
+
+                    if (spatialType == SqlServerSpatialObjectType.Geography)
+                        // NB note forcing WGS84
+                        provider = new SharpMap.Data.Providers.SqlServer2008Ex(UnitTests.Properties.Settings.Default.SqlServer2008,
+                            "roads_ugl_geog", "GEOG", "ID", spatialType, GeographySrid, SqlServer2008ExtentsMode.QueryIndividualFeatures);
+                    else
+                        provider = new SharpMap.Data.Providers.SqlServer2008Ex(UnitTests.Properties.Settings.Default.SqlServer2008,
+                            "roads_ugl_geom", "GEOM", "ID", spatialType, _geometrySrid, SqlServer2008ExtentsMode.QueryIndividualFeatures);
+                    break;
+
                 default:
-                    return new SharpMap.Data.Providers.SqlServer2008Ex(UnitTests.Properties.Settings.Default.SqlServer2008,
-                        "roads_ugl_geom", "GEOM", "ID", spatialType, 0, SqlServer2008ExtentsMode.EnvelopeAggregate);
+                    if (spatialType == SqlServerSpatialObjectType.Geography)
+                        // NB note forcing WGS84
+                        provider = new SharpMap.Data.Providers.SqlServer2008(UnitTests.Properties.Settings.Default.SqlServer2008,
+                                "roads_ugl_geog", "GEOG", "ID", spatialType, GeographySrid, SqlServer2008ExtentsMode.QueryIndividualFeatures);
+                    else
+                        provider = new SharpMap.Data.Providers.SqlServer2008(UnitTests.Properties.Settings.Default.SqlServer2008,
+                            "roads_ugl_geom", "GEOM", "ID", spatialType, _geometrySrid, SqlServer2008ExtentsMode.QueryIndividualFeatures);
+                    break;
             }
+
+            //provider.ValidateGeometries = true
+            //provider.DefinitionQuery = "ID NOT IN (103)"  // Invalid Geom
+
+            return provider;
         }
 
         /// <summary>
@@ -327,6 +337,15 @@ namespace UnitTests.Data.Providers
 
         [NUnit.Framework.TestCase(SqlServerSpatialObjectType.Geometry)]
         [NUnit.Framework.TestCase(SqlServerSpatialObjectType.Geography)]
+        [ExpectedException(typeof(ArgumentOutOfRangeException))]
+        public void TestSqlServer2008ExProviderOverridesValidateGeometries(SqlServerSpatialObjectType spatialType)
+        {
+            SharpMap.Data.Providers.SqlServer2008 sq = GetTestProvider( SqlServerProviderMode.NativeSqlBytes, spatialType);
+            sq.ValidateGeometries = false;
+        }
+
+        [NUnit.Framework.TestCase(SqlServerSpatialObjectType.Geometry)]
+        [NUnit.Framework.TestCase(SqlServerSpatialObjectType.Geography)]
         public void TestGetExtentsEnvelopeAggregate(SqlServerSpatialObjectType spatialType)
         {
             using (SqlConnection conn = new SqlConnection(UnitTests.Properties.Settings.Default.SqlServer2008))
@@ -351,13 +370,17 @@ namespace UnitTests.Data.Providers
             Assert.IsNotNull(extents);
         }
 
-        [NUnit.Framework.TestCase(SqlServerSpatialObjectType.Geometry, false)]
-        [NUnit.Framework.TestCase(SqlServerSpatialObjectType.Geometry, true)]
-        [NUnit.Framework.TestCase(SqlServerSpatialObjectType.Geography, false)]
-        [NUnit.Framework.TestCase(SqlServerSpatialObjectType.Geography, true)]
-        public void TestGetGeometriesInView(SqlServerSpatialObjectType spatialType, bool validateGeometries)
+        [NUnit.Framework.TestCase(SqlServerProviderMode.WellKnownBinary, SqlServerSpatialObjectType.Geometry, false)]
+        [NUnit.Framework.TestCase(SqlServerProviderMode.WellKnownBinary, SqlServerSpatialObjectType.Geography, false)]
+        [NUnit.Framework.TestCase(SqlServerProviderMode.WellKnownBinary, SqlServerSpatialObjectType.Geometry, true)]
+        [NUnit.Framework.TestCase(SqlServerProviderMode.WellKnownBinary, SqlServerSpatialObjectType.Geography, true)]
+        //[NUnit.Framework.TestCase(SqlServerProviderMode.NativeSqlBytes, SqlServerSpatialObjectType.Geometry, false)]
+        //[NUnit.Framework.TestCase(SqlServerProviderMode.NativeSqlBytes, SqlServerSpatialObjectType.Geography, false)]
+        [NUnit.Framework.TestCase(SqlServerProviderMode.NativeSqlBytes, SqlServerSpatialObjectType.Geometry, true)]
+        [NUnit.Framework.TestCase(SqlServerProviderMode.NativeSqlBytes, SqlServerSpatialObjectType.Geography, true)]
+        public void TestGetGeometriesInView(SqlServerProviderMode providerMode, SqlServerSpatialObjectType spatialType, bool validateGeometries)
         {
-            SharpMap.Data.Providers.SqlServer2008 sq = GetTestProvider(spatialType);
+            SharpMap.Data.Providers.SqlServer2008 sq = GetTestProvider(providerMode, spatialType);
             sq.ValidateGeometries = validateGeometries;
 
             var geometries = sq.GetGeometriesInView(GetTestEnvelope(spatialType));
@@ -367,11 +390,13 @@ namespace UnitTests.Data.Providers
             Assert.AreEqual(sq.ValidateGeometries ? _numValidatedGeoms : _numValidGeoms, geometries.Count);
         }
 
-        [NUnit.Framework.TestCase(SqlServerSpatialObjectType.Geometry)]
-        [NUnit.Framework.TestCase(SqlServerSpatialObjectType.Geography)]
-        public void TestGetGeometriesInViewDefinitionQuery(SqlServerSpatialObjectType spatialType)
+        [NUnit.Framework.TestCase(SqlServerProviderMode.WellKnownBinary, SqlServerSpatialObjectType.Geometry)]
+        [NUnit.Framework.TestCase(SqlServerProviderMode.WellKnownBinary, SqlServerSpatialObjectType.Geography)]
+        [NUnit.Framework.TestCase(SqlServerProviderMode.NativeSqlBytes, SqlServerSpatialObjectType.Geometry)]
+        [NUnit.Framework.TestCase(SqlServerProviderMode.NativeSqlBytes, SqlServerSpatialObjectType.Geography)]
+        public void TestGetGeometriesInViewDefinitionQuery(SqlServerProviderMode providerMode, SqlServerSpatialObjectType spatialType)
         {
-            SharpMap.Data.Providers.SqlServer2008 sq = GetTestProvider(spatialType);
+            SharpMap.Data.Providers.SqlServer2008 sq = GetTestProvider(providerMode, spatialType);
 
             sq.DefinitionQuery = "NAME LIKE 'A%'";
 
@@ -381,13 +406,17 @@ namespace UnitTests.Data.Providers
             Assert.LessOrEqual(geometries.Count, _numValidGeoms);
         }
 
-        [NUnit.Framework.TestCase(SqlServerSpatialObjectType.Geometry, GeometrySpatialIndex, false)]
-        [NUnit.Framework.TestCase(SqlServerSpatialObjectType.Geometry, GeometrySpatialIndex, true)]
-        [NUnit.Framework.TestCase(SqlServerSpatialObjectType.Geography, GeographySpatialIndex, false)]
-        [NUnit.Framework.TestCase(SqlServerSpatialObjectType.Geography, GeographySpatialIndex, true)]
-        public void TestGetGeometriesInViewNOLOCK(SqlServerSpatialObjectType spatialType, string indexName, bool validateGeometries)
+        [NUnit.Framework.TestCase(SqlServerProviderMode.WellKnownBinary, SqlServerSpatialObjectType.Geometry, false)]
+        [NUnit.Framework.TestCase(SqlServerProviderMode.WellKnownBinary, SqlServerSpatialObjectType.Geography, false)]
+        [NUnit.Framework.TestCase(SqlServerProviderMode.WellKnownBinary, SqlServerSpatialObjectType.Geometry, true)]
+        [NUnit.Framework.TestCase(SqlServerProviderMode.WellKnownBinary, SqlServerSpatialObjectType.Geography, true)]
+        //[NUnit.Framework.TestCase(SqlServerProviderMode.NativeSqlBytes, SqlServerSpatialObjectType.Geometry, false)]
+        //[NUnit.Framework.TestCase(SqlServerProviderMode.NativeSqlBytes, SqlServerSpatialObjectType.Geography, false)]
+        [NUnit.Framework.TestCase(SqlServerProviderMode.NativeSqlBytes, SqlServerSpatialObjectType.Geometry, true)]
+        [NUnit.Framework.TestCase(SqlServerProviderMode.NativeSqlBytes, SqlServerSpatialObjectType.Geography, true)]
+        public void TestGetGeometriesInViewNOLOCK(SqlServerProviderMode providerMode, SqlServerSpatialObjectType spatialType, bool validateGeometries)
         {
-            SharpMap.Data.Providers.SqlServer2008 sq = GetTestProvider(spatialType);
+            SharpMap.Data.Providers.SqlServer2008 sq = GetTestProvider(providerMode, spatialType);
 
             sq.NoLockHint = true;
             sq.ValidateGeometries = validateGeometries;
@@ -398,13 +427,17 @@ namespace UnitTests.Data.Providers
 
         }
 
-        [NUnit.Framework.TestCase(SqlServerSpatialObjectType.Geometry, GeometrySpatialIndex, false)]
-        [NUnit.Framework.TestCase(SqlServerSpatialObjectType.Geometry, GeometrySpatialIndex, true)]
-        [NUnit.Framework.TestCase(SqlServerSpatialObjectType.Geography, GeographySpatialIndex, false)]
-        [NUnit.Framework.TestCase(SqlServerSpatialObjectType.Geography, GeographySpatialIndex, true)]
-        public void TestGetGeometriesInViewFORCESEEK(SqlServerSpatialObjectType spatialType, string indexName, bool validateGeometries)
+        [NUnit.Framework.TestCase(SqlServerProviderMode.WellKnownBinary, SqlServerSpatialObjectType.Geometry, false)]
+        [NUnit.Framework.TestCase(SqlServerProviderMode.WellKnownBinary, SqlServerSpatialObjectType.Geography, false)]
+        [NUnit.Framework.TestCase(SqlServerProviderMode.WellKnownBinary, SqlServerSpatialObjectType.Geometry, true)]
+        [NUnit.Framework.TestCase(SqlServerProviderMode.WellKnownBinary, SqlServerSpatialObjectType.Geography, true)]
+        //[NUnit.Framework.TestCase(SqlServerProviderMode.NativeSqlBytes, SqlServerSpatialObjectType.Geometry, false)]
+        //[NUnit.Framework.TestCase(SqlServerProviderMode.NativeSqlBytes, SqlServerSpatialObjectType.Geography, false)]
+        [NUnit.Framework.TestCase(SqlServerProviderMode.NativeSqlBytes, SqlServerSpatialObjectType.Geometry, true)]
+        [NUnit.Framework.TestCase(SqlServerProviderMode.NativeSqlBytes, SqlServerSpatialObjectType.Geography, true)]
+        public void TestGetGeometriesInViewFORCESEEK(SqlServerProviderMode providerMode, SqlServerSpatialObjectType spatialType, bool validateGeometries)
         {
-            SharpMap.Data.Providers.SqlServer2008 sq = GetTestProvider(spatialType);
+            SharpMap.Data.Providers.SqlServer2008 sq = GetTestProvider(providerMode, spatialType);
 
             sq.ForceSeekHint = true;
             sq.ValidateGeometries = validateGeometries;
@@ -416,15 +449,19 @@ namespace UnitTests.Data.Providers
             Assert.AreEqual(_numValidGeoms, geometries.Count);
         }
 
-        [NUnit.Framework.TestCase(SqlServerSpatialObjectType.Geometry, GeometrySpatialIndex, false)]
-        [NUnit.Framework.TestCase(SqlServerSpatialObjectType.Geometry, GeometrySpatialIndex, true)]
-        [NUnit.Framework.TestCase(SqlServerSpatialObjectType.Geography, GeographySpatialIndex, false)]
-        [NUnit.Framework.TestCase(SqlServerSpatialObjectType.Geography, GeographySpatialIndex, true)]
-        public void TestGetGeometriesInViewFORCEINDEX(SqlServerSpatialObjectType spatialType, string indexName, bool validateGeometries)
+        [NUnit.Framework.TestCase(SqlServerProviderMode.WellKnownBinary, SqlServerSpatialObjectType.Geometry, false)]
+        [NUnit.Framework.TestCase(SqlServerProviderMode.WellKnownBinary, SqlServerSpatialObjectType.Geography, false)]
+        [NUnit.Framework.TestCase(SqlServerProviderMode.WellKnownBinary, SqlServerSpatialObjectType.Geometry, true)]
+        [NUnit.Framework.TestCase(SqlServerProviderMode.WellKnownBinary, SqlServerSpatialObjectType.Geography, true)]
+        //[NUnit.Framework.TestCase(SqlServerProviderMode.NativeSqlBytes, SqlServerSpatialObjectType.Geometry, false)]
+        //[NUnit.Framework.TestCase(SqlServerProviderMode.NativeSqlBytes, SqlServerSpatialObjectType.Geography, false)]
+        [NUnit.Framework.TestCase(SqlServerProviderMode.NativeSqlBytes, SqlServerSpatialObjectType.Geometry, true)]
+        [NUnit.Framework.TestCase(SqlServerProviderMode.NativeSqlBytes, SqlServerSpatialObjectType.Geography, true)]
+        public void TestGetGeometriesInViewFORCEINDEX(SqlServerProviderMode providerMode, SqlServerSpatialObjectType spatialType, bool validateGeometries)
         {
-            SharpMap.Data.Providers.SqlServer2008 sq = GetTestProvider(spatialType);
+            SharpMap.Data.Providers.SqlServer2008 sq = GetTestProvider(providerMode, spatialType);
 
-            sq.ForceIndex = indexName;
+            sq.ForceIndex = spatialType == SqlServerSpatialObjectType.Geometry ? GeometrySpatialIndex : GeographySpatialIndex;
             sq.ValidateGeometries = validateGeometries;
 
             var geometries = sq.GetGeometriesInView(GetTestEnvelope(spatialType));
@@ -434,19 +471,23 @@ namespace UnitTests.Data.Providers
             Assert.AreEqual(_numValidGeoms, geometries.Count);
         }
 
-        [NUnit.Framework.TestCase(SqlServerSpatialObjectType.Geometry, GeometrySpatialIndex, false)]
-        [NUnit.Framework.TestCase(SqlServerSpatialObjectType.Geometry, GeometrySpatialIndex, true)]
-        [NUnit.Framework.TestCase(SqlServerSpatialObjectType.Geography, GeographySpatialIndex, false)]
-        [NUnit.Framework.TestCase(SqlServerSpatialObjectType.Geography, GeographySpatialIndex, true)]
-        public void TestGetGeometriesInViewAllHints(SqlServerSpatialObjectType spatialType, string indexName, bool validateGeoms)
+        [NUnit.Framework.TestCase(SqlServerProviderMode.WellKnownBinary, SqlServerSpatialObjectType.Geometry, false)]
+        [NUnit.Framework.TestCase(SqlServerProviderMode.WellKnownBinary, SqlServerSpatialObjectType.Geography, false)]
+        [NUnit.Framework.TestCase(SqlServerProviderMode.WellKnownBinary, SqlServerSpatialObjectType.Geometry, true)]
+        [NUnit.Framework.TestCase(SqlServerProviderMode.WellKnownBinary, SqlServerSpatialObjectType.Geography, true)]
+        //[NUnit.Framework.TestCase(SqlServerProviderMode.NativeSqlBytes, SqlServerSpatialObjectType.Geometry, false)]
+        //[NUnit.Framework.TestCase(SqlServerProviderMode.NativeSqlBytes, SqlServerSpatialObjectType.Geography, false)]
+        [NUnit.Framework.TestCase(SqlServerProviderMode.NativeSqlBytes, SqlServerSpatialObjectType.Geometry, true)]
+        [NUnit.Framework.TestCase(SqlServerProviderMode.NativeSqlBytes, SqlServerSpatialObjectType.Geography, true)]
+        public void TestGetGeometriesInViewAllHints(SqlServerProviderMode providerMode, SqlServerSpatialObjectType spatialType, bool validateGeometries)
         {
-            SharpMap.Data.Providers.SqlServer2008 sq = GetTestProvider(spatialType);
+            SharpMap.Data.Providers.SqlServer2008 sq = GetTestProvider(providerMode, spatialType);
 
             sq.NoLockHint = true;
             sq.ForceSeekHint = true;
-            sq.ForceIndex = indexName;
+            sq.ForceIndex = spatialType == SqlServerSpatialObjectType.Geometry ? GeometrySpatialIndex : GeographySpatialIndex;
 
-            sq.ValidateGeometries = validateGeoms;
+            sq.ValidateGeometries = validateGeometries;
             var geometries = sq.GetGeometriesInView(GetTestEnvelope(spatialType));
 
             Assert.IsNotNull(geometries);
@@ -454,29 +495,7 @@ namespace UnitTests.Data.Providers
             Assert.AreEqual(_numValidGeoms, geometries.Count);
         }
 
-        [NUnit.Framework.TestCase(SqlServerSpatialObjectType.Geometry, false)]
-        [NUnit.Framework.TestCase(SqlServerSpatialObjectType.Geometry, true)]
-        [NUnit.Framework.TestCase(SqlServerSpatialObjectType.Geography, false)]
-        [NUnit.Framework.TestCase(SqlServerSpatialObjectType.Geography, true)]
-        public void TestGetGeometriesInViewEx(SqlServerSpatialObjectType spatialType, bool validateGeometries)
-        {
-            // Note:
-            // This test may fail with an InvalidCastException. This is caused by multiple versions of the 
-            // Microsoft.SqlServer.Types assembly being available (e.g. SQL 2008 and 2012).
-            // This can be solved with a <bindingRedirect> in the .config file.
-            // http://connect.microsoft.com/SQLServer/feedback/details/685654/invalidcastexception-retrieving-sqlgeography-column-in-ado-net-data-reader
-
-            SharpMap.Data.Providers.SqlServer2008 sq = GetTestProviderEx(spatialType);
-            sq.ValidateGeometries = validateGeometries;
-
-            var geometries = sq.GetGeometriesInView(GetTestEnvelope(spatialType));
-
-            Assert.IsNotNull(geometries);
-            Assert.AreEqual(validateGeometries ? _numValidatedGeoms : _numValidGeoms, geometries.Count);
-        }
-
         [NUnit.Framework.Test()]
-        [Ignore("Do not run performance test by default, because it might fail because of external factors (busy CPU).")]
         public void TestPerformanceSqlServer2008ExProvider()
         {
             // Note:
@@ -484,10 +503,18 @@ namespace UnitTests.Data.Providers
             // Microsoft.SqlServer.Types assembly being available (e.g. SQL 2008 and 2012).
             // This can be solved with a <bindingRedirect> in the .config file.
 
-            var spatialType = SqlServerSpatialObjectType.Geography;
+            var spatialType = SqlServerSpatialObjectType.Geometry;
 
-            SharpMap.Data.Providers.SqlServer2008 sq = GetTestProvider(spatialType);
-            SharpMap.Data.Providers.SqlServer2008 sqex = GetTestProviderEx(spatialType);
+            // testing with both providers using ExtentsMode = QueryIndividualFeatures (ie the "heaviest" lifting)
+            SharpMap.Data.Providers.SqlServer2008 sq = GetTestProvider(SqlServerProviderMode.WellKnownBinary, spatialType);
+            SharpMap.Data.Providers.SqlServer2008 sqex = GetTestProvider(SqlServerProviderMode.NativeSqlBytes, spatialType);
+
+            // Note: SqlServer2008Ex provider overrides ValidateGeometries behaviour, forcing this to true. 
+            // So to compare apples-with-apples, the SqlServer2008 provider must also set ValidateGeometries = true.
+            // From my testing, SqlServer2008 performance is slightly faster when using ValidateGeometries = true, 
+            // as the SQL where clause is simpler (does not require explicitly excluding invalid geometries)
+            sq.ValidateGeometries = true;
+            
             GeoAPI.Geometries.Envelope envelope = GetTestEnvelope(spatialType);
             List<TimeSpan> measurements = new List<TimeSpan>(200);
             List<TimeSpan> measurementsex = new List<TimeSpan>(200);
@@ -516,6 +543,12 @@ namespace UnitTests.Data.Providers
             TimeSpan avgex = TimeSpan.FromTicks((long)measurementsex.Average(x => x.Ticks));
 
             // The SqlServer2008Ex provider should be faster:
+            // Update Nov 2018: apparently this is no longer the case. Multiple tests following recent updates have SqlServer2008 
+            // consistently outperforming SqlServer2008ex (100 - 3600 records). I'm not sure if this is due to improvments in later 
+            // releases of SqlServer, or perhaps WKB payload smaller than SqlBytes (even though requires database CPU for WKB conversion)
+            //    for local instance SqlExpress, SqlServer2008  is consistently 30% faster than SqlServer2008Ex
+            //    for SqlServer on local database server, - I don't have one to test against
+            //    for Azure SQL (50DTU limit, test peaking at 26DTU), SqlServer2008 is about 5% faster than SqlServer2008Ex
             Assert.Less(avgex, avg);
         }
 
@@ -533,13 +566,17 @@ namespace UnitTests.Data.Providers
             Assert.AreEqual(sq.ValidateGeometries ? _numValidatedGeoms : _numValidGeoms, objectIds.Count);
         }
 
-        [NUnit.Framework.TestCase(SqlServerSpatialObjectType.Geometry, false)]
-        [NUnit.Framework.TestCase(SqlServerSpatialObjectType.Geometry, true)]
-        [NUnit.Framework.TestCase(SqlServerSpatialObjectType.Geography, false)]
-        [NUnit.Framework.TestCase(SqlServerSpatialObjectType.Geography, true)]
-        public void TestExecuteIntersectionQuery(SqlServerSpatialObjectType spatialType, bool validateGeometries)
+        [NUnit.Framework.TestCase(SqlServerProviderMode.WellKnownBinary, SqlServerSpatialObjectType.Geometry, false)]
+        [NUnit.Framework.TestCase(SqlServerProviderMode.WellKnownBinary, SqlServerSpatialObjectType.Geography, false)]
+        [NUnit.Framework.TestCase(SqlServerProviderMode.WellKnownBinary, SqlServerSpatialObjectType.Geometry, true)]
+        [NUnit.Framework.TestCase(SqlServerProviderMode.WellKnownBinary, SqlServerSpatialObjectType.Geography, true)]
+        //[NUnit.Framework.TestCase(SqlServerProviderMode.NativeSqlBytes, SqlServerSpatialObjectType.Geometry, false)]
+        //[NUnit.Framework.TestCase(SqlServerProviderMode.NativeSqlBytes, SqlServerSpatialObjectType.Geography, false)]
+        [NUnit.Framework.TestCase(SqlServerProviderMode.NativeSqlBytes, SqlServerSpatialObjectType.Geometry, true)]
+        [NUnit.Framework.TestCase(SqlServerProviderMode.NativeSqlBytes, SqlServerSpatialObjectType.Geography, true)]
+        public void TestExecuteIntersectionQuery(SqlServerProviderMode providerMode, SqlServerSpatialObjectType spatialType, bool validateGeometries)
         {
-            SharpMap.Data.Providers.SqlServer2008 sq = GetTestProvider(spatialType);
+            SharpMap.Data.Providers.SqlServer2008 sq = GetTestProvider(providerMode, spatialType);
 
             sq.ValidateGeometries = validateGeometries;
 
@@ -550,17 +587,21 @@ namespace UnitTests.Data.Providers
             Assert.AreEqual(sq.ValidateGeometries ? _numValidatedGeoms : _numValidGeoms, ds.Tables[0].Rows.Count);
         }
 
-        [NUnit.Framework.TestCase(SqlServerSpatialObjectType.Geometry, GeometrySpatialIndex, false)]
-        [NUnit.Framework.TestCase(SqlServerSpatialObjectType.Geometry, GeometrySpatialIndex, true)]
-        [NUnit.Framework.TestCase(SqlServerSpatialObjectType.Geography, GeographySpatialIndex, false)]
-        [NUnit.Framework.TestCase(SqlServerSpatialObjectType.Geography, GeographySpatialIndex, true)]
-        public void TestExecuteIntersectionQueryAllHints(SqlServerSpatialObjectType spatialType, string indexName, bool validateGeometries)
+        [NUnit.Framework.TestCase(SqlServerProviderMode.WellKnownBinary, SqlServerSpatialObjectType.Geometry, false)]
+        [NUnit.Framework.TestCase(SqlServerProviderMode.WellKnownBinary, SqlServerSpatialObjectType.Geography, false)]
+        [NUnit.Framework.TestCase(SqlServerProviderMode.WellKnownBinary, SqlServerSpatialObjectType.Geometry, true)]
+        [NUnit.Framework.TestCase(SqlServerProviderMode.WellKnownBinary, SqlServerSpatialObjectType.Geography, true)]
+        //[NUnit.Framework.TestCase(SqlServerProviderMode.NativeSqlBytes, SqlServerSpatialObjectType.Geometry, false)]
+        //[NUnit.Framework.TestCase(SqlServerProviderMode.NativeSqlBytes, SqlServerSpatialObjectType.Geography, false)]
+        [NUnit.Framework.TestCase(SqlServerProviderMode.NativeSqlBytes, SqlServerSpatialObjectType.Geometry, true)]
+        [NUnit.Framework.TestCase(SqlServerProviderMode.NativeSqlBytes, SqlServerSpatialObjectType.Geography, true)]
+        public void TestExecuteIntersectionQueryAllHints(SqlServerProviderMode providerMode, SqlServerSpatialObjectType spatialType, bool validateGeometries)
         {
-            SharpMap.Data.Providers.SqlServer2008 sq = GetTestProvider(spatialType);
+            SharpMap.Data.Providers.SqlServer2008 sq = GetTestProvider(providerMode, spatialType);
 
             sq.NoLockHint = true;
             sq.ForceSeekHint = true;
-            sq.ForceIndex = indexName;
+            sq.ForceIndex = spatialType == SqlServerSpatialObjectType.Geometry ? GeometrySpatialIndex : GeographySpatialIndex; ;
             sq.ValidateGeometries = validateGeometries;
 
             SharpMap.Data.FeatureDataSet ds = new SharpMap.Data.FeatureDataSet();
@@ -586,7 +627,7 @@ namespace UnitTests.Data.Providers
         [NUnit.Framework.TestCase(SqlServerSpatialObjectType.Geography)]
         public void TestGetFeatureCountWithDefinitionQuery(SqlServerSpatialObjectType spatialType)
         {
-            SharpMap.Data.Providers.SqlServer2008 sq = GetTestProvider(spatialType);
+            SharpMap.Data.Providers.SqlServer2008 sq = GetTestProvider(SqlServerProviderMode.WellKnownBinary, spatialType);
 
             sq.DefinitionQuery = "NAME LIKE 'A%'";
 
@@ -595,26 +636,89 @@ namespace UnitTests.Data.Providers
             Assert.LessOrEqual(count, _numValidGeoms);
         }
 
-        [NUnit.Framework.TestCase(SqlServerSpatialObjectType.Geometry)]
-        [NUnit.Framework.TestCase(SqlServerSpatialObjectType.Geography)]
-        public void TestGetFeature(SqlServerSpatialObjectType spatialType)
+        [NUnit.Framework.TestCase(SqlServerProviderMode.WellKnownBinary, SqlServerSpatialObjectType.Geometry)]
+        [NUnit.Framework.TestCase(SqlServerProviderMode.WellKnownBinary, SqlServerSpatialObjectType.Geography)]
+        [NUnit.Framework.TestCase(SqlServerProviderMode.NativeSqlBytes, SqlServerSpatialObjectType.Geometry)]
+        [NUnit.Framework.TestCase(SqlServerProviderMode.NativeSqlBytes, SqlServerSpatialObjectType.Geography)]
+        public void TestGetFeature(SqlServerProviderMode providerMode, SqlServerSpatialObjectType spatialType)
         {
-            SharpMap.Data.Providers.SqlServer2008 sq = GetTestProvider(spatialType);
+            SharpMap.Data.Providers.SqlServer2008 sq = GetTestProvider(providerMode, spatialType);
 
             var feature = sq.GetFeature(1);
 
             Assert.IsNotNull(feature);
+            Assert.IsNotNull(feature.Geometry);
         }
 
-        [NUnit.Framework.TestCase(SqlServerSpatialObjectType.Geometry)]
-        [NUnit.Framework.TestCase(SqlServerSpatialObjectType.Geography)]
-        public void TestGetFeatureNonExisting(SqlServerSpatialObjectType spatialType)
+        [NUnit.Framework.TestCase(SqlServerProviderMode.WellKnownBinary, SqlServerSpatialObjectType.Geometry)]
+        [NUnit.Framework.TestCase(SqlServerProviderMode.WellKnownBinary, SqlServerSpatialObjectType.Geography)]
+        [NUnit.Framework.TestCase(SqlServerProviderMode.NativeSqlBytes, SqlServerSpatialObjectType.Geometry)]
+        [NUnit.Framework.TestCase(SqlServerProviderMode.NativeSqlBytes, SqlServerSpatialObjectType.Geography)]
+        public void TestGetFeatureNonExisting(SqlServerProviderMode providerMode, SqlServerSpatialObjectType spatialType)
         {
-            SharpMap.Data.Providers.SqlServer2008 sq = GetTestProvider(spatialType);
+            SharpMap.Data.Providers.SqlServer2008 sq = GetTestProvider(providerMode, spatialType);
 
             var feature = sq.GetFeature(99999999);
 
             Assert.IsNull(feature);
         }
+
+        [NUnit.Framework.TestCase(SqlServerProviderMode.WellKnownBinary, SqlServerSpatialObjectType.Geometry)]
+        [NUnit.Framework.TestCase(SqlServerProviderMode.WellKnownBinary, SqlServerSpatialObjectType.Geography)]
+        [NUnit.Framework.TestCase(SqlServerProviderMode.NativeSqlBytes, SqlServerSpatialObjectType.Geometry)]
+        [NUnit.Framework.TestCase(SqlServerProviderMode.NativeSqlBytes, SqlServerSpatialObjectType.Geography)]
+        public void TestGetFeatureNullGeometry(SqlServerProviderMode providerMode, SqlServerSpatialObjectType spatialType)
+        {
+            SharpMap.Data.Providers.SqlServer2008 sq = GetTestProvider(providerMode, spatialType);
+
+            var feature = sq.GetFeature(_idNullGeom);
+
+            Assert.IsNotNull(feature);
+            Assert.IsNull(feature.Geometry);
+        }
+
+        [NUnit.Framework.TestCase(SqlServerProviderMode.WellKnownBinary, SqlServerSpatialObjectType.Geometry)]
+        [NUnit.Framework.TestCase(SqlServerProviderMode.WellKnownBinary, SqlServerSpatialObjectType.Geography)]
+        [NUnit.Framework.TestCase(SqlServerProviderMode.NativeSqlBytes, SqlServerSpatialObjectType.Geometry)]
+        [NUnit.Framework.TestCase(SqlServerProviderMode.NativeSqlBytes, SqlServerSpatialObjectType.Geography)]
+        public void TestGetFeatureEmptyGeometry(SqlServerProviderMode providerMode, SqlServerSpatialObjectType spatialType)
+        {
+            SharpMap.Data.Providers.SqlServer2008 sq = GetTestProvider(providerMode, spatialType);
+
+            var feature = sq.GetFeature(_idEmptyGeom);
+
+            Assert.IsNotNull(feature);
+            Assert.IsTrue(feature.Geometry.IsEmpty);
+        }
+
+        // NetTopologySuite.IO.WKBReader can make sense of SqlServer invalid Geoms!
+        //[NUnit.Framework.TestCase(SqlServerProviderMode.WellKnownBinary, SqlServerSpatialObjectType.Geometry, false)]
+        //[NUnit.Framework.TestCase(SqlServerProviderMode.WellKnownBinary, SqlServerSpatialObjectType.Geography, false)]
+        [NUnit.Framework.TestCase(SqlServerProviderMode.WellKnownBinary, SqlServerSpatialObjectType.Geometry, true)]
+        [NUnit.Framework.TestCase(SqlServerProviderMode.WellKnownBinary, SqlServerSpatialObjectType.Geography, true)]
+        //[NUnit.Framework.TestCase(SqlServerProviderMode.NativeSqlBytes, SqlServerSpatialObjectType.Geometry, false)]
+        //[NUnit.Framework.TestCase(SqlServerProviderMode.NativeSqlBytes, SqlServerSpatialObjectType.Geography, false)]
+        [NUnit.Framework.TestCase(SqlServerProviderMode.NativeSqlBytes, SqlServerSpatialObjectType.Geometry, true)]
+        [NUnit.Framework.TestCase(SqlServerProviderMode.NativeSqlBytes, SqlServerSpatialObjectType.Geography, true)]
+        public void TestGetFeatureInvalidGeometry(SqlServerProviderMode providerMode, SqlServerSpatialObjectType spatialType, bool validateGeometries)
+        {
+            SharpMap.Data.Providers.SqlServer2008 sq = GetTestProvider(providerMode, spatialType);
+            sq.ValidateGeometries = validateGeometries;
+
+            var feature = sq.GetFeature(_idInvalidGeom);
+
+            Assert.IsNotNull(feature);
+            if (providerMode== SqlServerProviderMode.NativeSqlBytes)
+                // client side conversion always attempts validation
+                Assert.IsTrue(!feature.Geometry.IsEmpty && feature.Geometry.IsValid);
+            else
+            {
+                if (validateGeometries)
+                    Assert.IsTrue(!feature.Geometry.IsEmpty && feature.Geometry.IsValid);
+                else
+                    Assert.IsTrue(feature.Geometry.IsEmpty);
+            }
+        }
+        
     }
 }
