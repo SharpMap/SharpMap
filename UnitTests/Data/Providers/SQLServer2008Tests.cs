@@ -261,7 +261,7 @@ namespace UnitTests.Data.Providers
             switch (providerMode)
             {
                 case SqlServerProviderMode.NativeSqlBytes:
-                    //Assert.Ignore("Ignore SharpMap.Data.Providers.SqlSErver2008Ex");
+                    Assert.Ignore("Ignore SharpMap.Data.Providers.SqlSErver2008Ex");
 
                     if (spatialType == SqlServerSpatialObjectType.Geography)
                         // NB note forcing WGS84
@@ -583,6 +583,25 @@ namespace UnitTests.Data.Providers
             SharpMap.Data.FeatureDataSet ds = new SharpMap.Data.FeatureDataSet();
 
             sq.ExecuteIntersectionQuery(GetTestEnvelope(spatialType), ds);
+
+            Assert.AreEqual(sq.ValidateGeometries ? _numValidatedGeoms : _numValidGeoms, ds.Tables[0].Rows.Count);
+        }
+
+        [NUnit.Framework.TestCase(SqlServerProviderMode.WellKnownBinary, SqlServerSpatialObjectType.Geography, -179, 179, -89.4, 89.4)]
+        [NUnit.Framework.TestCase(SqlServerProviderMode.WellKnownBinary, SqlServerSpatialObjectType.Geography, -180, 180, -90, 90)]
+        [NUnit.Framework.TestCase(SqlServerProviderMode.NativeSqlBytes, SqlServerSpatialObjectType.Geography, -179, 179, -89.4, 89.4)]
+        [NUnit.Framework.TestCase(SqlServerProviderMode.NativeSqlBytes, SqlServerSpatialObjectType.Geography, -180, 180, -90, 90)]
+        public void TestExecuteIntersectionQueryExceedGeogMaxExtents(SqlServerProviderMode providerMode, SqlServerSpatialObjectType spatialType, 
+            double x1, double x2, double y1, double y2)
+        {
+            // occurs when user zooms out beyond map extents. For Geog, when latitude approaches 90 N or S can result in  
+            // error 24206: "The specified input cannot be accepted because it contains an edge with antipodal points."
+            // Longitudes exceeding -179.99999999 or 180.0 are "wrapped" resulting in unexpected polygon (also contributes to err 24206)
+            SharpMap.Data.Providers.SqlServer2008 sq = GetTestProvider(providerMode, spatialType);
+
+            SharpMap.Data.FeatureDataSet ds = new SharpMap.Data.FeatureDataSet();
+
+            sq.ExecuteIntersectionQuery(new GeoAPI.Geometries.Envelope(x1, x2, y1, y2), ds);
 
             Assert.AreEqual(sq.ValidateGeometries ? _numValidatedGeoms : _numValidGeoms, ds.Tables[0].Rows.Count);
         }

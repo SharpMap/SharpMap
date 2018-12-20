@@ -102,8 +102,10 @@ namespace SharpMap.Data.Providers
         // column name used in queries for retrieving spatial column as WKB
         private const string SharpMapWkb = "sharpmapwkb";
 
-        // required for restricting extents of WKT (eg bbox) used to query SqlGeography
-        protected static readonly Envelope GeogMaxExtents = new Envelope(-179.999999999, 179.999999999, -89.999999999, 89.999999999);
+        // required for restricting extents of WKT (eg bbox) used to query SqlGeography to work around error 
+        // 24206 "The specified input cannot be accepted because it contains an edge with antipodal points"
+        // FullGlobe will be used when map extents exceed this envelope.
+        protected static readonly Envelope GeogMaxExtents = new Envelope(-179.999999999, 180.0, -89.999999000, 89.999999000);
 
         // SqlGeography : polygon interior defined by left hand/foot rule (anti-clockwise orientation)
         // SqlGeometry  : orientation is irrelevant
@@ -594,10 +596,11 @@ namespace SharpMap.Data.Providers
         /// <returns></returns>   
         protected string GetBoxFilterStr(Envelope bbox)
         {
-            if (SpatialObjectType == SqlServerSpatialObjectType.Geography)
-                bbox = bbox.Intersection(GeogMaxExtents);
-
             var bboxText = Factory.ToGeometry(bbox).ToString();
+
+            if (SpatialObjectType == SqlServerSpatialObjectType.Geography && !GeogMaxExtents.Contains(bbox))
+                // ReorientObject() has no effect on FullGlobe
+                bboxText = "FullGlobe";
 
             // .MakeValid() in WHERE clause is not compatible certain BuildHints, resulting in error:
             // The query processor could not produce a query plan for a query with a spatial index hint.  Reason: Could not find required binary spatial method in a condition.  Try removing the index hints or removing SET FORCEPLAN.
@@ -614,16 +617,6 @@ namespace SharpMap.Data.Providers
         /// <param name="ds">FeatureDataSet to fill data into</param>   
         protected override void OnExecuteIntersectionQuery(IGeometry geom, FeatureDataSet fds)
         {
-            if (SpatialObjectType == SqlServerSpatialObjectType.Geography)
-            {
-                // Define Ring with Clockwise orientation, to be reoriented in query
-                var maxExentsPoly = Factory.CreatePolygon(new Coordinate[] {
-                            GeogMaxExtents.BottomLeft(), GeogMaxExtents.TopLeft(),
-                            GeogMaxExtents.TopRight(), GeogMaxExtents.BottomRight(),
-                            GeogMaxExtents.BottomLeft()});
-                geom = geom.Intersection(maxExentsPoly);
-            }
-
             var sb = new StringBuilder($"SELECT {GetAttributeColumnNames()}, {GeometryColumn}{GetMakeValidString()}.STAsBinary() As {SharpMapWkb} " +
                                        $"FROM {QualifiedTable} {BuildTableHints()} WHERE ");
 
@@ -639,7 +632,12 @@ namespace SharpMap.Data.Providers
             // The query processor could not produce a query plan for a query with a spatial index hint.  Reason: Could not find required binary spatial method in a condition.  Try removing the index hints or removing SET FORCEPLAN.
             var makeValid = (ForceSeekHint || !string.IsNullOrEmpty(ForceIndex)) ? "" : GetMakeValidString(); //".MakeValid()"
 
-            sb.Append($"{GeometryColumn}{makeValid}.STIntersects({_spatialTypeString}::STGeomFromText('{geom.AsText()}', {SRID}){_reorientObject})=1 {GetExtraOptions()}");
+            var geomText = geom.AsText();
+
+            if (SpatialObjectType == SqlServerSpatialObjectType.Geography && !GeogMaxExtents.Contains(geom.EnvelopeInternal))
+                geomText = "FullGlobe";
+
+            sb.Append($"{GeometryColumn}{makeValid}.STIntersects({_spatialTypeString}::STGeomFromText('{geomText}', {SRID}){_reorientObject})=1 {GetExtraOptions()}");
 
             if (_logger.IsDebugEnabled) _logger.DebugFormat("OnExecuteIntersectionQuery {0}", sb.ToString());
 
