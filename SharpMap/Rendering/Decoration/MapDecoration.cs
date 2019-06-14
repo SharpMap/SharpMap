@@ -84,7 +84,7 @@ namespace SharpMap.Rendering.Decoration
                 case MapDecorationAnchorFlags.Bottom:
                     offsetY = clipRect.Height - (Location.Y + objectSize.Height);
                     break;
-                case MapDecorationAnchorFlags.HorizontalCenter:
+                case MapDecorationAnchorFlags.VerticalCenter:
                     offsetY = (clipRect.Height - (Location.Y + objectSize.Height)) / 2;
                     break;
             }

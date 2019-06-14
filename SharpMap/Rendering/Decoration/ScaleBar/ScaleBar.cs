@@ -73,6 +73,7 @@ namespace SharpMap.Rendering.Decoration.ScaleBar
             BarUnitSmallScale = (int)Unit.Kilometer;
             Scale = 1;
             Width = DefaultWidth;
+            _webMercatorFactor = 1.0;
         }
 
         private Color _barColor1 = DefaultBarColor1;
@@ -92,6 +93,7 @@ namespace SharpMap.Rendering.Decoration.ScaleBar
         private double _lon1;
         private double _lon2;
         private double _lat;
+        private double _webMercatorFactor;
         private bool _forceRecalc;
 
         //bar
@@ -149,6 +151,22 @@ namespace SharpMap.Rendering.Decoration.ScaleBar
             }
             else
                 SetScale((int)g.DpiX, map.Envelope.Width, map.Size.Width);
+
+            switch (map.SRID)
+            {
+                case 3857: 
+                    //other spherical variations (all of which are deprecated except 900913): 900913 54004 41001 102113 102100 3785 
+                    var midGrid = map.ImageToWorld(new PointF(map.Size.Width * 0.5f, map.Size.Height * 0.5f));
+                    var trans = SharpMap.Session.Instance.CoordinateSystemServices.CreateTransformation(3857, 4326);
+                    var midGeog = trans.MathTransform.Transform(new GeoAPI.Geometries.Coordinate(midGrid.X, midGrid.Y));
+
+                    _webMercatorFactor = Math.Cos(midGeog.Y * Math.PI / 180.0);
+                    break;
+
+                default:
+                    _webMercatorFactor = 1.0;
+                    break;
+            }
 
             var rect = new Rectangle(Point.Truncate(rectF.Location), Size.Truncate(rectF.Size));
             RenderScaleBar(g, rect);
@@ -875,14 +893,9 @@ namespace SharpMap.Rendering.Decoration.ScaleBar
             //Map Unit
             if (factor <= 0.0) //factor should be >0
                 factor = 1.0;
-            _mapUnitFactor = factor;
-            _mapUnitName = name;
-            _mapUnitShortName = shortName;
 
-            //Bar Unit   
-            //_barUnitFactor = factor;
-            //_barUnitName = name;
-            //_barUnitShortName = shortName;
+            ScaleBar.Units[(int)Unit.Custom] =  new UnitInfo((int)Unit.Custom, factor, name, shortName);
+            MapUnit = (int)Unit.Custom;
 
             _barUnitLargeScale = (int)Unit.Custom;
             _barUnitFactorLargeScale = factor;
@@ -977,6 +990,8 @@ namespace SharpMap.Rendering.Decoration.ScaleBar
                     return _barUnitName;
                 default:
                     var precision = 0;
+
+                    scale *= _webMercatorFactor;
 
                     //set the precision. Keep the first 5 (ScalePrecisionDigits) digits. 
                     if (scale > 0)
@@ -1163,6 +1178,8 @@ namespace SharpMap.Rendering.Decoration.ScaleBar
             double barUnitsPerPixel = barScale * GeoSpatialMath.MetersPerInch / pixelsPerInch;
 
             //calculate the result
+            barUnitsPerPixel *= _webMercatorFactor;
+
             scaleBarUnitsPerTic = minPixelsPerTic * barUnitsPerPixel;
             scaleBarUnitsPerTic = GetRoundIncrement(scaleBarUnitsPerTic);
             pixelsPerTic = (int)(scaleBarUnitsPerTic / barUnitsPerPixel);
