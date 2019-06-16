@@ -46,6 +46,9 @@ namespace SharpMap.Rendering.Decoration.ScaleBar
         private const int DefaultWidth = 180;
 
         private const double VerySmall = 0.0000001;
+
+        private const double WebMercatorRadius = 6378137.0;
+
         #endregion
 
         private static readonly Dictionary<int, UnitInfo> Units = new Dictionary<int, UnitInfo>();
@@ -64,7 +67,8 @@ namespace SharpMap.Rendering.Decoration.ScaleBar
         }
 
         /// <summary>
-        /// Creates an instance of this class
+        /// Creates an instance of this class. Special handling applies when Map.SRID=3857 (WebMercator) 
+        /// to adjust ScaleBar interval and text according to mid-latitude of current view. 
         /// </summary>
         public ScaleBar()
         {
@@ -133,14 +137,12 @@ namespace SharpMap.Rendering.Decoration.ScaleBar
         }
 
         /// <summary>
-        /// Function to render the actual map decoration
+        /// Function to render the actual map decoration. Note special handling when Map.SRID=3857 (WebMercator)
         /// </summary>
         /// <param name="g"></param>
         /// <param name="map"></param>
         protected override void OnRender(Graphics g, Map map)
         {
-            if (!this.Enabled)
-                return;
             var rectF = g.ClipBounds;
 
             if (MapUnit == (int)Unit.Degree)
@@ -157,10 +159,10 @@ namespace SharpMap.Rendering.Decoration.ScaleBar
                 case 3857: 
                     //other spherical variations (all of which are deprecated except 900913): 900913 54004 41001 102113 102100 3785 
                     var midGrid = map.ImageToWorld(new PointF(map.Size.Width * 0.5f, map.Size.Height * 0.5f));
-                    var trans = SharpMap.Session.Instance.CoordinateSystemServices.CreateTransformation(3857, 4326);
-                    var midGeog = trans.MathTransform.Transform(new GeoAPI.Geometries.Coordinate(midGrid.X, midGrid.Y));
-
-                    _webMercatorFactor = Math.Cos(midGeog.Y * Math.PI / 180.0);
+                    // constrain to 85deg N/S
+                    if (Math.Abs(midGrid.Y) >= 20000000) return;
+                    // refer to https://en.wikipedia.org/wiki/Mercator_projection#Scale_factor
+                    _webMercatorFactor = 1 / Math.Cosh(midGrid.Y / WebMercatorRadius);
                     break;
 
                 default:
