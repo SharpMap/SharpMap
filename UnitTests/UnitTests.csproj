@@ -206,6 +206,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
+    <Compile Include="Rendering\Decoration\ScaleBar\ScaleBarTests.cs" />
     <Compile Include="Rendering\GroupStyle\GroupStyleTests.cs" />
     <Compile Include="Rendering\Symbolizer\CohenSutherlandLineClippingTest.cs" />
     <Compile Include="Rendering\Symbolizer\LineSymbolizerTest.cs" />

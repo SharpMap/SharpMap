@@ -46,6 +46,9 @@ namespace SharpMap.Rendering.Decoration.ScaleBar
         private const int DefaultWidth = 180;
 
         private const double VerySmall = 0.0000001;
+
+        private const double WebMercatorRadius = 6378137.0;
+
         #endregion
 
         private static readonly Dictionary<int, UnitInfo> Units = new Dictionary<int, UnitInfo>();
@@ -64,7 +67,8 @@ namespace SharpMap.Rendering.Decoration.ScaleBar
         }
 
         /// <summary>
-        /// Creates an instance of this class
+        /// Creates an instance of this class. Special handling applies when Map.SRID=3857 (WebMercator) 
+        /// to adjust ScaleBar interval and text according to mid-latitude of current view. 
         /// </summary>
         public ScaleBar()
         {
@@ -73,6 +77,7 @@ namespace SharpMap.Rendering.Decoration.ScaleBar
             BarUnitSmallScale = (int)Unit.Kilometer;
             Scale = 1;
             Width = DefaultWidth;
+            _webMercatorFactor = 1.0;
         }
 
         private Color _barColor1 = DefaultBarColor1;
@@ -92,6 +97,7 @@ namespace SharpMap.Rendering.Decoration.ScaleBar
         private double _lon1;
         private double _lon2;
         private double _lat;
+        private double _webMercatorFactor;
         private bool _forceRecalc;
 
         //bar
@@ -131,14 +137,12 @@ namespace SharpMap.Rendering.Decoration.ScaleBar
         }
 
         /// <summary>
-        /// Function to render the actual map decoration
+        /// Function to render the actual map decoration. Note special handling when Map.SRID=3857 (WebMercator)
         /// </summary>
         /// <param name="g"></param>
         /// <param name="map"></param>
         protected override void OnRender(Graphics g, Map map)
         {
-            if (!this.Enabled)
-                return;
             var rectF = g.ClipBounds;
 
             if (MapUnit == (int)Unit.Degree)
@@ -149,6 +153,22 @@ namespace SharpMap.Rendering.Decoration.ScaleBar
             }
             else
                 SetScale((int)g.DpiX, map.Envelope.Width, map.Size.Width);
+
+            switch (map.SRID)
+            {
+                case 3857: 
+                    //other spherical variations (all of which are deprecated except 900913): 900913 54004 41001 102113 102100 3785 
+                    var midGrid = map.ImageToWorld(new PointF(map.Size.Width * 0.5f, map.Size.Height * 0.5f));
+                    // constrain to 85deg N/S
+                    if (Math.Abs(midGrid.Y) >= 20000000) return;
+                    // refer to https://en.wikipedia.org/wiki/Mercator_projection#Scale_factor
+                    _webMercatorFactor = 1 / Math.Cosh(midGrid.Y / WebMercatorRadius);
+                    break;
+
+                default:
+                    _webMercatorFactor = 1.0;
+                    break;
+            }
 
             var rect = new Rectangle(Point.Truncate(rectF.Location), Size.Truncate(rectF.Size));
             RenderScaleBar(g, rect);
@@ -875,14 +895,9 @@ namespace SharpMap.Rendering.Decoration.ScaleBar
             //Map Unit
             if (factor <= 0.0) //factor should be >0
                 factor = 1.0;
-            _mapUnitFactor = factor;
-            _mapUnitName = name;
-            _mapUnitShortName = shortName;
 
-            //Bar Unit   
-            //_barUnitFactor = factor;
-            //_barUnitName = name;
-            //_barUnitShortName = shortName;
+            ScaleBar.Units[(int)Unit.Custom] =  new UnitInfo((int)Unit.Custom, factor, name, shortName);
+            MapUnit = (int)Unit.Custom;
 
             _barUnitLargeScale = (int)Unit.Custom;
             _barUnitFactorLargeScale = factor;
@@ -977,6 +992,8 @@ namespace SharpMap.Rendering.Decoration.ScaleBar
                     return _barUnitName;
                 default:
                     var precision = 0;
+
+                    scale *= _webMercatorFactor;
 
                     //set the precision. Keep the first 5 (ScalePrecisionDigits) digits. 
                     if (scale > 0)
@@ -1163,6 +1180,8 @@ namespace SharpMap.Rendering.Decoration.ScaleBar
             double barUnitsPerPixel = barScale * GeoSpatialMath.MetersPerInch / pixelsPerInch;
 
             //calculate the result
+            barUnitsPerPixel *= _webMercatorFactor;
+
             scaleBarUnitsPerTic = minPixelsPerTic * barUnitsPerPixel;
             scaleBarUnitsPerTic = GetRoundIncrement(scaleBarUnitsPerTic);
             pixelsPerTic = (int)(scaleBarUnitsPerTic / barUnitsPerPixel);

@@ -46,12 +46,12 @@ namespace SharpMap.Rendering.Decoration
         CenterTop = MapDecorationAnchorFlags.HorizontalCenter | MapDecorationAnchorFlags.Top,
 
         /// <summary>
-        /// Right bottom
+        /// Center bottom
         /// </summary>
         CenterBottom = MapDecorationAnchorFlags.HorizontalCenter | MapDecorationAnchorFlags.Bottom,
 
         /// <summary>
-        /// Right center
+        /// Center
         /// </summary>
         Center = MapDecorationAnchorFlags.HorizontalCenter | MapDecorationAnchorFlags.VerticalCenter,
     }
