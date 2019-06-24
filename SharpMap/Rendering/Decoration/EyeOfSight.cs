@@ -67,7 +67,7 @@ namespace SharpMap.Rendering.Decoration
         /// </summary>
         /// <param name="g"></param>
         /// <param name="map"></param>
-        protected override void OnRender(Graphics g, Map map)
+        protected override void OnRender(Graphics g, MapViewport map)
         {
             // Render the rosetta
             base.OnRender(g, map);
@@ -81,13 +81,13 @@ namespace SharpMap.Rendering.Decoration
             var width = Size.Width;
             var height = Size.Height;
             var pts = new[]
-                          {
-                              new PointF(0f, -0.35f*height),
-                              new PointF(0.125f*width, 0.35f*height),
-                              new PointF(0f, 0.275f*height),
-                              new PointF(-0.125f*width, 0.35f*height),
-                              new PointF(0f, -0.35f*height),
-                          };
+            {
+                new PointF(0f, -0.35f*height),
+                new PointF(0.125f*width, 0.35f*height),
+                new PointF(0f, 0.275f*height),
+                new PointF(-0.125f*width, 0.35f*height),
+                new PointF(0f, -0.35f*height),
+            };
 
             // need to outline the needle
             if (NeedleOutlineWidth>0)
@@ -99,9 +99,8 @@ namespace SharpMap.Rendering.Decoration
             g.FillPolygon(new SolidBrush(OpacityColor(NeedleFillColor)), pts );
 
             g.Transform = oldTransform;
-
         }
-        
+
         #endregion
     }
 }

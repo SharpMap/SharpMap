@@ -60,6 +60,7 @@ namespace SharpMap.Rendering.Decoration
         /// </summary>
         public Size Size { get; set; }
 
+
         /// <summary>
         /// Gets or sets the fore color
         /// </summary>
@@ -75,17 +76,17 @@ namespace SharpMap.Rendering.Decoration
         /// <param name="g">The graphics object</param>
         /// <param name="map">The map</param>
         /// <returns>The size of the map decoration</returns>
-        protected override Size InternalSize(Graphics g, Map map)
+        protected override Size InternalSize(Graphics g, MapViewport map)
         {
             return Size;
         }
-
+        
         /// <summary>
         /// Function to render the actual map decoration
         /// </summary>
         /// <param name="g"></param>
         /// <param name="map"></param>
-        protected override void OnRender(Graphics g, Map map)
+        protected override void OnRender(Graphics g, MapViewport map)
         {
             var image = NorthArrowImage ?? DefaultNorthArrowBitmap;
 
@@ -107,8 +108,8 @@ namespace SharpMap.Rendering.Decoration
             
             var clip = g.ClipBounds;
             var newTransform = new Matrix(1f, 0f, 0f, 1f, 
-                                          clip.Left + halfSize.Width,
-                                          clip.Top + halfSize.Height);
+                clip.Left + halfSize.Width,
+                clip.Top + halfSize.Height);
             newTransform.Rotate((float)rot);
 
             // Setup image attributes

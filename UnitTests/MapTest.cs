@@ -547,6 +547,56 @@ namespace UnitTests
             Assert.AreEqual(340, map.Zoom);
         }
 
+        [TestCase(500, 100, 10000, 10000)]
+        public void ZoomToBox_WithRotatedViewport(int mapSizeWidth, int mapSizeHeight, double boxWidth,
+            double boxHeight)
+        {
+            // Ensure that map extents contain envelope
+            Map map = new Map(new Size(mapSizeWidth, mapSizeHeight));
+            map.BackColor= Color.Azure;
+
+            var env = new Envelope(0, boxWidth, 0, boxHeight);
+            env.Translate(700000 - boxHeight * 0.5, 1000000 - boxHeight * 0.5);
+
+            var vl = new VectorLayer("Test Points");
+            var gp = new GeometryProvider(env.ToPolygon());
+            gp.Geometries.Add(new NetTopologySuite.Geometries.Point(env.Centre));
+            var llIndicator = new Coordinate(env.BottomLeft());
+            llIndicator.X += 100;
+            llIndicator.Y += 100;
+            gp.Geometries.Add(new NetTopologySuite.Geometries.Point(llIndicator));
+            vl.DataSource = gp;
+            map.Layers.Add(vl);
+
+            for (var degrees = 0; degrees <= 360; degrees += 30)
+            {
+                var mapTransform = new System.Drawing.Drawing2D.Matrix();
+                mapTransform.RotateAt(degrees, new PointF(map.Size.Width / 2, map.Size.Height / 2));
+                map.MapTransform = mapTransform;
+
+                // reset view
+                map.Center = new Coordinate(0, 0);
+                map.Zoom = 1000;
+
+                map.ZoomToBox(env);
+                var fn =
+                    $"ZoomToBox_{mapSizeWidth}x{mapSizeHeight}_{degrees:0}deg_bbox_{env.Width}x{env.Height}_old.png";
+                using (var img = map.GetMap(96))
+                    img.Save(fn, System.Drawing.Imaging.ImageFormat.Bmp);
+
+                // reset view
+                map.Center = new Coordinate(0, 0);
+                map.Zoom = 1000;
+
+//                map.ZoomToBox(env, true);
+//                fn = $"ZoomToBox_{mapSizeWidth}x{mapSizeHeight}_{degrees:0}deg_bbox_{env.Width}x{env.Height}_new.png";
+//                using (var img = map.GetMap(96))
+//                    img.Save(fn, System.Drawing.Imaging.ImageFormat.Bmp);
+            }
+
+            map.Dispose();
+        }
+
         [Test]
         public void TestZoomToBoxRaisesMapViewOnChange()
         {

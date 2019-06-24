@@ -146,9 +146,15 @@ namespace SharpMap
         private readonly LayerCollection _layers;
         private readonly LayerCollection _backgroundLayers;
         private readonly VariableLayerCollection _variableLayers;
-        private object _lockMapTransform = new object();
-        private Matrix _mapTransform;
+#pragma warning disable 169
+        // both fields redundant, but unable to remove without violating serialization
+        private Matrix _mapTransform; 
         private Matrix _mapTransformInverted;
+#pragma warning restore 169
+        private readonly object _lockMapTransform = new object();
+        private readonly object _lockMapTransformInverted = new object();
+        private float[] _mapTransformElements; 
+        private float[] _mapTransformInvertedElements;
         
         private readonly MapViewPortGuard _mapViewportGuard;
         private readonly Dictionary<object, List<ILayer>> _layersPerGroup = new Dictionary<object, List<ILayer>>();
@@ -193,8 +199,9 @@ namespace SharpMap
             _variableLayers = new VariableLayerCollection(_layers);
             _layersPerGroup.Add(_variableLayers, new List<ILayer>());
             BackColor = Color.Transparent;
-            _mapTransform = new Matrix();
-            _mapTransformInverted = new Matrix();
+            var matrix = new Matrix();
+            _mapTransformElements = matrix.Elements;
+            _mapTransformInvertedElements = matrix.Elements;
             _center = new Point(0, 0);
             _zoom = 1;
 
@@ -603,13 +610,10 @@ namespace SharpMap
             if ((Layers == null || Layers.Count == 0) && (BackgroundLayer == null || BackgroundLayer.Count == 0) && (_variableLayers == null || _variableLayers.Count == 0))
                 throw new InvalidOperationException("No layers to render");
 
-            MapViewport mvp = null;
-            lock (_lockMapTransform)
-            {
-                // working with MapTransform CLONE
-                g.Transform = MapTransform;
-                mvp = (MapViewport)this;
-            }
+            g.Transform = MapTransform;
+            
+            var mvp = (MapViewport) this;
+
             g.Clear(BackColor);
             g.PageUnit = GraphicsUnit.Pixel;
 
@@ -686,7 +690,7 @@ namespace SharpMap
             // Render all map decorations
             foreach (var mapDecoration in _decorations)
             {
-                mapDecoration.Render(g, this);
+                mapDecoration.Render(g, mvp);
             }
             //Resets the timer for VariableLayer
             _variableLayers.Pause = false;
@@ -806,14 +810,12 @@ namespace SharpMap
             if (lc == null || lc.Count == 0)
                 throw new InvalidOperationException("No layers to render");
 
-            Matrix transform = g.Transform;
-            MapViewport mvp = null;
-            lock (_lockMapTransform)
-            {
-                // working with MapTransform CLONE
-                g.Transform = MapTransform;
-                mvp = (MapViewport)this;
-            }
+            var origTransform = g.Transform;
+
+            g.Transform = MapTransform;
+
+            var mvp = (MapViewport) this;
+
             if (!drawTransparent)
                 g.Clear(BackColor);
 
@@ -838,7 +840,7 @@ namespace SharpMap
              */
 
             if (drawTransparent)
-                g.Transform = transform;
+                g.Transform = origTransform;
 
             if (layerCollectionType == LayerCollectionType.Static)
             {
@@ -849,7 +851,7 @@ namespace SharpMap
                 {
                     foreach (var mapDecoration in Decorations)
                     {
-                        mapDecoration.Render(g, this);
+                        mapDecoration.Render(g, mvp);
                     }
                 }
             }
@@ -1008,33 +1010,33 @@ namespace SharpMap
         {
             if (bbox != null && !bbox.IsNull)
             {
-                //Ensure aspect ratio
-                var resX = Size.Width == 0 ? double.MaxValue : bbox.Width / Size.Width;
-                var resY = Size.Height == 0 ? double.MaxValue : bbox.Height / Size.Height;
-                var zoom = bbox.Width;
-                if (resY > resX && resX > 0)
+            //Ensure aspect ratio
+            var resX = Size.Width == 0 ? double.MaxValue : bbox.Width / Size.Width;
+            var resY = Size.Height == 0 ? double.MaxValue : bbox.Height / Size.Height;
+            var zoom = bbox.Width;
+            if (resY > resX && resX > 0)
                 {
-                    zoom *= resY / resX;
+                zoom *= resY / resX;
                 }
 
-                var center = new Coordinate(bbox.Centre);
+            var center = new Coordinate(bbox.Centre);
 
-                zoom = _mapViewportGuard.VerifyZoom(zoom, center);
-                var changed = false;
-                if (zoom != _zoom)
-                {
-                    _zoom = zoom;
-                    changed = true;
-                }
+            zoom = _mapViewportGuard.VerifyZoom(zoom, center);
+            var changed = false;
+            if (zoom != _zoom)
+            {
+                _zoom = zoom;
+                changed = true;
+            }
 
-                if (!center.Equals2D(_center))
-                {
-                    _center = center;
-                    changed = true;
-                }
+            if (!center.Equals2D(_center))
+            {
+                _center = center;
+                changed = true;
+            }
 
-                if (changed && MapViewOnChange != null)
-                    MapViewOnChange();
+            if (changed && MapViewOnChange != null)
+                MapViewOnChange();
             }
         }
 
@@ -1048,24 +1050,15 @@ namespace SharpMap
         public PointF WorldToImage(Coordinate p, bool careAboutMapTransform)
         {
             var pTmp = Transform.WorldtoMap(p, this);
-            if (!careAboutMapTransform)
+            if (!careAboutMapTransform || MapTransformRotation.Equals(0f))
                 return pTmp;
 
-            if (!MapTransformRotation.Equals(0f))
+            using (var transform = MapTransform)
             {
-                // working with MapTransform clone
-                using (var transform = MapTransform)
-                {
-                    if (!transform.IsIdentity)
-                    {
-                        var pts = new[] {pTmp};
-                        transform.TransformPoints(pts);
-                        pTmp = pts[0];
-                    }
-                }
+                var pts = new[] {pTmp};
+                transform.TransformPoints(pts);
+                return pts[0];
             }
-
-            return pTmp;
         }
 
         /// <summary>
@@ -1098,20 +1091,13 @@ namespace SharpMap
         /// <returns>Point in world coordinates</returns>
         public Point ImageToWorld(PointF p, bool careAboutMapTransform)
         {
-            if (careAboutMapTransform && MapTransformRotation != 0)
-            {
-                Matrix transformInv;
-                lock (_lockMapTransform)
-                    transformInv = _mapTransformInverted.Clone();
-
-                if (!transformInv.IsIdentity)
+            if (careAboutMapTransform && !MapTransformRotation.Equals(0f))
+                using (var transformInv = MapTransformInverted)
                 {
                     var pts = new[] { p };
                     transformInv.TransformPoints(pts);
                     p = pts[0];
                 }
-                transformInv.Dispose();
-            }
 
             return Transform.MapToWorld(p, this);
         }
@@ -1158,7 +1144,10 @@ namespace SharpMap
         }
 
         /// <summary>
-        /// Gets the extents of the current map based on the current zoom, center and mapsize
+        /// <para>Gets the extents of the current map based on the current zoom, center and size.</para>
+        /// <para>If a <see cref="MapTransform"/> is applied, the envelope containing the rotated view
+        /// will be returned, which is used by layers to spatially select data. However,
+        /// the aspect ratio will probably not be the same as Map.<see cref="Size"/></para> 
         /// </summary>
         public Envelope Envelope
         {
@@ -1209,28 +1198,42 @@ namespace SharpMap
             get
             {
                 lock (_lockMapTransform)
-                    return _mapTransform.Clone();
+                    return new Matrix(
+                        _mapTransformElements[0],
+                        _mapTransformElements[1],
+                        _mapTransformElements[2],
+                        _mapTransformElements[3],
+                        _mapTransformElements[4],
+                        _mapTransformElements[5]);
             }
             set
             {
-                if (value == null)
-                    value = new Matrix();
-
-                if (!value.IsInvertible)
-                    throw new ArgumentException("Matrix not invertible", nameof(value));
-
-                _mapTransform = value;
-                _mapTransformInverted = value.Clone();
-                _mapTransformInverted.Invert();
-
-                if (value.IsIdentity)
-                    MapTransformRotation = 0;
-                else
+                lock (_lockMapTransform)
                 {
-                    var rad = value.Elements[1] >= 0 ? Math.Acos(value.Elements[0]) : -Math.Acos(value.Elements[0]);
-                    if (rad < 0)
-                        rad += 2 * Math.PI;
-                    MapTransformRotation = (float)(rad * 180.0 / Math.PI);
+                    if (value == null)
+                        value = new Matrix();
+
+                    if (!value.IsInvertible)
+                        throw new ArgumentException("Matrix not invertible", nameof(value));
+
+                    _mapTransformElements = value.Elements;
+
+                    lock (_lockMapTransformInverted)
+                    {
+                        var inverted = value.Clone();
+                        inverted.Invert();
+                        _mapTransformInvertedElements = inverted.Elements;
+                    }
+                    
+                    if (value.IsIdentity)
+                        MapTransformRotation = 0f;
+                    else
+                    {
+                        var rad = value.Elements[1] >= 0 ? Math.Acos(value.Elements[0]) : -Math.Acos(value.Elements[0]);
+                        if (rad < 0)
+                            rad += 2 * Math.PI;
+                        MapTransformRotation = (float)(rad * 180.0 / Math.PI);
+                    }
                 }
 
             }
@@ -1238,11 +1241,22 @@ namespace SharpMap
 
         internal Matrix MapTransformInverted
         {
-            get { return _mapTransformInverted; }
+            get
+            {
+                lock (_lockMapTransformInverted)
+                    return new Matrix(
+                        _mapTransformInvertedElements[0],
+                        _mapTransformInvertedElements[1],
+                        _mapTransformInvertedElements[2],
+                        _mapTransformInvertedElements[3],
+                        _mapTransformInvertedElements[4],
+                        _mapTransformInvertedElements[5]);
+            }
         }
         
         /// <summary>
         /// MapTransform Rotation in degrees. Facilitates determining if map is rotated without locking MapTransform.
+        /// Positive rotation is applied anti-clockwise, with the apparent effect of north arrow rotating clockwise. 
         /// </summary>
         public float MapTransformRotation { get; private set; }
 
@@ -1369,7 +1383,7 @@ namespace SharpMap
         /// <returns></returns>
         public double GetMapScale(int dpi)
         {
-            return ScaleCalculations.CalculateScaleNonLatLong(Envelope.Width, Size.Width, 1, dpi);
+                return ScaleCalculations.CalculateScaleNonLatLong(Envelope.Width, Size.Width, 1, dpi);
         }
 
         /// <summary>

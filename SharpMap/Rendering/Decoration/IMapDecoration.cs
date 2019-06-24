@@ -1,3 +1,4 @@
+using System;
 using System.Drawing;
 
 namespace SharpMap.Rendering.Decoration
@@ -11,7 +12,10 @@ namespace SharpMap.Rendering.Decoration
         /// Renders the map decoration to the graphics object
         /// </summary>
         /// <param name="g">The graphics object</param>
-        /// <param name="map">The map</param>
+        /// <param name="map">The map viewport</param>
+        void Render(Graphics g, MapViewport map);
+
+        [Obsolete("Use Render (Graphics, MapViewport)")]
         void Render(Graphics g, Map map);
     }
 }

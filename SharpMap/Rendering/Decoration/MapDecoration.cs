@@ -60,7 +60,7 @@ namespace SharpMap.Rendering.Decoration
         /// </summary>
         /// <param name="map"></param>
         /// <returns></returns>
-        private Point GetLocation(Map map)
+        private Point GetLocation(MapViewport map)
         {
             var clipRect = map.Size;
             var objectSize = Size;
@@ -156,7 +156,7 @@ namespace SharpMap.Rendering.Decoration
         /// </summary>
         public bool RoundedEdges { get; set; }
 
-#endregion
+        #endregion
 
         /// <summary>
         /// Function to compute the required size for rendering the map decoration object
@@ -165,9 +165,15 @@ namespace SharpMap.Rendering.Decoration
         /// <param name="g">The graphics object</param>
         /// <param name="map">The map</param>
         /// <returns>The size of the map decoration</returns>
-        protected abstract Size InternalSize(Graphics g, Map map);
+        protected abstract Size InternalSize(Graphics g, MapViewport map);
 
-        private void CalcMapDecorationMetrics(Graphics g, Map map)
+        [Obsolete("Use InternalSize(Graphics, MapViewport")]
+        protected virtual Size InternalSize(Graphics g, Map map)
+        {
+            return InternalSize(g, (MapViewport) map);
+        }
+
+        private void CalcMapDecorationMetrics(Graphics g, MapViewport map)
         {
             _cachedSize = InternalSize(g, map);
             var rect = new Rectangle(Point.Add(GetLocation(map), BorderMargin), _cachedSize);
@@ -179,7 +185,7 @@ namespace SharpMap.Rendering.Decoration
             get { return Size.Add(_cachedSize, Size.Add(BorderMargin, BorderMargin)); }
         }
 
-        private Region GetClipRegion(Map map)
+        private Region GetClipRegion(MapViewport map)
         {
             return new Region(new Rectangle(Point.Add(GetLocation(map), BorderMargin), _cachedSize));
         }
@@ -216,12 +222,13 @@ namespace SharpMap.Rendering.Decoration
             return gp;
         }
 
+
         /// <summary>
-        /// 
+        /// Draw the map decoration
         /// </summary>
         /// <param name="g"></param>
         /// <param name="map"></param>
-        public void Render(Graphics g, Map map)
+        public void Render(Graphics g, MapViewport map)
         {
             //Is this map decoration enabled?
             if (!Enabled)
@@ -257,30 +264,57 @@ namespace SharpMap.Rendering.Decoration
             OnRendered(g, map);
         }
 
+        [Obsolete("Use Render(Graphics, MapViewport")]
+        public void Render(Graphics g, Map map)
+        {
+            Render(g, (MapViewport)map);
+        }
+
+
         /// <summary>
         /// Function to render the actual map decoration
         /// </summary>
         /// <param name="g"></param>
         /// <param name="map"></param>
-        protected virtual void OnRender(Graphics g, Map map)
+        protected virtual void OnRender(Graphics g, MapViewport map)
         {
         }
+
+        [Obsolete("Use OnRender(Graphics, MapViewport")]
+        protected virtual void OnRender(Graphics g, Map map)
+        {
+            OnRender(g, (MapViewport) map);
+        }
+
         /// <summary>
         /// Function to render the actual map decoration
         /// </summary>
         /// <param name="g"></param>
         /// <param name="map"></param>
-        protected virtual void OnRendering(Graphics g, Map map)
+        protected virtual void OnRendering(Graphics g, MapViewport map)
         {
             CalcMapDecorationMetrics(g, map);
         }
+
+        [Obsolete("Use OnRendering(Graphics, MapViewport")]
+        protected virtual void OnRendering(Graphics g, Map map)
+        {
+            OnRendering(g, (MapViewport)map);
+        }
+
         /// <summary>
         /// Function to render the actual map decoration
         /// </summary>
         /// <param name="g"></param>
         /// <param name="map"></param>
+        protected virtual void OnRendered(Graphics g, MapViewport map)
+        {
+        }
+
+        [Obsolete("Use OnRendered(Graphics, MapViewport")]
         protected virtual void OnRendered(Graphics g, Map map)
         {
+            OnRendered(g, (MapViewport) map);
         }
     }
 }
