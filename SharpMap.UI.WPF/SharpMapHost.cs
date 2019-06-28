@@ -48,31 +48,31 @@ namespace SharpMap.UI.WPF
     {
         // Dependency Property to store MapLayers.
         public static readonly DependencyProperty MapLayersProperty =
-            DependencyProperty.Register("MapLayers", typeof (ObservableCollection<ILayer>), typeof (SharpMapHost), new PropertyMetadata(SetMapLayersCallback));
+            DependencyProperty.Register("MapLayers", typeof(ObservableCollection<ILayer>), typeof(SharpMapHost), new PropertyMetadata(SetMapLayersCallback));
 
         // Dependency Property store store BackgroundLayer.
         public static readonly DependencyProperty BackgroundLayerProperty =
-            DependencyProperty.Register("BackgroundLayer", typeof (Layer), typeof (SharpMapHost), new PropertyMetadata(SetBackgroundLayerCallback));
+            DependencyProperty.Register("BackgroundLayer", typeof(Layer), typeof(SharpMapHost), new PropertyMetadata(SetBackgroundLayerCallback));
 
         // Dependency Property to store ActiveTool.
         public static readonly DependencyProperty ActiveToolProperty =
-            DependencyProperty.Register("ActiveTool", typeof (MapBox.Tools), typeof (SharpMapHost), new PropertyMetadata(SetActiveToolCallback));
+            DependencyProperty.Register("ActiveTool", typeof(MapBox.Tools), typeof(SharpMapHost), new PropertyMetadata(SetActiveToolCallback));
 
         // Dependency Property to store MaxExtent.
         public static readonly DependencyProperty MaxExtentProperty =
-            DependencyProperty.Register("MaxExtent", typeof (Envelope), typeof (SharpMapHost), new PropertyMetadata(SetMaxExtentCallback));
+            DependencyProperty.Register("MaxExtent", typeof(Envelope), typeof(SharpMapHost), new PropertyMetadata(SetMaxExtentCallback));
 
         // Dependency Property to store MapExtent.
         public static readonly DependencyProperty MapExtentProperty =
-            DependencyProperty.Register("MapExtent", typeof (Envelope), typeof (SharpMapHost), new PropertyMetadata(MapExtentCallback));
+            DependencyProperty.Register("MapExtent", typeof(Envelope), typeof(SharpMapHost), new PropertyMetadata(MapExtentCallback));
 
         // Dependency Property used when a new geometry is defined.
         public static readonly DependencyProperty DefinedGeometryProperty =
-            DependencyProperty.Register("DefinedGeometry", typeof (IGeometry), typeof (SharpMapHost), new PropertyMetadata(GeometryDefinedCallback));
+            DependencyProperty.Register("DefinedGeometry", typeof(IGeometry), typeof(SharpMapHost), new PropertyMetadata(GeometryDefinedCallback));
 
         // Dependency Property used when right click in a MapFeature.
         public static readonly DependencyProperty FeatureRightClickedCommandProperty =
-            DependencyProperty.Register("FeatureRightClickedCommand", typeof (ICommand), typeof (SharpMapHost));
+            DependencyProperty.Register("FeatureRightClickedCommand", typeof(ICommand), typeof(SharpMapHost));
 
         private readonly MapBox _mapBox;
 
@@ -82,14 +82,16 @@ namespace SharpMap.UI.WPF
 
         private Coordinate _currentMouseCoordinate;
 
+        private Coordinate _doubleClickCoordinate;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="SharpMapHost"/> class. 
         /// </summary>
         public SharpMapHost()
         {
-            _mapBox = new MapBox{
+            _mapBox = new MapBox {
                 BackColor = Color.White,
-                Map = new Map{
+                Map = new Map {
                     SRID = 900913
                 }
             };
@@ -97,22 +99,25 @@ namespace SharpMap.UI.WPF
 
             MapLayers = new ObservableCollection<ILayer>();
 
-            var scaleBar = new ScaleBar{
+            var scaleBar = new ScaleBar {
                 Anchor = MapDecorationAnchor.LeftBottom
             };
-            _mapBox.Map.Decorations.Add(scaleBar);
+            //_mapBox.Map.Decorations.Add(scaleBar);
             _mapBox.PanOnClick = false;
 
             KeyDown += OnKeyDown;
 
             _mapBox.MouseMove += MapBoxOnMouseMove;
+            _mapBox.MouseDoubleClick += _mapBox_MouseDoubleClick;
         }
+
+
 
         public ObservableCollection<ILayer> MapLayers
         {
             get
             {
-                return (ObservableCollection<ILayer>) GetValue(MapLayersProperty);
+                return (ObservableCollection<ILayer>)GetValue(MapLayersProperty);
             }
             set
             {
@@ -124,7 +129,7 @@ namespace SharpMap.UI.WPF
         {
             get
             {
-                return (Layer) GetValue(BackgroundLayerProperty);
+                return (Layer)GetValue(BackgroundLayerProperty);
             }
             set
             {
@@ -136,13 +141,16 @@ namespace SharpMap.UI.WPF
         {
             get
             {
-                return (MapBox.Tools) GetValue(ActiveToolProperty);
+                return (MapBox.Tools)GetValue(ActiveToolProperty);
             }
             set
             {
                 SetValue(ActiveToolProperty, value);
             }
         }
+
+        public delegate void mouseDoubleClickDelegate();
+        public event mouseDoubleClickDelegate MouseDoubleClickEvent;
 
         public string CurrentMouseCoordinateString
         {
@@ -157,6 +165,22 @@ namespace SharpMap.UI.WPF
             get
             {
                 return _currentMouseCoordinate;
+            }
+        }
+
+        public Coordinate DoubleClickCoordinate
+        {
+            get
+            {
+                return _doubleClickCoordinate;
+            }
+        }
+
+        public string DoubleClickCoordinateString
+        {
+            get
+            {
+                return _doubleClickCoordinate != null ? string.Format("{0:0}, {1:0}", _doubleClickCoordinate.X, _doubleClickCoordinate.Y) : ""; ;
             }
         }
 
@@ -319,7 +343,7 @@ namespace SharpMap.UI.WPF
 
             var mapBox = host._mapBox;
             var extent = (Envelope) args.NewValue;
-            mapBox.Map.ZoomToBox(extent);
+            mapBox.Map.ZoomToBox(extent);         
             mapBox.Refresh();
         }
 
@@ -449,6 +473,7 @@ namespace SharpMap.UI.WPF
         public void ZoomToEnvelope(Envelope env)
         {
             _mapBox.Map.ZoomToBox(env);
+            _mapBox.Map.MinimumZoom = _mapBox.Map.Zoom;
             _mapBox.Refresh();
         }
 
@@ -465,6 +490,19 @@ namespace SharpMap.UI.WPF
                 PropertyChanged(this, new PropertyChangedEventArgs("CurrentMouseCoordinate"));
                 PropertyChanged(this, new PropertyChangedEventArgs("CurrentMouseCoordinateString"));
             }
+        }
+
+        private void _mapBox_MouseDoubleClick(object o,  MouseEventArgs mouseEventArgs)
+        {
+            _doubleClickCoordinate = _currentMouseCoordinate;
+            
+            if (PropertyChanged != null)
+            {
+                PropertyChanged(this, new PropertyChangedEventArgs("DoubleClickCoordinate"));
+                PropertyChanged(this, new PropertyChangedEventArgs("DoubleClickCoordinateString"));
+            }
+
+            MouseDoubleClickEvent();
         }
 
 
