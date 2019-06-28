@@ -418,9 +418,9 @@ namespace UnitTests
 
             map.ZoomToBox(lineString.EnvelopeInternal);
 
-            string fn = $"MapRotation_{deg:000}_{map.Zoom:0}_{map.MapScale:0}.bmp";
+            string fn = $"MapRotation_{deg:000}_{map.Zoom:0}_{map.MapScale:0}.png";
             using (var img = map.GetMap(96))
-                img.Save(fn,System.Drawing.Imaging.ImageFormat.Bmp);
+                img.Save(System.IO.Path.Combine(UnitTestsFixture.GetImageDirectory(this), fn),System.Drawing.Imaging.ImageFormat.Png);
 
             map.Dispose();
         }
@@ -582,7 +582,7 @@ namespace UnitTests
                 var fn =
                     $"ZoomToBox_{mapSizeWidth}x{mapSizeHeight}_{degrees:0}deg_bbox_{env.Width}x{env.Height}_old.png";
                 using (var img = map.GetMap(96))
-                    img.Save(fn, System.Drawing.Imaging.ImageFormat.Bmp);
+                    img.Save(System.IO.Path.Combine(UnitTestsFixture.GetImageDirectory(this), fn), System.Drawing.Imaging.ImageFormat.Bmp);
 
                 // reset view
                 map.Center = new Coordinate(0, 0);
@@ -591,7 +591,7 @@ namespace UnitTests
 //                map.ZoomToBox(env, true);
 //                fn = $"ZoomToBox_{mapSizeWidth}x{mapSizeHeight}_{degrees:0}deg_bbox_{env.Width}x{env.Height}_new.png";
 //                using (var img = map.GetMap(96))
-//                    img.Save(fn, System.Drawing.Imaging.ImageFormat.Bmp);
+//                    img.Save(System.IO.Path.Combine(UnitTestsFixture.GetImageDirectory(this), fn), System.Drawing.Imaging.ImageFormat.Bmp);
             }
 
             map.Dispose();

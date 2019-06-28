@@ -34,9 +34,9 @@ namespace UnitTests.Layers
                 map.ZoomToBox(new Envelope(829384.331338522, 837200.785470394, 7068020.31417922, 7072526.73926545)
                             /*new Envelope(-239839.49199841652, 78451.759683380573, -37033.0152981899, 106723.52879865949)*/);
                 using (var image = map.GetMap())
-                {
-                    image.Save("TestIncompleteImage.png", ImageFormat.Png);
-                }
+                    image.Save(
+                        System.IO.Path.Combine(UnitTestsFixture.GetImageDirectory(this), "TestIncompleteImage.png"),
+                        ImageFormat.Png);
             }
         }
     }

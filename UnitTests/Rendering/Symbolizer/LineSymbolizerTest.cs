@@ -36,7 +36,7 @@
             var bmp = m.GetMap();
             sw.Stop();
             System.Diagnostics.Trace.WriteLine(string.Format("Rendering old method: {0}ms", sw.ElapsedMilliseconds));
-            bmp.Save("NDSRoads1.bmp");
+            bmp.Save(System.IO.Path.Combine(UnitTestsFixture.GetImageDirectory(this), "NDSRoads1.bmp"));
 
 
             var cls = new SharpMap.Rendering.Symbolizer.CachedLineSymbolizer();
@@ -48,7 +48,7 @@
             bmp = m.GetMap();
             sw.Stop();
             System.Diagnostics.Trace.WriteLine(string.Format("Rendering new method: {0}ms", sw.ElapsedMilliseconds));
-            bmp.Save("NDSRoads2.bmp");
+            bmp.Save(System.IO.Path.Combine(UnitTestsFixture.GetImageDirectory(this), "NDSRoads2.bmp"));
 
         }
 
@@ -85,7 +85,7 @@
             var bmp = m.GetMap();
             sw.Stop();
             System.Diagnostics.Trace.WriteLine(string.Format("Rendering new method: {0}ms", sw.ElapsedMilliseconds));
-            bmp.Save("AurichRoads1.bmp");
+            bmp.Save(System.IO.Path.Combine(UnitTestsFixture.GetImageDirectory(this), "AurichRoads1.bmp"));
 
             cls.LineSymbolizeHandlers[1] = new SharpMap.Rendering.Symbolizer.WarpedLineSymbolizeHander
                                                {
@@ -100,7 +100,7 @@
             bmp = m.GetMap();
             sw.Stop();
             System.Diagnostics.Trace.WriteLine(string.Format("Rendering new method: {0}ms", sw.ElapsedMilliseconds));
-            bmp.Save("AurichRoads2-0.bmp");
+            bmp.Save(System.IO.Path.Combine(UnitTestsFixture.GetImageDirectory(this), "AurichRoads2-0.bmp"));
 
             cls.LineSymbolizeHandlers[1] = new SharpMap.Rendering.Symbolizer.WarpedLineSymbolizeHander
             {
@@ -116,7 +116,7 @@
             bmp = m.GetMap();
             sw.Stop();
             System.Diagnostics.Trace.WriteLine(string.Format("Rendering new method: {0}ms", sw.ElapsedMilliseconds));
-            bmp.Save("AurichRoads2-1.bmp");
+            bmp.Save(System.IO.Path.Combine(UnitTestsFixture.GetImageDirectory(this),"AurichRoads2-1.bmp"));
             cls.LineSymbolizeHandlers[1] = new SharpMap.Rendering.Symbolizer.WarpedLineSymbolizeHander
             {
                 Pattern =
@@ -131,7 +131,7 @@
             bmp = m.GetMap();
             sw.Stop();
             System.Diagnostics.Trace.WriteLine(string.Format("Rendering new method: {0}ms", sw.ElapsedMilliseconds));
-            bmp.Save("AurichRoads2-2.bmp");
+            bmp.Save(System.IO.Path.Combine(UnitTestsFixture.GetImageDirectory(this), "AurichRoads2-2.bmp"));
 
             cls.LineSymbolizeHandlers[1] = new SharpMap.Rendering.Symbolizer.WarpedLineSymbolizeHander
             {
@@ -147,7 +147,7 @@
             bmp = m.GetMap();
             sw.Stop();
             System.Diagnostics.Trace.WriteLine(string.Format("Rendering new method: {0}ms", sw.ElapsedMilliseconds));
-            bmp.Save("AurichRoads2-3.bmp");
+            bmp.Save(System.IO.Path.Combine(UnitTestsFixture.GetImageDirectory(this), "AurichRoads2-3.bmp"));
 
 
             //cls.LineSymbolizeHandlers[0] = cls.LineSymbolizeHandlers[1];
@@ -162,7 +162,7 @@
             bmp = m.GetMap();
             sw.Stop();
             System.Diagnostics.Trace.WriteLine(string.Format("Rendering new method: {0}ms", sw.ElapsedMilliseconds));
-            bmp.Save("AurichRoads3.bmp");
+            bmp.Save(System.IO.Path.Combine(UnitTestsFixture.GetImageDirectory(this), "AurichRoads3.bmp"));
         }
 
         [NUnit.Framework.Test]
@@ -185,7 +185,7 @@
             var bmp = m.GetMap();
             sw.Stop();
             System.Diagnostics.Trace.WriteLine(string.Format("Rendering new method: {0}ms", sw.ElapsedMilliseconds));
-            bmp.Save("AurichRoads1Theme.bmp");
+            bmp.Save(System.IO.Path.Combine(UnitTestsFixture.GetImageDirectory(this), "AurichRoads1Theme.bmp"));
         }
 
         internal class ClsTheme : SharpMap.Rendering.Thematics.ITheme

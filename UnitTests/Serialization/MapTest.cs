@@ -63,8 +63,8 @@ namespace UnitTests.Serialization
             Assert.AreEqual(m.SRID, mD.SRID);
             Assert.AreEqual(m.Zoom, mD.Zoom);
 
-            Assert.DoesNotThrow(() => m.GetMap().Save(name + "-S.bmp"));
-            Assert.DoesNotThrow(() => mD.GetMap().Save(name + "-D.bmp"));
+            Assert.DoesNotThrow(() => m.GetMap().Save(System.IO.Path.Combine(UnitTestsFixture.GetImageDirectory(new MapTest()), name + "-S.bmp")));
+            Assert.DoesNotThrow(() => mD.GetMap().Save(System.IO.Path.Combine(UnitTestsFixture.GetImageDirectory(new MapTest()), name + "-D.bmp")));
         }
 
 

@@ -76,8 +76,9 @@ namespace UnitTests
                 NumTicks = 2,
                 Opacity = 1f
             });
-            var bmp = m.GetMap();
-            bmp.Save("TestMapDecorationTest.bmp");
+
+            using (var bmp = m.GetMap())
+                bmp.Save(System.IO.Path.Combine(UnitTestsFixture.GetImageDirectory(this), "TestMapDecorationTest.bmp"));
         }
 
     }

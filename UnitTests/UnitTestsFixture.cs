@@ -4,7 +4,8 @@
     public class UnitTestsFixture
     {
         private System.Diagnostics.Stopwatch _stopWatch;
-
+        private const string ImageBase = "Images"; 
+        
         [NUnit.Framework.SetUp]
         public void RunBeforeAnyTests()
         {
@@ -31,6 +32,14 @@
             _stopWatch.Stop();
             System.Diagnostics.Trace.WriteLine(
                 string.Format("All tests accomplished in {0}ms", _stopWatch.ElapsedMilliseconds));
+        }
+
+        internal static string GetImageDirectory(object T)
+        {
+            var imgPath = System.IO.Path.Combine($"{ImageBase}\\{T.GetType().FullName}");
+            if (!System.IO.Directory.Exists(imgPath))
+                System.IO.Directory.CreateDirectory(imgPath);
+            return imgPath;
         }
     }
 }

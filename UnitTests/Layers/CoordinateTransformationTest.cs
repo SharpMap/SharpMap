@@ -34,7 +34,7 @@ namespace UnitTests.Layers
             m.ZoomToBox(box);
 
             using (var img = m.GetMap())
-                img.Save(System.IO.Path.Combine(System.IO.Path.GetTempPath(), _baseFileName + "NoTargetSrid.bmp"));
+                img.Save(System.IO.Path.Combine(UnitTestsFixture.GetImageDirectory(this), _baseFileName + "NoTargetSrid.bmp"));
 
             // Test setting TargetSRID (should cause CoordinateTransformation to be updated) and generate maps with symmetrical 8-pointed star
             TestSrid(m, 4326, _gcsTolerance);
@@ -115,7 +115,7 @@ namespace UnitTests.Layers
 
             // visual check: symmetrical 8-pointed star
             using (var img = m.GetMap())
-                img.Save(System.IO.Path.Combine(System.IO.Path.GetTempPath(), _baseFileName + "_SRID_" + targetSrid + ".bmp"));
+                img.Save(System.IO.Path.Combine(UnitTestsFixture.GetImageDirectory(this), _baseFileName + "_SRID_" + targetSrid + ".bmp"));
         }
 
         private void TestTrans(Map m, int targetSrid, double tolerance)
@@ -135,7 +135,7 @@ namespace UnitTests.Layers
 
             // visual check: symmetrical 8-pointed star
             using (var img = m.GetMap())
-                img.Save(System.IO.Path.Combine(System.IO.Path.GetTempPath(), _baseFileName + "_Trans_" + targetSrid + ".bmp"));
+                img.Save(System.IO.Path.Combine(UnitTestsFixture.GetImageDirectory(this), _baseFileName + "_Trans_" + targetSrid + ".bmp"));
         }
 
         private void SetTargetSridAndZoomExtents(Map m, int targetSrid)

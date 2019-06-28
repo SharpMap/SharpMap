@@ -261,7 +261,7 @@ namespace UnitTests.Data.Providers
             switch (providerMode)
             {
                 case SqlServerProviderMode.NativeSqlBytes:
-                    Assert.Ignore("Ignore SharpMap.Data.Providers.SqlSErver2008Ex");
+                    //Assert.Ignore("Ignore SharpMap.Data.Providers.SqlServer2008Ex");
 
                     if (spatialType == SqlServerSpatialObjectType.Geography)
                         // NB note forcing WGS84
@@ -543,9 +543,10 @@ namespace UnitTests.Data.Providers
             TimeSpan avgex = TimeSpan.FromTicks((long)measurementsex.Average(x => x.Ticks));
 
             // The SqlServer2008Ex provider should be faster:
-            // Update Nov 2018: apparently this is no longer the case. Multiple tests following recent updates have SqlServer2008 
-            // consistently outperforming SqlServer2008ex (100 - 3600 records). I'm not sure if this is due to improvments in later 
-            // releases of SqlServer, or perhaps WKB payload smaller than SqlBytes (even though requires database CPU for WKB conversion)
+            // Update Nov 2018: "should"....  highly dependent on client computer specs, and dataset characteristics
+            // may also have an affect in real-world usage (eg num records, OGC geom type, geom complexity).
+            // For the test dataset @ 100 records and also @ 3600 records on an AVERAGE computer, SqlServer2008 is
+            // consistently out-performing SqlServer2008Ex as follows:
             //    for local instance SqlExpress, SqlServer2008  is consistently 30% faster than SqlServer2008Ex
             //    for SqlServer on local database server, - I don't have one to test against
             //    for Azure SQL (50DTU limit, test peaking at 26DTU), SqlServer2008 is about 5% faster than SqlServer2008Ex

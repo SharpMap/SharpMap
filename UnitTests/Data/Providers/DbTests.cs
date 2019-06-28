@@ -160,7 +160,6 @@
         [NUnit.Framework.Test]
         public void Test99GetMap()
         {
-
             var m = new SharpMap.Map(new System.Drawing.Size(512, 1048));
             var p = GetProvider();
             //p.SRID = 4326;
@@ -168,11 +167,10 @@
             var l = new SharpMap.Layers.VectorLayer("SpDb", p);
             m.Layers.Add(l);
             m.ZoomToExtents();
-            var i = m.GetMap();
-            var path = System.IO.Path.Combine(
-                System.IO.Directory.GetCurrentDirectory(),
-                string.Format("SpatialDbProvider_{0}.png", ImplementationName));
-            i.Save(path, System.Drawing.Imaging.ImageFormat.Png);
+
+            var path = System.IO.Path.Combine(UnitTestsFixture.GetImageDirectory(this), $"SpatialDbProvider_{ImplementationName}.png");
+            using (var i = m.GetMap())
+                i.Save(path, System.Drawing.Imaging.ImageFormat.Png);
             System.Diagnostics.Trace.WriteLine(new System.Uri(path).LocalPath);
         }
 

@@ -24,17 +24,17 @@ namespace UnitTests.Rendering.Symbolizer
             
             map.Layers.Add(layer);
             map.ZoomToExtents();
-            map.GetMap().Save("CharacterPointSymbolizer1.bmp");
+            map.GetMap().Save(System.IO.Path.Combine(UnitTestsFixture.GetImageDirectory(this), "CharacterPointSymbolizer1.bmp"));
 
             cps.Rotation = -30;
             cps.Offset = new System.Drawing.PointF(4, 4);
-            map.GetMap().Save("CharacterPointSymbolizer2.bmp");
+            map.GetMap().Save(System.IO.Path.Combine(UnitTestsFixture.GetImageDirectory(this), "CharacterPointSymbolizer2.bmp"));
 
             cps.Font = new System.Drawing.Font("Arial", 12);
             cps.Text = "ABC";
             cps.Offset = System.Drawing.PointF.Empty;
             cps.Rotation = -90;
-            map.GetMap().Save("CharacterPointSymbolizer3.bmp");
+            map.GetMap().Save(System.IO.Path.Combine(UnitTestsFixture.GetImageDirectory(this), "CharacterPointSymbolizer3.bmp"));
         }
 
 
@@ -53,14 +53,14 @@ namespace UnitTests.Rendering.Symbolizer
             var map = new SharpMap.Map(new System.Drawing.Size(720, 360));
             map.Layers.Add(layer);
             map.ZoomToExtents();
-            map.GetMap().Save("PathPointSymbolizer1.bmp");
+            map.GetMap().Save(System.IO.Path.Combine(UnitTestsFixture.GetImageDirectory(this), "PathPointSymbolizer1.bmp"));
 
             pps.Rotation = -30;
-            map.GetMap().Save("PathPointSymbolizer2.bmp");
+            map.GetMap().Save(System.IO.Path.Combine(UnitTestsFixture.GetImageDirectory(this), "PathPointSymbolizer2.bmp"));
 
             pps.Rotation = 0f;
             pps.Offset = new System.Drawing.PointF(4, 4);
-            map.GetMap().Save("PathPointSymbolizer3.bmp");
+            map.GetMap().Save(System.IO.Path.Combine(UnitTestsFixture.GetImageDirectory(this), "PathPointSymbolizer3.bmp"));
 
             var gpTriangle1 = new System.Drawing.Drawing2D.GraphicsPath();
             gpTriangle1.AddPolygon(new [] { new System.Drawing.Point(0, 0), new System.Drawing.Point(5, 10), new System.Drawing.Point(10, 0), new System.Drawing.Point(0, 0), });
@@ -93,9 +93,9 @@ namespace UnitTests.Rendering.Symbolizer
                                                         }){ Rotation = 45 };
 
             layer.Style.PointSymbolizer = pps;
-            map.GetMap().Save("PathPointSymbolizer4.bmp");
+            map.GetMap().Save(System.IO.Path.Combine(UnitTestsFixture.GetImageDirectory(this), "PathPointSymbolizer4.bmp"));
             pps.Rotation = 180;
-            map.GetMap().Save("PathPointSymbolizer5.bmp");
+            map.GetMap().Save(System.IO.Path.Combine(UnitTestsFixture.GetImageDirectory(this), "PathPointSymbolizer5.bmp"));
 
         }
 
@@ -118,10 +118,10 @@ namespace UnitTests.Rendering.Symbolizer
             var map = new SharpMap.Map(new System.Drawing.Size(720, 360));
             map.Layers.Add(layer);
             map.ZoomToExtents();
-            map.GetMap().Save("RasterPointSymbolizer1.bmp");
+            map.GetMap().Save(System.IO.Path.Combine(UnitTestsFixture.GetImageDirectory(this), "RasterPointSymbolizer1.bmp"));
 
             rps.Rotation = 45;
-            map.GetMap().Save("RasterPointSymbolizer2.bmp");
+            map.GetMap().Save(System.IO.Path.Combine(UnitTestsFixture.GetImageDirectory(this), "RasterPointSymbolizer2.bmp"));
             rps.Rotation = 0;
 
             var cps = new SharpMap.Rendering.Symbolizer.CharacterPointSymbolizer
@@ -140,7 +140,7 @@ namespace UnitTests.Rendering.Symbolizer
             layer.Style.PointSymbolizer = lps;
             map.Layers.Add(layer);
             map.ZoomToExtents();
-            map.GetMap().Save("RasterPointSymbolizer3.bmp");
+            map.GetMap().Save(System.IO.Path.Combine(UnitTestsFixture.GetImageDirectory(this), "RasterPointSymbolizer3.bmp"));
         }
 
         [NUnit.Framework.Test]
@@ -170,7 +170,7 @@ namespace UnitTests.Rendering.Symbolizer
             var map = new SharpMap.Map(new System.Drawing.Size(720, 360));
             map.Layers.Add(layer);
             map.ZoomToExtents();
-            map.GetMap().Save("ListPointSymbolizer1.bmp");
+            map.GetMap().Save(System.IO.Path.Combine(UnitTestsFixture.GetImageDirectory(this), "ListPointSymbolizer1.bmp"));
         }
     }
 }

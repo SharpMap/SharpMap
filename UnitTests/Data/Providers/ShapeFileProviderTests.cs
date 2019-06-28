@@ -163,9 +163,10 @@ namespace UnitTests.Data.Providers
 
             RepeatedRendering(map, shp.GetFeatureCount(), NumberOfRenderCycles, out _msVector);
 
-            var res = map.GetMap();
-            var path = System.IO.Path.ChangeExtension(GetTestDataFilePath("SPATIAL_F_SKARVMUFF.shp"), ".vector.png");
-            res.Save(path, System.Drawing.Imaging.ImageFormat.Png);
+            var path = System.IO.Path.Combine(UnitTestsFixture.GetImageDirectory(this), "SPATIAL_F_SKARVMUFF.shp");
+            path = System.IO.Path.ChangeExtension(path, ".vector.png");
+            using (var res = map.GetMap())
+                res.Save(path, System.Drawing.Imaging.ImageFormat.Png);
             System.Diagnostics.Trace.WriteLine("\nResult saved at file://" + path.Replace('\\', '/'));
         }
 
@@ -194,9 +195,10 @@ namespace UnitTests.Data.Providers
             long tmp;
             RepeatedRendering(map, shp.GetFeatureCount(), 1, out tmp);
 
-            var res = map.GetMap();
-            var path = System.IO.Path.ChangeExtension(GetTestDataFilePath("SPATIAL_F_SKARVMUFF.shp"), "lineal.png");
-            res.Save(path, System.Drawing.Imaging.ImageFormat.Png);
+            var path = System.IO.Path.Combine(UnitTestsFixture.GetImageDirectory(this), "SPATIAL_F_SKARVMUFF.shp");
+            path = System.IO.Path.ChangeExtension(path, "lineal.png");
+            using (var res = map.GetMap())
+                res.Save(path, System.Drawing.Imaging.ImageFormat.Png);
             System.Diagnostics.Trace.WriteLine("\nResult saved at file://" + path.Replace('\\', '/'));
         }
 

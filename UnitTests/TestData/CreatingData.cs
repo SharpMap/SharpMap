@@ -183,8 +183,8 @@
             var gl = new SharpMap.Layers.VectorLayer("GeometryLayer", gp);
             map.Layers.Add(gl);
             map.ZoomToExtents();
-            var mapimage = map.GetMap();
-            mapimage.Save("ellipse.png", System.Drawing.Imaging.ImageFormat.Png);
+            using (var mapImage = map.GetMap())
+                mapImage.Save(System.IO.Path.Combine(UnitTestsFixture.GetImageDirectory(this), "ellipse.png"), System.Drawing.Imaging.ImageFormat.Png);
         }
     }
 }
