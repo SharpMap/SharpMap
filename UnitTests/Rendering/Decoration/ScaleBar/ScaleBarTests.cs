@@ -31,9 +31,9 @@ namespace UnitTests.Rendering.Decoration.ScaleBar
         {
             //System.IO.Directory.CreateDirectory(Path.Combine(Path.GetTempPath(), "BruTileCache", "Osm"));
 
-            var files = System.IO.Directory.GetFiles(Path.Combine(Path.GetTempPath(), "SharpMap"));
-            foreach (var file in files)
-                System.IO.File.Delete(file);
+//            var files = System.IO.Directory.GetFiles(Path.Combine(Path.GetTempPath(), "SharpMap"));
+//            foreach (var file in files)
+//                System.IO.File.Delete(file);
 
             var gss = new NtsGeometryServices();
             var css = new SharpMap.CoordinateSystems.CoordinateSystemServices(
