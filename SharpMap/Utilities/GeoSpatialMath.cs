@@ -1,4 +1,5 @@
 ﻿using System;
+using GeoAPI.Geometries;
 
 namespace SharpMap.Utilities
 {
@@ -32,6 +33,22 @@ namespace SharpMap.Utilities
         /// </summary>
         public const double MetersPerDegreeAtEquator = MetersPerMile * MilesPerDegreeAtEquator;
 
+        /// <summary>
+        /// Web Mercator SRID constant
+        /// </summary>
+        public const int WebMercatorSrid = 3857;
+        
+        /// <summary>
+        /// Web Mercator SRID constant
+        /// </summary>
+        public const double WebMercatorRadius = 6378137.0;
+        
+        /// <summary>
+        /// Web Mercator Domain as Envelope
+        /// </summary>
+        public static readonly Envelope WebMercatorEnv = new Envelope(-20037508.34,20037508.34,-20000000,20000000);
+
+        
         /// <summary>
         /// Calculate the distance between 2 points on the great circle
         /// </summary>
