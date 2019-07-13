@@ -222,18 +222,16 @@ namespace SharpMap.Rendering.Decoration
             return gp;
         }
 
-
-        /// <summary>
-        /// Draw the map decoration
-        /// </summary>
-        /// <param name="g"></param>
-        /// <param name="map"></param>
         public void Render(Graphics g, MapViewport map)
         {
             //Is this map decoration enabled?
             if (!Enabled)
                 return;
 
+            // remove any image to world rotation
+            var oldTransform = g.Transform;
+            g.ResetTransform();
+            
             //Preparing rendering
             OnRendering(g, map);
 
@@ -258,7 +256,9 @@ namespace SharpMap.Rendering.Decoration
 
             //Restore old clip region
             g.Clip = oldClip;
-
+            
+            // restore any image to world rotation
+            g.Transform = oldTransform;
 
             //Finished rendering
             OnRendered(g, map);
@@ -272,7 +272,8 @@ namespace SharpMap.Rendering.Decoration
 
 
         /// <summary>
-        /// Function to render the actual map decoration
+        /// Render the actual map decoration.
+        /// <para>Refer to MapDecoration.<see cref="Render(System.Drawing.Graphics,SharpMap.MapViewport)"/> for underlying management of <paramref name="g"/>.Transform</para> 
         /// </summary>
         /// <param name="g"></param>
         /// <param name="map"></param>
@@ -287,7 +288,8 @@ namespace SharpMap.Rendering.Decoration
         }
 
         /// <summary>
-        /// Function to render the actual map decoration
+        /// Signal commencing rendering
+        /// <para>Refer to MapDecoration.<see cref="Render(System.Drawing.Graphics,SharpMap.MapViewport)"/> for underlying management of <paramref name="g"/>.Transform</para> 
         /// </summary>
         /// <param name="g"></param>
         /// <param name="map"></param>
@@ -303,7 +305,8 @@ namespace SharpMap.Rendering.Decoration
         }
 
         /// <summary>
-        /// Function to render the actual map decoration
+        /// Signal completion of rendering
+        /// <para>Refer to MapDecoration.<see cref="Render(System.Drawing.Graphics,SharpMap.MapViewport)"/> for underlying management of <paramref name="g"/>.Transform</para> 
         /// </summary>
         /// <param name="g"></param>
         /// <param name="map"></param>

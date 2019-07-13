@@ -62,18 +62,13 @@ namespace SharpMap.Rendering.Decoration
 
         #region MapDecoration overrides
 
-        /// <summary>
-        /// Function to render the actual map decoration
-        /// </summary>
-        /// <param name="g"></param>
-        /// <param name="map"></param>
         protected override void OnRender(Graphics g, MapViewport map)
         {
             // Render the rosetta
             base.OnRender(g, map);
             
             var clip = g.ClipBounds;
-            var oldTransform = g.Transform;
+            //var oldTransform = g.Transform;
             var newTransform = new Matrix(1f, 0f, 0f, 1f, clip.Left + Size.Width*0.5f, clip.Top + Size.Height*0.5f);
 
             g.Transform = newTransform;
@@ -98,7 +93,7 @@ namespace SharpMap.Rendering.Decoration
             // need to outline the needle
             g.FillPolygon(new SolidBrush(OpacityColor(NeedleFillColor)), pts );
 
-            g.Transform = oldTransform;
+            //g.Transform = oldTransform;
         }
 
         #endregion
