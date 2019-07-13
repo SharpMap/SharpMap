@@ -1,17 +1,25 @@
 using System;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
+using System.Diagnostics.Eventing.Reader;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.Linq;
 using System.Reactive.Linq;
 using GeoAPI.Geometries;
 using Moq;
 using NUnit.Framework;
 using NetTopologySuite.Geometries;
+using NetTopologySuite.Geometries.Utilities;
 using NetTopologySuite.IO;
+using NetTopologySuite.Operation.Polygonize;
+using NUnit.Framework.Constraints;
 using SharpMap;
 using SharpMap.Data.Providers;
 using Geometry = GeoAPI.Geometries.IGeometry;
 using SharpMap.Layers;
+using SharpMap.Rendering.Decoration;
+using SharpMap.Rendering.Decoration.ScaleBar;
 using Point = GeoAPI.Geometries.Coordinate;
 using BoundingBox = GeoAPI.Geometries.Envelope;
 
@@ -279,64 +287,300 @@ namespace UnitTests
             Assert.AreEqual(new Point(8, 50), p);
         }
 
-        [Test, Category("RequiresWindows")]
-        public void ImageToWorld_Rotations()
+        [Ignore("Benchmarking MapTransform in Map and MapViewport with(new) and without(old) Coordinate arrays")]
+        [TestCase("roads_ugl.shp", 0)] 
+        [TestCase("roads_ugl.shp", 45)] 
+        [TestCase("SPATIAL_F_SKARVMUFF.shp", 0)] 
+        [TestCase("SPATIAL_F_SKARVMUFF.shp", 45)] 
+        public void WorldToImageTransform_Benchmark(string shapeFileName, float mapTransformRotation)
         {
-            // Test applying map transform at 30 degree increments, comparing Image>>World calcs
-            // with independent Affine Transformation, map Envelope checks, and generate image
-            ImageToWorld_Rotation(0);
-            ImageToWorld_Rotation(30);
-            ImageToWorld_Rotation(60);
-            ImageToWorld_Rotation(90);
-            ImageToWorld_Rotation(120);
-            ImageToWorld_Rotation(150);
-            ImageToWorld_Rotation(180);
-            ImageToWorld_Rotation(210);
-            ImageToWorld_Rotation(240);
-            ImageToWorld_Rotation(270);
-            ImageToWorld_Rotation(300);
-            ImageToWorld_Rotation(330);
-            //ImageToWorld_Rotation(360);
+            // previous World >> Image transform calculations were for each individual coordinate in an array 
+            // new method transforms entire array (eg linestring, polygon ring, multipoint).
+            // When there is no map rotation, a simplified calculation is used. When map is rotated, an affine transformation is used
+            // (one affine transformation object instantiated per array, previously one affine transformation per coordinate). 
 
-            ImageToWorld_Rotation(0);
-            ImageToWorld_Rotation(-30);
-            ImageToWorld_Rotation(-60);
-            ImageToWorld_Rotation(-90);
-            ImageToWorld_Rotation(-120);
-            ImageToWorld_Rotation(-150);
-            ImageToWorld_Rotation(-180);
-            ImageToWorld_Rotation(-210);
-            ImageToWorld_Rotation(-240);
-            ImageToWorld_Rotation(-270);
-            ImageToWorld_Rotation(-300);
-            ImageToWorld_Rotation(-330);
-            //ImageToWorld_Rotation(-360);
+            // Hypothesis: There should be minimal change for point layers, but significant improvements for geometries with ILineString and IMultiPoint
+
+            // New methods typically much faster as shown below from several tests:
+            // roads_ugl: 3361 polylines (avg 52 vertices per feature)
+            //    Rotn     OBJ   OLD (avg)  NEW (avg)    Improvement
+            //    0deg     mAp     160        25          5x faster
+            //    0deg     mVp     300        20          15x faster
+            //    45deg    mAp    1500        20          75x faster - woo hoo!
+            //    45deg    mVp    2000        10          200x faster - woo hoo squared!
+            //
+            // SKARVMUFF: 4342 Points
+            //    Rotn    OBJ   OLD (avg)  NEW (avg)    Improvement
+            //    0deg    mAp     3         3            no discernible change
+            //    0deg    mVp     6         2            3x faster
+            //    45deg   mAp    25        10            2.5x faster
+            //    45deg   mVp    45         2            20x faster
+            
+            var map = new Map(new Size(1024, 1024)) {BackColor = System.Drawing.Color.LightSkyBlue};
+
+            if (!mapTransformRotation.Equals(0f))
+            {
+                System.Drawing.Drawing2D.Matrix mapTransform = new System.Drawing.Drawing2D.Matrix();
+                mapTransform.RotateAt(mapTransformRotation, new PointF(map.Size.Width * 0.5f, map.Size.Height * 0.5f));
+                map.MapTransform = mapTransform;
+            }
+
+            var fn = System.IO.Path.Combine("TestData", shapeFileName);
+            var prov = new SharpMap.Data.Providers.ShapeFile(fn, true);
+
+            var vl = new VectorLayer(shapeFileName, prov);
+            map.Layers.Add(vl);
+            map.ZoomToExtents();
+
+            var geoms = prov.GetGeometriesInView(map.Envelope);
+            var sw = new System.Diagnostics.Stopwatch();
+
+            var oldTimesMap = new System.Collections.Generic.List<long>();
+            var newTimesMap = new System.Collections.Generic.List<long>();
+
+            var oldTimesMvp = new System.Collections.Generic.List<long>();
+            var newTimesMvp = new System.Collections.Generic.List<long>();
+
+            var numTests = 20;
+            
+            // MAP tests
+            for (var i = 0; i < numTests; i++)
+            {
+                // old
+                sw.Reset();
+                sw.Start();
+                foreach (var geom in geoms)
+                {
+                    foreach (var p in geom.Coordinates)
+                    {
+                        var pt = SharpMap.Utilities.Transform.WorldToMap(p, map);
+                        if (!map.MapTransformRotation.Equals(0f))
+                        {
+                            using (var transform = map.MapTransform)
+                            {
+                                var pts = new[] {pt};
+                                transform.TransformPoints(pts);
+                                pt = pts[0];
+                            }
+                        }
+                    }
+                }
+                sw.Stop();
+                oldTimesMap.Add(sw.ElapsedMilliseconds);
+
+                // new
+                sw.Reset();
+                sw.Start();
+                foreach (var geom in geoms)
+                {
+                    if (geom.Coordinates.Length == 0)
+                    {
+                        var pt = map.WorldToImage(geom.Coordinates[0], true);
+                    }
+                    else
+                    {
+                        var pts = map.WorldToImage(geom.Coordinates, true);
+                    }
+                }
+                sw.Stop();
+                newTimesMap.Add(sw.ElapsedMilliseconds);
+            }
+            
+            // drop slowest 2 / fastest 2
+            oldTimesMap.Sort();
+            newTimesMap.Sort();
+
+            var oldTimesAvgMap = oldTimesMap.Skip(2).Take(16).Average();
+            var newTimesAvgMap = newTimesMap.Skip(2).Take(16).Average();
+            
+            Trace.WriteLine($"WorldToImageTransform_Benchmark {shapeFileName} {mapTransformRotation:000}deg MAP old: {oldTimesAvgMap}  MAP new: {newTimesAvgMap}");
+            // allow a little bit of leeway
+            Assert.LessOrEqual(newTimesAvgMap / oldTimesAvgMap,1.2,$"{shapeFileName}_{mapTransformRotation}deg_MAP" );
+           
+            // MapViewport Tests
+            var mvp = (MapViewport) map;
+            for (var i = 0; i < numTests; i++)
+            {
+                // old
+                sw.Reset();
+                sw.Start();
+                foreach (var geom in geoms)
+                {
+                    foreach (var p in geom.Coordinates)
+                    {
+                        var pt = mvp.WorldToImageOld(p, true);
+                        if (!mvp.MapTransformRotation.Equals(0f))
+                        {
+                            using (var transform = mvp.MapTransform)
+                            {
+                                var pts = new[] {pt};
+                                transform.TransformPoints(pts);
+                                pt = pts[0];
+                            }
+                        }
+                    }
+                }
+                sw.Stop();
+                oldTimesMvp.Add(sw.ElapsedMilliseconds);
+                
+                // new
+                sw.Reset();
+                sw.Start();
+                foreach (var geom in geoms)
+                {
+                    if (geom.Coordinates.Length == 0)
+                    {
+                        var pt = mvp.WorldToImage(geom.Coordinates[0], true);
+                    }
+                    else
+                    {
+                        var pts = mvp.WorldToImage(geom.Coordinates, true);
+                    }
+                }
+
+                sw.Stop();
+                newTimesMvp.Add(sw.ElapsedMilliseconds);
+            }
+            
+            oldTimesMvp.Sort();
+            newTimesMvp.Sort();
+            
+            var oldTimesAvgMvp = oldTimesMvp.Skip(2).Take(16).Average();
+            var newTimesAvgMvp = newTimesMvp.Skip(2).Take(16).Average();
+
+            
+            Trace.WriteLine($"WorldToImageTransform_Benchmark {shapeFileName} {mapTransformRotation:000}deg  MVP old: {oldTimesAvgMvp}  MVP new: {newTimesAvgMvp}");
+            // allow a little bit of leeway
+            Assert.LessOrEqual(newTimesAvgMvp/ oldTimesAvgMvp,1.2, $"{shapeFileName}_{mapTransformRotation}deg_MVP" );
+
+            map.Dispose();
         }
 
-        private void ImageToWorld_Rotation(float deg)
+        [TestCase(0), Category("RequiresWindows")]
+        [TestCase(30), Category("RequiresWindows")]
+        [TestCase(60), Category("RequiresWindows")]
+        [TestCase(90), Category("RequiresWindows")]
+        [TestCase(120), Category("RequiresWindows")]
+        [TestCase(150), Category("RequiresWindows")]
+        [TestCase(180), Category("RequiresWindows")]
+        [TestCase(210), Category("RequiresWindows")]
+        [TestCase(240), Category("RequiresWindows")]
+        [TestCase(270), Category("RequiresWindows")]
+        [TestCase(300), Category("RequiresWindows")]
+        [TestCase(330), Category("RequiresWindows")]
+        public void ImageToWorld_AndBack_Map_WithRotation(float rotationDeg)
         {
-            var map = new Map(new Size(1000, 500)) { BackColor = System.Drawing.Color.LightSkyBlue };
+            using (var map = ConfigureTransformMap(rotationDeg))
+            {
+                var imagePts = GetImageCoordinates(map);
+                var worldPts = GetWorldCoordinates(map, imagePts);
+                // Test map transform, comparing Image>>World calcs with independent
+                // Affine Transformation of image/world geometry and map properties
+                ValidateTransformScenarios(false, map, imagePts, worldPts.Coordinates);
+            }
+        }
+
+        [TestCase(0), Category("RequiresWindows")]
+        [TestCase(30), Category("RequiresWindows")]
+        [TestCase(60), Category("RequiresWindows")]
+        [TestCase(90), Category("RequiresWindows")]
+        [TestCase(120), Category("RequiresWindows")]
+        [TestCase(150), Category("RequiresWindows")]
+        [TestCase(180), Category("RequiresWindows")]
+        [TestCase(210), Category("RequiresWindows")]
+        [TestCase(240), Category("RequiresWindows")]
+        [TestCase(270), Category("RequiresWindows")]
+        [TestCase(300), Category("RequiresWindows")]
+        [TestCase(330), Category("RequiresWindows")]
+        public void ImageToWorld_AndBack_MapViewport_WithRotation(float rotationDeg)
+        {
+            // Similar to ImageToWorld_AndBack_Map_WithRotation but testing MapViewport and generating test images
+            var map = ConfigureTransformMap(rotationDeg);
+            map.Decorations.Add(new ScaleBar());
+            map.Decorations.Add(new NorthArrow(){ForeColor = Color.Red});
+            map.Decorations.Add(new EyeOfSight(){Anchor = MapDecorationAnchor.RightTop, ForeColor = Color.DarkBlue});
+            var imagePts = GetImageCoordinates(map);
+            var worldPts = GetWorldCoordinates(map, imagePts);
+            ValidateTransformScenarios(true, map, imagePts, worldPts.Coordinates);
+  
+            // visual checks
+            var vl = new VectorLayer("Test Viewport Outline");
+            var gp = new GeometryProvider(worldPts);
+            gp.Geometries.Add(new NetTopologySuite.Geometries.Point(map.Center));
+            vl.DataSource = gp;
+
+            map.Layers.Add(vl);
+
+            // Polygon should always appear aligned with borders, with red dot should always be in lower left corner.
+            // note buffer giving small margin around borders to be sure polygon isn't grossly larger than mapviewport. 
+            var polygon = GetMapExtentPolygon(map.Center, map.Zoom,map.MapHeight,map.MapTransformRotation).Buffer(-50);
+            vl = new VectorLayer("Test Viewport Inset");
+            gp = new GeometryProvider(polygon);
+            gp.Geometries.Add(new NetTopologySuite.Geometries.Point(map.Center));
+            gp.Geometries.Add(new NetTopologySuite.Geometries.Point(polygon.Coordinates[0]));
+            vl.DataSource = gp;
+            map.Layers.Add(vl);
+            
+            string fn = $"MapRotation_{rotationDeg:000}.png";
+            using (var img = map.GetMap(96))
+                img.Save(System.IO.Path.Combine(UnitTestsFixture.GetImageDirectory(this), fn),System.Drawing.Imaging.ImageFormat.Png);
+
+            map.Dispose();
+        }
+        
+        private Map ConfigureTransformMap(float rotationDeg)
+        {
+            var map = new Map(new Size(600, 300)) {BackColor = System.Drawing.Color.LightSkyBlue};
             map.Zoom = 1000;
             map.Center = new Point(25000, 75000);
-            double mapScale = map.GetMapScale(96);
-
-            double scaleX = 1;
-            double scaleY = 1;
+            var mapScale = map.MapScale;
 
             System.Drawing.Drawing2D.Matrix mapTransform = new System.Drawing.Drawing2D.Matrix();
-            mapTransform.RotateAt(deg, new PointF(map.Size.Width / 2f, map.Size.Height / 2f));
+            mapTransform.RotateAt(rotationDeg, new PointF(map.Size.Width * 0.5f, map.Size.Height * 0.5f));
             map.MapTransform = mapTransform;
 
-            var env = map.Envelope;
+            return map;
+        }
 
+        private PointF[] GetImageCoordinates(Map map)
+        {
+            return new PointF[]
+            {
+                new PointF((float) (map.Size.Width * 0.5),(float) (map.Size.Height * 0.5)), // centre
+                new PointF(0, 0), // UL
+                new PointF(map.Size.Width, 0), // UR
+                new PointF(map.Size.Width, map.Size.Height), // LR
+                new PointF(0, map.Size.Height) // LL
+            };   
+        }
+
+        private LineString GetWorldCoordinates(Map map, PointF[] imagePts)
+        {
+            var affineTrans = GetIndependentTransform(map);
+            // LineString equivalent of imagePts
+            var geom = new LineString((Coordinate[])Array.ConvertAll(imagePts , p => new Coordinate(p.X, p.Y)));
+            // independent transform to World coordinates            
+//            NetTopologySuite.CoordinateSystems.Transformations.GeometryTransform.TransformLineString(
+//                new GeometryFactory(new PrecisionModel()), geom, affineTrans);
+            geom = (LineString)affineTrans.Transform(geom);
+            geom.GeometryChangedAction();
+            return geom;
+        }
+        
+        //private ProjNet.CoordinateSystems.Transformations.AffineTransform GetIndependentTransform(Map map)
+        private AffineTransformation GetIndependentTransform(Map map)
+        {
+            double scaleX = map.Zoom / map.Size.Width;
+            double scaleY = map.MapHeight / map.Size.Height;
+            
             // Affine Transformation: 
             // 1: Translate to mapViewPort centre
             // 2: Reflect in X-Axis
             // 3: Rotation about mapViewPort centre
             // 4: Scale to map units
             // 5: Translate to map centre
-
-            //CLOCKWISE affine transform (negate degrees)
+            
+            //CLOCKWISE ProjNet affine transform (negate degrees)
             //double rad = -1 * deg * Math.PI / 180.0;
             //GeoAPI.CoordinateSystems.Transformations.IMathTransform trans =
             //    new ProjNet.CoordinateSystems.Transformations.AffineTransform(
@@ -347,84 +591,140 @@ namespace UnitTests
             //        -scaleY * Math.Cos(rad),
             //        scaleY * Math.Sin(rad) * map.Size.Width / 2f + scaleY * Math.Cos(rad) * map.Size.Height / 2f + map.Center.Y);
 
-            //ANTICLCOCKWISE affine transform
-            double rad = deg * Math.PI / 180.0;
-            GeoAPI.CoordinateSystems.Transformations.IMathTransform trans =
-              new ProjNet.CoordinateSystems.Transformations.AffineTransform(
-                  scaleX * Math.Cos(rad),
-                  scaleX * Math.Sin(rad),
-                  -scaleX * Math.Cos(rad) * map.Size.Width / 2d - scaleX * Math.Sin(rad) * map.Size.Height / 2d + map.Center.X,
-                  scaleY * Math.Sin(rad),
-                  -scaleY * Math.Cos(rad),
-                  -scaleY * Math.Sin(rad) * map.Size.Width / 2d + scaleY * Math.Cos(rad) * map.Size.Height / 2d + map.Center.Y);
+            //ANTICLCOCKWISE ProjNet affine transform 
+            double rad = map.MapTransformRotation * Math.PI / 180.0;
+//            var trans =
+//                new ProjNet.CoordinateSystems.Transformations.AffineTransform(
+//                    scaleX * Math.Cos(rad),
+//                    scaleX * Math.Sin(rad),
+//                    -scaleX * Math.Cos(rad) * map.Size.Width * 0.5 - scaleX * Math.Sin(rad) * map.Size.Height * 0.5 + map.Center.X,
+//                    scaleY * Math.Sin(rad),
+//                    -scaleY * Math.Cos(rad),
+//                    -scaleY * Math.Sin(rad) * map.Size.Width * 0.5 + scaleY * Math.Cos(rad) * map.Size.Height * 0.5 + map.Center.Y);
+//
+//            return trans;
 
-            // image coordindates
-            var pts = new[] { new Point(map.Size.Width / 2f, map.Size.Height / 2f), // centre
-                            new Point(0, 0),                                        // UL
-                            new Point(map.Size.Width, 0),                           // UR 
-                            new Point(map.Size.Width, map.Size.Height),             // LR
-                            new Point(0, map.Size.Height),                          // LL 
-                            new Point(map.Size.Width * 0.05, map.Size.Height * 0.95),  // LL inset 5%
-                            new Point(map.Size.Width * 0.95, map.Size.Height * 0.95), // LR inset 5%
-                            new Point(map.Size.Width * 0.95, map.Size.Height * 0.05), // UR inset 5%
-                            new Point(map.Size.Width * 0.05, map.Size.Height * 0.05) // UL inset 5%
-                            };
-
-            LineString lineString = new LineString(pts);
-
-            NetTopologySuite.CoordinateSystems.Transformations.GeometryTransform.TransformLineString(new GeometryFactory(new PrecisionModel()), lineString, trans);
+            var trans = new AffineTransformation();
+            trans.Compose(AffineTransformation.TranslationInstance(-map.Size.Width * 0.5, -map.Size.Height * 0.5));
+            trans.Compose(AffineTransformation.ScaleInstance(1, -1));
+            trans.Compose(AffineTransformation.RotationInstance(rad));
+            trans.Compose(AffineTransformation.ScaleInstance(scaleX, scaleY));
+            trans.Compose(AffineTransformation.TranslationInstance(map.Center.X, map.Center.Y));
+            return trans;
 
             // .Net Matrix
-             //System.Drawing.Drawing2D.Matrix matrix;
+            //System.Drawing.Drawing2D.Matrix matrix;
             //matrix = new System.Drawing.Drawing2D.Matrix();
             //matrix.Translate(-map.Size.Width / 2f, -map.Size.Height / 2f);      // shift origin to viewport centre
             //matrix.Scale(1, -1, System.Drawing.Drawing2D.MatrixOrder.Append);   // reflect in X axis
             //matrix.Rotate(deg, System.Drawing.Drawing2D.MatrixOrder.Append);    // rotate about viewport centre
             //matrix.Scale((float)scaleX, (float)scaleY, System.Drawing.Drawing2D.MatrixOrder.Append); // scale
             //matrix.Translate((float)map.Center.X, (float)map.Center.Y, System.Drawing.Drawing2D.MatrixOrder.Append); // translate to map centre
-
-            //var ptsF = new[] { new PointF(map.Size.Width / 2f, map.Size.Height / 2f), // centre
-            //                new PointF(0, 0),                            // UL
-            //                new PointF(map.Size.Width, 0),               // UR 
-            //                new PointF(map.Size.Width, map.Size.Height), // LR
-            //                new PointF(0, map.Size.Height) };            // LL
-
-            //matrix.TransformPoints(ptsF);
-
-            // validate ImageToWorld calcs with independent affine transformation
-            Assert.IsTrue(lineString.GetPointN(0).Coordinate.Equals2D(map.ImageToWorld(new PointF(map.Size.Width / 2f, map.Size.Height / 2f), true), 0.001), "Centre: " + deg + " deg");
-            Assert.IsTrue(lineString.GetPointN(1).Coordinate.Equals2D(map.ImageToWorld(new PointF(0, 0), true), 0.001), "Upper Left: " + deg + " deg");
-            Assert.IsTrue(lineString.GetPointN(2).Coordinate.Equals2D(map.ImageToWorld(new PointF(map.Size.Width, 0), true), 0.001), "Upper Right: " + deg + " deg");
-            Assert.IsTrue(lineString.GetPointN(3).Coordinate.Equals2D(map.ImageToWorld(new PointF(map.Size.Width, map.Size.Height), true), 0.001), "Lower Right: " + deg + " deg"); 
-            Assert.IsTrue(lineString.GetPointN(4).Coordinate.Equals2D(map.ImageToWorld(new PointF(0, map.Size.Height), true), 0.001), "Lower Left: " + deg + " deg");
-
-            // validate map envelope: lineString outline = image extents, so lineString.EnvelopeInternal should equal map.Envelope
-            // this test found long-standing bug in Map.Envelope calcs
-            Assert.IsTrue(env.BottomLeft().Equals2D(lineString.EnvelopeInternal.BottomLeft(), 0.1));
-            Assert.IsTrue(env.TopLeft().Equals2D(lineString.EnvelopeInternal.TopLeft(), 0.1));
-            Assert.IsTrue(env.TopRight().Equals2D(lineString.EnvelopeInternal.TopRight(), 0.1));
-            Assert.IsTrue(env.BottomRight().Equals2D(lineString.EnvelopeInternal.BottomRight(), 0.1));
-
-            // visual checks
-            var vl = new VectorLayer("Test Points");
-            var gp = new GeometryProvider(lineString);
-            gp.Geometries.Add(new NetTopologySuite.Geometries.Point(25000, 75000));
-            vl.DataSource = gp;
-            var cps = new SharpMap.Rendering.Symbolizer.CharacterPointSymbolizer();
-            cps.CharacterIndex = 221;
-            cps.Font = new Font("Wingdings", 30);
-            vl.Style.PointSymbolizer = cps; 
-            map.Layers.Add(vl);
-
-            map.ZoomToBox(lineString.EnvelopeInternal);
-
-            string fn = $"MapRotation_{deg:000}_{map.Zoom:0}_{map.MapScale:0}.png";
-            using (var img = map.GetMap(96))
-                img.Save(System.IO.Path.Combine(UnitTestsFixture.GetImageDirectory(this), fn),System.Drawing.Imaging.ImageFormat.Png);
-
-            map.Dispose();
         }
 
+        private Polygon GetMapExtentPolygon(Coordinate mapCenter, double zoom, double mapHeight, float rotationDeg)
+        {
+            // height has been adjusted for pixelRatio
+//            var height = map.MapHeight;
+//            if (double.IsNaN(height) || double.IsInfinity(height) || map.Size.Width == 0 || map.Size.Height == 0)
+//                return null;
+
+            var poly = new Polygon(new LinearRing(new Coordinate[]
+                {
+                    new Coordinate(mapCenter.X - zoom * .5,mapCenter.Y - mapHeight * .5),
+                    new Coordinate(mapCenter.X - zoom * .5,mapCenter.Y + mapHeight * .5),
+                    new Coordinate(mapCenter.X + zoom * .5,mapCenter.Y + mapHeight * .5),
+                    new Coordinate(mapCenter.X + zoom * .5,mapCenter.Y - mapHeight * .5),
+                    new Coordinate(mapCenter.X -zoom * .5,mapCenter.Y - mapHeight * .5)
+                }
+            ));
+
+            if (rotationDeg.Equals(0f))
+                return poly;
+
+            var rad = rotationDeg * Math.PI / 180.0;
+            var at = AffineTransformation.RotationInstance(rad, mapCenter.X, mapCenter.Y);
+            return (Polygon)at.Transform(poly);
+        }
+
+        private void ValidateTransformScenarios( bool useMapViewport, Map map, PointF[] ptsImage, Coordinate[] controlGeom)
+        {
+            Coordinate[] ptsWorld;
+            Envelope worldEnv;
+            Polygon worldPolygon;
+            PointF[] andBack;
+            string mode;
+
+            var controlEnv = new Envelope(
+                controlGeom.Min(c => c.X), 
+                controlGeom.Max(c => c.X),
+                controlGeom.Min(c => c.Y),
+                controlGeom.Max(c => c.Y));
+
+            var mvp = (MapViewport) map;
+            
+            if (!useMapViewport)
+            {
+                mode = "map";
+                ptsWorld = map.ImageToWorld((PointF[]) ptsImage.Clone(), true);
+                worldEnv = map.Envelope;
+                worldPolygon = GetMapExtentPolygon(map.Center, map.Zoom,map.MapHeight,map.MapTransformRotation);
+                andBack = map.WorldToImage(ptsWorld, true);
+            }
+            else
+            {
+                mode = "mvp";
+                ptsWorld= mvp.ImageToWorld((PointF[]) ptsImage.Clone(), true);
+                worldEnv = mvp.Envelope;
+                worldPolygon = GetMapExtentPolygon(mvp.Center, mvp.Zoom,mvp.MapHeight,mvp.MapTransformRotation);;
+                andBack = mvp.WorldToImage(ptsWorld, true);
+            }
+
+            // validate ImageToWorld calcs by comparison with control geom (independent affine transformation)
+            Assert.IsTrue(controlGeom[0].Equals2D(ptsWorld[0], 0.001), $"{mode}Image2World Centre");
+            Assert.IsTrue(controlGeom[1].Equals2D(ptsWorld[1], 0.001), $"{mode}Image2World TopLeft");
+            Assert.IsTrue(controlGeom[2].Equals2D(ptsWorld[2], 0.001), $"{mode}Image2World TopRight");
+            Assert.IsTrue(controlGeom[3].Equals2D(ptsWorld[3], 0.001), $"{mode}Image2World BottomRight");
+            Assert.IsTrue(controlGeom[4].Equals2D(ptsWorld[4], 0.001), $"{mode}Image2World BottomLeft");
+
+            // validate map envelope: lineString outline = image extents, so lineString.EnvelopeInternal should equal map.Envelope
+            // this test found and resolved long-standing problem in Map.Envelope calcs when MapTransform is applied
+            Assert.IsTrue(worldEnv.BottomLeft().Equals2D(controlEnv.BottomLeft(), 0.1), $"{mode}Envelope BottomLeft");
+            Assert.IsTrue(worldEnv.TopLeft().Equals2D(controlEnv.TopLeft(), 0.1), $"{mode}Envelope TopLeft");
+            Assert.IsTrue(worldEnv.TopRight().Equals2D(controlEnv.TopRight(), 0.1), $"{mode}Envelope TopRight");
+            Assert.IsTrue(worldEnv.BottomRight().Equals2D(controlEnv.BottomRight(), 0.1), $"{mode}Envelope BottomRight");
+
+            // validate map polygon
+            Assert.IsTrue(worldPolygon.EnvelopeInternal.BottomLeft().Equals2D(controlEnv.BottomLeft(), 0.1), $"{mode}Polygon BottomLeft");
+            Assert.IsTrue(worldPolygon.EnvelopeInternal.TopLeft().Equals2D(controlEnv.TopLeft(), 0.1), $"{mode}Polygon BottomLeft");
+            Assert.IsTrue(worldPolygon.EnvelopeInternal.TopRight().Equals2D(controlEnv.TopRight(), 0.1), $"{mode}Polygon BottomLeft");
+            Assert.IsTrue(worldPolygon.EnvelopeInternal.BottomRight().Equals2D(controlEnv.BottomRight(), 0.1), $"{mode}Polygon BottomLeft");
+            
+            // validate zoom
+            map.Zoom = 1000;
+            Assert.AreEqual(map.Zoom, mvp.Zoom, 0.001, $"{mode}MapZoom");
+            
+            Assert.AreEqual(map.Zoom, worldPolygon.Coordinates[1].Distance(worldPolygon.Coordinates[2]), 0.1, $"{mode}PolygonWidth");
+
+            // validate MapScale
+            Assert.AreEqual(map.MapScale, mvp.GetMapScale(96), 0.1, $"{mode}MapScale");
+            
+            // now convert WORLD >> IMAGE
+            //var andBack = map.WorldToImage(ptsWorld, true);
+
+            Assert.AreEqual(ptsImage[0].X,andBack[0].X, 0.02, $"{mode}World2Image Centre X");
+            Assert.AreEqual(ptsImage[0].Y,andBack[0].Y, 0.02, $"{mode}World2Image Centre Y");
+            Assert.AreEqual(ptsImage[1].X,andBack[1].X, 0.02, $"{mode}World2Image TopLeft X");
+            Assert.AreEqual(ptsImage[1].Y,andBack[1].Y, 0.02, $"{mode}World2Image TopLeft Y");
+            Assert.AreEqual(ptsImage[2].X,andBack[2].X, 0.02, $"{mode}World2Image TopRight X");
+            Assert.AreEqual(ptsImage[2].Y,andBack[2].Y, 0.02, $"{mode}World2Image TopRight Y");
+            Assert.AreEqual(ptsImage[3].X,andBack[3].X, 0.02, $"{mode}World2Image BottomRight X");
+            Assert.AreEqual(ptsImage[3].Y,andBack[3].Y, 0.02, $"{mode}World2Image BottomRight Y");
+            Assert.AreEqual(ptsImage[4].X,andBack[4].X, 0.02, $"{mode}World2Image BottomLeft X");
+            Assert.AreEqual(ptsImage[4].Y,andBack[4].Y, 0.02, $"{mode}World2Image BottomLeft Y");
+
+        }
+        
         [Test]
         public void Initalize_MapInstance()
         {
@@ -547,40 +847,59 @@ namespace UnitTests
             Assert.AreEqual(340, map.Zoom);
         }
 
-        [TestCase(500, 100, 10000, 10000)]
-        public void ZoomToBox_WithRotatedViewport(int mapSizeWidth, int mapSizeHeight, double boxWidth,
-            double boxHeight)
+        [TestCase(600, 300, 10000,10000)]
+        [TestCase(600, 300, 5000,15000)]
+        [TestCase(600, 300, 15000,5000)]
+        [TestCase(300, 600, 10000,10000)]
+        [TestCase(300, 600, 5000,15000)]
+        [TestCase(300, 600, 15000,5000)]
+        public void ZoomToBox_WithRotatedViewport(int mapSizeWidth, int mapSizeHeight, double dataWidthMetres, double dataHeightMetres)
         {
-            // Ensure that map extents contain envelope
-            Map map = new Map(new Size(mapSizeWidth, mapSizeHeight));
+            // Tests to ensure ZoomToExtents shows map extents at maximum possible scale without clipping
+            // Each test will work through series of MapTransform from 0-360 deg at 30deg increments/
+            // The old/new image outputs demonstrate how the updates have fixed problems when viewport is rotated.
+            var map = new Map(new Size(mapSizeWidth, mapSizeHeight));
             map.BackColor= Color.Azure;
 
-            var env = new Envelope(0, boxWidth, 0, boxHeight);
-            env.Translate(700000 - boxHeight * 0.5, 1000000 - boxHeight * 0.5);
-
+            // create layer with single polygon centred on 700,000mE, 1,000,000mN
+            var env = new Envelope(0, dataWidthMetres, 0, dataHeightMetres);
+            env.Translate(700000 - dataWidthMetres * 0.5, 1000000 - dataHeightMetres * 0.5);
+            var extentsPoly = new Polygon(new LinearRing(new Coordinate[]
+            {
+                new Coordinate(env.MinX, env.MinY),
+                new Coordinate(env.MinX, env.MaxY),
+                new Coordinate(env.MaxX, env.MaxY),
+                new Coordinate(env.MaxX, env.MinY),
+                new Coordinate(env.MinX, env.MinY)
+            }));
+            
             var vl = new VectorLayer("Test Points");
-            var gp = new GeometryProvider(env.ToPolygon());
+            var gp = new GeometryProvider(extentsPoly);
             gp.Geometries.Add(new NetTopologySuite.Geometries.Point(env.Centre));
-            var llIndicator = new Coordinate(env.BottomLeft());
-            llIndicator.X += 100;
-            llIndicator.Y += 100;
-            gp.Geometries.Add(new NetTopologySuite.Geometries.Point(llIndicator));
+            // red dot for lower left corner
+            var lowerLeft = new Coordinate(env.BottomLeft());
+            lowerLeft.X += 100;
+            lowerLeft.Y += 100;
+            gp.Geometries.Add(new NetTopologySuite.Geometries.Point(lowerLeft));
             vl.DataSource = gp;
             map.Layers.Add(vl);
 
-            for (var degrees = 0; degrees <= 360; degrees += 30)
+            for (var degrees = 0; degrees < 360; degrees += 30)
             {
                 var mapTransform = new System.Drawing.Drawing2D.Matrix();
                 mapTransform.RotateAt(degrees, new PointF(map.Size.Width / 2, map.Size.Height / 2));
                 map.MapTransform = mapTransform;
 
+                var ext = map.GetExtents();
+                Assert.IsTrue(ext.Equals(env));
+
                 // reset view
                 map.Center = new Coordinate(0, 0);
                 map.Zoom = 1000;
-
-                map.ZoomToBox(env);
-                var fn =
-                    $"ZoomToBox_{mapSizeWidth}x{mapSizeHeight}_{degrees:0}deg_bbox_{env.Width}x{env.Height}_old.png";
+                
+                // OLD: zoom to box, ignoring map rotation: layer extents will overlap borders or have significant margins  
+                map.ZoomToBox(ext);
+                var fn = $"ZoomToBox_{mapSizeWidth}x{mapSizeHeight}_bbox_{env.Width}x{env.Height}_OLD_{degrees:000}deg.png";
                 using (var img = map.GetMap(96))
                     img.Save(System.IO.Path.Combine(UnitTestsFixture.GetImageDirectory(this), fn), System.Drawing.Imaging.ImageFormat.Bmp);
 
@@ -588,10 +907,16 @@ namespace UnitTests
                 map.Center = new Coordinate(0, 0);
                 map.Zoom = 1000;
 
-//                map.ZoomToBox(env, true);
-//                fn = $"ZoomToBox_{mapSizeWidth}x{mapSizeHeight}_{degrees:0}deg_bbox_{env.Width}x{env.Height}_new.png";
-//                using (var img = map.GetMap(96))
-//                    img.Save(System.IO.Path.Combine(UnitTestsFixture.GetImageDirectory(this), fn), System.Drawing.Imaging.ImageFormat.Bmp);
+                // NEW: zoom to box, taking into account map rotation: map extents will fit perfectly between borders
+                map.ZoomToBox(env, true);
+                var polygon = GetMapExtentPolygon(map.Center, map.Zoom, map.MapHeight, map.MapTransformRotation);
+                // allow small margin by buffering true outline of MapViewport in world coordinates
+                Assert.IsTrue(polygon.Buffer(1).Contains(extentsPoly), $"{degrees:000}_contains");
+                Assert.IsTrue(polygon.Buffer(-1).Intersects(extentsPoly), $"{degrees:000}_intersects");
+                
+                fn = $"ZoomToBox_{mapSizeWidth}x{mapSizeHeight}_bbox_{env.Width}x{env.Height}_NEW_{degrees:000}deg.png";
+                using (var img = map.GetMap(96))
+                    img.Save(System.IO.Path.Combine(UnitTestsFixture.GetImageDirectory(this), fn), System.Drawing.Imaging.ImageFormat.Bmp);
             }
 
             map.Dispose();
