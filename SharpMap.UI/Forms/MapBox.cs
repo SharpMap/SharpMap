@@ -50,6 +50,7 @@ using IGeometry = GeoAPI.Geometries.IGeometry;
 using System.Threading;
 using Common.Logging;
 using System.Collections.Generic;
+using System.Drawing.Drawing2D;
 using SharpMap.Forms.ImageGenerator;
 
 namespace SharpMap.Forms
@@ -1426,52 +1427,45 @@ namespace SharpMap.Forms
                         return;
                 }
 
+                // oldZoom and oldHeight are the APPARENT width amd height of the map in world coordinates,
+                // even when a MapTransform is applied (ie NOT the same as Envelope.Width amd Height)
                 var oldCenter = _map.Center;
-                var oldZoom = _map.Zoom;
-                var oldHeight = _map.MapHeight;
+                var oldZoom = _map.Zoom; 
+                var oldHeight = _map.MapHeight; 
 
                 var scale = (e.Delta / 120.0);
                 var scaleBase = 1 + (_wheelZoomMagnitude/(10*(IsControlPressed ? _fineZoomFactor : 1)));
+                var scaleFactor = Math.Pow(scaleBase, scale);
 
                 if (!ZoomToPointer)
                     // zoom in/out maintaining existing centre
-                    _map.Zoom = oldZoom * Math.Pow(scaleBase, scale);
+                    _map.Zoom = oldZoom * scaleFactor;
                 else
                 {
                     // preserve MAP cursor posn
                     var p = _map.ImageToWorld(new Point(e.X, e.Y), true);
 
-                    System.Drawing.Drawing2D.Matrix transform = new System.Drawing.Drawing2D.Matrix();
-                    transform.Translate((float)-p.X, (float)-p.Y, System.Drawing.Drawing2D.MatrixOrder.Append);
-                    transform.Scale((float)Math.Pow(scaleBase, scale), (float)Math.Pow(scaleBase, scale), System.Drawing.Drawing2D.MatrixOrder.Append);
-                    transform.Translate((float)p.X, (float)p.Y, System.Drawing.Drawing2D.MatrixOrder.Append);
+                    var newCenter = new Coordinate(
+                        p.X + (oldCenter.X - p.X) * scaleFactor,
+                        p.Y + (oldCenter.Y - p.Y) * scaleFactor
+                    );
 
-                    // NB zoom is independent of MapTransform. 
-                    var pts = new[] { new PointF((float)oldCenter.X, (float)oldCenter.Y),
-                                      new PointF((float)(oldCenter.X - 0.5 * oldZoom), (float)(oldCenter.Y - 0.5 * oldHeight)),
-                                      new PointF((float)(oldCenter.X + 0.5 * oldZoom), (float)(oldCenter.Y + 0.5 * oldHeight))
-                                    };
-                    transform.TransformPoints(pts);
-                    transform.Dispose();
+                    var newWidth = oldZoom * scaleFactor;
+                    var newHeight = oldHeight * scaleFactor;
+                    
+                    var bbox = new Envelope(
+                        newCenter.X - newWidth * 0.5, 
+                        newCenter.X + newWidth * 0.5,
+                        newCenter.Y - newHeight * 0.5, 
+                        newCenter.Y + newHeight * 0.5);
 
-                    // Subject to creep when map is rotated, but significant improvement over previous implementation
-                    var newCenter = new Coordinate(pts[0].X, pts[0].Y);
-                    var newZoom = pts[2].X - pts[1].X;
-                    var box = new Envelope(pts[1].X, pts[2].X, pts[1].Y, pts[2].Y);
-
-                    //pre-checks to prevent mapViewPortGuard from adjusting centre upon reaching max extents
-                    if (newZoom < _map.MinimumZoom || newZoom > _map.MaximumZoom)
+                    if (_map.EnforceMaximumExtents && !_map.MaximumExtents.IsNull && !_map.MaximumExtents.Contains(bbox))
                         return;
 
-                    if (_map.EnforceMaximumExtents && !_map.MaximumExtents.IsNull && !_map.MaximumExtents.Contains(box))
-                        return;
-
-                    //_map.Center = newCenter;
-                    //_map.Zoom = newZoom;
-
-                    // more efficient that Center + Zoom 
-                    _map.ZoomToBox(box);
-
+                    // more efficient that Center + Zoom.
+                    // careAboutTransform == false: new center, width, and height will be adopted 
+                    // from bbox without applying correction for map rotation.
+                    _map.ZoomToBox(bbox, false);
                 }
 
                 if (!_map.Center.Equals2D(oldCenter, PrecisionTolerance))
@@ -1516,7 +1510,7 @@ namespace SharpMap.Forms
         }
 
         private Coordinate _dragStartCenter;
-        private System.Drawing.Drawing2D.Matrix _dragTransform;
+        private Matrix _dragTransform;
         private double _orgScale;
 
         /// <summary>
@@ -1558,20 +1552,19 @@ namespace SharpMap.Forms
                 _dragStartPoint = e.Location;
                 _dragEndPoint = e.Location;
                 _dragStartCenter = _map.Center;
-
-                _dragTransform = new System.Drawing.Drawing2D.Matrix();
+                
+                _dragTransform = new Matrix();
                 _dragTransform.Translate(-e.X, -e.Y);
-                _dragTransform.Scale(1f, -1f, System.Drawing.Drawing2D.MatrixOrder.Append);  // reflect in X axis
-                if (_map.MapTransformRotation == 0)
-                    _dragTransform.Scale((float)_map.PixelWidth, (float)_map.PixelHeight, System.Drawing.Drawing2D.MatrixOrder.Append);
+                _dragTransform.Scale(1f, -1f, MatrixOrder.Append);  // reflect in X axis
+                if (_map.MapTransformRotation.Equals(0f))
+                    _dragTransform.Scale((float)_map.PixelWidth, (float)_map.PixelHeight, MatrixOrder.Append);
                 else
                 {
-                    _dragTransform.Rotate(_map.MapTransformRotation, System.Drawing.Drawing2D.MatrixOrder.Append);
-                    // must derive scale for rotated maps, as "Zoom" is based upon non-rotated width
-                    var env = _map.Envelope;
-                    _dragTransform.Scale((float)(env.Width / Width), (float)(env.Width / Width / _map.PixelAspectRatio), System.Drawing.Drawing2D.MatrixOrder.Append);
+                    _dragTransform.Rotate(_map.MapTransformRotation, MatrixOrder.Append);
+                    // NB Zoom and MapHeight are APPARENT real-world dimensions of rotated viewport (NOT the same as Env.Width and Height)
+                    _dragTransform.Scale((float)(_map.Zoom / Width), (float)(_map.MapHeight / Height), MatrixOrder.Append);
                 }
-                _dragTransform.Translate((float)p.X, (float)p.Y, System.Drawing.Drawing2D.MatrixOrder.Append);
+                _dragTransform.Translate((float)p.X, (float)p.Y, MatrixOrder.Append);
 
                 _orgScale = _map.Zoom;
             }
@@ -1698,19 +1691,17 @@ namespace SharpMap.Forms
                                              //_activeTool == Tools.QueryPoint ||
                                              /*_activeTool == Tools.QueryPolygon || */
                                              (_shiftButtonDragRectangleZoom &&
-                                              (Control.ModifierKeys & Keys.Shift) != Keys.None);
+                                              (ModifierKeys & Keys.Shift) != Keys.None);
 
                 if (isPanOperation)
                 {
                     _dragEndPoint = ClipPoint(e.Location);
                     if (_dragStartCenter != null)
                     {
-                        var oldCenter = _map.Center;
-                        
-                        var pts = new[] { new System.Drawing.PointF(_dragStartPoint.X, _dragStartPoint.Y),
-                                          new System.Drawing.PointF(_dragEndPoint.X, _dragEndPoint.Y) //,
-                                         //new System.Drawing.PointF(Width/2f, Height/2f)
-                                        };
+                        var pts = new[] { 
+                            new PointF(_dragStartPoint.X, _dragStartPoint.Y),
+                            new PointF(_dragEndPoint.X, _dragEndPoint.Y) 
+                         };
 
                         _dragTransform.TransformPoints(pts);
 
@@ -1719,7 +1710,7 @@ namespace SharpMap.Forms
 
                         _map.Center = new Coordinate(_dragStartCenter.X - dX, _dragStartCenter.Y - dY);
 
-                        if (!_map.Center.Equals2D(oldCenter, PrecisionTolerance))
+                        if (!_map.Center.Equals2D(_dragStartCenter, PrecisionTolerance))
                         {
                             OnMapCenterChanged(_map.Center);
 
@@ -1977,7 +1968,7 @@ namespace SharpMap.Forms
             try
             {
                 if (_logger.IsDebugEnabled)
-                    _logger.Debug($"OnPaint ({pe.ClipRectangle}), ActiveTool: {Enum.GetName(typeof(MapBox.Tools), _activeTool)}");
+                    _logger.Debug($"OnPaint ({pe.ClipRectangle}), ActiveTool: {Enum.GetName(typeof(Tools), _activeTool)}");
 
                 //Console.WriteLine($"OnPaint ({pe.ClipRectangle.ToString()})");
 
