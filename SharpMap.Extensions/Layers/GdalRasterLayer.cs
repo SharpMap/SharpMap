@@ -35,6 +35,8 @@ using SharpMap.Rendering.Thematics;
 using Point = System.Drawing.Point;
 
 using Polygon = GeoAPI.Geometries.IPolygon;
+using System.IO.MemoryMappedFiles;
+using System.Runtime.InteropServices;
 
 namespace SharpMap.Layers
 {
@@ -328,7 +330,7 @@ namespace SharpMap.Layers
         }
 
         /// <summary>
-        /// initialize a Gdal based raster layer
+        /// initialize a Gdal based raster layer - from file
         /// </summary>
         /// <param name="strLayerName">Name of layer</param>
         /// <param name="imageFilename">location of image</param>
@@ -338,6 +340,99 @@ namespace SharpMap.Layers
             OpenDataset(imageFilename);
         }
 
+        /// <summary>
+        /// initialize a Gdal based raster layer - from buffer
+        /// </summary>
+        /// <param name="strLayerName">Name of layer</param>
+        /// <param name="imageBuffer">image buffer</param>
+        /// 
+        public GdalRasterLayer(string strLayerName, byte[] imageBuffer) : this(strLayerName)
+        {
+            var memoryFileName = @"/vsimem/tempImage";
+
+            Filename = memoryFileName;
+            OpenDataset(imageBuffer, memoryFileName);
+        }
+
+        /// <summary>
+        /// OpenDataset for buffer
+        /// </summary>
+        /// <param name="imageBuffer">image buffer</param>
+        /// <param name="memoryFileName">File Name in Memory</param>
+        protected void OpenDataset(byte[] imageBuffer, string memoryFileName)
+        {
+            try
+            {
+                Gdal.FileFromMemBuffer(memoryFileName, imageBuffer);
+
+                if (_logger.IsDebugEnabled)
+                    _logger.Debug("Opening dataset " + memoryFileName);
+
+                _gdalDataset = Gdal.Open(memoryFileName, Access.GA_ReadOnly);
+
+                if (_logger.IsDebugEnabled)
+                    _logger.Debug("Reading projection for " + memoryFileName);
+
+                // have gdal read the projection
+                Projection = _gdalDataset.GetProjectionRef();
+
+                // no projection info found in the image...check for a prj
+                if (Projection == "" &&
+                    File.Exists(memoryFileName.Substring(0, memoryFileName.LastIndexOf(".", StringComparison.CurrentCultureIgnoreCase)) + ".prj"))
+                {
+                    Projection =
+                        File.ReadAllText(memoryFileName.Substring(0, memoryFileName.LastIndexOf(".", StringComparison.CurrentCultureIgnoreCase)) + ".prj");
+                }
+
+                if (!String.IsNullOrEmpty(Projection))
+                {
+                    using (var p = new OSGeo.OSR.SpatialReference(null))
+                    {
+                        var wkt = Projection;
+                        var res = p.ImportFromWkt(ref wkt);
+                        var srid = 0;
+                        if (res == 0)
+                        {
+                            if (Projection.StartsWith("PROJCS"))
+                                int.TryParse(p.GetAuthorityCode("PROJCS"), out srid);
+                            else if (Projection.StartsWith("GEOGCS"))
+                                int.TryParse(p.GetAuthorityCode("GEOGCS"), out srid);
+                            else
+                                srid = p.AutoIdentifyEPSG();
+                        }
+                        SRID = srid;
+                    }
+                }
+
+                if (_logger.IsDebugEnabled)
+                    _logger.Debug("Read sizes" + memoryFileName);
+
+                _imageSize = new Size(_gdalDataset.RasterXSize, _gdalDataset.RasterYSize);
+                _envelope = GetExtent();
+
+                HistoBounds = new Rectangle((int)_envelope.MinX, (int)_envelope.MinY, (int)_envelope.Width,
+                    (int)_envelope.Height);
+                Bands = _gdalDataset.RasterCount;
+
+                if (_logger.IsDebugEnabled)
+                    _logger.Debug("Dataset open, " + memoryFileName);
+
+            }
+            catch (Exception ex)
+            {
+                _gdalDataset = null;
+                throw new Exception("Couldn't load " + memoryFileName + "\n\n" + ex.Message + ex.InnerException);
+            }
+            finally
+            {
+                Gdal.Unlink(memoryFileName);
+            }
+        }
+
+        /// <summary>
+        /// OpenDataset for imageFile
+        /// </summary>
+        /// <param name="imageFilename">location of image</param>
         protected void OpenDataset(string imageFilename)
         {
             try
@@ -348,7 +443,7 @@ namespace SharpMap.Layers
 
                 if (_logger.IsDebugEnabled)
                     _logger.Debug("Reading projection for " + imageFilename);
-
+                
                 // have gdal read the projection
                 Projection = _gdalDataset.GetProjectionRef();
 
