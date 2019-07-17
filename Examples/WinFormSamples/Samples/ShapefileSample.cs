@@ -173,6 +173,7 @@ namespace WinFormSamples.Samples
         {
             //Initialize a new map of size 'imagesize'
             Map map = new Map();
+            map.SRID = 4326;
 
             //Set up the countries layer
             VectorLayer layCountries = new VectorLayer("Countries");

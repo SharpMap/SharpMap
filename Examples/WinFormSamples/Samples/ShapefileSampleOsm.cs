@@ -88,7 +88,8 @@ namespace WinFormSamples.Samples
             //Initialize a new map
             Map map = new Map();
             map.BackColor = Color.Cornsilk;
-
+            map.SRID = 31466;
+            
             var encoding = System.Text.Encoding.UTF8;
 
             //Set up the countries layer

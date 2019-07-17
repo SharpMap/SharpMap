@@ -148,7 +148,7 @@
             // 
             this.chkGraticule.Location = new System.Drawing.Point(13, 129);
             this.chkGraticule.Name = "chkGraticule";
-            this.chkGraticule.Size = new System.Drawing.Size(156, 19);
+            this.chkGraticule.Size = new System.Drawing.Size(75, 19);
             this.chkGraticule.TabIndex = 5;
             this.chkGraticule.Text = "Graticule";
             this.chkGraticule.UseVisualStyleBackColor = true;
