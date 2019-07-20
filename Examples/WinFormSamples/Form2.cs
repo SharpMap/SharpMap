@@ -3,6 +3,7 @@ using System.Linq;
 using BruTile.Predefined;
 using SharpMap.Data;
 using SharpMap.Rendering.Decoration;
+using SharpMap.Rendering.Decoration.Graticule;
 using SharpMap.Rendering.Decoration.ScaleBar;
 
 namespace WinFormSamples
@@ -65,7 +66,7 @@ namespace WinFormSamples
             this.mapBox1.Map.Decorations.Add(new Graticule()
             {
                 Enabled =  chkGraticule.Checked,
-                PcsGraticuleMode = GraticuleStyle.PcsGraticuleMode.WebMercatorScaleLines,
+                PcsGraticuleMode = PcsGraticuleMode.WebMercatorScaleLines,
                 PcsGraticuleStyle =
                 {
                     NumSubdivisions = 2

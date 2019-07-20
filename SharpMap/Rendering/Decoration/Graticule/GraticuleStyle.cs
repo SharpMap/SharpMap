@@ -1,16 +1,15 @@
-using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using SharpMap.Styles;
 
-namespace SharpMap.Rendering.Decoration
+namespace SharpMap.Rendering.Decoration.Graticule
 {
     /// <summary>
     /// Graticule rendering properties, with Primary (major) and Secondary (minor) intervals.
     /// Use <see cref="PrimaryLineStyle"/>, <see cref="SecondaryLineStyle"/>, and <see cref="NumSubdivisions"/>
     /// to define how a graticule will render, and configure other properties to tune layout and formatting.  
     /// </summary>
-    public class GraticuleStyle
+    public partial class GraticuleStyle
     {
         private GraphicsPath _primaryTick;
         private GraphicsPath _secondaryTick;
@@ -24,88 +23,9 @@ namespace SharpMap.Rendering.Decoration
         /// </summary>
         public enum GraticuleTheme
         {
-            Bold,
-            Subtle,
-            None
-        }
-
-        /// <summary>
-        /// Define how a PcsGraticuleStyle will render 
-        /// </summary>
-        public enum PcsGraticuleMode
-        {
-            /// <summary>
-            /// Classic rectilinear graticule
-            /// </summary>
-            Standard,
-            
-            /// <summary>
-            /// Overrides Projected graticule behaviour ONLY for Web Mercator (SRID 3857), causing 
-            /// the graticule to be rendered as the meridian scale distortion lines from equator
-            /// to the poles. Can be used in conjunction or as an alternative to a ScaleBar. 
-            /// </summary>
-            WebMercatorScaleLines
-        }
-        
-        /// <summary>
-        /// Enumeration defining which borders should be labelled
-        /// </summary>
-        [Flags]
-        public enum GraticuleDecorationBorders
-        {
-            /// <summary>
-            /// No borders
-            /// </summary>
-            None = 0,
-
-            /// <summary>
-            /// Label Left and Top borders
-            /// </summary>
-            LeftTop = MapDecorationAnchorFlags.Left | MapDecorationAnchorFlags.Top,
-
-            /// <summary>
-            /// Label Left and Bottom borders
-            /// </summary>
-            LeftBottom = MapDecorationAnchorFlags.Left | MapDecorationAnchorFlags.Bottom,
-
-            /// <summary>
-            /// Label Right and Top borders
-            /// </summary>
-            RightTop = MapDecorationAnchorFlags.Right | MapDecorationAnchorFlags.Top,
-
-            /// <summary>
-            /// Label Right and Bottom borders
-            /// </summary>
-            RightBottom = MapDecorationAnchorFlags.Right | MapDecorationAnchorFlags.Bottom,
-
-            /// <summary>
-            /// Label all borders
-            /// </summary>
-            All = MapDecorationAnchorFlags.Left | MapDecorationAnchorFlags.Top | MapDecorationAnchorFlags.Right | MapDecorationAnchorFlags.Bottom,
-
-        }
-
-        public enum GraticuleLineStyle
-        {
-            /// <summary>
-            /// Do not draw line (or ticks)
-            /// </summary>
-            None,
-            
-            /// <summary>
-            /// Parallels and meridians plot as continuous lines 
-            /// </summary>
-            Continuous,
-
-            /// <summary>
-            /// Plot intersections of parallels and meridians only, using a Solid tick mark 
-            /// </summary>
-            SolidTick,
-            
-            /// <summary>
-            /// Plot intersections of parallels and meridians only, using a Hollow tick mark 
-            /// </summary>
-            HollowTick
+            Bold = 0,
+            Subtle = 1,
+            None = 2
         }
 
         /// <summary>
@@ -179,7 +99,7 @@ namespace SharpMap.Rendering.Decoration
         /// <summary>
         /// Edges to be labelled, taking into account any map rotation 
         /// </summary>
-        public GraticuleDecorationBorders LabelBorders { get; set; } = GraticuleDecorationBorders.LeftBottom;
+        public GraticuleBorders LabelBorders { get; set; } = GraticuleBorders.LeftBottom;
 
         /// <summary>
         /// Font for labelling primary graticule lines 
@@ -273,7 +193,7 @@ namespace SharpMap.Rendering.Decoration
         public GraticuleStyle(GraticuleTheme theme, 
             GraticuleLineStyle lineStyle, 
             bool withSecondaryIntervals,
-            GraticuleDecorationBorders labelBorders) : this()
+            GraticuleBorders labelBorders) : this()
         {
             switch (theme)
             {

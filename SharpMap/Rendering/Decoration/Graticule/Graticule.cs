@@ -8,14 +8,14 @@ using GeoAPI.CoordinateSystems;
 using GeoAPI.CoordinateSystems.Transformations;
 using GeoAPI.Geometries;
 using NetTopologySuite.Geometries;
-using SharpMap.Utilities;
 using NetTopologySuite.Geometries.Utilities;
 using NetTopologySuite.Utilities;
 using SharpMap.Styles;
+using SharpMap.Utilities;
 using Matrix = System.Drawing.Drawing2D.Matrix;
 using Point = NetTopologySuite.Geometries.Point;
 
-namespace SharpMap.Rendering.Decoration
+namespace SharpMap.Rendering.Decoration.Graticule
 {
     /// <summary>
     /// Map Decoration to draw projected and/or geographic graticule on the map.
@@ -73,7 +73,7 @@ namespace SharpMap.Rendering.Decoration
         private Envelope _gcsConstrExtents;
         private int _oldPcsNumSubdivisions;
         private int _oldGcsNumSubdivisions;
-        private GraticuleStyle.PcsGraticuleMode _oldPcsGraticuleMode;
+        private PcsGraticuleMode _oldPcsGraticuleMode;
 
         /// <summary>
         /// Helper class for managing graticule geometry
@@ -112,8 +112,8 @@ namespace SharpMap.Rendering.Decoration
         /// Defines how Web Mercator Projected Graticule will be rendered.
         /// Either as a standard rectilinear graticule, or as meridian scale distortion lines
         /// </summary>    
-        public GraticuleStyle.PcsGraticuleMode PcsGraticuleMode { get; set; } =
-            GraticuleStyle.PcsGraticuleMode.Standard;
+        public PcsGraticuleMode PcsGraticuleMode { get; set; } =
+            PcsGraticuleMode.Standard;
 
         /// <summary>
         /// Graticule style definition for the Geographic Coordinate System
@@ -129,15 +129,15 @@ namespace SharpMap.Rendering.Decoration
             BackgroundColor = Color.Transparent;
 
             PcsGraticuleStyle = new GraticuleStyle(GraticuleStyle.GraticuleTheme.Bold,
-                GraticuleStyle.GraticuleLineStyle.Continuous, true,
-                GraticuleStyle.GraticuleDecorationBorders.LeftBottom)
+                GraticuleLineStyle.Continuous, true,
+                GraticuleBorders.LeftBottom)
             {
                 SecondaryPen = {DashStyle = DashStyle.Dash}
             };
 
             GcsGraticuleStyle = new GraticuleStyle(GraticuleStyle.GraticuleTheme.Subtle,
-                GraticuleStyle.GraticuleLineStyle.HollowTick, false,
-                GraticuleStyle.GraticuleDecorationBorders.RightTop);
+                GraticuleLineStyle.HollowTick, false,
+                GraticuleBorders.RightTop);
         }
 
         protected override Size InternalSize(Graphics g, MapViewport map)
@@ -155,7 +155,7 @@ namespace SharpMap.Rendering.Decoration
                 if (_coordinateSystem == null) return;
 
                 var webMercatorScaleLinesActive = _srid == GeoSpatialMath.WebMercatorSrid &&
-                                                  PcsGraticuleMode == GraticuleStyle.PcsGraticuleMode
+                                                  PcsGraticuleMode == PcsGraticuleMode
                                                       .WebMercatorScaleLines;
 
                 if (_oldViewExtents is null || !_oldViewExtents.Equals(map.Envelope) ||
@@ -195,7 +195,7 @@ namespace SharpMap.Rendering.Decoration
         {
             var visibleRef = style.VisibilityUnits == VisibilityUnits.Scale ? _mapScale : map.Zoom;
 
-            if (style.Division <= 0 || style.PrimaryLineStyle == GraticuleStyle.GraticuleLineStyle.None ||
+            if (style.Division <= 0 || style.PrimaryLineStyle == GraticuleLineStyle.None ||
                 visibleRef <= style.MinVisible || visibleRef > style.MaxVisible ||
                 constrExtents == null || constrExtents.IsNull)
                 return;
@@ -269,11 +269,11 @@ namespace SharpMap.Rendering.Decoration
                 if (webMercatorScaleLinesActive) return false;
 
                 if (def.IsPrimary)
-                    return s.PrimaryLineStyle == GraticuleStyle.GraticuleLineStyle.SolidTick ||
-                           s.PrimaryLineStyle == GraticuleStyle.GraticuleLineStyle.HollowTick;
+                    return s.PrimaryLineStyle == GraticuleLineStyle.SolidTick ||
+                           s.PrimaryLineStyle == GraticuleLineStyle.HollowTick;
 
-                return s.SecondaryLineStyle == GraticuleStyle.GraticuleLineStyle.SolidTick ||
-                       s.SecondaryLineStyle == GraticuleStyle.GraticuleLineStyle.HollowTick;
+                return s.SecondaryLineStyle == GraticuleLineStyle.SolidTick ||
+                       s.SecondaryLineStyle == GraticuleLineStyle.HollowTick;
             }).ToArray();
 
             var linesOnly = graticuleDefs.Except(ticksAndEdgeCuts).ToArray();
@@ -329,7 +329,7 @@ namespace SharpMap.Rendering.Decoration
 
                 var isPrimaryParallel = IsPrimaryInterval(thisY, style.Division, tolerance);
 
-                if (!isPrimaryParallel && style.SecondaryLineStyle == GraticuleStyle.GraticuleLineStyle.None) continue;
+                if (!isPrimaryParallel && style.SecondaryLineStyle == GraticuleLineStyle.None) continue;
 
                 if (ExceedsResolution(style, isPrimaryParallel)) continue;
 
@@ -413,7 +413,7 @@ namespace SharpMap.Rendering.Decoration
                 var thisX = constrExtents.MinX + i * style.Subdivision;
                 var isPrimaryMeridian = IsPrimaryInterval(thisX, style.Division, tolerance);
 
-                if (!isPrimaryMeridian && style.SecondaryLineStyle == GraticuleStyle.GraticuleLineStyle.None) continue;
+                if (!isPrimaryMeridian && style.SecondaryLineStyle == GraticuleLineStyle.None) continue;
 
                 if (ExceedsResolution(style, isPrimaryMeridian)) continue;
 
@@ -838,7 +838,7 @@ namespace SharpMap.Rendering.Decoration
         {
             if (!def.IsPrimary && !style.LabelSubdivisions) return LabelEnds.None;
 
-            if (style.LabelBorders == GraticuleStyle.GraticuleDecorationBorders.All) return LabelEnds.Both;
+            if (style.LabelBorders == GraticuleBorders.All) return LabelEnds.Both;
 
             var ends = LabelEnds.None;
 
