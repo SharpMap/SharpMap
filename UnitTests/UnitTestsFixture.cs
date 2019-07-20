@@ -21,6 +21,10 @@
                 .SetCoordinateSystemServices(css)
                 .SetCoordinateSystemRepository(css);
 
+            // plug-in WebMercator so that correct spherical definition is directly available to Layer Transformations using SRID
+            var pcs = (ProjNet.CoordinateSystems.ProjectedCoordinateSystem)ProjNet.CoordinateSystems.ProjectedCoordinateSystem.WebMercator;
+            css.AddCoordinateSystem((int)pcs.AuthorityCode, pcs);
+           
             _stopWatch = new System.Diagnostics.Stopwatch();
             System.Diagnostics.Trace.WriteLine("Starting tests");
             _stopWatch.Start();

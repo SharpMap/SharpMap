@@ -64,7 +64,12 @@ namespace WinFormSamples
             // Graticule
             this.mapBox1.Map.Decorations.Add(new Graticule()
             {
-                Enabled =  chkGraticule.Checked
+                Enabled =  chkGraticule.Checked,
+                PcsGraticuleMode = GraticuleStyle.PcsGraticuleMode.WebMercatorScaleLines,
+                PcsGraticuleStyle =
+                {
+                    NumSubdivisions = 2
+                }
             });
             
             this.mapBox1.Map.ZoomToBox(geom);

@@ -12,6 +12,7 @@ using SharpMap.Utilities;
 using NetTopologySuite.Geometries.Utilities;
 using NetTopologySuite.Utilities;
 using SharpMap.Styles;
+using Matrix = System.Drawing.Drawing2D.Matrix;
 using Point = NetTopologySuite.Geometries.Point;
 
 namespace SharpMap.Rendering.Decoration
@@ -25,6 +26,8 @@ namespace SharpMap.Rendering.Decoration
     /// The Projected Coordinate System graticule is managed via <see cref="PcsGraticuleStyle"/>,
     /// and the Geographic Coordinate System graticule via <see cref="GcsGraticuleStyle"/> 
     /// </para>
+    /// Web Mercator Projected Coordinate System graticule can be rendered as a standard 
+    /// rectilinear graticule, or as meridian scale distortion lines via <see cref="PcsGraticuleMode"/> 
     /// </summary>
     public class Graticule : MapDecoration
     {
@@ -34,7 +37,7 @@ namespace SharpMap.Rendering.Decoration
         private const double GeographicTolerance = 1e-9; // 1dp more than typical precision
         private const double ProjectedTolerance = 1e-4; // 1dp more than typical precision
         private const double SecondOfArcDecimalPlaces = 1e-4; // approx. 1mm at the equator
-        
+
         private const int PcsPowerRangeMin = -5;
         private const int PcsPowerRangeMax = 10;
         private readonly double[] _pcsPreferredMultiples = {5, 2.5, 2, 1}; // MUST be in descending order
@@ -46,17 +49,17 @@ namespace SharpMap.Rendering.Decoration
             _gcsPreferredMultiples = {90, 60, 30, 20, 15, 10, 5, 2.5, 2, 1}; // MUST be in descending order
 
         private readonly Polygon _webMercatorClipPolygon = new Polygon(
-            new LinearRing(new []
-                {
-                    GeoSpatialMath.WebMercatorEnv.BottomLeft(),
-                    GeoSpatialMath.WebMercatorEnv.TopLeft(),
-                    GeoSpatialMath.WebMercatorEnv.TopRight(),
-                    GeoSpatialMath.WebMercatorEnv.BottomRight(),
-                    GeoSpatialMath.WebMercatorEnv.BottomLeft(),
-                }));
+            new LinearRing(new[]
+            {
+                GeoSpatialMath.WebMercatorEnv.BottomLeft(),
+                GeoSpatialMath.WebMercatorEnv.TopLeft(),
+                GeoSpatialMath.WebMercatorEnv.TopRight(),
+                GeoSpatialMath.WebMercatorEnv.BottomRight(),
+                GeoSpatialMath.WebMercatorEnv.BottomLeft(),
+            }));
 
         private int _srid;
-        private Envelope _previousExtents;
+        private Envelope _oldViewExtents;
         private Polygon _viewClipPolygon;
         private ICoordinateSystem _coordinateSystem;
         private string _pcsUnitSuffix;
@@ -68,8 +71,9 @@ namespace SharpMap.Rendering.Decoration
         private IMathTransform _project;
         private Envelope _pcsConstrExtents;
         private Envelope _gcsConstrExtents;
-        private int _pcsNumSubdivisions;
-        private int _gcsNumSubdivisions;
+        private int _oldPcsNumSubdivisions;
+        private int _oldGcsNumSubdivisions;
+        private GraticuleStyle.PcsGraticuleMode _oldPcsGraticuleMode;
 
         /// <summary>
         /// Helper class for managing graticule geometry
@@ -105,6 +109,13 @@ namespace SharpMap.Rendering.Decoration
         public GraticuleStyle PcsGraticuleStyle { get; set; }
 
         /// <summary>
+        /// Defines how Web Mercator Projected Graticule will be rendered.
+        /// Either as a standard rectilinear graticule, or as meridian scale distortion lines
+        /// </summary>    
+        public GraticuleStyle.PcsGraticuleMode PcsGraticuleMode { get; set; } =
+            GraticuleStyle.PcsGraticuleMode.Standard;
+
+        /// <summary>
         /// Graticule style definition for the Geographic Coordinate System
         /// </summary>    
         public GraticuleStyle GcsGraticuleStyle { get; set; }
@@ -124,9 +135,8 @@ namespace SharpMap.Rendering.Decoration
                 SecondaryPen = {DashStyle = DashStyle.Dash}
             };
 
-
-            GcsGraticuleStyle = new GraticuleStyle(GraticuleStyle.GraticuleTheme.Subtle, 
-                GraticuleStyle.GraticuleLineStyle.HollowTick, false, 
+            GcsGraticuleStyle = new GraticuleStyle(GraticuleStyle.GraticuleTheme.Subtle,
+                GraticuleStyle.GraticuleLineStyle.HollowTick, false,
                 GraticuleStyle.GraticuleDecorationBorders.RightTop);
         }
 
@@ -144,36 +154,44 @@ namespace SharpMap.Rendering.Decoration
 
                 if (_coordinateSystem == null) return;
 
-                if (_previousExtents is null || !_previousExtents.Equals(map.Envelope) || 
-                    PcsGraticuleStyle.NumSubdivisions != _pcsNumSubdivisions ||
-                    GcsGraticuleStyle.NumSubdivisions != _gcsNumSubdivisions)
-                    CalculateMetrics(g, map);
+                var webMercatorScaleLinesActive = _srid == GeoSpatialMath.WebMercatorSrid &&
+                                                  PcsGraticuleMode == GraticuleStyle.PcsGraticuleMode
+                                                      .WebMercatorScaleLines;
+
+                if (_oldViewExtents is null || !_oldViewExtents.Equals(map.Envelope) ||
+                    PcsGraticuleStyle.NumSubdivisions != _oldPcsNumSubdivisions ||
+                    GcsGraticuleStyle.NumSubdivisions != _oldGcsNumSubdivisions ||
+                    PcsGraticuleMode != _oldPcsGraticuleMode)
+                    CalculateMetrics(g, map, webMercatorScaleLinesActive);
 
                 if (_coordinateSystem is IProjectedCoordinateSystem)
                 {
-                    OnRenderInternal(g, map, PcsGraticuleStyle, _pcsConstrExtents, _pcsDomain);
-                    OnRenderInternal(g, map, GcsGraticuleStyle, _gcsConstrExtents, _gcsDomain);
+                    OnRenderInternal(g, map, PcsGraticuleStyle, _pcsConstrExtents, _pcsDomain,
+                        webMercatorScaleLinesActive);
+                    OnRenderInternal(g, map, GcsGraticuleStyle, _gcsConstrExtents, _gcsDomain, false);
                 }
                 else
-                    OnRenderInternal(g, map, GcsGraticuleStyle, _gcsConstrExtents, _gcsDomain);
+                    OnRenderInternal(g, map, GcsGraticuleStyle, _gcsConstrExtents, _gcsDomain, false);
             }
             catch (NullReferenceException ex)
             {
-                _logger.WarnFormat("SRID {0} Env {1} Rotation {2}", _srid,  map.Envelope, map.MapTransformRotation);
+                _logger.WarnFormat("SRID {0} Env {1} Rotation {2}", _srid, map.Envelope, map.MapTransformRotation);
                 _logger.Error(ex);
             }
         }
 
         /// <summary>
-        /// Fully render a graticule according to the style
+        /// Fully render a graticule according to the given style 
+        /// (ie Projected graticule is rendered separately to Geographic graticule)
         /// </summary>
         /// <param name="g"></param>
         /// <param name="map"></param>
         /// <param name="style"></param>
         /// <param name="constrExtents"></param>
         /// <param name="crsDomain"></param>
+        /// <param name="webMercatorScaleLinesActive">Refer to &lt;see cref="PcsGraticuleMode"/&gt;</param>
         private void OnRenderInternal(Graphics g, MapViewport map, GraticuleStyle style,
-            Envelope constrExtents, Envelope crsDomain)
+            Envelope constrExtents, Envelope crsDomain, bool webMercatorScaleLinesActive)
         {
             var visibleRef = style.VisibilityUnits == VisibilityUnits.Scale ? _mapScale : map.Zoom;
 
@@ -188,8 +206,8 @@ namespace SharpMap.Rendering.Decoration
 
             var graticuleDefs = new List<GraticuleDef>();
             // calculate geometry for Meridians and Parallels in world coordinate system
-            graticuleDefs.AddRange(CalculateParallels(style, constrExtents, crsDomain));
-            graticuleDefs.AddRange(CalculateMeridians(style, constrExtents, crsDomain));
+            graticuleDefs.AddRange(CalculateParallels(style, constrExtents, crsDomain, webMercatorScaleLinesActive));
+            graticuleDefs.AddRange(CalculateMeridians(style, constrExtents, crsDomain, webMercatorScaleLinesActive));
 
             // project / simplify / clip / transform to image space
             foreach (var def in graticuleDefs)
@@ -201,44 +219,44 @@ namespace SharpMap.Rendering.Decoration
                         (LineString) GeometryTransform.TransformLineString(def.WcsGraticule, _project, targetFactory);
                     def.WcsTickMarks = new MultiPoint(TransformPreserveZ(_project, def.WcsTickMarks.Coordinates));
                 }
-                
+
+                if (def.WcsGraticule == null || def.WcsGraticule.IsEmpty) continue;
+
                 // Simplify (AFTER doing any projection)
-                var graticuleLine = def.WcsGraticule;
-                if (graticuleLine == null) continue;
-                if (graticuleLine.NumPoints > 2)
+                if (def.WcsGraticule.NumPoints > 2)
                 {
                     int same;
                     if (def.IsParallel)
                     {
-                        var initialY = graticuleLine.Coordinates[0].Y;
-                        same = graticuleLine.Coordinates.Count(c => Math.Abs(c.Y - initialY) < tolerance);
+                        var initialY = def.WcsGraticule .Coordinates[0].Y;
+                        same = def.WcsGraticule.Coordinates.Count(c => Math.Abs(c.Y - initialY) < tolerance);
                     }
                     else
                     {
-                        var initialX = graticuleLine.Coordinates[0].X;
-                        same = graticuleLine.Coordinates.Count(c => Math.Abs(c.X - initialX) < tolerance);
+                        var initialX = def.WcsGraticule .Coordinates[0].X;
+                        same = def.WcsGraticule.Coordinates.Count(c => Math.Abs(c.X - initialX) < tolerance);
                     }
 
-                    if (graticuleLine.Coordinates.Length == same)
+                    if (def.WcsGraticule.Coordinates.Length == same)
                     {
                         // simplify to single line segment
-                        graticuleLine = new LineString(new[]
+                        def.WcsGraticule  = new LineString(new[]
                         {
-                            graticuleLine.Coordinates[0],
-                            graticuleLine.Coordinates[graticuleLine.NumPoints - 1]
+                            def.WcsGraticule .Coordinates.First(),
+                            def.WcsGraticule .Coordinates.Last()
                         });
                     }
                 }
 
                 // Clip + Transform to image. See CalculateMetrics for special handling of _viewClipPolygon and WebMercator
-                def.ImageGraticule = map.WorldToImage(_viewClipPolygon.Intersection(graticuleLine).Coordinates, true);
+                def.ImageGraticule = map.WorldToImage(_viewClipPolygon.Intersection(def.WcsGraticule).Coordinates, true);
 
                 var clippedTicks = _viewClipPolygon.Intersection(def.WcsTickMarks).Coordinates;
                 // transfer Z ordinate to bool[] to indicate Primary or Secondary pen when rendering 
                 def.ImageTickMarks = map.WorldToImage(clippedTicks, true);
                 def.ImageTickStyle = new bool[clippedTicks.Length];
                 for (var j = 0; j < clippedTicks.Length; j++)
-                    def.ImageTickStyle[j] = Convert.ToInt32 (clippedTicks[j].Z) == 1;
+                    def.ImageTickStyle[j] = Convert.ToInt32(clippedTicks[j].Z) == 1;
             }
 
             // Render
@@ -247,6 +265,8 @@ namespace SharpMap.Rendering.Decoration
                 var s = def.IsGeographicGraticule
                     ? GcsGraticuleStyle
                     : PcsGraticuleStyle;
+
+                if (webMercatorScaleLinesActive) return false;
 
                 if (def.IsPrimary)
                     return s.PrimaryLineStyle == GraticuleStyle.GraticuleLineStyle.SolidTick ||
@@ -269,7 +289,10 @@ namespace SharpMap.Rendering.Decoration
                 RenderGraticuleLines(g, linesOnly);
             }
 
-            RenderLabels(g, graticuleDefs, map.MapTransformRotation);
+            if (webMercatorScaleLinesActive)
+                RenderScaleLineLabels(g, graticuleDefs, map);
+            else
+                RenderLabels(g, graticuleDefs, map.MapTransformRotation);
         }
 
         /// <summary>
@@ -279,8 +302,10 @@ namespace SharpMap.Rendering.Decoration
         /// <param name="style"></param>
         /// <param name="constrExtents"></param>
         /// <param name="crsDomain"></param>
+        /// <param name="webMercatorScaleLinesActive">Refer to &lt;see cref="PcsGraticuleMode"/&gt;</param>
         /// <returns> List of graticule geometries for rendering</returns>
-        private List<GraticuleDef> CalculateParallels(GraticuleStyle style, Envelope constrExtents, Envelope crsDomain)
+        private List<GraticuleDef> CalculateParallels(GraticuleStyle style, Envelope constrExtents,
+            Envelope crsDomain, bool webMercatorScaleLinesActive)
         {
             var parallels = new List<GraticuleDef>();
             var coordList = new List<Coordinate>();
@@ -290,12 +315,19 @@ namespace SharpMap.Rendering.Decoration
             // Parallels
             var iterateX = 1 + Convert.ToInt32((constrExtents.MaxX - constrExtents.MinX) / style.Subdivision);
             var iterateY = 1 + Convert.ToInt32((constrExtents.MaxY - constrExtents.MinY) / style.Subdivision);
-            
+
             for (var i = 0; i < iterateY; i++)
             {
-                //var thisY = constrExtents.MinY; thisY <= constrExtents.MaxY; thisY += style.Subdivision
-                var thisY = constrExtents.MinY + i*style.Subdivision;
-                var isPrimaryParallel = IsPrimaryInterval( thisY, style.Division, tolerance);
+                var thisY = constrExtents.MinY + i * style.Subdivision;
+
+                if (webMercatorScaleLinesActive)
+                    // skip if NOT equator
+                    if (!(Math.Abs(thisY) < tolerance ||
+                          // or NOT "poles" (85 deg N/S)
+                          crsDomain != null && Math.Abs(Math.Abs(thisY) - crsDomain.MaxY) < tolerance))
+                        continue;
+
+                var isPrimaryParallel = IsPrimaryInterval(thisY, style.Division, tolerance);
 
                 if (!isPrimaryParallel && style.SecondaryLineStyle == GraticuleStyle.GraticuleLineStyle.None) continue;
 
@@ -307,10 +339,8 @@ namespace SharpMap.Rendering.Decoration
                         continue;
 
                 coordList.Clear();
-                for (var j= 0; j < iterateX; j++)
+                for (var j = 0; j < iterateX; j++)
                 {
-                    // var thisX = constrExtents.MinX; thisX <= constrExtents.MaxX; thisX += style.Subdivision
-                    //var x = thisX;
                     var thisX = constrExtents.MinX + j * style.Subdivision;
                     var x = thisX;
 
@@ -333,7 +363,7 @@ namespace SharpMap.Rendering.Decoration
                 }
 
                 if (coordList.Count < 2) continue;
-                
+
                 parallels.Add(new GraticuleDef()
                 {
                     IsGeographicGraticule = isGeographicGraticule,
@@ -355,8 +385,10 @@ namespace SharpMap.Rendering.Decoration
         /// <param name="style"></param>
         /// <param name="constrExtents"></param>
         /// <param name="crsDomain"></param>
+        /// <param name="webMercatorScaleLinesActive">Refer to &lt;see cref="PcsGraticuleMode"/&gt;</param>
         /// <returns> List of graticule geometries for rendering</returns>
-        private List<GraticuleDef> CalculateMeridians(GraticuleStyle style, Envelope constrExtents, Envelope crsDomain)
+        private List<GraticuleDef> CalculateMeridians(GraticuleStyle style, Envelope constrExtents,
+            Envelope crsDomain, bool webMercatorScaleLinesActive)
         {
             var meridians = new List<GraticuleDef>();
             var coordList = new List<Coordinate>();
@@ -365,12 +397,19 @@ namespace SharpMap.Rendering.Decoration
             var tolerance = isGeographicGraticule ? GeographicTolerance : ProjectedTolerance;
 
             // Meridians
-            var iterateX = 1 + Convert.ToInt32((constrExtents.MaxX - constrExtents.MinX) / style.Subdivision) ;
-            var iterateY = 1+ Convert.ToInt32((constrExtents.MaxY - constrExtents.MinY) / style.Subdivision) ;
+            var iterateX = 1 + Convert.ToInt32((constrExtents.MaxX - constrExtents.MinX) / style.Subdivision);
+            var iterateY = 1 + Convert.ToInt32((constrExtents.MaxY - constrExtents.MinY) / style.Subdivision);
 
-            for (var i = 0 ; i < iterateX; i++)
+            var factor = 1.0;
+            if (webMercatorScaleLinesActive)
             {
-                //var thisX = constrExtents.MinX; thisX <= constrExtents.MaxX; thisX += style.Subdivision
+                // increase resolution for Web Mercator scales lines for nice smooth line when zoomed out
+                factor = 0.5;
+                iterateY *= 2;
+            }
+
+            for (var i = 0; i < iterateX; i++)
+            {
                 var thisX = constrExtents.MinX + i * style.Subdivision;
                 var isPrimaryMeridian = IsPrimaryInterval(thisX, style.Division, tolerance);
 
@@ -385,37 +424,40 @@ namespace SharpMap.Rendering.Decoration
 
                 coordList.Clear();
                 tickList.Clear();
-
                 for (var j = 0; j < iterateY; j++)
                 {
-                    //var thisY = constrExtents.MinY; thisY <= constrExtents.MaxY; thisY += style.Subdivision
-                    var thisY = constrExtents.MinY + j * style.Subdivision;
+                    var thisY = constrExtents.MinY + j * style.Subdivision * factor;
                     var y = thisY;
 
                     // Trim meridian north-south extent to CRS domain
                     if (crsDomain != null && !crsDomain.IsNull)
                         // test for difference of 1 full increment or more
                         if (y < crsDomain.MinY - tolerance)
-                            if (y < crsDomain.MinY - style.Subdivision + tolerance) //(y + style.Subdivision <= crsDomain.MinY)
+                            if (y < crsDomain.MinY - style.Subdivision + tolerance
+                            ) //(y + style.Subdivision <= crsDomain.MinY)
                                 continue;
                             else
                                 y = crsDomain.MinY;
 
                         else if (y > crsDomain.MaxY + tolerance)
-                            if (y > crsDomain.MaxY + style.Subdivision - tolerance)//(y - style.Subdivision >= crsDomain.MaxY)
+                            if (y > crsDomain.MaxY + style.Subdivision - tolerance
+                            ) //(y - style.Subdivision >= crsDomain.MaxY)
                                 continue;
                             else
                                 y = crsDomain.MaxY;
 
-                    coordList.Add(_srid == GeoSpatialMath.WebMercatorSrid
+                    // special handling for Web Mercator scale lines
+                    coordList.Add(webMercatorScaleLinesActive
                         ? new Coordinate(CalcScaleCorrectedX(thisX, y), y)
                         : new Coordinate(thisX, y));
+
+                    if (webMercatorScaleLinesActive) continue;
 
                     // if regular interval has been adjusted to fit CRS bounds
                     if (Math.Abs(thisY - y) > tolerance) continue;
 
                     // ticks
-                    var isPrimaryParallel = IsPrimaryInterval(thisY,style.Division, tolerance);
+                    var isPrimaryParallel = IsPrimaryInterval(thisY, style.Division, tolerance);
 
                     if (!style.IsTickRequired(isPrimaryMeridian, isPrimaryParallel)) continue;
 
@@ -423,8 +465,10 @@ namespace SharpMap.Rendering.Decoration
 
                     if (crsDomain != null && !crsDomain.IsNull)
                         // skip this tick if coincident with CRS domain envelope
-                        if (Math.Abs(thisX - crsDomain.MinX) < tolerance || Math.Abs(thisX - crsDomain.MaxX) < tolerance ||
-                            Math.Abs(thisY - crsDomain.MinY) < tolerance || Math.Abs(thisY - crsDomain.MaxY) < tolerance)
+                        if (Math.Abs(thisX - crsDomain.MinX) < tolerance ||
+                            Math.Abs(thisX - crsDomain.MaxX) < tolerance ||
+                            Math.Abs(thisY - crsDomain.MinY) < tolerance ||
+                            Math.Abs(thisY - crsDomain.MaxY) < tolerance)
                             continue;
 
                     // use Z ordinate to indicate intersection of primary parallel and primary meridian
@@ -435,7 +479,7 @@ namespace SharpMap.Rendering.Decoration
                 }
 
                 if (coordList.Count < 2) continue;
-               
+
                 meridians.Add(new GraticuleDef()
                 {
                     IsGeographicGraticule = isGeographicGraticule,
@@ -481,12 +525,26 @@ namespace SharpMap.Rendering.Decoration
                 else
                     return style.Subdivision < OneSecond;
             }
-            
+
             // projected 
             if (isPrimaryIncrement)
                 return style.Division < 1;
             else
                 return style.Subdivision < 1;
+        }
+
+        /// <summary>
+        /// Return a formatted distance label
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        private string GetFormattedDistanceLabel(double value)
+        {
+            if (value > 1000 && _pcsUnitSuffix == "m")
+                return GetFormattedLabel(false, value / 1000,
+                    AxisOrientationEnum.Other).Replace("m", "km");
+
+            return GetFormattedLabel(false, value, AxisOrientationEnum.Other);
         }
 
         /// <summary>
@@ -560,16 +618,16 @@ namespace SharpMap.Rendering.Decoration
         private static int GetDecimalPlaces(double value, int maxPrecision)
         {
             if (maxPrecision <= 0) return 0;
-            
+
             // eg 0.###
             var fmt = "0." + new string('#', maxPrecision);
 
-            // implicit rounding away from zero???
+            // -101.8, 0 >> -102
             var strValue = value.ToString(fmt);
-                
-            return strValue.Contains('.') ? strValue.Reverse().TakeWhile(c => c !='.').Count() : 0;
+
+            return strValue.Contains('.') ? strValue.Reverse().TakeWhile(c => c != '.').Count() : 0;
         }
-        
+
         /// <summary>
         /// Transform coordinates between coordinate systems, preserving Z ordinate.
         /// </summary>
@@ -616,7 +674,7 @@ namespace SharpMap.Rendering.Decoration
         {
             var oldTransform = g.Transform;
 
-            using (var matrix = new System.Drawing.Drawing2D.Matrix())
+            using (var matrix = new Matrix())
             {
                 foreach (var def in graticuleDefs)
                 {
@@ -627,7 +685,7 @@ namespace SharpMap.Rendering.Decoration
                         : PcsGraticuleStyle;
 
                     var tolerance = def.IsGeographicGraticule ? GeographicTolerance : ProjectedTolerance;
-                    
+
                     var orientOn = PointF.Empty;
                     for (var i = 0; i < def.ImageTickMarks.Length; i++)
                     {
@@ -647,7 +705,7 @@ namespace SharpMap.Rendering.Decoration
                             else if (def.ImageGraticule.Length > 0)
                             {
                                 orientOn = def.ImageGraticule.FirstOrDefault(
-                                    p => !(Math.Abs(p.X - tick.X) < tolerance && 
+                                    p => !(Math.Abs(p.X - tick.X) < tolerance &&
                                            Math.Abs(p.Y - tick.Y) < tolerance));
                             }
 
@@ -732,7 +790,7 @@ namespace SharpMap.Rendering.Decoration
 
             var originalTransform = g.Transform;
 
-            using (var matrix = new System.Drawing.Drawing2D.Matrix())
+            using (var matrix = new Matrix())
             {
                 foreach (var def in graticuleDefs)
                 {
@@ -865,17 +923,12 @@ namespace SharpMap.Rendering.Decoration
         /// <param name="style">Graticule Style</param>
         /// <param name="labelSize">estimated label size from g.MeasureString</param>
         /// <param name="thisEnd">the end of the line to be labelled</param>
-        private void RenderLabel(Graphics g, System.Drawing.Drawing2D.Matrix matrix,
-            GraticuleDef def, GraticuleStyle style, SizeF labelSize, LabelEnds thisEnd)
+        private void RenderLabel(Graphics g, Matrix matrix, GraticuleDef def, GraticuleStyle style, 
+            SizeF labelSize, LabelEnds thisEnd)
         {
             var origin = thisEnd == LabelEnds.Start ? def.ImageGraticule.First() : def.ImageGraticule.Last();
             var orientOn = thisEnd == LabelEnds.Start ? def.ImageGraticule.Last() : def.ImageGraticule.First();
 
-            if (_srid == GeoSpatialMath.WebMercatorSrid)
-                orientOn = thisEnd == LabelEnds.Start ? 
-                    def.ImageGraticule[1] : 
-                    def.ImageGraticule[def.ImageGraticule.Length - 2];
-            
             // NB invert Y axis
             var rad = Math.Atan2(-1 * (orientOn.Y - origin.Y), orientOn.X - origin.X);
             if (rad < 0) rad += 2 * Math.PI;
@@ -913,6 +966,194 @@ namespace SharpMap.Rendering.Decoration
                 def.IsPrimary ? style.PrimaryLabelColor : style.SecondaryLabelColor,
                 origin);
         }
+        
+        /// <summary>
+        /// Render web mercator scale distortion meridians 
+        /// </summary>
+        /// <param name="g"></param>
+        /// <param name="graticuleDefs"></param>
+        /// <param name="map"></param>
+        private void RenderScaleLineLabels(Graphics g, List<GraticuleDef> graticuleDefs, MapViewport map)
+        {
+            // drop any parallels
+            var filteredDefs = graticuleDefs.Where(d => d.IsParallel == false).ToList();
+            if (filteredDefs.Count < 2) return;
+
+            // the 4 sides in image space in preferred labelling sequence
+            var sides = new[]
+            {
+                MapDecorationAnchorFlags.Bottom,
+                MapDecorationAnchorFlags.Top,
+                MapDecorationAnchorFlags.Left,
+                MapDecorationAnchorFlags.Right
+            };
+
+            // real-world lines, inset from view borders by specified amount
+            var intersectionLines = GetIntersectionLines(g, map, sides,
+                PcsGraticuleStyle.PrimaryMargin + PcsGraticuleStyle.PrimaryLabelOffset.X);
+
+            var dictIntersections = new Dictionary<MapDecorationAnchorFlags, List<Coordinate>>();
+            
+            for (var i = 0; i < sides.Length; i++)
+            {
+               var side = sides[i];
+
+                // check to see if this is one of the borders to be labelled
+                if (((int) side & (int) PcsGraticuleStyle.LabelBorders) == 0) continue;
+
+                // perform intersection in world units
+                dictIntersections[side] = CalculateScaleLineIntersections(filteredDefs, (LineString) intersectionLines[i]);
+            }
+
+            // determine label size in world units
+            var label = GetFormattedDistanceLabel(PcsGraticuleStyle.Subdivision);
+            var labelSize = g.MeasureString(label, PcsGraticuleStyle.PrimaryLabelFont);
+            var labelDist = labelSize.Width * map.PixelWidth;
+
+            // insert labels at every 2nd gap
+            var oldTransform = g.Transform;
+            using (var matrix = new Matrix())
+                foreach (var key in dictIntersections.Keys)
+                {
+                    var intPoints = dictIntersections[key];
+                    if (intPoints.Count < 2) continue;
+
+                    // iterate through intersection points, labelling every 2nd gap
+                    for (var j = 0; j < intPoints.Count - 1; j++)
+                    {
+                        if (j % 2 != 0) continue;
+
+                        matrix.Reset();
+                        var ptA = intPoints[j];
+                        var ptB = intPoints[j + 1];
+                        var dist = ptA.Distance(ptB);
+                        if (dist < labelDist * 0.75) continue;
+
+                        var midPtWcs = new Coordinate((ptA.X + ptB.X) * 0.5, (ptA.Y + ptB.Y) * 0.5);
+                        var midPtF = map.WorldToImage(midPtWcs, true);
+
+                        if ((key & MapDecorationAnchorFlags.Left) == MapDecorationAnchorFlags.Left ||
+                            (key & MapDecorationAnchorFlags.Right) == MapDecorationAnchorFlags.Right)
+                            matrix.RotateAt(-90, midPtF);
+
+                        switch (key)
+                        {
+                            case MapDecorationAnchorFlags.Left:
+                            case MapDecorationAnchorFlags.Top:
+                                matrix.Translate(labelSize.Width * -0.5f, 0);
+                                break;
+                            case MapDecorationAnchorFlags.Right:
+                            case MapDecorationAnchorFlags.Bottom:
+                                matrix.Translate(labelSize.Width * -0.5f, -labelSize.Height);
+                                break;
+                        }
+
+                        g.Transform = matrix;
+                        if (PcsGraticuleStyle.LabelHalo != null)
+                            // Y-1 to centre box around glyph
+                            g.FillRectangle(PcsGraticuleStyle.LabelHalo, midPtF.X, midPtF.Y - 1, labelSize.Width,
+                                labelSize.Height);
+
+                        g.DrawString(label, PcsGraticuleStyle.PrimaryLabelFont, PcsGraticuleStyle.PrimaryLabelColor,
+                            midPtF);
+                    }
+                }
+
+            g.Transform = oldTransform;
+        }
+        
+        /// <summary>
+        /// Construct lines inset from image border, then convert to world units to
+        /// be used for calculating intersections with graticule lines in world units
+        /// </summary>
+        /// <param name="g"></param>
+        /// <param name="map"></param>
+        /// <param name="sides"></param>
+        /// <param name="margin"></param>
+        /// <returns></returns>
+        private MultiLineString GetIntersectionLines(Graphics g, MapViewport map, MapDecorationAnchorFlags[] sides,
+            int margin)
+        {
+            // Image space
+            var pts = new []
+            {
+                new PointF(g.ClipBounds.Left + margin, g.ClipBounds.Bottom), // left side
+                new PointF(g.ClipBounds.Left + margin, g.ClipBounds.Top),
+                new PointF(g.ClipBounds.Left, g.ClipBounds.Top + margin), // top side
+                new PointF(g.ClipBounds.Right, g.ClipBounds.Top + margin),
+                new PointF(g.ClipBounds.Right - margin, g.ClipBounds.Top), // right side
+                new PointF(g.ClipBounds.Right - margin, g.ClipBounds.Bottom),
+                new PointF(g.ClipBounds.Left, g.ClipBounds.Bottom - margin), // bottom side
+                new PointF(g.ClipBounds.Right - margin, g.ClipBounds.Bottom - margin)
+            };
+
+            // to world coordinates
+            var coords = map.ImageToWorld(pts, true);
+
+            // construct world lines
+            var lines = new ILineString[4]; 
+            for (var i = 0; i < sides.Length; i++)
+            {
+                var side = sides[i];
+                switch (side)
+                {
+                    case MapDecorationAnchorFlags.Left:
+                        lines[i] = new LineString(new[] {coords[0], coords[1]}); // left
+                        break;
+                    case MapDecorationAnchorFlags.Top:
+                        lines[i] = new LineString(new[] {coords[2], coords[3]}); // top
+                        break;
+                    case MapDecorationAnchorFlags.Right:
+                        lines[i] = new LineString(new[] {coords[4], coords[5]}); // right
+                        break;
+                    case MapDecorationAnchorFlags.Bottom:
+                        lines[i] = new LineString(new[] {coords[6], coords[7]}); // bottom
+                        break;
+                }
+            }
+
+            return new MultiLineString(lines);
+        }
+
+        /// <summary>
+        /// Calculate intersections of given line with all of the provided graticule lines 
+        /// </summary>
+        /// <param name="filteredDefs"></param>
+        /// <param name="line"></param>
+        /// <returns>Coordinate list, ordered West to East, South to North</returns>
+        private List<Coordinate> CalculateScaleLineIntersections(List<GraticuleDef> filteredDefs, LineString line)
+        {
+            var coords = new List<Coordinate>();
+
+            foreach (var def in filteredDefs)
+            {
+                var geom = def.WcsGraticule.Intersection(line);
+                if (geom.IsEmpty) continue;
+
+                // typically 0, 1, or sometimes 2
+                foreach (var thisCoord in geom.Coordinates)
+                {
+                    if (coords.Count == 0)
+                        coords.Add(thisCoord);
+                    else
+                        for (var i = 0; i < coords.Count; i++)
+                        {
+                            var otherC = coords[i];
+                            if (!(thisCoord.X < otherC.X + ProjectedTolerance) ||
+                                !(thisCoord.Y < otherC.Y + ProjectedTolerance))
+                            {
+                                if (i != coords.Count - 1) continue;
+
+                                coords.Add(thisCoord);
+                                break;
+                            }
+                            coords.Insert(i, thisCoord);
+                            break;
+                        }
+                }
+            }
+            return coords;
+        }
 
         /// <summary>
         /// Configure coordinate systems and transformations to be used for constructing graticule lines
@@ -926,7 +1167,7 @@ namespace SharpMap.Rendering.Decoration
             _gcsDomain = null;
             _unProject = null;
             _project = null;
-            _previousExtents = null;
+            _oldViewExtents = null;
             _pcsUnitSuffix = string.Empty;
 
             if (_srid == 0) return;
@@ -944,10 +1185,10 @@ namespace SharpMap.Rendering.Decoration
 
                 case IProjectedCoordinateSystem pcs:
                     _pcsDomain = GetCrsDomain(pcs);
-                    
-                    _gcsDomain = _srid == GeoSpatialMath.WebMercatorSrid 
-                        // ok - technically it's 85.06, but for plotting geographic ticks 85 is a nice cutoff
-                        ? new Envelope(-180,180,-85,85) //new Envelope(-180,180,-85.06,85.06)
+
+                    _gcsDomain = _srid == GeoSpatialMath.WebMercatorSrid
+                        // ok - technically it's 85.06, but 85 good for rendering aesthetics
+                        ? new Envelope(-180, 180, -85, 85) //new Envelope(-180,180,-85.06,85.06)
                         : GetCrsDomain(pcs.GeographicCoordinateSystem);
 
                     _pcsUnitSuffix = !string.IsNullOrEmpty(pcs.LinearUnit.Abbreviation) ? pcs.LinearUnit.Abbreviation :
@@ -997,22 +1238,24 @@ namespace SharpMap.Rendering.Decoration
         /// </summary>
         /// <param name="g"></param>
         /// <param name="map"></param>
-        private void CalculateMetrics(Graphics g, MapViewport map)
+        /// <param name="webMercatorScaleLinesActive">Refer to &lt;see cref="PcsGraticuleMode"/&gt;</param>
+        private void CalculateMetrics(Graphics g, MapViewport map, bool webMercatorScaleLinesActive)
         {
             _pcsConstrExtents = null;
             _gcsConstrExtents = null;
             _viewClipPolygon = null;
 
-            _previousExtents = map.Envelope;
-            _pcsNumSubdivisions = PcsGraticuleStyle.NumSubdivisions;
-            _gcsNumSubdivisions = GcsGraticuleStyle.NumSubdivisions;
+            _oldViewExtents = map.Envelope;
+            _oldPcsNumSubdivisions = PcsGraticuleStyle.NumSubdivisions;
+            _oldGcsNumSubdivisions = GcsGraticuleStyle.NumSubdivisions;
+            _oldPcsGraticuleMode = PcsGraticuleMode;
 
             _mapScale = map.GetMapScale((int) g.DpiX);
 
             if (_coordinateSystem is IProjectedCoordinateSystem)
             {
                 // pcsConstrExtents is expanded to the next multiple of division 
-                _pcsConstrExtents = CalcPcsConstrExtents(_previousExtents);
+                _pcsConstrExtents = CalcPcsConstrExtents(_oldViewExtents, webMercatorScaleLinesActive);
 
                 // un-project viewEnv - all 4 corners essential for WebMercator
                 try
@@ -1020,10 +1263,10 @@ namespace SharpMap.Rendering.Decoration
                     var coords = _unProject.TransformList(
                         new List<Coordinate>()
                         {
-                            _previousExtents.BottomLeft(),
-                            _previousExtents.TopLeft(),
-                            _previousExtents.TopRight(),
-                            _previousExtents.BottomRight()
+                            _oldViewExtents.BottomLeft(),
+                            _oldViewExtents.TopLeft(),
+                            _oldViewExtents.TopRight(),
+                            _oldViewExtents.BottomRight()
                         });
 
                     _gcsConstrExtents = CalcGcsConstrExtents(
@@ -1036,12 +1279,12 @@ namespace SharpMap.Rendering.Decoration
                 }
                 catch (Exception ex)
                 {
-                    _logger.WarnFormat("SRID {0} Env {1} Rotation {2}", _srid,  map.Envelope, map.MapTransformRotation);
+                    _logger.WarnFormat("SRID {0} Env {1} Rotation {2}", _srid, map.Envelope, map.MapTransformRotation);
                     _logger.Error(ex);
                 }
             }
             else
-                _gcsConstrExtents = CalcGcsConstrExtents(_previousExtents);
+                _gcsConstrExtents = CalcGcsConstrExtents(_oldViewExtents);
 
             // used to trim graticule lines immediately prior to rendering
             _viewClipPolygon = new Polygon(new LinearRing(new[]
@@ -1054,39 +1297,34 @@ namespace SharpMap.Rendering.Decoration
                 }
             ));
 
-            if (!map.MapTransformRotation.Equals(0f)) 
+            if (!map.MapTransformRotation.Equals(0f))
             {
                 var at = AffineTransformation.RotationInstance(
-                Degrees.ToRadians(map.MapTransformRotation), map.Center.X, map.Center.Y);
+                    Degrees.ToRadians(map.MapTransformRotation), map.Center.X, map.Center.Y);
 
                 _viewClipPolygon = (Polygon) at.Transform(_viewClipPolygon);
             }
 
             // special handling for Web Mercator to ensure curved meridian lines are correctly trimmed
             if (_srid == GeoSpatialMath.WebMercatorSrid && _viewClipPolygon.Intersects(_webMercatorClipPolygon))
-                _viewClipPolygon = (Polygon)_viewClipPolygon.Intersection(_webMercatorClipPolygon);
+                _viewClipPolygon = (Polygon) _viewClipPolygon.Intersection(_webMercatorClipPolygon);
         }
 
         /// <summary>
         /// Calculate the primary and secondary intervals based upon the dimensions of <paramref name="viewEnv"/>
         /// </summary>
         /// <param name="viewEnv"></param>
+        /// <param name="webMercatorScaleLinesActive">Refer to &lt;see cref="PcsGraticuleMode"/&gt;</param>
         /// <returns>Envelope snapped to multiples of the calculated secondary interval</returns>
-        private Envelope CalcPcsConstrExtents(Envelope viewEnv)
+        private Envelope CalcPcsConstrExtents(Envelope viewEnv, bool webMercatorScaleLinesActive)
         {
             PcsGraticuleStyle.Division = CalcDivisor(10, PcsPowerRangeMin, PcsPowerRangeMax,
                 _pcsPreferredMultiples, viewEnv.MinExtent / 2);
             PcsGraticuleStyle.Subdivision = PcsGraticuleStyle.Division / PcsGraticuleStyle.NumSubdivisions;
 
-            switch (_srid)
-            {
-                case GeoSpatialMath.WebMercatorSrid:
-                    // special handling applying latitude-dependent scale factor
-                    return CalcConstExtentsWebMercator(viewEnv, PcsGraticuleStyle.Subdivision);
-                default:
-                    // regular rectilinear grid
-                    return CalcConstrExtentsRectilinear(viewEnv, PcsGraticuleStyle.Subdivision);
-            }
+            return webMercatorScaleLinesActive
+                ? CalcConstExtentsWebMercator(viewEnv, PcsGraticuleStyle.Subdivision)
+                : CalcConstrExtentsRectilinear(viewEnv, PcsGraticuleStyle.Subdivision);
         }
 
         /// <summary>
@@ -1102,15 +1340,24 @@ namespace SharpMap.Rendering.Decoration
             GcsGraticuleStyle.Division = CalcDivisor(60, GcsPowerRangeMin, GcsPowerRangeMax,
                 _gcsPreferredMultiples, halfMinExtent);
 
-            // 2 degrees with GcsNumSubdivisions = 3 would be a lousy subdivision so....
-            // Treat GcsNumSubdivisions as PREFERRED number of subdivisions and determine actual
-            // number of subdivisions to give sensible units in base 60 (ie deg min sec)
-            // If GcsNumSubdivisions == 4, then it is better to start at 3
-            GcsGraticuleStyle.Subdivision = CalcDivisor(60, GcsPowerRangeMin, GcsPowerRangeMax,
-                _gcsPreferredMultiples, GcsGraticuleStyle.Division /
-                                        (GcsGraticuleStyle.NumSubdivisions == 4
-                                            ? 3
-                                            : GcsGraticuleStyle.NumSubdivisions));
+            // this COULD be a nice subdivision (eg 1deg / 3 = 20"), or it could be lousy (eg 2deg / 3 = 40")
+            var test1 = GcsGraticuleStyle.Division / GcsGraticuleStyle.NumSubdivisions;
+            var test2 = CalcDivisor(60, GcsPowerRangeMin, GcsPowerRangeMax,
+                _gcsPreferredMultiples, test1);
+
+            if (Math.Abs(test1 - test2) < GeographicTolerance)
+                GcsGraticuleStyle.Subdivision = test2;
+            else
+            {
+                // Treat GcsNumSubdivisions as PREFERRED number of subdivisions and determine actual
+                // number of subdivisions to give sensible units in base 60 (ie deg min sec)
+                // If GcsNumSubdivisions == 4, then it is better to start at 3
+                GcsGraticuleStyle.Subdivision = CalcDivisor(60, GcsPowerRangeMin, GcsPowerRangeMax,
+                    _gcsPreferredMultiples, GcsGraticuleStyle.Division /
+                                            (GcsGraticuleStyle.NumSubdivisions == 4
+                                                ? 3
+                                                : GcsGraticuleStyle.NumSubdivisions));
+            }
 
             return CalcConstrExtentsRectilinear(viewEnvDegrees, GcsGraticuleStyle.Subdivision);
         }
@@ -1139,7 +1386,6 @@ namespace SharpMap.Rendering.Decoration
                         return candidate;
                 }
             }
-
             return candidate;
         }
 
@@ -1170,9 +1416,8 @@ namespace SharpMap.Rendering.Decoration
         }
 
         /// <summary>
-        /// Determine if east-west extents of <paramref name="viewEnv"/> need to be adjusted to
-        /// ensure that all scale-corrected meridians within view extent will plot 
-        /// Calculated envelope will often be significantly larger than <paramref name="viewEnv"/>
+        /// Adjust east-west extents of <paramref name="viewEnv"/> to ensure ALL  
+        /// scale-distortion meridian lines passing through view extent will plot 
         /// </summary>
         /// <param name="viewEnv"></param>
         /// <param name="secondaryInterval"></param>
@@ -1181,21 +1426,32 @@ namespace SharpMap.Rendering.Decoration
         {
             double minX, maxX;
 
-            if (viewEnv.MinX > 0)
-                // if LHS lies to the RIGHT of central meridian, calculate equatorial X
+            if (viewEnv.MinX < 0 && viewEnv.MinY <= 0 && viewEnv.MaxY >= 0)
+                // when LHS lies to WEST of central meridian AND view spans equator 
+                minX = viewEnv.MinX;
+            else if (viewEnv.MinX < 0)
+                // MIN when LHS lies to WEST of central meridian
+                minX = CalcEquatorialX(new Coordinate(viewEnv.MinX,
+                    Math.Min(Math.Abs(viewEnv.MinY), Math.Abs(viewEnv.MaxY))));
+            else
+                // MAX when LHS lies to EAST of central meridian
                 minX = CalcEquatorialX(new Coordinate(viewEnv.MinX,
                     Math.Max(Math.Abs(viewEnv.MinY), Math.Abs(viewEnv.MaxY))));
-            else
-                minX = viewEnv.MinX;
 
-            if (viewEnv.MaxX < 0)
-                // if RHS lies to the LEFT of central meridian, calculate equatorial X
+            if (viewEnv.MaxX > 0 && viewEnv.MinY <= 0 && viewEnv.MaxY >= 0)
+                // when RHS lies to EAST of central meridian AND view spans equator 
+                maxX = viewEnv.MaxX;
+            else if (viewEnv.MaxX > 0)
+                // MIN when RHS lies to EAST of central meridian
+                maxX = CalcEquatorialX(new Coordinate(viewEnv.MaxX,
+                    Math.Min(Math.Abs(viewEnv.MinY), Math.Abs(viewEnv.MaxY))));
+            else
+                // MAX when RHS lies to WEST of central meridian
                 maxX = CalcEquatorialX(new Coordinate(viewEnv.MaxX,
                     Math.Max(Math.Abs(viewEnv.MinY), Math.Abs(viewEnv.MaxY))));
-            else
-                maxX = viewEnv.MaxX;
 
-            return CalcConstrExtentsRectilinear(new Envelope(minX, maxX, viewEnv.MinY, viewEnv.MaxY), secondaryInterval);
+            return CalcConstrExtentsRectilinear(new Envelope(minX, maxX, viewEnv.MinY, viewEnv.MaxY),
+                secondaryInterval);
         }
 
         /// <summary>

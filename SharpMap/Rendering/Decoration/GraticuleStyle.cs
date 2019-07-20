@@ -19,11 +19,32 @@ namespace SharpMap.Rendering.Decoration
         private int _primaryTickSize = 10;
         private int _secondaryTickSize = 5;
 
+        /// <summary>
+        /// Apply a styling theme to a Graticule Style 
+        /// </summary>
         public enum GraticuleTheme
         {
             Bold,
             Subtle,
             None
+        }
+
+        /// <summary>
+        /// Define how a PcsGraticuleStyle will render 
+        /// </summary>
+        public enum PcsGraticuleMode
+        {
+            /// <summary>
+            /// Classic rectilinear graticule
+            /// </summary>
+            Standard,
+            
+            /// <summary>
+            /// Overrides Projected graticule behaviour ONLY for Web Mercator (SRID 3857), causing 
+            /// the graticule to be rendered as the meridian scale distortion lines from equator
+            /// to the poles. Can be used in conjunction or as an alternative to a ScaleBar. 
+            /// </summary>
+            WebMercatorScaleLines
         }
         
         /// <summary>
@@ -221,7 +242,7 @@ namespace SharpMap.Rendering.Decoration
         /// <summary>
         /// Number of intervals to appear between Primary graticule lines (or zero to disable Secondary graticule)
         /// </summary>
-        public int NumSubdivisions { get; set; } = 4;
+        public int NumSubdivisions { get; set; } = 2;
 
         /// <summary>
         /// Minimum visible zoom level for rendering, or zero for not applicable
