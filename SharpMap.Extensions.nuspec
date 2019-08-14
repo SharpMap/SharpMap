@@ -18,7 +18,7 @@ The engine is written in C# and based on the .Net 4.0 framework.
     </description>
     <tags>SharpMap GIS Map GeoSpatial</tags>
     <frameworkAssemblies>
-      <frameworkAssembly assemblyName="System.Configuration" targetFramework="net40-client" />
+      <frameworkAssembly assemblyName="System.Configuration" targetFramework="net472" />
     </frameworkAssemblies>
 	<dependencies>
 		<dependency id="SharpMap.Core" version="[$version$]"/>
@@ -30,7 +30,7 @@ The engine is written in C# and based on the .Net 4.0 framework.
 	</dependencies>
   </metadata>
   <files>
-	<file src="SharpMap.Extensions\bin\Release\SharpMap.Extensions.dll" target="lib\net40-client"/>
-	<file src="SharpMap.Extensions\bin\Release\SharpMap.Extensions.xml" target="lib\net40-client"/>
+	<file src="SharpMap.Extensions\bin\Release\SharpMap.Extensions.dll" target="lib\net472"/>
+	<file src="SharpMap.Extensions\bin\Release\SharpMap.Extensions.xml" target="lib\net472"/>
   </files>
 </package>

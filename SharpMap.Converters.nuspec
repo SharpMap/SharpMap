@@ -18,18 +18,18 @@
     </description>
     <tags>SharpMap GIS Map GeoSpatial</tags>
     <frameworkAssemblies>
-      <frameworkAssembly assemblyName="System" targetFramework="net40-client" />
-      <frameworkAssembly assemblyName="System.Xml" targetFramework="net40-client" />
+      <frameworkAssembly assemblyName="System" targetFramework="net472" />
+      <frameworkAssembly assemblyName="System.Xml" targetFramework="net472" />
     </frameworkAssemblies>
     <dependencies>
       <dependency id="SharpMap.Core" version="$version$"/>
     </dependencies>
   </metadata>
   <files>
-    <file src="SharpMap.Converters.GeoJSON\bin\Release\SharpMap.Converters.GeoJSON.dll" target="lib\net40-client"/>
-    <file src="SharpMap.Converters.GeoJSON\bin\Release\SharpMap.Converters.GeoJSON.xml" target="lib\net40-client"/>
-    <file src="SharpMap.Converters.SpatiaLite\bin\Release\SharpMap.Converters.SpatiaLite.dll" target="lib\net40-client"/>
-    <file src="SharpMap.Converters.SpatiaLite\bin\Release\SharpMap.Converters.SpatiaLite.xml" target="lib\net40-client"/>
+    <file src="SharpMap.Converters.GeoJSON\bin\Release\SharpMap.Converters.GeoJSON.dll" target="lib\net472"/>
+    <file src="SharpMap.Converters.GeoJSON\bin\Release\SharpMap.Converters.GeoJSON.xml" target="lib\net472"/>
+    <file src="SharpMap.Converters.SpatiaLite\bin\Release\SharpMap.Converters.SpatiaLite.dll" target="lib\net472"/>
+    <file src="SharpMap.Converters.SpatiaLite\bin\Release\SharpMap.Converters.SpatiaLite.xml" target="lib\net472"/>
   </files>
   
 </package>

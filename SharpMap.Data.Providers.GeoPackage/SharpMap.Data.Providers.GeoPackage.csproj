@@ -3,7 +3,7 @@
     <Import Project="$(SolutionDir)SharpMap.Common.props" />
 
     <PropertyGroup>
-        <TargetFrameworks>net452;netstandard2.0</TargetFrameworks>
+        <TargetFrameworks>net472;netstandard2.0</TargetFrameworks>
         <RootNamespace>SharpMap.Data.Providers</RootNamespace>
         <Product>SharpMap.Data.Providers.GeoPackage</Product>
         <Copyright>Copyright 2014 SharpMap - Team</Copyright>

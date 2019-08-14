@@ -24,7 +24,7 @@
     </dependencies>
   </metadata>
   <files>
-    <file src="SharpMap.Utilities.Indexing.SbnTree\bin\Release\SharpMap.Utilities.Indexing.SbnTree.dll" target="lib\net40"/>
-    <file src="SharpMap.Utilities.Indexing.SbnTree\bin\Release\SharpMap.Utilities.Indexing.SbnTree.xml" target="lib\net40"/>
+    <file src="SharpMap.Utilities.Indexing.SbnTree\bin\Release\net472\SharpMap.Utilities.Indexing.SbnTree.dll" target="lib\net472"/>
+    <!-- <file src="SharpMap.Utilities.Indexing.SbnTree\bin\Release\net472\SharpMap.Utilities.Indexing.SbnTree.xml" target="lib\net472"/> -->
   </files>
 </package>

@@ -29,7 +29,7 @@
     </dependencies>
   </metadata>
   <files>
-    <file src="SharpMap.UI.WPF\bin\Release\SharpMap.UI.WPF.dll" target="lib\net40-client"/>
-    <file src="SharpMap.UI.WPF\bin\Release\SharpMap.UI.WPF.xml" target="lib\net40-client"/>
+    <file src="SharpMap.UI.WPF\bin\Release\SharpMap.UI.WPF.dll" target="lib\net472"/>
+    <file src="SharpMap.UI.WPF\bin\Release\SharpMap.UI.WPF.xml" target="lib\net472"/>
   </files>
 </package>

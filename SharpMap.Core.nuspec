@@ -22,10 +22,10 @@ Bug fixes
     </description>
 	<tags>SharpMap GIS Map GeoSpatial</tags>
     <frameworkAssemblies>
-      <frameworkAssembly assemblyName="System" targetFramework="net40-client" />
-      <frameworkAssembly assemblyName="System.Data" targetFramework="net40-client" />
-      <frameworkAssembly assemblyName="System.Drawing" targetFramework="net40-client" />
-      <frameworkAssembly assemblyName="System.Xml" targetFramework="net40-client" />
+      <frameworkAssembly assemblyName="System" targetFramework="net472" />
+      <frameworkAssembly assemblyName="System.Data" targetFramework="net472" />
+      <frameworkAssembly assemblyName="System.Drawing" targetFramework="net472" />
+      <frameworkAssembly assemblyName="System.Xml" targetFramework="net472" />
     </frameworkAssemblies>
 	<dependencies>
     <dependency id="Common.Logging.Core" version="[3.3.1]"/>
@@ -35,8 +35,8 @@ Bug fixes
 	</dependencies>
   </metadata>
   <files>
-	  <file src="SharpMap\bin\Release\SharpMap.dll" target="lib\net40-client"/>
-    <file src="SharpMap\bin\Release\SharpMap.xml" target="lib\net40-client"/>
-    <file src="SharpMap\bin\Release\SpatialRefSys.xml" target="content"/>
+	  <file src="SharpMap\bin\Release\net472\SharpMap.dll" target="lib\net472"/>
+    <!-- <file src="SharpMap\bin\Release\net472\SharpMap.xml" target="lib\net472"/> -->
+    <!-- <file src="SharpMap\bin\Release\net472\SpatialRefSys.xml" target="content"/> -->
   </files>
 </package>

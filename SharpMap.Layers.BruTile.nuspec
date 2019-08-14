@@ -22,8 +22,8 @@ Bug fixes
     </description>
 	<tags>SharpMap GIS Map GeoSpatial</tags>
     <frameworkAssemblies>
-      <frameworkAssembly assemblyName="System" targetFramework="net40-client" />
-      <frameworkAssembly assemblyName="System.Drawing" targetFramework="net40-client" />
+      <frameworkAssembly assemblyName="System" targetFramework="net472" />
+      <frameworkAssembly assemblyName="System.Drawing" targetFramework="net472" />
     </frameworkAssemblies>
 	<dependencies>
 	  <dependency id="SharpMap.Core" version="[$version$]"/>
@@ -32,7 +32,7 @@ Bug fixes
 	</dependencies>
   </metadata>
   <files>
-	  <file src="SharpMap.Layers.BruTile\bin\Release\SharpMap.Layers.BruTile.dll" target="lib\net40-client"/>
-    <file src="SharpMap.Layers.BruTile\bin\Release\SharpMap.Layers.BruTile.xml" target="lib\net40-client"/>
+	  <file src="SharpMap.Layers.BruTile\bin\Release\net472\SharpMap.Layers.BruTile.dll" target="lib\net472"/>
+    <!-- <file src="SharpMap.Layers.BruTile\bin\Release\net472\SharpMap.Layers.BruTile.xml" target="lib\net472"/> -->
   </files>
 </package>

@@ -23,7 +23,7 @@
     </dependencies>
   </metadata>
   <files>
-    <file src="SharpMap.Layers.HeatLayer\bin\Release\SharpMap.Layers.HeatLayer.dll" target="lib\net40-client"/>
-    <file src="SharpMap.Layers.HeatLayer\bin\Release\SharpMap.Layers.HeatLayer.xml" target="lib\net40-client"/>
+    <file src="SharpMap.Layers.HeatLayer\bin\Release\net472\SharpMap.Layers.HeatLayer.dll" target="lib\net472"/>
+    <!-- <file src="SharpMap.Layers.HeatLayer\bin\Release\net472\SharpMap.Layers.HeatLayer.xml" target="lib\net472"/> -->
   </files>
 </package>

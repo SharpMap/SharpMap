@@ -21,10 +21,10 @@ Combination of SharpMap.Core and SharpMap.Layers.BruTile
     </description>
 	<tags>SharpMap GIS Map GeoSpatial</tags>
     <frameworkAssemblies>
-      <frameworkAssembly assemblyName="System" targetFramework="net40-client" />
-      <frameworkAssembly assemblyName="System.Data" targetFramework="net40-client" />
-      <frameworkAssembly assemblyName="System.Drawing" targetFramework="net40-client" />
-      <frameworkAssembly assemblyName="System.Xml" targetFramework="net40-client" />
+      <frameworkAssembly assemblyName="System" targetFramework="net472" />
+      <frameworkAssembly assemblyName="System.Data" targetFramework="net472" />
+      <frameworkAssembly assemblyName="System.Drawing" targetFramework="net472" />
+      <frameworkAssembly assemblyName="System.Xml" targetFramework="net472" />
     </frameworkAssemblies>
 	<dependencies>
     <dependency id="SharpMap.Core" version="[$version$]"/>
