@@ -1,38 +1,46 @@
 <?xml version="1.0"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
-  <metadata>
-    <id>SharpMap.Layers.BruTile</id>
-    <version>$version$</version>
-    <authors>SharpMap-Team</authors>
-	<licenseUrl>https://github.com/SharpMap/SharpMap/blob/Branches/1.0/license.txt</licenseUrl>
-    <projectUrl>https://github.com/SharpMap/SharpMap</projectUrl>
-    <iconUrl>https://avatars1.githubusercontent.com/u/8349804??v=3&amp;s=120</iconUrl>
-    <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <summary>
+    <metadata>
+        <id>SharpMap.Layers.BruTile</id>
+        <version>$version$</version>
+        <authors>SharpMap-Team</authors>
+        <licenseUrl>https://github.com/SharpMap/SharpMap/blob/Branches/1.0/license.txt</licenseUrl>
+        <projectUrl>https://github.com/SharpMap/SharpMap</projectUrl>
+        <iconUrl>https://avatars1.githubusercontent.com/u/8349804??v=3&amp;s=120</iconUrl>
+        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+        <summary>
       SharpMap is an easy-to-use mapping library for use in web and desktop applications.
 It provides access to many types of GIS data, enables spatial querying of that data, and renders beautiful maps.
 The engine is written in C# and based on the .Net 4.0 framework.
-      </summary>
-    <releaseNotes>
+        </summary>
+        <releaseNotes>
 New Features
 Bug fixes
-    </releaseNotes>
-    <description>
+        </releaseNotes>
+        <description>
       This package contains the components of SharpMap required to render tiled web-map-service maps.
-    </description>
-	<tags>SharpMap GIS Map GeoSpatial</tags>
-    <frameworkAssemblies>
-      <frameworkAssembly assemblyName="System" targetFramework="net472" />
-      <frameworkAssembly assemblyName="System.Drawing" targetFramework="net472" />
-    </frameworkAssemblies>
-	<dependencies>
-	  <dependency id="SharpMap.Core" version="[$version$]"/>
-		<dependency id="BruTile" version="[0.18.1]"/>
-    <dependency id="BruTile.Desktop" version="[0.18.1]"/>
-	</dependencies>
-  </metadata>
-  <files>
-	  <file src="SharpMap.Layers.BruTile\bin\Release\net472\SharpMap.Layers.BruTile.dll" target="lib\net472"/>
-    <!-- <file src="SharpMap.Layers.BruTile\bin\Release\net472\SharpMap.Layers.BruTile.xml" target="lib\net472"/> -->
-  </files>
+        </description>
+        <tags>SharpMap GIS Map GeoSpatial</tags>
+        <frameworkAssemblies>
+            <frameworkAssembly assemblyName="System" targetFramework="net472" />
+            <frameworkAssembly assemblyName="System.Core" targetFramework="net472" />
+            <frameworkAssembly assemblyName="System.Data" targetFramework="net472" />
+            <frameworkAssembly assemblyName="System.Drawing" targetFramework="net472" />
+            <frameworkAssembly assemblyName="System.IO.Compression.FileSystem" targetFramework="net472" />
+            <frameworkAssembly assemblyName="System.Numerics" targetFramework="net472" />
+            <frameworkAssembly assemblyName="System.Runtime.Serialization" targetFramework="net472" />
+            <frameworkAssembly assemblyName="System.Xml" targetFramework="net472" />
+            <frameworkAssembly assemblyName="System.Xml.Linq" targetFramework="net472" />
+        </frameworkAssemblies>
+        <dependencies>
+            <dependency id="SharpMap.Core" version="[$version$]"/>
+            <dependency id="BruTile" version="2.0.1"/>
+            <dependency id="BruTile.Desktop" version="2.0.1"/>
+        </dependencies>
+    </metadata>
+    <files>
+        <file src="SharpMap.Layers.BruTile\bin\Release\net472\SharpMap.Layers.BruTile.dll" target="lib\net472"/>
+        <file src="SharpMap.Layers.BruTile\bin\Release\netstandard2.0\SharpMap.Layers.BruTile.dll" target="lib\netstandard2.0"/>
+        <!-- <file src="SharpMap.Layers.BruTile\bin\Release\net472\SharpMap.Layers.BruTile.xml" target="lib\net472"/> -->
+    </files>
 </package>

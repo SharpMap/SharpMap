@@ -25,15 +25,12 @@
         </frameworkAssemblies>
         <dependencies>
             <dependency id="SharpMap.Core" version="$version$"/>
-            <dependency id="Common.Logging.Core" version="[3.3.1]"/>
-            <dependency id="Common.Logging" version="[3.3.1]"/>
-            <dependency id="GeoAPI" version="[1.7.5]"/>
-            <dependency id="GeoAPI.Core" version="[1.7.5]"/>
-            <dependency id="GeoAPI.CoordinateSystems" version="[1.7.5]"/>
-            <dependency id="NetTopologySuite" version="[1.14.0]"/>
-            <dependency id="NetTopologySuite.Core" version="[1.14.0]"/>
-            <dependency id="NetTopologySuite.CoordinateSystems" version="[1.14.0]"/>
-            <dependency id="Microsoft.SqlServer.Types" version="[14.0.1016.290]"/>
+            <dependency id="Common.Logging.Core" version="3.4.1"/>
+            <dependency id="Common.Logging" version="3.4.1"/>
+            <dependency id="GeoAPI" version="1.7.5"/>
+            <dependency id="NetTopologySuite" version="1.15.1"/>
+            <dependency id="Microsoft.CSharp" version="4.0.1"/>
+            <dependency id="Microsoft.SqlServer.Types" version="14.0.1016.290"/>
         </dependencies>
     </metadata>
     <files>

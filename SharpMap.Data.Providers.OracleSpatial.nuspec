@@ -1,26 +1,38 @@
 <?xml version="1.0"?>
 <package >
-  <metadata>
-    <id>SharpMap.Data.Providers.OracleSpatial</id>
-    <version>$version$</version>
-    <title>SharpMap.Data.Providers.OracleSpatial</title>
-    <authors>Triona AB, Peter Lofas</authors>
-    <owners>SharpMap-Team</owners>
-    <licenseUrl>https://github.com/SharpMap/SharpMap/blob/Branches/1.0/license.txt</licenseUrl>
-    <projectUrl>https://github.com/SharpMap/SharpMap</projectUrl>
-    <iconUrl>https://avatars1.githubusercontent.com/u/8349804??v=3&amp;s=120</iconUrl>
-    <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>SharpMap data provider for Oracle</description>
-    <copyright>Copyright © Triona AB 2014</copyright>
-    <tags>SharpMap Oracle</tags>
-    <dependencies>
-      <dependency id="SharpMap" version="[$version$]"/>
-      <dependency id="odac.client.x86" version="[1.112.3.20]"/>
-      <dependency id="odp.net.x86" version="[112.3.20]"/>
-    </dependencies>
-  </metadata>
-  <files>
-    <file src="SharpMap.Data.Providers.OracleSpatial\bin\Release\SharpMap.Data.Providers.OracleSpatial.dll" target="lib\net472"/>
-    <file src="SharpMap.Data.Providers.OracleSpatial\bin\Release\SharpMap.Data.Providers.OracleSpatial.xml" target="lib\net472"/>
-  </files>
+    <metadata>
+        <id>SharpMap.Data.Providers.OracleSpatial</id>
+        <version>$version$</version>
+        <title>SharpMap.Data.Providers.OracleSpatial</title>
+        <authors>Triona AB, Peter Lofas</authors>
+        <owners>SharpMap-Team</owners>
+        <licenseUrl>https://github.com/SharpMap/SharpMap/blob/Branches/1.0/license.txt</licenseUrl>
+        <projectUrl>https://github.com/SharpMap/SharpMap</projectUrl>
+        <iconUrl>https://avatars1.githubusercontent.com/u/8349804??v=3&amp;s=120</iconUrl>
+        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+        <description>SharpMap data provider for Oracle</description>
+        <copyright>Copyright © Triona AB 2014</copyright>
+        <tags>SharpMap Oracle</tags>
+        <frameworkAssemblies>
+            <frameworkAssembly assemblyName="Microsoft.CSharp" targetFramework="net472" />
+            <frameworkAssembly assemblyName="System" targetFramework="net472" />
+            <frameworkAssembly assemblyName="System.Core" targetFramework="net472" />
+            <frameworkAssembly assemblyName="System.Data" targetFramework="net472" />
+            <frameworkAssembly assemblyName="System.Data.DataSetExtensions" targetFramework="net472" />
+            <frameworkAssembly assemblyName="System.Xml" targetFramework="net472" />
+            <frameworkAssembly assemblyName="System.Xml.Linq" targetFramework="net472" />
+        </frameworkAssemblies>
+        <dependencies>
+            <dependency id="SharpMap.Core" version="[$version$]"/>
+            <dependency id="GeoAPI" version="1.7.5"/>
+            <dependency id="NetTopologySuite" version="1.15.1"/>
+            <dependency id="ProjNET4GeoAPI" version="1.4.0"/>
+            <dependency id="odac.client.x86" version="1.112.3.20"/>
+            <dependency id="odp.net.x86" version="112.3.20"/>
+        </dependencies>
+    </metadata>
+    <files>
+        <file src="SharpMap.Data.Providers.OracleSpatial\bin\Release\SharpMap.Data.Providers.OracleSpatial.dll" target="lib\net472"/>
+        <file src="SharpMap.Data.Providers.OracleSpatial\bin\Release\SharpMap.Data.Providers.OracleSpatial.xml" target="lib\net472"/>
+    </files>
 </package>

@@ -1,29 +1,41 @@
 <?xml version="1.0"?>
 <package >
-  <metadata>
-    <id>SharpMap.Data.Layers.HeatLayer</id>
-    <version>$version$</version>
-    <title>SharpMap.Data.Layers.HeatLayer</title>
-    <authors>SharpMap-Team</authors>
-    <owners>SharpMap-Team</owners>
-    <licenseUrl>https://github.com/SharpMap/SharpMap/blob/Branches/1.0/license.txt</licenseUrl>
-    <projectUrl>https://github.com/SharpMap/SharpMap</projectUrl>
-    <iconUrl>https://avatars1.githubusercontent.com/u/8349804??v=3&amp;s=120</iconUrl>
-    <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <summary>
+    <metadata>
+        <id>SharpMap.Data.Layers.HeatLayer</id>
+        <version>$version$</version>
+        <title>SharpMap.Data.Layers.HeatLayer</title>
+        <authors>SharpMap-Team</authors>
+        <owners>SharpMap-Team</owners>
+        <licenseUrl>https://github.com/SharpMap/SharpMap/blob/Branches/1.0/license.txt</licenseUrl>
+        <projectUrl>https://github.com/SharpMap/SharpMap</projectUrl>
+        <iconUrl>https://avatars1.githubusercontent.com/u/8349804??v=3&amp;s=120</iconUrl>
+        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+        <summary>
       SharpMap is an easy-to-use mapping library for use in web and desktop applications.
       It provides access to many types of GIS data, enables spatial querying of that data, and renders beautiful maps.
       The engine is written in C# and based on the .Net 4.0 framework.
-    </summary>
-    <description>A heat layer for SharpMap</description>
-    <copyright>Copyright © 2013-2017 SharpMap - Team</copyright>
-    <tags>SharpMap Heat</tags>
-    <dependencies>
-      <dependency id="SharpMap.Core" version="[$version$]"/>
-    </dependencies>
-  </metadata>
-  <files>
-    <file src="SharpMap.Layers.HeatLayer\bin\Release\net472\SharpMap.Layers.HeatLayer.dll" target="lib\net472"/>
-    <!-- <file src="SharpMap.Layers.HeatLayer\bin\Release\net472\SharpMap.Layers.HeatLayer.xml" target="lib\net472"/> -->
-  </files>
+        </summary>
+        <description>A heat layer for SharpMap</description>
+        <copyright>Copyright © 2013-2017 SharpMap - Team</copyright>
+        <tags>SharpMap Heat</tags>
+        <frameworkAssemblies>
+            <frameworkAssembly assemblyName="System" targetFramework="net472" />
+            <frameworkAssembly assemblyName="System.Core" targetFramework="net472" />
+            <frameworkAssembly assemblyName="System.Data" targetFramework="net472" />
+            <frameworkAssembly assemblyName="System.Drawing" targetFramework="net472" />
+            <frameworkAssembly assemblyName="System.IO.Compression.FileSystem" targetFramework="net472" />
+            <frameworkAssembly assemblyName="System.Numerics" targetFramework="net472" />
+            <frameworkAssembly assemblyName="System.Runtime.Serialization" targetFramework="net472" />
+            <frameworkAssembly assemblyName="System.Xml" targetFramework="net472" />
+            <frameworkAssembly assemblyName="System.Xml.Linq" targetFramework="net472" />
+        </frameworkAssemblies>
+        <dependencies>
+            <dependency id="SharpMap.Core" version="[$version$]"/>
+        </dependencies>
+    </metadata>
+    <files>
+        <file src="SharpMap.Layers.HeatLayer\bin\Release\net472\SharpMap.Layers.HeatLayer.dll" target="lib\net472"/>
+        <file src="SharpMap.Layers.HeatLayer\bin\Release\netstandard2.0\SharpMap.Layers.HeatLayer.dll" target="lib\netstandard2.0"/>
+        <!-- <file src="SharpMap.Layers.HeatLayer\bin\Release\net472\SharpMap.Layers.HeatLayer.xml" target="lib\net472"/> -->
+    </files>
 </package>
