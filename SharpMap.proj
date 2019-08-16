@@ -4,7 +4,7 @@
         <SolutionDir Condition= "'$(SolutionDir)' == '' Or '$(SolutionDir)' == '*Undefined*'">.\</SolutionDir>
         <SolutionFile>SharpMap.sln</SolutionFile>
         <!--- pass version in command line: MSBuild /t:NuGetPack SharpMap.proj /p:NuGetVersion=1.0.0  -->
-        <NuGetVersion>1.3.0</NuGetVersion>
+        <NuGetVersion>2.0.0</NuGetVersion>
     </PropertyGroup>
 
 
