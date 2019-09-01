@@ -396,62 +396,64 @@ namespace UnitTests
             Trace.WriteLine($"WorldToImageTransform_Benchmark {shapeFileName} {mapTransformRotation:000}deg MAP old: {oldTimesAvgMap}  MAP new: {newTimesAvgMap}");
             // allow a little bit of leeway
             Assert.LessOrEqual(newTimesAvgMap / oldTimesAvgMap,1.2,$"{shapeFileName}_{mapTransformRotation}deg_MAP" );
-           
-            // MapViewport Tests
-            var mvp = (MapViewport) map;
-            for (var i = 0; i < numTests; i++)
-            {
-                // old
-                sw.Reset();
-                sw.Start();
-                foreach (var geom in geoms)
-                {
-                    foreach (var p in geom.Coordinates)
-                    {
-                        var pt = mvp.WorldToImageOld(p, true);
-                        if (!mvp.MapTransformRotation.Equals(0f))
-                        {
-                            using (var transform = mvp.MapTransform)
-                            {
-                                var pts = new[] {pt};
-                                transform.TransformPoints(pts);
-                                pt = pts[0];
-                            }
-                        }
-                    }
-                }
-                sw.Stop();
-                oldTimesMvp.Add(sw.ElapsedMilliseconds);
-                
-                // new
-                sw.Reset();
-                sw.Start();
-                foreach (var geom in geoms)
-                {
-                    if (geom.Coordinates.Length == 0)
-                    {
-                        var pt = mvp.WorldToImage(geom.Coordinates[0], true);
-                    }
-                    else
-                    {
-                        var pts = mvp.WorldToImage(geom.Coordinates, true);
-                    }
-                }
 
-                sw.Stop();
-                newTimesMvp.Add(sw.ElapsedMilliseconds);
-            }
-            
-            oldTimesMvp.Sort();
-            newTimesMvp.Sort();
-            
-            var oldTimesAvgMvp = oldTimesMvp.Skip(2).Take(16).Average();
-            var newTimesAvgMvp = newTimesMvp.Skip(2).Take(16).Average();
-
-            
-            Trace.WriteLine($"WorldToImageTransform_Benchmark {shapeFileName} {mapTransformRotation:000}deg  MVP old: {oldTimesAvgMvp}  MVP new: {newTimesAvgMvp}");
-            // allow a little bit of leeway
-            Assert.LessOrEqual(newTimesAvgMvp/ oldTimesAvgMvp,1.2, $"{shapeFileName}_{mapTransformRotation}deg_MVP" );
+// NOTE: MapViewport Tests no longer relevant  due to redundant method WorldToImageOld being removed
+// Section commented out AFTER confirming test results
+//            // MapViewport Tests
+//            var mvp = (MapViewport) map;
+//            for (var i = 0; i < numTests; i++)
+//            {
+//                // old
+//                sw.Reset();
+//                sw.Start();
+//                foreach (var geom in geoms)
+//                {
+//                    foreach (var p in geom.Coordinates)
+//                    {
+//                        var pt = mvp.WorldToImageOld(p, true);
+//                        if (!mvp.MapTransformRotation.Equals(0f))
+//                        {
+//                            using (var transform = mvp.MapTransform)
+//                            {
+//                                var pts = new[] {pt};
+//                                transform.TransformPoints(pts);
+//                                pt = pts[0];
+//                            }
+//                        }
+//                    }
+//                }
+//                sw.Stop();
+//                oldTimesMvp.Add(sw.ElapsedMilliseconds);
+//                
+//                // new
+//                sw.Reset();
+//                sw.Start();
+//                foreach (var geom in geoms)
+//                {
+//                    if (geom.Coordinates.Length == 0)
+//                    {
+//                        var pt = mvp.WorldToImage(geom.Coordinates[0], true);
+//                    }
+//                    else
+//                    {
+//                        var pts = mvp.WorldToImage(geom.Coordinates, true);
+//                    }
+//                }
+//
+//                sw.Stop();
+//                newTimesMvp.Add(sw.ElapsedMilliseconds);
+//            }
+//            
+//            oldTimesMvp.Sort();
+//            newTimesMvp.Sort();
+//            
+//            var oldTimesAvgMvp = oldTimesMvp.Skip(2).Take(16).Average();
+//            var newTimesAvgMvp = newTimesMvp.Skip(2).Take(16).Average();
+//
+//            
+//            Trace.WriteLine($"WorldToImageTransform_Benchmark {shapeFileName} {mapTransformRotation:000}deg  MVP old: {oldTimesAvgMvp}  MVP new: {newTimesAvgMvp}");
+//            // allow a little bit of leeway
+//            Assert.LessOrEqual(newTimesAvgMvp/ oldTimesAvgMvp,1.2, $"{shapeFileName}_{mapTransformRotation}deg_MVP" );
 
             map.Dispose();
         }

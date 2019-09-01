@@ -314,50 +314,6 @@ namespace SharpMap
         }
 
         /// <summary>
-        /// temporarily retained for benchmarking purposes only
-        /// </summary>
-        [Obsolete]
-        public PointF WorldToImageOld(Coordinate p, bool careAboutMapTransform)
-        {
-            var pTmp = WorldToImage(p);
-            if (!careAboutMapTransform)
-                return pTmp;
-
-            var pts = new[] { pTmp };
-            //Monitor.Enter(_mapTransform);
-            using (var mapTransform = MapTransform)
-            {
-                if (mapTransform.IsIdentity == false)
-                {
-                    mapTransform.TransformPoints(pts);
-                }
-            }
-            //Monitor.Exit(_mapTransform);
-
-            return pts[0];
-        }
-
-        /// <summary>
-        /// temporarily retained for benchmarking purposes only
-        /// </summary>
-        [Obsolete]
-        public PointF WorldToImageOld(Coordinate p)
-        {
-            if (p.IsEmpty())
-                return PointF.Empty;
-
-            double x = (p.X - Left) / PixelWidth;
-            if (double.IsNaN(x))
-                return PointF.Empty;
-
-            double y = (Top - p.Y) / PixelHeight;
-            if (double.IsNaN(y))
-                return PointF.Empty;
-
-            return new PointF((float)x, (float)y);
-        }
-
-        /// <summary>
         /// Creates a map viewport from a given map
         /// </summary>
         /// <param name="map">The map</param>
