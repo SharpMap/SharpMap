@@ -1,7 +1,6 @@
 using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.Diagnostics.Eventing.Reader;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Linq;
@@ -12,8 +11,6 @@ using NUnit.Framework;
 using NetTopologySuite.Geometries;
 using NetTopologySuite.Geometries.Utilities;
 using NetTopologySuite.IO;
-using NetTopologySuite.Operation.Polygonize;
-using NUnit.Framework.Constraints;
 using SharpMap;
 using SharpMap.Data.Providers;
 using Geometry = GeoAPI.Geometries.IGeometry;
