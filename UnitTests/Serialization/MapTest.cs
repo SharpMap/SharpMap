@@ -73,7 +73,7 @@ namespace UnitTests.Serialization
         public void TestMap2()
         {
             var m = new Map(_mapSize);
-            m.BackgroundLayer.Add(new TileLayer(KnownTileSources.Create(KnownTileSource.MapQuest), "MapQuest"));
+            m.BackgroundLayer.Add(new TileLayer(KnownTileSources.Create(KnownTileSource.BingHybridStaging), "BingHybridStaging"));
             
             string cn = $"Data Source={Path.Combine("TestData", "osm_aurich.sqlite")};";
             
