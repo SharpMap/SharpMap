@@ -87,32 +87,21 @@ namespace SharpMap.Rendering.Decoration
 
         #region MapDecoration overrides
 
-        /// <summary>
-        /// Function to compute the required size for rendering the map decoration object
-        /// <para>This is just the size of the decoration object, border settings are excluded</para>
-        /// </summary>
-        /// <param name="g"></param>
-        /// <param name="map"></param>
-        /// <returns>The</returns>
-        protected override Size InternalSize(Graphics g, Map map)
+        protected override Size InternalSize(Graphics g, MapViewport map)
         {
             var s = g.MeasureString(Text, Font);
             return new Size((int)Math.Ceiling(s.Width), (int)Math.Ceiling(s.Height));
         }
 
-        /// <summary>
-        /// Function to render the actual map decoration
-        /// </summary>
-        /// <param name="g"></param>
-        /// <param name="map"></param>
-        protected override void OnRender(Graphics g, Map map)
+        protected override void OnRender(Graphics g, MapViewport map)
         {
             var layoutRectangle = g.ClipBounds;
             var b = new SolidBrush(OpacityColor(ForeColor));
             if (Halo > 0)
             {
                 var gp = new GraphicsPath();
-                gp.AddString(Text, Font.FontFamily, (int)Font.Style, Utility.ScaleSizeToDeviceUnits(Font.SizeInPoints, GraphicsUnit.Point, g), layoutRectangle, Format);
+                gp.AddString(Text, Font.FontFamily, (int) Font.Style,
+                    Utility.ScaleSizeToDeviceUnits(Font.SizeInPoints, GraphicsUnit.Point, g), layoutRectangle, Format);
                 g.DrawPath(_halo, gp);
                 g.FillPath(b, gp);
             }
@@ -120,7 +109,7 @@ namespace SharpMap.Rendering.Decoration
                 g.DrawString(Text, Font, b, layoutRectangle);
 
         }
-
+        
         #endregion
     }
 }

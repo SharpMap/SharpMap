@@ -63,17 +63,17 @@ namespace UnitTests.Serialization
             Assert.AreEqual(m.SRID, mD.SRID);
             Assert.AreEqual(m.Zoom, mD.Zoom);
 
-            Assert.DoesNotThrow(() => m.GetMap().Save(name + "-S.bmp"));
-            Assert.DoesNotThrow(() => mD.GetMap().Save(name + "-D.bmp"));
+            Assert.DoesNotThrow(() => m.GetMap().Save(System.IO.Path.Combine(UnitTestsFixture.GetImageDirectory(new MapTest()), name + "-S.bmp")));
+            Assert.DoesNotThrow(() => mD.GetMap().Save(System.IO.Path.Combine(UnitTestsFixture.GetImageDirectory(new MapTest()), name + "-D.bmp")));
         }
 
 
 
-        [Test, Description("MapQuest base map, OSM of Aurich, randomly styled")]
+        [Test, Description("BingHybridStaging base map, OSM of Aurich, randomly styled"), Ignore("Need to fix BruTile serialization")]
         public void TestMap2()
         {
             var m = new Map(_mapSize);
-            m.BackgroundLayer.Add(new TileLayer(KnownTileSources.Create(KnownTileSource.MapQuest), "MapQuest"));
+            m.BackgroundLayer.Add(new TileLayer(KnownTileSources.Create(KnownTileSource.BingHybridStaging), "BingHybridStaging"));
             
             string cn = $"Data Source={Path.Combine("TestData", "osm_aurich.sqlite")};";
             

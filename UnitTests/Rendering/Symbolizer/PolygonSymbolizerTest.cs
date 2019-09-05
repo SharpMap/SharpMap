@@ -54,7 +54,7 @@ namespace UnitTests.Rendering.Symbolizer
             
             sw.Start();
             img = m.GetMap();
-            img.Save("PolygonSymbolizer-1.bmp", System.Drawing.Imaging.ImageFormat.Bmp);
+            img.Save(System.IO.Path.Combine(UnitTestsFixture.GetImageDirectory(this), "PolygonSymbolizer-1.bmp"), System.Drawing.Imaging.ImageFormat.Bmp);
             sw.Stop();
             System.Diagnostics.Trace.WriteLine(string.Format("Rendering new method:{0}ms", sw.ElapsedMilliseconds));
 
@@ -70,7 +70,7 @@ namespace UnitTests.Rendering.Symbolizer
 
             sw.Reset(); sw.Start();
             img = m.GetMap();
-            img.Save("PolygonSymbolizer-2.bmp", System.Drawing.Imaging.ImageFormat.Bmp);
+            img.Save(System.IO.Path.Combine(UnitTestsFixture.GetImageDirectory(this),"PolygonSymbolizer-2.bmp"), System.Drawing.Imaging.ImageFormat.Bmp);
             sw.Stop();
             System.Diagnostics.Trace.WriteLine(string.Format("Rendering new method:{0}ms", sw.ElapsedMilliseconds));
         

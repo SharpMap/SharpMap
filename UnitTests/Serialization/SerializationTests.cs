@@ -16,6 +16,7 @@ using UnitTests.Serialization;
 
 namespace BruTile.Serialization.Tests
 {
+    [Category("BruTile"), Ignore("Fix first")]
     public class SerializationTests
     {
         [Test]

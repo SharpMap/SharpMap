@@ -60,6 +60,7 @@ namespace SharpMap.Rendering.Decoration
         /// </summary>
         public Size Size { get; set; }
 
+
         /// <summary>
         /// Gets or sets the fore color
         /// </summary>
@@ -68,24 +69,12 @@ namespace SharpMap.Rendering.Decoration
 
         #region MapDecoration overrides
 
-        /// <summary>
-        /// Function to compute the required size for rendering the map decoration object
-        /// <para>This is just the size of the decoration object, border settings are excluded</para>
-        /// </summary>
-        /// <param name="g">The graphics object</param>
-        /// <param name="map">The map</param>
-        /// <returns>The size of the map decoration</returns>
-        protected override Size InternalSize(Graphics g, Map map)
+        protected override Size InternalSize(Graphics g, MapViewport map)
         {
             return Size;
         }
-
-        /// <summary>
-        /// Function to render the actual map decoration
-        /// </summary>
-        /// <param name="g"></param>
-        /// <param name="map"></param>
-        protected override void OnRender(Graphics g, Map map)
+        
+        protected override void OnRender(Graphics g, MapViewport map)
         {
             var image = NorthArrowImage ?? DefaultNorthArrowBitmap;
 
@@ -103,12 +92,12 @@ namespace SharpMap.Rendering.Decoration
 
             var rot = -90 + (dy > 0 ? -1 : 1) * Math.Acos(cos) / GeoSpatialMath.DegToRad;
             var halfSize = new Size((int)(0.5f*Size.Width), (int)(0.5f*Size.Height));
-            var oldTransform = g.Transform;
+            //var oldTransform = g.Transform;
             
             var clip = g.ClipBounds;
             var newTransform = new Matrix(1f, 0f, 0f, 1f, 
-                                          clip.Left + halfSize.Width,
-                                          clip.Top + halfSize.Height);
+                clip.Left + halfSize.Width,
+                clip.Top + halfSize.Height);
             newTransform.Rotate((float)rot);
 
             // Setup image attributes
@@ -124,7 +113,7 @@ namespace SharpMap.Rendering.Decoration
             var rect = new Rectangle(-halfSize.Width, -halfSize.Height, Size.Width, Size.Height);
             g.DrawImage(image, rect, 0, 0, image.Size.Width, image.Size.Height, GraphicsUnit.Pixel, ia);
 
-            g.Transform = oldTransform;
+            //g.Transform = oldTransform;
         }
 
         #endregion

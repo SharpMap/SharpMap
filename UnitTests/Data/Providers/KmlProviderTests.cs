@@ -44,10 +44,8 @@ namespace UnitTests.Data.Providers
             m.ZoomToExtents();
             m.Zoom *= 1.1;
 
-            var img = m.GetMap();
-            img.Save("KmlProviderImage.png", ImageFormat.Png);
-
-
+            using (var img = m.GetMap())
+                img.Save(System.IO.Path.Combine(UnitTestsFixture.GetImageDirectory(this), "KmlProviderImage.png"), ImageFormat.Png);
         }
     }
 }

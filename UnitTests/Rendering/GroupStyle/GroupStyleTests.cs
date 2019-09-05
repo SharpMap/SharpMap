@@ -1,5 +1,6 @@
 ﻿using NUnit.Framework;
 using System.Drawing;
+using System.Drawing.Imaging;
 using SharpMap.Layers;
 using SharpMap;
 
@@ -70,7 +71,7 @@ namespace UnitTests.Rendering.GroupStyle
             m.Layers.Add(vLay);
             var img = m.GetMap();
 
-            img.Save(@"c:\\temp\ren.png");
+            img.Save(System.IO.Path.Combine(UnitTestsFixture.GetImageDirectory(this), "render.png"), ImageFormat.Png);
 
             Bitmap bmp = img as Bitmap;
             Color c1 = bmp.GetPixel(5, 5);

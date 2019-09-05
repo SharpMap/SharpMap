@@ -146,9 +146,15 @@ namespace SharpMap
         private readonly LayerCollection _layers;
         private readonly LayerCollection _backgroundLayers;
         private readonly VariableLayerCollection _variableLayers;
-        private object _lockMapTransform = new object();
-        private Matrix _mapTransform;
+#pragma warning disable 169
+        // both fields redundant, but unable to remove without violating serialization
+        private Matrix _mapTransform; 
         private Matrix _mapTransformInverted;
+#pragma warning restore 169
+        private readonly object _lockMapTransform = new object();
+        private readonly object _lockMapTransformInverted = new object();
+        private float[] _mapTransformElements; 
+        private float[] _mapTransformInvertedElements;
         
         private readonly MapViewPortGuard _mapViewportGuard;
         private readonly Dictionary<object, List<ILayer>> _layersPerGroup = new Dictionary<object, List<ILayer>>();
@@ -193,8 +199,9 @@ namespace SharpMap
             _variableLayers = new VariableLayerCollection(_layers);
             _layersPerGroup.Add(_variableLayers, new List<ILayer>());
             BackColor = Color.Transparent;
-            _mapTransform = new Matrix();
-            _mapTransformInverted = new Matrix();
+            var matrix = new Matrix();
+            _mapTransformElements = matrix.Elements;
+            _mapTransformInvertedElements = matrix.Elements;
             _center = new Point(0, 0);
             _zoom = 1;
 
@@ -603,13 +610,10 @@ namespace SharpMap
             if ((Layers == null || Layers.Count == 0) && (BackgroundLayer == null || BackgroundLayer.Count == 0) && (_variableLayers == null || _variableLayers.Count == 0))
                 throw new InvalidOperationException("No layers to render");
 
-            MapViewport mvp = null;
-            lock (_lockMapTransform)
-            {
-                // working with MapTransform CLONE
-                g.Transform = MapTransform;
-                mvp = (MapViewport)this;
-            }
+            g.Transform = MapTransform;
+            
+            var mvp = (MapViewport) this;
+
             g.Clear(BackColor);
             g.PageUnit = GraphicsUnit.Pixel;
 
@@ -675,7 +679,8 @@ namespace SharpMap
                     double visibleLevel = layer.VisibilityUnits == VisibilityUnits.ZoomLevel ? zoom : scale;
                     if (layer.Enabled && layer.MaxVisible >= visibleLevel && layer.MinVisible < visibleLevel)
                         LayerCollectionRenderer.RenderLayer(layer, g, mvp);
-                        
+                    
+                    OnLayerRendered(layer, LayerCollectionType.Variable);
                 }
             }
 
@@ -686,7 +691,7 @@ namespace SharpMap
             // Render all map decorations
             foreach (var mapDecoration in _decorations)
             {
-                mapDecoration.Render(g, this);
+                mapDecoration.Render(g, mvp);
             }
             //Resets the timer for VariableLayer
             _variableLayers.Pause = false;
@@ -806,14 +811,12 @@ namespace SharpMap
             if (lc == null || lc.Count == 0)
                 throw new InvalidOperationException("No layers to render");
 
-            Matrix transform = g.Transform;
-            MapViewport mvp = null;
-            lock (_lockMapTransform)
-            {
-                // working with MapTransform CLONE
-                g.Transform = MapTransform;
-                mvp = (MapViewport)this;
-            }
+            var origTransform = g.Transform;
+
+            g.Transform = MapTransform;
+
+            var mvp = (MapViewport) this;
+
             if (!drawTransparent)
                 g.Clear(BackColor);
 
@@ -838,7 +841,7 @@ namespace SharpMap
              */
 
             if (drawTransparent)
-                g.Transform = transform;
+                g.Transform = origTransform;
 
             if (layerCollectionType == LayerCollectionType.Static)
             {
@@ -849,7 +852,7 @@ namespace SharpMap
                 {
                     foreach (var mapDecoration in Decorations)
                     {
-                        mapDecoration.Render(g, this);
+                        mapDecoration.Render(g, mvp);
                     }
                 }
             }
@@ -992,7 +995,7 @@ namespace SharpMap
         /// </summary>
         public void ZoomToExtents()
         {
-            ZoomToBox(GetExtents());
+            ZoomToBox(GetExtents(), true);
         }
 
         /// <summary>
@@ -1004,116 +1007,125 @@ namespace SharpMap
         /// the bounding box, thus making the resulting envelope larger!
         /// </remarks>
         /// <param name="bbox"></param>
-        public void ZoomToBox(Envelope bbox)
+        /// <param name="careAboutTransform">True if any map rotation should be taken into account (eg ZoomToExtents).
+        /// False if rotation has already been accounted for (eg Zoom prev / next stack, or non-rotated views)</param>
+        public void ZoomToBox(Envelope bbox, bool careAboutTransform = false)
         {
-            if (bbox != null && !bbox.IsNull)
+            if (bbox == null || bbox.IsNull) return;
+
+            if (careAboutTransform && !MapTransformRotation.Equals(0f))
             {
-                //Ensure aspect ratio
-                var resX = Size.Width == 0 ? double.MaxValue : bbox.Width / Size.Width;
-                var resY = Size.Height == 0 ? double.MaxValue : bbox.Height / Size.Height;
-                var zoom = bbox.Width;
-                if (resY > resX && resX > 0)
-                {
-                    zoom *= resY / resX;
-                }
-
-                var center = new Coordinate(bbox.Centre);
-
-                zoom = _mapViewportGuard.VerifyZoom(zoom, center);
-                var changed = false;
-                if (zoom != _zoom)
-                {
-                    _zoom = zoom;
-                    changed = true;
-                }
-
-                if (!center.Equals2D(_center))
-                {
-                    _center = center;
-                    changed = true;
-                }
-
-                if (changed && MapViewOnChange != null)
-                    MapViewOnChange();
+                // adjust box for rotated views to ensure it is fully visible at maximum possible zoom
+                var rad = NetTopologySuite.Utilities.Degrees.ToRadians(MapTransformRotation);
+                var newWidth = bbox.Width * Math.Abs(Math.Cos(rad)) +
+                               bbox.Height * Math.Abs(Math.Sin(rad));
+                var newHeight = bbox.Width * Math.Abs(Math.Sin(rad)) +
+                                bbox.Height * Math.Abs(Math.Cos(rad));
+                bbox = new Envelope(
+                    bbox.Centre.X - newWidth * 0.5,
+                    bbox.Centre.X + newWidth * 0.5,
+                    bbox.Centre.Y - newHeight * 0.5,
+                    bbox.Centre.Y + newHeight * 0.5);
             }
+            
+            //Ensure aspect ratio
+            var resX = Size.Width == 0 ? double.MaxValue : bbox.Width / Size.Width;
+            var resY = Size.Height == 0 ? double.MaxValue : bbox.Height / Size.Height;
+            var zoom = bbox.Width;
+            if (resY > resX && resX > 0)
+                zoom *= resY / resX;
+
+            var center = new Coordinate(bbox.Centre);
+
+            zoom = _mapViewportGuard.VerifyZoom(zoom, center);
+            var changed = false;
+            if (zoom != _zoom)
+            {
+                _zoom = zoom;
+                changed = true;
+            }
+
+            if (!center.Equals2D(_center))
+            {
+                _center = center;
+                changed = true;
+            }
+
+            if (changed && MapViewOnChange != null)
+                MapViewOnChange();
         }
 
         /// <summary>
-        /// Converts a point from world coordinates to image coordinates based on the current
-        /// zoom, center and mapsize.
+        /// Converts an array of world coordinates to image coordinates based on the current <see cref="Zoom"/>, <see cref="Center"/>,
+        /// map <see cref="Size"/>, and (optionally) the <see cref="MapTransform"/>.
+        /// </summary>
+        /// <param name="coordinates">Coordinate array in world coordinates</param>
+        /// <param name="careAboutMapTransform">Indicates whether <see cref="MapTransform"/> should be applied. True for typical coordinate calcs,
+        /// False when rendering to image as the Graphics object has already applied the MapTransform</param>
+        /// <returns>PointF array in image coordinates</returns>
+        public PointF[] WorldToImage(Coordinate[] coordinates, bool careAboutMapTransform = false)
+        {
+            if (MapTransformRotation.Equals(0f))
+            {
+                // simple case is non-rotated views (ie MapTransform does NOT need to be applied)
+                var left = Center.X - Zoom * 0.5;   
+                var top = Center.Y + MapHeight * 0.5; 
+                return Transform.WorldToMap(coordinates, left, top, PixelWidth, PixelHeight);
+            }
+
+            // for rotated views, measurements must be performed in the rotated world coordinate space regardless
+            // of careAboutTransform. The most efficient way is using affine transformation (matrix) to translate,
+            // ROTATE, scale and flip coordinates, and finally translate to Image centre.
+            // If careAboutMapTransform == false then the matrix must also apply a reverse rotation as the MapTransform
+            // will be applied by the graphics object at completion of all drawing
+            var matrix = Transform.WorldToMapMatrix(
+                Center, PixelWidth, PixelHeight, MapTransformRotation, Size, careAboutMapTransform);
+            return Transform.WorldToMap(coordinates, matrix);
+        }
+        
+        /// <summary>
+        /// Converts a point in world coordinates to image coordinates based on the current <see cref="Zoom"/>, <see cref="Center"/>,
+        /// map <see cref="Size"/>, and (optionally) the <see cref="MapTransform"/>.
         /// </summary>
         /// <param name="p">Point in world coordinates</param>
-        /// <param name="careAboutMapTransform">Indicates whether MapTransform should be taken into account</param>
-        /// <returns>Point in image coordinates</returns>
-        public PointF WorldToImage(Coordinate p, bool careAboutMapTransform)
+        /// <param name="careAboutMapTransform">Indicates whether <see cref="MapTransform"/> should be applied. When rendering to image,
+        /// the Graphics object has usually applied MapTransform</param>
+        /// <returns>PointF in image coordinates</returns>
+        public PointF WorldToImage(Coordinate p, bool careAboutMapTransform = false)
         {
-            var pTmp = Transform.WorldtoMap(p, this);
-            if (!careAboutMapTransform)
-                return pTmp;
-
-            if (!MapTransformRotation.Equals(0f))
-            {
-                // working with MapTransform clone
-                using (var transform = MapTransform)
-                {
-                    if (!transform.IsIdentity)
-                    {
-                        var pts = new[] {pTmp};
-                        transform.TransformPoints(pts);
-                        pTmp = pts[0];
-                    }
-                }
-            }
-
-            return pTmp;
+            var points = WorldToImage(new Coordinate[] {p}, careAboutMapTransform);
+            return points[0];
         }
 
         /// <summary>
-        /// Converts a point from world coordinates to image coordinates based on the current
-        /// zoom, center and mapsize.
+        /// Converts a point array from image coordinates to world coordinates based on the current <see cref="Zoom"/>, <see cref="Center"/>,
+        /// map <see cref="Size"/>, and (optionally) the <see cref="MapTransform"/>.
         /// </summary>
-        /// <param name="p">Point in world coordinates</param>
-        /// <returns>Point in image coordinates</returns>
-        public PointF WorldToImage(Point p)
+        /// <param name="points">Point array in image coordinates. Note: if you wish to preserve the input values then
+        /// you must clone the point array as it will be modified if a MapTransform is applied</param>
+        /// <param name="careAboutMapTransform">Indicates whether <see cref="MapTransform"/> should be applied. </param>
+        /// <returns>Point array in world coordinates</returns>
+        public Point[] ImageToWorld(PointF[] points, bool careAboutMapTransform = false)
         {
-            return WorldToImage(p, false);
-        }
+            if (careAboutMapTransform && !MapTransformRotation.Equals(0f))
+                using (var transformInv = MapTransformInverted)
+                    transformInv.TransformPoints(points);
 
+            return Transform.MapToWorld(points, this);
+        }
+        
         /// <summary>
-        /// Converts a point from image coordinates to world coordinates based on the current
-        /// zoom, center and mapsize.
+        /// Converts a point from image coordinates to world coordinates based on the current <see cref="Zoom"/>, <see cref="Center"/>,
+        /// map <see cref="Size"/>, and (optionally) the <see cref="MapTransform"/>.
         /// </summary>
-        /// <param name="p">Point in image coordinates</param>
+        /// <param name="p">Point in image coordinates. Note: if you wish to preserve the input value then
+        /// you must clone the point as it will be modified if a MapTransform is applied</param>
+        /// <param name="careAboutMapTransform">Indicates whether <see cref="MapTransform"/> should be applied. </param>
         /// <returns>Point in world coordinates</returns>
-        public Point ImageToWorld(PointF p)
+        public Point ImageToWorld(PointF p, bool careAboutMapTransform = false)
         {
-            return ImageToWorld(p, false);
-        }
-        /// <summary>
-        /// Converts a point from image coordinates to world coordinates based on the current
-        /// zoom, center and mapsize.
-        /// </summary>
-        /// <param name="p">Point in image coordinates</param>
-        /// <param name="careAboutMapTransform">Indicates whether MapTransform should be taken into account</param>
-        /// <returns>Point in world coordinates</returns>
-        public Point ImageToWorld(PointF p, bool careAboutMapTransform)
-        {
-            if (careAboutMapTransform && MapTransformRotation != 0)
-            {
-                Matrix transformInv;
-                lock (_lockMapTransform)
-                    transformInv = _mapTransformInverted.Clone();
-
-                if (!transformInv.IsIdentity)
-                {
-                    var pts = new[] { p };
-                    transformInv.TransformPoints(pts);
-                    p = pts[0];
-                }
-                transformInv.Dispose();
-            }
-
-            return Transform.MapToWorld(p, this);
+            var pts = ImageToWorld(new PointF[] { p }, careAboutMapTransform);
+            return pts[0];
         }
 
         #endregion
@@ -1158,46 +1170,53 @@ namespace SharpMap
         }
 
         /// <summary>
-        /// Gets the extents of the current map based on the current zoom, center and mapsize
+        /// <para>Gets the rectilinear extents of the current map based on the current <see cref="Zoom"/>,
+        /// <see cref="Center"/>, map <see cref="Size"/>, and (optionally) the <see cref="MapTransform"/></para>
+        /// <para>If a <see cref="MapTransform"/> is applied, the envelope CONTAINING the rotated view
+        /// will be returned (used by layers to spatially select data) and the aspect ratio will NOT be the
+        /// same as map <see cref="Size"/>. If aspect ratio is important then refer to <see cref="Zoom"/>
+        /// and <see cref="MapHeight"/></para> 
         /// </summary>
         public Envelope Envelope
         {
             get
             {
-                if (double.IsNaN(MapHeight) || double.IsInfinity(MapHeight))
+                // height has been adjusted for pixelRatio
+                var height = MapHeight;
+                if (double.IsNaN(height) || double.IsInfinity(height))
                     return new Envelope(0, 0, 0, 0);
 
-                var ll = new Coordinate(Center.X - Zoom * .5, Center.Y - MapHeight * .5);
-                var ur = new Coordinate(Center.X + Zoom * .5, Center.Y + MapHeight * .5);
+                var ll = new Coordinate(Center.X - Zoom * .5, Center.Y - height * .5);
+                var ur = new Coordinate(Center.X + Zoom * .5, Center.Y + height * .5);
 
+                // simple, non-rotated view
                if (MapTransformRotation.Equals(0f))
                     return new Envelope(ll, ur);
-                else
-                {
-                    var pts = new[] { new PointF((float)ll.X, (float)ll.Y),
-                                      new PointF((float)ll.X, (float)ur.Y),
-                                      new PointF((float)ur.X, (float)ur.Y),
-                                      new PointF((float)ur.X, (float)ll.Y)};
 
-                    Matrix matrix = new Matrix();
-                    matrix.RotateAt(-MapTransformRotation, new PointF((float)Center.X, (float)Center.Y));
-                    matrix.TransformPoints(pts);
+               // otherwise derive envelope containing rotated view (required for layers to select data)
+               if (Size.Width == 0 || Size.Height == 0)
+                   return new Envelope(0, 0, 0, 0);
 
-                    return new Envelope(Math.Min(Math.Min(Math.Min(pts[0].X, pts[1].X), pts[2].X), pts[3].X),
-                                        Math.Max(Math.Max(Math.Max(pts[0].X, pts[1].X), pts[2].X), pts[3].X),
-                                        Math.Min(Math.Min(Math.Min(pts[0].Y, pts[1].Y), pts[2].Y), pts[3].Y),
-                                        Math.Max(Math.Max(Math.Max(pts[0].Y, pts[1].Y), pts[2].Y), pts[3].Y));
-                }
+               var rad = (double) -MapTransformRotation * Math.PI / 180.0;
+               var newWidth = (ur.X - ll.X) * Math.Abs(Math.Cos(rad)) +
+                              (ur.Y - ll.Y) * Math.Abs(Math.Sin(rad));
+               var newHeight = (ur.X - ll.X) * Math.Abs(Math.Sin(rad)) +
+                               (ur.Y - ll.Y) * Math.Abs(Math.Cos(rad));
 
-            }
+               ll = new Coordinate(Center.X - newWidth * .5, Center.Y - newHeight * .5);
+               ur = new Coordinate(Center.X + newWidth * .5, Center.Y + newHeight * .5);
+
+               return new Envelope(ll, ur);
+           }
         }
-
+        
         /// <summary>
-        /// Getter returns a CLONE. Using the <see cref="MapTransform"/> you can alter the coordinate system of the map rendering.
-        /// This makes it possible to rotate or rescale the image, for instance to have another direction than north upwards.
+        /// Using the <see cref="MapTransform"/> you can alter the coordinate system of the map rendering.
+        /// This makes it possible to rotate the image, for instance to have another direction than north upwards.
+        /// <para>The matrix elements are stored, and a new matrix is instantiated for every request</para>
         /// </summary>
         /// <example>
-        /// Rotate the map output 45 degrees around its center:
+        /// Rotate the map output +45 degrees around its center (ie north arrow will point to the top-right corner):
         /// <code lang="C#">
         /// System.Drawing.Drawing2D.Matrix maptransform = new System.Drawing.Drawing2D.Matrix(); //Create transformation matrix
         ///	maptransform.RotateAt(45,new PointF(myMap.Size.Width/2,myMap.Size.Height/2)); //Apply 45 degrees rotation around the center of the map
@@ -1209,40 +1228,69 @@ namespace SharpMap
             get
             {
                 lock (_lockMapTransform)
-                    return _mapTransform.Clone();
+                    return new Matrix(
+                        _mapTransformElements[0],
+                        _mapTransformElements[1],
+                        _mapTransformElements[2],
+                        _mapTransformElements[3],
+                        _mapTransformElements[4],
+                        _mapTransformElements[5]);
             }
             set
             {
-                if (value == null)
-                    value = new Matrix();
-
-                if (!value.IsInvertible)
-                    throw new ArgumentException("Matrix not invertible", nameof(value));
-
-                _mapTransform = value;
-                _mapTransformInverted = value.Clone();
-                _mapTransformInverted.Invert();
-
-                if (value.IsIdentity)
-                    MapTransformRotation = 0;
-                else
+                lock (_lockMapTransform)
                 {
-                    var rad = value.Elements[1] >= 0 ? Math.Acos(value.Elements[0]) : -Math.Acos(value.Elements[0]);
-                    if (rad < 0)
-                        rad += 2 * Math.PI;
-                    MapTransformRotation = (float)(rad * 180.0 / Math.PI);
+                    if (value == null)
+                        value = new Matrix();
+
+                    if (!value.IsInvertible)
+                        throw new ArgumentException("Matrix not invertible", nameof(value));
+
+                    _mapTransformElements = value.Elements;
+
+                    lock (_lockMapTransformInverted)
+                    {
+                        var inverted = value.Clone();
+                        inverted.Invert();
+                        _mapTransformInvertedElements = inverted.Elements;
+                    }
+                    
+                    if (value.IsIdentity)
+                        MapTransformRotation = 0f;
+                    else
+                    {
+                        var rad = value.Elements[1] >= 0 ? Math.Acos(value.Elements[0]) : -Math.Acos(value.Elements[0]);
+                        if (rad < 0)
+                            rad += 2 * Math.PI;
+                        MapTransformRotation = (float)(rad * 180.0 / Math.PI);
+                    }
                 }
 
             }
         }
 
+        /// <summary>
+        /// The inverse of <see cref="MapTransform"/> used for calculations from Image to World.
+        /// <para>The matrix elements are stored, and a new matrix is instantiated for every request</para>
+        /// </summary>
         internal Matrix MapTransformInverted
         {
-            get { return _mapTransformInverted; }
+            get
+            {
+                lock (_lockMapTransformInverted)
+                    return new Matrix(
+                        _mapTransformInvertedElements[0],
+                        _mapTransformInvertedElements[1],
+                        _mapTransformInvertedElements[2],
+                        _mapTransformInvertedElements[3],
+                        _mapTransformInvertedElements[4],
+                        _mapTransformInvertedElements[5]);
+            }
         }
         
         /// <summary>
         /// MapTransform Rotation in degrees. Facilitates determining if map is rotated without locking MapTransform.
+        /// Positive rotation is applied anti-clockwise, with the apparent effect of north arrow rotating clockwise. 
         /// </summary>
         public float MapTransformRotation { get; private set; }
 
@@ -1352,7 +1400,7 @@ namespace SharpMap
         }
 
         /// <summary>
-        /// Calculated the Zoom value for a given Scale-value
+        /// Calculate the Zoom value for a given Scale value
         /// </summary>
         /// <param name="scale"></param>
         /// <param name="dpi"></param>
@@ -1363,20 +1411,21 @@ namespace SharpMap
         }
 
         /// <summary>
-        /// Returns the mapscale if the map was to be rendered with the specified DPI-settings
+        /// Returns the mapscale if the map was to be rendered at the current <see cref="Zoom"/> with the specified DPI-settings
         /// </summary>
         /// <param name="dpi"></param>
         /// <returns></returns>
         public double GetMapScale(int dpi)
         {
-            return ScaleCalculations.CalculateScaleNonLatLong(Envelope.Width, Size.Width, 1, dpi);
+            return ScaleCalculations.CalculateScaleNonLatLong(Zoom, Size.Width, 1, dpi);
         }
 
         /// <summary>
         /// Gets or sets the zoom level of map.
         /// </summary>
         /// <remarks>
-        /// <para>The zoom level corresponds to the width of the map in WCS units.</para>
+        /// <para>The zoom level corresponds to the apparent width of the map in WCS units, regardless of any <see cref="MapTransform"/>.
+        /// Zoom will only equal <see cref="Envelope"/>.Width when <see cref="MapTransformRotation"/> is 0 or 180 degrees</para> 
         /// <para>A zoomlevel of 0 will result in an empty map being rendered, but will not throw an exception</para>
         /// </remarks>
         public double Zoom

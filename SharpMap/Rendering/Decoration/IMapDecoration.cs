@@ -1,3 +1,4 @@
+using System;
 using System.Drawing;
 
 namespace SharpMap.Rendering.Decoration
@@ -8,10 +9,18 @@ namespace SharpMap.Rendering.Decoration
     public interface IMapDecoration
     {
         /// <summary>
-        /// Renders the map decoration to the graphics object
+        /// Draw the map decoration.
+        /// <para>Note that base class <see cref="MapDecoration"/> implementation resets <paramref name="g"/>.Transform
+        /// prior to raising event OnRendering, and restore the <paramref name="g"/>.Transform prior to
+        /// raising event OnRendered.</para>
+        /// Likewise, <paramref name="g"/>.Clip is reset prior to rendering map decoration, and restored
+        /// immediately after rendering.
         /// </summary>
-        /// <param name="g">The graphics object</param>
-        /// <param name="map">The map</param>
+        /// <param name="g"></param>
+        /// <param name="map"></param>
+        void Render(Graphics g, MapViewport map);
+
+        [Obsolete("Use Render (Graphics, MapViewport)")]
         void Render(Graphics g, Map map);
     }
 }

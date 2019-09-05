@@ -14,12 +14,12 @@ namespace UnitTests
 {
     public class TestDecoration : MapDecoration
     {
-        protected override Size InternalSize(Graphics g, Map map)
+        protected override Size InternalSize(Graphics g, MapViewport map)
         {
             return new Size(50, 30);
         }
 
-        protected override void OnRender(Graphics g, Map map)
+        protected override void OnRender(Graphics g, MapViewport map)
         {
             g.FillRegion(new SolidBrush(OpacityColor(Color.Red)), g.Clip);
         }
@@ -76,8 +76,9 @@ namespace UnitTests
                 NumTicks = 2,
                 Opacity = 1f
             });
-            var bmp = m.GetMap();
-            bmp.Save("TestMapDecorationTest.bmp");
+
+            using (var bmp = m.GetMap())
+                bmp.Save(System.IO.Path.Combine(UnitTestsFixture.GetImageDirectory(this), "TestMapDecorationTest.bmp"));
         }
 
     }

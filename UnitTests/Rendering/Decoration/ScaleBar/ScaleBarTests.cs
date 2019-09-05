@@ -26,16 +26,14 @@ namespace UnitTests.Rendering.Decoration.ScaleBar
         //private readonly List<int> _testLatitudes = new List<int> {0,5,10,15,20,25,30,35,40,45,50,55,60,65,70,75,80,85};
         private readonly List<int> _testLatitudes = new List<int> {0, 10, 20, 30, 40, 50, 60, 70, 80};
 
-
         [TestFixtureSetUp]
         public void SetupMap()
         {
-            System.IO.Directory.CreateDirectory(Path.Combine(Path.GetTempPath(), "SharpMap"));
-            System.IO.Directory.CreateDirectory(Path.Combine(Path.GetTempPath(), "BruTileCache", "Osm"));
+            //System.IO.Directory.CreateDirectory(Path.Combine(Path.GetTempPath(), "BruTileCache", "Osm"));
 
-            var files = System.IO.Directory.GetFiles(Path.Combine(Path.GetTempPath(), "SharpMap"));
-            foreach (var file in files)
-                System.IO.File.Delete(file);
+//            var files = System.IO.Directory.GetFiles(Path.Combine(Path.GetTempPath(), "SharpMap"));
+//            foreach (var file in files)
+//                System.IO.File.Delete(file);
 
             var gss = new NtsGeometryServices();
             var css = new SharpMap.CoordinateSystems.CoordinateSystemServices(
@@ -70,16 +68,16 @@ namespace UnitTests.Rendering.Decoration.ScaleBar
 
             _map.Layers.Add(lyr);
 
-            // Add bru-tile map background
-            var cacheFolder = System.IO.Path.Combine(System.IO.Path.GetTempPath(), "BruTileCache", "Osm");
-            var lyrBruTile = new TileLayer(
-                BruTile.Predefined.KnownTileSources.Create(BruTile.Predefined.KnownTileSource.OpenStreetMap),
-                "Tiles", Color.Transparent, true, cacheFolder)
-            {
-                SRID = 3857,
-                TargetSRID = _map.SRID
-            };
-            _map.BackgroundLayer.Add(lyrBruTile);
+            // Add bru-tile map background 
+//            var cacheFolder = System.IO.Path.Combine(System.IO.Path.GetTempPath(), "BruTileCache", "Osm");
+//            var lyrBruTile = new TileLayer(
+//                BruTile.Predefined.KnownTileSources.Create(BruTile.Predefined.KnownTileSource.OpenStreetMap),
+//                "Tiles", Color.Transparent, true, cacheFolder)
+//            {
+//                SRID = 3857,
+//                TargetSRID = _map.SRID
+//            };
+//            _map.BackgroundLayer.Add(lyrBruTile);
 
             var scaleBar = new SharpMap.Rendering.Decoration.ScaleBar.ScaleBar()
             {
@@ -1263,12 +1261,10 @@ namespace UnitTests.Rendering.Decoration.ScaleBar
             _map.ZoomToBox(box);
 
             // generate image
-            var img = _map.GetMap();
             var strLat = (centerLat.HasValue) ? $"Lat_{centerLat:D2}" : "AllPoints";
-            img.Save(
-                Path.Combine(Path.GetTempPath(), "SharpMap",
-                    $"ScaleBarTest_{srDescr}_{strLat}_Interval_{interval:D5}.bmp"),
-                System.Drawing.Imaging.ImageFormat.Bmp);
+            using (var img = _map.GetMap())
+                img.Save(Path.Combine(UnitTestsFixture.GetImageDirectory(this), $"ScaleBarTest_{srDescr}_{strLat}_Interval_{interval:D5}.png"),
+                    System.Drawing.Imaging.ImageFormat.Png);
         }
     }
 }

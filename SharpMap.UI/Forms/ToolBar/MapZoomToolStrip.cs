@@ -451,16 +451,14 @@ namespace SharpMap.Forms.ToolBar
             
             if (tsb == _minZoom)
             {
-                MapControl.Map.MinimumZoom = _minZoom.Checked
-                    ? MapControl.Map.MinimumZoom = MapControl.Map.Zoom
-                    : MapControl.Map.MinimumZoom = Double.Epsilon;
+                MapControl.Map.MinimumZoom =
+                    _minZoom.Checked ? MapControl.Map.Zoom : Double.Epsilon;
             }
             
             if (tsb == _maxZoom)
             {
-                MapControl.Map.MaximumZoom = _maxZoom.Checked
-                    ? MapControl.Map.MaximumZoom = MapControl.Map.Zoom
-                    : MapControl.Map.MaximumZoom = Double.MaxValue;
+                MapControl.Map.MaximumZoom =
+                    _maxZoom.Checked ? MapControl.Map.Zoom : Double.MaxValue;
             }
 
             if (tsb == _lock)
@@ -481,6 +479,23 @@ namespace SharpMap.Forms.ToolBar
 
         private MapViewportLock mvpLock;
 
+        private void ResetControls()
+        {
+            Visible = true;
+            
+            if (MapControl.Map != null)
+            {
+                _minZoom.Checked = MapControl.Map.MinimumZoom > Double.Epsilon;
+                _maxZoom.Checked = MapControl.Map.MaximumZoom < Double.MaxValue;
+                _maxZoom2.Checked = MapControl.Map.MaximumExtents != null;
+            }
+
+            _zoomExtentStack = new ZoomExtentStack(MapControl);
+            _zoomExtentStack.StoreExtents = true;
+
+            mvpLock = new MapViewportLock(MapControl.Map);
+        }
+        
         protected override void OnMapControlChangedInternal(EventArgs e)
         {
             if (MapControl == null)
@@ -505,18 +520,9 @@ namespace SharpMap.Forms.ToolBar
                                                 /*_predefinedScales.Enabled =*/
                                                 MapControl.Map != null;
 
-            if (MapControl.Map != null)
-            {
-                _minZoom.Checked = MapControl.Map.MinimumZoom > Double.Epsilon;
-                _maxZoom.Checked = MapControl.Map.MaximumZoom < Double.MaxValue;
-                _maxZoom2.Checked = MapControl.Map.MaximumExtents != null;
-            }
-
             Visible = true;
-            _zoomExtentStack = new ZoomExtentStack(MapControl);
-            _zoomExtentStack.StoreExtents = true;
 
-            mvpLock = new MapViewportLock(MapControl.Map);
+            ResetControls();
 
             MapControl.Visible = true;
         }
@@ -526,13 +532,12 @@ namespace SharpMap.Forms.ToolBar
             if (sender != MapControl)
                 return;
 
-            _zoomExtentStack = new ZoomExtentStack(MapControl);
-            _zoomExtentStack.StoreExtents = true;
-
+            ResetControls();
+           
             _predefinedScales.Text = string.Format(NumberFormatInfo.CurrentInfo, "1:{0}", 
                 Math.Round(MapControl.Map.GetMapScale(_dpiX), 0, MidpointRounding.AwayFromZero));
+
             MapControl.Map.MapViewOnChange += OnMapMapViewOnChange;
-            mvpLock = new MapViewportLock(MapControl.Map);
         }
 
         private void HandleMapChanging(object sender, CancelEventArgs e)
