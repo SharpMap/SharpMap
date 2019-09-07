@@ -17,7 +17,7 @@ using Point = NetTopologySuite.Geometries.Point;
 
 namespace UnitTests.Rendering.Decoration.Graticule
 {
-    [TestFixture]
+    [TestFixture, Category("RequiresWindows")]
     public class GraticuleTest
     {
         private const double SecondOfArcDecimalPlaces = 1e-4; // approx. 1mm at the equator
