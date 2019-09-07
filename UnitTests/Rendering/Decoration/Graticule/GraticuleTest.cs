@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using GeoAPI.CoordinateSystems;
 using GeoAPI.Geometries;
 using NUnit.Framework;
@@ -156,8 +157,8 @@ namespace UnitTests.Rendering.Decoration.Graticule
 
         private void SaveMap(Map map, bool isGeographic)
         {
-            var x = GetFormattedLabel(isGeographic, map.Center.X, AxisOrientationEnum.East).Replace(",","");
-            var y = GetFormattedLabel(isGeographic, map.Center.Y, AxisOrientationEnum.North).Replace(",","");
+            var x = map.Center.X.ToString("N0");//GetFormattedLabel(isGeographic, map.Center.X, AxisOrientationEnum.East).Replace(",","");
+            var y = map.Center.Y.ToString("N0");//GetFormattedLabel(isGeographic, map.Center.Y, AxisOrientationEnum.North).Replace(",","");
             var s = map.MapScale.ToString("00000.###").Replace(".", "-");
             var fn = $"Graticule SRID {map.SRID} Scale {s} Center {x} {y} Rotn {map.MapTransformRotation:N0}.png";
             using (var img = map.GetMap(96))
@@ -257,18 +258,29 @@ namespace UnitTests.Rendering.Decoration.Graticule
 
         }
 
-
         [Ignore ("Time consuming test that has already been validated")]
-        [TestCase(7, AxisOrientationEnum.North )]
-        public void TestDmsLabel(double degree, AxisOrientationEnum axis)
+        [TestCase(7.0, 8.0, 0.00000001, AxisOrientationEnum.North )]
+        public void TestDmsLabel(  double fromVal, double toVal, double increment, AxisOrientationEnum axis)
         {
+            // ok ok - testing private method suggests this method should be public and somewhere else
+            // I think NTS would be good place, but at time of writing NTS was going through major version
+            // upgrade, so have left this as is for next significant release of SharpMap
+            
+            var tolerance = 1.1E-8;
+
             char[] split = {'°', '\'', '"', 'N', 'S', 'E', 'W'};
 
-            var until = Math.Truncate(degree + 1);
+            Type type = typeof (SharpMap.Rendering.Decoration.Graticule.Graticule);
+            BindingFlags bindingAttr = BindingFlags.NonPublic | BindingFlags.Instance;
+            MethodInfo method = type.GetMethod("GetFormattedLabel", bindingAttr);
             
+            var gratitule = Activator.CreateInstance(type);
+
+            var thisVal = fromVal;
             do
             {
-                var dms = GetFormattedLabel(true, degree, axis);
+                var dms = (string)method.Invoke(gratitule, new object [] {true, thisVal, axis});
+                //var dms = GetFormattedLabel(true, degree, axis);
                 var tokens = dms.Split(split, StringSplitOptions.RemoveEmptyEntries);
                 var dec = double.Parse(tokens[0]);
                 if (tokens.Length >= 3)
@@ -276,87 +288,10 @@ namespace UnitTests.Rendering.Decoration.Graticule
                 if (tokens.Length >= 2)
                     dec += double.Parse(tokens[1]) / 60;
 
-                Assert.AreEqual(degree, dec, 2.8E-8d, $"{degree:N8} {dms} {dec:N8}");
+                Assert.AreEqual(Math.Round(thisVal,8), Math.Round(dec, 8), tolerance, $"{thisVal:N8} {dms} {dec:N8}");
                 
-                degree += 0.00000001;
-            } while (degree < until);
-
-
+                thisVal += increment;
+            } while (thisVal < toVal);
         }
-        
-            private string GetFormattedLabel(bool isGeographicCoordinateSystem, double value, AxisOrientationEnum axis)
-        {
-            var axisSuffix = string.Empty;
-            switch (axis)
-            {
-                case AxisOrientationEnum.North:
-                    axisSuffix = value >= 0 ? "N" : "S";
-                    break;
-
-                case AxisOrientationEnum.East:
-                    axisSuffix = value >= 0 ? "E" : "W";
-                    break;
-            }
-
-            int dp;
-
-            if (!isGeographicCoordinateSystem)
-            {
-                dp = GetDecimalPlaces(value, 3);
-                return Math.Abs(value).ToString($"N{dp}") + "m" + axisSuffix;
-            }
-
-            // DMS: 8dp approx = 1mm (= 1" arc to 4dp) 
-            var deg = Math.Round(Math.Abs(value), 8, MidpointRounding.AwayFromZero);
-            var iDeg = (int) (deg); // equiv to Math.Truncate
-            var dec = deg - iDeg;
-
-            var mins = dec * 60;
-            var iMin = (int) (mins); // equiv to Math.Truncate
-
-            var secs = Math.Round(deg * 3600 - (iDeg * 3600) - (iMin * 60), 4, MidpointRounding.AwayFromZero);
-
-            if (Math.Abs(secs - 60) < SecondOfArcDecimalPlaces)
-            {
-                secs = 0;
-                iMin += 1;
-            }
-
-            if (iMin == 60)
-            {
-                iMin = 0;
-                iDeg += 1;
-            }
-
-            if (iMin == 0 && secs < SecondOfArcDecimalPlaces)
-                return $"{iDeg}°{axisSuffix}";
-
-            if (secs < SecondOfArcDecimalPlaces)
-                return $"{iDeg}°{iMin:00}'{axisSuffix}";
-
-            dp = GetDecimalPlaces(secs, 4);
-            var fmt = dp == 0 ? "00" : $"00.{new string('0', dp)}";
-            return ($"{iDeg}°{iMin:00}'{secs.ToString(fmt)}\"{axisSuffix}");
-        }
-
-        /// <summary>
-        /// Determine number of decimal places required for <paramref name="maxPrecision "/> without any trailing zeros
-        /// </summary>
-        /// <param name="value"></param>
-        /// <param name="maxPrecision"></param>
-        /// <returns>Number of decimal places without any trailing zeros</returns>
-        private static int GetDecimalPlaces(double value, int maxPrecision)
-        {
-            if (maxPrecision <= 0) return 0;
-            
-            // eg 0.###
-            var fmt = "0." + new string('#', maxPrecision);
-
-            // implicit rounding away from zero???
-            var strValue = value.ToString(fmt);
-                
-            return strValue.Contains('.') ? strValue.Reverse().TakeWhile(c => c !='.').Count() : 0;
-        }
-
     }
 }
