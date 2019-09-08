@@ -29,6 +29,11 @@ namespace SharpMap.Geometries
     /// </summary>
     public static class SpatialRelationsEx
     {
+        static SpatialRelationsEx()
+        {
+            SqlServer2008Ex.LoadSqlServerTypes();
+        }
+        
         /// <summary>
         /// Returns true if otherGeometry is wholly contained within the source geometry. This is the same as
         /// reversing the primary and comparison shapes of the Within operation.

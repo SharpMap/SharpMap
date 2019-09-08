@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Runtime.Serialization;
 using GeoAPI.Geometries;
 using Microsoft.SqlServer.Types;
+using SharpMap.Data.Providers;
 using SMGeometry = GeoAPI.Geometries.IGeometry;
 using SMGeometryType = GeoAPI.Geometries.OgcGeometryType;
 using SMPoint = GeoAPI.Geometries.IPoint;
@@ -67,6 +68,11 @@ namespace SharpMap.Converters.SqlServer2008SpatialObjects
         // sys.spatial_reference_systems table corresponding to the SRID in which the instance is defined
         public static double ReduceTolerance = 1d;
 
+        static SqlGeographyConverter()
+        {
+            SqlServer2008Ex.LoadSqlServerTypes();
+        }
+        
         public static SqlGeography ToSqlGeography(SMGeometry smGeometry)
         {
             SqlGeographyBuilder builder = new SqlGeographyBuilder();
