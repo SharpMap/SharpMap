@@ -274,11 +274,8 @@ namespace WinFormSamples
                         {
                             mapBox1.Refresh();
 
-                            MessageBox.Show("Requires SqlServer connection string to be defined (Project / Settings)\n\n" + 
-                                "Also, if project folder SqlServerTypes\\x64 and \\x86 are empty, then force reinstall of NuGet package:\n\n" +
-                                "PM> Update-Package Microsoft.SqlServer.Types -ProjectName Examples\\WinFormSamples -reinstall -ignoreDependencies","Sql Server",
-                                MessageBoxButtons.OK,MessageBoxIcon.Information);
-
+                            MessageBox.Show("Requires SqlServer connection string to be defined (Project / Settings)", 
+                                "Sql Server", MessageBoxButtons.OK,MessageBoxIcon.Information);
                             return;
                         }
                         // now show SqlServer dialog
@@ -320,8 +317,11 @@ namespace WinFormSamples
             {
                 MessageBox.Show(this, ex.Message, "Error");
             }
-            Cursor = Cursors.Default;
-            mapBox1.Cursor = mic;
+            finally
+            {
+                Cursor = Cursors.Default;
+                mapBox1.Cursor = mic;
+            }
         }
 
         private void mapImage_ActiveToolChanged(MapBox.Tools tool)

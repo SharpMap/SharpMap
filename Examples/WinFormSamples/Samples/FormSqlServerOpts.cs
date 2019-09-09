@@ -25,8 +25,8 @@ namespace WinFormSamples.Samples
 
         protected override void OnLoad(EventArgs e)
         {
-            // required for NuGet package Microsoft.SqlServer.Types
-            SqlServerTypes.Utilities.LoadNativeAssemblies(AppDomain.CurrentDomain.BaseDirectory);
+            // NO LONGER REQUIRED (performed internally by SharpMap.SqlServerSpatialObjects)
+            //SqlServerTypes.Utilities.LoadNativeAssemblies(AppDomain.CurrentDomain.BaseDirectory);
 
             SqlServerSample.InitialiseTables(ConnectionString);
 

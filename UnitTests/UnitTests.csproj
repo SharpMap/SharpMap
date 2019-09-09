@@ -60,13 +60,10 @@
   </Target>
   -->
   <ItemGroup Condition=" '$(Configuration)' != 'ReleaseLinux' ">
-    <!--<Reference Include="Microsoft.SqlServer.Types, Version=13.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL" />-->
-    <Reference Include="Microsoft.SqlServer.Types, Version=10.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\Programme\Microsoft SQL Server\100\SDK\Assemblies\Microsoft.SqlServer.Types.dll</HintPath>
-    </Reference>
+      <Reference Include="Microsoft.SqlServer.Types, Version=14.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+          <HintPath>..\packages\Microsoft.SqlServer.Types.14.0.1016.290\lib\net40\Microsoft.SqlServer.Types.dll</HintPath>
+      </Reference>
   </ItemGroup>
-
   <ItemGroup>
     <Reference Include="BruTile, Version=0.18.1.0, Culture=neutral, PublicKeyToken=null">
       <HintPath>..\packages\BruTile.0.18.1\lib\net40\BruTile.dll</HintPath>

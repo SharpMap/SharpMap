@@ -3,7 +3,7 @@
 /*
  *  The attached / following is part of SharpMap.SqlServerSpatialObjects.
  *  
- *  SharpMap.SqlServerSpatialObjects is free software © 2010 Ingenieurgruppe IVV GmbH & Co. KG, 
+ *  SharpMap.SqlServerSpatialObjects is free software ï¿½ 2010 Ingenieurgruppe IVV GmbH & Co. KG, 
  *  www.ivv-aachen.de; you can redistribute it and/or modify it under the terms 
  *  of the current GNU Lesser General Public License (LGPL) as published by and 
  *  available from the Free Software Foundation, Inc., 
@@ -31,6 +31,11 @@ namespace SharpMap.Geometries
     /// </summary>
     public static class SpatialOperationsEx
     {
+        static SpatialOperationsEx()
+        {
+            SqlServer2008Ex.LoadSqlServerTypes();
+        }
+        
         [Obsolete]
         public static Geometry Buffer(Geometry g, Double distance)
         {

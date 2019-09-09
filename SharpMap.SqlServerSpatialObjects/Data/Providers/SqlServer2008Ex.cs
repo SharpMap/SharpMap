@@ -21,7 +21,6 @@ using SharpMap.Converters.SqlServer2008SpatialObjects;
 using System;
 using System.Collections.ObjectModel;
 using System.Data.SqlClient;
-using System.Globalization;
 using System.Text;
 using BoundingBox = GeoAPI.Geometries.Envelope;
 using Geometry = GeoAPI.Geometries.IGeometry;
@@ -48,6 +47,36 @@ namespace SharpMap.Data.Providers
     {
         static readonly ILog _logger = LogManager.GetLogger(typeof(SqlServer2008Ex));
 
+        private static bool _isSqlTypesLoaded;
+        private static readonly object _loadLock = new object();
+        
+        /// <summary>
+        /// Ensure SqlServerTypes (x32 or x64) are loaded at runtime
+        /// </summary>
+        static  SqlServer2008Ex()
+        {
+            if (!_isSqlTypesLoaded)
+                lock(_loadLock)
+                    if (!_isSqlTypesLoaded)
+                    {
+                        try
+                        {
+                            SqlServerTypes.Utilities.LoadNativeAssemblies(AppDomain.CurrentDomain.BaseDirectory);
+                            _isSqlTypesLoaded = true;
+                        }
+                        catch (Exception e)
+                        {
+                            Console.WriteLine(e);
+                            throw;
+                        }
+                    }
+        }
+
+        /// <summary>
+        /// placeholder method to be called by related classes causing static ctor to load types
+        /// </summary>
+        public static void LoadSqlServerTypes() {}
+        
         /// <summary>
         /// Always <code>true</code>. Both queries and client-side conversion will always attempt to repair invalid spatial objects 
         /// </summary>
