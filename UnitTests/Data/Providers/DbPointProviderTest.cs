@@ -11,9 +11,9 @@ namespace UnitTests.Data.Providers
     {
         private System.Data.Common.DbConnection _connection; // Keep connection active; when closed, the in-memory database is dropped
 
-        public override void TestFixtureSetup()
+        public override void OneTimeSetUp()
         {
-            base.TestFixtureSetup();
+            base.OneTimeSetUp();
             _connection = WriteSqlLite();
         }
 
@@ -45,8 +45,8 @@ namespace UnitTests.Data.Providers
             return conn;
         }
 
-        [TestFixtureTearDown]
-        public void TearDownTestFixture()
+        [OneTimeTearDown]
+        public void OneTimeTearDown()
         {
             _connection.Close();
         }

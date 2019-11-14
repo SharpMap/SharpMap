@@ -16,8 +16,8 @@ namespace UnitTests.Layers
     {
         private FeatureDataTable _featureDataTable;
 
-        [TestFixtureSetUp]
-        public void FixtureSetUp()
+        [OneTimeSetUp]
+        public void OneTimeSetUp()
         {
             var fdt = new FeatureDataTable();
             fdt.Columns.Add(new DataColumn("ID", typeof (int)));
@@ -81,8 +81,8 @@ namespace UnitTests.Layers
             }
         }
 
-        [TestFixtureTearDown]
-        public void FixtureTearDown()
+        [OneTimeTearDown]
+        public void OneTimeTearDown()
         {
             _featureDataTable.Dispose();
         }

@@ -20,8 +20,8 @@ namespace UnitTests.Data.Providers
             return "TestData";
         }
 
-        [TestFixtureSetUp]
-        public void SetupFixture()
+        [OneTimeSetUp]
+        public void OneTimeSetUp()
         {
             GeoAPI.GeometryServiceProvider.Instance = new NetTopologySuite.NtsGeometryServices();
         }

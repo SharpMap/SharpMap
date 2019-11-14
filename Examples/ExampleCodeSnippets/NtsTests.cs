@@ -6,8 +6,8 @@ namespace ExampleCodeSnippets
     [NUnit.Framework.TestFixture]
     public class NtsTests
     {
-        [NUnit.Framework.TestFixtureSetUp]
-        public void FixtureSetUp()
+        [NUnit.Framework.OneTimeSetUp]
+        public void OneTimeSetUp()
         {
             GeoAPI.GeometryServiceProvider.Instance =
                 NetTopologySuite.NtsGeometryServices.Instance;

@@ -24,7 +24,7 @@ namespace UnitTests.Converters
         private const string Polygon = "POLYGON ((20 20, 20 30, 30 30, 30 20, 20 20), (21 21, 21 29, 29 29, 29 21, 21 21))";
         private const string MultiPolygon = "MULTIPOLYGON (((20 20, 20 30, 30 30, 30 20, 20 20)), ((41 41, 41 49, 49 49, 49 41, 41 41)))";
 
-        [TestFixtureSetUp]
+        [OneTimeSetUp]
         public void SetupFixture()
         {
             GeoAPI.GeometryServiceProvider.Instance = new NetTopologySuite.NtsGeometryServices();
@@ -121,25 +121,23 @@ namespace UnitTests.Converters
         }
 
         [Test]
-        [ExpectedException(typeof(SqlGeometryConverterException))]
         public void FailingConversionGeom()
         {
             //Prepare data
             const string invalidMultiPolygon = "MULTIPOLYGON (((20 20, 20 30, 30 30, 30 20, 20 20)), ((21 21, 21 29, 29 29, 29 21, 21 21)))";
             Geometry gMP = GeometryFromWKT.Parse(invalidMultiPolygon);
             gMP.SRID = 4326;
-            Assert.AreEqual(gMP, ToSqlServerAndBack(gMP, SqlServerSpatialObjectType.Geometry));
+            Assert.Throws<SqlGeometryConverterException>(() => gMP = ToSqlServerAndBack(gMP, SqlServerSpatialObjectType.Geometry));
         }
 
         [Test]
-        [ExpectedException(typeof(SqlGeographyConverterException))]
         public void FailingConversionGeog()
         {
             //Prepare data
             const string invalidMultiPolygon = "MULTIPOLYGON (((20 20, 20 30, 30 30, 30 20, 20 20)), ((21 21, 21 29, 29 29, 29 21, 21 21)))";
             Geometry gMP = GeometryFromWKT.Parse(invalidMultiPolygon);
             gMP.SRID = 4326;
-            Assert.AreEqual(gMP, ToSqlServerAndBack(gMP, SqlServerSpatialObjectType.Geography));
+            Assert.Throws<SqlGeometryConverterException>(() => gMP = ToSqlServerAndBack(gMP, SqlServerSpatialObjectType.Geography));
         }
 
         private string GetTestFile()

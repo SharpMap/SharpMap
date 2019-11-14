@@ -14,7 +14,7 @@ namespace ExampleCodeSnippets
 
 
         [NUnit.Framework.Test]
-        [NUnit.Framework.Ignore]
+        [NUnit.Framework.Ignore("Nothing to see here")]
         public void TestConversionProjNet()
         {
             var csf = new ProjNet.CoordinateSystems.CoordinateSystemFactory();

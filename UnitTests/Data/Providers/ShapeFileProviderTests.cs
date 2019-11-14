@@ -10,8 +10,8 @@ namespace UnitTests.Data.Providers
         private long _msVector;
         private const int NumberOfRenderCycles = 1;
 
-        [NUnit.Framework.TestFixtureTearDown]
-        public void TestFixtureTearDown()
+        [NUnit.Framework.OneTimeTearDown]
+        public void OneTimeTearDown()
         {
             System.Diagnostics.Trace.WriteLine("Speed comparison:");
             System.Diagnostics.Trace.WriteLine("VectorLayer\tLinealLayer\tRatio");

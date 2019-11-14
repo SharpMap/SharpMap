@@ -154,8 +154,8 @@ namespace SharpMap.Data.Providers
         public SqlServerSpatialObjectType SpatialObjectType { get; private set; }
 
         /// <summary>
-        /// When <code>true</code>, attempts to repair invalid SqlServer spatial objects by appending .MakeValid() in SQL statements. 
-        /// Ignored for <see cref="SqlServerSpatialObjectType"/>.Geomtry 
+        /// When <c>true</c>, attempts to repair invalid SqlServer spatial objects by appending .MakeValid() in SQL statements. 
+        /// Ignored for <see cref="SqlServerSpatialObjectType"/>.Geometry 
         /// when <see cref="ForceSeekHint"/> or <see cref="ForceIndex"/> is enabled due to SQL Server query execution plan.
         /// </summary>
         public virtual Boolean ValidateGeometries { get; set; }

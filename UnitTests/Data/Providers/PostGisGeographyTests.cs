@@ -25,8 +25,8 @@ namespace UnitTests.Data.Providers
 
         private List<uint> _insertedIds = new List<uint>(100);
 
-        [TestFixtureSetUp]
-        public void FixtureSetup()
+        [OneTimeSetUp]
+        public void OneTimeSetUp()
         {
             try
             {
@@ -107,8 +107,8 @@ namespace UnitTests.Data.Providers
             }
         }
 
-        [TestFixtureTearDown]
-        public void FixtureTearDown()
+        [OneTimeTearDown]
+        public void OneTimeTearDown()
         {
             try
             {

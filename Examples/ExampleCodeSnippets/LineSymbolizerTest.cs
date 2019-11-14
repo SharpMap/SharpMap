@@ -123,8 +123,8 @@ public class StreetDirectionSymbolizer : SharpMap.Rendering.Symbolizer.BaseSymbo
 
     public class LineSymbolizerTest
     {
-        [NUnit.Framework.TestFixtureSetUp]
-        public void SetUp()
+        [NUnit.Framework.OneTimeSetUp]
+        public void OneTimeSetUp()
         {
             GeoAPI.GeometryServiceProvider.Instance = NetTopologySuite.NtsGeometryServices.Instance;
         }

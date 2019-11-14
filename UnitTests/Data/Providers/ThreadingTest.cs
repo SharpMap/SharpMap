@@ -64,9 +64,9 @@ namespace UnitTests.Data.Providers
             }
         }
 
-        public override void OnFixtureSetUp()
+        public override void OneTimeSetUp()
         {
-            base.OnFixtureSetUp();
+            base.OneTimeSetUp();
             ShapeFile.SpatialIndexFactory = new SharpSbnIndexFactory();
         }
 
@@ -159,11 +159,11 @@ namespace UnitTests.Data.Providers
             _provider.Close();
         }
 
-        [TestFixtureSetUp]
-        public virtual void OnFixtureSetUp()
-        {}
+        [OneTimeSetUp]
+        public virtual void OneTimeSetUp()
+        {
 
-
+        }
         protected Envelope GetRandomEnvelope()
         {
             var minX = NextRandom(-0.1, 0.5, _extents.MinX, _extents.Width);
@@ -357,8 +357,8 @@ namespace UnitTests.Data.Providers
             SignalRun((int)arguments);
         }
 
-        [TestFixtureTearDown]
-        public void TearDown()
+        [OneTimeTearDown]
+        public void OneTimeTearDown()
         {
             _provider.Dispose();
         }

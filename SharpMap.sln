@@ -19,6 +19,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{A5E400B4
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{AEBB513B-1509-439F-BA86-FA9413BF8D8C}"
 	ProjectSection(SolutionItems) = preProject
+		README.md = README.md
+		SharpMap.Logo.png = SharpMap.Logo.png
 		SharpMap.sln.DotSettings = SharpMap.sln.DotSettings
 	EndProjectSection
 EndProject

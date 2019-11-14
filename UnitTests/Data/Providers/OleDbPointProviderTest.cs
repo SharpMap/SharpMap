@@ -9,9 +9,9 @@ namespace UnitTests.Data.Providers
     {
         private string _tableName;
 
-        public override void TestFixtureSetup()
+        public override void OneTimeSetUp()
         {
-            base.TestFixtureSetup();
+            base.OneTimeSetUp();
 
             try
             {

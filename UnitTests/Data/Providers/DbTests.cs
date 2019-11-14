@@ -3,8 +3,8 @@
     [NUnit.Framework.TestFixture]
     public abstract class DbTests<TProvider> where TProvider : SharpMap.Data.Providers.SpatialDbProvider
     {
-        [NUnit.Framework.TestFixtureSetUp]
-        public void FixtureSetUp()
+        [NUnit.Framework.OneTimeSetUp]
+        public void OneTimeSetUp()
         {
             try
             {

@@ -15,8 +15,8 @@ namespace UnitTests.WFS
     [Ignore("Tests disabled because they download external schemas from the internet")]
     public class RequestValidationTest
     {
-        [TestFixtureSetUp]
-        public void SetupFixture()
+        [OneTimeSetUp]
+        public void OneTimeSetUp()
         {
             GeoAPI.GeometryServiceProvider.Instance = new NetTopologySuite.NtsGeometryServices();
         }

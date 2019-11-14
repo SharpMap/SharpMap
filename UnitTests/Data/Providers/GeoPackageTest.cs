@@ -11,8 +11,8 @@ namespace UnitTests.Data.Providers
 {
     public class GeoPackageTest
     {
-        [TestFixtureSetUp]
-        public void Setup()
+        [OneTimeSetUp]
+        public void OneTimeSetUp()
         {
             GeoAPI.GeometryServiceProvider.Instance = new NtsGeometryServices();
 #if LINUX

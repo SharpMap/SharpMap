@@ -98,7 +98,7 @@ public static void EnsureVisible(SharpMap.Map map, GeoAPI.Geometries.Coordinate 
             System.Console.WriteLine(map.Center);
         }
 
-        [Test, Ignore]
+        [Test, Ignore("Utility, not a test")]
         public void CreateKnownColors()
         {
             Console.WriteLine("/// <summary>");
@@ -109,7 +109,7 @@ public static void EnsureVisible(SharpMap.Map map, GeoAPI.Geometries.Coordinate 
             Console.WriteLine("    /// <summary>");
             Console.WriteLine("    /// Creates an instance of this class");
             Console.WriteLine("    /// </summary>");
-            Console.WriteLine("    /// <param name=\"argb\">The ARBB value</param>");
+            Console.WriteLine("    /// <param name=\"argb\">The ARGB value</param>");
             Console.WriteLine("    public ArgbValueAttribute(int argb)\n    {");
             Console.WriteLine("            Argb = argb;\n    }");
             Console.WriteLine("    /// <summary>");

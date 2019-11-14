@@ -14,8 +14,8 @@ namespace UnitTests.Data.Providers
     [TestFixture]
     public class KmlProviderTests
     {
-        [TestFixtureSetUp]
-        public void SetUp()
+        [OneTimeSetUp]
+        public void OneTimeSetUp()
         {
             GeoAPI.GeometryServiceProvider.Instance = NetTopologySuite.NtsGeometryServices.Instance;
         }

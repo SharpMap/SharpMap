@@ -102,11 +102,10 @@ namespace UnitTests
         }
 
         [Test]
-        [ExpectedException(typeof(InvalidOperationException))]
         public void GetExtents_EmptyMap_ThrowInvalidOperationException()
         {
             Map map = new Map(new Size(2, 1));
-            map.ZoomToExtents();
+            Assert.Throws<InvalidOperationException>( () => map.ZoomToExtents() );
         }
 
         [Test]
@@ -229,11 +228,10 @@ namespace UnitTests
         }
 
         [Test]
-        [ExpectedException(typeof(InvalidOperationException))]
         public void GetMap_RenderEmptyMap_ThrowInvalidOperationException()
         {
             Map map = new Map(new Size(2, 1));
-            map.GetMap();
+            Assert.Throws<InvalidOperationException>(() => map.GetMap() );
         }
 
         [Test]

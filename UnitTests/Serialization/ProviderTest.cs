@@ -8,8 +8,8 @@ namespace UnitTests.Serialization
 {
     public class ProviderTest : BaseSerializationTest
     {
-        [TestFixtureSetUp]
-        public void FixtureSetUp()
+        [OneTimeSetUp]
+        public void OneTimeSetUp()
         {
             GeoAPI.GeometryServiceProvider.Instance = new NetTopologySuite.NtsGeometryServices();
         }

@@ -22,7 +22,7 @@
 
     <ItemGroup>
         <PackageReference Include="ProjNet4GeoAPI" Version="1.4.1" />
-        <PackageReference Include="NUnit" Version="2.7.1" />
+        <PackageReference Include="NUnit" Version="3.12.0" />
     </ItemGroup>
 
     <ItemGroup>

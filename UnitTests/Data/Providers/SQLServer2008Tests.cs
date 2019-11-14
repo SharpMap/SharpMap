@@ -13,8 +13,8 @@ namespace UnitTests.Data.Providers
     [NUnit.Framework.TestFixture]
     public class SQLServer2008Tests
     {
-        [TestFixtureSetUp]
-        public void SetupFixture()
+        [OneTimeSetUp]
+        public void OneTimeSetUp()
         {
             GeoAPI.GeometryServiceProvider.Instance = new NetTopologySuite.NtsGeometryServices();
         }
@@ -74,8 +74,8 @@ namespace UnitTests.Data.Providers
             return Path.Combine(Path.GetDirectoryName(this.GetType().Assembly.CodeBase.Replace("file:///", "")), @"TestData\");
         }
 
-        [TestFixtureSetUp]
-        public void SetupFixture()
+        [OneTimeSetUp]
+        public void OneTimeSetUp()
         {
             SqlConnectionStringBuilder connStrBuilder = new SqlConnectionStringBuilder(UnitTests.Properties.Settings.Default.SqlServer2008);
             if (string.IsNullOrEmpty(connStrBuilder.DataSource) || string.IsNullOrEmpty(connStrBuilder.InitialCatalog))
@@ -226,8 +226,8 @@ namespace UnitTests.Data.Providers
             }
         }
 
-        [TestFixtureTearDown]
-        public void TearDownTestFixture()
+        [OneTimeTearDown]
+        public void OneTimeTearDown()
         {
             SqlConnectionStringBuilder connStrBuilder = new SqlConnectionStringBuilder(UnitTests.Properties.Settings.Default.SqlServer2008);
             if (string.IsNullOrEmpty(connStrBuilder.DataSource) || string.IsNullOrEmpty(connStrBuilder.InitialCatalog))
@@ -337,11 +337,13 @@ namespace UnitTests.Data.Providers
 
         [NUnit.Framework.TestCase(SqlServerSpatialObjectType.Geometry)]
         [NUnit.Framework.TestCase(SqlServerSpatialObjectType.Geography)]
-        [ExpectedException(typeof(ArgumentOutOfRangeException))]
         public void TestSqlServer2008ExProviderOverridesValidateGeometries(SqlServerSpatialObjectType spatialType)
         {
-            SharpMap.Data.Providers.SqlServer2008 sq = GetTestProvider( SqlServerProviderMode.NativeSqlBytes, spatialType);
-            sq.ValidateGeometries = false;
+            Assert.Throws<ArgumentException>(() =>
+            {
+                var sq = GetTestProvider(SqlServerProviderMode.NativeSqlBytes, spatialType);
+                sq.ValidateGeometries = false;
+            });
         }
 
         [NUnit.Framework.TestCase(SqlServerSpatialObjectType.Geometry)]

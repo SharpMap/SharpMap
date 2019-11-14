@@ -26,8 +26,8 @@ namespace ExampleCodeSnippets
 
         }
 
-        [NUnit.Framework.TestFixtureSetUp]
-        public void FixtureSetUp()
+        [NUnit.Framework.OneTimeSetUp]
+        public void OneTimeSetUp()
         { }
 
         [NUnit.Framework.Test]

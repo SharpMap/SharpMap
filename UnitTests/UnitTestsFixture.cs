@@ -6,7 +6,7 @@
         private System.Diagnostics.Stopwatch _stopWatch;
         private const string ImageBase = "Images"; 
         
-        [NUnit.Framework.SetUp]
+        [NUnit.Framework.OneTimeSetUp]
         public void RunBeforeAnyTests()
         {
             var gss = new NetTopologySuite.NtsGeometryServices();
@@ -30,7 +30,7 @@
             _stopWatch.Start();
         }
 
-        [NUnit.Framework.TearDown]
+        [NUnit.Framework.OneTimeTearDown]
         public void RunAfterAllTests()
         {
             _stopWatch.Stop();

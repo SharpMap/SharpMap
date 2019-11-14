@@ -13,8 +13,8 @@ namespace UnitTests.Layers
     {
         private string _fileCacheRoot;
 
-        [TestFixtureSetUp]
-        public void TestFixtureSetUp()
+        [OneTimeSetUp]
+        public void OneTimeSetUp()
         {
             _fileCacheRoot = System.IO.Path.Combine(System.IO.Path.GetTempPath(), "BruTileFileCache");
         }

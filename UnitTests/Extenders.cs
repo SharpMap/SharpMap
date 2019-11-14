@@ -16,6 +16,7 @@
 using System;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.Linq;
 using System.Reactive.Linq;
 using GeoAPI.Geometries;
 using NUnit.Framework;
@@ -124,7 +125,7 @@ namespace UnitTests
 
         public static string GetDescription(this TestContext.TestAdapter adapter)
         {
-            return (string)adapter.Properties["_DESCRIPTION"];
+            return (string)adapter.Properties["_DESCRIPTION"].FirstOrDefault();
         }
     }
 }

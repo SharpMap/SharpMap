@@ -18,8 +18,8 @@ namespace UnitTests.CoordinateSystems
     [TestFixture]
     public class CoordinateSystemExtensionsTest
     {
-        [TestFixtureSetUp]
-        public void FixtureSetUp()
+        [OneTimeSetUp]
+        public void OneTimeSetUp()
         {
             var gss = new NtsGeometryServices();
             var css = new CoordinateSystemServices(

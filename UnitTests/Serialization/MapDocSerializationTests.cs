@@ -15,7 +15,7 @@ namespace UnitTests.Serialization
     [TestFixture]
     class MapDocSerializationTests
     {
-        [TestFixtureSetUp]
+        [OneTimeSetUp]
         public void OneTimeSetUp()
         {
             try
