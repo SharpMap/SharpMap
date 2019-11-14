@@ -50,17 +50,17 @@ namespace WPFSamples
             e.Handled = true;
         }
 
-        private void BgMapQuest_Click(object sender, RoutedEventArgs e)
+        private void BgStamenWaterColor_Click(object sender, RoutedEventArgs e)
         {
             WpfMap.BackgroundLayer = new SharpMap.Layers.TileAsyncLayer(
               BruTile.Predefined.KnownTileSources.Create(
-                BruTile.Predefined.KnownTileSource.MapQuestAerial), "MapQuest");
+                BruTile.Predefined.KnownTileSource.StamenWatercolor), "Stamen Watercolor");
 
             foreach (var menuItem in Menu.Items.OfType<MenuItem>())
             {
                 menuItem.IsChecked = false;
             }
-            BgMapQuest.IsChecked = true;
+            BgStamenWaterColor.IsChecked = true;
 
             WpfMap.ZoomToExtents();
             e.Handled = true;

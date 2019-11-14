@@ -20,7 +20,7 @@ namespace UnitTests.Data.Providers
             FeatureDataTable fdt = null;
             try
             {
-                var p = new Ogr(filePath);
+                var p = new OgrProvider(filePath);
                 p.SRID = 4326;
                 var layer = string.Empty;
                 if (!string.IsNullOrEmpty(layer)) p.LayerName = layer;

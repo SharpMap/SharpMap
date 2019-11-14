@@ -26,9 +26,8 @@ using GeoAPI;
 using GeoAPI.Geometries;
 using OSGeo.GDAL;
 using GeoAPI.CoordinateSystems;
-using ProjNet.CoordinateSystems;
 using GeoAPI.CoordinateSystems.Transformations;
-using ProjNet.CoordinateSystems.Transformations;
+using SharpMap.CoordinateSystems;
 using SharpMap.Data;
 using SharpMap.Extensions.Data;
 using Geometry = GeoAPI.Geometries.IGeometry;
@@ -472,12 +471,10 @@ namespace SharpMap.Layers
         // get raster projection
         public ICoordinateSystem GetProjection()
         {
-            var cFac = new CoordinateSystemFactory();
 
             try
             {
-                if (Projection != "")
-                    return cFac.CreateFromWkt(Projection);
+                return Session.Instance.CoordinateSystemServices.GetCoordinateSystem(SRID);
             }
             catch (Exception ee)
             {
@@ -613,10 +610,8 @@ namespace SharpMap.Layers
                 return;
             }
 
-            var cFac = new CoordinateSystemFactory();
-
             // get our two projections
-            ICoordinateSystem srcCoord = cFac.CreateFromWkt(Projection);
+            ICoordinateSystem srcCoord = GetProjection();
             ICoordinateSystem tgtCoord = mapProjection;
 
             // raster and map are in same projection, no need to transform
@@ -627,9 +622,8 @@ namespace SharpMap.Layers
             }
 
             // create transform
-            var ctFac = new CoordinateTransformationFactory();
-            CoordinateTransformation = ctFac.CreateFromCoordinateSystems(srcCoord, tgtCoord);
-            ReverseCoordinateTransformation = ctFac.CreateFromCoordinateSystems(tgtCoord, srcCoord);
+            CoordinateTransformation = Session.Instance.CoordinateSystemServices.CreateTransformation(srcCoord, tgtCoord);
+            ReverseCoordinateTransformation = Session.Instance.CoordinateSystemServices.CreateTransformation(tgtCoord, srcCoord);
         }
         // get boundary of raster
         private Envelope GetExtent()
@@ -764,7 +758,7 @@ namespace SharpMap.Layers
                     string wkt;
                     p.ImportFromEPSG(map.SRID);
                     p.ExportToWkt(out wkt);
-                    cs = new CoordinateSystemFactory().CreateFromWkt(wkt);
+                    cs = map.GetCoordinateSystem();
                 }
             }
             ReprojectToCoordinateSystem(cs);

@@ -27,16 +27,16 @@ namespace UnitTests.Data.Providers
         [TestFixtureSetUp]
         public void FixtureSetup()
         {
-            var connStrBuilder = new NpgsqlConnectionStringBuilder(Properties.Settings.Default.PostGis);
-            if (string.IsNullOrEmpty(connStrBuilder.Host) || string.IsNullOrEmpty(connStrBuilder.Database))
-            {
-                Assert.Ignore("Requires PostgreSQL connectionstring");
-            }
-
-
-            GeoAPI.GeometryServiceProvider.Instance = new NetTopologySuite.NtsGeometryServices();
             try
             {
+                GeoAPI.GeometryServiceProvider.Instance = new NetTopologySuite.NtsGeometryServices();
+
+                var connStrBuilder = new NpgsqlConnectionStringBuilder(Properties.Settings.Default.PostGis);
+                if (string.IsNullOrEmpty(connStrBuilder.Host) || string.IsNullOrEmpty(connStrBuilder.Database))
+                {
+                    Assert.Ignore("Requires PostgreSQL connectionstring");
+                }
+
                 // Set up sample table
                 using (var conn = new NpgsqlConnection(Properties.Settings.Default.PostGis))
                 {
@@ -111,15 +111,14 @@ namespace UnitTests.Data.Providers
         [TestFixtureTearDown]
         public void FixtureTearDown()
         {
-            var connStrBuilder = new NpgsqlConnectionStringBuilder(Properties.Settings.Default.PostGis);
-            if (string.IsNullOrEmpty(connStrBuilder.Host) || string.IsNullOrEmpty(connStrBuilder.Database))
-            {
-                return;
-            }
-
             try
             {
-                // Drop sample table
+                var connStrBuilder = new NpgsqlConnectionStringBuilder(Properties.Settings.Default.PostGis);
+                if (string.IsNullOrEmpty(connStrBuilder.Host) || string.IsNullOrEmpty(connStrBuilder.Database))
+                {
+                    return;
+                } // Drop sample table
+
                 using (var conn = new NpgsqlConnection(Properties.Settings.Default.PostGis))
                 {
                     conn.Open();
@@ -132,7 +131,9 @@ namespace UnitTests.Data.Providers
                     }
                 }
             }
-            catch { }
+            catch
+            {
+            }
         }
 
         private static SharpMap.Data.Providers.PostGIS GetTestProvider()

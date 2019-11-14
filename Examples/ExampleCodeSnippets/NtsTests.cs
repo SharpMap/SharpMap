@@ -1,4 +1,7 @@
-﻿namespace ExampleCodeSnippets
+﻿using System.Data.OleDb;
+using SharpMap.Data.Providers;
+
+namespace ExampleCodeSnippets
 {
     [NUnit.Framework.TestFixture]
     public class NtsTests
@@ -52,7 +55,7 @@
 
             var table = WriteCsv();
 
-            var p = new SharpMap.Data.Providers.OleDbPoint(
+            var p = new DbPoint(OleDbFactory.Instance, 
                 "Provider=" + Properties.Settings.Default.OleDbProvider + ";Data Source=\"" + System.IO.Path.GetTempPath() + "\";" +
                 "Extended Properties=\"text;HDR=Yes;FMT=Delimited\"", table, "ID", "X", "Y");
 

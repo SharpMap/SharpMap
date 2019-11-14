@@ -18,7 +18,7 @@
             </MenuItem>
             <MenuItem Header="_BackgroundMap">
                 <MenuItem Header="_OpenStreetMap" Name="BgOsm" Click="BgOSM_OnClick" IsCheckable="False"/>
-                <MenuItem Header="_MapQuest" Name="BgMapQuest" Click="BgMapQuest_Click" IsCheckable="False"/>
+                <MenuItem Header="_StamenWaterColor" Name="BgStamenWaterColor" Click="BgStamenWaterColor_Click" IsCheckable="False"/>
             </MenuItem>
         </Menu>
 

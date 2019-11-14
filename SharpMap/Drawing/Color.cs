@@ -11,9 +11,11 @@ namespace SharpMap.Drawing
         static Color()
         {
             KnownColorLookup = new Dictionary<KnownColor, int>();
+            var type = typeof(KnownColor);
             foreach (KnownColor knownColor in System.Enum.GetValues(typeof(KnownColor)))
             {
-                var argb = (ArgbValueAttribute) typeof(KnownColor).GetCustomAttribute(typeof(ArgbValueAttribute));
+                var fldInfo = type.GetField(knownColor.ToString());
+                var argb = (ArgbValueAttribute) fldInfo.GetCustomAttribute(typeof(ArgbValueAttribute));
                 KnownColorLookup.Add(knownColor, argb.Argb);
 
             }

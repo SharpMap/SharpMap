@@ -1,4 +1,3 @@
-#if !NETSTANDARD2_0
 // Copyright 2006 - Morten Nielsen (www.iter.dk)
 //
 // This file is part of SharpMap.
@@ -17,7 +16,8 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
 
 using System;
-using System.Data.OleDb;
+using System.Data.Common;
+using System.Reflection;
 
 namespace SharpMap.Data.Providers
 {
@@ -33,6 +33,29 @@ namespace SharpMap.Data.Providers
     public class OleDbPoint : DbPoint
     {
         /// <summary>
+        /// The OleDb provider factory
+        /// </summary>
+        private static readonly DbProviderFactory OleDbFactory;
+
+        /// <summary>
+        /// Static constructor to get a value for <see cref="OleDbFactory"/>
+        /// </summary>
+        static OleDbPoint()
+        {
+            try
+            {
+                const string aqn = "System.Data.OleDb.OleDbFactory, System.Data, Version = 4.0.0.0, Culture = neutral, PublicKeyToken = b77a5c561934e089";
+                var type = Type.GetType(aqn, true, false);
+                var fld = type.GetField("Instance", BindingFlags.Public | BindingFlags.Static);
+                OleDbFactory = (DbProviderFactory)fld.GetValue(null);
+            }
+            catch (Exception e)
+            {
+                throw new TypeInitializationException("SharpMap.Data.Providers.OleDbPoint", e);
+            }
+        }
+
+        /// <summary>
         /// Initializes a new instance of the OleDbPoint provider
         /// </summary>
         /// <param name="connectionString">The connection string</param>
@@ -41,9 +64,9 @@ namespace SharpMap.Data.Providers
         /// <param name="xColumn">The name of the x-ordinates column</param>
         /// <param name="yColumn">The name of the y-ordinates column</param>
         public OleDbPoint(string connectionString, string tableName, string oidColumnName, string xColumn, string yColumn)
-            : base(OleDbFactory.Instance, connectionString, tableName, oidColumnName, xColumn, yColumn)
+            : base(OleDbFactory, connectionString, tableName, oidColumnName, xColumn, yColumn)
         {
         }
     }
 }
-#endif
+

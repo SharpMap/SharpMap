@@ -247,7 +247,7 @@ namespace UnitTests.Rendering.Decoration.Graticule
         {
             var cacheFolder = "";//System.IO.Path.Combine(System.IO.Path.GetTempPath(), "BruTileCache", "Osm");
             var lyrBruTile = new TileLayer(
-                BruTile.Predefined.KnownTileSources.Create(BruTile.Predefined.KnownTileSource.OpenStreetMap),
+                BruTile.Predefined.KnownTileSources.Create(BruTile.Predefined.KnownTileSource.StamenTonerLite),
                 "Tiles", Color.Transparent, true, cacheFolder)
             {
                 SRID = 3857,

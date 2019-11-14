@@ -206,3 +206,6 @@ I[V|v][V|v]*.*
 # Microsoft.SqlServer.Types NuGet files
 **/SqlServerTypes/Loader.cs
 **/SqlServerTypes/readme.htm
+
+# Testrunner
+testrunner/**

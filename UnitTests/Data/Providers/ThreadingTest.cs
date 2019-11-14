@@ -112,6 +112,7 @@ namespace UnitTests.Data.Providers
         }
     }
 
+#if !LINUX
     [Ignore("Only run if you have a proper ManagedSpatiaLite connection")]
     public class ManagedSpatiaLiteThreadingTest : ThreadingTest
     {
@@ -120,6 +121,7 @@ namespace UnitTests.Data.Providers
         {
         }
     }
+#endif
 
     [Ignore("Only run if you have a proper sqlserver2008 connection")]
     public class SqlSever2008ThreadingTest : ThreadingTest

@@ -3,16 +3,16 @@
     <Import Project="$(SolutionDir)SharpMap.Common.props" />
 
     <PropertyGroup>
-        <TargetFrameworks>net40-client;net452;netstandard2.0</TargetFrameworks>
+        <TargetFramework>netstandard2.0</TargetFramework>
         <RootNamespace>SharpMap.Data.Providers</RootNamespace>
-        <Product>SharpMap.Data.Providers.GeoPackage</Product>
-        <Copyright>Copyright 2014 SharpMap - Team</Copyright>
+        <Product>SharpMap.Data.Providers.OracleSpatial</Product>
+        <Copyright>Copyright 2014-2019 SharpMap - Team</Copyright>
         <PackageTags>geopackage</PackageTags>
         <Description>This package contains a GeoPackage solution for SharpMap.</Description>
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="System.Data.SQLite.Core" Version="1.0.109.1" />
+      <PackageReference Include="System.Data.SQLite.Core" Version="1.0.112" />
     </ItemGroup>
 
     <ItemGroup>

@@ -21,9 +21,7 @@ using System.Drawing;
 using System.IO;
 using Common.Logging;
 using GeoAPI.Geometries;
-using Mono.Security.Protocol.Ntlm;
 using OSGeo.GDAL;
-using ProjNet.CoordinateSystems;
 using SharpMap.Data;
 using SharpMap.Data.Providers;
 

@@ -13,16 +13,23 @@ namespace UnitTests.Data.Providers
         {
             base.TestFixtureSetup();
 
-            // Check if the OLE DB provider is available
-            Microsoft.Win32.RegistryKey registryKey = 
-                Microsoft.Win32.Registry.ClassesRoot.OpenSubKey(Properties.Settings.Default.OleDbProvider);
-            if (registryKey != null)
+            try
             {
-                registryKey.Close();
+                // Check if the OLE DB provider is available
+                Microsoft.Win32.RegistryKey registryKey =
+                    Microsoft.Win32.Registry.ClassesRoot.OpenSubKey(Properties.Settings.Default.OleDbProvider);
+                if (registryKey != null)
+                {
+                    registryKey.Close();
+                }
+                else
+                {
+                    Assert.Ignore("OLE DB provider " + Properties.Settings.Default.OleDbProvider + " is not found.");
+                }
             }
-            else
+            catch (System.Security.SecurityException)
             {
-                Assert.Ignore("OLE DB provider " + Properties.Settings.Default.OleDbProvider + " is not found.");
+                Assert.Ignore($"Can't query if {Properties.Settings.Default.OleDbProvider} is installed.");
             }
 
             _tableName = WriteCsv();
@@ -135,7 +142,7 @@ namespace UnitTests.Data.Providers
         {
             using (var p = CreateProvider())
             {
-                var ext =p.GetExtents();
+                var ext = p.GetExtents();
                 var fds = new FeatureDataSet();
                 Assert.DoesNotThrow(() => p.ExecuteIntersectionQuery(ext, fds));
                 Assert.AreEqual(1, fds.Tables.Count);

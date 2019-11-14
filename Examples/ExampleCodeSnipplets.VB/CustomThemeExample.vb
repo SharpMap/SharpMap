@@ -17,24 +17,24 @@
 
     End Sub
 
-    Public Sub CustomThemeExample()
+    'Public Sub CustomThemeExample()
 
-        Dim map As New SharpMap.Map()
-        Dim prv As New SharpMap.Data.Providers.OleDbPoint("", "points", "fid", "x", "y")
-        Dim lyr As New SharpMap.Layers.VectorLayer("points", prv)
+    '    Dim map As New SharpMap.Map()
+    '    Dim prv As New SharpMap.Data.Providers.DataTablePoint("", "points", "fid", "x", "y")
+    '    Dim lyr As New SharpMap.Layers.VectorLayer("points", prv)
 
-        _testColumn = "Population"
-        _defaultStyle = lyr.Style
+    '    _testColumn = "Population"
+    '    _defaultStyle = lyr.Style
 
-        lyr.Theme = New SharpMap.Rendering.Thematics.CustomTheme(AddressOf StyleForValue)
-        map.Layers.Add(lyr)
-        map.ZoomToExtents()
+    '    lyr.Theme = New SharpMap.Rendering.Thematics.CustomTheme(AddressOf StyleForValue)
+    '    map.Layers.Add(lyr)
+    '    map.ZoomToExtents()
 
-        Using bmp As Drawing.Bitmap = map.GetMap()
-            bmp.Save("test.png")
-        End Using
+    '    Using bmp As Drawing.Bitmap = map.GetMap()
+    '        bmp.Save("test.png")
+    '    End Using
 
-    End Sub
+    'End Sub
 
     Public Function StyleForValue(row As SharpMap.Data.FeatureDataRow) As SharpMap.Styles.IStyle
 

@@ -1,8 +1,6 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
 
   <PropertyGroup>
-    <MSBuildCommunityTasksPath>$(MSBuildThisFileDirectory)BuildTools</MSBuildCommunityTasksPath>
-
     <UseTools35 Condition=" '$(UseTools35)' == '' ">true</UseTools35>
     <VersionTargetName Condition=" '$(UseTools35)' == 'true' ">VersionGit</VersionTargetName>
     <VersionTargetName Condition=" '$(UseTools35)' == 'false' ">VersionNoTools35</VersionTargetName>

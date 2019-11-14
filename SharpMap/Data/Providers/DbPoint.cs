@@ -55,19 +55,19 @@ namespace SharpMap.Data.Providers
         /// <summary>
         /// Initializes a new instance of the DbPoint provider
         /// </summary>
-        /// <param name="provider">The ADO.NET database provider factory</param>
+        /// <param name="providerFactory">The ADO.NET database provider factory</param>
         /// <param name="connectionString">The connection string</param>
         /// <param name="tableName">The name of the table</param>
         /// <param name="oidColumnName">The name of the object id column</param>
         /// <param name="xColumn">The name of the x-ordinates column</param>
         /// <param name="yColumn">The name of the y-ordinates column</param>
-        public DbPoint(DbProviderFactory provider, string connectionString, string tableName, string oidColumnName, string xColumn, string yColumn)
+        public DbPoint(DbProviderFactory providerFactory, string connectionString, string tableName, string oidColumnName, string xColumn, string yColumn)
         {
             Table = tableName;
             XColumn = xColumn;
             YColumn = yColumn;
             ObjectIdColumn = oidColumnName;
-            DbProvider = provider;
+            DbProvider = providerFactory;
             ConnectionString = connectionString;
         }
 

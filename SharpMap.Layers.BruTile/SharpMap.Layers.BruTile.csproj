@@ -3,10 +3,10 @@
     <Import Project="$(SolutionDir)SharpMap.Common.props" />
 
     <PropertyGroup>
-        <TargetFrameworks>net40-client;net452;netstandard2.0</TargetFrameworks>
+        <TargetFramework>netstandard2.0</TargetFramework>
         <RootNamespace>SharpMap</RootNamespace>
-        <Copyright>Copyright (c) 2011 - 2018 SharpMap - Team</Copyright>
-        <PackageTags>brutile basemap</PackageTags>
+        <Copyright>Copyright (c) 2011 - 2019 SharpMap - Team</Copyright>
+        <PackageTags>sharpmap brutile basemap</PackageTags>
         <Description>The package contains a base map layer solution based on BruTile.</Description>
     </PropertyGroup>
 
@@ -14,14 +14,9 @@
         <ProjectReference Include="..\SharpMap\SharpMap.csproj" />
     </ItemGroup>
 
-    <ItemGroup Condition=" '$(TargetFramework)' != 'net40-client' ">
-        <PackageReference Include="BruTile" Version="2.0.1" />
-        <PackageReference Include="BruTile.Desktop" Version="2.0.1" />
-    </ItemGroup>
-
-    <ItemGroup Condition=" '$(TargetFramework)' == 'net40-client' ">
-        <PackageReference Include="BruTile" Version="0.18.1" />
-        <PackageReference Include="BruTile.Desktop" Version="0.18.1" />
+    <ItemGroup>
+        <PackageReference Include="BruTile" Version="2.1.2" />
+        <PackageReference Include="BruTile.Desktop" Version="2.1.2" />
     </ItemGroup>
 
 </Project>

@@ -62,45 +62,45 @@ namespace SharpMap.Data.Providers
         private static readonly string SpatiaLitePath;
         private static readonly string SpatiaLiteNativeDll = "libspatialite-2.dll";
 
-        /// <summary>
-        /// Initializes Provider with information about where to find native spatialite library and how
-        /// it is named.
-        /// </summary>
-        static SpatiaLite()
-        {
-            try
-            {
-                var slBin = ConfigurationManager.AppSettings["SpatiaLiteNativeDll"];
-                if (!String.IsNullOrEmpty(slBin))
-                {
-                    SpatiaLiteNativeDll = slBin;
-                }
-                else
-                {
-                    logger.Warn("Path to native SpatiaLite binaries not configured, assuming they are in applications directory");
-                }
+        ///// <summary>
+        ///// Initializes Provider with information about where to find native spatialite library and how
+        ///// it is named.
+        ///// </summary>
+        //static SpatiaLite()
+        //{
+        //    try
+        //    {
+        //        var slBin = ConfigurationManager.AppSettings["SpatiaLiteNativeDll"];
+        //        if (!String.IsNullOrEmpty(slBin))
+        //        {
+        //            SpatiaLiteNativeDll = slBin;
+        //        }
+        //        else
+        //        {
+        //            logger.Warn("Path to native SpatiaLite binaries not configured, assuming they are in applications directory");
+        //        }
 
 
-                var slPath = ConfigurationManager.AppSettings["SpatiaLitePath"];
-                if (slPath == null)
-                    slPath = "";
-                SpatiaLitePath = slPath;
-                if (!string.IsNullOrEmpty(slPath))
-                {
-                    var path = Environment.GetEnvironmentVariable("path") ?? "";
-                    if (!path.ToLowerInvariant().Contains(slPath.ToLowerInvariant()))
-                        Environment.SetEnvironmentVariable("path", slPath + ";" + path);
-                }
-            }
-            catch (Exception ee)
-            {
-                SpatiaLitePath = "";
-                logger.Error("Error ininitializing SpatialLite", ee);
-            }
+        //        var slPath = ConfigurationManager.AppSettings["SpatiaLitePath"];
+        //        if (slPath == null)
+        //            slPath = "";
+        //        SpatiaLitePath = slPath;
+        //        if (!string.IsNullOrEmpty(slPath))
+        //        {
+        //            var path = Environment.GetEnvironmentVariable("path") ?? "";
+        //            if (!path.ToLowerInvariant().Contains(slPath.ToLowerInvariant()))
+        //                Environment.SetEnvironmentVariable("path", slPath + ";" + path);
+        //        }
+        //    }
+        //    catch (Exception ee)
+        //    {
+        //        SpatiaLitePath = "";
+        //        logger.Error("Error ininitializing SpatialLite", ee);
+        //    }
 
-            if (!System.IO.File.Exists(System.IO.Path.Combine(SpatiaLitePath, SpatiaLiteNativeDll)))
-                throw new System.IO.FileNotFoundException("SpatiaLite binaries not found under given path and filename");
-        }
+        //    if (!System.IO.File.Exists(System.IO.Path.Combine(SpatiaLitePath, SpatiaLiteNativeDll)))
+        //        throw new System.IO.FileNotFoundException("SpatiaLite binaries not found under given path and filename");
+        //}
 
         /// <summary>
         /// Gets or sets whether geometry definition lookup should use sql LIKE operator for name comparison.

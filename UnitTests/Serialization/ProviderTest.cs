@@ -24,23 +24,33 @@ namespace UnitTests.Serialization
                     return CreateProvider<GeometryProvider>();
                 case "shapefile":
                     return CreateProvider<ShapeFile>();
+                case "postgis":
+                    return CreateProvider<PostGIS>();
+#if !LINUX
                 case "managedspatialite":
                     return CreateProvider<ManagedSpatiaLite>();
                 case "spatialite":
                     return CreateProvider<SpatiaLite>();
-                case "postgis":
-                    return CreateProvider<PostGIS>();
+#endif            
             }
         }
-        
+
         internal static T CreateProvider<T>()
-            where T: IProvider
+        where T: IProvider
         {
             var gf = GeoAPI.GeometryServiceProvider.Instance.CreateGeometryFactory();
 
             if (typeof(T) == typeof(GeometryProvider))
                 return (T)(IProvider)new GeometryProvider(gf.CreatePoint(new Coordinate(1, 1)));
 
+            if (typeof(T) == typeof(ShapeFile))
+                return (T)(IProvider)new ShapeFile(Path.Combine("TestData", "roads_ugl.shp"));
+
+            if (typeof(T) == typeof(PostGIS))
+                return (T)(IProvider)new PostGIS("Host=127.0.0.1;Port=5432;User Id=postgres;Password=1.Kennwort;database=postgis_sample;",
+                    "rivers", "wkb_geometry", "ogc_fid");
+
+#if !LINUX
             if (typeof(T) == typeof(ManagedSpatiaLite))
                 return (T)(IProvider)new ManagedSpatiaLite($"Data Source={Path.Combine("TestData", "test-2.3.sqlite")};",
                                                             "HighWays", "Geometry", "PK_UID");
@@ -49,17 +59,10 @@ namespace UnitTests.Serialization
                 return (T)(IProvider)new SpatiaLite($"Data Source={Path.Combine("TestData", "test-2.3.sqlite")};",
                                                             "HighWays", "Geometry", "PK_UID");
 
-            if (typeof(T) == typeof(ShapeFile))
-                return (T)(IProvider)new ShapeFile(Path.Combine("TestData", "roads_ugl.shp"));
-
-#if !LINUX
             if (typeof(T) == typeof(SqlServer2008))
                 return (T)(IProvider)new SqlServer2008("Data Source=IVV-SQLD; Database=OBE;Integrated Security=SSPI;",
                                                        "Roads", "wkb_geometry", "ogc_fid", SqlServerSpatialObjectType.Geometry);
 #endif
-            if (typeof(T) == typeof(PostGIS))
-                return (T)(IProvider)new PostGIS("Host=127.0.0.1;Port=5432;User Id=postgres;Password=1.Kennwort;database=postgis_sample;",
-                                                    "rivers", "wkb_geometry", "ogc_fid");
             throw new NotSupportedException();
         }
 
@@ -75,7 +78,7 @@ namespace UnitTests.Serialization
 
             Assert.IsTrue(gpS.Geometries[0].Coordinate.X == 1);
         }
-
+#if !LINUX
         [Test]
         public void TestSpatiaLite2()
         {
@@ -90,6 +93,7 @@ namespace UnitTests.Serialization
             Assert.AreEqual(spatiaLite2S.ObjectIdColumn, spatiaLite2.ObjectIdColumn);
             Assert.AreEqual(spatiaLite2S.SRID, spatiaLite2.SRID);
         }
+#endif
 
         [Test, Ignore("Postgres Connection string needs to be ok")]
         public void TestPostGIS()

@@ -1,11 +1,16 @@
 language: csharp
 mono: latest
-dotnet: 2.1.402
+sudo: false
+dotnet: 3.0
+dist: bionic
+
+before_install:
+  - sudo apt-get install -y dotnet-runtime-2.2
+
 install:
-- nuget install NUnit.Runners -Version 2.6.4 -OutputDirectory testrunner
+- nuget install NUnit.Runners -Version 2.7.1 -OutputDirectory testrunner
 script:
 - nuget restore SharpMap.sln
 - dotnet msbuild SharpMap.targets /t:Version /p:UseTools35=false /v:minimal
 - dotnet msbuild SharpMap.sln /m "/t:Restore;Build" /p:Configuration=ReleaseLinux "/p:Platform=Any CPU" /p:UseTools35=false "/p:FrameworkPathOverride=$(dirname $(which mono))/../lib/mono/4.5/" /v:minimal /p:WarningLevel=3
-- cp SharpMap/SpatialRefSys.xml UnitTests/bin/
-- mono testrunner/NUnit.Runners.2.6.4/tools/nunit-console.exe --nothread --exclude:RequiresWindows UnitTests/bin/UnitTests.dll
+- mono testrunner/NUnit.Runners.2.7.1/tools/nunit-console.exe --nothread --exclude:RequiresWindows UnitTests/bin/ReleaseLinux/net472/UnitTests.dll

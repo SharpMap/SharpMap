@@ -14,12 +14,12 @@
         <Revision>0</Revision>
     </PropertyGroup>
 
-    <PropertyGroup Condition=" '$(TargetFramework)' == 'net40-client' Or '$(TargetFramework)' == 'net452'">
+    <PropertyGroup Condition=" '$(TargetFramework)' == 'net40-client' Or '$(TargetFramework)' == 'net452' Or '$(TargetFramework)' == 'net472'">
         <RequiresFrameworkAssemblyReferences>true</RequiresFrameworkAssemblyReferences>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'ReleaseLinux' ">
-        <AssetTargetFallback Condition=" '$(TargetFramework)' == 'net40-client' ">net452</AssetTargetFallback>
+        <AssetTargetFallback Condition=" '$(TargetFramework)' == 'net40-client' ">net472</AssetTargetFallback>
     </PropertyGroup>
 
     <PropertyGroup>
@@ -27,12 +27,19 @@
         <RepositoryType>git</RepositoryType>
         <PackageProjectUrl>https://github.com/SharpMap/SharpMap</PackageProjectUrl>
         <RepositoryUrl>https://github.com/SharpMap/SharpMap.git</RepositoryUrl>
+        <!--
         <PackageIconUrl>https://avatars1.githubusercontent.com/u/8349804??v=3&amp;amp;s=120</PackageIconUrl>
-        <PackageLicenseUrl>https://raw.githubusercontent.com/SharpMap/SharpMap/Branches/1.0/license.txt</PackageLicenseUrl>
+        -->
+        <PackageIcon>SharpMap.Logo.png</PackageIcon>
+        <PackageLicense>LGPL-2.1-or-later</PackageLicense>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <AssemblyVersion>$(Major).$(Minor).$(Build)</AssemblyVersion>
         <FileVersion>$(Major).$(Minor).$(Build).$(Revision)</FileVersion>
         <Version>$(Major).$(Minor).$(Build)-pre1</Version>
     </PropertyGroup>
+
+    <ItemGroup>
+        <None Include="$(SolutionDir)SharpMap.Logo.png" Pack="true" PackagePath="\"/>
+    </ItemGroup>
 
 </Project>

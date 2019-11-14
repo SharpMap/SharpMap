@@ -20,15 +20,9 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data;
 using GeoAPI.Geometries;
-#if GisSharpBlog
-using GisSharpBlog.NetTopologySuite.Features;
-using GisSharpBlog.NetTopologySuite.Geometries;
-using NtsGeometry = GisSharpBlog.NetTopologySuite.Geometries.Geometry;
-#else
 using NetTopologySuite.Features;
 using NetTopologySuite.Geometries;
 using NtsGeometry = NetTopologySuite.Geometries.Geometry;
-#endif
 
 using Geometry = GeoAPI.Geometries.IGeometry;
 using BoundingBox = GeoAPI.Geometries.Envelope;
@@ -154,7 +148,7 @@ namespace SharpMap.Data.Providers
         /// <seealso cref="NetTopologySuite.Geometries.PrecisionModel"/>     
         /// <seealso cref="NetTopologySuite.Geometries.GeometryFactory"/>
         public NtsProvider(IProvider provider,
-            PrecisionModel precisionModel) : this(precisionModel)
+            IPrecisionModel precisionModel) : this(precisionModel)
         {
             BuildFromProvider(provider);
         }

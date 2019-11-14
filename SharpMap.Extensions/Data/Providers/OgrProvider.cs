@@ -370,7 +370,7 @@ namespace SharpMap.Data.Providers
         public override int GetFeatureCount()
         {
             using(var ogrLayer = GetLayer(_layerIndex))
-                return ogrLayer.GetFeatureCount(1);
+                return (int)ogrLayer.GetFeatureCount(1);
         }
 
         /// <summary>
@@ -675,14 +675,15 @@ namespace SharpMap.Data.Providers
                     case OgrFieldType.OFTDate:
                     case OgrFieldType.OFTDateTime:
                     case OgrFieldType.OFTTime:
-                        Int32 y, m, d, h, mi, s, tz;
+                        int y, m, d, h, mi, tz;
+                        float s;
                         ogrFeature.GetFieldAsDateTime(iField, out y, out m, out d, out h, out mi, out s, out tz);
                         try
                         {
                             if (y == 0 && m == 0 && d == 0)
                                 values[iField] = DateTime.MinValue.AddMinutes(h * 60 + mi);
                             else
-                                values[iField] = new DateTime(y, m, d, h, mi, s);
+                                values[iField] = new DateTime(y, m, d, h, mi, (int)s);
                         }
 // ReSharper disable once EmptyGeneralCatchClause
                         catch { }

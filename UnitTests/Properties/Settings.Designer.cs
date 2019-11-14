@@ -65,8 +65,7 @@ namespace UnitTests.Properties {
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
-        [global::System.Configuration.DefaultSettingValueAttribute("Server=ivv-t3s.ivv-aachen.de;Port=5432;database=postgis_sample;Integrated Securit" +
-            "y=true;")]
+        [global::System.Configuration.DefaultSettingValueAttribute("Server=ivv-t3s.ivv-aachen.de;Port=5432;database=postgis_sample;Integrated Security=true;")]
         public string PostGis {
             get {
                 return ((string)(this["PostGis"]));
