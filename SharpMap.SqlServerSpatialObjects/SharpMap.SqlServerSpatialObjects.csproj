@@ -91,10 +91,22 @@
     </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Target Name="BeforeBuild" Condition=" !Exists('SqlServerTypes\Loader.cs') ">
+      <ItemGroup>
+          <SqlServerFiles Include="$(SolutionDir)packages\Microsoft.SqlServer.Types.14.0.1016.290\content\SqlServerTypes\**"/>
+      </ItemGroup>
+      <ItemGroup>
+          <SqlServerFilesX86 Include="$(SolutionDir)packages\Microsoft.SqlServer.Types.14.0.1016.290\nativeBinaries\x86\**"/>
+      </ItemGroup>
+      <ItemGroup>
+          <SqlServerFilesX64 Include="$(SolutionDir)packages\Microsoft.SqlServer.Types.14.0.1016.290\nativeBinaries\x64\**"/>
+      </ItemGroup>
+      <Copy SourceFiles="@(SqlServerFiles)" DestinationFolder="$(MSBuildProjectDirectory)\SqlServerTypes" />
+      <Copy SourceFiles="@(SqlServerFilesX86)" DestinationFolder="$(MSBuildProjectDirectory)\SqlServerTypes\x86" />
+      <Copy SourceFiles="@(SqlServerFilesX64)" DestinationFolder="$(MSBuildProjectDirectory)\SqlServerTypes\x64" />
+  </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
   <Target Name="AfterBuild">
   </Target>
   -->
