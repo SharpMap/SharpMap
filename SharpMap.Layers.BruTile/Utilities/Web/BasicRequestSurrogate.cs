@@ -3,8 +3,9 @@
 using System.Collections.Generic;
 using System.Reflection;
 using System.Runtime.Serialization;
+using BruTile.Web;
 
-namespace BruTile.Web
+namespace SharpMap.Utilities.Web
 {
     internal class BasicRequestSurrogate : ISerializationSurrogate
     {

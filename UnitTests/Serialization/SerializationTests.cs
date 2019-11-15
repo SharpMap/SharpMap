@@ -4,20 +4,22 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
+using BruTile;
 using BruTile.Cache;
 using BruTile.MbTiles;
 using BruTile.Predefined;
+using BruTile.Serialization.Tests;
 using BruTile.Web;
 using BruTile.Wmts;
 using NUnit.Framework;
-using UnitTests.Serialization;
+using SharpMap.Utilities;
 
-namespace BruTile.Serialization.Tests
+namespace UnitTests.Serialization
 {
-    [Category("BruTile"), Ignore("Fix first")]
+    [Category("BruTile")]
     public class SerializationTests
     {
         [Test]
@@ -134,6 +136,7 @@ namespace BruTile.Serialization.Tests
         #region Tile sources
 
         [Ignore("Needs internet connection")]
+        [Category("Internet")]
         [TestCase("http://tiles.geoservice.dlr.de/service/wmts?SERVICE=WMTS&REQUEST=GetCapabilities")]
         public void TestWmtsTileSource(string url)
         {
@@ -222,7 +225,29 @@ namespace BruTile.Serialization.Tests
 
         }
 
+        [Test]
+        public void TestHttpTileProvider()
+        {
+            var srcS = new HttpTileProvider(new BasicRequest("http://{s}.tile.opencyclemap.org/cycle/{z}/{x}/{y}.png", new [] {"a", "b"}), userAgent: "HUHU");
+            var srcD = SandD(srcS);
+            Assert.IsNotNull(srcD);
+        }
 
+        [Test]
+        public void TestNullCache()
+        {
+            var srcS = new NullCache();
+            var srcD = SandD(srcS);
+            Assert.IsNotNull(srcD);
+        }
+
+        [TestCase("http://{s}.tile.opencyclemap.org/cycle/{z}/{x}/{y}.png", new[] { "a", "b" }, null)]
+        public void TestBasicRequest(string urlFormatter, IEnumerable<string> serverNodes, string apiKey)
+        {
+            var srcS = new BasicRequest(urlFormatter, serverNodes, apiKey);
+            var srcD = SandD(srcS);
+            Assert.IsNotNull(srcD);
+        }
         #endregion
 
         #region private helper methods

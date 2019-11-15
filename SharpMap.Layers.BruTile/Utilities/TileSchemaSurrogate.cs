@@ -1,12 +1,13 @@
 ﻿// Copyright (c) BruTile developers team. All rights reserved. See License.txt in the project root for license information.
+
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Reflection;
 using System.Runtime.Serialization;
+using BruTile;
 using BruTile.Wmts;
 
-namespace BruTile
+namespace SharpMap.Utilities
 {
     internal class TileSchemaSurrogate : ISerializationSurrogate
     {
@@ -41,7 +42,8 @@ namespace BruTile
             var ts = (TileSchema) obj;
             ts.Name = info.GetString("name");
             ts.Srs = info.GetString("srs");
-            ts.Extent = (Extent)info.GetValue("extent", typeof(Extent));
+            var extentRef = (ExtentSurrogate.ExtentRef)info.GetValue("extent", typeof(ExtentSurrogate.ExtentRef));
+            ts.Extent = (Extent) ((IObjectReference) extentRef).GetRealObject(context);
             ts.OriginX = info.GetDouble("originX");
             ts.OriginY = info.GetDouble("originY");
             //ts.Width = info.GetInt32("width");
@@ -104,7 +106,8 @@ namespace BruTile
                 var ts = (WmtsTileSchema)obj;
                 ts.Name = info.GetString("name");
                 ts.Srs = info.GetString("srs");
-                ts.Extent = (Extent)info.GetValue("extent", typeof(Extent));
+                var extentRef = (ExtentSurrogate.ExtentRef)info.GetValue("extent", typeof(ExtentSurrogate.ExtentRef));
+                ts.Extent = (Extent)((IObjectReference)extentRef).GetRealObject(context);
                 ts.Format = info.GetString("format");
 
                 var type = (Type)info.GetValue("resolutionsType", typeof(Type));

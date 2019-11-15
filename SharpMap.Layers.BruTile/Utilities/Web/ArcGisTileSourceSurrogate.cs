@@ -3,8 +3,10 @@
 using System;
 using System.Reflection;
 using System.Runtime.Serialization;
+using BruTile;
+using BruTile.Web;
 
-namespace BruTile.Web
+namespace SharpMap.Utilities.Web
 {
     internal class ArcGisTileSourceSurrogate : ISerializationSurrogate
     {

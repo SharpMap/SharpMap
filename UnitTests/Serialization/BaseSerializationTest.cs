@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
+using SharpMap.Utilities;
 
 namespace UnitTests.Serialization
 {
@@ -22,7 +23,7 @@ namespace UnitTests.Serialization
             if (formatter.SurrogateSelector == null)
                 formatter.SurrogateSelector = new SurrogateSelector();
             formatter.SurrogateSelector.ChainSelector(SharpMap.Utilities.Surrogates.GetSurrogateSelectors());
-            BruTile.Utility.AddBruTileSurrogates(formatter);
+            Utility.AddBruTileSurrogates(formatter);
             return formatter;
         }
     }

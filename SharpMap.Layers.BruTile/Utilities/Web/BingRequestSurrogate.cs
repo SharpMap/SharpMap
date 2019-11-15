@@ -2,8 +2,9 @@
 
 using System;
 using System.Runtime.Serialization;
+using BruTile.Web;
 
-namespace BruTile.Web
+namespace SharpMap.Utilities.Web
 {
     [Obsolete]
     internal class BingRequestSurrogate : ISerializationSurrogate

@@ -5,11 +5,6 @@ VisualStudioVersion = 16.0.29503.13
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Examples", "Examples", "{480154D8-0960-416E-AE45-AF6B06794F77}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docs", "Docs", "{7F47E0CC-DB03-4E1F-B409-C861154D42C5}"
-	ProjectSection(SolutionItems) = preProject
-		Docs\SharpMap-Dependencies.png = Docs\SharpMap-Dependencies.png
-	EndProjectSection
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{A5E400B4-8360-4259-BDDD-292A134D14CC}"
 	ProjectSection(SolutionItems) = preProject
 		.travis.yml = .travis.yml

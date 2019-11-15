@@ -1,7 +1,9 @@
 ﻿// Copyright (c) BruTile developers team. All rights reserved. See License.txt in the project root for license information.
-using System.Runtime.Serialization;
 
-namespace BruTile
+using System.Runtime.Serialization;
+using BruTile;
+
+namespace SharpMap.Utilities
 {
     internal class ResolutionSurrogate : ISerializationSurrogate
     {
@@ -9,32 +11,32 @@ namespace BruTile
         internal class ResolutionRef : IObjectReference, ISerializable
         {
             private readonly Resolution _resolution;
-                /// <summary>
-                /// Serialization constructor
-                /// </summary>
-                /// <param name="info"></param>
-                /// <param name="context"></param>
-                public ResolutionRef(SerializationInfo info, StreamingContext context)
-                {
-                    _resolution = new Resolution(
-                        info.GetString("id"), info.GetDouble("upp"),
-                        info.GetInt32("th"), info.GetInt32("tw"),
-                        info.GetDouble("t"), info.GetDouble("l"),
-                        info.GetInt32("mw"), info.GetInt32("mh"),
-                        info.GetDouble("sd"));
-                }
-
-
-                object IObjectReference.GetRealObject(StreamingContext context)
-                {
-                    return _resolution;
-                }
-
-                void ISerializable.GetObjectData(SerializationInfo info, StreamingContext context)
-                {
-                    throw new System.NotSupportedException();
-                }
+            /// <summary>
+            /// Serialization constructor
+            /// </summary>
+            /// <param name="info"></param>
+            /// <param name="context"></param>
+            public ResolutionRef(SerializationInfo info, StreamingContext context)
+            {
+                _resolution = new Resolution(
+                    info.GetString("id"), info.GetDouble("upp"),
+                    info.GetInt32("th"), info.GetInt32("tw"),
+                    info.GetDouble("t"), info.GetDouble("l"),
+                    info.GetInt32("mw"), info.GetInt32("mh"),
+                    info.GetDouble("sd"));
             }
+
+
+            object IObjectReference.GetRealObject(StreamingContext context)
+            {
+                return _resolution;
+            }
+
+            void ISerializable.GetObjectData(SerializationInfo info, StreamingContext context)
+            {
+                throw new System.NotSupportedException();
+            }
+        }
 
         
 
@@ -57,7 +59,7 @@ namespace BruTile
 
         public object SetObjectData(object obj, SerializationInfo info, StreamingContext context, ISurrogateSelector selector)
         {
-                return null;
+            return null;
         }
 
         #endregion

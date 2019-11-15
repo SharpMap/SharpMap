@@ -2,8 +2,9 @@
 
 using System.Collections.Generic;
 using System.Runtime.Serialization;
+using BruTile.Wmts;
 
-namespace BruTile.Wmts
+namespace SharpMap.Utilities.Wmts
 {
     internal class WmtsRequestSurrogate : ISerializationSurrogate
     {

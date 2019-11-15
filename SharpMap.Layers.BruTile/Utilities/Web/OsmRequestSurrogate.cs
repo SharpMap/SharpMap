@@ -1,9 +1,6 @@
 ﻿// Copyright (c) BruTile developers team. All rights reserved. See License.txt in the project root for license information.
-using System;
-using System.Reflection;
-using System.Runtime.Serialization;
 
-namespace BruTile.Web
+namespace SharpMap.Utilities.Web
 {
     //[Obsolete]
     //internal class OsmRequestSurrogate : ISerializationSurrogate

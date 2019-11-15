@@ -5,6 +5,7 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.Linq;
 using System.Reactive.Linq;
+using System.Threading.Tasks;
 using GeoAPI.Geometries;
 using Moq;
 using NUnit.Framework;
@@ -1240,7 +1241,7 @@ namespace UnitTests
         }
 
         [TestCase(LayerCollectionType.Background, Description = "Map should not fire MapNewTileAvailable event for TileAsyncLayers added to detached collections, case BackgroundLayers")]
-        public void Map_TileAsyncAddedToDetachedCollection_DoesNotFireMapNewTileAvailable(LayerCollectionType collectionType)
+        public async Task Map_TileAsyncAddedToDetachedCollection_DoesNotFireMapNewTileAvailable(LayerCollectionType collectionType)
         {
             var map = new Map();
 
@@ -1256,7 +1257,9 @@ namespace UnitTests
 
             var eventSource = map.GetMapNewTileAvailableAsObservable();
             RaiseMapNewtileAvailableOn(tileAsync);
-            Assert.That(eventSource.Count().First(), Is.EqualTo(0), TestContext.CurrentContext.Test.GetDescription());
+            int count = await eventSource.Count();
+
+            Assert.That(count, Is.EqualTo(0), TestContext.CurrentContext.Test.GetDescription());
         }
 
         [Test(Description = "Removing a non empty group from layers empties the collection")]

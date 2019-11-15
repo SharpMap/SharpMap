@@ -1,17 +1,23 @@
 ﻿// Copyright (c) BruTile developers team. All rights reserved. See License.txt in the project root for license information.
+
 using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Runtime.Serialization;
+using BruTile;
 using BruTile.Cache;
 using BruTile.Predefined;
 using BruTile.Tms;
 using BruTile.Web;
 using BruTile.Wmsc;
 using BruTile.Wmts;
-using BruTile.Wmts.Generated;
+using SharpMap.Utilities.Cache;
+using SharpMap.Utilities.Predefined;
+using SharpMap.Utilities.Web;
+using SharpMap.Utilities.Wmts;
+using SharpMap.Utilities.Wmts.Generated;
 
-namespace BruTile
+namespace SharpMap.Utilities
 {
     public static class Utility
     {
@@ -130,6 +136,9 @@ namespace BruTile
             ss.AddSurrogate(typeof (MemoryCache<System.Drawing.Bitmap>),
                             new StreamingContext(StreamingContextStates.All),
                             new MemoryCacheSurrogate<System.Drawing.Bitmap>());
+            ss.AddSurrogate(typeof(FileCache),
+                new StreamingContext(StreamingContextStates.All),
+                new FileCacheSurrogate());
 
             // Predefined
             var tss1 = new TileSchemaSurrogate();
