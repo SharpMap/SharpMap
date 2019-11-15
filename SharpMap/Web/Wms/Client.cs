@@ -562,12 +562,13 @@ namespace SharpMap.Web.Wms
         #region Methods
 
         /// <summary>
-        /// Downloads servicedescription from WMS service  
+        /// Downloads the service description from WMS service  
         /// </summary>
-        /// <returns>XmlDocument from Url. Null if Url is empty or inproper XmlDocument</returns>
+        /// <returns><c>XmlDocument</c> from <see cref="CapabilitiesUrl"/>.</returns>
+        /// <exception cref="ApplicationException">Thrown if the result is not interpretable.</exception>
         public XmlDocument GetRemoteXml()
         {
-            Stream stream = null;
+            Stream stream;
 
             try
             {
@@ -576,10 +577,10 @@ namespace SharpMap.Web.Wms
                 myRequest.Timeout = _timeOut;
                 if (_proxy != null) myRequest.Proxy = _proxy;
                 
-                WebResponse myResponse = myRequest.GetResponse();
+                var myResponse = myRequest.GetResponse();
 
-                if (myResponse == null)
-                    throw new ApplicationException("No web response");
+                if (myResponse.ContentLength == 0)
+                    throw new ApplicationException("Empty web response");
 
                 stream = myResponse.GetResponseStream();
 
@@ -588,12 +589,12 @@ namespace SharpMap.Web.Wms
             }
             catch (Exception ex)
             {
-                throw new ApplicationException("Could not download capabilities document from the server. The server may not be available right now." + ex.Message);
+                throw new ApplicationException("Could not download capabilities document from the server. The server may not be available right now.\n" + ex.Message, ex);
             }
 
             try
             {
-                XmlTextReader xmlTextReader = new XmlTextReader(_capabilitiesUrl, stream);
+                var xmlTextReader = new XmlTextReader(_capabilitiesUrl, stream);
                 xmlTextReader.XmlResolver = null;
 
                 _xmlDoc = new XmlDocument();
@@ -602,9 +603,9 @@ namespace SharpMap.Web.Wms
                 _nsmgr = new XmlNamespaceManager(_xmlDoc.NameTable);
                 return _xmlDoc;
             }
-            catch (Exception /*ex*/)
+            catch (Exception ex)
             {
-                throw new ApplicationException("Could not convert the capabilities file into an XML document. Do you have illegal characters in the document.");
+                throw new ApplicationException("Could not convert the capabilities file into an XML document. Do you have illegal characters in the document.", ex);
             }
             finally
             {
