@@ -65,11 +65,6 @@ namespace UnitTests.Data
         [Test]
         public void TestSerializationOfDataset()
         {
-            #if LINUX
-            if (!System.IO.File.Exists("libSQLite.Interop.so"))
-                throw new IgnoreException($"'libSQLite.Interop.so' not present");
-            #endif
-
             var fds = new FeatureDataSet { DataSetName = "Serialization", Namespace = "ns" };
             using (var p = Serialization.ProviderTest.CreateProvider("managedspatialite"))
             {
@@ -115,17 +110,13 @@ namespace UnitTests.Data
 
             Assert.That(deserializedLayer2Table.Constraints.Count, Is.EqualTo(1), "Constraints not serialized");
             var cons = deserializedLayer2Table.Constraints[0] as UniqueConstraint;
-            Assert.NotNull(cons, "Wrong contraint");
+            Assert.NotNull(cons, "Wrong constraint");
             Assert.IsTrue(cons.IsPrimaryKey, "Constraint was a primary key");
         }
 
         [Test]
         public void TestSerialization()
         {
-#if LINUX
-            if (!System.IO.File.Exists("libSQLite.Interop.so"))
-                throw new IgnoreException($"'libSQLite.Interop.so' not present");
-#endif
             var fds = new FeatureDataSet { DataSetName = "Serialization", Namespace = "ns"};
             using (var p = Serialization.ProviderTest.CreateProvider("managedspatialite"))
             {

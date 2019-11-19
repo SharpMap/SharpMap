@@ -11,14 +11,17 @@ namespace UnitTests.Data.Providers
     [NUnit.Framework.TestFixture, NUnit.Framework.Category("KnownToFailOnTeamCityAtCodebetter")]
     public class ManagedSQLiteTests : ProviderTest
     {
-#if LINUX
-        [TestFixtureSetUp]
-        public void FixtureSetUp()
-        {
-            if (!File.Exists("libSQLite.Interop.so"))
-                throw new IgnoreException($"'libSQLite.Interop.so' not present");
-        }
-#endif
+//#if LINUX
+//        [NUnit.Framework.OneTimeSetUp]
+//        public void OneTimeSetUp()
+//        {
+//            if (Environment.OSVersion.Platform == PlatformID.Unix)
+//            {
+//                if (!File.Exists("libSQLite.Interop.so"))
+//                    throw new IgnoreException($"'libSQLite.Interop.so' not present");
+//            }
+//        }
+//#endif
 
         private string GetTestDBPath()
         {

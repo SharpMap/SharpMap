@@ -26,44 +26,51 @@ namespace UnitTests.Serialization
                     return CreateProvider<ShapeFile>();
                 case "postgis":
                     return CreateProvider<PostGIS>();
-#if !LINUX
                 case "managedspatialite":
                     return CreateProvider<ManagedSpatiaLite>();
                 case "spatialite":
                     return CreateProvider<SpatiaLite>();
-#endif            
             }
         }
 
         internal static T CreateProvider<T>()
         where T: IProvider
         {
-            var gf = GeoAPI.GeometryServiceProvider.Instance.CreateGeometryFactory();
+            try
+            {
+                var gf = GeoAPI.GeometryServiceProvider.Instance.CreateGeometryFactory();
 
-            if (typeof(T) == typeof(GeometryProvider))
-                return (T)(IProvider)new GeometryProvider(gf.CreatePoint(new Coordinate(1, 1)));
+                if (typeof(T) == typeof(GeometryProvider))
+                    return (T) (IProvider) new GeometryProvider(gf.CreatePoint(new Coordinate(1, 1)));
 
-            if (typeof(T) == typeof(ShapeFile))
-                return (T)(IProvider)new ShapeFile(TestUtility.GetPathToTestFile("roads_ugl.shp"));
+                if (typeof(T) == typeof(ShapeFile))
+                    return (T) (IProvider) new ShapeFile(TestUtility.GetPathToTestFile("roads_ugl.shp"));
 
-            if (typeof(T) == typeof(PostGIS))
-                return (T)(IProvider)new PostGIS("Host=ivv-t3s.ivv-aachen.de;Port=5432;integrated security=true;database=postgis_sample;",
-                    "rivers", "wkb_geometry", "ogc_fid");
+                if (typeof(T) == typeof(PostGIS))
+                    return (T) (IProvider) new PostGIS(
+                        "Host=ivv-t3s.ivv-aachen.de;Port=5432;integrated security=true;database=postgis_sample;",
+                        "rivers", "wkb_geometry", "ogc_fid");
+
+                if (typeof(T) == typeof(ManagedSpatiaLite))
+                    return (T)(IProvider)new ManagedSpatiaLite($"Data Source={TestUtility.GetPathToTestFile("test-2.3.sqlite")};",
+                        "HighWays", "Geometry", "PK_UID");
+
+                if (typeof(T) == typeof(SpatiaLite))
+                    return (T)(IProvider)new SpatiaLite($"Data Source={TestUtility.GetPathToTestFile("test-2.3.sqlite")};",
+                        "HighWays", "Geometry", "PK_UID");
 
 #if !LINUX
-            if (typeof(T) == typeof(ManagedSpatiaLite))
-                return (T)(IProvider)new ManagedSpatiaLite($"Data Source={TestUtility.GetPathToTestFile("test-2.3.sqlite")};",
-                                                            "HighWays", "Geometry", "PK_UID");
-
-            if (typeof(T) == typeof(SpatiaLite))
-                return (T)(IProvider)new SpatiaLite($"Data Source={TestUtility.GetPathToTestFile("test-2.3.sqlite")};",
-                                                            "HighWays", "Geometry", "PK_UID");
-
             if (typeof(T) == typeof(SqlServer2008))
                 return (T)(IProvider)new SqlServer2008("Data Source=IVV-SQLD; Database=OBE;Integrated Security=SSPI;",
                                                        "Roads", "wkb_geometry", "ogc_fid", SqlServerSpatialObjectType.Geometry);
 #endif
-            throw new NotSupportedException();
+                throw new NotSupportedException();
+            }
+            catch (Exception e)
+            {
+                Assert.Ignore("Failed to open connection\n{0}\n{1}", e.Message, e.StackTrace);
+                throw;
+            }
         }
 
         [Test]

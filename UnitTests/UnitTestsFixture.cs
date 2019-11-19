@@ -1,4 +1,6 @@
-﻿namespace UnitTests
+﻿using System;
+
+namespace UnitTests
 {
     [NUnit.Framework.SetUpFixture]
     public class UnitTestsFixture
@@ -38,9 +40,9 @@
                 string.Format("All tests accomplished in {0}ms", _stopWatch.ElapsedMilliseconds));
         }
 
-        internal static string GetImageDirectory(object T)
+        internal static string GetImageDirectory(object item)
         {
-            var imgPath = System.IO.Path.Combine($"{ImageBase}\\{T.GetType().FullName}");
+            string imgPath = System.IO.Path.Combine(NUnit.Framework.TestContext.CurrentContext.TestDirectory, ImageBase, item?.GetType()?.FullName ?? string.Empty);
             if (!System.IO.Directory.Exists(imgPath))
                 System.IO.Directory.CreateDirectory(imgPath);
             return imgPath;

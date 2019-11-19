@@ -16,10 +16,6 @@ namespace UnitTests.Data.Providers
         public void OneTimeSetUp()
         {
             GeoAPI.GeometryServiceProvider.Instance = new NtsGeometryServices();
-#if LINUX
-            if (!File.Exists("libSQLite.Interop.so"))
-                throw new IgnoreException($"'libSQLite.Interop.so' not present");
-#endif
         }
 
         [TestCase(@"geonames_belgium.gpkg")]

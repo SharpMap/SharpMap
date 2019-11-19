@@ -9,6 +9,7 @@ namespace UnitTests.Issues
     {
         [TestCase("https://www.wms.nrw.de/geobasis/wms_nw_dop", SecurityProtocolType.Ssl3, SecurityProtocolType.Tls12)]
         [Description("https request with unmatching security protocol type")]
+        [Category("RequiresWindows")]
         public void TestIssue156(string url, SecurityProtocolType sptFail, SecurityProtocolType sptSucceed)
         {
             var spDefault = ServicePointManager.SecurityProtocol;

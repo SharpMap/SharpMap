@@ -70,11 +70,11 @@
     <Reference Include="osr_csharp, Version=1.0.7127.27224, Culture=neutral, PublicKeyToken=db5a52b08dc5b321, processorArchitecture=MSIL">
       <HintPath>..\packages\GDAL.2.4.2\lib\net40\osr_csharp.dll</HintPath>
     </Reference>
-    <Reference Include="System.Data.SQLite, Version=1.0.112.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Data.SQLite.Core.1.0.112.0\lib\net46\System.Data.SQLite.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
+      <Reference Include="System.Data.SQLite, Version=1.0.112.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
+          <HintPath>..\packages\System.Data.SQLite.Core.1.0.112.0\lib\net46\System.Data.SQLite.dll</HintPath>
+      </Reference>
     <Reference Include="Common.Logging, Version=3.4.1.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
       <HintPath>..\packages\Common.Logging.3.4.1\lib\net40\Common.Logging.dll</HintPath>
     </Reference>
@@ -139,11 +139,7 @@
   </ItemGroup>
   <ItemGroup Condition=" '$(Configuration)' != 'ReleaseLinux' ">
     <Compile Include="Data\FwToolsHelper.cs" />
-    <Compile Include="Data\Providers\ManagedSpatiaLite.cs" />
     <Compile Include="Data\Providers\OgrProvider.cs" />
-    <Compile Include="Data\Providers\SpatiaLite.cs" />
-    <Compile Include="Data\Providers\SpatiaLiteIndex.cs" />
-    <Compile Include="Data\Providers\SqlLite.cs" />
     <Compile Include="GdalConfiguration.cs" />
     <Compile Include="Layers\GdalTileIndexRasterLayer.cs" />
     <Compile Include="Layers\GdalRasterLayer.cs">
@@ -153,6 +149,10 @@
     <Compile Include="Layers\GeoTransform.cs" />
   </ItemGroup>
   <ItemGroup>
+      <Compile Include="Data\Providers\ManagedSpatiaLite.cs" />
+      <Compile Include="Data\Providers\SpatiaLite.cs" />
+      <Compile Include="Data\Providers\SpatiaLiteIndex.cs" />
+      <Compile Include="Data\Providers\SqlLite.cs" />
     <Compile Include="Data\Providers\DataTablePoint.cs" />
     <Compile Include="Data\Providers\NtsProvider.cs" />
     <Compile Include="Data\Providers\Oracle.cs" />

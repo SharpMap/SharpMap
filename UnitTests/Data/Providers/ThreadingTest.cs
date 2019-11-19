@@ -156,8 +156,8 @@ namespace UnitTests.Data.Providers
         [OneTimeSetUp]
         public virtual void OneTimeSetUp()
         {
-
         }
+
         protected Envelope GetRandomEnvelope()
         {
             var minX = NextRandom(-0.1, 0.5, _extents.MinX, _extents.Width);

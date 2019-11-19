@@ -3,8 +3,8 @@
     <Import Project="$(SolutionDir)SharpMap.Common.props" />
 
     <PropertyGroup>
-        <TargetFramework>net472</TargetFramework>
         <Product>SharpMap NUnit Tests</Product>
+        <TargetFramework>net472</TargetFramework>
         <Copyright>
             Copyright © 2006 iter.dk
             Copyright © 2008-2019 SharpMap - Team
@@ -30,6 +30,7 @@
         <PackageReference Include="NUnit3TestAdapter" Version="3.15.1" />
         <PackageReference Include="ProjNet4GeoAPI" Version="1.4.1" />
         <PackageReference Include="System.Reactive.Core" Version="4.2" />
+        <PackageReference Include="System.Data.SQLite.Core" Version="1.0.112" />
     </ItemGroup>
 
     <ItemGroup>
@@ -47,7 +48,6 @@
 
     <ItemGroup Condition=" '$(Configuration)' != 'ReleaseLinux' ">
         <PackageReference Include="GDAL.Native" Version="2.4.2" />
-        <PackageReference Include="System.Data.SQLite.Core" Version="1.0.112" />
     </ItemGroup>
 
     <ItemGroup Condition=" '$(Configuration)' != 'ReleaseLinux' ">
@@ -69,7 +69,6 @@
     <ItemGroup Condition=" '$(Configuration)' == 'ReleaseLinux' ">
         <Compile Remove="Converters\SqlServer2008.cs" />
         <Compile Remove="Data\Providers\MsSqlServerSpatialTests.cs" />
-        <Compile Remove="Data\Providers\ManagedSQLiteTests.cs" />
         <Compile Remove="Data\Providers\SQLServer2008Tests.cs" />
         <Compile Remove="Data\Providers\OgrProviderTest.cs" />
     </ItemGroup>
@@ -88,5 +87,16 @@
       <EmbeddedResource Include="Layers\wms.atlantedesertificazione.xml" />
       <EmbeddedResource Include="Resources\Women.png" />
     </ItemGroup>
+
+    <Target Name="PostBuild" AfterTargets="PostBuildEvent" Condition=" '$(Configuration)' == 'ReleaseLinux' ">
+        <ItemGroup>
+            <LinuxInterop Include="$(MSBuildProjectDirectory)\..\packages\System.Data.SQLite.Core.1.0.112.0\runtimes\linux-x64\native\netstandard2.0\*.*"/>
+            <LinuxInterop Include="$(MSBuildProjectDirectory)\..\packages\System.Data.SQLite.Core.1.0.112.0\lib\net46\*.config"/>
+        </ItemGroup>
+        <Message Importance="high"  Text="Copying Linux interop file to '$(OutDir)'" />
+        <Message Importance="high"  Text="Files to copy: '@(LinuxInterop)'" />
+        
+        <Copy SourceFiles="@(LinuxInterop)" DestinationFolder="$(OutDir)"/>
+    </Target>
 
 </Project>
