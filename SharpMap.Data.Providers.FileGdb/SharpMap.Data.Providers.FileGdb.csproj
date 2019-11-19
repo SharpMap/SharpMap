@@ -28,7 +28,7 @@
     </ItemGroup>
 
     <ItemGroup Condition=" '$(Configuration)' == 'Debug' ">
-        <PackageReference Include="NUnit" Version="2.7.1" />
+        <PackageReference Include="NUnit" Version="3.12.0" />
     </ItemGroup>
 
     <ItemGroup>
