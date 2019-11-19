@@ -22,7 +22,7 @@ namespace UnitTests.Data.Providers
 
         private string GetTestDBPath()
         {
-            return "Data Source=" + GetTestDataFilePath("test-2.3.sqlite") + ";";
+            return $"Data Source={TestUtility.GetPathToTestFile("test-2.3.sqlite")};";
         }
 
         private SharpMap.Data.Providers.ManagedSpatiaLite CreateProvider(string tableName)
@@ -55,7 +55,7 @@ namespace UnitTests.Data.Providers
             }
             catch (Exception ex)
             {
-                Assert.Fail("Got exception, should not happen");
+                Assert.Fail("Got exception, should not happen.\n{0}\n{1}", ex.Message, ex.StackTrace);
 
             }
             finally

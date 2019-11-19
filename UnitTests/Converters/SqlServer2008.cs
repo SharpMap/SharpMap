@@ -1,17 +1,18 @@
 using System;
+using GeoAPI.Geometries;
 using NUnit.Framework;
-//using NUnit.Framework.SyntaxHelpers;
 using Microsoft.SqlServer.Types;
 using SharpMap.Converters.SqlServer2008SpatialObjects;
 using SharpMap.Converters.WellKnownText;
 using SharpMap.Geometries;
-using Geometry = GeoAPI.Geometries.IGeometry;
 using SharpMap.Data.Providers;
 
 namespace UnitTests.Converters
 {
     [TestFixture]
+#if LINUX
     [Ignore("Requires SqlServerSpatial")]
+#endif
     public class SqlServer2008
     {
         private const string Point = "POINT (20.564 46.3493254)";
@@ -32,7 +33,7 @@ namespace UnitTests.Converters
         }
 
 
-        private Geometry ToSqlServerAndBack(Geometry gIn, SqlServerSpatialObjectType spatialType)
+        private IGeometry ToSqlServerAndBack(IGeometry gIn, SqlServerSpatialObjectType spatialType)
         {
             Assert.That(gIn, Is.Not.Null);
             //Assert.That(gIn.SRID, Is.EqualTo(-1));
@@ -62,12 +63,12 @@ namespace UnitTests.Converters
             int srid = 4326;
 
             //Prepare data
-            Geometry gPn = GeometryFromWKT.Parse(Point);
-            Geometry gMp = GeometryFromWKT.Parse(Multipoint);
-            Geometry gLi = GeometryFromWKT.Parse(Linestring);
-            Geometry gML = GeometryFromWKT.Parse(MultiLinestring);
-            Geometry gPl = GeometryFromWKT.Parse(Polygon);
-            Geometry gMPol = GeometryFromWKT.Parse(MultiPolygon);
+            var gPn = GeometryFromWKT.Parse(Point);
+            var gMp = GeometryFromWKT.Parse(Multipoint);
+            var gLi = GeometryFromWKT.Parse(Linestring);
+            var gML = GeometryFromWKT.Parse(MultiLinestring);
+            var gPl = GeometryFromWKT.Parse(Polygon);
+            var gMPol = GeometryFromWKT.Parse(MultiPolygon);
 
             // Geography requires valid SRID
             gPn.SRID = srid;
@@ -77,7 +78,7 @@ namespace UnitTests.Converters
             gPl.SRID = srid;
             gMPol.SRID = srid;
 
-            var comparison = new Comparison<Geometry>((u, v) => u.EqualsExact(v) ? 0 : 1);
+            var comparison = new Comparison<IGeometry>((u, v) => u.EqualsExact(v) ? 0 : 1);
 
             Assert.That(ToSqlServerAndBack(gPn, spatialType), Is.EqualTo(gPn).Using(comparison));
             Assert.That(ToSqlServerAndBack(gMp, spatialType), Is.EqualTo(gMp).Using(comparison));
@@ -94,28 +95,28 @@ namespace UnitTests.Converters
             int srid = (spatialType == SqlServerSpatialObjectType.Geometry ? 0 : 4326);
 
             //Prepare data
-            Geometry gPn = GeometryFromWKT.Parse(Point);
+            var gPn = GeometryFromWKT.Parse(Point);
             gPn.SRID = srid;
-            Geometry gMp = GeometryFromWKT.Parse(Multipoint);
+            var gMp = GeometryFromWKT.Parse(Multipoint);
             gMp.SRID = srid;
-            Geometry gLi = GeometryFromWKT.Parse(Linestring);
+            var gLi = GeometryFromWKT.Parse(Linestring);
             gLi.SRID = srid;
-            Geometry gML = GeometryFromWKT.Parse(MultiLinestring);
+            var gML = GeometryFromWKT.Parse(MultiLinestring);
             gML.SRID = srid;
-            Geometry gPl = GeometryFromWKT.Parse(Polygon);
+            var gPl = GeometryFromWKT.Parse(Polygon);
             gPl.SRID = srid;
 
             System.Diagnostics.Trace.WriteLine(spatialType.ToString());
             if (spatialType == SqlServerSpatialObjectType.Geography)
                 System.Diagnostics.Trace.WriteLine("SqlServer syntax (STGeomFromText does not require .ReorientObject()):  SELECT geography::STGeomFromText(' insert WKT '), 4326)");
 
-            Geometry gPnBuffer30 = SpatialOperationsEx.Buffer(gPn, bufferDist, spatialType);
+            var gPnBuffer30 = SpatialOperationsEx.Buffer(gPn, bufferDist, spatialType);
             System.Diagnostics.Trace.WriteLine(gPnBuffer30.ToString());
 
-            Geometry gPnBuffer30IntersectiongPl = SpatialOperationsEx.Intersection(gPnBuffer30, gPl, spatialType);
+            var gPnBuffer30IntersectiongPl = SpatialOperationsEx.Intersection(gPnBuffer30, gPl, spatialType);
             System.Diagnostics.Trace.WriteLine(gPnBuffer30IntersectiongPl.ToString());
 
-            Geometry gUnion = SpatialOperationsEx.Union(gPn, spatialType, gMp, gML, gLi, gPl);
+            var gUnion = SpatialOperationsEx.Union(gPn, spatialType, gMp, gML, gLi, gPl);
             System.Diagnostics.Trace.WriteLine(gUnion.ToString());
 
         }
@@ -125,7 +126,7 @@ namespace UnitTests.Converters
         {
             //Prepare data
             const string invalidMultiPolygon = "MULTIPOLYGON (((20 20, 20 30, 30 30, 30 20, 20 20)), ((21 21, 21 29, 29 29, 29 21, 21 21)))";
-            Geometry gMP = GeometryFromWKT.Parse(invalidMultiPolygon);
+            var gMP = GeometryFromWKT.Parse(invalidMultiPolygon);
             gMP.SRID = 4326;
             Assert.Throws<SqlGeometryConverterException>(() => gMP = ToSqlServerAndBack(gMP, SqlServerSpatialObjectType.Geometry));
         }
@@ -135,27 +136,16 @@ namespace UnitTests.Converters
         {
             //Prepare data
             const string invalidMultiPolygon = "MULTIPOLYGON (((20 20, 20 30, 30 30, 30 20, 20 20)), ((21 21, 21 29, 29 29, 29 21, 21 21)))";
-            Geometry gMP = GeometryFromWKT.Parse(invalidMultiPolygon);
+            var gMP = GeometryFromWKT.Parse(invalidMultiPolygon);
             gMP.SRID = 4326;
-            Assert.Throws<SqlGeometryConverterException>(() => gMP = ToSqlServerAndBack(gMP, SqlServerSpatialObjectType.Geography));
-        }
-
-        private string GetTestFile()
-        {
-            return System.IO.Path.Combine(GetPathToTestDataDir(), "SPATIAL_F_SKARVMUFF.shp");
-            //return System.IO.Path.Combine(GetPathToTestDataDir(), "roads_ugl.shp");
-        }
-
-        private string GetPathToTestDataDir()
-        {
-            return System.IO.Path.Combine(System.IO.Path.GetDirectoryName(GetType().Assembly.CodeBase.Replace("file:///", "")), @"TestData\");
+            Assert.Throws<SqlGeographyConverterException>(() => gMP = ToSqlServerAndBack(gMP, SqlServerSpatialObjectType.Geography));
         }
 
         [NUnit.Framework.TestCase(SqlServerSpatialObjectType.Geometry)]
         [NUnit.Framework.TestCase(SqlServerSpatialObjectType.Geography)]
         public void TestShapeFile(SqlServerSpatialObjectType spatialType)
         {
-            using (var p = new SharpMap.Data.Providers.ShapeFile(GetTestFile(), true))
+            using (var p = new ShapeFile(TestUtility.GetPathToTestFile("SPATIAL_F_SKARVMUFF.shp"), true))
             {
                 p.Open();
 

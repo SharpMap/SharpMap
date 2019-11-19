@@ -11,6 +11,8 @@ namespace UnitTests.Data.Providers
 
         public override void OneTimeSetUp()
         {
+            if (System.IntPtr.Size == 8)
+                Assert.Ignore("Only run in 32bit mode, because most Excel installations are 32bit.");
             base.OneTimeSetUp();
 
             try

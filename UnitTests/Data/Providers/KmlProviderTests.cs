@@ -24,7 +24,7 @@ namespace UnitTests.Data.Providers
         public void TestConstruction()
         {
             KmlProvider p = null;
-            Assert.DoesNotThrow(() => p = KmlProvider.FromKml(System.IO.Path.Combine("TestData", "KML_Samples.kml")));
+            Assert.DoesNotThrow(() => p = KmlProvider.FromKml(TestUtility.GetPathToTestFile("KML_Samples.kml")));
 
             Assert.IsNotNull(p);
             Assert.IsTrue(p.ConnectionID.StartsWith("KML Samples"));
@@ -36,7 +36,7 @@ namespace UnitTests.Data.Providers
             var m = new Map(new Size(500, 300));
             m.BackColor = Color.White;
 
-            var p = KmlProvider.FromKml(System.IO.Path.Combine("TestData", "KML_Samples.kml"));
+            var p = KmlProvider.FromKml(TestUtility.GetPathToTestFile("KML_Samples.kml"));
             var l = new VectorLayer(p.ConnectionID, p);
             l.Theme = p.GetKmlTheme();
             

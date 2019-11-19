@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
 using System.IO;
 using GeoAPI.Geometries;
 using NetTopologySuite;
@@ -21,14 +22,16 @@ namespace UnitTests.Data.Providers
 #endif
         }
 
-        [TestCase(@"TestData\geonames_belgium.gpkg")]
-        [TestCase(@"TestData\gdal_sample.gpkg")]
-        [TestCase(@"TestData\haiti-vectors-split.gpkg")]
-        [TestCase(@"TestData\simple_sewer_features.gpkg")]
+        [TestCase(@"geonames_belgium.gpkg")]
+        [TestCase(@"gdal_sample.gpkg")]
+        [TestCase(@"haiti-vectors-split.gpkg")]
+        [TestCase(@"simple_sewer_features.gpkg")]
 
         public void TestGeoPackage(string filePath)
         {
-            filePath = filePath.Replace("\\", new string(Path.DirectorySeparatorChar, 1));
+            if (!Path.IsPathRooted(filePath))
+                filePath = TestUtility.GetPathToTestFile(filePath);
+
             if (!File.Exists(filePath))
                 throw new IgnoreException(string.Format("Test data not present: '{0}'!", filePath));
             

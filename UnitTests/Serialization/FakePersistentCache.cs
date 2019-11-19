@@ -1,7 +1,8 @@
 ﻿using System;
+using BruTile;
 using BruTile.Cache;
 
-namespace BruTile.Serialization.Tests
+namespace UnitTests.Serialization
 {
     [Serializable]
     public class FakePersistentCache<T> : IPersistentCache<T>

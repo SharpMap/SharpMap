@@ -321,7 +321,7 @@ namespace UnitTests
                 map.MapTransform = mapTransform;
             }
 
-            var fn = System.IO.Path.Combine("TestData", shapeFileName);
+            var fn = TestUtility.GetPathToTestFile(shapeFileName);
             var prov = new SharpMap.Data.Providers.ShapeFile(fn, true);
 
             var vl = new VectorLayer(shapeFileName, prov);

@@ -22,10 +22,10 @@ namespace UnitTests.Data.Providers
         [NUnit.Framework.Test]
         public void TestReadValueZFromPointZShapeFile()
         {
-            var file = GetTestDataFilePath("Point_With_Z.shp");
+            string file = TestUtility.GetPathToTestFile("Point_With_Z.shp");
             var sh = new SharpMap.Data.Providers.ShapeFile(file, true);
             sh.Open();
-            var fc = sh.GetFeatureCount();
+            int fc = sh.GetFeatureCount();
             NUnit.Framework.Assert.AreEqual(1149, fc);
             NUnit.Framework.Assert.AreEqual(0, sh.GetObjectIDsInView(sh.GetExtents())[0]);
             var featsInView = sh.GetGeometriesInView(new GeoAPI.Geometries.Envelope(sh.GetExtents()));
@@ -47,10 +47,10 @@ namespace UnitTests.Data.Providers
         [NUnit.Framework.Test]
         public void TestReadValueZFromLineStringZShapeFile()
         {
-            var file = GetTestDataFilePath("LineString_With_Z.shp");
+            string file = TestUtility.GetPathToTestFile("LineString_With_Z.shp");
             var sh = new SharpMap.Data.Providers.ShapeFile(file, true);
             sh.Open();
-            var fc = sh.GetFeatureCount();
+            int fc = sh.GetFeatureCount();
             NUnit.Framework.Assert.AreEqual(1221, fc);
             NUnit.Framework.Assert.AreEqual(0, sh.GetObjectIDsInView(sh.GetExtents())[0]);
             var featsInView = sh.GetGeometriesInView(new GeoAPI.Geometries.Envelope(sh.GetExtents()));
@@ -77,7 +77,7 @@ namespace UnitTests.Data.Providers
         [NUnit.Framework.Test]
         public void UsingTest()
         {
-            using (var s = System.IO.File.Open(GetTestDataFilePath("SPATIAL_F_SKARVMUFF.shp"), System.IO.FileMode.Open))
+            using (var s = System.IO.File.Open(TestUtility.GetPathToTestFile("SPATIAL_F_SKARVMUFF.shp"), System.IO.FileMode.Open))
             {
                 using (var reader = new System.IO.BinaryReader(s))
                 {
@@ -103,7 +103,7 @@ namespace UnitTests.Data.Providers
         public void TestDeleteAfterClose()
         {
             string test;
-            CopyShapeFile(GetTestDataFilePath("SPATIAL_F_SKARVMUFF.shp"), out test);
+            CopyShapeFile(TestUtility.GetPathToTestFile("SPATIAL_F_SKARVMUFF.shp"), out test);
 
             var shp = new SharpMap.Data.Providers.ShapeFile(test);
             shp.Open();
@@ -123,23 +123,14 @@ namespace UnitTests.Data.Providers
             }
             NUnit.Framework.Assert.IsTrue(succeeded);
         }
-        //private string GetTestFile()
-        //{
-        //    return System.IO.Path.Combine(GetPathToTestDataDir(), "roads_ugl.shp");
-        //}
-
-        //private string GetPathToTestDataDir()
-        //{
-        //    return System.IO.Path.Combine(System.IO.Path.GetDirectoryName(this.GetType().Assembly.CodeBase.Replace("file:///", "")), @"TestData\");
-        //}
 
         [NUnit.Framework.Test]
         public void TestReadPointZShapeFile()
         {
-            var file = GetTestDataFilePath("SPATIAL_F_SKARVMUFF.shp");
+            string file = TestUtility.GetPathToTestFile("SPATIAL_F_SKARVMUFF.shp");
             var sh = new SharpMap.Data.Providers.ShapeFile(file, true);
             sh.Open();
-            var fc = sh.GetFeatureCount();
+            int fc = sh.GetFeatureCount();
             NUnit.Framework.Assert.AreEqual(4342, fc);
             NUnit.Framework.Assert.AreEqual(0, sh.GetObjectIDsInView(sh.GetExtents())[0]);
             var featsInView = sh.GetGeometriesInView(new GeoAPI.Geometries.Envelope(sh.GetExtents()));
@@ -150,12 +141,12 @@ namespace UnitTests.Data.Providers
         [NUnit.Framework.Test]
         public void TestPerformanceVectorLayer()
         {
-            NUnit.Framework.Assert.IsTrue(System.IO.File.Exists(GetTestDataFilePath("SPATIAL_F_SKARVMUFF.shp")),
+            NUnit.Framework.Assert.IsTrue(System.IO.File.Exists(TestUtility.GetPathToTestFile("SPATIAL_F_SKARVMUFF.shp")),
                                           "Specified shapefile is not present!");
 
             var map = new SharpMap.Map(new System.Drawing.Size(1024, 768));
 
-            var shp = new SharpMap.Data.Providers.ShapeFile(GetTestDataFilePath("SPATIAL_F_SKARVMUFF.shp"), false, false);
+            var shp = new SharpMap.Data.Providers.ShapeFile(TestUtility.GetPathToTestFile("SPATIAL_F_SKARVMUFF.shp"), false, false);
             var lyr = new SharpMap.Layers.VectorLayer("Roads", shp);
 
             map.Layers.Add(lyr);
@@ -163,7 +154,7 @@ namespace UnitTests.Data.Providers
 
             RepeatedRendering(map, shp.GetFeatureCount(), NumberOfRenderCycles, out _msVector);
 
-            var path = System.IO.Path.Combine(UnitTestsFixture.GetImageDirectory(this), "SPATIAL_F_SKARVMUFF.shp");
+            string path = System.IO.Path.Combine(UnitTestsFixture.GetImageDirectory(this), "SPATIAL_F_SKARVMUFF.shp");
             path = System.IO.Path.ChangeExtension(path, ".vector.png");
             using (var res = map.GetMap())
                 res.Save(path, System.Drawing.Imaging.ImageFormat.Png);
@@ -173,12 +164,12 @@ namespace UnitTests.Data.Providers
         [NUnit.Framework.Test]
         public void TestPerformanceLinealLayer()
         {
-            NUnit.Framework.Assert.IsTrue(System.IO.File.Exists(GetTestDataFilePath("roads_ugl.shp")),
+            NUnit.Framework.Assert.IsTrue(System.IO.File.Exists(TestUtility.GetPathToTestFile("roads_ugl.shp")),
                                           "Specified shapefile is not present!");
 
             var map = new SharpMap.Map(new System.Drawing.Size(1024, 768));
 
-            var shp = new SharpMap.Data.Providers.ShapeFile(GetTestDataFilePath("roads_ugl.shp"), false, false);
+            var shp = new SharpMap.Data.Providers.ShapeFile(TestUtility.GetPathToTestFile("roads_ugl.shp"), false, false);
             var lyr = new SharpMap.Layers.Symbolizer.LinealVectorLayer("Roads", shp)
                           {
                               Symbolizer =
@@ -228,10 +219,10 @@ namespace UnitTests.Data.Providers
         [NUnit.Framework.Test]
         public void TestGetFeature()
         {
-            NUnit.Framework.Assert.IsTrue(System.IO.File.Exists(GetTestDataFilePath("SPATIAL_F_SKARVMUFF.shp")),
+            NUnit.Framework.Assert.IsTrue(System.IO.File.Exists(TestUtility.GetPathToTestFile("SPATIAL_F_SKARVMUFF.shp")),
                                           "Specified shapefile is not present!");
 
-            var shp = new SharpMap.Data.Providers.ShapeFile(GetTestDataFilePath("SPATIAL_F_SKARVMUFF.shp"), false, false);
+            var shp = new SharpMap.Data.Providers.ShapeFile(TestUtility.GetPathToTestFile("SPATIAL_F_SKARVMUFF.shp"), false, false);
             shp.Open();
             var feat = shp.GetFeature(0);
             NUnit.Framework.Assert.IsNotNull(feat);
@@ -241,10 +232,10 @@ namespace UnitTests.Data.Providers
         [NUnit.Framework.Test]
         public void TestExecuteIntersectionQuery()
         {
-            NUnit.Framework.Assert.IsTrue(System.IO.File.Exists(GetTestDataFilePath("SPATIAL_F_SKARVMUFF.shp")),
+            NUnit.Framework.Assert.IsTrue(System.IO.File.Exists(TestUtility.GetPathToTestFile("SPATIAL_F_SKARVMUFF.shp")),
                                           "Specified shapefile is not present!");
 
-            var shp = new SharpMap.Data.Providers.ShapeFile(GetTestDataFilePath("SPATIAL_F_SKARVMUFF.shp"), false, false);
+            var shp = new SharpMap.Data.Providers.ShapeFile(TestUtility.GetPathToTestFile("SPATIAL_F_SKARVMUFF.shp"), false, false);
             shp.Open();
 
             var fds = new SharpMap.Data.FeatureDataSet();
@@ -278,10 +269,10 @@ namespace UnitTests.Data.Providers
         [NUnit.Framework.Test]
         public void TestExecuteIntersectionQueryWithFilterDelegate()
         {
-            NUnit.Framework.Assert.IsTrue(System.IO.File.Exists(GetTestDataFilePath("SPATIAL_F_SKARVMUFF.shp")),
+            NUnit.Framework.Assert.IsTrue(System.IO.File.Exists(TestUtility.GetPathToTestFile("SPATIAL_F_SKARVMUFF.shp")),
                                           "Specified shapefile is not present!");
 
-            var shp = new SharpMap.Data.Providers.ShapeFile(GetTestDataFilePath("SPATIAL_F_SKARVMUFF.shp"), false, false);
+            var shp = new SharpMap.Data.Providers.ShapeFile(TestUtility.GetPathToTestFile("SPATIAL_F_SKARVMUFF.shp"), false, false);
             shp.Open();
 
             var fds = new SharpMap.Data.FeatureDataSet();

@@ -577,25 +577,31 @@ namespace SharpMap.Data.Providers
                         switch (type)
                         {
                             case OgrFieldType.OFTInteger:
-                                fdt.Columns.Add(ogrFldDef.GetName(), typeof(Int32));
+                                fdt.Columns.Add(ogrFldDef.GetName(), typeof(int));
                                 break;
                             case OgrFieldType.OFTIntegerList:
-                                fdt.Columns.Add(ogrFldDef.GetName(), typeof(Int32[]));
+                                fdt.Columns.Add(ogrFldDef.GetName(), typeof(int[]));
+                                break;
+                            case OgrFieldType.OFTInteger64:
+                                fdt.Columns.Add(ogrFldDef.GetName(), typeof(long));
+                                break;
+                            case OgrFieldType.OFTInteger64List:
+                                fdt.Columns.Add(ogrFldDef.GetName(), typeof(long[]));
                                 break;
                             case OgrFieldType.OFTReal:
-                                fdt.Columns.Add(ogrFldDef.GetName(), typeof(Double));
+                                fdt.Columns.Add(ogrFldDef.GetName(), typeof(double));
                                 break;
                             case OgrFieldType.OFTRealList:
-                                fdt.Columns.Add(ogrFldDef.GetName(), typeof(Double[]));
+                                fdt.Columns.Add(ogrFldDef.GetName(), typeof(double[]));
                                 break;
                             case OgrFieldType.OFTWideString:
                             case OgrFieldType.OFTString:
-                                var c = fdt.Columns.Add(ogrFldDef.GetName(), typeof(String));
+                                var c = fdt.Columns.Add(ogrFldDef.GetName(), typeof(string));
                                 c.MaxLength = ogrFldDef.GetWidth();
                                 break;
                             case OgrFieldType.OFTStringList:
                             case OgrFieldType.OFTWideStringList:
-                                fdt.Columns.Add(ogrFldDef.GetName(), typeof(String[]));
+                                fdt.Columns.Add(ogrFldDef.GetName(), typeof(string[]));
                                 break;
                             case OgrFieldType.OFTDate:
                             case OgrFieldType.OFTTime:
@@ -663,8 +669,14 @@ namespace SharpMap.Data.Providers
                     case OgrFieldType.OFTInteger:
                         values[iField] = ogrFeature.GetFieldAsInteger(iField);
                         break;
+                    case OgrFieldType.OFTInteger64:
+                        values[iField] = ogrFeature.GetFieldAsInteger64(iField);
+                        break;
                     case OgrFieldType.OFTIntegerList:
                         values[iField] = ogrFeature.GetFieldAsIntegerList(iField, out count);
+                        break;
+                    case OgrFieldType.OFTInteger64List:
+                        values[iField] = null; // ogrFeature.GetFieldAsInteger64List(iField, out count);
                         break;
                     case OgrFieldType.OFTReal:
                         values[iField] = ogrFeature.GetFieldAsDouble(iField);
@@ -688,6 +700,7 @@ namespace SharpMap.Data.Providers
 // ReSharper disable once EmptyGeneralCatchClause
                         catch { }
                         break;
+                    
                     default:
                         var iTmpField = iField;
                         _log.Debug(t => t("Cannot handle Ogr DataType '{0}'", ogrFeature.GetFieldType(iTmpField)));

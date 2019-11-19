@@ -10,7 +10,7 @@ namespace UnitTests.Data.Providers
         [NUnit.Framework.SetUp]
         public void TestSetUp()
         {
-            using (var sf = new SharpMap.Data.Providers.ShapeFile(GetTestDataFilePath("roads_ugl.shp")))
+            using (var sf = new SharpMap.Data.Providers.ShapeFile(TestUtility.GetPathToTestFile("roads_ugl.shp")))
             {
                 sf.Open();
                 var fds = new SharpMap.Data.FeatureDataSet();

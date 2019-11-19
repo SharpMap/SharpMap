@@ -13,16 +13,6 @@ namespace UnitTests.Data.Providers
     [TestFixture]
     public class PostGisGeographyTests
     {
-        private string GetTestFile()
-        {
-            return Path.Combine(GetPathToTestDataDir(), "roads_ugl.shp");
-        }
-
-        private string GetPathToTestDataDir()
-        {
-            return Path.Combine(Path.GetDirectoryName(this.GetType().Assembly.CodeBase.Replace("file:///", "")), @"TestData\");
-        }
-
         private List<uint> _insertedIds = new List<uint>(100);
 
         [OneTimeSetUp]
@@ -43,7 +33,7 @@ namespace UnitTests.Data.Providers
                 {
                     conn.Open();
                     // Load data
-                    using (var shapeFile = new SharpMap.Data.Providers.ShapeFile(GetTestFile(), false, false, 4326))
+                    using (var shapeFile = new SharpMap.Data.Providers.ShapeFile(TestUtility.GetPathToTestFile("roads_ugl.shp"), false, false, 4326))
                     {
                         shapeFile.Open();
 
@@ -101,9 +91,9 @@ namespace UnitTests.Data.Providers
 
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                Assert.Ignore("Failed to connect to PostgreSQL/PostGIS Server");
+                Assert.Ignore("Failed to connect to PostgreSQL/PostGIS Server.\n{0}\n{1}", ex.Message, ex.StackTrace);
             }
         }
 

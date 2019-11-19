@@ -24,7 +24,7 @@ namespace SharpMap.Utilities
         internal const BindingFlags PrivateInstance = BindingFlags.NonPublic | BindingFlags.Instance;
 
         internal static void SetFieldValue<T>(ref object obj, string fieldName,
-                                              BindingFlags bindingFlags = PrivateInstance, T newValue = default(T))
+                                              BindingFlags bindingFlags = PrivateInstance, T newValue = default)
         {
             var type = obj.GetType();
             var field = SearchField(type, fieldName, bindingFlags);
@@ -38,7 +38,7 @@ namespace SharpMap.Utilities
         }
 
         internal static T GetFieldValue<T>(object obj, string fieldName, BindingFlags bindingFlags = PrivateInstance,
-                                           T defaultValue = default(T))
+                                           T defaultValue = default)
         {
             var type = obj.GetType();
             var field = SearchField(type, fieldName, bindingFlags);
@@ -89,7 +89,7 @@ namespace SharpMap.Utilities
         }
 
         internal static void SetPropertyValue<T>(ref object obj, string propertyName,
-                                                 BindingFlags bindingFlags = PrivateInstance, T newValue = default(T))
+                                                 BindingFlags bindingFlags = PrivateInstance, T newValue = default)
         {
             var type = obj.GetType();
             var property = SearchProperty(type, propertyName, bindingFlags, true);
@@ -104,7 +104,7 @@ namespace SharpMap.Utilities
         }
 
         internal static T GetPropertyValue<T>(object obj, string propertyName,
-                                              BindingFlags bindingFlags = PrivateInstance, T newValue = default(T))
+                                              BindingFlags bindingFlags = PrivateInstance, T newValue = default)
         {
             var type = obj.GetType();
             var property = SearchProperty(type, propertyName, bindingFlags);

@@ -11,15 +11,6 @@ namespace UnitTests.Data.Providers
     [NUnit.Framework.TestFixture]
     public class DbaseReaderTests
     {
-        private string GetTestFile()
-        {
-            return Path.Combine(GetPathToTestDataDir(), "SPATIAL_F_SKARVMUFF.dbf");
-        }
-        private string GetPathToTestDataDir()
-        {
-            return "TestData";
-        }
-
         [OneTimeSetUp]
         public void OneTimeSetUp()
         {
@@ -35,7 +26,7 @@ namespace UnitTests.Data.Providers
         [NUnit.Framework.Test()]
         public void TestDbaseReader()
         {
-            using (DbaseReader reader = new DbaseReader(GetTestFile()))
+            using (DbaseReader reader = new DbaseReader(TestUtility.GetPathToTestFile("SPATIAL_F_SKARVMUFF.dbf")))
             {
                 reader.Open();
 
@@ -52,7 +43,7 @@ namespace UnitTests.Data.Providers
         [NUnit.Framework.Test()]
         public void TestDbaseBinaryTree()
         {
-            using (DbaseReader reader = new DbaseReader(GetTestFile()))
+            using (DbaseReader reader = new DbaseReader(TestUtility.GetPathToTestFile("SPATIAL_F_SKARVMUFF.dbf")))
             {
                 reader.Open();
 

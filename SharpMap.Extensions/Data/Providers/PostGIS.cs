@@ -58,10 +58,10 @@ namespace SharpMap.Data.Providers
     /// <para/>Detects PostGIS version and uses ST_Intersects method for PG_Verions >= 1.3 and &amp;&amp; (bbox comparison) for others)
     /// </summary>
     /// <example>
-    /// Adding a datasource to a layer:
+    /// Adding a data source to a layer:
     /// <code lang="C#">
     /// SharpMap.Layers.VectorLayer myLayer = new SharpMap.Layers.VectorLayer("My layer");
-    ///	string ConnStr = "Server=127.0.0.1;Port=5432;User Id=postgres;Password=password;Database=myGisDb;";
+    ///	string ConnStr = "Host=127.0.0.1;Port=5432;User Id=postgres;Password=password;Database=myGisDb;";
     /// myLayer.DataSource = new SharpMap.Data.Providers.PostGIS(ConnStr, "myTable");
     /// </code>
     /// </example>
@@ -69,7 +69,7 @@ namespace SharpMap.Data.Providers
     public class PostGIS : BaseProvider
     {
         private static readonly ILog Logger = LogManager.GetLogger<PostGIS>();
-        
+
         private string _definitionQuery;
         private string _geometryColumn;
         private string _objectIdColumn;
@@ -603,7 +603,7 @@ namespace SharpMap.Data.Providers
             using (var conn = new NpgsqlConnection(ConnectionString))
             {
                 conn.Open();
-                var strSQL = "SELECT " + _prefixFunction + "extent(\"" + GeometryColumn + "\") FROM " + QualifiedTable;
+                var strSQL = "SELECT " + _prefixFunction + "extent(\"" + GeometryColumn + "\")::text FROM " + QualifiedTable;
                 if (!String.IsNullOrEmpty(_definitionQuery))
                     strSQL += " WHERE " + _definitionQuery;
 

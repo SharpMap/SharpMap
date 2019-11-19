@@ -1,4 +1,6 @@
-﻿namespace UnitTests.Rendering.Symbolizer
+﻿using NUnit.Framework;
+
+namespace UnitTests.Rendering.Symbolizer
 {
     public class LineSymbolizerTest
     {
@@ -7,15 +9,10 @@
             GeoAPI.GeometryServiceProvider.Instance = new NetTopologySuite.NtsGeometryServices();
         }
 
-        private string GetTestFile()
-        {
-            return System.IO.Path.Combine("TestData", "roads_ugl.shp");
-        }
-
         [NUnit.Framework.Test] 
         public void TestBasicLineSymbolizer()
         {
-            var p = new SharpMap.Data.Providers.ShapeFile(GetTestFile(), false);
+            var p = new SharpMap.Data.Providers.ShapeFile(TestUtility.GetPathToTestFile("roads_aur.shp"), false);
             var l = new SharpMap.Layers.VectorLayer("roads", p);
             //l.Style.Outline = new System.Drawing.Pen(System.Drawing.Color.Firebrick, 5);
             l.Style.Line = new System.Drawing.Pen(System.Drawing.Color.Gold, 1);
@@ -52,10 +49,10 @@
 
         }
 
-        [NUnit.Framework.Test, NUnit.Framework.Ignore("DataSet inapropriate (too large)")]
+        [Test]
         public void TestWarpedLineSymbolizer()
         {
-            var p = new SharpMap.Data.Providers.ShapeFile(GetTestFile(), false);
+            var p = new SharpMap.Data.Providers.ShapeFile(TestUtility.GetPathToTestFile("roads_aur.shp"), false);
 
             var l = new SharpMap.Layers.VectorLayer("roads", p);
             
@@ -168,7 +165,7 @@
         [NUnit.Framework.Test]
         public void TestCachedLineSymbolizerInTheme()
         {
-            var p = new SharpMap.Data.Providers.ShapeFile(GetTestFile(), false);
+            var p = new SharpMap.Data.Providers.ShapeFile(TestUtility.GetPathToTestFile("roads_aur.shp"), false);
 
             var l = new SharpMap.Layers.VectorLayer("roads", p);
             var theme = new ClsTheme(l.Style);

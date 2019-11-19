@@ -11,7 +11,6 @@ using BruTile;
 using BruTile.Cache;
 using BruTile.MbTiles;
 using BruTile.Predefined;
-using BruTile.Serialization.Tests;
 using BruTile.Web;
 using BruTile.Wmts;
 using NUnit.Framework;

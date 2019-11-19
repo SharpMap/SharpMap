@@ -8,6 +8,7 @@ using System.Xml.Serialization;
 using SharpMap.Serialization;
 using System.IO;
 using System.Net;
+using System.Resources;
 using SharpMap.Layers;
 
 namespace UnitTests.Serialization
@@ -32,9 +33,7 @@ namespace UnitTests.Serialization
         }
 
         [Test]
-#if LINUX
         [Ignore("Xml somehow different than on Windows")]
-#endif
         public void TestSerializeWmsLayer()
         {
             SharpMap.Map m = new SharpMap.Map();
@@ -44,6 +43,7 @@ namespace UnitTests.Serialization
             MemoryStream ms = new MemoryStream();
             SharpMap.Serialization.MapSerialization.SaveMapToStream(m, ms);
             string txt = Encoding.ASCII.GetString(ms.ToArray());
+            txt = txt.Replace("\r\n", "");
             System.Diagnostics.Trace.WriteLine(txt);
             Assert.IsTrue(txt.Contains(@"<Layers><MapLayer xsi:type=""WmsLayer"">
       <Name>testwms</Name>

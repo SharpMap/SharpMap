@@ -44,19 +44,19 @@ namespace UnitTests.Serialization
                 return (T)(IProvider)new GeometryProvider(gf.CreatePoint(new Coordinate(1, 1)));
 
             if (typeof(T) == typeof(ShapeFile))
-                return (T)(IProvider)new ShapeFile(Path.Combine("TestData", "roads_ugl.shp"));
+                return (T)(IProvider)new ShapeFile(TestUtility.GetPathToTestFile("roads_ugl.shp"));
 
             if (typeof(T) == typeof(PostGIS))
-                return (T)(IProvider)new PostGIS("Host=127.0.0.1;Port=5432;User Id=postgres;Password=1.Kennwort;database=postgis_sample;",
+                return (T)(IProvider)new PostGIS("Host=ivv-t3s.ivv-aachen.de;Port=5432;integrated security=true;database=postgis_sample;",
                     "rivers", "wkb_geometry", "ogc_fid");
 
 #if !LINUX
             if (typeof(T) == typeof(ManagedSpatiaLite))
-                return (T)(IProvider)new ManagedSpatiaLite($"Data Source={Path.Combine("TestData", "test-2.3.sqlite")};",
+                return (T)(IProvider)new ManagedSpatiaLite($"Data Source={TestUtility.GetPathToTestFile("test-2.3.sqlite")};",
                                                             "HighWays", "Geometry", "PK_UID");
 
             if (typeof(T) == typeof(SpatiaLite))
-                return (T)(IProvider)new SpatiaLite($"Data Source={Path.Combine("TestData", "test-2.3.sqlite")};",
+                return (T)(IProvider)new SpatiaLite($"Data Source={TestUtility.GetPathToTestFile("test-2.3.sqlite")};",
                                                             "HighWays", "Geometry", "PK_UID");
 
             if (typeof(T) == typeof(SqlServer2008))
@@ -98,17 +98,20 @@ namespace UnitTests.Serialization
         [Test, Ignore("Postgres Connection string needs to be ok")]
         public void TestPostGIS()
         {
-            var pS = CreateProvider<PostGIS>(); 
+            using (var pS = CreateProvider<PostGIS>())
+            {
                 //new PostGIS(Properties.Settings.Default.PostGis,
                 //                 "rivers", "wkb_geometry", "ogc_fid");
-            PostGIS pD = null;
-            Assert.DoesNotThrow( () => pD = SandD(pS, GetFormatter()));
+                PostGIS pD = null;
+                Assert.DoesNotThrow(() => pD = SandD(pS, GetFormatter()));
 
-            Assert.AreEqual(pS.ConnectionString, pD.ConnectionString);
-            Assert.AreEqual(pS.Table, pD.Table);
-            Assert.AreEqual(pS.GeometryColumn, pD.GeometryColumn);
-            Assert.AreEqual(pS.ObjectIdColumn, pD.ObjectIdColumn);
-            Assert.AreEqual(pS.SRID, pD.SRID);
+                Assert.AreEqual(pS.ConnectionString, pD.ConnectionString);
+                Assert.AreEqual(pS.Table, pD.Table);
+                Assert.AreEqual(pS.GeometryColumn, pD.GeometryColumn);
+                Assert.AreEqual(pS.ObjectIdColumn, pD.ObjectIdColumn);
+                Assert.AreEqual(pS.SRID, pD.SRID);
+                pD.Dispose();
+            }
         }
 
 #if !LINUX

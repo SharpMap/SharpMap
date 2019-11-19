@@ -15,10 +15,7 @@ namespace UnitTests.Data.Providers
     {
         private static string TestDataPath 
         {
-            get
-            {
-                return Path.Combine("TestData", "roads_ugl.shp");
-            }
+            get => TestUtility.GetPathToTestFile("roads_ugl.shp");
         }
 
         public ShapeFileWithMemoryCacheThreadingTest()
@@ -58,10 +55,7 @@ namespace UnitTests.Data.Providers
     {
         internal static string TestDataPath
         {
-            get
-            {
-                return Path.Combine("TestData", "roads_ugl.shp");
-            }
+            get { return TestUtility.GetPathToTestFile("roads_ugl.shp"); }
         }
 
         public override void OneTimeSetUp()
@@ -103,7 +97,7 @@ namespace UnitTests.Data.Providers
 
     }
 
-    [Ignore("Only run if you have a proper postgis connection")]
+    //[Ignore("Only run if you have a proper postgis connection")]
     public class PostGisThreadingTest : ThreadingTest
     {
         public PostGisThreadingTest()
@@ -112,8 +106,9 @@ namespace UnitTests.Data.Providers
         }
     }
 
-#if !LINUX
+#if LINUX
     [Ignore("Only run if you have a proper ManagedSpatiaLite connection")]
+#endif
     public class ManagedSpatiaLiteThreadingTest : ThreadingTest
     {
         public ManagedSpatiaLiteThreadingTest()
@@ -121,7 +116,6 @@ namespace UnitTests.Data.Providers
         {
         }
     }
-#endif
 
     [Ignore("Only run if you have a proper sqlserver2008 connection")]
     public class SqlSever2008ThreadingTest : ThreadingTest
