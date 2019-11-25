@@ -373,8 +373,18 @@ namespace SharpMap.Data.Providers
                     Close();
                     if (_tree != null)
                     {
-                        if (_tree is IDisposable)
-                            ((IDisposable)_tree).Dispose();
+                        bool disposeTree = true;
+                        
+                        // If we are in a web-context we might not be entitled to dispose the spatial index!
+                        if (Web.HttpCacheUtility.IsWebContext)
+                        {
+                            if (Web.HttpCacheUtility.TryGetValue(_filename, out ISpatialIndex<uint> tree))
+                                disposeTree = tree == _tree;
+                        }
+
+                        if (disposeTree && _tree is IDisposable disposableTree)
+                            disposableTree.Dispose();
+
                         _tree = null;
                     }
 
