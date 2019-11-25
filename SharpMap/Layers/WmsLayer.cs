@@ -21,7 +21,6 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Text;
 using GeoAPI.Geometries;
@@ -69,8 +68,6 @@ namespace SharpMap.Layers
 
         private Boolean _continueOnError;
         //private ICredentials _credentials;
-        [NonSerialized]
-        private ImageAttributes _imageAttributes;
 
         private float _opacity = 1.0f;
         private readonly Collection<string> _layerList;
@@ -279,20 +276,11 @@ namespace SharpMap.Layers
                 if (value > 1f) value = 1f;
 
                 _opacity = value;
-                if (_imageAttributes != null)
-                    _imageAttributes.Dispose();
-
-                if (_opacity < 1f)
-                {
-                    _imageAttributes = new ImageAttributes();
-                    _imageAttributes.SetColorMatrix(new ColorMatrix { Matrix33 = _opacity },
-                        ColorMatrixFlag.Default, ColorAdjustType.Bitmap);
-                }
             }
         }
 
         /// <summary>
-        /// Set the opacity on the drawn image, this method updates the ImageAttributes with opacity-values and is used when sharpmap draws the image, the the wms-server
+        /// Set the opacity on the drawn image, this method updates the ImageAttributes with opacity-values and is used when SharpMap draws the image, the the wms-server
         /// 1.0 = No transparency
         /// 0.0 = full transparency
         /// </summary>
@@ -364,23 +352,21 @@ namespace SharpMap.Layers
         /// </code>
         /// </example>
         /// </remarks>
-        [Obsolete("Use transparency instead")]
+        [Obsolete("Use Opacity instead")]
         public ImageAttributes ImageAttributes
         {
-            get { return _imageAttributes; }
-            set { _imageAttributes = value; }
+            get { return CreateImageAttributes(Opacity); }
+            set { /*_imageAttributes = value;*/ }
         }
+
 
         /// <summary>
         /// Returns the extent of the layer
         /// </summary>
         /// <returns>Bounding box corresponding to the extent of the features in the layer</returns>
-        public override Envelope Envelope
+        public override Envelope Envelope 
         {
-            get
-            {
-                return _envelope ?? (_envelope = GetEnvelope());
-            }
+            get { return _envelope ?? (_envelope = GetEnvelope()); }
         }
 
         public override int SRID
@@ -667,7 +653,7 @@ namespace SharpMap.Layers
                                             }
 
                                             if (Logger.IsDebugEnabled)
-                                                Logger.Debug("No data to read. Have received: " + 
+                                                Logger.Debug("No data to read. Have received: " +
                                                              numRead + " of " + cLength);
 
 
@@ -706,9 +692,15 @@ namespace SharpMap.Layers
                             if (Logger.IsDebugEnabled)
                                 Logger.Debug("Image read.. Drawing");
 
-                            if (_imageAttributes != null)
-                                g.DrawImage(img, new Rectangle(0, 0, img.Width, img.Height), 0, 0,
-                                    img.Width, img.Height, GraphicsUnit.Pixel, _imageAttributes);
+                            if (Opacity < 1f)
+                            {
+                                using (var ia = CreateImageAttributes(Opacity))
+                                {
+                                    g.DrawImage(img, new Rectangle(0, 0, img.Width, img.Height), 0, 0,
+                                        img.Width, img.Height, GraphicsUnit.Pixel, ia);
+                                }
+
+                            }
                             else
                                 g.DrawImage(img, Rectangle.FromLTRB(0, 0, map.Size.Width, map.Size.Height));
 
@@ -898,6 +890,29 @@ namespace SharpMap.Layers
             {
                 AddChildLayers(childlayer, true);
             }
+        }
+
+        /// <summary>
+        /// Utility function to create <see cref="T:System.Drawing.Imaging.ImageAttributes"/>
+        /// for a given <paramref name="opacity"/> value
+        /// </summary>
+        /// <param name="opacity">The opacity value</param>
+        /// <returns>An object describing image attributes. Don't forget to dispose it!</returns>
+        private static ImageAttributes CreateImageAttributes(float opacity)
+        {
+            float[][] colorMatrixElements =
+            {
+                new [] {1f, 0, 0, 0, 0},
+                new [] {0f, 1, 0, 0, 0},
+                new [] {0f, 0, 1, 0, 0},
+                new [] {0f, 0, 0, opacity, 0},
+                new [] {0f, 0, 0, 0, 1}
+            };
+            var colorMatrix = new ColorMatrix(colorMatrixElements);
+            var imageAttributes = new ImageAttributes();
+            imageAttributes.SetColorMatrix(colorMatrix, ColorMatrixFlag.Default, ColorAdjustType.Bitmap);
+
+            return imageAttributes;
         }
     }
 }
