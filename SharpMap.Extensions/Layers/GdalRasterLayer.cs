@@ -348,7 +348,8 @@ namespace SharpMap.Layers
         /// 
         public GdalRasterLayer(string strLayerName, byte[] imageBuffer) : this(strLayerName)
         {
-            var memoryFileName = @"/vsimem/tempImage";
+            // a layer data name
+            string memoryFileName = $"/vsimem/{strLayerName}Data";
 
             Filename = memoryFileName;
             OpenDataset(imageBuffer, memoryFileName);
@@ -376,21 +377,13 @@ namespace SharpMap.Layers
                 // have gdal read the projection
                 Projection = _gdalDataset.GetProjectionRef();
 
-                // no projection info found in the image...check for a prj
-                if (Projection == "" &&
-                    File.Exists(memoryFileName.Substring(0, memoryFileName.LastIndexOf(".", StringComparison.CurrentCultureIgnoreCase)) + ".prj"))
-                {
-                    Projection =
-                        File.ReadAllText(memoryFileName.Substring(0, memoryFileName.LastIndexOf(".", StringComparison.CurrentCultureIgnoreCase)) + ".prj");
-                }
-
-                if (!String.IsNullOrEmpty(Projection))
+                if (!string.IsNullOrEmpty(Projection))
                 {
                     using (var p = new OSGeo.OSR.SpatialReference(null))
                     {
-                        var wkt = Projection;
-                        var res = p.ImportFromWkt(ref wkt);
-                        var srid = 0;
+                        string wkt = Projection;
+                        int res = p.ImportFromWkt(ref wkt);
+                        int srid = 0;
                         if (res == 0)
                         {
                             if (Projection.StartsWith("PROJCS"))
