@@ -1,10 +1,64 @@
 ﻿using System.Net;
+using GeoAPI.Geometries;
+using NetTopologySuite.Features;
 using NUnit.Framework;
 
 namespace UnitTests.Issues
 {
     public class GitHub
     {
+        [Test]
+        [Description("Shape is not getting plotted on the map image generated")]
+        public void TestIssue78()
+        {
+            string jsonFile = TestUtility.GetPathToTestFile("FeatureCollection.json");
+            if (!System.IO.File.Exists(jsonFile))
+                Assert.Ignore("Test file {0} not present.", jsonFile);
+
+            string json = System.IO.File.ReadAllText(jsonFile);
+            var env = new Envelope();
+
+            using (var map = new SharpMap.Map(new System.Drawing.Size(800, 400)))
+            {
+                map.Layers.Add(new SharpMap.Layers.TileLayer(
+                    BruTile.Predefined.KnownTileSources.Create(BruTile.Predefined.KnownTileSource.BingRoadsStaging, string.Empty), "BingRoad"));
+
+                var rss = Newtonsoft.Json.Linq.JObject.Parse(json);
+                var jsonReader = new NetTopologySuite.IO.GeoJsonReader();
+
+                foreach (var shape in rss["features"])
+                {
+                    var feature = jsonReader.Read<IFeature>(shape.ToString(Newtonsoft.Json.Formatting.None));
+                    var geom = feature.Geometry;
+
+                    var fp = new SharpMap.Data.Providers.GeometryFeatureProvider(geom);
+                    var layer = new SharpMap.Layers.VectorLayer("geojson", fp);
+
+                    layer.CoordinateTransformation = new
+                        ProjNet.CoordinateSystems.Transformations.CoordinateTransformationFactory().CreateFromCoordinateSystems(
+                        ProjNet.CoordinateSystems.GeographicCoordinateSystem.WGS84,
+                        ProjNet.CoordinateSystems.ProjectedCoordinateSystem.WebMercator);
+
+                    layer.Style = new SharpMap.Styles.VectorStyle
+                    {
+                        Fill = new System.Drawing.SolidBrush(System.Drawing.Color.FromArgb(100, 255, 0, 0)),
+                        Outline = new System.Drawing.Pen(System.Drawing.Color.Red, 1.5f),
+                        EnableOutline = true
+                    };
+
+                    env.ExpandToInclude(layer.Envelope);
+                    map.Layers.Add(layer);
+                }
+
+                map.ZoomToBox(env);
+                map.Zoom *= 1.1;
+
+                using (var img = map.GetMap())
+                    img.Save(System.IO.Path.Combine(UnitTestsFixture.GetImageDirectory(this), $"TestIssue78.png"));
+
+            }
+        }
+
 #if !LINUX
         [TestCase]
         [Description("Raster Layer removed when apply rotation on map")]
