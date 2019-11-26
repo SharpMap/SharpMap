@@ -468,11 +468,11 @@ namespace SharpMap.Forms.ImageGenerator
 
         private Bitmap MergeImages(uint generation, Rectangle rectangle)
         {
-            var res = generation == _idImageGeneration
+            var res = /*generation == _idImageGeneration
                 ? (Bitmap) _image 
-                : new Bitmap(MapBox.Size.Width, MapBox.Size.Height);
+                : */ new Bitmap(MapBox.Size.Width, MapBox.Size.Height);
 
-            var counter = 0;
+            int counter = 0;
             while (true)
             {
                 try
