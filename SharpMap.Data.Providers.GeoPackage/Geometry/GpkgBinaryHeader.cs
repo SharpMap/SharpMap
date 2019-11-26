@@ -7,7 +7,7 @@ namespace SharpMap.Data.Providers.Geometry
 {
     internal class GpkgBinaryHeader
     {
-        private const byte IsEmptyFlag = 0x01 << 5;
+        private const byte IsEmptyFlag = 0x01 << 4;
         private const byte EndianessFlag = 0x01;
         private const byte ExtentFlags = 0x07 << 1;
 
