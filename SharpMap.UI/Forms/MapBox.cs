@@ -65,16 +65,44 @@ namespace SharpMap.Forms
 // ReSharper disable once PartialTypeWithSinglePart
     public partial class MapBox : Control
     {
-        protected override void OnInvalidated(InvalidateEventArgs e)
+        /// <summary>
+        /// A tolerance value
+        /// </summary>
+        private const double PrecisionTolerance = 0.00000001;
+
+        /// <summary>
+        /// The map image generation function to use when creating new <see cref="MapBox"/> instances
+        /// </summary>
+        private static Func<MapBox, ProgressBar, IMapBoxImageGenerator> _mapImageGeneratorFunction;
+        
+        /// <summary>
+        /// Gets or sets the map image generation function to assign when creating new MapBox instances.
+        /// </summary>
+        public static Func<MapBox, ProgressBar, IMapBoxImageGenerator> MapImageGeneratorFunction
         {
-            base.OnInvalidated(e);
-            _logger.Debug(t => t("Rectangle {0} invalidate", e.InvalidRect));
+            get => _mapImageGeneratorFunction ?? LegacyMapImageGenerator;
+            set => _mapImageGeneratorFunction = value;
         }
 
 
-        private static readonly ILog _logger = LogManager.GetLogger(typeof (MapBox));
-        private const double PrecisionTolerance = 0.00000001;
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="mapBox"></param>
+        /// <param name="progressBar"></param>
+        /// <returns></returns>
+        public static IMapBoxImageGenerator LegacyMapImageGenerator(MapBox mapBox, ProgressBar progressBar)
+        {
+            return new LegacyMapBoxImageGenerator(mapBox, progressBar);
+        }
 
+        public static IMapBoxImageGenerator LayerListImageGenerator(MapBox mapBox, ProgressBar progressBar)
+        {
+            return new LayerListImageGenerator(mapBox, progressBar);
+        }
+
+        private static readonly ILog _logger = LogManager.GetLogger(typeof (MapBox));
+        
         static MapBox() { Map.Configure(); }
 
         #region PreviewModes enumerator
@@ -83,6 +111,7 @@ namespace SharpMap.Forms
         /// <summary>
         /// Preview modes
         /// </summary>
+        [Obsolete("Not used anywhere")]
         public enum PreviewModes
         {
             /// <summary>
@@ -606,6 +635,7 @@ namespace SharpMap.Forms
         [Description("Mode used to create preview image while panning or zooming.")]
         [DefaultValue(PreviewModes.Best)]
         [Category("Behavior")]
+        [Obsolete("Not used anywhere")]
         public PreviewModes PreviewMode
         {
             get { return _previewMode; }
@@ -660,6 +690,8 @@ namespace SharpMap.Forms
                     if (cea.Cancel) return;
 
                     _map = value;
+                    using(var g = Graphics.FromImage(Image))
+                        g.Clear(_map?.BackColor ?? SystemColors.Control);
 
                     OnMapChanged(EventArgs.Empty);
                 }
@@ -782,8 +814,7 @@ namespace SharpMap.Forms
 #pragma warning restore 1587
         {
 
-            SetStyle(
-                ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.UserPaint, true);
+            SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.UserPaint, true);
             base.DoubleBuffered = true;
 
             _map = new Map(ClientSize);
@@ -799,7 +830,7 @@ namespace SharpMap.Forms
             };
             Controls.Add(_progressBar);
 
-            _miRenderer = new LegacyMapBoxImageGenerator(this, _progressBar);
+            _miRenderer = MapImageGeneratorFunction(this, _progressBar); // new LayerListImageGenerator(this, _progressBar);
 
             _activeTool = Tools.None;
             LostFocus += HandleMapBoxLostFocus;
@@ -848,6 +879,7 @@ namespace SharpMap.Forms
 
             lock (_mapLocker)
             {
+                _map.VariableLayers.Pause = true;
                 _miRenderer.Dispose();
                 _map = null;
 
@@ -1629,6 +1661,9 @@ namespace SharpMap.Forms
             // Position in world coordinates
             var p = _map.ImageToWorld(new Point(e.X, e.Y), true);
 
+            // Set the center of interest
+            _map.CenterOfInterest = p;
+
             // Raise event
             if (MouseMove != null)
                 MouseMove(p, e);
@@ -1958,6 +1993,11 @@ namespace SharpMap.Forms
             return new Rectangle(x, y, width, height);
         }
 
+        protected override void OnInvalidated(InvalidateEventArgs e)
+        {
+            base.OnInvalidated(e);
+            _logger.Debug(t => t("Rectangle {0} invalidate", e.InvalidRect));
+        }
 
         /// <summary>
         /// Invokes the <see cref="E:System.Windows.Forms.Control.Paint"/>-event.
@@ -2043,7 +2083,7 @@ namespace SharpMap.Forms
                     if (image != null && image.PixelFormat != PixelFormat.Undefined)
                     {
                         
-                        var imageEnvelope = _miRenderer.ImageEnvelope;
+                        var imageEnvelope = _miRenderer.ImageEnvelope ?? new Envelope();
                         if (_map.Envelope.Equals(imageEnvelope))
                             pe.Graphics.DrawImageUnscaled(image, 0, 0);
                         else {

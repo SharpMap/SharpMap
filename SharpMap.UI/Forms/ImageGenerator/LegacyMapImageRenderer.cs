@@ -31,13 +31,14 @@ namespace SharpMap.Forms.ImageGenerator
         private readonly object _paintImageLocker = new object();
 
         private Image _image = new Bitmap(1, 1);
-        private uint _idImageGeneration;
         private Bitmap _imageBackground = new Bitmap(1, 1);
         private Bitmap _imageStatic = new Bitmap(1, 1);
         private Bitmap _imageVariable = new Bitmap(1, 1);
         private Envelope _imageEnvelope = new Envelope(0, 1, 0, 1);
 
-        private uint _imageGeneration;
+        private long _idImageGeneration;
+        private long _imageGeneration = long.MinValue;
+        private Envelope _imageGenerationEnvelope;
 
         /// <summary>
         /// Creates an instance for this class
@@ -51,6 +52,7 @@ namespace SharpMap.Forms.ImageGenerator
             WireMapBox();
         }
 
+        /// <inheritdoc cref="IDisposable.Dispose"/>
         public void Dispose()
         {
             Dispose(true);
@@ -61,6 +63,8 @@ namespace SharpMap.Forms.ImageGenerator
         {
             if (disposing && !_isDisposed)
             {
+                _isDisposed = true;
+
                 UnwireMap();
 
                 _imageBackground?.Dispose();
@@ -74,7 +78,6 @@ namespace SharpMap.Forms.ImageGenerator
 
                 _imageEnvelope = new Envelope();
             }
-            _isDisposed = true;
         }
 
         /// <summary>
@@ -85,9 +88,7 @@ namespace SharpMap.Forms.ImageGenerator
             get { return _mapBox; }
         }
 
-
-
-
+        /// <inheritdoc cref="IMapBoxImageGenerator.Image"/>
         public Image Image
         {
             get
@@ -97,6 +98,7 @@ namespace SharpMap.Forms.ImageGenerator
             }
         }
 
+        /// <inheritdoc cref="IMapBoxImageGenerator.ImageValue"/>
         public Image ImageValue
         {
             get
@@ -108,8 +110,10 @@ namespace SharpMap.Forms.ImageGenerator
             }
         }
 
+        /// <inheritdoc cref="IMapBoxImageGenerator.IsDisposed"/>
         public bool IsDisposed { get => _isDisposed; }
 
+        /// <inheritdoc cref="IMapBoxImageGenerator.ImageEnvelope"/>
         public Envelope ImageEnvelope { get => new Envelope(_imageEnvelope); }
 
         #region Necessary event handlers
@@ -169,24 +173,32 @@ namespace SharpMap.Forms.ImageGenerator
         /// <param name="e"></param>
         private void HandleVariableLayersRequery(object sender, EventArgs e)
         {
-            if (_mapBox.IsDisposed || _isDisposed)
+            if (IsDisposed) return;
+
+            // working on local copies
+            var mapBox = _mapBox;
+            var map = _map;
+
+            if (mapBox.IsDisposed || _isDisposed )
                 return;
 
             Image oldRef;
-            lock (_mapBox.MapLocker)
+            lock (mapBox.MapLocker)
             {
-                if (_mapBox.Dragging) return;
+                if (mapBox.Dragging) return;
                 oldRef = _imageVariable;
-                _imageVariable = GetMap(_map, _map.VariableLayers, LayerCollectionType.Variable, _map.Envelope);
+                if (map == null) return;
+                _imageVariable = GetMap(map, map?.VariableLayers, LayerCollectionType.Variable, map?.Envelope);
             }
 
-            var rect = new Rectangle(Point.Empty, _mapBox.Size);
+            var rect = new Rectangle(Point.Empty, mapBox.Size);
             UpdateImage(false, rect);
             if (oldRef != null)
                 oldRef.Dispose();
 
-            _mapBox.Invalidate(rect);
-            _mapBox.Invoke(new MethodInvoker(_mapBox.Update));
+            mapBox.Invalidate(rect);
+            if (!(mapBox.IsDisposed || _isDisposed))
+                mapBox.Invoke(new MethodInvoker(() => { if (!mapBox.IsDisposed) mapBox.Update(); }));
 
             //// TODO Why?
             //Application.DoEvents();
@@ -232,29 +244,24 @@ namespace SharpMap.Forms.ImageGenerator
         {
             try
             {
-                var width = _mapBox.Width;
-                var height = _mapBox.Height;
+                int width = map?.Size.Width ?? 0;
+                int height = map?.Size.Height ?? 0;
 
-                if ((layers == null || layers.Count == 0 || width <= 0 || height <= 0))
+                if (map == null || layers == null || layers.Count == 0 || width <= 0 || height <= 0)
                 {
                     if (layerCollectionType == LayerCollectionType.Background)
                         return new Bitmap(1, 1);
                     return null;
                 }
 
-                var retval = new Bitmap(width, height, PixelFormat.Format32bppArgb);
-
-                using (var g = Graphics.FromImage(retval))
+                var res = new Bitmap(width, height, PixelFormat.Format32bppArgb);
+                using (var g = Graphics.FromImage(res))
                 {
                     g.Clear(Color.Transparent);
                     map.RenderMap(g, layerCollectionType, false, true);
                 }
 
-                /*if (layerCollectionType == LayerCollectionType.Variable)
-                    retval.MakeTransparent(_map.BackColor);
-                else if (layerCollectionType == LayerCollectionType.Static && map.BackgroundLayer.Count > 0)
-                    retval.MakeTransparent(_map.BackColor);*/
-                return retval;
+                return res;
             }
             catch (Exception ee)
             {
@@ -266,7 +273,7 @@ namespace SharpMap.Forms.ImageGenerator
             }
         }
 
-        private void GetImagesAsync(Envelope extent, uint imageGeneration)
+        private void GetImagesAsync(Envelope extent, long imageGeneration)
         {
             lock (_mapBox.MapLocker)
             {
@@ -296,7 +303,7 @@ namespace SharpMap.Forms.ImageGenerator
         {
             public MapBox.Tools? Tool { get; set; }
             public Envelope bbox { get; set; }
-            public uint Generation { get; set; }
+            public long Generation { get; set; }
             public Rectangle UpdateArea { get; set; }
 
 #if DEBUG
@@ -306,23 +313,28 @@ namespace SharpMap.Forms.ImageGenerator
 
         private void GetImagesAsyncEnd(GetImageEndResult res)
         {
-            // draw only if generation is larger than the current, else we have aldready drawn something newer
-            // we must to check also IsHandleCreated because during disposal, the handle of the parent is detroyed sooner than progress bar's handle,
-            // this leads to cross thread operation and exception because InvokeRequired returns false, but for the progress bar it is true.
+            // draw only if generation is larger than the current, else we have already drawn something newer
+            // we must to check also IsHandleCreated because during disposal, the handle of the parent is destroyed
+            // sooner than progress bar's handle, this leads to cross thread operation and exception because
+            // InvokeRequired returns false, but for the progress bar it is true.
             if (res == null || res.Generation < _imageGeneration || _isDisposed || !_mapBox.IsHandleCreated)
                 return;
 
+            //if (_imageGenerationEnvelope != null)
+            //{
+            //    if (!_imageGenerationEnvelope.Equals(res.bbox))
+            //        return;
+            //}
 
             if (_logger.IsDebugEnabled)
                 _logger.DebugFormat("{0} - {1} / {2}", res.Generation, res.bbox, res.UpdateArea);
 
-
-            if ((_mapBox.SetToolsNoneWhileRedrawing|| _mapBox.ShowProgressUpdate) && _mapBox.InvokeRequired)
+            var mapBox = _mapBox;
+            if ((mapBox.SetToolsNoneWhileRedrawing|| mapBox.ShowProgressUpdate) && mapBox.InvokeRequired)
             {
                 try
                 {
-                    _mapBox.BeginInvoke(new MethodInvoker(() => GetImagesAsyncEnd(res)));
-
+                    mapBox.BeginInvoke(new MethodInvoker(() => GetImagesAsyncEnd(res)));
                 }
                 catch (Exception ex)
                 {
@@ -334,68 +346,10 @@ namespace SharpMap.Forms.ImageGenerator
                 try
                 {
                     var oldRef = _image;
-                    var width = _mapBox.Width;
-                    var height = _mapBox.Height;
+                    int width = mapBox.Width;
+                    int height = mapBox.Height;
                     if (width > 0 && height > 0)
                     {
-
-
-                        /*
-                        Bitmap bmp = new Bitmap(width, height);
-                        using (var g = Graphics.FromImage(bmp))
-                        {
-                            g.Clear(_map.BackColor);
-                            lock (_backgroundImagesLocker)
-                            {
-                                //Draws the background Image
-                                if (_imageBackground != null)
-                                {
-                                    try
-                                    {
-                                        g.DrawImageUnscaled(_imageBackground, 0, 0);
-                                    }
-                                    catch (Exception ex)
-                                    {
-                                        _logger.Warn(ex.Message, ex);
-                                    }
-                                }
-                            }
-
-                            //Draws the static images
-                            if (_staticImagesLocker != null)
-                            {
-                                try
-                                {
-                                    if (_imageStatic != null)
-                                    {
-                                        g.DrawImageUnscaled(_imageStatic, 0, 0);
-                                    }
-                                }
-                                catch (Exception ex)
-                                {
-                                    _logger.Warn(ex.Message, ex);
-                                }
-
-                            }
-
-                            //Draws the variable Images
-                            if (_imageVariable != null)
-                            {
-                                try
-                                {
-                                    g.DrawImageUnscaled(_imageVariable, 0, 0);
-                                }
-                                catch (Exception ex)
-                                {
-                                    _logger.Warn(ex.Message, ex);
-                                }
-                            }
-
-                            g.Dispose();
-                        }
-                        */
-
-
                         var bmp = MergeImages(res.Generation, res.UpdateArea);
 
                         lock (_paintImageLocker)
@@ -411,16 +365,16 @@ namespace SharpMap.Forms.ImageGenerator
 
                     if (res.Tool.HasValue)
                     {
-                        if (_mapBox.SetToolsNoneWhileRedrawing)
-                            _mapBox.ActiveTool = res.Tool.Value;
+                        if (mapBox.SetToolsNoneWhileRedrawing)
+                            mapBox.ActiveTool = res.Tool.Value;
 
-                        _mapBox.ClearDrag();
+                        mapBox.ClearDrag();
                         //_isRefreshing = false;
 
-                        if (_mapBox.SetToolsNoneWhileRedrawing)
-                            _mapBox.Enabled = true;
+                        if (mapBox.SetToolsNoneWhileRedrawing)
+                            mapBox.Enabled = true;
 
-                        if (_mapBox.ShowProgressUpdate)
+                        if (mapBox.ShowProgressUpdate)
                         {
                             _progressBar.Enabled = false;
                             _progressBar.Visible = false;
@@ -433,8 +387,9 @@ namespace SharpMap.Forms.ImageGenerator
                             oldRef.Dispose();
                     }
 
-                    _mapBox.Invalidate(res.UpdateArea);
-                    _mapBox.Invoke(new MethodInvoker(_mapBox.Update));
+                    mapBox.Invalidate(res.UpdateArea);
+                    if (!(IsDisposed || mapBox.IsDisposed))
+                        mapBox.Invoke(new MethodInvoker(() => { if (!mapBox.IsDisposed) mapBox.Update(); }));
                 }
                 catch (Exception ex)
                 {
@@ -443,34 +398,30 @@ namespace SharpMap.Forms.ImageGenerator
 
 #if DEBUG
                 if (res.Watch != null)
-                { res.Watch.Stop();
-                _mapBox.LastRefreshTime = res.Watch.Elapsed;
+                { 
+                    res.Watch.Stop();
+                    mapBox.LastRefreshTime = res.Watch.Elapsed;
                 }
 #endif
 
                 try
                 {
-                    _mapBox.OnMapRefreshed(EventArgs.Empty);
-                    /*
-                    if (_mapBox.MapRefreshed != null)
-                    {
-                        MapRefreshed(this, null);
-                    }
-*/
+                    mapBox.OnMapRefreshed(EventArgs.Empty);
                 }
                 catch (Exception ee)
                 {
-                    //Trap errors that occured when calling the eventhandlers
-                    _logger.Warn("Exception while calling eventhandler", ee);
+                    // Trap errors that occured when calling the event-handlers
+                    _logger.Warn("Exception while calling OnMapRefreshed", ee);
                 }
             }
         }
 
-        private Bitmap MergeImages(uint generation, Rectangle rectangle)
+        [MethodImpl(MethodImplOptions.Synchronized)]
+        private Bitmap MergeImages(long generation, Rectangle rectangle)
         {
-            var res = /*generation == _idImageGeneration
-                ? (Bitmap) _image 
-                : */ new Bitmap(MapBox.Size.Width, MapBox.Size.Height);
+            var res = generation == _idImageGeneration
+                ? (Bitmap) _image
+                : new Bitmap(MapBox.Size.Width, MapBox.Size.Height);
 
             int counter = 0;
             while (true)
@@ -480,10 +431,19 @@ namespace SharpMap.Forms.ImageGenerator
                     counter++;
                     using (var g = Graphics.FromImage(res))
                     {
-                        lock (_backgroundImagesLocker)
-                            TryDrawImage(g, _imageBackground, rectangle);
+                        if (_map.BackgroundLayer.Count == 0)
+                        {
+                            g.Clear(_map.BackColor);
+                        }
+                        else
+                        {
+                            lock (_backgroundImagesLocker)
+                                TryDrawImage(g, _imageBackground, rectangle);
+                        }
+
                         lock (_staticImagesLocker)
                             TryDrawImage(g, _imageStatic, rectangle);
+
                         TryDrawImage(g, _imageVariable, rectangle);
                     }
 
@@ -540,12 +500,13 @@ namespace SharpMap.Forms.ImageGenerator
 #endif
 
 
-            var width = _mapBox.Width;
-            var height = _mapBox.Height;
-            if (((_imageStatic == null && _imageVariable == null && _imageBackground == null) && !forceRefresh) ||
-                (width == 0 || height == 0)) return;
+            int width = _mapBox.Width;
+            int height = _mapBox.Height;
+            if (_imageStatic == null && _imageVariable == null && _imageBackground == null
+                && !forceRefresh 
+                || width == 0 || height == 0) return;
 
-            Envelope bbox = _map.Envelope;
+            var bbox = _map.Envelope;
             if (forceRefresh) // && _isRefreshing == false)
             {
                 //_isRefreshing = true;
@@ -574,10 +535,12 @@ namespace SharpMap.Forms.ImageGenerator
                 }
 
                 // Assert we never run into overflow errors
-                if (_imageGeneration == uint.MaxValue)
+                if (_imageGeneration == long.MaxValue)
                     _imageGeneration = 0;
 
-                var generation = ++_imageGeneration;
+                Interlocked.Increment(ref _imageGeneration);
+                long generation = _imageGeneration;
+                _imageGenerationEnvelope = bbox;
                 ThreadPool.QueueUserWorkItem(
                     delegate
                     {
