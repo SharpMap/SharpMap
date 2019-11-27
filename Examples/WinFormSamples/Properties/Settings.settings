@@ -24,7 +24,7 @@
       <Value Profile="(Default)">Data Source=;Initial Catalog=;Integrated Security=True</Value>
     </Setting>
     <Setting Name="OleDbProvider" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">Microsoft.ACE.OLEDB.15.0</Value>
+      <Value Profile="(Default)">Microsoft.ACE.OLEDB.12.0</Value>
     </Setting>
   </Settings>
 </SettingsFile>

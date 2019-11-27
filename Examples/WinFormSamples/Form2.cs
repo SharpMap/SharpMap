@@ -5,6 +5,7 @@ using SharpMap.Data;
 using SharpMap.Rendering.Decoration;
 using SharpMap.Rendering.Decoration.Graticule;
 using SharpMap.Rendering.Decoration.ScaleBar;
+using WinFormSamples.Samples;
 
 namespace WinFormSamples
 {
@@ -31,11 +32,12 @@ namespace WinFormSamples
             this.InitializeComponent();
             // this.SetStyle(ControlStyles.DoubleBuffer | ControlStyles.UserPaint | ControlStyles.AllPaintingInWmPaint, true);
             this.UpdateStyles();
+            this.mapBox1.ShowProgressUpdate = true;
         }
 
         private void Form2_Load(object sender, EventArgs e)
         {
-            var tileLayer = new TileAsyncLayer(KnownTileSources.Create(KnownTileSource.BingRoadsStaging), "TileLayer");
+            var tileLayer = new TileAsyncLayer(KnownTileSources.Create(KnownTileSource.BingRoadsStaging, userAgent:TileLayerSample.DefaultUserAgent), "TileLayer");
 
             this.mapBox1.Map.BackgroundLayer.Add(tileLayer);
             GeometryFactory gf = new GeometryFactory(new PrecisionModel(), 3857);

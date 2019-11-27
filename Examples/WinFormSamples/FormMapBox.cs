@@ -52,6 +52,7 @@ namespace WinFormSamples
             AddToListView = false;
 
             InitializeComponent();
+            
             mapBox1.ActiveTool = MapBox.Tools.Pan;
 
             var loadedAssemblies = AppDomain.CurrentDomain.GetAssemblies();
@@ -68,6 +69,8 @@ namespace WinFormSamples
             AppDomain.CurrentDomain.AssemblyLoad += HandleAssemblyLoad;
 
             pgMapDecoration.SelectedObject = null;
+            radioButton2.Checked = true;
+            radioButton_Click(radioButton2, EventArgs.Empty);
         }
 
         private void HandleAssemblyLoad(object sender, AssemblyLoadEventArgs args)
@@ -78,19 +81,26 @@ namespace WinFormSamples
         private void LoadMapDecorationTypes(System.Reflection.Assembly a)
         {
             var mdtype = typeof(SharpMap.Rendering.Decoration.IMapDecoration);
-            foreach (Type type in a.GetTypes())
+            try
             {
-                if (type.FullName.StartsWith("SharpMap"))
-                    Console.WriteLine(type.FullName);
-                if (mdtype.IsAssignableFrom(type))
+                foreach (Type type in a.GetTypes())
                 {
-                    if (!type.IsAbstract)
+                    if (type.FullName.StartsWith("SharpMap"))
+                        Console.WriteLine(type.FullName);
+                    if (mdtype.IsAssignableFrom(type))
                     {
-                        if (AddToListView)
-                            lvwDecorations.Items.Add(new ListViewItem(type.Name));
-                        MapDecorationTypes[type.Name] = type;
+                        if (!type.IsAbstract)
+                        {
+                            if (AddToListView)
+                                lvwDecorations.Items.Add(new ListViewItem(type.Name));
+                            MapDecorationTypes[type.Name] = type;
+                        }
                     }
                 }
+            }
+            catch (Exception e)
+            {
+                
             }
         }
 

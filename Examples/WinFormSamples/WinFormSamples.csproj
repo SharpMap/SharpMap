@@ -18,6 +18,7 @@
 
     <ItemGroup>
       <PackageReference Include="GDAL.Native" Version="2.4.2" />
+      <PackageReference Include="Npgsql" Version="4.0.10" />
       <PackageReference Include="ProjNET4GeoAPI" Version="1.4.1" />
     </ItemGroup>
 
@@ -46,6 +47,21 @@
         <None Update="Resources\**">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Update="Properties\Settings.Designer.cs">
+        <DesignTimeSharedInput>True</DesignTimeSharedInput>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>Settings.settings</DependentUpon>
+      </Compile>
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Update="Properties\Settings.settings">
+        <Generator>SettingsSingleFileGenerator</Generator>
+        <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+      </None>
     </ItemGroup>
 
 </Project>

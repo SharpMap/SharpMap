@@ -6,7 +6,8 @@ namespace WinFormSamples.Samples
     class TileLayerSample
     {
         private static Int32 _num;
-        
+        internal const string DefaultUserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:70.0) Gecko/20100101 Firefox/70.0";
+
         public static SharpMap.Map InitializeMap(float angle)
         {
             switch (_num++ % 6)
@@ -53,7 +54,7 @@ namespace WinFormSamples.Samples
             var map = new SharpMap.Map();
 
             var tileLayer = new SharpMap.Layers.TileAsyncLayer(
-                KnownTileSources.Create(KnownTileSource.OpenStreetMap), "TileLayer - OSM");
+                KnownTileSources.Create(KnownTileSource.OpenStreetMap, userAgent: DefaultUserAgent), "TileLayer - OSM");
             map.BackgroundLayer.Add(tileLayer);
             map.ZoomToBox(tileLayer.Envelope);
             
@@ -67,7 +68,7 @@ namespace WinFormSamples.Samples
             var map = new SharpMap.Map();
 
             var tileLayer = new SharpMap.Layers.TileAsyncLayer(
-                KnownTileSources.Create(KnownTileSource.OpenStreetMap), "TileLayer - OSM with XLS");
+                KnownTileSources.Create(KnownTileSource.OpenStreetMap, userAgent: DefaultUserAgent), "TileLayer - OSM with XLS");
             map.BackgroundLayer.Add(tileLayer);
 
             //Get data from excel
@@ -134,8 +135,7 @@ namespace WinFormSamples.Samples
         {
             var map = new SharpMap.Map();
 
-            var tileSources = KnownTileSources.Create();
-            var tileSource = KnownTileSources.Create(KnownTileSource.OpenStreetMap);
+            var tileSource = KnownTileSources.Create(KnownTileSource.OpenStreetMap, userAgent: DefaultUserAgent);
 
             var tileLayer = new SharpMap.Layers.TileAsyncLayer(tileSource, "TileLayer - OSM with VLC");
             map.BackgroundLayer.Add(tileLayer);
@@ -175,7 +175,7 @@ namespace WinFormSamples.Samples
             var map = new SharpMap.Map();
 
             var tileLayer = new SharpMap.Layers.TileLayer(
-                KnownTileSources.Create(mt), "TileLayer - Bing " + mt);
+                KnownTileSources.Create(mt, userAgent: DefaultUserAgent), "TileLayer - Bing " + mt);
             map.BackgroundLayer.Add(tileLayer);
             map.ZoomToBox(tileLayer.Envelope);
             return map;

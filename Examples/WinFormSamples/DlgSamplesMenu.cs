@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
+using SharpMap.Forms;
 
 namespace WinFormSamples
 {
@@ -13,6 +14,8 @@ namespace WinFormSamples
         public DlgSamplesMenu()
         {
             InitializeComponent();
+            checkBox1.Checked = true;
+            button2.Focus();
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -47,5 +50,12 @@ namespace WinFormSamples
                 f.ShowDialog();
         }
 
+        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        {
+            if (checkBox1.Checked)
+                MapBox.MapImageGeneratorFunction = null;
+            else 
+                MapBox.MapImageGeneratorFunction = MapBox.LayerListImageGenerator;
+        }
     }
 }

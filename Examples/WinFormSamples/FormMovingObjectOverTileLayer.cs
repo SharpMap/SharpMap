@@ -38,11 +38,11 @@ namespace WinFormSamples
                 new Envelope(-9.205626, -9.123736, 38.690993, 38.740837),
                 mathTransform);
 
+            var map = new SharpMap.Map();
             //Google Background
-            TileAsyncLayer layer2 = new TileAsyncLayer(KnownTileSources.Create(KnownTileSource.OpenStreetMap), "TileLayer - OSM");
+            TileAsyncLayer layer2 = new TileAsyncLayer(KnownTileSources.Create(KnownTileSource.BingRoads), "TileLayer - Bing");
+            map.BackgroundLayer.Add(layer2);
 
-
-            this.mapBox1.Map.BackgroundLayer.Add(layer2);
             var gf = new GeometryFactory(new PrecisionModel(), 3857);
 
             //Adds a static layer
@@ -53,7 +53,7 @@ namespace WinFormSamples
             staticLayer.Style.Symbol = Resources.PumpSmall;
             var geoProviderFixed = new SharpMap.Data.Providers.GeometryProvider(aux);
             staticLayer.DataSource = geoProviderFixed;
-            this.mapBox1.Map.Layers.Add(staticLayer);
+            map.Layers.Add(staticLayer);
 
 
             //Adds a moving variable layer
@@ -63,28 +63,34 @@ namespace WinFormSamples
             pushPinLayer.Style.Symbol = Resources.OutfallSmall;
             var geoProvider = new SharpMap.Data.Providers.GeometryProvider(geos);
             pushPinLayer.DataSource = geoProvider;
-            this.mapBox1.Map.VariableLayers.Add(pushPinLayer);
+            map.VariableLayers.Add(pushPinLayer);
 
-            this.mapBox1.Map.ZoomToBox(geom);
+            map.ZoomToBox(geom);
+
+
+            this.mapBox1.Map = map;
+
             this.mapBox1.Refresh();
 
         }
 
         private void timer1_Tick(object sender, EventArgs e)
         {
+            const double step = 25;
+            
             double dx, dy;
             if (movingLeft)
-                dx = -100;
+                dx = -step;
             else
-                dx = 100;
+                dx = step;
 
             if (movingUp)
-                dy = 100;
+                dy = step;
             else
-                dy = -100;
+                dy = -step;
 
-            position.X = position.X + dx;
-            position.Y = position.Y + dy;
+            position.X += dx;
+            position.Y += dy;
 
             if (position.X < this.mapBox1.Map.Envelope.MinX)
                 movingLeft = false;
@@ -95,6 +101,8 @@ namespace WinFormSamples
                 movingUp = true;
             else if (position.Y > this.mapBox1.Map.Envelope.MaxY)
                 movingUp = false;
+
+            geos[0].GeometryChanged();
 
             //static method replaced by instance method
             //VariableLayerCollection.TouchTimer();
