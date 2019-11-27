@@ -784,7 +784,7 @@ namespace SharpMap
         /// <param name="g">the <see cref="Graphics"/> object to use</param>
         /// <param name="layerCollectionType">the <see cref="LayerCollectionType"/> to use</param>
         /// <param name="drawMapDecorations">Set whether to draw map decorations on the map (if such are set)</param>
-        /// <param name="drawTransparent">Set wether to draw with transparent background or with BackColor as background</param>
+        /// <param name="drawTransparent">Set whether to draw with transparent background or with BackColor as background</param>
         /// <exception cref="ArgumentNullException">if <see cref="Graphics"/> object is null.</exception>
         /// <exception cref="InvalidOperationException">if there are no layers to render.</exception>
         public void RenderMap(Graphics g, LayerCollectionType layerCollectionType, bool drawMapDecorations, bool drawTransparent)

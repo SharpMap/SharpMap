@@ -179,7 +179,7 @@ namespace SharpMap.Layers
                 throw new Exception("Destination image must be provided");
 
             if (destImage.Width < destX + destWidth || destImage.Height < destY + destHeight)
-                throw new Exception("Destination image is smaller than requested dimentions");
+                throw new Exception("Destination image is smaller than requested dimensions");
 
             if (srcImage == null)
                 throw new Exception("Source image must be provided");

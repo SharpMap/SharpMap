@@ -32,12 +32,12 @@ namespace SharpMap.Layers
         event MapNewTileAvaliabledHandler MapNewTileAvaliable;
 
         /// <summary>
-        /// Event raised when downloadprogress of tiles changed
+        /// Event raised when download progress of tiles has changed
         /// </summary>
         event DownloadProgressHandler DownloadProgressChanged;
 
         /// <summary>
-        /// Gets or sets a value indicating if to redraw the map only when all tiles are downloaded
+        /// Gets or sets a value indicating if the map only should only be redrawn when all tiles are downloaded
         /// </summary>
         bool OnlyRedrawWhenComplete { get; set; }
 
