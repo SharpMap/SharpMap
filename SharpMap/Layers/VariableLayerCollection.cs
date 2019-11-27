@@ -41,8 +41,16 @@ namespace SharpMap.Layers
     public class VariableLayerCollection : LayerCollection
     {
         private readonly LayerCollection _variableLayers;
+        
         [NonSerialized]
         private Timer _timer = null;
+
+        private volatile bool _isQuerying;
+
+        [NonSerialized]
+        private EventHandler<ElapsedEventArgs> _handler;
+
+        private bool _pause;
 
         /// <summary>
         /// Method to restart the internal Timer
@@ -50,16 +58,17 @@ namespace SharpMap.Layers
         public void TouchTimer()
         {
             // check for pending re-draw (eg after map pan/zoom completed)
-            if (_timer.Enabled) return;
+            //if (_timer.Enabled) return;
+            if (_isQuerying) return;
 
-            _timer.Start();
+            //_timer.Start();
             System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(OnRequery));
         }
 
         [OnDeserializing]
         public void OnDeserializing(StreamingContext context)
         {
-            _timer = new Timer();
+            //_timer = new Timer();
         }
 
         /// <summary>
@@ -74,11 +83,11 @@ namespace SharpMap.Layers
         public VariableLayerCollection(LayerCollection variableLayers)
         {
             _variableLayers = variableLayers;
-            if (_timer == null)
+            if (_handler == null)
             {
-                _timer = new Timer();
-                _timer.Interval = 500;
-                _timer.Elapsed += new ElapsedEventHandler(TimerElapsed);
+                //_timer = new Timer();
+                //_timer.Interval = 500;
+                //_timer.Elapsed += new ElapsedEventHandler(TimerElapsed);
             }
         }
 
@@ -131,13 +140,14 @@ namespace SharpMap.Layers
             if (Pause) return;
 
             // check for race condition when timer has been stopped while event has just been submitted on threadpool.QueueUserWorkItem
-            if (!_timer.Enabled) return;
+            //if (!_timer.Enabled) return;
+            if (_isQuerying) return;
 
-            _timer.Stop();
+            //_timer.Stop();
 
-            if (VariableLayerCollectionRequery != null)
-                VariableLayerCollectionRequery(null, EventArgs.Empty);
-
+            _isQuerying = true;
+            VariableLayerCollectionRequery?.Invoke(this, EventArgs.Empty);
+            _isQuerying = false;
         }
 
         /// <summary>
@@ -145,18 +155,22 @@ namespace SharpMap.Layers
         /// </summary>
         public double Interval
         {
-            get { return _timer.Interval; }
+            get
+            {
+                return 0;//_timer.Interval;
+            }
             set
             {
                 // map sets Interval == 0 when disposing, to prevent race condition
+                /*
                 if (value <= 0)
                     _timer.Stop();
                 else
                     _timer.Interval = value;
+                 */
             }
         }
 
-        private bool _pause;
         /// <summary>
         /// Gets/Sets whether this collection should currently be updated or not
         /// </summary>
