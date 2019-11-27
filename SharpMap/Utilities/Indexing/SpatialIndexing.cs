@@ -468,13 +468,19 @@ namespace SharpMap.Utilities.SpatialIndexing
         /// <param name="filename"></param>
         public void SaveIndex(string filename)
         {
-            using (var fs = new FileStream(filename + ".sidx", FileMode.Create))
+            try
             {
-                using (var bw = new BinaryWriter(fs))
+                using (var fs = new FileStream(filename + ".sidx", FileMode.Create))
                 {
-                    bw.Write(INDEXFILEVERSION); //Save index version
-                    SaveNode(this, bw);
+                    using (var bw = new BinaryWriter(fs))
+                    {
+                        bw.Write(INDEXFILEVERSION); //Save index version
+                        SaveNode(this, bw);
+                    }
                 }
+            }
+            catch (Exception)
+            {
             }
         }
 
