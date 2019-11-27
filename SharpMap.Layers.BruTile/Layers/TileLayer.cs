@@ -22,7 +22,7 @@ namespace SharpMap.Layers
     public class TileLayer : Layer, System.Runtime.Serialization.IDeserializationCallback
     {
         private static readonly ILog Logger = LogManager.GetLogger<TileLayer>();
-        
+
         #region Fields
         
         //string layerName;

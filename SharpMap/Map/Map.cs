@@ -1332,12 +1332,24 @@ namespace SharpMap
             }
         }
 
+        public Coordinate CenterOfInterest
+        {
+            get => _centerOfInterest?.Copy() ?? Center;
+            set
+            {
+                if (value == _centerOfInterest)
+                    return;
+
+                _centerOfInterest = value;
+            }
+        }
+
         /// <summary>
         /// Center of map in WCS
         /// </summary>
         public Point Center
         {
-            get { return _center; }
+            get { return _center.Copy(); }
             set
             {
                 if (value == null)
@@ -1640,6 +1652,7 @@ namespace SharpMap
         }
 
         private Int32 _disclaimerLocation;
+        private Coordinate _centerOfInterest;
 
         /// <summary>
         /// Location for the disclaimer

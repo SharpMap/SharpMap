@@ -14,6 +14,7 @@ namespace SharpMap
     {
         private readonly Envelope _envelope;
         private readonly Coordinate _center;
+        private Coordinate _centerOfInterest;
 
         private readonly float[] _mapTransformElements;
         private readonly float[] _mapTransformInvertedElements;
@@ -84,6 +85,7 @@ namespace SharpMap
             : this(map.ID, map.SRID, map.Zoom, map.MapHeight, map.Envelope, map.Size, map.PixelAspectRatio,
                 map.MapTransform, map.MapTransformInverted, map.MapTransformRotation)
         {
+            CenterOfInterest = map.CenterOfInterest;
         }
 
         /// <summary>
@@ -185,6 +187,15 @@ namespace SharpMap
         /// Gets a value indicating the center of the map viewport
         /// </summary>
         public Coordinate Center => _center.Copy();
+
+        /// <summary>
+        /// Gets a value indicating the center of the map viewport
+        /// </summary>
+        public Coordinate CenterOfInterest
+        {
+            get => _centerOfInterest?.Copy() ?? Center;
+            set => _centerOfInterest = value;
+        }
 
         /// <summary>
         /// Gets a value indicating the zoom of the map viewport
