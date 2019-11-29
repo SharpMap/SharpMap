@@ -6,6 +6,7 @@ using System.Collections.Specialized;
 using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -39,7 +40,44 @@ namespace SharpMap.Forms.ImageGenerator
 
             public override bool Equals(object obj)
             {
-                return ReferenceEquals(Sync, (obj as LockedBitmap)?.Sync);
+                bool res = ReferenceEquals(Sync, (obj as LockedBitmap)?.Sync);
+                return res;
+            }
+        }
+        private class PendingDownloadTracker : IDisposable
+        {
+            private readonly ConcurrentBag<ITileAsyncLayer> _asyncLayers = new ConcurrentBag<ITileAsyncLayer>();
+            public event DownloadProgressHandler ProgressChanged;
+
+            public int NumPendingDownloads
+            {
+                get
+                {
+                    int num = 0;
+                    foreach (var lyr in _asyncLayers)
+                        num += lyr.NumPendingDownloads;
+                    return num;
+                }
+            }
+
+            public void Add(ITileAsyncLayer asyncLayer)
+            {
+                if (asyncLayer.OnlyRedrawWhenComplete)
+                    return;
+
+                _asyncLayers.Add(asyncLayer);
+                asyncLayer.DownloadProgressChanged += HandleDownloadProgressChanged;
+            }
+
+            private void HandleDownloadProgressChanged(int tilesremaining)
+            {
+                ProgressChanged?.Invoke(NumPendingDownloads);
+            }
+
+            public void Dispose()
+            {
+                foreach (var tileAsyncLayer in _asyncLayers)
+                    tileAsyncLayer.DownloadProgressChanged -= HandleDownloadProgressChanged;
             }
         }
 
@@ -55,9 +93,9 @@ namespace SharpMap.Forms.ImageGenerator
         private CancellationTokenSource _cts = 
             new CancellationTokenSource();
 
-        private int _numPendingDownloads = 0;
-
-
+        private bool _isDisposed;
+        private PendingDownloadTracker _pendingDownloadTracker;
+        
         private MapBox MapBox { get; set; }
         
         /// <summary>
@@ -70,7 +108,7 @@ namespace SharpMap.Forms.ImageGenerator
             _progressBar = progressBar;
             _layers = new List<ILayer>();
             _imageLayers = new ConcurrentDictionary<ILayer, LockedBitmap>();
-
+            NeedsUpdate = true;
             MapBox = mapBox;
             WireMapBox();
         }
@@ -97,8 +135,15 @@ namespace SharpMap.Forms.ImageGenerator
             if (Map == null)
                 return;
 
+            /*
+            _pendingDownloadTracker = new PendingDownloadTracker();
             foreach (var lyr in EnumerateLayers(Map))
+            {
+                if (lyr is ITileAsyncLayer asyncLyr)
+                    _pendingDownloadTracker.Add(asyncLyr);
                 _layers.Add(lyr);
+            }
+            */
 
             Map.BackgroundLayer.CollectionChanged += HandleMapLayerCollectionChanged;
             Map.Layers.CollectionChanged += HandleMapLayerCollectionChanged;
@@ -107,16 +152,13 @@ namespace SharpMap.Forms.ImageGenerator
             Map.MapNewTileAvaliable += HandleMapNewTileAvaliable;
             Map.VariableLayers.VariableLayerCollectionRequery += HandleVariableLayersRequery;
             Map.RefreshNeeded += HandleMapRefreshNeeded;
+
+            NeedsUpdate = true;
         }
 
         private void HandleMapLayerCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             NeedsUpdate = true;
-            /*
-            ClearCache();
-            foreach (var lyr in EnumerateLayers(Map))
-                _layers.Add(lyr);
-             */
         }
 
         private bool NeedsUpdate { get; set; }
@@ -160,22 +202,18 @@ namespace SharpMap.Forms.ImageGenerator
 
         private void HandleVariableLayersRequery(object sender, EventArgs e)
         {
-            //using (var map = Map.Clone())
-            //{
-                var map = Map;
-                if (map.VariableLayers.Count == 0)
-                    return;
+            if (IsDisposed)
+                return;
 
-            //  map.DisposeLayersOnDispose = false;
+            var map = Map;
+            if (map.VariableLayers.Count == 0)
+                return;
 
             var mvp = new MapViewport(map);
             foreach (var lyr in Map.VariableLayers)
             {
-                //new Task<Rectangle>(RenderLayerImage, new object[] {lyr, mvp, _cts.Token }).Start();
-                ThreadPool.QueueUserWorkItem(delegate { RenderLayerImage(new object[] { lyr, mvp, _cts.Token }); });
+                ThreadPool.QueueUserWorkItem(delegate { RenderLayerImage(new object[] { lyr, mvp, _cts.Token, false }); });
             }
-            //}
-
         }
 
         private void HandleMapRefreshNeeded(object sender, EventArgs e)
@@ -189,30 +227,32 @@ namespace SharpMap.Forms.ImageGenerator
             if (sender == null)
                 return;
 
+            if (IsDisposed) 
+                return;
+
             if (!_imageLayers.TryGetValue((ILayer)sender, out var lockImg))
                 return;
 
-            if (MapBox.IsDisposed == false && IsDisposed == false)
+            var min = Point.Round(Map.WorldToImage(box.Min()));
+            var max = Point.Round(Map.WorldToImage(box.Max()));
+            var rect = new Rectangle(min.X, max.Y, (max.X - min.X), (min.Y - max.Y));
+            lock (lockImg.Sync)
             {
-                var min = Point.Round(Map.WorldToImage(box.Min()));
-                var max = Point.Round(Map.WorldToImage(box.Max()));
-                var rect = new Rectangle(min.X, max.Y, (max.X - min.X), (min.Y - max.Y));
-                lock (lockImg.Sync)
+                using (var g = Graphics.FromImage(lockImg.Bitmap))
                 {
-                    using (var g = Graphics.FromImage(lockImg.Bitmap))
-                    {
-                        g.DrawImage(bm, rect, 0, 0,
-                            sourceWidth, sourceHeight,
-                            GraphicsUnit.Pixel,
-                            imageAttributes);
-                    }
+                    g.DrawImage(bm, rect, 0, 0,
+                        sourceWidth, sourceHeight,
+                        GraphicsUnit.Pixel,
+                        imageAttributes);
                 }
-
-                InvalidateCacheImage();
-
-                MapBox.Invoke(new MethodInvoker(MapBox.Invalidate), rect);
-                MapBox.Invoke(new MethodInvoker(MapBox.Update));
             }
+
+            InvalidateCacheImage();
+
+            if (IsDisposed) return;
+            MapBox.Invoke(new MethodInvoker(MapBox.Invalidate), rect);
+            if (IsDisposed) return;
+            MapBox.Invoke(new MethodInvoker(MapBox.Update));
         }
 
         private void UnwireMap()
@@ -239,25 +279,53 @@ namespace SharpMap.Forms.ImageGenerator
                 if (_imageLayers.TryRemove(layer, out var lockImg))
                 {
                     lock (lockImg.Sync)
-                        lockImg.Bitmap.Dispose();
+                    {
+                        var bitmap = lockImg.Bitmap;
+                        lockImg.Bitmap = null;
+                        bitmap.Dispose();
+                    }
                 }
             }
+
+            if (_pendingDownloadTracker != null)
+            {
+                _pendingDownloadTracker.ProgressChanged -= HandleProgressChanged;
+                _pendingDownloadTracker.Dispose();
+            }
+
+            _pendingDownloadTracker = new PendingDownloadTracker();
+            _pendingDownloadTracker.ProgressChanged += HandleProgressChanged;
+
             _imageLayers.Clear();
             _layers.Clear();
         }
+
+        private void HandleProgressChanged(int tilesRemaining)
+        {
+            if (IsDisposed)
+                return;
+
+            if (!MapBox.ShowProgressUpdate)
+                return;
+
+            _progressBar.BeginInvoke(new Action<ProgressBar>(p =>
+            {
+                p.Visible = tilesRemaining > 0;
+                p.Enabled = p.Visible;
+            }), _progressBar);
+        }
+
         public void Dispose()
         {
             Dispose(true);
             GC.SuppressFinalize(this);
         }
 
-
-
         protected virtual void Dispose(bool disposing)
         {
-            if (disposing && !IsDisposed)
+            if (disposing && !_isDisposed)
             {
-                IsDisposed = true;
+                SetDisposed();
                 UnwireMap();
                 ImageEnvelope = new Envelope();
             }
@@ -300,14 +368,14 @@ namespace SharpMap.Forms.ImageGenerator
                         if (mapCompare < lyr.MinVisible || lyr.MaxVisible < mapCompare)
                             continue;
 
-                        lock (_imageLayers)
-                        {
+                        //lock (_imageLayers)
+                        //{
                             if (_imageLayers.TryGetValue(lyr, out var lockImg))
                             {
                                 lock (lockImg.Sync)
                                     gr.DrawImageUnscaled(lockImg.Bitmap, 0, 0);
                             }
-                        }
+                        //}
                     }
                 }
 
@@ -320,7 +388,13 @@ namespace SharpMap.Forms.ImageGenerator
 
         public Envelope ImageEnvelope { get; private set; }
 
-        public bool IsDisposed { get; private set; }
+        public bool IsDisposed
+        {
+            get => _isDisposed || MapBox.IsDisposed || !MapBox.IsHandleCreated;
+            //private set => _isDisposed = value;
+        }
+
+        private bool SetDisposed() => _isDisposed = true;
 
         public Map Map { get; private set; }
 
@@ -329,8 +403,7 @@ namespace SharpMap.Forms.ImageGenerator
         /// </summary>
         public void Generate()
         {
-            if ( !MapBox.IsHandleCreated || IsDisposed || MapBox.IsDisposed || !MapBox.IsHandleCreated)
-                return;
+            if (IsDisposed) return;
 
             _logger.Debug(t => t("\n{0}> Enter Generate", Thread.CurrentThread.ManagedThreadId));
             _cts.Cancel();
@@ -340,7 +413,11 @@ namespace SharpMap.Forms.ImageGenerator
             {
                 ClearCache();
                 foreach (var lyr in EnumerateLayers(Map))
+                {
+                    if (lyr is ITileAsyncLayer asyncLyr)
+                        _pendingDownloadTracker.Add(asyncLyr);
                     _layers.Add(lyr);
+                }
                 NeedsUpdate = false;
             }
 
@@ -362,13 +439,17 @@ namespace SharpMap.Forms.ImageGenerator
                 // Does the layer need rendering
                 if (!lyr.Enabled) continue;
 
+                // Layer has no envelope, it has no data
+                if (lyr.Envelope?.IsNull ?? false) continue;
+                
                 // Does it fit in the visibility constraints
                 double mapCompare = lyr.VisibilityUnits == VisibilityUnits.Scale ? mapScale : mapZoom;    
                 if (mapCompare < lyr.MinVisible || lyr.MaxVisible < mapCompare)
                     continue;
 
                 // Add task to list
-                ThreadPool.QueueUserWorkItem(delegate { RenderLayerImage(new object[] {lyr, mvp, _cts.Token}); });
+                bool invalidateAll = i == _layers.Count - 1;
+                ThreadPool.QueueUserWorkItem(delegate { RenderLayerImage(new object[] {lyr, mvp, _cts.Token, invalidateAll}); });
             }
 
             ImageEnvelope = mvp.Envelope;
@@ -385,9 +466,18 @@ namespace SharpMap.Forms.ImageGenerator
         {
             if (IsDisposed) return Rectangle.Empty;
 
+
             object[] parameters = (object[]) param;
             var lyr = (ILayer)parameters[0];
             var mvp = (MapViewport) parameters[1];
+            var token = (CancellationToken) parameters[2];
+
+            //if ((bool)parameters[3]) MapBox.Invalidate();
+
+            if (token.IsCancellationRequested)
+                return Rectangle.Empty;
+
+            var updateRect = Rectangle.Empty;
 
             var sw = new Stopwatch();
             _logger.Debug(t => t("\n{0}> Enter RenderLayerImage {1}\n{0}>\t{2} => {3}",
@@ -416,7 +506,7 @@ namespace SharpMap.Forms.ImageGenerator
                         while (!_imageLayers.TryUpdate(lyr, newLockImg, img))
                             Thread.Sleep(25);
                         img = newLockImg;
-                        imageObj.Dispose();
+                        //imageObj.Dispose();
                     }
                 }
             }
@@ -440,12 +530,16 @@ namespace SharpMap.Forms.ImageGenerator
                 }
                 catch (Exception)
                 {
-                    return Rectangle.Empty;
+                    goto Exit;
                 }
             }
 
+            if (token.IsCancellationRequested)
+                goto Exit;
+
             // Envelope of the current layer
             var lyrEnvelope = lyr.Envelope;
+
             if (lyrEnvelope.Width == 0)
             {
                 if (lyr is VectorLayer vlyr)
@@ -465,27 +559,40 @@ namespace SharpMap.Forms.ImageGenerator
             var updateArea = mvp.Envelope.Intersection(imgEnvelope);
             var lt = Point.Truncate( mvp.WorldToImage(updateArea.TopLeft()));
             var rb = Point.Ceiling(mvp.WorldToImage(updateArea.BottomRight()));
-            var updateRect = Rectangle.FromLTRB(lt.X, lt.Y, rb.X, rb.Y);
+
+            if (token.IsCancellationRequested)
+                goto Exit;
+            
+            updateRect = Rectangle.FromLTRB(lt.X, lt.Y, rb.X, rb.Y);
 
             // Set the image envelope
             img.Extent = mvp.Envelope.Intersection(lyr.Envelope);
+
 
             var mapBox = MapBox;
             if (mapBox.IsHandleCreated)
             {
                 _logger.Debug(t => t("\n{0}> Invalidating rectangle {1}",Thread.CurrentThread.ManagedThreadId, updateRect));
                 InvalidateCacheImage();
+                if ((bool) parameters[3])
+                    mapBox.Invalidate();
+                else
+                    mapBox.Invalidate(updateRect);
 
-                mapBox.Invalidate(updateRect);
                 //MapBox.Invoke(new MethodInvoker(() => MapBox.Invalidate(updateRect)));
                 if (!IsDisposed)
                     mapBox.Invoke(new MethodInvoker(() => { if (!mapBox.IsDisposed) mapBox.Update();}));
             }
 
+            Exit:
             sw.Stop();
             _logger.Debug(t => t("\n{0}> Exit RenderLayerImage {1} after {4}ms \n{0}>\t{2} => {3}",
                 Thread.CurrentThread.ManagedThreadId, lyr.LayerName, mvp.Envelope, mvp.Size,
                 sw.ElapsedMilliseconds));
+            if (updateRect.IsEmpty)
+                _logger.Debug(t => t("\n{0}> Exit RenderLayerImage because of cancellation",
+                    Thread.CurrentThread.ManagedThreadId, lyr.LayerName, mvp.Envelope, mvp.Size,
+                    sw.ElapsedMilliseconds));
 
             return updateRect;
         }
