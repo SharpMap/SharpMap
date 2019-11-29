@@ -1,5 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+    
+  <Import Project="$(MSBuildProjectDirectory)\..\SharpMap.Common.props"/>
+
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -173,10 +176,11 @@
     <PostBuildEvent>
     </PostBuildEvent>
   </PropertyGroup>
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>  -->
+  <Target Name="AfterBuild" Condition=" '$(Configuration)' == 'Release' ">
+      <Message Importance="high" Text="$(MSBuildBinPath)"/>
+      <Message Importance="high" Text="$(MSBuildToolsPath)"/>
+      <Exec Command="&quot;NuGet.exe&quot; pack &quot;$(MSBuildProjectDirectory)\$(MSBuildProjectFile)&quot; -Symbols -version $(Version) -Properties Configuration=Release -outputdirectory &quot;$(MSBuildProjectDirectory)\$(OutDir).&quot;" />
+  </Target>
   <ItemGroup>
     <ProjectReference Include="..\SharpMap\SharpMap.csproj">
       <Project>{C83777FC-AABB-47D9-911F-D76255D4D541}</Project>

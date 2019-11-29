@@ -7,8 +7,7 @@ using System.Runtime.InteropServices;
 
 [assembly: AssemblyTitle("SharpMap Extensions")]
 [assembly: AssemblyDescription("Extensions for the SharpMap Engine")]
-[assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("iter.dk")]
+[assembly: AssemblyCompany("SharpMap-Team")]
 [assembly: AssemblyProduct("SharpMap.Extensions")]
 [assembly: AssemblyCopyright("Copyright © 2006 - 2012 Christian Gräfe, SharpMap-Team")]
 [assembly: AssemblyTrademark("")]
