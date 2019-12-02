@@ -421,7 +421,7 @@ namespace SharpMap.Layers
         /// </summary>
         /// <remarks>Layer names are case sensitive.</remarks>
         /// <param name="name">Name of layer</param>
-        /// <exception cref="System.ArgumentException">Throws an exception is an unknown layer is added</exception>
+        /// <exception cref="System.ArgumentException">Throws an exception if an unknown layer is added</exception>
         public void AddLayer(string name)
         {
             if (!LayerExists(_wmsClient.Layer, name))
