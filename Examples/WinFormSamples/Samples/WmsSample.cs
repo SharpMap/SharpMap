@@ -17,7 +17,7 @@ namespace WinFormSamples.Samples
 
             WmsLayer layWms = new WmsLayer("Brunnar", wmsUrl);
 
-            layWms.AddLayer("grundvatten:SE.GOV.SGU.BRUNNAR.250K");
+            layWms.AddLayer("SE.GOV.SGU.BRUNNAR.250K");
             //layWms.AddLayer("Topography");
             //layWms.AddLayer("Hillshading");
 
@@ -27,7 +27,8 @@ namespace WinFormSamples.Samples
             layWms.TimeOut = 20000; //Set timeout to 5 seconds
             layWms.SRID = 3006;
 
-            map.BackgroundLayer.Add(AsyncLayerProxyLayer.Create(layWms, new Size(256, 256)));
+            //map.BackgroundLayer.Add(AsyncLayerProxyLayer.Create(layWms, new Size(256, 256)));
+            map.BackgroundLayer.Add(layWms);
             map.MaximumExtents = layWms.Envelope;
             
             //limit the zoom to 360 degrees width
