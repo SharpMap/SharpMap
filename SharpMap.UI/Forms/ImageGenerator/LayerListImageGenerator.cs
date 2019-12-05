@@ -452,6 +452,9 @@ namespace SharpMap.Forms.ImageGenerator
                 ThreadPool.QueueUserWorkItem(delegate { RenderLayerImage(new object[] {lyr, mvp, _cts.Token, invalidateAll}); });
             }
 
+            if (_cts.IsCancellationRequested)
+                return;
+
             ImageEnvelope = mvp.Envelope;
 
             _logger.Debug(t => t("\n{0}> Exit Generate", Thread.CurrentThread.ManagedThreadId));
@@ -497,7 +500,7 @@ namespace SharpMap.Forms.ImageGenerator
                 lock (img.Sync)
                 {
                     var imageObj = img.Bitmap;
-                    if (img.Bitmap != null && img.Bitmap.Size != Map.Size)
+                    if (img.Bitmap != null && img.Bitmap.Size != mvp.Size)
                     {
                         object lockObj = img.Sync;
                         var newLockImg = new LockedBitmap(lockObj) { 
