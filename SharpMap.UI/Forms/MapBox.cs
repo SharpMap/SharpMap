@@ -1500,16 +1500,17 @@ namespace SharpMap.Forms
                     _map.ZoomToBox(bbox, false);
                 }
 
+                var exchange = false;
                 if (!_map.Center.Equals2D(oldCenter, PrecisionTolerance))
                 {
-                    Interlocked.Exchange(ref _needToRefreshAfterWheel, 1);
+                    exchange = true;
                     OnMapCenterChanged(_map.Center);
                 }
 
-                if (Math.Abs(_map.Zoom - oldZoom) > PrecisionTolerance)
+                if (Math.Abs(_map.Zoom - oldZoom) > PrecisionTolerance || exchange)
                 {
                     Interlocked.Exchange(ref _needToRefreshAfterWheel, 1);
-                    OnMapZoomChanged(_map.Zoom);
+                    //OnMapZoomChanged(_map.Zoom);
                 }
 
                 Invalidate();
@@ -1698,7 +1699,7 @@ namespace SharpMap.Forms
             {
                 _dragging = true;
             }
-
+ 
             if (_dragging)
             {
                 if (MouseDrag != null)
