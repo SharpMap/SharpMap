@@ -20,6 +20,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
+using System.Runtime.CompilerServices;
 using System.Text;
 using GeoAPI;
 using GeoAPI.Geometries;
@@ -379,7 +380,7 @@ namespace SharpMap.Data.Providers
                         if (Web.HttpCacheUtility.IsWebContext)
                         {
                             if (Web.HttpCacheUtility.TryGetValue(_filename, out ISpatialIndex<uint> tree))
-                                disposeTree = tree == _tree;
+                                disposeTree = !ReferenceEquals(tree, _tree);
                         }
 
                         if (disposeTree && _tree is IDisposable disposableTree)
@@ -1029,18 +1030,18 @@ namespace SharpMap.Data.Providers
 		/// </summary>
 		/// <param name="filename"></param>
 		/// <returns>A spatial index</returns>
-		private ISpatialIndex<uint> CreateSpatialIndexFromFile(string filename)
+        private ISpatialIndex<uint> CreateSpatialIndexFromFile(string filename)
 		{
 		    var tree = SpatialIndexFactory.Load(filename);
 		    if (tree == null)
 		    {
-		        tree = SpatialIndexFactory.Create(GetExtents(), GetFeatureCount(), GetAllFeatureBoundingBoxes());
-                tree.SaveIndex(Filename);
-		    }
+                tree = SpatialIndexFactory.Create(GetExtents(), GetFeatureCount(), GetAllFeatureBoundingBoxes());
+                tree.SaveIndex(filename);
+            }
 		    return tree;
 		}
 
- 
+
         //private void LoadSpatialIndex()
         //{
         //    LoadSpatialIndex(false, false);
@@ -1096,7 +1097,20 @@ namespace SharpMap.Data.Providers
         [Obsolete("Use SpatialIndexFactory")]
         public static SpatialIndexCreation SpatialIndexCreationOption { get; set; }
 
-		private void LoadSpatialIndex(bool forceRebuild)
+        private static readonly Dictionary<string, object> _lockWebCache = new Dictionary<string, object>();
+
+        [MethodImpl(MethodImplOptions.Synchronized)]
+        private static object GetOrCreateLock(string filename)
+        {
+            if (!_lockWebCache.TryGetValue(filename, out object lockValue))
+            {
+                lockValue = new object();
+                _lockWebCache.Add(filename, lockValue);
+            }
+            return lockValue;
+        }
+
+        private void LoadSpatialIndex(bool forceRebuild)
 		{
 		    // if we want a new tree, force its creation
 		    if (_tree != null && forceRebuild)
@@ -1107,10 +1121,13 @@ namespace SharpMap.Data.Providers
 
 		    if (forceRebuild)
 		    {
-		        _tree = SpatialIndexFactory.Create(GetExtents(), GetFeatureCount(), GetAllFeatureBoundingBoxes());
-                _tree.SaveIndex(_filename);
-		        if (Web.HttpCacheUtility.IsWebContext)
-                    Web.HttpCacheUtility.TryAddValue(_filename, _tree, TimeSpan.FromDays(1));
+                lock (GetOrCreateLock(_filename))
+                {
+                    _tree = SpatialIndexFactory.Create(GetExtents(), GetFeatureCount(), GetAllFeatureBoundingBoxes());
+                    _tree.SaveIndex(_filename);
+                    if (Web.HttpCacheUtility.IsWebContext)
+                        Web.HttpCacheUtility.TryAddValue(_filename, _tree, TimeSpan.FromDays(1));
+                }
                 return;
 		    }
 
@@ -1118,12 +1135,15 @@ namespace SharpMap.Data.Providers
 			// need to rebuild it for each request
 		    if (Web.HttpCacheUtility.IsWebContext)
 		    {
-		        if (!Web.HttpCacheUtility.TryGetValue(_filename, out _tree))
-		        {
-		            _tree = CreateSpatialIndexFromFile(_filename);
-		            Web.HttpCacheUtility.TryAddValue(_filename, _tree, TimeSpan.FromDays(1));
-		        }
-		    }
+                lock (GetOrCreateLock(_filename))
+                {
+                    if (!Web.HttpCacheUtility.TryGetValue(_filename, out _tree))
+                    {
+                        _tree = CreateSpatialIndexFromFile(_filename);
+                        Web.HttpCacheUtility.TryAddValue(_filename, _tree, TimeSpan.FromDays(1));
+                    }
+                }
+            }
 		    else
 		    {
 		        _tree = CreateSpatialIndexFromFile(_filename);
