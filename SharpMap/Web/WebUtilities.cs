@@ -1,6 +1,7 @@
 using System;
 using System.Globalization;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Xml;
 
 namespace SharpMap.Web
@@ -111,6 +112,7 @@ namespace SharpMap.Web
             return GetHttpContextCache(/*httpContext*/);
         }
 
+        [MethodImpl(MethodImplOptions.Synchronized)]
         internal static bool TryGetValue<T>(string key, out T instance)
             where T: class
         {
@@ -143,6 +145,7 @@ namespace SharpMap.Web
             return TryAddValue(key, instance, TimeSpan.FromDays(1));
         }
 
+        [MethodImpl(MethodImplOptions.Synchronized)]
         internal static bool TryAddValue<T>(string key, T instance, TimeSpan timeSpan)
             where T : class
         {

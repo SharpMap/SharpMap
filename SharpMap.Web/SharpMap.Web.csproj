@@ -13,6 +13,10 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
+    </ItemGroup>
+
+    <ItemGroup>
         <ProjectReference Include="..\SharpMap.Converters.GeoJSON\SharpMap.Converters.GeoJSON.csproj" />
         <ProjectReference Include="..\SharpMap\SharpMap.csproj" />
     </ItemGroup>
