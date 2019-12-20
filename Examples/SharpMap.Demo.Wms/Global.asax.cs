@@ -15,6 +15,12 @@
 
         protected void Application_Start()
         {
+            SharpMap.Session.Instance
+                .SetGeometryServices(NetTopologySuite.NtsGeometryServices.Instance)
+                .SetCoordinateSystemServices(CoordinateSystems.CoordinateSystemServices
+                    .FromSpatialRefSys(new ProjNet.CoordinateSystems.CoordinateSystemFactory(),
+                        new ProjNet.CoordinateSystems.Transformations.CoordinateTransformationFactory()));
+
             AreaRegistration.RegisterAllAreas();
             RegisterRoutes(RouteTable.Routes);
         }

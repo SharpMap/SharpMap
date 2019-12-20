@@ -23,7 +23,7 @@ namespace SharpMap.Demo.Wms.Controllers
 
         public BuildingsController()
         {
-            GeometryServiceProvider.Instance = new NtsGeometryServices();
+            GeometryServiceProvider.SetInstanceIfNotAlreadySetDirectly(new NtsGeometryServices());
         }
 
         private Point GeoToPixel(double lat, double lon, int zoom)

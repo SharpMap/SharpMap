@@ -1,3 +1,5 @@
+using ProjNet.CoordinateSystems;
+
 namespace SharpMap.Demo.Wms.Helpers
 {
     using System;
@@ -48,6 +50,7 @@ namespace SharpMap.Demo.Wms.Helpers
                     PointSize = 10
                 }
             };
+
             Nyc = new Dictionary<string, LayerData>
             {
                 { "nyc/poly_landmarks.shp", landmarks },
@@ -58,11 +61,15 @@ namespace SharpMap.Demo.Wms.Helpers
 
         public static Map Spherical()
         {
-            ICoordinateTransformation transformation = ProjHelper.LatLonToGoogle();
+            //ICoordinateTransformation transformation = ProjHelper.LatLonToGoogle();
             HttpContext context = HttpContext.Current;
             Map map = new Map(new Size(1, 1));
 
             IDictionary<string, LayerData> dict = Nyc;
+            var ctFac = new ProjNet.CoordinateSystems.Transformations.CoordinateTransformationFactory();
+            var pos = ctFac.CreateFromCoordinateSystems(GeographicCoordinateSystem.WGS84, ProjectedCoordinateSystem.WebMercator);
+            var neg = ctFac.CreateFromCoordinateSystems(ProjectedCoordinateSystem.WebMercator, GeographicCoordinateSystem.WGS84);
+
             foreach (string layer in dict.Keys)
             {
                 string format = String.Format("~/App_Data/{0}", layer);
@@ -75,11 +82,13 @@ namespace SharpMap.Demo.Wms.Helpers
                 ShapeFile source = new ShapeFile(path, true);
                 VectorLayer item = new VectorLayer(name, source)
                 {
-                    SRID = 4326,
-                    TargetSRID = 900913,
-                    CoordinateTransformation = transformation,
+                    //SRID = 4326,
+                    //TargetSRID = 900913,
+                    CoordinateTransformation = pos,
+                    ReverseCoordinateTransformation = neg,
                     Style = (VectorStyle)data.Style,
-                    SmoothingMode = SmoothingMode.AntiAlias
+                    SmoothingMode = SmoothingMode.AntiAlias,
+                    IsQueryEnabled = true
                 };
                 map.Layers.Add(item);
             }

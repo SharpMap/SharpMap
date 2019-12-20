@@ -15,10 +15,7 @@ namespace SharpMap.Demo.Wms.Handlers
 
         static AbstractStdMapHandler()
         {
-            lock (SyncLock)
-            {
-                GeometryServiceProvider.Instance = new NtsGeometryServices();            
-            }
+            GeometryServiceProvider.SetInstanceIfNotAlreadySetDirectly(NtsGeometryServices.Instance);
         }
 
         public abstract void ProcessRequest(HttpContext context);
