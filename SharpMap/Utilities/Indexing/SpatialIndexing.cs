@@ -610,7 +610,9 @@ namespace SharpMap.Utilities.SpatialIndexing
         public void Dispose()
         {
             //this._box = null;
+            _child0?.Dispose();
             _child0 = null;
+            _child1?.Dispose();
             _child1 = null;
             _objList = null;
         }
