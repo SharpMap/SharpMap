@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2" xmlns:gx="http://www.google.com/kml/ext/2.2" xmlns:kml="http://www.opengis.net/kml/2.2" xmlns:atom="http://www.w3.org/2005/Atom">
+<Document>
+	<name>Style Map Tests</name>
+	<description>Styles and Style Maps referenced by other KML files</description>
+	<Style id="sym_square">
+		<IconStyle>
+			<scale>1.2</scale>
+			<Icon>
+				<href>http://maps.google.com/mapfiles/kml/shapes/placemark_square.png</href>
+			</Icon>
+		</IconStyle>
+	</Style>
+	<Style id="sym_square_highlight">
+		<IconStyle>
+			<scale>1.2</scale>
+			<Icon>
+				<href>http://maps.google.com/mapfiles/kml/shapes/placemark_square_highlight.png</href>
+			</Icon>
+		</IconStyle>
+	</Style>
+	<Style id="sym_circle_highlight">
+		<IconStyle>
+			<scale>1.2</scale>
+			<Icon>
+				<href>http://maps.google.com/mapfiles/kml/shapes/placemark_circle_highlight.png</href>
+			</Icon>
+		</IconStyle>
+	</Style>
+	<Style id="sym_circle">
+		<IconStyle>
+			<scale>1.2</scale>
+			<Icon>
+				<href>http://maps.google.com/mapfiles/kml/shapes/placemark_circle.png</href>
+			</Icon>
+		</IconStyle>
+	</Style>
+	<Style id="linesymbology">
+		<LineStyle>
+			<color>ff00aa55</color>
+			<width>4</width>
+		</LineStyle>
+	</Style>
+	<Style id="polygonsymbology">
+		<LineStyle>
+			<color>ff7fff55</color>
+			<width>4</width>
+		</LineStyle>
+		<PolyStyle>
+			<color>ff7faaaa</color>
+		</PolyStyle>
+	</Style>	
+	<StyleMap id="sm_circle">
+		<Pair>
+			<key>normal</key>
+			<styleUrl>#sym_circle</styleUrl>
+		</Pair>
+		<Pair>
+			<key>highlight</key>
+			<styleUrl>#sym_circle_highlight</styleUrl>
+		</Pair>
+	</StyleMap>
+	<StyleMap id="sm_square">
+		<Pair>
+			<key>normal</key>
+			<styleUrl>#sym_square</styleUrl>
+		</Pair>
+		<Pair>
+			<key>highlight</key>
+			<styleUrl>#sym_square_highlight</styleUrl>
+		</Pair>
+	</StyleMap>
+</Document>
+</kml>
