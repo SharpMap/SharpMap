@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2" xmlns:gx="http://www.google.com/kml/ext/2.2" xmlns:kml="http://www.opengis.net/kml/2.2" xmlns:atom="http://www.w3.org/2005/Atom">
+<Document>
+	<name>Style Map Tests</name>
+	<Placemark>
+		<name>Africa 1</name>
+		<styleUrl>https://developers.google.com/kml/documentation/KML_Samples.kml#globeIcon</styleUrl>
+		<Point>
+			<coordinates>14.56324920473027,8.823766947866202,0</coordinates>
+		</Point>
+	</Placemark>
+	<Placemark>
+		<name>Africa 2</name>
+		<styleUrl>https://developers.google.com/kml/documentation/KML_Samples.kml#downArrowIcon</styleUrl>
+		<Point>
+			<coordinates>17.40955322880677,9.619815130815919,0</coordinates>
+		</Point>
+	</Placemark>
+</Document>
+</kml>

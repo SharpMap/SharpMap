@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2" xmlns:gx="http://www.google.com/kml/ext/2.2" xmlns:kml="http://www.opengis.net/kml/2.2" xmlns:atom="http://www.w3.org/2005/Atom">
+<Document>
+	<name>Style Map Tests</name>
+	<description>Placemarks using Styles defined in relative KML file</description>	
+	<Placemark>
+		<name>Africa 1</name>
+		<styleUrl>KML_styles.kml#sm_square</styleUrl>
+		<Point>
+			<gx:drawOrder>1</gx:drawOrder>
+			<coordinates>14.56324920473027,8.823766947866202,0</coordinates>
+		</Point>
+	</Placemark>
+	<Placemark>
+		<name>Africa 2</name>
+		<styleUrl>KML_styles.kml#sm_circle</styleUrl>
+		<Point>
+			<gx:drawOrder>1</gx:drawOrder>
+			<coordinates>17.40955322880677,9.619815130815919,0</coordinates>
+		</Point>
+	</Placemark>
+	<Placemark>
+		<name>Line 1 with StyleUrl</name>
+		<styleUrl>KML_styles.kml#linesymbology</styleUrl>
+		<LineString>
+			<coordinates>
+				14.7322444643474,8.741122422265486,0 14.98189150254889,8.876022509822219,0 15.1636208882102,8.614709363012477,0 
+			</coordinates>
+		</LineString>
+	</Placemark>
+	<Placemark>
+		<name>Line 2 with StyleUrl and overrides</name>
+		<styleUrl>KML_styles.kml#linesymbology</styleUrl>
+        <Style>
+            <LineStyle>
+                <width>1</width>
+            </LineStyle>
+        </Style>
+		<LineString>
+			<tessellate>1</tessellate>
+			<coordinates>
+				14.76679054044666,8.647733316197623,0 14.99402575335166,8.762810855977225,0 15.13946004407134,8.539054532876513,0 
+			</coordinates>
+		</LineString>
+	</Placemark>
+	<Placemark>
+		<name>Polygon 1 with StyleUrl</name>
+		<styleUrl>KML_styles.kml#polygonsymbology</styleUrl>
+		<Polygon>
+			<tessellate>1</tessellate>
+			<outerBoundaryIs>
+				<LinearRing>
+					<coordinates>
+						15.45930089777413,8.649774762626734,0 15.78812145713398,8.826902630484089,0 15.56553132250632,9.117659207419846,0 15.28843281990799,8.916977130845003,0 15.45930089777413,8.649774762626734,0 
+					</coordinates>
+				</LinearRing>
+			</outerBoundaryIs>
+		</Polygon>
+	</Placemark>
+	<Placemark>
+		<name>Polygon 2 with Style overrides</name>
+		<styleUrl>KML_styles.kml#polygonsymbology</styleUrl>
+        <Style>
+            <LineStyle>
+                <width>1</width>
+            </LineStyle>
+            <PolyStyle>
+                <color>ffffaa7f</color>
+            </PolyStyle>
+        </Style>
+		<Polygon>
+			<tessellate>1</tessellate>
+			<outerBoundaryIs>
+				<LinearRing>
+					<coordinates>
+						15.99240773337751,8.791408965716004,0 16.2407273758592,8.921982810633205,0 15.97838555087566,9.197063754094813,0 15.75799832823521,9.060468835708274,0 15.99240773337751,8.791408965716004,0 
+					</coordinates>
+				</LinearRing>
+			</outerBoundaryIs>
+		</Polygon>
+	</Placemark>
+	<Placemark>
+		<name>Polygon 3 inline style fill only</name>
+        <Style>
+            <PolyStyle>
+                <color>ff7fffaa</color>
+                <outline>0</outline>
+            </PolyStyle>
+        </Style>
+		<Polygon>
+			<tessellate>1</tessellate>
+			<outerBoundaryIs>
+				<LinearRing>
+					<coordinates>
+						16.45141663527584,8.99085343604397,0 16.62822777773094,9.105369181051785,0 16.3836231863226,9.367059726191357,0 16.22294327719263,9.238531882204896,0 16.45141663527584,8.99085343604397,0 
+					</coordinates>
+				</LinearRing>
+			</outerBoundaryIs>
+		</Polygon>
+	</Placemark>
+	<Placemark>
+		<name>Polygon 4 inline style outline only</name>
+        <Style>
+            <LineStyle>
+                <color>ffffff00</color>
+                <width>4</width>
+            </LineStyle>
+            <PolyStyle>
+                <color>ff7fffaa</color>
+                <fill>0</fill>
+            </PolyStyle>
+        </Style>
+		<Polygon>
+			<tessellate>1</tessellate>
+			<outerBoundaryIs>
+				<LinearRing>
+					<coordinates>
+						16.75311822571322,9.148653889350184,0 16.91888588059678,9.219599002061271,0 16.70384488661618,9.49955818101844,0 16.55253261598985,9.408508348830811,0 16.75311822571322,9.148653889350184,0 
+					</coordinates>
+				</LinearRing>
+			</outerBoundaryIs>
+		</Polygon>
+	</Placemark>
+	<Placemark>
+		<name>Polygon 5 with island</name>
+		<styleUrl>KML_styles.kml#polygonsymbology</styleUrl>
+		<Polygon>
+			<tessellate>1</tessellate>
+			<outerBoundaryIs>
+				<LinearRing>
+					<coordinates>
+						17.156109304262,9.251432883064757,0 17.32967734249761,9.340659686674064,0 17.15439083960273,9.617539674318666,0 16.97897194415396,9.494094316822185,0 17.156109304262,9.251432883064757,0 
+					</coordinates>
+				</LinearRing>
+			</outerBoundaryIs>
+			<innerBoundaryIs>
+				<LinearRing>
+					<coordinates>
+						17.18499558552173,9.330908287399483,0 17.24428094114781,9.374604608036631,0 17.17390026104265,9.5020304960033,0 17.10654405342015,9.460253752017769,0 17.18499558552173,9.330908287399483,0 
+					</coordinates>
+				</LinearRing>
+			</innerBoundaryIs>
+		</Polygon>
+	</Placemark>	
+</Document>
+</kml>
