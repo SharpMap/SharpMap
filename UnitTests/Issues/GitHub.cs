@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System;
+using System.Net;
 using GeoAPI.Geometries;
 using NetTopologySuite.Features;
 using NUnit.Framework;
@@ -90,7 +91,7 @@ namespace UnitTests.Issues
                     map.MapTransform = mapTransform;
 
                     using (var img = map.GetMap())
-                        img.Save(System.IO.Path.Combine(UnitTestsFixture.GetImageDirectory(this), $"TestIssue116.{f}deg.png"));
+                        img.Save(System.IO.Path.Combine(UnitTestsFixture.GetImageDirectory(this), $"TestIssue116.{(f < 0 ? "N" : "P")}{((int)Math.Abs(f)):D3}deg.png"));
                 }
             }
         }
