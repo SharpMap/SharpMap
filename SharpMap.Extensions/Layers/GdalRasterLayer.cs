@@ -893,7 +893,7 @@ namespace SharpMap.Layers
                 var trueImageBbox = displayBbox.Intersection(_envelope);
 
                 // put display bounds into current projection
-                Envelope shownImageBbox = trueImageBbox;
+                Envelope shownImageBbox = trueImageBbox.Copy();
                 if (ReverseCoordinateTransformation != null)
                 {
                     shownImageBbox = GeometryTransform.TransformBox(trueImageBbox, ReverseCoordinateTransformation.MathTransform);
@@ -912,6 +912,9 @@ namespace SharpMap.Layers
                 bitmapTl = rect.Location;
                 bitmapSize = Size.Add(rect.Size, new Size(1,1));
 
+                double disRatio = (double) displayImageSize.Width / displayImageSize.Height;
+                double bmsRatio = (double) bitmapSize.Width / bitmapSize.Height;
+
                 // check to see if image is on its side
                 if (bitmapSize.Width > bitmapSize.Height && displayImageSize.Width < displayImageSize.Height)
                 {
@@ -922,6 +925,8 @@ namespace SharpMap.Layers
                 {
                     displayImageSize.Width = bitmapSize.Width;
                     displayImageSize.Height = bitmapSize.Height;
+                    if (Math.Abs(disRatio - bmsRatio) > 1e-5)
+                        displayImageSize.Height = (int) (bmsRatio * displayImageSize.Height);
                 }
 
                 /*
@@ -1049,8 +1054,8 @@ namespace SharpMap.Layers
                         var geoXRot = geoTransform.Inverse[2];
                         var geoYRot = geoTransform.Inverse[4];
 
-                        var dblXScale = (g2I.Width) / (displayImageSize.Width - 1);
-                        var dblYScale = (g2I.Height) / (displayImageSize.Height - 1);
+                        double dblXScale = (displayImageSize.Width - 1) / (g2I.Width);
+                        double dblYScale = (displayImageSize.Height - 1) / (g2I.Height);
 
                         // get inverse transform  
                         // NOTE: calling transform.MathTransform.Inverse() once and storing it
@@ -1098,17 +1103,21 @@ namespace SharpMap.Layers
                             }
                             rowsRead += rowsToRead;
 
-                            double dx = dblXScale * geoTransform.HorizontalPixelResolution + dblYScale * geoTransform.XRotation;
-                            double dy = dblXScale * geoTransform.YRotation;
+                            double mapPixelWidth = map.PixelWidth;
+                            double mapPixelHeight = map.PixelHeight;
+
                             for (int pixY = 0; pixY < bitmapData.Height; pixY++)
                             {
                                 var rowPtr =  bitmapData.Scan0 + pixY * bitmapData.Stride;
                                 var row = (byte*) rowPtr;
 
-                                double gndX = geoTransform.ProjectedX(0, (int)(dblYScale * pixY));
-                                double gndY = geoTransform.ProjectedY(0, (int)(dblYScale * pixY));
+                                double gndY = Envelope.MaxY - pixY * mapPixelHeight;
+                                //if (gndY > map.Envelope.MaxY) continue;
+                                double gndX = Envelope.MinX;
+
                                 for (int pixX = 0; pixX < bitmap.Width; pixX++)
                                 {
+
                                     // transform ground point if needed
                                     if (inverseTransform != null)
                                     {
@@ -1125,8 +1134,8 @@ namespace SharpMap.Layers
                                     if (!g2I.Contains(imageCoord)) 
                                         goto Incrementation;
 
-                                    var imagePt = new Point((int)((imageCoord.X - imageLeft) / dblXScale),
-                                                            (int)((imageCoord.Y - imageTop) / dblYScale));
+                                    var imagePt = new Point((int)((imageCoord.X - imageLeft) * dblXScale),
+                                                            (int)((imageCoord.Y - imageTop) * dblYScale));
 
                                     // Apply color correction
                                     for (var i = 0; i < Bands; i++)
@@ -1217,8 +1226,7 @@ namespace SharpMap.Layers
                                     }
 
                                     Incrementation:
-                                    gndX += dx;
-                                    gndY += dy;
+                                    gndX += mapPixelWidth;
                                 }
                             }
                         }
