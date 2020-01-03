@@ -19,6 +19,10 @@
       <DefineConstants>$(DefineConstants);LINUX</DefineConstants>
     </PropertyGroup>
 
+    <PropertyGroup>
+      <NoWarn>1701;1702;1591</NoWarn>
+    </PropertyGroup>
+
     <ItemGroup>
         <PackageReference Include="BruTile.MbTiles" Version="2.1.2" />
         <PackageReference Include="Npgsql" Version="4.0.10" />
@@ -91,13 +95,13 @@
 
     <Target Name="PostBuild" AfterTargets="PostBuildEvent" Condition=" '$(Configuration)' == 'ReleaseLinux' ">
         <ItemGroup>
-            <LinuxInterop Include="$(MSBuildProjectDirectory)\..\packages\System.Data.SQLite.Core.1.0.112.0\runtimes\linux-x64\native\netstandard2.0\*.*"/>
-            <LinuxInterop Include="$(MSBuildProjectDirectory)\..\packages\System.Data.SQLite.Core.1.0.112.0\lib\net46\*.config"/>
+            <LinuxInterop Include="$(MSBuildProjectDirectory)\..\packages\System.Data.SQLite.Core.1.0.112.0\runtimes\linux-x64\native\netstandard2.0\*.*" />
+            <LinuxInterop Include="$(MSBuildProjectDirectory)\..\packages\System.Data.SQLite.Core.1.0.112.0\lib\net46\*.config" />
         </ItemGroup>
-        <Message Importance="high"  Text="Copying Linux interop file to '$(OutDir)'" />
-        <Message Importance="high"  Text="Files to copy: '@(LinuxInterop)'" />
+        <Message Importance="high" Text="Copying Linux interop file to '$(OutDir)'" />
+        <Message Importance="high" Text="Files to copy: '@(LinuxInterop)'" />
         
-        <Copy SourceFiles="@(LinuxInterop)" DestinationFolder="$(OutDir)"/>
+        <Copy SourceFiles="@(LinuxInterop)" DestinationFolder="$(OutDir)" />
     </Target>
 
 </Project>

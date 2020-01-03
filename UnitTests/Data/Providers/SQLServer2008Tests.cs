@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Data.SqlClient;
+using SharpMap.Data.Providers;
 
 namespace UnitTests.Data.Providers
 {
@@ -18,7 +19,9 @@ namespace UnitTests.Data.Providers
         [NUnit.Framework.TestCase("sde.gisadmin.di", "sde.gisadmin", "di")]
         public void VerifySchemaDetection(string schemaTable, string tableSchema, string table)
         {
-            SharpMap.Data.Providers.SqlServer2008 sq = new SharpMap.Data.Providers.SqlServer2008("", schemaTable, "oidcolumn");
+            SharpMap.Data.Providers.SqlServer2008 sq = new SharpMap.Data.Providers.SqlServer2008("", 
+                schemaTable, "geom", "oidcolumn", 
+                SqlServerSpatialObjectType.Geometry, 4326, SqlServer2008ExtentsMode.SpatialIndex);
             NUnit.Framework.Assert.AreEqual(tableSchema, sq.TableSchema);
             NUnit.Framework.Assert.AreEqual(table, sq.Table);
             NUnit.Framework.Assert.AreEqual("oidcolumn", sq.ObjectIdColumn);

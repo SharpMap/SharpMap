@@ -802,6 +802,23 @@ namespace UnitTests
             Assert.AreEqual(new BoundingBox(-120, 120, -90, 90), map.Envelope);
         }
 
+        [Test]
+        public void ZoomWithMapViewportLock()
+        {
+            Map map = new Map(new Size(100, 50));
+            //map.MaximumZoom = 100;
+            map.ZoomToBox(new Envelope(-200, 200, -100, 100));
+            var vpl = new MapViewportLock(map);
+            vpl.Lock();
+            Assert.IsTrue(vpl.IsLocked);
+
+            double zoom = map.Zoom;
+            map.Zoom *= 1.1;
+            Assert.That(map.Zoom, Is.EqualTo(zoom));
+
+            map.Center = new Coordinate(10, 10);
+            Assert.That(map.Center, Is.EqualTo(new Coordinate(0, 0)));
+        }
 
 
         [Test]

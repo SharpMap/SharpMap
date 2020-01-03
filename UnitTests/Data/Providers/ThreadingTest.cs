@@ -26,7 +26,7 @@ namespace UnitTests.Data.Providers
         [Test, Description("Simulates two threads using the same provider at the same time.")]
         public void TestTwoOpenClose()
         {
-            ///Simulates two threads using the same provider at the same time..
+            //Simulates two threads using the same provider at the same time..
             var provider = new ShapeFile(TestDataPath, false, true);
             provider.Open();
             provider.Open();
@@ -72,7 +72,7 @@ namespace UnitTests.Data.Providers
         [Test, Description("Simulates two threads using the same provider at the same time.")]
         public void TestTwoOpenClose()
         {
-            ///Simulates two threads using the same provider at the same time..
+            //Simulates two threads using the same provider at the same time..
             var provider = new ShapeFile(TestDataPath, true, false);
             provider.Open();
             provider.Open();
