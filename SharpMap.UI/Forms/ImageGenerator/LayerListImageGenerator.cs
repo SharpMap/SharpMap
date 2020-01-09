@@ -3,9 +3,11 @@ using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Data.SqlClient;
 using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
@@ -81,11 +83,22 @@ namespace SharpMap.Forms.ImageGenerator
             }
         }
 
+        private class LayerInfo
+        {
+            public ILayer Layer { get; private set; }
+            public bool Render { get; set; }
+            public LayerInfo(ILayer layer, bool render)
+            {
+                Layer = layer;
+                Render = render;
+            }
+        }
+
         private static readonly ILog _logger = LogManager.GetLogger<LayerListImageGenerator>();
 
         private ProgressBar _progressBar;
         private readonly ConcurrentDictionary<ILayer, LockedBitmap> _imageLayers;
-        private readonly List<ILayer> _layers;
+        //private readonly List<LayerInfo> _layerInfos;
 
         private readonly object _paintImageLock = new object();
         private Bitmap _paintImage;
@@ -106,7 +119,7 @@ namespace SharpMap.Forms.ImageGenerator
         public LayerListImageGenerator(MapBox mapBox, ProgressBar progressBar)
         {
             _progressBar = progressBar;
-            _layers = new List<ILayer>();
+            //_layerInfos = new List<LayerInfo>();
             _imageLayers = new ConcurrentDictionary<ILayer, LockedBitmap>();
             NeedsUpdate = true;
             MapBox = mapBox;
@@ -163,40 +176,40 @@ namespace SharpMap.Forms.ImageGenerator
 
         private bool NeedsUpdate { get; set; }
 
-        IEnumerable<ILayer> EnumerateLayers(Map map)
+        private IEnumerable<LayerInfo> EnumerateLayers(Map map)
         {
-            foreach (var lyr in EnumerateLayers(map.BackgroundLayer))
-                yield return lyr;
-            foreach (var lyr in EnumerateLayers(map.Layers))
-                yield return lyr;
-            foreach (var lyr in EnumerateLayers(map.VariableLayers))
-                yield return lyr;
+            foreach (var lyrInfo in EnumerateLayers(map.BackgroundLayer))
+                yield return lyrInfo;
+            foreach (var lyrInfo in EnumerateLayers(map.Layers))
+                yield return lyrInfo;
+            foreach (var lyrInfo in EnumerateLayers(map.VariableLayers))
+                yield return lyrInfo;
         }
 
-        IEnumerable<ILayer> EnumerateLayers(LayerCollection collection)
+        private IEnumerable<LayerInfo> EnumerateLayers(LayerCollection collection)
         {
             var coll = (ICollection) collection;
             lock (coll.SyncRoot)
             {
                 foreach (var lyr in collection)
                 {
-                    foreach (var tmpLyr in EnumerateLayers(lyr))
-                        yield return tmpLyr;
+                    foreach (var lyrInfo in EnumerateLayers(lyr, lyr.Enabled))
+                        yield return lyrInfo;
                 }
             }
         }
 
-        IEnumerable<ILayer> EnumerateLayers(ILayer lyr)
+        private IEnumerable<LayerInfo> EnumerateLayers(ILayer lyr, bool hierarchyEnabled)
         {
             if (lyr is LayerGroup lyrGroup)
             {
                 foreach (var tmpLyr in lyrGroup.Layers)
-                foreach (var tmpLyr2 in EnumerateLayers(tmpLyr))
+                foreach (var tmpLyr2 in EnumerateLayers(tmpLyr, lyrGroup.Enabled && tmpLyr.Enabled))
                     yield return tmpLyr2;
             }
             else
             {
-                yield return lyr;
+                yield return new LayerInfo(lyr, hierarchyEnabled);;
             }
         }
 
@@ -210,9 +223,11 @@ namespace SharpMap.Forms.ImageGenerator
                 return;
 
             var mvp = new MapViewport(map);
-            foreach (var lyr in Map.VariableLayers)
+            var token = _cts.Token;
+            foreach (var lyrInfo in EnumerateLayers(Map.VariableLayers))
             {
-                ThreadPool.QueueUserWorkItem(delegate { RenderLayerImage(new object[] { lyr, mvp, _cts.Token, false }); });
+                if (!lyrInfo.Render) continue;
+                ThreadPool.QueueUserWorkItem(delegate { RenderLayerImage(new object[] { lyrInfo.Layer, mvp, token, false }); });
             }
         }
 
@@ -274,9 +289,9 @@ namespace SharpMap.Forms.ImageGenerator
 
         private void ClearCache()
         {
-            foreach (var layer in _layers)
+            foreach (var key in _imageLayers.Keys)
             {
-                if (_imageLayers.TryRemove(layer, out var lockImg))
+                if (_imageLayers.TryRemove(key, out var lockImg))
                 {
                     lock (lockImg.Sync)
                     {
@@ -297,7 +312,6 @@ namespace SharpMap.Forms.ImageGenerator
             _pendingDownloadTracker.ProgressChanged += HandleProgressChanged;
 
             _imageLayers.Clear();
-            _layers.Clear();
         }
 
         private void HandleProgressChanged(int tilesRemaining)
@@ -349,6 +363,7 @@ namespace SharpMap.Forms.ImageGenerator
 
                 res = new Bitmap(MapBox.Width, MapBox.Height);
 
+                
                 using (var gr = Graphics.FromImage(res))
                 {
                     gr.Clear(Map.BackColor);
@@ -356,26 +371,24 @@ namespace SharpMap.Forms.ImageGenerator
                     double mapZoom = Map.Zoom;
                     double mapScale = Map.MapScale;
 
-                    for (int i = 0; i < _layers.Count; i++)
+                    // select layers to be rendered (ie Layers that are visible,
+                    // excluding children of LayerGroup that is not visible)
+                    var layers = EnumerateLayers(Map).Where(li => li.Render).Select(l => l.Layer).ToList();;
+                  
+                    for (int i = 0; i < layers.Count; i++)
                     {
-                        var lyr = _layers[i];
-
-                        // Does the layer need rendering
-                        if (!lyr.Enabled) continue;
+                        var lyr = layers[i];
 
                         // Does it fit in the visibility constraints
                         double mapCompare = lyr.VisibilityUnits == VisibilityUnits.Scale ? mapScale : mapZoom;
                         if (mapCompare < lyr.MinVisible || lyr.MaxVisible < mapCompare)
                             continue;
 
-                        //lock (_imageLayers)
-                        //{
-                            if (_imageLayers.TryGetValue(lyr, out var lockImg))
-                            {
-                                lock (lockImg.Sync)
-                                    gr.DrawImageUnscaled(lockImg.Bitmap, 0, 0);
-                            }
-                        //}
+                        if (_imageLayers.TryGetValue(lyr, out var lockImg))
+                        {
+                            lock (lockImg.Sync)
+                                gr.DrawImageUnscaled(lockImg.Bitmap, 0, 0);
+                        }
                     }
                 }
 
@@ -407,53 +420,58 @@ namespace SharpMap.Forms.ImageGenerator
 
             _logger.Debug(t => t("\n{0}> Enter Generate", Thread.CurrentThread.ManagedThreadId));
             _cts.Cancel();
-            _cts = new CancellationTokenSource();
+            _cts.Dispose();
 
+            _cts = new CancellationTokenSource();
+            var token = _cts.Token;
+
+            var layerInfos = EnumerateLayers(Map).ToList();
+            
             if (NeedsUpdate)
             {
                 ClearCache();
-                foreach (var lyr in EnumerateLayers(Map))
+                foreach (var lyrInfo in layerInfos)
                 {
-                    if (lyr is ITileAsyncLayer asyncLyr)
+                    if (lyrInfo.Layer is ITileAsyncLayer asyncLyr)
                         _pendingDownloadTracker.Add(asyncLyr);
-                    _layers.Add(lyr);
                 }
                 NeedsUpdate = false;
             }
 
+            if (token.IsCancellationRequested) return;
+            
             var map = MapBox.Map;
             double mapZoom = map.Zoom;
             double mapScale = map.MapScale;
 
             var mvp = new MapViewport(map);
 
-            for (int i = 0; i < _layers.Count; i++)
+            // select layers to be rendered (ie Layers that are visible,
+            // excluding children of LayerGroup that is not visible)
+            var layers = layerInfos.Where(li => li.Render).Select(l => l.Layer).ToList();
+
+            for (int i = 0; i < layers.Count; i++)
             {
                 // Has an cancellation ben requested
-                if (_cts.IsCancellationRequested)
-                    break;
+                if (token.IsCancellationRequested) return;
 
                 // Get the layer
-                var lyr = _layers[i];
-
-                // Does the layer need rendering
-                if (!lyr.Enabled) continue;
+                var lyr = layers[i];
 
                 // Layer has no envelope, it has no data
                 if (lyr.Envelope?.IsNull ?? false) continue;
-                
+
                 // Does it fit in the visibility constraints
-                double mapCompare = lyr.VisibilityUnits == VisibilityUnits.Scale ? mapScale : mapZoom;    
+                double mapCompare = lyr.VisibilityUnits == VisibilityUnits.Scale ? mapScale : mapZoom;
                 if (mapCompare < lyr.MinVisible || lyr.MaxVisible < mapCompare)
                     continue;
 
                 // Add task to list
-                bool invalidateAll = i == _layers.Count - 1;
-                ThreadPool.QueueUserWorkItem(delegate { RenderLayerImage(new object[] {lyr, mvp, _cts.Token, invalidateAll}); });
+                bool invalidateAll = i == layers.Count - 1;
+                ThreadPool.QueueUserWorkItem(delegate {RenderLayerImage(new object[] {lyr, mvp, token, invalidateAll});});
             }
 
-            if (_cts.IsCancellationRequested)
-                return;
+            if (token.IsCancellationRequested) return;
 
             ImageEnvelope = mvp.Envelope;
 
@@ -469,14 +487,12 @@ namespace SharpMap.Forms.ImageGenerator
         {
             if (IsDisposed) return Rectangle.Empty;
 
-
             object[] parameters = (object[]) param;
             var lyr = (ILayer)parameters[0];
             var mvp = (MapViewport) parameters[1];
             var token = (CancellationToken) parameters[2];
-
-            //if ((bool)parameters[3]) MapBox.Invalidate();
-
+            var invalidateAll = (bool) parameters[3];
+            
             if (token.IsCancellationRequested)
                 return Rectangle.Empty;
 
@@ -494,7 +510,6 @@ namespace SharpMap.Forms.ImageGenerator
             if (lyr is ITileAsyncLayer)
             {
                 _imageLayers.TryGetValue(lyr, out img);
-                //return Rectangle.Empty;
             }
 
             // Update size if necessary
@@ -580,7 +595,7 @@ namespace SharpMap.Forms.ImageGenerator
             {
                 _logger.Debug(t => t("\n{0}> Invalidating rectangle {1}",Thread.CurrentThread.ManagedThreadId, updateRect));
                 InvalidateCacheImage();
-                if ((bool) parameters[3])
+                if (invalidateAll)
                     mapBox.Invalidate();
                 else
                     mapBox.Invalidate(updateRect);
