@@ -41,4 +41,4 @@ jobs:
       if: success()
       env:
         MYGET_API_KEY: ${{ secrets.MYGET_API_KEY }}
-      run: dotnet nuget push SharpMap.Packages/SharpMap.*.nupkg -k $MYGET_API_KEY -s https://www.myget.org/F/sharpmap/api/v2/package --skip-duplicate
+      run: dotnet nuget push SharpMap.Packages/SharpMap.*.nupkg --api-key $MYGET_API_KEY --source https://www.myget.org/F/sharpmap/api/v2/package --skip-duplicate
