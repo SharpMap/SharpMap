@@ -11,6 +11,11 @@
         <SmBuildNo>0</SmBuildNo>
     </PropertyGroup>
 
+    <!-- Github-Actions -->
+    <PropertyGroup Condition=" '$(GITHUB_ACTIONS)' == 'True' ">
+        <SmBuildMetadata Condition=" '$(SmBuildMetadata)' == '' ">ci.github.$(GITHUB_ACTION)</SmBuildMetadata>
+        <SmBuildNo>$(GITHUB_ACTION)</SmBuildNo>
+    </PropertyGroup>
     <!-- Travis-CI -->
     <PropertyGroup Condition=" '$(TRAVIS)' == 'True' ">
         <SmBuildMetadata Condition=" '$(SmBuildMetadata)' == '' ">ci.travis.$(TRAVIS_BUILD_NUMBER)</SmBuildMetadata>
@@ -45,7 +50,7 @@
         <SmMinutesSinceStartOfUtcDay>$([System.DateTime]::new($(SmBuildTimestamp)).TimeOfDay.TotalMinutes.ToString("0000"))</SmMinutesSinceStartOfUtcDay>
 
         <VersionPrefix>$(SmMajor).$(SmMinor).$(SmPatch)</VersionPrefix>
-        <VersionSuffix>pre-$(SmDaysSinceEpoch)$(SmMinutesSinceStartOfUtcDay)+$(SmBuildMetadata)</VersionSuffix>
+        <VersionSuffix>pre.$(SmDaysSinceEpoch)$(SmMinutesSinceStartOfUtcDay)+$(SmBuildMetadata)</VersionSuffix>
 
     </PropertyGroup>
 

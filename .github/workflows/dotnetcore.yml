@@ -36,4 +36,9 @@ jobs:
       run: ../../../../testrunner/NUnit.ConsoleRunner.3.10.0/tools/nunit3-console.exe UnitTests.dll
       working-directory:
         ./UnitTests/bin/Release/net472
-      #shell: cmd
+
+    - name: Publish packages
+      if: success()
+      env:
+        MYGET_API_KEY: ${{ secrets.MYGET_API_KEY }}
+      run: dotnet nuget push SharpMap.Packages/SharpMap.*.nupkg -k $MYGET_API_KEY -s https://www.myget.org/F/sharpmap/api/v2/package --skip-duplicate
