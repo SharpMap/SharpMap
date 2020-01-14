@@ -49,7 +49,9 @@ namespace WinFormSamples
             SymbolOffsetBR,      // Basic Vector Style Point Size
             AlignHz,             // Regenerate Map Point layer data  
             AlignVt,             // Regenerate Map Point layer data
-            AlignDiagonal        // Regenerate Map Point layer data
+            AlignDiagonal ,      // Regenerate Map Point layer data
+            IncrementLineWidth,  // Rectangle layers
+            DecrementLineWidth   // Rectangle layers
         }
         
         public FormLayerListImageGenerator()
@@ -68,7 +70,6 @@ namespace WinFormSamples
             InitLayers();
             InitVariableLayers();
             InitTreeView();
-            this.mb.Refresh();
 
             using (var renderer = SharpMap.Forms.MapBox.MapImageGeneratorFunction(new SharpMap.Forms.MapBox(), null))
             {
@@ -77,10 +78,12 @@ namespace WinFormSamples
                 else
                     this.txtImgGeneration.Text = (this.txtImgGeneration.Text + "\n.    LayerListImageGenerator");
             };
-            
+
+            this.mb.Refresh();
+
             //_slowBoats?.Start();
             _mediumBoats?.Start();
-            _fastBoats?.Start();
+            //_fastBoats?.Start();
         }
 
         private void FormLayerListImageGenerator_Closing(object sender, EventArgs e)
@@ -157,16 +160,23 @@ namespace WinFormSamples
                         cm.MenuItems.Add(CreateMenuItem(enumMenuItem.IncreaseSymbolSize, "Increment symbol size"));
                         cm.MenuItems.Add(CreateMenuItem(enumMenuItem.DecreaseSymbolSize, "Decrement symbol size"));
                         cm.MenuItems.Add(new MenuItem("-"));
-                        cm.MenuItems.Add(CreateMenuItem(enumMenuItem.SymbolOffsetNone, "Remove Symbol Offset"));
-                        cm.MenuItems.Add(CreateMenuItem(enumMenuItem.SymbolOffsetTL, "Offset Step Top Left"));
-                        cm.MenuItems.Add(CreateMenuItem(enumMenuItem.SymbolOffsetTR, "Offset Step Top Right"));
-                        cm.MenuItems.Add(CreateMenuItem(enumMenuItem.SymbolOffsetBL, "Offset Step Bottom Left"));
-                        cm.MenuItems.Add(CreateMenuItem(enumMenuItem.SymbolOffsetBR, "Offset Step Bottom Right"));
+                        cm.MenuItems.Add(CreateMenuItem(enumMenuItem.SymbolOffsetNone, "Remove symbol offset"));
+                        cm.MenuItems.Add(CreateMenuItem(enumMenuItem.SymbolOffsetTL, "Offset step upper left"));
+                        cm.MenuItems.Add(CreateMenuItem(enumMenuItem.SymbolOffsetTR, "Offset step upper right"));
+                        cm.MenuItems.Add(CreateMenuItem(enumMenuItem.SymbolOffsetBL, "Offset Step lower left"));
+                        cm.MenuItems.Add(CreateMenuItem(enumMenuItem.SymbolOffsetBR, "Offset step lower right"));
                     }
                     if (cm.MenuItems.Count > 0) cm.MenuItems.Add(new MenuItem("-"));
-                    cm.MenuItems.Add(CreateMenuItem(enumMenuItem.AlignHz, "Align Horizontal"));
-                    cm.MenuItems.Add(CreateMenuItem(enumMenuItem.AlignVt, "Align Vertical"));
-                    cm.MenuItems.Add(CreateMenuItem(enumMenuItem.AlignDiagonal, "Align Diagonal"));
+                    cm.MenuItems.Add(CreateMenuItem(enumMenuItem.AlignHz, "Align Pts Horizontal"));
+                    cm.MenuItems.Add(CreateMenuItem(enumMenuItem.AlignVt, "Align Pts Vertical"));
+                    cm.MenuItems.Add(CreateMenuItem(enumMenuItem.AlignDiagonal, "Align Pts Diagonal"));
+                }
+
+                if (vlyr.LayerName.Contains("Rect"))
+                {
+                    if (cm.MenuItems.Count > 0) cm.MenuItems.Add(new MenuItem("-"));
+                    cm.MenuItems.Add(CreateMenuItem(enumMenuItem.IncrementLineWidth, "Increment line width"));
+                    cm.MenuItems.Add(CreateMenuItem(enumMenuItem.DecrementLineWidth, "Decrement line width"));
                 }
             }
 
@@ -274,6 +284,12 @@ namespace WinFormSamples
                         PopulateGeomFeatureLayer(vectorLyr, 2);
                     else
                         PopulateCharacterPointSymbolizerLayer((GeometryFeatureProvider)vectorLyr.DataSource, 2); 
+                    break;
+                case enumMenuItem.IncrementLineWidth:
+                    vectorLyr.Style.Line.Width += 1;
+                    break;
+                case enumMenuItem.DecrementLineWidth:
+                    vectorLyr.Style.Line.Width -= vectorLyr.Style.Line.Width <= 1 ? 0 : 1;
                     break;
 
                 default:
@@ -397,9 +413,10 @@ namespace WinFormSamples
 
         private ILayer CreateLabelLayer(VectorLayer lyr, string column, bool enabled)
         {
-            var lblLayer = new LabelLayer( lyr.LayerName + "Labels");
+            var lblLayer = new LabelLayer( lyr.LayerName + " Labels");
             lblLayer.DataSource = lyr.DataSource;
             lblLayer.LabelColumn = column;
+            lblLayer.Style.BackColor = Brushes.LightPink;
             lblLayer.SRID = lblLayer.SRID;
             lblLayer.Enabled = enabled;
             return lblLayer;

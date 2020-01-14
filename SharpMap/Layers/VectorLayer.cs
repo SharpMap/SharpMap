@@ -228,8 +228,7 @@ namespace SharpMap.Layers
                 RenderInternal(g, map, envelope, Theme);
             else
                 RenderInternal(g, map, envelope);
-
-
+            
             base.Render(g, map);
         }
 

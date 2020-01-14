@@ -97,7 +97,7 @@ namespace SharpMap.Forms.ImageGenerator
         private static readonly ILog _logger = LogManager.GetLogger<LayerListImageGenerator>();
 
         private ProgressBar _progressBar;
-        private readonly ConcurrentDictionary<ILayer, LockedBitmap> _imageLayers;
+        private readonly ConcurrentDictionary<ILayerEx, LockedBitmap> _imageLayers;
         //private readonly List<LayerInfo> _layerInfos;
 
         private readonly object _paintImageLock = new object();
@@ -120,7 +120,7 @@ namespace SharpMap.Forms.ImageGenerator
         {
             _progressBar = progressBar;
             //_layerInfos = new List<LayerInfo>();
-            _imageLayers = new ConcurrentDictionary<ILayer, LockedBitmap>();
+            _imageLayers = new ConcurrentDictionary<ILayerEx, LockedBitmap>();
             NeedsUpdate = true;
             MapBox = mapBox;
             WireMapBox();
@@ -223,8 +223,10 @@ namespace SharpMap.Forms.ImageGenerator
                 return;
 
             var mvp = new MapViewport(map);
+            
             var token = _cts.Token;
-            foreach (var lyrInfo in EnumerateLayers(Map.VariableLayers))
+            var lyrInfos = EnumerateLayers(Map.VariableLayers);
+            foreach (var lyrInfo in lyrInfos)
             {
                 if (!lyrInfo.Render) continue;
                 ThreadPool.QueueUserWorkItem(delegate { RenderLayerImage(new object[] { lyrInfo.Layer, mvp, token, false }); });
@@ -245,7 +247,7 @@ namespace SharpMap.Forms.ImageGenerator
             if (IsDisposed) 
                 return;
 
-            if (!_imageLayers.TryGetValue((ILayer)sender, out var lockImg))
+            if (!_imageLayers.TryGetValue((ILayerEx)sender, out var lockImg))
                 return;
 
             var min = Point.Round(Map.WorldToImage(box.Min()));
@@ -377,7 +379,7 @@ namespace SharpMap.Forms.ImageGenerator
                   
                     for (int i = 0; i < layers.Count; i++)
                     {
-                        var lyr = layers[i];
+                        var lyr = (ILayerEx)layers[i];
 
                         // Does it fit in the visibility constraints
                         double mapCompare = lyr.VisibilityUnits == VisibilityUnits.Scale ? mapScale : mapZoom;
@@ -485,137 +487,135 @@ namespace SharpMap.Forms.ImageGenerator
         /// <returns></returns>
         private Rectangle RenderLayerImage(object param)
         {
-            if (IsDisposed) return Rectangle.Empty;
+                if (IsDisposed) return Rectangle.Empty;
 
-            object[] parameters = (object[]) param;
-            var lyr = (ILayer)parameters[0];
-            var mvp = (MapViewport) parameters[1];
-            var token = (CancellationToken) parameters[2];
-            var invalidateAll = (bool) parameters[3];
+                object[] parameters = (object[]) param;
+                var lyr = (ILayerEx)parameters[0];
+                var mvp = (MapViewport) parameters[1];
+                var token = (CancellationToken) parameters[2];
+                var invalidateAll = (bool) parameters[3];
             
-            if (token.IsCancellationRequested)
-                return Rectangle.Empty;
+                if (token.IsCancellationRequested)
+                    return Rectangle.Empty;
 
-            if (lyr.Envelope == null || lyr.Envelope.Width == 0d)
-                return Rectangle.Empty;
+                var updateRect = Rectangle.Empty;
 
-            var updateRect = Rectangle.Empty;
+                var sw = new Stopwatch();
+                _logger.Debug(t => t("\n{0}> Enter RenderLayerImage {1}\n{0}>\t{2} => {3}",
+                    Thread.CurrentThread.ManagedThreadId, lyr.LayerName, mvp.Envelope, mvp.Size));
+                sw.Start();
 
-            var sw = new Stopwatch();
-            _logger.Debug(t => t("\n{0}> Enter RenderLayerImage {1}\n{0}>\t{2} => {3}",
-                Thread.CurrentThread.ManagedThreadId, lyr.LayerName, mvp.Envelope, mvp.Size));
-            sw.Start();
+                LockedBitmap img = null;
+//                if (lyr is ITileAsyncLayer)
+//                {
+                    _imageLayers.TryGetValue(lyr, out img);
+//                }
 
-            LockedBitmap img = null;
-            if (lyr is ITileAsyncLayer)
-            {
-                _imageLayers.TryGetValue(lyr, out img);
-            }
+                // Update size if necessary
+                if (img != null)
+                {
+                    lock (img.Sync)
+                    {
+                        var imageObj = img.Bitmap;
+                        if (img.Bitmap != null && img.Bitmap.Size != mvp.Size)
+                        {
+                            object lockObj = img.Sync;
+                            var newLockImg = new LockedBitmap(lockObj) { 
+                                Bitmap = new Bitmap(mvp.Size.Width, mvp.Size.Height, PixelFormat.Format32bppArgb)
+                            };
+                            while (!_imageLayers.TryUpdate(lyr, newLockImg, img))
+                                Thread.Sleep(25);
+                            img = newLockImg;
+                            //imageObj.Dispose();
+                        }
+                    }
+                }
+                else //if (img == null)
+                {
+                    img = new LockedBitmap {
+                        Bitmap = new Bitmap(mvp.Size.Width, mvp.Size.Height, PixelFormat.Format32bppArgb)
+                    };
+                    img = _imageLayers.AddOrUpdate(lyr, img, (u,v) => img);
+                }
 
-            // Update size if necessary
-            if (img != null)
-            {
+                Envelope affectedArea;
+            
                 lock (img.Sync)
                 {
-                    var imageObj = img.Bitmap;
-                    if (img.Bitmap != null && img.Bitmap.Size != mvp.Size)
+                    try
                     {
-                        object lockObj = img.Sync;
-                        var newLockImg = new LockedBitmap(lockObj) { 
-                            Bitmap = new Bitmap(mvp.Size.Width, mvp.Size.Height, PixelFormat.Format32bppArgb)
-                        };
-                        while (!_imageLayers.TryUpdate(lyr, newLockImg, img))
-                            Thread.Sleep(25);
-                        img = newLockImg;
-                        //imageObj.Dispose();
+                        using (var gr = Graphics.FromImage(img.Bitmap))
+                        {
+                            gr.Clear(Color.Transparent);
+                            lyr.Render(gr, mvp, out affectedArea);
+                        }
+                    }
+                    catch (Exception)
+                    {
+                        goto Exit;
                     }
                 }
-            }
-            else //if (img == null)
-            {
-                img = new LockedBitmap {
-                    Bitmap = new Bitmap(mvp.Size.Width, mvp.Size.Height, PixelFormat.Format32bppArgb)
-                };
-                img = _imageLayers.AddOrUpdate(lyr, img, (u,v) => img);
-            }
 
-            lock (img.Sync)
-            {
-                try
-                {
-                    using (var gr = Graphics.FromImage(img.Bitmap))
-                    {
-                        gr.Clear(Color.Transparent);
-                        lyr.Render(gr, mvp);
-                    }
-                }
-                catch (Exception)
-                {
+                if (token.IsCancellationRequested)
                     goto Exit;
-                }
-            }
 
-            if (token.IsCancellationRequested)
-                goto Exit;
+//            // Envelope of the current layer
+//            var lyrEnvelope = lyr.Envelope;
+//
+//            if (lyrEnvelope.Width == 0)
+//            {
+//                if (lyr is VectorLayer vlyr)
+//                {
+//                    double pointSize = vlyr.Style.PointSize;
+//                    if (vlyr.Style.Symbol != null)
+//                        pointSize =  vlyr.Style.Symbol.Size.Width * vlyr.Style.SymbolScale;
+//                    pointSize = 1.05d * Map.PixelWidth * pointSize;
+//                    lyrEnvelope.ExpandBy(pointSize);
+//                }
+//            }
 
-            // Envelope of the current layer
-            var lyrEnvelope = lyr.Envelope;
+                // Envelope of the last rendered image
+                var imgEnvelope = img.Extent.Copy();
+                imgEnvelope.ExpandToInclude(affectedArea);
 
-            if (lyrEnvelope.Width == 0)
-            {
-                if (lyr is VectorLayer vlyr)
+                var updateArea = mvp.Envelope.Intersection(imgEnvelope);
+                var lt = Point.Truncate( mvp.WorldToImage(updateArea.TopLeft()));
+                var rb = Point.Ceiling(mvp.WorldToImage(updateArea.BottomRight()));
+
+                updateRect = Rectangle.FromLTRB(lt.X, lt.Y, rb.X, rb.Y);
+
+                if (token.IsCancellationRequested)
+                    goto Exit;
+
+                var mapBox = MapBox;
+                if (mapBox.IsHandleCreated)
                 {
-                    double pointSize = vlyr.Style.PointSize;
-                    if (vlyr.Style.Symbol != null)
-                        pointSize =  vlyr.Style.Symbol.Size.Width * vlyr.Style.SymbolScale;
-                    pointSize = 1.05d * Map.PixelWidth * pointSize;
-                    lyrEnvelope.ExpandBy(pointSize);
+                    _logger.Debug(t => t("\n{0}> Invalidating rectangle {1}",Thread.CurrentThread.ManagedThreadId, updateRect));
+                    InvalidateCacheImage();
+                    if (invalidateAll)
+                        mapBox.Invalidate();
+                    else
+                        mapBox.Invalidate(updateRect);
+
+                    //MapBox.Invoke(new MethodInvoker(() => MapBox.Invalidate(updateRect)));
+                    if (!IsDisposed)
+                        mapBox.Invoke(new MethodInvoker(() => { if (!mapBox.IsDisposed) mapBox.Update();}));
                 }
-            }
 
-            // Envelope of the last rendered image
-            var imgEnvelope = img.Extent.Copy();
-            imgEnvelope.ExpandToInclude(lyrEnvelope);
+                // Set the image envelope
+                img.Extent = affectedArea; // mvp.Envelope.Intersection(lyr.Envelope);
 
-            var updateArea = mvp.Envelope.Intersection(imgEnvelope);
-            var lt = Point.Truncate( mvp.WorldToImage(updateArea.TopLeft()));
-            var rb = Point.Ceiling(mvp.WorldToImage(updateArea.BottomRight()));
-
-            if (token.IsCancellationRequested)
-                goto Exit;
-            
-            updateRect = Rectangle.FromLTRB(lt.X, lt.Y, rb.X, rb.Y);
-
-            // Set the image envelope
-            img.Extent = mvp.Envelope.Intersection(lyr.Envelope);
-
-
-            var mapBox = MapBox;
-            if (mapBox.IsHandleCreated)
-            {
-                _logger.Debug(t => t("\n{0}> Invalidating rectangle {1}",Thread.CurrentThread.ManagedThreadId, updateRect));
-                InvalidateCacheImage();
-                if (invalidateAll)
-                    mapBox.Invalidate();
-                else
-                    mapBox.Invalidate(updateRect);
-
-                //MapBox.Invoke(new MethodInvoker(() => MapBox.Invalidate(updateRect)));
-                if (!IsDisposed)
-                    mapBox.Invoke(new MethodInvoker(() => { if (!mapBox.IsDisposed) mapBox.Update();}));
-            }
-
-            Exit:
-            sw.Stop();
-            _logger.Debug(t => t("\n{0}> Exit RenderLayerImage {1} after {4}ms \n{0}>\t{2} => {3}",
-                Thread.CurrentThread.ManagedThreadId, lyr.LayerName, mvp.Envelope, mvp.Size,
-                sw.ElapsedMilliseconds));
-            if (updateRect.IsEmpty)
-                _logger.Debug(t => t("\n{0}> Exit RenderLayerImage because of cancellation",
+                Exit:
+                sw.Stop();
+                _logger.Debug(t => t("\n{0}> Exit RenderLayerImage {1} after {4}ms \n{0}>\t{2} => {3}",
                     Thread.CurrentThread.ManagedThreadId, lyr.LayerName, mvp.Envelope, mvp.Size,
                     sw.ElapsedMilliseconds));
+                if (updateRect.IsEmpty)
+                    _logger.Debug(t => t("\n{0}> Exit RenderLayerImage because of cancellation",
+                        Thread.CurrentThread.ManagedThreadId, lyr.LayerName, mvp.Envelope, mvp.Size,
+                        sw.ElapsedMilliseconds));
 
-            return updateRect;
+                return updateRect;
         }
         
         private void InvalidateCacheImage()

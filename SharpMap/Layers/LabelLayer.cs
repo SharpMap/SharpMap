@@ -473,139 +473,173 @@ namespace SharpMap.Layers
                 else
                     text = feature[LabelColumn].ToString();
 
-                if (!String.IsNullOrEmpty(text))
+                if (String.IsNullOrEmpty(text)) continue;
+                
+                // for lineal geometries, try clipping to ensure proper labeling
+                if (feature.Geometry is ILineal)
                 {
-                    // for lineal geometries, try clipping to ensure proper labeling
-                    if (feature.Geometry is ILineal)
-                    {
-                        if (feature.Geometry is ILineString)
-                            feature.Geometry = lineClipping.ClipLineString(feature.Geometry as ILineString);
-                        else if (feature.Geometry is IMultiLineString)
-                            feature.Geometry = lineClipping.ClipLineString(feature.Geometry as IMultiLineString);
-                    }
+                    if (feature.Geometry is ILineString)
+                        feature.Geometry = lineClipping.ClipLineString(feature.Geometry as ILineString);
+                    else if (feature.Geometry is IMultiLineString)
+                        feature.Geometry = lineClipping.ClipLineString(feature.Geometry as IMultiLineString);
+                }
 
-                    if (feature.Geometry is IGeometryCollection)
+                if (feature.Geometry is IGeometryCollection)
+                {
+                    if (MultipartGeometryBehaviour == MultipartGeometryBehaviourEnum.All)
                     {
-                        if (MultipartGeometryBehaviour == MultipartGeometryBehaviourEnum.All)
+                        foreach (var geom in (feature.Geometry as IGeometryCollection))
                         {
-                            foreach (var geom in (feature.Geometry as IGeometryCollection))
-                            {
-                                BaseLabel lbl = CreateLabel(feature, geom, text, rotation, priority, style, map, g, _getLocationMethod);
-                                if (lbl != null)
-                                    labels.Add(lbl);
-                            }
-                        }
-                        else if (MultipartGeometryBehaviour == MultipartGeometryBehaviourEnum.CommonCenter)
-                        {
-                            BaseLabel lbl = CreateLabel(feature, feature.Geometry, text, rotation, priority, style, map, g, _getLocationMethod);
+                            BaseLabel lbl = CreateLabel(feature, geom, text, rotation, priority, style, map, g, _getLocationMethod);
                             if (lbl != null)
                                 labels.Add(lbl);
                         }
-                        else if (MultipartGeometryBehaviour == MultipartGeometryBehaviourEnum.First)
-                        {
-                            if ((feature.Geometry as IGeometryCollection).NumGeometries > 0)
-                            {
-                                BaseLabel lbl = CreateLabel(feature, (feature.Geometry as IGeometryCollection).GetGeometryN(0), text,
-                                    rotation, style, map, g);
-                                if (lbl != null)
-                                    labels.Add(lbl);
-                            }
-                        }
-                        else if (MultipartGeometryBehaviour == MultipartGeometryBehaviourEnum.Largest)
-                        {
-                            var coll = (feature.Geometry as IGeometryCollection);
-                            if (coll.NumGeometries > 0)
-                            {
-                                var largestVal = 0d;
-                                var idxOfLargest = 0;
-                                for (var j = 0; j < coll.NumGeometries; j++)
-                                {
-                                    var geom = coll.GetGeometryN(j);
-                                    if (geom is ILineString && ((ILineString) geom).Length > largestVal)
-                                    {
-                                        largestVal = ((ILineString) geom).Length;
-                                        idxOfLargest = j;
-                                    }
-                                    if (geom is IMultiLineString && ((IMultiLineString) geom).Length > largestVal)
-                                    {
-                                        largestVal = ((IMultiLineString) geom).Length;
-                                        idxOfLargest = j;
-                                    }
-                                    if (geom is IPolygon && ((IPolygon) geom).Area > largestVal)
-                                    {
-                                        largestVal = ((IPolygon) geom).Area;
-                                        idxOfLargest = j;
-                                    }
-                                    if (geom is IMultiPolygon && ((IMultiPolygon) geom).Area > largestVal)
-                                    {
-                                        largestVal = ((IMultiPolygon) geom).Area;
-                                        idxOfLargest = j;
-                                    }
-                                }
-
-                                BaseLabel lbl = CreateLabel(feature, coll.GetGeometryN(idxOfLargest), text, rotation, priority, style,
-                                    map, g, _getLocationMethod);
-                                if (lbl != null)
-                                    labels.Add(lbl);
-                            }
-                        }
                     }
-                    else
+                    else if (MultipartGeometryBehaviour == MultipartGeometryBehaviourEnum.CommonCenter)
                     {
                         BaseLabel lbl = CreateLabel(feature, feature.Geometry, text, rotation, priority, style, map, g, _getLocationMethod);
                         if (lbl != null)
                             labels.Add(lbl);
                     }
+                    else if (MultipartGeometryBehaviour == MultipartGeometryBehaviourEnum.First)
+                    {
+                        if ((feature.Geometry as IGeometryCollection).NumGeometries > 0)
+                        {
+                            BaseLabel lbl = CreateLabel(feature, (feature.Geometry as IGeometryCollection).GetGeometryN(0), text,
+                                rotation, style, map, g);
+                            if (lbl != null)
+                                labels.Add(lbl);
+                        }
+                    }
+                    else if (MultipartGeometryBehaviour == MultipartGeometryBehaviourEnum.Largest)
+                    {
+                        var coll = (feature.Geometry as IGeometryCollection);
+                        if (coll.NumGeometries > 0)
+                        {
+                            var largestVal = 0d;
+                            var idxOfLargest = 0;
+                            for (var j = 0; j < coll.NumGeometries; j++)
+                            {
+                                var geom = coll.GetGeometryN(j);
+                                if (geom is ILineString && ((ILineString) geom).Length > largestVal)
+                                {
+                                    largestVal = ((ILineString) geom).Length;
+                                    idxOfLargest = j;
+                                }
+                                if (geom is IMultiLineString && ((IMultiLineString) geom).Length > largestVal)
+                                {
+                                    largestVal = ((IMultiLineString) geom).Length;
+                                    idxOfLargest = j;
+                                }
+                                if (geom is IPolygon && ((IPolygon) geom).Area > largestVal)
+                                {
+                                    largestVal = ((IPolygon) geom).Area;
+                                    idxOfLargest = j;
+                                }
+                                if (geom is IMultiPolygon && ((IMultiPolygon) geom).Area > largestVal)
+                                {
+                                    largestVal = ((IMultiPolygon) geom).Area;
+                                    idxOfLargest = j;
+                                }
+                            }
+
+                            BaseLabel lbl = CreateLabel(feature, coll.GetGeometryN(idxOfLargest), text, rotation, priority, style,
+                                map, g, _getLocationMethod);
+                            if (lbl != null)
+                                labels.Add(lbl);
+                        }
+                    }
+                }
+                else
+                {
+                    BaseLabel lbl = CreateLabel(feature, feature.Geometry, text, rotation, priority, style, map, g, _getLocationMethod);
+                    if (lbl != null)
+                        labels.Add(lbl);
                 }
             }
-            if (labels.Count > 0) //We have labels to render...
+
+            if (labels.Count == 0)
+                return;
+
+            if (Style.CollisionDetection && _labelFilter != null)
+                _labelFilter(labels);
+
+            RectangleF affectedArea = new RectangleF();
+
+            for (int i = 0; i < labels.Count; i++)
             {
-                if (Style.CollisionDetection && _labelFilter != null)
-                    _labelFilter(labels);
-
-                for (int i = 0; i < labels.Count; i++)
+                // Don't show the label if not necessary
+                if (!labels[i].Show)
                 {
-                    // Don't show the label if not necessary
-                    if (!labels[i].Show)
-                    {
-                        continue;
-                    }
+                    continue;
+                }
 
-                    if (labels[i] is Label)
+                RectangleF rect;
+
+                if (labels[i] is Label)
+                {
+                    var label = labels[i] as Label;
+                    if (label.Style.IsTextOnPath == false || label.TextOnPathLabel == null)
                     {
-                        var label = labels[i] as Label;
-                        if (label.Style.IsTextOnPath == false || label.TextOnPathLabel == null)
-                        {
-                            VectorRenderer.DrawLabel(g, label.Location, label.Style.Offset,
+                        rect = VectorRenderer.DrawLabelEx(g, label.Location, label.Style.Offset,
                                 label.Style.GetFontForGraphics(g), label.Style.ForeColor,
                                 label.Style.BackColor, label.Style.Halo, label.Rotation,
                                 label.Text, map, label.Style.HorizontalAlignment,
                                 label.LabelPoint);
-                        }
-                        else
-                        {
-                            if (label.Style.BackColor != null && label.Style.BackColor != System.Drawing.Brushes.Transparent)
-                            {
-                                //draw background
-                                if (label.TextOnPathLabel.RegionList.Count > 0)
-                                {
-                                    g.FillRectangles(labels[i].Style.BackColor, labels[i].TextOnPathLabel.RegionList.ToArray());
-                                    //g.FillPolygon(labels[i].Style.BackColor, labels[i].TextOnPathLabel.PointsText.ToArray());
-                                }
-                            }
-                            label.TextOnPathLabel.DrawTextOnPath();
-                        }
+
+                        affectedArea = VectorRenderer.RectExpandToInclude(affectedArea, rect);
                     }
-                    else if (labels[i] is PathLabel)
+                    else
                     {
-                        var plbl = labels[i] as PathLabel;
-                        var lblStyle = plbl.Style;
-                        g.DrawString(lblStyle.Halo, new SolidBrush(lblStyle.ForeColor), plbl.Text,
-                            lblStyle.Font.FontFamily, (int) lblStyle.Font.Style, lblStyle.Font.Size,
-                            lblStyle.GetStringFormat(), lblStyle.IgnoreLength, plbl.Location);
+                        if (label.Style.BackColor != null &&
+                            label.Style.BackColor != System.Drawing.Brushes.Transparent)
+                        {
+                            //draw background
+                            if (label.TextOnPathLabel.RegionList.Count > 0)
+                            {
+                                g.FillRectangles(labels[i].Style.BackColor,
+                                    labels[i].TextOnPathLabel.RegionList.ToArray());
+                                //g.FillPolygon(labels[i].Style.BackColor, labels[i].TextOnPathLabel.PointsText.ToArray());
+                            }
+                        }
+
+                        label.TextOnPathLabel.DrawTextOnPath();
                     }
                 }
+                else if (labels[i] is PathLabel)
+                {
+                    var plbl = labels[i] as PathLabel;
+                    var lblStyle = plbl.Style;
+                    g.DrawString(lblStyle.Halo, new SolidBrush(lblStyle.ForeColor), plbl.Text,
+                        lblStyle.Font.FontFamily, (int) lblStyle.Font.Style, lblStyle.Font.Size,
+                        lblStyle.GetStringFormat(), lblStyle.IgnoreLength, plbl.Location);
+                }
             }
+
+            if (!affectedArea.IsEmpty)
+            {
+                // TODO optimise for Rotation = 0.
+                var pts = new PointF[]
+                {
+                    new PointF(affectedArea.Left - 1, affectedArea.Top - 1),
+                    new PointF(affectedArea.Right + 1, affectedArea.Top - 1),
+                    new PointF(affectedArea.Right + 1, affectedArea.Bottom + 1),
+                    new PointF(affectedArea.Left - 1,  affectedArea.Bottom + 1)
+                };
+
+                var coords = map.ImageToWorld(pts, true);
+
+                var minX = Math.Min(coords[0].X, Math.Min(coords[1].X, Math.Min(coords[2].X, coords[3].X)));
+                var maxX = Math.Max(coords[0].X, Math.Max(coords[1].X, Math.Max(coords[2].X, coords[3].X)));
+                var minY = Math.Min(coords[0].Y, Math.Min(coords[1].Y, Math.Min(coords[2].Y, coords[3].Y)));
+                var maxY = Math.Max(coords[0].Y, Math.Max(coords[1].Y, Math.Max(coords[2].Y, coords[3].Y)));
+
+                var env = new Envelope(minX, maxX, minY, maxY);
+                //env.ExpandBy(env.Width * 0.05, env.Height * 0.05);
+                
+                base._affectedArea.ExpandToInclude(env);
+            }
+            
             base.Render(g, map);
         }
 

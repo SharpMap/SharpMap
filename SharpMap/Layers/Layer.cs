@@ -29,7 +29,7 @@ namespace SharpMap.Layers
     /// Implement this class instead of the ILayer interface to save a lot of common code.
     /// </summary>
     [Serializable]
-    public abstract partial class Layer : DisposableObject, ILayer
+    public abstract partial class Layer : DisposableObject, ILayerEx
     {
         #region Events
 
@@ -108,6 +108,10 @@ namespace SharpMap.Layers
         private int? _targetSrid;
         [field: NonSerialized]
         private bool _shouldNotResetCt;
+        
+        [field: NonSerialized]
+        protected Envelope _affectedArea = new Envelope();
+        
         // ReSharper disable PublicConstructorInAbstractClass
         ///<summary>
         /// Creates an instance of this class using the given Style
@@ -329,20 +333,43 @@ namespace SharpMap.Layers
         /// </summary>
         /// <param name="g">Graphics object reference</param>
         /// <param name="map">Map which is rendered</param>
-        [Obsolete("Use Render(Graphics, MapViewport)")]
+        [Obsolete("Use Render(Graphics, MapViewport, out Envelope affectedArea)")]
         public virtual void Render(Graphics g, Map map)
         {
             Render(g, (MapViewport)map);
         }
 
         /// <summary>
-        /// Renders the layer
+        /// Renders the layer using the current viewport
         /// </summary>
         /// <param name="g">Graphics object reference</param>
         /// <param name="map">Map which is rendered</param>
         public virtual void Render(Graphics g, MapViewport map)
         {
             OnLayerRendered(g);
+        }
+
+        /// <summary>
+        /// Renders the layer using the current viewport
+        /// </summary>
+        /// <param name="g">Graphics object reference</param>
+        /// <param name="map">Map which is rendered</param>
+        /// <param name="affectedArea">The actual extent of rendered data inclusive of any labels or vector symbology</param>
+        public virtual void Render(Graphics g, MapViewport map, out Envelope affectedArea)
+        {
+            Render(g, map);
+            
+            if (_affectedArea.IsNull)
+            {
+                affectedArea = map.Envelope.Intersection(Envelope);
+            }
+            else
+            {
+                affectedArea = map.Envelope.Intersection(_affectedArea);
+                _affectedArea.SetToNull();
+            }
+            
+            // OnLayerRendered already raised by Base.Render(Graphics g,m MapViewport map)
         }
 
         /// <summary>

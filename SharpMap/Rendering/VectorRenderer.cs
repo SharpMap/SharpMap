@@ -318,28 +318,10 @@ namespace SharpMap.Rendering
             return new SizeF((float)Math.Ceiling(f.Width), (float)Math.Ceiling(f.Height));
         }
 
-
-        /// <summary>
-        /// Renders a label to the map.
-        /// </summary>
-        /// <param name="g">Graphics reference</param>
-        /// <param name="labelPoint">Label placement</param>
-        /// <param name="offset">Offset of label in screen coordinates</param>
-        /// <param name="font">Font used for rendering</param>
-        /// <param name="forecolor">Font forecolor</param>
-        /// <param name="backcolor">Background color</param>
-        /// <param name="halo">Color of halo</param>
-        /// <param name="rotation">Text rotation in degrees</param>
-        /// <param name="text">Text to render</param>
-        /// <param name="map">Map reference</param>
-        /// <param name="alignment">Horizontal alignment for multi line labels. If not set <see cref="StringAlignment.Near"/> is used</param>
-        /// <param name="rotationPoint">Point where the rotation should take place</param>
-        [MethodImpl(MethodImplOptions.Synchronized)]
-        public static void DrawLabel(Graphics g, PointF labelPoint, PointF offset, Font font, Color forecolor,
-                                     Brush backcolor, Pen halo, float rotation, string text, MapViewport map,
-                                     LabelStyle.HorizontalAlignmentEnum alignment = LabelStyle.HorizontalAlignmentEnum.Left,
-                                     PointF? rotationPoint = null)
-
+        public static RectangleF DrawLabelEx(Graphics g, PointF labelPoint, PointF offset, Font font, Color forecolor,
+            Brush backcolor, Pen halo, float rotation, string text, MapViewport map,
+            LabelStyle.HorizontalAlignmentEnum alignment = LabelStyle.HorizontalAlignmentEnum.Left,
+            PointF? rotationPoint = null)
         {
             //Calculate the size of the text
             var labelSize = _sizeOfString(g, text, font);
@@ -368,29 +350,33 @@ namespace SharpMap.Rendering
                 rotationPoint = rotationPoint ?? labelPoint;
 
                 g.FillEllipse(Brushes.LawnGreen, rotationPoint.Value.X - 1, rotationPoint.Value.Y - 1, 2, 2);
-                
-                var t = g.Transform.Clone();
-                g.TranslateTransform(rotationPoint.Value.X, rotationPoint.Value.Y);
-                g.RotateTransform(rotation);
-                //g.TranslateTransform(-labelSize.Width/2, -labelSize.Height/2);
 
-                labelPoint = new PointF(labelPoint.X - rotationPoint.Value.X,
-                                        labelPoint.Y - rotationPoint.Value.Y);
+                using (var t = g.Transform.Clone())
+                {
+                    g.TranslateTransform(rotationPoint.Value.X, rotationPoint.Value.Y);
+                    g.RotateTransform(rotation);
+                    //g.TranslateTransform(-labelSize.Width/2, -labelSize.Height/2);
 
-                //labelSize = new SizeF(labelSize.Width*0.74f + 1f, labelSize.Height*0.74f);
-                if (backcolor != null && backcolor != Brushes.Transparent)
-                    g.FillRectangle(backcolor, labelPoint.X, labelPoint.Y, labelSize.Width, labelSize.Height);
+                    labelPoint = new PointF(labelPoint.X - rotationPoint.Value.X,
+                        labelPoint.Y - rotationPoint.Value.Y);
 
-                var path = new GraphicsPath();
-                path.AddString(text, font.FontFamily, (int) font.Style, font.Size,
-                               new RectangleF(labelPoint, labelSize) /* labelPoint*/, 
-                               new StringFormat { Alignment = salign } /*null*/);
-                if (halo != null)
-                    g.DrawPath(halo, path);
+                    //labelSize = new SizeF(labelSize.Width*0.74f + 1f, labelSize.Height*0.74f);
+                    if (backcolor != null && backcolor != Brushes.Transparent)
+                        g.FillRectangle(backcolor, labelPoint.X, labelPoint.Y, labelSize.Width, labelSize.Height);
 
-                g.FillPath(new SolidBrush(forecolor), path);
-                //g.DrawString(text, font, new System.Drawing.SolidBrush(forecolor), 0, 0);        
-                g.Transform = t;
+                    var path = new GraphicsPath();
+                    path.AddString(text, font.FontFamily, (int) font.Style, font.Size,
+                        new RectangleF(labelPoint, labelSize) /* labelPoint*/, 
+                        new StringFormat { Alignment = salign } /*null*/);
+                    if (halo != null)
+                        g.DrawPath(halo, path);
+
+                    g.FillPath(new SolidBrush(forecolor), path);
+                    //g.DrawString(text, font, new System.Drawing.SolidBrush(forecolor), 0, 0);
+                    g.Transform = t;
+
+                    return new RectangleF();
+                };
             }
             else
             {
@@ -406,7 +392,35 @@ namespace SharpMap.Rendering
                     g.DrawPath(halo, path);
                 g.FillPath(new SolidBrush(forecolor), path);
                 //g.DrawString(text, font, new System.Drawing.SolidBrush(forecolor), LabelPoint.X, LabelPoint.Y);
+                
+                //return path.GetBounds();
+                return new RectangleF(labelPoint.X, labelPoint.Y, labelSize.Width,labelSize.Height);
             }
+        }
+
+        /// <summary>
+        /// Renders a label to the map.
+        /// </summary>
+        /// <param name="g">Graphics reference</param>
+        /// <param name="labelPoint">Label placement</param>
+        /// <param name="offset">Offset of label in screen coordinates</param>
+        /// <param name="font">Font used for rendering</param>
+        /// <param name="forecolor">Font forecolor</param>
+        /// <param name="backcolor">Background color</param>
+        /// <param name="halo">Color of halo</param>
+        /// <param name="rotation">Text rotation in degrees</param>
+        /// <param name="text">Text to render</param>
+        /// <param name="map">Map reference</param>
+        /// <param name="alignment">Horizontal alignment for multi line labels. If not set <see cref="StringAlignment.Near"/> is used</param>
+        /// <param name="rotationPoint">Point where the rotation should take place</param>
+        [MethodImpl(MethodImplOptions.Synchronized)]
+        public static void DrawLabel(Graphics g, PointF labelPoint, PointF offset, Font font, Color forecolor,
+                                     Brush backcolor, Pen halo, float rotation, string text, MapViewport map,
+                                     LabelStyle.HorizontalAlignmentEnum alignment = LabelStyle.HorizontalAlignmentEnum.Left,
+                                     PointF? rotationPoint = null)
+
+        {
+            DrawLabelEx(g, labelPoint, offset, font, forecolor, backcolor, halo, rotation, text, map, alignment, rotationPoint);
         }
 
         private static ClipState DetermineClipState(PointF[] vertices, int width, int height)
@@ -736,5 +750,22 @@ namespace SharpMap.Rendering
         } ;
 
         #endregion
+
+        public static RectangleF RectExpandToInclude(RectangleF first, RectangleF second)
+        {
+            if (second.IsEmpty) return first;
+            if (first.IsEmpty) return second;
+
+            var maxX = Math.Max(first.Right, second.Right);
+            var maxY = Math.Max(first.Bottom,second.Bottom);
+
+            if (first.X > second.X) first.X = second.X;
+            if (first.Y > second.Y) first.Y = second.Y;
+
+            if (first.Right < maxX) first.Width = maxX - first.X;
+            if (first.Bottom < maxY) first.Height = maxY - first.Y;
+
+            return first;
+        }
     }
 }
