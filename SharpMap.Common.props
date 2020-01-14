@@ -45,7 +45,7 @@
         <SmMinutesSinceStartOfUtcDay>$([System.DateTime]::new($(SmBuildTimestamp)).TimeOfDay.TotalMinutes.ToString("0000"))</SmMinutesSinceStartOfUtcDay>
 
         <VersionPrefix>$(SmMajor).$(SmMinor).$(SmPatch)</VersionPrefix>
-        <VersionSuffix>pre.$(SmDaysSinceEpoch)$(SmMinutesSinceStartOfUtcDay)+$(SmBuildMetadata)</VersionSuffix>
+        <VersionSuffix>pre-$(SmDaysSinceEpoch)$(SmMinutesSinceStartOfUtcDay)+$(SmBuildMetadata)</VersionSuffix>
 
     </PropertyGroup>
 

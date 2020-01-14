@@ -4,6 +4,7 @@
     <UseTools35 Condition=" '$(UseTools35)' == '' ">true</UseTools35>
     <VersionTargetName Condition=" '$(UseTools35)' == 'true' ">VersionGit</VersionTargetName>
     <VersionTargetName Condition=" '$(UseTools35)' == 'false' ">VersionNoTools35</VersionTargetName>
+    <MSBuildCommunityTasksPath>$(MsBuildThisFileDirectory)BuildTools</MSBuildCommunityTasksPath>
   </PropertyGroup>
 
   <Import Project="$(MSBuildThisFileDirectory)BuildTools\MSBuild.Community.Tasks.targets"/>

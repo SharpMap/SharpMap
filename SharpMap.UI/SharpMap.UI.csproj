@@ -10,6 +10,7 @@
             Copyright 2008-2019 SharpMap - Team</Copyright>
         <PackageTags>sharpmap winforms</PackageTags>
         <Description>This package contains UI Compontents for System.Windows.Forms.</Description>
+        <GenerateResourceUsePreserializedResources>true</GenerateResourceUsePreserializedResources>
     </PropertyGroup>
 
     <ItemGroup>
@@ -28,6 +29,7 @@
 
     <ItemGroup>
         <PackageReference Include="GeoAPI.Core" Version="1.7.5" />
+        <PackageReference Include="System.Resources.Extensions" Version="4.7.0" />
     </ItemGroup>
 
     <ItemGroup>

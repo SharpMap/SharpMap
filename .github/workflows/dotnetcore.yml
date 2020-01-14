@@ -1,0 +1,39 @@
+name: .NET Core
+
+on: [push]
+
+jobs:
+  build:
+
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v1
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 2.2.401
+    - name: Setup Nuget
+      uses: nuget/setup-nuget@v1
+    - name: Setup MSBuild.exe
+      uses: warrenbuckley/Setup-MSBuild@v1
+
+    - name: Install packages into packages folder 1/2
+      run: nuget restore SharpMap.Extensions/packages.config -OutputDirectory packages
+    - name: Install packages into packages folder 2/2
+      run: nuget restore SharpMap.SqlServerSpatialObjects/packages.config -OutputDirectory packages
+    - name: MSBuild SharedAssemblyVersion
+      run: msbuild SharpMap.targets /t:Version
+
+    - name: Build with dotnet
+      env:
+        DOTNET_CLI_TELEMETRY_OPTOUT: 1
+      run: dotnet build SharpMap.sln --configuration ReleaseDotNet
+
+    - name: Setup NUnit TestRunner
+      run: nuget install NUnit.Console -Version 3.10.0 -OutputDirectory testrunner
+    - name: Perform tests
+      run: ../../../../testrunner/NUnit.ConsoleRunner.3.10.0/tools/nunit3-console.exe UnitTests.dll
+      working-directory:
+        ./UnitTests/bin/Release/net472
+      #shell: cmd
