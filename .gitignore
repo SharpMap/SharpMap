@@ -209,3 +209,6 @@ I[V|v][V|v]*.*
 
 # Testrunner
 testrunner/**
+
+# Generated packages
+SharpMap.Packages/**

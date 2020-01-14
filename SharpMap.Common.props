@@ -6,14 +6,50 @@
         <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     </PropertyGroup>
 
-    <!-- SharpMap version -->
     <PropertyGroup>
-        <Major>1</Major>
-        <Minor>2</Minor>
-        <Build>0</Build>
-        <Revision>0</Revision>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <SmBuildNo>0</SmBuildNo>
     </PropertyGroup>
 
+    <!-- Travis-CI -->
+    <PropertyGroup Condition=" '$(TRAVIS)' == 'True' ">
+        <SmBuildMetadata Condition=" '$(SmBuildMetadata)' == '' ">ci.travis.$(TRAVIS_BUILD_NUMBER)</SmBuildMetadata>
+        <SmBuildNo>$(TRAVIS_BUILD_NUMBER)</SmBuildNo>
+    </PropertyGroup>
+    <!-- TeamCity -->
+    <PropertyGroup Condition=" '$(TEAMCITY_VERSION)' != '' ">
+        <SmBuildMetadata Condition=" '$(SmBuildMetadata)' == '' ">ci.teamcity.$(BUILD_NUMBER)</SmBuildMetadata>
+        <SmBuildNo>$(BUILD_NUMBER)</SmBuildNo>
+    </PropertyGroup>
+    <!-- AppVeyor -->
+    <PropertyGroup Condition=" '$(APPVEYOR)' == 'True' ">
+        <SmBuildMetadata Condition=" '$(SmBuildMetadata)' == '' ">ci.appveyor.$(APPVEYOR_BUILD_NUMBER)</SmBuildMetadata>
+        <SmBuildNo>$(APPVEYOR_BUILD_NUMBER)</SmBuildNo>
+    </PropertyGroup>
+    <!-- Fallback for local builds and CI environments we don't recognize -->
+    <PropertyGroup>
+        <SmBuildMetadata Condition=" '$(SmBuildMetadata)' == '' ">local</SmBuildMetadata>
+    </PropertyGroup>
+
+
+    <!-- SharpMap version -->
+    <PropertyGroup>
+        
+        <SmMajor>1</SmMajor>
+        <SmMinor>2</SmMinor>
+        <SmPatch>0</SmPatch>
+        
+        <SmBuildTimestamp>$([System.DateTime]::UtcNow.Ticks)</SmBuildTimestamp>
+        <SmDaysSinceEpoch>$([System.DateTime]::op_Subtraction($([System.DateTime]::new($(SmBuildTimestamp)).Date),$([System.DateTime]::new(621355968000000000))).TotalDays.ToString("00000"))</SmDaysSinceEpoch>
+
+        <SmMinutesSinceStartOfUtcDay>$([System.DateTime]::new($(SmBuildTimestamp)).TimeOfDay.TotalMinutes.ToString("0000"))</SmMinutesSinceStartOfUtcDay>
+
+        <VersionPrefix>$(SmMajor).$(SmMinor).$(SmPatch)</VersionPrefix>
+        <VersionSuffix>pre.$(SmDaysSinceEpoch)$(SmMinutesSinceStartOfUtcDay)+$(SmBuildMetadata)</VersionSuffix>
+
+    </PropertyGroup>
+
+    <!--
     <PropertyGroup Condition=" '$(TargetFramework)' == 'net40-client' Or '$(TargetFramework)' == 'net452' Or '$(TargetFramework)' == 'net472'">
         <RequiresFrameworkAssemblyReferences>true</RequiresFrameworkAssemblyReferences>
     </PropertyGroup>
@@ -21,6 +57,7 @@
     <PropertyGroup Condition=" '$(Configuration)' == 'ReleaseLinux' ">
         <AssetTargetFallback Condition=" '$(TargetFramework)' == 'net40-client' ">net472</AssetTargetFallback>
     </PropertyGroup>
+    -->
 
     <PropertyGroup>
         <Authors>SharpMap - Team</Authors>
@@ -33,13 +70,27 @@
         <PackageIcon>SharpMap.Logo.png</PackageIcon>
         <PackageLicense>LGPL-2.1-or-later</PackageLicense>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-        <AssemblyVersion>$(Major).$(Minor).$(Build)</AssemblyVersion>
-        <FileVersion>$(Major).$(Minor).$(Build).$(Revision)</FileVersion>
-        <Version>$(Major).$(Minor).$(Build)-pre1</Version>
+        <AssemblyVersion>$(SmMajor).$(SmMinor).0.0</AssemblyVersion>
+        <FileVersion>$(VersionPrefix).$(SmBuildNo)</FileVersion>
+        <InformationalVersion>$(VersionPrefix)-$(VersionSuffix)</InformationalVersion>
+        <Version Condition="'$(Version)' == ''">$(VersionPrefix)-$(VersionSuffix)</Version>
+        <PackageOutputPath>$(SolutionDir)SharpMap.Packages</PackageOutputPath>
     </PropertyGroup>
 
     <ItemGroup>
         <None Include="$(SolutionDir)SharpMap.Logo.png" Pack="true" PackagePath="\"/>
+    </ItemGroup>
+
+    <PropertyGroup Label="SourceLink Info">
+        <PublishRepositoryUrl>true</PublishRepositoryUrl>
+        <EmbedUntrackedSources>true</EmbedUntrackedSources>
+        <IncludeSymbols>true</IncludeSymbols>
+        <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <!-- SourceLink adds stuff to let debuggers step into our code. -->
+        <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0-beta2-19367-01" PrivateAssets="All" />
     </ItemGroup>
 
 </Project>

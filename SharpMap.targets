@@ -22,22 +22,22 @@
     <AssemblyInfo
         CodeLanguage="CS"
         OutputFile="$(MSBuildThisFileDirectory)SharedAssemblyVersion.cs"
-        AssemblyInformationalVersion="$(Major).$(Minor).$(Build).$(Revision)"
-        AssemblyVersion="$(Major).$(Minor).$(Build)"
-        AssemblyFileVersion="$(Major).$(Minor).$(Build)" />
+        AssemblyInformationalVersion="$(InformationalVersion)"
+        AssemblyVersion="$(AssemblyVersion)"
+        AssemblyFileVersion="$(FileVersion)" />
     <OnError ExecuteTargets="VersionNoTools35"/>
   </Target>
   <Target Name="VersionNoTools35">
     <Message Text="Building revision from git commit hash failed, or Microsoft.Build.Utilities.v3.5 could not be found." />
     <ItemGroup>
       <AssemblyAttributes Include="AssemblyVersion">
-        <_Parameter1>$(Major).$(Minor).$(Build)</_Parameter1>
+        <_Parameter1>$(AssemblyVersion)</_Parameter1>
       </AssemblyAttributes>
       <AssemblyAttributes Include="AssemblyFileVersion">
-        <_Parameter1>$(Major).$(Minor).$(Build).$(Revision)</_Parameter1>
+        <_Parameter1>$(FileVersion)</_Parameter1>
       </AssemblyAttributes>
       <AssemblyAttributes Include="AssemblyInformationalVersion">
-        <_Parameter1>$(Major).$(Minor).$(Build).9999999</_Parameter1>
+        <_Parameter1>$(InformationalVersion)</_Parameter1>
       </AssemblyAttributes>
     </ItemGroup>
     <WriteCodeFragment Language="C#" OutputFile="$(MSBuildThisFileDirectory)SharedAssemblyVersion.cs" AssemblyAttributes="@(AssemblyAttributes)" />
