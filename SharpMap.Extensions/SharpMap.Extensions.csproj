@@ -27,24 +27,24 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>bin\$(Configuration)\</OutputPath>
     <DefineConstants>TRACE;DEBUG</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <PlatformTarget>AnyCPU</PlatformTarget>
-    <DocumentationFile>bin\Debug\SharpMap.Extensions.XML</DocumentationFile>
+    <DocumentationFile>$(OutputPath)SharpMap.Extensions.XML</DocumentationFile>
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
+    <OutputPath>bin\$(Configuration)\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <DocumentationFile>bin\Release\SharpMap.Extensions.XML</DocumentationFile>
+    <DocumentationFile>$(OutputPath)SharpMap.Extensions.XML</DocumentationFile>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
@@ -52,7 +52,7 @@
     <OutputPath>bin\ReleaseLinux\</OutputPath>
     <DefineConstants>TRACE;LINUX</DefineConstants>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <DocumentationFile>bin\Release\SharpMap.Extensions.XML</DocumentationFile>
+    <DocumentationFile>$(OutputPath)SharpMap.Extensions.XML</DocumentationFile>
     <Optimize>true</Optimize>
     <DebugType>pdbonly</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -179,7 +179,7 @@
   <Target Name="AfterBuild" Condition=" '$(Configuration)' != 'ReleaseLinux' ">
       <Message Importance="high" Text="$(MSBuildBinPath)"/>
       <Message Importance="high" Text="$(MSBuildToolsPath)"/>
-      <Exec Command="&quot;NuGet.exe&quot; pack &quot;$(MSBuildProjectDirectory)\$(MSBuildProjectFile)&quot; -Symbols -version $(Version) -Properties Configuration=Release -outputdirectory &quot;$(PackageOutputPath)\.&quot;" />
+      <Exec Command="&quot;NuGet.exe&quot; pack &quot;$(MSBuildProjectDirectory)\$(MSBuildProjectFile)&quot; -Symbols -version $(Version) -Properties Configuration=$(Configuration) -outputdirectory &quot;$(PackageOutputPath)\.&quot;" />
   </Target>
   <ItemGroup>
     <ProjectReference Include="..\SharpMap\SharpMap.csproj">

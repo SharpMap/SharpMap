@@ -17,7 +17,7 @@
 	
   <Target Name="VersionGit">
     <Message Text="Building revision from git..." />
-    <GitVersion LocalPath="$(MSBuildThisFileDirectory)" ContinueOnError="ErrorAndStop">
+    <!--<GitVersion LocalPath="$(MSBuildThisFileDirectory)" ContinueOnError="ErrorAndStop">
       <Output TaskParameter="CommitHash" PropertyName="Revision" />
     </GitVersion>
     <AssemblyInfo
@@ -27,6 +27,8 @@
         AssemblyVersion="$(AssemblyVersion)"
         AssemblyFileVersion="$(FileVersion)" />
     <OnError ExecuteTargets="VersionNoTools35"/>
+    -->
+    <CallTarget Targets="VersionNoTools35" />
   </Target>
   <Target Name="VersionNoTools35">
     <Message Text="Building revision from git commit hash failed, or Microsoft.Build.Utilities.v3.5 could not be found." />

@@ -36,6 +36,33 @@
         <SmBuildMetadata Condition=" '$(SmBuildMetadata)' == '' ">local</SmBuildMetadata>
     </PropertyGroup>
 
+    <!--Build timestamp-->
+    <PropertyGroup>
+        <BuildTimeLinux/>
+        <BuildTimeUtcTicks/>
+    </PropertyGroup>
+
+    <Choose>
+        <When Condition=" '$(BuildTimeLinux)' != '' ">
+            <PropertyGroup>
+            <SmBuildTimestamp>
+                $([System.DateTime]::op_Addition(
+                $([System.DateTime]::new($([MSBuild]::Multiply($(BuildTimeLinux), $([System.TimeSpan]::TicksPerSecond))))),
+                $([System.TimeSpan]::FromTicks(621355968000000000))).Ticks)
+            </SmBuildTimestamp>
+            </PropertyGroup>
+        </When>
+        <When Condition=" '$(BuildTimeUtcTicks)' != '' ">
+            <PropertyGroup>
+            <SmBuildTimestamp>$(BuildTimeUtcTicks)</SmBuildTimestamp>
+            </PropertyGroup>
+        </When>
+        <Otherwise>
+            <PropertyGroup>
+                <SmBuildTimestamp>$([System.DateTime]::UtcNow.Ticks)</SmBuildTimestamp>
+            </PropertyGroup>
+        </Otherwise>
+    </Choose>
 
     <!-- SharpMap version -->
     <PropertyGroup>
@@ -44,7 +71,6 @@
         <SmMinor>2</SmMinor>
         <SmPatch>0</SmPatch>
         
-        <SmBuildTimestamp>$([System.DateTime]::UtcNow.Ticks)</SmBuildTimestamp>
         <SmDaysSinceEpoch>$([System.DateTime]::op_Subtraction($([System.DateTime]::new($(SmBuildTimestamp)).Date),$([System.DateTime]::new(621355968000000000))).TotalDays.ToString("00000"))</SmDaysSinceEpoch>
 
         <SmMinutesSinceStartOfUtcDay>$([System.DateTime]::new($(SmBuildTimestamp)).TimeOfDay.TotalMinutes.ToString("0000"))</SmMinutesSinceStartOfUtcDay>
@@ -79,6 +105,13 @@
         <FileVersion>$(VersionPrefix).$(SmBuildNo)</FileVersion>
         <InformationalVersion>$(VersionPrefix)-$(VersionSuffix)</InformationalVersion>
         <Version Condition="'$(Version)' == ''">$(VersionPrefix)-$(VersionSuffix)</Version>
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(Configuration)' == 'Debug' " >
+        <PackageOutputPath>$(SolutionDir)SharpMap.Debug.Packages</PackageOutputPath>
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(Configuration)' != 'Debug' " >
         <PackageOutputPath>$(SolutionDir)SharpMap.Packages</PackageOutputPath>
     </PropertyGroup>
 
@@ -95,7 +128,7 @@
 
     <ItemGroup>
         <!-- SourceLink adds stuff to let debuggers step into our code. -->
-        <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0-beta2-19367-01" PrivateAssets="All" />
+        <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
     </ItemGroup>
 
 </Project>
