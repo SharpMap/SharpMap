@@ -37,8 +37,14 @@ jobs:
       working-directory:
         ./UnitTests/bin/Release/net472
 
-    - name: Publish packages
-      if: success()
-      env:
-        MYGET_API_KEY: ${{ secrets.MYGET_API_KEY }}
-      run: dotnet nuget push SharpMap.Packages/SharpMap.*.nupkg --api-key $MYGET_API_KEY --source https://www.myget.org/F/sharpmap/api/v2/package --skip-duplicate
+#    - name: Publish packages
+#      if: success()
+#      env:
+#        MYGET_API_KEY: ${{ secrets.MYGET_API_KEY }}
+#      run: dotnet nuget push SharpMap.Packages/SharpMap.*.nupkg --api-key $MYGET_API_KEY --source https://www.myget.org/F/sharpmap/api/v2/package --skip-duplicate
+
+    - name: Upload
+      uses: actions/upload-artifact@v1
+      with:
+        name: NuGet Package Files
+        path: SharpMap.Packages
