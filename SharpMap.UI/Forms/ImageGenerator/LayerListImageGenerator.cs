@@ -480,6 +480,9 @@ namespace SharpMap.Forms.ImageGenerator
             if (token.IsCancellationRequested)
                 return Rectangle.Empty;
 
+            if (lyr.Envelope == null || lyr.Envelope.Width == 0d)
+                return Rectangle.Empty;
+
             var updateRect = Rectangle.Empty;
 
             var sw = new Stopwatch();
