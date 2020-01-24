@@ -16,7 +16,7 @@
         <PackageReference Include="GeoAPI.Core" Version="1.7.5" />
     </ItemGroup>
 
-    <ItemGroup Condition=" '$(PlatformTargetS)' == 'x86' ">
+    <ItemGroup Condition=" '$(PlatformTarget)' == 'x86' ">
         <Reference Include="Esri.FileGDBAPI">
             <HintPath>Libraries\bin\Esri.FileGDBAPI.dll</HintPath>
         </Reference>

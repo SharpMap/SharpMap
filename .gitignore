@@ -211,4 +211,4 @@ I[V|v][V|v]*.*
 testrunner/**
 
 # Generated packages
-SharpMap.Packages/**
+/SharpMap.*Packages/**
