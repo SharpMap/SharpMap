@@ -9,6 +9,7 @@ using System.Net;
 using System.Threading;
 using BruTile;
 using BruTile.Cache;
+using BruTile.Web;
 using Common.Logging;
 using GeoAPI.Geometries;
 
@@ -133,8 +134,15 @@ namespace SharpMap.Layers
             if (!string.IsNullOrEmpty(fileCacheDir))
             {
                 _fileCache = new FileCache(fileCacheDir, "png");
-                _ImageFormat = ImageFormat.Png;
             }
+            else
+            {
+                _fileCache = (tileSource as HttpTileProvider)?.PersistentCache as FileCache;
+            }
+
+            if (_fileCache != null)
+                _ImageFormat = ImageFormat.Png;
+
         }
 
         /// <summary>
