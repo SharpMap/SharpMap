@@ -586,8 +586,6 @@ namespace SharpMap.Layers
                                 label.Style.BackColor, label.Style.Halo, label.Rotation,
                                 label.Text, map, label.Style.HorizontalAlignment,
                                 label.LabelPoint);
-
-                        affectedArea = VectorRenderer.RectExpandToInclude(affectedArea, rect);
                     }
                     else
                     {
@@ -602,44 +600,30 @@ namespace SharpMap.Layers
                                 //g.FillPolygon(labels[i].Style.BackColor, labels[i].TextOnPathLabel.PointsText.ToArray());
                             }
                         }
-
-                        label.TextOnPathLabel.DrawTextOnPath();
+                        rect = label.TextOnPathLabel.DrawTextOnPathEx();
                     }
                 }
                 else if (labels[i] is PathLabel)
                 {
                     var plbl = labels[i] as PathLabel;
                     var lblStyle = plbl.Style;
-                    g.DrawString(lblStyle.Halo, new SolidBrush(lblStyle.ForeColor), plbl.Text,
+                    rect = g.DrawStringEx(lblStyle.Halo, new SolidBrush(lblStyle.ForeColor), plbl.Text,
                         lblStyle.Font.FontFamily, (int) lblStyle.Font.Style, lblStyle.Font.Size,
                         lblStyle.GetStringFormat(), lblStyle.IgnoreLength, plbl.Location);
                 }
+                affectedArea = VectorRenderer.RectExpandToInclude(affectedArea, rect);
             }
 
             if (!affectedArea.IsEmpty)
             {
-                // TODO optimise for Rotation = 0.
                 var pts = new PointF[]
                 {
                     new PointF(affectedArea.Left - 1, affectedArea.Top - 1),
-                    new PointF(affectedArea.Right + 1, affectedArea.Top - 1),
                     new PointF(affectedArea.Right + 1, affectedArea.Bottom + 1),
-                    new PointF(affectedArea.Left - 1,  affectedArea.Bottom + 1)
                 };
-
-                var coords = map.ImageToWorld(pts, true);
-
-                var minX = Math.Min(coords[0].X, Math.Min(coords[1].X, Math.Min(coords[2].X, coords[3].X)));
-                var maxX = Math.Max(coords[0].X, Math.Max(coords[1].X, Math.Max(coords[2].X, coords[3].X)));
-                var minY = Math.Min(coords[0].Y, Math.Min(coords[1].Y, Math.Min(coords[2].Y, coords[3].Y)));
-                var maxY = Math.Max(coords[0].Y, Math.Max(coords[1].Y, Math.Max(coords[2].Y, coords[3].Y)));
-
-                var env = new Envelope(minX, maxX, minY, maxY);
-                //env.ExpandBy(env.Width * 0.05, env.Height * 0.05);
-                
-                base._affectedArea.ExpandToInclude(env);
+                var coords = map.ImageToWorld(pts, false);
+                base._affectedArea.ExpandToInclude(new Envelope(coords[0], coords[1]));
             }
-            
             base.Render(g, map);
         }
 

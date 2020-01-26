@@ -349,14 +349,14 @@ namespace SharpMap.Rendering
             {
                 rotationPoint = rotationPoint ?? labelPoint;
 
-                g.FillEllipse(Brushes.LawnGreen, rotationPoint.Value.X - 1, rotationPoint.Value.Y - 1, 2, 2);
-
+                //g.FillEllipse(Brushes.LawnGreen, rotationPoint.Value.X - 1, rotationPoint.Value.Y - 1, 2, 2);
+                RectangleF bounds;
                 using (var t = g.Transform.Clone())
                 {
                     g.TranslateTransform(rotationPoint.Value.X, rotationPoint.Value.Y);
                     g.RotateTransform(rotation);
                     //g.TranslateTransform(-labelSize.Width/2, -labelSize.Height/2);
-
+                    
                     labelPoint = new PointF(labelPoint.X - rotationPoint.Value.X,
                         labelPoint.Y - rotationPoint.Value.Y);
 
@@ -372,11 +372,19 @@ namespace SharpMap.Rendering
                         g.DrawPath(halo, path);
 
                     g.FillPath(new SolidBrush(forecolor), path);
-                    //g.DrawString(text, font, new System.Drawing.SolidBrush(forecolor), 0, 0);
-                    g.Transform = t;
 
-                    return new RectangleF();
+                    //g.DrawString(text, font, new System.Drawing.SolidBrush(forecolor), 0, 0);
+
+                    using (var inv = new Matrix())
+                    {
+                        inv.Translate(rotationPoint.Value.X, rotationPoint.Value.Y);
+                        inv.Rotate(rotation);
+                        bounds = path.GetBounds(inv);
+                    }
+                    
+                    g.Transform = t;
                 };
+                return bounds;
             }
             else
             {
@@ -392,9 +400,8 @@ namespace SharpMap.Rendering
                     g.DrawPath(halo, path);
                 g.FillPath(new SolidBrush(forecolor), path);
                 //g.DrawString(text, font, new System.Drawing.SolidBrush(forecolor), LabelPoint.X, LabelPoint.Y);
-                
-                //return path.GetBounds();
-                return new RectangleF(labelPoint.X, labelPoint.Y, labelSize.Width,labelSize.Height);
+
+                return path.GetBounds();
             }
         }
 

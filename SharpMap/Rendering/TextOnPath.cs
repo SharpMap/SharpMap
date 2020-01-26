@@ -422,6 +422,13 @@ namespace SharpMap.Rendering
         /// </summary>
         public void DrawTextOnPath()
         {
+            DrawTextOnPathEx();
+        }
+
+        public RectangleF DrawTextOnPathEx()
+        {
+            var  affectedArea = new RectangleF();
+            
             var points = new PointF[25001];
             var count = 0;
             var gp = new GraphicsPath(_pathdata.Points, _pathdata.Types) { FillMode = FillMode.Winding };
@@ -462,15 +469,17 @@ namespace SharpMap.Rendering
                     // if can show all letter
                     DrawText(Graphics, points, count);
                 }
+
+                affectedArea = gp.GetBounds();
                 gp.Dispose();
                 //DrawText(points, count);
             }
             catch (Exception ex)
             {
                 LastError = ex;
-
-
             }
+
+            return affectedArea;
         }
         /// <summary>
         /// Method to remove consecutive same/equal <see cref="PointF"/>s from the array

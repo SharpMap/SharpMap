@@ -441,8 +441,14 @@ namespace SharpMap.Rendering.Symbolizer
         /// <param name="path"></param>
         public static void DrawString(this Graphics self, Pen halo, Brush fill, string text, FontFamily fontFamily, int style, float emSize, StringFormat format, bool ignoreLength, GraphicsPath path)
         {
+            DrawStringEx(self, halo, fill, text, fontFamily, style, emSize, format, ignoreLength, path);
+        }
+
+        public static RectangleF DrawStringEx(this Graphics self, Pen halo, Brush fill, string text, FontFamily fontFamily, int style, float emSize, StringFormat format, bool ignoreLength, GraphicsPath path)
+        {
+            var rect = new RectangleF();
             if (path == null || path.PointCount == 0)
-                return;
+                return rect;
 
             var gp = new GraphicsPath();
             gp.AddString(text, fontFamily, style, emSize, new Point(0, 0), format);
@@ -461,12 +467,14 @@ namespace SharpMap.Rendering.Symbolizer
                         self.DrawPath(halo, wp);
                     if (fill != null)
                         self.FillPath(fill, wp);
+
+                    rect = wp.GetBounds();
                     wp.Dispose();
                 }
                 warpedPath.Dispose();
             }
             gp.Dispose();
+            return rect;
         }
-
     }
 }
