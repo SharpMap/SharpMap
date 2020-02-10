@@ -96,6 +96,7 @@ namespace SharpMap.Styles
         /// <summary>
         /// get or set label on path
         /// </summary>
+        [Obsolete("TextOnPath has been deprecated in favor of more efficient rendering techniques")]
         public bool IsTextOnPath
         {
             get { return _isTextOnPath; }

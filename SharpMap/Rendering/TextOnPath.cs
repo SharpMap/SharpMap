@@ -9,6 +9,7 @@ namespace SharpMap.Rendering
     /// <summary>
     /// Horizontal alignment options for texts on path
     /// </summary>
+    [Obsolete]
     public enum TextPathAlign
     {
         /// <summary>
@@ -28,6 +29,7 @@ namespace SharpMap.Rendering
     /// <summary>
     /// Vertical alignment option for texts on path
     /// </summary>
+    [Obsolete]
     public enum TextPathPosition
     {
         /// <summary>
@@ -47,6 +49,7 @@ namespace SharpMap.Rendering
     /// <summary>
     /// Extensions methods for text on path label rendering 
     /// </summary>
+    [Obsolete]
     public static class GraphicsExtension
     {
         /// <summary>
@@ -221,6 +224,7 @@ namespace SharpMap.Rendering
     /// <summary>
     /// Text on path generator class
     /// </summary>
+    [Obsolete("Deprecated in favor of more efficient rendering techniques")]
     public class TextOnPath
     {
         internal readonly static TextOnPath TextOnPathInstance = new TextOnPath();

@@ -17,7 +17,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Text;
@@ -25,11 +24,14 @@ using System.Globalization;
 using SharpMap.Data;
 using SharpMap.Data.Providers;
 using GeoAPI.Geometries;
+using NetTopologySuite.Geometries;
+using NetTopologySuite.Geometries.Utilities;
+using NetTopologySuite.Utilities;
 using SharpMap.Rendering;
 using SharpMap.Rendering.Thematics;
 using SharpMap.Styles;
-using Transform = SharpMap.Utilities.Transform;
 using SharpMap.Rendering.Symbolizer;
+
 
 namespace SharpMap.Layers
 {
@@ -410,36 +412,100 @@ namespace SharpMap.Layers
         {
             if (DataSource == null)
                 throw (new ApplicationException("DataSource property not set on layer '" + LayerName + "'"));
-            g.TextRenderingHint = TextRenderingHint;
-            g.SmoothingMode = SmoothingMode;
 
-            var mapEnvelope = map.Envelope;
-            var layerEnvelope = ToSource(mapEnvelope); //View to render
-            var lineClipping = new CohenSutherlandLineClipping(mapEnvelope.MinX, mapEnvelope.MinY,
-                mapEnvelope.MaxX, mapEnvelope.MaxY);
+            var layerEnvelope = ToSource(map.Envelope); //View to render
+            List<BaseLabel> labels = null;
 
-            var ds = new FeatureDataSet();
-            DataSource.Open();
-            DataSource.ExecuteIntersectionQuery(layerEnvelope, ds);
-            DataSource.Close();
-            if (ds.Tables.Count == 0)
+            using (var ds = new FeatureDataSet())
+            {
+                DataSource.Open();
+                DataSource.ExecuteIntersectionQuery(layerEnvelope, ds);
+                DataSource.Close();
+                if (ds.Tables.Count > 0)
+                {
+                    g.TextRenderingHint = TextRenderingHint;
+                    g.SmoothingMode = SmoothingMode;
+
+                    labels = CreateLabelDefinitions(g, map, ds.Tables[0]);
+                }
+            }
+            
+            if (labels == null || labels.Count == 0)
             {
                 base.Render(g, map);
                 return;
             }
 
-            var features = ds.Tables[0];
+            if (Style.CollisionDetection)
+                _labelFilter?.Invoke(labels);
 
-            //Initialize label collection
+            var affectedAreaGraphics = new RectangleF();
+            var affectedAreaWorld = new Envelope();
+            
+            for (int i = 0; i < labels.Count; i++)
+            {
+                var baseLabel = labels[i]; 
+                if (!baseLabel.Show)
+                    continue;
+
+                var font = baseLabel.Style.GetFontForGraphics(g);
+                
+                if (labels[i] is Label)
+                {
+                    var label = baseLabel as Label;
+                    affectedAreaGraphics = VectorRenderer.DrawLabel(
+                        g, label.Location, label.Style.Offset,
+                        font, label.Style.ForeColor, label.Style.BackColor, 
+                        label.Style.Halo, label.Rotation, label.Text, map, 
+                        label.Style.HorizontalAlignment, label.LabelPoint);
+                    
+                    affectedAreaGraphics = VectorRenderer.RectExpandToInclude(affectedAreaGraphics, affectedAreaGraphics);
+                }
+                else if (labels[i] is PathLabel)
+                {
+                    var pathLabel  = labels[i] as PathLabel;
+                    var lblStyle = pathLabel.Style;
+
+                    if (lblStyle.BackColor != null && lblStyle.BackColor != Brushes.Transparent)
+                        using (var gp = new GraphicsPath())
+                        {
+                            var pts = pathLabel.AffectedArea.ExteriorRing.TransformToImage(map);
+                            gp.AddPolygon(pts);
+                            g.FillPath(lblStyle.BackColor, gp);
+                        }
+
+                    g.DrawString(lblStyle.Halo, new SolidBrush(lblStyle.ForeColor), 
+                        pathLabel.Text, font.FontFamily, (int) font.Style, font.Size,
+                        lblStyle.GetStringFormat(), lblStyle.IgnoreLength, pathLabel.Location, pathLabel.Box.Height);
+
+                    affectedAreaWorld.ExpandToInclude(pathLabel.AffectedArea.EnvelopeInternal);
+                }
+            }
+
+            if (!affectedAreaGraphics.IsEmpty)
+            {
+                var pts = new[]
+                {
+                    new PointF(affectedAreaGraphics.Left - 1, affectedAreaGraphics.Top - 1),
+                    new PointF(affectedAreaGraphics.Right + 1, affectedAreaGraphics.Bottom + 1),
+                };
+                var coords = map.ImageToWorld(pts, false);
+                _affectedArea.ExpandToInclude(new Envelope(coords[0], coords[1]));
+            }
+
+            _affectedArea.ExpandToInclude(affectedAreaWorld);
+            
+            base.Render(g, map);
+        }
+
+       private List<BaseLabel> CreateLabelDefinitions(Graphics g, MapViewport map, FeatureDataTable features)
+        {
             var labels = new List<BaseLabel>();
-
-            //List<System.Drawing.Rectangle> LabelBoxes; //Used for collision detection
-            //Render labels
+            var factory = new GeometryFactory();
 
             for (int i = 0; i < features.Count; i++)
             {
                 var feature = features[i];
-                feature.Geometry = ToTarget(feature.Geometry);
 
                 LabelStyle style;
                 if (Theme != null) //If thematics is enabled, lets override the style
@@ -474,30 +540,38 @@ namespace SharpMap.Layers
                     text = feature[LabelColumn].ToString();
 
                 if (String.IsNullOrEmpty(text)) continue;
-                
-                // for lineal geometries, try clipping to ensure proper labeling
-                if (feature.Geometry is ILineal)
-                {
-                    if (feature.Geometry is ILineString)
-                        feature.Geometry = lineClipping.ClipLineString(feature.Geometry as ILineString);
-                    else if (feature.Geometry is IMultiLineString)
-                        feature.Geometry = lineClipping.ClipLineString(feature.Geometry as IMultiLineString);
-                }
 
+                // Geometry
+                feature.Geometry = ToTarget(feature.Geometry);
+
+                // for lineal geometries, clip to ensure proper labeling
+                if (feature.Geometry is ILineal)
+                    feature.Geometry = ClipLinealGeomToViewExtents(map, feature.Geometry);
+
+                if (feature.Geometry is IPolygonal)
+                {
+                    // TO CONSIDER clip to ViewExtents?
+                    // This will ensure that polygons only partly in view will be labelled
+                    // but perhaps need complexity threshold (eg Pts < 500) so as not to impact rendering
+                    // or new prop bool PartialPolygonalLabel
+                }
+                
                 if (feature.Geometry is IGeometryCollection)
                 {
                     if (MultipartGeometryBehaviour == MultipartGeometryBehaviourEnum.All)
                     {
-                        foreach (var geom in (feature.Geometry as IGeometryCollection))
+                        var geoms = feature.Geometry as IGeometryCollection;
+                        for (int j = 0; j < geoms.Count; j++)
                         {
-                            BaseLabel lbl = CreateLabel(feature, geom, text, rotation, priority, style, map, g, _getLocationMethod);
+                            BaseLabel lbl = CreateLabelDefinition(feature, geoms.GetGeometryN(j), text, rotation,
+                                priority, style, map, g, _getLocationMethod, factory);
                             if (lbl != null)
                                 labels.Add(lbl);
                         }
                     }
                     else if (MultipartGeometryBehaviour == MultipartGeometryBehaviourEnum.CommonCenter)
                     {
-                        BaseLabel lbl = CreateLabel(feature, feature.Geometry, text, rotation, priority, style, map, g, _getLocationMethod);
+                        BaseLabel lbl = CreateLabelDefinition(feature, feature.Geometry, text, rotation, priority, style, map, g, _getLocationMethod, factory);
                         if (lbl != null)
                             labels.Add(lbl);
                     }
@@ -505,8 +579,8 @@ namespace SharpMap.Layers
                     {
                         if ((feature.Geometry as IGeometryCollection).NumGeometries > 0)
                         {
-                            BaseLabel lbl = CreateLabel(feature, (feature.Geometry as IGeometryCollection).GetGeometryN(0), text,
-                                rotation, style, map, g);
+                            BaseLabel lbl = CreateLabelDefinition(feature, (feature.Geometry as IGeometryCollection).GetGeometryN(0), text,
+                                rotation, priority, style, map, g, _getLocationMethod, factory);
                             if (lbl != null)
                                 labels.Add(lbl);
                         }
@@ -543,8 +617,8 @@ namespace SharpMap.Layers
                                 }
                             }
 
-                            BaseLabel lbl = CreateLabel(feature, coll.GetGeometryN(idxOfLargest), text, rotation, priority, style,
-                                map, g, _getLocationMethod);
+                            BaseLabel lbl = CreateLabelDefinition(feature, coll.GetGeometryN(idxOfLargest), text, rotation, priority, style,
+                                map, g, _getLocationMethod, factory);
                             if (lbl != null)
                                 labels.Add(lbl);
                         }
@@ -552,137 +626,31 @@ namespace SharpMap.Layers
                 }
                 else
                 {
-                    BaseLabel lbl = CreateLabel(feature, feature.Geometry, text, rotation, priority, style, map, g, _getLocationMethod);
+                    BaseLabel lbl = CreateLabelDefinition(feature, feature.Geometry, text, rotation, priority, style, map, g, _getLocationMethod, factory);
                     if (lbl != null)
                         labels.Add(lbl);
                 }
             }
 
-            if (labels.Count == 0)
-                return;
-
-            if (Style.CollisionDetection && _labelFilter != null)
-                _labelFilter(labels);
-
-            RectangleF affectedArea = new RectangleF();
-
-            for (int i = 0; i < labels.Count; i++)
-            {
-                // Don't show the label if not necessary
-                if (!labels[i].Show)
-                {
-                    continue;
-                }
-
-                RectangleF rect;
-
-                if (labels[i] is Label)
-                {
-                    var label = labels[i] as Label;
-                    if (label.Style.IsTextOnPath == false || label.TextOnPathLabel == null)
-                    {
-                        rect = VectorRenderer.DrawLabelEx(g, label.Location, label.Style.Offset,
-                                label.Style.GetFontForGraphics(g), label.Style.ForeColor,
-                                label.Style.BackColor, label.Style.Halo, label.Rotation,
-                                label.Text, map, label.Style.HorizontalAlignment,
-                                label.LabelPoint);
-                    }
-                    else
-                    {
-                        if (label.Style.BackColor != null &&
-                            label.Style.BackColor != System.Drawing.Brushes.Transparent)
-                        {
-                            //draw background
-                            if (label.TextOnPathLabel.RegionList.Count > 0)
-                            {
-                                g.FillRectangles(labels[i].Style.BackColor,
-                                    labels[i].TextOnPathLabel.RegionList.ToArray());
-                                //g.FillPolygon(labels[i].Style.BackColor, labels[i].TextOnPathLabel.PointsText.ToArray());
-                            }
-                        }
-                        rect = label.TextOnPathLabel.DrawTextOnPathEx();
-                    }
-                }
-                else if (labels[i] is PathLabel)
-                {
-                    var plbl = labels[i] as PathLabel;
-                    var lblStyle = plbl.Style;
-                    rect = g.DrawStringEx(lblStyle.Halo, new SolidBrush(lblStyle.ForeColor), plbl.Text,
-                        lblStyle.Font.FontFamily, (int) lblStyle.Font.Style, lblStyle.Font.Size,
-                        lblStyle.GetStringFormat(), lblStyle.IgnoreLength, plbl.Location);
-                }
-                affectedArea = VectorRenderer.RectExpandToInclude(affectedArea, rect);
-            }
-
-            if (!affectedArea.IsEmpty)
-            {
-                var pts = new PointF[]
-                {
-                    new PointF(affectedArea.Left - 1, affectedArea.Top - 1),
-                    new PointF(affectedArea.Right + 1, affectedArea.Bottom + 1),
-                };
-                var coords = map.ImageToWorld(pts, false);
-                base._affectedArea.ExpandToInclude(new Envelope(coords[0], coords[1]));
-            }
-            base.Render(g, map);
+            return labels;
         }
-
-
-        private BaseLabel CreateLabel(FeatureDataRow fdr, IGeometry feature, string text, float rotation, LabelStyle style, MapViewport map, Graphics g)
+        private static BaseLabel CreateLabelDefinition( FeatureDataRow fdr, IGeometry geom, string text, float rotation, 
+            int priority, LabelStyle style, MapViewport map, Graphics g, GetLocationMethod _getLocationMethod, 
+            GeometryFactory factory)
         {
-            return CreateLabel(fdr, feature, text, rotation, Priority, style, map, g, _getLocationMethod);
-        }
-
-        private static BaseLabel CreateLabel(FeatureDataRow fdr, IGeometry feature, string text, float rotation, int priority, LabelStyle style, MapViewport map, Graphics g, GetLocationMethod _getLocationMethod)
-        {
-            if (feature == null) return null;
+            if (geom == null) 
+                return null;
 
             BaseLabel lbl = null;
             var font = style.GetFontForGraphics(g);
 
             SizeF size = VectorRenderer.SizeOfString(g, text, font);
 
-            if (feature is ILineal)
-            {
-                var line = feature as ILineString;
-                if (line != null)
-                {
-                    if (style.IsTextOnPath == false)
-                    {
-                        if (size.Width < 0.95 * line.Length / map.PixelWidth || style.IgnoreLength)
-                        {
-                            var positiveLineString = PositiveLineString(line, false);
-                            var lineStringPath = LineStringToPath(positiveLineString, map /*, false*/);
-                            var rect = lineStringPath.GetBounds();
-
-                            if (style.CollisionDetection && !style.CollisionBuffer.IsEmpty)
-                            {
-                                var cbx = style.CollisionBuffer.Width;
-                                var cby = style.CollisionBuffer.Height;
-                                rect.Inflate(2 * cbx, 2 * cby);
-                                rect.Offset(-cbx, -cby);
-                            }
-                            var labelBox = new LabelBox(rect);
-
-                            lbl = new PathLabel(text, lineStringPath, 0, priority, labelBox, style);
-                        }
-                    }
-                    else
-                    {
-                        //get centriod
-                        System.Drawing.PointF position2 = map.WorldToImage(feature.EnvelopeInternal.Centre);
-                        lbl = new Label(text, position2, rotation, priority, style);
-                        if (size.Width < 0.95 * line.Length / map.PixelWidth || !style.IgnoreLength)
-                        {
-                            CalculateLabelAroundOnLineString(line, ref lbl, map, g, size);
-                        }
-                    }
-                }
-                return lbl;
-            }
+            if (geom is ILineal)
+                return CreatePathLabel((ILineString) geom,text, size, priority, style, map, g, factory);
 
             var worldPosition = _getLocationMethod == null
-                ? feature.EnvelopeInternal.Centre
+                ? geom.EnvelopeInternal.Centre
                 : _getLocationMethod(fdr);
 
             if (worldPosition == null) return null;
@@ -711,21 +679,215 @@ namespace SharpMap.Layers
                                 { LabelPoint = position }; 
             }
 
-            /*
-            if (feature is LineString)
-            {
-                var line = feature as LineString;
-
-                //Only label feature if it is long enough, or it is definately wanted                
-                if (line.Length / map.PixelSize > size.Width || style.IgnoreLength)
-                {
-                    CalculateLabelOnLinestring(line, ref lbl, map);
-                }
-                else
-                    return null;
-            }
-            */
             return lbl;
+        }
+
+        private static BaseLabel CreatePathLabel(ILineString line, string text, SizeF textMeasure,
+            int priority, LabelStyle style, MapViewport map, Graphics g, GeometryFactory factory)
+        {
+            if (line == null)
+                return null;
+
+            var labelLength = textMeasure.Width * map.PixelWidth;
+            var labelHeight = textMeasure.Height * map.PixelHeight;
+
+            var offsetX = style.Offset.X * map.PixelWidth; // positive = increasing measure
+            var offsetY = style.Offset.Y * map.PixelHeight; // positive = right side of line
+
+            var start = 0d;
+            if (style.HorizontalAlignment == LabelStyle.HorizontalAlignmentEnum.Center)
+                start = line.Length * 0.5 - labelLength * 0.5;
+            else if (style.HorizontalAlignment == LabelStyle.HorizontalAlignmentEnum.Right)
+                start = line.Length - labelLength;
+
+            start += offsetX;
+
+            // Constrain label length
+            if (labelLength > 0.95 * line.Length && !style.IgnoreLength ||
+                start + labelLength < 0 || start > line.Length)
+                return null;
+
+            // LengthIndexedLine idea courtesy FObermaier
+            NetTopologySuite.LinearReferencing.LengthIndexedLine lil;
+
+            // optimize for detailed lines (eg labelling rivers at continental level)
+            // ratio and NumPoints based on instinct.... feel free to revise
+            var mid = start + labelLength / 2.0;
+            if (labelLength / line.Length < 0.5 && line.NumPoints > 200 && mid >= 0 && mid < line.Length)
+            {
+                lil = new NetTopologySuite.LinearReferencing.LengthIndexedLine(line);
+                var midPt = lil.ExtractPoint(mid);
+                // extract slightly more than label length to ensure offsetCurve follows line geometry
+                var halfLen = labelLength * 0.6;
+                // ensure non-negative indexes constrained to line length (due to special LengthIndexLine functionality) 
+                line = (LineString) lil.ExtractLine(Math.Max(0, mid - halfLen), Math.Min(mid + halfLen, line.Length));
+                // reset start
+                lil = new NetTopologySuite.LinearReferencing.LengthIndexedLine(line);
+                mid = lil.IndexOf(midPt);
+                start = mid - labelLength / 2.0;
+            }
+
+            // basic extend
+            var end = start + labelLength;
+            if (start < 0 || end > line.Length)
+            {
+                line = ExtendLine(line,
+                    start < 0 ? -1 * start : 0,
+                    end > line.Length ? end - line.Length : 0);
+                start = 0;
+                end = start + labelLength;
+            }
+
+            lil = new NetTopologySuite.LinearReferencing.LengthIndexedLine(line);
+            // reverse
+            var startPt = lil.ExtractPoint(start);
+            var endPt = lil.ExtractPoint(end);
+            if (LineNeedsReversing(startPt, endPt, false, map))
+            {
+                start = end;
+                end = start - labelLength;
+            }
+            line = (ILineString) lil.ExtractLine(start, end);
+
+            // Build offset curve
+            ILineString offsetCurve;
+            var bufferParameters =
+                new NetTopologySuite.Operation.Buffer.BufferParameters(4,
+                    GeoAPI.Operation.Buffer.EndCapStyle.Flat);
+
+            // determine offset curve that will run through the vertical centre of the text
+            if (style.VerticalAlignment != LabelStyle.VerticalAlignmentEnum.Middle)
+            {
+                var ocb = new NetTopologySuite.Operation.Buffer.OffsetCurveBuilder(factory.PrecisionModel,
+                    bufferParameters);
+
+                // Left side positive
+                var offsetCurvePoints = ocb.GetOffsetCurve(line.Coordinates,
+                    ((int) style.VerticalAlignment - 1) * 0.5 * labelHeight - offsetY);
+                offsetCurve = factory.CreateLineString(offsetCurvePoints);
+            }
+            else
+            {
+                offsetCurve = line;
+            }
+
+            // basic extend
+            var ratio = labelLength / offsetCurve.Length;
+            if (ratio > 1.01)
+            {
+                var diff = labelLength - offsetCurve.Length;
+                offsetCurve = ExtendLine(offsetCurve, diff / 2d, diff / 2d);
+            }
+
+            // enclosing polygon in world coords
+            var affectedArea = (IPolygon) offsetCurve.Buffer(0.5d * labelHeight, bufferParameters);
+
+            // fast, basic check (technically should use polygons for rotated views)
+            if (!map.Envelope.Contains(affectedArea.EnvelopeInternal))
+                return null;
+            
+            // using labelBox to pass text height to WarpedPath
+            return new PathLabel(text, LineStringToPath(offsetCurve, map), 0, priority, 
+                new LabelBox(0,0,textMeasure.Width,textMeasure.Height), style)
+            {
+                AffectedArea = affectedArea
+            };
+        }
+
+        private static ILineString ExtendLine(ILineString line, double startDist, double endDist)
+        {
+            var numPts = (startDist > 0 ? 1 : 0) + (endDist > 0 ? 1 : 0);
+            if (numPts == 0) return line;
+
+            var cs = line.Factory.CoordinateSequenceFactory.Create(line.CoordinateSequence.Count + numPts, line.CoordinateSequence.Dimension);
+            var offset = 0;
+            
+            if (startDist > 0)
+            {
+                var rad = Azimuth(line.Coordinates[1], line.Coordinates[0]);
+                var coords = new[]
+                {
+                    Traverse(line.Coordinates[0], rad, startDist)
+                };
+                var startSeq = line.Factory.CoordinateSequenceFactory.Create(coords);
+                CoordinateSequences.Copy(startSeq, 0, cs, offset++, 1);
+            }
+
+            CoordinateSequences.Copy(line.CoordinateSequence, 0, cs, offset, line.CoordinateSequence.Count);
+            offset += line.CoordinateSequence.Count;
+
+            if (endDist > 0)
+            {
+                var endPoints = new  []
+                {
+                    line.Coordinates[line.Coordinates.Length - 2],
+                    line.Coordinates[line.Coordinates.Length - 1]
+                };
+
+                var rad = Azimuth(endPoints[0], endPoints[1]);
+                var coords = new[]
+                {
+                    Traverse(endPoints[1], rad, endDist)
+                };
+                var es = line.Factory.CoordinateSequenceFactory.Create(coords);
+                CoordinateSequences.Copy(es, 0, cs, offset, 1);
+            }
+
+            return line.Factory.CreateLineString(cs);
+        }
+
+        private static double Azimuth( Coordinate c1, Coordinate c2)
+        {
+            var dX = c2.X - c1.X;
+            var dY = c2.Y - c1.Y;
+            return  Math.PI / 2 - Math.Atan2(dY, dX);
+        }
+        
+        private static Coordinate Traverse(Coordinate coord, double azimuth, double dist)
+        {
+            return new Coordinate(
+                coord.X + dist * Math.Sin(azimuth),
+                coord.Y + dist * Math.Cos(azimuth)
+            );
+        }
+        private IGeometry ClipLinealGeomToViewExtents(MapViewport map, IGeometry geom)
+        {
+            if (map.MapTransform.IsIdentity)
+            {
+                var lineClipping = new CohenSutherlandLineClipping(map.Envelope.MinX, map.Envelope.MinY,
+                    map.Envelope.MaxX, map.Envelope.MaxY);
+
+                if (geom is ILineString)
+                    return lineClipping.ClipLineString(geom as ILineString);
+                
+                if (geom is IMultiLineString)
+                    return lineClipping.ClipLineString(geom as IMultiLineString);
+            }
+            else
+            {
+                var clipPolygon = new Polygon(new LinearRing(new[]
+                    {
+                        new Coordinate(map.Center.X - map.Zoom * .5, map.Center.Y - map.MapHeight * .5),
+                        new Coordinate(map.Center.X - map.Zoom * .5, map.Center.Y + map.MapHeight * .5),
+                        new Coordinate(map.Center.X + map.Zoom * .5, map.Center.Y + map.MapHeight * .5),
+                        new Coordinate(map.Center.X + map.Zoom * .5, map.Center.Y - map.MapHeight * .5),
+                        new Coordinate(map.Center.X - map.Zoom * .5, map.Center.Y - map.MapHeight * .5)
+                    }
+                ));
+
+                var at = AffineTransformation.RotationInstance(
+                    Degrees.ToRadians(map.MapTransformRotation), map.Center.X, map.Center.Y);
+
+                clipPolygon = (Polygon) at.Transform(clipPolygon);
+
+                if (geom is ILineString)
+                    return clipPolygon.Intersection(geom as ILineString);
+                
+                if (geom is IMultiLineString)
+                    return clipPolygon.Intersection(geom as IMultiLineString);
+            }
+
+            return null;
         }
 
         /// <summary>
@@ -735,10 +897,10 @@ namespace SharpMap.Layers
         /// <param name="isRightToLeft">Value indicating whether labels are to be printed right to left</param>
         /// <returns>The positively directed linestring</returns>
         private static ILineString PositiveLineString(ILineString line, bool isRightToLeft)
-        {
+            {
             var s = line.StartPoint;
             var e = line.EndPoint;
-
+            
             var dx = e.X - s.X;
             if (isRightToLeft && dx < 0)
                 return line;
@@ -751,24 +913,36 @@ namespace SharpMap.Layers
             return line.Factory.CreateLineString(revCoord.ToArray());
         }
 
-        //private static void WarpedLabel(MultiLineString line, ref BaseLabel baseLabel, Map map)
-        //{
-        //    var path = MultiLineStringToPath(line, map, true);
-
-        //    var pathLabel = new PathLabel(baseLabel.Text, path, 0f, baseLabel.Priority, new LabelBox(path.GetBounds()), baseLabel.Style);
-        //    baseLabel = pathLabel;
-        //}
-
-        //private static void WarpedLabel(LineString line, ref BaseLabel baseLabel, Map map)
-        //{
+        /// <summary>
+        /// Very basic test to check for positive direction of Linestring, taking into account map rotation
+        /// </summary>
+        /// <param name="start">start of text</param>
+        /// <param name="end">end of text</param>
+        /// <param name="isRightToLeft"></param>
+        /// <param name="map"></param>
+        /// <returns></returns>
+        private static bool LineNeedsReversing(Coordinate start, Coordinate end, bool isRightToLeft, MapViewport map)
+        {
+            double startX, endX;
+            if (map.MapTransform.IsIdentity)
+            {
+                startX = start.X;
+                endX = end.X;
+            }
+            else
+            {
+                var pts = map.WorldToImage(new[] {start, end}, true);
+                startX = pts[0].X;
+                endX = pts[1].X;
+            }
             
-        //    var path = LineStringToPath(line, map, false);
-
-        //    var pathLabel = new PathLabel(baseLabel.Text, path, 0f, baseLabel.Priority, new LabelBox(path.GetBounds()), baseLabel.Style);
-        //    baseLabel = pathLabel;
-        //}
-
-
+            var dx = endX - startX;
+            if (isRightToLeft && dx < 0)
+                return false;
+            
+            return isRightToLeft || !(dx >= 0);
+        }
+        
         /// <summary>
         /// Function to transform a linestring to a graphics path for further processing
         /// </summary>
@@ -779,280 +953,8 @@ namespace SharpMap.Layers
         public static GraphicsPath LineStringToPath(ILineString lineString, MapViewport map/*, bool useClipping*/)
         {
             var gp = new GraphicsPath(FillMode.Alternate);
-            //if (!useClipping)
                 gp.AddLines(lineString.TransformToImage(map));
-            //else
-            //{
-            //    var bb = map.Envelope;
-            //    var cohenSutherlandLineClipping = new CohenSutherlandLineClipping(bb.Left, bb.Bottom, bb.Right, bb.Top);
-            //    var clippedLineStrings = cohenSutherlandLineClipping.ClipLineString(lineString);
-            //    foreach (var clippedLineString in clippedLineStrings.LineStrings)
-            //    {
-            //        var s = clippedLineString.StartPoint;
-            //        var e = clippedLineString.EndPoint;
-                    
-            //        var dx = e.X - s.X;
-            //        //var dy = e.Y - s.Y;
-
-            //        LineString revcls = null;
-            //        if (dx < 0)
-            //            revcls = ReverseLineString(clippedLineString);
-                    
-            //        gp.StartFigure();
-            //        gp.AddLines(revcls == null ? clippedLineString.TransformToImage(map) : revcls.TransformToImage(map));
-            //    }
-            //}
             return gp;
-        }
-
-        //private static LineString ReverseLineString(LineString clippedLineString)
-        //{
-        //    var coords = new Stack<Point>(clippedLineString.Vertices);
-        //    return new LineString(coords.ToArray());
-        //}
-
-        ///// <summary>
-        ///// Function to transform a linestring to a graphics path for further processing
-        ///// </summary>
-        ///// <param name="multiLineString">The Linestring</param>
-        ///// <param name="map">The map</param>
-        ///// <param name="useClipping">A value indicating whether clipping should be applied or not</param>
-        ///// <returns>A GraphicsPath</returns>
-        //public static GraphicsPath MultiLineStringToPath(MultiLineString multiLineString, Map map, bool useClipping)
-        //{
-        //    var gp = new GraphicsPath(FillMode.Alternate);
-        //    foreach (var lineString in multiLineString.LineStrings)
-        //        gp.AddPath(LineStringToPath(lineString, map, useClipping), false);
-
-        //    return gp;
-        //}
-
-        //private static GraphicsPath LineToGraphicsPath(LineString line, Map map)
-        //{
-        //    GraphicsPath path = new GraphicsPath();
-        //    path.AddLines(line.TransformToImage(map));
-        //    return path;
-        //}
-
-        private static void CalculateLabelOnLinestring(ILineString line, ref BaseLabel baseLabel, Map map)
-        {
-            double dx, dy;
-            var label = baseLabel as Label;
-
-            // first find the middle segment of the line
-            var vertices = line.Coordinates;
-            int midPoint = (vertices.Length - 1)/2;
-            if (vertices.Length > 2)
-            {
-                dx = vertices[midPoint + 1].X - vertices[midPoint].X;
-                dy = vertices[midPoint + 1].Y - vertices[midPoint].Y;
-            }
-            else
-            {
-                midPoint = 0;
-                dx = vertices[1].X - vertices[0].X;
-                dy = vertices[1].Y - vertices[0].Y;
-            }
-            if (dy == 0)
-                label.Rotation = 0;
-            else if (dx == 0)
-                label.Rotation = 90;
-            else
-            {
-                // calculate angle of line					
-                double angle = -Math.Atan(dy/dx) + Math.PI*0.5;
-                angle *= (180d/Math.PI); // convert radians to degrees
-                label.Rotation = (float) angle - 90; // -90 text orientation
-            }
-            var tmpx = vertices[midPoint].X + (dx*0.5);
-            var tmpy = vertices[midPoint].Y + (dy*0.5);
-            label.Location = map.WorldToImage(new Coordinate(tmpx, tmpy));
-        }
-
-        private static void CalculateLabelAroundOnLineString(ILineString line, ref BaseLabel label, MapViewport map, System.Drawing.Graphics g, System.Drawing.SizeF textSize)
-        {
-            var sPoints = line.Coordinates;
-
-            // only get point in enverlop of map
-            var colPoint = new Collection<PointF>();
-            var bCheckStarted = false;
-            //var testEnvelope = map.Envelope.Grow(map.PixelSize*10);
-            for (var j = 0; j < sPoints.Length; j++)
-            {
-                if (map.Envelope.Contains(sPoints[j]))
-                {
-                    //points[j] = map.WorldToImage(sPoints[j]);
-                    colPoint.Add(map.WorldToImage(sPoints[j]));
-                    bCheckStarted = true;
-                }
-                else if (bCheckStarted)
-                {
-                    // fix bug curved line out of map in center segment of line
-                    break;
-                }
-            }
-
-            if (colPoint.Count > 1)
-            {
-                label.TextOnPathLabel = new TextOnPath();
-                switch (label.Style.HorizontalAlignment)
-                {
-                    case LabelStyle.HorizontalAlignmentEnum.Left:
-                        label.TextOnPathLabel.TextPathAlignTop = TextPathAlign.Left;
-                        break;
-                    case LabelStyle.HorizontalAlignmentEnum.Right:
-                        label.TextOnPathLabel.TextPathAlignTop = TextPathAlign.Right;
-                        break;
-                    case LabelStyle.HorizontalAlignmentEnum.Center:
-                        label.TextOnPathLabel.TextPathAlignTop = TextPathAlign.Center;
-                        break;
-                    default:
-                        label.TextOnPathLabel.TextPathAlignTop = TextPathAlign.Center;
-                        break;
-                }
-                switch (label.Style.VerticalAlignment)
-                {
-                    case LabelStyle.VerticalAlignmentEnum.Bottom:
-                        label.TextOnPathLabel.TextPathPathPosition = TextPathPosition.UnderPath;
-                        break;
-                    case LabelStyle.VerticalAlignmentEnum.Top:
-                        label.TextOnPathLabel.TextPathPathPosition = TextPathPosition.OverPath;
-                        break;
-                    case LabelStyle.VerticalAlignmentEnum.Middle:
-                        label.TextOnPathLabel.TextPathPathPosition = TextPathPosition.CenterPath;
-                        break;
-                    default:
-                        label.TextOnPathLabel.TextPathPathPosition = TextPathPosition.CenterPath;
-                        break;
-                }
-
-                var idxStartPath = 0;
-                var numberPoint = colPoint.Count;
-                // start Optimzes Path points                
-                
-                var step = 100;
-                if (colPoint.Count >= step * 2)
-                {
-                    numberPoint = step * 2; ;
-                    switch (label.Style.HorizontalAlignment)
-                    {
-                        case LabelStyle.HorizontalAlignmentEnum.Left:
-                            //label.TextOnPathLabel.TextPathAlignTop = SharpMap.Rendering.TextPathAlign.Left;
-                            idxStartPath = 0;
-                            break;
-                        case LabelStyle.HorizontalAlignmentEnum.Right:
-                            //label.TextOnPathLabel.TextPathAlignTop = SharpMap.Rendering.TextPathAlign.Right;
-                            idxStartPath = colPoint.Count - step;
-                            break;
-                        case LabelStyle.HorizontalAlignmentEnum.Center:
-                            //label.TextOnPathLabel.TextPathAlignTop = SharpMap.Rendering.TextPathAlign.Center;
-                            idxStartPath = (int)colPoint.Count / 2 - step;
-                            break;
-                        default:
-                            //label.TextOnPathLabel.TextPathAlignTop = SharpMap.Rendering.TextPathAlign.Center;
-                            idxStartPath = (int)colPoint.Count / 2 - step;
-                            break;
-                    }
-                }
-                // end optimize path point
-                var points = new PointF[numberPoint];
-                var count = 0;
-                if (colPoint[0].X <= colPoint[colPoint.Count - 1].X)
-                {
-                    for (var l = idxStartPath; l < numberPoint + idxStartPath; l++)
-                    {
-                        points[count] = colPoint[l];
-                        count++;
-                    }
-                }
-                else
-                {
-                    //reverse the path                    
-                    for (var k = numberPoint - 1 + idxStartPath; k >= idxStartPath; k--)
-                    {
-                        points[count] = colPoint[k];
-                        count++;
-                    }
-                }
-                /*
-                //get text size in page units ie pixels
-                float textheight = label.Style.Font.Size;
-                switch (label.Style.Font.Unit)
-                {
-                    case GraphicsUnit.Display:
-                        textheight = textheight * g.DpiY / 75;
-                        break;
-                    case GraphicsUnit.Document:
-                        textheight = textheight * g.DpiY / 300;
-                        break;
-                    case GraphicsUnit.Inch:
-                        textheight = textheight * g.DpiY;
-                        break;
-                    case GraphicsUnit.Millimeter:
-                        textheight = (float)(textheight / 25.4 * g.DpiY);
-                        break;
-                    case GraphicsUnit.Pixel:
-                        //do nothing
-                        break;
-                    case GraphicsUnit.Point:
-                        textheight = textheight * g.DpiY / 72;
-                        break;
-                }
-                var topFont = new Font(label.Style.Font.FontFamily, textheight, label.Style.Font.Style, GraphicsUnit.Pixel);
-                 */
-                var topFont = label.Style.GetFontForGraphics(g);
-                //
-                var path = new GraphicsPath();
-                path.AddLines(points);
-
-                label.TextOnPathLabel.PathColorTop = System.Drawing.Color.Transparent;
-                label.TextOnPathLabel.Text = label.Text;
-                label.TextOnPathLabel.LetterSpacePercentage = 90;
-                label.TextOnPathLabel.FillColorTop = new System.Drawing.SolidBrush(label.Style.ForeColor);
-                label.TextOnPathLabel.Font = topFont;
-                label.TextOnPathLabel.PathDataTop = path.PathData;
-                label.TextOnPathLabel.Graphics = g;
-                //label.TextOnPathLabel.ShowPath=true;
-                //label.TextOnPathLabel.PathColorTop = System.Drawing.Color.YellowGreen;
-                if (label.Style.Halo != null)
-                {
-                    label.TextOnPathLabel.ColorHalo = label.Style.Halo;
-                }
-                else
-                {
-                    label.TextOnPathLabel.ColorHalo = null;// new System.Drawing.Pen(label.Style.ForeColor, (float)0.5); 
-                }
-                path.Dispose();
-
-                // MeasureString to get region
-                label.TextOnPathLabel.MeasureString = true;
-                label.TextOnPathLabel.DrawTextOnPath();
-                label.TextOnPathLabel.MeasureString = false;
-                // Get Region label for CollissionDetection here.
-                var pathRegion = new GraphicsPath();
-
-                if (label.TextOnPathLabel.RegionList.Count > 0)
-                {
-                    //int idxCenter = (int)label.TextOnPathLabel.PointsText.Count / 2;
-                    //System.Drawing.Drawing2D.Matrix rotationMatrix = g.Transform.Clone();// new Matrix();
-                    //rotationMatrix.RotateAt(label.TextOnPathLabel.Angles[idxCenter], label.TextOnPathLabel.PointsText[idxCenter]);
-                    //if (label.TextOnPathLabel.PointsTextUp.Count > 0)
-                    //{
-                    //    for (int up = label.TextOnPathLabel.PointsTextUp.Count - 1; up >= 0; up--)
-                    //    {
-                    //        label.TextOnPathLabel.PointsText.Add(label.TextOnPathLabel.PointsTextUp[up]);
-                    //    }
-
-                    //}                 
-                    pathRegion.AddRectangles(label.TextOnPathLabel.RegionList.ToArray());
-
-                    // get box for detect colission here              
-                    label.Box = new LabelBox(pathRegion.GetBounds());
-                    //g.FillRectangle(System.Drawing.Brushes.YellowGreen, label.Box);
-                }
-                pathRegion.Dispose();
-            }
-
         }
     }
 }
