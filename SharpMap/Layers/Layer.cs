@@ -358,17 +358,17 @@ namespace SharpMap.Layers
         public virtual void Render(Graphics g, MapViewport map, out Envelope affectedArea)
         {
             Render(g, map);
-            
+
             if (_affectedArea.IsNull)
             {
                 affectedArea = map.Envelope.Intersection(Envelope);
             }
             else
             {
-                affectedArea = map.Envelope.Intersection(_affectedArea);
+                affectedArea = map.Envelope.Intersection(ToTarget(_affectedArea));
                 _affectedArea.SetToNull();
             }
-            
+
             // OnLayerRendered already raised by Base.Render(Graphics g,m MapViewport map)
         }
 

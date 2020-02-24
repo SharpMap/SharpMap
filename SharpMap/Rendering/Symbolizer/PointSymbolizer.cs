@@ -28,9 +28,12 @@ namespace SharpMap.Rendering.Symbolizer
     /// Base class for all possible Point symbolizers
     /// </summary>
     [Serializable]
-    public abstract class PointSymbolizer : BaseSymbolizer, IPointSymbolizer
+    public abstract class PointSymbolizer : BaseSymbolizer, IPointSymbolizerEx
     {
         private float _scale = 1f;
+
+        [NonSerialized]
+        protected RectangleF _bounds;
 
         /// <summary>
         /// Offset of the point from the point
@@ -98,18 +101,39 @@ namespace SharpMap.Rendering.Symbolizer
             {
                 SizeF offset = GetOffset();
 
-                Matrix startingTransform = g.Transform.Clone();
+                using (var old = g.Transform.Clone())
+                using (var t = g.Transform)
+                {
+                    PointF rotationCenter = pp;
+                    t.RotateAt(Rotation, rotationCenter);
+                    t.Translate(offset.Width + 1, offset.Height + 1);
 
-                Matrix transform = g.Transform;
-                transform.Translate(offset.Width + 1, offset.Height + 1);
-                PointF rotationCenter = pp;
-                transform.RotateAt(Rotation, rotationCenter, MatrixOrder.Append);
+                    g.Transform = t;
 
-                g.Transform = transform;
+                    OnRenderInternal(pp, g);
 
-                OnRenderInternal(pp, g);
+                    using (var rev = new System.Drawing.Drawing2D.Matrix())
+                    {
+                        rev.RotateAt(Rotation, rotationCenter);
+                        rev.Translate(offset.Width + 1, offset.Height + 1);
+                        var pts = new[]
+                        {
+                            new PointF(_bounds.Left, _bounds.Top),
+                            new PointF(_bounds.Right, _bounds.Top),
+                            new PointF(_bounds.Right, _bounds.Bottom),
+                            new PointF(_bounds.Left, _bounds.Bottom),
+                        };
+                        rev.TransformPoints(pts);
 
-                g.Transform = startingTransform;
+                        var minX = Math.Min(pts[0].X, Math.Min(pts[1].X, Math.Min(pts[2].X, pts[3].X)));
+                        var maxX = Math.Max(pts[0].X, Math.Max(pts[1].X, Math.Max(pts[2].X, pts[3].X))); 
+                        var minY = Math.Min(pts[0].Y, Math.Min(pts[1].Y, Math.Min(pts[2].Y, pts[3].Y))); 
+                        var maxY = Math.Max(pts[0].Y, Math.Max(pts[1].Y, Math.Max(pts[2].Y, pts[3].Y)));
+                        _bounds = new RectangleF(minX, minY, maxX - minX, maxY - minY);    
+                    }
+                   
+                    g.Transform = old;    
+                }
             }
             else
             {
@@ -164,7 +188,9 @@ namespace SharpMap.Rendering.Symbolizer
                 return;
             }
             RenderPoint(map, ((IPoint)geometry).Coordinate, graphics);
-
+            
         }
+        
+        public RectangleF Bounds => _bounds;
     }
 }

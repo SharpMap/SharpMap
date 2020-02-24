@@ -204,11 +204,18 @@ namespace SharpMap.Rendering.Symbolizer
                     path.AddString(_text, Font.FontFamily, (int)Font.Style, Font.Size, pt, StringFormat);
                     g.DrawPath(haloPen, path);
                     g.FillPath(Foreground, path);
+                    _bounds = path.GetBounds();
                 }
             }
             else
             {
-                g.DrawString(_text, Font, Foreground, pt, StringFormat);
+                // g.DrawString(_text, Font, Foreground, pt, StringFormat);    
+                using (var path = new GraphicsPath(FillMode.Winding))
+                {
+                    path.AddString(_text, Font.FontFamily, (int)Font.Style, Font.Size, pt, StringFormat);
+                    g.FillPath(Foreground, path);
+                    _bounds = path.GetBounds();
+                }
             }
         }
     }

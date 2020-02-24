@@ -29,7 +29,7 @@ namespace SharpMap.Rendering.Symbolizer
     /// ListPointSymbolizer class
     /// </summary>
     [Serializable]
-    public class ListPointSymbolizer : Collection<PointSymbolizer>, IPointSymbolizer, IDisposableEx
+    public class ListPointSymbolizer : Collection<PointSymbolizer>, IPointSymbolizerEx, IDisposableEx
     {
         private Size _size;
 
@@ -71,8 +71,12 @@ namespace SharpMap.Rendering.Symbolizer
         /// <param name="g">The graphics object to use.</param>
         public void Render(MapViewport map, IPuntal points, Graphics g)
         {
+            _bounds = new RectangleF();
             foreach (var pointSymbolizer in Items)
+            {
                 pointSymbolizer.Render(map, points, g);
+                _bounds = VectorRenderer.RectExpandToInclude(_bounds, pointSymbolizer.Bounds);
+            }
         }
 
         /// <summary>
@@ -219,5 +223,9 @@ namespace SharpMap.Rendering.Symbolizer
         public bool IsDisposed { get; private set; }
 
         #endregion
+
+        [NonSerialized]
+        protected RectangleF _bounds;
+        public RectangleF Bounds => _bounds;
     }
 }
