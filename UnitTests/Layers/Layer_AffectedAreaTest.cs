@@ -1,7 +1,9 @@
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Text;
 using GeoAPI.Geometries;
 using NetTopologySuite.Geometries;
@@ -27,6 +29,21 @@ namespace UnitTests.Layers
             SineCurve,
             SineCurveClipped,
             SineCurveExtended
+        }
+
+        public enum SymbolizerMode
+        {
+            Rps,
+            Cps,
+            Pps,
+            Lps
+        }
+
+        public enum PointAlignment
+        {
+            Horizontal,
+            Vertical,
+            Diagonal
         }
 
         private readonly float[] _rotations = new float[]
@@ -394,6 +411,228 @@ namespace UnitTests.Layers
                 cs.SetOrdinate(i, GeoAPI.Geometries.Ordinate.Y, offset.Y + scaleY * System.Math.Sin(2d * i * System.Math.PI/180d));
             }
             return factory.CreateLineString(cs);        
+        }
+
+        [NUnit.Framework.TestCase(SymbolizerMode.Rps, PointAlignment.Horizontal, true)]
+        [NUnit.Framework.TestCase(SymbolizerMode.Rps, PointAlignment.Vertical, false)]
+        [NUnit.Framework.TestCase(SymbolizerMode.Rps, PointAlignment.Diagonal, false)]
+        [NUnit.Framework.TestCase(SymbolizerMode.Cps, PointAlignment.Horizontal, true)]
+        [NUnit.Framework.TestCase(SymbolizerMode.Cps, PointAlignment.Vertical, false)]
+        [NUnit.Framework.TestCase(SymbolizerMode.Cps, PointAlignment.Diagonal, false)]
+        [NUnit.Framework.TestCase(SymbolizerMode.Pps, PointAlignment.Horizontal, true)]
+        [NUnit.Framework.TestCase(SymbolizerMode.Pps, PointAlignment.Vertical, false)]
+        [NUnit.Framework.TestCase(SymbolizerMode.Pps, PointAlignment.Diagonal, false)]       
+        [NUnit.Framework.TestCase(SymbolizerMode.Lps, PointAlignment.Horizontal, true)]
+        [NUnit.Framework.TestCase(SymbolizerMode.Lps, PointAlignment.Vertical, false)]
+        [NUnit.Framework.TestCase(SymbolizerMode.Lps, PointAlignment.Diagonal, false)]       
+        public void PointSymbolizer_AffectedArea(SymbolizerMode symMode,  PointAlignment alignMode, bool testRotations)
+        {
+            using (var map = new Map())
+            {
+                ConfigureMap(map);
+
+                switch (symMode)
+                {
+                    case SymbolizerMode.Rps:
+                        AddRasterPointSymbolizerLayers(map, alignMode);
+                        break;
+                    case SymbolizerMode.Cps:
+                        AddCharacterPointSymbolizerLayers(map, alignMode);
+                        break;
+                    case SymbolizerMode.Pps:
+                        AddPathPointSymbolizerLayers(map, alignMode);
+                        break;
+                    case SymbolizerMode.Lps:
+                        AddListPointSymbolizerLayers(map, alignMode);
+                        break;
+                }
+
+                var extents = map.GetExtents();
+                extents.ExpandBy(0.2);
+
+                foreach (var rot in _rotations)
+                {
+                    SetMapTransform(map, rot);
+                    map.ZoomToBox(extents, true);
+
+                    var affectedArea = GetAffectedArea(map, (Layer) map.Layers[0]);
+                    AddAffectedAreaLayer(map, affectedArea);
+
+                    using (var img = map.GetMap())
+                        img.Save(
+                            Path.Combine(UnitTestsFixture.GetImageDirectory(this),
+                                $"{symMode.ToString()}_{alignMode.ToString()}_{rot:000}.png"),
+                            System.Drawing.Imaging.ImageFormat.Png);
+
+                    // remove affected area layer
+                    map.Layers.RemoveAt(2);
+                    if (!testRotations) break;
+                }
+            }
+        }
+
+        private List<NetTopologySuite.Geometries.Point> GetSymbolizerPoints(PointAlignment mode)
+        {
+            var pts = new List<NetTopologySuite.Geometries.Point>();
+            switch (mode)
+            {
+                case PointAlignment.Horizontal:
+                    pts.Add(new NetTopologySuite.Geometries.Point(99,7));
+                    pts.Add(new NetTopologySuite.Geometries.Point(100,7));
+                    pts.Add(new NetTopologySuite.Geometries.Point(101,7));
+                    break;
+                case PointAlignment.Vertical:
+                    pts.Add(new NetTopologySuite.Geometries.Point(99,7));
+                    pts.Add(new NetTopologySuite.Geometries.Point(99,8));
+                    pts.Add(new NetTopologySuite.Geometries.Point(99,9));
+                    break;
+                case PointAlignment.Diagonal:
+                    pts.Add(new NetTopologySuite.Geometries.Point(99,7));
+                    pts.Add(new NetTopologySuite.Geometries.Point(100,8));
+                    pts.Add(new NetTopologySuite.Geometries.Point(101,9));
+                    break;
+            }
+            return pts;
+        }           
+        
+        private void AddRasterPointSymbolizerLayers(Map map, PointAlignment mode)
+        {
+            var pts = GetSymbolizerPoints(mode);
+            
+            var vLyr = new VectorLayer("RasterPoint", new GeometryFeatureProvider(pts.AsEnumerable()));
+            var rps = new SharpMap.Rendering.Symbolizer.RasterPointSymbolizer();
+            rps.Symbol = GetRasterSymbol();
+            rps.Rotation = 30f;
+            vLyr.Style.PointSymbolizer = rps;
+            map.Layers.Add(vLyr);
+
+            vLyr = new VectorLayer("ReferencePoint", new GeometryFeatureProvider(pts.AsEnumerable()));
+            vLyr.Style.PointSize = 2f;
+            map.Layers.Add(vLyr);
+        }
+
+        private System.Drawing.Image GetRasterSymbol()
+        {
+            var str = "iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAOwQAADsEBuJFr7QAAABl0RVh0U29mdHdhcmUAcGFpbnQubmV0IDQuMC4yMfEgaZUAAAE8SURBVHhe7dpRDoIwEIThHpWbcHRkW2osJQouswTyTzLFWG3d79k0pTRd0bSqvXdF7fZpji1hzQOvsrzXfE7eKwC2hq8JR4gG+DZ8TShCJMCe4WvCEKIAjgxfE4IQAWCDjOM4vzwW+44cQQ3w7/A1cgQAhADe4WukCACIAM4avkaGEAkwDMOhfuYxAHtza4Ct4S0eAIsEAQAAytJtOLr8yC5eAAsAAOSzm/tcBQCAsnQbjgIAgD36AAAAAMur33kswJFu5dYAZwQAAPLZzX2uAgBAWboNRwEAwB6aAABAPru5z1UAAChLt+EoAADYQxMAAMhnN/e5CgAAZek2HAUAAHtoAgAA+ezmPlcBAKAs3YajAABgD00AACCf3dznKgAigK0/S3tzmz9LW89GkAxvfQMIaj/4zM6LoGl6AWGcInMnlc2ZAAAAAElFTkSuQmCC";
+            byte[] imageBytes = Convert.FromBase64String(str);
+            System.IO.MemoryStream ms = new System.IO.MemoryStream(imageBytes, 0, imageBytes.Length);
+            ms.Write(imageBytes, 0, imageBytes.Length);
+            System.Drawing.Image image = System.Drawing.Image.FromStream(ms, true);
+            return image;
+        }
+
+        private void AddCharacterPointSymbolizerLayers(Map map, PointAlignment mode)
+        {
+            var pts = GetSymbolizerPoints(mode);
+            
+            var vLyr = new VectorLayer("CharPoint", new GeometryFeatureProvider(pts.AsEnumerable()));
+            var cps  = new SharpMap.Rendering.Symbolizer.CharacterPointSymbolizer
+            {
+                Halo = 1,
+                HaloBrush = new System.Drawing.SolidBrush(System.Drawing.Color.Wheat),
+                Rotation = 30f,
+                Text = "xYz",
+            };
+            vLyr.Style.PointSymbolizer = cps;
+            map.Layers.Add(vLyr);
+
+            vLyr = new VectorLayer("ReferencePoint", new GeometryFeatureProvider(pts.AsEnumerable()));
+            vLyr.Style.PointSize = 4f;
+            map.Layers.Add(vLyr);
+        }
+        
+        private void AddLinePointSymbolizerLayers(Map map, PointAlignment mode)
+        {
+            var pts = GetSymbolizerPoints(mode);
+            
+            var vLyr = new VectorLayer("LinePoint", new GeometryFeatureProvider(pts.AsEnumerable()));
+            var cps  = new SharpMap.Rendering.Symbolizer.CharacterPointSymbolizer
+            {
+                Halo = 1,
+                HaloBrush = new System.Drawing.SolidBrush(System.Drawing.Color.Wheat),
+                Text = "xYz",
+            };
+            vLyr.Style.PointSymbolizer = cps;
+            map.Layers.Add(vLyr);
+
+            vLyr = new VectorLayer("ReferencePoint", new GeometryFeatureProvider(pts.AsEnumerable()));
+            vLyr.Style.PointSize = 4f;
+            map.Layers.Add(vLyr);
+        }
+
+        private void AddPathPointSymbolizerLayers(Map map, PointAlignment mode)
+        { 
+            var pts = GetSymbolizerPoints(mode);
+            
+            var vLyr = new VectorLayer("PathPoint with 2 parts", new GeometryFeatureProvider(pts.AsEnumerable()));
+
+            var gpTriangle1 = new System.Drawing.Drawing2D.GraphicsPath();
+            gpTriangle1.AddPolygon(new [] { new System.Drawing.Point(0, 0), new System.Drawing.Point(5, 10), new System.Drawing.Point(10, 0), new System.Drawing.Point(0, 0), });
+            var gpTriangle2 = new System.Drawing.Drawing2D.GraphicsPath();
+            gpTriangle2.AddPolygon(new[] { new System.Drawing.Point(0, 0), new System.Drawing.Point(-5, -10), new System.Drawing.Point(-10, 0), new System.Drawing.Point(0, 0), });
+            var pps = new
+                SharpMap.Rendering.Symbolizer.PathPointSymbolizer(new[]
+                                                        {
+                                                            new SharpMap.Rendering.Symbolizer.PathPointSymbolizer.PathDefinition
+                                                                {
+                                                                    Path = gpTriangle1,
+                                                                    Line =
+                                                                        new System.Drawing.Pen(
+                                                                        System.Drawing.Color.Red, 2),
+                                                                    Fill =
+                                                                        new System.Drawing.SolidBrush(
+                                                                        System.Drawing.Color.DodgerBlue)
+                                                                },
+                                                            new SharpMap.Rendering.Symbolizer.PathPointSymbolizer.PathDefinition
+                                                                {
+                                                                    Path = gpTriangle2,
+                                                                    Line =
+                                                                        new System.Drawing.Pen(
+                                                                        System.Drawing.Color.DodgerBlue, 2),
+                                                                    Fill =
+                                                                        new System.Drawing.SolidBrush(
+                                                                        System.Drawing.Color.Red)
+                                                                }
+
+                                                        });
+
+            vLyr.Style.PointSymbolizer = pps;
+            map.Layers.Add(vLyr);
+
+            vLyr = new VectorLayer("ReferencePoint", new GeometryFeatureProvider(pts.AsEnumerable()));
+            vLyr.Style.PointSize = 4f;
+            vLyr.Style.PointColor = Brushes.Yellow;
+            map.Layers.Add(vLyr);
+        }
+
+        private void AddListPointSymbolizerLayers(Map map, PointAlignment mode)
+        {
+            var pts = GetSymbolizerPoints(mode);
+            
+            var vLyr = new VectorLayer("ListPoint with Pps and Cps", new GeometryFeatureProvider(pts.AsEnumerable()));
+            var pps =
+                SharpMap.Rendering.Symbolizer.PathPointSymbolizer.CreateSquare(new System.Drawing.Pen(System.Drawing.Color.Red, 2),
+                    new System.Drawing.SolidBrush(
+                        System.Drawing.Color.DodgerBlue), 20);
+
+            var cps = new SharpMap.Rendering.Symbolizer.CharacterPointSymbolizer
+            {
+                Halo = 1,
+                HaloBrush = new System.Drawing.SolidBrush(System.Drawing.Color.WhiteSmoke),
+                Foreground = new System.Drawing.SolidBrush(System.Drawing.Color.Black),
+                Font = new System.Drawing.Font("Arial", 12),
+                CharacterIndex = 65
+            };
+
+            var lps = new SharpMap.Rendering.Symbolizer.ListPointSymbolizer { pps, cps };
+            vLyr.Style.PointSymbolizer = lps;
+            map.Layers.Add(vLyr);
+
+            vLyr = new VectorLayer("ReferencePoint", new GeometryFeatureProvider(pts.AsEnumerable()));
+            vLyr.Style.PointSize = 4f;
+            vLyr.Style.PointColor = Brushes.Yellow;
+            map.Layers.Add(vLyr);
+
         }
     }
 }
