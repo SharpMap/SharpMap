@@ -299,15 +299,15 @@ namespace SharpMap.Layers
                                 //Draw background of all line-outlines first
                                 if (feature.Geometry is ILineString)
                                 {
-                                    rect = VectorRenderer.DrawLineString(g, feature.Geometry as ILineString, outlineStyle.Outline,
+                                    rect = VectorRenderer.DrawLineStringEx(g, feature.Geometry as ILineString, outlineStyle.Outline,
                                                                         map, outlineStyle.LineOffset);
                                 }
                                 else if (feature.Geometry is IMultiLineString)
                                 {
-                                    rect = VectorRenderer.DrawMultiLineString(g, feature.Geometry as IMultiLineString,
+                                    rect = VectorRenderer.DrawMultiLineStringEx(g, feature.Geometry as IMultiLineString,
                                                                         outlineStyle.Outline, map, outlineStyle.LineOffset);
                                 }
-                                bounds = VectorRenderer.RectExpandToInclude(bounds, rect);
+                                bounds = RectangleF.Union(bounds, rect);//VectorRenderer.RectExpandToInclude(bounds, rect);
                             }
                         }
                     }
@@ -340,8 +340,8 @@ namespace SharpMap.Layers
                         {
                             if (clone != null)
                             {
-                                rect = RenderGeometry(g, map, feature.Geometry, clone);
-                                bounds = VectorRenderer.RectExpandToInclude(bounds, rect);
+                                rect = RenderGeometryEx(g, map, feature.Geometry, clone);
+                                bounds = RectangleF.Union(bounds, rect);//VectorRenderer.RectExpandToInclude(bounds, rect);
                             }
                         }
                     }
@@ -424,10 +424,10 @@ namespace SharpMap.Layers
                                     {
                                         //Draw background of all line-outlines first
                                         if (geom is ILineString)
-                                            rect = VectorRenderer.DrawLineString(g, geom as ILineString, vStyle.Outline, map, vStyle.LineOffset);
+                                            rect = VectorRenderer.DrawLineStringEx(g, geom as ILineString, vStyle.Outline, map, vStyle.LineOffset);
                                         else if (geom is IMultiLineString)
-                                            rect = VectorRenderer.DrawMultiLineString(g, geom as IMultiLineString, vStyle.Outline, map, vStyle.LineOffset);
-                                        bounds = VectorRenderer.RectExpandToInclude(bounds, rect);
+                                            rect = VectorRenderer.DrawMultiLineStringEx(g, geom as IMultiLineString, vStyle.Outline, map, vStyle.LineOffset);
+                                        bounds = RectangleF.Union(bounds, rect);//VectorRenderer.RectExpandToInclude(bounds, rect);
                                     }
                                 }
                             }
@@ -437,8 +437,8 @@ namespace SharpMap.Layers
                         {
                             if (geom != null)
                             {
-                                rect = RenderGeometry(g, map, geom, vStyle);
-                                bounds = VectorRenderer.RectExpandToInclude(bounds, rect);
+                                rect = RenderGeometryEx(g, map, geom, vStyle);
+                                bounds = RectangleF.Union(bounds, rect);//VectorRenderer.RectExpandToInclude(bounds, rect);
                             }
                         }
 
@@ -488,78 +488,78 @@ namespace SharpMap.Layers
         /// <param name="map">The map</param>
         /// <param name="feature">The feature's geometry</param>
         /// <param name="style">The style to apply</param>
-        protected RectangleF RenderGeometry(Graphics g, MapViewport map, IGeometry feature, VectorStyle style)
+        protected void RenderGeometry(Graphics g, MapViewport map, IGeometry feature, VectorStyle style)
         {
-            if (feature == null)
-                return new RectangleF();;
+            RenderGeometryEx(g, map, feature, style);
+        }
+
+        protected RectangleF RenderGeometryEx(Graphics g, MapViewport map, IGeometry feature, VectorStyle style)
+        {
+            if (feature == null) return RectangleF.Empty;
 
             var geometryType = feature.OgcGeometryType;
             switch (geometryType)
             {
                 case OgcGeometryType.Polygon:
                     if (style.EnableOutline)
-                        return VectorRenderer.DrawPolygon(g, (IPolygon)feature, style.Fill, style.Outline, _clippingEnabled,
+                        return VectorRenderer.DrawPolygonEx(g, (IPolygon)feature, style.Fill, style.Outline, _clippingEnabled,
                                                    map);
                     else
-                        return VectorRenderer.DrawPolygon(g, (IPolygon)feature, style.Fill, null, _clippingEnabled, map);
+                        return VectorRenderer.DrawPolygonEx(g, (IPolygon)feature, style.Fill, null, _clippingEnabled, map);
 
                 case OgcGeometryType.MultiPolygon:
                     if (style.EnableOutline)
-                        return VectorRenderer.DrawMultiPolygon(g, (IMultiPolygon)feature, style.Fill, style.Outline,
-                                                        _clippingEnabled, map);
-                    else
-                        return VectorRenderer.DrawMultiPolygon(g, (IMultiPolygon)feature, style.Fill, null, _clippingEnabled,
-                                                        map);
+                        return VectorRenderer.DrawMultiPolygonEx(g, (IMultiPolygon)feature, style.Fill, style.Outline, _clippingEnabled, map);
+                    return VectorRenderer.DrawMultiPolygonEx(g, (IMultiPolygon)feature, style.Fill, null, _clippingEnabled, map);
                 case OgcGeometryType.LineString:
                     if (style.LineSymbolizer != null)
                     {
                          style.LineSymbolizer.Render(map, (ILineString)feature, g);
-                         return new RectangleF();
+                         return RectangleF.Empty;
                     }
-                    return VectorRenderer.DrawLineString(g, (ILineString)feature, style.Line, map, style.LineOffset);
+                    return VectorRenderer.DrawLineStringEx(g, (ILineString)feature, style.Line, map, style.LineOffset);
 
                 case OgcGeometryType.MultiLineString:
                     if (style.LineSymbolizer != null)
                     {
-                         style.LineSymbolizer.Render(map, (IMultiLineString)feature, g);
-                         return new RectangleF();
+                        style.LineSymbolizer.Render(map, (IMultiLineString)feature, g);
+                        return RectangleF.Empty;
                     }
-                    return VectorRenderer.DrawMultiLineString(g, (IMultiLineString)feature, style.Line, map, style.LineOffset);
+                    return VectorRenderer.DrawMultiLineStringEx(g, (IMultiLineString)feature, style.Line, map, style.LineOffset);
+                    
 
                 case OgcGeometryType.Point:
                     if (style.PointSymbolizer != null)
-                        return VectorRenderer.DrawPoint(style.PointSymbolizer, g, (IPoint)feature, map);
+                        return VectorRenderer.DrawPointEx(style.PointSymbolizer, g, (IPoint)feature, map);
 
                     if (style.Symbol != null || style.PointColor == null)
-                        return VectorRenderer.DrawPoint(g, (IPoint)feature, style.Symbol, style.SymbolScale, style.SymbolOffset,
+                        return VectorRenderer.DrawPointEx(g, (IPoint)feature, style.Symbol, style.SymbolScale, style.SymbolOffset,
                                                  style.SymbolRotation, map);
 
-                    return VectorRenderer.DrawPoint(g, (IPoint)feature, style.PointColor, style.PointSize, style.SymbolOffset, map);
+                    return VectorRenderer.DrawPointEx(g, (IPoint)feature, style.PointColor, style.PointSize, style.SymbolOffset, map);
 
                 case OgcGeometryType.MultiPoint:
                     if (style.PointSymbolizer != null)
-                        return VectorRenderer.DrawMultiPoint(style.PointSymbolizer, g, (IMultiPoint)feature, map);
+                        return VectorRenderer.DrawMultiPointEx(style.PointSymbolizer, g, (IMultiPoint)feature, map);
                     
                     if (style.Symbol != null || style.PointColor == null)
-                        return VectorRenderer.DrawMultiPoint(g, (IMultiPoint)feature, style.Symbol, style.SymbolScale,
-                                                  style.SymbolOffset, style.SymbolRotation, map);
+                        return VectorRenderer.DrawMultiPointEx(g, (IMultiPoint)feature, style.Symbol, style.SymbolScale, style.SymbolOffset, style.SymbolRotation, map);
 
-                    return VectorRenderer.DrawMultiPoint(g, (IMultiPoint)feature, style.PointColor, style.PointSize, style.SymbolOffset, map);
+                    return VectorRenderer.DrawMultiPointEx(g, (IMultiPoint)feature, style.PointColor, style.PointSize, style.SymbolOffset, map);
 
                 case OgcGeometryType.GeometryCollection:
-                    var bounds = new RectangleF();
                     var coll = (IGeometryCollection)feature;
+                    var affectedArea = new RectangleF();
                     for (var i = 0; i < coll.NumGeometries; i++)
                     {
                         IGeometry geom = coll[i];
-                        var rect = RenderGeometry(g, map, geom, style);
-                        bounds = VectorRenderer.RectExpandToInclude(bounds, rect);
+                        var rect = RenderGeometryEx(g, map, geom, style);
+                        affectedArea = RectangleF.Union(affectedArea, rect);
                     }
-                    return bounds;
+                    return affectedArea;
                 
-                default:
-                    return new RectangleF();
             }
+            throw new NotSupportedException();
         }
 
         private void SetAffectedArea(RectangleF bounds, MapViewport map)

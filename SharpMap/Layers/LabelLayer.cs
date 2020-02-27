@@ -453,13 +453,14 @@ namespace SharpMap.Layers
                 if (labels[i] is Label)
                 {
                     var label = baseLabel as Label;
-                    affectedAreaGraphics = VectorRenderer.DrawLabel(
+                    affectedAreaGraphics = VectorRenderer.DrawLabelEx(
                         g, label.Location, label.Style.Offset,
                         font, label.Style.ForeColor, label.Style.BackColor, 
                         label.Style.Halo, label.Rotation, label.Text, map, 
                         label.Style.HorizontalAlignment, label.LabelPoint);
-                    
-                    affectedAreaGraphics = VectorRenderer.RectExpandToInclude(affectedAreaGraphics, affectedAreaGraphics);
+
+                    // TODO: ???
+                    affectedAreaGraphics = RectangleF.Union(affectedAreaGraphics, affectedAreaGraphics); // VectorRenderer.RectExpandToInclude(affectedAreaGraphics, affectedAreaGraphics));
                 }
                 else if (labels[i] is PathLabel)
                 {
