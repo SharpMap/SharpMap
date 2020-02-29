@@ -95,7 +95,7 @@ namespace UnitTests.Layers
                     using (var img = map.GetMap())
                         img.Save(
                             Path.Combine(UnitTestsFixture.GetImageDirectory(this),
-                                $"LabelLayer_{mode.ToString()}_{rot:000}.png"),
+                                $"LabelLayer_{mode}_{rot:000}.png"),
                             System.Drawing.Imaging.ImageFormat.Png);
 
                     // remove affected area layer
@@ -341,7 +341,7 @@ namespace UnitTests.Layers
                             using (var img = map.GetMap())
                                 img.Save(
                                     Path.Combine(UnitTestsFixture.GetImageDirectory(this),
-                                        $"PathLabel_{mode.ToString()}_Hz{hzAlign.ToString()}_Vt{vtAlign.ToString()}_{rot:000}.png"),
+                                        $"PathLabel_{mode}_Hz{hzAlign}_Vt{vtAlign}_{rot:000}.png"),
                                     System.Drawing.Imaging.ImageFormat.Png);
 
                             // remove affected area layer
@@ -461,7 +461,7 @@ namespace UnitTests.Layers
                     using (var img = map.GetMap())
                         img.Save(
                             Path.Combine(UnitTestsFixture.GetImageDirectory(this),
-                                $"{symMode.ToString()}_{alignMode.ToString()}_{rot:000}.png"),
+                                $"{symMode}_{alignMode}_{rot:000}.png"),
                             System.Drawing.Imaging.ImageFormat.Png);
 
                     // remove affected area layer
@@ -633,6 +633,58 @@ namespace UnitTests.Layers
             vLyr.Style.PointColor = Brushes.Yellow;
             map.Layers.Add(vLyr);
 
+        }
+
+        [NUnit.Framework.TestCase(1f, 0f, PointAlignment.Horizontal, true)]
+        [NUnit.Framework.TestCase(4f, 0f, PointAlignment.Horizontal, true)]
+        [NUnit.Framework.TestCase(4f, 10f, PointAlignment.Horizontal, true)]
+        [NUnit.Framework.TestCase(4f, 10f, PointAlignment.Vertical, false)]
+        [NUnit.Framework.TestCase(4f, 10f, PointAlignment.Diagonal, true)]
+        public void Line_AffectedArea(float width, float offset, PointAlignment alignMode, bool testRotations)
+        {
+            using (var map = new Map())
+            {
+                ConfigureMap(map);
+
+                AddLineLayers(map, alignMode, width, offset);
+                
+                var extents = map.GetExtents();
+                extents.ExpandBy(0.2);
+
+                foreach (var rot in _rotations)
+                {
+                    SetMapTransform(map, rot);
+                    map.ZoomToBox(extents, true);
+
+                    var affectedArea = GetAffectedArea(map, (Layer) map.Layers[0]);
+                    AddAffectedAreaLayer(map, affectedArea);
+
+                    using (var img = map.GetMap())
+                        img.Save(
+                            Path.Combine(UnitTestsFixture.GetImageDirectory(this),
+                                $"Line_W-{width}_O-{offset}_{alignMode}_{rot:000}.png"),
+                            System.Drawing.Imaging.ImageFormat.Png);
+
+                    // remove affected area layer
+                    map.Layers.RemoveAt(2);
+                    if (!testRotations) break;
+                }
+            }
+        }
+
+        private void AddLineLayers(Map map, PointAlignment mode, float width, float offset)
+        {
+            var pts = GetSymbolizerPoints(mode);
+            var line = new LineString(GetSymbolizerPoints(mode).Select(p => new Coordinate(p.X, p.Y)).ToArray());
+            
+            var vLyr = new VectorLayer("Line", new GeometryFeatureProvider(line));
+            vLyr.Style.Line = new Pen(Color.Green, width);
+            vLyr.Style.LineOffset = offset;
+            map.Layers.Add(vLyr);
+
+            vLyr = new VectorLayer("ReferencePoint", new GeometryFeatureProvider(pts.AsEnumerable()));
+            vLyr.Style.PointSize = 10f;
+            map.Layers.Add(vLyr);
         }
     }
 }
