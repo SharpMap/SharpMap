@@ -432,7 +432,8 @@ namespace SharpMap.Layers
             
             if (labels == null || labels.Count == 0)
             {
-                base.Render(g, map);
+                // Obsolete (and will cause infinite loop)
+                //base.Render(g, map);
                 return;
             }
 
@@ -495,7 +496,8 @@ namespace SharpMap.Layers
 
             _affectedArea.ExpandToInclude(affectedAreaWorld);
             
-            base.Render(g, map);
+            // Obsolete (and will cause infinite loop)
+            //base.Render(g, map);
         }
 
        private List<BaseLabel> CreateLabelDefinitions(Graphics g, MapViewport map, FeatureDataTable features)

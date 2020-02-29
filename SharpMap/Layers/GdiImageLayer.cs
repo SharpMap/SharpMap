@@ -207,7 +207,8 @@ namespace SharpMap.Layers
 
             }
 
-            base.Render(g, map);
+            // Obsolete (and will cause infinite loop) 
+            //base.Render(g, map);
         }
 
         /// <summary>

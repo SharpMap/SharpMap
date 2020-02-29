@@ -547,7 +547,7 @@ namespace SharpMap.Forms.ImageGenerator
                         using (var gr = Graphics.FromImage(img.Bitmap))
                         {
                             gr.Clear(Color.Transparent);
-                            lyr.Render(gr, mvp, out affectedArea);
+                            affectedArea = lyr.Render(gr, mvp);
                         }
                     }
                     catch (Exception)

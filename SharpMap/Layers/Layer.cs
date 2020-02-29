@@ -336,7 +336,7 @@ namespace SharpMap.Layers
         [Obsolete("Use Render(Graphics, MapViewport, out Envelope affectedArea)")]
         public virtual void Render(Graphics g, Map map)
         {
-            Render(g, (MapViewport)map);
+            Render(g, (MapViewport)map, out _);
         }
 
         /// <summary>
@@ -346,7 +346,7 @@ namespace SharpMap.Layers
         /// <param name="map">Map which is rendered</param>
         public virtual void Render(Graphics g, MapViewport map)
         {
-            OnLayerRendered(g);
+            Render(g, map, out _);
         }
 
         /// <summary>
@@ -354,24 +354,29 @@ namespace SharpMap.Layers
         /// </summary>
         /// <param name="g">Graphics object reference</param>
         /// <param name="map">Map which is rendered</param>
-        /// <param name="affectedArea">The actual extent of rendered data inclusive of any labels or vector symbology</param>
-        public virtual void Render(Graphics g, MapViewport map, out Envelope affectedArea)
+        /// <returns>The extent of the actual area rendered in world units</returns>
+        Envelope ILayerEx.Render(Graphics g, MapViewport map)
+        {
+            Render(g, map, out var affectedAreaWorld);
+            return affectedAreaWorld;
+        }
+
+        protected virtual void Render(Graphics g, MapViewport map, out Envelope affectedAreaWorld)
         {
             Render(g, map);
 
             if (_affectedArea.IsNull)
             {
-                affectedArea = map.Envelope.Intersection(Envelope);
+                affectedAreaWorld = map.Envelope.Intersection(Envelope);
             }
             else
             {
-                affectedArea = map.Envelope.Intersection(ToTarget(_affectedArea));
+                affectedAreaWorld = map.Envelope.Intersection(ToTarget(_affectedArea));
                 _affectedArea.SetToNull();
             }
 
-            // OnLayerRendered already raised by Base.Render(Graphics g,m MapViewport map)
+            OnLayerRendered(g);
         }
-
         /// <summary>
         /// Event invoker for the <see cref="LayerRendered"/> event.
         /// </summary>
