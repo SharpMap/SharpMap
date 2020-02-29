@@ -71,11 +71,11 @@ namespace SharpMap.Rendering.Symbolizer
         /// <param name="g">The graphics object to use.</param>
         public void Render(MapViewport map, IPuntal points, Graphics g)
         {
-            _bounds = new RectangleF();
+            _affectedArea = new RectangleF();
             foreach (var pointSymbolizer in Items)
             {
                 pointSymbolizer.Render(map, points, g);
-                _bounds = VectorRenderer.RectExpandToInclude(_bounds, pointSymbolizer.Bounds);
+                _affectedArea = _affectedArea.ExpandToInclude(pointSymbolizer.Bounds);
             }
         }
 
@@ -225,7 +225,7 @@ namespace SharpMap.Rendering.Symbolizer
         #endregion
 
         [NonSerialized]
-        protected RectangleF _bounds;
-        public RectangleF Bounds => _bounds;
+        protected RectangleF _affectedArea;
+        public RectangleF Bounds => _affectedArea;
     }
 }

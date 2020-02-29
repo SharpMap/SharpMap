@@ -78,7 +78,7 @@ namespace SharpMap.Rendering
             for(int i = 0; i < lines.NumGeometries; i++)
             {
                 var line = (ILineString) lines[i];
-                affectedArea = RectExpandToInclude(affectedArea, DrawLineStringEx(g, line, pen, map, offset));
+                affectedArea = affectedArea.ExpandToInclude(DrawLineStringEx(g, line, pen, map, offset));
             }
 
             return affectedArea;
@@ -183,7 +183,16 @@ namespace SharpMap.Rendering
                     gp.AddLines(LimitValues(points, ExtremeValueLimit));
 
                     g.DrawPath(pen, gp);
-                    return gp.GetBounds();
+
+                    // Note: gp.GetBounds(new Matrix(), pen) produces a "loose fit" to the bounded path with EXCESSIVE
+                    // inflation for pen width multiplied by the miter limit, plus additional margin for end caps
+                    // Also: do not use static Matrix due locking issues experienced with Map.Transform
+
+                    //return gp.GetBounds(new Matrix(), pen);
+
+                    var bounds = gp.GetBounds();
+                    bounds.Inflate(pen.Width / 2f, pen.Width / 2f);
+                    return bounds;
                 }
             }
             return new RectangleF();
@@ -222,7 +231,7 @@ namespace SharpMap.Rendering
             {
                 var p = (IPolygon)multiPolygon[i];
                 var rect = DrawPolygonEx(g, p, brush, pen, clip, map);
-                affectedArea = RectangleF.Union(affectedArea, rect); //RectExpandToInclude(bounds, rect);
+                affectedArea = affectedArea.ExpandToInclude(rect);
             }
 
             return affectedArea;
@@ -293,7 +302,11 @@ namespace SharpMap.Rendering
                 if (pen != null)
                     g.DrawPath(pen, gp);
 
-                return gp.GetBounds();
+                // refer to comments on DrawLineStringEx for determining bounds
+                var bounds = gp.GetBounds();
+                if (pen != null)
+                    bounds.Inflate(pen.Width / 2f, pen.Width / 2f);
+                return bounds;
             }
         }
 
@@ -890,7 +903,7 @@ namespace SharpMap.Rendering
             {
                 var point = (IPoint) points[i];
                 var rect = DrawPointEx(g, point, symbol, symbolscale, offset, rotation, map);
-                affectedArea = RectangleF.Union(affectedArea, rect); //RectExpandToInclude(affectedArea, rect);
+                affectedArea = affectedArea.ExpandToInclude(rect);
             }
 
             return affectedArea;
@@ -951,7 +964,7 @@ namespace SharpMap.Rendering
             {
                 var point = (IPoint) points[i];
                 var rect = DrawPointEx(g, point, brush, size, offset, map);
-                affectedArea = RectangleF.Union(affectedArea, rect); //RectExpandToInclude(affectedArea, rect);
+                affectedArea = affectedArea.ExpandToInclude(rect);
             }
 
             return affectedArea;
@@ -964,29 +977,34 @@ namespace SharpMap.Rendering
             Within,
             Outside,
             Intersecting
-        } ;
+        }
 
         #endregion
 
-        [Obsolete("Use RectangleF.Union")]
-        public static RectangleF RectExpandToInclude(RectangleF first, RectangleF second)
+        /// <summary>
+        /// Equivalent of Envelope.ExpandToInclude, allowing for RectangleF.Empty
+        /// </summary>
+        /// <param name="first"></param>
+        /// <param name="second"></param>
+        /// <returns></returns>
+        /// <remarks>
+        /// RectangleF.Union does not take into account RectangleF.Empty. For example, 
+        /// when A = (0, 0; 0, 0) and B = (1, 1; 2, 2) then A.Union(B) = (0, 0; 2, 2)
+        /// </remarks>
+        internal static RectangleF ExpandToInclude(this RectangleF first, RectangleF second)
         {
-            return RectangleF.Union(first, second);
-            /*
-            if (second.IsEmpty) return first;
-            if (first.IsEmpty) return second;
+            if (second.IsEmpty)
+                return first;
+            if (first.IsEmpty) 
+                return second;
 
             float maxX = Math.Max(first.Right, second.Right);
             float maxY = Math.Max(first.Bottom,second.Bottom);
+            
+            float minX = Math.Min(first.X, second.X);
+            float minY = Math.Min(first.Y, second.Y);
 
-            if (first.X > second.X) first.X = second.X;
-            if (first.Y > second.Y) first.Y = second.Y;
-
-            if (first.Right < maxX) first.Width = maxX - first.X;
-            if (first.Bottom < maxY) first.Height = maxY - first.Y;
-
-            return first;
-             */
+            return new RectangleF(minX, minY, maxX - minX, maxY - minY);
         }
     }
 }

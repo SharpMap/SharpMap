@@ -205,7 +205,7 @@ namespace SharpMap.Rendering.Symbolizer
                     {
                         g.DrawImageUnscaled(symbol, (int)(pt.X), (int)(pt.Y));
                     }
-                    _bounds = new RectangleF(pt.X, pt.Y, symbol.Width, symbol.Height);
+                    _affectedArea = new RectangleF(pt.X, pt.Y, symbol.Width, symbol.Height);
                 }
                 else
                 {
@@ -220,7 +220,7 @@ namespace SharpMap.Rendering.Symbolizer
                             width,
                             height);
                     }
-                    _bounds = new RectangleF(pt.X, pt.Y, width, height);
+                    _affectedArea = new RectangleF(pt.X, pt.Y, width, height);
                 }
             }
             else
@@ -239,7 +239,7 @@ namespace SharpMap.Rendering.Symbolizer
                     GraphicsUnit.Pixel,
                     ImageAttributes);
                 
-                _bounds = new RectangleF(x, y, width, height);
+                _affectedArea = new RectangleF(x, y, width, height);
             }
         }
     }

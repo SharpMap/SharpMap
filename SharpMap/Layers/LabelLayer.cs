@@ -459,8 +459,7 @@ namespace SharpMap.Layers
                         label.Style.Halo, label.Rotation, label.Text, map, 
                         label.Style.HorizontalAlignment, label.LabelPoint);
 
-                    // TODO: ???
-                    affectedAreaGraphics = RectangleF.Union(affectedAreaGraphics, affectedAreaGraphics); // VectorRenderer.RectExpandToInclude(affectedAreaGraphics, affectedAreaGraphics));
+                    affectedAreaGraphics = affectedAreaGraphics.ExpandToInclude(affectedAreaGraphics);
                 }
                 else if (labels[i] is PathLabel)
                 {

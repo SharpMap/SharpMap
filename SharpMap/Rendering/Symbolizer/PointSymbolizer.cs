@@ -33,7 +33,7 @@ namespace SharpMap.Rendering.Symbolizer
         private float _scale = 1f;
 
         [NonSerialized]
-        protected RectangleF _bounds;
+        protected RectangleF _affectedArea;
 
         /// <summary>
         /// Offset of the point from the point
@@ -118,10 +118,10 @@ namespace SharpMap.Rendering.Symbolizer
                         rev.Translate(offset.Width + 1, offset.Height + 1);
                         var pts = new[]
                         {
-                            new PointF(_bounds.Left, _bounds.Top),
-                            new PointF(_bounds.Right, _bounds.Top),
-                            new PointF(_bounds.Right, _bounds.Bottom),
-                            new PointF(_bounds.Left, _bounds.Bottom),
+                            new PointF(_affectedArea.Left, _affectedArea.Top),
+                            new PointF(_affectedArea.Right, _affectedArea.Top),
+                            new PointF(_affectedArea.Right, _affectedArea.Bottom),
+                            new PointF(_affectedArea.Left, _affectedArea.Bottom),
                         };
                         rev.TransformPoints(pts);
 
@@ -129,7 +129,7 @@ namespace SharpMap.Rendering.Symbolizer
                         var maxX = Math.Max(pts[0].X, Math.Max(pts[1].X, Math.Max(pts[2].X, pts[3].X))); 
                         var minY = Math.Min(pts[0].Y, Math.Min(pts[1].Y, Math.Min(pts[2].Y, pts[3].Y))); 
                         var maxY = Math.Max(pts[0].Y, Math.Max(pts[1].Y, Math.Max(pts[2].Y, pts[3].Y)));
-                        _bounds = new RectangleF(minX, minY, maxX - minX, maxY - minY);    
+                        _affectedArea = new RectangleF(minX, minY, maxX - minX, maxY - minY);    
                     }
                    
                     g.Transform = old;    
@@ -191,6 +191,6 @@ namespace SharpMap.Rendering.Symbolizer
             
         }
         
-        public RectangleF Bounds => _bounds;
+        public RectangleF Bounds => _affectedArea;
     }
 }

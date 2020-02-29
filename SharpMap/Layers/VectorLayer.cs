@@ -241,7 +241,7 @@ namespace SharpMap.Layers
         /// <param name="theme">The theme to apply</param>
         protected void RenderInternal(Graphics g, MapViewport map, Envelope envelope, ITheme theme)
         {
-            var bounds = new RectangleF();
+            var affectedArea = new RectangleF();
             var rect = new RectangleF(); 
 
             var ds = new FeatureDataSet();
@@ -307,7 +307,7 @@ namespace SharpMap.Layers
                                     rect = VectorRenderer.DrawMultiLineStringEx(g, feature.Geometry as IMultiLineString,
                                                                         outlineStyle.Outline, map, outlineStyle.LineOffset);
                                 }
-                                bounds = RectangleF.Union(bounds, rect);//VectorRenderer.RectExpandToInclude(bounds, rect);
+                                affectedArea = affectedArea.ExpandToInclude(rect);
                             }
                         }
                     }
@@ -341,13 +341,13 @@ namespace SharpMap.Layers
                             if (clone != null)
                             {
                                 rect = RenderGeometryEx(g, map, feature.Geometry, clone);
-                                bounds = RectangleF.Union(bounds, rect);//VectorRenderer.RectExpandToInclude(bounds, rect);
+                                affectedArea = affectedArea.ExpandToInclude(rect);
                             }
                         }
                     }
                 }
             }
-            SetAffectedArea(bounds, map);
+            SetAffectedArea(affectedArea, map);
         }
 
         /// <summary>
@@ -366,7 +366,7 @@ namespace SharpMap.Layers
             if (stylesToRender == null)
                 return;
 
-            var bounds = new RectangleF();
+            var affectedArea = new RectangleF();
             var rect = new RectangleF(); 
 
             Collection<IGeometry> geoms = null;
@@ -427,7 +427,7 @@ namespace SharpMap.Layers
                                             rect = VectorRenderer.DrawLineStringEx(g, geom as ILineString, vStyle.Outline, map, vStyle.LineOffset);
                                         else if (geom is IMultiLineString)
                                             rect = VectorRenderer.DrawMultiLineStringEx(g, geom as IMultiLineString, vStyle.Outline, map, vStyle.LineOffset);
-                                        bounds = RectangleF.Union(bounds, rect);//VectorRenderer.RectExpandToInclude(bounds, rect);
+                                        affectedArea = affectedArea.ExpandToInclude(rect);
                                     }
                                 }
                             }
@@ -438,7 +438,7 @@ namespace SharpMap.Layers
                             if (geom != null)
                             {
                                 rect = RenderGeometryEx(g, map, geom, vStyle);
-                                bounds = RectangleF.Union(bounds, rect);//VectorRenderer.RectExpandToInclude(bounds, rect);
+                                affectedArea = affectedArea.ExpandToInclude(rect);
                             }
                         }
 
@@ -451,7 +451,7 @@ namespace SharpMap.Layers
                 }
             }
             
-            SetAffectedArea(bounds, map);
+            SetAffectedArea(affectedArea, map);
             
         }
 
@@ -554,7 +554,7 @@ namespace SharpMap.Layers
                     {
                         IGeometry geom = coll[i];
                         var rect = RenderGeometryEx(g, map, geom, style);
-                        affectedArea = RectangleF.Union(affectedArea, rect);
+                        affectedArea = affectedArea.ExpandToInclude(rect);
                     }
                     return affectedArea;
                 
