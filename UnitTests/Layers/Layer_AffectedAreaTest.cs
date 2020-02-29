@@ -136,8 +136,9 @@ namespace UnitTests.Layers
             using (var img = new Bitmap(map.Size.Width, map.Size.Height))
             using (var g = Graphics.FromImage(img))
             {
-                layer.Render(g, (MapViewport) map, out var affectedArea);
-                return affectedArea;
+//                layer.Render(g, (MapViewport) map, out var affectedArea);
+//                return affectedArea;
+                return ((ILayerEx) layer).Render(g, (MapViewport)map);
             }
         }
 
