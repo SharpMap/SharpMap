@@ -190,7 +190,9 @@ namespace UnitTests.Layers
                 {
                     Offset = new PointF(20, -20),
                     HorizontalAlignment = LabelStyle.HorizontalAlignmentEnum.Left,
-                    VerticalAlignment = LabelStyle.VerticalAlignmentEnum.Bottom
+                    VerticalAlignment = LabelStyle.VerticalAlignmentEnum.Bottom,
+                    Halo = new Pen(Color.Yellow, 5f),
+                    BackColor = Brushes.Orange
                 }
             };
 
