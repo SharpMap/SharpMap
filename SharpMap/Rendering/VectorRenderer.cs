@@ -490,8 +490,10 @@ namespace SharpMap.Rendering
                         labelPoint.Y - rotationPoint.Value.Y);
 
                     //labelSize = new SizeF(labelSize.Width*0.74f + 1f, labelSize.Height*0.74f);
+                    var backPath = new GraphicsPath();
+                    backPath.AddRectangle(Rectangle.Ceiling(new RectangleF(labelPoint.X, labelPoint.Y, labelSize.Width, labelSize.Height)));
                     if (backColor != null && backColor != Brushes.Transparent)
-                        g.FillRectangle(backColor, labelPoint.X, labelPoint.Y, labelSize.Width, labelSize.Height);
+                        g.FillPath(backColor, backPath); //g.FillRectangle(backColor, background);
 
                     var path = new GraphicsPath();
                     path.AddString(text, font.FontFamily, (int) font.Style, font.Size,
@@ -508,18 +510,19 @@ namespace SharpMap.Rendering
                     {
                         inv.Translate(rotationPoint.Value.X, rotationPoint.Value.Y);
                         inv.Rotate(rotation);
-                        bounds = path.GetBounds(inv);
+                        bounds = backPath.GetBounds(inv);
                     }
                     
+                    // NB: g.Transform stores a copy of t
                     g.Transform = t;
                 }
                 return bounds;
             }
             else
             {
+                var background = new RectangleF(labelPoint.X, labelPoint.Y, labelSize.Width, labelSize.Height);
                 if (backColor != null && backColor != Brushes.Transparent)
-                    g.FillRectangle(backColor, labelPoint.X, labelPoint.Y, labelSize.Width,
-                                    labelSize.Height);
+                    g.FillRectangle(backColor, background);
 
                 var path = new GraphicsPath();
                 path.AddString(text, font.FontFamily, (int) font.Style, font.Size, 
@@ -530,7 +533,7 @@ namespace SharpMap.Rendering
                 g.FillPath(new SolidBrush(foreColor), path);
                 //g.DrawString(text, font, new System.Drawing.SolidBrush(forecolor), LabelPoint.X, LabelPoint.Y);
 
-                return path.GetBounds();
+                return background; //path.GetBounds();
             }
         }
 
