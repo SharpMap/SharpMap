@@ -131,29 +131,42 @@ namespace UnitTests.Layers
             }
         }
 
-        private Envelope GetAffectedArea(Map map, Layer layer)
+        private Polygon GetAffectedArea(Map map, Layer layer)
         {
             using (var img = new Bitmap(map.Size.Width, map.Size.Height))
             using (var g = Graphics.FromImage(img))
             {
 //                layer.Render(g, (MapViewport) map, out var affectedArea);
 //                return affectedArea;
-                return ((ILayerEx) layer).Render(g, (MapViewport)map);
+                
+                //return ((ILayerEx) layer).Render(g, (MapViewport)map);
+                var rect = ((ILayerEx) layer).Render(g, (MapViewport) map);
+                var pts = new PointF[]
+                {
+                    new PointF(rect.X, rect.Y),
+                    new PointF(rect.X + rect.Width, rect.Y),
+                    new PointF(rect.X + rect.Width, rect.Y + rect.Height),
+                    new PointF(rect.X, rect.Y + rect.Height),
+                    new PointF(rect.X, rect.Y),
+                };
+                var coords = map.ImageToWorld(pts);
+                return new Polygon(new LinearRing(coords));
             }
         }
 
-        private void AddAffectedAreaLayer(Map map, Envelope affectedAreaEnv)
+        private void AddAffectedAreaLayer(Map map, Polygon affectedArea)
         {
-            var coords = new Coordinate[]
-            {
-                new Coordinate(affectedAreaEnv.TopLeft()),
-                new Coordinate(affectedAreaEnv.TopRight()),
-                new Coordinate(affectedAreaEnv.BottomRight()),
-                new Coordinate(affectedAreaEnv.BottomLeft()),
-                new Coordinate(affectedAreaEnv.TopLeft())
-            };
-            
-            var gp = new GeometryProvider(new Polygon(new LinearRing(coords)));
+//            var coords = new Coordinate[]
+//            {
+//                new Coordinate(affectedArea.TopLeft()),
+//                new Coordinate(affectedArea.TopRight()),
+//                new Coordinate(affectedArea.BottomRight()),
+//                new Coordinate(affectedArea.BottomLeft()),
+//                new Coordinate(affectedArea.TopLeft())
+//            };
+//            
+//            var gp = new GeometryProvider(new Polygon(new LinearRing(coords)));
+            var gp = new GeometryProvider(affectedArea);
             var vLayer = new VectorLayer("Affected Area")
             {
                 DataSource = gp,
@@ -161,7 +174,7 @@ namespace UnitTests.Layers
             };
             vLayer.Style.Fill = null;
             vLayer.Style.EnableOutline = true;
-
+            //vLayer.Enabled = false;
             map.Layers.Add(vLayer);
         }
 
@@ -504,13 +517,14 @@ namespace UnitTests.Layers
             
             var vLyr = new VectorLayer("RasterPoint", new GeometryFeatureProvider(pts.AsEnumerable()));
             var rps = new SharpMap.Rendering.Symbolizer.RasterPointSymbolizer();
-            rps.Symbol = GetRasterSymbol();
+            rps.Symbol = GetRasterSymbol(); 
             rps.Rotation = 30f;
             vLyr.Style.PointSymbolizer = rps;
             map.Layers.Add(vLyr);
 
             vLyr = new VectorLayer("ReferencePoint", new GeometryFeatureProvider(pts.AsEnumerable()));
             vLyr.Style.PointSize = 2f;
+            //vLyr.Enabled = false;
             map.Layers.Add(vLyr);
         }
 

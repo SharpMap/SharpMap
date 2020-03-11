@@ -6,8 +6,8 @@ namespace SharpMap.Rendering.Symbolizer
     {
        
         /// <summary>
-        /// Returns the rectilinear graphics extent of this symbol 
+        /// Returns the rectangle enclosing the extent of this symbol 
         /// </summary>
-        RectangleF Bounds { get; }
+        RectangleF CanvasArea { get; }
     }
 }

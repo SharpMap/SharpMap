@@ -18,9 +18,7 @@
 using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
-using System.Drawing.Imaging;
 using GeoAPI.Geometries;
-using SharpMap.Utilities;
 
 namespace SharpMap.Rendering.Symbolizer
 {
@@ -32,8 +30,10 @@ namespace SharpMap.Rendering.Symbolizer
     {
         private float _scale = 1f;
 
-        [NonSerialized]
-        protected RectangleF _affectedArea;
+        /// <summary>
+        /// The calculated rectangle enclosing the extent of this symbol
+        /// </summary>
+        public RectangleF CanvasArea { get; protected set; } = RectangleF.Empty;
 
         /// <summary>
         /// Offset of the point from the point
@@ -81,8 +81,6 @@ namespace SharpMap.Rendering.Symbolizer
             return result;
         }
 
-
-
         /// <summary>
         /// Function to render the symbol
         /// </summary>
@@ -94,45 +92,32 @@ namespace SharpMap.Rendering.Symbolizer
             if (point == null)
                 return;
 
-
             PointF pp = map.WorldToImage(point);
 
             if (Rotation != 0f && !Single.IsNaN(Rotation))
             {
                 SizeF offset = GetOffset();
+                PointF rotationCenter = pp;
 
-                using (var old = g.Transform.Clone())
+                using (var origTrans = g.Transform.Clone())
                 using (var t = g.Transform)
                 {
-                    PointF rotationCenter = pp;
                     t.RotateAt(Rotation, rotationCenter);
                     t.Translate(offset.Width + 1, offset.Height + 1);
-
                     g.Transform = t;
 
                     OnRenderInternal(pp, g);
 
-                    using (var rev = new System.Drawing.Drawing2D.Matrix())
-                    {
-                        rev.RotateAt(Rotation, rotationCenter);
-                        rev.Translate(offset.Width + 1, offset.Height + 1);
-                        var pts = new[]
-                        {
-                            new PointF(_affectedArea.Left, _affectedArea.Top),
-                            new PointF(_affectedArea.Right, _affectedArea.Top),
-                            new PointF(_affectedArea.Right, _affectedArea.Bottom),
-                            new PointF(_affectedArea.Left, _affectedArea.Bottom),
-                        };
-                        rev.TransformPoints(pts);
-
-                        var minX = Math.Min(pts[0].X, Math.Min(pts[1].X, Math.Min(pts[2].X, pts[3].X)));
-                        var maxX = Math.Max(pts[0].X, Math.Max(pts[1].X, Math.Max(pts[2].X, pts[3].X))); 
-                        var minY = Math.Min(pts[0].Y, Math.Min(pts[1].Y, Math.Min(pts[2].Y, pts[3].Y))); 
-                        var maxY = Math.Max(pts[0].Y, Math.Max(pts[1].Y, Math.Max(pts[2].Y, pts[3].Y)));
-                        _affectedArea = new RectangleF(minX, minY, maxX - minX, maxY - minY);    
-                    }
-                   
-                    g.Transform = old;    
+                    g.Transform = origTrans;
+                }
+                
+                using (var symTrans = new Matrix())
+                {
+                    symTrans.RotateAt(Rotation, rotationCenter);
+                    symTrans.Translate(offset.Width + 1, offset.Height + 1);
+                    var pts = CanvasArea.ToPointArray();
+                    symTrans.TransformPoints(pts);
+                    CanvasArea = pts.ToRectangleF();
                 }
             }
             else
@@ -183,14 +168,16 @@ namespace SharpMap.Rendering.Symbolizer
             var mp = geometry as IMultiPoint;
             if (mp != null)
             {
+                var combinedArea = RectangleF.Empty;
                 foreach (var point in mp.Coordinates)
+                {
                     RenderPoint(map, point, graphics);
+                    combinedArea = CanvasArea.ExpandToInclude(combinedArea);
+                }
+                CanvasArea = combinedArea;
                 return;
             }
             RenderPoint(map, ((IPoint)geometry).Coordinate, graphics);
-            
         }
-        
-        public RectangleF Bounds => _affectedArea;
     }
 }

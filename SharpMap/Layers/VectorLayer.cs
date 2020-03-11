@@ -242,8 +242,8 @@ namespace SharpMap.Layers
         /// <param name="theme">The theme to apply</param>
         protected void RenderInternal(Graphics g, MapViewport map, Envelope envelope, ITheme theme)
         {
-            var affectedArea = new RectangleF();
-            var rect = new RectangleF(); 
+            var canvasArea = RectangleF.Empty;
+            var combinedArea = RectangleF.Empty;
 
             var ds = new FeatureDataSet();
             lock (_dataSource)
@@ -300,15 +300,15 @@ namespace SharpMap.Layers
                                 //Draw background of all line-outlines first
                                 if (feature.Geometry is ILineString)
                                 {
-                                    rect = VectorRenderer.DrawLineStringEx(g, feature.Geometry as ILineString, outlineStyle.Outline,
+                                    canvasArea = VectorRenderer.DrawLineStringEx(g, feature.Geometry as ILineString, outlineStyle.Outline,
                                                                         map, outlineStyle.LineOffset);
                                 }
                                 else if (feature.Geometry is IMultiLineString)
                                 {
-                                    rect = VectorRenderer.DrawMultiLineStringEx(g, feature.Geometry as IMultiLineString,
+                                    canvasArea = VectorRenderer.DrawMultiLineStringEx(g, feature.Geometry as IMultiLineString,
                                                                         outlineStyle.Outline, map, outlineStyle.LineOffset);
                                 }
-                                affectedArea = affectedArea.ExpandToInclude(rect);
+                                combinedArea = canvasArea.ExpandToInclude(combinedArea);
                             }
                         }
                     }
@@ -341,14 +341,15 @@ namespace SharpMap.Layers
                         {
                             if (clone != null)
                             {
-                                rect = RenderGeometryEx(g, map, feature.Geometry, clone);
-                                affectedArea = affectedArea.ExpandToInclude(rect);
+                                canvasArea = RenderGeometryEx(g, map, feature.Geometry, clone);
+                                combinedArea = canvasArea.ExpandToInclude(combinedArea);
                             }
                         }
                     }
                 }
             }
-            SetAffectedArea(affectedArea, map);
+
+            CanvasArea = combinedArea;
         }
 
         /// <summary>
@@ -367,8 +368,8 @@ namespace SharpMap.Layers
             if (stylesToRender == null)
                 return;
 
-            var affectedArea = new RectangleF();
-            var rect = new RectangleF(); 
+            var canvasArea = RectangleF.Empty;
+            var combinedArea = RectangleF.Empty;
 
             Collection<IGeometry> geoms = null;
 
@@ -425,10 +426,10 @@ namespace SharpMap.Layers
                                     {
                                         //Draw background of all line-outlines first
                                         if (geom is ILineString)
-                                            rect = VectorRenderer.DrawLineStringEx(g, geom as ILineString, vStyle.Outline, map, vStyle.LineOffset);
+                                            canvasArea = VectorRenderer.DrawLineStringEx(g, geom as ILineString, vStyle.Outline, map, vStyle.LineOffset);
                                         else if (geom is IMultiLineString)
-                                            rect = VectorRenderer.DrawMultiLineStringEx(g, geom as IMultiLineString, vStyle.Outline, map, vStyle.LineOffset);
-                                        affectedArea = affectedArea.ExpandToInclude(rect);
+                                            canvasArea = VectorRenderer.DrawMultiLineStringEx(g, geom as IMultiLineString, vStyle.Outline, map, vStyle.LineOffset);
+                                        combinedArea = canvasArea.ExpandToInclude(combinedArea);
                                     }
                                 }
                             }
@@ -438,8 +439,8 @@ namespace SharpMap.Layers
                         {
                             if (geom != null)
                             {
-                                rect = RenderGeometryEx(g, map, geom, vStyle);
-                                affectedArea = affectedArea.ExpandToInclude(rect);
+                                canvasArea = RenderGeometryEx(g, map, geom, vStyle);
+                                combinedArea = canvasArea.ExpandToInclude(combinedArea);
                             }
                         }
 
@@ -451,9 +452,8 @@ namespace SharpMap.Layers
                     }
                 }
             }
-            
-            SetAffectedArea(affectedArea, map);
-            
+
+            CanvasArea = combinedArea;
         }
 
         /// <summary>
@@ -550,33 +550,19 @@ namespace SharpMap.Layers
 
                 case OgcGeometryType.GeometryCollection:
                     var coll = (IGeometryCollection)feature;
-                    var affectedArea = new RectangleF();
+                    var combinedArea = RectangleF.Empty;
                     for (var i = 0; i < coll.NumGeometries; i++)
                     {
                         IGeometry geom = coll[i];
-                        var rect = RenderGeometryEx(g, map, geom, style);
-                        affectedArea = affectedArea.ExpandToInclude(rect);
+                        var canvasArea = RenderGeometryEx(g, map, geom, style);
+                        combinedArea = canvasArea.ExpandToInclude(combinedArea);
                     }
-                    return affectedArea;
+                    return combinedArea;
                 
             }
             throw new NotSupportedException();
         }
 
-        private void SetAffectedArea(RectangleF bounds, MapViewport map)
-        {
-            if (!bounds.IsEmpty)
-            {
-                var pts = new PointF[]
-                {
-                    new PointF(bounds.Left - 1, bounds.Top - 1),
-                    new PointF(bounds.Right + 1, bounds.Bottom + 1),
-                };
-                var coords = map.ImageToWorld(pts, false);
-                _affectedArea.ExpandToInclude(new Envelope(coords[0], coords[1]));
-            }
-        }
-        
         #region Implementation of ICanQueryLayer
 
         /// <summary>

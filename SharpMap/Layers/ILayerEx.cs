@@ -1,5 +1,4 @@
 using System.Drawing;
-using GeoAPI.Geometries;
 
 namespace SharpMap.Layers
 {
@@ -10,7 +9,7 @@ namespace SharpMap.Layers
         /// </summary>
         /// <param name="g">Graphics object reference</param>
         /// <param name="map">Map which is rendered</param>
-        /// <returns>The extent of the actual area rendered in world units</returns>
-        new Envelope Render(Graphics g, MapViewport  map);
+        /// <returns>Rectangle enclosing the actual area rendered on the graphics canvas</returns>
+        new Rectangle Render(Graphics g, MapViewport  map);
    }
 }

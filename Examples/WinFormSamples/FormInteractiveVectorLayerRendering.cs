@@ -367,7 +367,7 @@ namespace WinFormSamples
                     new System.Data.DataColumn("ARGB",typeof(int))
                 });
             lyr.Style.PointColor = new SolidBrush(Color.Green);
-            _fastBoats = new MovingObjects(100, 50, lyr, this.mb.Map, 0.8f, Color.Green);
+            _fastBoats = new MovingObjects(50, 50, lyr, this.mb.Map, 0.8f, Color.Green);
             _fastBoats.AddObject("Fast 1", GetRectangleCenter(MapDecorationAnchor.LeftTop));
             InitRasterPointSymbolizer(lyr, 0);
             lyrGrp.Layers.Add(lyr);
@@ -383,7 +383,7 @@ namespace WinFormSamples
                 new System.Data.DataColumn("ARGB",typeof(int))
             });
             lyr.Style.PointColor = new SolidBrush(Color.Yellow);
-            _mediumBoats = new MovingObjects(1000, 100, lyr, this.mb.Map, 1, Color.Yellow);
+            _mediumBoats = new MovingObjects(500, 100, lyr, this.mb.Map, 1, Color.Yellow);
             _mediumBoats.AddObject("Boat 1", GetRectangleCenter(MapDecorationAnchor.RightTop));
             _mediumBoats.AddObject("Boat 2", GetRectangleCenter(MapDecorationAnchor.RightCenter));
             InitRasterPointSymbolizer(lyr, 1);
@@ -416,7 +416,7 @@ namespace WinFormSamples
             var lblLayer = new LabelLayer( lyr.LayerName + " Labels");
             lblLayer.DataSource = lyr.DataSource;
             lblLayer.LabelColumn = column;
-            lblLayer.Style.BackColor = Brushes.LightPink;
+            //lblLayer.Style.BackColor = Brushes.LightPink;
             lblLayer.SRID = lblLayer.SRID;
             lblLayer.Enabled = enabled;
             return lblLayer;

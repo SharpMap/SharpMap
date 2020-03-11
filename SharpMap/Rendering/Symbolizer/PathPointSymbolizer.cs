@@ -237,7 +237,7 @@ namespace SharpMap.Rendering.Symbolizer
         internal override void OnRenderInternal(PointF pt, Graphics g)
         {
             var f = new SizeF(pt);
-            _affectedArea = new RectangleF();
+            var combinedArea = RectangleF.Empty;
             foreach (var pathDefinition in _paths)
             {
                 var ppts = pathDefinition.Path.PathPoints;
@@ -253,9 +253,11 @@ namespace SharpMap.Rendering.Symbolizer
                     if (pathDefinition.Line != null)
                         g.DrawPath(pathDefinition.Line, ptmp);
 
-                    _affectedArea = _affectedArea.ExpandToInclude(ptmp.GetBounds());
+                    combinedArea = ptmp.GetBounds().ExpandToInclude(combinedArea);
                 }
             }
+
+            CanvasArea = combinedArea;
         }
     }
 }

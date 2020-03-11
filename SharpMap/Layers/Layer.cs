@@ -20,6 +20,7 @@ using System.Drawing;
 using GeoAPI.CoordinateSystems.Transformations;
 using GeoAPI.Geometries;
 using SharpMap.Base;
+using SharpMap.Rendering;
 using SharpMap.Styles;
 
 namespace SharpMap.Layers
@@ -110,7 +111,7 @@ namespace SharpMap.Layers
         private bool _shouldNotResetCt;
         
         [field: NonSerialized]
-        protected Envelope _affectedArea = new Envelope();
+        protected RectangleF CanvasArea = RectangleF.Empty;
         
         // ReSharper disable PublicConstructorInAbstractClass
         ///<summary>
@@ -354,25 +355,43 @@ namespace SharpMap.Layers
         /// </summary>
         /// <param name="g">Graphics object reference</param>
         /// <param name="map">Map which is rendered</param>
-        /// <returns>The extent of the actual area rendered in world units</returns>
-        Envelope ILayerEx.Render(Graphics g, MapViewport map)
+        /// <returns>Rectangle enclosing the actual area rendered on the graphics canvas</returns>
+        Rectangle ILayerEx.Render(Graphics g, MapViewport map)
         {
-            Render(g, map, out var affectedAreaWorld);
-            return affectedAreaWorld;
+            Render(g, map, out var canvasArea);
+            return  canvasArea;
         }
 
-        protected virtual void Render(Graphics g, MapViewport map, out Envelope affectedAreaWorld)
+        protected virtual void Render(Graphics g, MapViewport map, out Rectangle affectedArea)
         {
             Render(g, map);
 
-            if (_affectedArea.IsNull)
+            if (CanvasArea.IsEmpty)
             {
-                affectedAreaWorld = map.Envelope.Intersection(Envelope);
+                affectedArea = new Rectangle(new Point(0,0),  map.Size);
             }
             else
             {
-                affectedAreaWorld = map.Envelope.Intersection(ToTarget(_affectedArea));
-                _affectedArea.SetToNull();
+                if (!g.Transform.IsIdentity)
+                {
+                    var pts = CanvasArea.ToPointArray();
+                    g.Transform.TransformPoints(pts);
+                    CanvasArea = pts.ToRectangleF();
+                }
+
+                affectedArea = CanvasArea.ToRectangle();
+                // and clip graphics extents (particularly for LabelPath)
+                affectedArea.Intersect(new Rectangle(new Point(0, 0), map.Size));
+                
+                // proof of concept: draw affected area to screen
+//                using (var orig = g.Transform.Clone())
+//                {
+//                    g.ResetTransform();
+//                    g.DrawRectangle(new Pen(Color.Red, 3f){Alignment = PenAlignment.Inset}, affectedArea);
+//                    g.Transform = orig;
+//                }
+                
+                CanvasArea = RectangleF.Empty;
             }
 
             OnLayerRendered(g);

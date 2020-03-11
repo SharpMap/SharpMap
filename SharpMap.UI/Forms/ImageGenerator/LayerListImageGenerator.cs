@@ -3,14 +3,11 @@ using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.Specialized;
-using System.Data.SqlClient;
 using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using Common.Logging;
 using GeoAPI.Geometries;
@@ -26,12 +23,11 @@ namespace SharpMap.Forms.ImageGenerator
             public LockedBitmap(object sync = null)
             {
                 Sync = sync ?? new object();
-                Extent = new Envelope();
+                GraphicsArea = Rectangle.Empty;
             }
 
             public object Sync { get; }
-
-            public Envelope Extent { get; set; }
+            public Rectangle GraphicsArea { get; set; }
 
             public Bitmap Bitmap { get; set; }
 
@@ -86,7 +82,7 @@ namespace SharpMap.Forms.ImageGenerator
         private class LayerInfo
         {
             public ILayer Layer { get; private set; }
-            public bool Render { get; set; }
+            public bool Render { get; private set; }
             public LayerInfo(ILayer layer, bool render)
             {
                 Layer = layer;
@@ -452,25 +448,39 @@ namespace SharpMap.Forms.ImageGenerator
             // excluding children of LayerGroup that is not visible)
             var layers = layerInfos.Where(li => li.Render).Select(l => l.Layer).ToList();
 
-            for (int i = 0; i < layers.Count; i++)
+            if (layers.Count == 0)
             {
-                // Has an cancellation ben requested
-                if (token.IsCancellationRequested) return;
+                InvalidateCacheImage();
+                var mapBox = MapBox;
+                if (mapBox.IsHandleCreated)
+                {
+                    mapBox.Invalidate();
+                    if (!IsDisposed)
+                        mapBox.Invoke(new MethodInvoker(() => { if (!mapBox.IsDisposed) mapBox.Update();}));
+                }
+            }
+            else
+            {
+                for (int i = 0; i < layers.Count; i++)
+                {
+                    // Has an cancellation ben requested
+                    if (token.IsCancellationRequested) return;
 
-                // Get the layer
-                var lyr = layers[i];
+                    // Get the layer
+                    var lyr = layers[i];
 
-                // Layer has no envelope, it has no data
-                if (lyr.Envelope?.IsNull ?? false) continue;
+                    // Layer has no envelope, it has no data
+                    if (lyr.Envelope?.IsNull ?? false) continue;
 
-                // Does it fit in the visibility constraints
-                double mapCompare = lyr.VisibilityUnits == VisibilityUnits.Scale ? mapScale : mapZoom;
-                if (mapCompare < lyr.MinVisible || lyr.MaxVisible < mapCompare)
-                    continue;
+                    // Does it fit in the visibility constraints
+                    double mapCompare = lyr.VisibilityUnits == VisibilityUnits.Scale ? mapScale : mapZoom;
+                    if (mapCompare < lyr.MinVisible || lyr.MaxVisible < mapCompare)
+                        continue;
 
-                // Add task to list
-                bool invalidateAll = i == layers.Count - 1;
-                ThreadPool.QueueUserWorkItem(delegate {RenderLayerImage(new object[] {lyr, mvp, token, invalidateAll});});
+                    // Add task to list
+                    bool invalidateAll = i == layers.Count - 1;
+                    ThreadPool.QueueUserWorkItem(delegate {RenderLayerImage(new object[] {lyr, mvp, token, invalidateAll});});
+                }
             }
 
             if (token.IsCancellationRequested) return;
@@ -485,9 +495,9 @@ namespace SharpMap.Forms.ImageGenerator
         /// </summary>
         /// <param name="param"></param>
         /// <returns></returns>
-        private Rectangle RenderLayerImage(object param)
+        private void RenderLayerImage(object param)
         {
-                if (IsDisposed) return Rectangle.Empty;
+                if (IsDisposed) return;
 
                 object[] parameters = (object[]) param;
                 var lyr = (ILayerEx)parameters[0];
@@ -496,7 +506,7 @@ namespace SharpMap.Forms.ImageGenerator
                 var invalidateAll = (bool) parameters[3];
             
                 if (token.IsCancellationRequested)
-                    return Rectangle.Empty;
+                    return;
 
                 var updateRect = Rectangle.Empty;
 
@@ -506,17 +516,14 @@ namespace SharpMap.Forms.ImageGenerator
                 sw.Start();
 
                 LockedBitmap img = null;
-//                if (lyr is ITileAsyncLayer)
-//                {
-                    _imageLayers.TryGetValue(lyr, out img);
-//                }
+                
+                _imageLayers.TryGetValue(lyr, out img);
 
                 // Update size if necessary
                 if (img != null)
                 {
                     lock (img.Sync)
                     {
-                        var imageObj = img.Bitmap;
                         if (img.Bitmap != null && img.Bitmap.Size != mvp.Size)
                         {
                             object lockObj = img.Sync;
@@ -526,11 +533,10 @@ namespace SharpMap.Forms.ImageGenerator
                             while (!_imageLayers.TryUpdate(lyr, newLockImg, img))
                                 Thread.Sleep(25);
                             img = newLockImg;
-                            //imageObj.Dispose();
                         }
                     }
                 }
-                else //if (img == null)
+                else 
                 {
                     img = new LockedBitmap {
                         Bitmap = new Bitmap(mvp.Size.Width, mvp.Size.Height, PixelFormat.Format32bppArgb)
@@ -538,7 +544,7 @@ namespace SharpMap.Forms.ImageGenerator
                     img = _imageLayers.AddOrUpdate(lyr, img, (u,v) => img);
                 }
 
-                Envelope affectedArea;
+                var graphicsArea = Rectangle.Empty;
             
                 lock (img.Sync)
                 {
@@ -547,7 +553,7 @@ namespace SharpMap.Forms.ImageGenerator
                         using (var gr = Graphics.FromImage(img.Bitmap))
                         {
                             gr.Clear(Color.Transparent);
-                            affectedArea = lyr.Render(gr, mvp);
+                            graphicsArea = lyr.Render(gr, mvp);
                         }
                     }
                     catch (Exception)
@@ -575,14 +581,14 @@ namespace SharpMap.Forms.ImageGenerator
 //            }
 
                 // Envelope of the last rendered image
-                var imgEnvelope = img.Extent.Copy();
-                imgEnvelope.ExpandToInclude(affectedArea);
+//                var imgWorld = img.MapExtent.Copy();
+//                imgWorld.ExpandToInclude(affectedArea.World);
 
-                var updateArea = mvp.Envelope.Intersection(imgEnvelope);
-                var lt = Point.Truncate( mvp.WorldToImage(updateArea.TopLeft()));
-                var rb = Point.Ceiling(mvp.WorldToImage(updateArea.BottomRight()));
+//                var updateArea = mvp.Envelope.Intersection(imgEnvelope);
+//                var lt = Point.Truncate( mvp.WorldToImage(updateArea.TopLeft()));
+//                var rb = Point.Ceiling(mvp.WorldToImage(updateArea.BottomRight()));
 
-                updateRect = Rectangle.FromLTRB(lt.X, lt.Y, rb.X, rb.Y);
+                updateRect = UnionRectangles(img.GraphicsArea, graphicsArea);
 
                 if (token.IsCancellationRequested)
                     goto Exit;
@@ -603,7 +609,7 @@ namespace SharpMap.Forms.ImageGenerator
                 }
 
                 // Set the image envelope
-                img.Extent = affectedArea; // mvp.Envelope.Intersection(lyr.Envelope);
+                img.GraphicsArea = graphicsArea; // mvp.Envelope.Intersection(lyr.Envelope);
 
                 Exit:
                 sw.Stop();
@@ -615,7 +621,7 @@ namespace SharpMap.Forms.ImageGenerator
                         Thread.CurrentThread.ManagedThreadId, lyr.LayerName, mvp.Envelope, mvp.Size,
                         sw.ElapsedMilliseconds));
 
-                return updateRect;
+                //return updateRect;
         }
         
         private void InvalidateCacheImage()
@@ -630,6 +636,32 @@ namespace SharpMap.Forms.ImageGenerator
             {
                 _logger.Debug(t => t("\n{0}> Couldn't invalidate cache image within 25ms!"));
             }
+        }
+        
+        /// <summary>
+        /// Equivalent of Envelope.ExpandToInclude, allowing for Rectangle.Empty
+        /// </summary>
+        /// <param name="first"></param>
+        /// <param name="second"></param>
+        /// <returns></returns>
+        /// <remarks>
+        /// Rectangle.Union does not take into account Rectangle.Empty. For example, 
+        /// when A = (0, 0; 0, 0) and B = (1, 1; 2, 2) then A.Union(B) = (0, 0; 2, 2)
+        /// </remarks>
+        private Rectangle UnionRectangles(Rectangle first, Rectangle second)
+        {
+            if (second.IsEmpty)
+                return first;
+            if (first.IsEmpty) 
+                return second;
+
+            int maxX = Math.Max(first.Right, second.Right);
+            int maxY = Math.Max(first.Bottom,second.Bottom);
+            
+            int minX = Math.Min(first.X, second.X);
+            int minY = Math.Min(first.Y, second.Y);
+
+            return new Rectangle(minX, minY, maxX - minX, maxY - minY);
         }
     }
 }

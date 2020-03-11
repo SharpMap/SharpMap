@@ -196,6 +196,8 @@ namespace SharpMap.Rendering.Symbolizer
         internal override void OnRenderInternal(PointF pt, Graphics g)
         {
             Image symbol = Symbol ?? DefaultSymbol;
+            float width = symbol.Width * Scale;
+            float height = symbol.Height * Scale;
 
             if (ImageAttributes == null)
             {
@@ -203,44 +205,33 @@ namespace SharpMap.Rendering.Symbolizer
                 {
                     lock (symbol)
                     {
-                        g.DrawImageUnscaled(symbol, (int)(pt.X), (int)(pt.Y));
+                        g.DrawImageUnscaled(symbol, (int) (pt.X), (int) (pt.Y));
                     }
-                    _affectedArea = new RectangleF(pt.X, pt.Y, symbol.Width, symbol.Height);
                 }
                 else
                 {
-                    float width = symbol.Width * Scale;
-                    float height = symbol.Height * Scale;
                     lock (symbol)
                     {
-                        g.DrawImage(
-                            symbol,
-                            (int)pt.X,
-                            (int)pt.Y,
-                            width,
-                            height);
+                        g.DrawImage(symbol, (int) pt.X, (int) pt.Y, width, height);
                     }
-                    _affectedArea = new RectangleF(pt.X, pt.Y, width, height);
                 }
             }
             else
             {
-                float width = symbol.Width * Scale;
-                float height = symbol.Height * Scale;
-                int x = (int)(pt.X);
-                int y = (int)(pt.Y);
+                int x = (int) (pt.X);
+                int y = (int) (pt.Y);
                 g.DrawImage(
                     symbol,
-                    new Rectangle(x, y, (int)width, (int)height),
+                    new Rectangle(x, y, (int) width, (int) height),
                     0,
                     0,
                     symbol.Width,
                     symbol.Height,
                     GraphicsUnit.Pixel,
                     ImageAttributes);
-                
-                _affectedArea = new RectangleF(x, y, width, height);
             }
+
+            CanvasArea = new RectangleF(pt.X, pt.Y, width, height);
         }
     }
 }

@@ -171,7 +171,7 @@ namespace SharpMap.Rendering
         {
             try
             {
-                layer.Render(g, mapViewport);
+                ((ILayerEx)layer).Render(g, mapViewport);
             }
             catch (Exception e)
             {

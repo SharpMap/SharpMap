@@ -440,8 +440,7 @@ namespace SharpMap.Layers
             if (Style.CollisionDetection)
                 _labelFilter?.Invoke(labels);
 
-            var affectedAreaGraphics = new RectangleF();
-            var affectedAreaWorld = new Envelope();
+            var combinedArea = RectangleF.Empty;
             
             for (int i = 0; i < labels.Count; i++)
             {
@@ -454,47 +453,36 @@ namespace SharpMap.Layers
                 if (labels[i] is Label)
                 {
                     var label = baseLabel as Label;
-                    affectedAreaGraphics = VectorRenderer.DrawLabelEx(
+                    var canvasArea = VectorRenderer.DrawLabelEx(
                         g, label.Location, label.Style.Offset,
                         font, label.Style.ForeColor, label.Style.BackColor, 
                         label.Style.Halo, label.Rotation, label.Text, map, 
                         label.Style.HorizontalAlignment, label.LabelPoint);
 
-                    affectedAreaGraphics = affectedAreaGraphics.ExpandToInclude(affectedAreaGraphics);
+                    combinedArea = canvasArea.ExpandToInclude(combinedArea);
                 }
                 else if (labels[i] is PathLabel)
                 {
                     var pathLabel  = labels[i] as PathLabel;
                     var lblStyle = pathLabel.Style;
 
+                    var background = pathLabel.AffectedArea.ExteriorRing.TransformToImage(map);
                     if (lblStyle.BackColor != null && lblStyle.BackColor != Brushes.Transparent)
                         using (var gp = new GraphicsPath())
                         {
-                            var pts = pathLabel.AffectedArea.ExteriorRing.TransformToImage(map);
-                            gp.AddPolygon(pts);
+                            gp.AddPolygon(background);
                             g.FillPath(lblStyle.BackColor, gp);
                         }
 
                     g.DrawString(lblStyle.Halo, new SolidBrush(lblStyle.ForeColor), 
                         pathLabel.Text, font.FontFamily, (int) font.Style, font.Size,
                         lblStyle.GetStringFormat(), lblStyle.IgnoreLength, pathLabel.Location, pathLabel.Box.Height);
-
-                    affectedAreaWorld.ExpandToInclude(pathLabel.AffectedArea.EnvelopeInternal);
+                    
+                    combinedArea = background.ToRectangleF().ExpandToInclude(combinedArea);
                 }
             }
 
-            if (!affectedAreaGraphics.IsEmpty)
-            {
-                var pts = new[]
-                {
-                    new PointF(affectedAreaGraphics.Left - 1, affectedAreaGraphics.Top - 1),
-                    new PointF(affectedAreaGraphics.Right + 1, affectedAreaGraphics.Bottom + 1),
-                };
-                var coords = map.ImageToWorld(pts, false);
-                _affectedArea.ExpandToInclude(new Envelope(coords[0], coords[1]));
-            }
-
-            _affectedArea.ExpandToInclude(affectedAreaWorld);
+            CanvasArea = combinedArea; 
             
             // Obsolete (and will cause infinite loop)
             //base.Render(g, map);
@@ -891,30 +879,7 @@ namespace SharpMap.Layers
 
             return null;
         }
-
-        /// <summary>
-        /// Very basic test to check for positive direction of Linestring
-        /// </summary>
-        /// <param name="line">The linestring to test</param>
-        /// <param name="isRightToLeft">Value indicating whether labels are to be printed right to left</param>
-        /// <returns>The positively directed linestring</returns>
-        private static ILineString PositiveLineString(ILineString line, bool isRightToLeft)
-            {
-            var s = line.StartPoint;
-            var e = line.EndPoint;
-            
-            var dx = e.X - s.X;
-            if (isRightToLeft && dx < 0)
-                return line;
-            
-            if (!isRightToLeft && dx >= 0)
-                return line;
-
-            var revCoord = new Stack<Coordinate>(line.Coordinates);
-
-            return line.Factory.CreateLineString(revCoord.ToArray());
-        }
-
+       
         /// <summary>
         /// Very basic test to check for positive direction of Linestring, taking into account map rotation
         /// </summary>
