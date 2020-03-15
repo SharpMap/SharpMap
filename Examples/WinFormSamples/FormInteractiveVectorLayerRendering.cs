@@ -70,6 +70,7 @@ namespace WinFormSamples
             InitLayers();
             InitVariableLayers();
             InitTreeView();
+            InitRotations();
 
             using (var renderer = SharpMap.Forms.MapBox.MapImageGeneratorFunction(new SharpMap.Forms.MapBox(), null))
             {
@@ -85,6 +86,8 @@ namespace WinFormSamples
             _mediumBoats?.Start();
             //_fastBoats?.Start();
         }
+
+
 
         private void FormLayerListImageGenerator_Closing(object sender, EventArgs e)
         {
@@ -336,6 +339,38 @@ namespace WinFormSamples
                     TreeViewAddLayerNode(node, lyr);
         }
 
+        private void InitRotations()
+        {
+            ddlRotation.Items.Clear();
+            ddlRotation.DisplayMember = "Text";
+            ddlRotation.ValueMember = "Value";
+
+            ddlRotation.Items.Add(new {Text = "North up", Value = 0f});
+            ddlRotation.Items.Add(new {Text = "30°", Value = 30f});
+            ddlRotation.Items.Add(new {Text = "60°", Value = 60f});
+            ddlRotation.Items.Add(new {Text = "90°", Value = 90f});
+            ddlRotation.Items.Add(new {Text = "120°", Value = 120f});
+            ddlRotation.Items.Add(new {Text = "150°", Value = 150f});
+            ddlRotation.Items.Add(new {Text = "180°", Value = 180f});
+            ddlRotation.Items.Add(new {Text = "210°", Value = 210f});
+            ddlRotation.Items.Add(new {Text = "240°", Value = 240f});
+            ddlRotation.Items.Add(new {Text = "270°", Value = 270f});
+            ddlRotation.Items.Add(new {Text = "300°", Value = 300f});
+            ddlRotation.Items.Add(new {Text = "330°", Value = 330f});
+
+            ddlRotation.SelectedIndex = 0;
+        }
+
+        private void ddlRotation_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            var deg = (ddlRotation.SelectedItem as dynamic).Value;
+            var matrix = new System.Drawing.Drawing2D.Matrix();
+            if (deg != 0f)
+                matrix.RotateAt((float) deg, new PointF(this.mb.Width / 2f, this.mb.Height / 2f));
+            this.mb.Map.MapTransform = matrix;
+            this.mb.Refresh();
+        }
+
         private void InitMap()
         {
             this.mb.Map = new SharpMap.Map()
@@ -351,6 +386,8 @@ namespace WinFormSamples
                 mathTransform);
             //geom.ExpandBy(2500);
             this.mb.Map.ZoomToBox(geom);
+
+            this.mb.Map.Decorations.Add(new NorthArrow() {ForeColor = Color.DarkSlateBlue});
         }
 
         private void InitVariableLayers()
@@ -633,6 +670,7 @@ namespace WinFormSamples
             cps.Offset = new System.Drawing.PointF((float)row[3], (float)row[4]);
             return new VectorStyle() {PointSymbolizer = cps};
          }
+
     }
 
     public class MovingObjects : IDisposable

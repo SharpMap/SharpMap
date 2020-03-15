@@ -366,9 +366,10 @@ namespace SharpMap.Layers
         {
             Render(g, map);
 
+            var mapRect = new Rectangle(new Point(0, 0), map.Size);
             if (CanvasArea.IsEmpty)
             {
-                affectedArea = new Rectangle(new Point(0,0),  map.Size);
+                affectedArea = mapRect;
             }
             else
             {
@@ -376,21 +377,29 @@ namespace SharpMap.Layers
                 {
                     var pts = CanvasArea.ToPointArray();
                     g.Transform.TransformPoints(pts);
+                    // Enclosing rectangle aligned with graphics canvas and inflated to nearest integer values.
                     CanvasArea = pts.ToRectangleF();
                 }
 
+                // This is the area of the graphics canvas that needs to be refreshed when invalidating the image. 
                 affectedArea = CanvasArea.ToRectangle();
-                // and clip graphics extents (particularly for LabelPath)
-                affectedArea.Intersect(new Rectangle(new Point(0, 0), map.Size));
-                
-                // proof of concept: draw affected area to screen
+
+//                // proof of concept: draw affected area to screen aligned with graphics canvas
 //                using (var orig = g.Transform.Clone())
 //                {
+//                    var areaToBeRendered = affectedArea;
+//                    areaToBeRendered.Intersect(mapRect);
 //                    g.ResetTransform();
-//                    g.DrawRectangle(new Pen(Color.Red, 3f){Alignment = PenAlignment.Inset}, affectedArea);
+//                    g.DrawRectangle(new Pen(Color.Red, 3f) {Alignment = System.Drawing.Drawing2D.PenAlignment.Inset},
+//                        areaToBeRendered);
 //                    g.Transform = orig;
 //                }
-                
+
+                // allow for bleed and/or minor labelling misdemeanours
+                affectedArea.Inflate(1, 1);
+                // clip to graphics canvas
+                affectedArea.Intersect(mapRect);
+
                 CanvasArea = RectangleF.Empty;
             }
 

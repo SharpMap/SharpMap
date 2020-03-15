@@ -12,6 +12,7 @@ using System.Windows.Forms;
 using Common.Logging;
 using GeoAPI.Geometries;
 using SharpMap.Layers;
+using SharpMap.Rendering.Symbolizer;
 using SharpMap.Styles;
 
 namespace SharpMap.Forms.ImageGenerator
@@ -552,8 +553,18 @@ namespace SharpMap.Forms.ImageGenerator
                     {
                         using (var gr = Graphics.FromImage(img.Bitmap))
                         {
+                            if (!Map.MapTransform.IsIdentity)
+                            {
+                                gr.Transform = Map.MapTransform;
+                                if (lyr is VectorLayer || lyr is LabelLayer)
+                                    RotateStyles(lyr, -Map.MapTransformRotation);  
+                            } 
+                            
                             gr.Clear(Color.Transparent);
                             graphicsArea = lyr.Render(gr, mvp);
+
+                            if (!Map.MapTransform.IsIdentity && (lyr is VectorLayer || lyr is LabelLayer))
+                                RotateStyles(lyr, Map.MapTransformRotation);
                         }
                     }
                     catch (Exception)
@@ -635,6 +646,27 @@ namespace SharpMap.Forms.ImageGenerator
             else
             {
                 _logger.Debug(t => t("\n{0}> Couldn't invalidate cache image within 25ms!"));
+            }
+        }
+        private static void RotateStyles(ILayer lyr, float correction)
+        {
+            switch (lyr)
+            {
+                case VectorLayer vLyr when vLyr.Theme != null:
+                    return;
+                case VectorLayer vLyr:
+                {
+                    if (vLyr.Style.PointSymbolizer != null)
+                        vLyr.Style.PointSymbolizer.Rotation += correction;
+                    else
+                        vLyr.Style.SymbolRotation += correction;
+                    return;
+                }
+                case LabelLayer lLyr when lLyr.Theme != null:
+                    return;
+                case LabelLayer lLyr:
+                    lLyr.Style.Rotation += correction;
+                    break;
             }
         }
         
