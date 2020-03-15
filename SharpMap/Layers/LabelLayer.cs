@@ -548,9 +548,9 @@ namespace SharpMap.Layers
                 
                 if (feature.Geometry is IGeometryCollection)
                 {
+                    var geoms = feature.Geometry as IGeometryCollection;
                     if (MultipartGeometryBehaviour == MultipartGeometryBehaviourEnum.All)
                     {
-                        var geoms = feature.Geometry as IGeometryCollection;
                         for (int j = 0; j < geoms.Count; j++)
                         {
                             BaseLabel lbl = CreateLabelDefinition(feature, geoms.GetGeometryN(j), text, rotation,
@@ -561,15 +561,33 @@ namespace SharpMap.Layers
                     }
                     else if (MultipartGeometryBehaviour == MultipartGeometryBehaviourEnum.CommonCenter)
                     {
-                        BaseLabel lbl = CreateLabelDefinition(feature, feature.Geometry, text, rotation, priority, style, map, g, _getLocationMethod, factory);
-                        if (lbl != null)
-                            labels.Add(lbl);
+                        if (geoms.NumGeometries > 0)
+                        {
+                            var pt = geoms.Centroid;
+                            var closest = double.MaxValue;
+                            var idxOfClosest = 0;
+                            for (var j = 0; j < geoms.NumGeometries; j++)
+                            {
+                                var geom = geoms.GetGeometryN(j);
+                                var dist = geom.Distance(pt);
+                                if (dist < closest)
+                                {
+                                    closest = dist;
+                                    idxOfClosest = j;
+                                }
+                            }
+
+                            BaseLabel lbl = CreateLabelDefinition(feature, geoms.GetGeometryN(idxOfClosest), text,
+                                rotation, priority, style, map, g, _getLocationMethod, factory);
+                            if (lbl != null)
+                                labels.Add(lbl);
+                        }
                     }
                     else if (MultipartGeometryBehaviour == MultipartGeometryBehaviourEnum.First)
                     {
-                        if ((feature.Geometry as IGeometryCollection).NumGeometries > 0)
+                        if (geoms.NumGeometries > 0)
                         {
-                            BaseLabel lbl = CreateLabelDefinition(feature, (feature.Geometry as IGeometryCollection).GetGeometryN(0), text,
+                            BaseLabel lbl = CreateLabelDefinition(feature, geoms.GetGeometryN(0), text,
                                 rotation, priority, style, map, g, _getLocationMethod, factory);
                             if (lbl != null)
                                 labels.Add(lbl);
@@ -577,14 +595,13 @@ namespace SharpMap.Layers
                     }
                     else if (MultipartGeometryBehaviour == MultipartGeometryBehaviourEnum.Largest)
                     {
-                        var coll = (feature.Geometry as IGeometryCollection);
-                        if (coll.NumGeometries > 0)
+                        if (geoms.NumGeometries > 0)
                         {
                             var largestVal = 0d;
                             var idxOfLargest = 0;
-                            for (var j = 0; j < coll.NumGeometries; j++)
+                            for (var j = 0; j < geoms.NumGeometries; j++)
                             {
-                                var geom = coll.GetGeometryN(j);
+                                var geom = geoms.GetGeometryN(j);
                                 if (geom is ILineString && ((ILineString) geom).Length > largestVal)
                                 {
                                     largestVal = ((ILineString) geom).Length;
@@ -607,7 +624,7 @@ namespace SharpMap.Layers
                                 }
                             }
 
-                            BaseLabel lbl = CreateLabelDefinition(feature, coll.GetGeometryN(idxOfLargest), text, rotation, priority, style,
+                            BaseLabel lbl = CreateLabelDefinition(feature, geoms.GetGeometryN(idxOfLargest), text, rotation, priority, style,
                                 map, g, _getLocationMethod, factory);
                             if (lbl != null)
                                 labels.Add(lbl);
