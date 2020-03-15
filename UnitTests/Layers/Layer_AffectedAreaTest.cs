@@ -7,13 +7,18 @@ using System.Linq;
 using System.Text;
 using GeoAPI.Geometries;
 using NetTopologySuite.Geometries;
+using NetTopologySuite.Geometries.Utilities;
 using NUnit.Framework;
+using ProjNet.CoordinateSystems.Transformations;
 using SharpMap;
 using SharpMap.Data;
 using SharpMap.Data.Providers;
+using SharpMap.Drawing;
 using SharpMap.Layers;
 using SharpMap.Rendering.Decoration;
+using Color = System.Drawing.Color;
 using LabelStyle = SharpMap.Styles.LabelStyle;
+using PointF = System.Drawing.PointF;
 
 namespace UnitTests.Layers
 {
@@ -136,10 +141,6 @@ namespace UnitTests.Layers
             using (var img = new Bitmap(map.Size.Width, map.Size.Height))
             using (var g = Graphics.FromImage(img))
             {
-//                layer.Render(g, (MapViewport) map, out var affectedArea);
-//                return affectedArea;
-                
-                //return ((ILayerEx) layer).Render(g, (MapViewport)map);
                 var rect = ((ILayerEx) layer).Render(g, (MapViewport) map);
                 var pts = new PointF[]
                 {
@@ -149,6 +150,7 @@ namespace UnitTests.Layers
                     new PointF(rect.X, rect.Y + rect.Height),
                     new PointF(rect.X, rect.Y),
                 };
+                
                 var coords = map.ImageToWorld(pts);
                 return new Polygon(new LinearRing(coords));
             }
@@ -156,17 +158,48 @@ namespace UnitTests.Layers
 
         private void AddAffectedAreaLayer(Map map, Polygon affectedArea)
         {
-//            var coords = new Coordinate[]
-//            {
-//                new Coordinate(affectedArea.TopLeft()),
-//                new Coordinate(affectedArea.TopRight()),
-//                new Coordinate(affectedArea.BottomRight()),
-//                new Coordinate(affectedArea.BottomLeft()),
-//                new Coordinate(affectedArea.TopLeft())
-//            };
-//            
-//            var gp = new GeometryProvider(new Polygon(new LinearRing(coords)));
-            var gp = new GeometryProvider(affectedArea);
+            var geoms = new List<IGeometry>(){affectedArea};
+            if (!map.MapTransform.IsIdentity)
+            {
+                // affectedArea is aligned with Graphics Canvas (not with north arrow)
+                // The following steps are simply to show this geom in world units  
+                var centreX = affectedArea.EnvelopeInternal.Centre.X;
+                var centreY = affectedArea.EnvelopeInternal.Centre.Y;
+                
+                // apply negative rotation about center of polygon
+                var rad = NetTopologySuite.Utilities.Degrees.ToRadians(map.MapTransformRotation);
+                var trans = new AffineTransformation();
+                trans.Compose(AffineTransformation.TranslationInstance(-centreX, -centreY));
+                trans.Compose(AffineTransformation.RotationInstance(-rad));
+
+                var rotated = trans.Transform(affectedArea.Copy());
+
+                // calculate enclosing envelope
+                var minX = rotated.Coordinates.Min(c => c.X);
+                var minY = rotated.Coordinates.Min(c => c.Y);
+                var maxX = rotated.Coordinates.Max(c => c.X);
+                var maxY = rotated.Coordinates.Max(c => c.Y);
+
+                var coords = new Coordinate[]
+                {
+                    new Coordinate(minX , maxY ),
+                    new Coordinate(maxX , maxY ),
+                    new Coordinate(maxX , minY ),
+                    new Coordinate(minX , minY ),
+                    new Coordinate(minX , maxY ),
+                };
+               
+                // rotate enclosing envelope back to world units
+                trans = new AffineTransformation();
+                trans.Compose(AffineTransformation.RotationInstance(rad));
+                trans.Compose(AffineTransformation.TranslationInstance(centreX, centreY));
+                
+                // construct geom to show on screen
+                var enclosing = trans.Transform(new Polygon(new LinearRing(coords)));
+                geoms.Add(enclosing);
+            }
+
+            var gp = new GeometryProvider(geoms);
             var vLayer = new VectorLayer("Affected Area")
             {
                 DataSource = gp,
@@ -210,7 +243,7 @@ namespace UnitTests.Layers
             };
 
             if (mode == LabelLayerMode.BasicLabelRot)
-                lLyr.Style.Rotation = 315f;
+                lLyr.Style.Rotation = 330;
 
             map.Layers.Add(lLyr);
         }
