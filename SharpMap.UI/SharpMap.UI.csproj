@@ -11,6 +11,7 @@
         <PackageTags>sharpmap winforms</PackageTags>
         <Description>This package contains UI Compontents for System.Windows.Forms.</Description>
         <GenerateResourceUsePreserializedResources>true</GenerateResourceUsePreserializedResources>
+        <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     </PropertyGroup>
 
     <ItemGroup>
