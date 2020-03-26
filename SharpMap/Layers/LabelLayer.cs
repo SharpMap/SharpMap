@@ -17,6 +17,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Text;
@@ -546,15 +547,14 @@ namespace SharpMap.Layers
                     // or new prop bool PartialPolygonalLabel
                 }
                 
-                if (feature.Geometry is IGeometryCollection)
+                if (feature.Geometry is IGeometryCollection geoms)
                 {
-                    var geoms = feature.Geometry as IGeometryCollection;
                     if (MultipartGeometryBehaviour == MultipartGeometryBehaviourEnum.All)
                     {
                         for (int j = 0; j < geoms.Count; j++)
                         {
-                            BaseLabel lbl = CreateLabelDefinition(feature, geoms.GetGeometryN(j), text, rotation,
-                                priority, style, map, g, _getLocationMethod, factory);
+                            var lbl = CreateLabelDefinition(feature, geoms.GetGeometryN(j), text, rotation,
+                                priority, style, map, g, _getLocationMethod);
                             if (lbl != null)
                                 labels.Add(lbl);
                         }
@@ -564,12 +564,12 @@ namespace SharpMap.Layers
                         if (geoms.NumGeometries > 0)
                         {
                             var pt = geoms.Centroid;
-                            var closest = double.MaxValue;
-                            var idxOfClosest = 0;
-                            for (var j = 0; j < geoms.NumGeometries; j++)
+                            double closest = double.MaxValue;
+                            int idxOfClosest = 0;
+                            for (int j = 0; j < geoms.NumGeometries; j++)
                             {
                                 var geom = geoms.GetGeometryN(j);
-                                var dist = geom.Distance(pt);
+                                double dist = geom.Distance(pt);
                                 if (dist < closest)
                                 {
                                     closest = dist;
@@ -577,8 +577,8 @@ namespace SharpMap.Layers
                                 }
                             }
 
-                            BaseLabel lbl = CreateLabelDefinition(feature, geoms.GetGeometryN(idxOfClosest), text,
-                                rotation, priority, style, map, g, _getLocationMethod, factory);
+                            var lbl = CreateLabelDefinition(feature, geoms.GetGeometryN(idxOfClosest), text,
+                                rotation, priority, style, map, g, _getLocationMethod);
                             if (lbl != null)
                                 labels.Add(lbl);
                         }
@@ -587,8 +587,8 @@ namespace SharpMap.Layers
                     {
                         if (geoms.NumGeometries > 0)
                         {
-                            BaseLabel lbl = CreateLabelDefinition(feature, geoms.GetGeometryN(0), text,
-                                rotation, priority, style, map, g, _getLocationMethod, factory);
+                            var lbl = CreateLabelDefinition(feature, geoms.GetGeometryN(0), text,
+                                rotation, priority, style, map, g, _getLocationMethod);
                             if (lbl != null)
                                 labels.Add(lbl);
                         }
@@ -597,35 +597,35 @@ namespace SharpMap.Layers
                     {
                         if (geoms.NumGeometries > 0)
                         {
-                            var largestVal = 0d;
-                            var idxOfLargest = 0;
+                            double largestVal = 0d;
+                            int idxOfLargest = 0;
                             for (var j = 0; j < geoms.NumGeometries; j++)
                             {
                                 var geom = geoms.GetGeometryN(j);
-                                if (geom is ILineString && ((ILineString) geom).Length > largestVal)
+                                if (geom is ILineString lineString && lineString.Length > largestVal)
                                 {
-                                    largestVal = ((ILineString) geom).Length;
+                                    largestVal = lineString.Length;
                                     idxOfLargest = j;
                                 }
-                                if (geom is IMultiLineString && ((IMultiLineString) geom).Length > largestVal)
+                                if (geom is IMultiLineString multiLineString && multiLineString.Length > largestVal)
                                 {
-                                    largestVal = ((IMultiLineString) geom).Length;
+                                    largestVal = multiLineString.Length;
                                     idxOfLargest = j;
                                 }
-                                if (geom is IPolygon && ((IPolygon) geom).Area > largestVal)
+                                if (geom is IPolygon polygon && polygon.Area > largestVal)
                                 {
-                                    largestVal = ((IPolygon) geom).Area;
+                                    largestVal = polygon.Area;
                                     idxOfLargest = j;
                                 }
-                                if (geom is IMultiPolygon && ((IMultiPolygon) geom).Area > largestVal)
+                                if (geom is IMultiPolygon multiPolygon && multiPolygon.Area > largestVal)
                                 {
-                                    largestVal = ((IMultiPolygon) geom).Area;
+                                    largestVal = multiPolygon.Area;
                                     idxOfLargest = j;
                                 }
                             }
 
-                            BaseLabel lbl = CreateLabelDefinition(feature, geoms.GetGeometryN(idxOfLargest), text, rotation, priority, style,
-                                map, g, _getLocationMethod, factory);
+                            var lbl = CreateLabelDefinition(feature, geoms.GetGeometryN(idxOfLargest), text, rotation, priority, style,
+                                map, g, _getLocationMethod);
                             if (lbl != null)
                                 labels.Add(lbl);
                         }
@@ -633,7 +633,7 @@ namespace SharpMap.Layers
                 }
                 else
                 {
-                    BaseLabel lbl = CreateLabelDefinition(feature, feature.Geometry, text, rotation, priority, style, map, g, _getLocationMethod, factory);
+                    BaseLabel lbl = CreateLabelDefinition(feature, feature.Geometry, text, rotation, priority, style, map, g, _getLocationMethod);
                     if (lbl != null)
                         labels.Add(lbl);
                 }
@@ -641,24 +641,26 @@ namespace SharpMap.Layers
 
             return labels;
         }
-        private static BaseLabel CreateLabelDefinition( FeatureDataRow fdr, IGeometry geom, string text, float rotation, 
-            int priority, LabelStyle style, MapViewport map, Graphics g, GetLocationMethod _getLocationMethod, 
-            GeometryFactory factory)
+        private static BaseLabel CreateLabelDefinition(FeatureDataRow fdr, IGeometry geom, string text, float rotation, 
+            int priority, LabelStyle style, MapViewport map, Graphics g, GetLocationMethod getLocationMethod)
         {
+            //ONLY atomic geometries
+            Debug.Assert(!(geom is IGeometryCollection));
+
             if (geom == null) 
                 return null;
 
-            BaseLabel lbl = null;
+            BaseLabel lbl;
             var font = style.GetFontForGraphics(g);
 
-            SizeF size = VectorRenderer.SizeOfString(g, text, font);
+            var size = VectorRenderer.SizeOfString(g, text, font);
 
-            if (geom is ILineal)
-                return CreatePathLabel((ILineString) geom,text, size, priority, style, map, g, factory);
+            if (geom is ILineString ls)
+                return CreatePathLabel(ls, text, size, priority, style, map);
 
-            var worldPosition = _getLocationMethod == null
+            var worldPosition = getLocationMethod == null
                 ? geom.EnvelopeInternal.Centre
-                : _getLocationMethod(fdr);
+                : getLocationMethod(fdr);
 
             if (worldPosition == null) return null;
 
@@ -690,10 +692,17 @@ namespace SharpMap.Layers
         }
 
         private static BaseLabel CreatePathLabel(ILineString line, string text, SizeF textMeasure,
-            int priority, LabelStyle style, MapViewport map, Graphics g, GeometryFactory factory)
+            int priority, LabelStyle style, MapViewport map)
         {
             if (line == null)
                 return null;
+
+            var factory = line.Factory;
+
+            // Simplify the line for smoother labeling
+            double avgCharacterSpace = (double)textMeasure.Width / text.Length * map.PixelWidth;
+            var simplifier = new NetTopologySuite.Simplify.VWLineSimplifier(line.Coordinates, avgCharacterSpace);
+            line = factory.CreateLineString(simplifier.Simplify());
 
             var labelLength = textMeasure.Width * map.PixelWidth;
             var labelHeight = textMeasure.Height * map.PixelHeight;
@@ -792,7 +801,7 @@ namespace SharpMap.Layers
             // fast, basic check (technically should use polygons for rotated views)
             if (!map.Envelope.Contains(affectedArea.EnvelopeInternal))
                 return null;
-            
+
             // using labelBox to pass text height to WarpedPath
             return new PathLabel(text, LineStringToPath(offsetCurve, map), 0, priority, 
                 new LabelBox(0,0,textMeasure.Width,textMeasure.Height), style)
