@@ -108,7 +108,7 @@
   <Target Name="AfterBuild" Condition=" '$(Configuration)' != 'ReleaseLinux' ">
     <Message Importance="high" Text="$(MSBuildBinPath)" />
     <Message Importance="high" Text="$(MSBuildToolsPath)" />
-    <Exec Command="&quot;NuGet.exe&quot; pack &quot;$(MSBuildProjectDirectory)\$(MSBuildProjectFile)&quot; -Symbols -version $(Version) -Properties Configuration=Release -outputdirectory &quot;$(PackageOutputPath)\.&quot;" />
+    <Exec Command="&quot;NuGet.exe&quot; pack &quot;$(MSBuildProjectDirectory)\$(MSBuildProjectFile)&quot; -Symbols -version $(Version) -Properties Configuration=$(Configuration) -outputdirectory &quot;$(PackageOutputPath)\.&quot;" />
   </Target>
   <ItemGroup>
     <ProjectReference Include="..\SharpMap\SharpMap.csproj">
