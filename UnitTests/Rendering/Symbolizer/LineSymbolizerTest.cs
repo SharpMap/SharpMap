@@ -82,7 +82,7 @@ namespace UnitTests.Rendering.Symbolizer
             var bmp = m.GetMap();
             sw.Stop();
             System.Diagnostics.Trace.WriteLine(string.Format("Rendering new method: {0}ms", sw.ElapsedMilliseconds));
-            bmp.Save(System.IO.Path.Combine(UnitTestsFixture.GetImageDirectory(this), "AurichRoads1.bmp"));
+            bmp.Save(System.IO.Path.Combine(UnitTestsFixture.GetImageDirectory(this), "AurichRoads2.bmp"));
 
             cls.LineSymbolizeHandlers[1] = new SharpMap.Rendering.Symbolizer.WarpedLineSymbolizeHander
                                                {

@@ -29,9 +29,10 @@ namespace SharpMap.Rendering.Symbolizer
     /// ListPointSymbolizer class
     /// </summary>
     [Serializable]
-    public class ListPointSymbolizer : Collection<PointSymbolizer>, IPointSymbolizer, IDisposableEx
+    public class ListPointSymbolizer : Collection<PointSymbolizer>, IPointSymbolizerEx, IDisposableEx
     {
         private Size _size;
+        public RectangleF CanvasArea { get; private set; } = RectangleF.Empty;
 
         #region Collection<T> overrides
         /// <inheritdoc/>
@@ -71,8 +72,13 @@ namespace SharpMap.Rendering.Symbolizer
         /// <param name="g">The graphics object to use.</param>
         public void Render(MapViewport map, IPuntal points, Graphics g)
         {
+            var combinedArea = RectangleF.Empty;
             foreach (var pointSymbolizer in Items)
+            {
                 pointSymbolizer.Render(map, points, g);
+                combinedArea = pointSymbolizer.CanvasArea.ExpandToInclude(combinedArea);
+            }
+            CanvasArea = combinedArea;
         }
 
         /// <summary>
@@ -89,7 +95,7 @@ namespace SharpMap.Rendering.Symbolizer
         /// </summary>
         public float Rotation
         {
-            get { return 0f; }
+            get => 0f;
             set { }
         }
 
@@ -124,10 +130,7 @@ namespace SharpMap.Rendering.Symbolizer
         /// </summary>
         public float  Scale
         {
-            get
-            {
-                return 1;
-            }
+            get => 1;
             set { }
         }
 

@@ -237,6 +237,7 @@ namespace SharpMap.Rendering.Symbolizer
         internal override void OnRenderInternal(PointF pt, Graphics g)
         {
             var f = new SizeF(pt);
+            var combinedArea = RectangleF.Empty;
             foreach (var pathDefinition in _paths)
             {
                 var ppts = pathDefinition.Path.PathPoints;
@@ -244,13 +245,19 @@ namespace SharpMap.Rendering.Symbolizer
                 for (int i = 0; i < pptsnew.Length; i++)
                     pptsnew[i] = PointF.Add(ppts[i], f);
 
-                GraphicsPath ptmp = new GraphicsPath(pptsnew, pathDefinition.Path.PathTypes, pathDefinition.Path.FillMode);
-                if (pathDefinition.Fill != null)
-                    g.FillPath(pathDefinition.Fill, ptmp);
-                if (pathDefinition.Line != null)
-                    g.DrawPath(pathDefinition.Line, ptmp);
+                using (var ptmp =
+                    new GraphicsPath(pptsnew, pathDefinition.Path.PathTypes, pathDefinition.Path.FillMode))
+                {
+                    if (pathDefinition.Fill != null)
+                        g.FillPath(pathDefinition.Fill, ptmp);
+                    if (pathDefinition.Line != null)
+                        g.DrawPath(pathDefinition.Line, ptmp);
 
+                    combinedArea = ptmp.GetBounds().ExpandToInclude(combinedArea);
+                }
             }
+
+            CanvasArea = combinedArea;
         }
     }
 }

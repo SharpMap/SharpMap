@@ -729,7 +729,8 @@ namespace SharpMap.Layers
                 Logger.Error("There was a problem connecting to the WMS server when rendering layer '" + LayerName +
                             "'", ex);
             }
-            base.Render(g, map);
+            // Obsolete (and will cause infinite loop)
+            //base.Render(g, map);
         }
 
         /// <summary>

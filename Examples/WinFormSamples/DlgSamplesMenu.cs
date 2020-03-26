@@ -50,6 +50,11 @@ namespace WinFormSamples
                 f.ShowDialog();
         }
 
+        private void button7_Click(object sender, EventArgs e)
+        {
+            using (var f = new FormLayerListImageGenerator())
+                f.ShowDialog();
+        }
         private void checkBox1_CheckedChanged(object sender, EventArgs e)
         {
             if (checkBox1.Checked)
@@ -57,5 +62,7 @@ namespace WinFormSamples
             else 
                 MapBox.MapImageGeneratorFunction = MapBox.LayerListImageGenerator;
         }
+
+
     }
 }

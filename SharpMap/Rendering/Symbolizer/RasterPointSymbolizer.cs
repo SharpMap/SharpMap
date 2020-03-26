@@ -196,6 +196,8 @@ namespace SharpMap.Rendering.Symbolizer
         internal override void OnRenderInternal(PointF pt, Graphics g)
         {
             Image symbol = Symbol ?? DefaultSymbol;
+            float width = symbol.Width * Scale;
+            float height = symbol.Height * Scale;
 
             if (ImageAttributes == null)
             {
@@ -203,33 +205,24 @@ namespace SharpMap.Rendering.Symbolizer
                 {
                     lock (symbol)
                     {
-                        g.DrawImageUnscaled(symbol, (int)(pt.X), (int)(pt.Y));
+                        g.DrawImageUnscaled(symbol, (int) (pt.X), (int) (pt.Y));
                     }
                 }
                 else
                 {
-                    float width = symbol.Width * Scale;
-                    float height = symbol.Height * Scale;
                     lock (symbol)
                     {
-                        g.DrawImage(
-                            symbol,
-                            (int)pt.X,
-                            (int)pt.Y,
-                            width,
-                            height);
+                        g.DrawImage(symbol, (int) pt.X, (int) pt.Y, width, height);
                     }
                 }
             }
             else
             {
-                float width = symbol.Width * Scale;
-                float height = symbol.Height * Scale;
-                int x = (int)(pt.X);
-                int y = (int)(pt.Y);
+                int x = (int) (pt.X);
+                int y = (int) (pt.Y);
                 g.DrawImage(
                     symbol,
-                    new Rectangle(x, y, (int)width, (int)height),
+                    new Rectangle(x, y, (int) width, (int) height),
                     0,
                     0,
                     symbol.Width,
@@ -237,6 +230,8 @@ namespace SharpMap.Rendering.Symbolizer
                     GraphicsUnit.Pixel,
                     ImageAttributes);
             }
+
+            CanvasArea = new RectangleF(pt.X, pt.Y, width, height);
         }
     }
 }

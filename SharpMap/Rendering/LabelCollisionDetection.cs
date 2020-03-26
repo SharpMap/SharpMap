@@ -43,6 +43,7 @@ namespace SharpMap.Rendering
         /// Simple and fast label collision detection.
         /// </summary>
         /// <param name="labels"></param>
+        [Obsolete("This is like no collision detection at all")]
         public static void SimpleCollisionDetection(List<BaseLabel> labels)
         {
             labels.Sort(); // sort labels by intersectiontests of labelbox
@@ -106,7 +107,7 @@ namespace SharpMap.Rendering
 		    double maxY = double.MinValue;
 		    foreach (BaseLabel l in labels)
             {
-                ProperBox box = new ProperBox(l.Box);
+                var box = new ProperBox(l is PathLabel pl ? new LabelBox(pl.Location.GetBounds()): l.Box);
 			    if (box.Left < minX) minX = box.Left;
 			    if (box.Right > maxX) maxX = box.Right;
                 if (box.Bottom > maxY) maxY = box.Bottom;
@@ -114,19 +115,23 @@ namespace SharpMap.Rendering
 		    }   
 
 		    // sort by area (highest priority first, followed by low area to maximize the amount of labels displayed)
-		    var sortedLabels = labels.OrderByDescending(label => label.Priority).ThenBy(label => label.Box.Width * label.Box.Height);
+		    var sortedLabels = labels.OrderByDescending(label => label.Priority).ThenBy(label =>
+            {
+                var box = label is PathLabel pl ? new LabelBox(pl.Location.GetBounds()) : label.Box;
+                return box.Width * box.Height;
+            });
 
 		    // make visible if it does not collide with other labels. Uses a quadtree and is therefore fast O(n log n) 
 		    QuadtreeNode<ProperBox> quadTree = new QuadtreeNode<ProperBox>(minX, maxX, minY, maxY, new LabelBoxContainmentChecker(), 0, 10);
 		    foreach (BaseLabel l in sortedLabels) {
 			    if (!l.Show) continue;
-			    if (quadTree.CollidesWithAny(new ProperBox(l.Box)))
+                var box = new ProperBox(l is PathLabel pl ? new LabelBox(pl.Location.GetBounds()) : l.Box);
+			    if (quadTree.CollidesWithAny(box))
                 {
 				    l.Show = false;
 			    }
                 else
                 {
-				    ProperBox box = new ProperBox(l.Box);
 				    quadTree.Insert(box);
 			    }
 		    }

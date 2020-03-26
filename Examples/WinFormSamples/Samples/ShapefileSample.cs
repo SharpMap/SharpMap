@@ -82,6 +82,7 @@ namespace WinFormSamples.Samples
                                    DataSource = layCountries.DataSource,
                                    Enabled = true,
                                    LabelColumn = "Name",
+                                   LabelFilter = LabelCollisionDetection.QuickAccurateCollisionDetectionMethod,
                                    Style =
                                        new LabelStyle
                                            {
@@ -94,7 +95,7 @@ namespace WinFormSamples.Samples
                                    MinVisible = 30,
                                    SRID = 4326,
                                    MultipartGeometryBehaviour = LabelLayer.MultipartGeometryBehaviourEnum.Largest,
-
+                                   
                                };
 
             //Set up a city label layer
@@ -106,7 +107,7 @@ namespace WinFormSamples.Samples
                                        TextRenderingHint = TextRenderingHint.AntiAlias,
                                        SmoothingMode = SmoothingMode.AntiAlias,
                                        SRID = 4326,
-                                       LabelFilter = LabelCollisionDetection.ThoroughCollisionDetection,
+                                       LabelFilter = LabelCollisionDetection.QuickAccurateCollisionDetectionMethod,
                                        Style =
                                            new LabelStyle
                                                {
@@ -130,7 +131,7 @@ namespace WinFormSamples.Samples
                                        TextRenderingHint = TextRenderingHint.AntiAlias,
                                        SmoothingMode = SmoothingMode.AntiAlias,
                                        SRID = 4326,
-                                       LabelFilter = LabelCollisionDetection.ThoroughCollisionDetection,
+                                       LabelFilter = LabelCollisionDetection.QuickAccurateCollisionDetectionMethod,
                                        MultipartGeometryBehaviour = LabelLayer.MultipartGeometryBehaviourEnum.All,
                                        Style =
                                            new LabelStyle
@@ -139,7 +140,7 @@ namespace WinFormSamples.Samples
                                                    Font = new Font(FontFamily.GenericSansSerif, 11),
                                                    HorizontalAlignment = LabelStyle.HorizontalAlignmentEnum.Center,
                                                    VerticalAlignment = LabelStyle.VerticalAlignmentEnum.Middle,
-                                                   //CollisionDetection = true,
+                                                   CollisionDetection = true,
                                                    Halo = new Pen(Color.Azure, 2), 
                                                    IgnoreLength =  true
                                                    
@@ -270,7 +271,7 @@ namespace WinFormSamples.Samples
                 TextRenderingHint = TextRenderingHint.AntiAlias,
                 SmoothingMode = SmoothingMode.AntiAlias,
                 SRID = 4326,
-                LabelFilter = LabelCollisionDetection.ThoroughCollisionDetection,
+                LabelFilter = LabelCollisionDetection.QuickAccurateCollisionDetectionMethod,
                 MultipartGeometryBehaviour = LabelLayer.MultipartGeometryBehaviourEnum.CommonCenter,
                 Style =
                                            new LabelStyle
@@ -279,7 +280,7 @@ namespace WinFormSamples.Samples
                                                Font = new Font(FontFamily.GenericSansSerif, 11),
                                                HorizontalAlignment = LabelStyle.HorizontalAlignmentEnum.Center,
                                                VerticalAlignment = LabelStyle.VerticalAlignmentEnum.Middle,
-                                               //CollisionDetection = true,
+                                               CollisionDetection = true,
                                                Halo = new Pen(Color.Azure, 2),
                                                IgnoreLength = ignoreLength,
                                                Offset = new PointF(0, -10)

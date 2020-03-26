@@ -14,6 +14,7 @@
         <OutputType>WinExe</OutputType>
         <StartupObject>WinFormSamples.Program</StartupObject>
         <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+        <GenerateResourceUsePreserializedResources>true</GenerateResourceUsePreserializedResources>
     </PropertyGroup>
 
     <ItemGroup>

@@ -533,7 +533,7 @@ namespace SharpMap.Layers
                     GetPreview(_gdalDataset, map.Size, g, tileEnvelope, null, map);
                 }
             }
-            base.Render(g, map);
+            //base.Render(g, map);
         }
 
         private IEnumerable<Envelope> Tile(MapViewport map)
@@ -860,12 +860,7 @@ namespace SharpMap.Layers
         protected virtual void GetPreview(Dataset dataset, Size size, Graphics g,
                                           Envelope displayBbox, ICoordinateSystem mapProjection, MapViewport map)
         {
-            //check if image is in bounding box
-            if (displayBbox.MinX > _envelope.MaxX || displayBbox.MaxX < _envelope.MinX ||
-                displayBbox.MaxY < _envelope.MinY || displayBbox.MinY > _envelope.MaxY)
-                return;
-
-            var drawStart = DateTime.Now;
+            DateTime drawStart = DateTime.Now;
             double totalReadDataTime = 0;
             double totalTimeSetPixel = 0;
 
@@ -879,13 +874,18 @@ namespace SharpMap.Layers
             
             Bitmap bitmap = null;
             var bitmapTl = new Point();
-            var rect = new Rectangle();
+            var bitmapSize = new Size();
+            Rectangle rect = new Rectangle();
             const int pixelSize = 3; //Format24bppRgb = byte[b,g,r] 
 
             if (dataset != null)
             {
+                //check if image is in bounding box
+                if ((displayBbox.MinX > _envelope.MaxX) || (displayBbox.MaxX < _envelope.MinX)
+                    || (displayBbox.MaxY < _envelope.MinY) || (displayBbox.MinY > _envelope.MaxY))
+                    return;
 
-                // init histogram
+                // init histo
                 var histogram = new List<int[]>();
                 for (int i = 0; i < Bands + 1; i++)
                     histogram.Add(new int[256]);
@@ -893,7 +893,7 @@ namespace SharpMap.Layers
                 var trueImageBbox = displayBbox.Intersection(_envelope);
 
                 // put display bounds into current projection
-                var shownImageBbox = trueImageBbox.Copy();
+                Envelope shownImageBbox = trueImageBbox.Copy();
                 if (ReverseCoordinateTransformation != null)
                 {
                     shownImageBbox = GeometryTransform.TransformBox(trueImageBbox, ReverseCoordinateTransformation.MathTransform);
@@ -910,7 +910,7 @@ namespace SharpMap.Layers
                 rect = Rectangle.FromLTRB(pos1.X, pos1.Y, pos2.X, pos2.Y);
 
                 bitmapTl = rect.Location;
-                var bitmapSize = Size.Add(rect.Size, new Size(1,1));
+                bitmapSize = Size.Add(rect.Size, new Size(1,1));
 
                 double disRatio = (double) displayImageSize.Width / displayImageSize.Height;
                 double bmsRatio = (double) bitmapSize.Width / bitmapSize.Height;
@@ -939,7 +939,8 @@ namespace SharpMap.Layers
                     return;
 
                 //initialize bitmap
-                bitmap = InitializeBitmap(bitmapSize, PixelFormat.Format24bppRgb, out var bitmapData);
+                BitmapData bitmapData;
+                bitmap = InitializeBitmap(bitmapSize, PixelFormat.Format24bppRgb, out bitmapData);
                 
                 try
                 {
@@ -1077,13 +1078,16 @@ namespace SharpMap.Layers
                                 // read the buffer
                                 using (var band = dataset.GetRasterBand(i + 1))
                                 {
-                                    var start = DateTime.Now;
+                                    DateTime start = DateTime.Now;
                                     band.ReadRaster(imageRect.Left, imageRect.Top,
                                                     imageRect.Width, imageRect.Height,
                                                     tempBuffer, displayImageSize.Width, rowsToRead, 0, 0);
 
                                     if (_logger.IsDebugEnabled)
-                                        totalReadDataTime += (DateTime.Now - start).TotalMilliseconds;
+                                    {
+                                        TimeSpan took = DateTime.Now - start;
+                                        totalReadDataTime += took.TotalMilliseconds;
+                                    }
                                 }
 
                                 // parse temp buffer into the image x y value buffer
@@ -1099,19 +1103,17 @@ namespace SharpMap.Layers
                             }
                             rowsRead += rowsToRead;
 
-                            //double dblMapMinX = map.Envelope.MinX;
-                            //double dblMapMaxY = map.Envelope.MaxY;
                             double mapPixelWidth = map.PixelWidth;
                             double mapPixelHeight = map.PixelHeight;
-                            var envelope = map.Envelope.Intersection(Envelope);
 
                             for (int pixY = 0; pixY < bitmapData.Height; pixY++)
                             {
                                 var rowPtr =  bitmapData.Scan0 + pixY * bitmapData.Stride;
                                 var row = (byte*) rowPtr;
 
-                                double gndY = envelope.MaxY - pixY * mapPixelHeight;
-                                double gndX = envelope.MinX;
+                                double gndY = Envelope.MaxY - pixY * mapPixelHeight;
+                                //if (gndY > map.Envelope.MaxY) continue;
+                                double gndX = Envelope.MinX;
 
                                 for (int pixX = 0; pixX < bitmap.Width; pixX++)
                                 {
@@ -1119,7 +1121,7 @@ namespace SharpMap.Layers
                                     // transform ground point if needed
                                     if (inverseTransform != null)
                                     {
-                                        double[] dblPoint = inverseTransform.Transform(new[] {gndX, gndY});
+                                        var dblPoint = inverseTransform.Transform(new[] {gndX, gndY});
                                         gndX = dblPoint[0];
                                         gndY = dblPoint[1];
                                     }
@@ -1136,7 +1138,7 @@ namespace SharpMap.Layers
                                                             (int)((imageCoord.Y - imageTop) * dblYScale));
 
                                     // Apply color correction
-                                    for (int i = 0; i < Bands; i++)
+                                    for (var i = 0; i < Bands; i++)
                                     {
                                         intermediateValue[i] = buffer[i][imagePt.X][imagePt.Y];
 
@@ -1252,8 +1254,8 @@ namespace SharpMap.Layers
                 bitmap.MakeTransparent(TransparentColor);
 
             g.DrawImage(bitmap, bitmapTl);
-            //using (var p = new Pen(new SolidBrush(Color.Crimson), 4f))
-            //    g.DrawRectangle(p, rect);
+            using (var p = new Pen(new SolidBrush(Color.Crimson), 4f))
+                g.DrawRectangle(p, rect);
 
             if (_logger.IsDebugEnabled)
             {

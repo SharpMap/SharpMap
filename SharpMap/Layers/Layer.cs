@@ -20,6 +20,7 @@ using System.Drawing;
 using GeoAPI.CoordinateSystems.Transformations;
 using GeoAPI.Geometries;
 using SharpMap.Base;
+using SharpMap.Rendering;
 using SharpMap.Styles;
 
 namespace SharpMap.Layers
@@ -29,7 +30,7 @@ namespace SharpMap.Layers
     /// Implement this class instead of the ILayer interface to save a lot of common code.
     /// </summary>
     [Serializable]
-    public abstract partial class Layer : DisposableObject, ILayer
+    public abstract partial class Layer : DisposableObject, ILayerEx
     {
         #region Events
 
@@ -108,6 +109,10 @@ namespace SharpMap.Layers
         private int? _targetSrid;
         [field: NonSerialized]
         private bool _shouldNotResetCt;
+        
+        [field: NonSerialized]
+        protected RectangleF CanvasArea = RectangleF.Empty;
+        
         // ReSharper disable PublicConstructorInAbstractClass
         ///<summary>
         /// Creates an instance of this class using the given Style
@@ -329,22 +334,77 @@ namespace SharpMap.Layers
         /// </summary>
         /// <param name="g">Graphics object reference</param>
         /// <param name="map">Map which is rendered</param>
-        [Obsolete("Use Render(Graphics, MapViewport)")]
+        [Obsolete("Use Render(Graphics, MapViewport, out Envelope affectedArea)")]
         public virtual void Render(Graphics g, Map map)
         {
-            Render(g, (MapViewport)map);
+            Render(g, (MapViewport)map, out _);
         }
 
         /// <summary>
-        /// Renders the layer
+        /// Renders the layer using the current viewport
         /// </summary>
         /// <param name="g">Graphics object reference</param>
         /// <param name="map">Map which is rendered</param>
         public virtual void Render(Graphics g, MapViewport map)
         {
-            OnLayerRendered(g);
+            Render(g, map, out _);
         }
 
+        /// <summary>
+        /// Renders the layer using the current viewport
+        /// </summary>
+        /// <param name="g">Graphics object reference</param>
+        /// <param name="map">Map which is rendered</param>
+        /// <returns>Rectangle enclosing the actual area rendered on the graphics canvas</returns>
+        Rectangle ILayerEx.Render(Graphics g, MapViewport map)
+        {
+            Render(g, map, out var canvasArea);
+            return  canvasArea;
+        }
+
+        protected virtual void Render(Graphics g, MapViewport map, out Rectangle affectedArea)
+        {
+            Render(g, map);
+
+            var mapRect = new Rectangle(new Point(0, 0), map.Size);
+            if (CanvasArea.IsEmpty)
+            {
+                affectedArea = mapRect;
+            }
+            else
+            {
+                if (!g.Transform.IsIdentity)
+                {
+                    var pts = CanvasArea.ToPointArray();
+                    g.Transform.TransformPoints(pts);
+                    // Enclosing rectangle aligned with graphics canvas and inflated to nearest integer values.
+                    CanvasArea = pts.ToRectangleF();
+                }
+
+                // This is the area of the graphics canvas that needs to be refreshed when invalidating the image. 
+                affectedArea = CanvasArea.ToRectangle();
+
+//                // proof of concept: draw affected area to screen aligned with graphics canvas
+//                using (var orig = g.Transform.Clone())
+//                {
+//                    var areaToBeRendered = affectedArea;
+//                    areaToBeRendered.Intersect(mapRect);
+//                    g.ResetTransform();
+//                    g.DrawRectangle(new Pen(Color.Red, 3f) {Alignment = System.Drawing.Drawing2D.PenAlignment.Inset},
+//                        areaToBeRendered);
+//                    g.Transform = orig;
+//                }
+
+                // allow for bleed and/or minor labelling misdemeanours
+                affectedArea.Inflate(1, 1);
+                // clip to graphics canvas
+                affectedArea.Intersect(mapRect);
+
+                CanvasArea = RectangleF.Empty;
+            }
+
+            OnLayerRendered(g);
+        }
         /// <summary>
         /// Event invoker for the <see cref="LayerRendered"/> event.
         /// </summary>

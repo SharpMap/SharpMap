@@ -18,9 +18,7 @@
 using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
-using System.Drawing.Imaging;
 using GeoAPI.Geometries;
-using SharpMap.Utilities;
 
 namespace SharpMap.Rendering.Symbolizer
 {
@@ -28,9 +26,14 @@ namespace SharpMap.Rendering.Symbolizer
     /// Base class for all possible Point symbolizers
     /// </summary>
     [Serializable]
-    public abstract class PointSymbolizer : BaseSymbolizer, IPointSymbolizer
+    public abstract class PointSymbolizer : BaseSymbolizer, IPointSymbolizerEx
     {
         private float _scale = 1f;
+
+        /// <summary>
+        /// The calculated rectangle enclosing the extent of this symbol
+        /// </summary>
+        public RectangleF CanvasArea { get; protected set; } = RectangleF.Empty;
 
         /// <summary>
         /// Offset of the point from the point
@@ -78,8 +81,6 @@ namespace SharpMap.Rendering.Symbolizer
             return result;
         }
 
-
-
         /// <summary>
         /// Function to render the symbol
         /// </summary>
@@ -91,25 +92,33 @@ namespace SharpMap.Rendering.Symbolizer
             if (point == null)
                 return;
 
-
             PointF pp = map.WorldToImage(point);
 
             if (Rotation != 0f && !Single.IsNaN(Rotation))
             {
                 SizeF offset = GetOffset();
-
-                Matrix startingTransform = g.Transform.Clone();
-
-                Matrix transform = g.Transform;
-                transform.Translate(offset.Width + 1, offset.Height + 1);
                 PointF rotationCenter = pp;
-                transform.RotateAt(Rotation, rotationCenter, MatrixOrder.Append);
 
-                g.Transform = transform;
+                using (var origTrans = g.Transform.Clone())
+                using (var t = g.Transform)
+                {
+                    t.RotateAt(Rotation, rotationCenter);
+                    t.Translate(offset.Width + 1, offset.Height + 1);
+                    g.Transform = t;
 
-                OnRenderInternal(pp, g);
+                    OnRenderInternal(pp, g);
 
-                g.Transform = startingTransform;
+                    g.Transform = origTrans;
+                }
+                
+                using (var symTrans = new Matrix())
+                {
+                    symTrans.RotateAt(Rotation, rotationCenter);
+                    symTrans.Translate(offset.Width + 1, offset.Height + 1);
+                    var pts = CanvasArea.ToPointArray();
+                    symTrans.TransformPoints(pts);
+                    CanvasArea = pts.ToRectangleF();
+                }
             }
             else
             {
@@ -159,12 +168,16 @@ namespace SharpMap.Rendering.Symbolizer
             var mp = geometry as IMultiPoint;
             if (mp != null)
             {
+                var combinedArea = RectangleF.Empty;
                 foreach (var point in mp.Coordinates)
+                {
                     RenderPoint(map, point, graphics);
+                    combinedArea = CanvasArea.ExpandToInclude(combinedArea);
+                }
+                CanvasArea = combinedArea;
                 return;
             }
             RenderPoint(map, ((IPoint)geometry).Coordinate, graphics);
-
         }
     }
 }

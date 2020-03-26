@@ -199,16 +199,23 @@ namespace SharpMap.Rendering.Symbolizer
             {
                 //need to look it up
                 using (var path = new GraphicsPath(FillMode.Winding))
-                using (var haloPen = new Pen(HaloBrush, 2 * Halo) { MiterLimit = 1.0f })
+                using (var haloPen = new Pen(HaloBrush, 2 * Halo) {MiterLimit = 1.0f})
                 {
-                    path.AddString(_text, Font.FontFamily, (int)Font.Style, Font.Size, pt, StringFormat);
+                    path.AddString(_text, Font.FontFamily, (int) Font.Style, Font.Size, pt, StringFormat);
                     g.DrawPath(haloPen, path);
                     g.FillPath(Foreground, path);
+                    CanvasArea = path.GetBounds();
                 }
             }
             else
             {
-                g.DrawString(_text, Font, Foreground, pt, StringFormat);
+                // g.DrawString(_text, Font, Foreground, pt, StringFormat);    
+                using (var path = new GraphicsPath(FillMode.Winding))
+                {
+                    path.AddString(_text, Font.FontFamily, (int) Font.Style, Font.Size, pt, StringFormat);
+                    g.FillPath(Foreground, path);
+                    CanvasArea = path.GetBounds();
+                }
             }
         }
     }

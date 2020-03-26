@@ -209,6 +209,9 @@ I[V|v][V|v]*.*
 
 # Testrunner
 testrunner/**
+/SharpMap/LastMajorVersionBinary
+*.snupkg
+testrunner/**
 
 # Generated packages
 /SharpMap.*Packages/**

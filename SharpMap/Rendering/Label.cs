@@ -19,6 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using GeoAPI.Geometries;
 using SharpMap.Styles;
 
 namespace SharpMap.Rendering
@@ -164,6 +165,7 @@ namespace SharpMap.Rendering
         /// <summary>
         /// Render text on path
         /// </summary>
+        [Obsolete("Paths are now labelled based upon LengthIndexedLine")]
         public TextOnPath TextOnPathLabel
         {
             get { return _textOnPath; }
@@ -178,7 +180,7 @@ namespace SharpMap.Rendering
         /// <param name="collisionbox">Box around label for collision detection</param>
         /// <param name="style">The style of the label</param>
         protected BaseLabel(string text, float rotation, int priority, LabelBox collisionbox,
-                     LabelStyle style)
+            LabelStyle style)
         {
             _Text = text;
             //_LabelPoint = labelpoint;
@@ -276,12 +278,12 @@ namespace SharpMap.Rendering
         /// </summary>
         /// <param name="other"></param>
         /// <returns></returns>
-        public int CompareTo(BaseLabel other)
+        public virtual int CompareTo(BaseLabel other)
         {
-            if (this.TextOnPathLabel != null)
-            {
-                return CompareToTextOnPath(other);
-            }
+//            if (this.TextOnPathLabel != null)
+//            {
+//                return CompareToTextOnPath(other);
+//            }
             if (this == other)
                 return 0;
             if (_box == null)
@@ -290,33 +292,33 @@ namespace SharpMap.Rendering
                 return 1;
             return _box.CompareTo(other.Box);
         }
-        private int CompareToTextOnPath(BaseLabel other)
-        {
-            if (this == other)
-                return 0;
-            if (TextOnPathLabel == null)
-                return -1;
-            if (other.TextOnPathLabel == null)
-                return 1;
-            
-            for (int i = 0; i < TextOnPathLabel.RegionList.Count; i++)
-            {
-                for (int j = 0; j < other.TextOnPathLabel.RegionList.Count; j++)
-                {
-                    if (TextOnPathLabel.RegionList[i].IntersectsWith(other.TextOnPathLabel.RegionList[j]))
-                        return 0;
-                }
-            }
-            if (_box == null)
-                return -1;
-            if (other.Box == null)
-                return 1;
-            if (other.Box.Left > this.Box.Right ||
-                other.Box.Bottom > this.Box.Top)
-                return 1;
-            else
-                return -1;
-        }
+//        private int CompareToTextOnPath(BaseLabel other)
+//        {
+//            if (this == other)
+//                return 0;
+//            if (TextOnPathLabel == null)
+//                return -1;
+//            if (other.TextOnPathLabel == null)
+//                return 1;
+//            
+//            for (int i = 0; i < TextOnPathLabel.RegionList.Count; i++)
+//            {
+//                for (int j = 0; j < other.TextOnPathLabel.RegionList.Count; j++)
+//                {
+//                    if (TextOnPathLabel.RegionList[i].IntersectsWith(other.TextOnPathLabel.RegionList[j]))
+//                        return 0;
+//                }
+//            }
+//            if (_box == null)
+//                return -1;
+//            if (other.Box == null)
+//                return 1;
+//            if (other.Box.Left > this.Box.Right ||
+//                other.Box.Bottom > this.Box.Top)
+//                return 1;
+//            else
+//                return -1;
+//        }
 
         #endregion
 
@@ -330,7 +332,7 @@ namespace SharpMap.Rendering
         /// <returns></returns>
         public int Compare(BaseLabel x, BaseLabel y)
         {
-            return x.CompareTo(y);
+            return x?.CompareTo(y) ?? -1;
         }
 
         #endregion
@@ -404,6 +406,22 @@ namespace SharpMap.Rendering
         public PathLabel(string text, GraphicsPath location, float rotation, int priority, LabelBox collisionbox, LabelStyle style)
             : base(text, location, rotation, priority, collisionbox, style)
         {
+        }
+
+        /// <summary>
+        /// Bounding polygon in world coordinates 
+        /// </summary>
+        public IPolygon AffectedArea { get; set; }
+
+        /// <inheritdoc cref="BaseLabel.CompareTo"/>
+        public override int CompareTo(BaseLabel other)
+        {
+            var lbThis = new LabelBox(Location.GetBounds());
+            var lbOther = other is PathLabel otherPl
+                ? new LabelBox(otherPl.Location.GetBounds())
+                : other.Box;
+
+            return lbThis.CompareTo(lbOther);
         }
     }
 

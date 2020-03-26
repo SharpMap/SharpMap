@@ -222,8 +222,9 @@ namespace SharpMap.Rendering.Symbolizer
         /// <param name="totalPathLength">The total length of the path to warp to</param>
         /// <param name="ignoreLength">value indicating if the text path should only be handled if the path fits the total length</param>
         /// <param name="format">The string format</param>
+        /// <param name="fontHeight">actual text height as rendered by graphic</param>
         /// <returns>The prepared text path</returns>
-        internal static GraphicsPath PrepareTextPathToWarp(GraphicsPath path, Double totalPathLength, bool ignoreLength, StringFormat format)
+        internal static GraphicsPath PrepareTextPathToWarp(GraphicsPath path, Double totalPathLength, bool ignoreLength, StringFormat format, float fontHeight)
         {
             var rect = path.GetBounds();
 
@@ -249,7 +250,22 @@ namespace SharpMap.Rendering.Symbolizer
                     xStart = totalPathLength;
                     break;
             }
-            path.Transform(new Matrix(1f, 0f, 0f, 1f, (float)xStart, 0f));
+
+            float yStart;
+            switch (format.LineAlignment)
+            {
+                default:
+                    yStart = 0;
+                    break;
+                case StringAlignment.Near:
+                    yStart = -fontHeight * 0.5f;
+                    break;
+                case StringAlignment.Far:
+                    yStart = fontHeight * 0.5f;
+                    break;
+            }
+
+            path.Transform(new Matrix(1f, 0f, 0f, 1f, (float)xStart,  yStart));
 
             return path;
         }
@@ -439,18 +455,21 @@ namespace SharpMap.Rendering.Symbolizer
         /// <param name="format">The format</param>
         /// <param name="ignoreLength"></param>
         /// <param name="path"></param>
-        public static void DrawString(this Graphics self, Pen halo, Brush fill, string text, FontFamily fontFamily, int style, float emSize, StringFormat format, bool ignoreLength, GraphicsPath path)
+        /// <param name="textHeight">actual text height as rendered by graphic</param>
+        public static void DrawString(this Graphics self, Pen halo, Brush fill, string text, FontFamily fontFamily, 
+            int style, float emSize, StringFormat format, bool ignoreLength, GraphicsPath path,
+           float textHeight)
         {
             if (path == null || path.PointCount == 0)
                 return;
 
-            var gp = new GraphicsPath();
+            var gp = new GraphicsPath(); 
             gp.AddString(text, fontFamily, style, emSize, new Point(0, 0), format);
 
             SortedList<float, GraphSegment> edges;
             var totalLength = GetPathLength(path, out edges);
 
-            var warpedPath = PrepareTextPathToWarp(gp, totalLength, ignoreLength, format);
+            var warpedPath = PrepareTextPathToWarp(gp, totalLength, ignoreLength, format, textHeight);
 
             if (warpedPath != null)
             {
@@ -468,5 +487,6 @@ namespace SharpMap.Rendering.Symbolizer
             gp.Dispose();
         }
 
+        
     }
 }

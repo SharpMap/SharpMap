@@ -173,7 +173,7 @@ namespace SharpMap.Layers
             
             if (fds.Tables.Count == 0 || fds.Tables[0].Rows.Count == 0)
             {
-                base.Render(g, map);
+                //base.Render(g, map);
                 return;
             }
 

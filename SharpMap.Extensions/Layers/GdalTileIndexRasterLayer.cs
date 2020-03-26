@@ -144,7 +144,7 @@ namespace SharpMap.Layers
                             Projection = hld.Projection;
                         }
 
-                        base.Render(g, map);
+                        //base.Render(g, map);
                         _envelope = null;
                         _gdalDataset = null;
                     }

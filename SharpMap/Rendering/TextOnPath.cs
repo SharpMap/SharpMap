@@ -9,6 +9,7 @@ namespace SharpMap.Rendering
     /// <summary>
     /// Horizontal alignment options for texts on path
     /// </summary>
+    [Obsolete]
     public enum TextPathAlign
     {
         /// <summary>
@@ -28,6 +29,7 @@ namespace SharpMap.Rendering
     /// <summary>
     /// Vertical alignment option for texts on path
     /// </summary>
+    [Obsolete]
     public enum TextPathPosition
     {
         /// <summary>
@@ -47,6 +49,7 @@ namespace SharpMap.Rendering
     /// <summary>
     /// Extensions methods for text on path label rendering 
     /// </summary>
+    [Obsolete]
     public static class GraphicsExtension
     {
         /// <summary>
@@ -221,6 +224,7 @@ namespace SharpMap.Rendering
     /// <summary>
     /// Text on path generator class
     /// </summary>
+    [Obsolete("Deprecated in favor of more efficient rendering techniques")]
     public class TextOnPath
     {
         internal readonly static TextOnPath TextOnPathInstance = new TextOnPath();
@@ -422,6 +426,13 @@ namespace SharpMap.Rendering
         /// </summary>
         public void DrawTextOnPath()
         {
+            DrawTextOnPathEx();
+        }
+
+        public RectangleF DrawTextOnPathEx()
+        {
+            var  affectedArea = new RectangleF();
+            
             var points = new PointF[25001];
             var count = 0;
             var gp = new GraphicsPath(_pathdata.Points, _pathdata.Types) { FillMode = FillMode.Winding };
@@ -462,15 +473,17 @@ namespace SharpMap.Rendering
                     // if can show all letter
                     DrawText(Graphics, points, count);
                 }
+
+                affectedArea = gp.GetBounds();
                 gp.Dispose();
                 //DrawText(points, count);
             }
             catch (Exception ex)
             {
                 LastError = ex;
-
-
             }
+
+            return affectedArea;
         }
         /// <summary>
         /// Method to remove consecutive same/equal <see cref="PointF"/>s from the array
