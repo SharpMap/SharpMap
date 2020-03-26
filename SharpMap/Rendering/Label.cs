@@ -278,7 +278,7 @@ namespace SharpMap.Rendering
         /// </summary>
         /// <param name="other"></param>
         /// <returns></returns>
-        public int CompareTo(BaseLabel other)
+        public virtual int CompareTo(BaseLabel other)
         {
 //            if (this.TextOnPathLabel != null)
 //            {
@@ -332,7 +332,7 @@ namespace SharpMap.Rendering
         /// <returns></returns>
         public int Compare(BaseLabel x, BaseLabel y)
         {
-            return x.CompareTo(y);
+            return x?.CompareTo(y) ?? -1;
         }
 
         #endregion
@@ -412,6 +412,17 @@ namespace SharpMap.Rendering
         /// Bounding polygon in world coordinates 
         /// </summary>
         public IPolygon AffectedArea { get; set; }
+
+        /// <inheritdoc cref="BaseLabel.CompareTo"/>
+        public override int CompareTo(BaseLabel other)
+        {
+            var lbThis = new LabelBox(Location.GetBounds());
+            var lbOther = other is PathLabel otherPl
+                ? new LabelBox(otherPl.Location.GetBounds())
+                : other.Box;
+
+            return lbThis.CompareTo(lbOther);
+        }
     }
 
     /// <summary>

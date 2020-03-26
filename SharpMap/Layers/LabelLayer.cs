@@ -700,7 +700,7 @@ namespace SharpMap.Layers
             var factory = line.Factory;
 
             // Simplify the line for smoother labeling
-            double avgCharacterSpace = (double)textMeasure.Width / text.Length * map.PixelWidth;
+            double avgCharacterSpace = 2d * textMeasure.Width / text.Length * map.PixelWidth;
             var simplifier = new NetTopologySuite.Simplify.VWLineSimplifier(line.Coordinates, avgCharacterSpace);
             line = factory.CreateLineString(simplifier.Simplify());
 
