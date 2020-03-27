@@ -9,7 +9,7 @@ namespace UnitTests.Data.Providers
 {
     public class NtsProviderTests
     {
-        [Test]
+        [Test, Ignore("not relevant")]
         public void FeatureWithNullDataThrowsException()
         {
             /*
@@ -20,17 +20,21 @@ namespace UnitTests.Data.Providers
             var ds = DataTablePointTests.CreateDataTableSource();
             // add row with null value
             ds.BeginLoadData();
+            
             var row = ds.LoadDataRow(new object[] { 1001, null, 1, 1 }, LoadOption.OverwriteChanges);
             ds.EndLoadData();
+            Assert.That(ds.Rows.Count, Is.EqualTo(101));
 
             var dsp = new DataTablePoint(ds, "oid", "x", "y");
+            Assert.That(dsp.GetFeatureCount(), Is.EqualTo(101));
+
             /*
              * act
              */
             // Create provider
             NtsProvider p = null;
             Assert.DoesNotThrow(() => p = new NtsProvider(dsp));
-
+            
             /*
              * assert
              */
@@ -41,7 +45,8 @@ namespace UnitTests.Data.Providers
 #endif
 
         }
-        [Test]
+
+        [Test, Ignore("not relevant")]
         public void FeatureWithNullDataThrowsException2()
         {
             // arrange

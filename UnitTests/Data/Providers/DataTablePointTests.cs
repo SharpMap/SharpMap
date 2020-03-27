@@ -39,7 +39,7 @@ namespace UnitTests.Data.Providers
                                             new DataColumn("y", typeof (double))
                                         });
 
-            var rnd = new Random();
+            var rnd = new Random(17);
             for (int i = 0; i < 100; i++)
             {
                 DataRow row = source.NewRow();
