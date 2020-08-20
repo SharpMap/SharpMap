@@ -37,6 +37,7 @@
     </ItemGroup>
 
 
+    <!--
     <PropertyGroup>
         <DriveSeperator>$(SolutionDir.SubString(1,1))</DriveSeperator>
     </PropertyGroup>
@@ -49,5 +50,5 @@
 
         <Exec Condition=" !$([System.IO.File]::Exists('$(SolutionDir)SharedAssemblyVersion.cs')) OR &#xD;&#xA;          $([System.IO.File]::GetLastWriteTime('$(SolutionDir)SharedAssemblyVersion.cs').Ticks) &lt; $([System.IO.File]::GetLastWriteTime('$(SolutionDir)SharpMap.Common.props').Ticks) " Command="$(SolutionDir.SubString(0, 2))&#xD;&#xA;cd &quot;$(SolutionDir)&quot;&#xD;&#xA;&quot;$(MSBuildBinPath)\msbuild&quot; SharpMap.targets /t:Version&#xD;&#xA;cd &quot;$(ProjectDir)&quot;" />
     </Target>
-
+    -->
 </Project>

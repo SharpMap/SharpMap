@@ -1,8 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
-    
-  <Import Project="$(MSBuildProjectDirectory)\..\SharpMap.Common.props"/>
-
+  <Import Project="$(MSBuildProjectDirectory)\..\SharpMap.Common.props" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -75,9 +73,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-      <Reference Include="System.Data.SQLite, Version=1.0.112.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
-          <HintPath>..\packages\System.Data.SQLite.Core.1.0.112.0\lib\net46\System.Data.SQLite.dll</HintPath>
-      </Reference>
+    <Reference Include="System.Data.SQLite, Version=1.0.112.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Data.SQLite.Core.1.0.112.0\lib\net46\System.Data.SQLite.dll</HintPath>
+    </Reference>
     <Reference Include="Common.Logging, Version=3.4.1.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
       <HintPath>..\packages\Common.Logging.3.4.1\lib\net40\Common.Logging.dll</HintPath>
     </Reference>
@@ -152,18 +150,15 @@
     <Compile Include="Layers\GeoTransform.cs" />
   </ItemGroup>
   <ItemGroup>
-      <Compile Include="Data\Providers\ManagedSpatiaLite.cs" />
-      <Compile Include="Data\Providers\SpatiaLite.cs" />
-      <Compile Include="Data\Providers\SpatiaLiteIndex.cs" />
-      <Compile Include="Data\Providers\SqlLite.cs" />
+    <Compile Include="Data\Providers\ManagedSpatiaLite.cs" />
+    <Compile Include="Data\Providers\SpatiaLite.cs" />
+    <Compile Include="Data\Providers\SpatiaLiteIndex.cs" />
+    <Compile Include="Data\Providers\SqlLite.cs" />
     <Compile Include="Data\Providers\DataTablePoint.cs" />
     <Compile Include="Data\Providers\NtsProvider.cs" />
     <Compile Include="Data\Providers\Oracle.cs" />
     <Compile Include="Data\Providers\PostGIS.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="..\SharedAssemblyVersion.cs">
-      <Link>Properties\SharedAssemblyVersion.cs</Link>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
@@ -177,9 +172,9 @@
     </PostBuildEvent>
   </PropertyGroup>
   <Target Name="AfterBuild" Condition=" '$(Configuration)' != 'ReleaseLinux' ">
-      <Message Importance="high" Text="$(MSBuildBinPath)"/>
-      <Message Importance="high" Text="$(MSBuildToolsPath)"/>
-      <Exec Command="&quot;NuGet.exe&quot; pack &quot;$(MSBuildProjectDirectory)\$(MSBuildProjectFile)&quot; -Symbols -version $(Version) -Properties Configuration=$(Configuration) -outputdirectory &quot;$(PackageOutputPath)\.&quot;" />
+    <Message Importance="high" Text="$(MSBuildBinPath)" />
+    <Message Importance="high" Text="$(MSBuildToolsPath)" />
+    <Exec Command="&quot;NuGet.exe&quot; pack &quot;$(MSBuildProjectDirectory)\$(MSBuildProjectFile)&quot; -Symbols -version $(Version) -Properties Configuration=$(Configuration) -outputdirectory &quot;$(PackageOutputPath)\.&quot;" />
   </Target>
   <ItemGroup>
     <ProjectReference Include="..\SharpMap\SharpMap.csproj">

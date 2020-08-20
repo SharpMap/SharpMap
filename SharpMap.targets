@@ -1,5 +1,5 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
-
+<!--
   <PropertyGroup>
     <UseTools35 Condition=" '$(UseTools35)' == '' ">true</UseTools35>
     <VersionTargetName Condition=" '$(UseTools35)' == 'true' ">VersionGit</VersionTargetName>
@@ -17,7 +17,7 @@
 	
   <Target Name="VersionGit">
     <Message Text="Building revision from git..." />
-    <!--<GitVersion LocalPath="$(MSBuildThisFileDirectory)" ContinueOnError="ErrorAndStop">
+    --><!--<GitVersion LocalPath="$(MSBuildThisFileDirectory)" ContinueOnError="ErrorAndStop">
       <Output TaskParameter="CommitHash" PropertyName="Revision" />
     </GitVersion>
     <AssemblyInfo
@@ -27,7 +27,7 @@
         AssemblyVersion="$(AssemblyVersion)"
         AssemblyFileVersion="$(FileVersion)" />
     <OnError ExecuteTargets="VersionNoTools35"/>
-    -->
+    --><!--
     <CallTarget Targets="VersionNoTools35" />
   </Target>
   <Target Name="VersionNoTools35">
@@ -44,7 +44,7 @@
       </AssemblyAttributes>
     </ItemGroup>
     <WriteCodeFragment Language="C#" OutputFile="$(MSBuildThisFileDirectory)SharedAssemblyVersion.cs" AssemblyAttributes="@(AssemblyAttributes)" />
-    <!--
+    --><!--
     <AssemblyInfo
         CodeLanguage="CS"
         OutputFile="$(MSBuildThisFileDirectory)SharedAssemblyVersion.cs"
@@ -52,5 +52,6 @@
         AssemblyVersion="$(Major).$(Minor).$(Build)"
         AssemblyFileVersion="$(Major).$(Minor).$(Build)" />
   -->
-      </Target>
+      <!--
+      </Target>-->
     </Project>

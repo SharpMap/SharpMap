@@ -15,15 +15,15 @@ jobs:
         dotnet-version: 2.2.401
     - name: Setup Nuget
       uses: nuget/setup-nuget@v1
-    - name: Setup MSBuild.exe
-      uses: warrenbuckley/Setup-MSBuild@v1
+    #- name: Setup MSBuild.exe
+    #  uses: warrenbuckley/Setup-MSBuild@v1
 
     - name: Install packages into packages folder 1/2
       run: nuget restore SharpMap.Extensions/packages.config -OutputDirectory packages
     - name: Install packages into packages folder 2/2
       run: nuget restore SharpMap.SqlServerSpatialObjects/packages.config -OutputDirectory packages
-    - name: MSBuild SharedAssemblyVersion
-      run: msbuild SharpMap.targets /t:Version
+    #- name: MSBuild SharedAssemblyVersion
+    #  run: msbuild SharpMap.targets /t:Version
 
     - name: Build with dotnet
       env:

@@ -8,35 +8,35 @@
 
     <PropertyGroup>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
-        <SmBuildNo>0</SmBuildNo>
+        <!--<SmBuildNo>0</SmBuildNo>-->
     </PropertyGroup>
 
-    <!-- Github-Actions -->
+    <!-- Github-Actions --><!--
     <PropertyGroup Condition=" '$(GITHUB_ACTIONS)' == 'True' ">
         <SmBuildMetadata Condition=" '$(SmBuildMetadata)' == '' ">ci.github.$(GITHUB_ACTION)</SmBuildMetadata>
         <SmBuildNo>$(GITHUB_ACTION)</SmBuildNo>
     </PropertyGroup>
-    <!-- Travis-CI -->
+    --><!-- Travis-CI --><!--
     <PropertyGroup Condition=" '$(TRAVIS)' == 'True' ">
         <SmBuildMetadata Condition=" '$(SmBuildMetadata)' == '' ">ci.travis.$(TRAVIS_BUILD_NUMBER)</SmBuildMetadata>
         <SmBuildNo>$(TRAVIS_BUILD_NUMBER)</SmBuildNo>
     </PropertyGroup>
-    <!-- TeamCity -->
+    --><!-- TeamCity --><!--
     <PropertyGroup Condition=" '$(TEAMCITY_VERSION)' != '' ">
         <SmBuildMetadata Condition=" '$(SmBuildMetadata)' == '' ">ci.teamcity.$(BUILD_NUMBER)</SmBuildMetadata>
         <SmBuildNo>$(BUILD_NUMBER)</SmBuildNo>
     </PropertyGroup>
-    <!-- AppVeyor -->
+    --><!-- AppVeyor --><!--
     <PropertyGroup Condition=" '$(APPVEYOR)' == 'True' ">
         <SmBuildMetadata Condition=" '$(SmBuildMetadata)' == '' ">ci.appveyor.$(APPVEYOR_BUILD_NUMBER)</SmBuildMetadata>
         <SmBuildNo>$(APPVEYOR_BUILD_NUMBER)</SmBuildNo>
     </PropertyGroup>
-    <!-- Fallback for local builds and CI environments we don't recognize -->
+    --><!-- Fallback for local builds and CI environments we don't recognize --><!--
     <PropertyGroup>
         <SmBuildMetadata Condition=" '$(SmBuildMetadata)' == '' ">local</SmBuildMetadata>
     </PropertyGroup>
 
-    <!--Build timestamp-->
+    --><!--Build timestamp--><!--
     <PropertyGroup>
         <BuildTimeLinux/>
         <BuildTimeUtcTicks/>
@@ -64,7 +64,7 @@
         </Otherwise>
     </Choose>
 
-    <!-- SharpMap version -->
+    --><!-- SharpMap version --><!--
     <PropertyGroup>
         
         <SmMajor>1</SmMajor>
@@ -78,7 +78,7 @@
         <VersionPrefix>$(SmMajor).$(SmMinor).$(SmPatch)</VersionPrefix>
         <VersionSuffix>pre.$(SmDaysSinceEpoch)$(SmMinutesSinceStartOfUtcDay)+$(SmBuildMetadata)</VersionSuffix>
 
-    </PropertyGroup>
+    </PropertyGroup>-->
 
     <!--
     <PropertyGroup Condition=" '$(TargetFramework)' == 'net40-client' Or '$(TargetFramework)' == 'net452' Or '$(TargetFramework)' == 'net472'">
@@ -101,10 +101,12 @@
         <PackageIcon>SharpMap.Logo.png</PackageIcon>
         <PackageLicense>LGPL-2.1-or-later</PackageLicense>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <!--
         <AssemblyVersion>$(SmMajor).$(SmMinor).0.0</AssemblyVersion>
         <FileVersion>$(VersionPrefix).$(SmBuildNo)</FileVersion>
         <InformationalVersion>$(VersionPrefix)-$(VersionSuffix)</InformationalVersion>
         <Version Condition="'$(Version)' == ''">$(VersionPrefix)-$(VersionSuffix)</Version>
+        -->
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Debug' " >
@@ -129,6 +131,7 @@
     <ItemGroup>
         <!-- SourceLink adds stuff to let debuggers step into our code. -->
         <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
+        <PackageReference Include="GitVersionTask" Version="5.3.7" PrivateAssets="All" />
     </ItemGroup>
 
 </Project>
