@@ -2,6 +2,7 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using GeoAPI.Geometries;
 
+//using KnownColor = System.Drawing.KnownColor
 namespace SharpMap.Rendering.Symbolizer
 {
     /// <summary>
@@ -9,9 +10,17 @@ namespace SharpMap.Rendering.Symbolizer
     /// </summary>
     public abstract class LineSymbolizer : BaseSymbolizer, ILineSymbolizer
     {
+#if !NETSTANDARD2_0
         /// <summary>
-        /// Creates an instance of this class. <see cref="Line"/> is set to a random <see cref="KnownColor"/>.
+        /// Creates an instance of this class. <see cref="Line"/> is set to a random
+        /// <see cref="System.Drawing.KnownColor"/>.
         /// </summary>
+#else
+        /// <summary>
+        /// Creates an instance of this class. <see cref="Line"/> is set to a random
+        /// <see cref="SharpMap.Drawing.KnownColor"/>.
+        /// </summary>
+#endif
         protected LineSymbolizer()
         {
             Line = new Pen(Utility.RandomKnownColor(), 1);

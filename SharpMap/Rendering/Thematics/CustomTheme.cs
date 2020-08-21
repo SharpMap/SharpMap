@@ -187,6 +187,7 @@ namespace SharpMap.Rendering.Thematics
 
         #endregion
 
+        /// <inheritdoc cref="ICloneable.Clone()"/>
         public object Clone()
         {
             var res = (CustomTheme)MemberwiseClone();

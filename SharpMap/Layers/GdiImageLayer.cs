@@ -146,6 +146,9 @@ namespace SharpMap.Layers
         /// </summary>
         public InterpolationMode InterpolationMode { get; set; }
 
+        /// <summary>
+        /// Releases managed resources
+        /// </summary>
         protected override void ReleaseManagedResources()
         {
             base.ReleaseManagedResources();

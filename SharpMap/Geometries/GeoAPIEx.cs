@@ -383,6 +383,11 @@ namespace GeoAPI.Geometries
             catch{}
         }
 
+        /// <summary>
+        /// Utility function to set the <see cref="Geometry.EnvelopeInternal"/> when it is known.
+        /// </summary>
+        /// <param name="geom">The geometry</param>
+        /// <param name="envelope">The envelope of <paramref name="geom"/></param>.
         public static void SetExtent(Geometry geom, Envelope envelope)
         {
             if (geom == null)

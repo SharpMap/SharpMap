@@ -23,8 +23,17 @@ namespace SharpMap.Rendering.Decoration.Graticule
         /// </summary>
         public enum GraticuleTheme
         {
+            /// <summary>
+            /// Bold
+            /// </summary>
             Bold = 0,
+            /// <summary>
+            /// Sublte
+            /// </summary>
             Subtle = 1,
+            /// <summary>
+            /// None
+            /// </summary>
             None = 2
         }
 
@@ -179,10 +188,6 @@ namespace SharpMap.Rendering.Decoration.Graticule
         /// </summary>
         public VisibilityUnits VisibilityUnits { get; set; } = VisibilityUnits.Scale;
 
-        public GraticuleStyle()
-        {
-        }
-
         /// <summary>
         /// Quickly style a graticule without configuring each individual property 
         /// </summary>
@@ -261,6 +266,11 @@ namespace SharpMap.Rendering.Decoration.Graticule
             if (!withSecondaryIntervals)
                 SecondaryLineStyle = GraticuleLineStyle.None;
         }
+
+        /// <summary>
+        /// Creates an instance of this class.
+        /// </summary>
+        public GraticuleStyle() {}
         
         /// <summary>
         /// Returns true if a primary or secondary tick is required for given combination of primary and secondary meridians and parallels 

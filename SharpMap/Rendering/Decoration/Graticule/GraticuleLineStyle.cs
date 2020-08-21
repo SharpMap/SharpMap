@@ -1,5 +1,8 @@
 namespace SharpMap.Rendering.Decoration.Graticule
 {
+    /// <summary>
+    /// An enumeration of possible graticule line styles.
+    /// </summary>
     public enum GraticuleLineStyle
     {
         /// <summary>

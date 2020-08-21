@@ -87,12 +87,14 @@ namespace SharpMap.Rendering.Decoration
 
         #region MapDecoration overrides
 
+        /// <intheritdoc cref="MapDecoration.InternalSize(Graphics, MapViewport)" />
         protected override Size InternalSize(Graphics g, MapViewport map)
         {
             var s = g.MeasureString(Text, Font);
             return new Size((int)Math.Ceiling(s.Width), (int)Math.Ceiling(s.Height));
         }
 
+        /// <intheritdoc cref="MapDecoration.OnRender(Graphics, MapViewport)" />
         protected override void OnRender(Graphics g, MapViewport map)
         {
             var layoutRectangle = g.ClipBounds;

@@ -57,9 +57,9 @@ namespace SharpMap.Data.Providers
         }
 
         /// <summary>
-        /// Creates a shapefile header using the provided <see cref="shpPath"/>
+        /// Creates a Shapefile header using the provided <paramref name="shpPath"/>
         /// </summary>
-        /// <param name="shpPath">The path to the shapefile</param>
+        /// <param name="shpPath">The path to the Shapefile</param>
         public static ShapeFileHeader Read(string shpPath)
         {
             using (var s = new FileStream(shpPath, FileMode.Open, FileAccess.Read, FileShare.Read))

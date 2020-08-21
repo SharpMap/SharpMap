@@ -10,9 +10,15 @@ namespace SharpMap.Rendering.Symbolizer
     /// </summary>
     public abstract class PolygonSymbolizer : BaseSymbolizer, IPolygonSymbolizer
     {
+#if !NETSTANDARD2_0
         /// <summary>
-        /// Creates an instance of his class. <see cref="Fill"/> is set to a <see cref="SolidBrush"/> with a random <see cref="KnownColor"/>.
+        /// Creates an instance of his class. <see cref="Fill"/> is set to a <see cref="SolidBrush"/> with a random <see cref="System.Drawing.KnownColor"/>.
         /// </summary>
+#else
+        /// <summary>
+        /// Creates an instance of his class. <see cref="Fill"/> is set to a <see cref="SolidBrush"/> with a random <see cref="SharpMap.Drawing.KnownColor"/>.
+        /// </summary>
+#endif
         protected PolygonSymbolizer()
         {
             Fill = new SolidBrush(Utility.RandomKnownColor());

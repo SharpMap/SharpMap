@@ -163,10 +163,17 @@ namespace SharpMap.Rendering.Decoration
         /// <para>This is just the size of the decoration object, border settings are excluded</para>
         /// </summary>
         /// <param name="g">The graphics object</param>
+        /// <param name="mvp">The map's viewport</param>
+        /// <returns>The size of the map decoration</returns>
+        protected abstract Size InternalSize(Graphics g, MapViewport mvp);
+
+        /// <summary>
+        /// Function to compute the required size for rendering the map decoration object
+        /// <para>This is just the size of the decoration object, border settings are excluded</para>
+        /// </summary>
+        /// <param name="g">The graphics object</param>
         /// <param name="map">The map</param>
         /// <returns>The size of the map decoration</returns>
-        protected abstract Size InternalSize(Graphics g, MapViewport map);
-
         [Obsolete("Use InternalSize(Graphics, MapViewport")]
         protected virtual Size InternalSize(Graphics g, Map map)
         {
@@ -222,7 +229,17 @@ namespace SharpMap.Rendering.Decoration
             return gp;
         }
 
-        public void Render(Graphics g, MapViewport map)
+        /// <summary>
+        /// Draw the map decoration.
+        /// <para>Note that this base class' implementation resets <paramref name="g"/>.Transform
+        /// prior to raising event OnRendering, and restore the <paramref name="g"/>.Transform prior to
+        /// raising event OnRendered.</para>
+        /// Likewise, <paramref name="g"/>.Clip is reset prior to rendering map decoration, and restored
+        /// immediately after rendering.
+        /// </summary>
+        /// <param name="g">A graphics object to use for rendering</param>
+        /// <param name="mvp">The viewport for rendering</param>
+        public void Render(Graphics g, MapViewport mvp)
         {
             //Is this map decoration enabled?
             if (!Enabled)
@@ -233,7 +250,7 @@ namespace SharpMap.Rendering.Decoration
             g.ResetTransform();
             
             //Preparing rendering
-            OnRendering(g, map);
+            OnRendering(g, mvp);
 
             //Draw border
             GraphicsPath gp;
@@ -249,10 +266,10 @@ namespace SharpMap.Rendering.Decoration
 
             //Clip region
             var oldClip = g.Clip;
-            g.Clip = GetClipRegion(map);
+            g.Clip = GetClipRegion(mvp);
 
             //Actually render the Decoration
-            OnRender(g, map);
+            OnRender(g, mvp);
 
             //Restore old clip region
             g.Clip = oldClip;
@@ -261,10 +278,20 @@ namespace SharpMap.Rendering.Decoration
             g.Transform = oldTransform;
 
             //Finished rendering
-            OnRendered(g, map);
+            OnRendered(g, mvp);
         }
 
-        [Obsolete("Use Render(Graphics, MapViewport")]
+        /// <summary>
+        /// Draw the map decoration.
+        /// <para>Note that this base class' implementation resets <paramref name="g"/>.Transform
+        /// prior to raising event OnRendering, and restore the <paramref name="g"/>.Transform prior to
+        /// raising event OnRendered.</para>
+        /// Likewise, <paramref name="g"/>.Clip is reset prior to rendering map decoration, and restored
+        /// immediately after rendering.
+        /// </summary>
+        /// <param name="g">A graphics object to use for rendering</param>
+        /// <param name="map">The viewport for rendering</param>
+        [Obsolete("Use Render(Graphics, Map")]
         public void Render(Graphics g, Map map)
         {
             Render(g, (MapViewport)map);
@@ -275,12 +302,18 @@ namespace SharpMap.Rendering.Decoration
         /// Render the actual map decoration.
         /// <para>Refer to MapDecoration.<see cref="Render(System.Drawing.Graphics,SharpMap.MapViewport)"/> for underlying management of <paramref name="g"/>.Transform</para> 
         /// </summary>
-        /// <param name="g"></param>
-        /// <param name="map"></param>
-        protected virtual void OnRender(Graphics g, MapViewport map)
+        /// <param name="g">A graphics object</param>
+        /// <param name="mvp">A map viewport</param>
+        protected virtual void OnRender(Graphics g, MapViewport mvp)
         {
         }
 
+        /// <summary>
+        /// Render the actual map decoration.
+        /// <para>Refer to MapDecoration.<see cref="Render(System.Drawing.Graphics,SharpMap.MapViewport)"/> for underlying management of <paramref name="g"/>.Transform</para> 
+        /// </summary>
+        /// <param name="g">A graphics object</param>
+        /// <param name="map">A map</param>
         [Obsolete("Use OnRender(Graphics, MapViewport")]
         protected virtual void OnRender(Graphics g, Map map)
         {
@@ -291,13 +324,19 @@ namespace SharpMap.Rendering.Decoration
         /// Signal commencing rendering
         /// <para>Refer to MapDecoration.<see cref="Render(System.Drawing.Graphics,SharpMap.MapViewport)"/> for underlying management of <paramref name="g"/>.Transform</para> 
         /// </summary>
-        /// <param name="g"></param>
-        /// <param name="map"></param>
-        protected virtual void OnRendering(Graphics g, MapViewport map)
+        /// <param name="g">A graphics object</param>
+        /// <param name="mvp">A map viewport</param>
+        protected virtual void OnRendering(Graphics g, MapViewport mvp)
         {
-            CalcMapDecorationMetrics(g, map);
+            CalcMapDecorationMetrics(g, mvp);
         }
 
+        /// <summary>
+        /// Signal commencing rendering
+        /// <para>Refer to MapDecoration. <see cref="Render(System.Drawing.Graphics,SharpMap.MapViewport)"/> for underlying management of <paramref name="g"/>.Transform</para> 
+        /// </summary>
+        /// <param name="g">A graphics object</param>
+        /// <param name="map">A map viewport</param>
         [Obsolete("Use OnRendering(Graphics, MapViewport")]
         protected virtual void OnRendering(Graphics g, Map map)
         {
@@ -308,12 +347,18 @@ namespace SharpMap.Rendering.Decoration
         /// Signal completion of rendering
         /// <para>Refer to MapDecoration.<see cref="Render(System.Drawing.Graphics,SharpMap.MapViewport)"/> for underlying management of <paramref name="g"/>.Transform</para> 
         /// </summary>
-        /// <param name="g"></param>
-        /// <param name="map"></param>
-        protected virtual void OnRendered(Graphics g, MapViewport map)
+        /// <param name="g">A graphics object</param>
+        /// <param name="mvp">A map viewport</param>
+        protected virtual void OnRendered(Graphics g, MapViewport mvp)
         {
         }
 
+        /// <summary>
+        /// Signal completion of rendering
+        /// <para>Refer to MapDecoration.<see cref="Render(System.Drawing.Graphics,SharpMap.Map)"/> for underlying management of <paramref name="g"/>.Transform</para> 
+        /// </summary>
+        /// <param name="g">A graphics object</param>
+        /// <param name="map">A map</param>
         [Obsolete("Use OnRendered(Graphics, MapViewport")]
         protected virtual void OnRendered(Graphics g, Map map)
         {

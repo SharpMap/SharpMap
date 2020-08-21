@@ -1332,6 +1332,13 @@ namespace SharpMap
             }
         }
 
+        /// <summary>
+        /// A focus point on the map.
+        /// </summary>
+        /// <remarks>
+        /// This point stays at its local position when zooming by wheel.
+        /// Possible tiles are fetched in order of the distance to this point.
+        /// </remarks>
         public Coordinate CenterOfInterest
         {
             get => _centerOfInterest?.Copy() ?? Center;

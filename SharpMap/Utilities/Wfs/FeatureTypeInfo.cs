@@ -343,6 +343,11 @@ namespace SharpMap.Utilities.Wfs
         [Serializable]
         public class ElementInfo
         {
+            /// <summary>
+            /// Creates an instance of this class
+            /// </summary>
+            /// <param name="name">The name of the element</param>
+            /// <param name="dataType">The data type of the element</param>
             public ElementInfo(string name, string dataType)
             {
                 if (name == null)

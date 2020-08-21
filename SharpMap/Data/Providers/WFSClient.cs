@@ -806,6 +806,10 @@ namespace SharpMap.Data.Providers
             Dispose(true);
         }
 
+        /// <summary>
+        /// Implementation of the Dispose patter
+        /// </summary>
+        /// <param name="disposing">Flag indicating if called from <see cref="Dispose()"/> or a finalizer.</param>
         protected virtual void Dispose(bool disposing)
         {
             if (!_disposed)

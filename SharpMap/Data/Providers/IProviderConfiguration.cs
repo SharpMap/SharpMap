@@ -87,7 +87,27 @@ namespace SharpMap.Data.Providers
         /// <summary>
         /// Gets or sets a value indicating whether or not to use the spatial index
         /// </summary>
-        public bool UseSpatialIndexForEnvelope { get; set; }
+        [Obsolete("Use ExtentsMode")]
+        public bool UseSpatialIndexForEnvelope
+        {
+            get => ExtentsMode == SqlServer2008ExtentsMode.SpatialIndex;
+            set
+            {
+                ExtentsMode = value
+                    ? SqlServer2008ExtentsMode.SpatialIndex
+                    : SqlServer2008ExtentsMode.QueryIndividualFeatures;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets a value indicating the spatial reference id
+        /// </summary>
+        public int SRID { get; set; }
+
+        /// <summary>
+        /// Gets or sets the way the spatial extent of the data source is evaluated
+        /// </summary>
+        public SqlServer2008ExtentsMode ExtentsMode { get; set; }
 
         /// <summary>
         /// Create the provider provider
@@ -95,9 +115,8 @@ namespace SharpMap.Data.Providers
         /// <returns>The created provider</returns>
         public IProvider Create()
         {
-            return new SqlServer2008(ConnectionString, TableName, GeometryColumnName, ObjectIdColumnName, SpatialObjectType,
-                UseSpatialIndexForEnvelope
-                );
+            return new SqlServer2008(ConnectionString, TableName, GeometryColumnName, ObjectIdColumnName, 
+                SpatialObjectType, SRID, ExtentsMode);
         }
     }
 }

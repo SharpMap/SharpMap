@@ -5,7 +5,7 @@ namespace SharpMap.Drawing
 {
 
     /// <summary>
-    /// Attribute class to associate ARGB value with <see cref="KnownColor" enum member
+    /// Attribute class to associate ARGB value with <see cref="KnownColor" /> enum member
     /// </summary>
     [System.AttributeUsage(System.AttributeTargets.Field)]
     internal class ArgbValueAttribute : System.Attribute
@@ -26,7 +26,7 @@ namespace SharpMap.Drawing
     }
 
     /// <summary>
-    /// Straight copy of <see cref="System.Drawing.KnownColor"/> names
+    /// Straight copy of <c>System.Drawing.KnownColor</c> names
     /// </summary>
     internal enum KnownColor
     {

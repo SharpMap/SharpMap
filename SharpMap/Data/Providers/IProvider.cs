@@ -28,6 +28,9 @@ namespace SharpMap.Data.Providers
     public interface IProvider : IProvider<uint>
     { }
 
+    /// <summary>
+    /// Interface for data provider implementations with a <see cref="Guid"/> as unique identifier
+    /// </summary>
     public interface IGuidProvider : IProvider<Guid>
     { }
 

@@ -62,10 +62,11 @@ namespace SharpMap.Rendering.Decoration
 
         #region MapDecoration overrides
 
-        protected override void OnRender(Graphics g, MapViewport map)
+        /// <inheritdoc cref="MapDecoration.OnRender(Graphics, MapViewport)"/>
+        protected override void OnRender(Graphics g, MapViewport mvp)
         {
             // Render the rosetta
-            base.OnRender(g, map);
+            base.OnRender(g, mvp);
             
             var clip = g.ClipBounds;
             //var oldTransform = g.Transform;

@@ -102,17 +102,28 @@ namespace SharpMap.Data.Providers
         // column name used in queries for retrieving spatial column as WKB
         private const string SharpMapWkb = "sharpmapwkb";
 
-        // required for restricting extents of WKT (eg bbox) used to query SqlGeography to work around error 
-        // 24206 "The specified input cannot be accepted because it contains an edge with antipodal points"
-        // FullGlobe will be used when map extents exceed this envelope.
+        /// <summary>
+        /// Envelope required for restricting extents of WKT (eg bbox) used to query SqlGeography to work around error 
+        /// 24206 "The specified input cannot be accepted because it contains an edge with antipodal points"
+        /// FullGlobe will be used when map extents exceed this envelope.
+        /// </summary>
         protected static readonly Envelope GeogMaxExtents = new Envelope(-179.999999999, 180.0, -89.999999000, 89.999999000);
 
-        // SqlGeography : polygon interior defined by left hand/foot rule (anti-clockwise orientation)
-        // SqlGeometry  : orientation is irrelevant
-        // GeometryToWKT returns Envelope with clockwise ring, so need to call .ReorientObject() for WKT used to query SqlGeography
+        /// <summary>
+        /// T-SQL command to "reorient" a geography
+        /// </summary>
+        /// <remarks>
+        /// <list type="bullet">
+        /// <item><term>SqlGeography</term><description>polygon interior defined by left hand/foot rule (anti-clockwise orientation)</description></item>
+        /// <item><term>SqlGeometry</term><description>orientation is irrelevant</description></item>
+        /// </list>
+        /// GeometryToWKT returns Envelope with clockwise ring, so need to call .ReorientObject() for WKT used to query SqlGeography
+        /// </remarks>
         protected readonly string _reorientObject;
 
-        // used for static spatial methods in SQL string
+        /// <summary>
+        /// Used for static spatial methods in SQL string
+        /// </summary>
         protected readonly string _spatialTypeString;
 
         private SqlServer2008ExtentsMode _extentsMode;
@@ -347,8 +358,13 @@ namespace SharpMap.Data.Providers
             set { ConnectionID = value; }
         }
 
+
+        /// <summary>
+        /// Gets the T-SQL string to enforce that a geometry is valid.
+        /// </summary>
+        /// <returns></returns>
         protected string GetMakeValidString()
-        { return ValidateGeometries ? ".MakeValid()" : String.Empty; }
+        { return ValidateGeometries ? ".MakeValid()" : string.Empty; }
 
         /// <summary>
         /// Method to parse TableSchema and Table from a (fully qualified) tablename
@@ -402,12 +418,16 @@ namespace SharpMap.Data.Providers
             Table = sb.ToString();
         }
 
+        /// <summary>
+        /// Method to get the name of the attribute columns
+        /// </summary>
+        /// <returns>A</returns>
         protected string GetAttributeColumnNames()
         {
             if (string.IsNullOrEmpty(_attributeColumnNames))
             {
                 // select csv list of OID + attribute columns (each column in square brackets)
-                var strSql = "SELECT STUFF (" +
+                string strSql = "SELECT STUFF (" +
                      $"(SELECT DISTINCT '], [' + name FROM sys.columns WHERE object_id = OBJECT_ID('{QualifiedTable}') " +
                      $"AND name NOT IN ('{GeometryColumn}') " +
                      "FOR XML PATH('')), 1, 2, '') + ']';";
@@ -614,7 +634,7 @@ namespace SharpMap.Data.Providers
         /// Returns the features that intersects with 'geom'   
         /// </summary>   
         /// <param name="geom"></param>   
-        /// <param name="ds">FeatureDataSet to fill data into</param>   
+        /// <param name="fds">FeatureDataSet to fill data into</param>   
         protected override void OnExecuteIntersectionQuery(IGeometry geom, FeatureDataSet fds)
         {
             var sb = new StringBuilder($"SELECT {GetAttributeColumnNames()}, {GeometryColumn}{GetMakeValidString()}.STAsBinary() As {SharpMapWkb} " +
@@ -859,7 +879,7 @@ namespace SharpMap.Data.Providers
         /// Returns all features with the view box   
         /// </summary>   
         /// <param name="bbox">view box</param>   
-        /// <param name="ds">FeatureDataSet to fill data into</param>   
+        /// <param name="fds">FeatureDataSet to fill data into</param>   
         public override void ExecuteIntersectionQuery(Envelope bbox, FeatureDataSet fds)
         {
             var sb = new StringBuilder($"SELECT {GetAttributeColumnNames()}, {GeometryColumn}{GetMakeValidString()}.STAsBinary() AS {SharpMapWkb} " +
@@ -882,6 +902,11 @@ namespace SharpMap.Data.Providers
 
         #endregion
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sql"></param>
+        /// <param name="fds"></param>
         protected virtual void ExecuteIntersectionQuery(string sql, FeatureDataSet fds)
         {
             using (var conn = new SqlConnection(ConnectionString))

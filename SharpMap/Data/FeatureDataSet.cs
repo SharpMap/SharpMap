@@ -350,18 +350,20 @@ namespace SharpMap.Data
             using (var ms = new MemoryStream((byte[]) info.GetValue("geometries", typeof(byte[]))))
             {
                 using (var reader = new BinaryReader(ms))
-            {
-                while (reader.BaseStream.Position < reader.BaseStream.Length)
                 {
-                    var rowIndex = reader.ReadInt32();
-                    var row = (FeatureDataRow) Rows[rowIndex];
-                    var srid = reader.ReadInt32();
-                    var wkbReader = new WKBReader(GeometryServiceProvider.Instance.CreateGeometryFactory(srid));
-                    var wkbSize = reader.ReadInt32();
-                    var wkb = reader.ReadBytes(wkbSize);
-                    row.Geometry = wkbReader.Read(wkb);
+                    var wkbReader = new WKBReader();
+                    while (reader.BaseStream.Position < reader.BaseStream.Length)
+                    {
+                        var rowIndex = reader.ReadInt32();
+                        var row = (FeatureDataRow) Rows[rowIndex];
+                        var srid = reader.ReadInt32();
+                        var wkbSize = reader.ReadInt32();
+                        var wkb = reader.ReadBytes(wkbSize);
+                        row.Geometry = wkbReader.Read(wkb);
+                        row.Geometry.SRID = srid;
+                    }
                 }
-            }}
+            }
         }
         /// <summary>
         /// Initializes a new instance of the FeatureDataTable class with the specified table name.
@@ -635,6 +637,7 @@ namespace SharpMap.Data
             _dataTables = dataTables;
         }
 
+        /// <iheritdoc cref="IEnumerable{T}.GetEnumerator"/>
         public IEnumerator<FeatureDataTable> GetEnumerator()
         {
             var dataTables = new DataTable[_dataTables.Count];

@@ -5,8 +5,14 @@ using System.Runtime.Serialization;
 
 namespace SharpMap.Utilities
 {
+    /// <summary>
+    /// A class containing several serialization surrogate classes
+    /// </summary>
     public partial class Surrogates
     {
+        /// <summary>
+        /// A serialization surrogate for <see cref="System.Drawing.Brush"/> brushes.
+        /// </summary>
         public class BrushSurrogate : ISerializationSurrogate
         {
             /// <summary>
@@ -18,12 +24,14 @@ namespace SharpMap.Utilities
             void ISerializationSurrogate.GetObjectData(Object obj, SerializationInfo info, StreamingContext context)
             {
             }
+
             /// <summary>
             /// Populates the provided SerializationInfo with the data needed to serialize the object.
             /// </summary>
             /// <param name="obj">The object to serialize.</param>
             /// <param name="info">The SerializationInfo to populate with data.</param>
             /// <param name="context">The destination for this serialization.</param>
+            /// <param name="selector">A surrogate selector</param>
             object ISerializationSurrogate.SetObjectData(Object obj, SerializationInfo info, StreamingContext context,
                 ISurrogateSelector selector)
             {

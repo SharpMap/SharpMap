@@ -192,6 +192,9 @@ namespace SharpMap.Layers
             }
         }
 
+        /// <summary>
+        /// Event raised when this collection has changed.
+        /// </summary>
         public event NotifyCollectionChangedEventHandler CollectionChanged;
 
         /// <summary>
@@ -204,6 +207,7 @@ namespace SharpMap.Layers
             if (handler != null) handler(this, e);
         }
 
+        /// <inheritdoc cref="System.Collections.ObjectModel.Collection{T}.InsertItem"/>
         protected override void InsertItem(int index, ILayer item)
         {
             lock (this)
@@ -214,6 +218,7 @@ namespace SharpMap.Layers
             }
         }
 
+        /// <inheritdoc cref="System.Collections.ObjectModel.Collection{T}.RemoveItem"/>
         protected override void RemoveItem(int index)
         {
             lock (this)
@@ -225,6 +230,7 @@ namespace SharpMap.Layers
             }
         }
 
+        /// <inheritdoc cref="System.Collections.ObjectModel.Collection{T}.SetItem"/>
         protected override void SetItem(int index, ILayer item)
         {
             lock (this)

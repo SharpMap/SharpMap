@@ -256,6 +256,12 @@ namespace SharpMap.Data.Providers
         /// </remarks>
         public string ToEnvelopeDecoratorFormat { get; set; }
 
+        /// <summary>
+        /// Converts <paramref name="obj"/> to the type required for the database
+        /// </summary>
+        /// <param name="obj">The object</param>
+        /// <param name="type">The required type</param>
+        /// <returns>The converted <paramref name="obj"/></returns>
         public virtual object ToDbType(object obj, DbType type)
         {
             switch (type)

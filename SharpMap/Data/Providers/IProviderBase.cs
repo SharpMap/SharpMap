@@ -4,6 +4,9 @@ using GeoAPI.Geometries;
 
 namespace SharpMap.Data.Providers
 {
+    /// <summary>
+    /// Base interface for providers
+    /// </summary>
     public interface IBaseProvider : IDisposable
     {
         /// <summary>

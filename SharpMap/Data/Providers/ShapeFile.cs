@@ -754,6 +754,8 @@ namespace SharpMap.Data.Providers
 		/// </summary>
 		/// <remarks>FilterDelegate is no longer applied to this ge</remarks>
 		/// <param name="oid">Object ID</param>
+		/// <param name="br">The binary reader for reading</param>
+		/// <param name="dbf">The dBase reader</param>
 		/// <returns>The geometry at the Id</returns>
         private IGeometry GetGeometryByID(uint oid, BinaryReader br, DbaseReader dbf)
         {

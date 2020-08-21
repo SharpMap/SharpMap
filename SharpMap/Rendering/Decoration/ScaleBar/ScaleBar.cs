@@ -121,8 +121,8 @@ namespace SharpMap.Rendering.Decoration.ScaleBar
 
         #region MapDecoration overrides
 
-
-        protected override Size InternalSize(Graphics g, MapViewport map)
+        /// <inheritdoc cref="MapDecoration.InternalSize(Graphics, MapViewport)"/>
+        protected override Size InternalSize(Graphics g, MapViewport mvp)
         {
             CalcScale((int)g.DpiX);
             double width = MarginLeft + MarginRight + DefaultWidth;
@@ -130,31 +130,32 @@ namespace SharpMap.Rendering.Decoration.ScaleBar
             return new Size((int)width, (int)height);
         }
 
-        protected override void OnRender(Graphics g, MapViewport map)
+        /// <inheritdoc cref="MapDecoration.OnRender(Graphics, MapViewport)"/>
+        protected override void OnRender(Graphics g, MapViewport mvp)
         {
             var rectF = g.ClipBounds;
             
             if (MapUnit == (int)Unit.Degree)
             {
                 // do not use map.Envelope as this is not apparent width on rotated viewports
-                var lon1 = map.Center.X - map.Zoom * 0.5;
-                var lon2 = map.Center.X + map.Zoom * 0.5;
-                SetScaleD((int)g.DpiX, lon1, lon2, map.Center.Y, map.Size.Width);
+                var lon1 = mvp.Center.X - mvp.Zoom * 0.5;
+                var lon2 = mvp.Center.X + mvp.Zoom * 0.5;
+                SetScaleD((int)g.DpiX, lon1, lon2, mvp.Center.Y, mvp.Size.Width);
             }
             else
             {
-                SetScale((int)g.DpiX, map.Zoom, map.Size.Width);
+                SetScale((int)g.DpiX, mvp.Zoom, mvp.Size.Width);
             }
 
-            switch (map.SRID)
+            switch (mvp.SRID)
             {
                 case 3857: 
                     //other spherical variations (all of which are deprecated except 900913): 900913 54004 41001 102113 102100 3785 
 
                     // constrain to 85deg N/S
-                    if (Math.Abs(map.Center.Y) >= 20000000) return;
+                    if (Math.Abs(mvp.Center.Y) >= 20000000) return;
                     // refer to https://en.wikipedia.org/wiki/Mercator_projection#Scale_factor
-                    _webMercatorFactor = 1 / Math.Cosh(map.Center.Y / GeoSpatialMath.WebMercatorRadius);
+                    _webMercatorFactor = 1 / Math.Cosh(mvp.Center.Y / GeoSpatialMath.WebMercatorRadius);
                     break;
 
                 default:

@@ -431,6 +431,7 @@ namespace SharpMap.Rendering.Thematics
             return Convert.ToDouble(row[_columnName]);
         }
 
+        /// <inheritdoc cref="ICloneable.Clone"/>
         public object Clone()
         {
             var res = (GradientTheme) MemberwiseClone();

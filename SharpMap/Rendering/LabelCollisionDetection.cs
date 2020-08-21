@@ -99,51 +99,53 @@ namespace SharpMap.Rendering
         /// </summary>
         /// <param name="labels"></param>
         public static void QuickAccurateCollisionDetectionMethod(List<BaseLabel> labels)
-	    {
-		    // find minimum / maximum coordinates
-		    double minX = double.MaxValue;
-		    double maxX = double.MinValue;
-		    double minY = double.MaxValue;
-		    double maxY = double.MinValue;
-		    foreach (BaseLabel l in labels)
+        {
+            // find minimum / maximum coordinates
+            double minX = double.MaxValue;
+            double maxX = double.MinValue;
+            double minY = double.MaxValue;
+            double maxY = double.MinValue;
+            foreach (BaseLabel l in labels)
             {
-                var box = new ProperBox(l is PathLabel pl ? new LabelBox(pl.Location.GetBounds()): l.Box);
-			    if (box.Left < minX) minX = box.Left;
-			    if (box.Right > maxX) maxX = box.Right;
+                var box = new ProperBox(l is PathLabel pl ? new LabelBox(pl.Location.GetBounds()) : l.Box);
+                if (box.Left < minX) minX = box.Left;
+                if (box.Right > maxX) maxX = box.Right;
                 if (box.Bottom > maxY) maxY = box.Bottom;
-			    if (box.Top < minY) minY = box.Top;
-		    }   
+                if (box.Top < minY) minY = box.Top;
+            }
 
-		    // sort by area (highest priority first, followed by low area to maximize the amount of labels displayed)
-		    var sortedLabels = labels.OrderByDescending(label => label.Priority).ThenBy(label =>
+            // sort by area (highest priority first, followed by low area to maximize the amount of labels displayed)
+            var sortedLabels = labels.OrderByDescending(label => label.Priority).ThenBy(label =>
             {
                 var box = label is PathLabel pl ? new LabelBox(pl.Location.GetBounds()) : label.Box;
                 return box.Width * box.Height;
             });
 
-		    // make visible if it does not collide with other labels. Uses a quadtree and is therefore fast O(n log n) 
-		    QuadtreeNode<ProperBox> quadTree = new QuadtreeNode<ProperBox>(minX, maxX, minY, maxY, new LabelBoxContainmentChecker(), 0, 10);
-		    foreach (BaseLabel l in sortedLabels) {
-			    if (!l.Show) continue;
+            // make visible if it does not collide with other labels. Uses a quadtree and is therefore fast O(n log n) 
+            QuadTreeNode<ProperBox> quadTree =
+                new QuadTreeNode<ProperBox>(minX, maxX, minY, maxY, new LabelBoxContainmentChecker(), 0, 10);
+            foreach (BaseLabel l in sortedLabels)
+            {
+                if (!l.Show) continue;
                 var box = new ProperBox(l is PathLabel pl ? new LabelBox(pl.Location.GetBounds()) : l.Box);
-			    if (quadTree.CollidesWithAny(box))
+                if (quadTree.CollidesWithAny(box))
                 {
-				    l.Show = false;
-			    }
+                    l.Show = false;
+                }
                 else
                 {
-				    quadTree.Insert(box);
-			    }
-		    }
-	    }
+                    quadTree.Insert(box);
+                }
+            }
+        }
 
         #endregion
 
         #region "Tools"
 
-        public class QuadtreeNode<T>
+        private class QuadTreeNode<T>
         {
-            List<QuadtreeNode<T>> children = null;
+            List<QuadTreeNode<T>> children = null;
             List<T> objects;
             int maxObjects;
             int level;
@@ -158,7 +160,7 @@ namespace SharpMap.Rendering
 
             public const int DEFAULT_MAX_OBJECTS_PER_NODE = 5;
 
-            public QuadtreeNode(double left, double right, double top, double bottom, QuadtreeContainmentChecker<T> containmentChecker, int maxObjects, int level, int maxLevel)
+            public QuadTreeNode(double left, double right, double top, double bottom, QuadtreeContainmentChecker<T> containmentChecker, int maxObjects, int level, int maxLevel)
             {
                 this.Left = left;
                 this.Right = right;
@@ -171,8 +173,8 @@ namespace SharpMap.Rendering
                 this.maxLevel = maxLevel;
             }
 
-            public QuadtreeNode(double left, double right, double top, double bottom, QuadtreeContainmentChecker<T> containmentChecker, int level, int maxLevel)
-                : this(left, right, top, bottom, containmentChecker, QuadtreeNode<T>.DEFAULT_MAX_OBJECTS_PER_NODE, level, maxLevel) { }
+            public QuadTreeNode(double left, double right, double top, double bottom, QuadtreeContainmentChecker<T> containmentChecker, int level, int maxLevel)
+                : this(left, right, top, bottom, containmentChecker, QuadTreeNode<T>.DEFAULT_MAX_OBJECTS_PER_NODE, level, maxLevel) { }
 
             public bool Insert(T obj)
             {
@@ -215,7 +217,7 @@ namespace SharpMap.Rendering
                 return this.children == null;
             }
 
-            public List<QuadtreeNode<T>> GetChildren()
+            public List<QuadTreeNode<T>> GetChildren()
             {
                 return this.children;
             }
@@ -250,7 +252,7 @@ namespace SharpMap.Rendering
                 }
                 else
                 {
-                    foreach (QuadtreeNode<T> node in this.children)
+                    foreach (QuadTreeNode<T> node in this.children)
                     {
                         if (x >= node.Left && x <= node.Right && y >= node.Bottom && y <= node.Top)
                         {
@@ -273,13 +275,13 @@ namespace SharpMap.Rendering
 
             protected void Divide()
             {
-                this.children = new List<QuadtreeNode<T>>(4);
+                this.children = new List<QuadTreeNode<T>>(4);
                 double middleX = Left + ((Right - Left) / 2);
                 double middleY = Top + (Math.Abs(Top - Bottom) / 2);
-                this.children.Add(new QuadtreeNode<T>(Left, middleX, Top, middleY, containmentChecker, maxObjects, level + 1, maxLevel));
-                this.children.Add(new QuadtreeNode<T>(middleX, Right, Top, middleY, containmentChecker, maxObjects, level + 1, maxLevel));
-                this.children.Add(new QuadtreeNode<T>(Left, middleX, middleY, Bottom, containmentChecker, maxObjects, level + 1, maxLevel));
-                this.children.Add(new QuadtreeNode<T>(middleX, Right, middleY, Bottom, containmentChecker, maxObjects, level + 1, maxLevel));
+                this.children.Add(new QuadTreeNode<T>(Left, middleX, Top, middleY, containmentChecker, maxObjects, level + 1, maxLevel));
+                this.children.Add(new QuadTreeNode<T>(middleX, Right, Top, middleY, containmentChecker, maxObjects, level + 1, maxLevel));
+                this.children.Add(new QuadTreeNode<T>(Left, middleX, middleY, Bottom, containmentChecker, maxObjects, level + 1, maxLevel));
+                this.children.Add(new QuadTreeNode<T>(middleX, Right, middleY, Bottom, containmentChecker, maxObjects, level + 1, maxLevel));
 
                 //move objects to child nodes
                 List<T> remainingObjects = new List<T>();
@@ -292,17 +294,17 @@ namespace SharpMap.Rendering
 
             public interface QuadtreeContainmentChecker<P>
             {
-                bool IsContainedOrIntersects(QuadtreeNode<P> node, P obj);
+                bool IsContainedOrIntersects(QuadTreeNode<P> node, P obj);
 
                 bool IsContainedOrIntersects(P obj1, P obj2);
 
-                bool IsFullyContained(QuadtreeNode<P> node, P obj);
+                bool IsFullyContained(QuadTreeNode<P> node, P obj);
 
 
             }
         }
 
-        public class ProperBox
+        private class ProperBox
         {
             private LabelBox box;
             public ProperBox(LabelBox box)
@@ -341,15 +343,15 @@ namespace SharpMap.Rendering
             }
         }
 
-        public class LabelBoxContainmentChecker : QuadtreeNode<ProperBox>.QuadtreeContainmentChecker<ProperBox>
+        private class LabelBoxContainmentChecker : QuadTreeNode<ProperBox>.QuadtreeContainmentChecker<ProperBox>
         {
 
-            public bool IsContainedOrIntersects(QuadtreeNode<ProperBox> node, ProperBox obj)
+            public bool IsContainedOrIntersects(QuadTreeNode<ProperBox> node, ProperBox obj)
             {
                 return !(obj.Left > node.Right | obj.Right < node.Left | obj.Top > node.Bottom | obj.Bottom < node.Top);
             }
 
-            public bool IsFullyContained(QuadtreeNode<ProperBox> node, ProperBox obj)
+            public bool IsFullyContained(QuadTreeNode<ProperBox> node, ProperBox obj)
             {
                 return obj.Left >= node.Left & obj.Right <= node.Right & obj.Bottom <= node.Bottom & obj.Top >= node.Top;
             }
@@ -361,5 +363,6 @@ namespace SharpMap.Rendering
         }
 
         #endregion
+
     }
 }

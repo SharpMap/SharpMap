@@ -1,4 +1,5 @@
 ﻿using System.Drawing.Drawing2D;
+#pragma warning disable 1591
 
 namespace SharpMap.Drawing
 {
@@ -29,3 +30,4 @@ namespace SharpMap.Drawing
         Prepend
     }
 }
+#pragma warning restore 1591

@@ -1,4 +1,5 @@
 ﻿using System;
+#pragma warning disable 1591
 
 namespace SharpMap.Drawing
 {
@@ -116,3 +117,4 @@ namespace SharpMap.Drawing
         }
     }
 }
+#pragma warning restore 1591

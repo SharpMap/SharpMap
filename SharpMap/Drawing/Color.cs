@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Reflection;
 
+#pragma warning disable 1591
 #if NETSTANDARD2_0
 namespace SharpMap.Drawing
 {
@@ -28,3 +29,4 @@ namespace SharpMap.Drawing
     }
 }
 #endif
+#pragma warning restore 1591

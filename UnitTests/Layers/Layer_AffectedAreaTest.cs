@@ -29,6 +29,7 @@ namespace UnitTests.Layers
         {
             BasicLabel,
             BasicLabelRot,
+            [Obsolete]
             TextOnPath,
             PathOnLabel,
             SineCurve,
@@ -248,6 +249,7 @@ namespace UnitTests.Layers
             map.Layers.Add(lLyr);
         }
 
+        [Obsolete]
         private void AddTextOnPathLayers(Map map)
         {
             string shapefile = System.IO.Path.GetFullPath(
@@ -325,6 +327,8 @@ namespace UnitTests.Layers
         /// </summary>
         /// <param name="mode"></param>
         /// <param name="testRotations"></param>
+        /// <param name="testHzAlign"></param>
+        /// <param name="testVtAlign"></param>
         [NUnit.Framework.TestCase(LabelLayerMode.SineCurve, true, false, true)]
         [NUnit.Framework.TestCase(LabelLayerMode.SineCurveClipped, true, false, false)]
         [NUnit.Framework.TestCase(LabelLayerMode.SineCurveExtended, true, false, false)]

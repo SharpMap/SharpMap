@@ -160,7 +160,7 @@ namespace SharpMap.Layers
             SmoothingMode = SmoothingMode.AntiAlias;
             TextRenderingHint = TextRenderingHint.AntiAlias;
             MultipartGeometryBehaviour = MultipartGeometryBehaviourEnum.All;
-            _labelFilter = LabelCollisionDetection.SimpleCollisionDetection;
+            _labelFilter = LabelCollisionDetection.QuickAccurateCollisionDetectionMethod;
         }
 
         /// <summary>
@@ -170,10 +170,10 @@ namespace SharpMap.Layers
         public MultipartGeometryBehaviourEnum MultipartGeometryBehaviour { get; set; }
 
         /// <summary>
-        /// Filtermethod delegate for performing filtering
+        /// Filter method delegate for performing filtering
         /// </summary>
         /// <remarks>
-        /// Default method is <see cref="SharpMap.Rendering.LabelCollisionDetection.SimpleCollisionDetection"/>
+        /// Default method is <see cref="SharpMap.Rendering.LabelCollisionDetection.QuickAccurateCollisionDetectionMethod"/>
         /// </remarks>
         public LabelCollisionDetection.LabelFilterMethod LabelFilter
         {

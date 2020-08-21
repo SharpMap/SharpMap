@@ -69,20 +69,22 @@ namespace SharpMap.Rendering.Decoration
 
         #region MapDecoration overrides
 
-        protected override Size InternalSize(Graphics g, MapViewport map)
+        /// <inheritdoc cref="MapDecoration.InternalSize(Graphics, MapViewport)"/>
+        protected override Size InternalSize(Graphics g, MapViewport mvp)
         {
             return Size;
         }
-        
-        protected override void OnRender(Graphics g, MapViewport map)
+
+        /// <inheritdoc cref="MapDecoration.OnRender(Graphics, MapViewport)"/>
+        protected override void OnRender(Graphics g, MapViewport mvp)
         {
             var image = NorthArrowImage ?? DefaultNorthArrowBitmap;
 
-            var mapSize = map.Size;
+            var mapSize = mvp.Size;
 
             //Get rotation
-            var ptTop = map.ImageToWorld(new PointF(mapSize.Width/2f, 0f),true);
-            var ptBottom = map.ImageToWorld(new PointF(mapSize.Width / 2f, mapSize.Height * 0.5f), true);
+            var ptTop = mvp.ImageToWorld(new PointF(mapSize.Width/2f, 0f),true);
+            var ptBottom = mvp.ImageToWorld(new PointF(mapSize.Width / 2f, mapSize.Height * 0.5f), true);
 
             var dx = ptTop.X - ptBottom.X;
             var dy = ptBottom.Y - ptTop.Y;

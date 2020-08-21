@@ -195,6 +195,7 @@ namespace SharpMap.Rendering
             g.Transform = transform.Clone();
         }
 
+        /// <inheritdoc cref="IDisposable.Dispose"/>
         public void Dispose()
         {
             if (_images != null)

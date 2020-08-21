@@ -65,6 +65,10 @@ namespace SharpMap.Layers
             System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(OnRequery));
         }
 
+        /// <summary>
+        /// Method called when deserializing this object.
+        /// </summary>
+        /// <param name="context"></param>
         [OnDeserializing]
         public void OnDeserializing(StreamingContext context)
         {

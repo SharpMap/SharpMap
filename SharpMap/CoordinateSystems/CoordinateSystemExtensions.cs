@@ -16,7 +16,7 @@ namespace SharpMap.CoordinateSystems
     {
         private static readonly ILog _logger = LogManager.GetLogger(typeof(CoordinateSystemExtensions));
 
-        private static Dictionary<int, string> _sridDefinition;
+        //private static Dictionary<int, string> _sridDefinition;
 
         private static readonly Dictionary<int, ICoordinateSystem> _sridCoordinateSystem = new Dictionary<int, ICoordinateSystem>();
 

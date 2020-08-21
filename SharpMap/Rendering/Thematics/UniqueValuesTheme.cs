@@ -109,6 +109,7 @@ namespace SharpMap.Rendering.Thematics
             return _default;
         }
 
+        /// <inheritdoc cref="ICloneable.Clone()"/>
         public object Clone()
         {
             var defStyle = (_default is ICloneable) ? (IStyle) ((ICloneable) _default).Clone() : _default;

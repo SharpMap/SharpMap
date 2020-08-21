@@ -124,6 +124,9 @@ namespace SharpMap.Layers
             set { _baseLayer.Enabled = value; }
         }
 
+        /// <summary>
+        /// Optional title of the layer. It will be used for services like WMS where both Name and Title are supported.
+        /// </summary>
         public string LayerTitle
         {
             get { return _baseLayer.LayerTitle; }

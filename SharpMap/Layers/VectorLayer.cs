@@ -494,6 +494,13 @@ namespace SharpMap.Layers
             RenderGeometryEx(g, map, feature, style);
         }
 
+        /// <summary>
+        /// Function to render <paramref name="feature"/> using <paramref name="style"/> and returning the area covered.
+        /// </summary>
+        /// <param name="g">The graphics object</param>
+        /// <param name="map">The map</param>
+        /// <param name="feature">The feature's geometry</param>
+        /// <param name="style">The style to apply</param>
         protected RectangleF RenderGeometryEx(Graphics g, MapViewport map, IGeometry feature, VectorStyle style)
         {
             if (feature == null) return RectangleF.Empty;
@@ -634,6 +641,7 @@ namespace SharpMap.Layers
 
         #endregion
 
+        /// <inheritdoc cref="ICloneable.Clone()"/>>
         public object Clone()
         {
             var res = (VectorLayer)MemberwiseClone();

@@ -787,6 +787,9 @@ namespace SharpMap.Utilities.SpatialIndexing
             }
         }
 
+        /// <summary>
+        /// Gets a value indicating the extension of the index file
+        /// </summary>
         public string Extension
         {
             get { return ".shp.sidx"; }

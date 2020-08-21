@@ -161,7 +161,9 @@ namespace SharpMap.Rendering
         private LabelStyle _Style;
 
         private string _Text;
-        private TextOnPath _textOnPath = null;
+
+        [Obsolete]
+        private TextOnPath _textOnPath;
         /// <summary>
         /// Render text on path
         /// </summary>

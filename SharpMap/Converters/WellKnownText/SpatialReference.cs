@@ -70,13 +70,13 @@ namespace SharpMap.Converters.WellKnownText
         /// <returns></returns>
         public static IEnumerable<KeyValuePair<int, string>> GetAllReferenceSystems()
         {
-            XmlNodeList nodes = null;
+            XmlNodeList nodes;
             try
             {
                 var xml = EnsureSpatialRefSysXml();
-                nodes = xml.DocumentElement.SelectNodes("/SpatialReference/*");
+                nodes = xml?.DocumentElement?.SelectNodes("/SpatialReference/*");
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 nodes = null;
             }

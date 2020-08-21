@@ -429,6 +429,10 @@ namespace SharpMap.Rendering
             DrawTextOnPathEx();
         }
 
+        /// <summary>
+        /// Method to draw the text on the <see cref="GraphicsPath"/>
+        /// </summary>
+        /// <returns>The area covered by the rendering process</returns>
         public RectangleF DrawTextOnPathEx()
         {
             var  affectedArea = new RectangleF();

@@ -122,7 +122,15 @@ namespace SharpMap.Layers
             set { _baseLayer.MaxVisible = value; }
         }
 
-        public VisibilityUnits VisibilityUnits { get; set; }
+
+        /// <summary>
+        /// Gets or Sets what level-reference the Min/Max values are defined in
+        /// </summary>
+        public VisibilityUnits VisibilityUnits
+        {
+            get => _baseLayer.VisibilityUnits;
+            set => _baseLayer.VisibilityUnits = value;
+        }
 
         bool ILayer.Enabled
         {
@@ -130,6 +138,9 @@ namespace SharpMap.Layers
             set { _baseLayer.Enabled = value; }
         }
 
+        /// <summary>
+        /// Optional title of layer. It will be used for services like WMS where both Name and Title are supported.
+        /// </summary>
         public string LayerTitle
         {
             get { return _baseLayer.LayerTitle; }
@@ -208,6 +219,7 @@ namespace SharpMap.Layers
             return ia;
         }
 
+        /// <inheritdoc cref="IDisposable.Dispose"/>
         public void Dispose()
         {
             if (_baseLayer is IDisposable)

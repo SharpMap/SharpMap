@@ -32,6 +32,10 @@ namespace SharpMap.Rendering.Symbolizer
     public class ListPointSymbolizer : Collection<PointSymbolizer>, IPointSymbolizerEx, IDisposableEx
     {
         private Size _size;
+
+        /// <summary>
+        /// Gets a value indicating the area of the map covered during the last rendering cycle.
+        /// </summary>
         public RectangleF CanvasArea { get; private set; } = RectangleF.Empty;
 
         #region Collection<T> overrides

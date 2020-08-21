@@ -120,6 +120,9 @@ namespace SharpMap.Rendering.Decoration.Graticule
         /// </summary>    
         public GraticuleStyle GcsGraticuleStyle { get; set; }
 
+        /// <summary>
+        /// Creates an instance of this class using default properties.
+        /// </summary>
         public Graticule()
         {
             Location = new System.Drawing.Point(0, 0);
@@ -140,11 +143,14 @@ namespace SharpMap.Rendering.Decoration.Graticule
                 GraticuleBorders.RightTop);
         }
 
-        protected override Size InternalSize(Graphics g, MapViewport map)
+
+        /// <intheritdoc cref="MapDecoration.InternalSize(Graphics, MapViewport)" />
+        protected override Size InternalSize(Graphics g, MapViewport mvp)
         {
-            return new Size(map.Size.Width, map.Size.Height);
+            return new Size(mvp.Size.Width, mvp.Size.Height);
         }
 
+        /// <intheritdoc cref="MapDecoration.OnRender(Graphics, MapViewport)" />
         protected override void OnRender(Graphics g, MapViewport map)
         {
             try
@@ -1467,10 +1473,10 @@ namespace SharpMap.Rendering.Decoration.Graticule
         }
 
         /// <summary>
-        /// Applies the Web Mercator scale factor to the <param name="x"></param> ordinate based upon the latitude dependent <param name="y"></param> ordinate
+        /// Applies the Web Mercator scale factor to the <paramref name="x" /> ordinate based upon the latitude dependent <paramref name="y" /> ordinate
         /// </summary>
-        /// <param name="x"></param>
-        /// <param name="y"></param>
+        /// <param name="x">An x-ordinate value</param>
+        /// <param name="y">An y-ordinate value</param>
         /// <returns>Scale-corrected X ordinate</returns>
         private double CalcScaleCorrectedX(double x, double y)
         {

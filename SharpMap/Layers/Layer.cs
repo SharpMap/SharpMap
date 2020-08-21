@@ -110,6 +110,9 @@ namespace SharpMap.Layers
         [field: NonSerialized]
         private bool _shouldNotResetCt;
         
+        /// <summary>
+        /// The area of the map that was covered by this layer
+        /// </summary>
         [field: NonSerialized]
         protected RectangleF CanvasArea = RectangleF.Empty;
         
@@ -257,6 +260,9 @@ namespace SharpMap.Layers
             }
         }
 
+        /// <summary>
+        /// Gets a flag indicating if the layer needs coordinate transformation
+        /// </summary>
         protected bool NeedsTransformation
         {
             get { return SRID != 0 && TargetSRID != 0 && SRID != TargetSRID; }
@@ -362,11 +368,17 @@ namespace SharpMap.Layers
             return  canvasArea;
         }
 
-        protected virtual void Render(Graphics g, MapViewport map, out Rectangle affectedArea)
+        /// <summary>
+        /// Renders the layer using the given graphics object and viewport. The <paramref name="affectedArea"/> is an additional result.
+        /// </summary>
+        /// <param name="g">A graphics object</param>
+        /// <param name="mvp">A map viewport</param>
+        /// <param name="affectedArea">The affected area.</param>
+        protected virtual void Render(Graphics g, MapViewport mvp, out Rectangle affectedArea)
         {
-            Render(g, map);
+            Render(g, mvp);
 
-            var mapRect = new Rectangle(new Point(0, 0), map.Size);
+            var mapRect = new Rectangle(new Point(0, 0), mvp.Size);
             if (CanvasArea.IsEmpty)
             {
                 affectedArea = mapRect;
@@ -576,6 +588,11 @@ namespace SharpMap.Layers
             return envelope;
         }
 
+        /// <summary>
+        /// Function to transform <paramref name="geometry"/> to the coordinate system defined by <see cref="TargetSRID"/>
+        /// </summary>
+        /// <param name="geometry">A geometry</param>
+        /// <returns>The transformed geometry</returns>
         protected virtual IGeometry ToTarget(IGeometry geometry)
         {
             if (geometry.SRID == TargetSRID)
@@ -589,6 +606,11 @@ namespace SharpMap.Layers
             return geometry;
         }
 
+        /// <summary>
+        /// Function to transform <paramref name="geometry"/> to the coordinate system defined by <see cref="SRID"/>
+        /// </summary>
+        /// <param name="geometry">A geometry</param>
+        /// <returns>The transformed geometry</returns>
         protected virtual IGeometry ToSource(IGeometry geometry)
         {
             if (geometry.SRID == SRID)
